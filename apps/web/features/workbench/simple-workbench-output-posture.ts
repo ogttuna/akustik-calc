@@ -1,5 +1,6 @@
 import type { AssemblyCalculation, RequestedOutputId } from "@dynecho/shared";
 
+import { getGateIAirborneFieldContextSurface } from "./airborne-field-context-surface";
 import { isFieldAirborneOutput } from "./field-airborne-output";
 import { FIELD_OUTPUT_DESIGN_GRADE_POSTURE_GUARD } from "./field-output-owner-policy-copy";
 import type { StudyMode } from "./preset-definitions";
@@ -131,6 +132,16 @@ export function buildSimpleWorkbenchOutputPosture(input: {
   }
 
   if (isFieldAirborneOutput(output) || FIELD_IMPACT_OUTPUTS.has(output) || output === "DnT,A,k") {
+    const gateISurface = getGateIAirborneFieldContextSurface(result);
+
+    if (gateISurface && isFieldAirborneOutput(output)) {
+      return {
+        detail: gateISurface.postureDetail,
+        label: gateISurface.label,
+        tone: "accent"
+      };
+    }
+
     return {
       detail:
         `This metric is carried through the active field continuation chain from the current lab or apparent curve. It is not being framed as an independent exact source row or measured field result. ${FIELD_OUTPUT_DESIGN_GRADE_POSTURE_GUARD}`,

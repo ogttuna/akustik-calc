@@ -1,5 +1,6 @@
 import type { AssemblyCalculation } from "@dynecho/shared";
 
+import { getGateIAirborneFieldContextSurface } from "./airborne-field-context-surface";
 import type {
   SimpleWorkbenchProposalCoverageItem,
   SimpleWorkbenchProposalLayer
@@ -106,15 +107,20 @@ function buildAirborneTraceGroup(result: AssemblyCalculation | null): SimpleWork
   const noteSelection = selectSimpleWorkbenchTraceNotes(trace.notes, {
     fallbackNotes: [`Strategy ${trace.strategy.replaceAll("_", " ")} selected ${trace.selectedLabel}.`]
   });
+  const gateISurface = getGateIAirborneFieldContextSurface(result);
+  const notes = gateISurface
+    ? [...noteSelection.notes.slice(0, 2), ...gateISurface.notes]
+    : noteSelection.notes;
 
   return {
     detail:
       `${trace.detectedFamilyLabel} with ${formatPercent(trace.confidenceScore)} ${trace.confidenceClass} confidence. ` +
-      `${formatDb(trace.solverSpreadRwDb)} solver spread across ${trace.candidateMethods.length} candidate method${trace.candidateMethods.length === 1 ? "" : "s"}.`,
+      `${formatDb(trace.solverSpreadRwDb)} solver spread across ${trace.candidateMethods.length} candidate method${trace.candidateMethods.length === 1 ? "" : "s"}.` +
+      (gateISurface ? ` ${gateISurface.detail}` : ""),
     label: "Airborne lane",
-    notes: noteSelection.notes,
+    notes,
     tone: mapAirborneTone(trace.confidenceClass),
-    value: trace.selectedLabel
+    value: gateISurface?.label ?? trace.selectedLabel
   };
 }
 

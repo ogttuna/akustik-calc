@@ -189,19 +189,51 @@ Fresh external checks still support this direction:
   that scope with stricter candidate rejection and basis/error-budget
   transparency.
 
-Gate I has now landed from that decision. The immediate next action is:
+Gate J has now landed from that decision chain. The immediate next
+action is:
 
-`gate_j_personal_use_mvp_airborne_field_context_surface_parity_plan`
+`gate_k_personal_use_mvp_airborne_field_context_input_surface_plan`
 
 Target:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-j-airborne-field-context-surface-parity-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-k-airborne-field-context-input-surface-contract.test.ts`
 
-Gate J should prove visible/API/report parity for the Gate I airborne
-field/apparent context basis. It must keep the same `R'w` / `DnT,w`
-values, candidate id, basis method, warning, and uncertainty posture on
-cards, dynamic trace, saved replay, API payloads, and report payloads,
-without numeric retune or building-prediction promotion.
+Gate K should make the Gate I/J airborne field-context physical inputs
+first-class on the Dynamic Calculator input surface. Gate J proves the
+runtime and visible/report/API payloads are honest; Gate K should make
+`contextMode`, panel width/height or partition area, receiving-room
+volume, RT60, and exact missing-input prompts explicit in the workbench
+instead of relying on raw context wiring.
+
+Gate J landed execution summary:
+
+1. Created
+   `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-j-airborne-field-context-surface-parity-contract.test.ts`.
+2. Added web surface parity in
+   `apps/web/features/workbench/airborne-field-context-surface.ts` and
+   `apps/web/features/workbench/airborne-field-context-surface-parity.test.ts`.
+3. Cards, validation posture, field provenance, corridor/method
+   dossiers, saved replay, Markdown report text, and calculator API
+   payloads now expose
+   `candidate_airborne_field_context_family_physics_prediction`,
+   `gate_i_airborne_field_apparent_context_adapter_runtime`, the Gate I
+   warning, actual `airborneBasis.errorBudgetDb`, and "not measured field
+   evidence" wording.
+4. No acoustic values moved: lined massive/masonry remains
+   `R'w 58 / DnT,w 59`, CLT remains `R'w 40 / DnT,w 41`, and grouped
+   triple-leaf remains `R'w 50 / DnT,w 51`.
+5. Missing field context, building-prediction/flanking, lab `Rw` /
+   `STC`, and exact-source precedence remain outside the Gate J surface
+   claim.
+6. Selected Gate K by ROI:
+   `gate_j_personal_use_mvp_airborne_field_context_surface_parity_landed_selected_input_surface_gate_k`.
+7. Validation completed on 2026-05-10: focused Gate J engine contract
+   passed 1 file / 4 tests; focused Gate J web surface parity passed 1
+   file / 4 tests; Gate I/J engine continuity passed 2 files / 10 tests;
+   web surface continuity passed 2 files / 8 tests; engine/web
+   typechecks passed; final `pnpm calculator:gate:current` passed with
+   engine 351 files / 2034 tests, web 69 files / 298 passed + 18
+   skipped, repo build 5/5, and whitespace guard clean.
 
 Gate I landed execution summary:
 
@@ -323,7 +355,7 @@ Consumed Gate H execution order:
    relevant web parity if visible behavior changes, and
    `git diff --check`; run `pnpm calculator:gate:current` for closeout.
 
-## Active Decision Map - 2026-05-10 Model-First Physics Prediction Pivot Coverage Sprint Gate I Landed / Gate J Next
+## Active Decision Map - 2026-05-10 Model-First Physics Prediction Pivot Coverage Sprint Gate J Landed / Gate K Next
 
 Current implementation position:
 `calculator_model_first_physics_prediction_pivot_v1`.
@@ -3006,7 +3038,39 @@ Zustand unavailable test-storage warnings and optional sharp package
 resolution warnings during web build. Broad `pnpm check` was not rerun
 because Gate BI has no runtime/API/UI surface change.
 
-## Next Implementation Order - Personal-Use MVP Coverage Sprint Gate J Airborne Field-Context Surface Parity
+## Next Implementation Order - Personal-Use MVP Coverage Sprint Gate K Airborne Field-Context Input Surface
+
+Gate J has landed surface parity for the Gate I field/apparent airborne
+basis. The highest ROI follow-up is to make those physical field-context
+inputs first-class in the Dynamic Calculator workbench so the user can
+enter them intentionally and see exact missing-input prompts before the
+engine blocks.
+
+Gate K order:
+
+1. Add
+   `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-k-airborne-field-context-input-surface-contract.test.ts`.
+2. Re-read Gate I/J contracts, `scenario-analysis.ts`, workbench store
+   snapshot wiring, wall route input controls, estimate API request
+   shape, and report replay before changing the UI.
+3. Add or extend a web input-surface helper for airborne field context:
+   route mode `field_between_rooms`, panel width/height or partition
+   area, receiving-room volume, RT60, and optional airtightness.
+4. Assert complete UI-derived lined massive/masonry, CLT, and grouped
+   triple-leaf field contexts feed the same Gate I runtime values and
+   Gate J surface basis.
+5. Assert partial UI fields produce precise `needs_input` warnings for
+   the missing physical fields and do not show a Gate I budget.
+6. Assert saved replay, calculator API payload, Markdown report, and
+   hostile edits preserve the same field context rather than silently
+   falling back to lab `Rw` / `STC`.
+7. Keep building-prediction/flanking explicit and out of scope until a
+   later owner lands.
+8. Run focused Gate K validation, Gate I/J continuity, web/API/report
+   parity where touched, engine/web typecheck as needed, final
+   `pnpm calculator:gate:current`, and `git diff --check`.
+
+## Consumed Gate J Implementation Order - Personal-Use MVP Coverage Sprint Airborne Field-Context Surface Parity
 
 Gate I has landed airborne field-context continuation for already-owned
 lab family routes. Complete `field_between_rooms` requests now carry a
@@ -3016,7 +3080,7 @@ without relabelling lab `Rw` / `STC`. The next risk is surface parity:
 the values, basis, warning, and candidate posture must be visible in the
 same way across calculator cards, APIs, snapshots, and reports.
 
-Gate J order:
+Gate J order completed:
 
 1. Add
    `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-j-airborne-field-context-surface-parity-contract.test.ts`.

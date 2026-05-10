@@ -1,5 +1,6 @@
 import type { AssemblyCalculation, ImpactErrorBudget } from "@dynecho/shared";
 
+import { getGateIAirborneFieldContextSurface } from "./airborne-field-context-surface";
 import { getFieldAirborneProvenanceSummary } from "./field-airborne-provenance";
 import type { StudyMode } from "./preset-definitions";
 import { getScenarioCorridorSummary, getValidationPostureTone } from "./scenario-corridor-summary";
@@ -259,6 +260,7 @@ function buildFloorCorridorDossier(result: AssemblyCalculation): SimpleWorkbench
 function buildWallCorridorDossier(result: AssemblyCalculation): SimpleWorkbenchCorridorDossier {
   const airbornePosture = describeAirborneValidationPosture(result);
   const provenance = getFieldAirborneProvenanceSummary(result);
+  const gateISurface = getGateIAirborneFieldContextSurface(result);
   const trace = result.dynamicAirborneTrace ?? null;
   const laneValue = trace?.selectedLabel ?? result.calculatorLabel ?? "Screening seed";
   const fieldRouteValue = provenance?.modeLabel ?? "Lab-side only";
@@ -268,7 +270,7 @@ function buildWallCorridorDossier(result: AssemblyCalculation): SimpleWorkbenchC
     cards: [
       {
         detail: trace
-          ? `${trace.detectedFamilyLabel} is the current airborne family read across ${formatCount(trace.candidateMethods.length, "candidate method")} with ${formatPercent(trace.confidenceScore)} confidence.`
+          ? `${trace.detectedFamilyLabel} is the current airborne family read across ${formatCount(trace.candidateMethods.length, "candidate method")} with ${formatPercent(trace.confidenceScore)} confidence.${gateISurface ? ` ${gateISurface.detail}` : ""}`
           : `${laneValue} remains the local airborne curve anchor. No family-ranked dynamic selector is attached yet.`,
         label: "Airborne lane",
         tone: trace ? mapAirborneConfidenceTone(trace.confidenceClass) : "neutral",
@@ -292,7 +294,7 @@ function buildWallCorridorDossier(result: AssemblyCalculation): SimpleWorkbenchC
       },
       {
         detail: provenance
-          ? `${provenance.label}. ${provenance.detail}`
+          ? `${provenance.label}. ${provenance.detail}${gateISurface ? ` ${gateISurface.candidateId} keeps ${gateISurface.budgetLabel} visible.` : ""}`
           : "No apparent-field or room-standardized airborne continuation is active on this wall route yet. Add geometry and room context before treating the read as an on-site apparent-field claim.",
         label: "Field route",
         tone: provenance ? "accent" : "neutral",
@@ -306,7 +308,7 @@ function buildWallCorridorDossier(result: AssemblyCalculation): SimpleWorkbenchC
           ? `${trace.selectedLabel} is screening ${trace.detectedFamilyLabel} at ${formatPercent(trace.confidenceScore)} confidence with ${trace.solverSpreadRwDb} dB selector spread. `
           : `${laneValue} remains the active local curve anchor without a family-ranked airborne selector. `
       }` +
-      `${provenance ? `${provenance.modeLabel} stays explicit on the field-side airborne chain.` : "No field-side airborne continuation is active, so this route should still be read as lab-side only."}`
+      `${provenance ? `${provenance.modeLabel} stays explicit on the field-side airborne chain${gateISurface ? ` with ${gateISurface.label}.` : "."}` : "No field-side airborne continuation is active, so this route should still be read as lab-side only."}`
   };
 }
 

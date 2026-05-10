@@ -1,5 +1,6 @@
 import type { AssemblyCalculation, RequestedOutputId } from "@dynecho/shared";
 
+import { getGateIAirborneFieldContextSurface } from "./airborne-field-context-surface";
 import { getDnTAkDetail, getDnTAkLiveLabel } from "./dntak-source-mode";
 import { FIELD_OUTPUT_CONTINUATION_BASIS_GUARD as FIELD_CONTINUATION_BASIS_GUARD } from "./field-output-owner-policy-copy";
 import { getRockwoolTripleLeafScreeningPolicyCopy } from "./rockwool-triple-leaf-screening-policy-copy";
@@ -179,29 +180,31 @@ export function getFieldAirborneLiveDetail(
   const curveLabel = getApparentCurveLabel(result);
   const rockwoolPolicy = getRockwoolTripleLeafScreeningPolicyCopy(result);
   const rockwoolScreeningBridge = rockwoolPolicy ? `${rockwoolPolicy.fieldDetail} ` : "";
+  const gateISurface = getGateIAirborneFieldContextSurface(result);
+  const basisGuard = gateISurface ? `${FIELD_CONTINUATION_BASIS_GUARD} ${gateISurface.detail}` : FIELD_CONTINUATION_BASIS_GUARD;
 
   if (output === "R'w") {
-    return `${routeLabel} is active. R'w is being read as the apparent on-site airborne single number from the ${curveLabel}. ${rockwoolScreeningBridge}${FIELD_CONTINUATION_BASIS_GUARD}`;
+    return `${routeLabel} is active. R'w is being read as the apparent on-site airborne single number from the ${curveLabel}. ${rockwoolScreeningBridge}${basisGuard}`;
   }
 
   if (output === "Dn,w") {
-    return `${routeLabel} is active. Dn,w is being derived from the same apparent field curve using the current partition area only. ${rockwoolScreeningBridge}${FIELD_CONTINUATION_BASIS_GUARD}`;
+    return `${routeLabel} is active. Dn,w is being derived from the same apparent field curve using the current partition area only. ${rockwoolScreeningBridge}${basisGuard}`;
   }
 
   if (output === "Dn,A") {
-    return `${routeLabel} is active. Dn,A is being carried as Dn,w + C from the same apparent field curve and partition area. ${rockwoolScreeningBridge}${FIELD_CONTINUATION_BASIS_GUARD}`;
+    return `${routeLabel} is active. Dn,A is being carried as Dn,w + C from the same apparent field curve and partition area. ${rockwoolScreeningBridge}${basisGuard}`;
   }
 
   if (output === "DnT,w") {
-    return `${routeLabel} is active. DnT,w is being standardized from the same apparent field curve using the current partition area and receiving-room volume. ${rockwoolScreeningBridge}${FIELD_CONTINUATION_BASIS_GUARD}`;
+    return `${routeLabel} is active. DnT,w is being standardized from the same apparent field curve using the current partition area and receiving-room volume. ${rockwoolScreeningBridge}${basisGuard}`;
   }
 
   if (output === "DnT,A") {
-    return `${routeLabel} is active. DnT,A is being carried as DnT,w + C on the standardized field lane. ${rockwoolScreeningBridge}${FIELD_CONTINUATION_BASIS_GUARD}`;
+    return `${routeLabel} is active. DnT,A is being carried as DnT,w + C on the standardized field lane. ${rockwoolScreeningBridge}${basisGuard}`;
   }
 
   if (output === "DnT,A,k") {
-    return `${routeLabel} is active. ${getDnTAkDetail(result)}. ${rockwoolScreeningBridge}${FIELD_CONTINUATION_BASIS_GUARD}`;
+    return `${routeLabel} is active. ${getDnTAkDetail(result)}. ${rockwoolScreeningBridge}${basisGuard}`;
   }
 
   return `${routeLabel} is active for ${output}.`;

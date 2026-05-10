@@ -22,7 +22,10 @@ read
 If you need the current Personal-Use MVP Coverage Sprint Gate H
 checkpoint read
 [CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_H_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_H_HANDOFF.md).
-If you need the current Personal-Use MVP Coverage Sprint Gate I
+If you need the current Personal-Use MVP Coverage Sprint Gate J
+checkpoint read
+[CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_J_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_J_HANDOFF.md).
+If you need the preceding Personal-Use MVP Coverage Sprint Gate I
 checkpoint read
 [CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_I_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_I_HANDOFF.md).
 If you need the preceding Personal-Use MVP Coverage Sprint Gate G
@@ -66,15 +69,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_i_personal_use_mvp_airborne_field_context_continuation_landed_selected_field_surface_parity_gate_j`
+`gate_j_personal_use_mvp_airborne_field_context_surface_parity_landed_selected_input_surface_gate_k`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-j-airborne-field-context-surface-parity-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-k-airborne-field-context-input-surface-contract.test.ts`
 
 Selected next action:
 
-`gate_j_personal_use_mvp_airborne_field_context_surface_parity_plan`
+`gate_k_personal_use_mvp_airborne_field_context_input_surface_plan`
 
 Strategic ROI replan:
 
@@ -134,6 +137,8 @@ Current strategy:
   `gate_i_personal_use_mvp_airborne_field_context_continuation_plan`.
 - Gate I has now landed airborne field-context continuation for
   already-owned lab family routes without numeric retuning.
+- Gate J has now landed visible/API/report surface parity for that
+  airborne field-context basis without moving acoustic values.
 - The 2026-05-10 ROI revalidation selected Gate G first because it moved
   the broadest user-visible wall coverage blocker before lined
   masonry/CLT wall upgrades, field/building continuations, or any return
@@ -154,14 +159,59 @@ Current strategy:
 - Partial explicit lined or mass-timber wall intent is `needs_input`;
   ordinary single leaf, double/framed, grouped triple-leaf, and field
   outputs remain outside the Gate H lab corridor.
-- Gate J is now selected for airborne field-context surface parity.
+- Gate K is now selected for first-class Dynamic Calculator airborne
+  field-context input-surface work.
 - Broad source crawling remains blocked unless the active matrix names a
   specific source or holdout as the highest-impact unblocker.
+
+Current Gate J result:
+
+- Gate J adds
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-j-airborne-field-context-surface-parity-contract.test.ts`
+  plus `apps/web/features/workbench/airborne-field-context-surface.ts`
+  and `apps/web/features/workbench/airborne-field-context-surface-parity.test.ts`;
+- output cards, validation posture, field provenance, corridor/method
+  dossiers, saved replay, Markdown report text, and calculator API
+  payloads all expose
+  `candidate_airborne_field_context_family_physics_prediction`,
+  `gate_i_airborne_field_apparent_context_adapter_runtime`, the Gate I
+  warning, actual `airborneBasis.errorBudgetDb`, and "not measured field
+  evidence" wording;
+- field values remain unchanged: lined massive/masonry stays
+  `R'w 58 / DnT,w 59`, CLT/mass-timber stays `R'w 40 / DnT,w 41`, and
+  grouped triple-leaf stays `R'w 50 / DnT,w 51`;
+- current visible field budgets reflect runtime basis, not a hardcoded
+  UI value: lined massive/masonry and CLT surface `+/-8 dB`, grouped
+  triple-leaf surfaces `+/-7 dB`;
+- missing field context, building-prediction/flanking requests, lab
+  `Rw` / `STC`, and exact-source precedence stay outside the Gate J
+  surface claim;
+- Gate K is selected for first-class airborne field-context input
+  controls and replay/API payload wiring.
+
+Gate J validation result:
+
+Validation completed on 2026-05-10: focused Gate J engine contract
+passed 1 file / 4 tests; focused Gate J web surface parity passed 1
+file / 4 tests; Gate I/J engine continuity passed 2 files / 10 tests;
+web surface continuity passed 2 files / 8 tests; engine and web
+typechecks passed; final `pnpm calculator:gate:current` passed with
+engine 351 files / 2034 tests, web 69 files / 298 passed + 18 skipped,
+repo build 5/5 successful, and whitespace guard clean. Known non-fatal
+warnings remain the existing Zustand unavailable test-storage warnings
+and optional `sharp/@img` package resolution warnings during the Next
+build.
 
 Current Gate I result:
 
 - Gate I adds the focused airborne field-context continuation contract
   and `dynamic-airborne-gate-i-airborne-field-context.ts`;
+- Gate I selection status was
+  `gate_i_personal_use_mvp_airborne_field_context_continuation_landed_selected_field_surface_parity_gate_j`;
+- Gate I selected
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-j-airborne-field-context-surface-parity-contract.test.ts`
+  with action
+  `gate_j_personal_use_mvp_airborne_field_context_surface_parity_plan`;
 - complete `field_between_rooms` requests for grouped mineral-wool
   triple-leaf, lined massive/masonry, and CLT/mass-timber wall families
   now use

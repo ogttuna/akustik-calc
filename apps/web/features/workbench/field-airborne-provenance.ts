@@ -1,5 +1,6 @@
 import type { AssemblyCalculation } from "@dynecho/shared";
 
+import { getGateIAirborneFieldContextSurface } from "./airborne-field-context-surface";
 import { getDnTAkSourceMode } from "./dntak-source-mode";
 import { getFieldAirborneModeLabel, getFieldAirborneRouteLabel } from "./field-airborne-output";
 
@@ -34,6 +35,15 @@ export function getFieldAirborneProvenanceSummary(
   const routeLabel = getFieldAirborneRouteLabel(result);
   const modeLabel = getFieldAirborneModeLabel(result);
   const dntakMode = getDnTAkSourceMode(result);
+  const gateISurface = getGateIAirborneFieldContextSurface(result);
+
+  if (gateISurface) {
+    return {
+      detail: `${routeLabel} is active. ${gateISurface.detail}`,
+      label: gateISurface.label,
+      modeLabel
+    };
+  }
 
   if (dntakMode === "exact_field_proxy_anchor") {
     return {
@@ -89,9 +99,11 @@ export function getFieldAirborneReportLines(result: AssemblyCalculation | null):
     return [];
   }
 
+  const gateISurface = getGateIAirborneFieldContextSurface(result);
   const lines = [
     `- Airborne field route: ${summary.modeLabel}`,
-    `- Airborne field provenance: ${summary.label}. ${summary.detail}`
+    `- Airborne field provenance: ${summary.label}. ${summary.detail}`,
+    ...(gateISurface ? gateISurface.reportLines : [])
   ];
 
   if (typeof result?.metrics?.estimatedRwPrimeDb === "number") {
