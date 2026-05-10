@@ -331,8 +331,20 @@ method, warning, actual field error budget, and not-measured-evidence
 posture visible across cards, dossiers, saved replay, report text, and
 the calculator API. Gate J selection status:
 `gate_j_personal_use_mvp_airborne_field_context_surface_parity_landed_selected_input_surface_gate_k`.
-Gate K is next:
+Gate K has now landed:
 `gate_k_personal_use_mvp_airborne_field_context_input_surface_plan`.
+It makes the Gate I/J airborne field-context physical inputs first-class
+on the Dynamic Calculator wall input surface: `field_between_rooms`,
+panel geometry, receiving-room volume, receiving-room RT60, and optional
+airtightness now feed the same runtime path through workbench, scenario
+analysis, saved replay, report, and API payloads. Complete UI-derived
+lined massive/masonry, CLT/mass-timber, and grouped triple-leaf examples
+keep Gate I values unchanged. Partial field contexts stay `needs_input`
+with precise missing fields and no Gate I field budget or live field
+card. Gate K selection status:
+`gate_k_personal_use_mvp_airborne_field_context_input_surface_landed_selected_building_prediction_boundary_gate_l`.
+Gate L is next:
+`gate_l_personal_use_mvp_airborne_building_prediction_boundary_plan`.
 Do not keep adding narrow steel-floor source/packet gates unless the
 active matrix or a later runtime proposal names a specific source-owned
 unblocker.
@@ -360,14 +372,16 @@ Selected Gate J airborne field-context surface parity file:
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-j-airborne-field-context-surface-parity-contract.test.ts`.
 Selected Gate K airborne field-context input surface file:
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-k-airborne-field-context-input-surface-contract.test.ts`.
+Selected Gate L airborne building-prediction boundary file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-l-airborne-building-prediction-boundary-contract.test.ts`.
 Latest landed calculator gate checkpoint:
-`docs/calculator/CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_J_HANDOFF.md`.
+`docs/calculator/CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_K_HANDOFF.md`.
 Latest strategic ROI revalidation:
 `docs/calculator/CHECKPOINT_2026-05-10_STRATEGIC_ROI_REVALIDATION_AND_GATE_G_PLAN_HANDOFF.md`.
 It selected Gate G after Gate F; Gate G has now landed and selected
-Gate H, Gate H selected Gate I, Gate I selected Gate J, and Gate J has
-now landed before building-prediction continuations or any return to
-steel-floor tolerance tightening.
+Gate H, Gate H selected Gate I, Gate I selected Gate J, Gate J selected
+Gate K, and Gate K has now selected the building-prediction boundary
+before any return to steel-floor tolerance tightening.
 Gate BH landed file:
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-bh-steel-floor-formula-same-stack-iso-delta-lw-residual-policy-closed-owner-revalidation-contract.test.ts`.
 Gate BH landed action:
@@ -763,26 +777,27 @@ plan.
 - current selected slice:
   `calculator_model_first_physics_prediction_pivot_v1`
 - current next decision inside the slice:
-  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-k-airborne-field-context-input-surface-contract.test.ts`
-  should run `gate_k_personal_use_mvp_airborne_field_context_input_surface_plan`.
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-l-airborne-building-prediction-boundary-contract.test.ts`
+  should run `gate_l_personal_use_mvp_airborne_building_prediction_boundary_plan`.
 - current selected status:
-  `gate_j_personal_use_mvp_airborne_field_context_surface_parity_landed_selected_input_surface_gate_k`.
+  `gate_k_personal_use_mvp_airborne_field_context_input_surface_landed_selected_building_prediction_boundary_gate_l`.
 - current strategic replan:
   `docs/calculator/CHECKPOINT_2026-05-08_STRATEGIC_ROI_REPLAN_HANDOFF.md`.
-  Gate BI and Personal-Use MVP Coverage Sprint Gates A/B/C/D/E/F/G/H/I/J have
+  Gate BI and Personal-Use MVP Coverage Sprint Gates A/B/C/D/E/F/G/H/I/J/K have
   landed through coverage matrix, timber/CLT input contract, formula
   corridor, runtime corridor, visible/API/report parity, and
   first-class input-surface parity, plus generalized wall multi-cavity
   route readiness beyond fixture gates, plus lined massive/masonry and
   CLT wall lab family-physics promotion, airborne field-context
   continuation for owned lab-family routes, and field-context surface
-  parity. Gate K is selected for airborne field-context input surface.
+  parity plus first-class airborne field-context input-surface wiring.
+  Gate L is selected for the airborne building-prediction boundary.
 - latest strategic ROI revalidation:
   `docs/calculator/CHECKPOINT_2026-05-10_STRATEGIC_ROI_REVALIDATION_AND_GATE_G_PLAN_HANDOFF.md`.
 - latest checkpoint:
-  `docs/calculator/CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_J_HANDOFF.md`.
+  `docs/calculator/CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_K_HANDOFF.md`.
 - latest landed calculator gate checkpoint:
-  `docs/calculator/CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_J_HANDOFF.md`.
+  `docs/calculator/CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_K_HANDOFF.md`.
 - just landed model-first physics prediction pivot Gate BH:
   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-bh-steel-floor-formula-same-stack-iso-delta-lw-residual-policy-closed-owner-revalidation-contract.test.ts`
   landed

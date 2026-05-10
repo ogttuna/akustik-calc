@@ -62,7 +62,7 @@ describe("getGuidedOutputUnlocks", () => {
     expect(formatUnlockOutputs(unlocks[2]?.outputs ?? [])).toBe("Ln,w+CI");
   });
 
-  it("does not block standardized airborne outputs on RT60 alone once room volume is present", () => {
+  it("asks for RT60 after standardized airborne room volume is present", () => {
     const unlocks = getGuidedOutputUnlocks({
       airborneContextMode: "building_prediction",
       airbornePanelHeightMm: "2800",
@@ -75,6 +75,7 @@ describe("getGuidedOutputUnlocks", () => {
       studyMode: "wall"
     });
 
-    expect(unlocks).toEqual([]);
+    expect(unlocks.map((group) => group.title)).toEqual(["Enter airborne RT60"]);
+    expect(formatUnlockOutputs(unlocks[0]?.outputs ?? [])).toBe("DnT,w");
   });
 });

@@ -281,9 +281,9 @@ const CASES: readonly RouteCase[] = [
       unsupported: ["Rw", "DnT,w", "DnT,A"],
       cards: {
         Rw: { status: "unsupported", value: "Not ready" },
-        "R'w": { status: "live", value: "59 dB" },
-        "Dn,w": { status: "live", value: "58 dB" },
-        "Dn,A": { status: "live", value: "56.9 dB" },
+        "R'w": { status: "needs_input", value: "Not ready" },
+        "Dn,w": { status: "needs_input", value: "Not ready" },
+        "Dn,A": { status: "needs_input", value: "Not ready" },
         "DnT,w": { status: "needs_input", value: "Not ready" },
         "DnT,A": { status: "needs_input", value: "Not ready" },
         STC: { status: "live", value: "59 dB" },

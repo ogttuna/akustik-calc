@@ -260,6 +260,16 @@ export function buildOutputCard(input: {
     };
   }
 
+  if (FIELD_AIRBORNE_OUTPUTS.has(output) && getFieldAirborneBlockingRequirement(output, result ?? null) !== null) {
+    return {
+      detail: buildUnavailableOutputDetail({ output, result: result ?? null, studyMode }),
+      label: REQUESTED_OUTPUT_LABELS[output],
+      output,
+      status: "needs_input",
+      value: "Not ready"
+    };
+  }
+
   switch (output) {
     case "Rw":
       if (studyMode === "floor" && typeof result?.floorSystemRatings?.Rw === "number") {

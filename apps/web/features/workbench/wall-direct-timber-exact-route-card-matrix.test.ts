@@ -147,6 +147,8 @@ const CASES: readonly ExactWallCase[] = [
       contextMode: "field_between_rooms",
       panelHeightMm: 3000,
       panelWidthMm: 4200,
+      receivingRoomRt60S: 0.7,
+      receivingRoomVolumeM3: 55,
       studSpacingMm: 600,
       studType: "wood_stud"
     },
@@ -157,21 +159,21 @@ const CASES: readonly ExactWallCase[] = [
         "R'w": { status: "live", value: "28 dB" },
         "Dn,w": { status: "live", value: "27 dB" },
         "Dn,A": { status: "live", value: "26.9 dB" },
-        "DnT,w": { status: "needs_input", value: "Not ready" },
-        "DnT,A": { status: "needs_input", value: "Not ready" },
+        "DnT,w": { status: "live", value: "30 dB" },
+        "DnT,A": { status: "live", value: "29.4 dB" },
         STC: { status: "live", value: "28 dB" },
         C: { status: "live", value: "-0.1 dB" },
         Ctr: { status: "live", value: "-3.9 dB" }
       },
       ctr: -3.9,
       dnA: 26.9,
-      dnTA: null,
-      dnTw: null,
+      dnTA: 29.4,
+      dnTw: 30,
       dnW: 27,
       rw: 28,
       rwPrime: 28,
-      supported: ["R'w", "Dn,w", "Dn,A", "STC", "C", "Ctr"],
-      unsupported: ["Rw", "DnT,w", "DnT,A"]
+      supported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"],
+      unsupported: ["Rw"]
     },
     warningPattern:
       /Curated airborne lab fallback active in field context: Knauf GB EN timber partition 63x38, 1x12\.5 Wallboard each side, no insulation/i
@@ -278,6 +280,8 @@ const CASES: readonly ExactWallCase[] = [
       contextMode: "field_between_rooms",
       panelHeightMm: 3000,
       panelWidthMm: 4200,
+      receivingRoomRt60S: 0.7,
+      receivingRoomVolumeM3: 55,
       studSpacingMm: 600,
       studType: "wood_stud"
     },
@@ -288,21 +292,21 @@ const CASES: readonly ExactWallCase[] = [
         "R'w": { status: "live", value: "36 dB" },
         "Dn,w": { status: "live", value: "35 dB" },
         "Dn,A": { status: "live", value: "33.9 dB" },
-        "DnT,w": { status: "needs_input", value: "Not ready" },
-        "DnT,A": { status: "needs_input", value: "Not ready" },
+        "DnT,w": { status: "live", value: "37 dB" },
+        "DnT,A": { status: "live", value: "36.4 dB" },
         STC: { status: "live", value: "36 dB" },
         C: { status: "live", value: "-1.1 dB" },
         Ctr: { status: "live", value: "-5.9 dB" }
       },
       ctr: -5.9,
       dnA: 33.9,
-      dnTA: null,
-      dnTw: null,
+      dnTA: 36.4,
+      dnTw: 37,
       dnW: 35,
       rw: 36,
       rwPrime: 36,
-      supported: ["R'w", "Dn,w", "Dn,A", "STC", "C", "Ctr"],
-      unsupported: ["Rw", "DnT,w", "DnT,A"]
+      supported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"],
+      unsupported: ["Rw"]
     },
     warningPattern:
       /Curated airborne lab fallback active in field context: Knauf GB EN timber partition 63x38, 1x12\.5 Wallboard each side, 50 mm cavity insulation/i

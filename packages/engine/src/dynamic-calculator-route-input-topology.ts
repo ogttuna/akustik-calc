@@ -595,7 +595,9 @@ function addFieldContextContract(input: {
     id: "gate_k_field_building_context_route_inputs",
     missingPhysicalInputs: missing,
     missingSourceEvidence: input.missingSourceEvidence,
-    requiredFields: ["contextMode", "partitionAreaM2", "receivingRoomVolumeM3"],
+    requiredFields: requiresStandardizedField
+      ? ["contextMode", "partitionAreaM2", "receivingRoomVolumeM3", "receivingRoomRt60S"]
+      : ["contextMode", "partitionAreaM2", "receivingRoomVolumeM3"],
     routeFamily: "field_apparent_output_context",
     targetOutputs: input.targetOutputs
   });

@@ -101,8 +101,8 @@ async function evaluateLiveWorkbenchPreset(input: {
       useWorkbenchStore.getState().setAirborneReceivingRoomRt60S("0.7");
       useWorkbenchStore.getState().setAirborneReceivingRoomVolumeM3("55");
     } else {
-      useWorkbenchStore.getState().setAirborneReceivingRoomRt60S("");
-      useWorkbenchStore.getState().setAirborneReceivingRoomVolumeM3("");
+      useWorkbenchStore.getState().setAirborneReceivingRoomRt60S("0.7");
+      useWorkbenchStore.getState().setAirborneReceivingRoomVolumeM3("55");
     }
   }
 
@@ -204,21 +204,21 @@ const LIVE_CASES: readonly LiveWallCase[] = [
         "R'w": { status: "live", value: "42 dB" },
         "Dn,w": { status: "live", value: "41 dB" },
         "Dn,A": { status: "live", value: "41.8 dB" },
-        "DnT,w": { status: "needs_input", value: "Not ready" },
-        "DnT,A": { status: "needs_input", value: "Not ready" },
+        "DnT,w": { status: "live", value: "44 dB" },
+        "DnT,A": { status: "live", value: "44.3 dB" },
         STC: { status: "live", value: "42 dB" },
         C: { status: "live", value: "+0.8 dB" },
         Ctr: { status: "live", value: "-4 dB" }
       },
       ctr: -4,
       dnA: 41.8,
-      dnTA: null,
-      dnTw: null,
+      dnTA: 44.3,
+      dnTw: 44,
       dnW: 41,
       rw: 42,
       rwPrime: 42,
-      supported: ["R'w", "Dn,w", "Dn,A", "STC", "C", "Ctr"],
-      unsupported: ["Rw", "DnT,w", "DnT,A"]
+      supported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"],
+      unsupported: ["Rw"]
     }
   },
   {
@@ -285,21 +285,21 @@ const LIVE_CASES: readonly LiveWallCase[] = [
         "R'w": { status: "live", value: "48 dB" },
         "Dn,w": { status: "live", value: "47 dB" },
         "Dn,A": { status: "live", value: "45.5 dB" },
-        "DnT,w": { status: "needs_input", value: "Not ready" },
-        "DnT,A": { status: "needs_input", value: "Not ready" },
+        "DnT,w": { status: "live", value: "49 dB" },
+        "DnT,A": { status: "live", value: "48 dB" },
         STC: { status: "live", value: "48 dB" },
         C: { status: "live", value: "-1.5 dB" },
         Ctr: { status: "live", value: "-6.4 dB" }
       },
       ctr: -6.4,
       dnA: 45.5,
-      dnTA: null,
-      dnTw: null,
+      dnTA: 48,
+      dnTw: 49,
       dnW: 47,
       rw: 48,
       rwPrime: 48,
-      supported: ["R'w", "Dn,w", "Dn,A", "STC", "C", "Ctr"],
-      unsupported: ["Rw", "DnT,w", "DnT,A"]
+      supported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"],
+      unsupported: ["Rw"]
     }
   },
   {

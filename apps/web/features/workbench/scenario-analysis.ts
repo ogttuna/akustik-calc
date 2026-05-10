@@ -18,6 +18,11 @@ import { buildWorkbenchMaterialCatalog } from "./workbench-materials";
 import { buildWorkbenchWarningNotes } from "./workbench-warning-notes";
 import type { LayerDraft } from "./workbench-store";
 import {
+  buildWorkbenchAirborneFieldContextInputSurface,
+  formatWorkbenchAirborneFieldContextMissingInputWarning,
+  type WorkbenchAirborneFieldContextInputSurfaceDraft
+} from "./airborne-field-context-input-surface";
+import {
   buildWorkbenchSteelFloorFormulaInputSurface,
   formatWorkbenchSteelFloorFormulaMissingInputWarning,
   type WorkbenchSteelFloorFormulaInputSurfaceDraft
@@ -86,6 +91,7 @@ export type EvaluatedScenario = {
 };
 
 export function evaluateScenario(input: {
+  airborneFieldContextInputSurface?: WorkbenchAirborneFieldContextInputSurfaceDraft | null;
   airborneContext?: AirborneContext | null;
   calculator?: AirborneCalculatorId | null;
   customMaterials?: readonly MaterialDefinition[];
@@ -105,17 +111,25 @@ export function evaluateScenario(input: {
   const normalized = normalizeRows(input.rows, baseCatalog);
   const runtimeCatalog =
     normalized.runtimeMaterials.length > 0 ? [...baseCatalog, ...normalized.runtimeMaterials] : baseCatalog;
+  const targetOutputs = input.targetOutputs ?? [];
+  const airborneFieldContextInputSurface =
+    input.airborneFieldContextInputSurface
+      ? buildWorkbenchAirborneFieldContextInputSurface({
+          studyMode: input.studyMode,
+          surface: input.airborneFieldContextInputSurface,
+          targetOutputs
+        })
+      : null;
   const inputWarnings = collectScenarioInputWarnings({
-    airborneContext: input.airborneContext ?? null,
+    airborneContext: airborneFieldContextInputSurface?.airborneContext ?? input.airborneContext ?? null,
     impactFieldContext: input.impactFieldContext ?? null,
     materials: runtimeCatalog,
     normalizedLayers: normalized.layers,
     rows: input.rows,
     studyMode: input.studyMode,
-    targetOutputs: input.targetOutputs ?? []
+    targetOutputs
   });
   const scenarioWarnings = [...normalized.warnings, ...inputWarnings];
-  const targetOutputs = input.targetOutputs ?? [];
   const steelFloorFormulaInputSurface =
     input.studyMode === "floor" && input.steelFloorFormulaInputSurface
       ? buildWorkbenchSteelFloorFormulaInputSurface({
@@ -155,6 +169,12 @@ export function evaluateScenario(input: {
   if (timberCltMissingInputWarning) {
     scenarioWarnings.push(timberCltMissingInputWarning);
   }
+  const airborneFieldMissingInputWarning = airborneFieldContextInputSurface
+    ? formatWorkbenchAirborneFieldContextMissingInputWarning(airborneFieldContextInputSurface)
+    : null;
+  if (airborneFieldMissingInputWarning) {
+    scenarioWarnings.push(airborneFieldMissingInputWarning);
+  }
   const activeInputSurfacePredictors = [
     steelFloorFormulaInputSurface?.status !== "inactive" ? steelFloorFormulaInputSurface?.impactPredictorInput : null,
     timberCltDeltaLwInputSurface?.status !== "inactive" ? timberCltDeltaLwInputSurface?.impactPredictorInput : null
@@ -171,7 +191,7 @@ export function evaluateScenario(input: {
   if (normalized.layers.length > 0) {
     try {
       result = calculateAssembly(normalized.layers, {
-        airborneContext: input.airborneContext ?? null,
+        airborneContext: airborneFieldContextInputSurface?.airborneContext ?? input.airborneContext ?? null,
         calculator: input.calculator ?? null,
         catalog: runtimeCatalog,
         exactImpactSource: input.exactImpactSource ?? null,

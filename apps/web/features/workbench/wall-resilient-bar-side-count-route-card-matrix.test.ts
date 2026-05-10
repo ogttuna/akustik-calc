@@ -89,6 +89,8 @@ const LEGACY_AUTO_CASES: readonly PairContextCase[] = [
       contextMode: "field_between_rooms",
       panelHeightMm: 3000,
       panelWidthMm: 4200,
+      receivingRoomRt60S: 0.7,
+      receivingRoomVolumeM3: 55,
       resilientBarSideCount: "auto",
       studSpacingMm: 600,
       studType: "resilient_stud"
@@ -101,8 +103,8 @@ const LEGACY_AUTO_CASES: readonly PairContextCase[] = [
       "R'w": { status: "live", value: "55 dB" },
       "Dn,w": { status: "live", value: "54 dB" },
       "Dn,A": { status: "live", value: "53.1 dB" },
-      "DnT,w": { status: "needs_input", value: "Not ready" },
-      "DnT,A": { status: "needs_input", value: "Not ready" },
+      "DnT,w": { status: "live", value: "57 dB" },
+      "DnT,A": { status: "live", value: "55.6 dB" },
       STC: { status: "live", value: "55 dB" },
       C: { status: "live", value: "-0.9 dB" },
       Ctr: { status: "live", value: "-6 dB" }
@@ -182,6 +184,8 @@ const LEGACY_AUTO_CASES: readonly PairContextCase[] = [
       contextMode: "field_between_rooms",
       panelHeightMm: 3000,
       panelWidthMm: 4200,
+      receivingRoomRt60S: 0.7,
+      receivingRoomVolumeM3: 55,
       resilientBarSideCount: "auto",
       studSpacingMm: 600,
       studType: "resilient_stud"
@@ -194,8 +198,8 @@ const LEGACY_AUTO_CASES: readonly PairContextCase[] = [
       "R'w": { status: "live", value: "50 dB" },
       "Dn,w": { status: "live", value: "49 dB" },
       "Dn,A": { status: "live", value: "48 dB" },
-      "DnT,w": { status: "needs_input", value: "Not ready" },
-      "DnT,A": { status: "needs_input", value: "Not ready" },
+      "DnT,w": { status: "live", value: "51 dB" },
+      "DnT,A": { status: "live", value: "50.5 dB" },
       STC: { status: "live", value: "50 dB" },
       C: { status: "live", value: "-1 dB" },
       Ctr: { status: "live", value: "-5.8 dB" }
@@ -307,6 +311,8 @@ const EXPLICIT_SIDE_COUNT_CASES: readonly PairContextCase[] = [
       contextMode: "field_between_rooms",
       panelHeightMm: 3000,
       panelWidthMm: 4200,
+      receivingRoomRt60S: 0.7,
+      receivingRoomVolumeM3: 55,
       resilientBarSideCount: "one_side",
       studSpacingMm: 600,
       studType: "resilient_stud"
@@ -319,8 +325,8 @@ const EXPLICIT_SIDE_COUNT_CASES: readonly PairContextCase[] = [
       "R'w": { status: "live", value: "50 dB" },
       "Dn,w": { status: "live", value: "49 dB" },
       "Dn,A": { status: "live", value: "47.7 dB" },
-      "DnT,w": { status: "needs_input", value: "Not ready" },
-      "DnT,A": { status: "needs_input", value: "Not ready" },
+      "DnT,w": { status: "live", value: "52 dB" },
+      "DnT,A": { status: "live", value: "50.2 dB" },
       STC: { status: "live", value: "50 dB" },
       C: { status: "live", value: "-1.3 dB" },
       Ctr: { status: "live", value: "-6.4 dB" }
@@ -338,6 +344,8 @@ const EXPLICIT_SIDE_COUNT_CASES: readonly PairContextCase[] = [
       contextMode: "field_between_rooms",
       panelHeightMm: 3000,
       panelWidthMm: 4200,
+      receivingRoomRt60S: 0.7,
+      receivingRoomVolumeM3: 55,
       resilientBarSideCount: "both_sides",
       studSpacingMm: 600,
       studType: "resilient_stud"
@@ -350,8 +358,8 @@ const EXPLICIT_SIDE_COUNT_CASES: readonly PairContextCase[] = [
       "R'w": { status: "live", value: "53 dB" },
       "Dn,w": { status: "live", value: "52 dB" },
       "Dn,A": { status: "live", value: "50.7 dB" },
-      "DnT,w": { status: "needs_input", value: "Not ready" },
-      "DnT,A": { status: "needs_input", value: "Not ready" },
+      "DnT,w": { status: "live", value: "55 dB" },
+      "DnT,A": { status: "live", value: "53.2 dB" },
       STC: { status: "live", value: "53 dB" },
       C: { status: "live", value: "-1.3 dB" },
       Ctr: { status: "live", value: "-6.4 dB" }
@@ -493,6 +501,8 @@ const EXPLICIT_SIDE_COUNT_CASES: readonly PairContextCase[] = [
       contextMode: "field_between_rooms",
       panelHeightMm: 3000,
       panelWidthMm: 4200,
+      receivingRoomRt60S: 0.7,
+      receivingRoomVolumeM3: 55,
       resilientBarSideCount: "one_side",
       studSpacingMm: 600,
       studType: "resilient_stud"
@@ -505,8 +515,8 @@ const EXPLICIT_SIDE_COUNT_CASES: readonly PairContextCase[] = [
       "R'w": { status: "live", value: "50 dB" },
       "Dn,w": { status: "live", value: "49 dB" },
       "Dn,A": { status: "live", value: "48.2 dB" },
-      "DnT,w": { status: "needs_input", value: "Not ready" },
-      "DnT,A": { status: "needs_input", value: "Not ready" },
+      "DnT,w": { status: "live", value: "51 dB" },
+      "DnT,A": { status: "live", value: "50.7 dB" },
       STC: { status: "live", value: "50 dB" },
       C: { status: "live", value: "-0.8 dB" },
       Ctr: { status: "live", value: "-5.6 dB" }
@@ -524,6 +534,8 @@ const EXPLICIT_SIDE_COUNT_CASES: readonly PairContextCase[] = [
       contextMode: "field_between_rooms",
       panelHeightMm: 3000,
       panelWidthMm: 4200,
+      receivingRoomRt60S: 0.7,
+      receivingRoomVolumeM3: 55,
       resilientBarSideCount: "both_sides",
       studSpacingMm: 600,
       studType: "resilient_stud"
@@ -536,8 +548,8 @@ const EXPLICIT_SIDE_COUNT_CASES: readonly PairContextCase[] = [
       "R'w": { status: "live", value: "53 dB" },
       "Dn,w": { status: "live", value: "52 dB" },
       "Dn,A": { status: "live", value: "51.2 dB" },
-      "DnT,w": { status: "needs_input", value: "Not ready" },
-      "DnT,A": { status: "needs_input", value: "Not ready" },
+      "DnT,w": { status: "live", value: "54 dB" },
+      "DnT,A": { status: "live", value: "53.7 dB" },
       STC: { status: "live", value: "53 dB" },
       C: { status: "live", value: "-0.8 dB" },
       Ctr: { status: "live", value: "-5.6 dB" }

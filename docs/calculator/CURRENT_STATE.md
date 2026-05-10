@@ -22,7 +22,10 @@ read
 If you need the current Personal-Use MVP Coverage Sprint Gate H
 checkpoint read
 [CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_H_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_H_HANDOFF.md).
-If you need the current Personal-Use MVP Coverage Sprint Gate J
+If you need the current Personal-Use MVP Coverage Sprint Gate K
+checkpoint read
+[CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_K_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_K_HANDOFF.md).
+If you need the preceding Personal-Use MVP Coverage Sprint Gate J
 checkpoint read
 [CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_J_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_J_HANDOFF.md).
 If you need the preceding Personal-Use MVP Coverage Sprint Gate I
@@ -69,15 +72,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_j_personal_use_mvp_airborne_field_context_surface_parity_landed_selected_input_surface_gate_k`
+`gate_k_personal_use_mvp_airborne_field_context_input_surface_landed_selected_building_prediction_boundary_gate_l`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-k-airborne-field-context-input-surface-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-l-airborne-building-prediction-boundary-contract.test.ts`
 
 Selected next action:
 
-`gate_k_personal_use_mvp_airborne_field_context_input_surface_plan`
+`gate_l_personal_use_mvp_airborne_building_prediction_boundary_plan`
 
 Strategic ROI replan:
 
@@ -139,6 +142,12 @@ Current strategy:
   already-owned lab family routes without numeric retuning.
 - Gate J has now landed visible/API/report surface parity for that
   airborne field-context basis without moving acoustic values.
+- Gate K has now landed first-class Dynamic Calculator input-surface
+  wiring for the same airborne field-context physical inputs. Complete
+  UI-derived lined massive/masonry, CLT/mass-timber, and grouped
+  triple-leaf wall contexts feed Gate I/J values unchanged; partial
+  field contexts block as `needs_input` with precise missing input copy
+  and no field budget.
 - The 2026-05-10 ROI revalidation selected Gate G first because it moved
   the broadest user-visible wall coverage blocker before lined
   masonry/CLT wall upgrades, field/building continuations, or any return
@@ -159,10 +168,50 @@ Current strategy:
 - Partial explicit lined or mass-timber wall intent is `needs_input`;
   ordinary single leaf, double/framed, grouped triple-leaf, and field
   outputs remain outside the Gate H lab corridor.
-- Gate K is now selected for first-class Dynamic Calculator airborne
-  field-context input-surface work.
+- Gate L is now selected to keep airborne building prediction explicit
+  and blocked until flanking/junction ownership exists.
 - Broad source crawling remains blocked unless the active matrix names a
   specific source or holdout as the highest-impact unblocker.
+
+Current Gate K result:
+
+- Gate K adds
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-k-airborne-field-context-input-surface-contract.test.ts`,
+  `apps/web/features/workbench/airborne-field-context-input-surface.ts`,
+  and
+  `apps/web/features/workbench/airborne-field-context-input-surface.test.ts`;
+- workbench route controls now treat field airborne `R'w`, `Dn,w`,
+  `Dn,A`, `DnT,w`, and `DnT,A` as requiring `field_between_rooms`, panel
+  width/height, receiving-room volume, and receiving-room RT60 before
+  the Gate I adapter can defend a result;
+- field output cards check selected `needs_input` state before showing
+  legacy sidecar metrics, so missing RT60 or missing room volume stays
+  parked and does not show a Gate I budget;
+- saved replay, scenario analysis, Markdown report payload, calculator
+  API payload, and hostile edits preserve the same field context instead
+  of silently falling back to lab `Rw` / `STC`;
+- acoustic values remain unchanged: lined massive/masonry stays
+  `R'w 58 / DnT,w 59`, CLT/mass-timber stays `R'w 40 / DnT,w 41`, and
+  grouped triple-leaf stays `R'w 50 / DnT,w 51`;
+- Gate L is selected for the airborne building-prediction boundary:
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-l-airborne-building-prediction-boundary-contract.test.ts`
+  with action
+  `gate_l_personal_use_mvp_airborne_building_prediction_boundary_plan`.
+
+Gate K validation result:
+
+Validation completed on 2026-05-10: focused Gate K engine contract
+passed 1 file / 5 tests; focused Gate K web input-surface acceptance
+plus guided unlocks passed 2 files / 9 tests; Gate I/J/K engine
+continuity passed 3 files / 15 tests; Gate J/K web surface continuity
+plus guided unlocks passed 3 files / 13 tests; engine and web
+typechecks passed; targeted field-output route-card regression pack
+passed 6 files / 42 tests; final `pnpm calculator:gate:current` passed
+with engine 352 files / 2039 tests, web 70 files / 303 passed + 18
+skipped, repo build 5/5 successful, and whitespace guard clean. Known
+non-fatal warnings remain the existing Zustand unavailable test-storage
+warnings and optional `sharp/@img` package resolution warnings during
+the Next build.
 
 Current Gate J result:
 
@@ -170,6 +219,12 @@ Current Gate J result:
   `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-j-airborne-field-context-surface-parity-contract.test.ts`
   plus `apps/web/features/workbench/airborne-field-context-surface.ts`
   and `apps/web/features/workbench/airborne-field-context-surface-parity.test.ts`;
+- Gate J selection status was
+  `gate_j_personal_use_mvp_airborne_field_context_surface_parity_landed_selected_input_surface_gate_k`;
+- Gate J selected
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-k-airborne-field-context-input-surface-contract.test.ts`
+  with action
+  `gate_k_personal_use_mvp_airborne_field_context_input_surface_plan`;
 - output cards, validation posture, field provenance, corridor/method
   dossiers, saved replay, Markdown report text, and calculator API
   payloads all expose

@@ -21,6 +21,7 @@ import {
   FIELD_AIRBORNE_OUTPUTS,
   STANDARDIZED_AIRBORNE_OUTPUTS
 } from "./field-airborne-output";
+import { buildWorkbenchAirborneFieldContextInputSurface } from "./airborne-field-context-input-surface";
 import { formatUnlockOutputs, getGuidedOutputUnlocks } from "./guided-output-unlocks";
 import { getGuidedTopologyGap } from "./guided-topology-gap";
 import { deriveGuidedRouteSignals } from "./guided-route-signals";
@@ -584,23 +585,42 @@ export function SimpleWorkbenchShell() {
   };
   const liveWallTopology = studyMode === "wall" ? buildWorkbenchWallTopology(wallTopologyDraft, rows.length) : undefined;
 
-  const liveAirborneContext: AirborneContext = {
-    airtightness: airborneAirtightness,
+  const liveAirborneBaseContext: Omit<
+    AirborneContext,
+    "airtightness" | "contextMode" | "panelHeightMm" | "panelWidthMm" | "receivingRoomRt60S" | "receivingRoomVolumeM3"
+  > = {
     connectionType: airborneConnectionType,
-    contextMode: airborneContextMode,
     electricalBoxes: airborneElectricalBoxes,
     junctionQuality: airborneJunctionQuality,
-    panelHeightMm: parsePositiveNumber(airbornePanelHeightMm),
-    panelWidthMm: parsePositiveNumber(airbornePanelWidthMm),
     penetrationState: airbornePenetrationState,
     perimeterSeal: airbornePerimeterSeal,
-    receivingRoomRt60S: parsePositiveNumber(airborneReceivingRoomRt60S),
-    receivingRoomVolumeM3: parsePositiveNumber(airborneReceivingRoomVolumeM3),
     resilientBarSideCount: airborneResilientBarSideCount,
     sharedTrack: airborneSharedTrack,
     studSpacingMm: parsePositiveNumber(airborneStudSpacingMm),
     studType: airborneStudType,
     wallTopology: liveWallTopology
+  };
+  const airborneFieldContextInputSurface = buildWorkbenchAirborneFieldContextInputSurface({
+    studyMode,
+    surface: {
+      airtightness: airborneAirtightness,
+      baseContext: liveAirborneBaseContext,
+      contextMode: airborneContextMode,
+      panelHeightMm: airbornePanelHeightMm,
+      panelWidthMm: airbornePanelWidthMm,
+      receivingRoomRt60S: airborneReceivingRoomRt60S,
+      receivingRoomVolumeM3: airborneReceivingRoomVolumeM3
+    },
+    targetOutputs: automaticOutputs
+  });
+  const liveAirborneContext: AirborneContext = {
+    ...airborneFieldContextInputSurface.airborneContext,
+    airtightness: airborneAirtightness,
+    contextMode: airborneContextMode,
+    panelHeightMm: parsePositiveNumber(airbornePanelHeightMm),
+    panelWidthMm: parsePositiveNumber(airbornePanelWidthMm),
+    receivingRoomRt60S: parsePositiveNumber(airborneReceivingRoomRt60S),
+    receivingRoomVolumeM3: parsePositiveNumber(airborneReceivingRoomVolumeM3)
   };
 
   const liveImpactFieldContext: ImpactFieldContext | null =
@@ -609,6 +629,15 @@ export function SimpleWorkbenchShell() {
       : null;
 
   const scenario = evaluateScenario({
+    airborneFieldContextInputSurface: {
+      airtightness: airborneAirtightness,
+      baseContext: liveAirborneBaseContext,
+      contextMode: airborneContextMode,
+      panelHeightMm: airbornePanelHeightMm,
+      panelWidthMm: airbornePanelWidthMm,
+      receivingRoomRt60S: airborneReceivingRoomRt60S,
+      receivingRoomVolumeM3: airborneReceivingRoomVolumeM3
+    },
     airborneContext: liveAirborneContext,
     calculator: calculatorId,
     customMaterials,
@@ -674,7 +703,7 @@ export function SimpleWorkbenchShell() {
   } else if (!standardizedAirborneActive) {
     contextNotes.push("Receiving-room volume stays parked because the current route stops at apparent field outputs such as R'w and Dn,w.");
   } else {
-    contextNotes.push("RT60 stays optional here. DnT outputs standardize with partition geometry and receiving-room volume; RT60 only feeds absorption-aware sidecars.");
+    contextNotes.push("Field-standardized airborne outputs require partition geometry, receiving-room volume, and RT60 before Gate I can defend the field-context route.");
   }
   if (studyMode === "floor") {
     if (steelFloorFormulaInputSurfaceActive) contextNotes.push("Steel floor formula inputs are active for the source-absent lab impact lane.");

@@ -17,8 +17,9 @@ override or anchor known assemblies, but missing source packets must
 not block a labelled family-specific physics prediction when the
 required topology and material inputs are present.
 
-As of 2026-05-10, Personal-Use MVP Coverage Sprint Gate J has landed
-airborne field-context surface parity for owned lab-family wall routes
+As of 2026-05-10, Personal-Use MVP Coverage Sprint Gate K has landed
+first-class airborne field-context input-surface wiring for owned
+lab-family wall routes
 after Gate H lined massive/masonry and CLT wall lab family-physics
 promotion and Gate G generalized wall multi-cavity / triple-leaf route
 readiness beyond fixture gates. Gate D first promoted explicit complete timber/CLT
@@ -35,9 +36,12 @@ promotes complete `field_between_rooms` requests for grouped
 triple-leaf, lined massive/masonry, and CLT/mass-timber wall families to
 a field/apparent family-physics basis without numeric retune; Gate J now
 proves cards, posture, provenance, dossiers, saved replay, Markdown
-report text, and calculator API payloads expose that basis honestly. The
-current selected next lane is Gate K airborne field-context input
-surface. Gate A
+report text, and calculator API payloads expose that basis honestly;
+Gate K now makes `field_between_rooms`, panel geometry, receiving-room
+volume, and RT60 first-class workbench inputs and keeps partial field
+contexts parked as `needs_input` without a field budget. The current
+selected next lane is Gate L airborne building-prediction boundary.
+Gate A
 landed in
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-a-scenario-matrix-contract.test.ts`
 with action `gate_a_personal_use_mvp_coverage_matrix_plan`; it selects
@@ -92,11 +96,18 @@ and selected
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-k-airborne-field-context-input-surface-contract.test.ts`
 with action
 `gate_k_personal_use_mvp_airborne_field_context_input_surface_plan`.
+Gate K landed in that file with selection status
+`gate_k_personal_use_mvp_airborne_field_context_input_surface_landed_selected_building_prediction_boundary_gate_l`
+and selected
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-l-airborne-building-prediction-boundary-contract.test.ts`
+with action
+`gate_l_personal_use_mvp_airborne_building_prediction_boundary_plan`.
 Gate BI landed in
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-bi-steel-floor-formula-same-stack-iso-delta-lw-tighten-candidate-governance-contract.test.ts`
 with action
 `gate_bi_steel_floor_formula_same_stack_iso_delta_lw_tighten_candidate_governance_plan`.
 See
+[CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_K_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_K_HANDOFF.md),
 [CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_J_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_J_HANDOFF.md),
 [CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_I_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_I_HANDOFF.md),
 [CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_H_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_H_HANDOFF.md),
@@ -112,18 +123,21 @@ and
 [CHECKPOINT_2026-05-08_STRATEGIC_ROI_REPLAN_HANDOFF.md](./CHECKPOINT_2026-05-08_STRATEGIC_ROI_REPLAN_HANDOFF.md).
 
 The 2026-05-10 ROI revalidation selected Gate G after Gate F, Gate G
-then selected Gate H, Gate H selected Gate I, and Gate I selected Gate
-J. Gate J has now landed visible surface parity for the new airborne
-field-context basis. Gate K is next: first-class wall field-context
-input surface for `contextMode`, panel geometry, receiving-room volume,
-and RT60. Steel-floor tolerance tightening stays deferred until
+then selected Gate H, Gate H selected Gate I, Gate I selected Gate J,
+Gate J selected Gate K, and Gate K has now selected Gate L. Gate K keeps
+the new airborne field-context basis first-class on the wall input
+surface and makes RT60 a visible blocker before `DnT,w` / `DnT,A` can be
+defended. Gate L is next: an explicit building-prediction/flanking
+boundary so `building_prediction` cannot borrow Gate I field budgets.
+Steel-floor tolerance tightening stays deferred until
 independent source-owned same-stack ISO `DeltaLw` packets exist.
-Gate J validation passed with focused engine/web coverage, Gate I/J
-engine continuity, web surface continuity, engine/web typechecks, full
-`pnpm calculator:gate:current` (engine 351 files / 2034 tests, web 69
-files / 298 passed + 18 skipped, repo build 5/5), and whitespace guard
-clean. The build still emits the known Zustand unavailable test-storage
-messages and optional `sharp/@img` warnings through the DOCX route.
+Gate K validation completed on 2026-05-10: focused Gate K engine/web
+packs, Gate I/J/K continuity, web surface continuity, engine/web
+typechecks, targeted field-output route-card regressions, final
+`pnpm calculator:gate:current`, and whitespace guard all passed. Final
+current-gate totals were engine 352 files / 2039 tests, web 70 files /
+303 passed + 18 skipped, repo build 5/5 successful, and whitespace guard
+clean.
 
 Gate A, Gate B, Gate C, Gate D, Gate E, Gate G, Gate H, Gate I,
 Gate J, Gate K, Gate L, Gate M, Gate N, Gate O, Gate P, Gate Q, Gate R,

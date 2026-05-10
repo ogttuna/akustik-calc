@@ -558,7 +558,7 @@ describe("field-output owner and design-grade policy Gate B visible guard", () =
       studyMode: "floor"
     });
 
-    expect(getCard(wallMissingRoom.cards, "R'w")).toMatchObject({ status: "live" });
+    expect(getCard(wallMissingRoom.cards, "R'w")).toMatchObject({ status: "needs_input", value: "Not ready" });
     expect(getCard(wallMissingRoom.cards, "DnT,w")).toMatchObject({ status: "needs_input", value: "Not ready" });
     expect(getCard(wallMissingRoom.cards, "DnT,w").detail).toContain("receiving-room volume");
     expect(

@@ -14,7 +14,8 @@ type FieldAirborneBlockingRequirement =
   | "curated_field_source"
   | "field_mode"
   | "partition_geometry"
-  | "room_volume";
+  | "room_volume"
+  | "rt60";
 
 function hasFieldAirborneMode(result: AssemblyCalculation | null): boolean {
   return (
@@ -38,6 +39,18 @@ function hasReceivingRoomVolume(result: AssemblyCalculation | null): boolean {
     typeof result?.metrics.estimatedDnTwDb === "number" ||
     typeof result?.metrics.estimatedDnTADb === "number"
   );
+}
+
+function hasReceivingRoomRt60(result: AssemblyCalculation | null): boolean {
+  return typeof result?.ratings.field?.receivingRoomRt60S === "number";
+}
+
+function getSelectedMissingPhysicalInputs(result: AssemblyCalculation | null): readonly string[] {
+  if (result?.airborneCandidateResolution?.selectedOrigin !== "needs_input") {
+    return [];
+  }
+
+  return result.airborneBasis?.missingPhysicalInputs ?? [];
 }
 
 function getApparentCurveLabel(result: AssemblyCalculation | null): string {
@@ -92,6 +105,24 @@ export function getFieldAirborneBlockingRequirement(
     return "field_mode";
   }
 
+  const selectedMissingInputs = getSelectedMissingPhysicalInputs(result);
+  if (selectedMissingInputs.includes("contextMode")) {
+    return "field_mode";
+  }
+  if (
+    selectedMissingInputs.includes("partitionAreaM2") ||
+    selectedMissingInputs.includes("panelWidthMm") ||
+    selectedMissingInputs.includes("panelHeightMm")
+  ) {
+    return "partition_geometry";
+  }
+  if (selectedMissingInputs.includes("receivingRoomVolumeM3")) {
+    return "room_volume";
+  }
+  if (selectedMissingInputs.includes("receivingRoomRt60S")) {
+    return "rt60";
+  }
+
   if (output === "R'w") {
     return null;
   }
@@ -101,11 +132,15 @@ export function getFieldAirborneBlockingRequirement(
   }
 
   if (STANDARDIZED_AIRBORNE_OUTPUTS.has(output)) {
-    if (hasReceivingRoomVolume(result)) {
+    if (hasReceivingRoomVolume(result) && hasReceivingRoomRt60(result)) {
       return null;
     }
 
-    return hasPartitionGeometry(result) ? "room_volume" : "partition_geometry";
+    if (!hasPartitionGeometry(result)) {
+      return "partition_geometry";
+    }
+
+    return hasReceivingRoomVolume(result) ? "rt60" : "room_volume";
   }
 
   return null;
@@ -124,6 +159,8 @@ export function getFieldAirbornePendingLabel(
       return "Need partition geometry";
     case "room_volume":
       return "Need room volume";
+    case "rt60":
+      return "Need RT60";
     default:
       return "Pending";
   }
@@ -144,6 +181,8 @@ export function getFieldAirbornePendingDetail(
       return `${routeLabel} is active, but ${output} still needs partition width and height before DAC can derive it from the apparent field curve.`;
     case "room_volume":
       return `${routeLabel} is active, but ${output} still needs the receiving-room volume before DAC can standardize the apparent field curve.`;
+    case "rt60":
+      return `${routeLabel} is active, but ${output} still needs receiving-room RT60 before the Gate I field-context adapter can defend this output.`;
     default:
       return "";
   }

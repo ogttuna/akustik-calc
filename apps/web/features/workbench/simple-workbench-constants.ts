@@ -517,12 +517,12 @@ export const AIRBORNE_CONTEXT_OPTIONS: readonly ControlOption<AirborneContextMod
   },
   {
     label: "Between rooms",
-    note: "Apparent field-side airborne route. Good for R'w and Dn,w style checks.",
+    note: "Apparent field-side airborne route. Gate I/J field outputs require partition geometry, receiving-room volume, and RT60.",
     value: "field_between_rooms"
   },
   {
     label: "Building prediction",
-    note: "Use when you also want standardized DnT outputs and room data.",
+    note: "Reserved for later flanking-owned building prediction work.",
     value: "building_prediction"
   }
 ];
@@ -630,7 +630,7 @@ export const WALL_SUPPORT_TOPOLOGY_OPTIONS: readonly ControlOption<WallSupportTo
 ];
 
 export const WALL_OUTPUT_PRESET_LAB: readonly RequestedOutputId[] = ["Rw", "STC", "C", "Ctr"];
-export const WALL_OUTPUT_PRESET_FIELD: readonly RequestedOutputId[] = ["Rw", "R'w", "Dn,w", "Dn,A", "STC", "Ctr"];
+export const WALL_OUTPUT_PRESET_FIELD: readonly RequestedOutputId[] = ["Rw", "R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "Ctr"];
 export const WALL_OUTPUT_PRESET_BUILDING: readonly RequestedOutputId[] = ["Rw", "R'w", "DnT,w", "DnT,A", "Dn,w", "Dn,A", "STC", "Ctr"];
 export const FLOOR_OUTPUT_PRESET_LAB: readonly RequestedOutputId[] = ["Rw", "Ln,w", "Ln,w+CI", "DeltaLw"];
 export const FLOOR_OUTPUT_PRESET_FIELD: readonly RequestedOutputId[] = [

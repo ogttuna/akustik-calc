@@ -189,21 +189,55 @@ Fresh external checks still support this direction:
   that scope with stricter candidate rejection and basis/error-budget
   transparency.
 
-Gate J has now landed from that decision chain. The immediate next
+Gate K has now landed from that decision chain. The immediate next
 action is:
 
-`gate_k_personal_use_mvp_airborne_field_context_input_surface_plan`
+`gate_l_personal_use_mvp_airborne_building_prediction_boundary_plan`
 
 Target:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-k-airborne-field-context-input-surface-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-l-airborne-building-prediction-boundary-contract.test.ts`
 
-Gate K should make the Gate I/J airborne field-context physical inputs
-first-class on the Dynamic Calculator input surface. Gate J proves the
-runtime and visible/report/API payloads are honest; Gate K should make
-`contextMode`, panel width/height or partition area, receiving-room
-volume, RT60, and exact missing-input prompts explicit in the workbench
-instead of relying on raw context wiring.
+Gate L should lock the airborne `building_prediction` boundary before
+any later field/building expansion. Gate I/J/K now own complete
+`field_between_rooms` wall outputs with explicit room context; Gate L
+must prove `building_prediction` cannot borrow those field budgets or
+lab values until flanking/junction ownership, propagation basis, and
+building-prediction output contracts exist.
+
+Gate K landed execution summary:
+
+1. Created
+   `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-k-airborne-field-context-input-surface-contract.test.ts`.
+2. Added first-class web input-surface helper and acceptance coverage in
+   `apps/web/features/workbench/airborne-field-context-input-surface.ts`
+   and
+   `apps/web/features/workbench/airborne-field-context-input-surface.test.ts`.
+3. Dynamic Calculator wall field mode now exposes the Gate I/J physical
+   inputs deliberately: `field_between_rooms`, panel width/height,
+   receiving-room volume, receiving-room RT60, and optional
+   airtightness. The wall field preset includes `DnT,w` / `DnT,A`.
+4. Complete UI-derived lined massive/masonry, CLT/mass-timber, and
+   grouped triple-leaf wall contexts feed the same Gate I runtime and
+   Gate J surface values without numeric movement: lined stays
+   `R'w 58 / DnT,w 59`, CLT stays `R'w 40 / DnT,w 41`, and grouped
+   triple-leaf stays `R'w 50 / DnT,w 51`.
+5. Partial UI fields now park with precise missing-input copy. Missing
+   RT60 or room volume blocks visible field cards before legacy sidecar
+   metrics can look live, and no Gate I field budget is shown.
+6. Saved replay, scenario analysis, calculator API payload, Markdown
+   report, and hostile edits preserve the explicit field context instead
+   of silently falling back to lab `Rw` / `STC`.
+7. Building-prediction/flanking remains out of scope and selected for
+   Gate L:
+   `gate_k_personal_use_mvp_airborne_field_context_input_surface_landed_selected_building_prediction_boundary_gate_l`.
+8. Validation completed on 2026-05-10: focused Gate K engine/web packs,
+   Gate I/J/K continuity, Gate J/K web surface continuity, engine/web
+   typechecks, targeted field-output route-card regressions, final
+   `pnpm calculator:gate:current`, and whitespace guard all passed. The
+   final current-gate totals were engine 352 files / 2039 tests, web 70
+   files / 303 passed + 18 skipped, repo build 5/5 successful, and
+   whitespace guard clean.
 
 Gate J landed execution summary:
 
@@ -226,7 +260,11 @@ Gate J landed execution summary:
    `STC`, and exact-source precedence remain outside the Gate J surface
    claim.
 6. Selected Gate K by ROI:
-   `gate_j_personal_use_mvp_airborne_field_context_surface_parity_landed_selected_input_surface_gate_k`.
+   `gate_j_personal_use_mvp_airborne_field_context_surface_parity_landed_selected_input_surface_gate_k`
+   with target
+   `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-k-airborne-field-context-input-surface-contract.test.ts`
+   and action
+   `gate_k_personal_use_mvp_airborne_field_context_input_surface_plan`.
 7. Validation completed on 2026-05-10: focused Gate J engine contract
    passed 1 file / 4 tests; focused Gate J web surface parity passed 1
    file / 4 tests; Gate I/J engine continuity passed 2 files / 10 tests;
@@ -3038,37 +3076,71 @@ Zustand unavailable test-storage warnings and optional sharp package
 resolution warnings during web build. Broad `pnpm check` was not rerun
 because Gate BI has no runtime/API/UI surface change.
 
-## Next Implementation Order - Personal-Use MVP Coverage Sprint Gate K Airborne Field-Context Input Surface
+## Next Implementation Order - Personal-Use MVP Coverage Sprint Gate L Airborne Building-Prediction Boundary
 
-Gate J has landed surface parity for the Gate I field/apparent airborne
-basis. The highest ROI follow-up is to make those physical field-context
-inputs first-class in the Dynamic Calculator workbench so the user can
-enter them intentionally and see exact missing-input prompts before the
-engine blocks.
+Gate K has landed first-class input-surface wiring for the Gate I/J
+field-between-rooms airborne basis. The next highest-risk user-facing
+gap is `building_prediction`: the UI already exposes the mode, but there
+is no owned flanking/junction propagation route. Gate L should therefore
+land as a boundary and readiness contract, not a broad runtime
+prediction gate.
 
-Gate K order:
+Gate L order:
 
 1. Add
+   `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-l-airborne-building-prediction-boundary-contract.test.ts`.
+2. Re-read Gate I/J/K contracts, `dynamic-calculator-route-input-topology.ts`,
+   `airborne-field-context-input-surface.ts`, route panel mode copy, cards,
+   report builders, and estimate API payload handling before changing
+   behavior.
+3. Assert `building_prediction` requests cannot reuse Gate I
+   `field_between_rooms` budgets, selected candidates, warnings, or field
+   card posture.
+4. Define the minimum future physical owner set for airborne building
+   prediction: separating element area, sending/receiving room geometry,
+   flanking junction class, junction dimensions or coupling class,
+   receiver absorption/reverberation basis, and output-basis owner for
+   apparent/standardized building metrics.
+5. Keep complete `field_between_rooms` Gate I/J/K cases live and
+   numeric-stable while building requests return `unsupported` or
+   `needs_input` with named missing physical owners.
+6. Assert lab `Rw` / `STC` cards, field `R'w` / `DnT,w` cards, and future
+   building-prediction cards remain separate basis families. No
+   field-to-building or lab-to-building alias is allowed.
+7. Preserve exact-source precedence and all Gate G/H/I/K numeric pins.
+8. Run focused Gate L validation, Gate I/J/K continuity, relevant web
+   boundary/card tests, engine/web typecheck as needed, final
+   `pnpm calculator:gate:current`, and `git diff --check`.
+
+## Consumed Gate K Implementation Order - Personal-Use MVP Coverage Sprint Airborne Field-Context Input Surface
+
+Gate J landed surface parity for the Gate I field/apparent airborne
+basis. Gate K made those physical field-context inputs first-class in
+the Dynamic Calculator workbench so the user can enter them intentionally
+and see exact missing-input prompts before the engine blocks.
+
+Gate K order completed:
+
+1. Added
    `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-k-airborne-field-context-input-surface-contract.test.ts`.
-2. Re-read Gate I/J contracts, `scenario-analysis.ts`, workbench store
-   snapshot wiring, wall route input controls, estimate API request
-   shape, and report replay before changing the UI.
-3. Add or extend a web input-surface helper for airborne field context:
-   route mode `field_between_rooms`, panel width/height or partition
-   area, receiving-room volume, RT60, and optional airtightness.
-4. Assert complete UI-derived lined massive/masonry, CLT, and grouped
+2. Re-read Gate I/J contracts, `scenario-analysis.ts`, workbench route
+   controls, estimate API request shape, and report replay before
+   changing the UI.
+3. Added `apps/web/features/workbench/airborne-field-context-input-surface.ts`
+   for route mode `field_between_rooms`, panel width/height,
+   receiving-room volume, RT60, and optional airtightness.
+4. Asserted complete UI-derived lined massive/masonry, CLT, and grouped
    triple-leaf field contexts feed the same Gate I runtime values and
    Gate J surface basis.
-5. Assert partial UI fields produce precise `needs_input` warnings for
-   the missing physical fields and do not show a Gate I budget.
-6. Assert saved replay, calculator API payload, Markdown report, and
+5. Asserted partial UI fields produce precise `needs_input` warnings for
+   missing physical fields and do not show a Gate I budget.
+6. Asserted saved replay, calculator API payload, Markdown report, and
    hostile edits preserve the same field context rather than silently
    falling back to lab `Rw` / `STC`.
-7. Keep building-prediction/flanking explicit and out of scope until a
+7. Kept building-prediction/flanking explicit and out of scope until a
    later owner lands.
-8. Run focused Gate K validation, Gate I/J continuity, web/API/report
-   parity where touched, engine/web typecheck as needed, final
-   `pnpm calculator:gate:current`, and `git diff --check`.
+8. Selected Gate L:
+   `gate_k_personal_use_mvp_airborne_field_context_input_surface_landed_selected_building_prediction_boundary_gate_l`.
 
 ## Consumed Gate J Implementation Order - Personal-Use MVP Coverage Sprint Airborne Field-Context Surface Parity
 

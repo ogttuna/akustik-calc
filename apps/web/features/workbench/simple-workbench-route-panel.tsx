@@ -997,7 +997,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
                     <ContextSubsection
                       note={
                         standardizedAirborneActive
-                          ? "Geometry and room volume are live for DnT."
+                          ? "Geometry, room volume, and RT60 are live for DnT."
                           : "Geometry is live for apparent airborne reads."
                       }
                       title="Airborne route"
@@ -1041,23 +1041,43 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
                       </div>
 
                       {standardizedAirborneActive ? (
-                        <FieldShell
-                          advisory={`Guided sanity band ${formatGuidedSanityBand(GUIDED_INPUT_SANITY_BANDS.receivingRoomVolumeM3)}.`}
-                          label="Airborne room volume (m³)"
-                          note="Receiving room volume for standardized DnT."
-                          relevance="required"
-                          usage="DnT,w and DnT,A"
-                          warning={airborneVolumeSanityWarning}
-                        >
-                          <input
-                            aria-invalid={Boolean(airborneVolumeSanityWarning)}
-                            className={getTextInputClassName(Boolean(airborneVolumeSanityWarning))}
-                            inputMode="decimal"
-                            onChange={(event) => setAirborneReceivingRoomVolumeM3(event.target.value)}
-                            placeholder="e.g. 42"
-                            value={airborneReceivingRoomVolumeM3}
-                          />
-                        </FieldShell>
+                        <>
+                          <FieldShell
+                            advisory={`Guided sanity band ${formatGuidedSanityBand(GUIDED_INPUT_SANITY_BANDS.receivingRoomVolumeM3)}.`}
+                            label="Airborne room volume (m³)"
+                            note="Receiving room volume for standardized DnT."
+                            relevance="required"
+                            usage="DnT,w and DnT,A"
+                            warning={airborneVolumeSanityWarning}
+                          >
+                            <input
+                              aria-invalid={Boolean(airborneVolumeSanityWarning)}
+                              className={getTextInputClassName(Boolean(airborneVolumeSanityWarning))}
+                              inputMode="decimal"
+                              onChange={(event) => setAirborneReceivingRoomVolumeM3(event.target.value)}
+                              placeholder="e.g. 42"
+                              value={airborneReceivingRoomVolumeM3}
+                            />
+                          </FieldShell>
+
+                          <FieldShell
+                            advisory={`Guided sanity band ${formatGuidedSanityBand(GUIDED_INPUT_SANITY_BANDS.receivingRoomRt60S)}.`}
+                            label="RT60 (s)"
+                            note="Receiving-room reverberation time required by the Gate I field-context adapter."
+                            relevance="required"
+                            usage="R'w, DnT,w and DnT,A"
+                            warning={rt60SanityWarning}
+                          >
+                            <input
+                              aria-invalid={Boolean(rt60SanityWarning)}
+                              className={getTextInputClassName(Boolean(rt60SanityWarning))}
+                              inputMode="decimal"
+                              onChange={(event) => setAirborneReceivingRoomRt60S(event.target.value)}
+                              placeholder="e.g. 0.6"
+                              value={airborneReceivingRoomRt60S}
+                            />
+                          </FieldShell>
+                        </>
                       ) : null}
                     </ContextSubsection>
                   ) : null}
@@ -1138,31 +1158,6 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
                           onChange={(event) => setAirborneReceivingRoomVolumeM3(event.target.value)}
                           placeholder="e.g. 42"
                           value={airborneReceivingRoomVolumeM3}
-                        />
-                      </FieldShell>
-                    </ContextSubsection>
-                  ) : null}
-
-                  {geometryActive && standardizedAirborneActive ? (
-                    <ContextSubsection
-                      note="RT60 only feeds absorption-aware sidecars."
-                      title="Airborne route"
-                    >
-                      <FieldShell
-                        advisory={`Guided sanity band ${formatGuidedSanityBand(GUIDED_INPUT_SANITY_BANDS.receivingRoomRt60S)}.`}
-                        label="RT60 (s)"
-                        note="Use only when absorption-aware sidecars matter."
-                        relevance="optional"
-                        usage="Absorption-aware field sidecars"
-                        warning={rt60SanityWarning}
-                      >
-                        <input
-                          aria-invalid={Boolean(rt60SanityWarning)}
-                          className={getTextInputClassName(Boolean(rt60SanityWarning))}
-                          inputMode="decimal"
-                          onChange={(event) => setAirborneReceivingRoomRt60S(event.target.value)}
-                          placeholder="e.g. 0.6"
-                          value={airborneReceivingRoomRt60S}
                         />
                       </FieldShell>
                     </ContextSubsection>

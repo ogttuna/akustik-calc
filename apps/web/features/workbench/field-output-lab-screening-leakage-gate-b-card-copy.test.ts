@@ -520,7 +520,7 @@ describe("field-output lab/screening leakage Gate B visible copy guard", () => {
       studyMode: "floor"
     });
 
-    expect(getCard(wallMissingRoom.cards, "R'w")).toMatchObject({ status: "live" });
+    expect(getCard(wallMissingRoom.cards, "R'w")).toMatchObject({ status: "needs_input", value: "Not ready" });
     expect(getCard(wallMissingRoom.cards, "DnT,w")).toMatchObject({ status: "needs_input", value: "Not ready" });
     expect(getCard(wallMissingRoom.cards, "DnT,w").detail).toContain("receiving-room volume");
     expect(
