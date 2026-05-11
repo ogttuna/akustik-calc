@@ -67,6 +67,17 @@ with selection status
 `gate_r_personal_use_mvp_opening_leak_composite_formula_corridor_landed_no_runtime_selected_runtime_corridor_gate_s`
 and selects Gate S
 `gate_s_personal_use_mvp_opening_leak_composite_transmission_loss_runtime_corridor_plan`.
+Gate S now lands that opening/leak composite runtime corridor with
+selection status
+`gate_s_personal_use_mvp_opening_leak_composite_runtime_corridor_landed_selected_surface_parity_gate_t`
+and selects Gate T
+`gate_t_personal_use_mvp_opening_leak_composite_surface_parity_plan`.
+Complete element-lab opening/leak requests now promote only lab `Rw`
+through `gate_s_opening_leak_composite_area_energy_runtime_corridor`;
+the pinned host-wall plus average-seal opening fixture returns `Rw
+38.2` with a `+/-6 dB` source-absent budget. `STC`, `R'w`, `DnT,w`,
+field, and building outputs remain unsupported until separately owned
+adapters exist.
 Gate A
 landed in
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-a-scenario-matrix-contract.test.ts`

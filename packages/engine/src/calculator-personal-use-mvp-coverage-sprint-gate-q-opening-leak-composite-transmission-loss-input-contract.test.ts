@@ -27,6 +27,10 @@ import {
   GATE_P_AIRBORNE_BUILDING_PREDICTION_RUNTIME_CORRIDOR_STATUS
 } from "./dynamic-airborne-gate-p-building-prediction-runtime-corridor";
 import { GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING } from "./dynamic-airborne-gate-n-building-prediction-runtime-adapter";
+import {
+  GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD,
+  GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_WARNING
+} from "./dynamic-airborne-gate-s-opening-leak-composite-transmission-loss-runtime-corridor";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
@@ -357,7 +361,7 @@ describe("Personal-Use MVP Coverage Sprint Gate Q opening/leak composite transmi
     expect(reversed.effectiveOpeningAreaM2).toBe(ordered.effectiveOpeningAreaM2);
   });
 
-  it("does not let opening inputs move host-wall or building-prediction runtime values in Gate Q", () => {
+  it("keeps Gate Q no-runtime while later Gate S owns opening runtime movement and boundaries", () => {
     const baseline = calculateAssembly(HOST_WALL, {
       airborneContext: { contextMode: "element_lab" },
       calculator: "dynamic",
@@ -382,9 +386,12 @@ describe("Personal-Use MVP Coverage Sprint Gate Q opening/leak composite transmi
       }
     );
 
-    expect(withOpening.metrics.estimatedRwDb).toBe(baseline.metrics.estimatedRwDb);
+    expect(withOpening.metrics.estimatedRwDb).toBe(38.2);
     expect(withOpening.metrics.estimatedStc).toBe(baseline.metrics.estimatedStc);
-    expect(withOpening.supportedTargetOutputs).toEqual(baseline.supportedTargetOutputs);
+    expect(withOpening.supportedTargetOutputs).toEqual(["Rw"]);
+    expect(withOpening.unsupportedTargetOutputs).toEqual(["STC"]);
+    expect(withOpening.airborneBasis?.method).toBe(GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD);
+    expect(withOpening.warnings).toContain(GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_WARNING);
     expect(buildingWithOpening.supportedTargetOutputs).toEqual([]);
     expect(buildingWithOpening.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
     expect(buildingWithOpening.metrics.estimatedRwPrimeDb).toBeUndefined();

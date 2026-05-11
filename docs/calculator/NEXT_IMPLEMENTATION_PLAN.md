@@ -24,6 +24,8 @@ For the Gate-F-after strategic ROI revalidation and Gate G handoff read
 [CHECKPOINT_2026-05-10_STRATEGIC_ROI_REVALIDATION_AND_GATE_G_PLAN_HANDOFF.md](./CHECKPOINT_2026-05-10_STRATEGIC_ROI_REVALIDATION_AND_GATE_G_PLAN_HANDOFF.md).
 For the 2026-05-11 INSUL / ISO research refresh and Gate P replan read
 [CHECKPOINT_2026-05-11_INSUL_ISO_RESEARCH_AND_GATE_P_REPLAN_HANDOFF.md](./CHECKPOINT_2026-05-11_INSUL_ISO_RESEARCH_AND_GATE_P_REPLAN_HANDOFF.md).
+For the Gate S opening/leak runtime corridor and Gate T handoff read
+[CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_S_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_S_HANDOFF.md).
 For the Gate R no-runtime formula corridor and Gate S handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md).
 For the Gate Q no-runtime input contract and Gate R handoff read
@@ -3317,7 +3319,61 @@ Zustand unavailable test-storage warnings and optional sharp package
 resolution warnings during web build. Broad `pnpm check` was not rerun
 because Gate BI has no runtime/API/UI surface change.
 
-## Next Implementation Order - Personal-Use MVP Coverage Sprint Gate S Opening/Leak Composite Runtime Corridor
+## Next Implementation Order - Personal-Use MVP Coverage Sprint Gate T Opening/Leak Composite Surface Parity
+
+Gate S has landed the opening/leak composite runtime corridor for
+complete element-lab lab `Rw` requests. The engine now promotes the Gate
+R area-energy formula at runtime, returns the pinned `Rw 38.2` fixture,
+surfaces `gate_s_opening_leak_composite_area_energy_runtime_corridor`,
+and blocks `STC`, `R'w`, `DnT,w`, field, and building outputs unless a
+later adapter explicitly owns them. Source-absent unbudgeted, STC-only,
+missing, duplicate, excessive, and non-lab opening inputs fail closed
+instead of returning host-wall `Rw` as a supported answer.
+
+Gate T target:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-t-opening-leak-composite-surface-parity-contract.test.ts`
+
+Gate T action:
+
+`gate_t_personal_use_mvp_opening_leak_composite_surface_parity_plan`
+
+Gate T order:
+
+1. Add the Gate T surface-parity contract test for the opening/leak
+   composite runtime corridor.
+2. Verify route/output card, API payload, saved replay, scenario
+   analysis, and Markdown/report surfaces show the same lab `Rw 38.2`,
+   `gate_s_opening_leak_composite_area_energy_runtime_corridor` method,
+   `family_physics_prediction` origin, and `+/-6 dB` budget that the
+   engine result exposes.
+3. Keep unsupported basis boundaries visible: `STC`, `R'w`, `DnT,w`,
+   field, and building outputs must remain unsupported with clear
+   warnings rather than aliasing lab `Rw` or opening element values.
+4. Verify missing/hostile input visibility for missing opening physical
+   fields, duplicate openings, excessive area, source-absent unbudgeted
+   values, and STC-only opening basis. These should show
+   `needs_input` / `unsupported` posture through every visible surface.
+5. Do not add a field/building/STC adapter in Gate T. If a later adapter
+   is selected, write it as a separate Gate U plan with its own formula,
+   owners, evidence, and tests.
+6. Validate focused Gate T, Gate S/R/Q/P/O/N/M/L continuity, Gate
+   G/H/I/J/K wall continuity, current-gate runner, and `git diff
+   --check`.
+
+## Consumed Gate S Implementation Order - Personal-Use MVP Coverage Sprint Opening/Leak Composite Runtime Corridor
+
+Gate S status:
+
+`gate_s_personal_use_mvp_opening_leak_composite_runtime_corridor_landed_selected_surface_parity_gate_t`
+
+Gate S selected Gate T action:
+
+`gate_t_personal_use_mvp_opening_leak_composite_surface_parity_plan`
+
+Gate S selected Gate T file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-t-opening-leak-composite-surface-parity-contract.test.ts`
 
 Gate R has landed the opening/leak composite transmission-loss formula
 corridor as no-runtime. It defines a source-absent area-energy lab `Rw`

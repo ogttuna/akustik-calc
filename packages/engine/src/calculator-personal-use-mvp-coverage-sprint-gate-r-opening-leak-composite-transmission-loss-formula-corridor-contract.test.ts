@@ -29,6 +29,10 @@ import {
   GATE_Q_OPENING_LEAK_COMPOSITE_REQUIRED_OWNER_INPUTS,
   GATE_Q_OPENING_LEAK_COMPOSITE_REQUIRED_PHYSICAL_INPUTS
 } from "./dynamic-airborne-gate-q-opening-leak-composite-transmission-loss-input-contract";
+import {
+  GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD,
+  GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_WARNING
+} from "./dynamic-airborne-gate-s-opening-leak-composite-transmission-loss-runtime-corridor";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
@@ -417,7 +421,7 @@ describe("Personal-Use MVP Coverage Sprint Gate R opening/leak composite formula
     });
   });
 
-  it("keeps safe opening reorders invariant and keeps runtime values unmoved", () => {
+  it("keeps safe opening reorders invariant while Gate S owns later runtime movement", () => {
     const ordered = buildGateROpeningLeakCompositeFormulaAssessment({
       airborneContext: {
         contextMode: "element_lab",
@@ -464,8 +468,12 @@ describe("Personal-Use MVP Coverage Sprint Gate R opening/leak composite formula
     expect(reversed.designCorridorEstimateDb).toBe(ordered.designCorridorEstimateDb);
     expect(reversed.normalizedOpeningKeys).toEqual(ordered.normalizedOpeningKeys);
     expect(reversed.openingContributions).toEqual([...ordered.openingContributions].reverse());
-    expect(withOpening.metrics.estimatedRwDb).toBe(baseline.metrics.estimatedRwDb);
+    expect(withOpening.metrics.estimatedRwDb).toBe(38.2);
     expect(withOpening.metrics.estimatedStc).toBe(baseline.metrics.estimatedStc);
+    expect(withOpening.supportedTargetOutputs).toEqual(["Rw"]);
+    expect(withOpening.unsupportedTargetOutputs).toEqual(["STC"]);
+    expect(withOpening.airborneBasis?.method).toBe(GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD);
+    expect(withOpening.warnings).toContain(GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_WARNING);
     expect(buildingWithOpening.supportedTargetOutputs).toEqual([]);
     expect(buildingWithOpening.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
   });

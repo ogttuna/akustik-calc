@@ -34,7 +34,10 @@ checkpoint read
 If you need the 2026-05-11 INSUL / ISO research refresh and Gate P
 replan read
 [CHECKPOINT_2026-05-11_INSUL_ISO_RESEARCH_AND_GATE_P_REPLAN_HANDOFF.md](./CHECKPOINT_2026-05-11_INSUL_ISO_RESEARCH_AND_GATE_P_REPLAN_HANDOFF.md).
-If you need the current Personal-Use MVP Coverage Sprint Gate R
+If you need the current Personal-Use MVP Coverage Sprint Gate S
+checkpoint read
+[CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_S_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_S_HANDOFF.md).
+If you need the preceding Personal-Use MVP Coverage Sprint Gate R
 checkpoint read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md).
 If you need the preceding Personal-Use MVP Coverage Sprint Gate Q
@@ -96,15 +99,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_r_personal_use_mvp_opening_leak_composite_formula_corridor_landed_no_runtime_selected_runtime_corridor_gate_s`
+`gate_s_personal_use_mvp_opening_leak_composite_runtime_corridor_landed_selected_surface_parity_gate_t`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-s-opening-leak-composite-transmission-loss-runtime-corridor-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-t-opening-leak-composite-surface-parity-contract.test.ts`
 
 Selected next action:
 
-`gate_s_personal_use_mvp_opening_leak_composite_transmission_loss_runtime_corridor_plan`
+`gate_t_personal_use_mvp_opening_leak_composite_surface_parity_plan`
 
 Strategic ROI replan:
 
@@ -244,46 +247,64 @@ Current strategy:
   first-class shared schema inputs. Complete opening inputs are
   `ready_for_formula_corridor`, but host-wall values stay unchanged
   until Gate R owns the area-energy formula and leakage penalty corridor.
-- Gate R has now landed that opening/leak composite formula corridor as
+- Gate R landed that opening/leak composite formula corridor as
   no-runtime. It defines the lab `Rw` area-energy composite formula,
   sealed/average/leaky/open-gap leakage penalties, a `+/-6 dB`
   source-absent design budget, STC-only and field/building alias
   negatives, and selects Gate S for runtime-corridor promotion.
+- Gate S has now landed that runtime-corridor promotion. Complete
+  element-lab opening/leak composite `Rw` requests now use the Gate R
+  area-energy formula at runtime, surface
+  `gate_s_opening_leak_composite_area_energy_runtime_corridor`, return
+  the pinned `Rw 38.2` fixture for the host-wall plus one average-seal
+  opening case, and carry the `+/-6 dB` source-absent budget. `STC`,
+  `R'w`, `DnT,w`, field, and building outputs remain unsupported until
+  separately owned adapters exist. Missing, duplicate, excessive,
+  source-absent unbudgeted, and STC-only opening inputs block support
+  instead of returning the host-wall `Rw`.
 - Broad source crawling remains blocked unless the active matrix names a
   specific source or holdout as the highest-impact unblocker.
 
-Current Gate R result:
+Current Gate S result:
 
-- Gate R adds
-  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-r-opening-leak-composite-transmission-loss-formula-corridor-contract.test.ts`
+- Gate S adds
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-s-opening-leak-composite-transmission-loss-runtime-corridor-contract.test.ts`
   and
-  `packages/engine/src/dynamic-airborne-gate-r-opening-leak-composite-transmission-loss-formula-corridor.ts`.
-- Formula basis:
-  `area_energy_composite_transmission_loss_source_absent_formula_corridor`.
-- Candidate design fixture: host-wall `Rw 55`, host area `12 m2`,
-  one `1.8 m2` average-seal opening with element `Rw 32`, composite
-  design `Rw 38.2`.
-- Required formula owners are `hostWallRwCandidateOwner`,
-  `areaWeightedTransmissionCoefficientFormulaOwner`,
-  `openingRatingBasisPolicyOwner`, `sealLeakagePenaltyTableOwner`, and
-  `compositeUncertaintyBudgetOwner`; source-absent openings also need
-  `sourceAbsentOpeningValueBudgetOwner`.
-- No-runtime boundary: `calculateAssembly` host-wall `Rw` / `STC` values
-  remain unchanged with opening inputs until Gate S promotes runtime.
-- Selection status:
-  `gate_r_personal_use_mvp_opening_leak_composite_formula_corridor_landed_no_runtime_selected_runtime_corridor_gate_s`.
-- Selected next action:
+  `packages/engine/src/dynamic-airborne-gate-s-opening-leak-composite-transmission-loss-runtime-corridor.ts`.
+- Landed action:
   `gate_s_personal_use_mvp_opening_leak_composite_transmission_loss_runtime_corridor_plan`.
+- Runtime basis:
+  `gate_s_opening_leak_composite_area_energy_runtime_corridor`.
+- Complete element-lab opening/leak runtime requests promote only lab
+  `Rw`; the active fixture returns `estimatedRwDb 38.2`, supports
+  `["Rw"]`, and parks `STC`, `R'w`, `DnT,w`, field, and building outputs
+  unless later adapters own them.
+- Negative runtime boundaries are source-absent opening values without
+  `sourceAbsentOpeningValueBudgetOwner`, STC-only opening basis,
+  missing physical opening fields, duplicate/excessive openings, and
+  non-element-lab contexts. These remain `unsupported` or
+  `needs_input`, with precise warning text.
+- Selection status:
+  `gate_s_personal_use_mvp_opening_leak_composite_runtime_corridor_landed_selected_surface_parity_gate_t`.
+- Selected next action:
+  `gate_t_personal_use_mvp_opening_leak_composite_surface_parity_plan`.
 - Selected next file:
-  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-s-opening-leak-composite-transmission-loss-runtime-corridor-contract.test.ts`.
-- Validation completed on 2026-05-11: focused Gate R passed 1 file / 6
-  tests; Gate R/Q/P/O/N/M/L plus Gate G/H/I/J/K continuity passed 12
-  files / 71 tests; final `pnpm calculator:gate:current` passed with
-  engine 359 files / 2080 tests, web 71 files / 306 passed + 18
-  skipped, repo build 5/5 successful, and whitespace guard clean.
-  Known warnings were the existing Zustand unavailable test-storage
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-t-opening-leak-composite-surface-parity-contract.test.ts`.
+- Validation completed on 2026-05-11: focused Gate S/R/Q passed 3
+  files / 17 tests; Gate S/R/Q/P/O/N/M/L plus Gate G/H/I/J/K continuity
+  passed 13 files / 76 tests; final `pnpm calculator:gate:current`
+  passed with engine 360 files / 2085 tests, web 71 files / 306 passed
+  + 18 skipped, repo build 5/5 successful, and whitespace guard clean.
+  Known warnings remain the existing Zustand unavailable test-storage
   warnings and optional sharp package resolution warnings during web
   build.
+
+Previous Gate R result:
+
+`gate_r_personal_use_mvp_opening_leak_composite_formula_corridor_landed_no_runtime_selected_runtime_corridor_gate_s`
+
+Gate R remains the no-runtime formula definition owner for
+`area_energy_composite_transmission_loss_source_absent_formula_corridor`.
 
 Previous Gate Q result:
 
