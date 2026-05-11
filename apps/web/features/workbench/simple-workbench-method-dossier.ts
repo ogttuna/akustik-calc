@@ -1,6 +1,7 @@
 import type { AssemblyCalculation } from "@dynecho/shared";
 
 import { getGateIAirborneFieldContextSurface } from "./airborne-field-context-surface";
+import { getGateSOpeningLeakCompositeSurface } from "./opening-leak-composite-surface";
 import type {
   SimpleWorkbenchProposalCoverageItem,
   SimpleWorkbenchProposalLayer
@@ -108,19 +109,22 @@ function buildAirborneTraceGroup(result: AssemblyCalculation | null): SimpleWork
     fallbackNotes: [`Strategy ${trace.strategy.replaceAll("_", " ")} selected ${trace.selectedLabel}.`]
   });
   const gateISurface = getGateIAirborneFieldContextSurface(result);
-  const notes = gateISurface
-    ? [...noteSelection.notes.slice(0, 2), ...gateISurface.notes]
-    : noteSelection.notes;
+  const gateSOpeningLeakSurface = getGateSOpeningLeakCompositeSurface(result);
+  const notes = gateSOpeningLeakSurface
+    ? [...noteSelection.notes.slice(0, 2), ...gateSOpeningLeakSurface.notes]
+    : gateISurface
+      ? [...noteSelection.notes.slice(0, 2), ...gateISurface.notes]
+      : noteSelection.notes;
 
   return {
     detail:
       `${trace.detectedFamilyLabel} with ${formatPercent(trace.confidenceScore)} ${trace.confidenceClass} confidence. ` +
       `${formatDb(trace.solverSpreadRwDb)} solver spread across ${trace.candidateMethods.length} candidate method${trace.candidateMethods.length === 1 ? "" : "s"}.` +
-      (gateISurface ? ` ${gateISurface.detail}` : ""),
+      (gateSOpeningLeakSurface ? ` ${gateSOpeningLeakSurface.detail}` : gateISurface ? ` ${gateISurface.detail}` : ""),
     label: "Airborne lane",
     notes,
     tone: mapAirborneTone(trace.confidenceClass),
-    value: gateISurface?.label ?? trace.selectedLabel
+    value: gateSOpeningLeakSurface?.label ?? gateISurface?.label ?? trace.selectedLabel
   };
 }
 

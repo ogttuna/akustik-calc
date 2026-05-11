@@ -3,6 +3,10 @@ import type { AssemblyCalculation, RequestedOutputId } from "@dynecho/shared";
 import { getGateIAirborneFieldContextSurface } from "./airborne-field-context-surface";
 import { isFieldAirborneOutput } from "./field-airborne-output";
 import { FIELD_OUTPUT_DESIGN_GRADE_POSTURE_GUARD } from "./field-output-owner-policy-copy";
+import {
+  getGateSOpeningLeakCompositeOutputDetail,
+  getGateSOpeningLeakCompositeSurface
+} from "./opening-leak-composite-surface";
 import type { StudyMode } from "./preset-definitions";
 import {
   describeAirborneValidationPosture,
@@ -87,6 +91,36 @@ export function buildSimpleWorkbenchOutputPosture(input: {
   studyMode: StudyMode;
 }): SimpleWorkbenchOutputPosture {
   const { output, result, status, studyMode } = input;
+  const gateSOpeningLeakSurface =
+    studyMode === "wall" ? getGateSOpeningLeakCompositeSurface(result) : null;
+
+  if (gateSOpeningLeakSurface) {
+    const detail = getGateSOpeningLeakCompositeOutputDetail(output, result) ?? gateSOpeningLeakSurface.postureDetail;
+
+    if (status === "live" && output === "Rw") {
+      return {
+        detail,
+        label: gateSOpeningLeakSurface.label,
+        tone: "accent"
+      };
+    }
+
+    if (status === "needs_input" || gateSOpeningLeakSurface.origin === "needs_input") {
+      return {
+        detail,
+        label: "Opening/leak input needed",
+        tone: "warning"
+      };
+    }
+
+    if (status === "unsupported") {
+      return {
+        detail,
+        label: "Opening/leak boundary",
+        tone: "neutral"
+      };
+    }
+  }
 
   if (status === "unsupported") {
     return {

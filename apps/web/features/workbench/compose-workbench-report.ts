@@ -30,6 +30,7 @@ import {
 } from "./dutch-impact-reference";
 import { getDnTAkReportLine } from "./dntak-source-mode";
 import { getFieldAirborneReportLines } from "./field-airborne-provenance";
+import { getGateSOpeningLeakCompositeReportLines } from "./opening-leak-composite-surface";
 import { FIELD_RISK_BY_ID, summarizeFieldRisk, type FieldRiskId } from "./field-risk-model";
 import {
   formatImpactMetricBasisLabel,
@@ -335,6 +336,7 @@ export function composeWorkbenchReport({
         `- STC: ${formatMetric(currentScenario.result.metrics.estimatedStc)} dB`,
         ...(dnTAkReportLine ? [dnTAkReportLine] : []),
         ...getFieldAirborneReportLines(currentScenario.result),
+        ...getGateSOpeningLeakCompositeReportLines(currentScenario.result),
         `- Surface mass: ${formatMetric(currentScenario.result.metrics.surfaceMassKgM2)} kg/m²`,
         `- Total thickness: ${formatMetric(currentScenario.result.metrics.totalThicknessMm)} mm`,
         `- Cavity / insulation count: ${currentScenario.result.metrics.airGapCount} / ${currentScenario.result.metrics.insulationCount}`,

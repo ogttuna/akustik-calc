@@ -11,6 +11,7 @@ import type { ImpactValidationModePosture } from "@dynecho/engine";
 import type { AssemblyCalculation, DynamicAirborneTrace } from "@dynecho/shared";
 
 import { getGateIAirborneFieldContextSurface } from "./airborne-field-context-surface";
+import { getGateSOpeningLeakCompositeSurface } from "./opening-leak-composite-surface";
 import { getImpactLaneKind, getImpactLanePillLabel } from "./impact-lane-view";
 import {
   isReinforcedConcreteLowConfidenceFloorLane,
@@ -235,6 +236,20 @@ export function describeAirborneValidationPosture(result: AssemblyCalculation | 
       detail: "Airborne screening becomes legible once the layer stack is valid.",
       label: "Waiting for stack",
       posture: "inactive"
+    };
+  }
+
+  const gateSOpeningLeakSurface = getGateSOpeningLeakCompositeSurface(result);
+  if (gateSOpeningLeakSurface) {
+    return {
+      detail: gateSOpeningLeakSurface.postureDetail,
+      label: gateSOpeningLeakSurface.label,
+      posture:
+        gateSOpeningLeakSurface.origin === "family_physics_prediction"
+          ? "estimate"
+          : gateSOpeningLeakSurface.origin === "needs_input"
+            ? "inactive"
+            : "low_confidence"
     };
   }
 

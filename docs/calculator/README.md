@@ -78,6 +78,17 @@ the pinned host-wall plus average-seal opening fixture returns `Rw
 38.2` with a `+/-6 dB` source-absent budget. `STC`, `R'w`, `DnT,w`,
 field, and building outputs remain unsupported until separately owned
 adapters exist.
+Gate T now lands that opening/leak surface parity with selection status
+`gate_t_personal_use_mvp_opening_leak_composite_surface_parity_landed_selected_input_surface_gate_u`
+and selects Gate U
+`gate_u_personal_use_mvp_opening_leak_composite_input_surface_plan`.
+Route summaries, output cards, scenario analysis, saved replay,
+calculator API payloads, method/corridor dossiers, target-output status,
+and Markdown report lines now show the same lab `Rw 38.2`,
+`gate_s_opening_leak_composite_area_energy_runtime_corridor`,
+`family_physics_prediction` origin, and `+/-6 dB` budget; blocked
+opening cases stay `needs_input` or `unsupported` without showing a
+promoted budget.
 Gate A
 landed in
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-a-scenario-matrix-contract.test.ts`

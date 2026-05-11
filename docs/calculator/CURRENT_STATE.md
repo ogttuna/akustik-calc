@@ -99,15 +99,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_s_personal_use_mvp_opening_leak_composite_runtime_corridor_landed_selected_surface_parity_gate_t`
+`gate_t_personal_use_mvp_opening_leak_composite_surface_parity_landed_selected_input_surface_gate_u`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-t-opening-leak-composite-surface-parity-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-u-opening-leak-composite-input-surface-contract.test.ts`
 
 Selected next action:
 
-`gate_t_personal_use_mvp_opening_leak_composite_surface_parity_plan`
+`gate_u_personal_use_mvp_opening_leak_composite_input_surface_plan`
 
 Strategic ROI replan:
 
@@ -262,12 +262,63 @@ Current strategy:
   separately owned adapters exist. Missing, duplicate, excessive,
   source-absent unbudgeted, and STC-only opening inputs block support
   instead of returning the host-wall `Rw`.
+- Gate T has now landed surface parity for that runtime corridor. Route
+  summaries, output cards, scenario analysis, saved replay, calculator
+  API payloads, method/corridor dossiers, target-output status, and
+  Markdown report lines now carry the same lab `Rw 38.2`,
+  `gate_s_opening_leak_composite_area_energy_runtime_corridor`,
+  `family_physics_prediction` origin, and `+/-6 dB` budget. `STC`,
+  `R'w`, `DnT,w`, field, and building outputs remain unsupported, and
+  missing/hostile/source-absent/STC-only opening inputs stay
+  `needs_input` or `unsupported` without a promoted budget.
 - Broad source crawling remains blocked unless the active matrix names a
   specific source or holdout as the highest-impact unblocker.
 
-Current Gate S result:
+Current Gate T result:
 
-- Gate S adds
+- Gate T adds
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-t-opening-leak-composite-surface-parity-contract.test.ts`,
+  `apps/web/features/workbench/opening-leak-composite-surface.ts`,
+  and `apps/web/features/workbench/opening-leak-composite-surface-parity.test.ts`.
+- Landed action:
+  `gate_t_personal_use_mvp_opening_leak_composite_surface_parity_plan`.
+- Surface parity scope:
+  route/card posture, `Rw` and unsupported companion output cards,
+  scenario corridor summary, target-output status, method dossier,
+  corridor dossier, saved replay, calculator API payload, and Markdown
+  report.
+- Runtime basis stays:
+  `gate_s_opening_leak_composite_area_energy_runtime_corridor`.
+- Complete element-lab opening/leak runtime requests still promote only
+  lab `Rw`; the active fixture returns `estimatedRwDb 38.2`, supports
+  `["Rw"]`, and parks `STC`, `R'w`, `DnT,w`, field, and building outputs
+  unless later adapters own them.
+- Negative visible boundaries are source-absent opening values without
+  `sourceAbsentOpeningValueBudgetOwner`, STC-only opening basis,
+  missing physical opening fields, duplicate/excessive openings, and
+  non-element-lab contexts. These remain `unsupported` or
+  `needs_input`, with precise warning text and no visible `+/-6 dB`
+  budget unless runtime actually promoted.
+- Selection status:
+  `gate_t_personal_use_mvp_opening_leak_composite_surface_parity_landed_selected_input_surface_gate_u`.
+- Selected next action:
+  `gate_u_personal_use_mvp_opening_leak_composite_input_surface_plan`.
+- Selected next file:
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-u-opening-leak-composite-input-surface-contract.test.ts`.
+- Validation is green: focused Gate T engine passed 1 file / 3 tests,
+  focused Gate T web passed 1 file / 4 tests, Gate L-T engine
+  continuity passed 9 files / 49 tests, web surface/status continuity
+  passed 6 files / 37 tests, Gate G-K wall continuity passed engine 5
+  files / 30 tests and web 5 files / 22 tests, engine and web typechecks
+  passed, and final `pnpm calculator:gate:current` passed with engine
+  361 files / 2088 tests, web 72 files / 310 passed + 18 skipped, repo
+  build 5/5 successful. Known non-fatal warnings remain the existing
+  test-storage Zustand warning and optional `sharp/@img` package
+  warnings during Next build.
+
+Previous Gate S result:
+
+Gate S adds
   `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-s-opening-leak-composite-transmission-loss-runtime-corridor-contract.test.ts`
   and
   `packages/engine/src/dynamic-airborne-gate-s-opening-leak-composite-transmission-loss-runtime-corridor.ts`.

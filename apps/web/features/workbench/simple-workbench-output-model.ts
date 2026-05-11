@@ -30,6 +30,10 @@ import {
 } from "./timber-clt-delta-lw-corridor-view";
 import { getDoubleLeafFramedBridgeAirbornePromptDetail } from "./airborne-physical-input-prompt";
 import {
+  WEB_GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD,
+  getGateSOpeningLeakCompositeOutputDetail
+} from "./opening-leak-composite-surface";
+import {
   getRockwoolSplitTripleLeafWithheldOutputDetail,
   getRockwoolTripleLeafScreeningPolicyCopy
 } from "./rockwool-triple-leaf-screening-policy-copy";
@@ -73,6 +77,13 @@ function isExplicitUnsupportedMissingInput(input: {
   studyMode: StudyMode;
 }): boolean {
   const { output, result, studyMode } = input;
+
+  if (
+    studyMode === "wall" &&
+    result?.airborneBasis?.method === WEB_GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD
+  ) {
+    return result.airborneBasis.origin === "needs_input" && AIRBORNE_PHYSICAL_PROMPT_OUTPUTS.has(output);
+  }
 
   if (FIELD_AIRBORNE_OUTPUTS.has(output)) {
     return getFieldAirborneBlockingRequirement(output, result) !== null;
@@ -119,6 +130,11 @@ function buildExplicitUnsupportedOutputDetail(input: {
     return `${REQUESTED_OUTPUT_SUPPORT_NOTES[output]} DAC is keeping this requested field-impact output explicit on the current path instead of inventing a number from nearby live values.`;
   }
 
+  const gateSOpeningLeakDetail = getGateSOpeningLeakCompositeOutputDetail(output, result ?? null);
+  if (gateSOpeningLeakDetail && studyMode === "wall") {
+    return gateSOpeningLeakDetail;
+  }
+
   return buildUnavailableOutputDetail({ output, result, studyMode });
 }
 
@@ -160,6 +176,11 @@ export function buildUnavailableOutputDetail(input: {
     }
   }
 
+  const gateSOpeningLeakDetail = getGateSOpeningLeakCompositeOutputDetail(output, result);
+  if (gateSOpeningLeakDetail && studyMode === "wall") {
+    return gateSOpeningLeakDetail;
+  }
+
   if (isImpactOnlyLowConfidenceLane && isImpactOnlyLowConfidenceUnavailableOutput(output)) {
     return IMPACT_ONLY_LOW_CONFIDENCE_UNAVAILABLE_DETAIL;
   }
@@ -179,6 +200,15 @@ export function isRouteBlockedOutput(input: {
   const { output, result, studyMode } = input;
 
   if (!result) {
+    return true;
+  }
+
+  if (
+    studyMode === "wall" &&
+    result.airborneBasis?.method === WEB_GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD &&
+    result.airborneBasis.origin === "needs_input" &&
+    AIRBORNE_PHYSICAL_PROMPT_OUTPUTS.has(output)
+  ) {
     return true;
   }
 
@@ -285,11 +315,15 @@ export function buildOutputCard(input: {
       }
 
       if (typeof result?.metrics.estimatedRwDb === "number") {
+        const gateSOpeningLeakDetail = getGateSOpeningLeakCompositeOutputDetail(output, result);
+
         return {
-          detail: isImpactOnlyLowConfidenceLane
-            ? IMPACT_ONLY_LOW_CONFIDENCE_RW_DETAIL
-            : rockwoolTripleLeafScreeningPolicy?.outputDetail ??
-              "Weighted airborne element rating from the active airborne calculator.",
+          detail:
+            gateSOpeningLeakDetail ??
+            (isImpactOnlyLowConfidenceLane
+              ? IMPACT_ONLY_LOW_CONFIDENCE_RW_DETAIL
+              : rockwoolTripleLeafScreeningPolicy?.outputDetail ??
+                "Weighted airborne element rating from the active airborne calculator."),
           label: "Rw",
           output,
           status: "live",

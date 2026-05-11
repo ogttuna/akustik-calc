@@ -26,6 +26,8 @@ For the 2026-05-11 INSUL / ISO research refresh and Gate P replan read
 [CHECKPOINT_2026-05-11_INSUL_ISO_RESEARCH_AND_GATE_P_REPLAN_HANDOFF.md](./CHECKPOINT_2026-05-11_INSUL_ISO_RESEARCH_AND_GATE_P_REPLAN_HANDOFF.md).
 For the Gate S opening/leak runtime corridor and Gate T handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_S_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_S_HANDOFF.md).
+For the Gate T opening/leak surface parity and Gate U handoff read
+[CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_T_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_T_HANDOFF.md).
 For the Gate R no-runtime formula corridor and Gate S handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md).
 For the Gate Q no-runtime input contract and Gate R handoff read
@@ -3319,7 +3321,64 @@ Zustand unavailable test-storage warnings and optional sharp package
 resolution warnings during web build. Broad `pnpm check` was not rerun
 because Gate BI has no runtime/API/UI surface change.
 
-## Next Implementation Order - Personal-Use MVP Coverage Sprint Gate T Opening/Leak Composite Surface Parity
+## Next Implementation Order - Personal-Use MVP Coverage Sprint Gate U Opening/Leak Composite Input Surface
+
+Gate T has landed surface parity for the Gate S opening/leak runtime
+corridor. The next highest-ROI step is to make those physical fields
+first-class in the Dynamic Calculator surface so a personal-use operator
+does not need to hand-build `airborneContext` JSON. Gate U is an input
+surface gate, not a new solver, adapter, or source crawl: runtime values
+must stay pinned at `Rw 38.2` for the complete fixture, exact source
+precedence must remain unchanged, and `STC`, `R'w`, `DnT,w`, field, and
+building outputs must stay unsupported unless a later adapter owns them.
+
+Gate U target:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-u-opening-leak-composite-input-surface-contract.test.ts`
+
+Gate U action:
+
+`gate_u_personal_use_mvp_opening_leak_composite_input_surface_plan`
+
+Gate U order:
+
+1. Add the Gate U input-surface contract for opening/leak composite
+   physical fields: `hostWallAreaM2`, opening `areaM2`, `count`,
+   element `Rw`, rating basis, seal/leakage class, origin, and stable
+   opening ids.
+2. Add a web workbench input-surface adapter that turns visible
+   form/store state into the existing `AirborneContext.openingLeakElements`
+   contract. It must handle one or more openings, safe reorder, saved
+   replay, and local/server snapshot replay without moving runtime
+   values.
+3. Verify the complete UI-derived opening case feeds the Gate S runtime
+   corridor and returns lab `Rw 38.2`, method
+   `gate_s_opening_leak_composite_area_energy_runtime_corridor`, origin
+   `family_physics_prediction`, support `["Rw"]`, unsupported
+   `["STC", "R'w", "DnT,w"]`, and `+/-6 dB` budget.
+4. Verify partial fields stay `needs_input` with exact missing names,
+   while duplicate ids/signatures, excessive opening area,
+   source-absent unbudgeted openings, and STC-only opening ratings remain
+   `unsupported` with no promoted budget.
+5. Keep Gate U scoped to input surfacing. Do not add an STC adapter,
+   field/building adapter, or new opening formula in this gate.
+6. Validate focused Gate U, Gate T/S/R/Q/P/O/N/M/L continuity, Gate
+   G/H/I/J/K wall continuity, current-gate runner, and `git diff
+   --check`.
+
+## Consumed Gate T Implementation Order - Personal-Use MVP Coverage Sprint Opening/Leak Composite Surface Parity
+
+Gate T status:
+
+`gate_t_personal_use_mvp_opening_leak_composite_surface_parity_landed_selected_input_surface_gate_u`
+
+Gate T selected Gate U action:
+
+`gate_u_personal_use_mvp_opening_leak_composite_input_surface_plan`
+
+Gate T selected Gate U file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-u-opening-leak-composite-input-surface-contract.test.ts`
 
 Gate S has landed the opening/leak composite runtime corridor for
 complete element-lab lab `Rw` requests. The engine now promotes the Gate

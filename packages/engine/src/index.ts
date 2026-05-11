@@ -24,6 +24,7 @@ export * from "./dynamic-calculator-double-leaf-framed-bridge-solver-contract";
 export * from "./dynamic-calculator-floor-impact-dynamic-stiffness-contract";
 export * from "./dynamic-calculator-floor-impact-field-context-contract";
 export * from "./dynamic-airborne-gate-s-double-leaf-framed";
+export * from "./dynamic-airborne-gate-s-opening-leak-composite-transmission-loss-runtime-corridor";
 export * from "./dynamic-calculator-family-solver-upgrade-selection";
 export * from "./dynamic-calculator-next-family-solver-upgrade-selection";
 export * from "./dynamic-calculator-next-solver-or-field-context-selection";
