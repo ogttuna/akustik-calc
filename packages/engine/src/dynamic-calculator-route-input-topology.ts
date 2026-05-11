@@ -270,6 +270,54 @@ function massTimberLayersHaveDensity(
     });
 }
 
+function materialSearchText(material: MaterialDefinition): string {
+  return [
+    material.id,
+    material.name,
+    material.notes ?? "",
+    ...material.tags,
+    ...(material.acoustic?.notes ?? [])
+  ].join(" ").toLowerCase();
+}
+
+function isAacNonHomogeneousMasonryMaterial(material: MaterialDefinition | null): boolean {
+  if (!material) {
+    return false;
+  }
+
+  const text = materialSearchText(material);
+  return (
+    material.category === "mass" &&
+    (
+      material.tags.map((tag) => tag.toLowerCase()).some((tag) =>
+        ["aac", "aircrete", "autoclaved-aerated-concrete", "lightweight-mineral"].includes(tag)
+      ) ||
+      /aac|gazbeton|ytong|aircrete|autoclaved|hebel/.test(text)
+    )
+  );
+}
+
+function hasAacNonHomogeneousMasonryLayer(
+  layers: readonly LayerInput[],
+  catalog: readonly MaterialDefinition[]
+): boolean {
+  return layers.some((layer) => isAacNonHomogeneousMasonryMaterial(resolveLayerMaterial(layer, catalog)));
+}
+
+function aacNonHomogeneousMasonryLayersHaveDensity(
+  layers: readonly LayerInput[],
+  catalog: readonly MaterialDefinition[]
+): boolean {
+  const aacLayers = layers.filter((layer) =>
+    isAacNonHomogeneousMasonryMaterial(resolveLayerMaterial(layer, catalog))
+  );
+
+  return aacLayers.length > 0 && aacLayers.every((layer) => {
+    const material = resolveLayerMaterial(layer, catalog);
+    return typeof material?.densityKgM3 === "number" && material.densityKgM3 > 0;
+  });
+}
+
 function looksLikeMultiCavityWall(
   layers: readonly LayerInput[],
   catalog: readonly MaterialDefinition[]
@@ -910,6 +958,96 @@ function addMassTimberPanelWallContract(input: {
   });
 }
 
+function addAacNonHomogeneousMasonryWallContract(input: {
+  catalog: readonly MaterialDefinition[];
+  layers: readonly LayerInput[];
+  missingSourceEvidence: readonly string[];
+  prompts: DynamicCalculatorRouteInputPrompt[];
+  targetOutputs: readonly RequestedOutputId[];
+}): AcousticInputCompleteness {
+  const missing: AcousticInputFieldId[] = [];
+  const hasAacMaterial = hasAacNonHomogeneousMasonryLayer(input.layers, input.catalog);
+  const hasDensity = aacNonHomogeneousMasonryLayersHaveDensity(input.layers, input.catalog);
+  const requirements: readonly {
+    detail: string;
+    fieldId: AcousticInputFieldId;
+    isMissing: boolean;
+    label: string;
+  }[] = [
+    {
+      detail: "Select an AAC, aircrete, or equivalent non-homogeneous masonry material before the Gate X wall route can promote.",
+      fieldId: "materialClass",
+      isMissing: !hasAacMaterial,
+      label: "AAC / non-homogeneous masonry class"
+    },
+    {
+      detail: "The AAC / non-homogeneous masonry wall route needs a positive single-leaf thickness.",
+      fieldId: "thicknessMm",
+      isMissing: !input.layers.some((layer) => layer.thicknessMm > 0),
+      label: "AAC / masonry thickness"
+    },
+    {
+      detail: "AAC / non-homogeneous masonry density must be known before surface mass and the Sharp/Davy delegate curve are trusted.",
+      fieldId: "densityKgM3",
+      isMissing: !hasDensity,
+      label: "AAC / masonry density"
+    }
+  ];
+
+  for (const requirement of requirements) {
+    if (!requirement.isMissing) {
+      continue;
+    }
+
+    missing.push(requirement.fieldId);
+    addPrompt(
+      input.prompts,
+      makePrompt({
+        detail: requirement.detail,
+        fieldId: requirement.fieldId,
+        label: requirement.label,
+        source: "material_property",
+        targetOutputs: input.targetOutputs
+      })
+    );
+  }
+
+  const usesEngineeringAcousticProperties = input.layers.some((layer) => {
+    const material = resolveLayerMaterial(layer, input.catalog);
+    return (
+      isAacNonHomogeneousMasonryMaterial(material) &&
+      material?.acoustic?.propertySourceStatus === "engineering_default"
+    );
+  });
+
+  return buildInputCompleteness({
+    appliedDefaults: usesEngineeringAcousticProperties
+      ? [
+          {
+            fieldId: "youngModulusPa",
+            reason:
+              "AAC / non-homogeneous masonry stiffness is represented by a catalog engineering default in Gate X.",
+            uncertaintyEffect: "widen_error_budget"
+          },
+          {
+            fieldId: "lossFactor",
+            reason:
+              "AAC / non-homogeneous masonry loss factor is represented by a catalog engineering default in Gate X.",
+            uncertaintyEffect: "widen_error_budget"
+          }
+        ]
+      : [],
+    conditionalFields: ["youngModulusPa", "lossFactor"],
+    id: "gate_x_aac_nonhomogeneous_masonry_wall_route_inputs",
+    missingPhysicalInputs: missing,
+    missingSourceEvidence: input.missingSourceEvidence,
+    optionalPrecisionFields: ["youngModulusPa", "lossFactor"],
+    requiredFields: ["materialClass", "densityKgM3", "thicknessMm", "surfaceMassKgM2"],
+    routeFamily: "single_leaf_airborne",
+    targetOutputs: input.targetOutputs
+  });
+}
+
 function hasFloorRole(layers: readonly LayerInput[], role: LayerInput["floorRole"]): boolean {
   return layers.some((layer) => layer.floorRole === role);
 }
@@ -1065,6 +1203,12 @@ export function buildDynamicCalculatorRouteInputTopologyAssessment(
       !needsDoubleLeafFramedTopology &&
       !needsLinedMassiveWallTopology &&
       hasExplicitMassTimberPanelTopology(input.airborneContext);
+    const needsAacNonHomogeneousMasonryTopology =
+      !needsGroupedTopology &&
+      !needsDoubleLeafFramedTopology &&
+      !needsLinedMassiveWallTopology &&
+      !needsMassTimberPanelTopology &&
+      hasAacNonHomogeneousMasonryLayer(input.layers, catalog);
 
     if (needsGroupedTopology) {
       inputCompletenessSet.push(
@@ -1110,6 +1254,18 @@ export function buildDynamicCalculatorRouteInputTopologyAssessment(
     if (needsMassTimberPanelTopology) {
       inputCompletenessSet.push(
         addMassTimberPanelWallContract({
+          catalog,
+          layers: input.layers,
+          missingSourceEvidence,
+          prompts,
+          targetOutputs: supportedRequestedOutputs.length > 0 ? supportedRequestedOutputs : WALL_AIRBORNE_OUTPUTS
+        })
+      );
+    }
+
+    if (needsAacNonHomogeneousMasonryTopology) {
+      inputCompletenessSet.push(
+        addAacNonHomogeneousMasonryWallContract({
           catalog,
           layers: input.layers,
           missingSourceEvidence,

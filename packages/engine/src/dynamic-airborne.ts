@@ -81,6 +81,10 @@ import {
   maybeBuildGateOSingleLeafMassivePanelBasis
 } from "./dynamic-airborne-gate-o-single-leaf";
 import {
+  GATE_X_AAC_NONHOMOGENEOUS_MASONRY_WARNING,
+  maybeBuildGateXAacNonHomogeneousMasonryBasis
+} from "./dynamic-airborne-gate-x-aac-nonhomogeneous-masonry";
+import {
   GATE_H_CLT_MASS_TIMBER_WALL_WARNING,
   GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD,
   GATE_H_LINED_MASSIVE_WALL_WARNING,
@@ -1862,6 +1866,20 @@ export function calculateDynamicAirborneResult(
   if (gateOSingleLeafMassivePanelBasis) {
     warnings.push(GATE_O_SINGLE_LEAF_MASSIVE_PANEL_PREDICTION_WARNING);
   }
+  const gateXAacNonHomogeneousMasonryBasis = maybeBuildGateXAacNonHomogeneousMasonryBasis({
+    confidenceClass,
+    curve: dynamicCurve,
+    family: family.family,
+    layers: analysisLayers,
+    options,
+    selectedMethod: blendSelection.blend.selectedMethod,
+    strategy,
+    topology
+  });
+
+  if (gateXAacNonHomogeneousMasonryBasis) {
+    warnings.push(GATE_X_AAC_NONHOMOGENEOUS_MASONRY_WARNING);
+  }
   const gateHLinedMasonryCltWallBasis = maybeBuildGateHLinedMasonryCltWallBasis({
     confidenceClass,
     curve: dynamicCurve,
@@ -1899,6 +1917,7 @@ export function calculateDynamicAirborneResult(
     airborneBasis:
       gateIAirborneFieldContextBasis ??
       gateHLinedMasonryCltWallBasis ??
+      gateXAacNonHomogeneousMasonryBasis ??
       gateOSingleLeafMassivePanelBasis ??
       undefined,
     curve: dynamicCurve,

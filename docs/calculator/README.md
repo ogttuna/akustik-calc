@@ -124,6 +124,22 @@ supported metric values, preserves timber/CLT `DeltaLw`, opening/leak
 `Rw 38.2`, field/building/ASTM/IIC boundaries, and identifies AAC /
 non-homogeneous masonry as the next bounded algorithmic coverage lane
 instead of broad source crawling.
+Gate X now lands that AAC / non-homogeneous masonry family solver with
+selection status
+`gate_x_personal_use_mvp_aac_nonhomogeneous_masonry_wall_family_solver_landed_selected_clt_ctr_gate_y`
+and selects Gate Y
+`gate_y_personal_use_mvp_clt_mass_timber_ctr_spectrum_adapter_plan`.
+Gate X landed in
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-x-aac-nonhomogeneous-masonry-wall-family-solver-contract.test.ts`
+and selected
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-y-clt-mass-timber-ctr-spectrum-adapter-contract.test.ts`.
+Complete element-lab AAC now stays numerically pinned at `Rw 44 / STC
+44 / C -0.7 / Ctr -5.2` while its origin becomes
+`family_physics_prediction` through
+`gate_x_aac_nonhomogeneous_masonry_sharp_davy_family_physics_runtime`
+with a `+/-6 dB` source-absent budget. Field/building requests, missing
+density, wrong families, lined massive routes, and exact-source
+precedence remain protected.
 Gate A
 landed in
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-a-scenario-matrix-contract.test.ts`

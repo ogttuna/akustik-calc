@@ -33,6 +33,9 @@ handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_V_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_V_HANDOFF.md).
 For the Gate W coverage matrix refresh and Gate X handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md).
+For the Gate X AAC / non-homogeneous masonry family solver and Gate Y
+handoff read
+[CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_X_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_X_HANDOFF.md).
 For the Gate R no-runtime formula corridor and Gate S handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md).
 For the Gate Q no-runtime input contract and Gate R handoff read
@@ -3326,7 +3329,53 @@ Zustand unavailable test-storage warnings and optional sharp package
 resolution warnings during web build. Broad `pnpm check` was not rerun
 because Gate BI has no runtime/API/UI surface change.
 
-## Next Implementation Order - Personal-Use MVP Coverage Sprint Gate X AAC / Non-Homogeneous Masonry Family Solver
+## Next Implementation Order - Personal-Use MVP Coverage Sprint Gate Y CLT / Mass-Timber Ctr Spectrum Adapter
+
+Gate X has now closed the AAC / non-homogeneous masonry element-lab
+gap. The executable matrix now leaves one immediate wall lab coverage
+gap: `wall.clt_mass_timber.lab` supports `Rw 42 / STC 42 / C -1.2`,
+but `Ctr` is still unsupported because the current CLT wall route has
+no owned low-frequency spectrum adaptation. Gate Y should add that
+adapter only for complete element-lab mass-timber wall inputs, without
+aliasing field/building outputs or importing source rows as a shortcut.
+
+Gate X status:
+
+`gate_x_personal_use_mvp_aac_nonhomogeneous_masonry_wall_family_solver_landed_selected_clt_ctr_gate_y`
+
+Gate Y target:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-y-clt-mass-timber-ctr-spectrum-adapter-contract.test.ts`
+
+Gate Y action:
+
+`gate_y_personal_use_mvp_clt_mass_timber_ctr_spectrum_adapter_plan`
+
+Active Gate Y task: decide and implement the smallest bounded
+source-absent CLT / mass-timber airborne lab `Ctr` spectrum-adapter
+contract that completes the existing `Rw`/`STC`/`C` lab lane while
+keeping exact-source precedence and field/building separation intact.
+
+Gate Y order:
+
+1. Add the Gate Y contract around the Gate X matrix row
+   `wall.clt_mass_timber.lab`, including its current values, unsupported
+   `Ctr`, and selected lane rationale.
+2. Define the physical owner set: mass-timber/CLT material class,
+   density, thickness, surface mass, panel topology, element-lab basis,
+   and optional orthotropic stiffness / damping defaults that widen
+   uncertainty instead of masquerading as source evidence.
+3. Promote only element-lab `Ctr` for the existing CLT wall family when
+   the spectrum owner is complete; keep `Rw`, `STC`, and `C` pinned
+   unless the contract explicitly proves a value move.
+4. Add negative boundaries for ordinary gypsum/concrete, missing
+   density/class, lined massive, field/apparent, building prediction,
+   ASTM-only wording, and exact source precedence.
+5. Keep the matrix companion pattern from Gate X so
+   `calculator-personal-use-mvp-coverage-sprint.ts` stays below the
+   2000-line split threshold.
+
+## Consumed Gate X Implementation Order - Personal-Use MVP Coverage Sprint AAC / Non-Homogeneous Masonry Family Solver
 
 Gate W has refreshed the executable Personal-Use MVP coverage matrix
 after Gates B-U and selected the next bounded algorithmic lane. The
@@ -3337,22 +3386,38 @@ This is a common wall-family coverage gap with low basis-leakage risk
 because it stays inside element-lab `Rw`/`STC`/`C`/`Ctr` and does not
 touch field, building, ASTM/IIC, or opening adapters.
 
-Gate W status:
+Gate W status before Gate X:
 
 `gate_w_personal_use_mvp_coverage_matrix_refresh_after_opening_leak_landed_selected_aac_masonry_gate_x`
 
-Gate X target:
+Gate X landed status:
+
+`gate_x_personal_use_mvp_aac_nonhomogeneous_masonry_wall_family_solver_landed_selected_clt_ctr_gate_y`
+
+Gate X landed file:
 
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-x-aac-nonhomogeneous-masonry-wall-family-solver-contract.test.ts`
 
-Gate X action:
+Gate X landed action:
 
 `gate_x_personal_use_mvp_aac_nonhomogeneous_masonry_wall_family_solver_plan`
 
-Active Gate X task: promote a bounded AAC / non-homogeneous masonry
-wall family solver from screening fallback to named family physics.
+Gate X selected Gate Y file:
 
-Gate X order:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-y-clt-mass-timber-ctr-spectrum-adapter-contract.test.ts`
+
+Gate X selected Gate Y action:
+
+`gate_y_personal_use_mvp_clt_mass_timber_ctr_spectrum_adapter_plan`
+
+Gate X result: complete element-lab AAC / non-homogeneous masonry now
+uses `gate_x_aac_nonhomogeneous_masonry_sharp_davy_family_physics_runtime`
+with `family_physics_prediction` origin and `+/-6 dB` error budget.
+Values remain pinned at `Rw 44 / STC 44 / C -0.7 / Ctr -5.2`. Missing
+AAC density becomes `needs_input`, exact source rows still override, and
+field/building routes do not inherit this lab budget.
+
+Gate X landed order:
 
 1. Add the Gate X contract around the refreshed Gate W matrix row
    `wall.aac_nonhomogeneous_masonry.lab`, current live values, and the

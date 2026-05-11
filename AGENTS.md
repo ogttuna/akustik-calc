@@ -472,11 +472,24 @@ building, ASTM/IIC, hostile, and exact-source boundaries, and selects
 the bounded AAC / non-homogeneous masonry family solver for Gate X with
 selection status:
 `gate_w_personal_use_mvp_coverage_matrix_refresh_after_opening_leak_landed_selected_aac_masonry_gate_x`.
-Gate X is next:
+Gate X has now landed:
 `gate_x_personal_use_mvp_aac_nonhomogeneous_masonry_wall_family_solver_plan`.
+Gate X promotes the complete element-lab AAC / non-homogeneous masonry
+route from `screening_fallback` to named `family_physics_prediction`
+through
+`gate_x_aac_nonhomogeneous_masonry_sharp_davy_family_physics_runtime`
+without retuning `Rw 44 / STC 44 / C -0.7 / Ctr -5.2`. It owns
+material class, density, thickness, surface mass, optional stiffness /
+loss-factor defaults, exact-source precedence, and field/building
+non-aliasing. Gate X closes with selection status:
+`gate_x_personal_use_mvp_aac_nonhomogeneous_masonry_wall_family_solver_landed_selected_clt_ctr_gate_y`.
+Gate Y is next:
+`gate_y_personal_use_mvp_clt_mass_timber_ctr_spectrum_adapter_plan`.
 Do not keep adding narrow steel-floor source/packet gates unless the
 active matrix or a later runtime proposal names a specific source-owned
 unblocker.
+Selected Gate Y CLT / mass-timber Ctr spectrum adapter file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-y-clt-mass-timber-ctr-spectrum-adapter-contract.test.ts`.
 Selected Gate X AAC/non-homogeneous masonry solver file:
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-x-aac-nonhomogeneous-masonry-wall-family-solver-contract.test.ts`.
 Landed Gate W coverage matrix refresh file:
@@ -514,7 +527,7 @@ Selected Gate M airborne building-prediction input contract file:
 Selected Gate N airborne building-prediction runtime adapter file:
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-n-airborne-building-prediction-runtime-adapter-contract.test.ts`.
 Latest landed calculator gate checkpoint:
-`docs/calculator/CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_T_HANDOFF.md`.
+`docs/calculator/CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_X_HANDOFF.md`.
 Latest strategic ROI revalidation:
 `docs/calculator/CHECKPOINT_2026-05-10_STRATEGIC_ROI_REVALIDATION_AND_GATE_G_PLAN_HANDOFF.md`.
 It selected Gate G after Gate F; Gate G has now landed and selected
@@ -543,11 +556,15 @@ expectations. Runtime values remain unchanged.
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_T_HANDOFF.md`
-3. `docs/calculator/CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_S_HANDOFF.md`
-4. `docs/calculator/CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md`
-5. `docs/calculator/CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_Q_HANDOFF.md`
-6. `docs/calculator/CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_P_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_X_HANDOFF.md`
+3. `docs/calculator/CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md`
+4. `docs/calculator/CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_V_HANDOFF.md`
+5. `docs/calculator/CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_U_HANDOFF.md`
+6. `docs/calculator/CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_T_HANDOFF.md`
+7. `docs/calculator/CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_S_HANDOFF.md`
+8. `docs/calculator/CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md`
+9. `docs/calculator/CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_Q_HANDOFF.md`
+10. `docs/calculator/CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_P_HANDOFF.md`
 5. `docs/calculator/CHECKPOINT_2026-05-11_INSUL_ISO_RESEARCH_AND_GATE_P_REPLAN_HANDOFF.md`
 5. `docs/calculator/CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_M_HANDOFF.md`
 6. `docs/calculator/CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_L_HANDOFF.md`

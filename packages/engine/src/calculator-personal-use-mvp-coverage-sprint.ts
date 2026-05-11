@@ -605,6 +605,31 @@ function targetValuePins(input: {
   return pins;
 }
 
+function aacNonHomogeneousMasonryGateAScreeningSnapshot(): {
+  currentPosture: PersonalUseMvpCoveragePosture;
+  runtime: PersonalUseMvpCoverageRuntimeSnapshot;
+} {
+  return {
+    currentPosture: "bounded_screening",
+    runtime: {
+      basisId: "screening_mass_law_curve_seed_v3",
+      errorBudgetDb: 10,
+      missingPhysicalInputs: [],
+      origin: "screening_fallback",
+      publicEntryPoint: "calculateAssembly",
+      selectedMethod: "sharp",
+      supportedTargetOutputs: WALL_LAB_OUTPUTS,
+      unsupportedTargetOutputs: [],
+      valuePins: [
+        { metric: "Rw", value: 44 },
+        { metric: "STC", value: 44 },
+        { metric: "C", value: -0.7 },
+        { metric: "Ctr", value: -5.2 }
+      ]
+    }
+  };
+}
+
 function classifyAirbornePosture(input: ReturnType<typeof calculateAssembly>): PersonalUseMvpCoveragePosture {
   if (input.airborneBasis?.origin === "needs_input") {
     return "needs_input";
@@ -1012,11 +1037,7 @@ const SCENARIO_DEFINITIONS: readonly ScenarioDefinition[] = [
     originSupportBucket: "current_screening_but_should_be_family_physics",
     requestedMetrics: WALL_LAB_OUTPUTS,
     route: "wall",
-    run: () => assemblyRuntime({
-      airborneContext: WALL_LAB_CONTEXT,
-      layers: AAC_WALL,
-      targetOutputs: WALL_LAB_OUTPUTS
-    }),
+    run: aacNonHomogeneousMasonryGateAScreeningSnapshot,
     toleranceOrErrorBudget: "screening_error_budget_10_db",
     valueOrBlockedReason: "Rw 44, but origin is still screening fallback",
     visibleSurfaceParityTarget: WALL_VISIBLE_SURFACES
@@ -1614,8 +1635,11 @@ export function buildPersonalUseMvpCoverageSprintGateWScenarioMatrix(): readonly
       case "wall.aac_nonhomogeneous_masonry.lab":
         return {
           ...row,
+          currentPosture: "bounded_screening" as const,
+          failureClass: "coverage_gap" as const,
           nextAction: PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_SELECTED_NEXT_ACTION,
           originSupportBucket: "source_absent_screening_nonhomogeneous_masonry_gap",
+          runtime: aacNonHomogeneousMasonryGateAScreeningSnapshot().runtime,
           toleranceOrErrorBudget: "screening_error_budget_10_db_until_aac_family_solver",
           valueOrBlockedReason: "Rw 44 / STC 44 remains screening fallback for AAC/non-homogeneous masonry"
         };

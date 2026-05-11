@@ -43,7 +43,10 @@ checkpoint read
 If you need the current Personal-Use MVP Coverage Sprint Gate V
 checkpoint read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_V_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_V_HANDOFF.md).
-If you need the current Personal-Use MVP Coverage Sprint Gate W
+If you need the current Personal-Use MVP Coverage Sprint Gate X
+checkpoint read
+[CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_X_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_X_HANDOFF.md).
+If you need the preceding Personal-Use MVP Coverage Sprint Gate W
 checkpoint read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md).
 If you need the preceding Personal-Use MVP Coverage Sprint Gate R
@@ -108,15 +111,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_w_personal_use_mvp_coverage_matrix_refresh_after_opening_leak_landed_selected_aac_masonry_gate_x`
+`gate_x_personal_use_mvp_aac_nonhomogeneous_masonry_wall_family_solver_landed_selected_clt_ctr_gate_y`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-x-aac-nonhomogeneous-masonry-wall-family-solver-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-y-clt-mass-timber-ctr-spectrum-adapter-contract.test.ts`
 
 Selected next action:
 
-`gate_x_personal_use_mvp_aac_nonhomogeneous_masonry_wall_family_solver_plan`
+`gate_y_personal_use_mvp_clt_mass_timber_ctr_spectrum_adapter_plan`
 
 Strategic ROI replan:
 
@@ -175,10 +178,29 @@ Current strategy:
   field/building/ASTM/IIC boundaries, exact-source precedence, hostile
   input refusals, and selects Gate X
   `gate_x_personal_use_mvp_aac_nonhomogeneous_masonry_wall_family_solver_plan`.
+  Gate W selected Gate X file:
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-x-aac-nonhomogeneous-masonry-wall-family-solver-contract.test.ts`.
   Remaining coverage gaps in the refreshed matrix are
   `wall.aac_nonhomogeneous_masonry.lab` and the lower-priority CLT
   `Ctr` spectrum-adaptation backlog; broad source crawling remains
   unselected.
+- Personal-Use MVP Coverage Sprint Gate X has now landed the AAC /
+  non-homogeneous masonry wall family solver,
+  `gate_x_personal_use_mvp_aac_nonhomogeneous_masonry_wall_family_solver_plan`.
+  Gate X promotes the complete element-lab AAC row from
+  `screening_fallback` to
+  `gate_x_aac_nonhomogeneous_masonry_sharp_davy_family_physics_runtime`
+  / `family_physics_prediction` with `+/-6 dB`, while keeping
+  `Rw 44 / STC 44 / C -0.7 / Ctr -5.2` unchanged. The route input
+  contract now owns AAC material class, density, thickness, surface
+  mass, optional stiffness/loss-factor defaults, exact-source
+  precedence, missing-density prompts, and field/building non-aliasing.
+  Gate X selection status:
+  `gate_x_personal_use_mvp_aac_nonhomogeneous_masonry_wall_family_solver_landed_selected_clt_ctr_gate_y`.
+  Selected next action:
+  `gate_y_personal_use_mvp_clt_mass_timber_ctr_spectrum_adapter_plan`.
+  Selected next file:
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-y-clt-mass-timber-ctr-spectrum-adapter-contract.test.ts`.
 - Personal-Use MVP Coverage Sprint Gate B has now landed the
   timber/CLT floor-impact `DeltaLw` input and formula-readiness
   contract without runtime movement.
@@ -737,7 +759,8 @@ Gate I validation result:
 Validation completed on 2026-05-10: focused Gate I passed 1 file / 6
 tests; Gate G/H/I plus Gate O/P continuity passed 5 files / 30 tests;
 engine typecheck passed; dynamic-airborne split line-count guard passed
-after updating the current composer size to 1912 physical lines; final
+after updating the then-current composer size to 1912 physical lines;
+Gate X later moved the current composer size to 1931 physical lines; final
 `pnpm calculator:gate:current` passed with engine 350 files / 2030
 tests, web 68 files / 294 passed + 18 skipped, repo build 5/5
 successful, and whitespace guard clean. Known non-fatal warnings remain
@@ -9433,7 +9456,7 @@ Knauf Gate C then closed no-runtime and selected
 | C3 | Wall field-continuation completeness | ✅ preset + corridor surfaces both VALUE-pinned; floor expansion non-blocking | `wall-field-continuation-completeness-matrix.test.ts` + `dynamic-airborne-wall-selector-value-pins.test.ts` + `coverage-grid-consistency.test.ts` |
 | C4 | Floor + wall hostile-input discipline | ✅ both green + all-caller direct thickness guard + torture-matrix O1 overlay | `all-caller-invalid-thickness-guard-gate-a-matrix.test.ts` + `raw-floor-hostile-input-answer-matrix.test.ts` + `raw-wall-hostile-input-answer-matrix.test.ts` + `mixed-floor-wall-cross-mode-wall-extension-matrix.test.ts` |
 | C5 | Reorder and split invariance on defended surfaces | ✅ wall reorder + floor split/parity surfaces; arbitrary floor reorder not claimed | `wall-reorder-invariance-matrix.test.ts` + `mixed-floor-wall-cross-mode-wall-extension-matrix.test.ts` O2 overlay + `floor-split-layer-parity.test.ts` + `coverage-grid-consistency.test.ts` |
-| C6 | Architectural hygiene (≤2000 line files) | ✅ `dynamic_airborne_split_refactor_v2` Gate C closed; `dynamic-airborne.ts` is 1912 lines after Gate I and still below threshold | `dynamic-airborne-*.ts` module family + `DYNAMIC_AIRBORNE_CARTOGRAPHY.md` + `dynamic-airborne-split-v2-gate-b-eleventh-carve-contract.test.ts` + `post-dynamic-airborne-split-refactor-v2-gate-c-next-slice-selection-contract.test.ts` + `coverage-grid-consistency.test.ts` |
+| C6 | Architectural hygiene (≤2000 line files) | ✅ `dynamic_airborne_split_refactor_v2` Gate C closed; `dynamic-airborne.ts` is 1931 lines after Gate X and still below threshold | `dynamic-airborne-*.ts` module family + `DYNAMIC_AIRBORNE_CARTOGRAPHY.md` + `dynamic-airborne-split-v2-gate-b-eleventh-carve-contract.test.ts` + `post-dynamic-airborne-split-refactor-v2-gate-c-next-slice-selection-contract.test.ts` + `coverage-grid-consistency.test.ts` |
 
 ## Step-7 Findings Ledger (live)
 
@@ -9459,12 +9482,13 @@ matrix. Source-of-truth detail lives in the archived slice plan
 
 ## Engine Architectural Posture
 
-`packages/engine/src/dynamic-airborne.ts` is 1912 lines (down
+`packages/engine/src/dynamic-airborne.ts` is 1931 lines (down
 from 6630) after the 15-commit split refactor on 2026-04-21, the
 2026-04-22 dead-import sweep (52 unused imports from the v1 split left
 in place; caught by broad `pnpm check` lint that the focused gate does
 not run), the 2026-04-26 v2 first eleven carves, and the 2026-05-10
-Gate I airborne field-context continuation. Eight bounded modules live
+Gate I airborne field-context continuation plus the 2026-05-11 Gate X
+AAC/non-homogeneous masonry promotion. Nine bounded modules live
 alongside:
 
 - `dynamic-airborne-helpers.ts` (337) — pure math, spectrum
@@ -9498,8 +9522,10 @@ alongside:
   `applyPremiumSingleBoardFieldCorrection`, and
   `applySingleLeafMasonryMonotonicFloor`, and
   `applyNarrowHeavyDoubleLeafGapCap`
+- `dynamic-airborne-gate-x-aac-nonhomogeneous-masonry.ts` — AAC /
+  non-homogeneous masonry Gate X family-physics basis builder
 
-Remaining `dynamic-airborne.ts` (1912 lines) hosts 3 in-file
+Remaining `dynamic-airborne.ts` (1931 lines) hosts 3 in-file
 `apply*` floor / cap / correction guards + `calculateDynamicAirborneResult` +
 `detectDynamicFamily` + `chooseBlend`. The split may continue only as
 optional future architecture work because three remaining guards still

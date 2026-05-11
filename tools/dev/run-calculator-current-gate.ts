@@ -377,6 +377,7 @@ async function main() {
         "src/calculator-personal-use-mvp-coverage-sprint-gate-u-opening-leak-composite-input-surface-contract.test.ts",
         "src/calculator-personal-use-mvp-coverage-sprint-gate-v-post-opening-leak-input-surface-revalidation-contract.test.ts",
         "src/calculator-personal-use-mvp-coverage-sprint-gate-w-coverage-matrix-refresh-after-opening-leak-contract.test.ts",
+        "src/calculator-personal-use-mvp-coverage-sprint-gate-x-aac-nonhomogeneous-masonry-wall-family-solver-contract.test.ts",
         "src/ubiq-open-web-packaged-finish-family-design.test.ts",
         "src/ubiq-open-web-packaged-finish-near-miss-matrix.test.ts",
         "src/ubiq-open-web-packaged-lane-trace-matrix.test.ts",

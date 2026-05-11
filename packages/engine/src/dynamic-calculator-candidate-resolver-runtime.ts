@@ -37,6 +37,10 @@ import {
   GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID
 } from "./dynamic-airborne-gate-i-airborne-field-context";
 import {
+  GATE_X_AAC_NONHOMOGENEOUS_MASONRY_RUNTIME_METHOD,
+  GATE_X_AAC_NONHOMOGENEOUS_MASONRY_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-gate-x-aac-nonhomogeneous-masonry";
+import {
   GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_METHOD,
   GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_OWNER_INPUTS
 } from "./dynamic-airborne-gate-n-building-prediction-runtime-adapter";
@@ -507,6 +511,10 @@ function familyPhysicsCandidateId(runtimeBasis?: AirborneResultBasis): string {
 
   if (runtimeBasis?.method === GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD) {
     return GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID;
+  }
+
+  if (runtimeBasis?.method === GATE_X_AAC_NONHOMOGENEOUS_MASONRY_RUNTIME_METHOD) {
+    return GATE_X_AAC_NONHOMOGENEOUS_MASONRY_SELECTED_CANDIDATE_ID;
   }
 
   return "candidate_grouped_rockwool_family_physics_prediction";
