@@ -110,6 +110,20 @@ Gate G/H/I/J/K wall/field continuity, and Gate L/M/N/O/P building
 boundaries after the UI input surface landed. The next step is an
 executable coverage matrix refresh before choosing another solver lane
 or source target.
+Gate W now lands that executable coverage matrix refresh with selection
+status
+`gate_w_personal_use_mvp_coverage_matrix_refresh_after_opening_leak_landed_selected_aac_masonry_gate_x`
+and selects Gate X
+`gate_x_personal_use_mvp_aac_nonhomogeneous_masonry_wall_family_solver_plan`.
+Gate W landed in
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-w-coverage-matrix-refresh-after-opening-leak-contract.test.ts`
+and selected
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-x-aac-nonhomogeneous-masonry-wall-family-solver-contract.test.ts`.
+The refreshed matrix has 28 wall/floor rows after Gates B-U, pins only
+supported metric values, preserves timber/CLT `DeltaLw`, opening/leak
+`Rw 38.2`, field/building/ASTM/IIC boundaries, and identifies AAC /
+non-homogeneous masonry as the next bounded algorithmic coverage lane
+instead of broad source crawling.
 Gate A
 landed in
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-a-scenario-matrix-contract.test.ts`

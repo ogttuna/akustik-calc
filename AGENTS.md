@@ -463,14 +463,23 @@ opening adapters, and did not disturb Gate G/H/I/J/K wall route or Gate
 L/M/N/O/P building-prediction boundaries. Gate V closes with selection
 status:
 `gate_v_personal_use_mvp_post_opening_leak_input_surface_revalidation_landed_no_runtime_selected_matrix_refresh_gate_w`.
-Gate W is next:
+Gate W has now landed:
 `gate_w_personal_use_mvp_coverage_matrix_refresh_after_opening_leak_plan`.
-Gate W is a coverage matrix refresh before choosing the next solver
-lane or source target.
+Gate W refreshes the executable Personal-Use MVP matrix to 28 rows
+after Gates B-U, keeps supported value pins separate from unsupported
+outputs, preserves timber/CLT `DeltaLw`, opening/leak `Rw 38.2`, field,
+building, ASTM/IIC, hostile, and exact-source boundaries, and selects
+the bounded AAC / non-homogeneous masonry family solver for Gate X with
+selection status:
+`gate_w_personal_use_mvp_coverage_matrix_refresh_after_opening_leak_landed_selected_aac_masonry_gate_x`.
+Gate X is next:
+`gate_x_personal_use_mvp_aac_nonhomogeneous_masonry_wall_family_solver_plan`.
 Do not keep adding narrow steel-floor source/packet gates unless the
 active matrix or a later runtime proposal names a specific source-owned
 unblocker.
-Selected Gate W coverage-matrix refresh file:
+Selected Gate X AAC/non-homogeneous masonry solver file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-x-aac-nonhomogeneous-masonry-wall-family-solver-contract.test.ts`.
+Landed Gate W coverage matrix refresh file:
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-w-coverage-matrix-refresh-after-opening-leak-contract.test.ts`.
 Landed Gate V opening/leak revalidation file:
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-v-post-opening-leak-input-surface-revalidation-contract.test.ts`.

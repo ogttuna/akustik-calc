@@ -18,6 +18,14 @@ import {
   buildSteelFloorFormulaPredictorInputFromSurface,
   type SteelFloorFormulaInputSurface
 } from "./steel-floor-formula-input-surface";
+import {
+  buildTimberCltDeltaLwPredictorInputFromSurface,
+  type TimberCltDeltaLwInputSurface
+} from "./timber-clt-delta-lw-input-surface";
+import {
+  GATE_B_CLT_LAYERS,
+  GATE_B_TIMBER_JOIST_LAYERS
+} from "./timber-clt-floor-impact-delta-lw-input-contract";
 
 export const PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_A_LANDED_GATE =
   "gate_a_personal_use_mvp_coverage_matrix_plan";
@@ -30,6 +38,18 @@ export const PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_A_SELECTED_NEXT_FILE =
 
 export const PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_A_SELECTED_NEXT_ACTION =
   "gate_b_personal_use_mvp_timber_clt_floor_impact_delta_lw_input_contract_plan";
+
+export const PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_LANDED_GATE =
+  "gate_w_personal_use_mvp_coverage_matrix_refresh_after_opening_leak_plan";
+
+export const PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_SELECTION_STATUS =
+  "gate_w_personal_use_mvp_coverage_matrix_refresh_after_opening_leak_landed_selected_aac_masonry_gate_x";
+
+export const PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_SELECTED_NEXT_FILE =
+  "packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-x-aac-nonhomogeneous-masonry-wall-family-solver-contract.test.ts";
+
+export const PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_SELECTED_NEXT_ACTION =
+  "gate_x_personal_use_mvp_aac_nonhomogeneous_masonry_wall_family_solver_plan";
 
 export type PersonalUseMvpCoverageRoute = "floor" | "wall";
 export type PersonalUseMvpCoverageOutputBasis =
@@ -133,6 +153,35 @@ export type PersonalUseMvpGateBLaneSelection = {
   selectionPolicy: readonly string[];
 };
 
+export type PersonalUseMvpGateXLaneId =
+  | "aac_nonhomogeneous_masonry_wall_family_solver"
+  | "airborne_building_prediction_runtime_terms"
+  | "astm_iic_aiic_rating_adapter"
+  | "clt_mass_timber_ctr_spectrum_adapter"
+  | "flat_multicavity_autogrouping_guarded_topology"
+  | "targeted_aac_source_holdout_packet";
+
+export type PersonalUseMvpGateXLaneCandidate = {
+  basisLeakageRisk: number;
+  currentFailureRisk: number;
+  evidenceRowIds: readonly string[];
+  id: PersonalUseMvpGateXLaneId;
+  implementationCost: number;
+  score: number;
+  selected: boolean;
+  solverReadiness: number;
+  sourceRowsRequiredForRuntimeSelection: boolean;
+  userFrequency: number;
+};
+
+export type PersonalUseMvpGateXLaneSelection = {
+  candidates: readonly PersonalUseMvpGateXLaneCandidate[];
+  selectedCandidate: PersonalUseMvpGateXLaneCandidate;
+  selectedNextAction: typeof PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_SELECTED_NEXT_ACTION;
+  selectedNextFile: typeof PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_SELECTED_NEXT_FILE;
+  selectionPolicy: readonly string[];
+};
+
 export type PersonalUseMvpCoverageSprintGateASummary = {
   basisCoverage: readonly PersonalUseMvpCoverageOutputBasis[];
   currentPostureCoverage: readonly PersonalUseMvpCoveragePosture[];
@@ -143,6 +192,20 @@ export type PersonalUseMvpCoverageSprintGateASummary = {
   selectedGateBLane: PersonalUseMvpGateBLaneId;
   selectedNextAction: typeof PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_A_SELECTED_NEXT_ACTION;
   selectedNextFile: typeof PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_A_SELECTED_NEXT_FILE;
+};
+
+export type PersonalUseMvpCoverageSprintGateWSummary = {
+  basisCoverage: readonly PersonalUseMvpCoverageOutputBasis[];
+  currentPostureCoverage: readonly PersonalUseMvpCoveragePosture[];
+  failureClassCoverage: readonly PersonalUseMvpCoverageFailureClass[];
+  noNewRuntimeValueMovement: true;
+  refreshedAfterGate: "gate_v_personal_use_mvp_post_opening_leak_input_surface_revalidation_landed_no_runtime_selected_matrix_refresh_gate_w";
+  remainingCoverageGapRowIds: readonly string[];
+  routeCoverage: readonly PersonalUseMvpCoverageRoute[];
+  rowCount: number;
+  selectedGateXLane: PersonalUseMvpGateXLaneId;
+  selectedNextAction: typeof PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_SELECTED_NEXT_ACTION;
+  selectedNextFile: typeof PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_SELECTED_NEXT_FILE;
 };
 
 type ScenarioDefinition = Omit<PersonalUseMvpCoverageScenarioRow, "currentPosture" | "runtime"> & {
@@ -371,6 +434,36 @@ const COMPLETE_STEEL_SURFACE: SteelFloorFormulaInputSurface = {
   steelSupportForm: "open_web_or_rolled"
 };
 
+const COMPLETE_TIMBER_CLT_TIMBER_SURFACE: TimberCltDeltaLwInputSurface = {
+  impactSystemType: "combined_upper_lower_system",
+  loadBasisKgM2: 72,
+  lowerAssemblyType: "suspended_ceiling_elastic_hanger",
+  lowerBoardLayerCount: 2,
+  lowerBoardThicknessMm: 12.5,
+  lowerCavityDepthMm: 27,
+  lowerCavityFillThicknessMm: 100,
+  lowerSupportClass: "furred_channels",
+  resilientLayerDynamicStiffnessMNm3: 30,
+  resilientLayerThicknessMm: 30,
+  structuralSupportType: "timber_joists",
+  upperTreatmentDensityKgM3: 1150,
+  upperTreatmentThicknessMm: 25
+};
+
+const COMPLETE_TIMBER_CLT_CLT_SURFACE: TimberCltDeltaLwInputSurface = {
+  baseFloorDensityKgM3: 470,
+  impactSystemType: "dry_floating_floor",
+  loadBasisKgM2: 90,
+  lowerAssemblyType: "none",
+  resilientLayerDynamicStiffnessMNm3: 40,
+  resilientLayerThicknessMm: 20,
+  structuralSupportType: "mass_timber_clt",
+  upperFillDensityKgM3: 500,
+  upperFillThicknessMm: 70,
+  upperTreatmentDensityKgM3: 1150,
+  upperTreatmentThicknessMm: 22
+};
+
 const TIMBER_FLOOR: readonly LayerInput[] = [
   { floorRole: "base_structure", materialId: "timber_frame_floor", thicknessMm: 240 },
   { floorRole: "resilient_layer", materialId: "mw_t_impact_layer", thicknessMm: 30 },
@@ -401,6 +494,57 @@ const FLOOR_WALL_AIRBORNE_CONTEXT: AirborneContext = {
   receivingRoomVolumeM3: 55
 };
 
+const OPENING_LEAK_OUTPUTS = ["Rw", "STC", "R'w", "DnT,w"] as const satisfies readonly RequestedOutputId[];
+
+const COMPLETE_OPENING_LEAK_CONTEXT: AirborneContext = {
+  contextMode: "element_lab",
+  hostWallAreaM2: 12,
+  openingLeakElements: [
+    {
+      areaM2: 1.8,
+      count: 1,
+      elementRwDb: 32,
+      id: "door-01",
+      origin: "catalogued",
+      ratingBasis: "rw_single_number",
+      sealLeakageClass: "average"
+    }
+  ]
+};
+
+const PARTIAL_OPENING_LEAK_CONTEXT: AirborneContext = {
+  contextMode: "element_lab",
+  hostWallAreaM2: 12,
+  openingLeakElements: [
+    {
+      areaM2: 1.8,
+      count: 1,
+      id: "door-01",
+      origin: "catalogued"
+    }
+  ]
+};
+
+const COMPLETE_BUILDING_PREDICTION_CONTEXT: AirborneContext = {
+  airtightness: "good",
+  buildingPredictionOutputBasis: "apparent_and_standardized",
+  conservativeFlankingAssumption: "multi_path_conservative",
+  contextMode: "building_prediction",
+  flankingJunctionClass: "rigid_t_junction",
+  junctionCouplingLengthM: 4.8,
+  panelHeightMm: 2700,
+  panelWidthMm: 4000,
+  receivingRoomRt60S: 0.55,
+  receivingRoomVolumeM3: 42,
+  sourceRoomVolumeM3: 38
+};
+
+const COMPLETE_BUILDING_PREDICTION_WITH_OPENING_CONTEXT: AirborneContext = {
+  ...COMPLETE_BUILDING_PREDICTION_CONTEXT,
+  hostWallAreaM2: COMPLETE_OPENING_LEAK_CONTEXT.hostWallAreaM2,
+  openingLeakElements: COMPLETE_OPENING_LEAK_CONTEXT.openingLeakElements
+};
+
 function round1(value: number): number {
   return Math.round(value * 10) / 10;
 }
@@ -427,11 +571,18 @@ const POSTURE_COVERAGE_ORDER = [
 function targetValuePins(input: {
   impact?: ImpactOnlyCalculation["impact"] | null;
   metrics?: ReturnType<typeof calculateAssembly>["metrics"];
+  supportedTargetOutputs?: readonly RequestedOutputId[];
   targetOutputs: readonly RequestedOutputId[];
 }): PersonalUseMvpCoverageMetricValuePin[] {
   const pins: PersonalUseMvpCoverageMetricValuePin[] = [];
+  const supported = new Set(input.supportedTargetOutputs ?? input.targetOutputs);
   const maybePush = (metric: RequestedOutputId, value: number | undefined): void => {
-    if (input.targetOutputs.includes(metric) && typeof value === "number" && Number.isFinite(value)) {
+    if (
+      input.targetOutputs.includes(metric) &&
+      supported.has(metric) &&
+      typeof value === "number" &&
+      Number.isFinite(value)
+    ) {
       pins.push({ metric, value: round1(value) });
     }
   };
@@ -586,6 +737,7 @@ function assemblyRuntime(input: {
       valuePins: targetValuePins({
         impact: result.impact,
         metrics: result.metrics,
+        supportedTargetOutputs: result.supportedTargetOutputs,
         targetOutputs: input.targetOutputs
       })
     }
@@ -625,7 +777,11 @@ function impactRuntime(input: {
       selectedMethod: result.dynamicImpactTrace?.selectionKind ?? result.impact?.basis ?? null,
       supportedTargetOutputs: result.supportedTargetOutputs,
       unsupportedTargetOutputs: result.unsupportedTargetOutputs,
-      valuePins: targetValuePins({ impact: result.impact, targetOutputs: input.targetOutputs })
+      valuePins: targetValuePins({
+        impact: result.impact,
+        supportedTargetOutputs: result.supportedTargetOutputs,
+        targetOutputs: input.targetOutputs
+      })
     }
   };
 }
@@ -706,6 +862,65 @@ function steelSurfaceRuntime(input: {
     runtime: {
       ...runtime.runtime,
       publicEntryPoint: "buildSteelFloorFormulaPredictorInputFromSurface"
+    }
+  };
+}
+
+function timberCltSurfaceRuntime(input: {
+  layers: readonly LayerInput[];
+  surface: TimberCltDeltaLwInputSurface;
+  targetOutputs: readonly RequestedOutputId[];
+}): {
+  currentPosture: PersonalUseMvpCoveragePosture;
+  runtime: PersonalUseMvpCoverageRuntimeSnapshot;
+} {
+  const surface = buildTimberCltDeltaLwPredictorInputFromSurface({
+    layers: input.layers,
+    surface: input.surface,
+    targetOutputs: input.targetOutputs
+  });
+
+  if (surface.status === "needs_input" || surface.status === "unsafe_topology" || !surface.impactPredictorInput) {
+    return {
+      currentPosture: surface.status === "inactive" ? "unsupported" : "needs_input",
+      runtime: {
+        basisId: surface.status,
+        errorBudgetDb: null,
+        missingPhysicalInputs: surface.missingPhysicalInputs,
+        origin: surface.status,
+        publicEntryPoint: "calculateAssembly",
+        selectedMethod: "timber_clt_delta_lw_input_surface_guard",
+        supportedTargetOutputs: [],
+        unsupportedTargetOutputs: input.targetOutputs,
+        valuePins: []
+      }
+    };
+  }
+
+  const result = calculateAssembly(input.layers, {
+    impactPredictorInput: surface.impactPredictorInput,
+    targetOutputs: input.targetOutputs
+  });
+  const deltaBudget = result.impact?.errorBudgets?.find(
+    (budget: { metricId?: string; totalBudgetDb?: number }) => budget.metricId === "DeltaLw"
+  );
+
+  return {
+    currentPosture: classifyAssemblyPosture(result),
+    runtime: {
+      basisId: result.impact?.metricBasis?.DeltaLw ?? result.impact?.basis ?? null,
+      errorBudgetDb: deltaBudget?.totalBudgetDb ?? null,
+      missingPhysicalInputs: [],
+      origin: result.impact?.basis ?? null,
+      publicEntryPoint: "calculateAssembly",
+      selectedMethod: result.dynamicImpactTrace?.selectionKind ?? result.impact?.basis ?? null,
+      supportedTargetOutputs: result.supportedTargetOutputs,
+      unsupportedTargetOutputs: result.unsupportedTargetOutputs,
+      valuePins: targetValuePins({
+        impact: result.impact,
+        supportedTargetOutputs: result.supportedTargetOutputs,
+        targetOutputs: input.targetOutputs
+      })
     }
   };
 }
@@ -1304,6 +1519,176 @@ export function buildPersonalUseMvpCoverageSprintGateAScenarioMatrix(): readonly
   return SCENARIO_DEFINITIONS.map(buildRow);
 }
 
+function buildGateWAdditionalRows(): readonly PersonalUseMvpCoverageScenarioRow[] {
+  return [
+    buildRow({
+      basis: "element_lab",
+      expectedPosture: "family_physics",
+      failureClass: "none",
+      family: "wall_opening_leak_composite",
+      hostileVariant: null,
+      id: "wall.opening_leak_composite.lab",
+      inputCompleteness: "complete",
+      nextAction: "regression_guard",
+      originSupportBucket: "source_absent_opening_area_energy_formula",
+      requestedMetrics: OPENING_LEAK_OUTPUTS,
+      route: "wall",
+      run: () => assemblyRuntime({
+        airborneContext: COMPLETE_OPENING_LEAK_CONTEXT,
+        layers: LINED_MASSIVE_WALL,
+        targetOutputs: OPENING_LEAK_OUTPUTS
+      }),
+      toleranceOrErrorBudget: "airborne_error_budget_6_db",
+      valueOrBlockedReason: "Rw 38.2 through opening/leak area-energy corridor; STC/R'w/DnT,w unsupported",
+      visibleSurfaceParityTarget: WALL_VISIBLE_SURFACES
+    }),
+    buildRow({
+      basis: "element_lab",
+      expectedPosture: "needs_input",
+      failureClass: "correct_block",
+      family: "wall_opening_leak_composite_partial",
+      hostileVariant: "missing_opening_rating_and_seal_fields",
+      id: "wall.opening_leak_composite_partial.needs_input",
+      inputCompleteness: "partial",
+      nextAction: "keep_needs_input_prompt",
+      originSupportBucket: "missing_opening_rating_and_seal_fields",
+      requestedMetrics: OPENING_LEAK_OUTPUTS,
+      route: "wall",
+      run: () => assemblyRuntime({
+        airborneContext: PARTIAL_OPENING_LEAK_CONTEXT,
+        layers: LINED_MASSIVE_WALL,
+        targetOutputs: OPENING_LEAK_OUTPUTS
+      }),
+      toleranceOrErrorBudget: "blocked_until_opening_physical_inputs_complete",
+      valueOrBlockedReason: "Missing openingElementRwDb, openingRatingBasis, openingSealLeakageClass",
+      visibleSurfaceParityTarget: WALL_VISIBLE_SURFACES
+    }),
+    buildRow({
+      basis: "building_prediction",
+      expectedPosture: "unsupported",
+      failureClass: "basis_boundary",
+      family: "wall_opening_leak_building_boundary",
+      hostileVariant: "opening_lab_corridor_requested_under_building_prediction",
+      id: "wall.opening_leak_composite_building_boundary.unsupported",
+      inputCompleteness: "complete",
+      nextAction: "airborne_building_prediction_runtime_terms",
+      originSupportBucket: "building_prediction_adapter_not_owned",
+      requestedMetrics: OPENING_LEAK_OUTPUTS,
+      route: "wall",
+      run: () => assemblyRuntime({
+        airborneContext: COMPLETE_BUILDING_PREDICTION_WITH_OPENING_CONTEXT,
+        layers: LINED_MASSIVE_WALL,
+        targetOutputs: OPENING_LEAK_OUTPUTS
+      }),
+      toleranceOrErrorBudget: "blocked_no_lab_to_building_alias",
+      valueOrBlockedReason: "Opening/leak lab Rw corridor is blocked for R'w/DnT,w building outputs",
+      visibleSurfaceParityTarget: WALL_VISIBLE_SURFACES
+    }),
+    buildRow({
+      basis: "building_prediction",
+      expectedPosture: "unsupported",
+      failureClass: "basis_boundary",
+      family: "wall_complete_airborne_building_prediction",
+      hostileVariant: null,
+      id: "wall.complete_building_prediction.unsupported",
+      inputCompleteness: "complete",
+      nextAction: "airborne_building_prediction_runtime_terms",
+      originSupportBucket: "building_prediction_adapter_not_owned",
+      requestedMetrics: WALL_FIELD_OUTPUTS,
+      route: "wall",
+      run: () => assemblyRuntime({
+        airborneContext: COMPLETE_BUILDING_PREDICTION_CONTEXT,
+        layers: LINED_MASSIVE_WALL,
+        targetOutputs: WALL_FIELD_OUTPUTS
+      }),
+      toleranceOrErrorBudget: "gate_o_design_budget_not_runtime_promoted",
+      valueOrBlockedReason: "Complete building-prediction inputs remain unsupported until path-by-path flanking terms are executable",
+      visibleSurfaceParityTarget: WALL_VISIBLE_SURFACES
+    })
+  ];
+}
+
+export function buildPersonalUseMvpCoverageSprintGateWScenarioMatrix(): readonly PersonalUseMvpCoverageScenarioRow[] {
+  const refreshedGateA = buildPersonalUseMvpCoverageSprintGateAScenarioMatrix().map((row) => {
+    switch (row.id) {
+      case "wall.aac_nonhomogeneous_masonry.lab":
+        return {
+          ...row,
+          nextAction: PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_SELECTED_NEXT_ACTION,
+          originSupportBucket: "source_absent_screening_nonhomogeneous_masonry_gap",
+          toleranceOrErrorBudget: "screening_error_budget_10_db_until_aac_family_solver",
+          valueOrBlockedReason: "Rw 44 / STC 44 remains screening fallback for AAC/non-homogeneous masonry"
+        };
+      case "wall.lined_massive_masonry.lab":
+        return {
+          ...row,
+          failureClass: "none" as const,
+          nextAction: "regression_guard",
+          originSupportBucket: "source_absent_gate_h_lined_massive_family_physics",
+          toleranceOrErrorBudget: "airborne_error_budget_6_db",
+          valueOrBlockedReason: "Rw 60 / STC 60 via Gate H lined massive family-physics runtime"
+        };
+      case "wall.clt_mass_timber.lab":
+        return {
+          ...row,
+          failureClass: "coverage_gap" as const,
+          nextAction: "clt_ctr_adaptation_backlog",
+          originSupportBucket: "source_absent_gate_h_clt_family_physics_partial_spectrum",
+          toleranceOrErrorBudget: "airborne_error_budget_6_db_with_Ctr_unsupported",
+          valueOrBlockedReason: "Rw 42 / STC 42 / C -1.2; Ctr remains unsupported until a CLT spectrum-adaptation owner exists"
+        };
+      case "floor.timber_joist_impact.lab": {
+        const refreshed = timberCltSurfaceRuntime({
+          layers: GATE_B_TIMBER_JOIST_LAYERS,
+          surface: COMPLETE_TIMBER_CLT_TIMBER_SURFACE,
+          targetOutputs: FLOOR_LAB_IMPACT_OUTPUTS
+        });
+
+        return {
+          ...row,
+          currentPosture: refreshed.currentPosture,
+          expectedPosture: "exact" as const,
+          failureClass: "none" as const,
+          nextAction: "regression_guard",
+          originSupportBucket: "exact_Ln,w_plus_source_absent_timber_DeltaLw_formula",
+          runtime: refreshed.runtime,
+          toleranceOrErrorBudget: "Ln,w exact; DeltaLw +/-7.5 dB source_absent_formula_error_budget",
+          valueOrBlockedReason: "Ln,w 51 exact plus DeltaLw 25.2 timber formula companion"
+        };
+      }
+      case "floor.clt_mass_timber_impact.lab": {
+        const refreshed = timberCltSurfaceRuntime({
+          layers: GATE_B_CLT_LAYERS,
+          surface: COMPLETE_TIMBER_CLT_CLT_SURFACE,
+          targetOutputs: FLOOR_LAB_IMPACT_OUTPUTS
+        });
+
+        return {
+          ...row,
+          currentPosture: refreshed.currentPosture,
+          failureClass: "none" as const,
+          nextAction: "regression_guard",
+          originSupportBucket: "published_family_Ln,w_plus_source_absent_CLT_DeltaLw_formula",
+          runtime: refreshed.runtime,
+          toleranceOrErrorBudget: "Ln,w family estimate; DeltaLw +/-7.5 dB source_absent_formula_error_budget",
+          valueOrBlockedReason: "Ln,w 50 family estimate plus DeltaLw 22.6 CLT formula companion"
+        };
+      }
+      case "floor.many_layer_stress_exact_stable":
+        return {
+          ...row,
+          expectedPosture: "source_anchored_delta" as const,
+          originSupportBucket: "exact_impact_plus_field_guide_split_invariance",
+          valueOrBlockedReason: "53 layers stay finite: Rw 52 / Ln,w 52 / L'n,w 55 / L'nT,w 52.2"
+        };
+      default:
+        return row;
+    }
+  });
+
+  return [...refreshedGateA, ...buildGateWAdditionalRows()];
+}
+
 function scoreLane(input: {
   basisLeakageRisk: number;
   currentFailureRisk: number;
@@ -1422,6 +1807,122 @@ export function rankPersonalUseMvpCoverageSprintGateBLanes(
   };
 }
 
+export function rankPersonalUseMvpCoverageSprintGateXLanes(
+  matrix: readonly PersonalUseMvpCoverageScenarioRow[] = buildPersonalUseMvpCoverageSprintGateWScenarioMatrix()
+): PersonalUseMvpGateXLaneSelection {
+  const candidateSeeds = [
+    {
+      basisLeakageRisk: 1,
+      currentFailureRisk: 3,
+      evidenceRowIds: ["wall.aac_nonhomogeneous_masonry.lab"],
+      id: "aac_nonhomogeneous_masonry_wall_family_solver",
+      implementationCost: 2,
+      solverReadiness: 4,
+      sourceRowsRequiredForRuntimeSelection: false,
+      userFrequency: 4
+    },
+    {
+      basisLeakageRisk: 7,
+      currentFailureRisk: 4,
+      evidenceRowIds: [
+        "wall.complete_building_prediction.unsupported",
+        "wall.opening_leak_composite_building_boundary.unsupported"
+      ],
+      id: "airborne_building_prediction_runtime_terms",
+      implementationCost: 6,
+      solverReadiness: 1,
+      sourceRowsRequiredForRuntimeSelection: false,
+      userFrequency: 4
+    },
+    {
+      basisLeakageRisk: 5,
+      currentFailureRisk: 3,
+      evidenceRowIds: ["floor.astm_iic_aiic_boundary.unsupported"],
+      id: "astm_iic_aiic_rating_adapter",
+      implementationCost: 4,
+      solverReadiness: 2,
+      sourceRowsRequiredForRuntimeSelection: false,
+      userFrequency: 3
+    },
+    {
+      basisLeakageRisk: 2,
+      currentFailureRisk: 2,
+      evidenceRowIds: ["wall.clt_mass_timber.lab"],
+      id: "clt_mass_timber_ctr_spectrum_adapter",
+      implementationCost: 3,
+      solverReadiness: 2,
+      sourceRowsRequiredForRuntimeSelection: false,
+      userFrequency: 2
+    },
+    {
+      basisLeakageRisk: 7,
+      currentFailureRisk: 3,
+      evidenceRowIds: ["wall.flat_list_multicavity_ambiguity.needs_input"],
+      id: "flat_multicavity_autogrouping_guarded_topology",
+      implementationCost: 4,
+      solverReadiness: 2,
+      sourceRowsRequiredForRuntimeSelection: false,
+      userFrequency: 3
+    },
+    {
+      basisLeakageRisk: 2,
+      currentFailureRisk: 2,
+      evidenceRowIds: ["wall.aac_nonhomogeneous_masonry.lab"],
+      id: "targeted_aac_source_holdout_packet",
+      implementationCost: 5,
+      solverReadiness: 2,
+      sourceRowsRequiredForRuntimeSelection: true,
+      userFrequency: 4
+    }
+  ] as const satisfies readonly Omit<PersonalUseMvpGateXLaneCandidate, "score" | "selected">[];
+
+  const rowIds = new Set(matrix.map((row) => row.id));
+  const candidatesWithoutSelection = candidateSeeds.map((candidate) => {
+    const missingRows = candidate.evidenceRowIds.filter((id) => !rowIds.has(id));
+    if (missingRows.length > 0) {
+      throw new Error(`Gate X lane ${candidate.id} references missing matrix rows: ${missingRows.join(", ")}`);
+    }
+
+    return {
+      ...candidate,
+      score: scoreLane(candidate),
+      selected: false
+    };
+  });
+  const [selected] = [...candidatesWithoutSelection].sort((left, right) => {
+    const scoreDelta = right.score - left.score;
+    return scoreDelta === 0 ? left.id.localeCompare(right.id) : scoreDelta;
+  });
+
+  if (!selected) {
+    throw new Error("Personal-use MVP Coverage Sprint Gate W requires a Gate X lane candidate.");
+  }
+
+  const candidates = candidatesWithoutSelection.map((candidate) => ({
+    ...candidate,
+    selected: candidate.id === selected.id
+  }));
+  const selectedCandidate = candidates.find((candidate) => candidate.selected);
+
+  if (!selectedCandidate) {
+    throw new Error("Personal-use MVP Coverage Sprint Gate W did not mark a selected Gate X lane.");
+  }
+
+  return {
+    candidates,
+    selectedCandidate,
+    selectedNextAction: PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_SELECTED_NEXT_ACTION,
+    selectedNextFile: PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_SELECTED_NEXT_FILE,
+    selectionPolicy: [
+      "refresh runtime/posture rows after landed Gates B-U before selecting a new lane",
+      "score user_frequency * current_failure_risk * solver_readiness / (implementation_cost + basis_leakage_risk)",
+      "prefer source-absent algorithmic coverage when one bounded family solver is ready",
+      "keep broad source crawling unselected unless a row names a source packet as the highest-impact unblocker",
+      "do not select building, field, ASTM, or lab adapters when the refreshed row shows basis-leakage risk is still dominant"
+    ]
+  };
+}
+
 export function summarizePersonalUseMvpCoverageSprintGateA(
   matrix: readonly PersonalUseMvpCoverageScenarioRow[] = buildPersonalUseMvpCoverageSprintGateAScenarioMatrix()
 ): PersonalUseMvpCoverageSprintGateASummary {
@@ -1435,6 +1936,29 @@ export function summarizePersonalUseMvpCoverageSprintGateA(
     routeCoverage: unique(matrix.map((row) => row.route)),
     rowCount: matrix.length,
     selectedGateBLane: laneSelection.selectedCandidate.id,
+    selectedNextAction: laneSelection.selectedNextAction,
+    selectedNextFile: laneSelection.selectedNextFile
+  };
+}
+
+export function summarizePersonalUseMvpCoverageSprintGateW(
+  matrix: readonly PersonalUseMvpCoverageScenarioRow[] = buildPersonalUseMvpCoverageSprintGateWScenarioMatrix()
+): PersonalUseMvpCoverageSprintGateWSummary {
+  const laneSelection = rankPersonalUseMvpCoverageSprintGateXLanes(matrix);
+
+  return {
+    basisCoverage: unique(matrix.map((row) => row.basis)),
+    currentPostureCoverage: orderedSubset(matrix.map((row) => row.currentPosture), POSTURE_COVERAGE_ORDER),
+    failureClassCoverage: unique(matrix.map((row) => row.failureClass)),
+    noNewRuntimeValueMovement: true,
+    refreshedAfterGate:
+      "gate_v_personal_use_mvp_post_opening_leak_input_surface_revalidation_landed_no_runtime_selected_matrix_refresh_gate_w",
+    remainingCoverageGapRowIds: matrix
+      .filter((row) => row.failureClass === "coverage_gap")
+      .map((row) => row.id),
+    routeCoverage: unique(matrix.map((row) => row.route)),
+    rowCount: matrix.length,
+    selectedGateXLane: laneSelection.selectedCandidate.id,
     selectedNextAction: laneSelection.selectedNextAction,
     selectedNextFile: laneSelection.selectedNextFile
   };

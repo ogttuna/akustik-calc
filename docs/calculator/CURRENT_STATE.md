@@ -43,6 +43,9 @@ checkpoint read
 If you need the current Personal-Use MVP Coverage Sprint Gate V
 checkpoint read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_V_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_V_HANDOFF.md).
+If you need the current Personal-Use MVP Coverage Sprint Gate W
+checkpoint read
+[CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md).
 If you need the preceding Personal-Use MVP Coverage Sprint Gate R
 checkpoint read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md).
@@ -105,15 +108,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_v_personal_use_mvp_post_opening_leak_input_surface_revalidation_landed_no_runtime_selected_matrix_refresh_gate_w`
+`gate_w_personal_use_mvp_coverage_matrix_refresh_after_opening_leak_landed_selected_aac_masonry_gate_x`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-w-coverage-matrix-refresh-after-opening-leak-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-x-aac-nonhomogeneous-masonry-wall-family-solver-contract.test.ts`
 
 Selected next action:
 
-`gate_w_personal_use_mvp_coverage_matrix_refresh_after_opening_leak_plan`
+`gate_x_personal_use_mvp_aac_nonhomogeneous_masonry_wall_family_solver_plan`
 
 Strategic ROI replan:
 
@@ -146,6 +149,8 @@ Current strategy:
 - Personal-Use MVP Coverage Sprint Gate V has now landed the
   no-runtime post-opening/input-surface revalidation,
   `gate_v_personal_use_mvp_post_opening_leak_input_surface_revalidation_plan`.
+  Gate V selection status:
+  `gate_v_personal_use_mvp_post_opening_leak_input_surface_revalidation_landed_no_runtime_selected_matrix_refresh_gate_w`.
   Gate V keeps the
   UI-derived opening fixture pinned at lab `Rw 38.2`,
   `gate_s_opening_leak_composite_area_energy_runtime_corridor`,
@@ -159,6 +164,21 @@ Current strategy:
   `pnpm calculator:gate:current` with engine 363 files / 2096 tests, web
   73 files / 314 passed + 18 skipped, repo build 5/5, and whitespace
   guard passed.
+- Personal-Use MVP Coverage Sprint Gate W has now landed the executable
+  coverage matrix refresh after opening/leak input-surface work,
+  `gate_w_personal_use_mvp_coverage_matrix_refresh_after_opening_leak_plan`.
+  Gate W landed in
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-w-coverage-matrix-refresh-after-opening-leak-contract.test.ts`.
+  Gate W refreshes the matrix to 28 rows, carries the landed Gates B-U
+  runtime/input lanes forward, pins only supported metric values,
+  preserves timber/CLT `DeltaLw`, opening/leak lab `Rw 38.2`,
+  field/building/ASTM/IIC boundaries, exact-source precedence, hostile
+  input refusals, and selects Gate X
+  `gate_x_personal_use_mvp_aac_nonhomogeneous_masonry_wall_family_solver_plan`.
+  Remaining coverage gaps in the refreshed matrix are
+  `wall.aac_nonhomogeneous_masonry.lab` and the lower-priority CLT
+  `Ctr` spectrum-adaptation backlog; broad source crawling remains
+  unselected.
 - Personal-Use MVP Coverage Sprint Gate B has now landed the
   timber/CLT floor-impact `DeltaLw` input and formula-readiness
   contract without runtime movement.

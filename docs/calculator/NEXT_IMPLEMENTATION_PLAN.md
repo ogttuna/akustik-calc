@@ -31,6 +31,8 @@ For the Gate T opening/leak surface parity and Gate U handoff read
 For the Gate V post opening/leak input-surface revalidation and Gate W
 handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_V_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_V_HANDOFF.md).
+For the Gate W coverage matrix refresh and Gate X handoff read
+[CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md).
 For the Gate R no-runtime formula corridor and Gate S handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md).
 For the Gate Q no-runtime input contract and Gate R handoff read
@@ -3324,52 +3326,95 @@ Zustand unavailable test-storage warnings and optional sharp package
 resolution warnings during web build. Broad `pnpm check` was not rerun
 because Gate BI has no runtime/API/UI surface change.
 
-## Next Implementation Order - Personal-Use MVP Coverage Sprint Gate W Coverage Matrix Refresh After Opening/Leak
+## Next Implementation Order - Personal-Use MVP Coverage Sprint Gate X AAC / Non-Homogeneous Masonry Family Solver
 
-Gate V has landed the no-runtime post-input-surface revalidation after
-the first-class Dynamic Calculator opening/leak input surface. The
-original Gate A ROI matrix has now had its highest-value runtime/input
-lanes either landed or deliberately parked behind missing owners:
-timber/CLT impact, generalized wall multi-cavity, lined masonry/CLT,
-airborne field context, airborne building prediction, and opening/leak
-composite modelling. The next highest-ROI step is therefore an
-executable matrix refresh before choosing another solver lane, source
-target, or adapter.
+Gate W has refreshed the executable Personal-Use MVP coverage matrix
+after Gates B-U and selected the next bounded algorithmic lane. The
+highest-ROI remaining gap is not broad source crawling: it is the
+source-absent AAC / non-homogeneous masonry wall row, which still sits
+on `screening_fallback` with `Rw 44 / STC 44 / C -0.7 / Ctr -5.2`.
+This is a common wall-family coverage gap with low basis-leakage risk
+because it stays inside element-lab `Rw`/`STC`/`C`/`Ctr` and does not
+touch field, building, ASTM/IIC, or opening adapters.
 
-Gate V status:
+Gate W status:
 
-`gate_v_personal_use_mvp_post_opening_leak_input_surface_revalidation_landed_no_runtime_selected_matrix_refresh_gate_w`
+`gate_w_personal_use_mvp_coverage_matrix_refresh_after_opening_leak_landed_selected_aac_masonry_gate_x`
 
-Gate W target:
+Gate X target:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-w-coverage-matrix-refresh-after-opening-leak-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-x-aac-nonhomogeneous-masonry-wall-family-solver-contract.test.ts`
 
-Gate W action:
+Gate X action:
 
-`gate_w_personal_use_mvp_coverage_matrix_refresh_after_opening_leak_plan`
+`gate_x_personal_use_mvp_aac_nonhomogeneous_masonry_wall_family_solver_plan`
 
-Active Gate W task: coverage matrix refresh.
+Active Gate X task: promote a bounded AAC / non-homogeneous masonry
+wall family solver from screening fallback to named family physics.
 
-Gate W order:
+Gate X order:
 
-1. Refresh the executable Personal-Use MVP coverage matrix against the
-   current engine and workbench surface after Gates B-U, including the
-   newly surfaced opening/leak inputs. This is the active coverage
-   matrix refresh.
-2. Keep every row basis-aware: lab element, field/apparent, building
-   prediction, and ASTM/IIC boundaries must stay separate with explicit
-   supported/unsupported outputs.
-3. Re-score remaining candidate lanes by user-visible coverage gain,
-   failure risk, solver readiness, implementation cost, and basis
-   leakage risk. Do not select broad source crawling unless a refreshed
-   row names one exact source or holdout as the highest-impact
-   unblocker.
-4. Pin numeric values, support buckets, origin/method, error budgets,
-   visible-surface parity targets, hostile variants, and next actions
-   for every refreshed row.
-5. Select exactly one bounded Gate X lane, then run focused Gate W,
-   matrix continuity, `pnpm calculator:gate:current`, and
-   `git diff --check`.
+1. Add the Gate X contract around the refreshed Gate W matrix row
+   `wall.aac_nonhomogeneous_masonry.lab`, current live values, and the
+   chosen AAC/non-homogeneous masonry family lane.
+2. Define the physical input owner set for AAC/non-homogeneous masonry:
+   material density/class, thickness, single-leaf masonry topology,
+   element-lab basis, and optional porous/non-homogeneous correction
+   terms. Missing owners must produce `needs_input`, not a hidden
+   default.
+3. Promote only element-lab `Rw`/`STC`/`C`/`Ctr` for the AAC row to a
+   named family-physics basis with explicit error budget. Do not alias
+   it to `R'w`, `DnT,w`, ASTM/STC adapter semantics, or building
+   prediction.
+4. Add nearby negative boundaries: wrong material family, missing
+   density/class, field/building target sets, layered lined-massive
+   walls already handled by Gate H, and exact measured rows.
+5. Run focused Gate X, Gate W matrix continuity, engine typecheck,
+   `pnpm calculator:gate:current`, and `git diff --check`.
+
+## Consumed Gate W Implementation Order - Personal-Use MVP Coverage Sprint Coverage Matrix Refresh After Opening/Leak
+
+Gate W landed the no-runtime coverage matrix refresh after Gate V. It
+does not move runtime formulas, workbench input behavior, source rows,
+or route cards. It updates the executable matrix to the current
+post-Gates-B-U reality and selects Gate X.
+
+Gate W landed summary:
+
+1. Added
+   `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-w-coverage-matrix-refresh-after-opening-leak-contract.test.ts`.
+   Gate W action:
+   `gate_w_personal_use_mvp_coverage_matrix_refresh_after_opening_leak_plan`.
+2. Refreshed the executable coverage matrix to 28 rows: original Gate A
+   rows plus opening/leak lab, opening/leak partial `needs_input`,
+   opening/leak building-boundary, and complete building-prediction
+   unsupported rows.
+3. Updated matrix support/value pinning so unsupported outputs do not
+   carry value pins. This prevents rows like partial openings, flat
+   multi-cavity `needs_input`, and building-boundary cases from showing
+   host-wall or screening values as supported results.
+4. Re-pinned landed lanes: timber joist `Ln,w 51` plus `DeltaLw 25.2`,
+   CLT `Ln,w 50` plus `DeltaLw 22.6`, lined massive `Rw 60 / STC 60`,
+   opening/leak `Rw 38.2`, steel `Ln,w 55.6 / DeltaLw 22.4`, field
+   wall/floor outputs, exact rows, hostile input refusals, and
+   missing-input prompts.
+5. Re-scored remaining candidates and selected
+   `aac_nonhomogeneous_masonry_wall_family_solver` for Gate X. Building
+   runtime terms, ASTM/IIC adapter, flat multi-cavity autogrouping, CLT
+   `Ctr`, and targeted source holdout acquisition remain lower priority
+   or higher basis-risk.
+
+Gate W landed status:
+
+`gate_w_personal_use_mvp_coverage_matrix_refresh_after_opening_leak_landed_selected_aac_masonry_gate_x`
+
+Gate W selected Gate X file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-x-aac-nonhomogeneous-masonry-wall-family-solver-contract.test.ts`
+
+Gate W selected Gate X action:
+
+`gate_x_personal_use_mvp_aac_nonhomogeneous_masonry_wall_family_solver_plan`
 
 ## Consumed Gate V Implementation Order - Personal-Use MVP Coverage Sprint Post Opening/Leak Input-Surface Revalidation
 
