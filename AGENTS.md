@@ -410,8 +410,16 @@ area, count, element `Rw`, rating basis, seal/leakage class, and origin
 as first-class inputs, keeps runtime no-runtime, and closes with
 selection status:
 `gate_q_personal_use_mvp_opening_leak_composite_input_contract_landed_no_runtime_selected_formula_corridor_gate_r`.
-Gate R is next:
+Gate R has now landed:
 `gate_r_personal_use_mvp_opening_leak_composite_transmission_loss_formula_corridor_plan`.
+Gate R defines the no-runtime opening/leak composite lab `Rw` formula
+corridor with host-wall and opening area-energy terms, explicit
+sealed/average/leaky/open-gap leakage penalties, a `+/-6 dB`
+source-absent design budget, and negative boundaries for STC-only,
+field, and building aliases. Gate R closes with selection status:
+`gate_r_personal_use_mvp_opening_leak_composite_formula_corridor_landed_no_runtime_selected_runtime_corridor_gate_s`.
+Gate S is next:
+`gate_s_personal_use_mvp_opening_leak_composite_transmission_loss_runtime_corridor_plan`.
 Do not keep adding narrow steel-floor source/packet gates unless the
 active matrix or a later runtime proposal names a specific source-owned
 unblocker.
@@ -446,7 +454,7 @@ Selected Gate M airborne building-prediction input contract file:
 Selected Gate N airborne building-prediction runtime adapter file:
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-n-airborne-building-prediction-runtime-adapter-contract.test.ts`.
 Latest landed calculator gate checkpoint:
-`docs/calculator/CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_M_HANDOFF.md`.
+`docs/calculator/CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md`.
 Latest strategic ROI revalidation:
 `docs/calculator/CHECKPOINT_2026-05-10_STRATEGIC_ROI_REVALIDATION_AND_GATE_G_PLAN_HANDOFF.md`.
 It selected Gate G after Gate F; Gate G has now landed and selected
@@ -475,9 +483,10 @@ expectations. Runtime values remain unchanged.
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_Q_HANDOFF.md`
-3. `docs/calculator/CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_P_HANDOFF.md`
-4. `docs/calculator/CHECKPOINT_2026-05-11_INSUL_ISO_RESEARCH_AND_GATE_P_REPLAN_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md`
+3. `docs/calculator/CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_Q_HANDOFF.md`
+4. `docs/calculator/CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_P_HANDOFF.md`
+5. `docs/calculator/CHECKPOINT_2026-05-11_INSUL_ISO_RESEARCH_AND_GATE_P_REPLAN_HANDOFF.md`
 5. `docs/calculator/CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_M_HANDOFF.md`
 6. `docs/calculator/CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_L_HANDOFF.md`
 7. `docs/calculator/CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_K_HANDOFF.md`
@@ -5196,11 +5205,10 @@ plan.
   selected slice
 - use `pnpm check` only when you need the broad full-repo gate
 - latest focused validation: `pnpm calculator:gate:current` green on
-  2026-05-10 after Personal-Use MVP Coverage Sprint Gate H; engine 349
-  files / 2024 tests, web 68 files / 294 passed + 18 skipped, repo
-  build 5/5 with the known optional `sharp/@img` warnings, whitespace
-  guard clean, `git diff --check` clean after validation-result doc
-  updates.
+  2026-05-11 after Personal-Use MVP Coverage Sprint Gate R; engine 359
+  files / 2080 tests, web 71 files / 306 passed + 18 skipped, repo
+  build 5/5 with the known optional `sharp/@img` warnings and existing
+  Zustand unavailable test-storage warnings, whitespace guard clean.
 - latest broad validation: `pnpm check` green on 2026-05-05 after
   Rockwool explicit screening-only policy Gate B; lint/typecheck clean,
   engine tests passed 382 files / 2262 tests, web tests passed 165

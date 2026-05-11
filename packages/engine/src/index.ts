@@ -15,6 +15,7 @@ export * from "./dynamic-airborne-gate-n-building-prediction-runtime-adapter";
 export * from "./dynamic-airborne-gate-o-building-prediction-formula-corridor";
 export * from "./dynamic-airborne-gate-p-building-prediction-runtime-corridor";
 export * from "./dynamic-airborne-gate-q-opening-leak-composite-transmission-loss-input-contract";
+export * from "./dynamic-airborne-gate-r-opening-leak-composite-transmission-loss-formula-corridor";
 export * from "./dynamic-airborne-gate-i-airborne-field-context";
 export * from "./dynamic-airborne-gate-o-single-leaf";
 export * from "./dynamic-calculator-candidate-resolver-runtime";

@@ -24,6 +24,8 @@ For the Gate-F-after strategic ROI revalidation and Gate G handoff read
 [CHECKPOINT_2026-05-10_STRATEGIC_ROI_REVALIDATION_AND_GATE_G_PLAN_HANDOFF.md](./CHECKPOINT_2026-05-10_STRATEGIC_ROI_REVALIDATION_AND_GATE_G_PLAN_HANDOFF.md).
 For the 2026-05-11 INSUL / ISO research refresh and Gate P replan read
 [CHECKPOINT_2026-05-11_INSUL_ISO_RESEARCH_AND_GATE_P_REPLAN_HANDOFF.md](./CHECKPOINT_2026-05-11_INSUL_ISO_RESEARCH_AND_GATE_P_REPLAN_HANDOFF.md).
+For the Gate R no-runtime formula corridor and Gate S handoff read
+[CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md).
 For the Gate Q no-runtime input contract and Gate R handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_Q_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_Q_HANDOFF.md).
 For the Gate P no-runtime closeout and Gate Q handoff read
@@ -3315,49 +3317,91 @@ Zustand unavailable test-storage warnings and optional sharp package
 resolution warnings during web build. Broad `pnpm check` was not rerun
 because Gate BI has no runtime/API/UI surface change.
 
-## Next Implementation Order - Personal-Use MVP Coverage Sprint Gate R Opening/Leak Composite Formula Corridor
+## Next Implementation Order - Personal-Use MVP Coverage Sprint Gate S Opening/Leak Composite Runtime Corridor
 
-Gate Q has landed the opening/leak composite transmission-loss input
-contract as no-runtime. It made `hostWallAreaM2` and per-opening area,
-count, element `Rw`, rating basis, seal/leakage class, and origin
-schema-owned inputs, but kept host-wall runtime unchanged until a
-formula corridor is owned.
+Gate R has landed the opening/leak composite transmission-loss formula
+corridor as no-runtime. It defines a source-absent area-energy lab `Rw`
+design corridor for host wall plus openings, explicit seal/leakage
+penalties, a visible `+/-6 dB` design budget, and strict negative
+boundaries for `STC`-only opening basis, field/building leakage, missing
+owners, source-absent unbudgeted opening values, and hostile opening
+inputs.
 
-Gate R target:
+Gate S target:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-r-opening-leak-composite-transmission-loss-formula-corridor-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-s-opening-leak-composite-transmission-loss-runtime-corridor-contract.test.ts`
 
-Gate R action:
+Gate S action:
 
-`gate_r_personal_use_mvp_opening_leak_composite_transmission_loss_formula_corridor_plan`
+`gate_s_personal_use_mvp_opening_leak_composite_transmission_loss_runtime_corridor_plan`
 
-Gate R order:
+Gate S order:
 
-1. Add the Gate R formula-corridor contract test and a helper if the
-   composite TL method needs a reusable surface.
-2. Define the source-absent area-energy formula corridor for host-wall
-   plus opening transmission loss before runtime promotion. The method
-   must use host-wall candidate `Rw`/curve basis, opening area ratio,
-   opening element rating basis, and an explicit seal/leakage penalty
-   model.
-3. Keep Gate R no-runtime unless the formula terms, uncertainty budget,
-   and basis labels are all visible and defensible. A later Gate can
-   promote numeric values only after Gate R proves the corridor.
-4. Preserve exact-source precedence, host-wall candidate precedence, and
-   lab/field/building boundaries. A door/window row cannot replace the
-   host wall, and a lab opening value cannot be copied to `R'w` or
-   `DnT,w`.
-5. Require explicit `needs_input` or `invalid_input` for missing area,
-   missing rating basis, missing seal/leakage class, duplicate openings,
-   excessive opening area, zero/negative opening area or count, and
-   unsafe source/basis aliases.
-6. Add a formula decision table for complete sealed/average/leaky/open
-   gap cases, plus negative rows for `STC`-only basis, source-absent
-   opening values without a corridor owner, and building-prediction
-   target leakage.
-7. Validate with focused Gate R, Gate Q/P/O/N/M/L continuity, Gate
+1. Add the Gate S runtime-corridor contract test and runtime helper
+   integration for the Gate R lab `Rw` formula corridor.
+2. Promote only complete, explicitly owned, element-lab opening/leak
+   composite cases to runtime. The promoted runtime value must use the
+   Gate R area-energy formula, host-wall candidate `Rw`, opening area
+   ratio, opening rating basis, and seal/leakage penalty.
+3. Keep exact measured/source host-wall rows ahead of the formula when
+   they truly exact-match the complete assembly. Opening element rows
+   remain terms, not host-wall replacements.
+4. Keep `STC`, `R'w`, `DnT,w`, field context, and building-prediction
+   outputs blocked unless Gate S adds an explicit owned adapter for each
+   basis. Do not copy lab `Rw` or opening element values into field or
+   building metrics.
+5. Surface the formula origin, `+/-6 dB` budget, opening/leak composite
+   support label, and missing-input messages through engine result,
+   support trace, cards/report/API payloads if Gate S touches visible
+   runtime surfaces.
+6. Preserve Gate Q/R hostile-input behavior: missing physical fields,
+   missing owners, duplicate openings, excessive area, zero/negative
+   area/count, `STC`-only basis, source-absent unbudgeted values, and
+   unsafe context aliases must stay non-runtime.
+7. Pin at least one complete numeric runtime case. Current Gate R
+   design fixture is host wall `Rw 55`, 12 m2 host area, 1.8 m2 average
+   sealed-class door with `Rw 32`, expected composite design `Rw 38.2`
+   before runtime promotion. Gate S must prove this value only when all
+   owners are complete.
+8. Validate with focused Gate S, Gate R/Q/P/O/N/M/L continuity, Gate
    G/H/I/J/K wall continuity, current-gate runner, and `git diff
    --check`.
+
+## Consumed Gate R Implementation Order - Personal-Use MVP Coverage Sprint Opening/Leak Composite Formula Corridor
+
+Gate Q landed the opening/leak composite transmission-loss input
+contract as no-runtime. Gate R consumed the next step and defined the
+formula corridor without moving runtime values.
+
+Gate R order completed:
+
+1. Added
+   `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-r-opening-leak-composite-transmission-loss-formula-corridor-contract.test.ts`.
+2. Added
+   `packages/engine/src/dynamic-airborne-gate-r-opening-leak-composite-transmission-loss-formula-corridor.ts`.
+3. Defined the area-energy composite TL formula corridor:
+   host-wall and opening transmission coefficients are area-weighted and
+   converted back to lab `Rw`.
+4. Defined explicit seal/leakage penalties: `sealed: 0 dB`,
+   `average: 2 dB`, `leaky: 6 dB`, `open_gap: 12 dB`.
+5. Added the `+/-6 dB` source-absent design budget for lab `Rw` and
+   kept it labelled as not measured evidence.
+6. Preserved exact-source precedence, host-wall candidate precedence,
+   no-runtime behavior, safe reorder invariance, and lab/field/building
+   separation.
+7. Blocked missing Gate Q physical inputs, missing formula owners,
+   `STC`-only opening basis, source-absent opening values without a
+   budget owner, building-prediction target leakage, duplicate openings,
+   excessive area, and zero/negative area/count.
+8. Selection status:
+   `gate_r_personal_use_mvp_opening_leak_composite_formula_corridor_landed_no_runtime_selected_runtime_corridor_gate_s`.
+9. Selected Gate S:
+   `gate_s_personal_use_mvp_opening_leak_composite_transmission_loss_runtime_corridor_plan`.
+10. Validation completed on 2026-05-11: focused Gate R passed 1 file /
+    6 tests; Gate R/Q/P/O/N/M/L plus Gate G/H/I/J/K continuity passed
+    12 files / 71 tests; final `pnpm calculator:gate:current` passed
+    with engine 359 files / 2080 tests, web 71 files / 306 passed + 18
+    skipped, repo build 5/5 successful, and whitespace guard clean.
 
 ## Consumed Gate Q Implementation Order - Personal-Use MVP Coverage Sprint Opening/Leak Composite Input Contract
 

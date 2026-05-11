@@ -34,7 +34,10 @@ checkpoint read
 If you need the 2026-05-11 INSUL / ISO research refresh and Gate P
 replan read
 [CHECKPOINT_2026-05-11_INSUL_ISO_RESEARCH_AND_GATE_P_REPLAN_HANDOFF.md](./CHECKPOINT_2026-05-11_INSUL_ISO_RESEARCH_AND_GATE_P_REPLAN_HANDOFF.md).
-If you need the current Personal-Use MVP Coverage Sprint Gate Q
+If you need the current Personal-Use MVP Coverage Sprint Gate R
+checkpoint read
+[CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md).
+If you need the preceding Personal-Use MVP Coverage Sprint Gate Q
 checkpoint read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_Q_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_Q_HANDOFF.md).
 If you need the preceding Personal-Use MVP Coverage Sprint Gate P
@@ -93,15 +96,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_q_personal_use_mvp_opening_leak_composite_input_contract_landed_no_runtime_selected_formula_corridor_gate_r`
+`gate_r_personal_use_mvp_opening_leak_composite_formula_corridor_landed_no_runtime_selected_runtime_corridor_gate_s`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-r-opening-leak-composite-transmission-loss-formula-corridor-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-s-opening-leak-composite-transmission-loss-runtime-corridor-contract.test.ts`
 
 Selected next action:
 
-`gate_r_personal_use_mvp_opening_leak_composite_transmission_loss_formula_corridor_plan`
+`gate_s_personal_use_mvp_opening_leak_composite_transmission_loss_runtime_corridor_plan`
 
 Strategic ROI replan:
 
@@ -241,10 +244,48 @@ Current strategy:
   first-class shared schema inputs. Complete opening inputs are
   `ready_for_formula_corridor`, but host-wall values stay unchanged
   until Gate R owns the area-energy formula and leakage penalty corridor.
+- Gate R has now landed that opening/leak composite formula corridor as
+  no-runtime. It defines the lab `Rw` area-energy composite formula,
+  sealed/average/leaky/open-gap leakage penalties, a `+/-6 dB`
+  source-absent design budget, STC-only and field/building alias
+  negatives, and selects Gate S for runtime-corridor promotion.
 - Broad source crawling remains blocked unless the active matrix names a
   specific source or holdout as the highest-impact unblocker.
 
-Current Gate Q result:
+Current Gate R result:
+
+- Gate R adds
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-r-opening-leak-composite-transmission-loss-formula-corridor-contract.test.ts`
+  and
+  `packages/engine/src/dynamic-airborne-gate-r-opening-leak-composite-transmission-loss-formula-corridor.ts`.
+- Formula basis:
+  `area_energy_composite_transmission_loss_source_absent_formula_corridor`.
+- Candidate design fixture: host-wall `Rw 55`, host area `12 m2`,
+  one `1.8 m2` average-seal opening with element `Rw 32`, composite
+  design `Rw 38.2`.
+- Required formula owners are `hostWallRwCandidateOwner`,
+  `areaWeightedTransmissionCoefficientFormulaOwner`,
+  `openingRatingBasisPolicyOwner`, `sealLeakagePenaltyTableOwner`, and
+  `compositeUncertaintyBudgetOwner`; source-absent openings also need
+  `sourceAbsentOpeningValueBudgetOwner`.
+- No-runtime boundary: `calculateAssembly` host-wall `Rw` / `STC` values
+  remain unchanged with opening inputs until Gate S promotes runtime.
+- Selection status:
+  `gate_r_personal_use_mvp_opening_leak_composite_formula_corridor_landed_no_runtime_selected_runtime_corridor_gate_s`.
+- Selected next action:
+  `gate_s_personal_use_mvp_opening_leak_composite_transmission_loss_runtime_corridor_plan`.
+- Selected next file:
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-s-opening-leak-composite-transmission-loss-runtime-corridor-contract.test.ts`.
+- Validation completed on 2026-05-11: focused Gate R passed 1 file / 6
+  tests; Gate R/Q/P/O/N/M/L plus Gate G/H/I/J/K continuity passed 12
+  files / 71 tests; final `pnpm calculator:gate:current` passed with
+  engine 359 files / 2080 tests, web 71 files / 306 passed + 18
+  skipped, repo build 5/5 successful, and whitespace guard clean.
+  Known warnings were the existing Zustand unavailable test-storage
+  warnings and optional sharp package resolution warnings during web
+  build.
+
+Previous Gate Q result:
 
 - Gate Q adds
   `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-q-opening-leak-composite-transmission-loss-input-contract.test.ts`
