@@ -28,6 +28,9 @@ For the Gate S opening/leak runtime corridor and Gate T handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_S_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_S_HANDOFF.md).
 For the Gate T opening/leak surface parity and Gate U handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_T_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_T_HANDOFF.md).
+For the Gate V post opening/leak input-surface revalidation and Gate W
+handoff read
+[CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_V_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_V_HANDOFF.md).
 For the Gate R no-runtime formula corridor and Gate S handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md).
 For the Gate Q no-runtime input contract and Gate R handoff read
@@ -3321,11 +3324,58 @@ Zustand unavailable test-storage warnings and optional sharp package
 resolution warnings during web build. Broad `pnpm check` was not rerun
 because Gate BI has no runtime/API/UI surface change.
 
-## Next Implementation Order - Personal-Use MVP Coverage Sprint Gate V Post Opening/Leak Input-Surface Revalidation
+## Next Implementation Order - Personal-Use MVP Coverage Sprint Gate W Coverage Matrix Refresh After Opening/Leak
+
+Gate V has landed the no-runtime post-input-surface revalidation after
+the first-class Dynamic Calculator opening/leak input surface. The
+original Gate A ROI matrix has now had its highest-value runtime/input
+lanes either landed or deliberately parked behind missing owners:
+timber/CLT impact, generalized wall multi-cavity, lined masonry/CLT,
+airborne field context, airborne building prediction, and opening/leak
+composite modelling. The next highest-ROI step is therefore an
+executable matrix refresh before choosing another solver lane, source
+target, or adapter.
+
+Gate V status:
+
+`gate_v_personal_use_mvp_post_opening_leak_input_surface_revalidation_landed_no_runtime_selected_matrix_refresh_gate_w`
+
+Gate W target:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-w-coverage-matrix-refresh-after-opening-leak-contract.test.ts`
+
+Gate W action:
+
+`gate_w_personal_use_mvp_coverage_matrix_refresh_after_opening_leak_plan`
+
+Active Gate W task: coverage matrix refresh.
+
+Gate W order:
+
+1. Refresh the executable Personal-Use MVP coverage matrix against the
+   current engine and workbench surface after Gates B-U, including the
+   newly surfaced opening/leak inputs. This is the active coverage
+   matrix refresh.
+2. Keep every row basis-aware: lab element, field/apparent, building
+   prediction, and ASTM/IIC boundaries must stay separate with explicit
+   supported/unsupported outputs.
+3. Re-score remaining candidate lanes by user-visible coverage gain,
+   failure risk, solver readiness, implementation cost, and basis
+   leakage risk. Do not select broad source crawling unless a refreshed
+   row names one exact source or holdout as the highest-impact
+   unblocker.
+4. Pin numeric values, support buckets, origin/method, error budgets,
+   visible-surface parity targets, hostile variants, and next actions
+   for every refreshed row.
+5. Select exactly one bounded Gate X lane, then run focused Gate W,
+   matrix continuity, `pnpm calculator:gate:current`, and
+   `git diff --check`.
+
+## Consumed Gate V Implementation Order - Personal-Use MVP Coverage Sprint Post Opening/Leak Input-Surface Revalidation
 
 Gate U has landed the first-class Dynamic Calculator opening/leak input
 surface without adding a new solver, new source row promotion, or
-STC/field/building adapter. The next highest-ROI step is a tight
+STC/field/building adapter. Gate V is a tight no-runtime
 post-input-surface revalidation gate that proves the new visible inputs
 did not disturb earlier personal-use MVP lanes or current-gate breadth.
 
@@ -3341,7 +3391,11 @@ Gate V action:
 
 `gate_v_personal_use_mvp_post_opening_leak_input_surface_revalidation_plan`
 
-Gate V order:
+Gate V landed status:
+
+`gate_v_personal_use_mvp_post_opening_leak_input_surface_revalidation_landed_no_runtime_selected_matrix_refresh_gate_w`
+
+Gate V landed summary:
 
 1. Add a no-runtime revalidation contract that records Gate U as landed
    and keeps the selected opening/leak fixture pinned at lab `Rw 38.2`,

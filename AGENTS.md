@@ -454,12 +454,25 @@ the Gate S lab `Rw 38.2` / `+/-6 dB` runtime basis; partial input stays
 `unsupported`, and no STC/field/building adapter is added. Gate U closes
 with selection status:
 `gate_u_personal_use_mvp_opening_leak_composite_input_surface_landed_selected_revalidation_gate_v`.
-Gate V is next:
+Gate V has now landed:
 `gate_v_personal_use_mvp_post_opening_leak_input_surface_revalidation_plan`.
+Gate V is a no-runtime post-input-surface revalidation gate. It proves
+the first-class opening/leak UI surface did not move the Gate S lab
+`Rw 38.2` / `+/-6 dB` corridor, did not promote STC/field/building
+opening adapters, and did not disturb Gate G/H/I/J/K wall route or Gate
+L/M/N/O/P building-prediction boundaries. Gate V closes with selection
+status:
+`gate_v_personal_use_mvp_post_opening_leak_input_surface_revalidation_landed_no_runtime_selected_matrix_refresh_gate_w`.
+Gate W is next:
+`gate_w_personal_use_mvp_coverage_matrix_refresh_after_opening_leak_plan`.
+Gate W is a coverage matrix refresh before choosing the next solver
+lane or source target.
 Do not keep adding narrow steel-floor source/packet gates unless the
 active matrix or a later runtime proposal names a specific source-owned
 unblocker.
-Selected Gate V opening/leak revalidation file:
+Selected Gate W coverage-matrix refresh file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-w-coverage-matrix-refresh-after-opening-leak-contract.test.ts`.
+Landed Gate V opening/leak revalidation file:
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-v-post-opening-leak-input-surface-revalidation-contract.test.ts`.
 Selected Gate BI file:
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-bi-steel-floor-formula-same-stack-iso-delta-lw-tighten-candidate-governance-contract.test.ts`.

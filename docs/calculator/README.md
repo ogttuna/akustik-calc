@@ -100,6 +100,16 @@ replay, server snapshot replay, output cards, Markdown reports, estimate
 API payloads, and hostile UI edits all preserve the Gate S lab `Rw
 38.2` runtime basis; STC, field, and building outputs still require
 later adapters.
+Gate V now lands that no-runtime post-input-surface revalidation with
+selection status
+`gate_v_personal_use_mvp_post_opening_leak_input_surface_revalidation_landed_no_runtime_selected_matrix_refresh_gate_w`
+and selects Gate W
+`gate_w_personal_use_mvp_coverage_matrix_refresh_after_opening_leak_plan`.
+Gate V revalidated the opening/leak `Rw 38.2` / `+/-6 dB` lab corridor,
+Gate G/H/I/J/K wall/field continuity, and Gate L/M/N/O/P building
+boundaries after the UI input surface landed. The next step is an
+executable coverage matrix refresh before choosing another solver lane
+or source target.
 Gate A
 landed in
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-a-scenario-matrix-contract.test.ts`
