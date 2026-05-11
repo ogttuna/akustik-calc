@@ -2,6 +2,9 @@ import type {
   AirborneCalculatorId,
   AirborneConnectionType,
   AirborneContextMode,
+  AirborneOpeningOrigin,
+  AirborneOpeningRatingBasis,
+  AirborneOpeningSealLeakageClass,
   AirborneResilientBarSideCount,
   AirborneStudType,
   AirtightnessClass,
@@ -526,6 +529,30 @@ export const AIRBORNE_CONTEXT_OPTIONS: readonly ControlOption<AirborneContextMod
     value: "building_prediction"
   }
 ];
+
+export const OPENING_LEAK_RATING_BASIS_OPTIONS: readonly ControlOption<AirborneOpeningRatingBasis>[] = [
+  { label: "Unknown", note: "No owned single-number basis yet.", value: "unknown" },
+  { label: "Rw single number", note: "ISO 717-1 weighted sound reduction index.", value: "rw_single_number" },
+  { label: "STC single number", note: "ASTM single-number rating; kept unsupported for this Rw corridor.", value: "stc_single_number" },
+  { label: "ISO 717-1 curve", note: "ISO curve-derived opening value.", value: "iso_717_1_curve" },
+  { label: "Catalog row", note: "Catalogued opening value with Rw-compatible basis.", value: "catalog_row" },
+  { label: "Measured lab", note: "Lab-owned opening value.", value: "measured_lab" }
+] as const;
+
+export const OPENING_LEAK_SEAL_OPTIONS: readonly ControlOption<AirborneOpeningSealLeakageClass>[] = [
+  { label: "Unknown", note: "No leakage class declared.", value: "unknown" },
+  { label: "Sealed", note: "Tight perimeter and hardware detailing.", value: "sealed" },
+  { label: "Average", note: "Typical installed leakage condition.", value: "average" },
+  { label: "Leaky", note: "Weak perimeter or hardware leakage.", value: "leaky" },
+  { label: "Open gap", note: "Explicit open leakage path.", value: "open_gap" }
+] as const;
+
+export const OPENING_LEAK_ORIGIN_OPTIONS: readonly ControlOption<AirborneOpeningOrigin>[] = [
+  { label: "Unknown", note: "Opening value origin not declared.", value: "unknown" },
+  { label: "Measured", note: "Direct measured opening element.", value: "measured" },
+  { label: "Catalogued", note: "Manufacturer or catalogued opening element.", value: "catalogued" },
+  { label: "Source absent", note: "Source-absent opening value; parked for this corridor.", value: "source_absent" }
+] as const;
 
 export const CONNECTION_OPTIONS: readonly ControlOption<AirborneConnectionType>[] = [
   { label: "Auto", note: "Let the engine infer a likely connection type.", value: "auto" },

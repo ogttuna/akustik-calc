@@ -4,6 +4,9 @@ import type {
   AirborneCalculatorId,
   AirborneConnectionType,
   AirborneContextMode,
+  AirborneOpeningOrigin,
+  AirborneOpeningRatingBasis,
+  AirborneOpeningSealLeakageClass,
   AirborneResilientBarSideCount,
   AirborneStudType,
   AirtightnessClass,
@@ -20,7 +23,7 @@ import type {
   WallSupportTopology,
   WallTopologyMode
 } from "@dynecho/shared";
-import { CloudUpload, FolderOpen, Plus, RefreshCcw } from "lucide-react";
+import { ArrowDown, ArrowUp, CloudUpload, FolderOpen, Plus, RefreshCcw, Trash2 } from "lucide-react";
 
 import type { GuidedRouteSignals } from "./guided-route-signals";
 import type { GuidedTopologyGap } from "./guided-topology-gap";
@@ -35,6 +38,9 @@ import {
   CONNECTION_OPTIONS,
   ELECTRICAL_BOX_OPTIONS,
   JUNCTION_OPTIONS,
+  OPENING_LEAK_ORIGIN_OPTIONS,
+  OPENING_LEAK_RATING_BASIS_OPTIONS,
+  OPENING_LEAK_SEAL_OPTIONS,
   PENETRATION_OPTIONS,
   RESILIENT_BAR_SIDE_COUNT_OPTIONS,
   SEAL_OPTIONS,
@@ -55,6 +61,7 @@ import {
   WALL_TOPOLOGY_MODE_OPTIONS,
   type WorkspacePanelId
 } from "./simple-workbench-constants";
+import type { WorkbenchOpeningLeakElementDraft } from "./opening-leak-composite-input-surface";
 import {
   workbenchSectionCardClass,
   workbenchSectionEyebrowClass,
@@ -108,11 +115,14 @@ type SimpleWorkbenchRoutePanelProps = {
   airborneWallCavity2LayerIndices: string;
   airborneWallInternalLeafCoupling: WallInternalLeafCoupling;
   airborneWallInternalLeafLayerIndices: string;
+  airborneOpeningLeakElements: readonly WorkbenchOpeningLeakElementDraft[];
+  airborneOpeningLeakHostWallAreaM2: string;
   airborneWallSideALeafLayerIndices: string;
   airborneWallSideBLeafLayerIndices: string;
   airborneWallSupportTopology: WallSupportTopology;
   airborneWallTopologyMode: WallTopologyMode;
   airborneVolumeSanityWarning: string | null;
+  addAirborneOpeningLeakElement: () => void;
   appendRows: (rows: readonly { densityKgM3?: string; dynamicStiffnessMNm3?: string; floorRole?: FloorRole; materialId: string; thicknessMm: string }[]) => void;
   automaticOutputsLength: number;
   calculatorId: AirborneCalculatorId;
@@ -154,6 +164,7 @@ type SimpleWorkbenchRoutePanelProps = {
   lightweightSteelBaseRow: { id: string } | null;
   liveRowCount: number;
   modePresets: readonly PresetDefinition[];
+  moveAirborneOpeningLeakElement: (id: string, direction: "down" | "up") => void;
   onContextModeChange: (mode: AirborneContextMode) => void;
   onLoadServerProject: () => void;
   onPresetChange: (presetId: PresetId) => void;
@@ -162,6 +173,7 @@ type SimpleWorkbenchRoutePanelProps = {
   onStartEmpty: () => void;
   onStudyModeChange: (mode: StudyMode) => void;
   onSyncServerProject: () => void;
+  openingLeakCompositeInputSurfaceActive: boolean;
   panelHeightSanityWarning: string | null;
   panelWidthSanityWarning: string | null;
   parkedRowCount: number;
@@ -177,10 +189,12 @@ type SimpleWorkbenchRoutePanelProps = {
     label: string;
   }>;
   serverProjectStatusLabel: string;
+  removeAirborneOpeningLeakElement: (id: string) => void;
   setAirborneAirtightness: (value: AirtightnessClass) => void;
   setAirborneConnectionType: (value: AirborneConnectionType) => void;
   setAirborneElectricalBoxes: (value: ElectricalBoxState) => void;
   setAirborneJunctionQuality: (value: JunctionQuality) => void;
+  setAirborneOpeningLeakHostWallAreaM2: (value: string) => void;
   setAirbornePanelHeightMm: (value: string) => void;
   setAirbornePanelWidthMm: (value: string) => void;
   setAirbornePenetrationState: (value: PenetrationState) => void;
@@ -240,6 +254,7 @@ type SimpleWorkbenchRoutePanelProps = {
   studyMode: StudyMode;
   topologyGap: GuidedTopologyGap | null;
   updateMaterial: (id: string, materialId: string) => void;
+  updateAirborneOpeningLeakElement: (id: string, value: Partial<WorkbenchOpeningLeakElementDraft>) => void;
   validationSummary: GuidedValidationSummary;
   wallTopologyControlsActive: boolean;
   wallModifiersActive: boolean;
@@ -273,11 +288,14 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
     airborneWallCavity2LayerIndices,
     airborneWallInternalLeafCoupling,
     airborneWallInternalLeafLayerIndices,
+    airborneOpeningLeakElements,
+    airborneOpeningLeakHostWallAreaM2,
     airborneWallSideALeafLayerIndices,
     airborneWallSideBLeafLayerIndices,
     airborneWallSupportTopology,
     airborneWallTopologyMode,
     airborneVolumeSanityWarning,
+    addAirborneOpeningLeakElement,
     appendRows,
     automaticOutputsLength,
     calculatorId,
@@ -319,6 +337,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
     lightweightSteelBaseRow,
     liveRowCount,
     modePresets,
+    moveAirborneOpeningLeakElement,
     onContextModeChange,
     onLoadServerProject,
     onPresetChange,
@@ -327,6 +346,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
     onStartEmpty,
     onStudyModeChange,
     onSyncServerProject,
+    openingLeakCompositeInputSurfaceActive,
     panelHeightSanityWarning,
     panelWidthSanityWarning,
     parkedRowCount,
@@ -339,10 +359,12 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
     selectedServerProjectId,
     serverProjectOptions,
     serverProjectStatusLabel,
+    removeAirborneOpeningLeakElement,
     setAirborneAirtightness,
     setAirborneConnectionType,
     setAirborneElectricalBoxes,
     setAirborneJunctionQuality,
+    setAirborneOpeningLeakHostWallAreaM2,
     setAirbornePanelHeightMm,
     setAirbornePanelWidthMm,
     setAirbornePenetrationState,
@@ -402,6 +424,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
     studyMode,
     topologyGap,
     updateMaterial,
+    updateAirborneOpeningLeakElement,
     validationSummary,
     wallTopologyControlsActive,
     wallModifiersActive
@@ -560,7 +583,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
             </details>
           </section>
 
-          {geometryActive || impactFieldActive || steelFloorFormulaInputSurfaceActive || timberCltDeltaLwInputSurfaceActive ? (
+          {geometryActive || impactFieldActive || openingLeakCompositeInputSurfaceActive || steelFloorFormulaInputSurfaceActive || timberCltDeltaLwInputSurfaceActive ? (
             <section className={`rounded border px-3 py-3 ${workbenchSectionCardClass("route")}`}>
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="text-[0.84rem] font-semibold text-[color:var(--ink)]">Input map</div>
@@ -570,10 +593,226 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
               <div className="mt-3 grid gap-3">
                 <ContextBucket
                   description="Directly gates the live read."
-                  hasContent={geometryActive || impactFieldActive || steelFloorFormulaInputSurfaceActive || timberCltDeltaLwInputSurfaceActive}
+                  hasContent={geometryActive || impactFieldActive || openingLeakCompositeInputSurfaceActive || steelFloorFormulaInputSurfaceActive || timberCltDeltaLwInputSurfaceActive}
                   title="Required now"
                   tone="required"
                 >
+                  {openingLeakCompositeInputSurfaceActive ? (
+                    <ContextSubsection
+                      note="These fields feed the Gate S lab Rw opening/leak corridor."
+                      title="Opening/leak composite"
+                    >
+                      <div className="grid gap-3">
+                        <FieldShell
+                          label="Host wall area (m²)"
+                          note="Gross separating wall area before opening subtraction."
+                          relevance="required"
+                          usage="Rw"
+                        >
+                          <input
+                            className={getTextInputClassName(false)}
+                            inputMode="decimal"
+                            onChange={(event) => setAirborneOpeningLeakHostWallAreaM2(event.target.value)}
+                            placeholder="e.g. 12"
+                            value={airborneOpeningLeakHostWallAreaM2}
+                          />
+                        </FieldShell>
+
+                        <div className="grid gap-2">
+                          {airborneOpeningLeakElements.map((opening, openingIndex) => (
+                            <div
+                              className="grid gap-3 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-3 py-3"
+                              key={`${opening.id}-${openingIndex}`}
+                            >
+                              <div className="flex flex-wrap items-center justify-between gap-2">
+                                <div className="text-[0.74rem] font-semibold text-[color:var(--ink-soft)]">
+                                  Opening {openingIndex + 1}
+                                </div>
+                                <div className="inline-flex shrink-0 items-center gap-1">
+                                  <button
+                                    aria-label={`Move opening ${openingIndex + 1} up`}
+                                    className="focus-ring inline-flex h-8 w-8 items-center justify-center rounded border border-[color:var(--line)] text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-45"
+                                    disabled={openingIndex === 0}
+                                    onClick={() => moveAirborneOpeningLeakElement(opening.id, "up")}
+                                    title="Move up"
+                                    type="button"
+                                  >
+                                    <ArrowUp className="h-3.5 w-3.5" />
+                                  </button>
+                                  <button
+                                    aria-label={`Move opening ${openingIndex + 1} down`}
+                                    className="focus-ring inline-flex h-8 w-8 items-center justify-center rounded border border-[color:var(--line)] text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-45"
+                                    disabled={openingIndex === airborneOpeningLeakElements.length - 1}
+                                    onClick={() => moveAirborneOpeningLeakElement(opening.id, "down")}
+                                    title="Move down"
+                                    type="button"
+                                  >
+                                    <ArrowDown className="h-3.5 w-3.5" />
+                                  </button>
+                                  <button
+                                    aria-label={`Remove opening ${openingIndex + 1}`}
+                                    className="focus-ring inline-flex h-8 w-8 items-center justify-center rounded border border-[color:var(--line)] text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-45"
+                                    disabled={airborneOpeningLeakElements.length === 1}
+                                    onClick={() => removeAirborneOpeningLeakElement(opening.id)}
+                                    title="Remove opening"
+                                    type="button"
+                                  >
+                                    <Trash2 className="h-3.5 w-3.5" />
+                                  </button>
+                                </div>
+                              </div>
+
+                              <div className="grid gap-3 sm:grid-cols-2">
+                                <FieldShell
+                                  label="Opening id"
+                                  note="Stable id used for duplicate and reorder guards."
+                                  relevance="required"
+                                  usage="Rw"
+                                >
+                                  <input
+                                    className={getTextInputClassName(false)}
+                                    onChange={(event) => updateAirborneOpeningLeakElement(opening.id, { id: event.target.value })}
+                                    placeholder="e.g. door-1"
+                                    value={opening.id}
+                                  />
+                                </FieldShell>
+
+                                <FieldShell
+                                  label="Area (m²)"
+                                  note="Area of one repeated opening."
+                                  relevance="required"
+                                  usage="Rw"
+                                >
+                                  <input
+                                    className={getTextInputClassName(false)}
+                                    inputMode="decimal"
+                                    onChange={(event) => updateAirborneOpeningLeakElement(opening.id, { areaM2: event.target.value })}
+                                    placeholder="e.g. 1.8"
+                                    value={opening.areaM2}
+                                  />
+                                </FieldShell>
+
+                                <FieldShell
+                                  label="Count"
+                                  note="Positive integer repeat count."
+                                  relevance="required"
+                                  usage="Rw"
+                                >
+                                  <input
+                                    className={getTextInputClassName(false)}
+                                    inputMode="numeric"
+                                    onChange={(event) => updateAirborneOpeningLeakElement(opening.id, { count: event.target.value })}
+                                    placeholder="e.g. 1"
+                                    value={opening.count}
+                                  />
+                                </FieldShell>
+
+                                <FieldShell
+                                  label="Element Rw (dB)"
+                                  note="Opening element rating before leakage penalty."
+                                  relevance="required"
+                                  usage="Rw"
+                                >
+                                  <input
+                                    className={getTextInputClassName(false)}
+                                    inputMode="decimal"
+                                    onChange={(event) => updateAirborneOpeningLeakElement(opening.id, { elementRwDb: event.target.value })}
+                                    placeholder="e.g. 32"
+                                    value={opening.elementRwDb}
+                                  />
+                                </FieldShell>
+
+                                <FieldShell
+                                  label="Rating basis"
+                                  note="Rw-compatible basis is required for this corridor."
+                                  relevance="required"
+                                  usage="Rw"
+                                >
+                                  <select
+                                    aria-label={`Opening ${openingIndex + 1} rating basis`}
+                                    className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                                    onChange={(event) =>
+                                      updateAirborneOpeningLeakElement(opening.id, {
+                                        ratingBasis: event.target.value as "" | AirborneOpeningRatingBasis
+                                      })
+                                    }
+                                    value={opening.ratingBasis}
+                                  >
+                                    <option value="">Select rating basis</option>
+                                    {OPENING_LEAK_RATING_BASIS_OPTIONS.map((option) => (
+                                      <option key={option.value} value={option.value}>
+                                        {option.label}
+                                      </option>
+                                    ))}
+                                  </select>
+                                </FieldShell>
+
+                                <FieldShell
+                                  label="Seal/leakage"
+                                  note="Leakage class controls the opening penalty."
+                                  relevance="required"
+                                  usage="Rw"
+                                >
+                                  <select
+                                    aria-label={`Opening ${openingIndex + 1} seal leakage class`}
+                                    className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                                    onChange={(event) =>
+                                      updateAirborneOpeningLeakElement(opening.id, {
+                                        sealLeakageClass: event.target.value as "" | AirborneOpeningSealLeakageClass
+                                      })
+                                    }
+                                    value={opening.sealLeakageClass}
+                                  >
+                                    <option value="">Select seal/leakage</option>
+                                    {OPENING_LEAK_SEAL_OPTIONS.map((option) => (
+                                      <option key={option.value} value={option.value}>
+                                        {option.label}
+                                      </option>
+                                    ))}
+                                  </select>
+                                </FieldShell>
+
+                                <FieldShell
+                                  label="Origin"
+                                  note="Measured or catalogued opening values can promote; source-absent is parked."
+                                  relevance="required"
+                                  usage="Rw"
+                                >
+                                  <select
+                                    aria-label={`Opening ${openingIndex + 1} origin`}
+                                    className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                                    onChange={(event) =>
+                                      updateAirborneOpeningLeakElement(opening.id, {
+                                        origin: event.target.value as "" | AirborneOpeningOrigin
+                                      })
+                                    }
+                                    value={opening.origin}
+                                  >
+                                    <option value="">Select origin</option>
+                                    {OPENING_LEAK_ORIGIN_OPTIONS.map((option) => (
+                                      <option key={option.value} value={option.value}>
+                                        {option.label}
+                                      </option>
+                                    ))}
+                                  </select>
+                                </FieldShell>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        <button
+                          className="focus-ring inline-flex h-10 min-w-0 items-center justify-center gap-2 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-3 text-[0.82rem] font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
+                          onClick={addAirborneOpeningLeakElement}
+                          type="button"
+                        >
+                          <Plus className="h-4 w-4" />
+                          Add opening
+                        </button>
+                      </div>
+                    </ContextSubsection>
+                  ) : null}
+
                   {steelFloorFormulaInputSurfaceActive ? (
                     <ContextSubsection
                       note="These fields feed the source-absent steel floor formula lane."

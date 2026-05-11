@@ -441,11 +441,26 @@ copy, and missing/hostile/source-absent/STC-only opening inputs remain
 `needs_input` or `unsupported` without a promoted budget. Gate T closes
 with selection status:
 `gate_t_personal_use_mvp_opening_leak_composite_surface_parity_landed_selected_input_surface_gate_u`.
-Gate U is next:
+Gate U has now landed:
 `gate_u_personal_use_mvp_opening_leak_composite_input_surface_plan`.
+Gate U makes the opening/leak physical terms first-class in the Dynamic
+Calculator wall input surface: host wall area, stable opening ids,
+opening area/count, element `Rw`, rating basis, seal/leakage class, and
+origin now flow through live evaluation, local saved replay, server
+snapshot replay, output cards, Markdown report payloads, estimate API
+payloads, and hostile UI edits. Complete UI-derived input still returns
+the Gate S lab `Rw 38.2` / `+/-6 dB` runtime basis; partial input stays
+`needs_input`, duplicate/excessive/source-absent/STC-only openings stay
+`unsupported`, and no STC/field/building adapter is added. Gate U closes
+with selection status:
+`gate_u_personal_use_mvp_opening_leak_composite_input_surface_landed_selected_revalidation_gate_v`.
+Gate V is next:
+`gate_v_personal_use_mvp_post_opening_leak_input_surface_revalidation_plan`.
 Do not keep adding narrow steel-floor source/packet gates unless the
 active matrix or a later runtime proposal names a specific source-owned
 unblocker.
+Selected Gate V opening/leak revalidation file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-v-post-opening-leak-input-surface-revalidation-contract.test.ts`.
 Selected Gate BI file:
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-bi-steel-floor-formula-same-stack-iso-delta-lw-tighten-candidate-governance-contract.test.ts`.
 Selected Gate A coverage matrix file:

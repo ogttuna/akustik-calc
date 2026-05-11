@@ -37,6 +37,9 @@ replan read
 If you need the current Personal-Use MVP Coverage Sprint Gate S
 checkpoint read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_S_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_S_HANDOFF.md).
+If you need the current Personal-Use MVP Coverage Sprint Gate U
+checkpoint read
+[CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_U_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_U_HANDOFF.md).
 If you need the preceding Personal-Use MVP Coverage Sprint Gate R
 checkpoint read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md).
@@ -99,15 +102,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_t_personal_use_mvp_opening_leak_composite_surface_parity_landed_selected_input_surface_gate_u`
+`gate_u_personal_use_mvp_opening_leak_composite_input_surface_landed_selected_revalidation_gate_v`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-u-opening-leak-composite-input-surface-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-v-post-opening-leak-input-surface-revalidation-contract.test.ts`
 
 Selected next action:
 
-`gate_u_personal_use_mvp_opening_leak_composite_input_surface_plan`
+`gate_v_personal_use_mvp_post_opening_leak_input_surface_revalidation_plan`
 
 Strategic ROI replan:
 
@@ -123,6 +126,14 @@ Current strategy:
   BH's policy-only `tighten` candidate.
 - Personal-Use MVP Coverage Sprint Gate A has now landed as an
   executable 24-row wall/floor scenario matrix.
+- Personal-Use MVP Coverage Sprint Gate U has now landed the first-class
+  wall opening/leak input surface. Live workbench evaluation, local
+  saved replay, server snapshot replay, output cards, Markdown reports,
+  estimate API payloads, and hostile UI edits all feed the existing Gate
+  S runtime corridor without moving `Rw 38.2` or the `+/-6 dB` budget.
+  Partial opening fields stay `needs_input`; duplicate/excessive,
+  source-absent, and STC-only opening edits stay `unsupported` with no
+  promoted budget. Gate V revalidation is the next selected action.
 - Personal-Use MVP Coverage Sprint Gate B has now landed the
   timber/CLT floor-impact `DeltaLw` input and formula-readiness
   contract without runtime movement.

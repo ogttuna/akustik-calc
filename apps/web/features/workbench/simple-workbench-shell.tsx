@@ -22,6 +22,7 @@ import {
   STANDARDIZED_AIRBORNE_OUTPUTS
 } from "./field-airborne-output";
 import { buildWorkbenchAirborneFieldContextInputSurface } from "./airborne-field-context-input-surface";
+import { buildWorkbenchOpeningLeakCompositeInputSurface } from "./opening-leak-composite-input-surface";
 import { formatUnlockOutputs, getGuidedOutputUnlocks } from "./guided-output-unlocks";
 import { getGuidedTopologyGap } from "./guided-topology-gap";
 import { deriveGuidedRouteSignals } from "./guided-route-signals";
@@ -273,6 +274,8 @@ export function SimpleWorkbenchShell() {
   const airborneConnectionType = useWorkbenchStore((state) => state.airborneConnectionType);
   const airborneElectricalBoxes = useWorkbenchStore((state) => state.airborneElectricalBoxes);
   const airborneJunctionQuality = useWorkbenchStore((state) => state.airborneJunctionQuality);
+  const airborneOpeningLeakElements = useWorkbenchStore((state) => state.airborneOpeningLeakElements);
+  const airborneOpeningLeakHostWallAreaM2 = useWorkbenchStore((state) => state.airborneOpeningLeakHostWallAreaM2);
   const airbornePanelHeightMm = useWorkbenchStore((state) => state.airbornePanelHeightMm);
   const airbornePanelWidthMm = useWorkbenchStore((state) => state.airbornePanelWidthMm);
   const airbornePenetrationState = useWorkbenchStore((state) => state.airbornePenetrationState);
@@ -350,6 +353,11 @@ export function SimpleWorkbenchShell() {
   const setAirborneContextMode = useWorkbenchStore((state) => state.setAirborneContextMode);
   const setAirborneElectricalBoxes = useWorkbenchStore((state) => state.setAirborneElectricalBoxes);
   const setAirborneJunctionQuality = useWorkbenchStore((state) => state.setAirborneJunctionQuality);
+  const addAirborneOpeningLeakElement = useWorkbenchStore((state) => state.addAirborneOpeningLeakElement);
+  const moveAirborneOpeningLeakElement = useWorkbenchStore((state) => state.moveAirborneOpeningLeakElement);
+  const removeAirborneOpeningLeakElement = useWorkbenchStore((state) => state.removeAirborneOpeningLeakElement);
+  const setAirborneOpeningLeakHostWallAreaM2 = useWorkbenchStore((state) => state.setAirborneOpeningLeakHostWallAreaM2);
+  const updateAirborneOpeningLeakElement = useWorkbenchStore((state) => state.updateAirborneOpeningLeakElement);
   const setAirbornePanelHeightMm = useWorkbenchStore((state) => state.setAirbornePanelHeightMm);
   const setAirbornePanelWidthMm = useWorkbenchStore((state) => state.setAirbornePanelWidthMm);
   const setAirbornePenetrationState = useWorkbenchStore((state) => state.setAirbornePenetrationState);
@@ -448,6 +456,7 @@ export function SimpleWorkbenchShell() {
         row.floorRole === "base_structure" &&
         TIMBER_CLT_DELTA_LW_BASE_MATERIAL_IDS.has(row.materialId)
     );
+  const openingLeakCompositeInputSurfaceActive = studyMode === "wall";
   const totalThickness = sumThickness(rows);
   const { collapsedLiveRowCount, liveRowCount, parkedRowCount, solverLayerCount } = getRowActivityCounts(rows, materials);
 
@@ -600,11 +609,25 @@ export function SimpleWorkbenchShell() {
     studType: airborneStudType,
     wallTopology: liveWallTopology
   };
+  const openingLeakCompositeInputSurface = buildWorkbenchOpeningLeakCompositeInputSurface({
+    studyMode,
+    surface: {
+      elements: airborneOpeningLeakElements,
+      hostWallAreaM2: airborneOpeningLeakHostWallAreaM2
+    },
+    targetOutputs: automaticOutputs
+  });
+  const liveAirborneBaseContextWithOpenings: typeof liveAirborneBaseContext = {
+    ...liveAirborneBaseContext,
+    ...(openingLeakCompositeInputSurface.status !== "inactive"
+      ? openingLeakCompositeInputSurface.airborneContextPatch
+      : {})
+  };
   const airborneFieldContextInputSurface = buildWorkbenchAirborneFieldContextInputSurface({
     studyMode,
     surface: {
       airtightness: airborneAirtightness,
-      baseContext: liveAirborneBaseContext,
+      baseContext: liveAirborneBaseContextWithOpenings,
       contextMode: airborneContextMode,
       panelHeightMm: airbornePanelHeightMm,
       panelWidthMm: airbornePanelWidthMm,
@@ -615,6 +638,9 @@ export function SimpleWorkbenchShell() {
   });
   const liveAirborneContext: AirborneContext = {
     ...airborneFieldContextInputSurface.airborneContext,
+    ...(openingLeakCompositeInputSurface.status !== "inactive"
+      ? openingLeakCompositeInputSurface.airborneContextPatch
+      : {}),
     airtightness: airborneAirtightness,
     contextMode: airborneContextMode,
     panelHeightMm: parsePositiveNumber(airbornePanelHeightMm),
@@ -644,6 +670,12 @@ export function SimpleWorkbenchShell() {
     id: "simple-current",
     impactFieldContext: liveImpactFieldContext,
     name: projectName,
+    openingLeakCompositeInputSurface: openingLeakCompositeInputSurfaceActive
+      ? {
+          elements: airborneOpeningLeakElements,
+          hostWallAreaM2: airborneOpeningLeakHostWallAreaM2
+        }
+      : null,
     rows,
     source: "current",
     steelFloorFormulaInputSurface: steelFloorFormulaInputSurfaceActive
@@ -710,6 +742,9 @@ export function SimpleWorkbenchShell() {
     if (timberCltDeltaLwInputSurfaceActive) contextNotes.push("Timber/CLT DeltaLw formula inputs are active for the source-absent lab impact lane.");
     if (!impactFieldActive) contextNotes.push("Field K and floor-side room-volume corrections stay hidden until field impact outputs are requested.");
     else if (!standardizedImpactOutputsActive) contextNotes.push("Floor field volume is optional right now because only L'n,w is active; standardized L'nT outputs are not requested yet.");
+  }
+  if (openingLeakCompositeInputSurfaceActive) {
+    contextNotes.push("Opening/leak fields can activate the Gate S lab Rw composite route; blank fields leave the host-wall route unchanged.");
   }
   if (!wallModifiersActive) contextNotes.push("Wall leakage modifiers only matter on wall field or building reads, so they stay out of the main path here.");
 
@@ -810,6 +845,8 @@ export function SimpleWorkbenchShell() {
       airborneContextMode,
       airborneElectricalBoxes,
       airborneJunctionQuality,
+      airborneOpeningLeakElements: airborneOpeningLeakElements.map((element) => ({ ...element })),
+      airborneOpeningLeakHostWallAreaM2,
       airbornePanelHeightMm,
       airbornePanelWidthMm,
       airbornePenetrationState,
@@ -1288,6 +1325,8 @@ export function SimpleWorkbenchShell() {
           airborneContextMode={airborneContextMode}
           airborneElectricalBoxes={airborneElectricalBoxes}
           airborneJunctionQuality={airborneJunctionQuality}
+          airborneOpeningLeakElements={airborneOpeningLeakElements}
+          airborneOpeningLeakHostWallAreaM2={airborneOpeningLeakHostWallAreaM2}
           airbornePanelHeightMm={airbornePanelHeightMm}
           airbornePanelWidthMm={airbornePanelWidthMm}
           airbornePenetrationState={airbornePenetrationState}
@@ -1378,6 +1417,11 @@ export function SimpleWorkbenchShell() {
           setAirborneConnectionType={setAirborneConnectionType}
           setAirborneElectricalBoxes={setAirborneElectricalBoxes}
           setAirborneJunctionQuality={setAirborneJunctionQuality}
+          addAirborneOpeningLeakElement={addAirborneOpeningLeakElement}
+          moveAirborneOpeningLeakElement={moveAirborneOpeningLeakElement}
+          removeAirborneOpeningLeakElement={removeAirborneOpeningLeakElement}
+          setAirborneOpeningLeakHostWallAreaM2={setAirborneOpeningLeakHostWallAreaM2}
+          updateAirborneOpeningLeakElement={updateAirborneOpeningLeakElement}
           setAirbornePanelHeightMm={setAirbornePanelHeightMm}
           setAirbornePanelWidthMm={setAirbornePanelWidthMm}
           setAirbornePenetrationState={setAirbornePenetrationState}
@@ -1429,6 +1473,7 @@ export function SimpleWorkbenchShell() {
           setImpactTimberCltUpperTreatmentDensityKgM3={setImpactTimberCltUpperTreatmentDensityKgM3}
           setImpactTimberCltUpperTreatmentThicknessMm={setImpactTimberCltUpperTreatmentThicknessMm}
           showSteelBoundSupportFormActions={showSteelBoundSupportFormActions}
+          openingLeakCompositeInputSurfaceActive={openingLeakCompositeInputSurfaceActive}
           steelFloorFormulaInputSurfaceActive={steelFloorFormulaInputSurfaceActive}
           timberCltDeltaLwInputSurfaceActive={timberCltDeltaLwInputSurfaceActive}
           showTimberImpactOnlyGuidedActions={showTimberImpactOnlyGuidedActions}

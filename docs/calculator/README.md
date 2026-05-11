@@ -89,6 +89,17 @@ and Markdown report lines now show the same lab `Rw 38.2`,
 `family_physics_prediction` origin, and `+/-6 dB` budget; blocked
 opening cases stay `needs_input` or `unsupported` without showing a
 promoted budget.
+Gate U now lands that opening/leak input surface with selection status
+`gate_u_personal_use_mvp_opening_leak_composite_input_surface_landed_selected_revalidation_gate_v`
+and selects Gate V
+`gate_v_personal_use_mvp_post_opening_leak_input_surface_revalidation_plan`.
+The Dynamic Calculator wall surface now owns host wall area, stable
+opening ids, opening area/count, element `Rw`, rating basis,
+seal/leakage class, and origin. Complete UI-derived input, local saved
+replay, server snapshot replay, output cards, Markdown reports, estimate
+API payloads, and hostile UI edits all preserve the Gate S lab `Rw
+38.2` runtime basis; STC, field, and building outputs still require
+later adapters.
 Gate A
 landed in
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-a-scenario-matrix-contract.test.ts`

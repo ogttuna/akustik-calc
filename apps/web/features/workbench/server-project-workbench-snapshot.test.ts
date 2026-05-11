@@ -14,6 +14,18 @@ const SCENARIO: ScenarioSnapshot = {
   airborneContextMode: "element_lab",
   airborneElectricalBoxes: "none",
   airborneJunctionQuality: "good",
+  airborneOpeningLeakElements: [
+    {
+      areaM2: "",
+      count: "",
+      elementRwDb: "",
+      id: "opening-1",
+      origin: "",
+      ratingBasis: "",
+      sealLeakageClass: ""
+    }
+  ],
+  airborneOpeningLeakHostWallAreaM2: "",
   airbornePanelHeightMm: "",
   airbornePanelWidthMm: "",
   airbornePenetrationState: "none",

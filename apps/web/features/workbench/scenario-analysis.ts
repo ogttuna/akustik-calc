@@ -23,6 +23,11 @@ import {
   type WorkbenchAirborneFieldContextInputSurfaceDraft
 } from "./airborne-field-context-input-surface";
 import {
+  buildWorkbenchOpeningLeakCompositeInputSurface,
+  formatWorkbenchOpeningLeakCompositeMissingInputWarning,
+  type WorkbenchOpeningLeakCompositeInputSurfaceDraft
+} from "./opening-leak-composite-input-surface";
+import {
   buildWorkbenchSteelFloorFormulaInputSurface,
   formatWorkbenchSteelFloorFormulaMissingInputWarning,
   type WorkbenchSteelFloorFormulaInputSurfaceDraft
@@ -99,6 +104,7 @@ export function evaluateScenario(input: {
   id: string;
   impactFieldContext?: ImpactFieldContext | null;
   name: string;
+  openingLeakCompositeInputSurface?: WorkbenchOpeningLeakCompositeInputSurfaceDraft | null;
   rows: readonly LayerDraft[];
   savedAtIso?: string;
   source: "current" | "saved";
@@ -118,10 +124,26 @@ export function evaluateScenario(input: {
           studyMode: input.studyMode,
           surface: input.airborneFieldContextInputSurface,
           targetOutputs
+      })
+      : null;
+  const openingLeakCompositeInputSurface =
+    input.studyMode === "wall" && input.openingLeakCompositeInputSurface
+      ? buildWorkbenchOpeningLeakCompositeInputSurface({
+          studyMode: input.studyMode,
+          surface: input.openingLeakCompositeInputSurface,
+          targetOutputs
         })
       : null;
+  const baseAirborneContext = airborneFieldContextInputSurface?.airborneContext ?? input.airborneContext ?? null;
+  const effectiveAirborneContext =
+    openingLeakCompositeInputSurface && openingLeakCompositeInputSurface.status !== "inactive"
+      ? {
+          ...(baseAirborneContext ?? { contextMode: "element_lab" as const }),
+          ...openingLeakCompositeInputSurface.airborneContextPatch
+        }
+      : baseAirborneContext;
   const inputWarnings = collectScenarioInputWarnings({
-    airborneContext: airborneFieldContextInputSurface?.airborneContext ?? input.airborneContext ?? null,
+    airborneContext: effectiveAirborneContext,
     impactFieldContext: input.impactFieldContext ?? null,
     materials: runtimeCatalog,
     normalizedLayers: normalized.layers,
@@ -175,6 +197,17 @@ export function evaluateScenario(input: {
   if (airborneFieldMissingInputWarning) {
     scenarioWarnings.push(airborneFieldMissingInputWarning);
   }
+  const openingLeakMissingInputWarning = openingLeakCompositeInputSurface
+    ? formatWorkbenchOpeningLeakCompositeMissingInputWarning(openingLeakCompositeInputSurface)
+    : null;
+  if (openingLeakMissingInputWarning) {
+    scenarioWarnings.push(openingLeakMissingInputWarning);
+  }
+  if (openingLeakCompositeInputSurface?.status === "unsupported") {
+    scenarioWarnings.push(
+      `Opening/leak composite input surface is parked because the visible opening fields are unsafe: ${openingLeakCompositeInputSurface.hostileInputBoundaries.join(", ")}.`
+    );
+  }
   const activeInputSurfacePredictors = [
     steelFloorFormulaInputSurface?.status !== "inactive" ? steelFloorFormulaInputSurface?.impactPredictorInput : null,
     timberCltDeltaLwInputSurface?.status !== "inactive" ? timberCltDeltaLwInputSurface?.impactPredictorInput : null
@@ -191,7 +224,7 @@ export function evaluateScenario(input: {
   if (normalized.layers.length > 0) {
     try {
       result = calculateAssembly(normalized.layers, {
-        airborneContext: airborneFieldContextInputSurface?.airborneContext ?? input.airborneContext ?? null,
+        airborneContext: effectiveAirborneContext,
         calculator: input.calculator ?? null,
         catalog: runtimeCatalog,
         exactImpactSource: input.exactImpactSource ?? null,

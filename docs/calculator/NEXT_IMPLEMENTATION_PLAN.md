@@ -3321,7 +3321,45 @@ Zustand unavailable test-storage warnings and optional sharp package
 resolution warnings during web build. Broad `pnpm check` was not rerun
 because Gate BI has no runtime/API/UI surface change.
 
-## Next Implementation Order - Personal-Use MVP Coverage Sprint Gate U Opening/Leak Composite Input Surface
+## Next Implementation Order - Personal-Use MVP Coverage Sprint Gate V Post Opening/Leak Input-Surface Revalidation
+
+Gate U has landed the first-class Dynamic Calculator opening/leak input
+surface without adding a new solver, new source row promotion, or
+STC/field/building adapter. The next highest-ROI step is a tight
+post-input-surface revalidation gate that proves the new visible inputs
+did not disturb earlier personal-use MVP lanes or current-gate breadth.
+
+Gate U status:
+
+`gate_u_personal_use_mvp_opening_leak_composite_input_surface_landed_selected_revalidation_gate_v`
+
+Gate V target:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-v-post-opening-leak-input-surface-revalidation-contract.test.ts`
+
+Gate V action:
+
+`gate_v_personal_use_mvp_post_opening_leak_input_surface_revalidation_plan`
+
+Gate V order:
+
+1. Add a no-runtime revalidation contract that records Gate U as landed
+   and keeps the selected opening/leak fixture pinned at lab `Rw 38.2`,
+   method `gate_s_opening_leak_composite_area_energy_runtime_corridor`,
+   origin `family_physics_prediction`, supported `["Rw"]`,
+   unsupported `["STC", "R'w", "DnT,w"]`, and `+/-6 dB` budget.
+2. Re-run focused Gate U and the Gate T/S/R/Q/P/O/N/M/L continuity set
+   so opening/leak input surfacing does not break building-prediction or
+   earlier opening ownership boundaries.
+3. Re-run Gate G/H/I/J/K wall continuity to prove wall multi-cavity and
+   airborne field-context input surfaces still route independently of
+   the opening/leak surface.
+4. Re-run `pnpm calculator:gate:current` and `git diff --check`.
+5. If all validations stay green, select the next bounded personal-use
+   MVP lane from the current ROI matrix instead of expanding source
+   crawling.
+
+## Consumed Gate U Implementation Order - Personal-Use MVP Coverage Sprint Opening/Leak Composite Input Surface
 
 Gate T has landed surface parity for the Gate S opening/leak runtime
 corridor. The next highest-ROI step is to make those physical fields

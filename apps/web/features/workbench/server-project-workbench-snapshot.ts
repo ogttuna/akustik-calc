@@ -6,6 +6,10 @@ import {
   type CriteriaPackId
 } from "./criteria-packs";
 import { getPresetById, type PresetId, type StudyMode } from "./preset-definitions";
+import {
+  makeWorkbenchOpeningLeakElementDraft,
+  type WorkbenchOpeningLeakElementDraft
+} from "./opening-leak-composite-input-surface";
 import type { LayerDraft, ScenarioSnapshot } from "./workbench-store";
 
 export const SERVER_PROJECT_WORKBENCH_SNAPSHOT_SCHEMA_ID = "dynecho.simple-workbench.snapshot.v1";
@@ -49,6 +53,43 @@ function parseCriteriaPackId(value: unknown): CriteriaPackId {
 
 function parseAirborneResilientBarSideCount(value: unknown): AirborneResilientBarSideCount | undefined {
   return value === "auto" || value === "one_side" || value === "both_sides" ? value : undefined;
+}
+
+function parseOpeningLeakElementDraft(value: unknown): WorkbenchOpeningLeakElementDraft | null {
+  if (!isObjectRecord(value)) {
+    return null;
+  }
+
+  return makeWorkbenchOpeningLeakElementDraft({
+    areaM2: typeof value.areaM2 === "string" ? value.areaM2 : "",
+    count: typeof value.count === "string" ? value.count : "",
+    elementRwDb: typeof value.elementRwDb === "string" ? value.elementRwDb : "",
+    id: typeof value.id === "string" && value.id.trim().length > 0 ? value.id : crypto.randomUUID(),
+    origin:
+      value.origin === "unknown" ||
+      value.origin === "measured" ||
+      value.origin === "catalogued" ||
+      value.origin === "source_absent"
+        ? value.origin
+        : "",
+    ratingBasis:
+      value.ratingBasis === "unknown" ||
+      value.ratingBasis === "rw_single_number" ||
+      value.ratingBasis === "stc_single_number" ||
+      value.ratingBasis === "iso_717_1_curve" ||
+      value.ratingBasis === "catalog_row" ||
+      value.ratingBasis === "measured_lab"
+        ? value.ratingBasis
+        : "",
+    sealLeakageClass:
+      value.sealLeakageClass === "unknown" ||
+      value.sealLeakageClass === "sealed" ||
+      value.sealLeakageClass === "average" ||
+      value.sealLeakageClass === "leaky" ||
+      value.sealLeakageClass === "open_gap"
+        ? value.sealLeakageClass
+        : ""
+  });
 }
 
 function parseLayerDraft(value: unknown): LayerDraft | null {
@@ -105,9 +146,21 @@ export function parseServerProjectWorkbenchSnapshot(value: unknown): ScenarioSna
   }
 
   const rows = value.rows.map((row) => parseLayerDraft(row)).filter((row): row is LayerDraft => row !== null);
+  const openingLeakElements = Array.isArray(value.airborneOpeningLeakElements)
+    ? value.airborneOpeningLeakElements
+        .map((entry) => parseOpeningLeakElementDraft(entry))
+        .filter((entry): entry is WorkbenchOpeningLeakElementDraft => entry !== null)
+    : [makeWorkbenchOpeningLeakElementDraft()];
 
   return {
     ...(value as ScenarioSnapshot),
+    airborneOpeningLeakElements: openingLeakElements.length > 0
+      ? openingLeakElements
+      : [makeWorkbenchOpeningLeakElementDraft()],
+    airborneOpeningLeakHostWallAreaM2:
+      typeof value.airborneOpeningLeakHostWallAreaM2 === "string"
+        ? value.airborneOpeningLeakHostWallAreaM2
+        : "",
     airborneResilientBarSideCount: parseAirborneResilientBarSideCount(value.airborneResilientBarSideCount),
     criteriaPackId: parseCriteriaPackId(value.criteriaPackId),
     presetId,

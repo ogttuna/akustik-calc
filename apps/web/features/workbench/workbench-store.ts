@@ -61,6 +61,10 @@ import type {
   WorkbenchTimberCltDeltaLwLowerSupportClass,
   WorkbenchTimberCltDeltaLwStructuralSupportType
 } from "./timber-clt-delta-lw-input-surface";
+import {
+  makeWorkbenchOpeningLeakElementDraft,
+  type WorkbenchOpeningLeakElementDraft
+} from "./opening-leak-composite-input-surface";
 
 type LayerDraft = {
   densityKgM3?: string;
@@ -80,6 +84,8 @@ type ScenarioSnapshot = WorkbenchWallTopologyDraft & {
   airborneContextMode: AirborneContextMode;
   airborneElectricalBoxes: ElectricalBoxState;
   airborneJunctionQuality: JunctionQuality;
+  airborneOpeningLeakElements: WorkbenchOpeningLeakElementDraft[];
+  airborneOpeningLeakHostWallAreaM2: string;
   airbornePanelHeightMm: string;
   airbornePanelWidthMm: string;
   airbornePenetrationState: PenetrationState;
@@ -170,6 +176,8 @@ type WorkbenchStore = WorkbenchWallTopologyDraft & {
   airborneContextMode: AirborneContextMode;
   airborneElectricalBoxes: ElectricalBoxState;
   airborneJunctionQuality: JunctionQuality;
+  airborneOpeningLeakElements: WorkbenchOpeningLeakElementDraft[];
+  airborneOpeningLeakHostWallAreaM2: string;
   airbornePanelHeightMm: string;
   airbornePanelWidthMm: string;
   airbornePenetrationState: PenetrationState;
@@ -270,6 +278,12 @@ type WorkbenchStore = WorkbenchWallTopologyDraft & {
   setAirborneContextMode: (value: AirborneContextMode) => void;
   setAirborneElectricalBoxes: (value: ElectricalBoxState) => void;
   setAirborneJunctionQuality: (value: JunctionQuality) => void;
+  addAirborneOpeningLeakElement: () => void;
+  moveAirborneOpeningLeakElement: (id: string, direction: "down" | "up") => void;
+  removeAirborneOpeningLeakElement: (id: string) => void;
+  replaceAirborneOpeningLeakElements: (elements: readonly WorkbenchOpeningLeakElementDraft[]) => void;
+  setAirborneOpeningLeakHostWallAreaM2: (value: string) => void;
+  updateAirborneOpeningLeakElement: (id: string, value: Partial<WorkbenchOpeningLeakElementDraft>) => void;
   setAirbornePanelHeightMm: (value: string) => void;
   setAirbornePanelWidthMm: (value: string) => void;
   setAirbornePenetrationState: (value: PenetrationState) => void;
@@ -593,6 +607,8 @@ function makeDefaultState(input?: {
     airborneContextMode: "element_lab" as const,
     airborneElectricalBoxes: "none" as const,
     airborneJunctionQuality: "good" as const,
+    airborneOpeningLeakElements: [makeWorkbenchOpeningLeakElementDraft()],
+    airborneOpeningLeakHostWallAreaM2: "",
     airbornePanelHeightMm: "",
     airbornePanelWidthMm: "",
     airbornePenetrationState: "none" as const,
@@ -698,6 +714,11 @@ function buildLoadedScenarioState(
     airborneContextMode: scenario.airborneContextMode ?? "element_lab",
     airborneElectricalBoxes: scenario.airborneElectricalBoxes ?? "none",
     airborneJunctionQuality: scenario.airborneJunctionQuality ?? "good",
+    airborneOpeningLeakElements:
+      scenario.airborneOpeningLeakElements && scenario.airborneOpeningLeakElements.length > 0
+        ? scenario.airborneOpeningLeakElements.map((element) => ({ ...element }))
+        : [makeWorkbenchOpeningLeakElementDraft()],
+    airborneOpeningLeakHostWallAreaM2: scenario.airborneOpeningLeakHostWallAreaM2 ?? "",
     airbornePanelHeightMm: scenario.airbornePanelHeightMm ?? "",
     airbornePanelWidthMm: scenario.airbornePanelWidthMm ?? "",
     airbornePenetrationState: scenario.airbornePenetrationState ?? "none",
@@ -991,6 +1012,8 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
               airborneContextMode: state.airborneContextMode,
               airborneElectricalBoxes: state.airborneElectricalBoxes,
               airborneJunctionQuality: state.airborneJunctionQuality,
+              airborneOpeningLeakElements: state.airborneOpeningLeakElements.map((element) => ({ ...element })),
+              airborneOpeningLeakHostWallAreaM2: state.airborneOpeningLeakHostWallAreaM2,
               airbornePanelHeightMm: state.airbornePanelHeightMm,
               airbornePanelWidthMm: state.airbornePanelWidthMm,
               airbornePenetrationState: state.airbornePenetrationState,
@@ -1094,6 +1117,54 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
       setAirborneContextMode: (value) => set({ airborneContextMode: value }),
       setAirborneElectricalBoxes: (value) => set({ airborneElectricalBoxes: value }),
       setAirborneJunctionQuality: (value) => set({ airborneJunctionQuality: value }),
+      addAirborneOpeningLeakElement: () =>
+        set((state) => ({
+          airborneOpeningLeakElements: [
+            ...state.airborneOpeningLeakElements,
+            makeWorkbenchOpeningLeakElementDraft()
+          ]
+        })),
+      moveAirborneOpeningLeakElement: (id, direction) =>
+        set((state) => {
+          const index = state.airborneOpeningLeakElements.findIndex((element) => element.id === id);
+          if (index === -1) {
+            return state;
+          }
+
+          const targetIndex = direction === "up" ? index - 1 : index + 1;
+          if (targetIndex < 0 || targetIndex >= state.airborneOpeningLeakElements.length) {
+            return state;
+          }
+
+          const airborneOpeningLeakElements = [...state.airborneOpeningLeakElements];
+          const [current] = airborneOpeningLeakElements.splice(index, 1);
+          airborneOpeningLeakElements.splice(targetIndex, 0, current);
+
+          return { airborneOpeningLeakElements };
+        }),
+      removeAirborneOpeningLeakElement: (id) =>
+        set((state) => {
+          const nextElements = state.airborneOpeningLeakElements.filter((element) => element.id !== id);
+
+          return {
+            airborneOpeningLeakElements:
+              nextElements.length > 0 ? nextElements : [makeWorkbenchOpeningLeakElementDraft()]
+          };
+        }),
+      replaceAirborneOpeningLeakElements: (elements) =>
+        set({
+          airborneOpeningLeakElements:
+            elements.length > 0
+              ? elements.map((element) => ({ ...element }))
+              : [makeWorkbenchOpeningLeakElementDraft()]
+        }),
+      setAirborneOpeningLeakHostWallAreaM2: (value) => set({ airborneOpeningLeakHostWallAreaM2: value }),
+      updateAirborneOpeningLeakElement: (id, value) =>
+        set((state) => ({
+          airborneOpeningLeakElements: state.airborneOpeningLeakElements.map((element) =>
+            element.id === id ? { ...element, ...value, id: value.id ?? element.id } : element
+          )
+        })),
       setAirbornePanelHeightMm: (value) => set({ airbornePanelHeightMm: value }),
       setAirbornePanelWidthMm: (value) => set({ airbornePanelWidthMm: value }),
       setAirbornePenetrationState: (value) => set({ airbornePenetrationState: value }),
