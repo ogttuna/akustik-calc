@@ -36,6 +36,8 @@ For the Gate W coverage matrix refresh and Gate X handoff read
 For the Gate X AAC / non-homogeneous masonry family solver and Gate Y
 handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_X_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_X_HANDOFF.md).
+For the post-Gate X broad revalidation and Gate Y-ready handoff read
+[CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_X_BROAD_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_X_BROAD_REVALIDATION_HANDOFF.md).
 For the Gate R no-runtime formula corridor and Gate S handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md).
 For the Gate Q no-runtime input contract and Gate R handoff read
@@ -91,6 +93,48 @@ many layers, duplicate/split roles, ambiguous topology, and safe or
 unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
+
+## Post-Gate X Broad Revalidation - 2026-05-11
+
+Gate X remains landed and Gate Y remains the active next implementation
+step.
+
+Current selected status:
+
+`gate_x_personal_use_mvp_aac_nonhomogeneous_masonry_wall_family_solver_landed_selected_clt_ctr_gate_y`
+
+Selected next action:
+
+`gate_y_personal_use_mvp_clt_mass_timber_ctr_spectrum_adapter_plan`
+
+Selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-y-clt-mass-timber-ctr-spectrum-adapter-contract.test.ts`
+
+The broad revalidation after Gate X passed `pnpm check`: lint and
+typecheck are clean, engine tests passed 490 files / 2911 tests, web
+tests passed 179 files / 989 passed + 18 skipped, and the repo build
+passed 5/5 tasks. The only required changes were stale test/lint
+alignment: unused Gate R/S imports/helpers, JSX escaping for `R'w`,
+proposal text expecting the old `Field continuation` label instead of
+`Airborne field-context prediction`, and wall-selector building
+prediction card expectations that must stay `needs_input` until the
+building owner fields are explicit.
+
+No acoustic runtime values moved. Gate X still keeps complete lab AAC /
+non-homogeneous masonry pinned at `Rw 44 / STC 44 / C -0.7 / Ctr -5.2`
+while its origin is
+`gate_x_aac_nonhomogeneous_masonry_sharp_davy_family_physics_runtime`
+/ `family_physics_prediction` with `+/-6 dB`. Exact-source precedence,
+field/building non-aliasing, opening/leak, timber/CLT impact, and
+building-prediction missing-input boundaries remain intact.
+
+Gate Y should start by adding the executable CLT / mass-timber `Ctr`
+spectrum-adapter contract, continue the companion-module pattern because
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint.ts` is
+1985 lines after cleanup, and avoid broad source crawling unless the
+matrix names a specific source-owned holdout as the highest-impact
+unblocker.
 
 ## Strategic ROI Replan - 2026-05-08
 

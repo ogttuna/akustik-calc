@@ -46,6 +46,9 @@ checkpoint read
 If you need the current Personal-Use MVP Coverage Sprint Gate X
 checkpoint read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_X_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_X_HANDOFF.md).
+If you need the post-Gate X broad revalidation and Gate Y-ready handoff
+read
+[CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_X_BROAD_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_X_BROAD_REVALIDATION_HANDOFF.md).
 If you need the preceding Personal-Use MVP Coverage Sprint Gate W
 checkpoint read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md).
@@ -201,6 +204,14 @@ Current strategy:
   `gate_y_personal_use_mvp_clt_mass_timber_ctr_spectrum_adapter_plan`.
   Selected next file:
   `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-y-clt-mass-timber-ctr-spectrum-adapter-contract.test.ts`.
+  Post-Gate X broad revalidation passed `pnpm check` with lint/typecheck
+  clean, engine 490 files / 2911 tests, web 179 files / 989 passed + 18
+  skipped, and repo build 5/5. Only stale lint/test expectations moved:
+  unused imports/helpers, JSX escaping for `R'w`, proposal copy now
+  expecting `Airborne field-context prediction`, and building-prediction
+  wall-selector cards staying `needs_input` until building owners are
+  explicit. Runtime values, budgets, source precedence, and basis rules
+  did not move.
 - Personal-Use MVP Coverage Sprint Gate B has now landed the
   timber/CLT floor-impact `DeltaLw` input and formula-readiness
   contract without runtime movement.

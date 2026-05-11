@@ -7,7 +7,6 @@ import { describe, expect, it } from "vitest";
 
 import { evaluateScenario } from "./scenario-analysis";
 import {
-  FIELD_OUTPUT_DESIGN_GRADE_POSTURE_GUARD,
   FIELD_OUTPUT_OWNER_POLICY_GUARD
 } from "./field-output-owner-policy-copy";
 import {

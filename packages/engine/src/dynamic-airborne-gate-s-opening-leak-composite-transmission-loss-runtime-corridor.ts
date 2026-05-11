@@ -130,10 +130,6 @@ const COMPLETE_OPENING_CONTEXT = {
   ]
 } as const satisfies AirborneContext;
 
-function uniqueOutputs(outputs: readonly RequestedOutputId[]): RequestedOutputId[] {
-  return [...new Set(outputs)];
-}
-
 function uniqueStrings(outputs: readonly string[]): string[] {
   return [...new Set(outputs)];
 }

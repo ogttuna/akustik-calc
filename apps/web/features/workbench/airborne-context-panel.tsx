@@ -316,7 +316,7 @@ export function AirborneContextPanel({
       <div className="mt-5 rounded-lg border hairline bg-[color:var(--panel)] px-4 py-4">
         <div className="text-sm font-semibold text-[color:var(--ink)]">Field conversion inputs</div>
         <p className="mt-2 text-sm leading-7 text-[color:var(--ink-soft)]">
-          These values do not change the apparent wall curve itself. They are the physical context required before the field-context adapter can defend `R'w`, `Dn,w`, `Dn,A`, `DnT,w`, and `DnT,A`.
+          These values do not change the apparent wall curve itself. They are the physical context required before the field-context adapter can defend `R&apos;w`, `Dn,w`, `Dn,A`, `DnT,w`, and `DnT,A`.
         </p>
         <div className="mt-4 grid gap-3 md:grid-cols-2">
           <label className="space-y-2 text-sm text-[color:var(--ink-soft)]" htmlFor="airborne-panel-width-mm">

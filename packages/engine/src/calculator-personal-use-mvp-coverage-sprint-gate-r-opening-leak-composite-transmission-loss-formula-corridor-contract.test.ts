@@ -5,8 +5,7 @@ import { fileURLToPath } from "node:url";
 import {
   AirborneContextSchema,
   type AirborneContext,
-  type LayerInput,
-  type RequestedOutputId
+  type LayerInput
 } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 

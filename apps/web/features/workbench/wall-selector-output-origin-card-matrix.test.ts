@@ -181,8 +181,8 @@ const CASES: readonly WallSelectorCardCase[] = [
     },
     cards: {
       Rw: { status: "unsupported", value: "Not ready" },
-      "R'w": { status: "live", value: "45 dB" },
-      "DnT,w": { status: "live", value: "47 dB" }
+      "R'w": { status: "needs_input", value: "Not ready" },
+      "DnT,w": { status: "needs_input", value: "Not ready" }
     }
   },
   {
@@ -211,8 +211,8 @@ const CASES: readonly WallSelectorCardCase[] = [
     },
     cards: {
       Rw: { status: "unsupported", value: "Not ready" },
-      "R'w": { status: "live", value: "47 dB" },
-      "DnT,w": { status: "live", value: "49 dB" }
+      "R'w": { status: "needs_input", value: "Not ready" },
+      "DnT,w": { status: "needs_input", value: "Not ready" }
     }
   },
   {

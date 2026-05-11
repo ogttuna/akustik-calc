@@ -348,10 +348,6 @@ const SINGLE_CONCRETE_WALL: readonly LayerInput[] = [
   { materialId: "concrete", thicknessMm: 200 }
 ];
 
-const AAC_WALL: readonly LayerInput[] = [
-  { materialId: "ytong_aac_d700", thicknessMm: 150 }
-];
-
 const LAMINATED_BOARD_WALL: readonly LayerInput[] = [
   { materialId: "acoustic_gypsum_board", thicknessMm: 15 },
   { materialId: "diamond_board", thicknessMm: 18 }

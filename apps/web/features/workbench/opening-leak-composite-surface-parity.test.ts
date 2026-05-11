@@ -1,5 +1,4 @@
 import {
-  calculateAssembly,
   GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD,
   GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_WARNING
 } from "@dynecho/engine";

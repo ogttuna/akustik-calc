@@ -418,20 +418,20 @@ describe("simple workbench generated proposal document honesty", () => {
     expect(scenario.result?.supportedTargetOutputs).toEqual(["R'w", "Dn,w", "DnT,w", "STC", "C", "Ctr"]);
     expect(scenario.result?.unsupportedTargetOutputs).toEqual(["Rw"]);
     expect(coverageItems.find((item) => item.label === "R'w")).toEqual(
-      expect.objectContaining({ postureLabel: "Field continuation", status: "live", value: "59 dB" })
+      expect.objectContaining({ postureLabel: "Airborne field-context prediction", status: "live", value: "59 dB" })
     );
     expect(coverageItems.find((item) => item.label === "Dn,w")).toEqual(
-      expect.objectContaining({ postureLabel: "Field continuation", status: "live", value: "58 dB" })
+      expect.objectContaining({ postureLabel: "Airborne field-context prediction", status: "live", value: "58 dB" })
     );
     expect(coverageItems.find((item) => item.label === "DnT,w")).toEqual(
-      expect.objectContaining({ postureLabel: "Field continuation", status: "live", value: "61 dB" })
+      expect.objectContaining({ postureLabel: "Airborne field-context prediction", status: "live", value: "61 dB" })
     );
     expect(coverageItems.find((item) => item.label === "Rw")).toEqual(
       expect.objectContaining({ postureLabel: "Unsupported on route", status: "unsupported", value: "Not ready" })
     );
 
     expectProposalTextToContain(document, [
-      "Field continuation",
+      "Airborne field-context prediction",
       "R'w",
       "Dn,w",
       "DnT,w",

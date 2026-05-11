@@ -140,6 +140,12 @@ Complete element-lab AAC now stays numerically pinned at `Rw 44 / STC
 with a `+/-6 dB` source-absent budget. Field/building requests, missing
 density, wrong families, lined massive routes, and exact-source
 precedence remain protected.
+Post-Gate X broad revalidation is also complete. `pnpm check` passed
+with lint/typecheck clean, engine 490 files / 2911 tests, web 179
+files / 989 passed + 18 skipped, and repo build 5/5. The pass aligned stale
+lint/test contracts only; Gate Y remains the selected CLT /
+mass-timber `Ctr` spectrum-adapter step, with no runtime value,
+tolerance, source-precedence, or basis-rule movement.
 Gate A
 landed in
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-a-scenario-matrix-contract.test.ts`
