@@ -64,6 +64,13 @@ export const AcousticInputFieldIdSchema = z.enum([
   "conservativeFlankingAssumption",
   "junctionCouplingLengthM",
   "buildingPredictionOutputBasis",
+  "hostWallAreaM2",
+  "openingAreaM2",
+  "openingElementRwDb",
+  "openingRatingBasis",
+  "openingSealLeakageClass",
+  "openingCount",
+  "openingOrigin",
   "impactFieldContext"
 ]);
 export type AcousticInputFieldId = z.infer<typeof AcousticInputFieldIdSchema>;

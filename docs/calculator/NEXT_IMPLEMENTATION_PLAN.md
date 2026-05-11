@@ -22,6 +22,12 @@ For the 2026-05-08 strategic ROI replan that follows Gate BH read
 [CHECKPOINT_2026-05-08_STRATEGIC_ROI_REPLAN_HANDOFF.md](./CHECKPOINT_2026-05-08_STRATEGIC_ROI_REPLAN_HANDOFF.md).
 For the Gate-F-after strategic ROI revalidation and Gate G handoff read
 [CHECKPOINT_2026-05-10_STRATEGIC_ROI_REVALIDATION_AND_GATE_G_PLAN_HANDOFF.md](./CHECKPOINT_2026-05-10_STRATEGIC_ROI_REVALIDATION_AND_GATE_G_PLAN_HANDOFF.md).
+For the 2026-05-11 INSUL / ISO research refresh and Gate P replan read
+[CHECKPOINT_2026-05-11_INSUL_ISO_RESEARCH_AND_GATE_P_REPLAN_HANDOFF.md](./CHECKPOINT_2026-05-11_INSUL_ISO_RESEARCH_AND_GATE_P_REPLAN_HANDOFF.md).
+For the Gate Q no-runtime input contract and Gate R handoff read
+[CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_Q_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_Q_HANDOFF.md).
+For the Gate P no-runtime closeout and Gate Q handoff read
+[CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_P_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_P_HANDOFF.md).
 
 ## Product Goal - Acoustic Calculator First
 
@@ -253,6 +259,90 @@ Gate O landed execution summary:
    passed after the validation-doc sync. Known non-fatal warnings:
    test-environment Zustand storage-unavailable messages and optional
    `sharp` `@img/*` resolution warnings during web build.
+
+## Strategic Research Refresh - 2026-05-11 INSUL / Building Prediction
+
+This refresh rechecked the active Gate P decision against current public
+INSUL documentation and official ISO standard pages. It does not change
+the selected next gate: Gate P remains the immediate implementation
+decision. It does tighten the acceptance bar for runtime promotion.
+
+External findings:
+
+- INSUL presents itself as a wall/floor/ceiling/window sound-insulation
+  predictor and says it uses mass law, critical-frequency methods,
+  Sharp, Cremer, and continued laboratory comparison to provide useful
+  estimates. Its user guide states that prediction is not a substitute
+  for test data and gives a typical accuracy statement around 3
+  `STC`/`Rw` points for most constructions:
+  <https://docs.insul.co.nz/v10/>.
+- INSUL Version 10 publicly supports airborne `STC`/`Rw` prediction for
+  single, double, triple, and quad systems, plus `IIC` and `Ln,w`
+  impact predictions for single, double, and triple systems. That
+  confirms the market scope DynEcho must eventually cover, but it also
+  reinforces that the calculator needs family-specific models rather
+  than source-row accumulation:
+  <https://www.insul.co.nz/media/43149/INSUL-Version10-November-2023.pdf>.
+- INSUL's triple-panel theory page says triple-panel predictions are
+  less accurate than single/double panels and gives 90% limits around
+  4 dB for `Rw` / `STC`. This supports keeping explicit wider budgets
+  for complex multi-leaf systems:
+  <https://docs.insul.co.nz/v10/SoundInsulationTheory/Airborne-TriplePanels/>.
+- Most important for Gate P: INSUL's airborne flanking page says INSUL
+  does not directly calculate flanking transmission within a building;
+  it provides a visual indicator/reminder. That is a strong competitor
+  benchmark warning against promoting `R'w` / `DnT,w` from a vague
+  heuristic overlay:
+  <https://docs.insul.co.nz/v10/SoundInsulationTheory/Airborne-Flanking/>.
+- INSUL impact documentation keeps vertical impact prediction scoped and
+  explicitly excludes horizontal/diagonal impact radiation. Its impact
+  accuracy page gives broad `Ln,w` / `IIC` uncertainty ranges by floor
+  family. That reinforces DynEcho's current rule: do not alias impact
+  field/building metrics from lab values without owned context:
+  <https://docs.insul.co.nz/v10/SoundInsulationTheory/Impact-ImpactSound/>,
+  <https://docs.insul.co.nz/v10/SoundInsulationTheory/Impact-Accuracy/>.
+- ISO 12354-1 frames airborne building prediction as calculation from
+  element performance plus direct/indirect flanking transmission and
+  structural propagation terms, with a detailed frequency-band model and
+  a restricted simplified single-number model:
+  <https://www.iso.org/standard/70242.html>.
+- ISO 12354-2 gives the same kind of building-prediction framing for
+  impact sound between rooms:
+  <https://www.iso.org/standard/70243.html>.
+- ISO 717-1 and ISO 717-2 define single-number rating conversion from
+  measured band results for airborne and impact sound insulation. This
+  keeps `Rw`, `R'w`, `DnT,w`, `Ln,w`, `L'n,w`, and `L'nT,w` as
+  basis-specific outputs rather than interchangeable labels:
+  <https://www.iso.org/standard/77435.html>,
+  <https://www.iso.org/standard/69867.html>.
+- ISO 16283-1 and ISO 16283-2 define field measurement procedures for
+  airborne and impact sound insulation in buildings. This confirms that
+  field/apparent outputs remain explicit measurement or
+  building-context routes, not relabelled lab results:
+  <https://www.iso.org/standard/55997.html>,
+  <https://www.iso.org/standard/77436.html>.
+
+Gate P decision after research:
+
+1. Gate P must start by trying to prove a narrow runtime corridor from
+   owned formula terms, not from UI copy or the previous field-context
+   overlay.
+2. Runtime promotion is allowed only if the engine can compute and trace
+   the direct separating-element frequency curve, conservative flanking
+   path energy sum, junction vibration-reduction/coupling term, room
+   standardization term, and the existing `+/-9 dB` source-absent
+   building budget.
+3. If any of those terms remain only named but not executable, the
+   correct Gate P outcome is no-runtime: complete building requests stay
+   `unsupported`, the warning explains which formula owners are missing,
+   and the next gate pivots back to a higher-ROI personal-use coverage
+   lane.
+4. A single-number source row, lab `Rw`/`STC`, Gate I field result, or
+   INSUL-style reminder about flanking is not enough to calculate
+   design-grade `R'w` or `DnT,w`.
+5. No broad source crawl is selected. A source search is only justified
+   if Gate P names a specific holdout needed to calibrate one owned
+   formula term.
 
 Gate N landed execution summary:
 
@@ -3225,7 +3315,90 @@ Zustand unavailable test-storage warnings and optional sharp package
 resolution warnings during web build. Broad `pnpm check` was not rerun
 because Gate BI has no runtime/API/UI surface change.
 
-## Next Implementation Order - Personal-Use MVP Coverage Sprint Gate P Airborne Building-Prediction Runtime Corridor
+## Next Implementation Order - Personal-Use MVP Coverage Sprint Gate R Opening/Leak Composite Formula Corridor
+
+Gate Q has landed the opening/leak composite transmission-loss input
+contract as no-runtime. It made `hostWallAreaM2` and per-opening area,
+count, element `Rw`, rating basis, seal/leakage class, and origin
+schema-owned inputs, but kept host-wall runtime unchanged until a
+formula corridor is owned.
+
+Gate R target:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-r-opening-leak-composite-transmission-loss-formula-corridor-contract.test.ts`
+
+Gate R action:
+
+`gate_r_personal_use_mvp_opening_leak_composite_transmission_loss_formula_corridor_plan`
+
+Gate R order:
+
+1. Add the Gate R formula-corridor contract test and a helper if the
+   composite TL method needs a reusable surface.
+2. Define the source-absent area-energy formula corridor for host-wall
+   plus opening transmission loss before runtime promotion. The method
+   must use host-wall candidate `Rw`/curve basis, opening area ratio,
+   opening element rating basis, and an explicit seal/leakage penalty
+   model.
+3. Keep Gate R no-runtime unless the formula terms, uncertainty budget,
+   and basis labels are all visible and defensible. A later Gate can
+   promote numeric values only after Gate R proves the corridor.
+4. Preserve exact-source precedence, host-wall candidate precedence, and
+   lab/field/building boundaries. A door/window row cannot replace the
+   host wall, and a lab opening value cannot be copied to `R'w` or
+   `DnT,w`.
+5. Require explicit `needs_input` or `invalid_input` for missing area,
+   missing rating basis, missing seal/leakage class, duplicate openings,
+   excessive opening area, zero/negative opening area or count, and
+   unsafe source/basis aliases.
+6. Add a formula decision table for complete sealed/average/leaky/open
+   gap cases, plus negative rows for `STC`-only basis, source-absent
+   opening values without a corridor owner, and building-prediction
+   target leakage.
+7. Validate with focused Gate R, Gate Q/P/O/N/M/L continuity, Gate
+   G/H/I/J/K wall continuity, current-gate runner, and `git diff
+   --check`.
+
+## Consumed Gate Q Implementation Order - Personal-Use MVP Coverage Sprint Opening/Leak Composite Input Contract
+
+Gate P landed the airborne building-prediction runtime-corridor decision
+as no-runtime. Gate Q consumed the next lower basis-risk, high-coverage
+wall calculator gap: openings, leakage, and composite area transmission
+loss.
+
+Gate Q order completed:
+
+1. Added
+   `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-q-opening-leak-composite-transmission-loss-input-contract.test.ts`.
+2. Added
+   `packages/engine/src/dynamic-airborne-gate-q-opening-leak-composite-transmission-loss-input-contract.ts`.
+3. Added shared schema fields in
+   `packages/shared/src/domain/airborne-context.ts` and
+   `packages/shared/src/domain/input-completeness.ts` for
+   `hostWallAreaM2`, `openingAreaM2`, `openingElementRwDb`,
+   `openingRatingBasis`, `openingSealLeakageClass`, `openingCount`, and
+   `openingOrigin`.
+4. Kept Gate Q no-runtime. Complete opening inputs are
+   `ready_for_formula_corridor`, but `Rw`, `STC`, `R'w`, and `DnT,w`
+   host-wall/building values do not move.
+5. Preserved exact-source precedence, host-wall candidate precedence,
+   leakage-input honesty, and lab/field/building separation.
+6. Covered missing physical fields, unknown rating/seal classes,
+   excessive area, duplicate openings, zero/negative area/count, safe
+   reorder invariance, and many-layer host-wall stability.
+7. Selection status:
+   `gate_q_personal_use_mvp_opening_leak_composite_input_contract_landed_no_runtime_selected_formula_corridor_gate_r`.
+8. Selected Gate R:
+   `gate_r_personal_use_mvp_opening_leak_composite_transmission_loss_formula_corridor_plan`.
+9. Validation completed on 2026-05-11: focused Gate Q passed 1 file /
+   6 tests; Gate Q/P/O/N/M/L plus Gate G/H/I/J/K continuity passed 11
+   files / 65 tests; final `pnpm calculator:gate:current` passed with
+   engine 358 files / 2074 tests, web 71 files / 306 passed + 18
+   skipped, repo build 5/5 successful, and whitespace guard clean.
+   Final standalone `git diff --check` passed after this validation-note
+   sync.
+
+## Consumed Gate P Implementation Order - Personal-Use MVP Coverage Sprint Airborne Building-Prediction Runtime Corridor
 
 Gate O has landed the no-runtime building-prediction formula corridor:
 airborne `building_prediction` now has complete physical inputs,
@@ -3234,7 +3407,7 @@ metric-basis adapter owners, named formula terms, alias blockers, and a
 `unsupported` until Gate P decides whether runtime promotion is
 defensible from owned curve/path/room terms.
 
-Gate P order:
+Gate P order completed:
 
 1. Add
    `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-p-airborne-building-prediction-runtime-corridor-contract.test.ts`.
@@ -3244,29 +3417,79 @@ Gate P order:
    `dynamic-calculator-candidate-resolver-runtime.ts`,
    `apply-airborne-context.ts`, `curve-rating.ts`, `calculate-assembly.ts`,
    workbench field/building cards, report/API payloads, and ISO 12354-1
-   basis notes before changing runtime behavior.
-3. Runtime can promote only if the implementation can produce a named
+   basis notes before changing runtime behavior. Also keep the
+   2026-05-11 INSUL / ISO refresh above in scope: public INSUL flanking
+   behavior is a cautionary boundary, not permission to ship a heuristic
+   building metric.
+3. Build the Gate P test as a promotion decision table with two explicit
+   branches:
+   `runtime_promoted_with_owned_formula_terms` and
+   `runtime_blocked_formula_terms_not_owned`. The current expected
+   branch is blocked unless implementation proves every term below is
+   executable.
+4. Runtime can promote only if the implementation can produce a named
    building-prediction basis from:
    direct separating-element frequency curve, conservative flanking path
    energy combination, junction vibration reduction / coupling length,
-   room standardization, and visible `+/-9 dB` error budget.
-4. If Gate P promotes, add numeric assertions for `R'w` and `DnT,w`,
-   selected candidate id, basis/origin, warning copy, supported/unsupported
-   output parity, exact-source precedence, lab/field/building separation,
-   and hostile edits. It must not reuse Gate I selected candidate ids.
-5. If Gate P cannot promote without overclaiming the current heuristic
+   room standardization, and visible `+/-9 dB` error budget. Each term
+   must appear in the dynamic trace or method dossier; hidden
+   coefficients are not acceptable for personal-use readiness.
+5. If Gate P promotes, add numeric assertions for `R'w` and `DnT,w`,
+   selected candidate id, basis/origin, warning copy,
+   supported/unsupported output parity, exact-source precedence,
+   lab/field/building separation, and hostile edits. It must not reuse
+   Gate I selected candidate ids or present the value as measured
+   evidence.
+6. If Gate P cannot promote without overclaiming the current heuristic
    overlay, keep complete requests `unsupported`, keep the Gate N method
-   and Gate O formula-corridor dossier, and select the next highest-ROI
-   personal-use coverage lane.
-6. Preserve Gate G/H/I/K/M/N/O numeric and posture pins: grouped
+   and Gate O formula-corridor dossier, keep `proposedRuntimeEstimateDb:
+   null`, and select the next highest-ROI personal-use coverage lane.
+   Gate P selected opening/leak composite transmission-loss input
+   ownership because it improves common wall calculator coverage with
+   lower basis-leakage risk than airborne building flanking.
+7. Preserve Gate G/H/I/K/M/N/O numeric and posture pins: grouped
    triple-leaf, lined massive/masonry, CLT, field-context values,
    precise Gate M `needs_input`, Gate N formula-owner blockers, and
    Gate O `proposedRuntimeEstimateDb: null` contract must stay stable
    unless Gate P explicitly owns a runtime transition.
-7. Run focused Gate P validation, Gate O/N/M/L continuity, Gate I/J/K
+8. Run focused Gate P validation, Gate O/N/M/L continuity, Gate I/J/K
    field continuity, relevant web/API/report tests if selected candidate
    or visible posture changes, `pnpm calculator:gate:current`, and
    `git diff --check`.
+
+Gate P landed execution summary:
+
+1. Added
+   `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-p-airborne-building-prediction-runtime-corridor-contract.test.ts`.
+2. Added
+   `packages/engine/src/dynamic-airborne-gate-p-building-prediction-runtime-corridor.ts`
+   for the Gate P plan id, no-runtime selection status, term blocker
+   table, corridor decisions, and Gate Q selection constants.
+3. Gate P kept the selected runtime branch at
+   `runtime_blocked_formula_terms_not_owned`; both `R'w` and `DnT,w`
+   retain `proposedRuntimeEstimateDb: null` and
+   `candidate_dynamic_unsupported`.
+   Selection status:
+   `gate_p_personal_use_mvp_airborne_building_prediction_runtime_corridor_closed_no_runtime_selected_opening_leak_composite_gate_q`.
+4. Direct separating-element curve ownership, flanking path energy,
+   junction/coupling, room standardization, and the `+/-9 dB` budget all
+   remain explicit blockers before building runtime can move.
+5. Gate P preserved exact-source precedence and lab/field/building alias
+   boundaries. Gate I field values stay live; Gate P does not copy them
+   into `building_prediction`.
+6. Gate P selected:
+   `gate_q_personal_use_mvp_opening_leak_composite_transmission_loss_input_contract_plan`.
+7. Runtime guard detail: explicit `building_prediction` requests with
+   `buildingPredictionOutputBasis` now keep unsupported `R'w` / `DnT,w`
+   out of supported outputs and out of diagnostic metrics; legacy
+   field-style continuation snapshots without that explicit output basis
+   stay on their existing guarded route.
+8. Validation completed on 2026-05-11: focused Gate P passed 1 file / 6
+   tests; Gate P/O/N/M/L plus Gate I/J/K continuity passed 8 files / 44
+   tests; final `pnpm calculator:gate:current` passed with engine 357
+   files / 2068 tests, web 71 files / 306 passed + 18 skipped, and repo
+   build 5/5 successful. `git diff --check` must be rerun after this
+   validation-note sync.
 
 ## Consumed Gate O Implementation Order - Personal-Use MVP Coverage Sprint Airborne Building-Prediction Formula Corridor
 

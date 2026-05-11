@@ -54,8 +54,15 @@ building-prediction owner set. Complete owner sets still select
 adapter and names the missing ISO 12354-1 flanking formula terms without
 moving runtime values. Gate O now defines the building-prediction
 formula corridor and same-building holdout budget without moving runtime
-values. The current selected next lane is Gate P airborne
-building-prediction runtime corridor.
+values. Gate P now closes the airborne building-prediction runtime
+corridor as no-runtime because the direct-curve, flanking-energy,
+junction/coupling, room-standardization, and `+/-9 dB` budget owners are
+not executable runtime terms yet. The current selected next lane is Gate
+Q opening/leak composite transmission-loss input ownership. Gate Q now
+lands that contract as no-runtime with selection status
+`gate_q_personal_use_mvp_opening_leak_composite_input_contract_landed_no_runtime_selected_formula_corridor_gate_r`
+and selects Gate R
+`gate_r_personal_use_mvp_opening_leak_composite_transmission_loss_formula_corridor_plan`.
 Gate A
 landed in
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-a-scenario-matrix-contract.test.ts`
@@ -141,11 +148,25 @@ and selected
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-p-airborne-building-prediction-runtime-corridor-contract.test.ts`
 with action
 `gate_p_personal_use_mvp_airborne_building_prediction_runtime_corridor_plan`.
+Gate P landed in that file with selection status
+`gate_p_personal_use_mvp_airborne_building_prediction_runtime_corridor_closed_no_runtime_selected_opening_leak_composite_gate_q`
+and selected
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-q-opening-leak-composite-transmission-loss-input-contract.test.ts`
+with action
+`gate_q_personal_use_mvp_opening_leak_composite_transmission_loss_input_contract_plan`.
+Gate Q landed in that file with selection status
+`gate_q_personal_use_mvp_opening_leak_composite_input_contract_landed_no_runtime_selected_formula_corridor_gate_r`
+and selected
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-r-opening-leak-composite-transmission-loss-formula-corridor-contract.test.ts`
+with action
+`gate_r_personal_use_mvp_opening_leak_composite_transmission_loss_formula_corridor_plan`.
 Gate BI landed in
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-bi-steel-floor-formula-same-stack-iso-delta-lw-tighten-candidate-governance-contract.test.ts`
 with action
 `gate_bi_steel_floor_formula_same_stack_iso_delta_lw_tighten_candidate_governance_plan`.
 See
+[CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_Q_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_Q_HANDOFF.md),
+[CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_P_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_P_HANDOFF.md),
 [CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_O_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_O_HANDOFF.md),
 [CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_N_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_N_HANDOFF.md),
 [CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_M_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_M_HANDOFF.md),
@@ -168,8 +189,8 @@ and
 The 2026-05-10 ROI revalidation selected Gate G after Gate F, Gate G
 then selected Gate H, Gate H selected Gate I, Gate I selected Gate J,
 Gate J selected Gate K, Gate K selected Gate L, Gate L selected Gate M,
-Gate M selected Gate N, Gate N selected Gate O, and Gate O has now
-selected Gate P. Gate K keeps
+Gate M selected Gate N, Gate N selected Gate O, Gate O selected Gate P,
+Gate P selected Gate Q, and Gate Q has now selected Gate R. Gate K keeps
 the new airborne field-context basis first-class on the wall input
 surface and makes RT60 a visible blocker before `DnT,w` / `DnT,A` can be
 defended. Gate L adds the explicit building-prediction flanking/junction
@@ -185,9 +206,26 @@ building-prediction uncertainty budget are required before Gate O can
 consider a formula corridor. Gate O now defines that source-absent
 building-prediction formula corridor with separate `R'w` and `DnT,w`
 lanes, `+/-9 dB` not-measured design budgets, same-building holdout
-uncertainty, and strict alias blocks; runtime stays parked for Gate P.
+uncertainty, and strict alias blocks. Gate P confirms building runtime
+stays parked and shifts the next calculator-readiness work to
+opening/leak composite transmission-loss input ownership. Gate Q now
+owns those first-class inputs, keeps runtime no-runtime, and selects the
+Gate R formula-corridor step.
 Steel-floor tolerance tightening stays deferred until
 independent source-owned same-stack ISO `DeltaLw` packets exist.
+Gate Q validation result:
+focused Gate Q passed 1 file / 6 tests; Gate Q/P/O/N/M/L plus Gate
+G/H/I/J/K continuity passed 11 files / 65 tests; final
+`pnpm calculator:gate:current` passed with engine 358 files / 2074
+tests, web 71 files / 306 passed + 18 skipped, repo build 5/5
+successful, and whitespace guard clean. Final standalone `git diff
+--check` passed after this validation-note sync.
+Gate P validation result:
+focused Gate P passed 1 file / 6 tests; Gate P/O/N/M/L plus Gate I/J/K
+continuity passed 8 files / 44 tests; final
+`pnpm calculator:gate:current` passed with engine 357 files / 2068
+tests, web 71 files / 306 passed + 18 skipped, and repo build 5/5
+successful. `git diff --check` must be rerun after validation-note sync.
 Gate O validation result:
 focused Gate O validation passed 1 file / 6 tests; Gate O/N/M/L plus
 Gate I/J/K continuity passed 7 files / 38 tests; engine typecheck

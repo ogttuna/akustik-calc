@@ -31,6 +31,15 @@ checkpoint read
 If you need the current Personal-Use MVP Coverage Sprint Gate O
 checkpoint read
 [CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_O_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_O_HANDOFF.md).
+If you need the 2026-05-11 INSUL / ISO research refresh and Gate P
+replan read
+[CHECKPOINT_2026-05-11_INSUL_ISO_RESEARCH_AND_GATE_P_REPLAN_HANDOFF.md](./CHECKPOINT_2026-05-11_INSUL_ISO_RESEARCH_AND_GATE_P_REPLAN_HANDOFF.md).
+If you need the current Personal-Use MVP Coverage Sprint Gate Q
+checkpoint read
+[CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_Q_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_Q_HANDOFF.md).
+If you need the preceding Personal-Use MVP Coverage Sprint Gate P
+checkpoint read
+[CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_P_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_P_HANDOFF.md).
 If you need the preceding Personal-Use MVP Coverage Sprint Gate L
 checkpoint read
 [CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_L_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_L_HANDOFF.md).
@@ -84,15 +93,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_o_personal_use_mvp_airborne_building_prediction_formula_corridor_landed_no_runtime_selected_runtime_corridor_gate_p`
+`gate_q_personal_use_mvp_opening_leak_composite_input_contract_landed_no_runtime_selected_formula_corridor_gate_r`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-p-airborne-building-prediction-runtime-corridor-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-r-opening-leak-composite-transmission-loss-formula-corridor-contract.test.ts`
 
 Selected next action:
 
-`gate_p_personal_use_mvp_airborne_building_prediction_runtime_corridor_plan`
+`gate_r_personal_use_mvp_opening_leak_composite_transmission_loss_formula_corridor_plan`
 
 Strategic ROI replan:
 
@@ -207,12 +216,94 @@ Current strategy:
   blocks for lab `Rw`/`STC`, Gate I field budgets, and source
   single-number rows without an owned curve. Short label:
   building-prediction formula corridor.
-- Gate P is now selected to decide whether that corridor can promote
+- Gate O selected Gate P to decide whether that corridor can promote
   runtime values safely. If path-by-path flanking terms cannot be owned,
   Gate P must keep building prediction parked instead of pretending the
   current heuristic field overlay is design-grade.
+- The 2026-05-11 INSUL / ISO refresh tightened the Gate P bar without
+  changing the selected next file. INSUL's public docs say it does not
+  directly calculate building flanking transmission, and ISO 12354-1
+  frames airborne building prediction around element performance plus
+  direct/indirect flanking and structural propagation terms. Gate P must
+  therefore prove executable direct-curve, flanking-energy,
+  junction/coupling, room-standardization, and `+/-9 dB` budget owners
+  before runtime promotion. Otherwise the correct Gate P result is
+  no-runtime `unsupported` plus a next-lane selection.
+- Gate P has now landed that no-runtime decision. It keeps complete
+  airborne `building_prediction` requests on the Gate N unsupported
+  method, preserves Gate O `proposedRuntimeEstimateDb: null`, rejects
+  lab/field/source single-number aliases, and selects Gate Q opening/leak
+  composite transmission-loss input ownership as the next high-ROI
+  personal-use calculator lane.
+- Gate Q has now landed that opening/leak composite input ownership
+  contract as no-runtime. `hostWallAreaM2` plus per-opening area, count,
+  element `Rw`, rating basis, seal/leakage class, and origin are
+  first-class shared schema inputs. Complete opening inputs are
+  `ready_for_formula_corridor`, but host-wall values stay unchanged
+  until Gate R owns the area-energy formula and leakage penalty corridor.
 - Broad source crawling remains blocked unless the active matrix names a
   specific source or holdout as the highest-impact unblocker.
+
+Current Gate Q result:
+
+- Gate Q adds
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-q-opening-leak-composite-transmission-loss-input-contract.test.ts`
+  and
+  `packages/engine/src/dynamic-airborne-gate-q-opening-leak-composite-transmission-loss-input-contract.ts`.
+- Selection status:
+  `gate_q_personal_use_mvp_opening_leak_composite_input_contract_landed_no_runtime_selected_formula_corridor_gate_r`.
+- No-runtime warning:
+  `Opening/leak composite transmission-loss inputs are owned, but the area-energy formula corridor is not promoted yet. DAC keeps host wall values unchanged instead of guessing door/window/leak penalties.`
+- Required physical inputs are `hostWallAreaM2`, `openingAreaM2`,
+  `openingElementRwDb`, `openingRatingBasis`,
+  `openingSealLeakageClass`, `openingCount`, and `openingOrigin`.
+- Hostile boundaries cover excessive opening area, duplicate openings,
+  zero/negative area or count, unknown rating/seal classes, safe reorder,
+  and many-layer host-wall stability.
+- Selected next action:
+  `gate_r_personal_use_mvp_opening_leak_composite_transmission_loss_formula_corridor_plan`.
+- Selected next file:
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-r-opening-leak-composite-transmission-loss-formula-corridor-contract.test.ts`.
+- Validation completed on 2026-05-11: focused Gate Q passed 1 file / 6
+  tests; Gate Q/P/O/N/M/L plus Gate G/H/I/J/K continuity passed 11 files
+  / 65 tests; final `pnpm calculator:gate:current` passed with engine
+  358 files / 2074 tests, web 71 files / 306 passed + 18 skipped, repo
+  build 5/5 successful, and whitespace guard clean. Final standalone
+  `git diff --check` passed after this validation-note sync.
+
+Current Gate P result:
+
+- Gate P adds
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-p-airborne-building-prediction-runtime-corridor-contract.test.ts`
+  and
+  `packages/engine/src/dynamic-airborne-gate-p-building-prediction-runtime-corridor.ts`.
+- Runtime branch selected:
+  `runtime_blocked_formula_terms_not_owned`.
+- Selection status:
+  `gate_p_personal_use_mvp_airborne_building_prediction_runtime_corridor_closed_no_runtime_selected_opening_leak_composite_gate_q`.
+- Complete building requests still select
+  `candidate_dynamic_unsupported` with method
+  `dynamic_calculator_building_prediction_runtime_adapter_owner_missing`.
+- Gate P found the Gate O terms useful as a design corridor, but not
+  executable as a runtime corridor: direct frequency curve, flanking
+  energy, junction/coupling, room standardization, and the `+/-9 dB`
+  budget all remain promotion blockers.
+- Selected next action:
+  `gate_q_personal_use_mvp_opening_leak_composite_transmission_loss_input_contract_plan`.
+- Short label:
+  opening/leak composite transmission-loss.
+- Selected next file:
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-q-opening-leak-composite-transmission-loss-input-contract.test.ts`.
+- Broad source crawling remains explicitly rejected as the next lane.
+- Gate P only hides leaked `R'w` / `DnT,w` metrics for explicit
+  `building_prediction` requests that also own
+  `buildingPredictionOutputBasis`; legacy field-style continuation
+  snapshots remain live and separately guarded.
+- Validation completed on 2026-05-11: focused Gate P 1 file / 6 tests,
+  Gate P/O/N/M/L plus Gate I/J/K continuity 8 files / 44 tests, and
+  `pnpm calculator:gate:current` with engine 357 files / 2068 tests,
+  web 71 files / 306 passed + 18 skipped, and repo build 5/5
+  successful.
 
 Current Gate O result:
 

@@ -73,6 +73,30 @@ export type AirborneBuildingPredictionOutputBasis = z.infer<
   typeof AirborneBuildingPredictionOutputBasisSchema
 >;
 
+export const AirborneOpeningRatingBasisSchema = z.enum([
+  "unknown",
+  "rw_single_number",
+  "stc_single_number",
+  "iso_717_1_curve",
+  "catalog_row",
+  "measured_lab"
+]);
+export type AirborneOpeningRatingBasis = z.infer<typeof AirborneOpeningRatingBasisSchema>;
+
+export const AirborneOpeningSealLeakageClassSchema = z.enum([
+  "unknown",
+  "sealed",
+  "average",
+  "leaky",
+  "open_gap"
+]);
+export type AirborneOpeningSealLeakageClass = z.infer<
+  typeof AirborneOpeningSealLeakageClassSchema
+>;
+
+export const AirborneOpeningOriginSchema = z.enum(["unknown", "measured", "catalogued", "source_absent"]);
+export type AirborneOpeningOrigin = z.infer<typeof AirborneOpeningOriginSchema>;
+
 export const WallTopologyModeSchema = z.enum([
   "auto",
   "flat_layer_order",
@@ -135,6 +159,23 @@ export const WallTopologySchema: z.ZodType<
   z.input<typeof WallTopologySchemaInternal>
 > = WallTopologySchemaInternal;
 
+const AirborneOpeningLeakElementSchemaInternal = z.object({
+  areaM2: z.number().positive().optional(),
+  count: z.number().int().positive().optional(),
+  elementRwDb: z.number().positive().optional(),
+  id: z.string().min(1).optional(),
+  origin: AirborneOpeningOriginSchema.optional(),
+  ratingBasis: AirborneOpeningRatingBasisSchema.optional(),
+  sealLeakageClass: AirborneOpeningSealLeakageClassSchema.optional()
+});
+export type AirborneOpeningLeakElement = z.infer<typeof AirborneOpeningLeakElementSchemaInternal>;
+
+export const AirborneOpeningLeakElementSchema: z.ZodType<
+  AirborneOpeningLeakElement,
+  z.ZodTypeDef,
+  z.input<typeof AirborneOpeningLeakElementSchemaInternal>
+> = AirborneOpeningLeakElementSchemaInternal;
+
 const AirborneContextShape = {
   airtightness: AirtightnessClassSchema.optional(),
   connectionType: AirborneConnectionTypeSchema.optional(),
@@ -153,6 +194,8 @@ const AirborneContextShape = {
   conservativeFlankingAssumption: AirborneConservativeFlankingAssumptionSchema.optional(),
   junctionCouplingLengthM: z.number().positive().optional(),
   buildingPredictionOutputBasis: AirborneBuildingPredictionOutputBasisSchema.optional(),
+  hostWallAreaM2: z.number().positive().optional(),
+  openingLeakElements: z.array(AirborneOpeningLeakElementSchema).optional(),
   sharedTrack: SharedTrackClassSchema.optional(),
   studSpacingMm: z.number().positive().optional(),
   studType: AirborneStudTypeSchema.optional(),

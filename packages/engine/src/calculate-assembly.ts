@@ -142,6 +142,14 @@ const GATE_W_FLOOR_IMPACT_OUTPUTS = new Set<RequestedOutputId>([
 const GATE_Z_FIELD_IMPACT_OUTPUTS = new Set<RequestedOutputId>(["L'n,w", "L'nT,w", "L'nT,50"]);
 const GATE_Z_RUNTIME_READY_FIELD_IMPACT_OUTPUTS = new Set<RequestedOutputId>(["L'n,w", "L'nT,w"]);
 const GATE_Z_LOW_FREQUENCY_OWNER = "lowFrequencyImpactSpectrumOrCI50_2500Owner";
+const GATE_P_AIRBORNE_BUILDING_PREDICTION_OUTPUTS = new Set<RequestedOutputId>([
+  "Dn,A",
+  "Dn,w",
+  "DnT,A",
+  "DnT,A,k",
+  "DnT,w",
+  "R'w"
+]);
 
 function hasGateWFloorImpactRequest(targetOutputs: readonly RequestedOutputId[]): boolean {
   return targetOutputs.some((output) => GATE_W_FLOOR_IMPACT_OUTPUTS.has(output));
@@ -1462,13 +1470,43 @@ export function calculateAssembly(
         targetOutputs: targetOutputSupport.targetOutputs
       })
     : null;
-  const warnings = buildEstimateWarnings(resolvedLayers, selectedCalculatorLabel);
+  const shouldParkAirborneBuildingPredictionRuntime =
+    dynamicCandidateResolverRuntime?.routeInputAssessment.outputBasis === "building_prediction" &&
+    typeof airborneContext?.buildingPredictionOutputBasis === "string" &&
+    (
+      dynamicCandidateResolverRuntime.resolution.selectedOrigin === "needs_input" ||
+      dynamicCandidateResolverRuntime.resolution.selectedOrigin === "unsupported"
+    );
   const suppressParkedBuildingPredictionOverlayWarnings =
     dynamicCandidateResolverRuntime?.routeInputAssessment.outputBasis === "building_prediction" &&
     (
       dynamicCandidateResolverRuntime.resolution.selectedOrigin === "needs_input" ||
       dynamicCandidateResolverRuntime.resolution.selectedOrigin === "unsupported"
     );
+  const parkedAirborneBuildingPredictionOutputs = shouldParkAirborneBuildingPredictionRuntime
+    ? targetOutputSupport.targetOutputs.filter((output) =>
+        GATE_P_AIRBORNE_BUILDING_PREDICTION_OUTPUTS.has(output)
+      )
+    : [];
+  const parkedAirborneBuildingPredictionOutputSet = new Set(parkedAirborneBuildingPredictionOutputs);
+  const visibleTargetOutputSupport =
+    parkedAirborneBuildingPredictionOutputSet.size === 0
+      ? targetOutputSupport
+      : {
+          ...targetOutputSupport,
+          supportedTargetOutputs: targetOutputSupport.supportedTargetOutputs.filter(
+            (output) => !parkedAirborneBuildingPredictionOutputSet.has(output)
+          ),
+          unsupportedTargetOutputs: [
+            ...targetOutputSupport.unsupportedTargetOutputs,
+            ...parkedAirborneBuildingPredictionOutputs.filter(
+              (output) => !targetOutputSupport.unsupportedTargetOutputs.includes(output)
+            )
+          ]
+        };
+  const hideParkedAirborneBuildingPredictionMetrics =
+    parkedAirborneBuildingPredictionOutputSet.size > 0;
+  const warnings = buildEstimateWarnings(resolvedLayers, selectedCalculatorLabel);
   warnings.push(...(dynamicAirborneResult?.warnings ?? []));
   if (!suppressParkedBuildingPredictionOverlayWarnings) {
     warnings.push(...airborneOverlayResult.warnings);
@@ -1478,7 +1516,7 @@ export function calculateAssembly(
   if (rockwoolSplitTripleLeafExactOutputWithhold.warning) {
     warnings.push(rockwoolSplitTripleLeafExactOutputWithhold.warning);
   }
-  warnings.push(...buildTargetOutputWarnings(targetOutputSupport));
+  warnings.push(...buildTargetOutputWarnings(visibleTargetOutputSupport));
   warnings.push(...floorFamilySourceGuardWarnings);
   if (
     dynamicCandidateResolverRuntime?.routeInputAssessment.outputBasis === "building_prediction" &&
@@ -1673,25 +1711,27 @@ export function calculateAssembly(
       totalThicknessMm,
       surfaceMassKgM2,
       estimatedRwDb: adjustedEstimatedRwDb,
-      estimatedRwPrimeDb: ratings.field?.RwPrime ?? ratings.iso717.RwPrime,
+      estimatedRwPrimeDb: hideParkedAirborneBuildingPredictionMetrics
+        ? undefined
+        : ratings.field?.RwPrime ?? ratings.iso717.RwPrime,
       estimatedCDb: ratings.iso717.C,
       estimatedCtrDb: ratings.iso717.Ctr,
-      estimatedDnTwDb: ratings.field?.DnTw,
-      estimatedDnTADb: ratings.field?.DnTA,
-      estimatedDnTAkDb: ratings.field?.DnTAk,
-      estimatedDnWDb: ratings.field?.DnW,
-      estimatedDnADb: ratings.field?.DnA,
+      estimatedDnTwDb: hideParkedAirborneBuildingPredictionMetrics ? undefined : ratings.field?.DnTw,
+      estimatedDnTADb: hideParkedAirborneBuildingPredictionMetrics ? undefined : ratings.field?.DnTA,
+      estimatedDnTAkDb: hideParkedAirborneBuildingPredictionMetrics ? undefined : ratings.field?.DnTAk,
+      estimatedDnWDb: hideParkedAirborneBuildingPredictionMetrics ? undefined : ratings.field?.DnW,
+      estimatedDnADb: hideParkedAirborneBuildingPredictionMetrics ? undefined : ratings.field?.DnA,
       estimatedStc: ratings.astmE413.STC,
       airGapCount: resolvedLayers.filter((layer) => layer.material.category === "gap").length,
       insulationCount: resolvedLayers.filter((layer) => layer.material.category === "insulation").length,
       method: dynamicAirborneResult?.id ?? importedCalculatorResult?.id ?? "screening_mass_law_curve_seed_v3"
     },
     ratings,
-    supportedImpactOutputs: targetOutputSupport.supportedImpactOutputs,
-    supportedTargetOutputs: targetOutputSupport.supportedTargetOutputs,
-    targetOutputs: targetOutputSupport.targetOutputs,
-    unsupportedImpactOutputs: targetOutputSupport.unsupportedImpactOutputs,
-    unsupportedTargetOutputs: targetOutputSupport.unsupportedTargetOutputs,
+    supportedImpactOutputs: visibleTargetOutputSupport.supportedImpactOutputs,
+    supportedTargetOutputs: visibleTargetOutputSupport.supportedTargetOutputs,
+    targetOutputs: visibleTargetOutputSupport.targetOutputs,
+    unsupportedImpactOutputs: visibleTargetOutputSupport.unsupportedImpactOutputs,
+    unsupportedTargetOutputs: visibleTargetOutputSupport.unsupportedTargetOutputs,
     warnings
   };
 
