@@ -84,6 +84,9 @@ revalidation handoff read
 For the Gate AK STC-aware matrix refresh and Gate AL building prediction
 owner-gap handoff read
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AK_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AK_HANDOFF.md).
+For the Gate AL building prediction owner-gap refresh and Gate AM direct
+curve owner handoff read
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AL_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AL_HANDOFF.md).
 For the Gate R no-runtime formula corridor and Gate S handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md).
 For the Gate Q no-runtime input contract and Gate R handoff read
@@ -140,7 +143,62 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
+## Gate AL Building Prediction Owner Gap Refresh Landed - 2026-05-12
+
+Gate AL has now landed the no-runtime owner-gap refresh selected by
+Gate AK:
+
+`gate_al_personal_use_mvp_airborne_building_prediction_owner_gap_refresh_plan`
+
+Current selected status:
+
+`gate_al_personal_use_mvp_airborne_building_prediction_owner_gap_refresh_landed_no_runtime_selected_direct_curve_owner_gate_am`
+
+Selected next action:
+
+`gate_am_personal_use_mvp_airborne_building_prediction_direct_curve_owner_contract_plan`
+
+Selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-am-airborne-building-prediction-direct-curve-owner-contract.test.ts`
+
+Gate AL converts the Gate O/P building-prediction formula terms into an
+owner-gap map without promoting runtime. Direct separating-element
+frequency curve, flanking path energy sum, junction vibration reduction
+index, room absorption standardization, and building prediction
+uncertainty budget are all still runtime-unowned. Complete building
+requests remain `unsupported`; partial building requests remain
+`needs_input`; opening/leak building requests remain unsupported and
+budget-free. Lab `Rw` / `STC`, field `R'w` / `DnT,w`, source single
+numbers without curves, and opening/leak lab adapters remain blocked as
+building-output aliases.
+
+Gate AL selects Gate AM as a no-runtime direct separating-element
+frequency curve owner contract. That owner is the first prerequisite
+because every later building energy path needs a frequency curve before
+flanking, junction, room standardization, or uncertainty-budget work can
+become runtime-safe.
+
+Gate AL validation passed on 2026-05-12: focused Gate AL 1 file /
+6 tests, Gate AK/Gate AL continuity 2 files / 12 tests, engine
+typecheck, `pnpm calculator:gate:current` with engine 379 files /
+2187 tests, web 74 files / 318 passed + 18 skipped, build 5/5,
+whitespace guard clean, and full `pnpm check` with engine 504 files /
+2989 tests, web 180 files / 993 passed + 18 skipped, lint/typecheck
+clean, and build 5/5. Gate AM must keep legacy raw dynamic
+field/building continuation snapshots frozen until a later gate
+deliberately migrates them behind the building-prediction owner
+contract.
+
+Gate AK has consumed this handoff. The current selected next action is
+now Gate AM direct curve owner contract.
+
 ## Gate AK STC-Aware Matrix Refresh Landed - 2026-05-12
+
+Gate AL has consumed the building prediction owner gap refresh selected
+by Gate AK and closed it as a no-runtime owner-gap map. The current
+selected next action is now Gate AM direct separating-element frequency
+curve owner contract.
 
 Gate AK has now landed the no-runtime matrix refresh selected by
 Gate AJ:

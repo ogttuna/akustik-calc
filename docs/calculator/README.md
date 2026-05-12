@@ -396,6 +396,21 @@ Gate AK, Gate AJ/Gate AK continuity, engine typecheck,
 `pnpm calculator:gate:current`, full `pnpm check`, repo build, and
 whitespace guard evidence. See
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AK_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AK_HANDOFF.md).
+Gate AL now lands that building prediction owner gap refresh with
+selection status
+`gate_al_personal_use_mvp_airborne_building_prediction_owner_gap_refresh_landed_no_runtime_selected_direct_curve_owner_gate_am`
+and selected action
+`gate_am_personal_use_mvp_airborne_building_prediction_direct_curve_owner_contract_plan`.
+Selected next file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-am-airborne-building-prediction-direct-curve-owner-contract.test.ts`.
+The direct separating-element frequency curve, flanking path energy,
+junction vibration reduction, room standardization, and uncertainty
+budget remain runtime-unowned; complete building requests stay
+unsupported and alias-free. Gate AL validation passed with focused
+Gate AL, Gate AK/Gate AL continuity, engine typecheck,
+`pnpm calculator:gate:current`, full `pnpm check`, repo build, and
+whitespace guard evidence. See
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AL_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AL_HANDOFF.md).
 Gate A
 landed in
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-a-scenario-matrix-contract.test.ts`

@@ -86,7 +86,11 @@ Validation passed before commit:
 
 ## Next Gate AL
 
-Gate AL should implement:
+Gate AL has now consumed this handoff and closed as the no-runtime
+building prediction owner gap refresh. See
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AL_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AL_HANDOFF.md).
+
+Gate AL implemented:
 
 1. an executable owner-gap map for airborne `building_prediction` after
    Gate L/M/N/O/P and Gate AK;
@@ -97,4 +101,5 @@ Gate AL should implement:
    budget ownership;
 4. rejection of lab `Rw`/`STC`, field `R'w`/`DnT,w`, and opening/leak
    lab adapters as building-output aliases;
-5. a new narrow next action selected only after the owner gap is ranked.
+5. Gate AM as the selected no-runtime direct separating-element
+   frequency curve owner contract.

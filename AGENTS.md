@@ -688,6 +688,28 @@ Gate AL is a building prediction owner gap refresh, not a building
 runtime promotion: direct curve, flanking energy, junction/coupling,
 room standardization, and uncertainty owners must be executable before
 building `R'w` or `DnT,w` can promote.
+Gate AL has now landed:
+`gate_al_personal_use_mvp_airborne_building_prediction_owner_gap_refresh_plan`.
+It maps the Gate O/P building formula terms into explicit runtime-unowned
+owners: direct separating-element frequency curve, flanking path energy
+sum, junction vibration reduction index, room absorption standardization,
+and building prediction uncertainty budget. Complete building requests
+remain `unsupported`; partial building requests remain `needs_input`;
+lab `Rw`/`STC`, field `R'w`/`DnT,w`, opening/leak lab adapters, and
+source single numbers without curves remain blocked as building aliases.
+Gate AL selection status:
+`gate_al_personal_use_mvp_airborne_building_prediction_owner_gap_refresh_landed_no_runtime_selected_direct_curve_owner_gate_am`.
+Gate AL validation passed on 2026-05-12: focused Gate AL 1 file /
+6 tests, Gate AK/Gate AL continuity 2 files / 12 tests, engine
+typecheck, `pnpm calculator:gate:current` with engine 379 files /
+2187 tests, web 74 files / 318 passed + 18 skipped, build 5/5,
+whitespace guard clean, and full `pnpm check` with engine 504 files /
+2989 tests, web 180 files / 993 passed + 18 skipped, lint/typecheck
+clean, and build 5/5.
+Selected next action:
+`gate_am_personal_use_mvp_airborne_building_prediction_direct_curve_owner_contract_plan`.
+Selected next file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-am-airborne-building-prediction-direct-curve-owner-contract.test.ts`.
 Do not keep adding narrow steel-floor source/packet gates unless the
 active matrix or a later runtime proposal names a specific source-owned
 unblocker.
