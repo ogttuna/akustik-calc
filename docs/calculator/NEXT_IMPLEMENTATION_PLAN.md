@@ -99,6 +99,9 @@ AP room standardization handoff read
 For the Gate AP building prediction room standardization owner and Gate
 AQ uncertainty-budget handoff read
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AP_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AP_HANDOFF.md).
+For the post-Gate-AP checkpoint, broad revalidation, and still-selected
+Gate AQ handoff read
+[CHECKPOINT_2026-05-12_POST_GATE_AP_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_POST_GATE_AP_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md).
 For the Gate R no-runtime formula corridor and Gate S handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md).
 For the Gate Q no-runtime input contract and Gate R handoff read
@@ -204,6 +207,41 @@ sync. See
 
 Gate AP has consumed this handoff. The current selected next action is
 now Gate AQ uncertainty-budget owner contract.
+
+## Post-Gate AP Checkpoint And Broad Revalidation - 2026-05-12
+
+The post-Gate-AP checkpoint has re-read the authority docs and live
+implementation before starting Gate AQ. No implementation/doc mismatch
+was found: Gate AP is landed, no-runtime, included in the current-gate
+runner, and still selects Gate AQ as the next owner contract. The
+selected Gate AQ file intentionally does not exist yet because it is the
+next implementation step.
+
+Current selected status remains:
+
+`gate_ap_personal_use_mvp_airborne_building_prediction_room_standardization_owner_landed_no_runtime_selected_uncertainty_budget_gate_aq`
+
+Selected next action remains:
+
+`gate_aq_personal_use_mvp_airborne_building_prediction_uncertainty_budget_owner_contract_plan`
+
+Selected next file remains:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-aq-airborne-building-prediction-uncertainty-budget-owner-contract.test.ts`
+
+Gate AQ remains the right next step because the direct curve, flanking
+energy, junction vibration, and room standardization owners are already
+defined, while the building-prediction `+/-9 dB` uncertainty-budget owner
+is still missing. Complete `building_prediction` requests must remain
+`unsupported` and partial building requests must remain `needs_input`
+until a later all-owner runtime corridor can prove every formula term,
+surface, and uncertainty posture is executable. The checkpoint
+validation passed with focused Gate AP 1 file / 6 tests,
+`pnpm calculator:gate:current` engine 383 files / 2211 tests and web
+74 files / 318 passed + 18 skipped plus build 5/5, and broad
+`pnpm check` engine 508 files / 3013 tests and web 180 files /
+993 passed + 18 skipped plus lint/typecheck/build clean. See
+[CHECKPOINT_2026-05-12_POST_GATE_AP_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_POST_GATE_AP_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md).
 
 ## Gate AO Building Prediction Junction Vibration Owner Landed - 2026-05-12
 

@@ -106,6 +106,9 @@ owner and Gate AP handoff read
 If you need the latest Gate AP building prediction room standardization
 owner and Gate AQ handoff read
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AP_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AP_HANDOFF.md).
+If you need the post-Gate-AP checkpoint and broad revalidation before
+starting Gate AQ read
+[CHECKPOINT_2026-05-12_POST_GATE_AP_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_POST_GATE_AP_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md).
 If you need the preceding Personal-Use MVP Coverage Sprint Gate W
 checkpoint read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md).
@@ -682,6 +685,19 @@ Current strategy:
   clean, and full `pnpm check` with engine 508 files / 3013 tests, web
   180 files / 993 passed + 18 skipped, lint/typecheck clean, and build
   5/5. `git diff --check` passed after validation-note sync.
+- Post-Gate-AP checkpoint status: docs and implementation were re-read
+  before starting Gate AQ. No stale plan mismatch was found. Gate AP is
+  landed, no-runtime, present in the current-gate runner, and still
+  selects Gate AQ
+  `gate_aq_personal_use_mvp_airborne_building_prediction_uncertainty_budget_owner_contract_plan`.
+  The selected Gate AQ test file does not exist yet by design; it is the
+  next implementation step. The checkpoint validation passed with
+  focused Gate AP 1 file / 6 tests, `pnpm calculator:gate:current`
+  engine 383 files / 2211 tests and web 74 files / 318 passed + 18
+  skipped plus build 5/5, and broad `pnpm check` engine 508 files /
+  3013 tests and web 180 files / 993 passed + 18 skipped plus
+  lint/typecheck/build clean. See
+  [CHECKPOINT_2026-05-12_POST_GATE_AP_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_POST_GATE_AP_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md).
 - Personal-Use MVP Coverage Sprint Gate B has now landed the
   timber/CLT floor-impact `DeltaLw` input and formula-readiness
   contract without runtime movement.

@@ -17,9 +17,10 @@ override or anchor known assemblies, but missing source packets must
 not block a labelled family-specific physics prediction when the
 required topology and material inputs are present.
 
-As of 2026-05-10, Personal-Use MVP Coverage Sprint Gate L has landed
-the airborne `building_prediction` boundary after first-class airborne
-field-context input-surface wiring for owned
+As of 2026-05-12, the Personal-Use MVP Coverage Sprint has advanced
+through the Gate AP airborne `building_prediction` room-standardization
+owner after the Gate L boundary and first-class airborne field-context
+input-surface wiring for owned
 lab-family wall routes
 after Gate H lined massive/masonry and CLT wall lab family-physics
 promotion and Gate G generalized wall multi-cavity / triple-leaf route
@@ -496,6 +497,11 @@ with focused Gate AP, Gate AO/Gate AP continuity, engine typecheck,
 `pnpm calculator:gate:current`, full `pnpm check`, repo build, and
 whitespace guard evidence. See
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AP_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AP_HANDOFF.md).
+The post-Gate-AP checkpoint re-read docs and implementation, found the
+plan still aligned, and keeps Gate AQ as the selected next no-runtime
+uncertainty-budget owner. It passed focused Gate AP, current-gate, and
+broad `pnpm check` validation. See
+[CHECKPOINT_2026-05-12_POST_GATE_AP_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_POST_GATE_AP_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md).
 Gate A
 landed in
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-a-scenario-matrix-contract.test.ts`

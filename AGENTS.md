@@ -815,6 +815,13 @@ Selected next action:
 `gate_aq_personal_use_mvp_airborne_building_prediction_uncertainty_budget_owner_contract_plan`.
 Selected next file:
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-aq-airborne-building-prediction-uncertainty-budget-owner-contract.test.ts`.
+Post-Gate-AP checkpoint:
+`docs/calculator/CHECKPOINT_2026-05-12_POST_GATE_AP_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md`.
+The checkpoint re-read docs and implementation, found no mismatch, and
+keeps Gate AQ as the selected no-runtime uncertainty-budget owner before
+any later all-owner building-prediction runtime corridor. Focused Gate
+AP, `pnpm calculator:gate:current`, and broad `pnpm check` validation
+passed at this checkpoint.
 Do not keep adding narrow steel-floor source/packet gates unless the
 active matrix or a later runtime proposal names a specific source-owned
 unblocker.
