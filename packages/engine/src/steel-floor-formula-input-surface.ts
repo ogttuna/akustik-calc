@@ -88,6 +88,15 @@ export const STEEL_FLOOR_FORMULA_INPUT_SURFACE_FIELDS = [
   "lowerCeilingIsolationSupportForm"
 ] as const satisfies readonly AcousticInputFieldId[];
 
+export const STEEL_FLOOR_FORMULA_INPUT_SURFACE_LABELS = {
+  loadBasisKgM2: "Resilient-layer load basis (kg/m2)",
+  lowerCeilingIsolationSupportForm: "Lower ceiling isolation support form",
+  resilientLayerDynamicStiffnessMNm3: "Upper resilient dynamic stiffness (MN/m3)",
+  steelCarrierDepthMm: "Steel carrier depth (mm)",
+  steelCarrierSpacingMm: "Steel carrier spacing (mm)",
+  steelSupportForm: "Steel support form"
+} as const satisfies Partial<Record<AcousticInputFieldId, string>>;
+
 const STEEL_FLOOR_BASE_MATERIAL_IDS = new Set([
   "lightweight_steel_floor",
   "open_web_steel_floor",

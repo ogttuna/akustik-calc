@@ -80,6 +80,10 @@ handoff read
 [CHECKPOINT_2026-05-12_POST_GATE_AE_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_POST_GATE_AE_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md).
 If you need the clean Gate AF implementation plan read
 [SLICE_PERSONAL_USE_MVP_GATE_AF_POST_FLAT_MULTICAVITY_REVALIDATION_PLAN.md](./SLICE_PERSONAL_USE_MVP_GATE_AF_POST_FLAT_MULTICAVITY_REVALIDATION_PLAN.md).
+If you need the latest Gate AF closeout and Gate AG handoff read
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AF_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AF_HANDOFF.md).
+If you need the latest Gate AG closeout and Gate AH handoff read
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AG_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AG_HANDOFF.md).
 If you need the preceding Personal-Use MVP Coverage Sprint Gate W
 checkpoint read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md).
@@ -145,15 +149,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_ae_personal_use_mvp_flat_multicavity_solver_broadening_landed_selected_revalidation_gate_af`
+`gate_ag_personal_use_mvp_floor_formula_surface_polish_landed_selected_opening_leak_stc_spectrum_adapter_gate_ah`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-af-post-flat-multicavity-solver-broadening-revalidation-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ah-opening-leak-stc-spectrum-adapter-contract.test.ts`
 
 Selected next action:
 
-`gate_af_personal_use_mvp_post_flat_multicavity_solver_broadening_revalidation_plan`
+`gate_ah_personal_use_mvp_opening_leak_stc_spectrum_adapter_plan`
 
 Strategic ROI replan:
 
@@ -417,6 +421,39 @@ Current strategy:
   Vitest 180 files / 993 passed + 18 skipped, found no runtime fix to
   make, and confirmed Gate AF remains the first next implementation
   step.
+- Personal-Use MVP Coverage Sprint Gate AF has now landed
+  `gate_af_personal_use_mvp_post_flat_multicavity_solver_broadening_revalidation_plan`.
+  Selection status:
+  `gate_af_personal_use_mvp_post_flat_multicavity_solver_broadening_revalidation_landed_selected_floor_formula_surface_polish_gate_ag`.
+  Selected next action:
+  `gate_ag_personal_use_mvp_floor_formula_surface_polish_plan`.
+  Selected next file:
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ag-floor-formula-surface-polish-contract.test.ts`.
+  Gate AF is a no-runtime revalidation gate: the 40-row matrix remains
+  gap-free, Gate AE flat multicavity stays `Rw 53 / STC 57 / C -0.6 /
+  Ctr -8` with `+/-7 dB`, Gate G grouped triple-leaf stays `Rw 50 / STC
+  55 / C 0.8 / Ctr -7.3` with `+/-5 dB`, and stale topology,
+  duplicate groups, missing topology, field/building, ASTM, IIC, and
+  broad source crawl boundaries remain blocked. Gate AF removes the
+  now-landed `flat_multicavity_solver_broadening` lane from scoring and
+  selects `floor_formula_surface_polish` as the next bounded
+  calculator-first lane.
+- Personal-Use MVP Coverage Sprint Gate AG has now landed
+  `gate_ag_personal_use_mvp_floor_formula_surface_polish_plan`.
+  Selection status:
+  `gate_ag_personal_use_mvp_floor_formula_surface_polish_landed_selected_opening_leak_stc_spectrum_adapter_gate_ah`.
+  Selected next action:
+  `gate_ah_personal_use_mvp_opening_leak_stc_spectrum_adapter_plan`.
+  Selected next file:
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ah-opening-leak-stc-spectrum-adapter-contract.test.ts`.
+  Gate AG is no-runtime prompt/input polish for existing floor formula
+  lanes. Steel remains `LnW 55.6 / DeltaLw 22.4`, timber remains
+  `Ln,w 51 / DeltaLw 25.2`, CLT remains `Ln,w 50 / DeltaLw 22.6`, and
+  heavy concrete safe reorder remains `Ln,w 39.2 / DeltaLw 32.6`.
+  Workbench warnings now use engine-owned labels such as
+  `Steel carrier spacing (mm)`, `Upper resilient dynamic stiffness
+  (MN/m3)`, and `Resilient-layer load basis (kg/m2)`. Exact-source
+  precedence and lab/field/building basis boundaries remain unchanged.
 - Personal-Use MVP Coverage Sprint Gate B has now landed the
   timber/CLT floor-impact `DeltaLw` input and formula-readiness
   contract without runtime movement.

@@ -1,6 +1,7 @@
 import {
   buildTimberCltDeltaLwPredictorInputFromSurface,
   hasTimberCltDeltaLwInputSurfaceRoute,
+  TIMBER_CLT_DELTA_LW_INPUT_SURFACE_LABELS,
   type TimberCltDeltaLwImpactSystemType,
   type TimberCltDeltaLwInputSurface,
   type TimberCltDeltaLwInputSurfaceResult,
@@ -41,13 +42,8 @@ export type WorkbenchTimberCltDeltaLwInputSurfaceDraft = {
   impactTimberCltUpperTreatmentThicknessMm: string;
 };
 
-export const WORKBENCH_TIMBER_CLT_DELTA_LW_INPUT_LABELS: Partial<Record<AcousticInputFieldId, string>> = {
-  baseSlabOrFloor: "Timber/CLT support family",
-  ceilingOrLowerAssembly: "Lower assembly",
-  loadBasisKgM2: "Load basis (kg/m2)",
-  resilientLayerDynamicStiffnessMNm3: "Dynamic stiffness (MN/m3)",
-  toppingOrFloatingLayer: "Upper floating/topping mass"
-};
+export const WORKBENCH_TIMBER_CLT_DELTA_LW_INPUT_LABELS:
+  Partial<Record<AcousticInputFieldId, string>> = TIMBER_CLT_DELTA_LW_INPUT_SURFACE_LABELS;
 
 export function normalizeWorkbenchTimberCltDeltaLwInputSurface(
   draft: WorkbenchTimberCltDeltaLwInputSurfaceDraft

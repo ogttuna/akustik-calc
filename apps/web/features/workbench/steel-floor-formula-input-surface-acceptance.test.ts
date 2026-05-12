@@ -366,7 +366,7 @@ describe("steel floor formula input surface acceptance", () => {
       }
     });
     expect(emptySpacing.result?.impact?.basis).not.toBe(STEEL_FORMULA_BASIS);
-    expect(emptySpacing.warnings.join("\n")).toContain("Carrier spacing (mm)");
+    expect(emptySpacing.warnings.join("\n")).toContain("Steel carrier spacing (mm)");
 
     const invalidFields = evaluateSteelScenario({
       surface: {
@@ -376,8 +376,8 @@ describe("steel floor formula input surface acceptance", () => {
       }
     });
     expect(invalidFields.result?.impact?.basis).not.toBe(STEEL_FORMULA_BASIS);
-    expect(invalidFields.warnings.join("\n")).toContain("Load basis (kg/m2)");
-    expect(invalidFields.warnings.join("\n")).toContain("Dynamic stiffness (MN/m3)");
+    expect(invalidFields.warnings.join("\n")).toContain("Resilient-layer load basis (kg/m2)");
+    expect(invalidFields.warnings.join("\n")).toContain("Upper resilient dynamic stiffness (MN/m3)");
 
     const completeThenRemoved = evaluateSteelScenario({});
     expectSteelFormulaResult(completeThenRemoved.result);
@@ -388,7 +388,7 @@ describe("steel floor formula input surface acceptance", () => {
       }
     });
     expect(removedField.result?.impact?.basis).not.toBe(STEEL_FORMULA_BASIS);
-    expect(removedField.warnings.join("\n")).toContain("Load basis (kg/m2)");
+    expect(removedField.warnings.join("\n")).toContain("Resilient-layer load basis (kg/m2)");
   });
 
   it("keeps hostile layer edits bounded across many layers, safe reorder, duplicate carriers, split carriers, and steel toggles", () => {

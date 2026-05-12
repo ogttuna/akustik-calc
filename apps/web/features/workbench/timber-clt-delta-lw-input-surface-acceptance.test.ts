@@ -408,8 +408,8 @@ describe("timber/CLT DeltaLw input surface acceptance", () => {
       }
     });
     expect(invalidFields.result?.impact?.DeltaLw).toBeUndefined();
-    expect(invalidFields.warnings.join("\n")).toContain("Load basis (kg/m2)");
-    expect(invalidFields.warnings.join("\n")).toContain("Dynamic stiffness (MN/m3)");
+    expect(invalidFields.warnings.join("\n")).toContain("Resilient-layer load basis (kg/m2)");
+    expect(invalidFields.warnings.join("\n")).toContain("Upper resilient dynamic stiffness (MN/m3)");
     expect(invalidFields.warnings.join("\n")).toContain("Upper floating/topping mass");
 
     const safelyReordered = evaluateTimberCltScenario({

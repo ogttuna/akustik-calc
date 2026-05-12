@@ -304,6 +304,31 @@ web Vitest split batches, and repo build 5/5. Gate AF remains the next
 selected no-runtime revalidation step before choosing another solver or
 source lane. See
 [CHECKPOINT_2026-05-12_POST_GATE_AE_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_POST_GATE_AE_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md).
+Gate AF now lands the post-flat-multicavity no-runtime revalidation with
+selection status
+`gate_af_personal_use_mvp_post_flat_multicavity_solver_broadening_revalidation_landed_selected_floor_formula_surface_polish_gate_ag`
+and selected action
+`gate_ag_personal_use_mvp_floor_formula_surface_polish_plan`.
+Selected next file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ag-floor-formula-surface-polish-contract.test.ts`.
+Gate AF keeps Gate AE `Rw 53 / STC 57 / C -0.6 / Ctr -8` and Gate G
+`Rw 50 / STC 55 / C 0.8 / Ctr -7.3` frozen, keeps hostile/basis/source
+boundaries blocked, and selects `floor_formula_surface_polish` over
+broad source crawl. See
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AF_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AF_HANDOFF.md).
+Gate AG now lands that floor formula surface polish with selection
+status
+`gate_ag_personal_use_mvp_floor_formula_surface_polish_landed_selected_opening_leak_stc_spectrum_adapter_gate_ah`
+and selected action
+`gate_ah_personal_use_mvp_opening_leak_stc_spectrum_adapter_plan`.
+Selected next file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ah-opening-leak-stc-spectrum-adapter-contract.test.ts`.
+Gate AG keeps steel `LnW 55.6 / DeltaLw 22.4`, timber
+`Ln,w 51 / DeltaLw 25.2`, CLT `Ln,w 50 / DeltaLw 22.6`, and heavy
+concrete safe reorder `Ln,w 39.2 / DeltaLw 32.6` frozen while
+centralizing floor formula missing-input labels for clearer workbench
+prompts. See
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AG_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AG_HANDOFF.md).
 Gate A
 landed in
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-a-scenario-matrix-contract.test.ts`

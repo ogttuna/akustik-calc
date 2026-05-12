@@ -841,7 +841,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
                         </FieldShell>
 
                         <FieldShell
-                          label="Carrier depth (mm)"
+                          label="Steel carrier depth (mm)"
                           note="Overrides the base_structure layer depth when entered."
                           relevance="required"
                           usage="Ln,w and DeltaLw"
@@ -856,7 +856,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
                         </FieldShell>
 
                         <FieldShell
-                          label="Carrier spacing (mm)"
+                          label="Steel carrier spacing (mm)"
                           note="Centre-to-centre spacing for the steel carrier."
                           relevance="required"
                           usage="Ln,w and DeltaLw"
@@ -871,7 +871,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
                         </FieldShell>
 
                         <FieldShell
-                          label="Dynamic stiffness (MN/m³)"
+                          label="Upper resilient dynamic stiffness (MN/m³)"
                           note="Upper impact layer stiffness."
                           relevance="required"
                           usage="DeltaLw"
@@ -886,7 +886,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
                         </FieldShell>
 
                         <FieldShell
-                          label="Load basis (kg/m²)"
+                          label="Resilient-layer load basis (kg/m²)"
                           note="Surface mass carried by the resilient layer."
                           relevance="required"
                           usage="DeltaLw"
@@ -901,7 +901,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
                         </FieldShell>
 
                         <FieldShell
-                          label="Lower isolation"
+                          label="Lower ceiling isolation"
                           note="Support class for the ceiling-side isolation package."
                           relevance="required"
                           usage="Ln,w"
@@ -985,7 +985,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
                         </FieldShell>
 
                         <FieldShell
-                          label="Load basis (kg/m²)"
+                          label="Resilient-layer load basis (kg/m²)"
                           note="Surface mass carried by the resilient layer."
                           relevance="required"
                           usage="DeltaLw"
@@ -1000,7 +1000,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
                         </FieldShell>
 
                         <FieldShell
-                          label="Dynamic stiffness (MN/m³)"
+                          label="Upper resilient dynamic stiffness (MN/m³)"
                           note="Upper resilient layer stiffness."
                           relevance="required"
                           usage="DeltaLw"

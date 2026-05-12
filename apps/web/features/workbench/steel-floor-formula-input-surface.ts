@@ -1,6 +1,7 @@
 import {
   buildSteelFloorFormulaPredictorInputFromSurface,
   hasSteelFloorFormulaInputSurfaceRoute,
+  STEEL_FLOOR_FORMULA_INPUT_SURFACE_LABELS,
   type SteelFloorFormulaInputSurface,
   type SteelFloorFormulaInputSurfaceResult,
   type SteelFloorLowerCeilingIsolationSupportForm
@@ -27,14 +28,8 @@ export type WorkbenchSteelFloorFormulaInputSurfaceDraft = {
   impactSteelSupportForm: "" | ImpactPredictorSupportForm;
 };
 
-export const WORKBENCH_STEEL_FLOOR_FORMULA_INPUT_LABELS: Partial<Record<AcousticInputFieldId, string>> = {
-  loadBasisKgM2: "Load basis (kg/m2)",
-  lowerCeilingIsolationSupportForm: "Lower isolation",
-  resilientLayerDynamicStiffnessMNm3: "Dynamic stiffness (MN/m3)",
-  steelCarrierDepthMm: "Carrier depth (mm)",
-  steelCarrierSpacingMm: "Carrier spacing (mm)",
-  steelSupportForm: "Steel support form"
-};
+export const WORKBENCH_STEEL_FLOOR_FORMULA_INPUT_LABELS:
+  Partial<Record<AcousticInputFieldId, string>> = STEEL_FLOOR_FORMULA_INPUT_SURFACE_LABELS;
 
 export function normalizeWorkbenchSteelFloorFormulaInputSurface(
   draft: WorkbenchSteelFloorFormulaInputSurfaceDraft

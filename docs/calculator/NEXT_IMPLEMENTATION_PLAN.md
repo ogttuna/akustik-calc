@@ -70,6 +70,11 @@ Gate AF revalidation handoff read
 [CHECKPOINT_2026-05-12_POST_GATE_AE_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_POST_GATE_AE_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md).
 For the clean Gate AF implementation plan read
 [SLICE_PERSONAL_USE_MVP_GATE_AF_POST_FLAT_MULTICAVITY_REVALIDATION_PLAN.md](./SLICE_PERSONAL_USE_MVP_GATE_AF_POST_FLAT_MULTICAVITY_REVALIDATION_PLAN.md).
+For the Gate AF closeout and Gate AG floor-polish handoff read
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AF_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AF_HANDOFF.md).
+For the Gate AG floor formula surface polish closeout and Gate AH
+opening/leak `STC` handoff read
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AG_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AG_HANDOFF.md).
 For the Gate R no-runtime formula corridor and Gate S handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md).
 For the Gate Q no-runtime input contract and Gate R handoff read
@@ -125,6 +130,81 @@ many layers, duplicate/split roles, ambiguous topology, and safe or
 unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
+
+## Gate AG Floor Formula Surface Polish Landed - 2026-05-12
+
+Gate AG has now landed the no-runtime floor formula input-surface polish
+selected by Gate AF:
+
+`gate_ag_personal_use_mvp_floor_formula_surface_polish_plan`
+
+Current selected status:
+
+`gate_ag_personal_use_mvp_floor_formula_surface_polish_landed_selected_opening_leak_stc_spectrum_adapter_gate_ah`
+
+Selected next action:
+
+`gate_ah_personal_use_mvp_opening_leak_stc_spectrum_adapter_plan`
+
+Selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ah-opening-leak-stc-spectrum-adapter-contract.test.ts`
+
+Gate AG keeps runtime values frozen: steel floor remains lab
+`LnW 55.6 / DeltaLw 22.4`, timber joist remains exact `Ln,w 51` plus
+formula `DeltaLw 25.2`, CLT remains `Ln,w 50` plus formula
+`DeltaLw 22.6`, and heavy concrete floating-floor safe reorder remains
+`Ln,w 39.2 / DeltaLw 32.6`. Exact-source precedence and lab/field/
+building basis boundaries are unchanged.
+
+The implemented polish centralizes floor formula missing-input labels in
+the engine and has the workbench warning formatters consume them. The
+visible prompts now name `Steel carrier spacing (mm)`,
+`Upper resilient dynamic stiffness (MN/m3)`, and
+`Resilient-layer load basis (kg/m2)` instead of shorter ambiguous
+labels. This is a prompt/input-surface clarity change, not a formula or
+API-shape change.
+
+The next bounded calculator-first lane is opening/leak `STC` spectrum
+adapter work. Gate AH must own the rating basis and STC-only negative
+boundaries before any `STC` promotion; `R'w`, `DnT,w`, field, and
+building outputs remain out of scope.
+
+## Gate AF Post Flat Multicavity Revalidation Landed - 2026-05-12
+
+Gate AF has now landed the no-runtime post-promotion revalidation
+selected by Gate AE:
+
+`gate_af_personal_use_mvp_post_flat_multicavity_solver_broadening_revalidation_plan`
+
+Current selected status:
+
+`gate_af_personal_use_mvp_post_flat_multicavity_solver_broadening_revalidation_landed_selected_floor_formula_surface_polish_gate_ag`
+
+Selected next action:
+
+`gate_ag_personal_use_mvp_floor_formula_surface_polish_plan`
+
+Selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ag-floor-formula-surface-polish-contract.test.ts`
+
+Gate AF keeps runtime values frozen: Gate AE flat multicavity remains
+`Rw 53 / STC 57 / C -0.6 / Ctr -8` through
+`gate_ae_flat_multicavity_two_cavity_frequency_solver`,
+`family_physics_prediction`, and `+/-7 dB`; Gate G grouped triple-leaf
+remains `Rw 50 / STC 55 / C 0.8 / Ctr -7.3` through
+`triple_leaf_two_cavity_frequency_solver` and `+/-5 dB`.
+
+The executable post-Gate-AE scoring removes the now-landed
+`flat_multicavity_solver_broadening` lane. It selects
+`floor_formula_surface_polish` with score `27.0`, ahead of
+`opening_leak_stc_spectrum_adapter` at `21.8`,
+`airborne_field_building_basis_expansion` at `11.3`, and
+`broad_source_crawl` at `0.2`. This keeps the next step calculator-first:
+polish existing floor formula input surfaces and prompts without moving
+formula values, tolerances, source precedence, or lab/field/building
+basis rules.
 
 ## Gate AA Scenario Matrix V2 Expansion Landed - 2026-05-11
 

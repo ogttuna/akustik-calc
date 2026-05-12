@@ -608,8 +608,32 @@ completed. The 2026-05-12 post-Gate-AE checkpoint then passed broad
 lint, typecheck, engine Vitest 497 files / 2950 tests, all web Vitest
 split batches, and repo build 5/5. Runtime values and basis boundaries
 remain unchanged.
-Gate AF is next:
+Gate AF has now landed:
 `gate_af_personal_use_mvp_post_flat_multicavity_solver_broadening_revalidation_plan`.
+Gate AF is no-runtime post-promotion revalidation: the 40-row matrix
+remains gap-free, Gate AE flat multicavity stays `Rw 53 / STC 57 / C
+-0.6 / Ctr -8` with `+/-7 dB`, Gate G grouped triple-leaf stays `Rw 50 /
+STC 55 / C 0.8 / Ctr -7.3` with `+/-5 dB`, and stale topology,
+duplicate groups, missing topology, field/building, ASTM, IIC, and
+broad source crawl boundaries remain blocked. Gate AF selection status:
+`gate_af_personal_use_mvp_post_flat_multicavity_solver_broadening_revalidation_landed_selected_floor_formula_surface_polish_gate_ag`.
+Gate AG has now landed:
+`gate_ag_personal_use_mvp_floor_formula_surface_polish_plan`.
+Gate AG is no-runtime floor formula prompt/input polish: steel floor
+stays lab `LnW 55.6 / DeltaLw 22.4`, timber joist stays exact
+`Ln,w 51` plus formula `DeltaLw 25.2`, CLT stays `Ln,w 50` plus
+formula `DeltaLw 22.6`, and heavy concrete safe reorder stays
+`Ln,w 39.2 / DeltaLw 32.6`. Workbench missing-input warnings now use
+engine-owned labels like `Steel carrier spacing (mm)`,
+`Upper resilient dynamic stiffness (MN/m3)`, and
+`Resilient-layer load basis (kg/m2)`. Exact-source precedence and
+lab/field/building boundaries remain unchanged. Gate AG selection
+status:
+`gate_ag_personal_use_mvp_floor_formula_surface_polish_landed_selected_opening_leak_stc_spectrum_adapter_gate_ah`.
+Selected next action:
+`gate_ah_personal_use_mvp_opening_leak_stc_spectrum_adapter_plan`.
+Selected next file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ah-opening-leak-stc-spectrum-adapter-contract.test.ts`.
 Do not keep adding narrow steel-floor source/packet gates unless the
 active matrix or a later runtime proposal names a specific source-owned
 unblocker.
@@ -627,8 +651,12 @@ Landed Gate AD flat multicavity broad-revalidation file:
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ad-flat-multicavity-broad-revalidation-and-internal-pilot-rehearsal-contract.test.ts`.
 Landed Gate AE flat multicavity solver-broadening file:
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ae-flat-multicavity-solver-broadening-contract.test.ts`.
-Selected Gate AF post-flat-multicavity solver-broadening revalidation file:
+Landed Gate AF post-flat-multicavity solver-broadening revalidation file:
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-af-post-flat-multicavity-solver-broadening-revalidation-contract.test.ts`.
+Landed Gate AG floor formula surface polish file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ag-floor-formula-surface-polish-contract.test.ts`.
+Selected Gate AH opening/leak STC spectrum adapter file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ah-opening-leak-stc-spectrum-adapter-contract.test.ts`.
 Selected Gate X AAC/non-homogeneous masonry solver file:
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-x-aac-nonhomogeneous-masonry-wall-family-solver-contract.test.ts`.
 Landed Gate W coverage matrix refresh file:

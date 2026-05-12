@@ -108,6 +108,14 @@ export const TIMBER_CLT_DELTA_LW_INPUT_SURFACE_FIELDS = [
   "ceilingOrLowerAssembly"
 ] as const satisfies readonly AcousticInputFieldId[];
 
+export const TIMBER_CLT_DELTA_LW_INPUT_SURFACE_LABELS = {
+  baseSlabOrFloor: "Timber/CLT base floor family",
+  ceilingOrLowerAssembly: "Ceiling/lower assembly",
+  loadBasisKgM2: "Resilient-layer load basis (kg/m2)",
+  resilientLayerDynamicStiffnessMNm3: "Upper resilient dynamic stiffness (MN/m3)",
+  toppingOrFloatingLayer: "Upper floating/topping mass"
+} as const satisfies Partial<Record<AcousticInputFieldId, string>>;
+
 export const TIMBER_CLT_DELTA_LW_BASE_MATERIAL_IDS = new Set([
   "clt_panel",
   "timber_frame_floor",
