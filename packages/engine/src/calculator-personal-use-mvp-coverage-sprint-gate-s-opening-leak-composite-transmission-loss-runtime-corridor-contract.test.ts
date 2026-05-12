@@ -27,6 +27,7 @@ import {
   GATE_R_OPENING_LEAK_COMPOSITE_FORMULA_CORRIDOR_STATUS
 } from "./dynamic-airborne-gate-r-opening-leak-composite-transmission-loss-formula-corridor";
 import { GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING } from "./dynamic-airborne-gate-n-building-prediction-runtime-adapter";
+import { GATE_AH_OPENING_LEAK_STC_SPECTRUM_ADAPTER_WARNING } from "./dynamic-airborne-gate-ah-opening-leak-stc-spectrum-adapter";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
@@ -175,7 +176,7 @@ describe("Personal-Use MVP Coverage Sprint Gate S opening/leak composite runtime
     }
   });
 
-  it("promotes complete element-lab opening/leak Rw at runtime without aliasing STC, field, or building outputs", () => {
+  it("promotes complete element-lab opening/leak Rw and later Gate AH STC while keeping field/building outputs blocked", () => {
     const baseline = calculateAssembly(HOST_WALL, {
       airborneContext: { contextMode: "element_lab" },
       calculator: "dynamic",
@@ -189,17 +190,18 @@ describe("Personal-Use MVP Coverage Sprint Gate S opening/leak composite runtime
 
     expect(baseline.metrics.estimatedRwDb).toBeGreaterThan(withOpening.metrics.estimatedRwDb);
     expect(withOpening.metrics.estimatedRwDb).toBe(38.2);
-    expect(withOpening.metrics.estimatedStc).toBe(baseline.metrics.estimatedStc);
-    expect(withOpening.supportedTargetOutputs).toEqual(["Rw"]);
-    expect(withOpening.unsupportedTargetOutputs).toEqual(["STC", "R'w", "DnT,w"]);
+    expect(withOpening.metrics.estimatedStc).toBe(39);
+    expect(withOpening.supportedTargetOutputs).toEqual(["Rw", "STC"]);
+    expect(withOpening.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
     expect(withOpening.airborneBasis).toMatchObject({
       errorBudgetDb: 6,
       method: GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD,
       missingPhysicalInputs: [],
       origin: "family_physics_prediction"
     });
-    expect(withOpening.airborneBasis?.assumptions.join("\n")).toMatch(/STC, field, and building outputs remain unsupported/i);
-    expect(withOpening.warnings).toContain(GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_WARNING);
+    expect(withOpening.airborneBasis?.assumptions.join("\n")).toMatch(/Gate AH separately owns element-lab STC/i);
+    expect(withOpening.warnings).toContain(GATE_AH_OPENING_LEAK_STC_SPECTRUM_ADAPTER_WARNING);
+    expect(withOpening.warnings).not.toContain(GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_WARNING);
   });
 
   it("blocks source-absent, STC-only, missing, and hostile opening inputs instead of returning host-wall Rw as supported", () => {

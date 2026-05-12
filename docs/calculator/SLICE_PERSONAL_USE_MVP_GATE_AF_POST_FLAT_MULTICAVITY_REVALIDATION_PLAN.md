@@ -265,7 +265,7 @@ checkpoint until Phase A assertions, export, and runner updates exist.
    - `opening_leak_stc_spectrum_adapter`: expected score `21.8`,
      evidence rows `wall.opening_leak_composite.lab`,
      `wall.opening_leak_two_openings.lab`, and
-     `wall.opening_leak_stc_only.unsupported`.
+     `wall.opening_leak_stc_target.lab`.
    - `airborne_field_building_basis_expansion`: expected score `11.3`,
      evidence rows `wall.complete_building_prediction.unsupported` and
      `wall.building_prediction_partial_context.needs_input`.

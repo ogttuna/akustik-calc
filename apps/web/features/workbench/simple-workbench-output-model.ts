@@ -344,8 +344,10 @@ export function buildOutputCard(input: {
       break;
     case "STC":
       if (typeof result?.metrics.estimatedStc === "number") {
+        const gateSOpeningLeakDetail = getGateSOpeningLeakCompositeOutputDetail(output, result);
+
         return {
-          detail: "ASTM single-number companion from the same airborne curve.",
+          detail: gateSOpeningLeakDetail ?? "ASTM single-number companion from the same airborne curve.",
           label: "STC",
           output,
           status: "live",

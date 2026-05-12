@@ -131,7 +131,7 @@ export function rankPersonalUseMvpCoverageSprintGateAELanes(
       evidenceRowIds: [
         "wall.opening_leak_composite.lab",
         "wall.opening_leak_two_openings.lab",
-        "wall.opening_leak_stc_only.unsupported"
+        "wall.opening_leak_stc_target.lab"
       ],
       id: "opening_leak_stc_spectrum_adapter",
       implementationCost: 4,

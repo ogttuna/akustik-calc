@@ -113,12 +113,12 @@ describe("Personal-Use MVP Coverage Sprint Gate AD broad revalidation and intern
 
     expect(gateAASummary.remainingCoverageGapRowIds).toEqual([]);
     expect(gateADSummary).toMatchObject({
-      blockedRowCount: 17,
+      blockedRowCount: 16,
       gateAAMatrixRows: 40,
       gapFreeAfterGateAD: true,
       internalPilotStatus: "controlled_internal_pilot_ready_with_gate_ae_solver_broadening_next",
       noRuntimeValueMovement: true,
-      numericSupportedRowCount: 23,
+      numericSupportedRowCount: 24,
       previousSelectionStatus:
         "gate_ac_personal_use_mvp_flat_multicavity_topology_surface_parity_landed_selected_broad_revalidation_gate_ad",
       remainingCoverageGapRowIds: [],
@@ -127,7 +127,7 @@ describe("Personal-Use MVP Coverage Sprint Gate AD broad revalidation and intern
     });
     expect(classifiedRows.size).toBe(40);
     expect(gateADSummary.blockedRowIds).toContain("wall.flat_multicavity_many_layer_schedule.needs_input");
-    expect(gateADSummary.blockedRowIds).toContain("wall.opening_leak_stc_only.unsupported");
+    expect(gateADSummary.pilotReadyRowIds).toContain("wall.opening_leak_stc_target.lab");
     expect(gateADSummary.blockedRowIds).toContain("floor.lightweight_steel_formula_missing_spacing.needs_input");
     expect(gateADSummary.controlledUseRowIds).toContain("wall.opening_leak_two_openings.lab");
     expect(gateADSummary.pilotReadyRowIds).toContain("wall.double_leaf_split_board_layers.lab");

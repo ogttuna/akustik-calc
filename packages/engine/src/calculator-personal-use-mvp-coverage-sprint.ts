@@ -1557,7 +1557,7 @@ function buildGateWAdditionalRows(): readonly PersonalUseMvpCoverageScenarioRow[
         targetOutputs: OPENING_LEAK_OUTPUTS
       }),
       toleranceOrErrorBudget: "airborne_error_budget_6_db",
-      valueOrBlockedReason: "Rw 38.2 through opening/leak area-energy corridor; STC/R'w/DnT,w unsupported",
+      valueOrBlockedReason: "Rw 38.2 / STC 39 through opening/leak area-energy corridor plus Gate AH ASTM E413 adapter; R'w/DnT,w unsupported",
       visibleSurfaceParityTarget: WALL_VISIBLE_SURFACES
     }),
     buildRow({

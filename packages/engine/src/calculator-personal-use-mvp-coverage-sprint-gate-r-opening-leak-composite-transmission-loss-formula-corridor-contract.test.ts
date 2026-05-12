@@ -29,9 +29,9 @@ import {
   GATE_Q_OPENING_LEAK_COMPOSITE_REQUIRED_PHYSICAL_INPUTS
 } from "./dynamic-airborne-gate-q-opening-leak-composite-transmission-loss-input-contract";
 import {
-  GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD,
-  GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_WARNING
+  GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD
 } from "./dynamic-airborne-gate-s-opening-leak-composite-transmission-loss-runtime-corridor";
+import { GATE_AH_OPENING_LEAK_STC_SPECTRUM_ADAPTER_WARNING } from "./dynamic-airborne-gate-ah-opening-leak-stc-spectrum-adapter";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
@@ -447,11 +447,6 @@ describe("Personal-Use MVP Coverage Sprint Gate R opening/leak composite formula
       scenarioId: "gate_r_safe_reordered_openings_invariant",
       targetOutputs: ["Rw"]
     });
-    const baseline = calculateAssembly(HOST_WALL, {
-      airborneContext: { contextMode: "element_lab" },
-      calculator: "dynamic",
-      targetOutputs: ["Rw", "STC"]
-    });
     const withOpening = calculateAssembly(HOST_WALL, {
       airborneContext: COMPLETE_OPENING_CONTEXT,
       calculator: "dynamic",
@@ -468,11 +463,11 @@ describe("Personal-Use MVP Coverage Sprint Gate R opening/leak composite formula
     expect(reversed.normalizedOpeningKeys).toEqual(ordered.normalizedOpeningKeys);
     expect(reversed.openingContributions).toEqual([...ordered.openingContributions].reverse());
     expect(withOpening.metrics.estimatedRwDb).toBe(38.2);
-    expect(withOpening.metrics.estimatedStc).toBe(baseline.metrics.estimatedStc);
-    expect(withOpening.supportedTargetOutputs).toEqual(["Rw"]);
-    expect(withOpening.unsupportedTargetOutputs).toEqual(["STC"]);
+    expect(withOpening.metrics.estimatedStc).toBe(39);
+    expect(withOpening.supportedTargetOutputs).toEqual(["Rw", "STC"]);
+    expect(withOpening.unsupportedTargetOutputs).toEqual([]);
     expect(withOpening.airborneBasis?.method).toBe(GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD);
-    expect(withOpening.warnings).toContain(GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_WARNING);
+    expect(withOpening.warnings).toContain(GATE_AH_OPENING_LEAK_STC_SPECTRUM_ADAPTER_WARNING);
     expect(buildingWithOpening.supportedTargetOutputs).toEqual([]);
     expect(buildingWithOpening.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
   });

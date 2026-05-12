@@ -12,9 +12,9 @@ import {
 } from "./dynamic-airborne-gate-i-airborne-field-context";
 import { GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING } from "./dynamic-airborne-gate-n-building-prediction-runtime-adapter";
 import {
-  GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD,
-  GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_WARNING
+  GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD
 } from "./dynamic-airborne-gate-s-opening-leak-composite-transmission-loss-runtime-corridor";
+import { GATE_AH_OPENING_LEAK_STC_SPECTRUM_ADAPTER_WARNING } from "./dynamic-airborne-gate-ah-opening-leak-stc-spectrum-adapter";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
@@ -203,15 +203,16 @@ describe("Personal-Use MVP Coverage Sprint Gate V post opening/leak input-surfac
     });
 
     expect(result.metrics.estimatedRwDb).toBe(38.2);
-    expect(result.supportedTargetOutputs).toEqual(["Rw"]);
-    expect(result.unsupportedTargetOutputs).toEqual(["STC", "R'w", "DnT,w"]);
+    expect(result.metrics.estimatedStc).toBe(39);
+    expect(result.supportedTargetOutputs).toEqual(["Rw", "STC"]);
+    expect(result.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
     expect(result.airborneBasis).toMatchObject({
       errorBudgetDb: 6,
       method: GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD,
       missingPhysicalInputs: [],
       origin: "family_physics_prediction"
     });
-    expect(result.warnings).toContain(GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_WARNING);
+    expect(result.warnings).toContain(GATE_AH_OPENING_LEAK_STC_SPECTRUM_ADAPTER_WARNING);
   });
 
   it("keeps field and building contexts separated from the opening/leak lab corridor", () => {

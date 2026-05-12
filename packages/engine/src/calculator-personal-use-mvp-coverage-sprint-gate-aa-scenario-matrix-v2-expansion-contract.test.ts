@@ -65,7 +65,7 @@ const EXPECTED_GATE_AA_ADDED_ROW_IDS = [
   "wall.grouped_triple_leaf_safe_reverse_order.lab",
   "wall.flat_multicavity_many_layer_schedule.needs_input",
   "wall.opening_leak_two_openings.lab",
-  "wall.opening_leak_stc_only.unsupported",
+  "wall.opening_leak_stc_target.lab",
   "wall.opening_leak_duplicate_id.refused",
   "wall.building_prediction_partial_context.needs_input",
   "floor.timber_joist_formula_missing_dynamic_stiffness.needs_input",
@@ -147,8 +147,8 @@ describe("Personal-Use MVP Coverage Sprint Gate AA scenario matrix v2 expansion"
       correct_block: 10,
       coverage_gap: 0,
       hostile_input_refusal: 3,
-      none: 23,
-      unsupported_metric: 2
+      none: 24,
+      unsupported_metric: 1
     });
     expect(summary.correctlyBlockedRowIds).toEqual([
       "wall.flat_list_multicavity_ambiguity.needs_input",
@@ -166,6 +166,7 @@ describe("Personal-Use MVP Coverage Sprint Gate AA scenario matrix v2 expansion"
           "wall.double_leaf_split_board_layers.lab",
           "wall.grouped_triple_leaf_safe_reverse_order.lab",
           "wall.opening_leak_two_openings.lab",
+          "wall.opening_leak_stc_target.lab",
           "floor.clt_mass_timber_field_lnt50.local_guide",
           "floor.heavy_concrete_floating_floor_safe_reorder.lab"
         ].includes(id)
@@ -217,11 +218,11 @@ describe("Personal-Use MVP Coverage Sprint Gate AA scenario matrix v2 expansion"
         basisId: PERSONAL_USE_MVP_GATE_AA_OPENING_RUNTIME_METHOD,
         errorBudgetDb: 6,
         origin: "family_physics_prediction",
-        supportedTargetOutputs: ["Rw"],
-        unsupportedTargetOutputs: ["STC", "R'w", "DnT,w"]
+        supportedTargetOutputs: ["Rw", "STC"],
+        unsupportedTargetOutputs: ["R'w", "DnT,w"]
       }
     });
-    expect(values(openingTwo)).toEqual({ Rw: 33.7 });
+    expect(values(openingTwo)).toEqual({ Rw: 33.7, STC: 34 });
 
     expect(cltFieldLnt50).toMatchObject({
       basis: "field_apparent",
@@ -248,7 +249,7 @@ describe("Personal-Use MVP Coverage Sprint Gate AA scenario matrix v2 expansion"
   it("keeps new hostile and partial rows out of numeric support with precise missing fields", () => {
     const rows = buildPersonalUseMvpCoverageSprintGateAAScenarioMatrix();
     const flatMany = byId(rows, "wall.flat_multicavity_many_layer_schedule.needs_input");
-    const openingStc = byId(rows, "wall.opening_leak_stc_only.unsupported");
+    const openingStc = byId(rows, "wall.opening_leak_stc_target.lab");
     const duplicateOpening = byId(rows, "wall.opening_leak_duplicate_id.refused");
     const partialBuilding = byId(rows, "wall.building_prediction_partial_context.needs_input");
     const timberMissing = byId(rows, "floor.timber_joist_formula_missing_dynamic_stiffness.needs_input");
@@ -275,14 +276,14 @@ describe("Personal-Use MVP Coverage Sprint Gate AA scenario matrix v2 expansion"
     });
 
     expect(openingStc).toMatchObject({
-      currentPosture: "unsupported",
-      failureClass: "unsupported_metric",
+      currentPosture: "family_physics",
+      failureClass: "none",
       runtime: {
         basisId: PERSONAL_USE_MVP_GATE_AA_OPENING_RUNTIME_METHOD,
-        origin: "unsupported",
-        supportedTargetOutputs: [],
-        unsupportedTargetOutputs: ["STC"],
-        valuePins: []
+        origin: "family_physics_prediction",
+        supportedTargetOutputs: ["STC"],
+        unsupportedTargetOutputs: [],
+        valuePins: [{ metric: "STC", value: 39 }]
       }
     });
     expect(duplicateOpening).toMatchObject({

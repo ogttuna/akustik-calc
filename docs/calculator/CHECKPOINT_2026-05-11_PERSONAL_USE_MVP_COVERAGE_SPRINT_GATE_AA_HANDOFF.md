@@ -50,7 +50,7 @@ Gate AA adds these rows:
 - `wall.grouped_triple_leaf_safe_reverse_order.lab`
 - `wall.flat_multicavity_many_layer_schedule.needs_input`
 - `wall.opening_leak_two_openings.lab`
-- `wall.opening_leak_stc_only.unsupported`
+- `wall.opening_leak_stc_target.lab`
 - `wall.opening_leak_duplicate_id.refused`
 - `wall.building_prediction_partial_context.needs_input`
 - `floor.timber_joist_formula_missing_dynamic_stiffness.needs_input`

@@ -303,6 +303,10 @@ export function maybeBuildGateSOpeningLeakCompositeRuntimeCorridor(
     return null;
   }
 
+  const formulaTargetOutputs =
+    input.targetOutputs.includes("STC") && !input.targetOutputs.includes("Rw")
+      ? [...input.targetOutputs, "Rw" as const]
+      : input.targetOutputs;
   const assessment = buildGateROpeningLeakCompositeFormulaAssessment({
     airborneContext: input.airborneContext ?? undefined,
     hostWallRatingBasis: input.hostWallRatingBasis,
@@ -310,7 +314,7 @@ export function maybeBuildGateSOpeningLeakCompositeRuntimeCorridor(
     openingRouteRequested: true,
     owners: RUNTIME_OWNER_INPUTS,
     scenarioId: scenarioIdForRuntime(input.airborneContext),
-    targetOutputs: input.targetOutputs
+    targetOutputs: formulaTargetOutputs
   });
   const status = runtimeStatus(assessment.status);
   const runtimeRwDb =

@@ -753,19 +753,19 @@ function buildGateAAMatrixV2Rows(): readonly PersonalUseMvpCoverageScenarioRow[]
         targetOutputs: OPENING_LEAK_OUTPUTS
       }),
       toleranceOrErrorBudget: "airborne_error_budget_6_db",
-      valueOrBlockedReason: "Rw 33.7 with STC / field / building outputs still unsupported",
+      valueOrBlockedReason: "Rw 33.7 / STC 34 with field / building outputs still unsupported",
       visibleSurfaceParityTarget: WALL_VISIBLE_SURFACES
     }),
     row({
       basis: "element_lab",
-      expectedPosture: "unsupported",
-      failureClass: "unsupported_metric",
-      family: "wall_opening_leak_stc_only",
-      hostileVariant: "stc_only_opening_request_without_spectrum_adapter",
-      id: "wall.opening_leak_stc_only.unsupported",
+      expectedPosture: "family_physics",
+      failureClass: "none",
+      family: "wall_opening_leak_stc_adapter",
+      hostileVariant: "stc_target_from_rw_compatible_opening",
+      id: "wall.opening_leak_stc_target.lab",
       inputCompleteness: "complete",
-      nextAction: "opening_leak_stc_spectrum_adapter_backlog",
-      originSupportBucket: "opening_leak_stc_adapter_missing",
+      nextAction: "regression_guard",
+      originSupportBucket: "source_absent_opening_leak_stc_spectrum_adapter",
       requestedMetrics: ["STC"],
       route: "wall",
       runtime: () => assemblyRuntime({
@@ -773,8 +773,8 @@ function buildGateAAMatrixV2Rows(): readonly PersonalUseMvpCoverageScenarioRow[]
         layers: CONCRETE_HOST_WALL,
         targetOutputs: ["STC"]
       }),
-      toleranceOrErrorBudget: "no_stc_alias_from_opening_lab_rw",
-      valueOrBlockedReason: "STC-only opening/leak request stays unsupported until a spectrum adapter owns it.",
+      toleranceOrErrorBudget: "airborne_error_budget_6_db",
+      valueOrBlockedReason: "STC 39 through Gate AH ASTM E413 spectrum adapter.",
       visibleSurfaceParityTarget: WALL_VISIBLE_SURFACES
     }),
     row({
@@ -984,12 +984,12 @@ export function rankPersonalUseMvpCoverageSprintGateABLanes(
       evidenceRowIds: [
         "wall.opening_leak_composite.lab",
         "wall.opening_leak_two_openings.lab",
-        "wall.opening_leak_stc_only.unsupported"
+        "wall.opening_leak_stc_target.lab"
       ],
       id: "opening_leak_stc_spectrum_adapter",
       implementationCost: 4,
       reason:
-        "Opening/leak Rw works, but STC needs a real spectrum/rating adapter before promotion.",
+        "Opening/leak Rw works, and the new STC target row now proves why a real spectrum/rating adapter was needed before promotion.",
       sourceRowsRequiredForRuntimeSelection: false,
       userFrequency: 5
     },

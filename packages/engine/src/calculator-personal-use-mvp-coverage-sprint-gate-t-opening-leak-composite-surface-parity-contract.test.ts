@@ -10,8 +10,8 @@ import {
   GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_CORRIDOR_PLAN,
   GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_CORRIDOR_STATUS,
   GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD,
-  GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_WARNING
 } from "./dynamic-airborne-gate-s-opening-leak-composite-transmission-loss-runtime-corridor";
+import { GATE_AH_OPENING_LEAK_STC_SPECTRUM_ADAPTER_WARNING } from "./dynamic-airborne-gate-ah-opening-leak-stc-spectrum-adapter";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
@@ -133,14 +133,15 @@ describe("Personal-Use MVP Coverage Sprint Gate T opening/leak composite surface
     });
 
     expect(result.metrics.estimatedRwDb).toBe(38.2);
-    expect(result.supportedTargetOutputs).toEqual(["Rw"]);
-    expect(result.unsupportedTargetOutputs).toEqual(["STC", "R'w", "DnT,w"]);
+    expect(result.metrics.estimatedStc).toBe(39);
+    expect(result.supportedTargetOutputs).toEqual(["Rw", "STC"]);
+    expect(result.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
     expect(result.airborneBasis).toMatchObject({
       errorBudgetDb: 6,
       method: GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD,
       origin: "family_physics_prediction"
     });
-    expect(result.warnings).toContain(GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_WARNING);
+    expect(result.warnings).toContain(GATE_AH_OPENING_LEAK_STC_SPECTRUM_ADAPTER_WARNING);
   });
 
   it("keeps docs and the current-gate runner aligned with Gate T closeout and Gate U selection", () => {

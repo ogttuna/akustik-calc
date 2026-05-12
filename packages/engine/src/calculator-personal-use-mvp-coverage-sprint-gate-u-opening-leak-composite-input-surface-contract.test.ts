@@ -7,9 +7,9 @@ import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
 import {
-  GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD,
-  GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_WARNING
+  GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD
 } from "./dynamic-airborne-gate-s-opening-leak-composite-transmission-loss-runtime-corridor";
+import { GATE_AH_OPENING_LEAK_STC_SPECTRUM_ADAPTER_WARNING } from "./dynamic-airborne-gate-ah-opening-leak-stc-spectrum-adapter";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
@@ -120,14 +120,15 @@ describe("Personal-Use MVP Coverage Sprint Gate U opening/leak composite input s
     });
 
     expect(result.metrics.estimatedRwDb).toBe(38.2);
-    expect(result.supportedTargetOutputs).toEqual(["Rw"]);
-    expect(result.unsupportedTargetOutputs).toEqual(["STC", "R'w", "DnT,w"]);
+    expect(result.metrics.estimatedStc).toBe(39);
+    expect(result.supportedTargetOutputs).toEqual(["Rw", "STC"]);
+    expect(result.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
     expect(result.airborneBasis).toMatchObject({
       errorBudgetDb: 6,
       method: GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD,
       origin: "family_physics_prediction"
     });
-    expect(result.warnings).toContain(GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_WARNING);
+    expect(result.warnings).toContain(GATE_AH_OPENING_LEAK_STC_SPECTRUM_ADAPTER_WARNING);
   });
 
   it("keeps docs and the current-gate runner aligned with Gate U closeout and Gate V selection", () => {

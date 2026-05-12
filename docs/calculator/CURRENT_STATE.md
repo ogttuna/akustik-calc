@@ -84,6 +84,8 @@ If you need the latest Gate AF closeout and Gate AG handoff read
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AF_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AF_HANDOFF.md).
 If you need the latest Gate AG closeout and Gate AH handoff read
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AG_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AG_HANDOFF.md).
+If you need the latest Gate AH closeout and Gate AI handoff read
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AH_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AH_HANDOFF.md).
 If you need the preceding Personal-Use MVP Coverage Sprint Gate W
 checkpoint read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md).
@@ -149,15 +151,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_ag_personal_use_mvp_floor_formula_surface_polish_landed_selected_opening_leak_stc_spectrum_adapter_gate_ah`
+`gate_ah_personal_use_mvp_opening_leak_stc_spectrum_adapter_landed_selected_surface_parity_gate_ai`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ah-opening-leak-stc-spectrum-adapter-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ai-opening-leak-stc-surface-parity-contract.test.ts`
 
 Selected next action:
 
-`gate_ah_personal_use_mvp_opening_leak_stc_spectrum_adapter_plan`
+`gate_ai_personal_use_mvp_opening_leak_stc_surface_parity_plan`
 
 Strategic ROI replan:
 
@@ -454,6 +456,21 @@ Current strategy:
   `Steel carrier spacing (mm)`, `Upper resilient dynamic stiffness
   (MN/m3)`, and `Resilient-layer load basis (kg/m2)`. Exact-source
   precedence and lab/field/building basis boundaries remain unchanged.
+- Personal-Use MVP Coverage Sprint Gate AH has now landed
+  `gate_ah_personal_use_mvp_opening_leak_stc_spectrum_adapter_plan`.
+  Selection status:
+  `gate_ah_personal_use_mvp_opening_leak_stc_spectrum_adapter_landed_selected_surface_parity_gate_ai`.
+  Selected next action:
+  `gate_ai_personal_use_mvp_opening_leak_stc_surface_parity_plan`.
+  Selected next file:
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ai-opening-leak-stc-surface-parity-contract.test.ts`.
+  Complete element-lab opening/leak STC stacks now support lab `STC` through
+  the ASTM E413 adapter
+  `astm_e413_stc_from_airborne_transmission_loss_curve`: the Gate S
+  fixture returns `Rw 38.2 / STC 39`, and the two-opening high-leakage
+  row returns `Rw 33.7 / STC 34`. `STC` is re-rated from the shifted
+  host-wall frequency curve, not copied from `Rw`; STC-only opening
+  input basis, field, and building aliases remain blocked.
 - Personal-Use MVP Coverage Sprint Gate B has now landed the
   timber/CLT floor-impact `DeltaLw` input and formula-readiness
   contract without runtime movement.

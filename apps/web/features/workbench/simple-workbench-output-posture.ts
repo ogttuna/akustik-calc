@@ -97,7 +97,7 @@ export function buildSimpleWorkbenchOutputPosture(input: {
   if (gateSOpeningLeakSurface) {
     const detail = getGateSOpeningLeakCompositeOutputDetail(output, result) ?? gateSOpeningLeakSurface.postureDetail;
 
-    if (status === "live" && output === "Rw") {
+    if (status === "live" && (output === "Rw" || output === "STC")) {
       return {
         detail,
         label: gateSOpeningLeakSurface.label,

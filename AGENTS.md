@@ -630,10 +630,23 @@ engine-owned labels like `Steel carrier spacing (mm)`,
 lab/field/building boundaries remain unchanged. Gate AG selection
 status:
 `gate_ag_personal_use_mvp_floor_formula_surface_polish_landed_selected_opening_leak_stc_spectrum_adapter_gate_ah`.
-Selected next action:
+Gate AH has now landed:
 `gate_ah_personal_use_mvp_opening_leak_stc_spectrum_adapter_plan`.
+Gate AH promotes complete element-lab opening/leak `STC` through the
+ASTM E413 rating adapter
+`astm_e413_stc_from_airborne_transmission_loss_curve` by applying the
+Gate S area-energy `Rw` loss to the selected host-wall frequency curve
+and re-rating the shifted spectrum. The pinned complete fixture now
+returns lab `Rw 38.2 / STC 39` with the same `+/-6 dB` source-absent
+opening/leak budget; the high-leakage two-opening matrix row returns
+`Rw 33.7 / STC 34`. `STC` is not copied from `Rw`, STC-only opening
+input basis remains blocked, and field/building outputs still do not
+alias from lab values. Gate AH selection status:
+`gate_ah_personal_use_mvp_opening_leak_stc_spectrum_adapter_landed_selected_surface_parity_gate_ai`.
+Selected next action:
+`gate_ai_personal_use_mvp_opening_leak_stc_surface_parity_plan`.
 Selected next file:
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ah-opening-leak-stc-spectrum-adapter-contract.test.ts`.
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ai-opening-leak-stc-surface-parity-contract.test.ts`.
 Do not keep adding narrow steel-floor source/packet gates unless the
 active matrix or a later runtime proposal names a specific source-owned
 unblocker.
@@ -655,7 +668,7 @@ Landed Gate AF post-flat-multicavity solver-broadening revalidation file:
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-af-post-flat-multicavity-solver-broadening-revalidation-contract.test.ts`.
 Landed Gate AG floor formula surface polish file:
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ag-floor-formula-surface-polish-contract.test.ts`.
-Selected Gate AH opening/leak STC spectrum adapter file:
+Landed Gate AH opening/leak STC spectrum adapter file:
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ah-opening-leak-stc-spectrum-adapter-contract.test.ts`.
 Selected Gate X AAC/non-homogeneous masonry solver file:
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-x-aac-nonhomogeneous-masonry-wall-family-solver-contract.test.ts`.

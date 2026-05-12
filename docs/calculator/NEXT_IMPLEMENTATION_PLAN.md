@@ -75,6 +75,9 @@ For the Gate AF closeout and Gate AG floor-polish handoff read
 For the Gate AG floor formula surface polish closeout and Gate AH
 opening/leak `STC` handoff read
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AG_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AG_HANDOFF.md).
+For the Gate AH opening/leak `STC` ASTM E413 spectrum adapter closeout
+and Gate AI surface-parity handoff read
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AH_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AH_HANDOFF.md).
 For the Gate R no-runtime formula corridor and Gate S handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md).
 For the Gate Q no-runtime input contract and Gate R handoff read
@@ -131,44 +134,56 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
-## Gate AG Floor Formula Surface Polish Landed - 2026-05-12
+## Gate AH Opening/Leak STC Spectrum Adapter Landed - 2026-05-12
 
-Gate AG has now landed the no-runtime floor formula input-surface polish
-selected by Gate AF:
-
-`gate_ag_personal_use_mvp_floor_formula_surface_polish_plan`
-
-Current selected status:
-
-`gate_ag_personal_use_mvp_floor_formula_surface_polish_landed_selected_opening_leak_stc_spectrum_adapter_gate_ah`
-
-Selected next action:
+Gate AH has now landed the opening/leak STC spectrum adapter selected
+by Gate AG:
 
 `gate_ah_personal_use_mvp_opening_leak_stc_spectrum_adapter_plan`
 
+Current selected status:
+
+`gate_ah_personal_use_mvp_opening_leak_stc_spectrum_adapter_landed_selected_surface_parity_gate_ai`
+
+Selected next action:
+
+`gate_ai_personal_use_mvp_opening_leak_stc_surface_parity_plan`
+
 Selected next file:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ah-opening-leak-stc-spectrum-adapter-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ai-opening-leak-stc-surface-parity-contract.test.ts`
 
-Gate AG keeps runtime values frozen: steel floor remains lab
-`LnW 55.6 / DeltaLw 22.4`, timber joist remains exact `Ln,w 51` plus
-formula `DeltaLw 25.2`, CLT remains `Ln,w 50` plus formula
-`DeltaLw 22.6`, and heavy concrete floating-floor safe reorder remains
-`Ln,w 39.2 / DeltaLw 32.6`. Exact-source precedence and lab/field/
-building basis boundaries are unchanged.
+Gate AH promotes complete element-lab opening/leak `STC` through the
+ASTM E413 rating adapter
+`astm_e413_stc_from_airborne_transmission_loss_curve`. The adapter
+applies the Gate S area-energy opening `Rw` loss to the selected
+host-wall frequency curve and re-rates that shifted spectrum, so `STC`
+is not copied from `Rw`.
 
-The implemented polish centralizes floor formula missing-input labels in
-the engine and has the workbench warning formatters consume them. The
-visible prompts now name `Steel carrier spacing (mm)`,
-`Upper resilient dynamic stiffness (MN/m3)`, and
-`Resilient-layer load basis (kg/m2)` instead of shorter ambiguous
-labels. This is a prompt/input-surface clarity change, not a formula or
-API-shape change.
+Pinned runtime behavior:
 
-The next bounded calculator-first lane is opening/leak `STC` spectrum
-adapter work. Gate AH must own the rating basis and STC-only negative
-boundaries before any `STC` promotion; `R'w`, `DnT,w`, field, and
-building outputs remain out of scope.
+- complete Gate S fixture: lab `Rw 38.2 / STC 39`;
+- high-leakage two-opening matrix row: lab `Rw 33.7 / STC 34`;
+- error budget remains the Gate S `+/-6 dB` source-absent opening/leak
+  budget;
+- `ratingAdapterBasisSet` records the ASTM E413 runtime adapter and
+  explicit alias blocks;
+- STC-only opening input basis stays blocked;
+- `R'w`, `DnT,w`, field, and building outputs still do not alias from
+  lab `Rw` or lab `STC`.
+
+Gate AI is next because the core runtime adapter and minimal visible
+copy are present, but the dedicated surface-parity gate should harden
+cards, target-output status, dossiers, reports, API snapshots, and saved
+replay around the new `STC 39` support without broadening field or
+building outputs.
+
+## Gate AG Floor Formula Surface Polish Landed - 2026-05-12
+
+Gate AG landed the no-runtime floor formula input-surface polish
+selected by Gate AF:
+
+`gate_ag_personal_use_mvp_floor_formula_surface_polish_plan`
 
 ## Gate AF Post Flat Multicavity Revalidation Landed - 2026-05-12
 

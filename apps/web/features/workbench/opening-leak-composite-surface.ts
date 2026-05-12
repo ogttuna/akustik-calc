@@ -1,10 +1,13 @@
-import type { AssemblyCalculation, RequestedOutputId } from "@dynecho/shared";
+import type { AssemblyCalculation, RatingAdapterBasis, RequestedOutputId } from "@dynecho/shared";
 
 export const WEB_GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD =
   "gate_s_opening_leak_composite_area_energy_runtime_corridor";
 
 export const WEB_GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_WARNING =
   "Opening/leak composite runtime corridor active: lab Rw uses the selected host-wall candidate, area-weighted opening transmission, explicit seal/leakage penalty, and a +/-6 dB source-absent budget. STC, field, and building outputs stay unsupported without owned adapters.";
+
+export const WEB_GATE_AH_OPENING_LEAK_STC_SPECTRUM_ADAPTER_WARNING =
+  "Opening/leak STC spectrum adapter active: lab STC is re-rated with ASTM E413 from the host-wall transmission-loss spectrum shifted by the Gate S area-energy opening loss. It is source-absent, uses the same +/-6 dB opening/leak budget, and does not alias field or building outputs.";
 
 export type OpeningLeakCompositeSurface = {
   budgetLabel: string | null;
@@ -45,6 +48,17 @@ function hasOpeningLeakCompositeMethod(result: AssemblyCalculation | null | unde
   return result?.airborneBasis?.method === WEB_GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD;
 }
 
+function hasGateAHOpeningLeakStcAdapter(result: AssemblyCalculation | null | undefined): boolean {
+  return Boolean(
+    result?.ratingAdapterBasisSet?.some(
+      (basis: RatingAdapterBasis) =>
+        basis.adapterId === "astm_e413_stc_from_airborne_transmission_loss_curve" &&
+        basis.metricId === "STC" &&
+        basis.implementationStatus === "runtime_adapter"
+    )
+  );
+}
+
 export function isGateSOpeningLeakCompositeRuntimeSurface(
   result: AssemblyCalculation | null | undefined
 ): result is AssemblyCalculation {
@@ -75,9 +89,12 @@ export function getGateSOpeningLeakCompositeSurface(
   const unsupportedOutputs = result.unsupportedTargetOutputs.filter((output: RequestedOutputId) =>
     OPENING_AFFECTED_OUTPUTS.has(output)
   );
+  const stcAdapterActive = hasGateAHOpeningLeakStcAdapter(result);
   const warning =
+    result.warnings.find((entry: string) => entry === WEB_GATE_AH_OPENING_LEAK_STC_SPECTRUM_ADAPTER_WARNING) ??
     result.warnings.find((entry: string) => entry === WEB_GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_WARNING) ??
     result.warnings.find((entry: string) => /Opening\/leak composite runtime/i.test(entry)) ??
+    result.warnings.find((entry: string) => /Opening\/leak STC spectrum adapter/i.test(entry)) ??
     null;
   const label =
     origin === "family_physics_prediction"
@@ -86,7 +103,7 @@ export function getGateSOpeningLeakCompositeSurface(
         ? "Opening/leak input needed"
         : "Opening/leak boundary";
   const budgetText = budgetLabel
-    ? `${budgetLabel} source-absent lab Rw budget`
+    ? `${budgetLabel} source-absent lab ${stcAdapterActive ? "Rw / STC" : "Rw"} budget`
     : "no runtime tolerance because this opening/leak route is blocked";
   const unsupportedText =
     unsupportedOutputs.length > 0
@@ -98,12 +115,15 @@ export function getGateSOpeningLeakCompositeSurface(
       : "";
   const baseDetail =
     origin === "family_physics_prediction"
-      ? `Gate S opening/leak composite runtime is active through ${method}: lab Rw ${formatBudget(result.metrics.estimatedRwDb)} dB uses host-wall plus opening area-energy transmission, ${budgetText}, origin ${origin}, not measured evidence.`
+      ? `Gate S opening/leak composite runtime is active through ${method}: lab Rw ${formatBudget(result.metrics.estimatedRwDb)} dB${stcAdapterActive ? ` and Gate AH lab STC ${formatBudget(result.metrics.estimatedStc)} dB` : ""} use host-wall plus opening area-energy transmission, ${budgetText}, origin ${origin}, not measured evidence.`
       : `Gate S opening/leak composite runtime is blocked through ${method}: origin ${origin}, ${budgetText}.${missingText}`;
-  const detail = `${baseDetail}${unsupportedText} STC, field, and building outputs are not aliased from lab Rw.${warning ? ` ${warning}` : ""}`;
+  const aliasText = stcAdapterActive
+    ? "STC is re-rated through the Gate AH ASTM E413 spectrum adapter; field and building outputs are not aliased from lab Rw/STC."
+    : "STC, field, and building outputs are not aliased from lab Rw.";
+  const detail = `${baseDetail}${unsupportedText} ${aliasText}${warning ? ` ${warning}` : ""}`;
   const notes = [
     origin === "family_physics_prediction"
-      ? `Gate S selected ${method} with lab Rw ${formatBudget(result.metrics.estimatedRwDb)} dB.`
+      ? `Gate S selected ${method} with lab Rw ${formatBudget(result.metrics.estimatedRwDb)} dB${stcAdapterActive ? ` and Gate AH STC ${formatBudget(result.metrics.estimatedStc)} dB` : ""}.`
       : `Gate S kept ${method} blocked with origin ${origin}.`,
     budgetLabel
       ? `Opening/leak uncertainty remains ${budgetLabel}; this is not measured evidence.`
@@ -127,11 +147,11 @@ export function getGateSOpeningLeakCompositeSurface(
     reportLines: [
       `- Airborne opening/leak basis: Gate S opening/leak composite runtime (method ${method}; origin ${origin}).`,
       origin === "family_physics_prediction"
-        ? `- Airborne opening/leak Rw: ${formatBudget(result.metrics.estimatedRwDb)} dB, budget ${budgetLabel ?? "unavailable"}, not measured evidence.`
+        ? `- Airborne opening/leak Rw: ${formatBudget(result.metrics.estimatedRwDb)} dB${stcAdapterActive ? `; STC: ${formatBudget(result.metrics.estimatedStc)} dB through Gate AH ASTM E413 adapter` : ""}, budget ${budgetLabel ?? "unavailable"}, not measured evidence.`
         : `- Airborne opening/leak status: ${origin}${missingInputs.length > 0 ? `; missing ${missingInputs.join(", ")}` : ""}.`,
       ...(unsupportedOutputs.length > 0
         ? [
-            `- Airborne opening/leak unsupported outputs: ${listOutputs(unsupportedOutputs)} stay unsupported; no STC, field, or building alias.`
+            `- Airborne opening/leak unsupported outputs: ${listOutputs(unsupportedOutputs)} stay unsupported; no ${stcAdapterActive ? "field or building" : "STC, field, or building"} alias.`
           ]
         : []),
       ...(warning ? [`- Airborne opening/leak warning: ${warning}`] : [])
@@ -151,7 +171,7 @@ export function getGateSOpeningLeakCompositeOutputDetail(
     return null;
   }
 
-  if (output === "Rw" && surface.origin === "family_physics_prediction") {
+  if ((output === "Rw" || output === "STC") && surface.origin === "family_physics_prediction") {
     return surface.detail;
   }
 

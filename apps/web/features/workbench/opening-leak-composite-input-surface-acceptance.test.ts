@@ -1,6 +1,6 @@
 import {
-  GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD,
-  GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_WARNING
+  GATE_AH_OPENING_LEAK_STC_SPECTRUM_ADAPTER_WARNING,
+  GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD
 } from "@dynecho/engine";
 import type {
   AssemblyCalculation,
@@ -132,14 +132,15 @@ function evaluateOpeningScenario(input: {
 
 function expectOpeningRuntime(result: AssemblyCalculation | null | undefined) {
   expect(result?.metrics.estimatedRwDb).toBe(38.2);
-  expect(result?.supportedTargetOutputs).toEqual(["Rw"]);
-  expect(result?.unsupportedTargetOutputs).toEqual(["STC", "R'w", "DnT,w"]);
+  expect(result?.metrics.estimatedStc).toBe(39);
+  expect(result?.supportedTargetOutputs).toEqual(["Rw", "STC"]);
+  expect(result?.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
   expect(result?.airborneBasis).toMatchObject({
     errorBudgetDb: 6,
     method: GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD,
     origin: "family_physics_prediction"
   });
-  expect(result?.warnings).toContain(GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_WARNING);
+  expect(result?.warnings).toContain(GATE_AH_OPENING_LEAK_STC_SPECTRUM_ADAPTER_WARNING);
 }
 
 function expectOpeningScenario(scenario: EvaluatedScenario) {
@@ -159,13 +160,13 @@ function expectOpeningScenario(scenario: EvaluatedScenario) {
     status: "live",
     value: "38.2 dB"
   });
-  expect(rwCard.detail).toContain("+/-6 dB source-absent lab Rw budget");
+  expect(rwCard.detail).toContain("+/-6 dB source-absent lab Rw / STC budget");
   expect(stcCard).toMatchObject({
-    postureLabel: "Opening/leak boundary",
-    status: "unsupported",
-    value: "Not ready"
+    postureLabel: "Opening/leak composite runtime",
+    status: "live",
+    value: "39 dB"
   });
-  expect(stcCard.detail).toContain("not aliased from lab Rw");
+  expect(stcCard.detail).toContain("Gate AH ASTM E413 spectrum adapter");
 }
 
 function buildOpeningReport(scenario: EvaluatedScenario) {
@@ -239,7 +240,9 @@ describe("opening/leak composite input surface acceptance", () => {
 
     const report = buildOpeningReport(liveScenario);
     expect(report).toContain("- Airborne opening/leak basis: Gate S opening/leak composite runtime");
-    expect(report).toContain("- Airborne opening/leak Rw: 38.2 dB, budget +/-6 dB, not measured evidence.");
+    expect(report).toContain(
+      "- Airborne opening/leak Rw: 38.2 dB; STC: 39 dB through Gate AH ASTM E413 adapter, budget +/-6 dB, not measured evidence."
+    );
 
     const savedSnapshot = await saveCompleteOpeningStoreSnapshot();
     expect(savedSnapshot.airborneOpeningLeakHostWallAreaM2).toBe("12");
@@ -269,7 +272,7 @@ describe("opening/leak composite input surface acceptance", () => {
     expectOpeningScenario(serverScenario);
   });
 
-  it("keeps calculator API payloads on the same lab Rw basis without promoting field or STC outputs", async () => {
+  it("keeps calculator API payloads on the same lab Rw/STC basis without promoting field outputs", async () => {
     const layers = toLayerInputs(HOST_WALL_ROWS);
     const surface = buildWorkbenchOpeningLeakCompositeInputSurface({
       studyMode: "wall",
@@ -298,7 +301,7 @@ describe("opening/leak composite input surface acceptance", () => {
     expect(response.status).toBe(200);
     expect(body.ok).toBe(true);
     expectOpeningRuntime(body.result);
-    expect(body.result?.unsupportedTargetOutputs).toEqual(["STC", "R'w", "DnT,w"]);
+    expect(body.result?.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
   });
 
   it("gives precise missing-input guidance for partial, empty, zero, comma, and removed fields", () => {

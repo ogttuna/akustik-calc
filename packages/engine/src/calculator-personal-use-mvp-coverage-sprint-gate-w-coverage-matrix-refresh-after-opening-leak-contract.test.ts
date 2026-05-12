@@ -262,11 +262,11 @@ describe("Personal-Use MVP Coverage Sprint Gate W coverage matrix refresh after 
       runtime: {
         basisId: "gate_s_opening_leak_composite_area_energy_runtime_corridor",
         errorBudgetDb: 6,
-        supportedTargetOutputs: ["Rw"],
-        unsupportedTargetOutputs: ["STC", "R'w", "DnT,w"]
+        supportedTargetOutputs: ["Rw", "STC"],
+        unsupportedTargetOutputs: ["R'w", "DnT,w"]
       }
     });
-    expect(values(opening)).toEqual({ Rw: 38.2 });
+    expect(values(opening)).toEqual({ Rw: 38.2, STC: 39 });
   });
 
   it("keeps missing input, field/building, ASTM/IIC, and flat multi-cavity boundaries fail-closed", () => {

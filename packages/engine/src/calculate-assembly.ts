@@ -46,6 +46,9 @@ import {
   maybeBuildGateSOpeningLeakCompositeRuntimeCorridor
 } from "./dynamic-airborne-gate-s-opening-leak-composite-transmission-loss-runtime-corridor";
 import {
+  maybeBuildGateAHOpeningLeakStcSpectrumAdapter
+} from "./dynamic-airborne-gate-ah-opening-leak-stc-spectrum-adapter";
+import {
   buildDynamicCalculatorCandidateResolverRuntime,
   inferDynamicCalculatorRuntimeRoute
 } from "./dynamic-calculator-candidate-resolver-runtime";
@@ -1267,6 +1270,21 @@ export function calculateAssembly(
     : null;
   const visibleEstimatedRwDb =
     gateSOpeningLeakCompositeRuntime?.runtimeRwDb ?? adjustedEstimatedRwDb;
+  const gateAHOpeningLeakStcSpectrumAdapter = options.calculator === "dynamic"
+    ? maybeBuildGateAHOpeningLeakStcSpectrumAdapter({
+        airborneContext,
+        gateSRuntime: gateSOpeningLeakCompositeRuntime,
+        hostCurve: curve,
+        hostWallRwDb: adjustedEstimatedRwDb,
+        targetOutputs
+      })
+    : null;
+  const visibleEstimatedStcDb =
+    gateAHOpeningLeakStcSpectrumAdapter?.runtimeStcDb ?? ratings.astmE413.STC;
+  const gateSOpeningLeakBlockedOutputs =
+    gateAHOpeningLeakStcSpectrumAdapter
+      ? gateSOpeningLeakCompositeRuntime?.blockedOutputs.filter((output) => output !== "STC") ?? []
+      : gateSOpeningLeakCompositeRuntime?.blockedOutputs ?? [];
   const exactImpact = exactImpactSource ? buildExactImpactFromSource(exactImpactSource) : null;
   const directImpactLane = resolveLayerBasedImpactLane({
     catalog,
@@ -1512,7 +1530,7 @@ export function calculateAssembly(
       estimatedDnWDb: ratings.field?.DnW,
       estimatedRwDb: visibleEstimatedRwDb,
       estimatedRwPrimeDb: ratings.field?.RwPrime ?? ratings.iso717.RwPrime,
-      estimatedStc: ratings.astmE413.STC
+      estimatedStc: visibleEstimatedStcDb
     },
     targetOutputs: options.targetOutputs ?? []
   });
@@ -1614,7 +1632,7 @@ export function calculateAssembly(
     : [];
   const visibleTargetOutputSupport = moveSupportedOutputsToUnsupported(
     moveSupportedOutputsToUnsupported(targetOutputSupport, parkedAirborneBuildingPredictionOutputs),
-    gateSOpeningLeakCompositeRuntime?.blockedOutputs ?? []
+    gateSOpeningLeakBlockedOutputs
   );
   const parkedAirborneBuildingPredictionOutputSet = new Set(parkedAirborneBuildingPredictionOutputs);
   const hideParkedAirborneBuildingPredictionMetrics =
@@ -1629,7 +1647,9 @@ export function calculateAssembly(
   if (rockwoolSplitTripleLeafExactOutputWithhold.warning) {
     warnings.push(rockwoolSplitTripleLeafExactOutputWithhold.warning);
   }
-  if (gateSOpeningLeakCompositeRuntime?.warning) {
+  if (gateAHOpeningLeakStcSpectrumAdapter?.warning) {
+    warnings.push(gateAHOpeningLeakStcSpectrumAdapter.warning);
+  } else if (gateSOpeningLeakCompositeRuntime?.warning) {
     warnings.push(gateSOpeningLeakCompositeRuntime.warning);
   }
   if (gateYCltMassTimberCtrSpectrumAdapterBasis) {
@@ -1840,12 +1860,15 @@ export function calculateAssembly(
       estimatedDnTAkDb: hideParkedAirborneBuildingPredictionMetrics ? undefined : ratings.field?.DnTAk,
       estimatedDnWDb: hideParkedAirborneBuildingPredictionMetrics ? undefined : ratings.field?.DnW,
       estimatedDnADb: hideParkedAirborneBuildingPredictionMetrics ? undefined : ratings.field?.DnA,
-      estimatedStc: ratings.astmE413.STC,
+      estimatedStc: visibleEstimatedStcDb,
       airGapCount: resolvedLayers.filter((layer) => layer.material.category === "gap").length,
       insulationCount: resolvedLayers.filter((layer) => layer.material.category === "insulation").length,
       method: dynamicAirborneResult?.id ?? importedCalculatorResult?.id ?? "screening_mass_law_curve_seed_v3"
     },
     ratings,
+    ratingAdapterBasisSet: gateAHOpeningLeakStcSpectrumAdapter
+      ? [gateAHOpeningLeakStcSpectrumAdapter.ratingAdapterBasis]
+      : undefined,
     supportedImpactOutputs: visibleTargetOutputSupport.supportedImpactOutputs,
     supportedTargetOutputs: visibleTargetOutputSupport.supportedTargetOutputs,
     targetOutputs: visibleTargetOutputSupport.targetOutputs,
@@ -1874,6 +1897,26 @@ export function calculateAssembly(
 
   if (gateSOpeningLeakCompositeRuntime?.basis) {
     result.airborneBasis = gateSOpeningLeakCompositeRuntime.basis;
+    if (
+      gateAHOpeningLeakStcSpectrumAdapter &&
+      result.airborneBasis.origin === "family_physics_prediction"
+    ) {
+      result.airborneBasis = {
+        ...result.airborneBasis,
+        assumptions: [
+          ...result.airborneBasis.assumptions.filter(
+            (assumption: string) => !/STC, field, and building outputs remain unsupported/i.test(assumption)
+          ),
+          "Opening ratings must be Rw / ISO 717-1 lab compatible for the Gate S composite Rw formula.",
+          "Gate AH separately owns element-lab STC by applying the Gate S Rw loss to the selected host-wall frequency curve and re-rating it with ASTM E413.",
+          "Field and building outputs remain unsupported until separately owned adapters exist."
+        ],
+        requiredInputs: [
+          ...result.airborneBasis.requiredInputs,
+          "GateAHOpeningLeakStcSpectrumAdapter:ASTM E413 contour from shifted TL curve"
+        ]
+      };
+    }
   }
 
   return AssemblyCalculationSchema.parse(result);

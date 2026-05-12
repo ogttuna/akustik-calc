@@ -72,12 +72,13 @@ selection status
 `gate_s_personal_use_mvp_opening_leak_composite_runtime_corridor_landed_selected_surface_parity_gate_t`
 and selects Gate T
 `gate_t_personal_use_mvp_opening_leak_composite_surface_parity_plan`.
-Complete element-lab opening/leak requests now promote only lab `Rw`
+Complete element-lab opening/leak requests first promote lab `Rw`
 through `gate_s_opening_leak_composite_area_energy_runtime_corridor`;
-the pinned host-wall plus average-seal opening fixture returns `Rw
-38.2` with a `+/-6 dB` source-absent budget. `STC`, `R'w`, `DnT,w`,
-field, and building outputs remain unsupported until separately owned
-adapters exist.
+Gate AH then promotes lab `STC` through the ASTM E413 shifted-spectrum
+adapter. The pinned host-wall plus average-seal opening fixture returns
+`Rw 38.2 / STC 39` with a `+/-6 dB` source-absent budget. `R'w`,
+`DnT,w`, field, and building outputs remain unsupported until separately
+owned adapters exist.
 Gate T now lands that opening/leak surface parity with selection status
 `gate_t_personal_use_mvp_opening_leak_composite_surface_parity_landed_selected_input_surface_gate_u`
 and selects Gate U
@@ -329,6 +330,20 @@ concrete safe reorder `Ln,w 39.2 / DeltaLw 32.6` frozen while
 centralizing floor formula missing-input labels for clearer workbench
 prompts. See
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AG_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AG_HANDOFF.md).
+Gate AH now lands the opening/leak STC ASTM E413 spectrum adapter
+with selection status
+`gate_ah_personal_use_mvp_opening_leak_stc_spectrum_adapter_landed_selected_surface_parity_gate_ai`
+and selected action
+`gate_ai_personal_use_mvp_opening_leak_stc_surface_parity_plan`.
+Selected next file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ai-opening-leak-stc-surface-parity-contract.test.ts`.
+Complete element-lab opening/leak now returns `Rw 38.2 / STC 39`
+through Gate S plus
+`astm_e413_stc_from_airborne_transmission_loss_curve`; high-leakage
+two-opening returns `Rw 33.7 / STC 34`. `STC` is re-rated from the
+shifted host-wall spectrum, not copied from `Rw`; field/building aliases
+and STC-only opening input basis remain blocked. See
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AH_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AH_HANDOFF.md).
 Gate A
 landed in
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-a-scenario-matrix-contract.test.ts`

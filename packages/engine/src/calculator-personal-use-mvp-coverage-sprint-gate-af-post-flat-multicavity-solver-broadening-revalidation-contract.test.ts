@@ -116,7 +116,7 @@ describe("Personal-Use MVP Coverage Sprint Gate AF post-flat-multicavity revalid
       workbenchInputBehaviorChange: false
     });
     expect(summary).toMatchObject({
-      blockedRowCount: 17,
+      blockedRowCount: 16,
       gateAAMatrixRows: 40,
       gapFreeAfterGateAF: true,
       landedGate: PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AF_LANDED_GATE,
@@ -145,10 +145,9 @@ describe("Personal-Use MVP Coverage Sprint Gate AF post-flat-multicavity revalid
     expect(gateAASummary.rowCount).toBe(40);
     expect(gateAASummary.remainingCoverageGapRowIds).toEqual([]);
     expect(gateAFSummary).toMatchObject({
-      blockedRowCount: 17,
+      blockedRowCount: 16,
       blockedRowIds: expect.arrayContaining([
         "wall.flat_multicavity_many_layer_schedule.needs_input",
-        "wall.opening_leak_stc_only.unsupported",
         "floor.lightweight_steel_formula_missing_spacing.needs_input",
         "wall.complete_building_prediction.unsupported"
       ]),

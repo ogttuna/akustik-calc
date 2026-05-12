@@ -228,11 +228,11 @@ describe("Personal-Use MVP Coverage Sprint Gate Z post-CLT-Ctr coverage revalida
       runtime: {
         basisId: GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD,
         errorBudgetDb: 6,
-        supportedTargetOutputs: ["Rw"],
-        unsupportedTargetOutputs: ["STC", "R'w", "DnT,w"]
+        supportedTargetOutputs: ["Rw", "STC"],
+        unsupportedTargetOutputs: ["R'w", "DnT,w"]
       }
     });
-    expect(values(opening)).toEqual({ Rw: 38.2 });
+    expect(values(opening)).toEqual({ Rw: 38.2, STC: 39 });
 
     expect(timberFloor).toMatchObject({
       currentPosture: "exact",
