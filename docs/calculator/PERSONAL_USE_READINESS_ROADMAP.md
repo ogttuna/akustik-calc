@@ -4,6 +4,14 @@ Date: 2026-04-27
 
 Current review note: 2026-05-08
 
+2026-05-12 update: the post-Gate-AP checkpoint confirms that the older
+controlled internal-use bar is still historical only. The current
+company-internal daily-use bar remains open until airborne
+`building_prediction` can handle complete `R'w` / `DnT,w` requests with
+owned building basis and visible uncertainty, or fail closed with
+precise missing inputs. The active final path is recorded in
+[CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md).
+
 ## Purpose
 
 This roadmap records the calculator-focused work that made DynEcho

@@ -102,6 +102,9 @@ AQ uncertainty-budget handoff read
 For the post-Gate-AP checkpoint, broad revalidation, and still-selected
 Gate AQ handoff read
 [CHECKPOINT_2026-05-12_POST_GATE_AP_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_POST_GATE_AP_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md).
+For the current company-internal daily-use final path and revalidation
+handoff read
+[CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md).
 For the Gate R no-runtime formula corridor and Gate S handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md).
 For the Gate Q no-runtime input contract and Gate R handoff read
@@ -242,6 +245,26 @@ validation passed with focused Gate AP 1 file / 6 tests,
 `pnpm check` engine 508 files / 3013 tests and web 180 files /
 993 passed + 18 skipped plus lint/typecheck/build clean. See
 [CHECKPOINT_2026-05-12_POST_GATE_AP_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_POST_GATE_AP_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md).
+
+## Company-Internal Daily-Use Final Path - 2026-05-12
+
+The latest broad analysis separates the old controlled internal pilot
+bar from the current daily company-use bar. The historical operating
+envelope remains useful, but it is not enough for the current product
+goal because airborne `building_prediction` still cannot return
+defended `R'w` / `DnT,w` values. The daily-use path is:
+
+1. Gate AQ no-runtime uncertainty-budget owner;
+2. Gate AR projected all-owner building-prediction runtime corridor;
+3. Gate AS projected surface/API/report parity;
+4. Gate AT projected acceptance matrix refresh;
+5. Gate AU projected daily-use release handoff and broad revalidation.
+
+This is the shortest defensible path. Gate AQ is still the first
+implementation step. Runtime promotion before Gate AQ would create an
+unowned reliability claim, and broad source crawling would not unblock
+the source-absent calculator route. See
+[CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md).
 
 ## Gate AO Building Prediction Junction Vibration Owner Landed - 2026-05-12
 

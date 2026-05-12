@@ -109,6 +109,8 @@ owner and Gate AQ handoff read
 If you need the post-Gate-AP checkpoint and broad revalidation before
 starting Gate AQ read
 [CHECKPOINT_2026-05-12_POST_GATE_AP_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_POST_GATE_AP_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md).
+If you need the current company-internal daily-use final path read
+[CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md).
 If you need the preceding Personal-Use MVP Coverage Sprint Gate W
 checkpoint read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md).
@@ -698,6 +700,16 @@ Current strategy:
   3013 tests and web 180 files / 993 passed + 18 skipped plus
   lint/typecheck/build clean. See
   [CHECKPOINT_2026-05-12_POST_GATE_AP_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_POST_GATE_AP_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md).
+- Company-internal daily-use status: still open. The old internal-use
+  operating envelope was a narrower controlled-use bar; the current
+  daily-use bar requires complete airborne `building_prediction`
+  requests to return defended building `R'w` / `DnT,w` values with
+  visible basis and uncertainty or to fail closed with precise fields.
+  The shortest defensible path is Gate AQ uncertainty-budget owner,
+  then projected all-owner runtime corridor, surface/API/report parity,
+  acceptance matrix refresh, and daily-use release handoff. Gate AQ
+  remains the first action. See
+  [CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md).
 - Personal-Use MVP Coverage Sprint Gate B has now landed the
   timber/CLT floor-impact `DeltaLw` input and formula-readiness
   contract without runtime movement.

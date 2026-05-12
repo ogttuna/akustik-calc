@@ -2,6 +2,14 @@
 
 Status: ROADMAP, not an active implementation slice.
 
+Current review note 2026-05-12:
+the company-internal daily-use bar is being tracked separately from the
+comprehensive accuracy bar. Daily use should close the post-Gate-AP
+airborne `building_prediction` path with visible `+/-9 dB` uncertainty;
+the comprehensive accuracy roadmap still owns later source-owned
+holdouts, residual policies, and tolerance tightening. See
+[CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md).
+
 Current handoff note 2026-04-29:
 `internal_use_operating_envelope_v1` closed no-runtime at Gate C and
 selected `calculator_source_pack_readiness_triage_v1`; source-pack

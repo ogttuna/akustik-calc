@@ -7,6 +7,13 @@ internal-use visibility audit and a focused wall source-gated copy fix;
 Gate C closed no-runtime on 2026-04-29 and selected
 `calculator_source_pack_readiness_triage_v1`)
 
+2026-05-12 note: this remains a historical controlled internal-use
+operating-envelope slice, not the current daily-use release bar. The
+daily-use bar now depends on completing the post-Gate-AP airborne
+`building_prediction` path through Gate AQ and the projected runtime /
+surface / acceptance gates. See
+[CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md).
+
 Closeout implementation file:
 
 `packages/engine/src/post-internal-use-operating-envelope-v1-next-slice-selection-contract.test.ts`

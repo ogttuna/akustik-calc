@@ -822,6 +822,13 @@ keeps Gate AQ as the selected no-runtime uncertainty-budget owner before
 any later all-owner building-prediction runtime corridor. Focused Gate
 AP, `pnpm calculator:gate:current`, and broad `pnpm check` validation
 passed at this checkpoint.
+Company-internal daily-use final path:
+`docs/calculator/CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md`.
+The old internal-use operating envelope is a narrower historical
+controlled-use bar. The current daily-use bar remains open until Gate AQ
+uncertainty-budget ownership, projected all-owner building runtime,
+surface/API/report parity, acceptance matrix refresh, and release
+handoff all pass.
 Do not keep adding narrow steel-floor source/packet gates unless the
 active matrix or a later runtime proposal names a specific source-owned
 unblocker.
