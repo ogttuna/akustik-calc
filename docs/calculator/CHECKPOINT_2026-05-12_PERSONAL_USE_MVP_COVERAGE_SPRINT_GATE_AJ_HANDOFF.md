@@ -81,6 +81,10 @@ Pinned behavior:
 
 ## Next Gate AK
 
+Gate AK has now consumed this handoff and closed as the no-runtime
+STC-aware matrix refresh. See
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AK_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AK_HANDOFF.md).
+
 Gate AK should refresh the executable personal-use MVP matrix after the
 opening/leak `STC` runtime and visible surface are both landed. Treat it
 as an STC-aware matrix refresh, not a broad source crawl:

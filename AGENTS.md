@@ -672,6 +672,22 @@ Selected next action:
 Selected next file:
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ak-coverage-matrix-refresh-after-opening-leak-stc-contract.test.ts`.
 Gate AK is an STC-aware matrix refresh, not a broad source crawl.
+Gate AK has now landed:
+`gate_ak_personal_use_mvp_coverage_matrix_refresh_after_opening_leak_stc_plan`.
+It keeps the Gate AA 40-row matrix intact, adds no runtime movement,
+preserves opening/leak `Rw 38.2 / STC 39`, high-leakage
+`Rw 33.7 / STC 34`, and `STC`-only target `STC 39`, and keeps
+unsupported `R'w`, `DnT,w`, field, building, source-absent, duplicate,
+and wrong-basis opening routes budget-free. Gate AK selection status:
+`gate_ak_personal_use_mvp_coverage_matrix_refresh_after_opening_leak_stc_landed_selected_building_prediction_owner_gap_gate_al`.
+Selected next action:
+`gate_al_personal_use_mvp_airborne_building_prediction_owner_gap_refresh_plan`.
+Selected next file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-al-airborne-building-prediction-owner-gap-refresh-contract.test.ts`.
+Gate AL is a building prediction owner gap refresh, not a building
+runtime promotion: direct curve, flanking energy, junction/coupling,
+room standardization, and uncertainty owners must be executable before
+building `R'w` or `DnT,w` can promote.
 Do not keep adding narrow steel-floor source/packet gates unless the
 active matrix or a later runtime proposal names a specific source-owned
 unblocker.

@@ -88,6 +88,9 @@ If you need the latest Gate AH closeout and Gate AI handoff read
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AH_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AH_HANDOFF.md).
 If you need the latest Gate AI closeout and Gate AJ handoff read
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AI_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AI_HANDOFF.md).
+If you need the latest Gate AK STC-aware matrix refresh and Gate AL
+handoff read
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AK_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AK_HANDOFF.md).
 If you need the preceding Personal-Use MVP Coverage Sprint Gate W
 checkpoint read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md).
@@ -153,15 +156,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_aj_personal_use_mvp_post_opening_leak_stc_surface_revalidation_landed_no_runtime_selected_matrix_refresh_gate_ak`
+`gate_ak_personal_use_mvp_coverage_matrix_refresh_after_opening_leak_stc_landed_selected_building_prediction_owner_gap_gate_al`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ak-coverage-matrix-refresh-after-opening-leak-stc-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-al-airborne-building-prediction-owner-gap-refresh-contract.test.ts`
 
 Selected next action:
 
-`gate_ak_personal_use_mvp_coverage_matrix_refresh_after_opening_leak_stc_plan`
+`gate_al_personal_use_mvp_airborne_building_prediction_owner_gap_refresh_plan`
 
 Strategic ROI replan:
 
@@ -505,6 +508,31 @@ Current strategy:
   Validation passed with focused Gate AJ, Gate AI/Gate AJ continuity,
   engine typecheck, `pnpm calculator:gate:current`, full `pnpm check`,
   repo build, and whitespace guard evidence.
+- Personal-Use MVP Coverage Sprint Gate AK has now landed
+  `gate_ak_personal_use_mvp_coverage_matrix_refresh_after_opening_leak_stc_plan`.
+  Selection status:
+  `gate_ak_personal_use_mvp_coverage_matrix_refresh_after_opening_leak_stc_landed_selected_building_prediction_owner_gap_gate_al`.
+  Selected next action:
+  `gate_al_personal_use_mvp_airborne_building_prediction_owner_gap_refresh_plan`.
+  Selected next file:
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-al-airborne-building-prediction-owner-gap-refresh-contract.test.ts`.
+  Gate AK is no-runtime STC-aware matrix refresh: the Gate AA 40-row
+  matrix remains intact with `coverage_gap: 0`, opening/leak
+  `Rw 38.2 / STC 39`, high-leakage `Rw 33.7 / STC 34`, and `STC`-only
+  target `STC 39` unchanged. Unsupported `R'w`, `DnT,w`, field,
+  building, source-absent, duplicate, and wrong-basis opening routes
+  remain budget-free. Gate AL is selected because the refreshed matrix
+  shows the building prediction owner gap is now the highest-value
+  remaining calculator blocker; it must not promote building runtime
+  until direct curve, flanking energy, junction/coupling, room
+  standardization, and uncertainty owners are executable. Validation
+  passed on 2026-05-12: focused Gate AK 1 file / 6 tests, Gate AJ/AK
+  continuity 2 files / 13 tests, engine typecheck,
+  `pnpm calculator:gate:current` with engine 378 files / 2181 tests,
+  web 74 files / 318 passed + 18 skipped, build 5/5, whitespace guard
+  clean, and full `pnpm check` with engine 503 files / 2983 tests, web
+  180 files / 993 passed + 18 skipped, lint/typecheck clean, and build
+  5/5.
 - Personal-Use MVP Coverage Sprint Gate B has now landed the
   timber/CLT floor-impact `DeltaLw` input and formula-readiness
   contract without runtime movement.

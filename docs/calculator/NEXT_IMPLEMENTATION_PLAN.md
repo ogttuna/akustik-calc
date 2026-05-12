@@ -81,6 +81,9 @@ and Gate AI surface-parity handoff read
 For the Gate AI opening/leak `STC` surface parity closeout and Gate AJ
 revalidation handoff read
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AI_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AI_HANDOFF.md).
+For the Gate AK STC-aware matrix refresh and Gate AL building prediction
+owner-gap handoff read
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AK_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AK_HANDOFF.md).
 For the Gate R no-runtime formula corridor and Gate S handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md).
 For the Gate Q no-runtime input contract and Gate R handoff read
@@ -137,6 +140,50 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
+## Gate AK STC-Aware Matrix Refresh Landed - 2026-05-12
+
+Gate AK has now landed the no-runtime matrix refresh selected by
+Gate AJ:
+
+`gate_ak_personal_use_mvp_coverage_matrix_refresh_after_opening_leak_stc_plan`
+
+Current selected status:
+
+`gate_ak_personal_use_mvp_coverage_matrix_refresh_after_opening_leak_stc_landed_selected_building_prediction_owner_gap_gate_al`
+
+Selected next action:
+
+`gate_al_personal_use_mvp_airborne_building_prediction_owner_gap_refresh_plan`
+
+Selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-al-airborne-building-prediction-owner-gap-refresh-contract.test.ts`
+
+Gate AK is an STC-aware matrix refresh, not a runtime promotion and not
+a broad source crawl. It preserves the Gate AA 40-row matrix without
+adding or removing rows, keeps `coverage_gap: 0`, and revalidates that
+Gate S/Gate AH opening/leak rows still pin only supported metrics:
+`Rw 38.2 / STC 39`, high-leakage `Rw 33.7 / STC 34`, and `STC`-only
+target `STC 39` remain unchanged. Duplicate opening input, source-absent
+opening value, wrong opening rating basis, `R'w`, `DnT,w`, field, and
+building outputs remain budget-free blocked or unsupported cases.
+
+Gate AK ranks the remaining calculator-first lanes and selects the
+building prediction owner gap refresh for Gate AL. This selection is
+deliberately not a building runtime promotion: Gate L/M/N/O/P still show
+that direct curve, flanking energy, junction/coupling, room
+standardization, and `+/-9 dB` budget owners are not executable runtime
+terms. Gate AL should make that owner gap explicit and keep lab `Rw` /
+`STC`, field `R'w` / `DnT,w`, and opening/leak lab adapters from leaking
+into building outputs.
+
+Gate AJ has consumed this handoff. The current selected next action is
+now the Gate AL building prediction owner gap refresh.
+
+Gate AK validation passed with focused Gate AK, Gate AJ/Gate AK
+continuity, engine typecheck, `pnpm calculator:gate:current`, full
+`pnpm check`, repo build, and whitespace guard evidence.
+
 ## Gate AJ Post Opening/Leak STC Surface Revalidation Landed - 2026-05-12
 
 Gate AJ has now landed the no-runtime revalidation gate selected by
@@ -177,10 +224,11 @@ Revalidation locked by Gate AJ:
 - Gate W/AA matrix rows stay gap-free, with supported metric pins kept
   separate from unsupported outputs.
 
-Gate AK is next as an STC-aware matrix refresh. It should refresh the
-executable personal-use MVP matrix after the opening/leak `STC` runtime
-and surface are both landed, then re-rank the next calculator-first lane
-from that matrix. It should not start a broad source crawl.
+Gate AK has consumed this selected next action as an STC-aware matrix
+refresh. It refreshed the executable personal-use MVP matrix after the
+opening/leak `STC` runtime and surface landed, then re-ranked the next
+calculator-first lane from that matrix without starting a broad source
+crawl.
 
 Gate AJ validation passed with focused Gate AJ, Gate AI/Gate AJ
 continuity, engine typecheck, `pnpm calculator:gate:current`, full

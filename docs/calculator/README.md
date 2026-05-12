@@ -81,9 +81,12 @@ adapter. The pinned host-wall plus average-seal opening fixture returns
 owned adapters exist. Gate AI now proves route/cards, target-output
 status/corridor, dossiers, saved replay, calculator API payloads, and
 Markdown reports carry that same Gate S plus Gate AH basis without
-runtime movement or field/building aliases. Gate AJ now revalidates
-that no-runtime surface against opening input, wall field, building, and
-matrix boundaries, then selects Gate AK as the STC-aware matrix refresh.
+runtime movement or field/building aliases. Gate AJ revalidated that
+no-runtime surface against opening input, wall field, building, and
+matrix boundaries. Gate AK now lands the STC-aware matrix refresh
+without changing the 40-row matrix or runtime values and selects the
+building prediction owner gap refresh for Gate AL instead of broad
+source crawling.
 Gate T now lands that opening/leak surface parity with selection status
 `gate_t_personal_use_mvp_opening_leak_composite_surface_parity_landed_selected_input_surface_gate_u`
 and selects Gate U
@@ -376,9 +379,23 @@ Gate AH `STC 39`, high-leakage `Rw 33.7 / STC 34`, the `+/-6 dB`
 not-measured-evidence budget, Gate U input surface, field-context
 routes, building-prediction boundaries, or Gate W/AA matrix
 supported/unsupported separation. Gate AK is the selected STC-aware
-matrix refresh, not a broad source crawl. Gate AK selected next:
-STC-aware matrix refresh. See
+matrix refresh, not a broad source crawl. See
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AJ_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AJ_HANDOFF.md).
+Gate AK now lands that STC-aware matrix refresh with selection status
+`gate_ak_personal_use_mvp_coverage_matrix_refresh_after_opening_leak_stc_landed_selected_building_prediction_owner_gap_gate_al`
+and selected action
+`gate_al_personal_use_mvp_airborne_building_prediction_owner_gap_refresh_plan`.
+Selected next file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-al-airborne-building-prediction-owner-gap-refresh-contract.test.ts`.
+The Gate AA 40-row matrix remains intact, opening/leak `Rw 38.2 /
+STC 39`, high-leakage `Rw 33.7 / STC 34`, and `STC`-only target
+`STC 39` stay unchanged, unsupported/basis-boundary outputs stay
+budget-free, and the building prediction owner gap is now the selected
+next calculator-first lane. Gate AK validation passed with focused
+Gate AK, Gate AJ/Gate AK continuity, engine typecheck,
+`pnpm calculator:gate:current`, full `pnpm check`, repo build, and
+whitespace guard evidence. See
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AK_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AK_HANDOFF.md).
 Gate A
 landed in
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-a-scenario-matrix-contract.test.ts`
