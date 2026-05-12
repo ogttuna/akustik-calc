@@ -769,6 +769,27 @@ Current strategy:
   build 5/5.
   See
   [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AS_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AS_HANDOFF.md).
+- Personal-Use MVP Coverage Sprint Gate AT has now landed
+  `gate_at_personal_use_mvp_acceptance_matrix_refresh_after_building_prediction_plan`.
+  Selection status:
+  `gate_at_personal_use_mvp_acceptance_matrix_refresh_after_building_prediction_landed_selected_daily_use_release_handoff_gate_au`.
+  Selected next action:
+  `gate_au_personal_use_mvp_daily_use_release_handoff_plan`.
+  Selected next file:
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-au-daily-use-release-handoff-contract.test.ts`.
+  Gate AT refreshes the daily-use acceptance matrix to 41 rows after
+  Gate AS. It retires the stale complete-building `unsupported` row id,
+  pins complete building runtime as `R'w 58` / `DnT,w 59` with the
+  `+/-9 dB` not-measured budget, adds the broad-target lab-alias
+  boundary row, keeps partial building / opening-leak building / ASTM /
+  hostile layer-edit / high-layer / exact-source rows explicit, and
+  finds no remaining coverage gaps or daily-use release blockers. See
+  [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AT_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AT_HANDOFF.md).
+  Validation passed on 2026-05-12: focused Gate AT engine contract 1
+  file / 6 tests, Gate AS + Gate AT continuity 2 files / 10 tests,
+  engine typecheck, `pnpm calculator:gate:current` with engine 387 files
+  / 2234 tests, web 75 files / 321 passed + 18 skipped, build 5/5, and
+  `git diff --check` clean.
 - Post-Gate-AP checkpoint status: docs and implementation were re-read
   before starting Gate AQ. No stale plan mismatch was found. Gate AP is
   landed, no-runtime, present in the current-gate runner, and selected Gate AQ
@@ -785,8 +806,9 @@ Current strategy:
   daily-use bar requires complete airborne `building_prediction`
   requests to return defended building `R'w` / `DnT,w` values with
   visible basis and uncertainty or to fail closed with precise fields.
-  The shortest defensible path is now Gate AT acceptance matrix refresh,
-  then daily-use release handoff. See
+  Gate AT has now completed the acceptance matrix refresh with no
+  remaining coverage gaps or daily-use release blockers. The shortest
+  defensible path is now Gate AU daily-use release handoff. See
   [CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md).
 - Gate AQ planning status: implementation-ready after the latest
   analysis pass. Official ISO/INSUL reference checks confirm that

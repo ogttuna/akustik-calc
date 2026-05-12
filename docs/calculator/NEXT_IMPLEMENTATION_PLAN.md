@@ -164,6 +164,44 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
+## Gate AT Acceptance Matrix Refresh After Building Prediction Landed - 2026-05-12
+
+Gate AT has now landed the acceptance matrix refresh selected by Gate AS:
+
+`gate_at_personal_use_mvp_acceptance_matrix_refresh_after_building_prediction_plan`
+
+Current selected status:
+
+`gate_at_personal_use_mvp_acceptance_matrix_refresh_after_building_prediction_landed_selected_daily_use_release_handoff_gate_au`
+
+Selected next action:
+
+`gate_au_personal_use_mvp_daily_use_release_handoff_plan`
+
+Selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-au-daily-use-release-handoff-contract.test.ts`
+
+Gate AT keeps runtime/API/input behavior unchanged while refreshing the
+daily-use acceptance matrix to 41 rows after building-prediction runtime
+and surface parity. It retires the stale
+`wall.complete_building_prediction.unsupported` row id in favor of
+`wall.complete_building_prediction.runtime`, adds a broad-target
+building alias-boundary row, pins `R'w 58` / `DnT,w 59` with the
+`+/-9 dB` not-measured building budget, and keeps partial building,
+opening/leak building, ASTM/IIC, exact-source precedence, hostile
+layer-edit, and high-layer-count rows explicit.
+
+The refreshed matrix has no remaining coverage gaps and no daily-use
+release blockers for the selected operating envelope. Gate AT selects
+Gate AU daily-use release handoff. See
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AT_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AT_HANDOFF.md).
+Validation passed on 2026-05-12: focused Gate AT engine contract 1 file
+/ 6 tests, Gate AS + Gate AT continuity 2 files / 10 tests, engine
+typecheck, `pnpm calculator:gate:current` with engine 387 files / 2234
+tests, web 75 files / 321 passed + 18 skipped, build 5/5, and
+`git diff --check` clean.
+
 ## Gate AS Building Prediction Surface/API/Report Parity Landed - 2026-05-12
 
 Gate AS has now landed the visible parity step selected by Gate AR:
@@ -378,13 +416,13 @@ bar from the current daily company-use bar. The historical operating
 envelope remains useful, but it is not enough for the current product
 goal until airborne `building_prediction` runtime is accepted by the
 matrix. Gate AR has promoted defended source-absent `R'w` / `DnT,w`
-engine values, and Gate AS has made that basis visible across
-surface/API/report paths. The remaining daily-use path is:
+engine values, Gate AS has made that basis visible across
+surface/API/report paths, and Gate AT has refreshed the acceptance
+matrix with no remaining coverage gaps or release blockers. The
+remaining daily-use path is Gate AU daily-use release handoff and broad
+revalidation.
 
-1. Gate AT projected acceptance matrix refresh;
-2. Gate AU projected daily-use release handoff and broad revalidation.
-
-This is the shortest defensible path after Gate AS. Broad source
+This is the shortest defensible path after Gate AT. Broad source
 crawling still does not unblock the source-absent calculator route. See
 [CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md).
 

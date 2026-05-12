@@ -18,8 +18,9 @@ not block a labelled family-specific physics prediction when the
 required topology and material inputs are present.
 
 As of 2026-05-12, the Personal-Use MVP Coverage Sprint has advanced
-through the Gate AS airborne `building_prediction` surface/API/report
-parity step after Gate AR landed the all-owner runtime corridor, Gate
+through the Gate AT airborne `building_prediction` acceptance matrix
+refresh after Gate AS made the all-owner runtime corridor visible across
+surface/API/report paths and Gate AR landed that runtime corridor, Gate
 AQ closed the uncertainty-budget owner, Gate AP closed room
 standardization, the Gate L boundary, and first-class airborne
 field-context input-surface wiring for owned
@@ -505,8 +506,7 @@ uncertainty-budget owner. It passed focused Gate AP, current-gate, and
 broad `pnpm check` validation. See
 [CHECKPOINT_2026-05-12_POST_GATE_AP_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_POST_GATE_AP_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md).
 The current company-internal daily-use bar is still open and now has a
-single final path: Gate AT acceptance matrix refresh and daily-use
-release handoff. See
+single final path: Gate AU daily-use release handoff. See
 [CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md).
 The Gate AQ implementation-ready planning pass confirms that Gate AQ
 must stay no-runtime and select the Gate AR all-owner runtime corridor.
@@ -564,6 +564,28 @@ engine/web typecheck, `pnpm calculator:gate:current`, full
 `pnpm check`, repo build, and whitespace guard evidence.
 See
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AS_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AS_HANDOFF.md).
+Gate AT has now landed
+`gate_at_personal_use_mvp_acceptance_matrix_refresh_after_building_prediction_plan`
+with selection status
+`gate_at_personal_use_mvp_acceptance_matrix_refresh_after_building_prediction_landed_selected_daily_use_release_handoff_gate_au`.
+This acceptance matrix refresh selects the daily-use release handoff as
+the next slice.
+It refreshes the daily-use acceptance matrix to 41 rows, retires the
+stale complete-building `unsupported` row id, pins complete building
+runtime as `R'w 58` / `DnT,w 59` with the `+/-9 dB` not-measured budget,
+adds the broad-target lab-alias boundary row, keeps partial building,
+opening/leak building, ASTM/IIC, exact-source precedence, hostile
+layer-edit, and high-layer-count rows explicit, and selects the
+daily-use release handoff
+`gate_au_personal_use_mvp_daily_use_release_handoff_plan` in
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-au-daily-use-release-handoff-contract.test.ts`.
+Gate AT validation passed on 2026-05-12 with focused Gate AT engine
+contract 1 file / 6 tests, Gate AS + Gate AT continuity 2 files / 10
+tests, engine typecheck, `pnpm calculator:gate:current` with engine 387
+files / 2234 tests, web 75 files / 321 passed + 18 skipped, build 5/5,
+and `git diff --check` clean.
+See
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AT_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AT_HANDOFF.md).
 Gate A
 landed in
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-a-scenario-matrix-contract.test.ts`
