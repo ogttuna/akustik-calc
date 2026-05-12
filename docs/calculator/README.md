@@ -18,9 +18,10 @@ not block a labelled family-specific physics prediction when the
 required topology and material inputs are present.
 
 As of 2026-05-12, the Personal-Use MVP Coverage Sprint has advanced
-through the Gate AP airborne `building_prediction` room-standardization
-owner after the Gate L boundary and first-class airborne field-context
-input-surface wiring for owned
+through the Gate AR airborne `building_prediction` all-owner runtime
+corridor after Gate AQ closed the uncertainty-budget owner, Gate AP
+closed room standardization, the Gate L boundary, and first-class
+airborne field-context input-surface wiring for owned
 lab-family wall routes
 after Gate H lined massive/masonry and CLT wall lab family-physics
 promotion and Gate G generalized wall multi-cavity / triple-leaf route
@@ -503,8 +504,7 @@ uncertainty-budget owner. It passed focused Gate AP, current-gate, and
 broad `pnpm check` validation. See
 [CHECKPOINT_2026-05-12_POST_GATE_AP_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_POST_GATE_AP_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md).
 The current company-internal daily-use bar is still open and now has a
-single final path: Gate AQ uncertainty-budget owner, projected all-owner
-building runtime corridor, surface/API/report parity, acceptance matrix
+single final path: Gate AS surface/API/report parity, acceptance matrix
 refresh, and daily-use release handoff. See
 [CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md).
 The Gate AQ implementation-ready planning pass confirms that Gate AQ
@@ -526,6 +526,25 @@ AP/Gate AQ continuity, engine typecheck, `pnpm calculator:gate:current`,
 full `pnpm check`, repo build, and whitespace guard evidence.
 See
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AQ_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AQ_HANDOFF.md).
+Gate AR has now landed
+`gate_ar_personal_use_mvp_airborne_building_prediction_all_owner_runtime_corridor_plan`
+with selection status
+`gate_ar_personal_use_mvp_airborne_building_prediction_all_owner_runtime_corridor_landed_selected_surface_parity_gate_as`.
+It promotes complete airborne `building_prediction` requests through
+`gate_ar_airborne_building_prediction_all_owner_runtime_corridor`; the
+first lined massive fixture returns `R'w 58` and `DnT,w 59` with the
+Gate AQ `+/-9 dB` not-measured uncertainty budget. Partial building
+context, field/lab basis separation, and opening/leak building
+boundaries remain protected. Gate AR selects
+`gate_as_personal_use_mvp_airborne_building_prediction_surface_api_report_parity_plan`
+in
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-as-airborne-building-prediction-surface-parity-contract.test.ts`.
+Gate AR validation passed on 2026-05-12 with focused Gate AR, Gate
+AQ/Gate AR continuity, airborne building-prediction continuity,
+matrix/split revalidation, `pnpm calculator:gate:current`, full
+`pnpm check`, repo build, and whitespace guard evidence.
+See
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AR_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AR_HANDOFF.md).
 Gate A
 landed in
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-a-scenario-matrix-contract.test.ts`

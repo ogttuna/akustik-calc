@@ -40,6 +40,8 @@ import {
   GATE_AE_FLAT_MULTICAVITY_RUNTIME_METHOD,
   GATE_AE_FLAT_MULTICAVITY_SELECTED_CANDIDATE_ID
 } from "./dynamic-airborne-gate-ae-flat-multicavity";
+import { GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD } from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
+import { GATE_O_AIRBORNE_BUILDING_PREDICTION_TOLERANCE_DB } from "./dynamic-airborne-gate-o-building-prediction-formula-corridor";
 import { buildDynamicCalculatorRouteInputTopologyAssessment } from "./dynamic-calculator-route-input-topology";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
@@ -116,7 +118,7 @@ describe("Personal-Use MVP Coverage Sprint Gate AF post-flat-multicavity revalid
       workbenchInputBehaviorChange: false
     });
     expect(summary).toMatchObject({
-      blockedRowCount: 16,
+      blockedRowCount: 15,
       gateAAMatrixRows: 40,
       gapFreeAfterGateAF: true,
       landedGate: PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AF_LANDED_GATE,
@@ -145,11 +147,11 @@ describe("Personal-Use MVP Coverage Sprint Gate AF post-flat-multicavity revalid
     expect(gateAASummary.rowCount).toBe(40);
     expect(gateAASummary.remainingCoverageGapRowIds).toEqual([]);
     expect(gateAFSummary).toMatchObject({
-      blockedRowCount: 16,
+      blockedRowCount: 15,
       blockedRowIds: expect.arrayContaining([
         "wall.flat_multicavity_many_layer_schedule.needs_input",
         "floor.lightweight_steel_formula_missing_spacing.needs_input",
-        "wall.complete_building_prediction.unsupported"
+        "wall.building_prediction_partial_context.needs_input"
       ]),
       gateAAMatrixRows: 40,
       gapFreeAfterGateAF: true,
@@ -252,11 +254,18 @@ describe("Personal-Use MVP Coverage Sprint Gate AF post-flat-multicavity revalid
     });
     expect(buildingRow).toMatchObject({
       basis: "building_prediction",
-      expectedPosture: "unsupported",
-      failureClass: "basis_boundary",
+      currentPosture: "family_physics",
+      expectedPosture: "family_physics",
+      failureClass: "none",
       runtime: {
-        supportedTargetOutputs: [],
-        unsupportedTargetOutputs: ["R'w", "DnT,w"]
+        basisId: GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
+        errorBudgetDb: GATE_O_AIRBORNE_BUILDING_PREDICTION_TOLERANCE_DB,
+        supportedTargetOutputs: ["R'w", "DnT,w"],
+        unsupportedTargetOutputs: [],
+        valuePins: [
+          { metric: "R'w", value: 58 },
+          { metric: "DnT,w", value: 59 }
+        ]
       }
     });
   });

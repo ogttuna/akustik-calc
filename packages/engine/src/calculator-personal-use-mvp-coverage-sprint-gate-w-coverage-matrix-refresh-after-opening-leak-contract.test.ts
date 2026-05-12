@@ -15,6 +15,8 @@ import {
   type PersonalUseMvpCoverageMetricValuePin,
   type PersonalUseMvpCoverageScenarioRow
 } from "./calculator-personal-use-mvp-coverage-sprint";
+import { GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD } from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
+import { GATE_O_AIRBORNE_BUILDING_PREDICTION_TOLERANCE_DB } from "./dynamic-airborne-gate-o-building-prediction-formula-corridor";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
@@ -299,13 +301,21 @@ describe("Personal-Use MVP Coverage Sprint Gate W coverage matrix refresh after 
     expect(values(byId(rows, "wall.opening_leak_composite_building_boundary.unsupported"))).toEqual({});
 
     expect(byId(rows, "wall.complete_building_prediction.unsupported")).toMatchObject({
-      currentPosture: "unsupported",
-      nextAction: "airborne_building_prediction_runtime_terms",
+      currentPosture: "family_physics",
+      expectedPosture: "family_physics",
+      failureClass: "none",
+      nextAction: "airborne_building_prediction_surface_parity",
       runtime: {
+        basisId: GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
+        errorBudgetDb: GATE_O_AIRBORNE_BUILDING_PREDICTION_TOLERANCE_DB,
         missingPhysicalInputs: [],
-        supportedTargetOutputs: [],
-        unsupportedTargetOutputs: ["R'w", "DnT,w"]
+        supportedTargetOutputs: ["R'w", "DnT,w"],
+        unsupportedTargetOutputs: []
       }
+    });
+    expect(values(byId(rows, "wall.complete_building_prediction.unsupported"))).toEqual({
+      "DnT,w": 59,
+      "R'w": 58
     });
 
     expect(byId(rows, "floor.astm_iic_aiic_boundary.unsupported")).toMatchObject({

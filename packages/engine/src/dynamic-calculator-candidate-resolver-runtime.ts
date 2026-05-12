@@ -49,6 +49,10 @@ import {
   GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_OWNER_INPUTS
 } from "./dynamic-airborne-gate-n-building-prediction-runtime-adapter";
 import {
+  GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
+  GATE_AR_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
+import {
   GATE_AE_FLAT_MULTICAVITY_RUNTIME_METHOD,
   GATE_AE_FLAT_MULTICAVITY_SELECTED_CANDIDATE_ID
 } from "./dynamic-airborne-gate-ae-flat-multicavity";
@@ -475,10 +479,6 @@ function selectLane(input: {
     return "needs_input";
   }
 
-  if (input.assessment.outputBasis === "building_prediction") {
-    return "unsupported";
-  }
-
   if (
     exactSourceEligible({
       assessment: input.assessment,
@@ -486,6 +486,12 @@ function selectLane(input: {
     })
   ) {
     return "exact_full_stack";
+  }
+
+  if (input.assessment.outputBasis === "building_prediction") {
+    return input.runtimeSignal?.airborneBasis?.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD
+      ? "family_physics"
+      : "unsupported";
   }
 
   if (
@@ -505,6 +511,10 @@ function selectLane(input: {
 }
 
 function familyPhysicsCandidateId(runtimeBasis?: AirborneResultBasis): string {
+  if (runtimeBasis?.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD) {
+    return GATE_AR_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID;
+  }
+
   if (runtimeBasis?.method === GATE_AE_FLAT_MULTICAVITY_RUNTIME_METHOD) {
     return GATE_AE_FLAT_MULTICAVITY_SELECTED_CANDIDATE_ID;
   }

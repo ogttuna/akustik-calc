@@ -17,9 +17,12 @@ import {
 } from "./dynamic-airborne-gate-o-building-prediction-formula-corridor";
 import {
   GATE_N_AIRBORNE_BUILDING_PREDICTION_FORMULA_OWNER_INPUTS,
-  GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_METHOD,
   GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING
 } from "./dynamic-airborne-gate-n-building-prediction-runtime-adapter";
+import {
+  GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
+  GATE_AR_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
 import {
   GATE_M_AIRBORNE_BUILDING_PREDICTION_REQUIRED_PHYSICAL_INPUTS
 } from "./dynamic-calculator-route-input-topology";
@@ -199,7 +202,7 @@ describe("Personal-Use MVP Coverage Sprint Gate O airborne building-prediction f
     );
   });
 
-  it("keeps runtime parked until Gate P instead of selecting the current heuristic overlay as building prediction", () => {
+  it("keeps the Gate O formula contract while Gate AR now promotes complete building-prediction runtime", () => {
     const result = calculateAssembly(LINED_MASSIVE_WALL, {
       airborneContext: COMPLETE_BUILDING_CONTEXT,
       calculator: "dynamic",
@@ -207,16 +210,21 @@ describe("Personal-Use MVP Coverage Sprint Gate O airborne building-prediction f
     });
 
     expect(result.airborneCandidateResolution).toMatchObject({
-      runtimeValueMovement: false,
-      selectedCandidateId: "candidate_dynamic_unsupported",
-      selectedOrigin: "unsupported"
+      runtimeValueMovement: true,
+      selectedCandidateId: GATE_AR_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID,
+      selectedOrigin: "family_physics_prediction"
     });
     expect(result.airborneBasis).toMatchObject({
-      method: GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_METHOD,
-      origin: "unsupported"
+      errorBudgetDb: GATE_O_AIRBORNE_BUILDING_PREDICTION_TOLERANCE_DB,
+      method: GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
+      origin: "family_physics_prediction"
     });
+    expect(result.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
+    expect(result.unsupportedTargetOutputs).toEqual([]);
+    expect(result.metrics.estimatedRwPrimeDb).toBe(58);
+    expect(result.metrics.estimatedDnTwDb).toBe(59);
     expect(result.airborneBasis?.method).not.toContain("gate_o");
-    expect(result.warnings).toContain(GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING);
+    expect(result.warnings).not.toContain(GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING);
   });
 
   it("keeps negative boundaries exact instead of guessing building metrics", () => {

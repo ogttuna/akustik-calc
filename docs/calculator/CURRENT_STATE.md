@@ -113,6 +113,9 @@ If you need the current company-internal daily-use final path read
 [CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md).
 If you need the implementation-ready Gate AQ planning revalidation read
 [CHECKPOINT_2026-05-12_GATE_AQ_PLAN_REVALIDATION_AND_IMPLEMENTATION_READY_HANDOFF.md](./CHECKPOINT_2026-05-12_GATE_AQ_PLAN_REVALIDATION_AND_IMPLEMENTATION_READY_HANDOFF.md).
+If you need the current Personal-Use MVP Coverage Sprint Gate AR
+checkpoint read
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AR_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AR_HANDOFF.md).
 If you need the preceding Personal-Use MVP Coverage Sprint Gate W
 checkpoint read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md).
@@ -714,6 +717,31 @@ Current strategy:
   clean, and build 5/5. `git diff --check` passed after validation-note
   sync. See
   [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AQ_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AQ_HANDOFF.md).
+- Personal-Use MVP Coverage Sprint Gate AR has now landed
+  `gate_ar_personal_use_mvp_airborne_building_prediction_all_owner_runtime_corridor_plan`.
+  Selection status:
+  `gate_ar_personal_use_mvp_airborne_building_prediction_all_owner_runtime_corridor_landed_selected_surface_parity_gate_as`.
+  Selected next action:
+  `gate_as_personal_use_mvp_airborne_building_prediction_surface_api_report_parity_plan`.
+  Selected next file:
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-as-airborne-building-prediction-surface-parity-contract.test.ts`.
+  Gate AR promotes complete airborne `building_prediction` requests to
+  source-absent runtime through
+  `gate_ar_airborne_building_prediction_all_owner_runtime_corridor`.
+  The first complete lined massive fixture returns `R'w 58` and
+  `DnT,w 59` with the Gate AQ `+/-9 dB` not-measured budget. Partial
+  building context stays `needs_input`, field context stays on Gate I,
+  lab `Rw` / `STC` stays lab, and opening/leak building outputs remain
+  blocked. Validation passed on 2026-05-12: focused Gate AR 1 file /
+  7 tests, Gate AQ/Gate AR continuity 2 files / 13 tests, airborne
+  building-prediction continuity 12 files / 72 tests, matrix/split
+  revalidation 7 files / 40 tests, `pnpm calculator:gate:current` with
+  engine 385 files / 2224 tests, web 74 files / 318 passed + 18
+  skipped, build 5/5, and full `pnpm check` with lint/typecheck clean,
+  engine 510 files / 3026 tests, web 180 files / 993 passed + 18
+  skipped, and build 5/5. `git diff --check` passed after
+  validation-note sync. See
+  [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AR_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AR_HANDOFF.md).
 - Post-Gate-AP checkpoint status: docs and implementation were re-read
   before starting Gate AQ. No stale plan mismatch was found. Gate AP is
   landed, no-runtime, present in the current-gate runner, and selected Gate AQ
@@ -730,9 +758,8 @@ Current strategy:
   daily-use bar requires complete airborne `building_prediction`
   requests to return defended building `R'w` / `DnT,w` values with
   visible basis and uncertainty or to fail closed with precise fields.
-  The shortest defensible path is now Gate AR projected all-owner
-  runtime corridor, then surface/API/report parity, acceptance matrix
-  refresh, and daily-use release handoff. See
+  The shortest defensible path is now Gate AS surface/API/report parity,
+  then acceptance matrix refresh and daily-use release handoff. See
   [CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md).
 - Gate AQ planning status: implementation-ready after the latest
   analysis pass. Official ISO/INSUL reference checks confirm that

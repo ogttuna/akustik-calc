@@ -1,15 +1,15 @@
 # Dynamic Airborne Cartography
 
-Last reviewed: 2026-05-10
+Last reviewed: 2026-05-12
 Status: split v1 landed 15 atomic commits that moved the first bounded
 modules out of the original 6630-line monolith. The v2 slice is now
 closed at Gate C: eleven correction guards were carved into
 `dynamic-airborne-correction-guards.ts`, recursive probes use
 `DynamicAirborneComposer` injection where needed, and
 `dynamic-airborne.ts` was 1793 lines at Gate C closeout. The active
-calculator slice has since grown it to 1931 physical lines after Gate X
-AAC/non-homogeneous masonry promotion. That is still below the 2000-line
-C6 threshold, so the remaining three recursive guards are optional
+calculator slice has since grown it to 1960 physical lines after Gate AR
+airborne building-prediction runtime promotion. That is still below the
+2000-line C6 threshold, so the remaining three recursive guards are optional
 architecture backlog rather than the selected work. The active
 calculator slice is now
 `calculator_model_first_physics_prediction_pivot_v1`.
@@ -49,7 +49,7 @@ Gate B carve and broad validation.
   with irrelevant neighbours.
 - Hygiene debt: MASTER_PLAN §3 grid row
   `dynamic-airborne.ts size` is now closed for C6 after v2 Gate C:
-  `dynamic-airborne.ts` is 1931 physical lines after Gate X and remains
+  `dynamic-airborne.ts` is 1960 physical lines after Gate AR and remains
   below the 2000-line threshold.
 
 ## Target Structure (Three Files)

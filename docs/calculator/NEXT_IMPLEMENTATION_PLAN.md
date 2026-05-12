@@ -164,6 +164,47 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
+## Gate AR Building Prediction All-Owner Runtime Corridor Landed - 2026-05-12
+
+Gate AR has now landed the runtime corridor selected by Gate AQ:
+
+`gate_ar_personal_use_mvp_airborne_building_prediction_all_owner_runtime_corridor_plan`
+
+Current selected status:
+
+`gate_ar_personal_use_mvp_airborne_building_prediction_all_owner_runtime_corridor_landed_selected_surface_parity_gate_as`
+
+Selected next action:
+
+`gate_as_personal_use_mvp_airborne_building_prediction_surface_api_report_parity_plan`
+
+Selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-as-airborne-building-prediction-surface-parity-contract.test.ts`
+
+Gate AR promotes complete airborne `building_prediction` requests from
+parked unsupported posture to source-absent `family_physics_prediction`
+runtime through
+`gate_ar_airborne_building_prediction_all_owner_runtime_corridor`.
+The first complete lined massive building fixture supports `R'w 58` and
+`DnT,w 59` with the Gate AQ `+/-9 dB` not-measured uncertainty budget.
+
+Partial building context remains `needs_input`. Field context remains on
+Gate I. Lab `Rw` / `STC` remains on lab-family routes. Opening/leak
+building outputs stay blocked until a dedicated building adapter owns
+them. Gate AR selects Gate AS surface/API/report parity as the next
+bounded step.
+
+Validation passed on 2026-05-12: focused Gate AR 1 file / 7
+tests, Gate AQ/Gate AR continuity 2 files / 13 tests, full airborne
+building-prediction continuity 12 files / 72 tests, matrix/split
+revalidation 7 files / 40 tests, `pnpm calculator:gate:current` with
+engine 385 files / 2224 tests, web 74 files / 318 passed + 18 skipped,
+build 5/5, and full `pnpm check` with lint/typecheck clean, engine 510
+files / 3026 tests, web 180 files / 993 passed + 18 skipped, and build
+5/5. `git diff --check` passed after validation-note sync. See
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AR_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AR_HANDOFF.md).
+
 ## Gate AQ Building Prediction Uncertainty-Budget Owner Landed - 2026-05-12
 
 Gate AQ has now landed the no-runtime uncertainty-budget owner contract
@@ -295,18 +336,17 @@ validation passed with focused Gate AP 1 file / 6 tests,
 The latest broad analysis separates the old controlled internal pilot
 bar from the current daily company-use bar. The historical operating
 envelope remains useful, but it is not enough for the current product
-goal because airborne `building_prediction` still cannot return
-defended `R'w` / `DnT,w` values. The daily-use path is:
+goal until airborne `building_prediction` runtime is visible across
+surfaces and accepted by the matrix. Gate AR has now promoted defended
+source-absent `R'w` / `DnT,w` engine values. The remaining daily-use
+path is:
 
-1. Gate AR projected all-owner building-prediction runtime corridor;
-2. Gate AS projected surface/API/report parity;
-3. Gate AT projected acceptance matrix refresh;
-4. Gate AU projected daily-use release handoff and broad revalidation.
+1. Gate AS projected surface/API/report parity;
+2. Gate AT projected acceptance matrix refresh;
+3. Gate AU projected daily-use release handoff and broad revalidation.
 
-This is the shortest defensible path after Gate AQ. Runtime promotion
-before Gate AR would still create an unowned reliability claim if the
-all-owner value path is not executable and visible, and broad source
-crawling would not unblock the source-absent calculator route. See
+This is the shortest defensible path after Gate AR. Broad source
+crawling still does not unblock the source-absent calculator route. See
 [CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md).
 
 ## Gate AQ Implementation-Ready Plan Revalidation - 2026-05-12

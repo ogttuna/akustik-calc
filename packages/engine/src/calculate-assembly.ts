@@ -38,6 +38,7 @@ import { classifyLayerRole, materialText } from "./airborne-topology";
 import { calculateDynamicAirborneResult } from "./dynamic-airborne";
 import { GATE_L_AIRBORNE_BUILDING_PREDICTION_BOUNDARY_WARNING } from "./dynamic-airborne-gate-l-building-prediction-boundary";
 import { GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING } from "./dynamic-airborne-gate-n-building-prediction-runtime-adapter";
+import { GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD } from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
 import {
   GATE_Y_CLT_MASS_TIMBER_CTR_SPECTRUM_ADAPTER_WARNING,
   maybeBuildGateYCltMassTimberCtrSpectrumAdapterBasis
@@ -159,6 +160,12 @@ const GATE_P_AIRBORNE_BUILDING_PREDICTION_OUTPUTS = new Set<RequestedOutputId>([
   "DnT,A,k",
   "DnT,w",
   "R'w"
+]);
+const GATE_AR_AIRBORNE_BUILDING_PREDICTION_LAB_ALIAS_OUTPUTS = new Set<RequestedOutputId>([
+  "C",
+  "Ctr",
+  "Rw",
+  "STC"
 ]);
 
 type TargetOutputSupportLike = ReturnType<typeof analyzeTargetOutputSupport>;
@@ -1592,7 +1599,10 @@ export function calculateAssembly(
           ? {
               airborneBasis: gateYCltMassTimberCtrSpectrumAdapterBasis ?? dynamicAirborneResult.airborneBasis,
               detectedFamily: dynamicAirborneResult.trace.detectedFamily,
-              runtimeValueMovement: dynamicAirborneResult.airborneCandidateResolution?.runtimeValueMovement,
+              runtimeValueMovement:
+                dynamicAirborneResult.airborneBasis?.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD
+                  ? true
+                  : dynamicAirborneResult.airborneCandidateResolution?.runtimeValueMovement,
               selectedMethod: dynamicAirborneResult.trace.selectedMethod,
               strategy: dynamicAirborneResult.trace.strategy
             }
@@ -1630,9 +1640,21 @@ export function calculateAssembly(
         GATE_P_AIRBORNE_BUILDING_PREDICTION_OUTPUTS.has(output)
       )
     : [];
+  const gateARAirborneBuildingPredictionActive =
+    dynamicCandidateResolverRuntime?.resolution.selectedBasis?.method ===
+    GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD;
+  const gateARAirborneBuildingPredictionLabAliasBlockedOutputs =
+    gateARAirborneBuildingPredictionActive
+      ? targetOutputSupport.targetOutputs.filter((output) =>
+          GATE_AR_AIRBORNE_BUILDING_PREDICTION_LAB_ALIAS_OUTPUTS.has(output)
+        )
+      : [];
   const visibleTargetOutputSupport = moveSupportedOutputsToUnsupported(
-    moveSupportedOutputsToUnsupported(targetOutputSupport, parkedAirborneBuildingPredictionOutputs),
-    gateSOpeningLeakBlockedOutputs
+    moveSupportedOutputsToUnsupported(
+      moveSupportedOutputsToUnsupported(targetOutputSupport, parkedAirborneBuildingPredictionOutputs),
+      gateSOpeningLeakBlockedOutputs
+    ),
+    gateARAirborneBuildingPredictionLabAliasBlockedOutputs
   );
   const parkedAirborneBuildingPredictionOutputSet = new Set(parkedAirborneBuildingPredictionOutputs);
   const hideParkedAirborneBuildingPredictionMetrics =

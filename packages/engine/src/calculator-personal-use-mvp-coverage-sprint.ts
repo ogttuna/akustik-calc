@@ -1604,14 +1604,14 @@ function buildGateWAdditionalRows(): readonly PersonalUseMvpCoverageScenarioRow[
     }),
     buildRow({
       basis: "building_prediction",
-      expectedPosture: "unsupported",
-      failureClass: "basis_boundary",
+      expectedPosture: "family_physics",
+      failureClass: "none",
       family: "wall_complete_airborne_building_prediction",
       hostileVariant: null,
       id: "wall.complete_building_prediction.unsupported",
       inputCompleteness: "complete",
-      nextAction: "airborne_building_prediction_runtime_terms",
-      originSupportBucket: "building_prediction_adapter_not_owned",
+      nextAction: "airborne_building_prediction_surface_parity",
+      originSupportBucket: "source_absent_building_prediction_family_physics",
       requestedMetrics: WALL_FIELD_OUTPUTS,
       route: "wall",
       run: () => assemblyRuntime({
@@ -1619,8 +1619,8 @@ function buildGateWAdditionalRows(): readonly PersonalUseMvpCoverageScenarioRow[
         layers: LINED_MASSIVE_WALL,
         targetOutputs: WALL_FIELD_OUTPUTS
       }),
-      toleranceOrErrorBudget: "gate_o_design_budget_not_runtime_promoted",
-      valueOrBlockedReason: "Complete building-prediction inputs remain unsupported until path-by-path flanking terms are executable",
+      toleranceOrErrorBudget: "gate_aq_plus_minus_9_db_source_absent_budget",
+      valueOrBlockedReason: "R'w 58 / DnT,w 59 through Gate AR source-absent all-owner runtime corridor",
       visibleSurfaceParityTarget: WALL_VISIBLE_SURFACES
     })
   ];

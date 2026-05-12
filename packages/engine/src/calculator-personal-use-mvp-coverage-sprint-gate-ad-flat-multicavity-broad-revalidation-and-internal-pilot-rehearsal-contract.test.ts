@@ -113,12 +113,12 @@ describe("Personal-Use MVP Coverage Sprint Gate AD broad revalidation and intern
 
     expect(gateAASummary.remainingCoverageGapRowIds).toEqual([]);
     expect(gateADSummary).toMatchObject({
-      blockedRowCount: 16,
+      blockedRowCount: 15,
       gateAAMatrixRows: 40,
       gapFreeAfterGateAD: true,
       internalPilotStatus: "controlled_internal_pilot_ready_with_gate_ae_solver_broadening_next",
       noRuntimeValueMovement: true,
-      numericSupportedRowCount: 24,
+      numericSupportedRowCount: 25,
       previousSelectionStatus:
         "gate_ac_personal_use_mvp_flat_multicavity_topology_surface_parity_landed_selected_broad_revalidation_gate_ad",
       remainingCoverageGapRowIds: [],

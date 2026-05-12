@@ -825,10 +825,9 @@ passed at this checkpoint.
 Company-internal daily-use final path:
 `docs/calculator/CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md`.
 The old internal-use operating envelope is a narrower historical
-controlled-use bar. The current daily-use bar remains open until Gate AQ
-uncertainty-budget ownership, projected all-owner building runtime,
-surface/API/report parity, acceptance matrix refresh, and release
-handoff all pass.
+controlled-use bar. Gate AR has now promoted the all-owner building
+runtime corridor; the current daily-use bar remains open until surface/
+API/report parity, acceptance matrix refresh, and release handoff pass.
 Gate AQ implementation-ready plan:
 `docs/calculator/CHECKPOINT_2026-05-12_GATE_AQ_PLAN_REVALIDATION_AND_IMPLEMENTATION_READY_HANDOFF.md`.
 Gate AQ must be a no-runtime uncertainty-budget owner contract and
@@ -856,6 +855,31 @@ whitespace guard clean, and full `pnpm check` with engine 509 files /
 3019 tests, web 180 files / 993 passed + 18 skipped, lint/typecheck
 clean, and build 5/5. `git diff --check` passed after validation-note
 sync.
+Gate AR has now landed:
+`gate_ar_personal_use_mvp_airborne_building_prediction_all_owner_runtime_corridor_plan`.
+Gate AR selection status:
+`gate_ar_personal_use_mvp_airborne_building_prediction_all_owner_runtime_corridor_landed_selected_surface_parity_gate_as`.
+Gate AR promotes complete airborne `building_prediction` requests to
+source-absent `R'w` / `DnT,w` runtime through
+`gate_ar_airborne_building_prediction_all_owner_runtime_corridor`.
+The first complete lined massive fixture returns `R'w 58` and
+`DnT,w 59` with the Gate AQ `+/-9 dB` not-measured uncertainty budget.
+Partial building context remains `needs_input`; field context remains
+Gate I; lab `Rw` / `STC` remains lab; opening/leak building outputs
+remain blocked. Gate AR selects:
+`gate_as_personal_use_mvp_airborne_building_prediction_surface_api_report_parity_plan`.
+Selected Gate AS file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-as-airborne-building-prediction-surface-parity-contract.test.ts`.
+Gate AR validation passed on 2026-05-12: focused Gate AR 1 file /
+7 tests, Gate AQ/Gate AR continuity 2 files / 13 tests, airborne
+building-prediction continuity 12 files / 72 tests, matrix/split
+revalidation 7 files / 40 tests, `pnpm calculator:gate:current` with
+engine 385 files / 2224 tests, web 74 files / 318 passed + 18 skipped,
+build 5/5, and full `pnpm check` with lint/typecheck clean, engine
+510 files / 3026 tests, web 180 files / 993 passed + 18 skipped, and
+build 5/5. `git diff --check` passed after validation-note sync.
+Gate AR handoff:
+`docs/calculator/CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AR_HANDOFF.md`.
 Do not keep adding narrow steel-floor source/packet gates unless the
 active matrix or a later runtime proposal names a specific source-owned
 unblocker.

@@ -143,11 +143,11 @@ describe("Personal-Use MVP Coverage Sprint Gate AA scenario matrix v2 expansion"
       selectedNextAction: "gate_ab_personal_use_mvp_flat_multicavity_topology_input_surface_plan"
     });
     expect(summary.failureClassCounts).toEqual({
-      basis_boundary: 2,
+      basis_boundary: 1,
       correct_block: 10,
       coverage_gap: 0,
       hostile_input_refusal: 3,
-      none: 24,
+      none: 25,
       unsupported_metric: 1
     });
     expect(summary.correctlyBlockedRowIds).toEqual([
@@ -160,7 +160,6 @@ describe("Personal-Use MVP Coverage Sprint Gate AA scenario matrix v2 expansion"
       "hostile.invalid_thickness_zero.refused",
       "wall.opening_leak_composite_partial.needs_input",
       "wall.opening_leak_composite_building_boundary.unsupported",
-      "wall.complete_building_prediction.unsupported",
       ...EXPECTED_GATE_AA_ADDED_ROW_IDS.filter((id) =>
         ![
           "wall.double_leaf_split_board_layers.lab",

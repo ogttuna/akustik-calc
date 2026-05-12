@@ -22,6 +22,8 @@ import {
   rankPersonalUseMvpCoverageSprintGateALLanes,
   summarizePersonalUseMvpCoverageSprintGateAK
 } from "./calculator-personal-use-mvp-coverage-sprint-gate-ak";
+import { GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD } from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
+import { GATE_O_AIRBORNE_BUILDING_PREDICTION_TOLERANCE_DB } from "./dynamic-airborne-gate-o-building-prediction-formula-corridor";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
@@ -142,11 +144,11 @@ describe("Personal-Use MVP Coverage Sprint Gate AK coverage matrix refresh after
       stcAwareMatrixRefresh: true
     });
     expect(summary.failureClassCounts).toEqual({
-      basis_boundary: 2,
+      basis_boundary: 1,
       correct_block: 10,
       coverage_gap: 0,
       hostile_input_refusal: 3,
-      none: 24,
+      none: 25,
       unsupported_metric: 1
     });
 
@@ -242,15 +244,20 @@ describe("Personal-Use MVP Coverage Sprint Gate AK coverage matrix refresh after
 
     expect(completeBuilding).toMatchObject({
       basis: "building_prediction",
-      currentPosture: "unsupported",
-      failureClass: "basis_boundary",
-      nextAction: "airborne_building_prediction_runtime_terms",
+      currentPosture: "family_physics",
+      expectedPosture: "family_physics",
+      failureClass: "none",
+      nextAction: "airborne_building_prediction_surface_parity",
       runtime: {
-        errorBudgetDb: null,
+        basisId: GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
+        errorBudgetDb: GATE_O_AIRBORNE_BUILDING_PREDICTION_TOLERANCE_DB,
         missingPhysicalInputs: [],
-        supportedTargetOutputs: [],
-        unsupportedTargetOutputs: ["R'w", "DnT,w"],
-        valuePins: []
+        supportedTargetOutputs: ["R'w", "DnT,w"],
+        unsupportedTargetOutputs: [],
+        valuePins: [
+          { metric: "R'w", value: 58 },
+          { metric: "DnT,w", value: 59 }
+        ]
       }
     });
 

@@ -21,6 +21,8 @@ import { GATE_X_AAC_NONHOMOGENEOUS_MASONRY_RUNTIME_METHOD } from "./dynamic-airb
 import { GATE_Y_CLT_MASS_TIMBER_CTR_SPECTRUM_ADAPTER_RUNTIME_METHOD } from "./dynamic-airborne-gate-y-clt-mass-timber-ctr-spectrum-adapter";
 import { GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD } from "./dynamic-airborne-gate-s-opening-leak-composite-transmission-loss-runtime-corridor";
 import { GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_METHOD } from "./dynamic-airborne-gate-n-building-prediction-runtime-adapter";
+import { GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD } from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
+import { GATE_O_AIRBORNE_BUILDING_PREDICTION_TOLERANCE_DB } from "./dynamic-airborne-gate-o-building-prediction-formula-corridor";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
@@ -160,11 +162,11 @@ describe("Personal-Use MVP Coverage Sprint Gate Z post-CLT-Ctr coverage revalida
       selectedNextAction: "gate_aa_personal_use_mvp_scenario_matrix_v2_expansion_plan"
     });
     expect(summary.failureClassCounts).toEqual({
-      basis_boundary: 2,
+      basis_boundary: 1,
       correct_block: 5,
       coverage_gap: 0,
       hostile_input_refusal: 2,
-      none: 18,
+      none: 19,
       unsupported_metric: 1
     });
     expect(summary.correctlyBlockedRowIds).toEqual([
@@ -176,8 +178,7 @@ describe("Personal-Use MVP Coverage Sprint Gate Z post-CLT-Ctr coverage revalida
       "floor.astm_iic_aiic_boundary.unsupported",
       "hostile.invalid_thickness_zero.refused",
       "wall.opening_leak_composite_partial.needs_input",
-      "wall.opening_leak_composite_building_boundary.unsupported",
-      "wall.complete_building_prediction.unsupported"
+      "wall.opening_leak_composite_building_boundary.unsupported"
     ]);
 
     for (const row of rows) {
@@ -294,18 +295,32 @@ describe("Personal-Use MVP Coverage Sprint Gate Z post-CLT-Ctr coverage revalida
       }
     });
 
-    for (const row of [building, openingBuilding]) {
-      expect(row).toMatchObject({
-        currentPosture: "unsupported",
-        failureClass: "basis_boundary",
-        runtime: {
-          basisId: GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_METHOD,
-          errorBudgetDb: null,
-          supportedTargetOutputs: []
-        }
-      });
-      expect(row.runtime.valuePins).toEqual([]);
-    }
+    expect(building).toMatchObject({
+      currentPosture: "family_physics",
+      expectedPosture: "family_physics",
+      failureClass: "none",
+      runtime: {
+        basisId: GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
+        errorBudgetDb: GATE_O_AIRBORNE_BUILDING_PREDICTION_TOLERANCE_DB,
+        supportedTargetOutputs: ["R'w", "DnT,w"],
+        unsupportedTargetOutputs: []
+      }
+    });
+    expect(values(building)).toEqual({
+      "DnT,w": 59,
+      "R'w": 58
+    });
+
+    expect(openingBuilding).toMatchObject({
+      currentPosture: "unsupported",
+      failureClass: "basis_boundary",
+      runtime: {
+        basisId: GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_METHOD,
+        errorBudgetDb: null,
+        supportedTargetOutputs: []
+      }
+    });
+    expect(openingBuilding.runtime.valuePins).toEqual([]);
 
     expect(astm).toMatchObject({
       currentPosture: "unsupported",

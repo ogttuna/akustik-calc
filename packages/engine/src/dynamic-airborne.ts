@@ -95,6 +95,10 @@ import {
   GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING,
   maybeBuildGateIAirborneFieldContextBasis
 } from "./dynamic-airborne-gate-i-airborne-field-context";
+import {
+  GATE_AR_AIRBORNE_BUILDING_PREDICTION_WARNING,
+  maybeBuildGateARAirborneBuildingPredictionRuntimeBasis
+} from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
 import { maybeCalculateGateSDoubleLeafFramedBridgeRuntime } from "./dynamic-airborne-gate-s-double-leaf-framed";
 import { ROCKWOOL_TRIPLE_LEAF_SOURCE_REQUIRED_RUNTIME_WARNING } from "./rockwool-triple-leaf-source-required-boundary";
 
@@ -1922,9 +1926,24 @@ export function calculateDynamicAirborneResult(
   if (gateIAirborneFieldContextBasis) {
     warnings.push(GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING);
   }
+  const gateARAirborneBuildingPredictionBasis = maybeBuildGateARAirborneBuildingPredictionRuntimeBasis({
+    confidenceClass,
+    curve: dynamicCurve,
+    family: family.family,
+    layers: analysisLayers,
+    options,
+    selectedMethod: blendSelection.blend.selectedMethod,
+    strategy,
+    topology
+  });
+
+  if (gateARAirborneBuildingPredictionBasis) {
+    warnings.push(GATE_AR_AIRBORNE_BUILDING_PREDICTION_WARNING);
+  }
 
   return {
     airborneBasis:
+      gateARAirborneBuildingPredictionBasis ??
       gateIAirborneFieldContextBasis ??
       gateHLinedMasonryCltWallBasis ??
       gateXAacNonHomogeneousMasonryBasis ??

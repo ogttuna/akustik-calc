@@ -15,10 +15,15 @@ import {
   GATE_M_AIRBORNE_BUILDING_PREDICTION_SELECTED_NEXT_FILE
 } from "./dynamic-airborne-gate-m-building-prediction-input-contract";
 import {
-  GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_METHOD,
-  GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_OWNER_INPUTS,
   GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING
 } from "./dynamic-airborne-gate-n-building-prediction-runtime-adapter";
+import {
+  GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
+  GATE_AR_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
+import {
+  GATE_O_AIRBORNE_BUILDING_PREDICTION_TOLERANCE_DB
+} from "./dynamic-airborne-gate-o-building-prediction-formula-corridor";
 import {
   buildDynamicCalculatorRouteInputTopologyAssessment,
   GATE_M_AIRBORNE_BUILDING_PREDICTION_OWNER_INPUTS,
@@ -212,7 +217,7 @@ describe("Personal-Use MVP Coverage Sprint Gate M airborne building-prediction i
     expect(scenarios.gate_m_field_between_rooms_stays_out_of_building_contract.status).toBe("not_requested");
   });
 
-  it("feeds the route-input topology assessment without promoting building-prediction runtime values", () => {
+  it("feeds the route-input topology assessment while Gate AR now promotes complete building-prediction runtime values", () => {
     const assessment = buildDynamicCalculatorRouteInputTopologyAssessment({
       airborneContext: COMPLETE_BUILDING_CONTEXT,
       layers: LINED_MASSIVE_WALL,
@@ -235,25 +240,27 @@ describe("Personal-Use MVP Coverage Sprint Gate M airborne building-prediction i
       ...GATE_M_AIRBORNE_BUILDING_PREDICTION_REQUIRED_PHYSICAL_INPUTS
     ]);
     expect(result.airborneCandidateResolution).toMatchObject({
-      runtimeValueMovement: false,
-      selectedCandidateId: "candidate_dynamic_unsupported",
-      selectedOrigin: "unsupported"
+      runtimeValueMovement: true,
+      selectedCandidateId: GATE_AR_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID,
+      selectedOrigin: "family_physics_prediction"
     });
     expect(result.airborneBasis).toMatchObject({
-      method: GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_METHOD,
-      origin: "unsupported",
-      requiredInputs: [...GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_OWNER_INPUTS]
+      errorBudgetDb: GATE_O_AIRBORNE_BUILDING_PREDICTION_TOLERANCE_DB,
+      method: GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
+      origin: "family_physics_prediction"
     });
     expect(result.airborneCandidateResolution?.selectedBasis?.missingPhysicalInputs ?? []).toEqual([]);
-    expect(result.airborneCandidateResolution?.runtimeValueMovement).toBe(false);
+    expect(result.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
+    expect(result.unsupportedTargetOutputs).toEqual([]);
+    expect(result.metrics.estimatedRwPrimeDb).toBe(58);
+    expect(result.metrics.estimatedDnTwDb).toBe(59);
     expect(
       result.airborneCandidateResolution?.candidates.find((candidate: { id: string; selected?: boolean }) =>
         candidate.id === "candidate_airborne_field_context_family_physics_prediction"
       )?.selected
     ).not.toBe(true);
-    expect(result.warnings).toContain(GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING);
+    expect(result.warnings).not.toContain(GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING);
     expect(result.warnings).not.toContain(GATE_L_AIRBORNE_BUILDING_PREDICTION_BOUNDARY_WARNING);
-    expect(result.warnings.join("\n")).not.toContain("Airborne field-side overlay active");
   });
 
   it("keeps Gate I room-to-room field values stable while Gate M owns only building input readiness", () => {

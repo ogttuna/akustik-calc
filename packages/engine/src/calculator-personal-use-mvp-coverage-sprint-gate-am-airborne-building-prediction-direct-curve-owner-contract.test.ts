@@ -28,6 +28,10 @@ import {
   GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING
 } from "./dynamic-airborne-gate-n-building-prediction-runtime-adapter";
 import {
+  GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
+  GATE_AR_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
+import {
   GATE_O_AIRBORNE_BUILDING_PREDICTION_TOLERANCE_DB
 } from "./dynamic-airborne-gate-o-building-prediction-formula-corridor";
 
@@ -241,7 +245,7 @@ describe("Personal-Use MVP Coverage Sprint Gate AM airborne building-prediction 
     expect(owner.gatePBlockerPreserved).toContain("frequency curve owner");
   });
 
-  it("keeps complete and partial building-prediction requests parked after the direct curve owner contract", () => {
+  it("promotes complete Gate AR building-prediction runtime after the direct curve owner contract while partial stays parked", () => {
     const complete = calculateAssembly(LINED_MASSIVE_WALL, {
       airborneContext: COMPLETE_BUILDING_CONTEXT,
       calculator: "dynamic",
@@ -254,20 +258,20 @@ describe("Personal-Use MVP Coverage Sprint Gate AM airborne building-prediction 
     });
 
     expect(complete.airborneCandidateResolution).toMatchObject({
-      runtimeValueMovement: false,
-      selectedCandidateId: "candidate_dynamic_unsupported",
-      selectedOrigin: "unsupported"
+      runtimeValueMovement: true,
+      selectedCandidateId: GATE_AR_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID,
+      selectedOrigin: "family_physics_prediction"
     });
     expect(complete.airborneBasis).toMatchObject({
-      method: GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_METHOD,
-      origin: "unsupported"
+      errorBudgetDb: GATE_O_AIRBORNE_BUILDING_PREDICTION_TOLERANCE_DB,
+      method: GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
+      origin: "family_physics_prediction"
     });
-    expect(complete.airborneBasis?.errorBudgetDb).toBeUndefined();
-    expect(complete.supportedTargetOutputs).toEqual([]);
-    expect(complete.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
-    expect(complete.metrics.estimatedRwPrimeDb).toBeUndefined();
-    expect(complete.metrics.estimatedDnTwDb).toBeUndefined();
-    expect(complete.warnings).toContain(GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING);
+    expect(complete.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
+    expect(complete.unsupportedTargetOutputs).toEqual([]);
+    expect(complete.metrics.estimatedRwPrimeDb).toBe(58);
+    expect(complete.metrics.estimatedDnTwDb).toBe(59);
+    expect(complete.warnings).not.toContain(GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING);
 
     expect(partial.airborneBasis).toMatchObject({
       origin: "needs_input"
