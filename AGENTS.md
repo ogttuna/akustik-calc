@@ -735,6 +735,33 @@ Selected next action:
 `gate_an_personal_use_mvp_airborne_building_prediction_flanking_path_energy_owner_contract_plan`.
 Selected next file:
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-an-airborne-building-prediction-flanking-path-energy-owner-contract.test.ts`.
+Gate AN has now landed:
+`gate_an_personal_use_mvp_airborne_building_prediction_flanking_path_energy_owner_contract_plan`.
+Gate AN is a no-runtime flanking path energy owner contract for
+airborne building prediction. It requires the Gate AM direct curve
+dependency, named flanking path topology, path identity/count ownership,
+basis-compatible indirect transmission terms, coupling surface area
+ownership, source-absent conservative assumption ownership, and
+basis-compatible metric scope before the flanking-energy term can be
+used. Generic conservative flanking labels, lab `Rw` / `STC`, field
+`R'w` / `DnT,w`, opening/leak lab adapters, source single numbers
+without path terms, and legacy raw dynamic field/building continuation
+snapshots stay blocked as building-output aliases. Complete building
+requests remain `unsupported`; partial building requests remain
+`needs_input`.
+Gate AN selection status:
+`gate_an_personal_use_mvp_airborne_building_prediction_flanking_path_energy_owner_landed_no_runtime_selected_junction_vibration_gate_ao`.
+Gate AN validation passed on 2026-05-12: focused Gate AN 1 file /
+6 tests, Gate AM/Gate AN continuity 2 files / 12 tests, engine
+typecheck, `pnpm calculator:gate:current` with engine 381 files /
+2199 tests, web 74 files / 318 passed + 18 skipped, build 5/5,
+whitespace guard clean, and full `pnpm check` with engine 506 files /
+3001 tests, web 180 files / 993 passed + 18 skipped, lint/typecheck
+clean, and build 5/5.
+Selected next action:
+`gate_ao_personal_use_mvp_airborne_building_prediction_junction_vibration_owner_contract_plan`.
+Selected next file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ao-airborne-building-prediction-junction-vibration-owner-contract.test.ts`.
 Do not keep adding narrow steel-floor source/packet gates unless the
 active matrix or a later runtime proposal names a specific source-owned
 unblocker.

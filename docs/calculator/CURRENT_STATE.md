@@ -97,6 +97,9 @@ Gate AM handoff read
 If you need the latest Gate AM building prediction direct curve owner
 and Gate AN handoff read
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AM_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AM_HANDOFF.md).
+If you need the latest Gate AN building prediction flanking path energy
+owner and Gate AO handoff read
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AN_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AN_HANDOFF.md).
 If you need the preceding Personal-Use MVP Coverage Sprint Gate W
 checkpoint read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md).
@@ -162,15 +165,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_am_personal_use_mvp_airborne_building_prediction_direct_curve_owner_landed_no_runtime_selected_flanking_path_energy_gate_an`
+`gate_an_personal_use_mvp_airborne_building_prediction_flanking_path_energy_owner_landed_no_runtime_selected_junction_vibration_gate_ao`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-an-airborne-building-prediction-flanking-path-energy-owner-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ao-airborne-building-prediction-junction-vibration-owner-contract.test.ts`
 
 Selected next action:
 
-`gate_an_personal_use_mvp_airborne_building_prediction_flanking_path_energy_owner_contract_plan`
+`gate_ao_personal_use_mvp_airborne_building_prediction_junction_vibration_owner_contract_plan`
 
 Strategic ROI replan:
 
@@ -590,6 +593,34 @@ Current strategy:
   5/5, whitespace guard clean, and full `pnpm check` with engine 505
   files / 2995 tests, web 180 files / 993 passed + 18 skipped,
   lint/typecheck clean, and build 5/5.
+- Personal-Use MVP Coverage Sprint Gate AN has now landed
+  `gate_an_personal_use_mvp_airborne_building_prediction_flanking_path_energy_owner_contract_plan`.
+  Selection status:
+  `gate_an_personal_use_mvp_airborne_building_prediction_flanking_path_energy_owner_landed_no_runtime_selected_junction_vibration_gate_ao`.
+  Selected next action:
+  `gate_ao_personal_use_mvp_airborne_building_prediction_junction_vibration_owner_contract_plan`.
+  Selected next file:
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ao-airborne-building-prediction-junction-vibration-owner-contract.test.ts`.
+  Gate AN is no-runtime: it defines the named flanking path energy
+  owner for building prediction without promoting `R'w` or `DnT,w`.
+  The owner requires the Gate AM direct curve dependency, named
+  flanking path topology, path identity/count ownership,
+  basis-compatible indirect transmission terms, coupling surface area
+  ownership, source-absent conservative assumption ownership, and
+  basis-compatible metric scope. Generic flanking labels, lab `Rw` /
+  `STC`, field `R'w` / `DnT,w`, opening/leak lab adapters, source
+  single numbers without path terms, and legacy raw dynamic
+  field/building continuation snapshots stay blocked as building
+  flanking energy aliases. Gate AO is selected because junction
+  vibration reduction is the next required owner before room,
+  uncertainty, or runtime work can become safe. Validation passed on
+  2026-05-12: focused Gate AN 1 file / 6 tests, Gate AM/Gate AN
+  continuity 2 files / 12 tests, engine typecheck,
+  `pnpm calculator:gate:current` with engine 381 files / 2199 tests,
+  web 74 files / 318 passed + 18 skipped, build 5/5, whitespace guard
+  clean, and full `pnpm check` with engine 506 files / 3001 tests, web
+  180 files / 993 passed + 18 skipped, lint/typecheck clean, and build
+  5/5.
 - Personal-Use MVP Coverage Sprint Gate B has now landed the
   timber/CLT floor-impact `DeltaLw` input and formula-readiness
   contract without runtime movement.

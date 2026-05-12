@@ -82,9 +82,26 @@ Validation passed before commit:
   optional `sharp/@img` build warnings and unavailable test-storage
   Zustand warnings remain non-fatal.
 
-## Next Gate AN
+## Gate AN Consumption
 
-Gate AN should implement a no-runtime flanking path energy owner
+Gate AN has consumed this handoff and landed the no-runtime flanking
+path energy owner contract:
+
+`gate_an_personal_use_mvp_airborne_building_prediction_flanking_path_energy_owner_contract_plan`
+
+Gate AN selection status:
+
+`gate_an_personal_use_mvp_airborne_building_prediction_flanking_path_energy_owner_landed_no_runtime_selected_junction_vibration_gate_ao`
+
+Current selected next action:
+
+`gate_ao_personal_use_mvp_airborne_building_prediction_junction_vibration_owner_contract_plan`
+
+Current selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ao-airborne-building-prediction-junction-vibration-owner-contract.test.ts`
+
+Gate AN implemented the planned no-runtime flanking path energy owner
 contract:
 
 1. define the flanking path energy owner for airborne building
@@ -100,3 +117,6 @@ contract:
    aliases blocked;
 6. select the next narrow owner lane only after flanking path energy
    ownership is stable.
+
+See
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AN_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AN_HANDOFF.md).

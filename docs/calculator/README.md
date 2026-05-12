@@ -86,9 +86,10 @@ no-runtime surface against opening input, wall field, building, and
 matrix boundaries. Gate AK now lands the STC-aware matrix refresh
 without changing the 40-row matrix or runtime values and selects the
 building prediction owner gap refresh for Gate AL instead of broad
-source crawling. Gate AL landed that owner-gap map, and Gate AM now
-lands the direct separating-element frequency curve owner contract while
-selecting flanking path energy ownership for Gate AN.
+source crawling. Gate AL landed that owner-gap map, Gate AM landed the
+direct separating-element frequency curve owner contract, and Gate AN
+now lands the flanking path energy owner contract while selecting
+junction vibration reduction ownership for Gate AO.
 Gate T now lands that opening/leak surface parity with selection status
 `gate_t_personal_use_mvp_opening_leak_composite_surface_parity_landed_selected_input_surface_gate_u`
 and selects Gate U
@@ -432,6 +433,26 @@ Gate AM, Gate AL/Gate AM continuity, engine typecheck,
 `pnpm calculator:gate:current`, full `pnpm check`, repo build, and
 whitespace guard evidence. See
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AM_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AM_HANDOFF.md).
+Gate AN now lands that flanking path energy owner contract with
+selection status
+`gate_an_personal_use_mvp_airborne_building_prediction_flanking_path_energy_owner_landed_no_runtime_selected_junction_vibration_gate_ao`
+and selected action
+`gate_ao_personal_use_mvp_airborne_building_prediction_junction_vibration_owner_contract_plan`.
+Selected next file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ao-airborne-building-prediction-junction-vibration-owner-contract.test.ts`.
+Gate AN requires the Gate AM direct curve dependency, named flanking
+path topology, path identity/count ownership, basis-compatible indirect
+transmission terms, coupling surface area ownership, source-absent
+conservative assumption ownership, and basis-compatible metric scope
+before the flanking energy term can be used. Generic flanking labels,
+lab `Rw` / `STC`, field `R'w` / `DnT,w`, opening/leak lab adapters,
+source single numbers without path terms, and legacy raw dynamic
+field/building continuation snapshots remain blocked as building-output
+aliases. Junction vibration is now the selected next owner lane for
+Gate AO. Gate AN validation passed with focused Gate AN, Gate AM/Gate
+AN continuity, engine typecheck, `pnpm calculator:gate:current`, full
+`pnpm check`, repo build, and whitespace guard evidence. See
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AN_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AN_HANDOFF.md).
 Gate A
 landed in
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-a-scenario-matrix-contract.test.ts`
