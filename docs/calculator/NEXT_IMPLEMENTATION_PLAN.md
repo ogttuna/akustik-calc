@@ -164,6 +164,48 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
+## Gate AQ Building Prediction Uncertainty-Budget Owner Landed - 2026-05-12
+
+Gate AQ has now landed the no-runtime uncertainty-budget owner contract
+selected by Gate AP:
+
+`gate_aq_personal_use_mvp_airborne_building_prediction_uncertainty_budget_owner_contract_plan`
+
+Current selected status:
+
+`gate_aq_personal_use_mvp_airborne_building_prediction_uncertainty_budget_owner_landed_no_runtime_selected_all_owner_runtime_corridor_gate_ar`
+
+Selected next action:
+
+`gate_ar_personal_use_mvp_airborne_building_prediction_all_owner_runtime_corridor_plan`
+
+Selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ar-airborne-building-prediction-all-owner-runtime-corridor-contract.test.ts`
+
+Gate AQ consumes the Gate AP room-standardization owner and accounts for
+the final Gate AL owner gap: `building_prediction_uncertainty_budget`.
+It preserves Gate O's `+/-9 dB` budget separately for `R'w` and
+`DnT,w`, maps every budget term to an explicit owner signal, keeps the
+budget source-absent and not-measured, and blocks tolerance movement or
+runtime promotion in Gate AQ.
+
+Complete building requests remain `unsupported`; partial building
+requests remain `needs_input`; field, lab, opening/leak, STC/IIC,
+source-single-number, and generic-safety-factor aliases stay blocked.
+Gate AQ selects Gate AR all-owner runtime corridor as the next bounded
+step.
+
+Gate AQ validation passed on 2026-05-12: focused Gate AQ 1 file /
+6 tests, Gate AP/Gate AQ continuity 2 files / 12 tests, engine
+typecheck, `pnpm calculator:gate:current` with engine 384 files /
+2217 tests, web 74 files / 318 passed + 18 skipped, build 5/5,
+whitespace guard clean, and full `pnpm check` with engine 509 files /
+3019 tests, web 180 files / 993 passed + 18 skipped, lint/typecheck
+clean, and build 5/5. `git diff --check` passed after validation-note
+sync. See
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AQ_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AQ_HANDOFF.md).
+
 ## Gate AP Building Prediction Room Standardization Owner Landed - 2026-05-12
 
 Gate AP has now landed the no-runtime room absorption /
@@ -211,17 +253,16 @@ clean, and build 5/5. `git diff --check` passed after validation-note
 sync. See
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AP_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AP_HANDOFF.md).
 
-Gate AP has consumed this handoff. The current selected next action is
-now Gate AQ uncertainty-budget owner contract.
+Gate AP has consumed this handoff. Gate AQ has now landed and selected
+Gate AR all-owner runtime corridor.
 
 ## Post-Gate AP Checkpoint And Broad Revalidation - 2026-05-12
 
-The post-Gate-AP checkpoint has re-read the authority docs and live
+The post-Gate-AP checkpoint re-read the authority docs and live
 implementation before starting Gate AQ. No implementation/doc mismatch
-was found: Gate AP is landed, no-runtime, included in the current-gate
-runner, and still selects Gate AQ as the next owner contract. The
-selected Gate AQ file intentionally does not exist yet because it is the
-next implementation step.
+was found: Gate AP was landed, no-runtime, included in the current-gate
+runner, and selected Gate AQ as the next owner contract. Gate AQ has
+since landed as the no-runtime uncertainty-budget owner.
 
 Current selected status remains:
 
@@ -235,10 +276,10 @@ Selected next file remains:
 
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-aq-airborne-building-prediction-uncertainty-budget-owner-contract.test.ts`
 
-Gate AQ remains the right next step because the direct curve, flanking
+Gate AQ was the right next step because the direct curve, flanking
 energy, junction vibration, and room standardization owners are already
 defined, while the building-prediction `+/-9 dB` uncertainty-budget owner
-is still missing. Complete `building_prediction` requests must remain
+was still missing. Complete `building_prediction` requests must remain
 `unsupported` and partial building requests must remain `needs_input`
 until a later all-owner runtime corridor can prove every formula term,
 surface, and uncertainty posture is executable. The checkpoint
@@ -257,16 +298,15 @@ envelope remains useful, but it is not enough for the current product
 goal because airborne `building_prediction` still cannot return
 defended `R'w` / `DnT,w` values. The daily-use path is:
 
-1. Gate AQ no-runtime uncertainty-budget owner;
-2. Gate AR projected all-owner building-prediction runtime corridor;
-3. Gate AS projected surface/API/report parity;
-4. Gate AT projected acceptance matrix refresh;
-5. Gate AU projected daily-use release handoff and broad revalidation.
+1. Gate AR projected all-owner building-prediction runtime corridor;
+2. Gate AS projected surface/API/report parity;
+3. Gate AT projected acceptance matrix refresh;
+4. Gate AU projected daily-use release handoff and broad revalidation.
 
-This is the shortest defensible path. Gate AQ is still the first
-implementation step. Runtime promotion before Gate AQ would create an
-unowned reliability claim, and broad source crawling would not unblock
-the source-absent calculator route. See
+This is the shortest defensible path after Gate AQ. Runtime promotion
+before Gate AR would still create an unowned reliability claim if the
+all-owner value path is not executable and visible, and broad source
+crawling would not unblock the source-absent calculator route. See
 [CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md).
 
 ## Gate AQ Implementation-Ready Plan Revalidation - 2026-05-12
@@ -288,11 +328,11 @@ Recommended helper:
 
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-aq.ts`
 
-Expected Gate AQ selection:
+Gate AQ landed selection:
 
 `gate_aq_personal_use_mvp_airborne_building_prediction_uncertainty_budget_owner_landed_no_runtime_selected_all_owner_runtime_corridor_gate_ar`
 
-Expected Gate AR file:
+Selected Gate AR file:
 
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ar-airborne-building-prediction-all-owner-runtime-corridor-contract.test.ts`
 

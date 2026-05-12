@@ -7,8 +7,10 @@ company-internal daily-use final path handoff. It re-reads the live
 implementation, checks the relevant public official references, and
 turns Gate AQ into an implementation-ready plan.
 
-No runtime behavior moves in this checkpoint. The next implementation
-step remains Gate AQ.
+No runtime behavior moved in the planning checkpoint. Gate AQ has since
+landed as the no-runtime uncertainty-budget owner and selected Gate AR.
+See
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AQ_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AQ_HANDOFF.md).
 
 ## Implementation Read
 
@@ -27,7 +29,7 @@ Live implementation and docs still agree:
 - Complete airborne `building_prediction` requests still return
   `unsupported`; partial building contexts still return `needs_input`;
   field/lab/opening routes remain separate.
-- The selected Gate AQ file intentionally does not exist yet:
+- The selected Gate AQ file existed after implementation:
   `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-aq-airborne-building-prediction-uncertainty-budget-owner-contract.test.ts`.
 
 ## External Reference Check
@@ -59,7 +61,7 @@ planning assumptions, not to import copyrighted formulas:
 
 Planning consequence: Gate AQ should not promote runtime. It should own
 the uncertainty-budget term that makes a later all-owner runtime corridor
-honest.
+honest. That is the implemented Gate AQ posture.
 
 ## Gate AQ Implementation Contract
 
@@ -170,13 +172,17 @@ After implementing Gate AQ:
 
 Validation completed on 2026-05-12:
 
-- focused Gate AP guard stayed green: 1 file / 6 tests;
-- `pnpm calculator:gate:current` stayed green with engine 383 files /
-  2211 tests, web 74 files / 318 passed + 18 skipped, repo build 5/5,
+- focused Gate AQ passed 1 file / 6 tests;
+- Gate AP + Gate AQ continuity passed 2 files / 12 tests;
+- engine typecheck passed;
+- `pnpm calculator:gate:current` passed with engine 384 files /
+  2217 tests, web 74 files / 318 passed + 18 skipped, repo build 5/5,
   and whitespace guard clean;
-- broad `pnpm check` stayed green with lint/typecheck clean, engine 508
-  files / 3013 tests, web 180 files / 993 passed + 18 skipped, and repo
-  build 5/5.
+- broad `pnpm check` passed with lint/typecheck clean, engine 509 files /
+  3019 tests, web 180 files / 993 passed + 18 skipped, and repo build
+  5/5;
+- `git diff --check` passed after validation-note sync.
 
-This checkpoint remains no-runtime and documentation-only. Gate AQ is
-still the next implementation step.
+This checkpoint remains no-runtime and documentation-only. The Gate AQ
+implementation handoff records the executable closeout and Gate AR
+selection.

@@ -689,13 +689,36 @@ Current strategy:
   clean, and full `pnpm check` with engine 508 files / 3013 tests, web
   180 files / 993 passed + 18 skipped, lint/typecheck clean, and build
   5/5. `git diff --check` passed after validation-note sync.
+- Personal-Use MVP Coverage Sprint Gate AQ has now landed
+  `gate_aq_personal_use_mvp_airborne_building_prediction_uncertainty_budget_owner_contract_plan`.
+  Selection status:
+  `gate_aq_personal_use_mvp_airborne_building_prediction_uncertainty_budget_owner_landed_no_runtime_selected_all_owner_runtime_corridor_gate_ar`.
+  Selected next action:
+  `gate_ar_personal_use_mvp_airborne_building_prediction_all_owner_runtime_corridor_plan`.
+  Selected next file:
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ar-airborne-building-prediction-all-owner-runtime-corridor-contract.test.ts`.
+  Gate AQ is no-runtime: it owns the building-prediction `+/-9 dB`
+  uncertainty-budget surface for `R'w` and `DnT,w`, maps every direct,
+  flanking, junction, precision, and same-building holdout absence term
+  to an owner signal, and keeps the budget source-absent and not
+  measured. Complete building requests remain `unsupported`; partial
+  building requests remain `needs_input`; field, lab, opening/leak,
+  STC/IIC, source-single-number, and generic-safety-factor aliases stay
+  blocked. Gate AR all-owner runtime corridor is now selected.
+  Gate AQ validation passed on 2026-05-12: focused Gate AQ 1 file /
+  6 tests, Gate AP/Gate AQ continuity 2 files / 12 tests, engine
+  typecheck, `pnpm calculator:gate:current` with engine 384 files /
+  2217 tests, web 74 files / 318 passed + 18 skipped, build 5/5,
+  whitespace guard clean, and full `pnpm check` with engine 509 files /
+  3019 tests, web 180 files / 993 passed + 18 skipped, lint/typecheck
+  clean, and build 5/5. `git diff --check` passed after validation-note
+  sync. See
+  [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AQ_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AQ_HANDOFF.md).
 - Post-Gate-AP checkpoint status: docs and implementation were re-read
   before starting Gate AQ. No stale plan mismatch was found. Gate AP is
-  landed, no-runtime, present in the current-gate runner, and still
-  selects Gate AQ
+  landed, no-runtime, present in the current-gate runner, and selected Gate AQ
   `gate_aq_personal_use_mvp_airborne_building_prediction_uncertainty_budget_owner_contract_plan`.
-  The selected Gate AQ test file does not exist yet by design; it is the
-  next implementation step. The checkpoint validation passed with
+  Gate AQ has since landed. The checkpoint validation passed with
   focused Gate AP 1 file / 6 tests, `pnpm calculator:gate:current`
   engine 383 files / 2211 tests and web 74 files / 318 passed + 18
   skipped plus build 5/5, and broad `pnpm check` engine 508 files /
@@ -707,16 +730,15 @@ Current strategy:
   daily-use bar requires complete airborne `building_prediction`
   requests to return defended building `R'w` / `DnT,w` values with
   visible basis and uncertainty or to fail closed with precise fields.
-  The shortest defensible path is Gate AQ uncertainty-budget owner,
-  then projected all-owner runtime corridor, surface/API/report parity,
-  acceptance matrix refresh, and daily-use release handoff. Gate AQ
-  remains the first action. See
+  The shortest defensible path is now Gate AR projected all-owner
+  runtime corridor, then surface/API/report parity, acceptance matrix
+  refresh, and daily-use release handoff. See
   [CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md).
 - Gate AQ planning status: implementation-ready after the latest
   analysis pass. Official ISO/INSUL reference checks confirm that
   building prediction must keep direct, flanking, junction, room/rating,
-  and uncertainty basis terms explicit. Gate AQ should land only the
-  no-runtime uncertainty-budget owner, then select Gate AR all-owner
+  and uncertainty basis terms explicit. Gate AQ has now landed as the
+  no-runtime uncertainty-budget owner and selected Gate AR all-owner
   runtime corridor. See
   [CHECKPOINT_2026-05-12_GATE_AQ_PLAN_REVALIDATION_AND_IMPLEMENTATION_READY_HANDOFF.md](./CHECKPOINT_2026-05-12_GATE_AQ_PLAN_REVALIDATION_AND_IMPLEMENTATION_READY_HANDOFF.md).
 - Personal-Use MVP Coverage Sprint Gate B has now landed the

@@ -511,6 +511,21 @@ The Gate AQ implementation-ready planning pass confirms that Gate AQ
 must stay no-runtime and select the Gate AR all-owner runtime corridor.
 See
 [CHECKPOINT_2026-05-12_GATE_AQ_PLAN_REVALIDATION_AND_IMPLEMENTATION_READY_HANDOFF.md](./CHECKPOINT_2026-05-12_GATE_AQ_PLAN_REVALIDATION_AND_IMPLEMENTATION_READY_HANDOFF.md).
+Gate AQ has now landed
+`gate_aq_personal_use_mvp_airborne_building_prediction_uncertainty_budget_owner_contract_plan`
+with selection status
+`gate_aq_personal_use_mvp_airborne_building_prediction_uncertainty_budget_owner_landed_no_runtime_selected_all_owner_runtime_corridor_gate_ar`.
+It keeps building runtime parked, owns the metric-specific `+/-9 dB`
+source-absent uncertainty-budget surface for `R'w` and `DnT,w`, and
+selects
+`gate_ar_personal_use_mvp_airborne_building_prediction_all_owner_runtime_corridor_plan`
+in
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ar-airborne-building-prediction-all-owner-runtime-corridor-contract.test.ts`.
+Gate AQ validation passed on 2026-05-12 with focused Gate AQ, Gate
+AP/Gate AQ continuity, engine typecheck, `pnpm calculator:gate:current`,
+full `pnpm check`, repo build, and whitespace guard evidence.
+See
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AQ_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AQ_HANDOFF.md).
 Gate A
 landed in
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-a-scenario-matrix-contract.test.ts`

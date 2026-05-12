@@ -835,6 +835,27 @@ Gate AQ must be a no-runtime uncertainty-budget owner contract and
 select Gate AR all-owner building-prediction runtime corridor. Do not
 promote building `R'w` / `DnT,w` runtime before Gate AQ is executable and
 visible.
+Gate AQ has now landed:
+`gate_aq_personal_use_mvp_airborne_building_prediction_uncertainty_budget_owner_contract_plan`.
+Gate AQ selection status:
+`gate_aq_personal_use_mvp_airborne_building_prediction_uncertainty_budget_owner_landed_no_runtime_selected_all_owner_runtime_corridor_gate_ar`.
+It owns the metric-specific `+/-9 dB` source-absent uncertainty-budget
+surface for building `R'w` and `DnT,w`, preserves not-measured posture,
+keeps runtime parked, blocks lab/field/opening/source-single-number and
+generic safety-factor aliases, and selects the Gate AR all-owner runtime corridor:
+`gate_ar_personal_use_mvp_airborne_building_prediction_all_owner_runtime_corridor_plan`.
+Selected Gate AR file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ar-airborne-building-prediction-all-owner-runtime-corridor-contract.test.ts`.
+Gate AQ handoff:
+`docs/calculator/CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AQ_HANDOFF.md`.
+Gate AQ validation passed on 2026-05-12: focused Gate AQ 1 file /
+6 tests, Gate AP/Gate AQ continuity 2 files / 12 tests, engine
+typecheck, `pnpm calculator:gate:current` with engine 384 files /
+2217 tests, web 74 files / 318 passed + 18 skipped, build 5/5,
+whitespace guard clean, and full `pnpm check` with engine 509 files /
+3019 tests, web 180 files / 993 passed + 18 skipped, lint/typecheck
+clean, and build 5/5. `git diff --check` passed after validation-note
+sync.
 Do not keep adding narrow steel-floor source/packet gates unless the
 active matrix or a later runtime proposal names a specific source-owned
 unblocker.
