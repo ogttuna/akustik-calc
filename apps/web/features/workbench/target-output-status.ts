@@ -44,6 +44,7 @@ import {
   STEEL_BOUND_SUPPORT_FORM_AIRBORNE_DETAIL,
   STEEL_BOUND_SUPPORT_FORM_LNW_DETAIL
 } from "./steel-bound-support-form-lane";
+import { getGateARAirborneBuildingPredictionOutputDetail } from "./airborne-building-prediction-surface";
 import { getGateSOpeningLeakCompositeOutputDetail } from "./opening-leak-composite-surface";
 
 export type TargetOutputStatus = {
@@ -321,6 +322,7 @@ export function getTargetOutputStatus(input: {
   if (result?.supportedTargetOutputs.includes(output)) {
     const label = getEngineLiveLabel(output, result);
     const gateSOpeningLeakDetail = getGateSOpeningLeakCompositeOutputDetail(output, result);
+    const gateARBuildingDetail = getGateARAirborneBuildingPredictionOutputDetail(output, result);
     const customEngineLiveNote = isFieldAirborneOutput(output)
       ? getFieldAirborneLiveDetail(output, result)
       : isReinforcedConcreteLowConfidenceLane && output === "Ln,w"
@@ -347,6 +349,7 @@ export function getTargetOutputStatus(input: {
       label,
       note:
         gateSOpeningLeakDetail ??
+        gateARBuildingDetail ??
         customEngineLiveNote ??
         (label === "Bound support"
           ? `${supportNote} The current stack only resolves a conservative bound for this output.`
@@ -380,6 +383,17 @@ export function getTargetOutputStatus(input: {
         kind: needsInput ? "pending_input" : "unavailable",
         label: needsInput ? "Needs opening input" : "Unsupported opening basis",
         note: gateSOpeningLeakDetail,
+        output,
+        tone: "warning"
+      };
+    }
+
+    const gateARBuildingDetail = getGateARAirborneBuildingPredictionOutputDetail(output, result);
+    if (gateARBuildingDetail) {
+      return {
+        kind: "unavailable",
+        label: "Unsupported building basis",
+        note: gateARBuildingDetail,
         output,
         tone: "warning"
       };
@@ -474,10 +488,12 @@ export function getTargetOutputCorridor(input: {
   if (LIVE_OUTPUTS.has(output)) {
     const airbornePosture = describeAirborneValidationPosture(result);
     const gateSOpeningLeakDetail = getGateSOpeningLeakCompositeOutputDetail(output, result);
+    const gateARBuildingDetail = getGateARAirborneBuildingPredictionOutputDetail(output, result);
 
     return {
       detail:
         gateSOpeningLeakDetail ??
+        gateARBuildingDetail ??
         (isReinforcedConcreteLowConfidenceLane && (output === "Rw" || output === "Ctr")
           ? status.note
           : airbornePosture.detail),

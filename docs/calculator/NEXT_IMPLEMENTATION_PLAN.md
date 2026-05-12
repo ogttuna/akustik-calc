@@ -164,6 +164,46 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
+## Gate AS Building Prediction Surface/API/Report Parity Landed - 2026-05-12
+
+Gate AS has now landed the visible parity step selected by Gate AR:
+
+`gate_as_personal_use_mvp_airborne_building_prediction_surface_api_report_parity_plan`
+
+Current selected status:
+
+`gate_as_personal_use_mvp_airborne_building_prediction_surface_api_report_parity_landed_selected_acceptance_matrix_gate_at`
+
+Selected next action:
+
+`gate_at_personal_use_mvp_acceptance_matrix_refresh_after_building_prediction_plan`
+
+Selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-at-acceptance-matrix-refresh-after-building-prediction-contract.test.ts`
+
+Gate AS keeps Gate AR runtime values unchanged while making the Gate AR
+candidate id, method, `R'w 58`, `DnT,w 59`, `+/-9 dB` source-absent
+building-prediction budget, and not-measured warning visible across
+output cards, route posture, scenario corridor summaries, target-output
+status/corridor, method/corridor dossiers, saved replay, Markdown
+report lines, and estimate API payloads.
+
+Lab `Rw` / `STC` requested beside building outputs remain unsupported
+with explicit no-alias copy. Partial building context remains
+`needs_input`; field context remains Gate I; lab context remains
+lab-family; opening/leak building outputs remain blocked.
+
+Gate AS validation passed on 2026-05-12: focused Gate AS engine 1 file /
+4 tests, focused Gate AS web 1 file / 3 tests, Gate AR/Gate AS engine
+continuity 2 files / 11 tests, related web surface regression 5 files /
+22 tests, engine/web typecheck, `pnpm calculator:gate:current` with
+engine 386 files / 2228 tests, web 75 files / 321 passed + 18 skipped,
+build 5/5, whitespace guard clean, and full `pnpm check` with
+lint/typecheck clean, engine 511 files / 3030 tests, web 181 files /
+996 passed + 18 skipped, and build 5/5. See
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AS_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AS_HANDOFF.md).
+
 ## Gate AR Building Prediction All-Owner Runtime Corridor Landed - 2026-05-12
 
 Gate AR has now landed the runtime corridor selected by Gate AQ:
@@ -336,16 +376,15 @@ validation passed with focused Gate AP 1 file / 6 tests,
 The latest broad analysis separates the old controlled internal pilot
 bar from the current daily company-use bar. The historical operating
 envelope remains useful, but it is not enough for the current product
-goal until airborne `building_prediction` runtime is visible across
-surfaces and accepted by the matrix. Gate AR has now promoted defended
-source-absent `R'w` / `DnT,w` engine values. The remaining daily-use
-path is:
+goal until airborne `building_prediction` runtime is accepted by the
+matrix. Gate AR has promoted defended source-absent `R'w` / `DnT,w`
+engine values, and Gate AS has made that basis visible across
+surface/API/report paths. The remaining daily-use path is:
 
-1. Gate AS projected surface/API/report parity;
-2. Gate AT projected acceptance matrix refresh;
-3. Gate AU projected daily-use release handoff and broad revalidation.
+1. Gate AT projected acceptance matrix refresh;
+2. Gate AU projected daily-use release handoff and broad revalidation.
 
-This is the shortest defensible path after Gate AR. Broad source
+This is the shortest defensible path after Gate AS. Broad source
 crawling still does not unblock the source-absent calculator route. See
 [CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md).
 

@@ -20,6 +20,7 @@ import {
 import { FIELD_IMPACT_OUTPUTS } from "./simple-workbench-constants";
 import { buildSimpleWorkbenchOutputPosture } from "./simple-workbench-output-posture";
 import { formatSignedDb } from "./simple-workbench-utils";
+import { getGateARAirborneBuildingPredictionOutputDetail } from "./airborne-building-prediction-surface";
 import {
   getSteelFloorFormulaCorridorOutputDetail,
   isSteelFloorFormulaCorridorImpact
@@ -135,6 +136,11 @@ function buildExplicitUnsupportedOutputDetail(input: {
     return gateSOpeningLeakDetail;
   }
 
+  const gateARBuildingDetail = getGateARAirborneBuildingPredictionOutputDetail(output, result ?? null);
+  if (gateARBuildingDetail && studyMode === "wall") {
+    return gateARBuildingDetail;
+  }
+
   return buildUnavailableOutputDetail({ output, result, studyMode });
 }
 
@@ -179,6 +185,11 @@ export function buildUnavailableOutputDetail(input: {
   const gateSOpeningLeakDetail = getGateSOpeningLeakCompositeOutputDetail(output, result);
   if (gateSOpeningLeakDetail && studyMode === "wall") {
     return gateSOpeningLeakDetail;
+  }
+
+  const gateARBuildingDetail = getGateARAirborneBuildingPredictionOutputDetail(output, result);
+  if (gateARBuildingDetail && studyMode === "wall") {
+    return gateARBuildingDetail;
   }
 
   if (isImpactOnlyLowConfidenceLane && isImpactOnlyLowConfidenceUnavailableOutput(output)) {
@@ -333,8 +344,10 @@ export function buildOutputCard(input: {
       break;
     case "R'w":
       if (typeof result?.metrics.estimatedRwPrimeDb === "number") {
+        const gateARBuildingDetail = getGateARAirborneBuildingPredictionOutputDetail(output, result);
+
         return {
-          detail: getFieldAirborneLiveDetail("R'w", result),
+          detail: gateARBuildingDetail ?? getFieldAirborneLiveDetail("R'w", result),
           label: "R'w",
           output,
           status: "live",
@@ -410,8 +423,10 @@ export function buildOutputCard(input: {
       break;
     case "DnT,w":
       if (typeof result?.metrics.estimatedDnTwDb === "number") {
+        const gateARBuildingDetail = getGateARAirborneBuildingPredictionOutputDetail(output, result);
+
         return {
-          detail: getFieldAirborneLiveDetail("DnT,w", result),
+          detail: gateARBuildingDetail ?? getFieldAirborneLiveDetail("DnT,w", result),
           label: "DnT,w",
           output,
           status: "live",

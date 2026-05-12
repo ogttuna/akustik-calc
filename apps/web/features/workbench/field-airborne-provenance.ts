@@ -1,5 +1,9 @@
 import type { AssemblyCalculation } from "@dynecho/shared";
 
+import {
+  getGateARAirborneBuildingPredictionReportLines,
+  getGateARAirborneBuildingPredictionSurface
+} from "./airborne-building-prediction-surface";
 import { getGateIAirborneFieldContextSurface } from "./airborne-field-context-surface";
 import { getDnTAkSourceMode } from "./dntak-source-mode";
 import { getFieldAirborneModeLabel, getFieldAirborneRouteLabel } from "./field-airborne-output";
@@ -35,7 +39,16 @@ export function getFieldAirborneProvenanceSummary(
   const routeLabel = getFieldAirborneRouteLabel(result);
   const modeLabel = getFieldAirborneModeLabel(result);
   const dntakMode = getDnTAkSourceMode(result);
+  const gateARSurface = getGateARAirborneBuildingPredictionSurface(result);
   const gateISurface = getGateIAirborneFieldContextSurface(result);
+
+  if (gateARSurface) {
+    return {
+      detail: `${routeLabel} is active. ${gateARSurface.detail}`,
+      label: gateARSurface.label,
+      modeLabel
+    };
+  }
 
   if (gateISurface) {
     return {
@@ -100,9 +113,11 @@ export function getFieldAirborneReportLines(result: AssemblyCalculation | null):
   }
 
   const gateISurface = getGateIAirborneFieldContextSurface(result);
+  const gateARSurface = getGateARAirborneBuildingPredictionSurface(result);
   const lines = [
     `- Airborne field route: ${summary.modeLabel}`,
     `- Airborne field provenance: ${summary.label}. ${summary.detail}`,
+    ...(gateARSurface ? getGateARAirborneBuildingPredictionReportLines(result) : []),
     ...(gateISurface ? gateISurface.reportLines : [])
   ];
 

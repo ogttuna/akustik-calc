@@ -1,5 +1,6 @@
 import type { AssemblyCalculation } from "@dynecho/shared";
 
+import { getGateARAirborneBuildingPredictionSurface } from "./airborne-building-prediction-surface";
 import { getGateIAirborneFieldContextSurface } from "./airborne-field-context-surface";
 import { getGateSOpeningLeakCompositeSurface } from "./opening-leak-composite-surface";
 import type {
@@ -108,11 +109,14 @@ function buildAirborneTraceGroup(result: AssemblyCalculation | null): SimpleWork
   const noteSelection = selectSimpleWorkbenchTraceNotes(trace.notes, {
     fallbackNotes: [`Strategy ${trace.strategy.replaceAll("_", " ")} selected ${trace.selectedLabel}.`]
   });
+  const gateARBuildingSurface = getGateARAirborneBuildingPredictionSurface(result);
   const gateISurface = getGateIAirborneFieldContextSurface(result);
   const gateSOpeningLeakSurface = getGateSOpeningLeakCompositeSurface(result);
   const notes = gateSOpeningLeakSurface
     ? [...noteSelection.notes.slice(0, 2), ...gateSOpeningLeakSurface.notes]
-    : gateISurface
+    : gateARBuildingSurface
+      ? [...noteSelection.notes.slice(0, 2), ...gateARBuildingSurface.notes]
+      : gateISurface
       ? [...noteSelection.notes.slice(0, 2), ...gateISurface.notes]
       : noteSelection.notes;
 
@@ -120,11 +124,17 @@ function buildAirborneTraceGroup(result: AssemblyCalculation | null): SimpleWork
     detail:
       `${trace.detectedFamilyLabel} with ${formatPercent(trace.confidenceScore)} ${trace.confidenceClass} confidence. ` +
       `${formatDb(trace.solverSpreadRwDb)} solver spread across ${trace.candidateMethods.length} candidate method${trace.candidateMethods.length === 1 ? "" : "s"}.` +
-      (gateSOpeningLeakSurface ? ` ${gateSOpeningLeakSurface.detail}` : gateISurface ? ` ${gateISurface.detail}` : ""),
+      (gateSOpeningLeakSurface
+        ? ` ${gateSOpeningLeakSurface.detail}`
+        : gateARBuildingSurface
+          ? ` ${gateARBuildingSurface.detail}`
+          : gateISurface
+            ? ` ${gateISurface.detail}`
+            : ""),
     label: "Airborne lane",
     notes,
     tone: mapAirborneTone(trace.confidenceClass),
-    value: gateSOpeningLeakSurface?.label ?? gateISurface?.label ?? trace.selectedLabel
+    value: gateSOpeningLeakSurface?.label ?? gateARBuildingSurface?.label ?? gateISurface?.label ?? trace.selectedLabel
   };
 }
 

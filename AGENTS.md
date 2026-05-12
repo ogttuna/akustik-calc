@@ -826,8 +826,9 @@ Company-internal daily-use final path:
 `docs/calculator/CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md`.
 The old internal-use operating envelope is a narrower historical
 controlled-use bar. Gate AR has now promoted the all-owner building
-runtime corridor; the current daily-use bar remains open until surface/
-API/report parity, acceptance matrix refresh, and release handoff pass.
+runtime corridor, and Gate AS has made it visible across surface/API/
+report paths; the current daily-use bar remains open until acceptance
+matrix refresh and release handoff pass.
 Gate AQ implementation-ready plan:
 `docs/calculator/CHECKPOINT_2026-05-12_GATE_AQ_PLAN_REVALIDATION_AND_IMPLEMENTATION_READY_HANDOFF.md`.
 Gate AQ must be a no-runtime uncertainty-budget owner contract and
@@ -880,6 +881,29 @@ build 5/5, and full `pnpm check` with lint/typecheck clean, engine
 build 5/5. `git diff --check` passed after validation-note sync.
 Gate AR handoff:
 `docs/calculator/CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AR_HANDOFF.md`.
+Gate AS has now landed:
+`gate_as_personal_use_mvp_airborne_building_prediction_surface_api_report_parity_plan`.
+Gate AS selection status:
+`gate_as_personal_use_mvp_airborne_building_prediction_surface_api_report_parity_landed_selected_acceptance_matrix_gate_at`.
+Gate AS preserves Gate AR `R'w 58` / `DnT,w 59` and the `+/-9 dB`
+not-measured budget while surfacing the Gate AR candidate, method,
+values, warning, and lab-alias boundaries across output cards, route
+posture, scenario summary, target-output status/corridor,
+method/corridor dossiers, saved replay, Markdown report, and estimate
+API payloads. Gate AS selects:
+`gate_at_personal_use_mvp_acceptance_matrix_refresh_after_building_prediction_plan`.
+Selected Gate AT file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-at-acceptance-matrix-refresh-after-building-prediction-contract.test.ts`.
+Gate AS handoff:
+`docs/calculator/CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AS_HANDOFF.md`.
+Gate AS validation passed on 2026-05-12: focused Gate AS engine 1 file /
+4 tests, focused Gate AS web 1 file / 3 tests, Gate AR/Gate AS engine
+continuity 2 files / 11 tests, related web surface regression 5 files /
+22 tests, engine/web typecheck, `pnpm calculator:gate:current` with
+engine 386 files / 2228 tests, web 75 files / 321 passed + 18 skipped,
+build 5/5, whitespace guard clean, and full `pnpm check` with
+lint/typecheck clean, engine 511 files / 3030 tests, web 181 files /
+996 passed + 18 skipped, and build 5/5.
 Do not keep adding narrow steel-floor source/packet gates unless the
 active matrix or a later runtime proposal names a specific source-owned
 unblocker.

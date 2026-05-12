@@ -116,6 +116,9 @@ If you need the implementation-ready Gate AQ planning revalidation read
 If you need the current Personal-Use MVP Coverage Sprint Gate AR
 checkpoint read
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AR_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AR_HANDOFF.md).
+If you need the current Personal-Use MVP Coverage Sprint Gate AS
+checkpoint read
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AS_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AS_HANDOFF.md).
 If you need the preceding Personal-Use MVP Coverage Sprint Gate W
 checkpoint read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md).
@@ -742,6 +745,30 @@ Current strategy:
   skipped, and build 5/5. `git diff --check` passed after
   validation-note sync. See
   [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AR_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AR_HANDOFF.md).
+- Personal-Use MVP Coverage Sprint Gate AS has now landed
+  `gate_as_personal_use_mvp_airborne_building_prediction_surface_api_report_parity_plan`.
+  Selection status:
+  `gate_as_personal_use_mvp_airborne_building_prediction_surface_api_report_parity_landed_selected_acceptance_matrix_gate_at`.
+  Selected next action:
+  `gate_at_personal_use_mvp_acceptance_matrix_refresh_after_building_prediction_plan`.
+  Selected next file:
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-at-acceptance-matrix-refresh-after-building-prediction-contract.test.ts`.
+  Gate AS keeps Gate AR runtime values unchanged while making
+  `R'w 58`, `DnT,w 59`, the Gate AR candidate/method, the `+/-9 dB`
+  not-measured budget, and lab-alias boundaries visible across cards,
+  route posture, scenario summary, target-output status/corridor,
+  method/corridor dossiers, saved replay, Markdown report, and estimate
+  API payloads. Validation passed on 2026-05-12: focused Gate AS engine
+  1 file / 4 tests, focused Gate AS web 1 file / 3 tests, Gate AR/Gate
+  AS engine continuity 2 files / 11 tests, related web surface
+  regression 5 files / 22 tests, engine/web typecheck,
+  `pnpm calculator:gate:current` with engine 386 files / 2228 tests,
+  web 75 files / 321 passed + 18 skipped, build 5/5, whitespace guard
+  clean, and full `pnpm check` with lint/typecheck clean, engine 511
+  files / 3030 tests, web 181 files / 996 passed + 18 skipped, and
+  build 5/5.
+  See
+  [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AS_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AS_HANDOFF.md).
 - Post-Gate-AP checkpoint status: docs and implementation were re-read
   before starting Gate AQ. No stale plan mismatch was found. Gate AP is
   landed, no-runtime, present in the current-gate runner, and selected Gate AQ
@@ -758,8 +785,8 @@ Current strategy:
   daily-use bar requires complete airborne `building_prediction`
   requests to return defended building `R'w` / `DnT,w` values with
   visible basis and uncertainty or to fail closed with precise fields.
-  The shortest defensible path is now Gate AS surface/API/report parity,
-  then acceptance matrix refresh and daily-use release handoff. See
+  The shortest defensible path is now Gate AT acceptance matrix refresh,
+  then daily-use release handoff. See
   [CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md).
 - Gate AQ planning status: implementation-ready after the latest
   analysis pass. Official ISO/INSUL reference checks confirm that

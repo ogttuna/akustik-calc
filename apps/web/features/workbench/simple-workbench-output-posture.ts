@@ -1,5 +1,9 @@
 import type { AssemblyCalculation, RequestedOutputId } from "@dynecho/shared";
 
+import {
+  getGateARAirborneBuildingPredictionOutputDetail,
+  getGateARAirborneBuildingPredictionSurface
+} from "./airborne-building-prediction-surface";
 import { getGateIAirborneFieldContextSurface } from "./airborne-field-context-surface";
 import { isFieldAirborneOutput } from "./field-airborne-output";
 import { FIELD_OUTPUT_DESIGN_GRADE_POSTURE_GUARD } from "./field-output-owner-policy-copy";
@@ -91,8 +95,32 @@ export function buildSimpleWorkbenchOutputPosture(input: {
   studyMode: StudyMode;
 }): SimpleWorkbenchOutputPosture {
   const { output, result, status, studyMode } = input;
+  const gateARBuildingSurface =
+    studyMode === "wall" ? getGateARAirborneBuildingPredictionSurface(result) : null;
   const gateSOpeningLeakSurface =
     studyMode === "wall" ? getGateSOpeningLeakCompositeSurface(result) : null;
+
+  if (gateARBuildingSurface) {
+    const detail =
+      getGateARAirborneBuildingPredictionOutputDetail(output, result) ??
+      gateARBuildingSurface.postureDetail;
+
+    if (status === "live" && (output === "R'w" || output === "DnT,w")) {
+      return {
+        detail,
+        label: gateARBuildingSurface.label,
+        tone: "accent"
+      };
+    }
+
+    if (status === "unsupported") {
+      return {
+        detail,
+        label: "Airborne building boundary",
+        tone: "neutral"
+      };
+    }
+  }
 
   if (gateSOpeningLeakSurface) {
     const detail = getGateSOpeningLeakCompositeOutputDetail(output, result) ?? gateSOpeningLeakSurface.postureDetail;

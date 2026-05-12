@@ -7,6 +7,7 @@ import {
   REINFORCED_CONCRETE_LOW_CONFIDENCE_FLOOR_FAMILY_NOTE
 } from "./reinforced-concrete-low-confidence-floor-lane";
 import { getDoubleLeafFramedBridgeAirbornePromptInputs } from "./airborne-physical-input-prompt";
+import { getGateARAirborneBuildingPredictionSurface } from "./airborne-building-prediction-surface";
 import { getGateSOpeningLeakCompositeSurface } from "./opening-leak-composite-surface";
 import { isSteelBoundSupportFormLane, STEEL_BOUND_SUPPORT_FORM_ROUTE_NOTE } from "./steel-bound-support-form-lane";
 
@@ -144,6 +145,7 @@ export function getDynamicCalcBranchSummary(input: {
   }
 
   const airborneTrace = result.dynamicAirborneTrace ?? null;
+  const gateARBuildingSurface = getGateARAirborneBuildingPredictionSurface(result);
   const gateSOpeningLeakSurface = getGateSOpeningLeakCompositeSurface(result);
   if (gateSOpeningLeakSurface) {
     return {
@@ -155,6 +157,14 @@ export function getDynamicCalcBranchSummary(input: {
             ? "warning"
             : "warning",
       value: gateSOpeningLeakSurface.label
+    };
+  }
+
+  if (gateARBuildingSurface) {
+    return {
+      detail: gateARBuildingSurface.detail,
+      tone: "ready",
+      value: gateARBuildingSurface.label
     };
   }
 

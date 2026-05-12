@@ -1,5 +1,6 @@
 import type { AssemblyCalculation, ImpactErrorBudget } from "@dynecho/shared";
 
+import { getGateARAirborneBuildingPredictionSurface } from "./airborne-building-prediction-surface";
 import { getGateIAirborneFieldContextSurface } from "./airborne-field-context-surface";
 import { getFieldAirborneProvenanceSummary } from "./field-airborne-provenance";
 import { getGateSOpeningLeakCompositeSurface } from "./opening-leak-composite-surface";
@@ -261,10 +262,16 @@ function buildFloorCorridorDossier(result: AssemblyCalculation): SimpleWorkbench
 function buildWallCorridorDossier(result: AssemblyCalculation): SimpleWorkbenchCorridorDossier {
   const airbornePosture = describeAirborneValidationPosture(result);
   const provenance = getFieldAirborneProvenanceSummary(result);
+  const gateARBuildingSurface = getGateARAirborneBuildingPredictionSurface(result);
   const gateISurface = getGateIAirborneFieldContextSurface(result);
   const gateSOpeningLeakSurface = getGateSOpeningLeakCompositeSurface(result);
   const trace = result.dynamicAirborneTrace ?? null;
-  const laneValue = gateSOpeningLeakSurface?.label ?? trace?.selectedLabel ?? result.calculatorLabel ?? "Screening seed";
+  const laneValue =
+    gateSOpeningLeakSurface?.label ??
+    gateARBuildingSurface?.label ??
+    trace?.selectedLabel ??
+    result.calculatorLabel ??
+    "Screening seed";
   const fieldRouteValue = provenance?.modeLabel ?? "Lab-side only";
   const spreadValue = trace ? `${trace.solverSpreadRwDb} dB` : "Local curve only";
 
@@ -272,7 +279,7 @@ function buildWallCorridorDossier(result: AssemblyCalculation): SimpleWorkbenchC
     cards: [
       {
         detail: trace
-          ? `${trace.detectedFamilyLabel} is the current airborne family read across ${formatCount(trace.candidateMethods.length, "candidate method")} with ${formatPercent(trace.confidenceScore)} confidence.${gateSOpeningLeakSurface ? ` ${gateSOpeningLeakSurface.detail}` : gateISurface ? ` ${gateISurface.detail}` : ""}`
+          ? `${trace.detectedFamilyLabel} is the current airborne family read across ${formatCount(trace.candidateMethods.length, "candidate method")} with ${formatPercent(trace.confidenceScore)} confidence.${gateSOpeningLeakSurface ? ` ${gateSOpeningLeakSurface.detail}` : gateARBuildingSurface ? ` ${gateARBuildingSurface.detail}` : gateISurface ? ` ${gateISurface.detail}` : ""}`
           : `${laneValue} remains the local airborne curve anchor. No family-ranked dynamic selector is attached yet.`,
         label: "Airborne lane",
         tone: trace ? mapAirborneConfidenceTone(trace.confidenceClass) : "neutral",
@@ -296,9 +303,11 @@ function buildWallCorridorDossier(result: AssemblyCalculation): SimpleWorkbenchC
       },
       {
         detail: provenance
-          ? `${provenance.label}. ${provenance.detail}${gateISurface ? ` ${gateISurface.candidateId} keeps ${gateISurface.budgetLabel} visible.` : ""}`
+          ? `${provenance.label}. ${provenance.detail}${gateARBuildingSurface ? ` ${gateARBuildingSurface.candidateId} keeps ${gateARBuildingSurface.budgetLabel} visible.` : gateISurface ? ` ${gateISurface.candidateId} keeps ${gateISurface.budgetLabel} visible.` : ""}`
           : gateSOpeningLeakSurface
             ? `${gateSOpeningLeakSurface.label} is lab-side only. ${gateSOpeningLeakSurface.detail}`
+            : gateARBuildingSurface
+              ? `${gateARBuildingSurface.label} is building-prediction only. ${gateARBuildingSurface.detail}`
             : "No apparent-field or room-standardized airborne continuation is active on this wall route yet. Add geometry and room context before treating the read as an on-site apparent-field claim.",
         label: "Field route",
         tone: provenance ? "accent" : "neutral",
@@ -312,7 +321,7 @@ function buildWallCorridorDossier(result: AssemblyCalculation): SimpleWorkbenchC
           ? `${trace.selectedLabel} is screening ${trace.detectedFamilyLabel} at ${formatPercent(trace.confidenceScore)} confidence with ${trace.solverSpreadRwDb} dB selector spread. `
           : `${laneValue} remains the active local curve anchor without a family-ranked airborne selector. `
       }` +
-      `${provenance ? `${provenance.modeLabel} stays explicit on the field-side airborne chain${gateISurface ? ` with ${gateISurface.label}.` : "."}` : gateSOpeningLeakSurface ? `${gateSOpeningLeakSurface.label} stays explicit as a lab-side opening/leak route.` : "No field-side airborne continuation is active, so this route should still be read as lab-side only."}`
+      `${provenance ? `${provenance.modeLabel} stays explicit on the field-side airborne chain${gateARBuildingSurface ? ` with ${gateARBuildingSurface.label}.` : gateISurface ? ` with ${gateISurface.label}.` : "."}` : gateSOpeningLeakSurface ? `${gateSOpeningLeakSurface.label} stays explicit as a lab-side opening/leak route.` : gateARBuildingSurface ? `${gateARBuildingSurface.label} stays explicit as a building-prediction route.` : "No field-side airborne continuation is active, so this route should still be read as lab-side only."}`
   };
 }
 

@@ -1,5 +1,6 @@
 import type { AssemblyCalculation, RequestedOutputId } from "@dynecho/shared";
 
+import { getGateARAirborneBuildingPredictionSurface } from "./airborne-building-prediction-surface";
 import { getGateIAirborneFieldContextSurface } from "./airborne-field-context-surface";
 import { getDnTAkDetail, getDnTAkLiveLabel } from "./dntak-source-mode";
 import { FIELD_OUTPUT_CONTINUATION_BASIS_GUARD as FIELD_CONTINUATION_BASIS_GUARD } from "./field-output-owner-policy-copy";
@@ -213,6 +214,10 @@ export function getFieldAirborneStatusLabel(
   output: RequestedOutputId,
   result: AssemblyCalculation | null
 ): string {
+  if (getGateARAirborneBuildingPredictionSurface(result)) {
+    return output === "R'w" ? "Building apparent" : "Building standardized";
+  }
+
   if (output === "DnT,A,k") {
     return getDnTAkLiveLabel(result);
   }
@@ -240,8 +245,13 @@ export function getFieldAirborneLiveDetail(
   const curveLabel = getApparentCurveLabel(result);
   const rockwoolPolicy = getRockwoolTripleLeafScreeningPolicyCopy(result);
   const rockwoolScreeningBridge = rockwoolPolicy ? `${rockwoolPolicy.fieldDetail} ` : "";
+  const gateARSurface = getGateARAirborneBuildingPredictionSurface(result);
   const gateISurface = getGateIAirborneFieldContextSurface(result);
-  const basisGuard = gateISurface ? `${FIELD_CONTINUATION_BASIS_GUARD} ${gateISurface.detail}` : FIELD_CONTINUATION_BASIS_GUARD;
+  const basisGuard = gateARSurface
+    ? `${FIELD_CONTINUATION_BASIS_GUARD} ${gateARSurface.detail}`
+    : gateISurface
+      ? `${FIELD_CONTINUATION_BASIS_GUARD} ${gateISurface.detail}`
+      : FIELD_CONTINUATION_BASIS_GUARD;
 
   if (output === "R'w") {
     return `${routeLabel} is active. R'w is being read as the apparent on-site airborne single number from the ${curveLabel}. ${rockwoolScreeningBridge}${basisGuard}`;

@@ -10,6 +10,7 @@ import {
 import type { ImpactValidationModePosture } from "@dynecho/engine";
 import type { AssemblyCalculation, DynamicAirborneTrace } from "@dynecho/shared";
 
+import { getGateARAirborneBuildingPredictionSurface } from "./airborne-building-prediction-surface";
 import { getGateIAirborneFieldContextSurface } from "./airborne-field-context-surface";
 import { getGateSOpeningLeakCompositeSurface } from "./opening-leak-composite-surface";
 import { getImpactLaneKind, getImpactLanePillLabel } from "./impact-lane-view";
@@ -254,6 +255,15 @@ export function describeAirborneValidationPosture(result: AssemblyCalculation | 
   }
 
   const gateIFieldSurface = getGateIAirborneFieldContextSurface(result);
+  const gateARBuildingSurface = getGateARAirborneBuildingPredictionSurface(result);
+  if (gateARBuildingSurface) {
+    return {
+      detail: gateARBuildingSurface.postureDetail,
+      label: gateARBuildingSurface.label,
+      posture: "estimate"
+    };
+  }
+
   if (gateIFieldSurface) {
     return {
       detail: gateIFieldSurface.postureDetail,
