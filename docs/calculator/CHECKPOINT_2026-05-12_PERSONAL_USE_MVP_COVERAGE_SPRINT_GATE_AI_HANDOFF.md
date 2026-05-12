@@ -8,6 +8,10 @@ Selection status:
 
 `gate_ai_personal_use_mvp_opening_leak_stc_surface_parity_landed_selected_revalidation_gate_aj`
 
+Previous Gate AH selection status:
+
+`gate_ah_personal_use_mvp_opening_leak_stc_spectrum_adapter_landed_selected_surface_parity_gate_ai`
+
 Selected next action:
 
 `gate_aj_personal_use_mvp_post_opening_leak_stc_surface_revalidation_plan`
@@ -57,10 +61,15 @@ frozen:
 - No source row, tolerance, formula, exact-match, or field/building
   behavior moved.
 
-## Next Gate AJ
+## Gate AJ Follow-Up
 
-Gate AJ should be a post-STC-surface revalidation gate. It should prove
-that the added `STC` support and visible surface did not regress:
+Gate AJ has consumed this handoff as a no-runtime post-STC-surface
+revalidation gate:
+
+`gate_aj_personal_use_mvp_post_opening_leak_stc_surface_revalidation_plan`
+
+It proves that the added `STC` support and visible surface did not
+regress:
 
 1. Gate S opening/leak `Rw 38.2` / `+/-6 dB` runtime corridor.
 2. Gate AH opening/leak `STC 39` ASTM E413 adapter.
@@ -70,5 +79,8 @@ that the added `STC` support and visible surface did not regress:
 6. Gate W/AA coverage matrix supported-value versus unsupported-output
    separation.
 
-Gate AJ should not promote new runtime behavior unless the revalidation
-finds a concrete defect that requires a minimal fix.
+Gate AJ closed with status
+`gate_aj_personal_use_mvp_post_opening_leak_stc_surface_revalidation_landed_no_runtime_selected_matrix_refresh_gate_ak`
+and selected
+`gate_ak_personal_use_mvp_coverage_matrix_refresh_after_opening_leak_stc_plan`
+as the STC-aware matrix refresh.

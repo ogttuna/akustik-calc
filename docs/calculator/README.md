@@ -81,7 +81,9 @@ adapter. The pinned host-wall plus average-seal opening fixture returns
 owned adapters exist. Gate AI now proves route/cards, target-output
 status/corridor, dossiers, saved replay, calculator API payloads, and
 Markdown reports carry that same Gate S plus Gate AH basis without
-runtime movement or field/building aliases.
+runtime movement or field/building aliases. Gate AJ now revalidates
+that no-runtime surface against opening input, wall field, building, and
+matrix boundaries, then selects Gate AK as the STC-aware matrix refresh.
 Gate T now lands that opening/leak surface parity with selection status
 `gate_t_personal_use_mvp_opening_leak_composite_surface_parity_landed_selected_input_surface_gate_u`
 and selects Gate U
@@ -362,6 +364,21 @@ source-absent, STC-only opening basis, `R'w`, `DnT,w`, field, and
 building requests remain blocked without a Gate AH adapter or budget.
 See
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AI_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AI_HANDOFF.md).
+Gate AJ now lands the no-runtime post-opening/leak-STC surface
+revalidation gate with selection status
+`gate_aj_personal_use_mvp_post_opening_leak_stc_surface_revalidation_landed_no_runtime_selected_matrix_refresh_gate_ak`
+and selected action
+`gate_ak_personal_use_mvp_coverage_matrix_refresh_after_opening_leak_stc_plan`.
+Selected next file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ak-coverage-matrix-refresh-after-opening-leak-stc-contract.test.ts`.
+It proves the visible `STC` surface did not move Gate S `Rw 38.2`,
+Gate AH `STC 39`, high-leakage `Rw 33.7 / STC 34`, the `+/-6 dB`
+not-measured-evidence budget, Gate U input surface, field-context
+routes, building-prediction boundaries, or Gate W/AA matrix
+supported/unsupported separation. Gate AK is the selected STC-aware
+matrix refresh, not a broad source crawl. Gate AK selected next:
+STC-aware matrix refresh. See
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AJ_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AJ_HANDOFF.md).
 Gate A
 landed in
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-a-scenario-matrix-contract.test.ts`

@@ -654,10 +654,24 @@ budget, and not-measured-evidence posture. Missing, source-absent,
 STC-only opening basis, `R'w`, `DnT,w`, field, and building requests
 stay blocked without a Gate AH budget or adapter. Gate AI selection status:
 `gate_ai_personal_use_mvp_opening_leak_stc_surface_parity_landed_selected_revalidation_gate_aj`.
-Selected next action:
+Gate AI selected next action:
 `gate_aj_personal_use_mvp_post_opening_leak_stc_surface_revalidation_plan`.
-Selected next file:
+Gate AI selected next file:
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-aj-post-opening-leak-stc-surface-revalidation-contract.test.ts`.
+Gate AJ has now landed:
+`gate_aj_personal_use_mvp_post_opening_leak_stc_surface_revalidation_plan`.
+Gate AJ is no-runtime revalidation after the Gate AI surface. It proves
+Gate S lab `Rw 38.2`, Gate AH lab `STC 39`, high-leakage
+`Rw 33.7 / STC 34`, the `+/-6 dB` not-measured-evidence budget, Gate U
+input surface, field-context routes, building-prediction boundaries, and
+Gate W/AA matrix supported/unsupported separation remain unchanged.
+Gate AJ selection status:
+`gate_aj_personal_use_mvp_post_opening_leak_stc_surface_revalidation_landed_no_runtime_selected_matrix_refresh_gate_ak`.
+Selected next action:
+`gate_ak_personal_use_mvp_coverage_matrix_refresh_after_opening_leak_stc_plan`.
+Selected next file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ak-coverage-matrix-refresh-after-opening-leak-stc-contract.test.ts`.
+Gate AK is an STC-aware matrix refresh, not a broad source crawl.
 Do not keep adding narrow steel-floor source/packet gates unless the
 active matrix or a later runtime proposal names a specific source-owned
 unblocker.

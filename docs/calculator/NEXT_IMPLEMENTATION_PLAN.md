@@ -137,6 +137,55 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
+## Gate AJ Post Opening/Leak STC Surface Revalidation Landed - 2026-05-12
+
+Gate AJ has now landed the no-runtime revalidation gate selected by
+Gate AI:
+
+`gate_aj_personal_use_mvp_post_opening_leak_stc_surface_revalidation_plan`
+
+Current selected status:
+
+`gate_aj_personal_use_mvp_post_opening_leak_stc_surface_revalidation_landed_no_runtime_selected_matrix_refresh_gate_ak`
+
+Selected next action:
+
+`gate_ak_personal_use_mvp_coverage_matrix_refresh_after_opening_leak_stc_plan`
+
+Selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ak-coverage-matrix-refresh-after-opening-leak-stc-contract.test.ts`
+
+Gate AJ proves that Gate AI's visible `STC` surface did not move the
+calculator runtime. The complete opening/leak fixture remains lab
+`Rw 38.2 / STC 39`, the high-leakage two-opening case remains
+`Rw 33.7 / STC 34`, and the Gate S `+/-6 dB` source-absent budget is
+still not measured evidence. Missing, duplicate, source-absent,
+STC-only opening basis, field, and building requests remain blocked
+without a Gate AH adapter or budget.
+
+Revalidation locked by Gate AJ:
+
+- Gate S opening/leak `Rw` runtime and Gate AH ASTM E413 `STC` adapter
+  remain element-lab only;
+- Gate U opening/leak input surface and hostile UI edits still fail
+  closed for partial, duplicate, source-absent, and wrong-basis input;
+- Gate G/H/I/J/K wall and field-context routes remain separate from the
+  opening/leak lab adapter;
+- Gate L/M/N/O/P building-prediction requests remain unsupported until
+  direct, flanking, junction, and room-normalization owners exist;
+- Gate W/AA matrix rows stay gap-free, with supported metric pins kept
+  separate from unsupported outputs.
+
+Gate AK is next as an STC-aware matrix refresh. It should refresh the
+executable personal-use MVP matrix after the opening/leak `STC` runtime
+and surface are both landed, then re-rank the next calculator-first lane
+from that matrix. It should not start a broad source crawl.
+
+Gate AJ validation passed with focused Gate AJ, Gate AI/Gate AJ
+continuity, engine typecheck, `pnpm calculator:gate:current`, full
+`pnpm check`, repo build, and whitespace guard evidence.
+
 ## Gate AI Opening/Leak STC Surface Parity Landed - 2026-05-12
 
 Gate AI has now landed the no-runtime visible-surface parity gate
@@ -175,11 +224,9 @@ Parity locked by Gate AI:
   `R'w`, `DnT,w`, field, and building requests stay blocked without a
   Gate AH budget or adapter.
 
-Gate AJ is next because the STC runtime and surface are now both
-present. The next pass should revalidate that the added `STC` support
-did not disturb the earlier opening/leak input-surface, wall field,
-building-prediction, and coverage-matrix boundaries before selecting a
-new calculator-first lane.
+Gate AJ has consumed this handoff and closed it as a no-runtime
+revalidation gate. The current selected next action is now the Gate AK
+STC-aware matrix refresh.
 
 ## Gate AH Opening/Leak STC Spectrum Adapter Landed - 2026-05-12
 
