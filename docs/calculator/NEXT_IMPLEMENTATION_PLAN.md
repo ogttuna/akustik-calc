@@ -87,6 +87,9 @@ owner-gap handoff read
 For the Gate AL building prediction owner-gap refresh and Gate AM direct
 curve owner handoff read
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AL_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AL_HANDOFF.md).
+For the Gate AM building prediction direct curve owner and Gate AN
+flanking path energy handoff read
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AM_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AM_HANDOFF.md).
 For the Gate R no-runtime formula corridor and Gate S handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md).
 For the Gate Q no-runtime input contract and Gate R handoff read
@@ -143,6 +146,53 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
+## Gate AM Building Prediction Direct Curve Owner Landed - 2026-05-12
+
+Gate AM has now landed the no-runtime direct separating-element
+frequency curve owner contract selected by Gate AL:
+
+`gate_am_personal_use_mvp_airborne_building_prediction_direct_curve_owner_contract_plan`
+
+Current selected status:
+
+`gate_am_personal_use_mvp_airborne_building_prediction_direct_curve_owner_landed_no_runtime_selected_flanking_path_energy_gate_an`
+
+Selected next action:
+
+`gate_an_personal_use_mvp_airborne_building_prediction_flanking_path_energy_owner_contract_plan`
+
+Selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-an-airborne-building-prediction-flanking-path-energy-owner-contract.test.ts`
+
+Gate AM defines the direct curve owner without promoting airborne
+building prediction runtime. The owner requires the selected dynamic
+airborne family-solver frequency curve, frequency-band resolution owner,
+ISO 717-1 rating adapter basis, selected candidate trace ownership, and
+basis-compatible metric scope. A single-number lab `Rw` / `STC`, source
+row without a curve, field runtime budget, opening/leak lab adapter, or
+legacy raw dynamic field/building continuation snapshot cannot satisfy
+the building direct-energy term.
+
+Complete building requests remain `unsupported`; partial building
+requests remain `needs_input`; field-context wall outputs remain
+separate from building prediction. Flanking path energy, junction
+vibration reduction, room standardization, and building prediction
+uncertainty budget are still runtime-unowned. Gate AM therefore selects
+Gate AN as the next no-runtime flanking path energy owner contract.
+
+Gate AM validation passed on 2026-05-12: focused Gate AM 1 file /
+6 tests, Gate AL/Gate AM continuity 2 files / 12 tests, engine
+typecheck, `pnpm calculator:gate:current` with engine 380 files /
+2193 tests, web 74 files / 318 passed + 18 skipped, build 5/5,
+whitespace guard clean, and full `pnpm check` with engine 505 files /
+2995 tests, web 180 files / 993 passed + 18 skipped, lint/typecheck
+clean, and build 5/5. See
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AM_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AM_HANDOFF.md).
+
+Gate AL has consumed this handoff. The current selected next action is
+now Gate AN flanking path energy owner contract.
+
 ## Gate AL Building Prediction Owner Gap Refresh Landed - 2026-05-12
 
 Gate AL has now landed the no-runtime owner-gap refresh selected by
@@ -190,8 +240,8 @@ field/building continuation snapshots frozen until a later gate
 deliberately migrates them behind the building-prediction owner
 contract.
 
-Gate AK has consumed this handoff. The current selected next action is
-now Gate AM direct curve owner contract.
+Gate AM has consumed this handoff. The current selected next action is
+now Gate AN flanking path energy owner contract.
 
 ## Gate AK STC-Aware Matrix Refresh Landed - 2026-05-12
 

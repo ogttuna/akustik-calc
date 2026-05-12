@@ -710,6 +710,31 @@ Selected next action:
 `gate_am_personal_use_mvp_airborne_building_prediction_direct_curve_owner_contract_plan`.
 Selected next file:
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-am-airborne-building-prediction-direct-curve-owner-contract.test.ts`.
+Gate AM has now landed:
+`gate_am_personal_use_mvp_airborne_building_prediction_direct_curve_owner_contract_plan`.
+Gate AM is a no-runtime direct separating-element frequency curve owner
+contract for airborne building prediction. It requires selected dynamic
+airborne frequency-curve ownership, frequency-band resolution, ISO 717-1
+rating basis, selected candidate trace ownership, and basis-compatible
+metric scope before the direct-energy term can be used. Lab `Rw` /
+`STC`, field `R'w` / `DnT,w`, opening/leak lab adapters, source single
+numbers without curves, and legacy raw dynamic field/building
+continuation snapshots stay blocked as building-output aliases. Complete
+building requests remain `unsupported`; partial building requests remain
+`needs_input`.
+Gate AM selection status:
+`gate_am_personal_use_mvp_airborne_building_prediction_direct_curve_owner_landed_no_runtime_selected_flanking_path_energy_gate_an`.
+Gate AM validation passed on 2026-05-12: focused Gate AM 1 file /
+6 tests, Gate AL/Gate AM continuity 2 files / 12 tests, engine
+typecheck, `pnpm calculator:gate:current` with engine 380 files /
+2193 tests, web 74 files / 318 passed + 18 skipped, build 5/5,
+whitespace guard clean, and full `pnpm check` with engine 505 files /
+2995 tests, web 180 files / 993 passed + 18 skipped, lint/typecheck
+clean, and build 5/5.
+Selected next action:
+`gate_an_personal_use_mvp_airborne_building_prediction_flanking_path_energy_owner_contract_plan`.
+Selected next file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-an-airborne-building-prediction-flanking-path-energy-owner-contract.test.ts`.
 Do not keep adding narrow steel-floor source/packet gates unless the
 active matrix or a later runtime proposal names a specific source-owned
 unblocker.

@@ -392,6 +392,7 @@ async function main() {
         "src/calculator-personal-use-mvp-coverage-sprint-gate-aj-post-opening-leak-stc-surface-revalidation-contract.test.ts",
         "src/calculator-personal-use-mvp-coverage-sprint-gate-ak-coverage-matrix-refresh-after-opening-leak-stc-contract.test.ts",
         "src/calculator-personal-use-mvp-coverage-sprint-gate-al-airborne-building-prediction-owner-gap-refresh-contract.test.ts",
+        "src/calculator-personal-use-mvp-coverage-sprint-gate-am-airborne-building-prediction-direct-curve-owner-contract.test.ts",
         "src/ubiq-open-web-packaged-finish-family-design.test.ts",
         "src/ubiq-open-web-packaged-finish-near-miss-matrix.test.ts",
         "src/ubiq-open-web-packaged-lane-trace-matrix.test.ts",

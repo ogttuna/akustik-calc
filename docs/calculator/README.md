@@ -86,7 +86,9 @@ no-runtime surface against opening input, wall field, building, and
 matrix boundaries. Gate AK now lands the STC-aware matrix refresh
 without changing the 40-row matrix or runtime values and selects the
 building prediction owner gap refresh for Gate AL instead of broad
-source crawling.
+source crawling. Gate AL landed that owner-gap map, and Gate AM now
+lands the direct separating-element frequency curve owner contract while
+selecting flanking path energy ownership for Gate AN.
 Gate T now lands that opening/leak surface parity with selection status
 `gate_t_personal_use_mvp_opening_leak_composite_surface_parity_landed_selected_input_surface_gate_u`
 and selects Gate U
@@ -411,6 +413,25 @@ Gate AL, Gate AK/Gate AL continuity, engine typecheck,
 `pnpm calculator:gate:current`, full `pnpm check`, repo build, and
 whitespace guard evidence. See
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AL_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AL_HANDOFF.md).
+Gate AM now lands that direct separating-element frequency curve owner
+contract with selection status
+`gate_am_personal_use_mvp_airborne_building_prediction_direct_curve_owner_landed_no_runtime_selected_flanking_path_energy_gate_an`
+and selected action
+`gate_an_personal_use_mvp_airborne_building_prediction_flanking_path_energy_owner_contract_plan`.
+Selected next file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-an-airborne-building-prediction-flanking-path-energy-owner-contract.test.ts`.
+Gate AM requires selected dynamic airborne frequency-curve ownership,
+frequency-band resolution, ISO 717-1 rating basis, selected candidate
+trace ownership, and basis-compatible metric scope before that direct
+energy term can be used. Lab `Rw` / `STC`, field `R'w` / `DnT,w`,
+opening/leak lab adapters, source single numbers without curves, and
+legacy raw dynamic field/building continuation snapshots remain blocked
+as building-output aliases. Flanking path energy is now the selected
+next owner lane for Gate AN. Gate AM validation passed with focused
+Gate AM, Gate AL/Gate AM continuity, engine typecheck,
+`pnpm calculator:gate:current`, full `pnpm check`, repo build, and
+whitespace guard evidence. See
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AM_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AM_HANDOFF.md).
 Gate A
 landed in
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-a-scenario-matrix-contract.test.ts`

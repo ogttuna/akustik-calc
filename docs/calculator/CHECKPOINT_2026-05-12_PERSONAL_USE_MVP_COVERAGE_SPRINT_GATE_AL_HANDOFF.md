@@ -88,6 +88,13 @@ Validation passed before commit:
 
 ## Next Gate AM
 
+Gate AM has now consumed this handoff and landed
+`gate_am_personal_use_mvp_airborne_building_prediction_direct_curve_owner_contract_plan`.
+The current selected next action is
+`gate_an_personal_use_mvp_airborne_building_prediction_flanking_path_energy_owner_contract_plan`
+with selected file
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-an-airborne-building-prediction-flanking-path-energy-owner-contract.test.ts`.
+
 Gate AM should implement a no-runtime direct curve owner contract:
 
 1. define the direct separating-element frequency curve owner for

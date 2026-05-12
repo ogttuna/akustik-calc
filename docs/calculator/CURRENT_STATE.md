@@ -94,6 +94,9 @@ handoff read
 If you need the latest Gate AL building prediction owner-gap refresh and
 Gate AM handoff read
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AL_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AL_HANDOFF.md).
+If you need the latest Gate AM building prediction direct curve owner
+and Gate AN handoff read
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AM_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AM_HANDOFF.md).
 If you need the preceding Personal-Use MVP Coverage Sprint Gate W
 checkpoint read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md).
@@ -159,15 +162,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_al_personal_use_mvp_airborne_building_prediction_owner_gap_refresh_landed_no_runtime_selected_direct_curve_owner_gate_am`
+`gate_am_personal_use_mvp_airborne_building_prediction_direct_curve_owner_landed_no_runtime_selected_flanking_path_energy_gate_an`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-am-airborne-building-prediction-direct-curve-owner-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-an-airborne-building-prediction-flanking-path-energy-owner-contract.test.ts`
 
 Selected next action:
 
-`gate_am_personal_use_mvp_airborne_building_prediction_direct_curve_owner_contract_plan`
+`gate_an_personal_use_mvp_airborne_building_prediction_flanking_path_energy_owner_contract_plan`
 
 Strategic ROI replan:
 
@@ -562,6 +565,31 @@ Current strategy:
   5/5. Gate AM must keep legacy raw dynamic field/building continuation
   snapshots frozen until a later gate deliberately migrates them behind
   the building-prediction owner contract.
+- Personal-Use MVP Coverage Sprint Gate AM has now landed
+  `gate_am_personal_use_mvp_airborne_building_prediction_direct_curve_owner_contract_plan`.
+  Selection status:
+  `gate_am_personal_use_mvp_airborne_building_prediction_direct_curve_owner_landed_no_runtime_selected_flanking_path_energy_gate_an`.
+  Selected next action:
+  `gate_an_personal_use_mvp_airborne_building_prediction_flanking_path_energy_owner_contract_plan`.
+  Selected next file:
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-an-airborne-building-prediction-flanking-path-energy-owner-contract.test.ts`.
+  Gate AM is no-runtime: it defines the direct separating-element
+  frequency curve owner for building prediction without promoting
+  `R'w` or `DnT,w`. The owner requires selected dynamic airborne
+  frequency-curve ownership, band resolution, ISO 717-1 rating basis,
+  selected candidate trace ownership, and basis-compatible metric scope.
+  Lab `Rw` / `STC`, field `R'w` / `DnT,w`, opening/leak lab adapters,
+  source single numbers without curves, and legacy raw dynamic
+  field/building continuation snapshots stay blocked as building direct
+  energy aliases. Gate AN is selected because flanking path energy is
+  the next required owner before junction, room, uncertainty, or runtime
+  work can become safe. Validation passed on 2026-05-12: focused Gate
+  AM 1 file / 6 tests, Gate AL/Gate AM continuity 2 files / 12 tests,
+  engine typecheck, `pnpm calculator:gate:current` with engine 380
+  files / 2193 tests, web 74 files / 318 passed + 18 skipped, build
+  5/5, whitespace guard clean, and full `pnpm check` with engine 505
+  files / 2995 tests, web 180 files / 993 passed + 18 skipped,
+  lint/typecheck clean, and build 5/5.
 - Personal-Use MVP Coverage Sprint Gate B has now landed the
   timber/CLT floor-impact `DeltaLw` input and formula-readiness
   contract without runtime movement.
