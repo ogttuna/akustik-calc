@@ -28,6 +28,7 @@ import {
   getDutchResidentialImpactReferenceRows,
   getDutchResidentialImpactReferenceReportLines
 } from "./dutch-impact-reference";
+import { getGateACFlatMulticavityTopologyReportLines } from "./flat-multicavity-topology-surface";
 import { getDnTAkReportLine } from "./dntak-source-mode";
 import { getFieldAirborneReportLines } from "./field-airborne-provenance";
 import { getGateSOpeningLeakCompositeReportLines } from "./opening-leak-composite-surface";
@@ -336,6 +337,7 @@ export function composeWorkbenchReport({
         `- STC: ${formatMetric(currentScenario.result.metrics.estimatedStc)} dB`,
         ...(dnTAkReportLine ? [dnTAkReportLine] : []),
         ...getFieldAirborneReportLines(currentScenario.result),
+        ...getGateACFlatMulticavityTopologyReportLines(currentScenario),
         ...getGateSOpeningLeakCompositeReportLines(currentScenario.result),
         `- Surface mass: ${formatMetric(currentScenario.result.metrics.surfaceMassKgM2)} kg/m²`,
         `- Total thickness: ${formatMetric(currentScenario.result.metrics.totalThicknessMm)} mm`,

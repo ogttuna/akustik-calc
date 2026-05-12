@@ -39,6 +39,10 @@ import { calculateDynamicAirborneResult } from "./dynamic-airborne";
 import { GATE_L_AIRBORNE_BUILDING_PREDICTION_BOUNDARY_WARNING } from "./dynamic-airborne-gate-l-building-prediction-boundary";
 import { GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING } from "./dynamic-airborne-gate-n-building-prediction-runtime-adapter";
 import {
+  GATE_Y_CLT_MASS_TIMBER_CTR_SPECTRUM_ADAPTER_WARNING,
+  maybeBuildGateYCltMassTimberCtrSpectrumAdapterBasis
+} from "./dynamic-airborne-gate-y-clt-mass-timber-ctr-spectrum-adapter";
+import {
   maybeBuildGateSOpeningLeakCompositeRuntimeCorridor
 } from "./dynamic-airborne-gate-s-opening-leak-composite-transmission-loss-runtime-corridor";
 import {
@@ -251,6 +255,38 @@ function moveSupportedOutputsToUnsupported(
       unsupportedImpactOutputSet.has(output)
     ),
     unsupportedTargetOutputs
+  };
+}
+
+function moveUnsupportedOutputsToSupported(
+  support: TargetOutputSupportLike,
+  outputs: readonly RequestedOutputId[]
+): TargetOutputSupportLike {
+  if (outputs.length === 0) {
+    return support;
+  }
+
+  const outputSet = new Set(outputs);
+  const supportedOutputSet = new Set([
+    ...support.supportedTargetOutputs,
+    ...support.targetOutputs.filter((output) => outputSet.has(output))
+  ]);
+  const supportedTargetOutputs = support.targetOutputs.filter((output) =>
+    supportedOutputSet.has(output)
+  );
+  const supportedImpactOutputSet = new Set([
+    ...support.supportedImpactOutputs,
+    ...supportedTargetOutputs.filter((output) => support.unsupportedImpactOutputs.includes(output))
+  ]);
+
+  return {
+    ...support,
+    supportedImpactOutputs: support.targetOutputs.filter((output) =>
+      supportedImpactOutputSet.has(output)
+    ),
+    supportedTargetOutputs,
+    unsupportedImpactOutputs: support.unsupportedImpactOutputs.filter((output) => !outputSet.has(output)),
+    unsupportedTargetOutputs: support.unsupportedTargetOutputs.filter((output) => !outputSet.has(output))
   };
 }
 
@@ -1480,11 +1516,22 @@ export function calculateAssembly(
     },
     targetOutputs: options.targetOutputs ?? []
   });
+  const gateYCltMassTimberCtrSpectrumAdapterBasis =
+    maybeBuildGateYCltMassTimberCtrSpectrumAdapterBasis({
+      airborneContext,
+      basis: dynamicAirborneResult?.airborneBasis ?? null,
+      ctrDb: ratings.iso717.Ctr,
+      sourceAnchorApplied: verifiedAirborneAnchorResult.applied,
+      targetOutputs: initialTargetOutputSupport.targetOutputs
+    });
+  const targetOutputSupportWithGateYCltCtr = gateYCltMassTimberCtrSpectrumAdapterBasis
+    ? moveUnsupportedOutputsToSupported(initialTargetOutputSupport, ["Ctr"])
+    : initialTargetOutputSupport;
   const rockwoolSplitTripleLeafExactOutputWithhold =
     withholdRockwoolSplitTripleLeafExactTargetOutputs({
       airborneContext,
       layers: resolvedLayers,
-      targetOutputSupport: initialTargetOutputSupport,
+      targetOutputSupport: targetOutputSupportWithGateYCltCtr,
       trace: dynamicAirborneResult?.trace
     });
   const targetOutputSupport = rockwoolSplitTripleLeafExactOutputWithhold.targetOutputSupport;
@@ -1525,7 +1572,7 @@ export function calculateAssembly(
         }),
         runtimeSignal: dynamicAirborneResult
           ? {
-              airborneBasis: dynamicAirborneResult.airborneBasis,
+              airborneBasis: gateYCltMassTimberCtrSpectrumAdapterBasis ?? dynamicAirborneResult.airborneBasis,
               detectedFamily: dynamicAirborneResult.trace.detectedFamily,
               runtimeValueMovement: dynamicAirborneResult.airborneCandidateResolution?.runtimeValueMovement,
               selectedMethod: dynamicAirborneResult.trace.selectedMethod,
@@ -1584,6 +1631,9 @@ export function calculateAssembly(
   }
   if (gateSOpeningLeakCompositeRuntime?.warning) {
     warnings.push(gateSOpeningLeakCompositeRuntime.warning);
+  }
+  if (gateYCltMassTimberCtrSpectrumAdapterBasis) {
+    warnings.push(GATE_Y_CLT_MASS_TIMBER_CTR_SPECTRUM_ADAPTER_WARNING);
   }
   warnings.push(...buildTargetOutputWarnings(visibleTargetOutputSupport));
   warnings.push(...floorFamilySourceGuardWarnings);

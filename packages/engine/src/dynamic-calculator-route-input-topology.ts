@@ -206,6 +206,10 @@ function hasExplicitMassTimberPanelTopology(context: AirborneContext | undefined
   return context?.wallTopology?.topologyMode === "mass_timber_panel";
 }
 
+function hasLayerGroup(indices: readonly number[] | undefined): boolean {
+  return Array.isArray(indices) && indices.length > 0;
+}
+
 function hasKnownTopologyValue(value: string | undefined): boolean {
   return typeof value === "string" && value !== "unknown" && value !== "auto";
 }
@@ -421,6 +425,13 @@ function addGroupedWallTopologyContract(input: {
 }): AcousticInputCompleteness {
   const topology = input.context?.wallTopology;
   const groupedMode = topology?.topologyMode === "grouped_triple_leaf";
+  const explicitNonGroupedMode = Boolean(topology && topology.topologyMode !== "grouped_triple_leaf");
+  const hasRequiredLayerGroups =
+    hasLayerGroup(topology?.sideALeafLayerIndices) &&
+    hasLayerGroup(topology?.cavity1LayerIndices) &&
+    hasLayerGroup(topology?.internalLeafLayerIndices) &&
+    hasLayerGroup(topology?.cavity2LayerIndices) &&
+    hasLayerGroup(topology?.sideBLeafLayerIndices);
   const layerGroupValidation = groupedMode
     ? validateWallTripleLeafLayerGroups({
         layerCount: input.layers.length,
@@ -437,13 +448,17 @@ function addGroupedWallTopologyContract(input: {
     {
       detail: "Group the layers that form the source-side leaf before a multi-cavity solver can run.",
       fieldId: "sideALeafGroup",
-      isMissing: !topology?.sideALeafLayerIndices,
+      isMissing: !hasLayerGroup(topology?.sideALeafLayerIndices),
       label: "Side A leaf group"
     },
     {
-      detail: "Grouped leaf and cavity layer ownership must be non-overlapping and inside the current layer list.",
+      detail:
+        "Select grouped triple-leaf topology and keep every leaf/cavity group non-empty, non-overlapping, and inside the current layer list.",
       fieldId: "leafGrouping",
-      isMissing: Boolean(layerGroupValidation && !layerGroupValidation.valid),
+      isMissing:
+        explicitNonGroupedMode ||
+        (groupedMode && !hasRequiredLayerGroups) ||
+        Boolean(layerGroupValidation && !layerGroupValidation.valid),
       label: "Valid grouped layer ownership"
     },
     {
@@ -461,7 +476,7 @@ function addGroupedWallTopologyContract(input: {
     {
       detail: "Group the internal leaf separately from both outer leaves.",
       fieldId: "internalLeafGroup",
-      isMissing: !topology?.internalLeafLayerIndices,
+      isMissing: !hasLayerGroup(topology?.internalLeafLayerIndices),
       label: "Internal leaf group"
     },
     {
@@ -496,7 +511,7 @@ function addGroupedWallTopologyContract(input: {
     {
       detail: "Group the receiving-side leaf before the stack can leave screening posture.",
       fieldId: "sideBLeafGroup",
-      isMissing: !topology?.sideBLeafLayerIndices,
+      isMissing: !hasLayerGroup(topology?.sideBLeafLayerIndices),
       label: "Side B leaf group"
     },
     {

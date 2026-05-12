@@ -100,6 +100,7 @@ export type PersonalUseMvpCoverageRuntimeSnapshot = {
   publicEntryPoint:
     | "buildDynamicCalculatorRouteInputTopologyAssessment"
     | "buildSteelFloorFormulaPredictorInputFromSurface"
+    | "buildTimberCltDeltaLwPredictorInputFromSurface"
     | "calculateAssembly"
     | "calculateImpactOnly";
   selectedMethod: string | null;

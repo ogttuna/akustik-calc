@@ -41,9 +41,17 @@ import {
   GATE_X_AAC_NONHOMOGENEOUS_MASONRY_SELECTED_CANDIDATE_ID
 } from "./dynamic-airborne-gate-x-aac-nonhomogeneous-masonry";
 import {
+  GATE_Y_CLT_MASS_TIMBER_CTR_SPECTRUM_ADAPTER_RUNTIME_METHOD,
+  GATE_Y_CLT_MASS_TIMBER_CTR_SPECTRUM_ADAPTER_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-gate-y-clt-mass-timber-ctr-spectrum-adapter";
+import {
   GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_METHOD,
   GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_OWNER_INPUTS
 } from "./dynamic-airborne-gate-n-building-prediction-runtime-adapter";
+import {
+  GATE_AE_FLAT_MULTICAVITY_RUNTIME_METHOD,
+  GATE_AE_FLAT_MULTICAVITY_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-gate-ae-flat-multicavity";
 
 export type DynamicCalculatorCandidateResolverSourceAnchor = {
   applied: boolean;
@@ -497,6 +505,10 @@ function selectLane(input: {
 }
 
 function familyPhysicsCandidateId(runtimeBasis?: AirborneResultBasis): string {
+  if (runtimeBasis?.method === GATE_AE_FLAT_MULTICAVITY_RUNTIME_METHOD) {
+    return GATE_AE_FLAT_MULTICAVITY_SELECTED_CANDIDATE_ID;
+  }
+
   if (runtimeBasis?.method === GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_RUNTIME_METHOD) {
     return GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_SELECTED_CANDIDATE_ID;
   }
@@ -515,6 +527,10 @@ function familyPhysicsCandidateId(runtimeBasis?: AirborneResultBasis): string {
 
   if (runtimeBasis?.method === GATE_X_AAC_NONHOMOGENEOUS_MASONRY_RUNTIME_METHOD) {
     return GATE_X_AAC_NONHOMOGENEOUS_MASONRY_SELECTED_CANDIDATE_ID;
+  }
+
+  if (runtimeBasis?.method === GATE_Y_CLT_MASS_TIMBER_CTR_SPECTRUM_ADAPTER_RUNTIME_METHOD) {
+    return GATE_Y_CLT_MASS_TIMBER_CTR_SPECTRUM_ADAPTER_SELECTED_CANDIDATE_ID;
   }
 
   return "candidate_grouped_rockwool_family_physics_prediction";

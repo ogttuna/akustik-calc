@@ -11,11 +11,12 @@ import {
   GATE_O_SINGLE_LEAF_MASSIVE_PANEL_PREDICTION_WARNING,
   maybeBuildGateOSingleLeafMassivePanelBasis
 } from "./dynamic-airborne-gate-o-single-leaf";
+import { GATE_H_CLT_MASS_TIMBER_WALL_WARNING } from "./dynamic-airborne-gate-h-lined-masonry-clt";
 import {
-  GATE_H_CLT_MASS_TIMBER_WALL_RUNTIME_METHOD,
-  GATE_H_CLT_MASS_TIMBER_WALL_SELECTED_CANDIDATE_ID,
-  GATE_H_CLT_MASS_TIMBER_WALL_WARNING
-} from "./dynamic-airborne-gate-h-lined-masonry-clt";
+  GATE_Y_CLT_MASS_TIMBER_CTR_SPECTRUM_ADAPTER_RUNTIME_METHOD,
+  GATE_Y_CLT_MASS_TIMBER_CTR_SPECTRUM_ADAPTER_SELECTED_CANDIDATE_ID,
+  GATE_Y_CLT_MASS_TIMBER_CTR_SPECTRUM_ADAPTER_WARNING
+} from "./dynamic-airborne-gate-y-clt-mass-timber-ctr-spectrum-adapter";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
@@ -279,15 +280,16 @@ describe("calculator model-first physics prediction pivot Gate O", () => {
     });
     expect(clt.airborneCandidateResolution).toMatchObject({
       runtimeValueMovement: false,
-      selectedCandidateId: GATE_H_CLT_MASS_TIMBER_WALL_SELECTED_CANDIDATE_ID,
+      selectedCandidateId: GATE_Y_CLT_MASS_TIMBER_CTR_SPECTRUM_ADAPTER_SELECTED_CANDIDATE_ID,
       selectedOrigin: "family_physics_prediction"
     });
     expect(clt.airborneBasis).toMatchObject({
-      method: GATE_H_CLT_MASS_TIMBER_WALL_RUNTIME_METHOD,
+      method: GATE_Y_CLT_MASS_TIMBER_CTR_SPECTRUM_ADAPTER_RUNTIME_METHOD,
       origin: "family_physics_prediction"
     });
     expect(clt.warnings).not.toContain(GATE_O_SINGLE_LEAF_MASSIVE_PANEL_PREDICTION_WARNING);
     expect(clt.warnings).toContain(GATE_H_CLT_MASS_TIMBER_WALL_WARNING);
+    expect(clt.warnings).toContain(GATE_Y_CLT_MASS_TIMBER_CTR_SPECTRUM_ADAPTER_WARNING);
 
     expect(groupedRockwool.metrics).toMatchObject({
       estimatedRwDb: 50,

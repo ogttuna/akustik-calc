@@ -85,6 +85,7 @@ function collectInactiveOfficialProductWarnings(input: {
 }
 
 export type EvaluatedScenario = {
+  airborneContext?: AirborneContext | null;
   id: string;
   name: string;
   result: AssemblyCalculation | null;

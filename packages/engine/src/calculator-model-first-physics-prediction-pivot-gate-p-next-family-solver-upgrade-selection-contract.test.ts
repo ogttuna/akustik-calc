@@ -8,9 +8,9 @@ import { describe, expect, it } from "vitest";
 import { calculateAssembly } from "./calculate-assembly";
 import { buildGatePNextFamilySolverUpgradeSelection } from "./dynamic-calculator-next-family-solver-upgrade-selection";
 import {
-  GATE_H_CLT_MASS_TIMBER_WALL_RUNTIME_METHOD,
-  GATE_H_CLT_MASS_TIMBER_WALL_SELECTED_CANDIDATE_ID
-} from "./dynamic-airborne-gate-h-lined-masonry-clt";
+  GATE_Y_CLT_MASS_TIMBER_CTR_SPECTRUM_ADAPTER_RUNTIME_METHOD,
+  GATE_Y_CLT_MASS_TIMBER_CTR_SPECTRUM_ADAPTER_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-gate-y-clt-mass-timber-ctr-spectrum-adapter";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
@@ -315,11 +315,11 @@ describe("calculator model-first physics prediction pivot Gate P", () => {
     expect(clt.metrics).toMatchObject({ estimatedRwDb: 40, estimatedStc: 40 });
     expect(clt.airborneCandidateResolution).toMatchObject({
       runtimeValueMovement: false,
-      selectedCandidateId: GATE_H_CLT_MASS_TIMBER_WALL_SELECTED_CANDIDATE_ID,
+      selectedCandidateId: GATE_Y_CLT_MASS_TIMBER_CTR_SPECTRUM_ADAPTER_SELECTED_CANDIDATE_ID,
       selectedOrigin: "family_physics_prediction"
     });
     expect(clt.airborneBasis).toMatchObject({
-      method: GATE_H_CLT_MASS_TIMBER_WALL_RUNTIME_METHOD,
+      method: GATE_Y_CLT_MASS_TIMBER_CTR_SPECTRUM_ADAPTER_RUNTIME_METHOD,
       origin: "family_physics_prediction"
     });
 

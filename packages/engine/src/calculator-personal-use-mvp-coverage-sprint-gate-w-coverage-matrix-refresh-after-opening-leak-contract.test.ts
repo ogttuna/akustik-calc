@@ -225,12 +225,12 @@ describe("Personal-Use MVP Coverage Sprint Gate W coverage matrix refresh after 
       currentPosture: "family_physics",
       failureClass: "coverage_gap",
       runtime: {
-        basisId: "gate_h_clt_mass_timber_wall_single_leaf_family_physics_runtime",
-        supportedTargetOutputs: ["Rw", "STC", "C"],
-        unsupportedTargetOutputs: ["Ctr"]
+        basisId: "gate_y_clt_mass_timber_ctr_spectrum_adapter_runtime",
+        supportedTargetOutputs: ["Rw", "STC", "C", "Ctr"],
+        unsupportedTargetOutputs: []
       }
     });
-    expect(values(cltWall)).toEqual({ C: -1.2, Rw: 42, STC: 42 });
+    expect(values(cltWall)).toEqual({ C: -1.2, Ctr: -6.1, Rw: 42, STC: 42 });
 
     expect(timberFloor).toMatchObject({
       currentPosture: "exact",

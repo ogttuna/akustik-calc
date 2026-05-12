@@ -38,6 +38,36 @@ handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_X_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_X_HANDOFF.md).
 For the post-Gate X broad revalidation and Gate Y-ready handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_X_BROAD_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_X_BROAD_REVALIDATION_HANDOFF.md).
+For the Gate Y CLT / mass-timber `Ctr` research plan and executable
+implementation order read
+[CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_Y_RESEARCH_PLAN_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_Y_RESEARCH_PLAN_HANDOFF.md).
+For the Gate Y CLT / mass-timber `Ctr` spectrum adapter and Gate Z
+handoff read
+[CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_Y_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_Y_HANDOFF.md).
+For the Gate Z no-runtime post-CLT-Ctr coverage revalidation and Gate AA
+scenario matrix v2 handoff read
+[CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_Z_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_Z_HANDOFF.md).
+For the Gate AA no-runtime scenario matrix v2 expansion and Gate AB
+flat multicavity topology input-surface handoff read
+[CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AA_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AA_HANDOFF.md).
+For the post-Gate-AA Gate AB readiness analysis and implementation
+sequence read
+[CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_GATE_AB_READINESS_ANALYSIS_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_GATE_AB_READINESS_ANALYSIS_HANDOFF.md).
+For the Gate AB flat multicavity topology input contract and Gate AC
+surface-parity handoff read
+[CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AB_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AB_HANDOFF.md).
+For the Gate AC flat multicavity topology surface parity and Gate AD
+broad-revalidation handoff read
+[CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AC_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AC_HANDOFF.md).
+For the Gate AD broad revalidation / internal pilot rehearsal and Gate
+AE solver-broadening handoff read
+[CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AD_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AD_HANDOFF.md).
+For the Gate AE flat multicavity solver broadening and Gate AF
+revalidation handoff read
+[CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AE_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AE_HANDOFF.md).
+For the post-Gate-AE checkpoint, broad `pnpm check`, and still-selected
+Gate AF revalidation handoff read
+[CHECKPOINT_2026-05-12_POST_GATE_AE_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_POST_GATE_AE_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md).
 For the Gate R no-runtime formula corridor and Gate S handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md).
 For the Gate Q no-runtime input contract and Gate R handoff read
@@ -94,47 +124,319 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
-## Post-Gate X Broad Revalidation - 2026-05-11
+## Gate AA Scenario Matrix V2 Expansion Landed - 2026-05-11
 
-Gate X remains landed and Gate Y remains the active next implementation
-step.
+Gate X, Gate Y, and Gate Z remain landed. Gate AA has now landed the
+no-runtime scenario matrix v2 expansion and selected Gate AB as the next
+bounded implementation lane.
 
 Current selected status:
 
-`gate_x_personal_use_mvp_aac_nonhomogeneous_masonry_wall_family_solver_landed_selected_clt_ctr_gate_y`
+`gate_aa_personal_use_mvp_scenario_matrix_v2_expansion_landed_selected_flat_multicavity_input_surface_gate_ab`
 
 Selected next action:
 
-`gate_y_personal_use_mvp_clt_mass_timber_ctr_spectrum_adapter_plan`
+`gate_ab_personal_use_mvp_flat_multicavity_topology_input_surface_plan`
 
 Selected next file:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-y-clt-mass-timber-ctr-spectrum-adapter-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ab-flat-multicavity-topology-input-surface-contract.test.ts`
 
-The broad revalidation after Gate X passed `pnpm check`: lint and
-typecheck are clean, engine tests passed 490 files / 2911 tests, web
-tests passed 179 files / 989 passed + 18 skipped, and the repo build
-passed 5/5 tasks. The only required changes were stale test/lint
-alignment: unused Gate R/S imports/helpers, JSX escaping for `R'w`,
-proposal text expecting the old `Field continuation` label instead of
-`Airborne field-context prediction`, and wall-selector building
-prediction card expectations that must stay `needs_input` until the
-building owner fields are explicit.
+Gate Y makes the complete element-lab CLT wall support `Ctr` from the
+existing calculated ISO 717-1 frequency curve. The pinned result is now
+`Rw 42 / STC 42 / C -1.2 / Ctr -6.1` with
+`gate_y_clt_mass_timber_ctr_spectrum_adapter_runtime`,
+`family_physics_prediction`, and the same `+/-6 dB` uncalibrated budget.
+This is not a retune and not a source-row promotion.
 
-No acoustic runtime values moved. Gate X still keeps complete lab AAC /
-non-homogeneous masonry pinned at `Rw 44 / STC 44 / C -0.7 / Ctr -5.2`
-while its origin is
-`gate_x_aac_nonhomogeneous_masonry_sharp_davy_family_physics_runtime`
-/ `family_physics_prediction` with `+/-6 dB`. Exact-source precedence,
-field/building non-aliasing, opening/leak, timber/CLT impact, and
-building-prediction missing-input boundaries remain intact.
+The previous Gate X selected Gate Y action remains documented for
+handoff continuity:
+`gate_y_personal_use_mvp_clt_mass_timber_ctr_spectrum_adapter_plan`.
+The Gate Y landed file is
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-y-clt-mass-timber-ctr-spectrum-adapter-contract.test.ts`.
+The Gate Y selected Gate Z action was
+`gate_z_personal_use_mvp_post_clt_ctr_coverage_revalidation_plan`.
+The Gate Z landed file is
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-z-post-clt-ctr-coverage-revalidation-contract.test.ts`.
+The Gate Z selection status was
+`gate_z_personal_use_mvp_post_clt_ctr_coverage_revalidation_landed_selected_matrix_v2_expansion_gate_aa`.
+The Gate Z selected Gate AA action was
+`gate_aa_personal_use_mvp_scenario_matrix_v2_expansion_plan`.
+The Gate AA landed file is
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-aa-scenario-matrix-v2-expansion-contract.test.ts`.
 
-Gate Y should start by adding the executable CLT / mass-timber `Ctr`
-spectrum-adapter contract, continue the companion-module pattern because
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint.ts` is
-1985 lines after cleanup, and avoid broad source crawling unless the
-matrix names a specific source-owned holdout as the highest-impact
-unblocker.
+Gate Z proves the 28-row personal-use matrix is gap-free after the Gate
+X AAC solver and Gate Y CLT `Ctr` adapter. It keeps all runtime values,
+budgets, APIs, cards, source precedence, and lab/field/building basis
+rules unchanged. Failure-class counts are `none: 18`,
+`correct_block: 5`, `hostile_input_refusal: 2`,
+`unsupported_metric: 1`, `basis_boundary: 2`, and `coverage_gap: 0`.
+
+Gate AA extends the executable matrix from 28 to 40 rows and remains
+gap-free. New rows cover split-board double-leaf walls, safe-reordered
+grouped triple-leaf walls, many-layer flat multicavity ambiguity,
+multi-opening leakage, opening `STC` non-support, duplicate opening
+refusal, partial building-prediction context, missing timber/steel floor
+formula inputs, wrong-family steel guardrails, CLT low-frequency field
+local-guide posture, and heavy floating-floor safe reorder continuity.
+Failure-class counts are `none: 23`, `correct_block: 10`,
+`hostile_input_refusal: 3`, `unsupported_metric: 2`,
+`basis_boundary: 2`, and `coverage_gap: 0`.
+
+Gate AB is selected as the flat multicavity topology input surface. The
+highest-ROI next step is not a source crawl or formula retune; it is to
+ask for explicit side leaf groups, cavity depths, internal leaf group,
+coupling, and support topology so realistic many-layer wall schedules can
+move from ambiguous `needs_input` toward the already-owned family solver
+lanes. Gate AA validation passed on 2026-05-11: focused Gate AA 1 file
+/ 6 tests, Gate X/Y/Z/AA continuity 4 files / 26 tests, engine
+typecheck, and `pnpm calculator:gate:current` with engine 368 files /
+2128 tests, web 73 files / 314 passed + 18 skipped, repo build 5/5, and
+whitespace guard clean.
+
+## Gate AB Readiness Analysis - 2026-05-11
+
+The current route remains correct. Gate AA deliberately did not promote
+ambiguous flat/many-layer multicavity walls; it proved they must ask for
+explicit topology instead of guessing from layer order. That is the
+right next product problem because it improves real calculator use while
+preserving acoustic basis honesty.
+
+Implementation evidence already supports this lane:
+
+- `AirborneContext.wallTopology` can represent the owner set Gate AB
+  needs: side A leaf, cavity 1, internal leaf, internal coupling, cavity
+  2, side B leaf, and support topology.
+- `buildDynamicCalculatorRouteInputTopologyAssessment` already exposes
+  the missing physical fields and prompts that Gate AB should harden.
+- Workbench grouped-topology code already parses row-number groups,
+  persists them, and clears stale groups on preset changes.
+- Existing double/triple-leaf runtime paths can consume complete grouped
+  topologies without moving the Gate AA pinned values.
+
+Gate AB should therefore be an input-surface/contract gate, not a source
+crawl and not a formula retune. It should prove complete owner sets,
+partial `needs_input` prompts, invalid/overlapping group refusal, safe
+grouped runtime continuity, and field/building/opening-STC/ASTM
+non-aliasing boundaries.
+
+Recommended sequence:
+
+1. Gate AB: engine/shared flat multicavity topology input contract.
+2. Gate AC: workbench/API/saved-snapshot/report parity for those fields.
+3. Gate AD: broad revalidation and company-internal pilot readiness
+   rehearsal.
+4. Re-rank opening `STC`, field/building runtime terms, floor polish,
+   and source acquisition only after the expanded evidence is green.
+
+## Gate AB Flat Multicavity Topology Input Contract Landed - 2026-05-11
+
+Gate AB has now landed the no-runtime engine/shared input contract:
+
+`gate_ab_personal_use_mvp_flat_multicavity_topology_input_surface_plan`
+
+Selection status:
+
+`gate_ab_personal_use_mvp_flat_multicavity_topology_input_surface_landed_selected_surface_parity_gate_ac`
+
+Selected next action:
+
+`gate_ac_personal_use_mvp_flat_multicavity_topology_surface_parity_plan`
+
+Selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ac-flat-multicavity-topology-surface-parity-contract.test.ts`
+
+Gate AB keeps the ambiguous flat/many-layer multicavity row as
+`needs_input` until physical topology ownership is explicit. Complete
+grouped owner sets now prove side A leaf group, leaf grouping, cavity 1
+depth/fill/absorption, internal leaf group, internal coupling, cavity 2
+depth/fill/absorption, side B leaf group, and support topology. Stale
+`flat_layer_order` group indices, duplicate/overlapping indices,
+out-of-range groups, and empty required groups are refused by
+`leafGrouping` instead of being treated as complete.
+
+No runtime values, formulas, source rows, tolerances, API shapes,
+workbench input behavior, or lab/field/building basis rules moved. The
+safe grouped triple-leaf runtime remains pinned at
+`Rw 50 / STC 55 / C 0.8 / Ctr -7.3` through
+`triple_leaf_two_cavity_frequency_solver`, and field/apparent plus ASTM
+requests remain separate basis routes.
+
+Gate AB validation passed on 2026-05-11: focused Gate AB 1 file / 6
+tests, Gate G/K/L/X/Y/Z/AA/AB continuity 8 files / 57 tests, engine
+typecheck, and `pnpm calculator:gate:current` with engine 369 files /
+2134 tests, web 73 files / 314 passed + 18 skipped, repo build 5/5, and
+whitespace guard clean.
+
+## Gate AC Flat Multicavity Topology Surface Parity Landed - 2026-05-11
+
+Gate AC has now landed the workbench/API/saved-snapshot/report parity
+slice for the same topology owner fields:
+
+`gate_ac_personal_use_mvp_flat_multicavity_topology_surface_parity_plan`
+
+Selection status:
+
+`gate_ac_personal_use_mvp_flat_multicavity_topology_surface_parity_landed_selected_broad_revalidation_gate_ad`
+
+Selected next action:
+
+`gate_ad_personal_use_mvp_flat_multicavity_broad_revalidation_and_internal_pilot_rehearsal_plan`
+
+Selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ad-flat-multicavity-broad-revalidation-and-internal-pilot-rehearsal-contract.test.ts`
+
+Gate AC does not retune the solver or source-promote rows. It proves
+that UI-owned grouped topology reaches live evaluation, saved replay,
+the calculator API, output cards, and Markdown report lines. Complete
+flat/many-layer grouped topology remains explicit but source-absent
+screening (`Rw 38 / STC 38 / C -1 / Ctr -5.6`, method
+`screening_mass_law_curve_seed_v3`, origin `screening_fallback`), while
+the existing grouped triple-leaf family solver stays pinned at
+`Rw 50 / STC 55 / C 0.8 / Ctr -7.3` through
+`triple_leaf_two_cavity_frequency_solver`.
+
+Partial UI topology stays parked: it creates no Gate AC report surface
+and still exposes grouped-topology missing-input prompts. The visible
+surface label is `Wall multicavity topology owner set`, and report copy
+explicitly says it is not measured evidence.
+
+Gate AC validation passed on 2026-05-11: focused Gate AC engine 1 file /
+4 tests, focused Gate AC web 1 file / 4 tests, Gate AB/AC engine
+continuity 2 files / 10 tests, grouped-wall/AC web continuity 2 files /
+8 tests, engine typecheck, web typecheck, and `pnpm
+calculator:gate:current` with engine 370 files / 2138 tests, web 74
+files / 318 passed + 18 skipped, repo build 5/5, and whitespace guard
+clean. The Next build kept the known optional `sharp/@img` package
+warnings but completed successfully.
+
+## Gate AD Broad Revalidation And Internal Pilot Landed - 2026-05-11
+
+Gate AD has now landed the no-runtime broad revalidation and
+company-internal pilot rehearsal:
+
+`gate_ad_personal_use_mvp_flat_multicavity_broad_revalidation_and_internal_pilot_rehearsal_plan`
+
+Selection status:
+
+`gate_ad_personal_use_mvp_broad_revalidation_landed_selected_flat_multicavity_solver_broadening_gate_ae`
+
+Selected next action:
+
+`gate_ae_personal_use_mvp_flat_multicavity_solver_broadening_plan`
+
+Selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ae-flat-multicavity-solver-broadening-contract.test.ts`
+
+Gate AD keeps the Gate AA 40-row matrix gap-free and classifies it for
+controlled internal pilot use: 23 numeric supported rows, 17 blocked
+rows with explicit `needs_input`/unsupported/basis/hostile posture, and
+zero `coverage_gap` rows. No runtime formulas, values, source rows,
+tolerances, workbench fields, API shapes, cards, reports, or
+lab/field/building/ASTM basis rules moved.
+
+The complete grouped flat/many-layer wall remains explicit but broad
+screening only (`Rw 38 / STC 38 / C -1 / Ctr -5.6`, method
+`screening_mass_law_curve_seed_v3`, origin `screening_fallback`,
+`+/-10 dB`). The existing grouped triple-leaf family solver remains
+pinned at `Rw 50 / STC 55 / C 0.8 / Ctr -7.3` through
+`triple_leaf_two_cavity_frequency_solver`.
+
+Gate AD selects Gate AE because the highest ROI is now algorithmic:
+replace broad screening for complete source-absent flat multicavity
+topology with a named solver corridor. Broad source crawling, opening
+`STC`, field/building runtime terms, floor polish, and ASTM/IIC adapters
+remain parked behind explicit basis or owner contracts.
+
+Gate AD validation passed on 2026-05-11: focused Gate AD engine 1 file /
+5 tests, Gate AA/AB/AC/AD engine continuity 4 files / 21 tests, Gate AC
+web surface continuity 2 files / 8 tests, engine typecheck, web
+typecheck, `pnpm calculator:gate:current` with engine 371 files / 2143
+tests, web 74 files / 318 passed + 18 skipped, repo build 5/5, and
+whitespace guard clean, plus explicit `git diff --check`. The Next build
+kept the known optional `sharp/@img` package warnings but completed.
+
+## Gate AE Flat Multicavity Solver Broadening Landed - 2026-05-11
+
+Gate AE has now landed the bounded runtime promotion selected by Gate
+AD:
+
+`gate_ae_personal_use_mvp_flat_multicavity_solver_broadening_plan`
+
+Selection status:
+
+`gate_ae_personal_use_mvp_flat_multicavity_solver_broadening_landed_selected_revalidation_gate_af`
+
+Selected next action:
+
+`gate_af_personal_use_mvp_post_flat_multicavity_solver_broadening_revalidation_plan`
+
+Selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-af-post-flat-multicavity-solver-broadening-revalidation-contract.test.ts`
+
+Gate AE replaces broad screening only for complete explicit
+`element_lab` grouped flat/many-layer multicavity walls. It does not
+auto-group flat layer lists and does not promote source rows. The
+complete grouped stack now returns `Rw 53 / STC 57 / C -0.6 / Ctr -8`
+through `gate_ae_flat_multicavity_two_cavity_frequency_solver`,
+`family_physics_prediction`, with a `+/-7 dB` uncalibrated error
+budget. The previous broad-screening pin was `Rw 38 / STC 38 / C -1 /
+Ctr -5.6`.
+
+The existing Gate G full mineral-wool grouped triple-leaf runtime remains
+unchanged at `Rw 50 / STC 55 / C 0.8 / Ctr -7.3` with the
+`triple_leaf_two_cavity_frequency_solver` basis and `+/-5 dB` budget.
+Stale `flat_layer_order` topology, duplicate groups, missing topology,
+field/apparent requests, building prediction, ASTM, and IIC routes stay
+behind their explicit input/basis owners.
+
+Gate AF is selected as post-promotion revalidation: run the 40-row
+matrix, older Gate G/AB/AC/AD continuity, web/API/report parity, and
+basis-boundary checks before selecting the next solver or source lane.
+
+Gate AE validation passed on 2026-05-11: focused Gate AE/AC/AD engine
+contracts 3 files / 14 tests, focused flat-multicavity web surface
+parity 1 file / 4 tests, engine typecheck, web typecheck, focused
+dynamic-airborne split line-count contract 1 file / 5 tests, and `pnpm
+calculator:gate:current` with engine 372 files / 2148 tests, web 74
+files / 318 passed + 18 skipped, repo build 5/5, and whitespace guard
+clean. The Next build kept the known optional `sharp/@img` package
+warnings but completed.
+
+## Post-Gate AE Checkpoint and Broad Revalidation - 2026-05-12
+
+The post-Gate-AE checkpoint confirms this is a clean stopping point
+before Gate AF. Docs, implementation, and selected next action are
+aligned: Gate AE runtime and web parity are landed; Gate AF remains the
+next no-runtime broad revalidation step; and the selected Gate AF file is
+intentionally not created yet.
+
+One lint-only gap was found during the checkpoint: Gate AA had an unused
+`PersonalUseMvpCoverageRuntimeSnapshot` type import. It was removed
+without moving any runtime value, formula, source-promotion rule,
+tolerance, or lab/field/building boundary.
+
+Validation now includes the broad repository gate. `pnpm
+calculator:gate:current` passed with engine 372 files / 2148 tests, web
+74 files / 318 passed + 18 skipped, repo build 5/5, and whitespace guard
+clean. Final `pnpm check` passed after the lint cleanup: lint,
+typecheck, engine Vitest 497 files / 2950 tests, all web Vitest split
+batches, and repo build 5/5. The known optional `sharp/@img` warnings
+from the DOCX/PDF path remain non-fatal.
+
+Keep the next implementation step narrow:
+
+`gate_af_personal_use_mvp_post_flat_multicavity_solver_broadening_revalidation_plan`
+
+Gate AF should prove the 40-row matrix, old Gate G/AB/AC/AD continuity,
+web/API/report parity, and lab/field/building/ASTM/IIC boundaries after
+the Gate AE runtime promotion. If green, select the next solver or
+source lane from the refreshed matrix instead of defaulting to broad
+source crawling.
 
 ## Strategic ROI Replan - 2026-05-08
 
@@ -3373,51 +3675,87 @@ Zustand unavailable test-storage warnings and optional sharp package
 resolution warnings during web build. Broad `pnpm check` was not rerun
 because Gate BI has no runtime/API/UI surface change.
 
-## Next Implementation Order - Personal-Use MVP Coverage Sprint Gate Y CLT / Mass-Timber Ctr Spectrum Adapter
+## Consumed Gate Y Implementation Order - Personal-Use MVP Coverage Sprint CLT / Mass-Timber Ctr Spectrum Adapter
 
-Gate X has now closed the AAC / non-homogeneous masonry element-lab
-gap. The executable matrix now leaves one immediate wall lab coverage
-gap: `wall.clt_mass_timber.lab` supports `Rw 42 / STC 42 / C -1.2`,
-but `Ctr` is still unsupported because the current CLT wall route has
-no owned low-frequency spectrum adaptation. Gate Y should add that
-adapter only for complete element-lab mass-timber wall inputs, without
-aliasing field/building outputs or importing source rows as a shortcut.
+Gate X closed the AAC / non-homogeneous masonry element-lab gap and
+selected Gate Y. Gate Y has now closed the immediate CLT wall lab
+support gap: `wall.clt_mass_timber.lab` supports
+`Rw 42 / STC 42 / C -1.2 / Ctr -6.1` through a named source-absent
+ISO 717-1 spectrum adapter, without aliasing field/building outputs or
+importing source rows as a shortcut.
 
 Gate X status:
 
 `gate_x_personal_use_mvp_aac_nonhomogeneous_masonry_wall_family_solver_landed_selected_clt_ctr_gate_y`
 
-Gate Y target:
+Gate Y landed file:
 
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-y-clt-mass-timber-ctr-spectrum-adapter-contract.test.ts`
 
-Gate Y action:
+Gate Y landed action:
 
 `gate_y_personal_use_mvp_clt_mass_timber_ctr_spectrum_adapter_plan`
 
-Active Gate Y task: decide and implement the smallest bounded
-source-absent CLT / mass-timber airborne lab `Ctr` spectrum-adapter
-contract that completes the existing `Rw`/`STC`/`C` lab lane while
-keeping exact-source precedence and field/building separation intact.
+Gate Y landed status:
 
-Gate Y order:
+`gate_y_personal_use_mvp_clt_mass_timber_ctr_spectrum_adapter_landed_selected_post_gate_y_revalidation_gate_z`
+
+Gate Y selected Gate Z file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-z-post-clt-ctr-coverage-revalidation-contract.test.ts`
+
+Gate Y selected Gate Z action:
+
+`gate_z_personal_use_mvp_post_clt_ctr_coverage_revalidation_plan`
+
+Gate Y task implemented the smallest bounded source-absent CLT /
+mass-timber airborne lab `Ctr` spectrum-adapter contract that completes
+the existing `Rw`/`STC`/`C` lab lane while keeping exact-source
+precedence and field/building separation intact.
+
+Implementation read:
+
+- complete CLT lab returns finite `estimatedCtrDb: -6.1`;
+- `Ctr` is now included in `supportedTargetOutputs` when the owner set is complete;
+- `airborneBasis` already owns `curveBasis:
+  "calculated_frequency_curve"`, ISO 717-1, and dynamic delegate
+  frequency bands;
+- Gate Y promotes output support and basis posture for complete CLT lab
+  only, without retuning the numeric curve.
+
+Gate Y landed order:
 
 1. Add the Gate Y contract around the Gate X matrix row
-   `wall.clt_mass_timber.lab`, including its current values, unsupported
-   `Ctr`, and selected lane rationale.
-2. Define the physical owner set: mass-timber/CLT material class,
-   density, thickness, surface mass, panel topology, element-lab basis,
-   and optional orthotropic stiffness / damping defaults that widen
-   uncertainty instead of masquerading as source evidence.
-3. Promote only element-lab `Ctr` for the existing CLT wall family when
-   the spectrum owner is complete; keep `Rw`, `STC`, and `C` pinned
-   unless the contract explicitly proves a value move.
-4. Add negative boundaries for ordinary gypsum/concrete, missing
-   density/class, lined massive, field/apparent, building prediction,
-   ASTM-only wording, and exact source precedence.
-5. Keep the matrix companion pattern from Gate X so
-   `calculator-personal-use-mvp-coverage-sprint.ts` stays below the
-   2000-line split threshold.
+   `wall.clt_mass_timber.lab`, including the inherited pre-change
+   posture: `Rw 42 / STC 42 / C -1.2`, finite `estimatedCtrDb: -6.1`,
+   and unsupported `Ctr`.
+2. Add a small Gate Y companion helper for the CLT `Ctr`
+   spectrum-adapter constants, selected candidate id, support label, and
+   guard predicates. Continue the Gate X companion-module pattern instead
+   of growing the base matrix file.
+3. Define the owner set: wall route, `element_lab` basis,
+   mass-timber/CLT single-panel topology, finite density, finite
+   thickness, finite surface mass, calculated dynamic frequency curve,
+   ISO 717-1 rating adapter, and no exact-source override.
+4. Promote only element-lab `Ctr` for the existing CLT wall family when
+   the owner set is complete. Keep `Rw 42`, `STC 42`, `C -1.2`, and the
+   `+/-6 dB` source-absent uncalibrated parent budget pinned.
+5. Add negative boundaries for missing custom CLT density or invalid
+   thickness, ordinary gypsum/concrete/AAC, lined massive, framed or
+   grouped triple-leaf walls, opening/leak routes, field/apparent,
+   building prediction, ASTM/STC-only wording, exact source precedence,
+   and duplicate/ambiguous CLT layers.
+6. Update the matrix overlay so `wall.clt_mass_timber.lab` moves from
+   partial spectrum support to full lab `Rw`/`STC`/`C`/`Ctr` family
+   physics support.
+7. Validation completed on 2026-05-11: focused Gate Y 1 file / 7
+   tests, Gate H/X/Y continuity 3 files / 21 tests, targeted Gate
+   W/O/P expectation refresh 3 files / 15 tests, engine typecheck,
+   `pnpm calculator:gate:current` with engine 366 files / 2116 tests,
+   web 73 files / 314 passed + 18 skipped, repo build 5/5, broad
+   `pnpm check` with lint/typecheck clean, engine 491 files / 2918
+   tests, web 179 files / 989 passed + 18 skipped, repo build 5/5, and
+   `git diff --check`.
 
 ## Consumed Gate X Implementation Order - Personal-Use MVP Coverage Sprint AAC / Non-Homogeneous Masonry Family Solver
 

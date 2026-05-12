@@ -75,6 +75,7 @@ import {
   evaluateWallTripleLeafTopologyReadiness,
   WALL_TRIPLE_LEAF_TOPOLOGY_FIELD_LABELS
 } from "./wall-triple-leaf-topology-readiness";
+import { maybeCalculateGateAEFlatMulticavityPrediction } from "./dynamic-airborne-gate-ae-flat-multicavity";
 import { maybeCalculateGateGGroupedRockwoolPrediction } from "./dynamic-airborne-gate-g-rockwool";
 import {
   GATE_O_SINGLE_LEAF_MASSIVE_PANEL_PREDICTION_WARNING,
@@ -1049,6 +1050,15 @@ export function calculateDynamicAirborneResult(
   });
   if (gateGGroupedRockwoolPrediction) {
     return gateGGroupedRockwoolPrediction;
+  }
+  const gateAEFlatMulticavityPrediction = maybeCalculateGateAEFlatMulticavityPrediction({
+    family,
+    layers: analysisLayers,
+    options,
+    topology
+  });
+  if (gateAEFlatMulticavityPrediction) {
+    return gateAEFlatMulticavityPrediction;
   }
   const gateSDoubleLeafFramedBridgeRuntime = maybeCalculateGateSDoubleLeafFramedBridgeRuntime({
     family,

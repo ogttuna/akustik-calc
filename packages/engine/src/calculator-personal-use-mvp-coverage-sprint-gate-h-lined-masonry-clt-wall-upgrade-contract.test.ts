@@ -66,6 +66,7 @@ const CURRENT_SELECTION_DOCS = [
 ] as const;
 
 const WALL_LAB_OUTPUTS = ["Rw", "STC", "C", "Ctr"] as const satisfies readonly RequestedOutputId[];
+const WALL_LAB_OUTPUTS_WITHOUT_CTR = ["Rw", "STC", "C"] as const satisfies readonly RequestedOutputId[];
 const WALL_FIELD_OUTPUTS = ["R'w", "DnT,w"] as const satisfies readonly RequestedOutputId[];
 
 const WALL_LAB_CONTEXT: AirborneContext = {
@@ -231,7 +232,7 @@ describe("Personal-Use MVP Coverage Sprint Gate H lined masonry and CLT wall upg
     const clt = calculateAssembly(CLT_WALL, {
       airborneContext: WALL_LAB_CONTEXT,
       calculator: "dynamic",
-      targetOutputs: WALL_LAB_OUTPUTS
+      targetOutputs: WALL_LAB_OUTPUTS_WITHOUT_CTR
     });
 
     expect(clt.metrics).toMatchObject({
@@ -239,7 +240,7 @@ describe("Personal-Use MVP Coverage Sprint Gate H lined masonry and CLT wall upg
       estimatedStc: 42
     });
     expect(clt.supportedTargetOutputs).toEqual(["Rw", "STC", "C"]);
-    expect(clt.unsupportedTargetOutputs).toEqual(["Ctr"]);
+    expect(clt.unsupportedTargetOutputs).toEqual([]);
     expect(clt.dynamicAirborneTrace).toMatchObject({
       detectedFamily: "single_leaf_panel",
       selectedMethod: "sharp",
