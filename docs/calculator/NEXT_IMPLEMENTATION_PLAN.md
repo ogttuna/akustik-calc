@@ -68,6 +68,8 @@ revalidation handoff read
 For the post-Gate-AE checkpoint, broad `pnpm check`, and still-selected
 Gate AF revalidation handoff read
 [CHECKPOINT_2026-05-12_POST_GATE_AE_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_POST_GATE_AE_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md).
+For the clean Gate AF implementation plan read
+[SLICE_PERSONAL_USE_MVP_GATE_AF_POST_FLAT_MULTICAVITY_REVALIDATION_PLAN.md](./SLICE_PERSONAL_USE_MVP_GATE_AF_POST_FLAT_MULTICAVITY_REVALIDATION_PLAN.md).
 For the Gate R no-runtime formula corridor and Gate S handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md).
 For the Gate Q no-runtime input contract and Gate R handoff read
@@ -427,6 +429,14 @@ clean. Final `pnpm check` passed after the lint cleanup: lint,
 typecheck, engine Vitest 497 files / 2950 tests, all web Vitest split
 batches, and repo build 5/5. The known optional `sharp/@img` warnings
 from the DOCX/PDF path remain non-fatal.
+
+A later broad plan review on 2026-05-12 reran `pnpm check` green with
+lint clean, typecheck clean, engine Vitest 497 files / 2950 tests, web
+Vitest 180 files / 993 passed + 18 skipped, and repo build 5/5. No
+runtime, tolerance, source-precedence, card/report/API, or
+lab/field/building fix was required. The active implementation gap is
+still the missing Gate AF no-runtime revalidation summary, contract, and
+current-gate runner entry.
 
 Keep the next implementation step narrow:
 

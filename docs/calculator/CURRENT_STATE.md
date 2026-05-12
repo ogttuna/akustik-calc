@@ -78,6 +78,8 @@ checkpoint read
 If you need the latest post-Gate-AE checkpoint and broad revalidation
 handoff read
 [CHECKPOINT_2026-05-12_POST_GATE_AE_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_POST_GATE_AE_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md).
+If you need the clean Gate AF implementation plan read
+[SLICE_PERSONAL_USE_MVP_GATE_AF_POST_FLAT_MULTICAVITY_REVALIDATION_PLAN.md](./SLICE_PERSONAL_USE_MVP_GATE_AF_POST_FLAT_MULTICAVITY_REVALIDATION_PLAN.md).
 If you need the preceding Personal-Use MVP Coverage Sprint Gate W
 checkpoint read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md).
@@ -410,7 +412,11 @@ Current strategy:
   2026-05-12 confirmed the docs/implementation plan still points to
   Gate AF, fixed one lint-only unused Gate AA type import, and passed
   final `pnpm check` with lint, typecheck, engine Vitest 497 files /
-  2950 tests, all web Vitest split batches, and repo build 5/5.
+  2950 tests, all web Vitest split batches, and repo build 5/5. A broad
+  plan review later on 2026-05-12 reran `pnpm check` green with web
+  Vitest 180 files / 993 passed + 18 skipped, found no runtime fix to
+  make, and confirmed Gate AF remains the first next implementation
+  step.
 - Personal-Use MVP Coverage Sprint Gate B has now landed the
   timber/CLT floor-impact `DeltaLw` input and formula-readiness
   contract without runtime movement.
