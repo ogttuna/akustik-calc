@@ -93,6 +93,9 @@ flanking path energy handoff read
 For the Gate AN building prediction flanking path energy owner and Gate
 AO junction vibration handoff read
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AN_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AN_HANDOFF.md).
+For the Gate AO building prediction junction vibration owner and Gate
+AP room standardization handoff read
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AO_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AO_HANDOFF.md).
 For the Gate R no-runtime formula corridor and Gate S handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md).
 For the Gate Q no-runtime input contract and Gate R handoff read
@@ -149,6 +152,56 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
+## Gate AO Building Prediction Junction Vibration Owner Landed - 2026-05-12
+
+Gate AO has now landed the no-runtime junction vibration reduction owner
+contract selected by Gate AN:
+
+`gate_ao_personal_use_mvp_airborne_building_prediction_junction_vibration_owner_contract_plan`
+
+Current selected status:
+
+`gate_ao_personal_use_mvp_airborne_building_prediction_junction_vibration_owner_landed_no_runtime_selected_room_standardization_gate_ap`
+
+Selected next action:
+
+`gate_ap_personal_use_mvp_airborne_building_prediction_room_standardization_owner_contract_plan`
+
+Selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ap-airborne-building-prediction-room-standardization-owner-contract.test.ts`
+
+Gate AO defines the junction vibration reduction owner without
+promoting airborne building prediction runtime. The owner requires the
+Gate AN flanking path energy dependency, explicit junction class
+ownership, coupling length ownership, basis-compatible vibration
+reduction index ownership, path-specific junction coupling ownership,
+and basis-compatible metric scope. A generic junction class label,
+single-number lab `Rw` / `STC`, source row without junction/coupling
+terms, field runtime budget, opening/leak lab adapter, or legacy raw
+dynamic field/building continuation snapshot cannot satisfy the
+building junction-vibration term.
+
+Complete building requests remain `unsupported`; partial building
+requests remain `needs_input`; field-context wall outputs remain
+separate from building prediction. Room standardization and building
+prediction uncertainty budget are still runtime-unowned. Gate AO
+therefore selects Gate AP as the next no-runtime room standardization
+owner contract.
+
+Gate AO validation passed on 2026-05-12: focused Gate AO 1 file /
+6 tests, Gate AN/Gate AO continuity 2 files / 12 tests, engine
+typecheck, `pnpm calculator:gate:current` with engine 382 files /
+2205 tests, web 74 files / 318 passed + 18 skipped, build 5/5,
+whitespace guard clean, and full `pnpm check` with engine 507 files /
+3007 tests, web 180 files / 993 passed + 18 skipped, lint/typecheck
+clean, and build 5/5. `git diff --check` passed after validation-note
+sync. See
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AO_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AO_HANDOFF.md).
+
+Gate AO has consumed this handoff. The current selected next action is
+now Gate AP room standardization owner contract.
+
 ## Gate AN Building Prediction Flanking Path Energy Owner Landed - 2026-05-12
 
 Gate AN has now landed the no-runtime flanking path energy owner
@@ -195,8 +248,8 @@ whitespace guard clean, and full `pnpm check` with engine 506 files /
 clean, and build 5/5. See
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AN_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AN_HANDOFF.md).
 
-Gate AN has consumed this handoff. The current selected next action is
-now Gate AO junction vibration reduction owner contract.
+Gate AO has consumed this handoff. The current selected next action is
+now Gate AP room standardization owner contract.
 
 ## Gate AM Building Prediction Direct Curve Owner Landed - 2026-05-12
 
