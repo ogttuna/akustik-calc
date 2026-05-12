@@ -86,6 +86,8 @@ If you need the latest Gate AG closeout and Gate AH handoff read
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AG_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AG_HANDOFF.md).
 If you need the latest Gate AH closeout and Gate AI handoff read
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AH_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AH_HANDOFF.md).
+If you need the latest Gate AI closeout and Gate AJ handoff read
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AI_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AI_HANDOFF.md).
 If you need the preceding Personal-Use MVP Coverage Sprint Gate W
 checkpoint read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md).
@@ -151,15 +153,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_ah_personal_use_mvp_opening_leak_stc_spectrum_adapter_landed_selected_surface_parity_gate_ai`
+`gate_ai_personal_use_mvp_opening_leak_stc_surface_parity_landed_selected_revalidation_gate_aj`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ai-opening-leak-stc-surface-parity-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-aj-post-opening-leak-stc-surface-revalidation-contract.test.ts`
 
 Selected next action:
 
-`gate_ai_personal_use_mvp_opening_leak_stc_surface_parity_plan`
+`gate_aj_personal_use_mvp_post_opening_leak_stc_surface_revalidation_plan`
 
 Strategic ROI replan:
 
@@ -471,6 +473,21 @@ Current strategy:
   row returns `Rw 33.7 / STC 34`. `STC` is re-rated from the shifted
   host-wall frequency curve, not copied from `Rw`; STC-only opening
   input basis, field, and building aliases remain blocked.
+- Personal-Use MVP Coverage Sprint Gate AI has now landed
+  `gate_ai_personal_use_mvp_opening_leak_stc_surface_parity_plan`.
+  Selection status:
+  `gate_ai_personal_use_mvp_opening_leak_stc_surface_parity_landed_selected_revalidation_gate_aj`.
+  Selected next action:
+  `gate_aj_personal_use_mvp_post_opening_leak_stc_surface_revalidation_plan`.
+  Selected next file:
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-aj-post-opening-leak-stc-surface-revalidation-contract.test.ts`.
+  Gate AI is no-runtime surface parity: route/card posture,
+  target-output status/corridor, method/corridor dossiers, saved replay,
+  calculator API payloads, and Markdown reports now preserve the same
+  Gate S lab `Rw 38.2`, Gate AH lab `STC 39`, ASTM E413 adapter id,
+  `+/-6 dB` not-measured-evidence budget, and warning. Missing,
+  source-absent, STC-only opening basis, `R'w`, `DnT,w`, field, and
+  building requests remain blocked without a Gate AH budget or adapter.
 - Personal-Use MVP Coverage Sprint Gate B has now landed the
   timber/CLT floor-impact `DeltaLw` input and formula-readiness
   contract without runtime movement.

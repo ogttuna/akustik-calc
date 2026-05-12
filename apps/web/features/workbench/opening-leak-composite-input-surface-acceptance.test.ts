@@ -140,6 +140,14 @@ function expectOpeningRuntime(result: AssemblyCalculation | null | undefined) {
     method: GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD,
     origin: "family_physics_prediction"
   });
+  expect(result?.ratingAdapterBasisSet).toEqual([
+    expect.objectContaining({
+      adapterId: "astm_e413_stc_from_airborne_transmission_loss_curve",
+      implementationStatus: "runtime_adapter",
+      metricId: "STC",
+      ratingStandard: "ASTM E413"
+    })
+  ]);
   expect(result?.warnings).toContain(GATE_AH_OPENING_LEAK_STC_SPECTRUM_ADAPTER_WARNING);
 }
 

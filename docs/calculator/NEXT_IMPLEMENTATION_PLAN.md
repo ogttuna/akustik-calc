@@ -78,6 +78,9 @@ opening/leak `STC` handoff read
 For the Gate AH opening/leak `STC` ASTM E413 spectrum adapter closeout
 and Gate AI surface-parity handoff read
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AH_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AH_HANDOFF.md).
+For the Gate AI opening/leak `STC` surface parity closeout and Gate AJ
+revalidation handoff read
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AI_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AI_HANDOFF.md).
 For the Gate R no-runtime formula corridor and Gate S handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md).
 For the Gate Q no-runtime input contract and Gate R handoff read
@@ -134,6 +137,50 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
+## Gate AI Opening/Leak STC Surface Parity Landed - 2026-05-12
+
+Gate AI has now landed the no-runtime visible-surface parity gate
+selected by Gate AH:
+
+`gate_ai_personal_use_mvp_opening_leak_stc_surface_parity_plan`
+
+Current selected status:
+
+`gate_ai_personal_use_mvp_opening_leak_stc_surface_parity_landed_selected_revalidation_gate_aj`
+
+Selected next action:
+
+`gate_aj_personal_use_mvp_post_opening_leak_stc_surface_revalidation_plan`
+
+Selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-aj-post-opening-leak-stc-surface-revalidation-contract.test.ts`
+
+Gate AI keeps Gate S/Gate AH runtime values frozen while making the
+new `STC` support explicit across visible surfaces. The complete
+opening/leak fixture remains lab `Rw 38.2 / STC 39`; the high-leakage
+two-opening case remains lab `Rw 33.7 / STC 34`; the `+/-6 dB`
+source-absent budget is still not measured evidence.
+
+Parity locked by Gate AI:
+
+- route/card posture, target-output status, and target-output corridor
+  show the Gate S opening/leak runtime plus Gate AH ASTM E413 STC
+  adapter;
+- method/corridor dossiers, saved replay, calculator API payloads, and
+  Markdown reports preserve the ASTM E413 adapter id, rating standard,
+  metric basis, warning, and not-measured-evidence budget;
+- missing opening fields stay `needs_input`;
+- source-absent opening values, STC-only opening input basis,
+  `R'w`, `DnT,w`, field, and building requests stay blocked without a
+  Gate AH budget or adapter.
+
+Gate AJ is next because the STC runtime and surface are now both
+present. The next pass should revalidate that the added `STC` support
+did not disturb the earlier opening/leak input-surface, wall field,
+building-prediction, and coverage-matrix boundaries before selecting a
+new calculator-first lane.
+
 ## Gate AH Opening/Leak STC Spectrum Adapter Landed - 2026-05-12
 
 Gate AH has now landed the opening/leak STC spectrum adapter selected
@@ -172,11 +219,9 @@ Pinned runtime behavior:
 - `R'w`, `DnT,w`, field, and building outputs still do not alias from
   lab `Rw` or lab `STC`.
 
-Gate AI is next because the core runtime adapter and minimal visible
-copy are present, but the dedicated surface-parity gate should harden
-cards, target-output status, dossiers, reports, API snapshots, and saved
-replay around the new `STC 39` support without broadening field or
-building outputs.
+Gate AI has now consumed this handoff as a no-runtime surface-parity
+gate. The current selected next action is Gate AJ post-STC-surface
+revalidation, not another runtime promotion.
 
 ## Gate AG Floor Formula Surface Polish Landed - 2026-05-12
 

@@ -77,8 +77,7 @@ with the ASTM E413 contour.
 
 ## Next Step
 
-Gate AI should harden the visible surface around the new `STC 39`
-support: output cards, target-output status, method/corridor dossiers,
-Markdown report, saved replay, and calculator API should all preserve
-the same Gate S + Gate AH basis while field/building outputs remain
-blocked.
+Gate AI has now consumed this handoff as
+`gate_ai_personal_use_mvp_opening_leak_stc_surface_parity_plan`. Read
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AI_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AI_HANDOFF.md)
+for the current Gate AJ revalidation handoff.

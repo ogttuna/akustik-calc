@@ -19,6 +19,10 @@ export type OpeningLeakCompositeSurface = {
   origin: string;
   postureDetail: string;
   reportLines: readonly string[];
+  stcAdapterActive: boolean;
+  stcAdapterId: string | null;
+  stcAdapterLabel: string | null;
+  stcRatingStandard: string | null;
   unsupportedOutputs: readonly RequestedOutputId[];
   warning: string | null;
 };
@@ -48,14 +52,16 @@ function hasOpeningLeakCompositeMethod(result: AssemblyCalculation | null | unde
   return result?.airborneBasis?.method === WEB_GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD;
 }
 
-function hasGateAHOpeningLeakStcAdapter(result: AssemblyCalculation | null | undefined): boolean {
-  return Boolean(
-    result?.ratingAdapterBasisSet?.some(
+function getGateAHOpeningLeakStcAdapterBasis(
+  result: AssemblyCalculation | null | undefined
+): RatingAdapterBasis | null {
+  return (
+    result?.ratingAdapterBasisSet?.find(
       (basis: RatingAdapterBasis) =>
         basis.adapterId === "astm_e413_stc_from_airborne_transmission_loss_curve" &&
         basis.metricId === "STC" &&
         basis.implementationStatus === "runtime_adapter"
-    )
+    ) ?? null
   );
 }
 
@@ -89,7 +95,8 @@ export function getGateSOpeningLeakCompositeSurface(
   const unsupportedOutputs = result.unsupportedTargetOutputs.filter((output: RequestedOutputId) =>
     OPENING_AFFECTED_OUTPUTS.has(output)
   );
-  const stcAdapterActive = hasGateAHOpeningLeakStcAdapter(result);
+  const stcAdapterBasis = getGateAHOpeningLeakStcAdapterBasis(result);
+  const stcAdapterActive = Boolean(stcAdapterBasis);
   const warning =
     result.warnings.find((entry: string) => entry === WEB_GATE_AH_OPENING_LEAK_STC_SPECTRUM_ADAPTER_WARNING) ??
     result.warnings.find((entry: string) => entry === WEB_GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_WARNING) ??
@@ -156,6 +163,10 @@ export function getGateSOpeningLeakCompositeSurface(
         : []),
       ...(warning ? [`- Airborne opening/leak warning: ${warning}`] : [])
     ],
+    stcAdapterActive,
+    stcAdapterId: stcAdapterBasis?.adapterId ?? null,
+    stcAdapterLabel: stcAdapterActive ? "Gate AH ASTM E413 STC adapter" : null,
+    stcRatingStandard: stcAdapterBasis?.ratingStandard ?? null,
     unsupportedOutputs,
     warning
   };

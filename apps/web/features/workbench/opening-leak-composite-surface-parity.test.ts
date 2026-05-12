@@ -25,7 +25,7 @@ import {
   buildOutputCard,
   type OutputCardModel
 } from "./simple-workbench-output-model";
-import { getTargetOutputStatus } from "./target-output-status";
+import { getTargetOutputCorridor, getTargetOutputStatus } from "./target-output-status";
 import type { LayerDraft } from "./workbench-store";
 
 const AUTH_ENV_KEYS = ["DYNECHO_AUTH_USERNAME", "DYNECHO_AUTH_PASSWORD", "DYNECHO_AUTH_SECRET"] as const;
@@ -152,7 +152,7 @@ afterEach(() => {
 });
 
 describe("opening/leak composite surface parity", () => {
-  it("keeps web Gate S identifiers aligned with the engine constants", () => {
+  it("keeps web Gate S and Gate AH identifiers aligned with the engine constants", () => {
     expect(WEB_GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD).toBe(
       GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD
     );
@@ -188,7 +188,11 @@ describe("opening/leak composite surface parity", () => {
       budgetLabel: "+/-6 dB",
       label: "Opening/leak composite runtime",
       method: GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD,
-      origin: "family_physics_prediction"
+      origin: "family_physics_prediction",
+      stcAdapterActive: true,
+      stcAdapterId: "astm_e413_stc_from_airborne_transmission_loss_curve",
+      stcAdapterLabel: "Gate AH ASTM E413 STC adapter",
+      stcRatingStandard: "ASTM E413"
     });
     expect(surface?.detail).toContain("lab Rw 38.2 dB");
     expect(surface?.detail).toContain("Gate AH lab STC 39 dB");
@@ -241,10 +245,23 @@ describe("opening/leak composite surface parity", () => {
     });
     expect(targetStatus.note).toContain("Gate AH ASTM");
 
+    const targetCorridor = getTargetOutputCorridor({
+      guideResult: null,
+      output: "STC",
+      result
+    });
+    expect(targetCorridor).toMatchObject({
+      laneLabel: "Airborne lane"
+    });
+    expect(targetCorridor.detail).toContain("Gate AH ASTM E413 spectrum adapter");
+
     const corridorDossier = buildSimpleWorkbenchCorridorDossier(result, "wall");
     expect(corridorDossier.headline).toContain("Opening/leak composite runtime");
     expect(corridorDossier.cards.find((card) => card.label === "Airborne lane")?.detail).toContain(
       GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD
+    );
+    expect(corridorDossier.cards.find((card) => card.label === "Airborne lane")?.detail).toContain(
+      "Gate AH lab STC 39 dB"
     );
 
     const methodDossier = buildSimpleWorkbenchMethodDossier({
@@ -322,6 +339,15 @@ describe("opening/leak composite surface parity", () => {
     expect(body.result?.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
     expect(body.result?.airborneBasis?.method).toBe(GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD);
     expect(body.result?.airborneBasis?.errorBudgetDb).toBe(6);
+    expect(body.result?.ratingAdapterBasisSet).toEqual([
+      expect.objectContaining({
+        adapterId: "astm_e413_stc_from_airborne_transmission_loss_curve",
+        contextBasis: "element_lab",
+        implementationStatus: "runtime_adapter",
+        metricId: "STC",
+        ratingStandard: "ASTM E413"
+      })
+    ]);
     expect(body.result?.warnings).toContain(GATE_AH_OPENING_LEAK_STC_SPECTRUM_ADAPTER_WARNING);
   });
 
