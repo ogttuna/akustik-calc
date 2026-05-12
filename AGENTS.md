@@ -829,6 +829,12 @@ controlled-use bar. The current daily-use bar remains open until Gate AQ
 uncertainty-budget ownership, projected all-owner building runtime,
 surface/API/report parity, acceptance matrix refresh, and release
 handoff all pass.
+Gate AQ implementation-ready plan:
+`docs/calculator/CHECKPOINT_2026-05-12_GATE_AQ_PLAN_REVALIDATION_AND_IMPLEMENTATION_READY_HANDOFF.md`.
+Gate AQ must be a no-runtime uncertainty-budget owner contract and
+select Gate AR all-owner building-prediction runtime corridor. Do not
+promote building `R'w` / `DnT,w` runtime before Gate AQ is executable and
+visible.
 Do not keep adding narrow steel-floor source/packet gates unless the
 active matrix or a later runtime proposal names a specific source-owned
 unblocker.

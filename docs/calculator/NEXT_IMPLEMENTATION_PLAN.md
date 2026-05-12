@@ -105,6 +105,9 @@ Gate AQ handoff read
 For the current company-internal daily-use final path and revalidation
 handoff read
 [CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md).
+For the implementation-ready Gate AQ plan revalidation and official
+reference check read
+[CHECKPOINT_2026-05-12_GATE_AQ_PLAN_REVALIDATION_AND_IMPLEMENTATION_READY_HANDOFF.md](./CHECKPOINT_2026-05-12_GATE_AQ_PLAN_REVALIDATION_AND_IMPLEMENTATION_READY_HANDOFF.md).
 For the Gate R no-runtime formula corridor and Gate S handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_R_HANDOFF.md).
 For the Gate Q no-runtime input contract and Gate R handoff read
@@ -265,6 +268,36 @@ implementation step. Runtime promotion before Gate AQ would create an
 unowned reliability claim, and broad source crawling would not unblock
 the source-absent calculator route. See
 [CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md).
+
+## Gate AQ Implementation-Ready Plan Revalidation - 2026-05-12
+
+The second planning pass checked the live Gate AP implementation and
+current official references before starting Gate AQ. The plan remains:
+implement a no-runtime uncertainty-budget owner first, then only consider
+all-owner building runtime in Gate AR. ISO 12354-1, ISO 10848-1, and
+ISO 717-1 support the same boundary: building prediction needs direct,
+flanking, junction, room/rating, and uncertainty basis terms, not a lab
+single-number alias. INSUL's public technical material reinforces that
+element prediction is not a substitute for building flanking ownership.
+
+Gate AQ implementation target:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-aq-airborne-building-prediction-uncertainty-budget-owner-contract.test.ts`
+
+Recommended helper:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-aq.ts`
+
+Expected Gate AQ selection:
+
+`gate_aq_personal_use_mvp_airborne_building_prediction_uncertainty_budget_owner_landed_no_runtime_selected_all_owner_runtime_corridor_gate_ar`
+
+Expected Gate AR file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ar-airborne-building-prediction-all-owner-runtime-corridor-contract.test.ts`
+
+See
+[CHECKPOINT_2026-05-12_GATE_AQ_PLAN_REVALIDATION_AND_IMPLEMENTATION_READY_HANDOFF.md](./CHECKPOINT_2026-05-12_GATE_AQ_PLAN_REVALIDATION_AND_IMPLEMENTATION_READY_HANDOFF.md).
 
 ## Gate AO Building Prediction Junction Vibration Owner Landed - 2026-05-12
 

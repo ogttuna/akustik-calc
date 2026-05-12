@@ -507,6 +507,10 @@ single final path: Gate AQ uncertainty-budget owner, projected all-owner
 building runtime corridor, surface/API/report parity, acceptance matrix
 refresh, and daily-use release handoff. See
 [CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md).
+The Gate AQ implementation-ready planning pass confirms that Gate AQ
+must stay no-runtime and select the Gate AR all-owner runtime corridor.
+See
+[CHECKPOINT_2026-05-12_GATE_AQ_PLAN_REVALIDATION_AND_IMPLEMENTATION_READY_HANDOFF.md](./CHECKPOINT_2026-05-12_GATE_AQ_PLAN_REVALIDATION_AND_IMPLEMENTATION_READY_HANDOFF.md).
 Gate A
 landed in
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-a-scenario-matrix-contract.test.ts`

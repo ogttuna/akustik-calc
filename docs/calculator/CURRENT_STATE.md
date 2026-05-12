@@ -111,6 +111,8 @@ starting Gate AQ read
 [CHECKPOINT_2026-05-12_POST_GATE_AP_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_POST_GATE_AP_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md).
 If you need the current company-internal daily-use final path read
 [CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md).
+If you need the implementation-ready Gate AQ planning revalidation read
+[CHECKPOINT_2026-05-12_GATE_AQ_PLAN_REVALIDATION_AND_IMPLEMENTATION_READY_HANDOFF.md](./CHECKPOINT_2026-05-12_GATE_AQ_PLAN_REVALIDATION_AND_IMPLEMENTATION_READY_HANDOFF.md).
 If you need the preceding Personal-Use MVP Coverage Sprint Gate W
 checkpoint read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md).
@@ -710,6 +712,13 @@ Current strategy:
   acceptance matrix refresh, and daily-use release handoff. Gate AQ
   remains the first action. See
   [CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md).
+- Gate AQ planning status: implementation-ready after the latest
+  analysis pass. Official ISO/INSUL reference checks confirm that
+  building prediction must keep direct, flanking, junction, room/rating,
+  and uncertainty basis terms explicit. Gate AQ should land only the
+  no-runtime uncertainty-budget owner, then select Gate AR all-owner
+  runtime corridor. See
+  [CHECKPOINT_2026-05-12_GATE_AQ_PLAN_REVALIDATION_AND_IMPLEMENTATION_READY_HANDOFF.md](./CHECKPOINT_2026-05-12_GATE_AQ_PLAN_REVALIDATION_AND_IMPLEMENTATION_READY_HANDOFF.md).
 - Personal-Use MVP Coverage Sprint Gate B has now landed the
   timber/CLT floor-impact `DeltaLw` input and formula-readiness
   contract without runtime movement.
