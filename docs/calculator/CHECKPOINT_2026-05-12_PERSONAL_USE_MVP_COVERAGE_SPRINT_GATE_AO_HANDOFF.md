@@ -89,9 +89,26 @@ Validation passed before commit:
 - Whitespace guard:
   `git diff --check` passed after validation-note sync.
 
-## Next Gate AP
+## Gate AP Consumption
 
-Gate AP should implement a no-runtime room standardization owner
+Gate AP has consumed this handoff and landed the no-runtime room
+standardization owner contract:
+
+`gate_ap_personal_use_mvp_airborne_building_prediction_room_standardization_owner_contract_plan`
+
+Gate AP selection status:
+
+`gate_ap_personal_use_mvp_airborne_building_prediction_room_standardization_owner_landed_no_runtime_selected_uncertainty_budget_gate_aq`
+
+Current selected next action:
+
+`gate_aq_personal_use_mvp_airborne_building_prediction_uncertainty_budget_owner_contract_plan`
+
+Current selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-aq-airborne-building-prediction-uncertainty-budget-owner-contract.test.ts`
+
+Gate AP implemented the planned no-runtime room standardization owner
 contract:
 
 1. define the room absorption / standardization owner for airborne
@@ -107,3 +124,6 @@ contract:
    aliases blocked;
 6. select the next narrow owner lane only after room standardization
    ownership is stable.
+
+See
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AP_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AP_HANDOFF.md).

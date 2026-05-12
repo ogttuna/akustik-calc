@@ -88,9 +88,10 @@ without changing the 40-row matrix or runtime values and selects the
 building prediction owner gap refresh for Gate AL instead of broad
 source crawling. Gate AL landed that owner-gap map, Gate AM landed the
 direct separating-element frequency curve owner contract, Gate AN
-landed the flanking path energy owner contract, and Gate AO now lands
-the junction vibration owner contract while selecting room
-standardization ownership for Gate AP.
+landed the flanking path energy owner contract, Gate AO landed the
+junction vibration owner contract, and Gate AP now lands the room
+standardization owner contract while selecting uncertainty-budget
+ownership for Gate AQ.
 Gate T now lands that opening/leak surface parity with selection status
 `gate_t_personal_use_mvp_opening_leak_composite_surface_parity_landed_selected_input_surface_gate_u`
 and selects Gate U
@@ -474,6 +475,27 @@ AO validation passed with focused Gate AO, Gate AN/Gate AO continuity,
 engine typecheck, `pnpm calculator:gate:current`, full `pnpm check`,
 repo build, and whitespace guard evidence. See
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AO_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AO_HANDOFF.md).
+Gate AP now lands that room absorption / standardization owner contract
+with selection status
+`gate_ap_personal_use_mvp_airborne_building_prediction_room_standardization_owner_landed_no_runtime_selected_uncertainty_budget_gate_aq`
+and selected action
+`gate_aq_personal_use_mvp_airborne_building_prediction_uncertainty_budget_owner_contract_plan`.
+Selected next file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-aq-airborne-building-prediction-uncertainty-budget-owner-contract.test.ts`.
+Gate AP requires the Gate AO junction vibration dependency, separating
+element area ownership, receiving-room volume ownership, receiving-room
+RT60 ownership, building standardization basis ownership,
+basis-compatible room absorption ownership, and basis-compatible metric
+scope before the room term can be used. Generic room labels, apparent
+`R'w` relabelled as `DnT,w`, lab `Rw` / `STC`, field `R'w` / `DnT,w`,
+opening/leak lab adapters, source single numbers without room terms,
+and legacy raw dynamic field/building continuation snapshots remain
+blocked as building-output aliases. Uncertainty-budget ownership is now
+the selected next owner lane for Gate AQ. Gate AP validation passed
+with focused Gate AP, Gate AO/Gate AP continuity, engine typecheck,
+`pnpm calculator:gate:current`, full `pnpm check`, repo build, and
+whitespace guard evidence. See
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AP_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AP_HANDOFF.md).
 Gate A
 landed in
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-a-scenario-matrix-contract.test.ts`
