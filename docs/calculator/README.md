@@ -18,7 +18,7 @@ not block a labelled family-specific physics prediction when the
 required topology and material inputs are present.
 
 As of 2026-05-13, the current selected slice is
-`personal_use_mvp_coverage_sprint_after_gate_bf_floor_impact_source_absent_input_surface`.
+`personal_use_mvp_coverage_sprint_after_gate_bg_floor_impact_source_absent_post_input_surface_revalidation`.
 Gate AU closed company-internal daily-use ready, Gate AV
 `gate_av_personal_use_mvp_post_release_accuracy_and_adapter_roadmap_plan`
 landed the no-runtime post-release accuracy/adapters roadmap, and Gate
@@ -155,6 +155,34 @@ and whitespace guard clean. Full `pnpm check` passed with
 lint/typecheck clean, engine 524 files / 3112 tests, web 184 files /
 1006 passed + 18 skipped, and build 5/5 after timeout-only hardening on
 three pre-existing long-running engine tests.
+
+Gate BG
+`gate_bg_personal_use_mvp_floor_impact_source_absent_post_input_surface_revalidation_plan`
+has now landed the no-runtime post-input-surface revalidation for the
+`Heavy concrete combined input surface` with selection status
+`gate_bg_personal_use_mvp_floor_impact_source_absent_post_input_surface_revalidation_landed_no_runtime_selected_coverage_matrix_refresh_gate_bh`.
+It keeps the Gate BD runtime frozen at lab `Ln,w 44.4` /
+`DeltaLw 30.1` through
+`predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate`
+with unchanged `+/-6.5 dB` / `+/-5.5 dB` source-absent
+not-measured budgets. Safe reordered input, missing load basis,
+duplicate or ambiguous heavy-concrete base ownership, exact source
+precedence, and field/ASTM basis boundaries remain protected. Gate BG
+selected
+`gate_bh_personal_use_mvp_floor_impact_source_absent_coverage_matrix_refresh_plan`
+in
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bh-floor-impact-source-absent-coverage-matrix-refresh-contract.test.ts`.
+Next plain label: floor-impact source-absent coverage matrix refresh.
+Short label: floor-impact source-absent post-input-surface revalidation.
+Gate BG handoff:
+[CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BG_HANDOFF.md](./CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BG_HANDOFF.md).
+Gate BG validation passed on 2026-05-13: focused Gate BG 1 file / 4
+tests, Gate BF + Gate BG continuity 2 files / 9 tests, engine
+typecheck, `pnpm calculator:gate:current` with engine 400 files / 2314
+tests, web 77 files / 328 passed + 18 skipped, repo build 5/5, full
+`pnpm check` with lint/typecheck clean, engine 525 files / 3116 tests,
+web 184 files / 1006 passed + 18 skipped, repo build 5/5, and
+whitespace guard clean.
 
 The Personal-Use MVP Coverage Sprint has advanced
 through the Gate AU company-internal daily-use ready release handoff

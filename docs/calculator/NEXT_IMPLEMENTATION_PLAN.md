@@ -279,23 +279,21 @@ The recommended post-Gate-AV order is:
 10. Later calibration and budget tightening only after source-owned
    holdouts and paired negatives exist.
 
-Gate BF has now landed, so the current active step is Gate BG:
+Gate BG has now landed, so the current active step is Gate BH:
 
-`gate_bg_personal_use_mvp_floor_impact_source_absent_post_input_surface_revalidation_plan`
+`gate_bh_personal_use_mvp_floor_impact_source_absent_coverage_matrix_refresh_plan`
 
-Selected Gate BG file:
+Selected Gate BH file:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bg-floor-impact-source-absent-post-input-surface-revalidation-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bh-floor-impact-source-absent-coverage-matrix-refresh-contract.test.ts`
 
-Gate BG should not retune `Ln,w 44.4` or `DeltaLw 30.1`. It should
-revalidate that Gate BF's `Heavy concrete combined input surface`
-preserves the Gate BD runtime basis
-`predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate`,
-the Gate BE visible `Heavy concrete combined formula corridor` copy,
-the source-absent `+/-6.5 dB` / `+/-5.5 dB` not-measured budgets,
-exact source precedence, hostile input boundaries, and
-lab/field/building/ASTM non-aliasing before selecting the next
-highest-ROI calculator coverage lane.
+Gate BH should not retune `Ln,w 44.4` or `DeltaLw 30.1`. It should
+refresh the executable floor-impact source-absent coverage matrix after
+Gates BA-BG, keeping supported values separate from unsupported output
+bases and adding the Gate BF/BG `Heavy concrete combined input surface`
+row beside existing heavy floating, steel, timber/CLT, exact source,
+field, ASTM/IIC, missing-input, and hostile-topology rows before
+selecting the next highest-ROI calculator coverage lane.
 
 The research check behind this plan points to frequency-band direct
 curves as the strongest long-term shape: ISO 12354-1/2 building
@@ -640,6 +638,55 @@ contracts before another coverage lane moves.
 
 Next plain label: floor-impact source-absent post-input-surface
 revalidation.
+
+## Gate BG Floor-Impact Source-Absent Post-Input-Surface Revalidation Landed - 2026-05-13
+
+Gate BG has now landed the no-runtime post-input-surface revalidation
+selected by Gate BF:
+
+`gate_bg_personal_use_mvp_floor_impact_source_absent_post_input_surface_revalidation_plan`
+
+Gate BG selection status:
+
+`gate_bg_personal_use_mvp_floor_impact_source_absent_post_input_surface_revalidation_landed_no_runtime_selected_coverage_matrix_refresh_gate_bh`
+
+Selected next action:
+
+`gate_bh_personal_use_mvp_floor_impact_source_absent_coverage_matrix_refresh_plan`
+
+Selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bh-floor-impact-source-absent-coverage-matrix-refresh-contract.test.ts`
+
+Gate BG proves Gate BF's `Heavy concrete combined input surface`
+preserves the Gate BD runtime basis
+`predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate`
+without retuning values, formulas, tolerances, source rows, API shape,
+or workbench input behavior. Complete and safe reordered input remain
+lab `Ln,w 44.4` / `DeltaLw 30.1` with unchanged `+/-6.5 dB` /
+`+/-5.5 dB` source-absent not-measured budgets. Missing load basis,
+duplicate or ambiguous heavy-concrete base ownership, exact source
+precedence, and field/ASTM basis requests remain out of promoted
+runtime support.
+
+Gate BG closeout checkpoint:
+
+[CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BG_HANDOFF.md](./CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BG_HANDOFF.md)
+
+Gate BG validation passed on 2026-05-13: focused Gate BG 1 file / 4
+tests, Gate BF + Gate BG continuity 2 files / 9 tests, engine
+typecheck, `pnpm calculator:gate:current` with engine 400 files / 2314
+tests, web 77 files / 328 passed + 18 skipped, repo build 5/5, full
+`pnpm check` with lint/typecheck clean, engine 525 files / 3116 tests,
+web 184 files / 1006 passed + 18 skipped, repo build 5/5, and
+whitespace guard clean.
+
+Gate BH is now selected because the floor-impact source-absent runtime,
+surface parity, input surface, and post-input-surface boundaries are all
+owned. The next useful step is a coverage matrix refresh before choosing
+another solver lane.
+
+Next plain label: floor-impact source-absent coverage matrix refresh.
 
 ## Gate BC Floor-Impact Source-Absent Formula Corridor Landed - 2026-05-13
 

@@ -1169,6 +1169,30 @@ and whitespace guard clean. Full `pnpm check` passed with
 lint/typecheck clean, engine 524 files / 3112 tests, web 184 files /
 1006 passed + 18 skipped, and build 5/5 after timeout-only hardening on
 three pre-existing long-running engine tests.
+Gate BG has now landed:
+`gate_bg_personal_use_mvp_floor_impact_source_absent_post_input_surface_revalidation_plan`.
+Gate BG selection status:
+`gate_bg_personal_use_mvp_floor_impact_source_absent_post_input_surface_revalidation_landed_no_runtime_selected_coverage_matrix_refresh_gate_bh`.
+Gate BG is a no-runtime revalidation after Gate BF's
+`Heavy concrete combined input surface`: complete and safe-reordered
+heavy-concrete combined input remain lab `Ln,w 44.4` / `DeltaLw 30.1`
+through `predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate`
+with unchanged `+/-6.5 dB` / `+/-5.5 dB` source-absent not-measured
+budgets. Missing load basis, duplicate/ambiguous concrete base
+ownership, exact source precedence, and field/ASTM basis requests remain
+out of promoted runtime support.
+Selected Gate BH action:
+`gate_bh_personal_use_mvp_floor_impact_source_absent_coverage_matrix_refresh_plan`.
+Selected Gate BH file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bh-floor-impact-source-absent-coverage-matrix-refresh-contract.test.ts`.
+Next plain label: floor-impact source-absent coverage matrix refresh.
+Gate BG validation completed on 2026-05-13: focused Gate BG 1 file / 4
+tests, Gate BF + Gate BG continuity 2 files / 9 tests, engine
+typecheck, `pnpm calculator:gate:current` with engine 400 files / 2314
+tests, web 77 files / 328 passed + 18 skipped, repo build 5/5, full
+`pnpm check` with lint/typecheck clean, engine 525 files / 3116 tests,
+web 184 files / 1006 passed + 18 skipped, repo build 5/5, and
+whitespace guard clean.
 Known non-fatal build
 warnings remain the optional `sharp/@img` warnings from
 `@turbodocx/html-to-docx`.
