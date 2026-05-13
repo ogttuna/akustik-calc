@@ -175,20 +175,8 @@ export function buildImpactSupport(input: BuildImpactSupportInput): ImpactSuppor
 
   if (input.impact && (hasBareAnnexC || hasFloatingAnnexC || hasCombinedAnnexC)) {
     notes.push("Annex C style estimate is active on the dedicated impact lane.");
-    pushUnique(formulaNotes, "Annex C style estimate remains a narrow heavy-floor screening path.");
-    if (hasBareAnnexC || hasFloatingAnnexC || hasCombinedAnnexC) {
-      pushUnique(formulaNotes, "Heavy bare-floor path follows 164 - 35 log10(m'base) for the base slab contribution.");
-    }
-    if (hasFloatingAnnexC || hasCombinedAnnexC) {
-      pushUnique(formulaNotes, "Floating-floor branch applies 13 log10(m'load) - 14.2 log10(s') + 20.8 for the treatment term.");
-      pushUnique(formulaNotes, "Resonance cross-check follows f0 ~= 160 * sqrt(s'/m'load).");
-    }
     if (hasCombinedAnnexC) {
       notes.push("Heavy-concrete combined upper/lower formula corridor is active; exact measured rows still outrank it.");
-      pushUnique(
-        formulaNotes,
-        "Combined upper/lower branch adds an explicit lower-ceiling improvement term and subtracts a bounded interaction penalty."
-      );
       pushUnique(formulaNotes, "Heavy-concrete combined upper/lower corridor is source-absent lab evidence, not a measured row.");
       const errorBudgetNote = buildHeavyConcreteCombinedFormulaErrorBudgetFormulaNote(input.impact);
       if (errorBudgetNote) {
@@ -198,6 +186,18 @@ export function buildImpactSupport(input: BuildImpactSupportInput): ImpactSuppor
         formulaNotes,
         `Corridor tolerance remains +/-${HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_LN_W_TOLERANCE_DB} dB for Ln,w and +/-${HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_DELTA_LW_TOLERANCE_DB} dB for DeltaLw.`
       );
+      pushUnique(
+        formulaNotes,
+        "Combined upper/lower branch adds an explicit lower-ceiling improvement term and subtracts a bounded interaction penalty."
+      );
+    }
+    pushUnique(formulaNotes, "Annex C style estimate remains a narrow heavy-floor screening path.");
+    if (hasBareAnnexC || hasFloatingAnnexC || hasCombinedAnnexC) {
+      pushUnique(formulaNotes, "Heavy bare-floor path follows 164 - 35 log10(m'base) for the base slab contribution.");
+    }
+    if (hasFloatingAnnexC || hasCombinedAnnexC) {
+      pushUnique(formulaNotes, "Floating-floor branch applies 13 log10(m'load) - 14.2 log10(s') + 20.8 for the treatment term.");
+      pushUnique(formulaNotes, "Resonance cross-check follows f0 ~= 160 * sqrt(s'/m'load).");
     }
   }
 

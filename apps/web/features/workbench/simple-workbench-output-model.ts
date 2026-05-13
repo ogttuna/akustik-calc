@@ -26,6 +26,10 @@ import {
   getGateAYAdvancedWallOutputDetail
 } from "./advanced-wall-source-absent-surface";
 import {
+  getHeavyConcreteCombinedFormulaCorridorOutputDetail,
+  isHeavyConcreteCombinedFormulaCorridorImpact
+} from "./heavy-concrete-combined-impact-corridor-view";
+import {
   getSteelFloorFormulaCorridorOutputDetail,
   isSteelFloorFormulaCorridorImpact
 } from "./steel-floor-formula-corridor-view";
@@ -284,6 +288,7 @@ export function buildOutputCard(input: {
   const isImpactOnlyLowConfidenceLane = isImpactOnlyLowConfidenceFloorLane(result);
   const isReinforcedConcreteLowConfidenceLane =
     isReinforcedConcreteLowConfidenceFloorLane(result);
+  const isHeavyConcreteCombinedFormulaCorridor = isHeavyConcreteCombinedFormulaCorridorImpact(result);
   const isSteelFloorFormulaCorridor = isSteelFloorFormulaCorridorImpact(result);
   const isTimberCltDeltaLwFormulaCorridor = isTimberCltDeltaLwFormulaCorridorImpact(result);
   const rockwoolTripleLeafScreeningPolicy = getRockwoolTripleLeafScreeningPolicyCopy(result);
@@ -512,8 +517,12 @@ export function buildOutputCard(input: {
             ? REINFORCED_CONCRETE_LOW_CONFIDENCE_LNW_DETAIL
             : isImpactOnlyLowConfidenceLane
               ? IMPACT_ONLY_LOW_CONFIDENCE_LNW_DETAIL
+              : isHeavyConcreteCombinedFormulaCorridor
+                ? getHeavyConcreteCombinedFormulaCorridorOutputDetail("Ln,w", result.impact) ??
+                  "Lab-side Ln,w from the active heavy-concrete combined formula corridor."
               : isSteelFloorFormulaCorridor
-                ? getSteelFloorFormulaCorridorOutputDetail("Ln,w", result.impact) ?? "Lab-side Ln,w from the active steel formula corridor."
+                ? getSteelFloorFormulaCorridorOutputDetail("Ln,w", result.impact) ??
+                  "Lab-side Ln,w from the active steel formula corridor."
               : "Lab-side weighted normalized impact sound level.",
           label: "Ln,w",
           output,
@@ -605,6 +614,9 @@ export function buildOutputCard(input: {
         return {
           detail: isSteelFloorFormulaCorridor
             ? getSteelFloorFormulaCorridorOutputDetail("DeltaLw", result.impact) ?? "DeltaLw from the active steel formula corridor."
+            : isHeavyConcreteCombinedFormulaCorridor
+              ? getHeavyConcreteCombinedFormulaCorridorOutputDetail("DeltaLw", result.impact) ??
+                "DeltaLw from the active heavy-concrete combined formula corridor."
             : isTimberCltDeltaLwFormulaCorridor
               ? getTimberCltDeltaLwFormulaCorridorOutputDetail("DeltaLw", result.impact) ??
                 "DeltaLw from the active timber/CLT formula corridor."

@@ -62,6 +62,10 @@ export function formatConfidenceProvenanceForImpact(input: {
     return "Low-confidence fallback";
   }
 
+  if (input.basis === "predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate") {
+    return "Heavy concrete combined formula corridor";
+  }
+
   if (input.basis === "predictor_lightweight_steel_mass_spring_holdout_corridor_estimate") {
     return "Steel formula corridor";
   }

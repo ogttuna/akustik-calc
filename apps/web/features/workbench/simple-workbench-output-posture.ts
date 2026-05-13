@@ -12,6 +12,10 @@ import {
   getGateAYAdvancedWallSurface
 } from "./advanced-wall-source-absent-surface";
 import {
+  getHeavyConcreteCombinedFormulaCorridorPosture,
+  isHeavyConcreteCombinedFormulaCorridorImpact
+} from "./heavy-concrete-combined-impact-corridor-view";
+import {
   getGateSOpeningLeakCompositeOutputDetail,
   getGateSOpeningLeakCompositeSurface
 } from "./opening-leak-composite-surface";
@@ -255,6 +259,10 @@ export function buildSimpleWorkbenchOutputPosture(input: {
   }
 
   if (studyMode === "floor") {
+    if (isHeavyConcreteCombinedFormulaCorridorImpact(result) && (output === "Ln,w" || output === "DeltaLw")) {
+      return getHeavyConcreteCombinedFormulaCorridorPosture();
+    }
+
     if (isSteelFloorFormulaCorridorImpact(result) && (output === "Ln,w" || output === "DeltaLw")) {
       return getSteelFloorFormulaCorridorPosture();
     }

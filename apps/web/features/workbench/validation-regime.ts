@@ -18,6 +18,7 @@ import {
   isReinforcedConcreteLowConfidenceFloorLane,
   REINFORCED_CONCRETE_LOW_CONFIDENCE_TRACE_CANDIDATE_DETAIL
 } from "./reinforced-concrete-low-confidence-floor-lane";
+import { HEAVY_CONCRETE_COMBINED_FORMULA_BASIS } from "./heavy-concrete-combined-impact-corridor-view";
 import { STEEL_FLOOR_FORMULA_BASIS } from "./steel-floor-formula-corridor-view";
 
 export type ValidationPosture = {
@@ -171,6 +172,15 @@ export function describeImpactValidationPosture(result: AssemblyCalculation | nu
       return {
         detail:
           "The active floor lane is the Gate AD lightweight-steel formula corridor with explicit carrier geometry, load mass, dynamic stiffness, and lower isolation. Keep the +/-4.5 dB Ln,w and +/-2.0 dB DeltaLw tolerances attached.",
+        label: trace.selectedLabel,
+        posture: "estimate"
+      };
+    }
+
+    if (result.impact?.basis === HEAVY_CONCRETE_COMBINED_FORMULA_BASIS) {
+      return {
+        detail:
+          "The active floor lane is the Gate BD heavy-concrete combined upper/lower formula corridor with explicit slab mass, load basis, dynamic stiffness, lower ceiling treatment, and bounded coupling. Keep the +/-6.5 dB Ln,w and +/-5.5 dB DeltaLw source-absent budgets attached.",
         label: trace.selectedLabel,
         posture: "estimate"
       };
@@ -353,6 +363,7 @@ export function getActiveValidationMode(result: AssemblyCalculation | null) {
   if (
     trace?.selectionKind === "formula_estimate" ||
     impactBasis === "predictor_heavy_bare_floor_iso12354_annexc_estimate" ||
+    impactBasis === HEAVY_CONCRETE_COMBINED_FORMULA_BASIS ||
     impactBasis === "predictor_heavy_floating_floor_iso12354_annexc_estimate"
   ) {
     return getImpactValidationModeRegimeById("formula_estimate");

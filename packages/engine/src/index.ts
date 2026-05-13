@@ -19,6 +19,7 @@ export * from "./calculator-personal-use-mvp-coverage-sprint-gate-ba";
 export * from "./calculator-personal-use-mvp-coverage-sprint-gate-bb";
 export * from "./calculator-personal-use-mvp-coverage-sprint-gate-bc";
 export * from "./calculator-personal-use-mvp-coverage-sprint-gate-bd";
+export * from "./calculator-personal-use-mvp-coverage-sprint-gate-be";
 export * from "./curve-rating";
 export * from "./dynamic-airborne";
 export * from "./dynamic-airborne-gate-ae-flat-multicavity";

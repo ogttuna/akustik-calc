@@ -125,7 +125,7 @@ use `pnpm check` when shared contracts move.
   `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bd-floor-impact-source-absent-runtime-corridor-contract.test.ts`.
   Short label: floor-impact source-absent formula corridor.
 - [calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BD_HANDOFF.md](./calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BD_HANDOFF.md)
-  — latest calculator handoff: Gate BD landed the floor-impact
+  — prior calculator handoff: Gate BD landed the floor-impact
   source-absent runtime corridor and selected Gate BE surface parity.
   Landed action:
   `gate_bd_personal_use_mvp_floor_impact_source_absent_runtime_corridor_plan`;
@@ -144,6 +144,24 @@ use `pnpm check` when shared contracts move.
   2026-05-13 with focused Gate BD, BA-BD continuity, impact regression,
   engine typecheck/build, `pnpm calculator:gate:current`, and
   `git diff --check`.
+- [calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BE_HANDOFF.md](./calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BE_HANDOFF.md)
+  — latest calculator handoff: Gate BE landed the floor-impact
+  source-absent surface parity for the `Heavy concrete combined formula corridor`
+  and selected Gate BF input surface. Landed action:
+  `gate_be_personal_use_mvp_floor_impact_source_absent_surface_parity_plan`;
+  selection status:
+  `gate_be_personal_use_mvp_floor_impact_source_absent_surface_parity_landed_selected_input_surface_gate_bf`;
+  selected next action:
+  `gate_bf_personal_use_mvp_floor_impact_source_absent_input_surface_plan`;
+  selected next file:
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bf-floor-impact-source-absent-input-surface-contract.test.ts`.
+  Runtime stays lab `Ln,w 44.4` / `DeltaLw 30.1` with the same
+  source-absent not-measured budgets. Short label: floor-impact
+  source-absent surface parity. Next plain label: floor-impact
+  source-absent input surface. Validation passed on 2026-05-13 with
+  focused Gate BE, Gate BD/BE continuity, focused web surface parity,
+  engine/web typecheck, `pnpm calculator:gate:current`, full
+  `pnpm check`, and `git diff --check`.
 - [calculator/CHECKPOINT_2026-05-13_POST_GATE_BD_FULL_REVALIDATION_AND_GATE_BE_PLAN_HANDOFF.md](./calculator/CHECKPOINT_2026-05-13_POST_GATE_BD_FULL_REVALIDATION_AND_GATE_BE_PLAN_HANDOFF.md)
   — latest broad revalidation and planning checkpoint: post-Gate BD
   `pnpm check` passed with lint, typecheck, engine 522 files / 3103
@@ -151,8 +169,8 @@ use `pnpm check` when shared contracts move.
   two lint-only cleanups. It confirms Gate BE surface parity is the
   first next implementation step.
 - [calculator/NEXT_IMPLEMENTATION_PLAN.md](./calculator/NEXT_IMPLEMENTATION_PLAN.md)
-  — active calculator tactical plan; currently Gate BE floor-impact
-  source-absent surface parity.
+  — active calculator tactical plan; currently Gate BF floor-impact
+  source-absent input surface.
 - [calculator/SLICE_PERSONAL_USE_MVP_GATE_AV_POST_RELEASE_ACCURACY_AND_ADAPTER_ROADMAP_PLAN.md](./calculator/SLICE_PERSONAL_USE_MVP_GATE_AV_POST_RELEASE_ACCURACY_AND_ADAPTER_ROADMAP_PLAN.md)
   — Gate AV analysis slice: no-runtime post-release roadmap,
   source-absent solver gap cartography selection, and ranked next

@@ -4,11 +4,16 @@ import {
   getSteelFloorFormulaCorridorNarrative,
   isSteelFloorFormulaCorridorImpact
 } from "./steel-floor-formula-corridor-view";
+import {
+  getHeavyConcreteCombinedFormulaCorridorNarrative,
+  isHeavyConcreteCombinedFormulaCorridorImpact
+} from "./heavy-concrete-combined-impact-corridor-view";
 
 export type ImpactLaneKind =
   | "bound_only"
   | "exact_family"
   | "exact_source"
+  | "heavy_concrete_combined_formula_corridor"
   | "low_confidence_fallback"
   | "official_catalog"
   | "published_family"
@@ -45,6 +50,10 @@ export function getImpactLaneKind(input: {
     return "low_confidence_fallback";
   }
 
+  if (isHeavyConcreteCombinedFormulaCorridorImpact(impact)) {
+    return "heavy_concrete_combined_formula_corridor";
+  }
+
   if (isSteelFloorFormulaCorridorImpact(impact)) {
     return "steel_formula_corridor";
   }
@@ -72,6 +81,8 @@ export function getImpactLanePillLabel(kind: ImpactLaneKind): string {
       return "Bound support live";
     case "scoped_formula":
       return "Scoped live";
+    case "heavy_concrete_combined_formula_corridor":
+      return "Heavy concrete formula live";
     case "steel_formula_corridor":
       return "Steel formula live";
     case "unavailable":
@@ -95,6 +106,8 @@ export function getImpactLaneHeadline(kind: ImpactLaneKind): string {
       return "Conservative upper-bound support";
     case "scoped_formula":
       return "Ln,w and DeltaLw";
+    case "heavy_concrete_combined_formula_corridor":
+      return "Heavy concrete combined formula corridor";
     case "steel_formula_corridor":
       return "Steel floor formula corridor";
     case "unavailable":
@@ -118,6 +131,8 @@ export function getImpactLaneNarrative(kind: ImpactLaneKind, hasExactFamilyCompa
               ? "Some official rows publish conservative impact support only, such as Ln,w upper bounds, Ln,w+CI upper bounds, or DeltaLw lower bounds. DAC now carries those bounds honestly instead of inventing a precise live metric."
               : kind === "scoped_formula"
                 ? "This lane stays honest: the local formula and predictor branch still covers the narrow heavy-floor estimate path, while exact families, official rows, exact imports, and labeled published-family fallbacks can light up their own evidence lanes when the topology supports them. Broader family import and deeper field-side continuations still need more adoption work."
+                : kind === "heavy_concrete_combined_formula_corridor"
+                  ? getHeavyConcreteCombinedFormulaCorridorNarrative()
                 : kind === "steel_formula_corridor"
                   ? getSteelFloorFormulaCorridorNarrative()
                 : "The current stack does not yet hit a supported impact lane.";

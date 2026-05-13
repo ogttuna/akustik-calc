@@ -13,6 +13,11 @@ import {
   isSteelFloorFormulaCorridorImpact
 } from "./steel-floor-formula-corridor-view";
 import {
+  formatHeavyConcreteCombinedFormulaErrorBudgetSummary,
+  formatHeavyConcreteCombinedFormulaErrorBudgetTerms,
+  isHeavyConcreteCombinedFormulaCorridorImpact
+} from "./heavy-concrete-combined-impact-corridor-view";
+import {
   formatTimberCltDeltaLwFormulaErrorBudgetSummary,
   formatTimberCltDeltaLwFormulaErrorBudgetTerms,
   isTimberCltDeltaLwFormulaCorridorImpact
@@ -117,11 +122,14 @@ function mapSolverSpreadTone(value: number): SimpleWorkbenchCorridorDossierCard[
   return "warning";
 }
 
-function buildSteelFormulaErrorBudgetCards(result: AssemblyCalculation): SimpleWorkbenchCorridorDossierCard[] {
+function buildImpactFormulaErrorBudgetCards(result: AssemblyCalculation): SimpleWorkbenchCorridorDossierCard[] {
+  const isHeavyConcreteCombinedFormula = isHeavyConcreteCombinedFormulaCorridorImpact(result);
   const isTimberCltFormula = isTimberCltDeltaLwFormulaCorridorImpact(result);
 
   return (result.impact?.errorBudgets ?? []).map((budget: ImpactErrorBudget) => ({
-    detail: isTimberCltFormula
+    detail: isHeavyConcreteCombinedFormula
+      ? `${formatHeavyConcreteCombinedFormulaErrorBudgetSummary(budget)}. Terms: ${formatHeavyConcreteCombinedFormulaErrorBudgetTerms(budget)}.`
+      : isTimberCltFormula
       ? `${formatTimberCltDeltaLwFormulaErrorBudgetSummary(budget)}. Terms: ${formatTimberCltDeltaLwFormulaErrorBudgetTerms(budget)}.`
       : `${formatSteelFloorFormulaErrorBudgetSummary(budget)}. Terms: ${formatSteelFloorFormulaErrorBudgetTerms(budget)}.`,
     label: `${budget.metricId} error budget`,
@@ -202,10 +210,13 @@ function buildFloorCorridorDossier(result: AssemblyCalculation): SimpleWorkbench
   const activeMode = getActiveValidationMode(result);
   const impactPosture = describeImpactValidationPosture(result);
   const toleranceLabel = formatImpactValidationTolerance(activeFamily?.maxToleranceDb ?? IMPACT_VALIDATION_CORPUS_SUMMARY.toleranceBandMaxDb);
-  const errorBudgetCards = buildSteelFormulaErrorBudgetCards(result);
+  const errorBudgetCards = buildImpactFormulaErrorBudgetCards(result);
+  const isHeavyConcreteCombinedFormula = isHeavyConcreteCombinedFormulaCorridorImpact(result);
   const errorBudgetHeadline =
     errorBudgetCards.length === 0
       ? ""
+      : isHeavyConcreteCombinedFormula
+        ? " Source-absent heavy-concrete combined upper/lower budgets are structured and marked not measured evidence."
       : isSteelFloorFormulaCorridorImpact(result)
         ? " Source-absent steel formula budgets are structured and marked not measured evidence."
         : isTimberCltDeltaLwFormulaCorridorImpact(result)

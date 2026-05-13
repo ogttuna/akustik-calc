@@ -18,7 +18,7 @@ not block a labelled family-specific physics prediction when the
 required topology and material inputs are present.
 
 As of 2026-05-13, the current selected slice is
-`personal_use_mvp_coverage_sprint_after_gate_bd_floor_impact_source_absent_runtime_corridor`.
+`personal_use_mvp_coverage_sprint_after_gate_be_floor_impact_source_absent_surface_parity`.
 Gate AU closed company-internal daily-use ready, Gate AV
 `gate_av_personal_use_mvp_post_release_accuracy_and_adapter_roadmap_plan`
 landed the no-runtime post-release accuracy/adapters roadmap, and Gate
@@ -79,11 +79,11 @@ with source-absent not-measured budgets of `+/-6.5 dB` for `Ln,w` and
 `+/-5.5 dB` for `DeltaLw`. Missing lower treatment or dynamic
 stiffness blocks fallback; exact source, existing heavy floating, steel,
 timber/CLT, field/building, and ASTM boundaries remain protected.
-The next selected action is
+Gate BD selected
 `gate_be_personal_use_mvp_floor_impact_source_absent_surface_parity_plan`
 in
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-be-floor-impact-source-absent-surface-parity-contract.test.ts`.
-Next plain label: floor-impact source-absent surface parity.
+Gate BD next plain label was floor-impact source-absent surface parity.
 Short label: floor-impact source-absent runtime corridor.
 Gate BD validation passed on 2026-05-13: focused Gate BD 1 file / 6
 tests, Gate BC + Gate BD continuity 2 files / 14 tests, Gate BA +
@@ -98,6 +98,30 @@ Post-Gate BD full revalidation then passed on 2026-05-13:
 web 182 files / 985 passed + 18 skipped, and build 5/5 after two
 lint-only cleanups. The detailed handoff is
 [CHECKPOINT_2026-05-13_POST_GATE_BD_FULL_REVALIDATION_AND_GATE_BE_PLAN_HANDOFF.md](./CHECKPOINT_2026-05-13_POST_GATE_BD_FULL_REVALIDATION_AND_GATE_BE_PLAN_HANDOFF.md).
+Gate BE
+`gate_be_personal_use_mvp_floor_impact_source_absent_surface_parity_plan`
+has now landed the no-retune surface parity for the
+`Heavy concrete combined formula corridor` with selection status
+`gate_be_personal_use_mvp_floor_impact_source_absent_surface_parity_landed_selected_input_surface_gate_bf`.
+Cards, posture, support trace, metric-basis copy, corridor/method
+dossiers, scenario analysis, saved replay, calculator API,
+impact-only API, and Markdown report now expose the same lab
+`Ln,w 44.4` / `DeltaLw 30.1` basis and source-absent not-measured
+budgets. Gate BE selected
+`gate_bf_personal_use_mvp_floor_impact_source_absent_input_surface_plan`
+in
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bf-floor-impact-source-absent-input-surface-contract.test.ts`.
+Next plain label: floor-impact source-absent input surface.
+Short label: floor-impact source-absent surface parity.
+Gate BE handoff:
+[CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BE_HANDOFF.md](./CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BE_HANDOFF.md).
+Gate BE validation passed on 2026-05-13: focused Gate BE 1 file / 4
+tests, Gate BD + Gate BE continuity 2 files / 10 tests, focused web
+surface parity 1 file / 3 tests, engine/web typecheck, `pnpm
+calculator:gate:current` with engine 398 files / 2305 tests, web 76
+files / 325 passed + 18 skipped, repo build 5/5, and full `pnpm check`
+with lint/typecheck clean, engine 523 files / 3107 tests, web 183 files
+/ 1003 passed + 18 skipped, and build 5/5.
 
 The Personal-Use MVP Coverage Sprint has advanced
 through the Gate AU company-internal daily-use ready release handoff

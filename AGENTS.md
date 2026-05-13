@@ -1116,12 +1116,31 @@ The first `pnpm check` attempt caught two lint-only issues: an unused
 Gate BA import and redundant `Boolean(...)` calls in the Gate AY
 advanced-wall adapter. After those behavior-neutral cleanups, full
 `pnpm check` passed with lint, typecheck, engine 522 files / 3103 tests,
-web 182 files / 985 passed + 18 skipped, and build 5/5. This confirms
-Gate BE surface parity is still the first next implementation step:
-make the Gate BD basis and not-measured budgets visible across cards,
-posture, support trace, dossiers, scenario/saved replay, API payloads,
-and Markdown report before any input-surface, adapter, retune, or
-source-crawl lane.
+web 182 files / 985 passed + 18 skipped, and build 5/5. Gate BE has now
+landed:
+`gate_be_personal_use_mvp_floor_impact_source_absent_surface_parity_plan`.
+Gate BE selection status:
+`gate_be_personal_use_mvp_floor_impact_source_absent_surface_parity_landed_selected_input_surface_gate_bf`.
+Gate BE keeps the Gate BD runtime frozen at lab `Ln,w 44.4` /
+`DeltaLw 30.1` through the `Heavy concrete combined formula corridor`
+and makes the basis plus source-absent not-measured budgets visible
+across cards, posture, support trace, dossiers, scenario/saved replay,
+API payloads, and Markdown report. Gate BE selects Gate BF input
+surface next.
+Selected Gate BF action:
+`gate_bf_personal_use_mvp_floor_impact_source_absent_input_surface_plan`.
+Selected Gate BF file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bf-floor-impact-source-absent-input-surface-contract.test.ts`.
+Next plain label: floor-impact source-absent input surface.
+Gate BE validation completed on 2026-05-13: focused Gate BE 1 file / 4
+tests, Gate BD + Gate BE continuity 2 files / 10 tests, focused web
+surface parity 1 file / 3 tests, engine/web typecheck, `pnpm
+calculator:gate:current` with engine 398 files / 2305 tests, web 76
+files / 325 passed + 18 skipped, repo build 5/5, and full `pnpm check`
+with lint/typecheck clean, engine 523 files / 3107 tests, web 183 files
+/ 1003 passed + 18 skipped, and build 5/5. Known non-fatal build
+warnings remain the optional `sharp/@img` warnings from
+`@turbodocx/html-to-docx`.
 Gate AU handoff:
 `docs/calculator/CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AU_HANDOFF.md`.
 Gate AU validation completed on 2026-05-13: focused Gate AU 1 file / 6
@@ -1621,13 +1640,13 @@ plan.
 ## Current Workflow
 
 - current selected slice:
-  `personal_use_mvp_coverage_sprint_after_gate_bd_floor_impact_source_absent_runtime_corridor`
+  `personal_use_mvp_coverage_sprint_after_gate_be_floor_impact_source_absent_surface_parity`
 - current next decision:
-  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-be-floor-impact-source-absent-surface-parity-contract.test.ts`
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bf-floor-impact-source-absent-input-surface-contract.test.ts`
   should run
-  `gate_be_personal_use_mvp_floor_impact_source_absent_surface_parity_plan`.
+  `gate_bf_personal_use_mvp_floor_impact_source_absent_input_surface_plan`.
 - current selected status:
-  `gate_bd_personal_use_mvp_floor_impact_source_absent_runtime_corridor_landed_selected_surface_parity_gate_be`.
+  `gate_be_personal_use_mvp_floor_impact_source_absent_surface_parity_landed_selected_input_surface_gate_bf`.
 - current strategic replan:
   `docs/calculator/CHECKPOINT_2026-05-08_STRATEGIC_ROI_REPLAN_HANDOFF.md`.
   Gate BI and Personal-Use MVP Coverage Sprint Gates A through BC have
@@ -1644,16 +1663,19 @@ plan.
   contract. Gate BC is landed no-runtime bounded floor-impact
   source-absent formula corridor. Gate BD is landed runtime corridor for
   complete heavy-concrete combined upper/lower input at `Ln,w 44.4` /
-  `DeltaLw 30.1` with source-absent not-measured budgets. The next lane
-  is Gate BE surface parity rather than input-surface work or broad
-  source-row crawling.
-  Next plain label: floor-impact source-absent surface parity.
+  `DeltaLw 30.1` with source-absent not-measured budgets. Gate BE is
+  landed surface parity for the `Heavy concrete combined formula corridor`
+  and selected Gate BF input surface rather than adapter,
+  retune, or broad source-row crawling.
+  Next plain label: floor-impact source-absent input surface.
+  Gate BE validation is recorded in
+  `docs/calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BE_HANDOFF.md`.
 - latest strategic ROI revalidation:
   `docs/calculator/CHECKPOINT_2026-05-10_STRATEGIC_ROI_REVALIDATION_AND_GATE_G_PLAN_HANDOFF.md`.
 - latest checkpoint:
-  `docs/calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BD_HANDOFF.md`.
+  `docs/calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BE_HANDOFF.md`.
 - latest landed calculator gate checkpoint:
-  `docs/calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BD_HANDOFF.md`.
+  `docs/calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BE_HANDOFF.md`.
 - just landed model-first physics prediction pivot Gate BH:
   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-bh-steel-floor-formula-same-stack-iso-delta-lw-residual-policy-closed-owner-revalidation-contract.test.ts`
   landed

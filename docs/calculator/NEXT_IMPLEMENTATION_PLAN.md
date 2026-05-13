@@ -279,23 +279,26 @@ The recommended post-Gate-AV order is:
 10. Later calibration and budget tightening only after source-owned
    holdouts and paired negatives exist.
 
-Gate BD has now landed, so the current active step is Gate BE:
+Gate BE has now landed, so the current active step is Gate BF:
 
-`gate_be_personal_use_mvp_floor_impact_source_absent_surface_parity_plan`
+`gate_bf_personal_use_mvp_floor_impact_source_absent_input_surface_plan`
 
-Selected Gate BE file:
+Selected Gate BF file:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-be-floor-impact-source-absent-surface-parity-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bf-floor-impact-source-absent-input-surface-contract.test.ts`
 
-Gate BE should not retune `Ln,w 44.4` or `DeltaLw 30.1`. It should
-make the Gate BD runtime basis
+Gate BF should not retune `Ln,w 44.4` or `DeltaLw 30.1`. It should
+make the same Gate BD runtime basis
 `predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate`
-and the source-absent `+/-6.5 dB` / `+/-5.5 dB` not-measured budgets
-visible across output cards, support trace, scenario analysis, saved
-replay, Markdown report payloads, and API surfaces. It must keep exact
-source precedence, existing heavy floating/steel/timber/CLT routes,
-missing-input fallback blocks, and lab/field/building/ASTM boundaries
-unchanged.
+and Gate BE `Heavy concrete combined formula corridor` copy reachable
+from first-class Dynamic Calculator floor inputs. It must feed slab
+mass/load, resilient-layer dynamic stiffness, lower treatment, and
+upper/lower coupling owners through live workbench evaluation, scenario
+analysis, saved replay, Markdown report payloads, and API surfaces
+without moving the source-absent `+/-6.5 dB` / `+/-5.5 dB`
+not-measured budgets. It must keep exact source precedence, existing
+heavy floating/steel/timber/CLT routes, missing-input fallback blocks,
+and lab/field/building/ASTM boundaries unchanged.
 
 The research check behind this plan points to frequency-band direct
 curves as the strongest long-term shape: ISO 12354-1/2 building
@@ -527,15 +530,62 @@ advanced-wall dynamic adapter. After those cleanups, full `pnpm check`
 passed with lint, typecheck, engine 522 files / 3103 tests, web 182
 files / 985 passed + 18 skipped, and build 5/5.
 
-Implementation read after revalidation: the new impact basis label is
-available on the web surface, but Gate BE has not landed an executable
-surface-parity contract yet. Therefore the next step remains Gate BE:
-prove cards, posture, impact metric basis copy, support trace,
+Implementation read after revalidation: the new impact basis label was
+available on the web surface, but Gate BE had not yet landed an
+executable surface-parity contract. Gate BE now closes that gap.
+
+## Gate BE Floor-Impact Source-Absent Surface Parity Landed - 2026-05-13
+
+Gate BE has now landed the no-retune surface parity selected by Gate BD:
+
+`gate_be_personal_use_mvp_floor_impact_source_absent_surface_parity_plan`
+
+Gate BE selection status:
+
+`gate_be_personal_use_mvp_floor_impact_source_absent_surface_parity_landed_selected_input_surface_gate_bf`
+
+Selected next action:
+
+`gate_bf_personal_use_mvp_floor_impact_source_absent_input_surface_plan`
+
+Selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bf-floor-impact-source-absent-input-surface-contract.test.ts`
+
+Gate BE makes the `Heavy concrete combined formula corridor` visible
+across cards, posture, impact metric basis copy, support trace,
 corridor/method dossier, scenario analysis, saved replay, calculator
-API payload, impact-only API payload, and Markdown report all expose the
-same source-absent not-measured basis and budgets for Gate BD while
-keeping exact-source, missing-input, field/building, ASTM/IIC, and
-existing formula-family boundaries outside the promoted budget.
+API payload, impact-only API payload, and Markdown report. The runtime
+does not move: complete explicit heavy-concrete combined input still
+returns lab `Ln,w 44.4` / `DeltaLw 30.1` through
+`predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate`
+with `+/-6.5 dB` / `+/-5.5 dB` source-absent not-measured budgets.
+
+Gate BE preserves exact source precedence, existing heavy floating,
+steel, timber/CLT routes, missing lower-treatment and missing dynamic
+stiffness fallback blocks, and lab/field/building/ASTM/IIC basis
+boundaries. No source row, tolerance, formula, or runtime value is
+promoted at Gate BE.
+
+Gate BE closeout checkpoint:
+
+[CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BE_HANDOFF.md](./CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BE_HANDOFF.md)
+
+Gate BE validation passed on 2026-05-13: focused Gate BE 1 file / 4
+tests, Gate BD + Gate BE continuity 2 files / 10 tests, focused web
+surface parity 1 file / 3 tests, engine/web typecheck, `pnpm
+calculator:gate:current` with engine 398 files / 2305 tests, web 76
+files / 325 passed + 18 skipped, repo build 5/5, and full `pnpm check`
+with lint/typecheck clean, engine 523 files / 3107 tests, web 183 files
+/ 1003 passed + 18 skipped, and build 5/5. Known non-fatal build
+warnings remain the optional `sharp/@img` warnings from
+`@turbodocx/html-to-docx`.
+
+Gate BF is now selected because the floor-impact source-absent corridor
+needs first-class Dynamic Calculator floor inputs before new adapter,
+retune, or source-crawl work.
+
+Next plain label: floor-impact source-absent input surface.
 
 ## Gate BC Floor-Impact Source-Absent Formula Corridor Landed - 2026-05-13
 
