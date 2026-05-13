@@ -18,7 +18,7 @@ not block a labelled family-specific physics prediction when the
 required topology and material inputs are present.
 
 As of 2026-05-13, the current selected slice is
-`personal_use_mvp_coverage_sprint_after_gate_bg_floor_impact_source_absent_post_input_surface_revalidation`.
+`personal_use_mvp_coverage_sprint_after_gate_bh_floor_impact_source_absent_coverage_matrix_refresh`.
 Gate AU closed company-internal daily-use ready, Gate AV
 `gate_av_personal_use_mvp_post_release_accuracy_and_adapter_roadmap_plan`
 landed the no-runtime post-release accuracy/adapters roadmap, and Gate
@@ -183,6 +183,36 @@ tests, web 77 files / 328 passed + 18 skipped, repo build 5/5, full
 `pnpm check` with lint/typecheck clean, engine 525 files / 3116 tests,
 web 184 files / 1006 passed + 18 skipped, repo build 5/5, and
 whitespace guard clean.
+
+Gate BH
+`gate_bh_personal_use_mvp_floor_impact_source_absent_coverage_matrix_refresh_plan`
+has now landed the no-runtime floor-impact source-absent coverage matrix
+refresh with selection status
+`gate_bh_personal_use_mvp_floor_impact_source_absent_coverage_matrix_refresh_landed_no_runtime_selected_field_building_adapter_gate_bi`.
+The refreshed executable matrix now has 21 floor-impact rows and adds
+the Gate BF/BG `Heavy concrete combined input surface` rows plus
+`floor.building_impact.prediction_adapter_boundary` beside existing
+heavy floating, steel, timber/CLT, exact source, field, ASTM/IIC,
+missing-input, hostile-topology, and many-layer rows. Complete and
+safe-reordered combined-heavy input remains lab `Ln,w 44.4` /
+`DeltaLw 30.1` through
+`predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate`
+with unchanged `+/-6.5 dB` / `+/-5.5 dB` source-absent not-measured
+budgets. Gate BH selected
+`gate_bi_personal_use_mvp_floor_impact_field_building_adapter_contract_plan`
+in
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bi-floor-impact-field-building-adapter-contract.test.ts`.
+Next plain label: floor-impact field/building adapter contract.
+Short label: floor-impact source-absent coverage matrix refresh.
+Gate BH handoff:
+[CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BH_HANDOFF.md](./CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BH_HANDOFF.md).
+Gate BH validation passed on 2026-05-13: focused Gate BH 1 file / 6
+tests, Gate BG + Gate BH continuity 2 files / 10 tests, engine
+typecheck, `pnpm calculator:gate:current` with engine 401 files / 2320
+tests, web 77 files / 328 passed + 18 skipped, repo build 5/5,
+whitespace guard clean, and full `pnpm check` with lint/typecheck clean,
+engine 526 files / 3122 tests, web 184 files / 1006 passed + 18
+skipped, and repo build 5/5.
 
 The Personal-Use MVP Coverage Sprint has advanced
 through the Gate AU company-internal daily-use ready release handoff

@@ -1193,6 +1193,29 @@ tests, web 77 files / 328 passed + 18 skipped, repo build 5/5, full
 `pnpm check` with lint/typecheck clean, engine 525 files / 3116 tests,
 web 184 files / 1006 passed + 18 skipped, repo build 5/5, and
 whitespace guard clean.
+Gate BH has now landed:
+`gate_bh_personal_use_mvp_floor_impact_source_absent_coverage_matrix_refresh_plan`.
+Gate BH selection status:
+`gate_bh_personal_use_mvp_floor_impact_source_absent_coverage_matrix_refresh_landed_no_runtime_selected_field_building_adapter_gate_bi`.
+Gate BH is a no-runtime floor-impact source-absent coverage matrix
+refresh after Gates BA-BG. It keeps the `Heavy concrete combined input
+surface` complete and safe-reordered rows at lab `Ln,w 44.4` /
+`DeltaLw 30.1` with unchanged source-absent budgets, adds
+`floor.building_impact.prediction_adapter_boundary`, and preserves
+heavy floating, steel, timber/CLT, exact source, field, ASTM/IIC,
+missing-input, hostile-topology, and many-layer boundaries.
+Selected Gate BI action:
+`gate_bi_personal_use_mvp_floor_impact_field_building_adapter_contract_plan`.
+Selected Gate BI file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bi-floor-impact-field-building-adapter-contract.test.ts`.
+Next plain label: floor-impact field/building adapter contract.
+Gate BH validation completed on 2026-05-13: focused Gate BH 1 file / 6
+tests, Gate BG + Gate BH continuity 2 files / 10 tests, engine
+typecheck, `pnpm calculator:gate:current` with engine 401 files / 2320
+tests, web 77 files / 328 passed + 18 skipped, repo build 5/5,
+whitespace guard clean, and full `pnpm check` with lint/typecheck clean,
+engine 526 files / 3122 tests, web 184 files / 1006 passed + 18
+skipped, and repo build 5/5.
 Known non-fatal build
 warnings remain the optional `sharp/@img` warnings from
 `@turbodocx/html-to-docx`.

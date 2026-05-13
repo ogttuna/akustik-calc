@@ -192,6 +192,9 @@ planning checkpoint read
 If you need the current Personal-Use MVP Coverage Sprint Gate BE
 checkpoint read
 [CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BE_HANDOFF.md](./CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BE_HANDOFF.md).
+If you need the current Personal-Use MVP Coverage Sprint Gate BH
+checkpoint read
+[CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BH_HANDOFF.md](./CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BH_HANDOFF.md).
 
 ---
 
@@ -199,25 +202,25 @@ checkpoint read
 
 Current selected slice:
 
-`personal_use_mvp_coverage_sprint_after_gate_be_floor_impact_source_absent_surface_parity`
+`personal_use_mvp_coverage_sprint_after_gate_bh_floor_impact_source_absent_coverage_matrix_refresh`
 
 Source label:
 
-Personal-Use MVP Coverage Sprint after Gate BE landed floor-impact
-source-absent surface parity for the heavy-concrete combined runtime
-corridor selected by Gate BD.
+Personal-Use MVP Coverage Sprint after Gate BH landed the no-runtime
+floor-impact source-absent coverage matrix refresh and selected the
+field/building adapter contract.
 
 Current selected status:
 
-`gate_be_personal_use_mvp_floor_impact_source_absent_surface_parity_landed_selected_input_surface_gate_bf`
+`gate_bh_personal_use_mvp_floor_impact_source_absent_coverage_matrix_refresh_landed_no_runtime_selected_field_building_adapter_gate_bi`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bf-floor-impact-source-absent-input-surface-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bi-floor-impact-field-building-adapter-contract.test.ts`
 
 Selected next action:
 
-`gate_bf_personal_use_mvp_floor_impact_source_absent_input_surface_plan`
+`gate_bi_personal_use_mvp_floor_impact_field_building_adapter_contract_plan`
 
 Strategic ROI replan:
 
@@ -504,6 +507,31 @@ Current strategy:
   full `pnpm check` with lint/typecheck clean, engine 525 files / 3116
   tests, web 184 files / 1006 passed + 18 skipped, repo build 5/5, and
   whitespace guard clean.
+- Personal-Use MVP Coverage Sprint Gate BH has now landed
+  `gate_bh_personal_use_mvp_floor_impact_source_absent_coverage_matrix_refresh_plan`
+  with selection status
+  `gate_bh_personal_use_mvp_floor_impact_source_absent_coverage_matrix_refresh_landed_no_runtime_selected_field_building_adapter_gate_bi`.
+  Gate BH is a no-runtime floor-impact source-absent coverage matrix
+  refresh after Gates BA-BG. It keeps the Gate BF/BG
+  `Heavy concrete combined input surface` at lab `Ln,w 44.4` /
+  `DeltaLw 30.1` with unchanged source-absent budgets, adds
+  `floor.building_impact.prediction_adapter_boundary`, and preserves
+  existing heavy floating, steel, timber/CLT, exact source, field,
+  ASTM/IIC, missing-input, hostile-topology, and many-layer boundaries.
+  Gate BH selects
+  `gate_bi_personal_use_mvp_floor_impact_field_building_adapter_contract_plan`
+  in
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bi-floor-impact-field-building-adapter-contract.test.ts`.
+  In plain terms, the next work is the floor-impact field/building
+  adapter contract.
+  Next plain label: floor-impact field/building adapter contract.
+  Gate BH validation passed on 2026-05-13: focused Gate BH 1 file / 6
+  tests, Gate BG + Gate BH continuity 2 files / 10 tests, engine
+  typecheck, `pnpm calculator:gate:current` with engine 401 files /
+  2320 tests, web 77 files / 328 passed + 18 skipped, repo build 5/5,
+  whitespace guard clean, and full `pnpm check` with lint/typecheck
+  clean, engine 526 files / 3122 tests, web 184 files / 1006 passed +
+  18 skipped, and repo build 5/5.
 - Historical implementation chain note: the active calculator-first
   pivot that led into this sprint is
   `calculator_model_first_physics_prediction_pivot_v1`; its Gate A

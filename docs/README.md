@@ -144,8 +144,28 @@ use `pnpm check` when shared contracts move.
   2026-05-13 with focused Gate BD, BA-BD continuity, impact regression,
   engine typecheck/build, `pnpm calculator:gate:current`, and
   `git diff --check`.
+- [calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BH_HANDOFF.md](./calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BH_HANDOFF.md)
+  — latest calculator handoff: Gate BH landed no-runtime
+  floor-impact source-absent coverage matrix refresh after the
+  `Heavy concrete combined input surface`. Landed action:
+  `gate_bh_personal_use_mvp_floor_impact_source_absent_coverage_matrix_refresh_plan`;
+  selection status:
+  `gate_bh_personal_use_mvp_floor_impact_source_absent_coverage_matrix_refresh_landed_no_runtime_selected_field_building_adapter_gate_bi`;
+  selected next action:
+  `gate_bi_personal_use_mvp_floor_impact_field_building_adapter_contract_plan`;
+  selected next file:
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bi-floor-impact-field-building-adapter-contract.test.ts`.
+  The refreshed executable matrix has 21 floor rows and adds Gate BF/BG
+  combined-heavy rows plus `floor.building_impact.prediction_adapter_boundary`.
+  Complete and safe-reordered combined-heavy input remains lab
+  `Ln,w 44.4` / `DeltaLw 30.1` with the same source-absent
+  not-measured budgets. Short label: floor-impact source-absent coverage
+  matrix refresh. Gate BI plain label: floor-impact field/building adapter contract.
+  Validation passed on 2026-05-13 with focused Gate BH, Gate BG/BH
+  continuity, engine typecheck, `pnpm calculator:gate:current`, full
+  `pnpm check`, and whitespace guard clean.
 - [calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BG_HANDOFF.md](./calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BG_HANDOFF.md)
-  — latest calculator handoff: Gate BG landed no-runtime
+  — prior calculator handoff: Gate BG landed no-runtime
   floor-impact source-absent post-input-surface revalidation after the
   `Heavy concrete combined input surface` and selected Gate BH
   coverage matrix refresh. Landed action:
@@ -210,8 +230,8 @@ use `pnpm check` when shared contracts move.
   two lint-only cleanups. It confirms Gate BE surface parity is the
   first next implementation step.
 - [calculator/NEXT_IMPLEMENTATION_PLAN.md](./calculator/NEXT_IMPLEMENTATION_PLAN.md)
-  — active calculator tactical plan; currently Gate BH floor-impact
-  source-absent coverage matrix refresh.
+  — active calculator tactical plan; currently Gate BI floor-impact
+  field/building adapter contract.
 - [calculator/SLICE_PERSONAL_USE_MVP_GATE_AV_POST_RELEASE_ACCURACY_AND_ADAPTER_ROADMAP_PLAN.md](./calculator/SLICE_PERSONAL_USE_MVP_GATE_AV_POST_RELEASE_ACCURACY_AND_ADAPTER_ROADMAP_PLAN.md)
   — Gate AV analysis slice: no-runtime post-release roadmap,
   source-absent solver gap cartography selection, and ranked next

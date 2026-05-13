@@ -279,21 +279,22 @@ The recommended post-Gate-AV order is:
 10. Later calibration and budget tightening only after source-owned
    holdouts and paired negatives exist.
 
-Gate BG has now landed, so the current active step is Gate BH:
+Gate BH has now landed, so the current active step is Gate BI:
 
-`gate_bh_personal_use_mvp_floor_impact_source_absent_coverage_matrix_refresh_plan`
+`gate_bi_personal_use_mvp_floor_impact_field_building_adapter_contract_plan`
 
-Selected Gate BH file:
+Selected Gate BI file:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bh-floor-impact-source-absent-coverage-matrix-refresh-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bi-floor-impact-field-building-adapter-contract.test.ts`
 
-Gate BH should not retune `Ln,w 44.4` or `DeltaLw 30.1`. It should
-refresh the executable floor-impact source-absent coverage matrix after
-Gates BA-BG, keeping supported values separate from unsupported output
-bases and adding the Gate BF/BG `Heavy concrete combined input surface`
-row beside existing heavy floating, steel, timber/CLT, exact source,
-field, ASTM/IIC, missing-input, and hostile-topology rows before
-selecting the next highest-ROI calculator coverage lane.
+Gate BI should not retune `Ln,w 44.4` or `DeltaLw 30.1`, should not
+promote `L'nT,w` / `L'nT,50` from lab data, and should not add an ASTM
+adapter. It should define the floor-impact field/building adapter owner
+contract selected by Gate BH: apparent field and building prediction
+must own separating element area, receiving-room volume, RT60 or
+absorption basis, junction/flanking context, coupling or Kij owner,
+normalization basis, and low-frequency ownership before any numeric
+runtime can promote.
 
 The research check behind this plan points to frequency-band direct
 curves as the strongest long-term shape: ISO 12354-1/2 building
@@ -302,9 +303,9 @@ INSUL / Acoulatis / SONarchitect capability descriptions all reinforce
 that single-number outputs should be basis-specific results of owned
 curves or owned one-number corridors, not cross-basis aliases.
 
-Gate AV closeout checkpoint:
+Gate BH closeout checkpoint:
 
-[CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AV_HANDOFF.md](./CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AV_HANDOFF.md)
+[CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BH_HANDOFF.md](./CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BH_HANDOFF.md)
 
 ## Gate AW Source-Absent Solver Gap Cartography Landed - 2026-05-13
 
@@ -687,6 +688,55 @@ owned. The next useful step is a coverage matrix refresh before choosing
 another solver lane.
 
 Next plain label: floor-impact source-absent coverage matrix refresh.
+
+## Gate BH Floor-Impact Source-Absent Coverage Matrix Refresh Landed - 2026-05-13
+
+Gate BH has now landed the no-runtime matrix refresh selected by Gate
+BG:
+
+`gate_bh_personal_use_mvp_floor_impact_source_absent_coverage_matrix_refresh_plan`
+
+Gate BH selection status:
+
+`gate_bh_personal_use_mvp_floor_impact_source_absent_coverage_matrix_refresh_landed_no_runtime_selected_field_building_adapter_gate_bi`
+
+Selected next action:
+
+`gate_bi_personal_use_mvp_floor_impact_field_building_adapter_contract_plan`
+
+Selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bi-floor-impact-field-building-adapter-contract.test.ts`
+
+Gate BH refreshes the executable floor-impact source-absent matrix to
+21 rows without runtime movement. It adds the Gate BF/BG `Heavy
+concrete combined input surface` complete, safe-reorder,
+missing-load, and duplicate-base rows plus
+`floor.building_impact.prediction_adapter_boundary`. The supported
+heavy-concrete combined rows remain lab `Ln,w 44.4` / `DeltaLw 30.1`
+with unchanged `+/-6.5 dB` / `+/-5.5 dB` source-absent not-measured
+budgets. Existing heavy floating, steel, timber/CLT, exact source,
+field, ASTM/IIC, missing-input, hostile-topology, and many-layer rows
+remain pinned and basis-separated.
+
+Gate BH selects Gate BI because field/building impact ownership is the
+largest basis-risk gap remaining after the lab source-absent floor
+lanes are stable. Formula retune, ASTM/IIC adapters, and broad source
+crawl remain behind explicit owner and holdout evidence.
+
+Gate BH closeout checkpoint:
+
+[CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BH_HANDOFF.md](./CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BH_HANDOFF.md)
+
+Gate BH validation passed on 2026-05-13: focused Gate BH 1 file / 6
+tests, Gate BG + Gate BH continuity 2 files / 10 tests, engine
+typecheck, `pnpm calculator:gate:current` with engine 401 files / 2320
+tests, web 77 files / 328 passed + 18 skipped, repo build 5/5,
+whitespace guard clean, and full `pnpm check` with lint/typecheck clean,
+engine 526 files / 3122 tests, web 184 files / 1006 passed + 18
+skipped, and repo build 5/5.
+
+Next plain label: floor-impact field/building adapter contract.
 
 ## Gate BC Floor-Impact Source-Absent Formula Corridor Landed - 2026-05-13
 
