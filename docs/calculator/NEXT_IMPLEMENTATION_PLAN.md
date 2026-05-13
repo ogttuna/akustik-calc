@@ -33,6 +33,9 @@ handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_V_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_V_HANDOFF.md).
 For the Gate W coverage matrix refresh and Gate X handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md).
+For the post-Gate-BH plan and test review that keeps Gate BI selected
+read
+[CHECKPOINT_2026-05-13_POST_GATE_BH_PLAN_AND_TEST_REVIEW.md](./CHECKPOINT_2026-05-13_POST_GATE_BH_PLAN_AND_TEST_REVIEW.md).
 For the Gate X AAC / non-homogeneous masonry family solver and Gate Y
 handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_X_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_X_HANDOFF.md).
@@ -306,6 +309,30 @@ curves or owned one-number corridors, not cross-basis aliases.
 Gate BH closeout checkpoint:
 
 [CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BH_HANDOFF.md](./CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BH_HANDOFF.md)
+
+Post-Gate-BH checkpoint review:
+
+[CHECKPOINT_2026-05-13_POST_GATE_BH_PLAN_AND_TEST_REVIEW.md](./CHECKPOINT_2026-05-13_POST_GATE_BH_PLAN_AND_TEST_REVIEW.md)
+
+Current Gate BI implementation order after the checkpoint:
+
+1. Add the selected Gate BI contract test file.
+2. Consume the Gate BH matrix summary and keep the selected lane pinned
+   to `floor_impact_field_building_adapter_contract`.
+3. Define field-apparent and building-prediction owner groups
+   separately.
+4. Keep current field continuation values unchanged: `L'n,w 53`,
+   `L'nT,w 50.6`, and local `L'nT,50 49`.
+5. Keep building `L'nT,w` / `L'nT,50` unsupported until separating
+   element area, receiving-room volume, RT60 or absorption basis,
+   junction/flanking context, coupling or Kij owner, normalization
+   basis, low-frequency ownership, and uncertainty budget ownership are
+   explicit.
+6. Prove lab `Ln,w` / `DeltaLw` runtime values and error budgets stay
+   frozen, exact source precedence stays first, and no ASTM/IIC adapter
+   is introduced.
+7. Select the next narrow lane only after the owner contract makes the
+   field/building adapter promotion boundary executable.
 
 ## Gate AW Source-Absent Solver Gap Cartography Landed - 2026-05-13
 

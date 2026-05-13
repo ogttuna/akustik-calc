@@ -1219,6 +1219,16 @@ skipped, and repo build 5/5.
 Known non-fatal build
 warnings remain the optional `sharp/@img` warnings from
 `@turbodocx/html-to-docx`.
+Post-Gate-BH checkpoint review:
+`CHECKPOINT_2026-05-13_POST_GATE_BH_PLAN_AND_TEST_REVIEW.md`.
+That review confirms the implementation and living docs still select
+Gate BI as the floor-impact field/building adapter contract. Current
+field rows stay bounded to existing owned `L'n,w` / `L'nT,w` and local
+`L'nT,50`; floor-impact building prediction remains unsupported until
+Gate BI owns separating area, receiving-room volume, RT60 or absorption,
+junction/flanking, coupling or Kij, normalization, low-frequency, and
+uncertainty budget fields. Do not retune lab `Ln,w` / `DeltaLw`, add
+broad source crawl, or add ASTM/IIC adapters in this checkpoint lane.
 Gate AU handoff:
 `docs/calculator/CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AU_HANDOFF.md`.
 Gate AU validation completed on 2026-05-13: focused Gate AU 1 file / 6

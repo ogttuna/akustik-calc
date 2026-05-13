@@ -195,6 +195,8 @@ checkpoint read
 If you need the current Personal-Use MVP Coverage Sprint Gate BH
 checkpoint read
 [CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BH_HANDOFF.md](./CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BH_HANDOFF.md).
+If you need the latest post-Gate-BH plan and test review read
+[CHECKPOINT_2026-05-13_POST_GATE_BH_PLAN_AND_TEST_REVIEW.md](./CHECKPOINT_2026-05-13_POST_GATE_BH_PLAN_AND_TEST_REVIEW.md).
 
 ---
 
@@ -221,6 +223,10 @@ Selected next implementation file:
 Selected next action:
 
 `gate_bi_personal_use_mvp_floor_impact_field_building_adapter_contract_plan`
+
+Latest checkpoint review:
+
+`CHECKPOINT_2026-05-13_POST_GATE_BH_PLAN_AND_TEST_REVIEW.md`
 
 Strategic ROI replan:
 
@@ -532,6 +538,15 @@ Current strategy:
   whitespace guard clean, and full `pnpm check` with lint/typecheck
   clean, engine 526 files / 3122 tests, web 184 files / 1006 passed +
   18 skipped, and repo build 5/5.
+- Post-Gate-BH checkpoint review confirms the active plan is still
+  correct. Current field continuation rows remain bounded to existing
+  owned `L'n,w` / `L'nT,w` and local `L'nT,50` evidence. Floor-impact
+  building prediction remains unsupported until Gate BI owns separating
+  area, receiving-room volume, RT60 or absorption, junction/flanking,
+  coupling or Kij, normalization, low-frequency, and uncertainty budget
+  fields. No lab value retune, broad source crawl, or ASTM/IIC adapter is
+  the next step. Checkpoint validation passed with focused Gate BH,
+  `pnpm calculator:gate:current`, and `git diff --check`.
 - Historical implementation chain note: the active calculator-first
   pivot that led into this sprint is
   `calculator_model_first_physics_prediction_pivot_v1`; its Gate A

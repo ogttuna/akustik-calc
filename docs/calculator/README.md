@@ -19,6 +19,11 @@ required topology and material inputs are present.
 
 As of 2026-05-13, the current selected slice is
 `personal_use_mvp_coverage_sprint_after_gate_bh_floor_impact_source_absent_coverage_matrix_refresh`.
+The latest checkpoint review is
+[CHECKPOINT_2026-05-13_POST_GATE_BH_PLAN_AND_TEST_REVIEW.md](./CHECKPOINT_2026-05-13_POST_GATE_BH_PLAN_AND_TEST_REVIEW.md).
+It confirms the active next step remains Gate BI floor-impact
+field/building adapter ownership, not lab retune, broad source crawl, or
+ASTM/IIC adapter work.
 Gate AU closed company-internal daily-use ready, Gate AV
 `gate_av_personal_use_mvp_post_release_accuracy_and_adapter_roadmap_plan`
 landed the no-runtime post-release accuracy/adapters roadmap, and Gate
@@ -213,6 +218,14 @@ tests, web 77 files / 328 passed + 18 skipped, repo build 5/5,
 whitespace guard clean, and full `pnpm check` with lint/typecheck clean,
 engine 526 files / 3122 tests, web 184 files / 1006 passed + 18
 skipped, and repo build 5/5.
+The post-Gate-BH checkpoint keeps those runtime values frozen and
+records the remaining gap as the Gate BI field/building owner contract:
+current field continuation is limited to existing owned rows, while
+floor-impact building prediction stays unsupported until separating
+area, room, reverberation/absorption, junction/flanking, coupling/Kij,
+normalization, low-frequency, and uncertainty owners exist.
+Post-Gate-BH checkpoint validation passed with focused Gate BH,
+`pnpm calculator:gate:current`, and `git diff --check`.
 
 The Personal-Use MVP Coverage Sprint has advanced
 through the Gate AU company-internal daily-use ready release handoff

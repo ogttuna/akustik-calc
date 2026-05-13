@@ -164,6 +164,13 @@ use `pnpm check` when shared contracts move.
   Validation passed on 2026-05-13 with focused Gate BH, Gate BG/BH
   continuity, engine typecheck, `pnpm calculator:gate:current`, full
   `pnpm check`, and whitespace guard clean.
+- [calculator/CHECKPOINT_2026-05-13_POST_GATE_BH_PLAN_AND_TEST_REVIEW.md](./calculator/CHECKPOINT_2026-05-13_POST_GATE_BH_PLAN_AND_TEST_REVIEW.md)
+  — post-Gate-BH checkpoint review: docs and implementation still agree
+  that Gate BI is the next floor-impact field/building adapter contract.
+  It records the remaining owner/input gaps, keeps lab values and
+  budgets frozen, keeps building-impact runtime unsupported, and defines
+  the next Gate BI execution order. Validation passed with focused Gate
+  BH, `pnpm calculator:gate:current`, and `git diff --check`.
 - [calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BG_HANDOFF.md](./calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BG_HANDOFF.md)
   — prior calculator handoff: Gate BG landed no-runtime
   floor-impact source-absent post-input-surface revalidation after the
@@ -231,7 +238,8 @@ use `pnpm check` when shared contracts move.
   first next implementation step.
 - [calculator/NEXT_IMPLEMENTATION_PLAN.md](./calculator/NEXT_IMPLEMENTATION_PLAN.md)
   — active calculator tactical plan; currently Gate BI floor-impact
-  field/building adapter contract.
+  field/building adapter contract, revalidated by the post-Gate-BH
+  checkpoint.
 - [calculator/SLICE_PERSONAL_USE_MVP_GATE_AV_POST_RELEASE_ACCURACY_AND_ADAPTER_ROADMAP_PLAN.md](./calculator/SLICE_PERSONAL_USE_MVP_GATE_AV_POST_RELEASE_ACCURACY_AND_ADAPTER_ROADMAP_PLAN.md)
   — Gate AV analysis slice: no-runtime post-release roadmap,
   source-absent solver gap cartography selection, and ranked next
