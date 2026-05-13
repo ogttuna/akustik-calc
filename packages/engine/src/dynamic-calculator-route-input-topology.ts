@@ -12,6 +12,11 @@ import {
 import { getDefaultMaterialCatalog, resolveMaterial } from "./material-catalog";
 import { buildGateQDoubleLeafFramedBridgeInputContract } from "./dynamic-calculator-double-leaf-framed-bridge-input-contract";
 import { validateWallTripleLeafLayerGroups } from "./wall-triple-leaf-topology-readiness";
+import {
+  buildPersonalUseMvpCoverageSprintGateAXContract,
+  type PersonalUseMvpCoverageSprintGateAXPhysicalFieldId
+} from "./calculator-personal-use-mvp-coverage-sprint-gate-ax";
+import { calculateGateAYAdvancedWallRuntimeCorridor } from "./calculator-personal-use-mvp-coverage-sprint-gate-ay";
 
 export type DynamicCalculatorRoute = "wall" | "floor";
 export type DynamicCalculatorOutputBasis = "element_lab" | "field_apparent" | "building_prediction";
@@ -41,6 +46,7 @@ export const GATE_M_AIRBORNE_BUILDING_PREDICTION_OWNER_INPUTS = [
 ] as const;
 
 export type DynamicCalculatorPromptSource =
+  | "advanced_wall_input_surface"
   | "field_context"
   | "floor_role"
   | "material_property"
@@ -192,6 +198,10 @@ function isLeafLikeLayer(layer: LayerInput, catalog: readonly MaterialDefinition
 
 function hasGroupedTripleLeafTopology(context: AirborneContext | undefined): boolean {
   return context?.wallTopology?.topologyMode === "grouped_triple_leaf";
+}
+
+function hasAdvancedWallSourceAbsentContext(context: AirborneContext | undefined): boolean {
+  return context?.advancedWall?.wallSolverIntent === "advanced_source_absent_wall";
 }
 
 function hasExplicitDoubleLeafFramedTopology(context: AirborneContext | undefined): boolean {
@@ -412,6 +422,98 @@ function buildInputCompleteness(input: {
     routeFamily: input.routeFamily,
     status,
     targetOutputs: [...input.targetOutputs]
+  });
+}
+
+const ADVANCED_WALL_FIELD_LABELS: Partial<Record<PersonalUseMvpCoverageSprintGateAXPhysicalFieldId, string>> = {
+  absorberCoverageRatio: "Absorber coverage ratio",
+  absorberFlowResistivityPaSM2: "Absorber flow resistivity",
+  absorberThicknessMm: "Absorber thickness",
+  cavityDepthMm: "Cavity depth",
+  cavitySealState: "Cavity seal state",
+  cavitySequence: "Cavity sequence",
+  directTransmissionCurveOwner: "Direct curve owner",
+  duplicateOwnershipGuard: "Duplicate ownership guard",
+  exactSourcePrecedenceCheck: "Exact source precedence check",
+  fieldBuildingAdapterBoundary: "Field/building adapter boundary",
+  frameDepthMm: "Frame depth",
+  frameLineCouplingStiffnessMNPerM3: "Frame line-coupling stiffness",
+  frameMaterialClass: "Frame material class",
+  frameSpacingMm: "Frame spacing",
+  frequencyBandSet: "Frequency band set",
+  hostWallAreaM2: "Host wall area",
+  iso717RwCAdapterOwner: "ISO 717-1 adapter owner",
+  leafGrouping: "Advanced wall leaf grouping",
+  leafSequence: "Advanced wall leaf sequence",
+  mechanicalBridgeAreaRatio: "Mechanical bridge area ratio",
+  openingAreaM2: "Opening area",
+  openingElementRw: "Opening element Rw",
+  openingIntent: "Opening intent",
+  openingOrigin: "Opening origin",
+  openingRatingBasis: "Opening rating basis",
+  openingSealLeakageClass: "Opening seal/leakage class",
+  openingSubElementIds: "Opening sub-element ids",
+  outputBasis: "Advanced wall output basis",
+  panelBendingStiffnessNm: "Panel bending stiffness",
+  panelCriticalFrequencyHz: "Panel critical frequency",
+  panelLayerOwnership: "Panel layer ownership",
+  panelLossFactor: "Panel loss factor",
+  panelMaterialClass: "Panel material class",
+  panelSurfaceMassKgM2: "Panel surface mass",
+  panelThicknessMm: "Panel thickness",
+  resilientConnectionStiffnessMNPerM3: "Resilient connection stiffness",
+  resilientConnectionType: "Resilient connection type",
+  sourceAbsentErrorBudgetOwner: "Source-absent error-budget owner",
+  splitLayerGuard: "Split layer guard",
+  stcAdapterOwner: "STC adapter owner",
+  wallSolverIntent: "Advanced wall solver intent"
+};
+
+function asAdvancedWallInputField(field: PersonalUseMvpCoverageSprintGateAXPhysicalFieldId): AcousticInputFieldId {
+  return field as AcousticInputFieldId;
+}
+
+function addAdvancedWallSourceAbsentContract(input: {
+  context: AirborneContext | undefined;
+  missingSourceEvidence: readonly string[];
+  prompts: DynamicCalculatorRouteInputPrompt[];
+  targetOutputs: readonly RequestedOutputId[];
+}): AcousticInputCompleteness {
+  const advancedWall = input.context?.advancedWall ?? {};
+  const runtimeResult = calculateGateAYAdvancedWallRuntimeCorridor({
+    ...advancedWall,
+    outputBasis: advancedWall.outputBasis ?? input.context?.contextMode ?? "element_lab",
+    targetOutputs: input.targetOutputs.length > 0 ? input.targetOutputs : WALL_AIRBORNE_OUTPUTS
+  });
+  const missing = runtimeResult.missingPhysicalInputs.map(asAdvancedWallInputField);
+  const requiredFields = buildPersonalUseMvpCoverageSprintGateAXContract()
+    .requiredPhysicalFields
+    .map(asAdvancedWallInputField);
+
+  for (const field of missing) {
+    const sourceField = field as PersonalUseMvpCoverageSprintGateAXPhysicalFieldId;
+    addPrompt(
+      input.prompts,
+      makePrompt({
+        detail:
+          sourceField === "fieldBuildingAdapterBoundary"
+            ? "Gate AY owns element-lab Rw/STC/C/Ctr only; field and building outputs need a separate adapter owner before they can promote."
+            : `Enter the Gate AY advanced-wall physical owner field before the source-absent direct-curve runtime can promote: ${ADVANCED_WALL_FIELD_LABELS[sourceField] ?? field}.`,
+        fieldId: field,
+        label: ADVANCED_WALL_FIELD_LABELS[sourceField] ?? field,
+        source: "advanced_wall_input_surface",
+        targetOutputs: input.targetOutputs
+      })
+    );
+  }
+
+  return buildInputCompleteness({
+    id: "gate_az_advanced_wall_source_absent_route_inputs",
+    missingPhysicalInputs: missing,
+    missingSourceEvidence: input.missingSourceEvidence,
+    requiredFields,
+    routeFamily: "advanced_wall_source_absent_airborne",
+    targetOutputs: input.targetOutputs
   });
 }
 
@@ -1204,9 +1306,13 @@ export function buildDynamicCalculatorRouteInputTopologyAssessment(
   const inputCompletenessSet: AcousticInputCompleteness[] = [];
 
   if (input.route === "wall") {
+    const needsAdvancedWallSourceAbsentTopology = hasAdvancedWallSourceAbsentContext(input.airborneContext);
     const needsGroupedTopology =
-      hasGroupedTripleLeafTopology(input.airborneContext) ||
-      looksLikeMultiCavityWall(input.layers, catalog);
+      !needsAdvancedWallSourceAbsentTopology &&
+      (
+        hasGroupedTripleLeafTopology(input.airborneContext) ||
+        looksLikeMultiCavityWall(input.layers, catalog)
+      );
     const needsDoubleLeafFramedTopology =
       !needsGroupedTopology && hasExplicitDoubleLeafFramedTopology(input.airborneContext);
     const needsLinedMassiveWallTopology =
@@ -1224,6 +1330,17 @@ export function buildDynamicCalculatorRouteInputTopologyAssessment(
       !needsLinedMassiveWallTopology &&
       !needsMassTimberPanelTopology &&
       hasAacNonHomogeneousMasonryLayer(input.layers, catalog);
+
+    if (needsAdvancedWallSourceAbsentTopology) {
+      inputCompletenessSet.push(
+        addAdvancedWallSourceAbsentContract({
+          context: input.airborneContext,
+          missingSourceEvidence,
+          prompts,
+          targetOutputs: supportedRequestedOutputs.length > 0 ? supportedRequestedOutputs : WALL_AIRBORNE_OUTPUTS
+        })
+      );
+    }
 
     if (needsGroupedTopology) {
       inputCompletenessSet.push(
@@ -1291,8 +1408,11 @@ export function buildDynamicCalculatorRouteInputTopologyAssessment(
     }
 
     if (
-      outputBasis !== "element_lab" ||
-      input.targetOutputs.some((output) => FIELD_OR_APPARENT_OUTPUTS.has(output))
+      !needsAdvancedWallSourceAbsentTopology &&
+      (
+        outputBasis !== "element_lab" ||
+        input.targetOutputs.some((output) => FIELD_OR_APPARENT_OUTPUTS.has(output))
+      )
     ) {
       const fieldContextTargetOutputs =
         outputBasis === "building_prediction"

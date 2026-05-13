@@ -22,6 +22,7 @@ import {
   STANDARDIZED_AIRBORNE_OUTPUTS
 } from "./field-airborne-output";
 import { buildWorkbenchAirborneFieldContextInputSurface } from "./airborne-field-context-input-surface";
+import { buildWorkbenchAdvancedWallInputSurface } from "./advanced-wall-source-absent-input-surface";
 import { buildWorkbenchOpeningLeakCompositeInputSurface } from "./opening-leak-composite-input-surface";
 import { formatUnlockOutputs, getGuidedOutputUnlocks } from "./guided-output-unlocks";
 import { getGuidedTopologyGap } from "./guided-topology-gap";
@@ -274,6 +275,7 @@ export function SimpleWorkbenchShell() {
   const airborneConnectionType = useWorkbenchStore((state) => state.airborneConnectionType);
   const airborneElectricalBoxes = useWorkbenchStore((state) => state.airborneElectricalBoxes);
   const airborneJunctionQuality = useWorkbenchStore((state) => state.airborneJunctionQuality);
+  const airborneAdvancedWallInputSurface = useWorkbenchStore((state) => state.airborneAdvancedWallInputSurface);
   const airborneOpeningLeakElements = useWorkbenchStore((state) => state.airborneOpeningLeakElements);
   const airborneOpeningLeakHostWallAreaM2 = useWorkbenchStore((state) => state.airborneOpeningLeakHostWallAreaM2);
   const airbornePanelHeightMm = useWorkbenchStore((state) => state.airbornePanelHeightMm);
@@ -617,8 +619,28 @@ export function SimpleWorkbenchShell() {
     },
     targetOutputs: automaticOutputs
   });
-  const liveAirborneBaseContextWithOpenings: typeof liveAirborneBaseContext = {
+  const advancedWallInputSurface = buildWorkbenchAdvancedWallInputSurface({
+    studyMode,
+    surface: airborneAdvancedWallInputSurface,
+    targetOutputs: automaticOutputs
+  });
+  const liveAirborneBaseContextWithAdvanced: typeof liveAirborneBaseContext = {
     ...liveAirborneBaseContext,
+    ...(advancedWallInputSurface.status !== "inactive"
+      ? advancedWallInputSurface.airborneContextPatch
+      : {})
+  };
+  const liveAirborneBaseContextWithOpenings: typeof liveAirborneBaseContext = {
+    ...liveAirborneBaseContextWithAdvanced,
+    ...(openingLeakCompositeInputSurface.status !== "inactive"
+      ? openingLeakCompositeInputSurface.airborneContextPatch
+      : {})
+  };
+  const liveAirborneBaseContextWithSurfaceInputs: typeof liveAirborneBaseContext = {
+    ...liveAirborneBaseContext,
+    ...(advancedWallInputSurface.status !== "inactive"
+      ? advancedWallInputSurface.airborneContextPatch
+      : {}),
     ...(openingLeakCompositeInputSurface.status !== "inactive"
       ? openingLeakCompositeInputSurface.airborneContextPatch
       : {})
@@ -638,6 +660,9 @@ export function SimpleWorkbenchShell() {
   });
   const liveAirborneContext: AirborneContext = {
     ...airborneFieldContextInputSurface.airborneContext,
+    ...(advancedWallInputSurface.status !== "inactive"
+      ? advancedWallInputSurface.airborneContextPatch
+      : {}),
     ...(openingLeakCompositeInputSurface.status !== "inactive"
       ? openingLeakCompositeInputSurface.airborneContextPatch
       : {}),
@@ -655,9 +680,12 @@ export function SimpleWorkbenchShell() {
       : null;
 
   const scenario = evaluateScenario({
+    advancedWallInputSurface: advancedWallInputSurface.status !== "inactive"
+      ? airborneAdvancedWallInputSurface
+      : null,
     airborneFieldContextInputSurface: {
       airtightness: airborneAirtightness,
-      baseContext: liveAirborneBaseContext,
+      baseContext: liveAirborneBaseContextWithSurfaceInputs,
       contextMode: airborneContextMode,
       panelHeightMm: airbornePanelHeightMm,
       panelWidthMm: airbornePanelWidthMm,
@@ -845,6 +873,13 @@ export function SimpleWorkbenchShell() {
       airborneContextMode,
       airborneElectricalBoxes,
       airborneJunctionQuality,
+      airborneAdvancedWallInputSurface: {
+        ...airborneAdvancedWallInputSurface,
+        cavities: airborneAdvancedWallInputSurface.cavities.map((cavity) => ({ ...cavity })),
+        frameCoupling: { ...airborneAdvancedWallInputSurface.frameCoupling },
+        openings: airborneAdvancedWallInputSurface.openings.map((opening) => ({ ...opening })),
+        panels: airborneAdvancedWallInputSurface.panels.map((panel) => ({ ...panel }))
+      },
       airborneOpeningLeakElements: airborneOpeningLeakElements.map((element) => ({ ...element })),
       airborneOpeningLeakHostWallAreaM2,
       airbornePanelHeightMm,

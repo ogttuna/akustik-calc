@@ -26,6 +26,7 @@ import {
   inferImpactSupportingElementFamilyFromPredictorInput
 } from "./impact-supporting-element-family";
 import { maybeBuildImpactPredictorInputFromLayerStack } from "./impact-predictor-input";
+import { HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS } from "./heavy-concrete-combined-impact-formula-corridor";
 import { STEEL_FLOOR_FORMULA_BASIS } from "./steel-floor-impact-formula-corridor";
 import {
   MASS_TIMBER_CLT_DELTA_LW_FORMULA_BASIS,
@@ -89,6 +90,10 @@ function getScopedFormulaSelectionLabel(
 
   if (basisLabels.has(FORMULA_FLOATING_BASIS)) {
     return "Heavy floating-floor formula";
+  }
+
+  if (basisLabels.has(HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS)) {
+    return "Heavy concrete combined upper/lower formula corridor";
   }
 
   if (basisLabels.has(FORMULA_BARE_BASIS) || basisLabels.has(FORMULA_BARE_METRIC_BASIS)) {
@@ -302,6 +307,8 @@ function formatImpactBasisLabel(value: ImpactCalculation["basis"] | ImpactBoundC
       return "Heavy bare-floor Annex C style estimate";
     case "predictor_heavy_floating_floor_iso12354_annexc_estimate":
       return "Heavy floating-floor Annex C style estimate";
+    case "predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate":
+      return "Heavy concrete combined upper/lower formula corridor";
     case "predictor_heavy_concrete_published_upper_treatment_estimate":
       return "Published heavy-concrete upper-treatment estimate";
     case "predictor_floor_system_family_archetype_estimate":

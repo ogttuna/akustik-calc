@@ -23,6 +23,11 @@ import {
   type WorkbenchAirborneFieldContextInputSurfaceDraft
 } from "./airborne-field-context-input-surface";
 import {
+  buildWorkbenchAdvancedWallInputSurface,
+  formatWorkbenchAdvancedWallMissingInputWarning,
+  type WorkbenchAdvancedWallInputSurfaceDraft
+} from "./advanced-wall-source-absent-input-surface";
+import {
   buildWorkbenchOpeningLeakCompositeInputSurface,
   formatWorkbenchOpeningLeakCompositeMissingInputWarning,
   type WorkbenchOpeningLeakCompositeInputSurfaceDraft
@@ -97,6 +102,7 @@ export type EvaluatedScenario = {
 };
 
 export function evaluateScenario(input: {
+  advancedWallInputSurface?: WorkbenchAdvancedWallInputSurfaceDraft | null;
   airborneFieldContextInputSurface?: WorkbenchAirborneFieldContextInputSurfaceDraft | null;
   airborneContext?: AirborneContext | null;
   calculator?: AirborneCalculatorId | null;
@@ -135,14 +141,29 @@ export function evaluateScenario(input: {
           targetOutputs
         })
       : null;
+  const advancedWallInputSurface =
+    input.studyMode === "wall" && input.advancedWallInputSurface
+      ? buildWorkbenchAdvancedWallInputSurface({
+          studyMode: input.studyMode,
+          surface: input.advancedWallInputSurface,
+          targetOutputs
+        })
+      : null;
   const baseAirborneContext = airborneFieldContextInputSurface?.airborneContext ?? input.airborneContext ?? null;
+  const advancedWallAirborneContext =
+    advancedWallInputSurface && advancedWallInputSurface.status !== "inactive"
+      ? {
+          ...(baseAirborneContext ?? { contextMode: "element_lab" as const }),
+          ...advancedWallInputSurface.airborneContextPatch
+        }
+      : baseAirborneContext;
   const effectiveAirborneContext =
     openingLeakCompositeInputSurface && openingLeakCompositeInputSurface.status !== "inactive"
       ? {
-          ...(baseAirborneContext ?? { contextMode: "element_lab" as const }),
+          ...(advancedWallAirborneContext ?? { contextMode: "element_lab" as const }),
           ...openingLeakCompositeInputSurface.airborneContextPatch
         }
-      : baseAirborneContext;
+      : advancedWallAirborneContext;
   const inputWarnings = collectScenarioInputWarnings({
     airborneContext: effectiveAirborneContext,
     impactFieldContext: input.impactFieldContext ?? null,
@@ -197,6 +218,17 @@ export function evaluateScenario(input: {
     : null;
   if (airborneFieldMissingInputWarning) {
     scenarioWarnings.push(airborneFieldMissingInputWarning);
+  }
+  const advancedWallMissingInputWarning = advancedWallInputSurface
+    ? formatWorkbenchAdvancedWallMissingInputWarning(advancedWallInputSurface)
+    : null;
+  if (advancedWallMissingInputWarning) {
+    scenarioWarnings.push(advancedWallMissingInputWarning);
+  }
+  if (advancedWallInputSurface?.status === "unsupported") {
+    scenarioWarnings.push(
+      `Advanced wall source-absent input surface is parked because the visible advanced-wall fields are outside the Gate AY lab runtime boundary: ${advancedWallInputSurface.hostileInputBoundaries.length > 0 ? advancedWallInputSurface.hostileInputBoundaries.join(", ") : "field_or_building_output_basis"}.`
+    );
   }
   const openingLeakMissingInputWarning = openingLeakCompositeInputSurface
     ? formatWorkbenchOpeningLeakCompositeMissingInputWarning(openingLeakCompositeInputSurface)

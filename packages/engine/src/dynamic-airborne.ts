@@ -99,6 +99,7 @@ import {
   GATE_AR_AIRBORNE_BUILDING_PREDICTION_WARNING,
   maybeBuildGateARAirborneBuildingPredictionRuntimeBasis
 } from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
+import { maybeCalculateGateAYAdvancedWallRuntime } from "./dynamic-airborne-gate-ay-advanced-wall";
 import { maybeCalculateGateSDoubleLeafFramedBridgeRuntime } from "./dynamic-airborne-gate-s-double-leaf-framed";
 import { ROCKWOOL_TRIPLE_LEAF_SOURCE_REQUIRED_RUNTIME_WARNING } from "./rockwool-triple-leaf-source-required-boundary";
 
@@ -1036,6 +1037,14 @@ export function calculateDynamicAirborneResult(
     options.forcedFamily
       ? { family: options.forcedFamily, notes: [] as string[] }
       : detectDynamicFamily(analysisLayers, framingHint);
+
+  const gateAYAdvancedWallRuntime = maybeCalculateGateAYAdvancedWallRuntime({
+    layers: analysisLayers,
+    options
+  });
+  if (gateAYAdvancedWallRuntime) {
+    return gateAYAdvancedWallRuntime;
+  }
 
   const guardedFlatList = applyFlatListMultileafFamilyGuard({ calculate: calculateDynamicAirborneResult, estimateScreeningRw: estimateRwDb, family: family.family, framingHint, layers: analysisLayers, options });
   if (guardedFlatList) return guardedFlatList;

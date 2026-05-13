@@ -8,6 +8,10 @@ import { getGateIAirborneFieldContextSurface } from "./airborne-field-context-su
 import { isFieldAirborneOutput } from "./field-airborne-output";
 import { FIELD_OUTPUT_DESIGN_GRADE_POSTURE_GUARD } from "./field-output-owner-policy-copy";
 import {
+  getGateAYAdvancedWallOutputDetail,
+  getGateAYAdvancedWallSurface
+} from "./advanced-wall-source-absent-surface";
+import {
   getGateSOpeningLeakCompositeOutputDetail,
   getGateSOpeningLeakCompositeSurface
 } from "./opening-leak-composite-surface";
@@ -97,6 +101,8 @@ export function buildSimpleWorkbenchOutputPosture(input: {
   const { output, result, status, studyMode } = input;
   const gateARBuildingSurface =
     studyMode === "wall" ? getGateARAirborneBuildingPredictionSurface(result) : null;
+  const gateAYAdvancedWallSurface =
+    studyMode === "wall" ? getGateAYAdvancedWallSurface(result) : null;
   const gateSOpeningLeakSurface =
     studyMode === "wall" ? getGateSOpeningLeakCompositeSurface(result) : null;
 
@@ -117,6 +123,34 @@ export function buildSimpleWorkbenchOutputPosture(input: {
       return {
         detail,
         label: "Airborne building boundary",
+        tone: "neutral"
+      };
+    }
+  }
+
+  if (gateAYAdvancedWallSurface) {
+    const detail = getGateAYAdvancedWallOutputDetail(output, result) ?? gateAYAdvancedWallSurface.postureDetail;
+
+    if (status === "live" && (output === "Rw" || output === "STC" || output === "C" || output === "Ctr")) {
+      return {
+        detail,
+        label: gateAYAdvancedWallSurface.label,
+        tone: "accent"
+      };
+    }
+
+    if (status === "needs_input" || gateAYAdvancedWallSurface.origin === "needs_input") {
+      return {
+        detail,
+        label: "Advanced wall input needed",
+        tone: "warning"
+      };
+    }
+
+    if (status === "unsupported") {
+      return {
+        detail,
+        label: "Advanced wall boundary",
         tone: "neutral"
       };
     }

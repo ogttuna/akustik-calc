@@ -12,6 +12,11 @@ import {
 } from "@dynecho/shared";
 
 import {
+  HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS,
+  HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_DELTA_LW_TOLERANCE_DB,
+  HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_LN_W_TOLERANCE_DB
+} from "./heavy-concrete-combined-impact-formula-corridor";
+import {
   hasReinforcedConcreteLowConfidenceProxyAirborne,
   REINFORCED_CONCRETE_LOW_CONFIDENCE_NEARBY_ROW_RANKING_SUPPORT_NOTE,
   REINFORCED_CONCRETE_LOW_CONFIDENCE_PROXY_AIRBORNE_SUPPORT_NOTE
@@ -40,6 +45,7 @@ type BuildImpactSupportInput = {
 const ANNEX_C_BARE_BASIS = "predictor_heavy_bare_floor_iso12354_annexc_estimate";
 const ANNEX_C_BARE_METRIC_BASIS = "predictor_bare_massive_floor_iso12354_annexc_estimate";
 const ANNEX_C_FLOATING_BASIS = "predictor_heavy_floating_floor_iso12354_annexc_estimate";
+const ANNEX_C_COMBINED_BASIS = HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS;
 
 function pushUnique(target: string[], line: string) {
   if (!target.includes(line)) {
@@ -77,6 +83,18 @@ function buildTimberCltFormulaErrorBudgetFormulaNote(impact: ImpactCalculation):
   return `Timber/CLT DeltaLw error budget is structured: DeltaLw ${formatErrorBudgetRange(budget)}; origin source_absent_formula_error_budget; not measured evidence.`;
 }
 
+function buildHeavyConcreteCombinedFormulaErrorBudgetFormulaNote(impact: ImpactCalculation): string | null {
+  const budgets = impact.errorBudgets ?? [];
+
+  if (budgets.length === 0) {
+    return null;
+  }
+
+  return `Heavy-concrete combined upper/lower error budgets are structured: ${budgets
+    .map((budget) => `${budget.metricId} ${formatErrorBudgetRange(budget)}`)
+    .join("; ")}; origin source_absent_formula_error_budget; not measured evidence.`;
+}
+
 function hasMetricBasis(impact: ImpactCalculation | null, label: string): boolean {
   if (!impact?.metricBasis) {
     return false;
@@ -91,6 +109,10 @@ function hasBareAnnexCFormula(impact: ImpactCalculation | null): boolean {
 
 function hasFloatingAnnexCFormula(impact: ImpactCalculation | null): boolean {
   return impact?.basis === ANNEX_C_FLOATING_BASIS || hasMetricBasis(impact, ANNEX_C_FLOATING_BASIS);
+}
+
+function hasCombinedAnnexCFormula(impact: ImpactCalculation | null): boolean {
+  return impact?.basis === ANNEX_C_COMBINED_BASIS || hasMetricBasis(impact, ANNEX_C_COMBINED_BASIS);
 }
 
 export function buildImpactSupport(input: BuildImpactSupportInput): ImpactSupport | null {
@@ -149,16 +171,33 @@ export function buildImpactSupport(input: BuildImpactSupportInput): ImpactSuppor
 
   const hasBareAnnexC = hasBareAnnexCFormula(input.impact);
   const hasFloatingAnnexC = hasFloatingAnnexCFormula(input.impact);
+  const hasCombinedAnnexC = hasCombinedAnnexCFormula(input.impact);
 
-  if (input.impact && (hasBareAnnexC || hasFloatingAnnexC)) {
+  if (input.impact && (hasBareAnnexC || hasFloatingAnnexC || hasCombinedAnnexC)) {
     notes.push("Annex C style estimate is active on the dedicated impact lane.");
     pushUnique(formulaNotes, "Annex C style estimate remains a narrow heavy-floor screening path.");
-    if (hasBareAnnexC || hasFloatingAnnexC) {
+    if (hasBareAnnexC || hasFloatingAnnexC || hasCombinedAnnexC) {
       pushUnique(formulaNotes, "Heavy bare-floor path follows 164 - 35 log10(m'base) for the base slab contribution.");
     }
-    if (hasFloatingAnnexC) {
+    if (hasFloatingAnnexC || hasCombinedAnnexC) {
       pushUnique(formulaNotes, "Floating-floor branch applies 13 log10(m'load) - 14.2 log10(s') + 20.8 for the treatment term.");
       pushUnique(formulaNotes, "Resonance cross-check follows f0 ~= 160 * sqrt(s'/m'load).");
+    }
+    if (hasCombinedAnnexC) {
+      notes.push("Heavy-concrete combined upper/lower formula corridor is active; exact measured rows still outrank it.");
+      pushUnique(
+        formulaNotes,
+        "Combined upper/lower branch adds an explicit lower-ceiling improvement term and subtracts a bounded interaction penalty."
+      );
+      pushUnique(formulaNotes, "Heavy-concrete combined upper/lower corridor is source-absent lab evidence, not a measured row.");
+      const errorBudgetNote = buildHeavyConcreteCombinedFormulaErrorBudgetFormulaNote(input.impact);
+      if (errorBudgetNote) {
+        pushUnique(formulaNotes, errorBudgetNote);
+      }
+      pushUnique(
+        formulaNotes,
+        `Corridor tolerance remains +/-${HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_LN_W_TOLERANCE_DB} dB for Ln,w and +/-${HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_DELTA_LW_TOLERANCE_DB} dB for DeltaLw.`
+      );
     }
   }
 

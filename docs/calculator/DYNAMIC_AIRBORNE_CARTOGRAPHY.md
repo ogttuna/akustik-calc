@@ -7,7 +7,7 @@ closed at Gate C: eleven correction guards were carved into
 `dynamic-airborne-correction-guards.ts`, recursive probes use
 `DynamicAirborneComposer` injection where needed, and
 `dynamic-airborne.ts` was 1793 lines at Gate C closeout. The active
-calculator slice has since grown it to 1960 physical lines after Gate AR
+calculator slice has since grown it to 1969 physical lines after Gate AZ
 airborne building-prediction runtime promotion. That is still below the
 2000-line C6 threshold, so the remaining three recursive guards are optional
 architecture backlog rather than the selected work. The active
@@ -49,7 +49,7 @@ Gate B carve and broad validation.
   with irrelevant neighbours.
 - Hygiene debt: MASTER_PLAN §3 grid row
   `dynamic-airborne.ts size` is now closed for C6 after v2 Gate C:
-  `dynamic-airborne.ts` is 1960 physical lines after Gate AR and remains
+  `dynamic-airborne.ts` is 1969 physical lines after Gate AZ and remains
   below the 2000-line threshold.
 
 ## Target Structure (Three Files)

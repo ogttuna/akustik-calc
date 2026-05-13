@@ -65,6 +65,10 @@ import {
   makeWorkbenchOpeningLeakElementDraft,
   type WorkbenchOpeningLeakElementDraft
 } from "./opening-leak-composite-input-surface";
+import {
+  makeWorkbenchAdvancedWallInputSurfaceDraft,
+  type WorkbenchAdvancedWallInputSurfaceDraft
+} from "./advanced-wall-source-absent-input-surface";
 
 type LayerDraft = {
   densityKgM3?: string;
@@ -84,6 +88,7 @@ type ScenarioSnapshot = WorkbenchWallTopologyDraft & {
   airborneContextMode: AirborneContextMode;
   airborneElectricalBoxes: ElectricalBoxState;
   airborneJunctionQuality: JunctionQuality;
+  airborneAdvancedWallInputSurface?: WorkbenchAdvancedWallInputSurfaceDraft;
   airborneOpeningLeakElements: WorkbenchOpeningLeakElementDraft[];
   airborneOpeningLeakHostWallAreaM2: string;
   airbornePanelHeightMm: string;
@@ -176,6 +181,7 @@ type WorkbenchStore = WorkbenchWallTopologyDraft & {
   airborneContextMode: AirborneContextMode;
   airborneElectricalBoxes: ElectricalBoxState;
   airborneJunctionQuality: JunctionQuality;
+  airborneAdvancedWallInputSurface: WorkbenchAdvancedWallInputSurfaceDraft;
   airborneOpeningLeakElements: WorkbenchOpeningLeakElementDraft[];
   airborneOpeningLeakHostWallAreaM2: string;
   airbornePanelHeightMm: string;
@@ -278,6 +284,7 @@ type WorkbenchStore = WorkbenchWallTopologyDraft & {
   setAirborneContextMode: (value: AirborneContextMode) => void;
   setAirborneElectricalBoxes: (value: ElectricalBoxState) => void;
   setAirborneJunctionQuality: (value: JunctionQuality) => void;
+  replaceAirborneAdvancedWallInputSurface: (surface: WorkbenchAdvancedWallInputSurfaceDraft) => void;
   addAirborneOpeningLeakElement: () => void;
   moveAirborneOpeningLeakElement: (id: string, direction: "down" | "up") => void;
   removeAirborneOpeningLeakElement: (id: string) => void;
@@ -607,6 +614,7 @@ function makeDefaultState(input?: {
     airborneContextMode: "element_lab" as const,
     airborneElectricalBoxes: "none" as const,
     airborneJunctionQuality: "good" as const,
+    airborneAdvancedWallInputSurface: makeWorkbenchAdvancedWallInputSurfaceDraft(),
     airborneOpeningLeakElements: [makeWorkbenchOpeningLeakElementDraft()],
     airborneOpeningLeakHostWallAreaM2: "",
     airbornePanelHeightMm: "",
@@ -700,6 +708,18 @@ function makeScenarioName(state: Pick<WorkbenchStore, "activePresetId" | "projec
   return `${state.projectName} · ${preset.label} ${String(state.savedScenarios.length + 1).padStart(2, "0")}`;
 }
 
+function cloneAdvancedWallInputSurface(
+  surface: WorkbenchAdvancedWallInputSurfaceDraft
+): WorkbenchAdvancedWallInputSurfaceDraft {
+  return {
+    ...surface,
+    cavities: surface.cavities.map((cavity) => ({ ...cavity })),
+    frameCoupling: { ...surface.frameCoupling },
+    openings: surface.openings.map((opening) => ({ ...opening })),
+    panels: surface.panels.map((panel) => ({ ...panel }))
+  };
+}
+
 function buildLoadedScenarioState(
   state: Pick<WorkbenchStore, "customMaterials">,
   scenario: ScenarioSnapshot
@@ -714,6 +734,9 @@ function buildLoadedScenarioState(
     airborneContextMode: scenario.airborneContextMode ?? "element_lab",
     airborneElectricalBoxes: scenario.airborneElectricalBoxes ?? "none",
     airborneJunctionQuality: scenario.airborneJunctionQuality ?? "good",
+    airborneAdvancedWallInputSurface: scenario.airborneAdvancedWallInputSurface
+      ? cloneAdvancedWallInputSurface(scenario.airborneAdvancedWallInputSurface)
+      : makeWorkbenchAdvancedWallInputSurfaceDraft(),
     airborneOpeningLeakElements:
       scenario.airborneOpeningLeakElements && scenario.airborneOpeningLeakElements.length > 0
         ? scenario.airborneOpeningLeakElements.map((element) => ({ ...element }))
@@ -1012,6 +1035,7 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
               airborneContextMode: state.airborneContextMode,
               airborneElectricalBoxes: state.airborneElectricalBoxes,
               airborneJunctionQuality: state.airborneJunctionQuality,
+              airborneAdvancedWallInputSurface: cloneAdvancedWallInputSurface(state.airborneAdvancedWallInputSurface),
               airborneOpeningLeakElements: state.airborneOpeningLeakElements.map((element) => ({ ...element })),
               airborneOpeningLeakHostWallAreaM2: state.airborneOpeningLeakHostWallAreaM2,
               airbornePanelHeightMm: state.airbornePanelHeightMm,
@@ -1117,6 +1141,8 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
       setAirborneContextMode: (value) => set({ airborneContextMode: value }),
       setAirborneElectricalBoxes: (value) => set({ airborneElectricalBoxes: value }),
       setAirborneJunctionQuality: (value) => set({ airborneJunctionQuality: value }),
+      replaceAirborneAdvancedWallInputSurface: (surface) =>
+        set({ airborneAdvancedWallInputSurface: cloneAdvancedWallInputSurface(surface) }),
       addAirborneOpeningLeakElement: () =>
         set((state) => ({
           airborneOpeningLeakElements: [

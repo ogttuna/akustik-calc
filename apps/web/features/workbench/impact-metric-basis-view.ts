@@ -81,6 +81,8 @@ export function formatImpactMetricBasisLabel(basis: ImpactMetricBasisLabel): str
       return "ISO 12354 bare heavy-floor estimate";
     case "predictor_heavy_floating_floor_iso12354_annexc_estimate":
       return "ISO 12354 floating-floor estimate";
+    case "predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate":
+      return "Heavy concrete combined upper/lower formula corridor";
     case "predictor_mass_timber_clt_delta_lw_formula_corridor_estimate":
       return "Mass-timber CLT DeltaLw formula corridor";
     case "predictor_timber_joist_delta_lw_formula_corridor_estimate":
@@ -138,6 +140,8 @@ export function describeImpactMetricBasis(metric: ImpactMetricKey, basis: Impact
       return `${formatImpactMetricLabel(metric)} came from the bare heavy-floor ISO 12354 Annex C estimate.`;
     case "predictor_heavy_floating_floor_iso12354_annexc_estimate":
       return `${formatImpactMetricLabel(metric)} came from the narrow heavy-floor floating-floor ISO 12354 Annex C estimate.`;
+    case "predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate":
+      return `${formatImpactMetricLabel(metric)} came from the source-absent heavy-concrete combined upper/lower formula corridor.`;
     case "predictor_mass_timber_clt_delta_lw_formula_corridor_estimate":
       return `${formatImpactMetricLabel(metric)} came from the source-absent mass-timber CLT DeltaLw formula corridor.`;
     case "predictor_timber_joist_delta_lw_formula_corridor_estimate":

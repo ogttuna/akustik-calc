@@ -1,5 +1,6 @@
 import type { ImpactCalculation, ImpactPredictorInput, ResolvedLayer } from "@dynecho/shared";
 
+import { estimateHeavyConcreteCombinedImpactFromPredictorInput } from "./heavy-concrete-combined-impact-formula-corridor";
 import { isResolvedHeavyConcreteCarrierEligible } from "./heavy-concrete-carrier-eligibility";
 import { getImpactConfidenceForBasis } from "./impact-confidence";
 import { buildUniformImpactMetricBasis } from "./impact-metric-basis";
@@ -224,6 +225,11 @@ export function estimateImpactFromPredictorInput(
   const steelFormulaImpact = estimateSteelFloorImpactFromPredictorInput(input);
   if (steelFormulaImpact) {
     return steelFormulaImpact;
+  }
+
+  const heavyConcreteCombinedFormulaImpact = estimateHeavyConcreteCombinedImpactFromPredictorInput(input);
+  if (heavyConcreteCombinedFormulaImpact) {
+    return heavyConcreteCombinedFormulaImpact;
   }
 
   if (

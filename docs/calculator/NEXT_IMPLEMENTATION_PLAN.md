@@ -182,6 +182,10 @@ Selected next file:
 
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-av-post-release-accuracy-and-adapter-roadmap-contract.test.ts`
 
+Detailed Gate AV planning surface:
+
+[SLICE_PERSONAL_USE_MVP_GATE_AV_POST_RELEASE_ACCURACY_AND_ADAPTER_ROADMAP_PLAN.md](./SLICE_PERSONAL_USE_MVP_GATE_AV_POST_RELEASE_ACCURACY_AND_ADAPTER_ROADMAP_PLAN.md)
+
 Gate AU makes the company-internal daily-use ready decision without
 runtime/API/input/card/report behavior movement. It consumes the Gate AT
 41-row matrix, keeps 26 supported value rows and 16 accepted fail-closed
@@ -208,6 +212,542 @@ build 5/5, and whitespace guard clean. The first broad `pnpm check`
 attempt had already passed lint/typecheck and engine before a transient
 web deep-hybrid heavy-core timeout; reruns proved the web invariant
 green without runtime movement.
+
+## Gate AV Post-Release Roadmap Landed - 2026-05-13
+
+Gate AV has now landed after re-analysis against the implementation and
+current external reference shape. It remains a no-runtime planning gate. The
+roadmap keeps the calculator-first rule: exact measured/source rows win
+when they truly match, but source-absent assemblies should be calculated
+from the best available family-specific model when their physical inputs
+are complete.
+
+Gate AV landed action:
+
+`gate_av_personal_use_mvp_post_release_accuracy_and_adapter_roadmap_plan`
+
+Gate AV selection status:
+
+`gate_av_personal_use_mvp_post_release_accuracy_and_adapter_roadmap_landed_no_runtime_selected_source_absent_solver_gap_cartography_gate_aw`
+
+The implementation already has the right spine: candidate resolution,
+`needs_input`, `unsupported`, target-output support, exact precedence,
+source-absent budgets, and visible basis/posture parity are first-class.
+The remaining post-release risk is not that DynEcho lacks every source
+row. The larger risk is incomplete source-absent solver coverage for
+hostile N-layer wall and floor packages, plus adapters that still need
+their own basis-specific owner contracts.
+
+Gate AV therefore selects:
+
+`gate_aw_personal_use_mvp_source_absent_solver_gap_cartography_plan`
+
+Selected Gate AW file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-aw-source-absent-solver-gap-cartography-contract.test.ts`
+
+Gate AW should be an executable cartography gate, not a broad source
+crawl and not an immediate runtime formula gate. It should enumerate the
+current exact-source, formula-supported, `needs_input`, and unsupported
+surfaces across wall lab, wall field/building, opening/leak, floor
+impact lab, floor field, ASTM boundaries, and hostile mixed-layer
+assemblies. It should then rank the next source-absent solver gap by
+coverage impact and accuracy risk.
+
+The recommended post-Gate-AV order is:
+
+1. Gate AW source-absent solver gap cartography, no runtime movement.
+2. Gate AX advanced wall multi-panel / multi-cavity direct-curve solver
+   contract, no runtime movement at first.
+3. Gate AY selected wall solver runtime corridor after the Gate AX input
+   contract is closed.
+4. Gate AZ advanced wall source-absent solver input surface, wiring the
+   Gate AY physical owners through the Dynamic Calculator without
+   retuning values.
+5. Gate BA floor-impact source-absent solver gap cartography for
+   concrete, floating screed, resilient underlay, suspended ceiling, and
+   mixed timber/steel/CLT packages.
+6. Gate BB floor-impact source-absent input contract for dynamic
+   stiffness, load basis, carrier family, lower treatment, mixed support,
+   and hostile floor-role owners.
+7. Gate BC floor-impact source-absent formula corridor for the bounded
+   heavy-concrete combined upper/lower lane selected by Gate BB.
+8. Gate BD floor-impact source-absent runtime corridor over the Gate BC
+   formula terms and error budgets.
+9. Later opening/leak field/building and ASTM impact adapters, each with
+   separate basis ownership.
+10. Later calibration and budget tightening only after source-owned
+   holdouts and paired negatives exist.
+
+Gate BD has now landed, so the current active step is Gate BE:
+
+`gate_be_personal_use_mvp_floor_impact_source_absent_surface_parity_plan`
+
+Selected Gate BE file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-be-floor-impact-source-absent-surface-parity-contract.test.ts`
+
+Gate BE should not retune `Ln,w 44.4` or `DeltaLw 30.1`. It should
+make the Gate BD runtime basis
+`predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate`
+and the source-absent `+/-6.5 dB` / `+/-5.5 dB` not-measured budgets
+visible across output cards, support trace, scenario analysis, saved
+replay, Markdown report payloads, and API surfaces. It must keep exact
+source precedence, existing heavy floating/steel/timber/CLT routes,
+missing-input fallback blocks, and lab/field/building/ASTM boundaries
+unchanged.
+
+The research check behind this plan points to frequency-band direct
+curves as the strongest long-term shape: ISO 12354-1/2 building
+estimation, ISO 717-1/2 ratings, ASTM E413/E989 adapters, and public
+INSUL / Acoulatis / SONarchitect capability descriptions all reinforce
+that single-number outputs should be basis-specific results of owned
+curves or owned one-number corridors, not cross-basis aliases.
+
+Gate AV closeout checkpoint:
+
+[CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AV_HANDOFF.md](./CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AV_HANDOFF.md)
+
+## Gate AW Source-Absent Solver Gap Cartography Landed - 2026-05-13
+
+Gate AW has now landed as executable no-runtime cartography:
+
+`gate_aw_personal_use_mvp_source_absent_solver_gap_cartography_plan`
+
+Gate AW selection status:
+
+`gate_aw_personal_use_mvp_source_absent_solver_gap_cartography_landed_no_runtime_selected_advanced_wall_source_absent_solver_contract_gate_ax`
+
+Selected next action:
+
+`gate_ax_personal_use_mvp_advanced_wall_source_absent_solver_contract_plan`
+
+Selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ax-advanced-wall-source-absent-solver-contract.test.ts`
+
+Gate AW does not move runtime values, source rows, tolerances, inputs,
+API/card/report surfaces, or basis labels. It maps 20 representative
+wall/floor cells across current runtime-owned coverage, `needs_input`
+boundaries, unsupported boundaries, adapter gaps, and source-absent
+solver gaps.
+
+Gate AW's key result is that the largest practical consulting gap is not
+broad source-row acquisition. It is mixed N-layer wall assemblies:
+panels, cavities, studs, resilient connections, linings, split boards,
+safe/unsafe reorders, and opening/leak sub-elements that can fall
+between existing family delegates. Gate AW therefore selects Gate AX to
+define the advanced wall source-absent direct-curve input contract
+before any runtime formula promotion.
+
+Gate AX must be no-runtime first. It should define the physical owner
+set for a multi-panel / multi-cavity wall direct-curve solver: panel
+surface mass, stiffness, loss factor, critical frequency, cavity depth,
+absorber coverage, frame/coupling stiffness, stud spacing, resilient
+connections, opening/leak sub-elements, exact-source precedence,
+`needs_input` fields, hostile duplicate/split/reorder boundaries, and
+visible budget requirements.
+
+Gate AW closeout checkpoint:
+
+[CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AW_HANDOFF.md](./CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AW_HANDOFF.md)
+
+Gate AW validation passed on 2026-05-13: focused Gate AW 1 file / 6
+tests, Gate AV + Gate AW continuity 2 files / 13 tests,
+`pnpm calculator:gate:current` with engine 390 files / 2253 tests, web
+75 files / 321 passed + 18 skipped, build 5/5, and `git diff --check`
+clean.
+
+## Gate AX Advanced Wall Source-Absent Solver Contract Landed - 2026-05-13
+
+Gate AX has now landed as executable no-runtime input-contract planning:
+
+`gate_ax_personal_use_mvp_advanced_wall_source_absent_solver_contract_plan`
+
+Gate AX selection status:
+
+`gate_ax_personal_use_mvp_advanced_wall_source_absent_solver_contract_landed_no_runtime_selected_runtime_corridor_gate_ay`
+
+Selected next action:
+
+`gate_ay_personal_use_mvp_advanced_wall_source_absent_solver_runtime_corridor_plan`
+
+Selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ay-advanced-wall-source-absent-solver-runtime-corridor-contract.test.ts`
+
+Gate AX does not move runtime values, source rows, tolerances, inputs,
+API/card/report surfaces, or basis labels. It turns the Gate AW wall
+gaps into explicit owner groups for route/basis, leaf/cavity topology,
+panel dynamic properties, cavity absorbers, frame/coupling,
+opening/leak sub-elements, direct-curve/rating adapters, hostile-input
+guards, and source-absent uncertainty visibility.
+
+Gate AX's key result is that complete N-layer wall input can only be
+`ready_for_runtime_gate`; it still cannot return a new generalized
+solver value at Gate AX. Missing panel stiffness/loss/critical
+frequency, missing cavity/absorber terms, partial opening/leak inputs,
+duplicate/split topology, field/building output requests, and
+same-stack exact source rows all fail closed, delegate, or preserve
+source precedence before any generalized source-absent wall solver can
+run.
+
+Gate AY should be the bounded runtime-corridor gate. It may promote
+numeric runtime only if the Gate AX owner set is executable, exact
+source precedence stays first, current grouped triple-leaf and existing
+family delegates remain numerically stable, field/building outputs stay
+separate, and the source-absent design budget is visible as
+not-measured evidence.
+
+Gate AX closeout checkpoint:
+
+[CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AX_HANDOFF.md](./CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AX_HANDOFF.md)
+
+Gate AX validation passed on 2026-05-13: focused Gate AX 1 file / 6
+tests, Gate AW + Gate AX continuity 2 files / 12 tests,
+`pnpm calculator:gate:current` with engine 391 files / 2259 tests, web
+75 files / 321 passed + 18 skipped, build 5/5, and `git diff --check`
+clean.
+
+## Gate AY Advanced Wall Source-Absent Solver Runtime Corridor Landed - 2026-05-13
+
+Gate AY has now landed the bounded runtime corridor selected by Gate AX:
+
+`gate_ay_personal_use_mvp_advanced_wall_source_absent_solver_runtime_corridor_plan`
+
+Gate AY selection status:
+
+`gate_ay_personal_use_mvp_advanced_wall_source_absent_solver_runtime_corridor_landed_selected_input_surface_gate_az`
+
+Selected next action:
+
+`gate_az_personal_use_mvp_advanced_wall_source_absent_solver_input_surface_plan`
+
+Selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-az-advanced-wall-source-absent-solver-input-surface-contract.test.ts`
+
+Gate AY promotes complete explicit Gate AX owner input to
+`gate_ay_advanced_wall_source_absent_direct_curve_runtime_corridor`.
+The corridor calculates a third-octave element-lab wall direct curve
+from panel mass/stiffness/loss/critical-frequency, cavity depth,
+absorber thickness/coverage/flow resistivity, frame/coupling terms, and
+explicit opening intent. The active complete no-opening fixture returns
+`Rw 65`, `STC 65`, `C -1.1`, and `Ctr -6.4` with `+/-8 dB` source-absent
+budgets for `Rw` / `STC` and `+/-3 dB` budgets for `C` / `Ctr`. A weak
+opening/leak fixture is not ignored and returns `Rw 37`, `STC 36`,
+`C 1.2`, and `Ctr 1.2`.
+
+Gate AY keeps the fail-closed boundaries from Gate AX: exact source
+precedence bypasses the formula, existing grouped triple-leaf delegates
+keep their current values, missing panel/cavity/frame/opening/rating
+owners return `needs_input`, duplicate or split ownership returns
+invalid topology without a budget, safe explicit reorders stay stable,
+and field/building outputs are not aliases of lab `Rw` / `STC`.
+
+Gate AY is not the input surface. Gate AZ is now selected to wire the
+same physical fields into the Dynamic Calculator wall UI, scenario
+replay, saved snapshots, and API payloads without retuning the Gate AY
+values or promoting field/building adapters.
+
+Gate AY closeout checkpoint:
+
+[CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AY_HANDOFF.md](./CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AY_HANDOFF.md)
+
+Gate AY validation passed on 2026-05-13: focused Gate AY 1 file / 8
+tests, Gate AX + Gate AY continuity 2 files / 14 tests, Gate AW + Gate
+AX + Gate AY continuity 3 files / 20 tests,
+`pnpm calculator:gate:current` with engine 392 files / 2267 tests, web
+75 files / 321 passed + 18 skipped, build 5/5, and `git diff --check`
+clean.
+
+## Gate BD Floor-Impact Source-Absent Runtime Corridor Landed - 2026-05-13
+
+Gate BD has now landed the runtime corridor selected by Gate BC:
+
+`gate_bd_personal_use_mvp_floor_impact_source_absent_runtime_corridor_plan`
+
+Gate BD selection status:
+
+`gate_bd_personal_use_mvp_floor_impact_source_absent_runtime_corridor_landed_selected_surface_parity_gate_be`
+
+Selected next action:
+
+`gate_be_personal_use_mvp_floor_impact_source_absent_surface_parity_plan`
+
+Selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-be-floor-impact-source-absent-surface-parity-contract.test.ts`
+
+Gate BD promotes complete explicit heavy-concrete combined upper/lower
+input to lab `Ln,w 44.4` / `DeltaLw 30.1` through
+`predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate`.
+The runtime carries Gate BC source-absent not-measured budgets:
+`+/-6.5 dB` for `Ln,w` and `+/-5.5 dB` for `DeltaLw`.
+
+The formula remains:
+
+`DeltaLw_total = DeltaLw_upper(m'load, s') + DeltaLw_lower(lower assembly) - couplingPenalty(upper, lower)`
+
+`Ln,w = Ln,w_bare_heavy_reference - DeltaLw_total`
+
+Gate BD preserves exact UBIQ precedence (`Ln,w 51`, no invented
+`DeltaLw`), the existing heavy floating corridor (`Ln,w 50.3` /
+`DeltaLw 24.3`), the missing-load published anchor (`Ln,w 47` with
+`DeltaLw` unsupported), and missing lower-treatment / missing dynamic
+stiffness fallback blocks. ASTM, field, and building impact outputs stay
+non-alias boundaries.
+
+Gate BE is selected because runtime moved and the new basis/budgets must
+be visible consistently before first-class UI input-surface work or any
+adapter/retune/source-crawl lane.
+
+Next plain label: floor-impact source-absent surface parity.
+
+Gate BD closeout checkpoint:
+
+[CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BD_HANDOFF.md](./CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BD_HANDOFF.md)
+
+Gate BD validation passed on 2026-05-13: focused Gate BD 1 file / 6
+tests, Gate BC + Gate BD continuity 2 files / 14 tests, Gate BA +
+Gate BB + Gate BC + Gate BD continuity 4 files / 29 tests, impact
+regression guard 3 files / 109 tests, Gate AZ fixture type-safety guard
+1 file / 5 tests, engine typecheck, engine build,
+`pnpm calculator:gate:current` with engine 397 files / 2301 tests, web
+76 files / 325 passed + 18 skipped, repo build 5/5, whitespace guard
+clean, and `git diff --check` clean.
+
+Post-Gate BD full revalidation passed on 2026-05-13:
+
+[CHECKPOINT_2026-05-13_POST_GATE_BD_FULL_REVALIDATION_AND_GATE_BE_PLAN_HANDOFF.md](./CHECKPOINT_2026-05-13_POST_GATE_BD_FULL_REVALIDATION_AND_GATE_BE_PLAN_HANDOFF.md)
+
+The first `pnpm check` attempt caught two non-runtime lint issues: an
+unused Gate BA import and redundant `Boolean(...)` calls in the Gate AY
+advanced-wall dynamic adapter. After those cleanups, full `pnpm check`
+passed with lint, typecheck, engine 522 files / 3103 tests, web 182
+files / 985 passed + 18 skipped, and build 5/5.
+
+Implementation read after revalidation: the new impact basis label is
+available on the web surface, but Gate BE has not landed an executable
+surface-parity contract yet. Therefore the next step remains Gate BE:
+prove cards, posture, impact metric basis copy, support trace,
+corridor/method dossier, scenario analysis, saved replay, calculator
+API payload, impact-only API payload, and Markdown report all expose the
+same source-absent not-measured basis and budgets for Gate BD while
+keeping exact-source, missing-input, field/building, ASTM/IIC, and
+existing formula-family boundaries outside the promoted budget.
+
+## Gate BC Floor-Impact Source-Absent Formula Corridor Landed - 2026-05-13
+
+Gate BC has now landed the no-runtime floor-impact source-absent
+formula corridor selected by Gate BB:
+
+`gate_bc_personal_use_mvp_floor_impact_source_absent_formula_corridor_plan`
+
+Gate BC selection status:
+
+`gate_bc_personal_use_mvp_floor_impact_source_absent_formula_corridor_landed_no_runtime_selected_runtime_corridor_gate_bd`
+
+Selected next action:
+
+`gate_bd_personal_use_mvp_floor_impact_source_absent_runtime_corridor_plan`
+
+Selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bd-floor-impact-source-absent-runtime-corridor-contract.test.ts`
+
+Gate BC consumes only the Gate BB owner contract. It defines the bounded
+heavy-concrete combined upper/lower lab impact formula terms:
+`DeltaLw_total = DeltaLw_upper(m'load, s') + DeltaLw_lower(lower
+assembly) - couplingPenalty(upper, lower)` and `Ln,w =
+Ln,w_bare_heavy_reference - DeltaLw_total`. It also defines
+source-absent not-measured design budgets of `+/-6.5 dB` for lab
+`Ln,w` and `+/-5.5 dB` for lab `DeltaLw`.
+
+Gate BC keeps runtime values frozen. Exact UBIQ still stays `Ln,w 51`
+without invented `DeltaLw`; heavy concrete floating-floor remains
+`Ln,w 50.3` / `DeltaLw 24.3`; missing load still preserves only the
+published-family `Ln,w 47` anchor with `DeltaLw` unsupported; ASTM
+`IIC` / `AIIC` and field/building impact requests remain non-alias
+boundaries.
+
+Gate BC selects Gate BD as the next floor-impact source-absent runtime
+corridor. Gate BD must calculate only from complete Gate BB physical
+owners, preserve exact-source precedence and existing steel/timber/CLT
+runtime corridors, emit the Gate BC error budgets as not-measured
+evidence, and keep lab, field, building, and ASTM bases separate.
+
+Next plain label: floor-impact source-absent runtime corridor.
+
+Gate BC closeout checkpoint:
+
+[CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BC_HANDOFF.md](./CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BC_HANDOFF.md)
+
+Gate BC validation passed on 2026-05-13: focused Gate BC engine 1 file
+/ 8 tests, Gate BB + Gate BC continuity 2 files / 17 tests, Gate BA +
+Gate BB + Gate BC continuity 3 files / 23 tests, engine build including
+DTS, `pnpm calculator:gate:current` with engine 396 files / 2295 tests,
+web 76 files / 325 passed + 18 skipped, repo build 5/5, and
+`git diff --check` clean.
+
+## Gate BB Floor-Impact Source-Absent Input Contract Landed - 2026-05-13
+
+Gate BB has now landed the no-runtime floor-impact source-absent input
+contract selected by Gate BA:
+
+`gate_bb_personal_use_mvp_floor_impact_source_absent_input_contract_plan`
+
+Gate BB selection status:
+
+`gate_bb_personal_use_mvp_floor_impact_source_absent_input_contract_landed_no_runtime_selected_formula_corridor_gate_bc`
+
+Selected next action:
+
+`gate_bc_personal_use_mvp_floor_impact_source_absent_formula_corridor_plan`
+
+Selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bc-floor-impact-source-absent-formula-corridor-contract.test.ts`
+
+Gate BB converts the Gate BA cartography into explicit physical owner
+fields and fail-closed rules before any wider source-absent runtime
+promotion. It names base/carrier family, upper topping/floating mass,
+resilient-layer dynamic stiffness or source-owned product curve, load
+basis, lower treatment coupling, steel carrier geometry, field/building
+/ ASTM basis boundaries, and duplicate/split/mixed-support topology
+guards.
+
+Gate BB keeps runtime values frozen. Exact UBIQ still stays `Ln,w 51`
+without invented `DeltaLw`; heavy concrete floating-floor remains
+`Ln,w 50.3` / `DeltaLw 24.3`; missing load still preserves only the
+published-family `Ln,w 47` anchor with `DeltaLw` unsupported; ASTM
+`IIC` / `AIIC` and field/building impact requests remain non-alias
+boundaries.
+
+Gate BB selects Gate BC as the next bounded floor-impact source-absent
+formula corridor. Gate BC must use the Gate BB owner contract, not a
+broad source crawl, not a formula retune, and not a lab/field/building
+or ISO/ASTM alias.
+
+Next plain label: floor-impact source-absent formula corridor.
+
+Gate BB closeout checkpoint:
+
+[CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BB_HANDOFF.md](./CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BB_HANDOFF.md)
+
+Gate BB validation passed on 2026-05-13: focused Gate BB engine 1 file
+/ 9 tests, Gate BA + Gate BB continuity 2 files / 15 tests, engine
+build including DTS, `pnpm calculator:gate:current` with engine 395
+files / 2287 tests, web 76 files / 325 passed + 18 skipped, repo build
+5/5, and `git diff --check` clean.
+
+## Gate BA Floor-Impact Source-Absent Solver Gap Cartography Landed - 2026-05-13
+
+Gate BA has now landed the no-runtime floor-impact cartography selected
+by Gate AZ:
+
+`gate_ba_personal_use_mvp_floor_impact_source_absent_solver_gap_cartography_plan`
+
+Gate BA selection status:
+
+`gate_ba_personal_use_mvp_floor_impact_source_absent_solver_gap_cartography_landed_no_runtime_selected_floor_impact_source_absent_input_contract_gate_bb`
+
+Selected next action:
+
+`gate_bb_personal_use_mvp_floor_impact_source_absent_input_contract_plan`
+
+Selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bb-floor-impact-source-absent-input-contract.test.ts`
+
+Gate BA maps current floor-impact coverage without moving runtime
+values. Exact official floor-system rows remain first. Heavy concrete
+bare and floating-floor formula paths remain stable. Published-family
+anchors for heavy/lightweight concrete and composite panel floors remain
+labeled anchors rather than universal physics. Steel, timber joist, and
+CLT/mass-timber formula corridors remain owned when complete physical
+inputs are present. Field impact context remains separate from lab
+`Ln,w` / `DeltaLw`, and ASTM `IIC` / `AIIC` plus building-prediction
+impact outputs remain explicit unsupported boundaries.
+
+Gate BA pins current runtime probes:
+
+- exact UBIQ FL-28 official row: `Ln,w 51`, no invented `DeltaLw`;
+- explicit heavy concrete floating-floor input:
+  `Ln,w 50.3` / `DeltaLw 24.3` through
+  `predictor_heavy_floating_floor_iso12354_annexc_estimate`;
+- missing upper load owner: existing published-family `Ln,w 47`, with
+  `DeltaLw` still unsupported;
+- explicit field context: `L'n,w 52.3` / `L'nT,w 50.3`;
+- ASTM `IIC` / `AIIC`: unsupported even when ISO impact values exist.
+
+Gate BA selects Gate BB as the next no-runtime input contract. Gate BB
+should define required owner fields and fail-closed boundaries for
+dynamic stiffness / product curve, load basis, base/carrier family,
+lower treatment coupling, mixed support families, and hostile floor-role
+topology before any new broad `Ln,w` / `DeltaLw` runtime corridor is
+promoted. Broad source crawling remains lower priority because exact
+rows do not solve arbitrary floor layer combinations.
+
+Gate BA closeout checkpoint:
+
+[CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BA_HANDOFF.md](./CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BA_HANDOFF.md)
+
+Gate BA validation passed on 2026-05-13: focused Gate BA engine 1 file /
+6 tests, Gate AZ + Gate BA continuity, `pnpm calculator:gate:current`,
+and `git diff --check` clean.
+
+## Gate AZ Advanced Wall Source-Absent Solver Input Surface Landed - 2026-05-13
+
+Gate AZ has now landed the input surface selected by Gate AY:
+
+`gate_az_personal_use_mvp_advanced_wall_source_absent_solver_input_surface_plan`
+
+Gate AZ selection status:
+
+`gate_az_personal_use_mvp_advanced_wall_source_absent_solver_input_surface_landed_selected_floor_impact_source_absent_solver_gap_cartography_gate_ba`
+
+Selected next action:
+
+`gate_ba_personal_use_mvp_floor_impact_source_absent_solver_gap_cartography_plan`
+
+Selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ba-floor-impact-source-absent-solver-gap-cartography-contract.test.ts`
+
+Gate AZ wires the Gate AY physical owner fields through shared
+`AirborneContext.advancedWall`, route-input assessment, the
+dynamic-airborne Gate AY adapter, workbench live evaluation, scenario
+analysis, saved replay, server snapshot payloads, output cards,
+posture, corridor dossier, Markdown report lines, calculator API
+payloads, and the current-gate runner. Complete UI-derived advanced
+wall input preserves Gate AY `Rw 65` / `STC 65` / `C -1.1` /
+`Ctr -6.4` with `gate_ay_advanced_wall_source_absent_direct_curve_runtime_corridor`,
+`family_physics_prediction`, and visible `+/-8 dB` `Rw` / `STC` plus
+`+/-3 dB` `C` / `Ctr` source-absent budgets.
+
+Gate AZ keeps the same boundaries: partial physical input returns
+`needs_input` with precise missing fields and no promoted budget,
+field/building targets stay unsupported, duplicate or split ownership
+is refused, safe explicit reorders stay stable, saved/API replay keeps
+the same basis, and exact source or already-owned delegate routes remain
+first.
+
+Gate BA is now selected as a no-runtime floor-impact source-absent
+solver gap cartography step. It should map concrete, floating screed,
+resilient underlay, suspended ceiling, and mixed timber/steel/CLT floor
+impact combinations across existing exact rows, owned formula lanes,
+`needs_input`, unsupported basis boundaries, and remaining solver gaps
+before any new `Ln,w` / `DeltaLw` runtime corridor is promoted.
+
+Gate AZ closeout checkpoint:
+
+[CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AZ_HANDOFF.md](./CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AZ_HANDOFF.md)
+
+Gate AZ validation passed on 2026-05-13: focused Gate AZ engine 1 file /
+5 tests, focused Gate AZ web 1 file / 4 tests, Gate AX + Gate AY +
+Gate AZ continuity, web input-surface continuity, `pnpm
+calculator:gate:current`, and `git diff --check` clean.
 
 ## Gate AT Acceptance Matrix Refresh After Building Prediction Landed - 2026-05-12
 
@@ -464,10 +1004,13 @@ matrix. Gate AR has promoted defended source-absent `R'w` / `DnT,w`
 engine values, Gate AS has made that basis visible across
 surface/API/report paths, Gate AT has refreshed the acceptance matrix
 with no remaining coverage gaps or release blockers, and Gate AU has
-landed the company-internal daily-use ready release handoff. The next
-path is Gate AV post-release accuracy roadmap.
+landed the company-internal daily-use ready release handoff. Gate AV has
+now landed the no-runtime post-release accuracy roadmap, and Gate AW has
+landed source-absent solver gap cartography. Gate AX has now landed the
+no-runtime advanced wall source-absent solver contract. The next path is
+Gate AY advanced wall source-absent solver runtime corridor.
 
-This is the shortest defensible path after Gate AU. Broad source
+This is the shortest defensible path after Gate AX. Broad source
 crawling still does not unblock the source-absent calculator route. See
 [CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md).
 

@@ -56,6 +56,10 @@ import {
   GATE_AE_FLAT_MULTICAVITY_RUNTIME_METHOD,
   GATE_AE_FLAT_MULTICAVITY_SELECTED_CANDIDATE_ID
 } from "./dynamic-airborne-gate-ae-flat-multicavity";
+import {
+  PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AY_RUNTIME_METHOD,
+  PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AY_SELECTED_CANDIDATE_ID
+} from "./gate-ay-advanced-wall-runtime-constants";
 
 export type DynamicCalculatorCandidateResolverSourceAnchor = {
   applied: boolean;
@@ -466,7 +470,8 @@ function selectLane(input: {
 }): GateMSelectedLane {
   if (
     input.topologyNormalization.status === "unsupported_hostile_input" ||
-    input.assessment.status === "unsupported"
+    input.assessment.status === "unsupported" ||
+    input.runtimeSignal?.airborneBasis?.origin === "unsupported"
   ) {
     return "unsupported";
   }
@@ -474,7 +479,8 @@ function selectLane(input: {
   if (
     input.topologyNormalization.blockers.length > 0 ||
     input.assessment.missingPhysicalInputs.length > 0 ||
-    input.assessment.status === "needs_input"
+    input.assessment.status === "needs_input" ||
+    input.runtimeSignal?.airborneBasis?.origin === "needs_input"
   ) {
     return "needs_input";
   }
@@ -517,6 +523,10 @@ function familyPhysicsCandidateId(runtimeBasis?: AirborneResultBasis): string {
 
   if (runtimeBasis?.method === GATE_AE_FLAT_MULTICAVITY_RUNTIME_METHOD) {
     return GATE_AE_FLAT_MULTICAVITY_SELECTED_CANDIDATE_ID;
+  }
+
+  if (runtimeBasis?.method === PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AY_RUNTIME_METHOD) {
+    return PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AY_SELECTED_CANDIDATE_ID;
   }
 
   if (runtimeBasis?.method === GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_RUNTIME_METHOD) {
@@ -758,14 +768,18 @@ function buildSeeds(input: {
       outputIds: outputs
     },
     {
-      basis: needsInputBasis({ assessment: input.assessment }),
+      basis: input.runtimeBasis?.origin === "needs_input"
+        ? input.runtimeBasis
+        : needsInputBasis({ assessment: input.assessment }),
       id: "candidate_dynamic_needs_input",
       metricIds: metric,
       origin: "needs_input",
       outputIds: outputs
     },
     {
-      basis: unsupportedBasis({ assessment: input.assessment }),
+      basis: input.runtimeBasis?.origin === "unsupported"
+        ? input.runtimeBasis
+        : unsupportedBasis({ assessment: input.assessment }),
       id: "candidate_dynamic_unsupported",
       metricIds: metric,
       origin: "unsupported",

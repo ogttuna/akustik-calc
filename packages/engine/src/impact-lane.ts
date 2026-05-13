@@ -31,6 +31,7 @@ import { buildExactImpactFromSource } from "./impact-exact";
 import { applyImpactFieldContextToBoundImpact, applyImpactFieldContextToImpact } from "./impact-field-context";
 import { estimateImpactFromLayers, estimateImpactFromPredictorInput } from "./impact-estimate";
 import { buildImpactPredictorStatus } from "./impact-predictor-status";
+import { shouldBlockHeavyConcreteCombinedImpactFormulaFallback } from "./heavy-concrete-combined-impact-formula-corridor";
 import {
   filterImpactCatalogMatchForExplicitPredictorInput,
   matchImpactProductCatalog
@@ -179,6 +180,9 @@ export function resolveLayerBasedImpactLane(
     rawImpactCatalogMatch?.catalog.matchMode === "product_property_delta" &&
     !impactCatalogMatch;
   const blockSteelFormulaFallback = shouldBlockSteelFloorImpactFormulaFallback(input.predictorInput);
+  const blockHeavyConcreteCombinedFormulaFallback = shouldBlockHeavyConcreteCombinedImpactFormulaFallback(
+    input.predictorInput
+  );
   const floorSystemRecommendations = floorSystemMatch
     ? []
     : recommendFloorSystems(input.resolvedLayers, FLOOR_SYSTEM_VISIBLE_RECOMMENDATION_LIMIT);
@@ -206,11 +210,16 @@ export function resolveLayerBasedImpactLane(
     !boundFloorSystemMatch &&
     !impactCatalogMatch &&
     !predictorFormulaImpact &&
-    !blockSteelFormulaFallback
+    !blockSteelFormulaFallback &&
+    !blockHeavyConcreteCombinedFormulaFallback
       ? derivePredictorSpecificFloorSystemEstimate(input.predictorInput)
       : null;
   const narrowImpact =
-    input.officialFloorSystemId || explicitDeltaImpact || rejectProductDeltaFormulaFallback || blockSteelFormulaFallback
+    input.officialFloorSystemId ||
+      explicitDeltaImpact ||
+      rejectProductDeltaFormulaFallback ||
+      blockSteelFormulaFallback ||
+      blockHeavyConcreteCombinedFormulaFallback
       ? null
       : predictorFormulaImpact ?? estimateImpactFromLayers(input.resolvedLayers);
   const boundFloorSystemEstimate =
@@ -221,7 +230,8 @@ export function resolveLayerBasedImpactLane(
     !explicitDeltaImpact &&
     !predictorSpecificFloorSystemEstimate &&
     !narrowImpact &&
-    !blockSteelFormulaFallback
+    !blockSteelFormulaFallback &&
+    !blockHeavyConcreteCombinedFormulaFallback
       ? deriveBoundFloorSystemEstimate(input.resolvedLayers)
       : null;
   const floorSystemEstimate =
@@ -235,7 +245,8 @@ export function resolveLayerBasedImpactLane(
           !boundFloorSystemEstimate &&
           !impactCatalogMatch &&
           !narrowImpact &&
-          !blockSteelFormulaFallback
+          !blockSteelFormulaFallback &&
+          !blockHeavyConcreteCombinedFormulaFallback
             ? deriveFloorSystemEstimate(input.resolvedLayers, floorSystemRecommendations)
             : null
         );

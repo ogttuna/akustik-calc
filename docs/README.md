@@ -30,11 +30,133 @@ use `pnpm check` when shared contracts move.
 - [calculator/CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md](./calculator/CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md)
   — historical broad handoff: broad validation green and calculator
   accuracy/coverage refocus selected.
-- [calculator/CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md](./calculator/CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md)
-  — latest calculator handoff: no-stud double-leaf Gate C closed and
-  timber double-board source research was selected.
-- [calculator/SLICE_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_PLAN.md](./calculator/SLICE_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_PLAN.md)
-  — active calculator accuracy/coverage plan.
+- [calculator/CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AU_HANDOFF.md](./calculator/CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AU_HANDOFF.md)
+  — company-internal daily-use ready handoff: Gate AU closed and
+  selected Gate AV post-release accuracy/adapters roadmap.
+- [calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AV_HANDOFF.md](./calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AV_HANDOFF.md)
+  — post-release roadmap handoff: Gate AV landed no-runtime and selected
+  Gate AW source-absent solver gap cartography. Landed action:
+  `gate_av_personal_use_mvp_post_release_accuracy_and_adapter_roadmap_plan`;
+  selection status:
+  `gate_av_personal_use_mvp_post_release_accuracy_and_adapter_roadmap_landed_no_runtime_selected_source_absent_solver_gap_cartography_gate_aw`;
+  selected next action:
+  `gate_aw_personal_use_mvp_source_absent_solver_gap_cartography_plan`;
+  selected next file:
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-aw-source-absent-solver-gap-cartography-contract.test.ts`.
+- [calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AW_HANDOFF.md](./calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AW_HANDOFF.md)
+  — source-absent cartography handoff: Gate AW landed no-runtime source-absent
+  solver gap cartography and selected Gate AX advanced wall source-absent solver contract.
+  Landed action:
+  `gate_aw_personal_use_mvp_source_absent_solver_gap_cartography_plan`;
+  selection status:
+  `gate_aw_personal_use_mvp_source_absent_solver_gap_cartography_landed_no_runtime_selected_advanced_wall_source_absent_solver_contract_gate_ax`;
+  selected next action:
+  `gate_ax_personal_use_mvp_advanced_wall_source_absent_solver_contract_plan`;
+  selected next file:
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ax-advanced-wall-source-absent-solver-contract.test.ts`.
+- [calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AX_HANDOFF.md](./calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AX_HANDOFF.md)
+  — advanced wall contract handoff: Gate AX landed no-runtime advanced wall source-absent solver contract
+  and selected Gate AY runtime corridor. Landed action:
+  `gate_ax_personal_use_mvp_advanced_wall_source_absent_solver_contract_plan`;
+  selection status:
+  `gate_ax_personal_use_mvp_advanced_wall_source_absent_solver_contract_landed_no_runtime_selected_runtime_corridor_gate_ay`;
+  selected next action:
+  `gate_ay_personal_use_mvp_advanced_wall_source_absent_solver_runtime_corridor_plan`;
+  selected next file:
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ay-advanced-wall-source-absent-solver-runtime-corridor-contract.test.ts`.
+- [calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AY_HANDOFF.md](./calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AY_HANDOFF.md)
+  — advanced wall runtime handoff: Gate AY landed the advanced wall
+  source-absent solver runtime corridor and selected Gate AZ input
+  surface. Landed action:
+  `gate_ay_personal_use_mvp_advanced_wall_source_absent_solver_runtime_corridor_plan`;
+  selection status:
+  `gate_ay_personal_use_mvp_advanced_wall_source_absent_solver_runtime_corridor_landed_selected_input_surface_gate_az`;
+  selected next action:
+  `gate_az_personal_use_mvp_advanced_wall_source_absent_solver_input_surface_plan`;
+  selected next file:
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-az-advanced-wall-source-absent-solver-input-surface-contract.test.ts`.
+  Short label: advanced wall source-absent solver runtime corridor.
+- [calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AZ_HANDOFF.md](./calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AZ_HANDOFF.md)
+  — advanced wall input-surface handoff: Gate AZ landed the advanced wall
+  source-absent solver input surface and selected Gate BA floor-impact
+  source-absent solver gap cartography. Landed action:
+  `gate_az_personal_use_mvp_advanced_wall_source_absent_solver_input_surface_plan`;
+  selection status:
+  `gate_az_personal_use_mvp_advanced_wall_source_absent_solver_input_surface_landed_selected_floor_impact_source_absent_solver_gap_cartography_gate_ba`;
+  selected next action:
+  `gate_ba_personal_use_mvp_floor_impact_source_absent_solver_gap_cartography_plan`;
+  selected next file:
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-ba-floor-impact-source-absent-solver-gap-cartography-contract.test.ts`.
+  Short label: advanced wall source-absent solver input surface.
+- [calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BA_HANDOFF.md](./calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BA_HANDOFF.md)
+  — prior calculator handoff: Gate BA landed no-runtime floor-impact
+  source-absent solver gap cartography and selected Gate BB
+  floor-impact source-absent input contract. Landed action:
+  `gate_ba_personal_use_mvp_floor_impact_source_absent_solver_gap_cartography_plan`;
+  selection status:
+  `gate_ba_personal_use_mvp_floor_impact_source_absent_solver_gap_cartography_landed_no_runtime_selected_floor_impact_source_absent_input_contract_gate_bb`;
+  selected next action:
+  `gate_bb_personal_use_mvp_floor_impact_source_absent_input_contract_plan`;
+  selected next file:
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bb-floor-impact-source-absent-input-contract.test.ts`.
+  Short label: floor-impact source-absent solver gap cartography.
+- [calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BB_HANDOFF.md](./calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BB_HANDOFF.md)
+  — prior calculator handoff: Gate BB landed no-runtime
+  floor-impact source-absent input contract and selected Gate BC
+  floor-impact source-absent formula corridor. Landed action:
+  `gate_bb_personal_use_mvp_floor_impact_source_absent_input_contract_plan`;
+  selection status:
+  `gate_bb_personal_use_mvp_floor_impact_source_absent_input_contract_landed_no_runtime_selected_formula_corridor_gate_bc`;
+  selected next action:
+  `gate_bc_personal_use_mvp_floor_impact_source_absent_formula_corridor_plan`;
+  selected next file:
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bc-floor-impact-source-absent-formula-corridor-contract.test.ts`.
+  Short label: floor-impact source-absent input contract.
+- [calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BC_HANDOFF.md](./calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BC_HANDOFF.md)
+  — prior calculator handoff: Gate BC landed no-runtime
+  floor-impact source-absent formula corridor and selected Gate BD
+  floor-impact source-absent runtime corridor. Landed action:
+  `gate_bc_personal_use_mvp_floor_impact_source_absent_formula_corridor_plan`;
+  selection status:
+  `gate_bc_personal_use_mvp_floor_impact_source_absent_formula_corridor_landed_no_runtime_selected_runtime_corridor_gate_bd`;
+  selected next action:
+  `gate_bd_personal_use_mvp_floor_impact_source_absent_runtime_corridor_plan`;
+  selected next file:
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bd-floor-impact-source-absent-runtime-corridor-contract.test.ts`.
+  Short label: floor-impact source-absent formula corridor.
+- [calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BD_HANDOFF.md](./calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BD_HANDOFF.md)
+  — latest calculator handoff: Gate BD landed the floor-impact
+  source-absent runtime corridor and selected Gate BE surface parity.
+  Landed action:
+  `gate_bd_personal_use_mvp_floor_impact_source_absent_runtime_corridor_plan`;
+  selection status:
+  `gate_bd_personal_use_mvp_floor_impact_source_absent_runtime_corridor_landed_selected_surface_parity_gate_be`;
+  selected next action:
+  `gate_be_personal_use_mvp_floor_impact_source_absent_surface_parity_plan`;
+  selected next file:
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-be-floor-impact-source-absent-surface-parity-contract.test.ts`.
+  Complete heavy-concrete combined input now returns `Ln,w 44.4` /
+  `DeltaLw 30.1` through
+  `predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate`
+  with `+/-6.5 dB` / `+/-5.5 dB` not-measured budgets. Short label:
+  floor-impact source-absent runtime corridor. Next plain label:
+  floor-impact source-absent surface parity. Validation passed on
+  2026-05-13 with focused Gate BD, BA-BD continuity, impact regression,
+  engine typecheck/build, `pnpm calculator:gate:current`, and
+  `git diff --check`.
+- [calculator/CHECKPOINT_2026-05-13_POST_GATE_BD_FULL_REVALIDATION_AND_GATE_BE_PLAN_HANDOFF.md](./calculator/CHECKPOINT_2026-05-13_POST_GATE_BD_FULL_REVALIDATION_AND_GATE_BE_PLAN_HANDOFF.md)
+  — latest broad revalidation and planning checkpoint: post-Gate BD
+  `pnpm check` passed with lint, typecheck, engine 522 files / 3103
+  tests, web 182 files / 985 passed + 18 skipped, and build 5/5 after
+  two lint-only cleanups. It confirms Gate BE surface parity is the
+  first next implementation step.
+- [calculator/NEXT_IMPLEMENTATION_PLAN.md](./calculator/NEXT_IMPLEMENTATION_PLAN.md)
+  — active calculator tactical plan; currently Gate BE floor-impact
+  source-absent surface parity.
+- [calculator/SLICE_PERSONAL_USE_MVP_GATE_AV_POST_RELEASE_ACCURACY_AND_ADAPTER_ROADMAP_PLAN.md](./calculator/SLICE_PERSONAL_USE_MVP_GATE_AV_POST_RELEASE_ACCURACY_AND_ADAPTER_ROADMAP_PLAN.md)
+  — Gate AV analysis slice: no-runtime post-release roadmap,
+  source-absent solver gap cartography selection, and ranked next
+  accuracy/adapters work.
 - [calculator/CHECKPOINT_2026-04-23_TEAM_ACCESS_MODEL_HANDOFF.md](./calculator/CHECKPOINT_2026-04-23_TEAM_ACCESS_MODEL_HANDOFF.md)
   — productization closeout: team-access policy model closed.
 - [calculator/CHECKPOINT_2026-04-23_AUTH_SESSION_HARDENING_HANDOFF.md](./calculator/CHECKPOINT_2026-04-23_AUTH_SESSION_HARDENING_HANDOFF.md)
@@ -95,9 +217,9 @@ wins.
 ## Fast Paths
 
 - "Where do I resume implementation now?" →
-  [calculator/CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md](./calculator/CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md)
+  [calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BD_HANDOFF.md](./calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BD_HANDOFF.md)
   → [calculator/NEXT_IMPLEMENTATION_PLAN.md](./calculator/NEXT_IMPLEMENTATION_PLAN.md)
-  → [calculator/SLICE_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_PLAN.md](./calculator/SLICE_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_PLAN.md).
+  → Gate BE file named in the current selected slice.
 - "What is stable right now?" →
   [calculator/CURRENT_STATE.md](./calculator/CURRENT_STATE.md)
   → [calculator/SYSTEM_MAP.md](./calculator/SYSTEM_MAP.md)
@@ -114,10 +236,8 @@ wins.
 - Use `CURRENT_STATE.md` for "what is stable right now".
 - Use `NEXT_IMPLEMENTATION_PLAN.md` for "what exactly should be
   implemented next".
-- Use `calculator/SLICE_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_PLAN.md`
-  for the active calculator slice details.
-- Use `calculator/CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md`
-  for the most recent session narrative.
+- Use `calculator/CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BD_HANDOFF.md`
+  for the most recent calculator session narrative.
 - Use older checkpoints under `docs/archive/handoffs/` only when
   you need the historical context that predates the living
   triangle.

@@ -32,6 +32,7 @@ type BuildFloorSystemRatingsInput = {
 const HEAVY_COMPANION_BASES = new Set<ImpactCalculation["basis"]>([
   "predictor_explicit_delta_heavy_reference_derived",
   "predictor_heavy_bare_floor_iso12354_annexc_estimate",
+  "predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate",
   "predictor_heavy_floating_floor_iso12354_annexc_estimate",
   "predictor_heavy_concrete_published_upper_treatment_estimate"
 ]);

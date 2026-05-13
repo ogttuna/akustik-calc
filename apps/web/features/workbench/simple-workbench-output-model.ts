@@ -22,6 +22,10 @@ import { buildSimpleWorkbenchOutputPosture } from "./simple-workbench-output-pos
 import { formatSignedDb } from "./simple-workbench-utils";
 import { getGateARAirborneBuildingPredictionOutputDetail } from "./airborne-building-prediction-surface";
 import {
+  WEB_GATE_AY_ADVANCED_WALL_RUNTIME_METHOD,
+  getGateAYAdvancedWallOutputDetail
+} from "./advanced-wall-source-absent-surface";
+import {
   getSteelFloorFormulaCorridorOutputDetail,
   isSteelFloorFormulaCorridorImpact
 } from "./steel-floor-formula-corridor-view";
@@ -81,7 +85,10 @@ function isExplicitUnsupportedMissingInput(input: {
 
   if (
     studyMode === "wall" &&
-    result?.airborneBasis?.method === WEB_GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD
+    (
+      result?.airborneBasis?.method === WEB_GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD ||
+      result?.airborneBasis?.method === WEB_GATE_AY_ADVANCED_WALL_RUNTIME_METHOD
+    )
   ) {
     return result.airborneBasis.origin === "needs_input" && AIRBORNE_PHYSICAL_PROMPT_OUTPUTS.has(output);
   }
@@ -136,6 +143,11 @@ function buildExplicitUnsupportedOutputDetail(input: {
     return gateSOpeningLeakDetail;
   }
 
+  const gateAYAdvancedWallDetail = getGateAYAdvancedWallOutputDetail(output, result ?? null);
+  if (gateAYAdvancedWallDetail && studyMode === "wall") {
+    return gateAYAdvancedWallDetail;
+  }
+
   const gateARBuildingDetail = getGateARAirborneBuildingPredictionOutputDetail(output, result ?? null);
   if (gateARBuildingDetail && studyMode === "wall") {
     return gateARBuildingDetail;
@@ -187,6 +199,11 @@ export function buildUnavailableOutputDetail(input: {
     return gateSOpeningLeakDetail;
   }
 
+  const gateAYAdvancedWallDetail = getGateAYAdvancedWallOutputDetail(output, result);
+  if (gateAYAdvancedWallDetail && studyMode === "wall") {
+    return gateAYAdvancedWallDetail;
+  }
+
   const gateARBuildingDetail = getGateARAirborneBuildingPredictionOutputDetail(output, result);
   if (gateARBuildingDetail && studyMode === "wall") {
     return gateARBuildingDetail;
@@ -216,7 +233,10 @@ export function isRouteBlockedOutput(input: {
 
   if (
     studyMode === "wall" &&
-    result.airborneBasis?.method === WEB_GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD &&
+    (
+      result.airborneBasis?.method === WEB_GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD ||
+      result.airborneBasis?.method === WEB_GATE_AY_ADVANCED_WALL_RUNTIME_METHOD
+    ) &&
     result.airborneBasis.origin === "needs_input" &&
     AIRBORNE_PHYSICAL_PROMPT_OUTPUTS.has(output)
   ) {
@@ -327,9 +347,11 @@ export function buildOutputCard(input: {
 
       if (typeof result?.metrics.estimatedRwDb === "number") {
         const gateSOpeningLeakDetail = getGateSOpeningLeakCompositeOutputDetail(output, result);
+        const gateAYAdvancedWallDetail = getGateAYAdvancedWallOutputDetail(output, result);
 
         return {
           detail:
+            gateAYAdvancedWallDetail ??
             gateSOpeningLeakDetail ??
             (isImpactOnlyLowConfidenceLane
               ? IMPACT_ONLY_LOW_CONFIDENCE_RW_DETAIL
@@ -358,9 +380,10 @@ export function buildOutputCard(input: {
     case "STC":
       if (typeof result?.metrics.estimatedStc === "number") {
         const gateSOpeningLeakDetail = getGateSOpeningLeakCompositeOutputDetail(output, result);
+        const gateAYAdvancedWallDetail = getGateAYAdvancedWallOutputDetail(output, result);
 
         return {
-          detail: gateSOpeningLeakDetail ?? "ASTM single-number companion from the same airborne curve.",
+          detail: gateAYAdvancedWallDetail ?? gateSOpeningLeakDetail ?? "ASTM single-number companion from the same airborne curve.",
           label: "STC",
           output,
           status: "live",
@@ -385,8 +408,10 @@ export function buildOutputCard(input: {
       }
 
       if (typeof result?.metrics.estimatedCDb === "number") {
+        const gateAYAdvancedWallDetail = getGateAYAdvancedWallOutputDetail(output, result);
+
         return {
-          detail: "Mid-frequency adaptation term on the airborne lane.",
+          detail: gateAYAdvancedWallDetail ?? "Mid-frequency adaptation term on the airborne lane.",
           label: "C",
           output,
           status: "live",
@@ -412,8 +437,10 @@ export function buildOutputCard(input: {
       }
 
       if (typeof result?.metrics.estimatedCtrDb === "number") {
+        const gateAYAdvancedWallDetail = getGateAYAdvancedWallOutputDetail(output, result);
+
         return {
-          detail: isImpactOnlyLowConfidenceLane ? IMPACT_ONLY_LOW_CONFIDENCE_CTR_DETAIL : "Traffic-noise adaptation term on the airborne lane.",
+          detail: gateAYAdvancedWallDetail ?? (isImpactOnlyLowConfidenceLane ? IMPACT_ONLY_LOW_CONFIDENCE_CTR_DETAIL : "Traffic-noise adaptation term on the airborne lane."),
           label: "Ctr",
           output,
           status: "live",

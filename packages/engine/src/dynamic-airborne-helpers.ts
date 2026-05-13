@@ -21,6 +21,7 @@ import type {
   DynamicAirborneDelegateMethod,
   DynamicAirborneFamily,
   DynamicAirborneTrace,
+  RequestedOutputId,
   ResolvedLayer,
   TransmissionLossCurve
 } from "@dynecho/shared";
@@ -59,6 +60,7 @@ export type DynamicAirborneOptions = {
   narrowHeavyDoubleLeafGapGuardDepth?: number;
   singleLeafMasonryFloorGuardDepth?: number;
   screeningEstimatedRwDb: number;
+  targetOutputs?: readonly RequestedOutputId[];
 };
 
 export type DynamicAirborneComposer = (

@@ -328,6 +328,16 @@ export function getImpactConfidenceForBasis(basis: ImpactEstimateBasis): ImpactC
     };
   }
 
+  if (basis === "predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate") {
+    return {
+      level: "medium",
+      provenance: "formula_estimate_narrow_scope",
+      score: 0.7,
+      summary:
+        "Source-absent heavy-concrete combined upper/lower formula with explicit dynamic stiffness, load, and lower ceiling owners."
+    };
+  }
+
   if (basis === "predictor_heavy_bare_floor_iso12354_annexc_estimate") {
     return {
       level: "medium",

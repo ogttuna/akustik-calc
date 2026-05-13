@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { RequestedOutputSchema } from "./output";
+
 export const AirborneContextModeSchema = z.enum(["element_lab", "field_between_rooms", "building_prediction"]);
 export type AirborneContextMode = z.infer<typeof AirborneContextModeSchema>;
 
@@ -97,6 +99,42 @@ export type AirborneOpeningSealLeakageClass = z.infer<
 export const AirborneOpeningOriginSchema = z.enum(["unknown", "measured", "catalogued", "source_absent"]);
 export type AirborneOpeningOrigin = z.infer<typeof AirborneOpeningOriginSchema>;
 
+export const AirborneAdvancedWallPanelMaterialClassSchema = z.enum([
+  "cement_board",
+  "engineered_timber",
+  "gypsum_board",
+  "masonry_lining",
+  "wood_board"
+]);
+export type AirborneAdvancedWallPanelMaterialClass = z.infer<
+  typeof AirborneAdvancedWallPanelMaterialClassSchema
+>;
+
+export const AirborneAdvancedWallCavitySealStateSchema = z.enum(["average", "leaky", "sealed"]);
+export type AirborneAdvancedWallCavitySealState = z.infer<
+  typeof AirborneAdvancedWallCavitySealStateSchema
+>;
+
+export const AirborneAdvancedWallFrameMaterialClassSchema = z.enum(["light_steel", "timber", "mixed"]);
+export type AirborneAdvancedWallFrameMaterialClass = z.infer<
+  typeof AirborneAdvancedWallFrameMaterialClassSchema
+>;
+
+export const AirborneAdvancedWallResilientConnectionTypeSchema = z.enum([
+  "direct_fixed",
+  "independent_frame",
+  "none",
+  "resilient_channel"
+]);
+export type AirborneAdvancedWallResilientConnectionType = z.infer<
+  typeof AirborneAdvancedWallResilientConnectionTypeSchema
+>;
+
+export const AirborneAdvancedWallOpeningIntentSchema = z.enum(["none", "present"]);
+export type AirborneAdvancedWallOpeningIntent = z.infer<
+  typeof AirborneAdvancedWallOpeningIntentSchema
+>;
+
 export const WallTopologyModeSchema = z.enum([
   "auto",
   "flat_layer_order",
@@ -176,7 +214,111 @@ export const AirborneOpeningLeakElementSchema: z.ZodType<
   z.input<typeof AirborneOpeningLeakElementSchemaInternal>
 > = AirborneOpeningLeakElementSchemaInternal;
 
+const AirborneAdvancedWallPanelSchemaInternal = z.object({
+  bendingStiffnessNm: z.number().positive().optional(),
+  criticalFrequencyHz: z.number().positive().optional(),
+  id: z.string().min(1).optional(),
+  layerIds: z.array(z.string().min(1)).min(1).optional(),
+  leafId: z.string().min(1).optional(),
+  lossFactor: z.number().positive().optional(),
+  materialClass: AirborneAdvancedWallPanelMaterialClassSchema.optional(),
+  sequence: z.number().positive().optional(),
+  surfaceMassKgM2: z.number().positive().optional(),
+  thicknessMm: z.number().positive().optional()
+});
+export type AirborneAdvancedWallPanel = z.infer<typeof AirborneAdvancedWallPanelSchemaInternal>;
+
+export const AirborneAdvancedWallPanelSchema: z.ZodType<
+  AirborneAdvancedWallPanel,
+  z.ZodTypeDef,
+  z.input<typeof AirborneAdvancedWallPanelSchemaInternal>
+> = AirborneAdvancedWallPanelSchemaInternal;
+
+const AirborneAdvancedWallCavitySchemaInternal = z.object({
+  absorberCoverageRatio: z.number().min(0).max(1).optional(),
+  absorberFlowResistivityPaSM2: z.number().positive().optional(),
+  absorberThicknessMm: z.number().positive().optional(),
+  depthMm: z.number().positive().optional(),
+  id: z.string().min(1).optional(),
+  sealState: AirborneAdvancedWallCavitySealStateSchema.optional(),
+  sequence: z.number().positive().optional()
+});
+export type AirborneAdvancedWallCavity = z.infer<typeof AirborneAdvancedWallCavitySchemaInternal>;
+
+export const AirborneAdvancedWallCavitySchema: z.ZodType<
+  AirborneAdvancedWallCavity,
+  z.ZodTypeDef,
+  z.input<typeof AirborneAdvancedWallCavitySchemaInternal>
+> = AirborneAdvancedWallCavitySchemaInternal;
+
+const AirborneAdvancedWallFrameCouplingSchemaInternal = z.object({
+  depthMm: z.number().positive().optional(),
+  frameMaterialClass: AirborneAdvancedWallFrameMaterialClassSchema.optional(),
+  lineCouplingStiffnessMNPerM3: z.number().positive().optional(),
+  mechanicalBridgeAreaRatio: z.number().min(0).max(1).optional(),
+  resilientConnectionStiffnessMNPerM3: z.number().positive().optional(),
+  resilientConnectionType: AirborneAdvancedWallResilientConnectionTypeSchema.optional(),
+  spacingMm: z.number().positive().optional()
+});
+export type AirborneAdvancedWallFrameCoupling = z.infer<
+  typeof AirborneAdvancedWallFrameCouplingSchemaInternal
+>;
+
+export const AirborneAdvancedWallFrameCouplingSchema: z.ZodType<
+  AirborneAdvancedWallFrameCoupling,
+  z.ZodTypeDef,
+  z.input<typeof AirborneAdvancedWallFrameCouplingSchemaInternal>
+> = AirborneAdvancedWallFrameCouplingSchemaInternal;
+
+const AirborneAdvancedWallOpeningSchemaInternal = z.object({
+  areaM2: z.number().positive().optional(),
+  count: z.number().positive().optional(),
+  elementRwDb: z.number().positive().optional(),
+  id: z.string().min(1).optional(),
+  origin: z.enum(["catalogued", "measured"]).optional(),
+  ratingBasis: z.enum(["measured_lab", "rw_single_number"]).optional(),
+  sealLeakageClass: z.enum(["average", "leaky", "open_gap", "sealed"]).optional()
+});
+export type AirborneAdvancedWallOpening = z.infer<typeof AirborneAdvancedWallOpeningSchemaInternal>;
+
+export const AirborneAdvancedWallOpeningSchema: z.ZodType<
+  AirborneAdvancedWallOpening,
+  z.ZodTypeDef,
+  z.input<typeof AirborneAdvancedWallOpeningSchemaInternal>
+> = AirborneAdvancedWallOpeningSchemaInternal;
+
+const AirborneAdvancedWallInputSchemaInternal = z.object({
+  cavities: z.array(AirborneAdvancedWallCavitySchema).optional(),
+  directTransmissionCurveOwner: z.literal(true).optional(),
+  duplicateOwnershipGuard: z.literal(true).optional(),
+  exactSourcePrecedenceApplied: z.boolean().optional(),
+  exactSourcePrecedenceCheck: z.literal(true).optional(),
+  existingOwnedDelegateRoute: z.enum(["triple_leaf_two_cavity_frequency_solver"]).nullable().optional(),
+  fieldBuildingAdapterBoundary: z.literal(true).optional(),
+  frameCoupling: AirborneAdvancedWallFrameCouplingSchema.optional(),
+  frequencyBandSet: z.literal("third_octave_100_3150").optional(),
+  hostWallAreaM2: z.number().positive().optional(),
+  iso717RwCAdapterOwner: z.literal(true).optional(),
+  openingIntent: AirborneAdvancedWallOpeningIntentSchema.optional(),
+  openings: z.array(AirborneAdvancedWallOpeningSchema).optional(),
+  outputBasis: AirborneContextModeSchema.optional(),
+  panels: z.array(AirborneAdvancedWallPanelSchema).optional(),
+  sourceAbsentErrorBudgetOwner: z.literal(true).optional(),
+  splitLayerGuard: z.literal(true).optional(),
+  stcAdapterOwner: z.literal(true).optional(),
+  targetOutputs: z.array(RequestedOutputSchema).optional(),
+  wallSolverIntent: z.literal("advanced_source_absent_wall").optional()
+});
+export type AirborneAdvancedWallInput = z.infer<typeof AirborneAdvancedWallInputSchemaInternal>;
+
+export const AirborneAdvancedWallInputSchema: z.ZodType<
+  AirborneAdvancedWallInput,
+  z.ZodTypeDef,
+  z.input<typeof AirborneAdvancedWallInputSchemaInternal>
+> = AirborneAdvancedWallInputSchemaInternal;
+
 const AirborneContextShape = {
+  advancedWall: AirborneAdvancedWallInputSchema.optional(),
   airtightness: AirtightnessClassSchema.optional(),
   connectionType: AirborneConnectionTypeSchema.optional(),
   contextMode: AirborneContextModeSchema.optional(),

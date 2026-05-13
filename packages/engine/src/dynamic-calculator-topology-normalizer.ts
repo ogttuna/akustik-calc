@@ -172,6 +172,10 @@ function hasGroupedTripleLeafTopology(context: AirborneContext | undefined): boo
   return context?.wallTopology?.topologyMode === "grouped_triple_leaf";
 }
 
+function hasAdvancedWallSourceAbsentContext(context: AirborneContext | undefined): boolean {
+  return context?.advancedWall?.wallSolverIntent === "advanced_source_absent_wall";
+}
+
 function layerIdentity(layer: LayerInput): string {
   return `${layer.floorRole ?? ""}|${layer.materialId}|${String(layer.thicknessMm)}`;
 }
@@ -346,12 +350,15 @@ export function normalizeDynamicCalculatorTopologyInput(
   const maxLayerCount = input.maxLayerCount ?? DEFAULT_MAX_LAYER_COUNT;
   const actions: DynamicCalculatorTopologyNormalizationAction[] = [];
   const blockers = validateLayers(input.layers, maxLayerCount);
+  const hasAdvancedWallContext = hasAdvancedWallSourceAbsentContext(input.airborneContext);
   const currentLooksLikeMulticavityWall =
     input.route === "wall" &&
+    !hasAdvancedWallContext &&
     (hasGroupedTripleLeafTopology(input.airborneContext) ||
       looksLikeMultiCavityWall(input.layers, catalog));
   const previousLooksLikeMulticavityWall =
     input.route === "wall" &&
+    !hasAdvancedWallContext &&
     input.previousLayers !== undefined &&
     looksLikeMultiCavityWall(input.previousLayers, catalog);
 

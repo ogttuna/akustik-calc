@@ -22,12 +22,6 @@ import {
   PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AS_LANDED_GATE,
   PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AS_SELECTION_STATUS
 } from "./calculator-personal-use-mvp-coverage-sprint-gate-as";
-import {
-  GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD
-} from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
-import {
-  GATE_O_AIRBORNE_BUILDING_PREDICTION_TOLERANCE_DB
-} from "./dynamic-airborne-gate-o-building-prediction-formula-corridor";
 
 export const PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AT_LANDED_GATE =
   "gate_at_personal_use_mvp_acceptance_matrix_refresh_after_building_prediction_plan";
@@ -523,7 +517,7 @@ export function summarizePersonalUseMvpCoverageSprintGateAT(
 }
 
 export const PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AT_BUILDING_RUNTIME_METHOD =
-  GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD;
+  "gate_ar_airborne_building_prediction_all_owner_runtime_corridor";
 
 export const PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AT_BUILDING_ERROR_BUDGET_DB =
-  GATE_O_AIRBORNE_BUILDING_PREDICTION_TOLERANCE_DB;
+  9;

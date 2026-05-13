@@ -31,6 +31,7 @@ import {
 import { getGateACFlatMulticavityTopologyReportLines } from "./flat-multicavity-topology-surface";
 import { getDnTAkReportLine } from "./dntak-source-mode";
 import { getFieldAirborneReportLines } from "./field-airborne-provenance";
+import { getGateAYAdvancedWallReportLines } from "./advanced-wall-source-absent-surface";
 import { getGateSOpeningLeakCompositeReportLines } from "./opening-leak-composite-surface";
 import { FIELD_RISK_BY_ID, summarizeFieldRisk, type FieldRiskId } from "./field-risk-model";
 import {
@@ -338,6 +339,7 @@ export function composeWorkbenchReport({
         ...(dnTAkReportLine ? [dnTAkReportLine] : []),
         ...getFieldAirborneReportLines(currentScenario.result),
         ...getGateACFlatMulticavityTopologyReportLines(currentScenario),
+        ...getGateAYAdvancedWallReportLines(currentScenario.result),
         ...getGateSOpeningLeakCompositeReportLines(currentScenario.result),
         `- Surface mass: ${formatMetric(currentScenario.result.metrics.surfaceMassKgM2)} kg/m²`,
         `- Total thickness: ${formatMetric(currentScenario.result.metrics.totalThicknessMm)} mm`,

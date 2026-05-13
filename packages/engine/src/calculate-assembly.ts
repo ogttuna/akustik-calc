@@ -36,6 +36,7 @@ import {
 import { applyApproximateAirborneFieldCompanion, applyVerifiedAirborneCatalogAnchor } from "./airborne-verified-catalog";
 import { classifyLayerRole, materialText } from "./airborne-topology";
 import { calculateDynamicAirborneResult } from "./dynamic-airborne";
+import { PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AY_RUNTIME_METHOD } from "./gate-ay-advanced-wall-runtime-constants";
 import { GATE_L_AIRBORNE_BUILDING_PREDICTION_BOUNDARY_WARNING } from "./dynamic-airborne-gate-l-building-prediction-boundary";
 import { GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING } from "./dynamic-airborne-gate-n-building-prediction-runtime-adapter";
 import { GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD } from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
@@ -1216,7 +1217,8 @@ export function calculateAssembly(
     ? calculateDynamicAirborneResult(airborneResolvedLayers, {
         airborneContext,
         frequenciesHz: screeningCurve.frequenciesHz,
-        screeningEstimatedRwDb
+        screeningEstimatedRwDb,
+        targetOutputs
       })
     : null;
   const importedCalculatorResult = options.calculator && options.calculator !== "dynamic"
@@ -1649,10 +1651,18 @@ export function calculateAssembly(
           GATE_AR_AIRBORNE_BUILDING_PREDICTION_LAB_ALIAS_OUTPUTS.has(output)
         )
       : [];
+  const gateAYAdvancedWallBlockedOutputs =
+    dynamicAirborneResult?.airborneBasis?.method === PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AY_RUNTIME_METHOD &&
+    dynamicAirborneResult.airborneBasis.origin !== "family_physics_prediction"
+      ? targetOutputSupport.targetOutputs
+      : [];
   const visibleTargetOutputSupport = moveSupportedOutputsToUnsupported(
     moveSupportedOutputsToUnsupported(
-      moveSupportedOutputsToUnsupported(targetOutputSupport, parkedAirborneBuildingPredictionOutputs),
-      gateSOpeningLeakBlockedOutputs
+      moveSupportedOutputsToUnsupported(
+        moveSupportedOutputsToUnsupported(targetOutputSupport, parkedAirborneBuildingPredictionOutputs),
+        gateSOpeningLeakBlockedOutputs
+      ),
+      gateAYAdvancedWallBlockedOutputs
     ),
     gateARAirborneBuildingPredictionLabAliasBlockedOutputs
   );
