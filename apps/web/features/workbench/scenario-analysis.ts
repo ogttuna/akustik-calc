@@ -33,6 +33,11 @@ import {
   type WorkbenchOpeningLeakCompositeInputSurfaceDraft
 } from "./opening-leak-composite-input-surface";
 import {
+  buildWorkbenchHeavyConcreteCombinedImpactInputSurface,
+  formatWorkbenchHeavyConcreteCombinedImpactMissingInputWarning,
+  type WorkbenchHeavyConcreteCombinedImpactInputSurfaceDraft
+} from "./heavy-concrete-combined-impact-input-surface";
+import {
   buildWorkbenchSteelFloorFormulaInputSurface,
   formatWorkbenchSteelFloorFormulaMissingInputWarning,
   type WorkbenchSteelFloorFormulaInputSurfaceDraft
@@ -111,6 +116,7 @@ export function evaluateScenario(input: {
   id: string;
   impactFieldContext?: ImpactFieldContext | null;
   name: string;
+  heavyConcreteCombinedImpactInputSurface?: WorkbenchHeavyConcreteCombinedImpactInputSurfaceDraft | null;
   openingLeakCompositeInputSurface?: WorkbenchOpeningLeakCompositeInputSurfaceDraft | null;
   rows: readonly LayerDraft[];
   savedAtIso?: string;
@@ -191,6 +197,15 @@ export function evaluateScenario(input: {
           targetOutputs
         })
       : null;
+  const heavyConcreteCombinedImpactInputSurface =
+    input.studyMode === "floor" && input.heavyConcreteCombinedImpactInputSurface
+      ? buildWorkbenchHeavyConcreteCombinedImpactInputSurface({
+          catalog: runtimeCatalog,
+          layers: normalized.layers,
+          surface: input.heavyConcreteCombinedImpactInputSurface,
+          targetOutputs
+        })
+      : null;
   if (steelFloorFormulaInputSurface?.status === "unsafe_topology") {
     scenarioWarnings.push(
       "Steel-floor formula input surface is parked because the visible steel carrier topology is unsafe to collapse. Keep one explicit base_structure carrier before relying on the steel formula lane."
@@ -199,6 +214,11 @@ export function evaluateScenario(input: {
   if (timberCltDeltaLwInputSurface?.status === "unsafe_topology") {
     scenarioWarnings.push(
       "Timber/CLT DeltaLw formula input surface is parked because the visible timber or CLT carrier topology is unsafe to collapse. Keep one explicit base_structure carrier before relying on the timber/CLT formula lane."
+    );
+  }
+  if (heavyConcreteCombinedImpactInputSurface?.status === "unsafe_topology") {
+    scenarioWarnings.push(
+      "Heavy concrete combined formula input surface is parked because the visible concrete base topology is unsafe to collapse. Keep one explicit base_structure concrete slab before relying on the combined upper/lower formula lane."
     );
   }
   const steelFormulaMissingInputWarning = steelFloorFormulaInputSurface
@@ -212,6 +232,12 @@ export function evaluateScenario(input: {
     : null;
   if (timberCltMissingInputWarning) {
     scenarioWarnings.push(timberCltMissingInputWarning);
+  }
+  const heavyConcreteMissingInputWarning = heavyConcreteCombinedImpactInputSurface
+    ? formatWorkbenchHeavyConcreteCombinedImpactMissingInputWarning(heavyConcreteCombinedImpactInputSurface)
+    : null;
+  if (heavyConcreteMissingInputWarning) {
+    scenarioWarnings.push(heavyConcreteMissingInputWarning);
   }
   const airborneFieldMissingInputWarning = airborneFieldContextInputSurface
     ? formatWorkbenchAirborneFieldContextMissingInputWarning(airborneFieldContextInputSurface)
@@ -243,7 +269,10 @@ export function evaluateScenario(input: {
   }
   const activeInputSurfacePredictors = [
     steelFloorFormulaInputSurface?.status !== "inactive" ? steelFloorFormulaInputSurface?.impactPredictorInput : null,
-    timberCltDeltaLwInputSurface?.status !== "inactive" ? timberCltDeltaLwInputSurface?.impactPredictorInput : null
+    timberCltDeltaLwInputSurface?.status !== "inactive" ? timberCltDeltaLwInputSurface?.impactPredictorInput : null,
+    heavyConcreteCombinedImpactInputSurface?.status !== "inactive"
+      ? heavyConcreteCombinedImpactInputSurface?.impactPredictorInput
+      : null
   ].filter((item): item is ImpactPredictorInput => item !== null && item !== undefined);
   if (activeInputSurfacePredictors.length > 1) {
     scenarioWarnings.push(

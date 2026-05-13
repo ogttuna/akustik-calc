@@ -446,6 +446,37 @@ Current strategy:
   183 files / 1003 passed + 18 skipped, and build 5/5. Known non-fatal
   build warnings remain the optional `sharp/@img` warnings from
   `@turbodocx/html-to-docx`.
+- Personal-Use MVP Coverage Sprint Gate BF has now landed
+  `gate_bf_personal_use_mvp_floor_impact_source_absent_input_surface_plan`
+  with selection status
+  `gate_bf_personal_use_mvp_floor_impact_source_absent_input_surface_landed_selected_revalidation_gate_bg`.
+  Gate BF makes the `Heavy concrete combined input surface` first-class
+  on the Dynamic Calculator floor route. Workbench controls, scenario
+  analysis, saved replay, server snapshot replay, output cards,
+  calculator API payloads, impact-only API payloads, and Markdown
+  report payloads now feed the Gate BD predictor input. Complete
+  UI-derived heavy-concrete combined input still returns lab
+  `Ln,w 44.4` / `DeltaLw 30.1` with `+/-6.5 dB` / `+/-5.5 dB`
+  source-absent not-measured budgets. Partial physical fields stay
+  `needs_input`, ambiguous base ownership stays unsafe, exact source
+  precedence remains first, and field/building/ASTM/IIC aliases remain
+  blocked. Gate BF selects
+  `gate_bg_personal_use_mvp_floor_impact_source_absent_post_input_surface_revalidation_plan`
+  in
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bg-floor-impact-source-absent-post-input-surface-revalidation-contract.test.ts`.
+  In plain terms, the next work is Gate BG floor-impact source-absent
+  post-input-surface revalidation.
+  Next plain label: floor-impact source-absent post-input-surface
+  revalidation.
+  Gate BF validation passed on 2026-05-13: focused Gate BF 1 file / 5
+  tests, focused web heavy-concrete combined input-surface acceptance 1
+  file / 3 tests, server snapshot replay 1 file / 4 tests, engine/web
+  typecheck, and `pnpm calculator:gate:current` with engine 399 files /
+  2310 tests, web 77 files / 328 passed + 18 skipped, repo build 5/5,
+  and whitespace guard clean. Full `pnpm check` passed with
+  lint/typecheck clean, engine 524 files / 3112 tests, web 184 files /
+  1006 passed + 18 skipped, and build 5/5 after timeout-only hardening
+  on three pre-existing long-running engine tests.
 - Historical implementation chain note: the active calculator-first
   pivot that led into this sprint is
   `calculator_model_first_physics_prediction_pivot_v1`; its Gate A

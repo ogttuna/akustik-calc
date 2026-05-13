@@ -56,6 +56,10 @@ import {
 import { getWorkbenchMaterialById } from "./workbench-materials";
 import type { WorkbenchSteelFloorFormulaLowerCeilingIsolationSupportForm } from "./steel-floor-formula-input-surface";
 import type {
+  WorkbenchHeavyConcreteCombinedLowerAssemblyType,
+  WorkbenchHeavyConcreteCombinedLowerSupportClass
+} from "./heavy-concrete-combined-impact-input-surface";
+import type {
   WorkbenchTimberCltDeltaLwImpactSystemType,
   WorkbenchTimberCltDeltaLwLowerAssemblyType,
   WorkbenchTimberCltDeltaLwLowerSupportClass,
@@ -127,6 +131,17 @@ type ScenarioSnapshot = WorkbenchWallTopologyDraft & {
   impactGuideReceivingRoomVolumeM3: string;
   impactLowerTreatmentReductionDb: string;
   impactReferenceDeltaLwDb: string;
+  impactHeavyConcreteBaseSlabDensityKgM3: string;
+  impactHeavyConcreteBaseSlabThicknessMm: string;
+  impactHeavyConcreteLoadBasisKgM2: string;
+  impactHeavyConcreteLowerAssemblyType: WorkbenchHeavyConcreteCombinedLowerAssemblyType;
+  impactHeavyConcreteLowerBoardLayerCount: string;
+  impactHeavyConcreteLowerBoardThicknessMm: string;
+  impactHeavyConcreteLowerCavityDepthMm: string;
+  impactHeavyConcreteLowerCavityFillThicknessMm: string;
+  impactHeavyConcreteLowerSupportClass: WorkbenchHeavyConcreteCombinedLowerSupportClass;
+  impactHeavyConcreteResilientLayerDynamicStiffnessMNm3: string;
+  impactHeavyConcreteResilientLayerThicknessMm: string;
   impactSteelCarrierDepthMm: string;
   impactSteelCarrierSpacingMm: string;
   impactSteelLoadBasisKgM2: string;
@@ -220,6 +235,17 @@ type WorkbenchStore = WorkbenchWallTopologyDraft & {
   impactGuideReceivingRoomVolumeM3: string;
   impactLowerTreatmentReductionDb: string;
   impactReferenceDeltaLwDb: string;
+  impactHeavyConcreteBaseSlabDensityKgM3: string;
+  impactHeavyConcreteBaseSlabThicknessMm: string;
+  impactHeavyConcreteLoadBasisKgM2: string;
+  impactHeavyConcreteLowerAssemblyType: WorkbenchHeavyConcreteCombinedLowerAssemblyType;
+  impactHeavyConcreteLowerBoardLayerCount: string;
+  impactHeavyConcreteLowerBoardThicknessMm: string;
+  impactHeavyConcreteLowerCavityDepthMm: string;
+  impactHeavyConcreteLowerCavityFillThicknessMm: string;
+  impactHeavyConcreteLowerSupportClass: WorkbenchHeavyConcreteCombinedLowerSupportClass;
+  impactHeavyConcreteResilientLayerDynamicStiffnessMNm3: string;
+  impactHeavyConcreteResilientLayerThicknessMm: string;
   impactSteelCarrierDepthMm: string;
   impactSteelCarrierSpacingMm: string;
   impactSteelLoadBasisKgM2: string;
@@ -338,6 +364,17 @@ type WorkbenchStore = WorkbenchWallTopologyDraft & {
   setImpactGuideReceivingRoomVolumeM3: (value: string) => void;
   setImpactLowerTreatmentReductionDb: (value: string) => void;
   setImpactReferenceDeltaLwDb: (value: string) => void;
+  setImpactHeavyConcreteBaseSlabDensityKgM3: (value: string) => void;
+  setImpactHeavyConcreteBaseSlabThicknessMm: (value: string) => void;
+  setImpactHeavyConcreteLoadBasisKgM2: (value: string) => void;
+  setImpactHeavyConcreteLowerAssemblyType: (value: WorkbenchHeavyConcreteCombinedLowerAssemblyType) => void;
+  setImpactHeavyConcreteLowerBoardLayerCount: (value: string) => void;
+  setImpactHeavyConcreteLowerBoardThicknessMm: (value: string) => void;
+  setImpactHeavyConcreteLowerCavityDepthMm: (value: string) => void;
+  setImpactHeavyConcreteLowerCavityFillThicknessMm: (value: string) => void;
+  setImpactHeavyConcreteLowerSupportClass: (value: WorkbenchHeavyConcreteCombinedLowerSupportClass) => void;
+  setImpactHeavyConcreteResilientLayerDynamicStiffnessMNm3: (value: string) => void;
+  setImpactHeavyConcreteResilientLayerThicknessMm: (value: string) => void;
   setImpactSteelCarrierDepthMm: (value: string) => void;
   setImpactSteelCarrierSpacingMm: (value: string) => void;
   setImpactSteelLoadBasisKgM2: (value: string) => void;
@@ -655,6 +692,17 @@ function makeDefaultState(input?: {
     impactGuideReceivingRoomVolumeM3: "",
     impactLowerTreatmentReductionDb: "",
     impactReferenceDeltaLwDb: "",
+    impactHeavyConcreteBaseSlabDensityKgM3: "",
+    impactHeavyConcreteBaseSlabThicknessMm: "",
+    impactHeavyConcreteLoadBasisKgM2: "",
+    impactHeavyConcreteLowerAssemblyType: "" as const,
+    impactHeavyConcreteLowerBoardLayerCount: "",
+    impactHeavyConcreteLowerBoardThicknessMm: "",
+    impactHeavyConcreteLowerCavityDepthMm: "",
+    impactHeavyConcreteLowerCavityFillThicknessMm: "",
+    impactHeavyConcreteLowerSupportClass: "" as const,
+    impactHeavyConcreteResilientLayerDynamicStiffnessMNm3: "",
+    impactHeavyConcreteResilientLayerThicknessMm: "",
     impactSteelCarrierDepthMm: "",
     impactSteelCarrierSpacingMm: "",
     impactSteelLoadBasisKgM2: "",
@@ -807,6 +855,18 @@ function buildLoadedScenarioState(
     impactGuideReceivingRoomVolumeM3: scenario.impactGuideReceivingRoomVolumeM3 ?? "",
     impactLowerTreatmentReductionDb: scenario.impactLowerTreatmentReductionDb ?? "",
     impactReferenceDeltaLwDb: scenario.impactReferenceDeltaLwDb ?? "",
+    impactHeavyConcreteBaseSlabDensityKgM3: scenario.impactHeavyConcreteBaseSlabDensityKgM3 ?? "",
+    impactHeavyConcreteBaseSlabThicknessMm: scenario.impactHeavyConcreteBaseSlabThicknessMm ?? "",
+    impactHeavyConcreteLoadBasisKgM2: scenario.impactHeavyConcreteLoadBasisKgM2 ?? "",
+    impactHeavyConcreteLowerAssemblyType: scenario.impactHeavyConcreteLowerAssemblyType ?? "",
+    impactHeavyConcreteLowerBoardLayerCount: scenario.impactHeavyConcreteLowerBoardLayerCount ?? "",
+    impactHeavyConcreteLowerBoardThicknessMm: scenario.impactHeavyConcreteLowerBoardThicknessMm ?? "",
+    impactHeavyConcreteLowerCavityDepthMm: scenario.impactHeavyConcreteLowerCavityDepthMm ?? "",
+    impactHeavyConcreteLowerCavityFillThicknessMm: scenario.impactHeavyConcreteLowerCavityFillThicknessMm ?? "",
+    impactHeavyConcreteLowerSupportClass: scenario.impactHeavyConcreteLowerSupportClass ?? "",
+    impactHeavyConcreteResilientLayerDynamicStiffnessMNm3:
+      scenario.impactHeavyConcreteResilientLayerDynamicStiffnessMNm3 ?? "",
+    impactHeavyConcreteResilientLayerThicknessMm: scenario.impactHeavyConcreteResilientLayerThicknessMm ?? "",
     impactSteelCarrierDepthMm: scenario.impactSteelCarrierDepthMm ?? "",
     impactSteelCarrierSpacingMm: scenario.impactSteelCarrierSpacingMm ?? "",
     impactSteelLoadBasisKgM2: scenario.impactSteelLoadBasisKgM2 ?? "",
@@ -1088,6 +1148,18 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
               impactGuideReceivingRoomVolumeM3: state.impactGuideReceivingRoomVolumeM3,
               impactLowerTreatmentReductionDb: state.impactLowerTreatmentReductionDb,
               impactReferenceDeltaLwDb: state.impactReferenceDeltaLwDb,
+              impactHeavyConcreteBaseSlabDensityKgM3: state.impactHeavyConcreteBaseSlabDensityKgM3,
+              impactHeavyConcreteBaseSlabThicknessMm: state.impactHeavyConcreteBaseSlabThicknessMm,
+              impactHeavyConcreteLoadBasisKgM2: state.impactHeavyConcreteLoadBasisKgM2,
+              impactHeavyConcreteLowerAssemblyType: state.impactHeavyConcreteLowerAssemblyType,
+              impactHeavyConcreteLowerBoardLayerCount: state.impactHeavyConcreteLowerBoardLayerCount,
+              impactHeavyConcreteLowerBoardThicknessMm: state.impactHeavyConcreteLowerBoardThicknessMm,
+              impactHeavyConcreteLowerCavityDepthMm: state.impactHeavyConcreteLowerCavityDepthMm,
+              impactHeavyConcreteLowerCavityFillThicknessMm: state.impactHeavyConcreteLowerCavityFillThicknessMm,
+              impactHeavyConcreteLowerSupportClass: state.impactHeavyConcreteLowerSupportClass,
+              impactHeavyConcreteResilientLayerDynamicStiffnessMNm3:
+                state.impactHeavyConcreteResilientLayerDynamicStiffnessMNm3,
+              impactHeavyConcreteResilientLayerThicknessMm: state.impactHeavyConcreteResilientLayerThicknessMm,
               impactSteelCarrierDepthMm: state.impactSteelCarrierDepthMm,
               impactSteelCarrierSpacingMm: state.impactSteelCarrierSpacingMm,
               impactSteelLoadBasisKgM2: state.impactSteelLoadBasisKgM2,
@@ -1238,6 +1310,25 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
       setImpactGuideReceivingRoomVolumeM3: (value) => set({ impactGuideReceivingRoomVolumeM3: value }),
       setImpactLowerTreatmentReductionDb: (value) => set({ impactLowerTreatmentReductionDb: value }),
       setImpactReferenceDeltaLwDb: (value) => set({ impactReferenceDeltaLwDb: value }),
+      setImpactHeavyConcreteBaseSlabDensityKgM3: (value) =>
+        set({ impactHeavyConcreteBaseSlabDensityKgM3: value }),
+      setImpactHeavyConcreteBaseSlabThicknessMm: (value) =>
+        set({ impactHeavyConcreteBaseSlabThicknessMm: value }),
+      setImpactHeavyConcreteLoadBasisKgM2: (value) => set({ impactHeavyConcreteLoadBasisKgM2: value }),
+      setImpactHeavyConcreteLowerAssemblyType: (value) => set({ impactHeavyConcreteLowerAssemblyType: value }),
+      setImpactHeavyConcreteLowerBoardLayerCount: (value) =>
+        set({ impactHeavyConcreteLowerBoardLayerCount: value }),
+      setImpactHeavyConcreteLowerBoardThicknessMm: (value) =>
+        set({ impactHeavyConcreteLowerBoardThicknessMm: value }),
+      setImpactHeavyConcreteLowerCavityDepthMm: (value) =>
+        set({ impactHeavyConcreteLowerCavityDepthMm: value }),
+      setImpactHeavyConcreteLowerCavityFillThicknessMm: (value) =>
+        set({ impactHeavyConcreteLowerCavityFillThicknessMm: value }),
+      setImpactHeavyConcreteLowerSupportClass: (value) => set({ impactHeavyConcreteLowerSupportClass: value }),
+      setImpactHeavyConcreteResilientLayerDynamicStiffnessMNm3: (value) =>
+        set({ impactHeavyConcreteResilientLayerDynamicStiffnessMNm3: value }),
+      setImpactHeavyConcreteResilientLayerThicknessMm: (value) =>
+        set({ impactHeavyConcreteResilientLayerThicknessMm: value }),
       setImpactSteelCarrierDepthMm: (value) => set({ impactSteelCarrierDepthMm: value }),
       setImpactSteelCarrierSpacingMm: (value) => set({ impactSteelCarrierSpacingMm: value }),
       setImpactSteelLoadBasisKgM2: (value) => set({ impactSteelLoadBasisKgM2: value }),

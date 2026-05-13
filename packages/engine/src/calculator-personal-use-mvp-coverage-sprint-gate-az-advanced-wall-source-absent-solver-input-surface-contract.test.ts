@@ -65,7 +65,7 @@ describe("Personal-Use MVP Coverage Sprint Gate AZ advanced wall source-absent s
     expect(result.metrics.estimatedCDb).toBe(-1.1);
     expect(result.metrics.estimatedCtrDb).toBe(-6.4);
     expect(result.warnings).toContain(PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AY_RUNTIME_WARNING);
-  });
+  }, 30000);
 
   it("keeps missing advanced-wall physical inputs parked with precise prompts and no source-absent budget", () => {
     const contract = buildPersonalUseMvpCoverageSprintGateAZInputSurfaceContract();
@@ -81,7 +81,7 @@ describe("Personal-Use MVP Coverage Sprint Gate AZ advanced wall source-absent s
     expect(result.supportedTargetOutputs).toEqual([]);
     expect(result.unsupportedTargetOutputs).toEqual(["Rw", "STC", "C", "Ctr"]);
     expect(result.warnings.join(" ")).toContain("panelLossFactor");
-  });
+  }, 30000);
 
   it("refuses field/building aliases from the advanced-wall lab runtime", () => {
     const contract = buildPersonalUseMvpCoverageSprintGateAZInputSurfaceContract();

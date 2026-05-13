@@ -56,6 +56,7 @@ export * from "./floor-system-ratings";
 export * from "./floor-system-evaluation";
 export * from "./floor-system-match";
 export * from "./heavy-concrete-combined-impact-formula-corridor";
+export * from "./heavy-concrete-combined-impact-input-surface";
 export * from "./impact-confidence";
 export * from "./impact-direct-flanking";
 export * from "./impact-exact";

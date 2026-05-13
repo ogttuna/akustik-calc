@@ -44,6 +44,8 @@ import {
   PENETRATION_OPTIONS,
   RESILIENT_BAR_SIDE_COUNT_OPTIONS,
   SEAL_OPTIONS,
+  HEAVY_CONCRETE_COMBINED_LOWER_ASSEMBLY_OPTIONS,
+  HEAVY_CONCRETE_COMBINED_LOWER_SUPPORT_OPTIONS,
   STEEL_BOUND_SUPPORT_FORM_ACTIONS,
   STEEL_FLOOR_FORMULA_LOWER_ISOLATION_OPTIONS,
   STEEL_FLOOR_FORMULA_SUPPORT_FORM_OPTIONS,
@@ -78,6 +80,10 @@ import {
   SectionLead
 } from "./simple-workbench-primitives";
 import { getEnvironmentLabel, getTextInputClassName } from "./simple-workbench-utils";
+import type {
+  WorkbenchHeavyConcreteCombinedLowerAssemblyType,
+  WorkbenchHeavyConcreteCombinedLowerSupportClass
+} from "./heavy-concrete-combined-impact-input-surface";
 import type { WorkbenchSteelFloorFormulaLowerCeilingIsolationSupportForm } from "./steel-floor-formula-input-surface";
 import type {
   WorkbenchTimberCltDeltaLwImpactSystemType,
@@ -134,6 +140,17 @@ type SimpleWorkbenchRoutePanelProps = {
   impactFieldActive: boolean;
   impactGuideKDb: string;
   impactGuideReceivingRoomVolumeM3: string;
+  impactHeavyConcreteBaseSlabDensityKgM3: string;
+  impactHeavyConcreteBaseSlabThicknessMm: string;
+  impactHeavyConcreteLoadBasisKgM2: string;
+  impactHeavyConcreteLowerAssemblyType: WorkbenchHeavyConcreteCombinedLowerAssemblyType;
+  impactHeavyConcreteLowerBoardLayerCount: string;
+  impactHeavyConcreteLowerBoardThicknessMm: string;
+  impactHeavyConcreteLowerCavityDepthMm: string;
+  impactHeavyConcreteLowerCavityFillThicknessMm: string;
+  impactHeavyConcreteLowerSupportClass: WorkbenchHeavyConcreteCombinedLowerSupportClass;
+  impactHeavyConcreteResilientLayerDynamicStiffnessMNm3: string;
+  impactHeavyConcreteResilientLayerThicknessMm: string;
   impactSteelCarrierDepthMm: string;
   impactSteelCarrierSpacingMm: string;
   impactSteelLoadBasisKgM2: string;
@@ -222,6 +239,17 @@ type SimpleWorkbenchRoutePanelProps = {
   setCalculatorId: (value: AirborneCalculatorId) => void;
   setImpactGuideKDb: (value: string) => void;
   setImpactGuideReceivingRoomVolumeM3: (value: string) => void;
+  setImpactHeavyConcreteBaseSlabDensityKgM3: (value: string) => void;
+  setImpactHeavyConcreteBaseSlabThicknessMm: (value: string) => void;
+  setImpactHeavyConcreteLoadBasisKgM2: (value: string) => void;
+  setImpactHeavyConcreteLowerAssemblyType: (value: WorkbenchHeavyConcreteCombinedLowerAssemblyType) => void;
+  setImpactHeavyConcreteLowerBoardLayerCount: (value: string) => void;
+  setImpactHeavyConcreteLowerBoardThicknessMm: (value: string) => void;
+  setImpactHeavyConcreteLowerCavityDepthMm: (value: string) => void;
+  setImpactHeavyConcreteLowerCavityFillThicknessMm: (value: string) => void;
+  setImpactHeavyConcreteLowerSupportClass: (value: WorkbenchHeavyConcreteCombinedLowerSupportClass) => void;
+  setImpactHeavyConcreteResilientLayerDynamicStiffnessMNm3: (value: string) => void;
+  setImpactHeavyConcreteResilientLayerThicknessMm: (value: string) => void;
   setImpactSteelCarrierDepthMm: (value: string) => void;
   setImpactSteelCarrierSpacingMm: (value: string) => void;
   setImpactSteelLoadBasisKgM2: (value: string) => void;
@@ -247,6 +275,7 @@ type SimpleWorkbenchRoutePanelProps = {
   setImpactTimberCltUpperTreatmentThicknessMm: (value: string) => void;
   showSteelBoundSupportFormActions: boolean;
   steelFloorFormulaInputSurfaceActive: boolean;
+  heavyConcreteCombinedImpactInputSurfaceActive: boolean;
   timberCltDeltaLwInputSurfaceActive: boolean;
   showTimberImpactOnlyGuidedActions: boolean;
   standardizedAirborneActive: boolean;
@@ -307,6 +336,17 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
     impactFieldActive,
     impactGuideKDb,
     impactGuideReceivingRoomVolumeM3,
+    impactHeavyConcreteBaseSlabDensityKgM3,
+    impactHeavyConcreteBaseSlabThicknessMm,
+    impactHeavyConcreteLoadBasisKgM2,
+    impactHeavyConcreteLowerAssemblyType,
+    impactHeavyConcreteLowerBoardLayerCount,
+    impactHeavyConcreteLowerBoardThicknessMm,
+    impactHeavyConcreteLowerCavityDepthMm,
+    impactHeavyConcreteLowerCavityFillThicknessMm,
+    impactHeavyConcreteLowerSupportClass,
+    impactHeavyConcreteResilientLayerDynamicStiffnessMNm3,
+    impactHeavyConcreteResilientLayerThicknessMm,
     impactSteelCarrierDepthMm,
     impactSteelCarrierSpacingMm,
     impactSteelLoadBasisKgM2,
@@ -392,6 +432,17 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
     setCalculatorId,
     setImpactGuideKDb,
     setImpactGuideReceivingRoomVolumeM3,
+    setImpactHeavyConcreteBaseSlabDensityKgM3,
+    setImpactHeavyConcreteBaseSlabThicknessMm,
+    setImpactHeavyConcreteLoadBasisKgM2,
+    setImpactHeavyConcreteLowerAssemblyType,
+    setImpactHeavyConcreteLowerBoardLayerCount,
+    setImpactHeavyConcreteLowerBoardThicknessMm,
+    setImpactHeavyConcreteLowerCavityDepthMm,
+    setImpactHeavyConcreteLowerCavityFillThicknessMm,
+    setImpactHeavyConcreteLowerSupportClass,
+    setImpactHeavyConcreteResilientLayerDynamicStiffnessMNm3,
+    setImpactHeavyConcreteResilientLayerThicknessMm,
     setImpactSteelCarrierDepthMm,
     setImpactSteelCarrierSpacingMm,
     setImpactSteelLoadBasisKgM2,
@@ -417,6 +468,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
     setImpactTimberCltUpperTreatmentThicknessMm,
     showSteelBoundSupportFormActions,
     steelFloorFormulaInputSurfaceActive,
+    heavyConcreteCombinedImpactInputSurfaceActive,
     timberCltDeltaLwInputSurfaceActive,
     showTimberImpactOnlyGuidedActions,
     standardizedAirborneActive,
@@ -583,7 +635,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
             </details>
           </section>
 
-          {geometryActive || impactFieldActive || openingLeakCompositeInputSurfaceActive || steelFloorFormulaInputSurfaceActive || timberCltDeltaLwInputSurfaceActive ? (
+          {geometryActive || impactFieldActive || openingLeakCompositeInputSurfaceActive || steelFloorFormulaInputSurfaceActive || timberCltDeltaLwInputSurfaceActive || heavyConcreteCombinedImpactInputSurfaceActive ? (
             <section className={`rounded border px-3 py-3 ${workbenchSectionCardClass("route")}`}>
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="text-[0.84rem] font-semibold text-[color:var(--ink)]">Input map</div>
@@ -593,7 +645,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
               <div className="mt-3 grid gap-3">
                 <ContextBucket
                   description="Directly gates the live read."
-                  hasContent={geometryActive || impactFieldActive || openingLeakCompositeInputSurfaceActive || steelFloorFormulaInputSurfaceActive || timberCltDeltaLwInputSurfaceActive}
+                  hasContent={geometryActive || impactFieldActive || openingLeakCompositeInputSurfaceActive || steelFloorFormulaInputSurfaceActive || timberCltDeltaLwInputSurfaceActive || heavyConcreteCombinedImpactInputSurfaceActive}
                   title="Required now"
                   tone="required"
                 >
@@ -923,6 +975,200 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
                               </option>
                             ))}
                           </select>
+                        </FieldShell>
+                      </div>
+                    </ContextSubsection>
+                  ) : null}
+
+                  {heavyConcreteCombinedImpactInputSurfaceActive ? (
+                    <ContextSubsection
+                      note="These fields feed the source-absent heavy-concrete combined upper/lower formula lane."
+                      title="Heavy concrete combined formula"
+                    >
+                      <div className="grid gap-3">
+                        <FieldShell
+                          label="Base slab density (kg/m³)"
+                          note="Concrete density for the reference slab mass."
+                          relevance="required"
+                          usage="Ln,w"
+                        >
+                          <input
+                            className={getTextInputClassName(false)}
+                            inputMode="decimal"
+                            onChange={(event) => setImpactHeavyConcreteBaseSlabDensityKgM3(event.target.value)}
+                            placeholder="e.g. 2400"
+                            value={impactHeavyConcreteBaseSlabDensityKgM3}
+                          />
+                        </FieldShell>
+
+                        <FieldShell
+                          label="Base slab thickness (mm)"
+                          note="Overrides the base_structure layer thickness when entered."
+                          relevance="required"
+                          usage="Ln,w"
+                        >
+                          <input
+                            className={getTextInputClassName(false)}
+                            inputMode="decimal"
+                            onChange={(event) => setImpactHeavyConcreteBaseSlabThicknessMm(event.target.value)}
+                            placeholder="e.g. 150"
+                            value={impactHeavyConcreteBaseSlabThicknessMm}
+                          />
+                        </FieldShell>
+
+                        <FieldShell
+                          label="Loaded upper mass basis (kg/m²)"
+                          note="Loaded mass carried by the resilient layer."
+                          relevance="required"
+                          usage="DeltaLw"
+                        >
+                          <input
+                            className={getTextInputClassName(false)}
+                            inputMode="decimal"
+                            onChange={(event) => setImpactHeavyConcreteLoadBasisKgM2(event.target.value)}
+                            placeholder="e.g. 100"
+                            value={impactHeavyConcreteLoadBasisKgM2}
+                          />
+                        </FieldShell>
+
+                        <FieldShell
+                          label="Upper resilient dynamic stiffness (MN/m³)"
+                          note="Upper impact layer stiffness."
+                          relevance="required"
+                          usage="DeltaLw"
+                        >
+                          <input
+                            className={getTextInputClassName(false)}
+                            inputMode="decimal"
+                            onChange={(event) => setImpactHeavyConcreteResilientLayerDynamicStiffnessMNm3(event.target.value)}
+                            placeholder="e.g. 30"
+                            value={impactHeavyConcreteResilientLayerDynamicStiffnessMNm3}
+                          />
+                        </FieldShell>
+
+                        <FieldShell
+                          label="Resilient layer thickness (mm)"
+                          note="Optional thickness for resonance trace and replay parity."
+                          relevance="optional"
+                          usage="DeltaLw"
+                        >
+                          <input
+                            className={getTextInputClassName(false)}
+                            inputMode="decimal"
+                            onChange={(event) => setImpactHeavyConcreteResilientLayerThicknessMm(event.target.value)}
+                            placeholder="e.g. 8"
+                            value={impactHeavyConcreteResilientLayerThicknessMm}
+                          />
+                        </FieldShell>
+
+                        <FieldShell
+                          label="Lower ceiling assembly"
+                          note="Ceiling-side isolation type."
+                          relevance="required"
+                          usage="Ln,w and DeltaLw"
+                        >
+                          <select
+                            aria-label="Heavy concrete lower ceiling assembly"
+                            className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                            onChange={(event) =>
+                              setImpactHeavyConcreteLowerAssemblyType(
+                                event.target.value as WorkbenchHeavyConcreteCombinedLowerAssemblyType
+                              )
+                            }
+                            value={impactHeavyConcreteLowerAssemblyType}
+                          >
+                            <option value="">Select lower assembly</option>
+                            {HEAVY_CONCRETE_COMBINED_LOWER_ASSEMBLY_OPTIONS.map((option) => (
+                              <option key={option.value} value={option.value}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
+                        </FieldShell>
+
+                        <FieldShell
+                          label="Lower support class"
+                          note="Support class used by the lower ceiling term."
+                          relevance="required"
+                          usage="Ln,w and DeltaLw"
+                        >
+                          <select
+                            aria-label="Heavy concrete lower support class"
+                            className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                            onChange={(event) =>
+                              setImpactHeavyConcreteLowerSupportClass(
+                                event.target.value as WorkbenchHeavyConcreteCombinedLowerSupportClass
+                              )
+                            }
+                            value={impactHeavyConcreteLowerSupportClass}
+                          >
+                            <option value="">Select lower support</option>
+                            {HEAVY_CONCRETE_COMBINED_LOWER_SUPPORT_OPTIONS.map((option) => (
+                              <option key={option.value} value={option.value}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
+                        </FieldShell>
+
+                        <FieldShell
+                          label="Lower cavity depth (mm)"
+                          note="Soffit-to-board cavity depth."
+                          relevance="required"
+                          usage="Ln,w and DeltaLw"
+                        >
+                          <input
+                            className={getTextInputClassName(false)}
+                            inputMode="decimal"
+                            onChange={(event) => setImpactHeavyConcreteLowerCavityDepthMm(event.target.value)}
+                            placeholder="e.g. 120"
+                            value={impactHeavyConcreteLowerCavityDepthMm}
+                          />
+                        </FieldShell>
+
+                        <FieldShell
+                          label="Lower cavity fill thickness (mm)"
+                          note="Absorber thickness in the ceiling cavity."
+                          relevance="required"
+                          usage="Ln,w and DeltaLw"
+                        >
+                          <input
+                            className={getTextInputClassName(false)}
+                            inputMode="decimal"
+                            onChange={(event) => setImpactHeavyConcreteLowerCavityFillThicknessMm(event.target.value)}
+                            placeholder="e.g. 80"
+                            value={impactHeavyConcreteLowerCavityFillThicknessMm}
+                          />
+                        </FieldShell>
+
+                        <FieldShell
+                          label="Lower board thickness (mm)"
+                          note="Per-layer gypsum board thickness."
+                          relevance="required"
+                          usage="Ln,w and DeltaLw"
+                        >
+                          <input
+                            className={getTextInputClassName(false)}
+                            inputMode="decimal"
+                            onChange={(event) => setImpactHeavyConcreteLowerBoardThicknessMm(event.target.value)}
+                            placeholder="e.g. 12.5"
+                            value={impactHeavyConcreteLowerBoardThicknessMm}
+                          />
+                        </FieldShell>
+
+                        <FieldShell
+                          label="Lower board layer count"
+                          note="Number of lower gypsum board layers."
+                          relevance="required"
+                          usage="Ln,w and DeltaLw"
+                        >
+                          <input
+                            className={getTextInputClassName(false)}
+                            inputMode="numeric"
+                            onChange={(event) => setImpactHeavyConcreteLowerBoardLayerCount(event.target.value)}
+                            placeholder="e.g. 2"
+                            value={impactHeavyConcreteLowerBoardLayerCount}
+                          />
                         </FieldShell>
                       </div>
                     </ContextSubsection>

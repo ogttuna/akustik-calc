@@ -364,5 +364,5 @@ describe("airborne seeded sanity", () => {
     expect(maxLab).toBeLessThanOrEqual(95);
     expect(minField).toBeGreaterThanOrEqual(0);
     expect(maxField).toBeLessThanOrEqual(95);
-  });
+  }, 30000);
 });

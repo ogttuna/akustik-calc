@@ -279,26 +279,23 @@ The recommended post-Gate-AV order is:
 10. Later calibration and budget tightening only after source-owned
    holdouts and paired negatives exist.
 
-Gate BE has now landed, so the current active step is Gate BF:
+Gate BF has now landed, so the current active step is Gate BG:
 
-`gate_bf_personal_use_mvp_floor_impact_source_absent_input_surface_plan`
+`gate_bg_personal_use_mvp_floor_impact_source_absent_post_input_surface_revalidation_plan`
 
-Selected Gate BF file:
+Selected Gate BG file:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bf-floor-impact-source-absent-input-surface-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bg-floor-impact-source-absent-post-input-surface-revalidation-contract.test.ts`
 
-Gate BF should not retune `Ln,w 44.4` or `DeltaLw 30.1`. It should
-make the same Gate BD runtime basis
-`predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate`
-and Gate BE `Heavy concrete combined formula corridor` copy reachable
-from first-class Dynamic Calculator floor inputs. It must feed slab
-mass/load, resilient-layer dynamic stiffness, lower treatment, and
-upper/lower coupling owners through live workbench evaluation, scenario
-analysis, saved replay, Markdown report payloads, and API surfaces
-without moving the source-absent `+/-6.5 dB` / `+/-5.5 dB`
-not-measured budgets. It must keep exact source precedence, existing
-heavy floating/steel/timber/CLT routes, missing-input fallback blocks,
-and lab/field/building/ASTM boundaries unchanged.
+Gate BG should not retune `Ln,w 44.4` or `DeltaLw 30.1`. It should
+revalidate that Gate BF's `Heavy concrete combined input surface`
+preserves the Gate BD runtime basis
+`predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate`,
+the Gate BE visible `Heavy concrete combined formula corridor` copy,
+the source-absent `+/-6.5 dB` / `+/-5.5 dB` not-measured budgets,
+exact source precedence, hostile input boundaries, and
+lab/field/building/ASTM non-aliasing before selecting the next
+highest-ROI calculator coverage lane.
 
 The research check behind this plan points to frequency-band direct
 curves as the strongest long-term shape: ISO 12354-1/2 building
@@ -586,6 +583,63 @@ needs first-class Dynamic Calculator floor inputs before new adapter,
 retune, or source-crawl work.
 
 Next plain label: floor-impact source-absent input surface.
+
+## Gate BF Floor-Impact Source-Absent Input Surface Landed - 2026-05-13
+
+Gate BF has now landed the first-class Dynamic Calculator input surface
+selected by Gate BE:
+
+`gate_bf_personal_use_mvp_floor_impact_source_absent_input_surface_plan`
+
+Gate BF selection status:
+
+`gate_bf_personal_use_mvp_floor_impact_source_absent_input_surface_landed_selected_revalidation_gate_bg`
+
+Selected next action:
+
+`gate_bg_personal_use_mvp_floor_impact_source_absent_post_input_surface_revalidation_plan`
+
+Selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bg-floor-impact-source-absent-post-input-surface-revalidation-contract.test.ts`
+
+Gate BF makes the `Heavy concrete combined input surface` first-class
+on the floor route: base slab density/thickness, loaded upper mass
+basis, upper resilient dynamic stiffness/thickness, lower ceiling
+assembly, lower support class, board count/thickness, cavity depth, and
+cavity fill now flow through live workbench evaluation, scenario
+analysis, saved replay, server snapshot replay, output cards, Markdown
+report payloads, calculator API payloads, and impact-only API payloads.
+
+The runtime does not move: complete UI-derived heavy-concrete combined
+input still returns lab `Ln,w 44.4` / `DeltaLw 30.1` through
+`predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate`
+with `+/-6.5 dB` / `+/-5.5 dB` source-absent not-measured budgets.
+Partial physical fields stay `needs_input`, duplicate or ambiguous
+heavy-concrete base ownership is parked as unsafe topology, exact source
+precedence remains first, and field/building/ASTM/IIC aliases remain
+blocked.
+
+Gate BF closeout checkpoint:
+
+[CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BF_HANDOFF.md](./CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BF_HANDOFF.md)
+
+Gate BF validation passed on 2026-05-13: focused Gate BF 1 file / 5
+tests, focused web heavy-concrete combined input-surface acceptance 1
+file / 3 tests, server snapshot replay 1 file / 4 tests, engine/web
+typecheck, and `pnpm calculator:gate:current` with engine 399 files /
+2310 tests, web 77 files / 328 passed + 18 skipped, repo build 5/5,
+and whitespace guard clean. Full `pnpm check` passed with
+lint/typecheck clean, engine 524 files / 3112 tests, web 184 files /
+1006 passed + 18 skipped, and build 5/5 after timeout-only hardening on
+three pre-existing long-running engine tests.
+
+Gate BG is now selected because the new first-class floor input surface
+must be revalidated against the Gate BD/BE runtime and visible-surface
+contracts before another coverage lane moves.
+
+Next plain label: floor-impact source-absent post-input-surface
+revalidation.
 
 ## Gate BC Floor-Impact Source-Absent Formula Corridor Landed - 2026-05-13
 

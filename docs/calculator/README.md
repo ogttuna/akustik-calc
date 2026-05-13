@@ -18,7 +18,7 @@ not block a labelled family-specific physics prediction when the
 required topology and material inputs are present.
 
 As of 2026-05-13, the current selected slice is
-`personal_use_mvp_coverage_sprint_after_gate_be_floor_impact_source_absent_surface_parity`.
+`personal_use_mvp_coverage_sprint_after_gate_bf_floor_impact_source_absent_input_surface`.
 Gate AU closed company-internal daily-use ready, Gate AV
 `gate_av_personal_use_mvp_post_release_accuracy_and_adapter_roadmap_plan`
 landed the no-runtime post-release accuracy/adapters roadmap, and Gate
@@ -122,6 +122,39 @@ calculator:gate:current` with engine 398 files / 2305 tests, web 76
 files / 325 passed + 18 skipped, repo build 5/5, and full `pnpm check`
 with lint/typecheck clean, engine 523 files / 3107 tests, web 183 files
 / 1003 passed + 18 skipped, and build 5/5.
+
+Gate BF
+`gate_bf_personal_use_mvp_floor_impact_source_absent_input_surface_plan`
+has now landed the first-class Dynamic Calculator floor input surface
+for the `Heavy concrete combined input surface` with selection status
+`gate_bf_personal_use_mvp_floor_impact_source_absent_input_surface_landed_selected_revalidation_gate_bg`.
+Workbench controls, scenario analysis, saved replay, server snapshot
+replay, output cards, calculator API payloads, impact-only API payloads,
+and Markdown report payloads now feed the same Gate BD runtime
+predictor input. Complete UI-derived heavy-concrete combined input
+still returns lab `Ln,w 44.4` / `DeltaLw 30.1` through
+`predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate`
+with `+/-6.5 dB` / `+/-5.5 dB` source-absent not-measured budgets.
+Partial physical fields stay `needs_input`, duplicate or ambiguous base
+ownership stays unsafe, exact source precedence remains first, and
+field/building/ASTM/IIC aliases remain blocked. Gate BF selected
+`gate_bg_personal_use_mvp_floor_impact_source_absent_post_input_surface_revalidation_plan`
+in
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bg-floor-impact-source-absent-post-input-surface-revalidation-contract.test.ts`.
+Next plain label: floor-impact source-absent post-input-surface
+revalidation.
+Short label: floor-impact source-absent input surface.
+Gate BF handoff:
+[CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BF_HANDOFF.md](./CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BF_HANDOFF.md).
+Gate BF validation passed on 2026-05-13: focused Gate BF 1 file / 5
+tests, focused web heavy-concrete combined input-surface acceptance 1
+file / 3 tests, server snapshot replay 1 file / 4 tests, engine/web
+typecheck, and `pnpm calculator:gate:current` with engine 399 files /
+2310 tests, web 77 files / 328 passed + 18 skipped, repo build 5/5,
+and whitespace guard clean. Full `pnpm check` passed with
+lint/typecheck clean, engine 524 files / 3112 tests, web 184 files /
+1006 passed + 18 skipped, and build 5/5 after timeout-only hardening on
+three pre-existing long-running engine tests.
 
 The Personal-Use MVP Coverage Sprint has advanced
 through the Gate AU company-internal daily-use ready release handoff

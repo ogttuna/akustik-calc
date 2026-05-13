@@ -151,6 +151,7 @@ const STEEL_FLOOR_FORMULA_BASE_MATERIAL_IDS = new Set([
   "open_web_steel_joist",
   "steel_joist_floor"
 ]);
+const HEAVY_CONCRETE_COMBINED_BASE_MATERIAL_IDS = new Set(["concrete", "heavy_concrete"]);
 const TIMBER_CLT_DELTA_LW_BASE_MATERIAL_IDS = new Set([
   "clt_panel",
   "timber_frame_floor",
@@ -317,6 +318,17 @@ export function SimpleWorkbenchShell() {
   const impactGuideReceivingRoomVolumeM3 = useWorkbenchStore((state) => state.impactGuideReceivingRoomVolumeM3);
   const impactLowerTreatmentReductionDb = useWorkbenchStore((state) => state.impactLowerTreatmentReductionDb);
   const impactReferenceDeltaLwDb = useWorkbenchStore((state) => state.impactReferenceDeltaLwDb);
+  const impactHeavyConcreteBaseSlabDensityKgM3 = useWorkbenchStore((state) => state.impactHeavyConcreteBaseSlabDensityKgM3);
+  const impactHeavyConcreteBaseSlabThicknessMm = useWorkbenchStore((state) => state.impactHeavyConcreteBaseSlabThicknessMm);
+  const impactHeavyConcreteLoadBasisKgM2 = useWorkbenchStore((state) => state.impactHeavyConcreteLoadBasisKgM2);
+  const impactHeavyConcreteLowerAssemblyType = useWorkbenchStore((state) => state.impactHeavyConcreteLowerAssemblyType);
+  const impactHeavyConcreteLowerBoardLayerCount = useWorkbenchStore((state) => state.impactHeavyConcreteLowerBoardLayerCount);
+  const impactHeavyConcreteLowerBoardThicknessMm = useWorkbenchStore((state) => state.impactHeavyConcreteLowerBoardThicknessMm);
+  const impactHeavyConcreteLowerCavityDepthMm = useWorkbenchStore((state) => state.impactHeavyConcreteLowerCavityDepthMm);
+  const impactHeavyConcreteLowerCavityFillThicknessMm = useWorkbenchStore((state) => state.impactHeavyConcreteLowerCavityFillThicknessMm);
+  const impactHeavyConcreteLowerSupportClass = useWorkbenchStore((state) => state.impactHeavyConcreteLowerSupportClass);
+  const impactHeavyConcreteResilientLayerDynamicStiffnessMNm3 = useWorkbenchStore((state) => state.impactHeavyConcreteResilientLayerDynamicStiffnessMNm3);
+  const impactHeavyConcreteResilientLayerThicknessMm = useWorkbenchStore((state) => state.impactHeavyConcreteResilientLayerThicknessMm);
   const impactSteelCarrierDepthMm = useWorkbenchStore((state) => state.impactSteelCarrierDepthMm);
   const impactSteelCarrierSpacingMm = useWorkbenchStore((state) => state.impactSteelCarrierSpacingMm);
   const impactSteelLoadBasisKgM2 = useWorkbenchStore((state) => state.impactSteelLoadBasisKgM2);
@@ -395,6 +407,17 @@ export function SimpleWorkbenchShell() {
   const setConsultantWordmarkLine = useWorkbenchStore((state) => state.setConsultantWordmarkLine);
   const setImpactGuideKDb = useWorkbenchStore((state) => state.setImpactGuideKDb);
   const setImpactGuideReceivingRoomVolumeM3 = useWorkbenchStore((state) => state.setImpactGuideReceivingRoomVolumeM3);
+  const setImpactHeavyConcreteBaseSlabDensityKgM3 = useWorkbenchStore((state) => state.setImpactHeavyConcreteBaseSlabDensityKgM3);
+  const setImpactHeavyConcreteBaseSlabThicknessMm = useWorkbenchStore((state) => state.setImpactHeavyConcreteBaseSlabThicknessMm);
+  const setImpactHeavyConcreteLoadBasisKgM2 = useWorkbenchStore((state) => state.setImpactHeavyConcreteLoadBasisKgM2);
+  const setImpactHeavyConcreteLowerAssemblyType = useWorkbenchStore((state) => state.setImpactHeavyConcreteLowerAssemblyType);
+  const setImpactHeavyConcreteLowerBoardLayerCount = useWorkbenchStore((state) => state.setImpactHeavyConcreteLowerBoardLayerCount);
+  const setImpactHeavyConcreteLowerBoardThicknessMm = useWorkbenchStore((state) => state.setImpactHeavyConcreteLowerBoardThicknessMm);
+  const setImpactHeavyConcreteLowerCavityDepthMm = useWorkbenchStore((state) => state.setImpactHeavyConcreteLowerCavityDepthMm);
+  const setImpactHeavyConcreteLowerCavityFillThicknessMm = useWorkbenchStore((state) => state.setImpactHeavyConcreteLowerCavityFillThicknessMm);
+  const setImpactHeavyConcreteLowerSupportClass = useWorkbenchStore((state) => state.setImpactHeavyConcreteLowerSupportClass);
+  const setImpactHeavyConcreteResilientLayerDynamicStiffnessMNm3 = useWorkbenchStore((state) => state.setImpactHeavyConcreteResilientLayerDynamicStiffnessMNm3);
+  const setImpactHeavyConcreteResilientLayerThicknessMm = useWorkbenchStore((state) => state.setImpactHeavyConcreteResilientLayerThicknessMm);
   const setImpactSteelCarrierDepthMm = useWorkbenchStore((state) => state.setImpactSteelCarrierDepthMm);
   const setImpactSteelCarrierSpacingMm = useWorkbenchStore((state) => state.setImpactSteelCarrierSpacingMm);
   const setImpactSteelLoadBasisKgM2 = useWorkbenchStore((state) => state.setImpactSteelLoadBasisKgM2);
@@ -457,6 +480,14 @@ export function SimpleWorkbenchShell() {
       (row) =>
         row.floorRole === "base_structure" &&
         TIMBER_CLT_DELTA_LW_BASE_MATERIAL_IDS.has(row.materialId)
+    );
+  const heavyConcreteCombinedImpactInputSurfaceActive =
+    studyMode === "floor" &&
+    automaticOutputs.some((output) => output === "Ln,w" || output === "DeltaLw") &&
+    rows.some(
+      (row) =>
+        row.floorRole === "base_structure" &&
+        HEAVY_CONCRETE_COMBINED_BASE_MATERIAL_IDS.has(row.materialId)
     );
   const openingLeakCompositeInputSurfaceActive = studyMode === "wall";
   const totalThickness = sumThickness(rows);
@@ -698,6 +729,21 @@ export function SimpleWorkbenchShell() {
     id: "simple-current",
     impactFieldContext: liveImpactFieldContext,
     name: projectName,
+    heavyConcreteCombinedImpactInputSurface: heavyConcreteCombinedImpactInputSurfaceActive
+      ? {
+          impactHeavyConcreteBaseSlabDensityKgM3,
+          impactHeavyConcreteBaseSlabThicknessMm,
+          impactHeavyConcreteLoadBasisKgM2,
+          impactHeavyConcreteLowerAssemblyType,
+          impactHeavyConcreteLowerBoardLayerCount,
+          impactHeavyConcreteLowerBoardThicknessMm,
+          impactHeavyConcreteLowerCavityDepthMm,
+          impactHeavyConcreteLowerCavityFillThicknessMm,
+          impactHeavyConcreteLowerSupportClass,
+          impactHeavyConcreteResilientLayerDynamicStiffnessMNm3,
+          impactHeavyConcreteResilientLayerThicknessMm
+        }
+      : null,
     openingLeakCompositeInputSurface: openingLeakCompositeInputSurfaceActive
       ? {
           elements: airborneOpeningLeakElements,
@@ -768,6 +814,7 @@ export function SimpleWorkbenchShell() {
   if (studyMode === "floor") {
     if (steelFloorFormulaInputSurfaceActive) contextNotes.push("Steel floor formula inputs are active for the source-absent lab impact lane.");
     if (timberCltDeltaLwInputSurfaceActive) contextNotes.push("Timber/CLT DeltaLw formula inputs are active for the source-absent lab impact lane.");
+    if (heavyConcreteCombinedImpactInputSurfaceActive) contextNotes.push("Heavy concrete combined upper/lower formula inputs are active for the source-absent lab impact lane.");
     if (!impactFieldActive) contextNotes.push("Field K and floor-side room-volume corrections stay hidden until field impact outputs are requested.");
     else if (!standardizedImpactOutputsActive) contextNotes.push("Floor field volume is optional right now because only L'n,w is active; standardized L'nT outputs are not requested yet.");
   }
@@ -935,6 +982,17 @@ export function SimpleWorkbenchShell() {
       impactImprovementBandInput,
       impactLowerTreatmentReductionDb,
       impactReferenceDeltaLwDb,
+      impactHeavyConcreteBaseSlabDensityKgM3,
+      impactHeavyConcreteBaseSlabThicknessMm,
+      impactHeavyConcreteLoadBasisKgM2,
+      impactHeavyConcreteLowerAssemblyType,
+      impactHeavyConcreteLowerBoardLayerCount,
+      impactHeavyConcreteLowerBoardThicknessMm,
+      impactHeavyConcreteLowerCavityDepthMm,
+      impactHeavyConcreteLowerCavityFillThicknessMm,
+      impactHeavyConcreteLowerSupportClass,
+      impactHeavyConcreteResilientLayerDynamicStiffnessMNm3,
+      impactHeavyConcreteResilientLayerThicknessMm,
       impactSteelCarrierDepthMm,
       impactSteelCarrierSpacingMm,
       impactSteelLoadBasisKgM2,
@@ -1398,6 +1456,17 @@ export function SimpleWorkbenchShell() {
           impactFieldActive={impactFieldActive}
           impactGuideKDb={impactGuideKDb}
           impactGuideReceivingRoomVolumeM3={impactGuideReceivingRoomVolumeM3}
+          impactHeavyConcreteBaseSlabDensityKgM3={impactHeavyConcreteBaseSlabDensityKgM3}
+          impactHeavyConcreteBaseSlabThicknessMm={impactHeavyConcreteBaseSlabThicknessMm}
+          impactHeavyConcreteLoadBasisKgM2={impactHeavyConcreteLoadBasisKgM2}
+          impactHeavyConcreteLowerAssemblyType={impactHeavyConcreteLowerAssemblyType}
+          impactHeavyConcreteLowerBoardLayerCount={impactHeavyConcreteLowerBoardLayerCount}
+          impactHeavyConcreteLowerBoardThicknessMm={impactHeavyConcreteLowerBoardThicknessMm}
+          impactHeavyConcreteLowerCavityDepthMm={impactHeavyConcreteLowerCavityDepthMm}
+          impactHeavyConcreteLowerCavityFillThicknessMm={impactHeavyConcreteLowerCavityFillThicknessMm}
+          impactHeavyConcreteLowerSupportClass={impactHeavyConcreteLowerSupportClass}
+          impactHeavyConcreteResilientLayerDynamicStiffnessMNm3={impactHeavyConcreteResilientLayerDynamicStiffnessMNm3}
+          impactHeavyConcreteResilientLayerThicknessMm={impactHeavyConcreteResilientLayerThicknessMm}
           impactSteelCarrierDepthMm={impactSteelCarrierDepthMm}
           impactSteelCarrierSpacingMm={impactSteelCarrierSpacingMm}
           impactSteelLoadBasisKgM2={impactSteelLoadBasisKgM2}
@@ -1484,6 +1553,17 @@ export function SimpleWorkbenchShell() {
           setCalculatorId={setCalculatorId}
           setImpactGuideKDb={setImpactGuideKDb}
           setImpactGuideReceivingRoomVolumeM3={setImpactGuideReceivingRoomVolumeM3}
+          setImpactHeavyConcreteBaseSlabDensityKgM3={setImpactHeavyConcreteBaseSlabDensityKgM3}
+          setImpactHeavyConcreteBaseSlabThicknessMm={setImpactHeavyConcreteBaseSlabThicknessMm}
+          setImpactHeavyConcreteLoadBasisKgM2={setImpactHeavyConcreteLoadBasisKgM2}
+          setImpactHeavyConcreteLowerAssemblyType={setImpactHeavyConcreteLowerAssemblyType}
+          setImpactHeavyConcreteLowerBoardLayerCount={setImpactHeavyConcreteLowerBoardLayerCount}
+          setImpactHeavyConcreteLowerBoardThicknessMm={setImpactHeavyConcreteLowerBoardThicknessMm}
+          setImpactHeavyConcreteLowerCavityDepthMm={setImpactHeavyConcreteLowerCavityDepthMm}
+          setImpactHeavyConcreteLowerCavityFillThicknessMm={setImpactHeavyConcreteLowerCavityFillThicknessMm}
+          setImpactHeavyConcreteLowerSupportClass={setImpactHeavyConcreteLowerSupportClass}
+          setImpactHeavyConcreteResilientLayerDynamicStiffnessMNm3={setImpactHeavyConcreteResilientLayerDynamicStiffnessMNm3}
+          setImpactHeavyConcreteResilientLayerThicknessMm={setImpactHeavyConcreteResilientLayerThicknessMm}
           setImpactSteelCarrierDepthMm={setImpactSteelCarrierDepthMm}
           setImpactSteelCarrierSpacingMm={setImpactSteelCarrierSpacingMm}
           setImpactSteelLoadBasisKgM2={setImpactSteelLoadBasisKgM2}
@@ -1510,6 +1590,7 @@ export function SimpleWorkbenchShell() {
           showSteelBoundSupportFormActions={showSteelBoundSupportFormActions}
           openingLeakCompositeInputSurfaceActive={openingLeakCompositeInputSurfaceActive}
           steelFloorFormulaInputSurfaceActive={steelFloorFormulaInputSurfaceActive}
+          heavyConcreteCombinedImpactInputSurfaceActive={heavyConcreteCombinedImpactInputSurfaceActive}
           timberCltDeltaLwInputSurfaceActive={timberCltDeltaLwInputSurfaceActive}
           showTimberImpactOnlyGuidedActions={showTimberImpactOnlyGuidedActions}
           standardizedAirborneActive={standardizedAirborneActive}

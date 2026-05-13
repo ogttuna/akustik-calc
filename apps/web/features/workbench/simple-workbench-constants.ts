@@ -27,6 +27,10 @@ import type { CSSProperties } from "react";
 import type { PresetId, StudyMode } from "./preset-definitions";
 import type { WorkbenchSteelFloorFormulaLowerCeilingIsolationSupportForm } from "./steel-floor-formula-input-surface";
 import type {
+  WorkbenchHeavyConcreteCombinedLowerAssemblyType,
+  WorkbenchHeavyConcreteCombinedLowerSupportClass
+} from "./heavy-concrete-combined-impact-input-surface";
+import type {
   WorkbenchTimberCltDeltaLwImpactSystemType,
   WorkbenchTimberCltDeltaLwLowerAssemblyType,
   WorkbenchTimberCltDeltaLwLowerSupportClass,
@@ -172,6 +176,46 @@ export const STEEL_FLOOR_FORMULA_LOWER_ISOLATION_OPTIONS: readonly ControlOption
     label: "Direct to joists",
     note: "Direct fixed ceiling support. Use only when the visible layers still carry the board and cavity dimensions.",
     value: "direct_to_joists"
+  }
+] as const;
+
+export const HEAVY_CONCRETE_COMBINED_LOWER_ASSEMBLY_OPTIONS: readonly ControlOption<
+  Exclude<WorkbenchHeavyConcreteCombinedLowerAssemblyType, "">
+>[] = [
+  {
+    label: "Direct fixed ceiling",
+    note: "Ceiling board fixed directly to the concrete soffit or rigid battens.",
+    value: "direct_fixed_ceiling"
+  },
+  {
+    label: "Rigid furred ceiling",
+    note: "Suspended or furred ceiling without resilient isolation.",
+    value: "suspended_ceiling_rigid_hanger"
+  },
+  {
+    label: "Elastic furred ceiling",
+    note: "Suspended isolated ceiling with furred channels or comparable resilient support.",
+    value: "suspended_ceiling_elastic_hanger"
+  },
+  {
+    label: "Spring hanger ceiling",
+    note: "Ceiling package hung from spring or comparable resilient hangers.",
+    value: "suspended_ceiling_spring_hanger"
+  }
+] as const;
+
+export const HEAVY_CONCRETE_COMBINED_LOWER_SUPPORT_OPTIONS: readonly ControlOption<
+  Exclude<WorkbenchHeavyConcreteCombinedLowerSupportClass, "">
+>[] = [
+  {
+    label: "Direct to slab",
+    note: "Use with direct fixed lower boards.",
+    value: "direct_to_joists"
+  },
+  {
+    label: "Furred channels",
+    note: "Use for furred, resilient, or suspended channel support.",
+    value: "furred_channels"
   }
 ] as const;
 
