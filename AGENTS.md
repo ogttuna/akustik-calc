@@ -926,6 +926,33 @@ contract 1 file / 6 tests, Gate AS + Gate AT continuity 2 files / 10
 tests, engine typecheck, `pnpm calculator:gate:current` with engine 387
 files / 2234 tests, web 75 files / 321 passed + 18 skipped, build 5/5,
 and `git diff --check` clean.
+Gate AU has now landed:
+`gate_au_personal_use_mvp_daily_use_release_handoff_plan`.
+Gate AU selection status:
+`gate_au_personal_use_mvp_daily_use_release_handoff_landed_selected_post_release_accuracy_roadmap_gate_av`.
+Gate AU is the company-internal daily-use ready handoff: it consumes
+the Gate AT 41-row matrix, preserves 26 supported value rows, accepts
+16 fail-closed boundary rows, confirms zero coverage gaps and zero
+daily-use release blockers, and records
+`company_internal_daily_use_ready_with_visible_basis_budgets_needs_input_and_unsupported_boundaries`.
+Gate AU does not move runtime values, tolerances, source precedence,
+inputs, API shape, cards, or report copy. Gate AU selects the
+post-release accuracy roadmap:
+`gate_av_personal_use_mvp_post_release_accuracy_and_adapter_roadmap_plan`.
+Selected Gate AV file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-av-post-release-accuracy-and-adapter-roadmap-contract.test.ts`.
+Gate AU handoff:
+`docs/calculator/CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AU_HANDOFF.md`.
+Gate AU validation completed on 2026-05-13: focused Gate AU 1 file / 6
+tests, Gate AT + Gate AU continuity 2 files / 12 tests, engine
+typecheck, `pnpm calculator:gate:current` with engine 388 files / 2240
+tests, web 75 files / 321 passed + 18 skipped, build 5/5, full engine
+suite 513 files / 3042 tests, targeted web heavy-core rerun 1 file / 3
+tests, full web test rerun 181 files / 996 passed + 18 skipped, repo
+build 5/5, and whitespace guard clean. The first broad `pnpm check`
+attempt passed lint/typecheck and engine before a transient web
+deep-hybrid heavy-core timeout; reruns proved the web invariant green
+without runtime movement.
 Do not keep adding narrow steel-floor source/packet gates unless the
 active matrix or a later runtime proposal names a specific source-owned
 unblocker.

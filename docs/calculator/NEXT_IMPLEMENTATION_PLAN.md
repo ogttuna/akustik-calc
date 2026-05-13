@@ -164,6 +164,51 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
+## Gate AU Daily-Use Release Handoff Landed - 2026-05-12
+
+Gate AU has now landed the daily-use release handoff selected by Gate AT:
+
+`gate_au_personal_use_mvp_daily_use_release_handoff_plan`
+
+Current selected status:
+
+`gate_au_personal_use_mvp_daily_use_release_handoff_landed_selected_post_release_accuracy_roadmap_gate_av`
+
+Selected next action:
+
+`gate_av_personal_use_mvp_post_release_accuracy_and_adapter_roadmap_plan`
+
+Selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-av-post-release-accuracy-and-adapter-roadmap-contract.test.ts`
+
+Gate AU makes the company-internal daily-use ready decision without
+runtime/API/input/card/report behavior movement. It consumes the Gate AT
+41-row matrix, keeps 26 supported value rows and 16 accepted fail-closed
+boundary rows explicit, confirms zero coverage gaps and zero daily-use
+release blockers, and records the release decision as
+`company_internal_daily_use_ready_with_visible_basis_budgets_needs_input_and_unsupported_boundaries`.
+
+The daily-use envelope remains honest: exact source rows win first,
+source-absent formula rows expose their error budget, missing physical
+owners return `needs_input`, hostile input rows fail closed, and lab,
+field, building-prediction, and ASTM/IIC bases are not aliased. Gate AU
+selects Gate AV post-release accuracy roadmap so calibration,
+budget-tightening, opening/leak building adapter, and ASTM/IIC adapter
+work can be ranked after the release handoff. See
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AU_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AU_HANDOFF.md).
+
+Gate AU validation completed on 2026-05-13: focused Gate AU 1 file / 6
+tests, Gate AT + Gate AU continuity 2 files / 12 tests, engine
+typecheck, `pnpm calculator:gate:current` with engine 388 files / 2240
+tests, web 75 files / 321 passed + 18 skipped, build 5/5, full engine
+suite 513 files / 3042 tests, targeted web heavy-core rerun 1 file / 3
+tests, full web test rerun 181 files / 996 passed + 18 skipped, repo
+build 5/5, and whitespace guard clean. The first broad `pnpm check`
+attempt had already passed lint/typecheck and engine before a transient
+web deep-hybrid heavy-core timeout; reruns proved the web invariant
+green without runtime movement.
+
 ## Gate AT Acceptance Matrix Refresh After Building Prediction Landed - 2026-05-12
 
 Gate AT has now landed the acceptance matrix refresh selected by Gate AS:
@@ -417,12 +462,12 @@ envelope remains useful, but it is not enough for the current product
 goal until airborne `building_prediction` runtime is accepted by the
 matrix. Gate AR has promoted defended source-absent `R'w` / `DnT,w`
 engine values, Gate AS has made that basis visible across
-surface/API/report paths, and Gate AT has refreshed the acceptance
-matrix with no remaining coverage gaps or release blockers. The
-remaining daily-use path is Gate AU daily-use release handoff and broad
-revalidation.
+surface/API/report paths, Gate AT has refreshed the acceptance matrix
+with no remaining coverage gaps or release blockers, and Gate AU has
+landed the company-internal daily-use ready release handoff. The next
+path is Gate AV post-release accuracy roadmap.
 
-This is the shortest defensible path after Gate AT. Broad source
+This is the shortest defensible path after Gate AU. Broad source
 crawling still does not unblock the source-absent calculator route. See
 [CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md).
 

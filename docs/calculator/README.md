@@ -18,8 +18,9 @@ not block a labelled family-specific physics prediction when the
 required topology and material inputs are present.
 
 As of 2026-05-12, the Personal-Use MVP Coverage Sprint has advanced
-through the Gate AT airborne `building_prediction` acceptance matrix
-refresh after Gate AS made the all-owner runtime corridor visible across
+through the Gate AU company-internal daily-use ready release handoff
+after Gate AT refreshed the airborne `building_prediction` acceptance
+matrix and Gate AS made the all-owner runtime corridor visible across
 surface/API/report paths and Gate AR landed that runtime corridor, Gate
 AQ closed the uncertainty-budget owner, Gate AP closed room
 standardization, the Gate L boundary, and first-class airborne
@@ -505,8 +506,9 @@ plan still aligned, and keeps Gate AQ as the selected next no-runtime
 uncertainty-budget owner. It passed focused Gate AP, current-gate, and
 broad `pnpm check` validation. See
 [CHECKPOINT_2026-05-12_POST_GATE_AP_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_POST_GATE_AP_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md).
-The current company-internal daily-use bar is still open and now has a
-single final path: Gate AU daily-use release handoff. See
+The current company-internal daily-use bar is now company-internal
+daily-use ready after Gate AU. The next work is Gate AV post-release
+accuracy roadmap, not another release blocker. See
 [CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md).
 The Gate AQ implementation-ready planning pass confirms that Gate AQ
 must stay no-runtime and select the Gate AR all-owner runtime corridor.
@@ -564,6 +566,33 @@ engine/web typecheck, `pnpm calculator:gate:current`, full
 `pnpm check`, repo build, and whitespace guard evidence.
 See
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AS_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AS_HANDOFF.md).
+Gate AU has now landed
+`gate_au_personal_use_mvp_daily_use_release_handoff_plan`
+with selection status
+`gate_au_personal_use_mvp_daily_use_release_handoff_landed_selected_post_release_accuracy_roadmap_gate_av`.
+Gate AU is the company-internal daily-use ready handoff: it consumes the
+Gate AT 41-row matrix, preserves 26 supported value rows, accepts 16
+fail-closed boundary rows, confirms zero coverage gaps and zero
+daily-use release blockers, and records
+`company_internal_daily_use_ready_with_visible_basis_budgets_needs_input_and_unsupported_boundaries`.
+It does not move runtime values, tolerances, source precedence, inputs,
+API shape, cards, or report copy. Gate AU selects the post-release
+accuracy roadmap. The post-release accuracy roadmap is Gate AV:
+`gate_av_personal_use_mvp_post_release_accuracy_and_adapter_roadmap_plan`
+in
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-av-post-release-accuracy-and-adapter-roadmap-contract.test.ts`.
+Gate AU validation completed on 2026-05-13 with focused Gate AU 1 file
+/ 6 tests, Gate AT + Gate AU continuity 2 files / 12 tests, engine
+typecheck, `pnpm calculator:gate:current` with engine 388 files / 2240
+tests, web 75 files / 321 passed + 18 skipped, build 5/5, full engine
+suite 513 files / 3042 tests, targeted web heavy-core rerun 1 file / 3
+tests, full web test rerun 181 files / 996 passed + 18 skipped, repo
+build 5/5, and whitespace guard clean. The first broad `pnpm check`
+attempt passed lint/typecheck and engine before a transient web
+deep-hybrid heavy-core timeout; reruns proved the web invariant green
+without runtime movement.
+See
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AU_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AU_HANDOFF.md).
 Gate AT has now landed
 `gate_at_personal_use_mvp_acceptance_matrix_refresh_after_building_prediction_plan`
 with selection status

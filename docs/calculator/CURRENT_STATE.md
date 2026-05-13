@@ -119,6 +119,9 @@ checkpoint read
 If you need the current Personal-Use MVP Coverage Sprint Gate AS
 checkpoint read
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AS_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AS_HANDOFF.md).
+If you need the latest Personal-Use MVP Coverage Sprint Gate AU
+company-internal daily-use ready handoff read
+[CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AU_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AU_HANDOFF.md).
 If you need the preceding Personal-Use MVP Coverage Sprint Gate W
 checkpoint read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_W_HANDOFF.md).
@@ -175,24 +178,24 @@ If you need the current strategic ROI replan after Gate BH read
 
 Current selected slice:
 
-`calculator_model_first_physics_prediction_pivot_v1`
+`personal_use_mvp_coverage_sprint_after_gate_au_daily_use_release_handoff`
 
 Source label:
 
-Calculator model-first physics prediction pivot after the source-packet
-path was found too narrow for the user's calculator-first goal.
+Personal-Use MVP Coverage Sprint after Gate AU closed the
+company-internal daily-use release handoff selected by Gate AT.
 
 Current selected status:
 
-`gate_ap_personal_use_mvp_airborne_building_prediction_room_standardization_owner_landed_no_runtime_selected_uncertainty_budget_gate_aq`
+`gate_au_personal_use_mvp_daily_use_release_handoff_landed_selected_post_release_accuracy_roadmap_gate_av`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-aq-airborne-building-prediction-uncertainty-budget-owner-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-av-post-release-accuracy-and-adapter-roadmap-contract.test.ts`
 
 Selected next action:
 
-`gate_aq_personal_use_mvp_airborne_building_prediction_uncertainty_budget_owner_contract_plan`
+`gate_av_personal_use_mvp_post_release_accuracy_and_adapter_roadmap_plan`
 
 Strategic ROI replan:
 
@@ -204,6 +207,11 @@ Latest strategic ROI revalidation:
 
 Current strategy:
 
+- Personal-Use MVP Coverage Sprint Gate AU has now landed the
+  company-internal daily-use ready handoff. The next selected work is
+  Gate AV post-release accuracy roadmap, not a release blocker. Gate AU
+  does not move runtime values, tolerances, source precedence, inputs,
+  API shape, cards, or report copy.
 - Gate BI landed as a small no-runtime governance guard around Gate
   BH's policy-only `tighten` candidate.
 - Personal-Use MVP Coverage Sprint Gate A has now landed as an
@@ -769,6 +777,36 @@ Current strategy:
   build 5/5.
   See
   [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AS_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AS_HANDOFF.md).
+- Personal-Use MVP Coverage Sprint Gate AU has now landed
+  `gate_au_personal_use_mvp_daily_use_release_handoff_plan`.
+  Selection status:
+  `gate_au_personal_use_mvp_daily_use_release_handoff_landed_selected_post_release_accuracy_roadmap_gate_av`.
+  Selected next action:
+  `gate_av_personal_use_mvp_post_release_accuracy_and_adapter_roadmap_plan`.
+  Selected next file:
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-av-post-release-accuracy-and-adapter-roadmap-contract.test.ts`.
+  Gate AU is the company-internal daily-use ready handoff and closes the
+  daily-use release handoff selected by Gate AT. It consumes
+  the Gate AT 41-row matrix, keeps 26 supported value rows and 16
+  accepted fail-closed boundary rows explicit, confirms zero coverage
+  gaps and zero daily-use release blockers, and records the release
+  decision
+  `company_internal_daily_use_ready_with_visible_basis_budgets_needs_input_and_unsupported_boundaries`.
+  Gate AU does not move runtime values, tolerances, inputs, API shape,
+  cards, reports, or source precedence. It selects Gate AV post-release
+  accuracy roadmap. The post-release accuracy roadmap covers calibration, budget tightening, opening/leak
+  building adapter, and ASTM/IIC adapter ranking. See
+  [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AU_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AU_HANDOFF.md).
+  Validation completed on 2026-05-13: focused Gate AU 1 file / 6 tests,
+  Gate AT + Gate AU continuity 2 files / 12 tests, engine typecheck,
+  `pnpm calculator:gate:current` with engine 388 files / 2240 tests,
+  web 75 files / 321 passed + 18 skipped, build 5/5, full engine suite
+  513 files / 3042 tests, targeted web heavy-core rerun 1 file / 3
+  tests, full web test rerun 181 files / 996 passed + 18 skipped, repo
+  build 5/5, and whitespace guard clean. The first broad `pnpm check`
+  attempt passed lint/typecheck and engine before a transient web
+  deep-hybrid heavy-core timeout; the reruns kept the invariant green
+  without runtime movement.
 - Personal-Use MVP Coverage Sprint Gate AT has now landed
   `gate_at_personal_use_mvp_acceptance_matrix_refresh_after_building_prediction_plan`.
   Selection status:
@@ -801,14 +839,16 @@ Current strategy:
   3013 tests and web 180 files / 993 passed + 18 skipped plus
   lint/typecheck/build clean. See
   [CHECKPOINT_2026-05-12_POST_GATE_AP_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_POST_GATE_AP_CHECKPOINT_AND_BROAD_REVALIDATION_HANDOFF.md).
-- Company-internal daily-use status: still open. The old internal-use
+- Company-internal daily-use status: company-internal daily-use ready
+  after Gate AU. The old internal-use
   operating envelope was a narrower controlled-use bar; the current
   daily-use bar requires complete airborne `building_prediction`
   requests to return defended building `R'w` / `DnT,w` values with
   visible basis and uncertainty or to fail closed with precise fields.
   Gate AT has now completed the acceptance matrix refresh with no
-  remaining coverage gaps or daily-use release blockers. The shortest
-  defensible path is now Gate AU daily-use release handoff. See
+  remaining coverage gaps or daily-use release blockers, and Gate AU has
+  landed the release handoff. The next path is Gate AV post-release
+  accuracy roadmap, not another release blocker. See
   [CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-12_INTERNAL_DAILY_USE_FINAL_PATH_AND_REVALIDATION_HANDOFF.md).
 - Gate AQ planning status: implementation-ready after the latest
   analysis pass. Official ISO/INSUL reference checks confirm that
