@@ -1,5 +1,6 @@
 import {
   ImpactCalculationSchema,
+  type AcousticInputFieldId,
   type ImpactCalculation,
   type ImpactErrorBudget,
   type ImpactErrorBudgetTerm,
@@ -14,6 +15,12 @@ export const HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS =
   "predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate" as const;
 export const HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_LN_W_TOLERANCE_DB = 6.5;
 export const HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_DELTA_LW_TOLERANCE_DB = 5.5;
+export const HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_REQUIRED_FIELDS = [
+  "baseSlabOrFloor",
+  "resilientLayerDynamicStiffnessMNm3",
+  "loadBasisKgM2",
+  "ceilingOrLowerAssembly"
+] as const satisfies readonly AcousticInputFieldId[];
 
 type HeavyConcreteCombinedImpactFormulaMetricId = "DeltaLw" | "Ln,w";
 
@@ -290,24 +297,54 @@ function isHeavyConcreteCombinedFormulaRoute(
   return Boolean(
     input &&
       input.structuralSupportType === "reinforced_concrete" &&
-      input.impactSystemType === "combined_upper_lower_system" &&
-      hasPositiveNumber(input.loadBasisKgM2)
+      input.impactSystemType === "combined_upper_lower_system"
   );
+}
+
+export function collectHeavyConcreteCombinedImpactFormulaMissingPhysicalInputs(
+  input: ImpactPredictorInput | null | undefined
+): AcousticInputFieldId[] {
+  if (!isHeavyConcreteCombinedFormulaRoute(input)) {
+    return [];
+  }
+
+  const missing: AcousticInputFieldId[] = [];
+
+  if (!hasPositiveNumber(computePredictorBaseSurfaceMassKgM2(input))) {
+    missing.push("baseSlabOrFloor");
+  }
+
+  if (!hasPositiveNumber(input.resilientLayer?.dynamicStiffnessMNm3)) {
+    missing.push("resilientLayerDynamicStiffnessMNm3");
+  }
+
+  if (!hasPositiveNumber(input.loadBasisKgM2)) {
+    missing.push("loadBasisKgM2");
+  }
+
+  if (!hasCompleteLowerTreatment(input)) {
+    missing.push("ceilingOrLowerAssembly");
+  }
+
+  return missing;
 }
 
 export function shouldBlockHeavyConcreteCombinedImpactFormulaFallback(
   input: ImpactPredictorInput | null | undefined
 ): boolean {
-  if (!isHeavyConcreteCombinedFormulaRoute(input)) {
-    return false;
+  return collectHeavyConcreteCombinedImpactFormulaMissingPhysicalInputs(input).length > 0;
+}
+
+export function buildHeavyConcreteCombinedImpactFormulaFallbackBlockerWarning(
+  input: ImpactPredictorInput | null | undefined
+): string | null {
+  const missing = collectHeavyConcreteCombinedImpactFormulaMissingPhysicalInputs(input);
+
+  if (missing.length === 0) {
+    return null;
   }
 
-  return !(
-    hasPositiveNumber(input?.baseSlab?.densityKgM3) &&
-    hasPositiveNumber(input?.baseSlab?.thicknessMm) &&
-    hasPositiveNumber(input?.resilientLayer?.dynamicStiffnessMNm3) &&
-    hasCompleteLowerTreatment(input)
-  );
+  return `Dynamic Calculator reinforced-concrete combined upper/lower impact runtime is waiting for ${missing.join(", ")} before promoting Ln,w / DeltaLw from the heavy-concrete combined formula corridor.`;
 }
 
 export function estimateHeavyConcreteCombinedImpactFromPredictorInput(

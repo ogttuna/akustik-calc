@@ -15,7 +15,7 @@ const EXPLICIT_LAB_CONTEXT: AirborneContext = {
 const EXPLICIT_FIELD_CONTEXT: AirborneContext = {
   airtightness: "good",
   connectionType: "line_connection",
-  contextMode: "building_prediction",
+  contextMode: "field_between_rooms",
   electricalBoxes: "none",
   junctionQuality: "good",
   panelHeightMm: 2800,
@@ -34,7 +34,7 @@ const WORKBENCH_LAB_CONTEXT: AirborneContext = {
 };
 
 const WORKBENCH_FIELD_CONTEXT: AirborneContext = {
-  contextMode: "building_prediction",
+  contextMode: "field_between_rooms",
   panelHeightMm: 2800,
   panelWidthMm: 3600,
   receivingRoomRt60S: 0.6,
@@ -76,7 +76,7 @@ const WORKBENCH_MOVE_STACK: readonly LayerInput[] = [
 const EXPLICIT_DUPLICATE_VARIANTS = [
   {
     base: {
-      confidence: "low",
+      confidence: "medium",
       dnTw: 55,
       family: "double_leaf",
       rw: 63,
@@ -96,7 +96,7 @@ const EXPLICIT_DUPLICATE_VARIANTS = [
   },
   {
     base: {
-      confidence: "low",
+      confidence: "medium",
       dnTw: 55,
       family: "double_leaf",
       rw: 63,
@@ -116,7 +116,7 @@ const EXPLICIT_DUPLICATE_VARIANTS = [
   },
   {
     base: {
-      confidence: "low",
+      confidence: "medium",
       dnTw: 55,
       family: "double_leaf",
       rw: 63,
@@ -417,7 +417,7 @@ describe("dynamic airborne stability contracts", () => {
       rwPrime: base.rwPrime,
       strategy: base.strategy
     }).toEqual({
-      confidence: "low",
+      confidence: "medium",
       dnTw: 55,
       family: "double_leaf",
       rw: 63,
@@ -501,7 +501,7 @@ describe("dynamic airborne stability contracts", () => {
       rwPrime: moved.rwPrime,
       strategy: moved.strategy
     }).toEqual({
-      confidence: "low",
+      confidence: "medium",
       dnTw: 55,
       family: "double_leaf",
       rw: 62,

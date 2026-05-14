@@ -7044,7 +7044,7 @@ describe("calculateAssembly", () => {
     expect(result.floorSystemEstimate?.airborneRatings.Rw).toBe(63.6);
   });
 
-  it("keeps layer-driven steel joist vinyl stacks on the upstream low-confidence Pliteq lane", () => {
+  it("parks incomplete steel joist vinyl predictor input instead of using the upstream low-confidence Pliteq lane", () => {
     const result = calculateAssembly(
       [
         { floorRole: "base_structure", materialId: "steel_joist_floor", thicknessMm: 250 },
@@ -7079,22 +7079,20 @@ describe("calculateAssembly", () => {
       }
     );
 
-    expect(result.floorSystemEstimate?.kind).toBe("low_confidence");
-    expect(result.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
-    expect(result.impact?.LnW).toBe(58.3);
-    expect(result.floorSystemRatings?.Rw).toBe(61);
-    expect(result.floorSystemRatings?.RwCtr).toBe(57);
-    expect(result.impact?.estimateCandidateIds).toEqual([
-      "pliteq_steel_joist_250_rst02_vinyl_lab_2026",
-      "ubiq_fl32_steel_200_lab_2026",
-      "ubiq_fl32_steel_300_lab_2026",
-      "pliteq_steel_joist_250_rst12_porcelain_lab_2026",
-      "pliteq_steel_joist_250_rst02_wood_lab_2026"
-    ]);
-    expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
-    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(true);
-    expect(result.supportedTargetOutputs).toEqual(["Ln,w", "Rw", "Ctr"]);
-    expect(result.unsupportedTargetOutputs).toEqual([]);
+    expect(result.floorSystemEstimate).toBeNull();
+    expect(result.impact).toBeNull();
+    expect(result.floorSystemRatings?.Rw).toBe(72);
+    expect(result.floorSystemRatings?.RwCtr).toBe(66.2);
+    expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(false);
+    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
+    expect(result.supportedTargetOutputs).toEqual(["Rw", "Ctr"]);
+    expect(result.unsupportedTargetOutputs).toEqual(["Ln,w"]);
+    expect(
+      result.warnings.some((warning: string) =>
+        /needs steelCarrierSpacingMm, lowerCeilingIsolationSupportForm before calculating lab Ln,w/i.test(warning)
+      )
+    ).toBe(true);
+    expect(result.warnings.some((warning: string) => /low-confidence fallback/i.test(warning))).toBe(false);
   });
 
   it("keeps timber bare-floor laminate layer stacks on the upstream low-confidence lane with ambiguous airborne companions withheld", () => {

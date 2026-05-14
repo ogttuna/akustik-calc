@@ -8,6 +8,9 @@ import type {
 } from "@dynecho/shared";
 
 import { getImpactConfidenceForBasis } from "./impact-confidence";
+import {
+  mergeFloorImpactFieldBuildingAdapterErrorBudgets
+} from "./impact-field-adapter-error-budget";
 import { computeImpactSpectrumAdaptationTerms, computeImpactWeightedRating } from "./impact-iso717";
 import { createImpactMetricBasis, mergeImpactMetricBasis } from "./impact-metric-basis";
 import { inferImpactSupportingElementFamilyFromLayers } from "./impact-supporting-element-family";
@@ -527,6 +530,12 @@ export function applyDirectFlankingFieldEstimate(
     availableOutputs: buildAvailableOutputs(input.impact, typeof lPrimeNTw === "number"),
     basis,
     confidence: getImpactConfidenceForBasis(basis),
+    errorBudgets: mergeFloorImpactFieldBuildingAdapterErrorBudgets({
+      impact: input.impact,
+      lPrimeNTw,
+      lPrimeNW,
+      profile: "direct_flanking_energy_sum"
+    }),
     fieldEstimateDefaultSupportingElementFamily: defaultSupportingElementFamily ?? undefined,
     fieldEstimateDirectOffsetDb: directOffsetDb,
     fieldEstimateExpertPathModifierCount: expertModifiedCount > 0 ? expertModifiedCount : undefined,

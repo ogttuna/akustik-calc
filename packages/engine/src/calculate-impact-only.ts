@@ -56,9 +56,13 @@ import { computeLayerSurfaceMassKgM2 } from "./layer-surface-mass";
 import { getFloorFamilySourceGuard } from "./floor-family-source-guard";
 import { getDefaultMaterialCatalog, resolveMaterial } from "./material-catalog";
 import {
+  buildHeavyConcreteCombinedImpactFormulaFallbackBlockerWarning
+} from "./heavy-concrete-combined-impact-formula-corridor";
+import {
   hasReinforcedConcreteLowConfidenceProxyAirborne,
   REINFORCED_CONCRETE_LOW_CONFIDENCE_PROXY_AIRBORNE_WARNING
 } from "./reinforced-concrete-low-confidence-airborne";
+import { buildSteelFloorImpactFormulaFallbackBlockerWarning } from "./steel-floor-impact-formula-corridor";
 import { analyzeTargetOutputSupport, buildTargetOutputWarnings } from "./target-output-support";
 
 export type CalculateImpactOnlyOptions = {
@@ -271,9 +275,12 @@ export function calculateImpactOnly(
           resolvedLayers: derivedResolvedSourceLayers,
           targetOutputs: options.targetOutputs
         });
+        const derivedHeavyConcreteCombinedFormulaFallbackBlockerWarning =
+          buildHeavyConcreteCombinedImpactFormulaFallbackBlockerWarning(derivedPredictorInput);
         const shouldUseDerived =
           !blocksBoundOnlyUbiqOpenWebCarpetDerivedEstimate &&
           (
+            Boolean(derivedHeavyConcreteCombinedFormulaFallbackBlockerWarning) ||
             Boolean(
               derivedImpactLane.floorSystemMatch ||
                 derivedImpactLane.boundFloorSystemMatch ||
@@ -311,7 +318,12 @@ export function calculateImpactOnly(
       }
     }
 
-    if (!blocksBoundOnlyUbiqOpenWebCarpetDerivedEstimate && !floorSystemEstimate && !boundFloorSystemEstimate) {
+    if (
+      !blocksBoundOnlyUbiqOpenWebCarpetDerivedEstimate &&
+      !floorSystemEstimate &&
+      !boundFloorSystemEstimate &&
+      !buildHeavyConcreteCombinedImpactFormulaFallbackBlockerWarning(predictorInput)
+    ) {
       const fallbackImpactLane = resolveLayerBasedImpactLane({
         catalog,
         exactImpact,
@@ -372,6 +384,14 @@ export function calculateImpactOnly(
     !impact && !lowerBoundImpact && targetOutputSupport.unsupportedImpactOutputs.length > 0 && floorFamilySourceGuard
       ? [floorFamilySourceGuard.warning]
       : [];
+  const steelFloorFormulaFallbackBlockerWarning = buildSteelFloorImpactFormulaFallbackBlockerWarning(predictorInput);
+  const heavyConcreteCombinedFormulaFallbackBlockerWarning =
+    buildHeavyConcreteCombinedImpactFormulaFallbackBlockerWarning(predictorInput);
+  const impactPredictorAdditionalWarnings = [
+    ...floorFamilySourceGuardWarnings,
+    ...(heavyConcreteCombinedFormulaFallbackBlockerWarning ? [heavyConcreteCombinedFormulaFallbackBlockerWarning] : []),
+    ...(steelFloorFormulaFallbackBlockerWarning ? [steelFloorFormulaFallbackBlockerWarning] : [])
+  ];
   const { dynamicImpactTrace, impactPredictorStatus, impactSupport } = buildResolvedImpactArtifacts({
     boundFloorSystemEstimate,
     boundFloorSystemMatch,
@@ -379,7 +399,7 @@ export function calculateImpactOnly(
     floorSystemMatch,
     impact,
     impactCatalogMatch,
-    impactPredictorAdditionalWarnings: floorFamilySourceGuardWarnings,
+    impactPredictorAdditionalWarnings,
     impactFieldContext,
     lowerBoundImpact,
     predictorInput,
@@ -401,6 +421,12 @@ export function calculateImpactOnly(
       });
   const warnings = buildTargetOutputWarnings(targetOutputSupport);
   warnings.push(...floorFamilySourceGuardWarnings);
+  if (heavyConcreteCombinedFormulaFallbackBlockerWarning) {
+    warnings.push(heavyConcreteCombinedFormulaFallbackBlockerWarning);
+  }
+  if (steelFloorFormulaFallbackBlockerWarning) {
+    warnings.push(steelFloorFormulaFallbackBlockerWarning);
+  }
 
   if (sourceMode === "source_layers") {
     warnings.push(

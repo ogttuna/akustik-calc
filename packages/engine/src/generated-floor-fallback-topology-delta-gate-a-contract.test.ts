@@ -74,7 +74,7 @@ const REQUIRED_GATE_A_ARTIFACTS = [
   "pliteq_exact_match_delta_register",
   "ubiq_bound_match_delta_register",
   "exact_bound_precedence_and_near_miss_guards",
-  "unsupported_output_low_confidence_visibility_guards",
+  "unsupported_output_family_archetype_visibility_guards",
   "many_layer_and_reorder_stability_guard_plan",
   "next_candidate_decision"
 ] as const;
@@ -153,14 +153,14 @@ const EXACT_BOUND_PRECEDENCE_AND_NEAR_MISS_GUARDS = [
   "exact_pliteq_rows_keep_precedence_over_generated_fallback_when_exact_topology_is_present",
   "ubiq_fl32_bound_rows_keep_bound_precedence_when_bound_topology_is_present",
   "generated_fallback_cannot_interpolate_between_pliteq_exact_and_ubiq_bound_as_one_source_family",
-  "near_miss_live_stack_stays_low_confidence_even_when_support_family_and_boards_are_adjacent"
+  "near_miss_live_stack_stays_family_archetype_even_when_support_family_and_boards_are_adjacent"
 ] as const;
 
 const UNSUPPORTED_OUTPUT_LOW_CONFIDENCE_VISIBILITY_GUARDS = [
   "live_lab_lnw_plus_ci_stays_unsupported",
   "live_lab_delta_lw_stays_unsupported",
   "live_field_lprimen_t50_stays_unsupported",
-  "low_confidence_warning_stays_visible_on_live_fallback"
+  "family_archetype_warning_stays_visible_on_live_fallback"
 ] as const;
 
 const MANY_LAYER_AND_REORDER_STABILITY_GUARD_PLAN = [
@@ -229,7 +229,7 @@ describe("generated floor fallback topology-delta Gate A contract", () => {
       "pliteq_exact_match_delta_register",
       "ubiq_bound_match_delta_register",
       "exact_bound_precedence_and_near_miss_guards",
-      "unsupported_output_low_confidence_visibility_guards",
+      "unsupported_output_family_archetype_visibility_guards",
       "many_layer_and_reorder_stability_guard_plan",
       "next_candidate_decision"
     ]);
@@ -298,22 +298,22 @@ describe("generated floor fallback topology-delta Gate A contract", () => {
     expect(field.boundFloorSystemMatch).toBeNull();
     expect(field.boundFloorSystemEstimate).toBeNull();
     expect(resultSnapshot(field)).toMatchObject({
-      floorSystemEstimateBasis: "predictor_floor_system_low_confidence_estimate",
-      floorSystemEstimateKind: "low_confidence",
+      floorSystemEstimateBasis: "predictor_floor_system_family_archetype_estimate",
+      floorSystemEstimateKind: "family_archetype",
       impactBasis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
       lPrimeNT50: null,
-      lPrimeNTw: 58.5,
-      lPrimeNW: 61.3,
-      lnW: 58.3,
-      rw: 61,
+      lPrimeNTw: 58.2,
+      lPrimeNW: 61,
+      lnW: 58,
+      rw: 60,
       rwPrimeDb: 70,
       unsupportedTargetOutputs: ["L'nT,50"]
     });
     expect(field.dynamicImpactTrace).toMatchObject({
-      estimateTier: "low_confidence",
+      estimateTier: "family_archetype",
       evidenceTier: "estimate",
-      fitPercent: 28,
-      selectionKindLabel: "Low-confidence fallback"
+      fitPercent: 63,
+      selectionKindLabel: "Published family estimate"
     });
     expect(PLITEQ_EXACT_MATCH_DELTA_REGISTER.liveExactBlockers).toEqual([
       "live_stack_lacks_19mm_inex_floor_panel_deck",
@@ -382,7 +382,7 @@ describe("generated floor fallback topology-delta Gate A contract", () => {
       "exact_pliteq_rows_keep_precedence_over_generated_fallback_when_exact_topology_is_present",
       "ubiq_fl32_bound_rows_keep_bound_precedence_when_bound_topology_is_present",
       "generated_fallback_cannot_interpolate_between_pliteq_exact_and_ubiq_bound_as_one_source_family",
-      "near_miss_live_stack_stays_low_confidence_even_when_support_family_and_boards_are_adjacent"
+      "near_miss_live_stack_stays_family_archetype_even_when_support_family_and_boards_are_adjacent"
     ]);
   });
 
@@ -396,14 +396,14 @@ describe("generated floor fallback topology-delta Gate A contract", () => {
     expect(field.supportedTargetOutputs).toEqual(["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]);
     expect(field.unsupportedTargetOutputs).toEqual(["L'nT,50"]);
     expect(field.impact?.LPrimeNT50).toBeUndefined();
-    expect(field.warnings.some((warning: string) => /Published low-confidence fallback active/i.test(warning)))
+    expect(field.warnings.some((warning: string) => /Published family estimate active/i.test(warning)))
       .toBe(true);
     expect(field.warnings.some((warning: string) => /L'nT,50/i.test(warning))).toBe(true);
     expect(UNSUPPORTED_OUTPUT_LOW_CONFIDENCE_VISIBILITY_GUARDS).toEqual([
       "live_lab_lnw_plus_ci_stays_unsupported",
       "live_lab_delta_lw_stays_unsupported",
       "live_field_lprimen_t50_stays_unsupported",
-      "low_confidence_warning_stays_visible_on_live_fallback"
+      "family_archetype_warning_stays_visible_on_live_fallback"
     ]);
   });
 

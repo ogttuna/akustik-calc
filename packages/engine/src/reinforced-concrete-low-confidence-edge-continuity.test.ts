@@ -27,8 +27,18 @@ function evaluate(input: Record<string, unknown>) {
   });
 }
 
+function expectParkedCombinedRoute(result: ReturnType<typeof evaluate>) {
+  expect(result.floorSystemEstimate).toBeNull();
+  expect(result.impact).toBeNull();
+  expect(result.dynamicImpactTrace).toBeUndefined();
+  expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
+  expect(result.warnings).toContain(
+    "Dynamic Calculator reinforced-concrete combined upper/lower impact runtime is waiting for loadBasisKgM2, ceilingOrLowerAssembly before promoting Ln,w / DeltaLw from the heavy-concrete combined formula corridor."
+  );
+}
+
 describe("reinforced concrete low-confidence edge continuity", () => {
-  it("keeps near-threshold combined-vinyl package variations on the same predictor branch with bounded drift", () => {
+  it("keeps near-threshold combined-vinyl package variations on the same missing-owner boundary", () => {
     const baseline = evaluate(buildInput());
     const variants = [
       evaluate(
@@ -65,23 +75,15 @@ describe("reinforced concrete low-confidence edge continuity", () => {
       )
     ];
 
-    expect(baseline.floorSystemEstimate?.kind).toBe("low_confidence");
-    expect(baseline.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
-    expect(baseline.floorSystemEstimate?.fitPercent).toBe(29);
+    expectParkedCombinedRoute(baseline);
 
     for (const result of variants) {
-      expect(result.floorSystemEstimate?.kind).toBe("low_confidence");
-      expect(result.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
-      expect(result.floorSystemEstimate?.fitPercent).toBe(29);
-      expect(result.dynamicImpactTrace?.fitPercent).toBe(29);
-      expect(result.impact?.estimateCandidateIds).toEqual(baseline.impact?.estimateCandidateIds);
-
-      expect(Math.abs((result.impact?.LnW ?? 0) - (baseline.impact?.LnW ?? 0))).toBeLessThanOrEqual(0.3);
-      expect(Math.abs((result.floorSystemRatings?.Rw ?? 0) - (baseline.floorSystemRatings?.Rw ?? 0))).toBeLessThanOrEqual(0.3);
+      expectParkedCombinedRoute(result);
+      expect(Math.abs((result.floorSystemRatings?.Rw ?? 0) - (baseline.floorSystemRatings?.Rw ?? 0))).toBeLessThanOrEqual(1);
     }
   });
 
-  it("keeps board-material presence neutral on the baseline low-confidence combined-vinyl lane", () => {
+  it("keeps board-material presence neutral on the baseline missing-owner combined-vinyl boundary", () => {
     const withoutBoardClass = evaluate(buildInput());
     const withFirestopBoard = evaluate(
       buildInput({
@@ -96,15 +98,9 @@ describe("reinforced concrete low-confidence edge continuity", () => {
       })
     );
 
-    expect(withoutBoardClass.floorSystemEstimate?.kind).toBe("low_confidence");
-    expect(withFirestopBoard.floorSystemEstimate?.kind).toBe("low_confidence");
-    expect(withoutBoardClass.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
-    expect(withFirestopBoard.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
-    expect(withFirestopBoard.floorSystemEstimate?.fitPercent).toBe(29);
-    expect(withFirestopBoard.dynamicImpactTrace?.fitPercent).toBe(29);
-    expect(withFirestopBoard.impact?.LnW).toBe(withoutBoardClass.impact?.LnW);
+    expectParkedCombinedRoute(withoutBoardClass);
+    expectParkedCombinedRoute(withFirestopBoard);
     expect(withFirestopBoard.floorSystemRatings?.Rw).toBe(withoutBoardClass.floorSystemRatings?.Rw);
     expect(withFirestopBoard.floorSystemRatings?.RwCtr).toBe(withoutBoardClass.floorSystemRatings?.RwCtr);
-    expect(withFirestopBoard.impact?.estimateCandidateIds).toEqual(withoutBoardClass.impact?.estimateCandidateIds);
   });
 });

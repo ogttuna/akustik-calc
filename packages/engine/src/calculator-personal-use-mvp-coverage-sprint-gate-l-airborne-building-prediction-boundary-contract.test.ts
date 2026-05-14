@@ -158,6 +158,8 @@ describe("Personal-Use MVP Coverage Sprint Gate L airborne building-prediction b
       GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID
     );
     expect(result.airborneBasis?.method).not.toBe(GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD);
+    expect(result.supportedTargetOutputs).toEqual([]);
+    expect(result.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
 
     expect(assessment).toMatchObject({
       missingPhysicalInputs: [...GATE_M_BUILDING_PREDICTION_MISSING_INPUTS],
@@ -186,7 +188,8 @@ describe("Personal-Use MVP Coverage Sprint Gate L airborne building-prediction b
       targetOutputs: WALL_LAB_OUTPUTS
     });
 
-    expect(result.supportedTargetOutputs).toEqual(["Rw", "STC"]);
+    expect(result.supportedTargetOutputs).toEqual([]);
+    expect(result.unsupportedTargetOutputs).toEqual(["Rw", "STC"]);
     expect(result.airborneCandidateResolution).toMatchObject({
       selectedCandidateId: "candidate_dynamic_needs_input",
       selectedOrigin: "needs_input"

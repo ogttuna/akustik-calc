@@ -206,7 +206,7 @@ const FIELD_OUTPUTS = [
 const SPLIT_ROCKWOOL_FIELD_OUTPUTS = ["R'w", "DnT,w"] as const satisfies readonly RequestedOutputId[];
 
 const COMPLETE_TRIPLE_LEAF_BUILDING_CONTEXT: AirborneContext = {
-  contextMode: "building_prediction",
+  contextMode: "field_between_rooms",
   panelHeightMm: 2500,
   panelWidthMm: 4000,
   receivingRoomRt60S: 0.6,
@@ -236,7 +236,7 @@ const FLOOR_FIELD_CONTEXT: AirborneContext = {
 };
 
 const FLOOR_BUILDING_CONTEXT: AirborneContext = {
-  contextMode: "building_prediction",
+  contextMode: "field_between_rooms",
   panelHeightMm: 3000,
   panelWidthMm: 4200,
   receivingRoomRt60S: 0.7,
@@ -410,22 +410,18 @@ describe("field-output lab/screening leakage guard Gate A contract", () => {
     });
 
     expect(floorBuildingSnapshot(REINFORCED_CONCRETE_LOW_CONFIDENCE_LAYERS)).toMatchObject({
-      candidateIds: [
-        "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
-        "euracoustics_f1_rigid_ceiling_concrete_lab_2026",
-        "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
-      ],
+      candidateIds: null,
       dnTw: 59,
-      floorRatingsBasis: "predictor_floor_system_low_confidence_estimate",
-      impactBasis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
-      lPrimeNTw: 50.2,
-      lPrimeNW: 53,
-      lnW: 50,
-      rw: 65.9,
+      floorRatingsBasis: "screening_mass_law_curve_seed_v3",
+      impactBasis: null,
+      lPrimeNTw: null,
+      lPrimeNW: null,
+      lnW: null,
+      rw: 58,
       rwPrime: 58,
-      supported: ["Rw", "R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "Ln,w", "L'n,w", "L'nT,w", "Ctr"],
-      systemEstimateKind: "low_confidence",
-      unsupported: ["Ln,w+CI", "DeltaLw", "L'nT,50"]
+      supported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "Ctr"],
+      systemEstimateKind: null,
+      unsupported: ["Rw", "Ln,w", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"]
     });
 
     expect(floorBuildingSnapshot(RAW_TERMINAL_CONCRETE_HELPER_LAYERS)).toMatchObject({

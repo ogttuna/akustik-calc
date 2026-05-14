@@ -325,19 +325,19 @@ const CASES: readonly StressCase[] = [
     warningIncludes: [/impact sound outputs are not available/i, /unsupported target outputs: Rw/i]
   },
   {
-    id: "52-layer reinforced-concrete low-confidence formula stack",
+    id: "52-layer reinforced-concrete combined stack missing formula owners",
     layers: makeReinforcedConcreteSplitLayers(),
     expected: {
       boundId: null,
       candidateIds: null,
       estimateKind: null,
-      impactBasis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+      impactBasis: null,
       layerCount: 52,
       lowerBoundBasis: null,
       matchId: null,
       ratingsBasis: "screening_mass_law_curve_seed_v3",
-      supported: ["Rw", "R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "Ln,w", "L'n,w", "L'nT,w", "Ctr"],
-      unsupported: ["Ln,w+CI", "DeltaLw", "L'nT,50"],
+      supported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "Ctr"],
+      unsupported: ["Rw", "Ln,w", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
       values: {
         deltaLw: null,
         dnA: 55.7,
@@ -345,16 +345,16 @@ const CASES: readonly StressCase[] = [
         dnTw: 59,
         dnW: 57,
         lPrimeNT50: null,
-        lPrimeNTw: 72,
-        lPrimeNW: 74.8,
-        lnW: 71.8,
+        lPrimeNTw: null,
+        lPrimeNW: null,
+        lnW: null,
         lnWPlusCI: null,
         rw: 58,
         rwDb: 58.3,
         rwPrimeDb: 58
       }
     },
-    warningIncludes: [/no curated exact floor-system landed/i, /live field-side supplement is active/i]
+    warningIncludes: [/impact sound outputs are not available/i, /reinforced-concrete combined upper\/lower impact runtime is waiting/i]
   }
 ];
 

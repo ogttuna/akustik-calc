@@ -2,6 +2,7 @@ import {
   buildSteelFloorFormulaPredictorInputFromSurface,
   hasSteelFloorFormulaInputSurfaceRoute,
   STEEL_FLOOR_FORMULA_INPUT_SURFACE_LABELS,
+  STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_BASIS,
   type SteelFloorFormulaInputSurface,
   type SteelFloorFormulaInputSurfaceResult,
   type SteelFloorLowerCeilingIsolationSupportForm
@@ -63,15 +64,29 @@ export function buildWorkbenchSteelFloorFormulaInputSurface(input: {
 export function formatWorkbenchSteelFloorFormulaMissingInputWarning(
   result: SteelFloorFormulaInputSurfaceResult
 ): string | null {
-  if (result.status !== "needs_input" || result.missingPhysicalInputs.length === 0) {
+  const deltaLwMissingInputs = result.targetOutputMissingPhysicalInputs.DeltaLw ?? [];
+  const missingInputs = [...new Set([...result.missingPhysicalInputs, ...deltaLwMissingInputs])];
+
+  if (
+    (result.status !== "needs_input" || result.missingPhysicalInputs.length === 0) &&
+    deltaLwMissingInputs.length === 0
+  ) {
     return null;
   }
 
-  const missingLabels = result.missingPhysicalInputs.map(
+  const missingLabels = missingInputs.map(
     (field) => WORKBENCH_STEEL_FLOOR_FORMULA_INPUT_LABELS[field] ?? field
   );
 
-  return `Steel-floor formula lane needs these physical inputs before calculating Ln,w / DeltaLw: ${missingLabels.join(", ")}.`;
+  const metricLabel = deltaLwMissingInputs.length > 0 && result.missingPhysicalInputs.length === 0
+    ? "DeltaLw"
+    : deltaLwMissingInputs.length > 0
+      ? "Ln,w / DeltaLw"
+      : result.formulaBasis === STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_BASIS
+        ? "Ln,w"
+        : "Ln,w / DeltaLw";
+
+  return `Steel-floor formula lane needs these physical inputs before calculating ${metricLabel}: ${missingLabels.join(", ")}.`;
 }
 
 export function hasWorkbenchSteelFloorFormulaInputSurfaceRoute(input: {

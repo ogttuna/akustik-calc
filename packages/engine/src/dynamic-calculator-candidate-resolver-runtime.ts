@@ -33,6 +33,10 @@ import {
   GATE_H_LINED_MASSIVE_WALL_SELECTED_CANDIDATE_ID
 } from "./dynamic-airborne-gate-h-lined-masonry-clt";
 import {
+  COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_RUNTIME_METHOD,
+  COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-company-internal-heavy-composite-wall";
+import {
   GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD,
   GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID
 } from "./dynamic-airborne-gate-i-airborne-field-context";
@@ -52,6 +56,12 @@ import {
   GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
   GATE_AR_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID
 } from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
+import {
+  COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD,
+  COMPANY_INTERNAL_OPENING_LEAK_BUILDING_SELECTED_CANDIDATE_ID,
+  COMPANY_INTERNAL_OPENING_LEAK_FIELD_RUNTIME_METHOD,
+  COMPANY_INTERNAL_OPENING_LEAK_FIELD_SELECTED_CANDIDATE_ID
+} from "./company-internal-opening-leak-building-runtime-corridor";
 import {
   GATE_AE_FLAT_MULTICAVITY_RUNTIME_METHOD,
   GATE_AE_FLAT_MULTICAVITY_SELECTED_CANDIDATE_ID
@@ -495,7 +505,8 @@ function selectLane(input: {
   }
 
   if (input.assessment.outputBasis === "building_prediction") {
-    return input.runtimeSignal?.airborneBasis?.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD
+    return input.runtimeSignal?.airborneBasis?.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD ||
+      input.runtimeSignal?.airborneBasis?.method === COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD
       ? "family_physics"
       : "unsupported";
   }
@@ -521,6 +532,14 @@ function familyPhysicsCandidateId(runtimeBasis?: AirborneResultBasis): string {
     return GATE_AR_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID;
   }
 
+  if (runtimeBasis?.method === COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD) {
+    return COMPANY_INTERNAL_OPENING_LEAK_BUILDING_SELECTED_CANDIDATE_ID;
+  }
+
+  if (runtimeBasis?.method === COMPANY_INTERNAL_OPENING_LEAK_FIELD_RUNTIME_METHOD) {
+    return COMPANY_INTERNAL_OPENING_LEAK_FIELD_SELECTED_CANDIDATE_ID;
+  }
+
   if (runtimeBasis?.method === GATE_AE_FLAT_MULTICAVITY_RUNTIME_METHOD) {
     return GATE_AE_FLAT_MULTICAVITY_SELECTED_CANDIDATE_ID;
   }
@@ -539,6 +558,10 @@ function familyPhysicsCandidateId(runtimeBasis?: AirborneResultBasis): string {
 
   if (runtimeBasis?.method === GATE_H_CLT_MASS_TIMBER_WALL_RUNTIME_METHOD) {
     return GATE_H_CLT_MASS_TIMBER_WALL_SELECTED_CANDIDATE_ID;
+  }
+
+  if (runtimeBasis?.method === COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_RUNTIME_METHOD) {
+    return COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_SELECTED_CANDIDATE_ID;
   }
 
   if (runtimeBasis?.method === GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD) {

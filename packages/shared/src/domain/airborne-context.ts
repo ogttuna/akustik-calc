@@ -337,6 +337,7 @@ const AirborneContextShape = {
   junctionCouplingLengthM: z.number().positive().optional(),
   buildingPredictionOutputBasis: AirborneBuildingPredictionOutputBasisSchema.optional(),
   hostWallAreaM2: z.number().positive().optional(),
+  openingLeakFieldBuildingAdapterBoundary: z.literal(true).optional(),
   openingLeakElements: z.array(AirborneOpeningLeakElementSchema).optional(),
   sharedTrack: SharedTrackClassSchema.optional(),
   studSpacingMm: z.number().positive().optional(),

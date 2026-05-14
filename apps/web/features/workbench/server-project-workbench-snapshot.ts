@@ -1,4 +1,9 @@
-import type { AirborneResilientBarSideCount } from "@dynecho/shared";
+import type {
+  AirborneBuildingPredictionOutputBasis,
+  AirborneConservativeFlankingAssumption,
+  AirborneFlankingJunctionClass,
+  AirborneResilientBarSideCount
+} from "@dynecho/shared";
 
 import {
   DEFAULT_CRITERIA_PACK_ID,
@@ -53,6 +58,35 @@ function parseCriteriaPackId(value: unknown): CriteriaPackId {
 
 function parseAirborneResilientBarSideCount(value: unknown): AirborneResilientBarSideCount | undefined {
   return value === "auto" || value === "one_side" || value === "both_sides" ? value : undefined;
+}
+
+function parseAirborneBuildingPredictionOutputBasis(value: unknown): AirborneBuildingPredictionOutputBasis {
+  return value === "unknown" ||
+    value === "apparent" ||
+    value === "standardized" ||
+    value === "apparent_and_standardized"
+    ? value
+    : "unknown";
+}
+
+function parseAirborneConservativeFlankingAssumption(value: unknown): AirborneConservativeFlankingAssumption {
+  return value === "unknown" ||
+    value === "single_conservative_path" ||
+    value === "multi_path_conservative" ||
+    value === "worst_case_screening"
+    ? value
+    : "unknown";
+}
+
+function parseAirborneFlankingJunctionClass(value: unknown): AirborneFlankingJunctionClass {
+  return value === "unknown" ||
+    value === "rigid_cross_junction" ||
+    value === "rigid_t_junction" ||
+    value === "lightweight_junction" ||
+    value === "isolated_junction" ||
+    value === "mixed_junction"
+    ? value
+    : "unknown";
 }
 
 function parseOpeningLeakElementDraft(value: unknown): WorkbenchOpeningLeakElementDraft | null {
@@ -154,6 +188,15 @@ export function parseServerProjectWorkbenchSnapshot(value: unknown): ScenarioSna
 
   return {
     ...(value as ScenarioSnapshot),
+    airborneBuildingPredictionOutputBasis: parseAirborneBuildingPredictionOutputBasis(
+      value.airborneBuildingPredictionOutputBasis
+    ),
+    airborneConservativeFlankingAssumption: parseAirborneConservativeFlankingAssumption(
+      value.airborneConservativeFlankingAssumption
+    ),
+    airborneFlankingJunctionClass: parseAirborneFlankingJunctionClass(value.airborneFlankingJunctionClass),
+    airborneJunctionCouplingLengthM:
+      typeof value.airborneJunctionCouplingLengthM === "string" ? value.airborneJunctionCouplingLengthM : "",
     airborneOpeningLeakElements: openingLeakElements.length > 0
       ? openingLeakElements
       : [makeWorkbenchOpeningLeakElementDraft()],
@@ -162,6 +205,8 @@ export function parseServerProjectWorkbenchSnapshot(value: unknown): ScenarioSna
         ? value.airborneOpeningLeakHostWallAreaM2
         : "",
     airborneResilientBarSideCount: parseAirborneResilientBarSideCount(value.airborneResilientBarSideCount),
+    airborneSourceRoomVolumeM3:
+      typeof value.airborneSourceRoomVolumeM3 === "string" ? value.airborneSourceRoomVolumeM3 : "",
     criteriaPackId: parseCriteriaPackId(value.criteriaPackId),
     presetId,
     rows,

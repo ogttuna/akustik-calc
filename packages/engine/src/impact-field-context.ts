@@ -9,6 +9,9 @@ import type {
 
 import { getImpactConfidenceForBasis } from "./impact-confidence";
 import { applyDirectFlankingFieldEstimate } from "./impact-direct-flanking";
+import {
+  mergeFloorImpactFieldBuildingAdapterErrorBudgets
+} from "./impact-field-adapter-error-budget";
 import { deriveImpactGuideMetrics } from "./impact-guide";
 import { createImpactMetricBasis, mergeImpactMetricBasis } from "./impact-metric-basis";
 
@@ -20,7 +23,8 @@ function pushOutput(outputs: ImpactCalculation["availableOutputs"], output: Impa
 
 function shouldApplyGuideFieldContext(input: ImpactFieldContext | null | undefined): boolean {
   return Boolean(
-    typeof input?.fieldKDb === "number" ||
+    typeof input?.ci50_2500Db === "number" ||
+      typeof input?.fieldKDb === "number" ||
       typeof input?.guideHdDb === "number" ||
       typeof input?.guideMassRatio === "number" ||
       typeof input?.receivingRoomVolumeM3 === "number" ||
@@ -141,7 +145,12 @@ export function applyImpactFieldContextToImpact(
   const guide = deriveImpactGuideMetrics({
     baseConfidence: impact.confidence,
     baseLnW: adjustedBaseLnW,
-    ci50_2500Db: typeof impact.CI50_2500 === "number" ? impact.CI50_2500 : null,
+    ci50_2500Db:
+      typeof fieldContext?.ci50_2500Db === "number"
+        ? fieldContext.ci50_2500Db
+        : typeof impact.CI50_2500 === "number"
+          ? impact.CI50_2500
+          : null,
     ciDb:
       typeof impact.LnWPlusCI === "number" && typeof impact.LnW === "number"
         ? impact.LnWPlusCI - impact.LnW
@@ -195,7 +204,7 @@ export function applyImpactFieldContextToImpact(
   return {
     ...impact,
     CI: impact.CI,
-    CI50_2500: impact.CI50_2500,
+    CI50_2500: guide.CI50_2500 ?? impact.CI50_2500,
     LPrimeNW: guide.LPrimeNW ?? impact.LPrimeNW,
     LPrimeNT50: guide.LPrimeNT50 ?? impact.LPrimeNT50,
     LPrimeNTw: guide.LPrimeNTw ?? impact.LPrimeNTw,
@@ -203,6 +212,13 @@ export function applyImpactFieldContextToImpact(
     availableOutputs,
     basis,
     confidence,
+    errorBudgets: mergeFloorImpactFieldBuildingAdapterErrorBudgets({
+      impact,
+      lPrimeNT50: guide.LPrimeNT50,
+      lPrimeNTw: guide.LPrimeNTw,
+      lPrimeNW: guide.LPrimeNW,
+      profile: "standardized_field_volume_normalization"
+    }),
     fieldEstimateKCorrectionDb:
       typeof guide.LPrimeNW === "number" && typeof guide.K === "number"
         ? guide.K

@@ -254,5 +254,5 @@ export function formatWorkbenchOpeningLeakCompositeMissingInputWarning(
     (field) => WORKBENCH_OPENING_LEAK_INPUT_LABELS[field] ?? field
   );
 
-  return `Opening/leak composite lane needs these physical inputs before calculating lab Rw: ${missingLabels.join(", ")}.`;
+  return `Opening/leak composite lane needs these physical inputs before calculating lab/field/building opening outputs: ${missingLabels.join(", ")}.`;
 }

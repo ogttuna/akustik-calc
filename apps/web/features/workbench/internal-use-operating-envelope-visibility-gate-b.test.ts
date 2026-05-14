@@ -248,7 +248,7 @@ describe("internal use operating envelope Gate B visibility", () => {
     }
   );
 
-  it("keeps the generated steel floor fallback visibly low-confidence and unsupported where required", () => {
+  it("keeps the generated steel floor family estimate visible and unsupported where required", () => {
     const scenario = evaluateScenario({
       airborneContext: FLOOR_AIRBORNE_CONTEXT,
       id: "floor_steel_fallback_generated",
@@ -285,10 +285,10 @@ describe("internal use operating envelope Gate B visibility", () => {
       warnings: scenario.warnings
     });
 
-    expect(scenario.result.floorSystemEstimate?.kind).toBe("low_confidence");
-    expect(scenario.result.floorSystemEstimate?.impact.basis).toBe("predictor_floor_system_low_confidence_estimate");
+    expect(scenario.result.floorSystemEstimate?.kind).toBe("family_archetype");
+    expect(scenario.result.floorSystemEstimate?.impact.basis).toBe("predictor_floor_system_family_archetype_estimate");
     expect(scenario.result.impact?.basis).toBe("mixed_predicted_plus_estimated_standardized_field_volume_normalization");
-    expect(scenario.result.dynamicImpactTrace?.estimateTier).toBe("low_confidence");
+    expect(scenario.result.dynamicImpactTrace?.estimateTier).toBe("family_archetype");
     expect(scenario.result.unsupportedTargetOutputs).toEqual(["L'nT,50"]);
     expect(unsupportedCard).toEqual(
       expect.objectContaining({
@@ -297,20 +297,23 @@ describe("internal use operating envelope Gate B visibility", () => {
       })
     );
     expect(unsupportedCard.detail).toContain("current path");
-    expect(snapshot.branch.tone).toBe("warning");
-    expect(snapshot.branch.detail).toMatch(/Low-confidence|fallback/i);
-    expect(snapshot.validation.value).toBe("Low-confidence fallback");
-    expect(snapshot.validation.detail).toContain("last-resort estimate");
-    expect(snapshot.evidence.decisionTrailHeadline).toContain("screening posture");
+    expect(snapshot.branch.tone).toBe("neutral");
+    expect(snapshot.branch.detail).toContain("Published family estimate");
+    expect(snapshot.branch.detail).toContain("suspended ceiling only topology");
+    expect(snapshot.validation.value).toBe("Scoped estimate");
+    expect(snapshot.validation.detail).toContain("supported floor estimate");
+    expect(snapshot.validation.detail).toContain("not as a measured claim");
+    expect(snapshot.evidence.decisionTrailHeadline).toContain("Published family estimate");
     expect(snapshot.evidence.decisionTrailItems).toContainEqual(
       expect.objectContaining({
-        label: "Delivery posture",
-        tone: "warning"
+        detail: expect.stringContaining("scoped estimate"),
+        label: "Impact corridor",
+        tone: "accent"
       })
     );
-    expect(snapshot.brief.executiveSummary).toContain("screening-only low-confidence fallback route");
+    expect(snapshot.brief.executiveSummary).toContain("suspended ceiling only route with a scoped estimate posture");
     expect(
-      snapshot.brief.recommendationItems.find((item) => item.label === "Keep screening language explicit")?.detail
-    ).toContain("do not present it as delivery-ready");
+      snapshot.brief.recommendationItems.find((item) => item.label === "Issue as estimate, not measurement")?.detail
+    ).toContain("avoid lab-claim or field-measurement language");
   });
 });

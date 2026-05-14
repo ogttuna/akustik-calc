@@ -25,6 +25,7 @@ type OriginSnapshot = {
   readyForPlannedSolver: boolean | null;
   supported: readonly string[];
   unsupported: readonly string[];
+  warningMentionsHeavyConcreteFormulaNeedsInput: boolean;
   warningMentionsProxyAirborne: boolean;
   warningMentionsPublishedLowConfidenceFit: boolean;
   warningMentionsUnsupportedRwCtr: boolean;
@@ -73,6 +74,9 @@ function snapshot(result: DynamicResult): OriginSnapshot {
     readyForPlannedSolver: result.impactPredictorStatus?.readyForPlannedSolver ?? null,
     supported: result.supportedTargetOutputs,
     unsupported: result.unsupportedTargetOutputs,
+    warningMentionsHeavyConcreteFormulaNeedsInput: warnings.some((warning: string) =>
+      /reinforced-concrete combined upper\/lower impact runtime is waiting/i.test(warning)
+    ),
     warningMentionsProxyAirborne: warnings.some((warning: string) =>
       /low-confidence reinforced-concrete fallback is active with proxy airborne companions/i.test(warning)
     ),
@@ -91,15 +95,9 @@ function snapshot(result: DynamicResult): OriginSnapshot {
   };
 }
 
-const LOW_CONFIDENCE_CANDIDATE_IDS = [
-  "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
-  "euracoustics_f1_rigid_ceiling_concrete_lab_2026",
-  "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
-] as const;
-
 const CASES: readonly OriginCase[] = [
   {
-    id: "explicit predictor input keeps reinforced concrete on the published-family low-confidence provenance surface",
+    id: "explicit predictor input parks reinforced-concrete combined impact on a needs-input provenance surface",
     evaluate: () =>
       calculateImpactOnly([], {
         impactPredictorInput: {
@@ -119,34 +117,35 @@ const CASES: readonly OriginCase[] = [
         targetOutputs: ["Rw", "Ctr", "Ln,w", "DeltaLw"]
       }),
     expected: {
-      candidateIds: LOW_CONFIDENCE_CANDIDATE_IDS,
-      confidenceLevel: "low",
-      confidenceProvenance: "published_family_estimate",
-      confidenceScore: 0.54,
-      estimateKind: "low_confidence",
-      fitPercent: 29,
+      candidateIds: null,
+      confidenceLevel: null,
+      confidenceProvenance: null,
+      confidenceScore: null,
+      estimateKind: null,
+      fitPercent: null,
       formulaNotesMentionAnnexC: false,
       formulaNotesMentionBareFloorPath: false,
       formulaNotesMentionFloatingBranch: false,
-      impactBasis: "predictor_floor_system_low_confidence_estimate",
+      impactBasis: null,
       implementedFormulaEstimate: false,
-      implementedLowConfidenceEstimate: true,
+      implementedLowConfidenceEstimate: false,
       inputMode: "explicit_predictor_input",
-      noteMentionsLowConfidenceFallback: true,
-      noteMentionsNearbyRowRanking: true,
-      noteMentionsProxyAirborneCompanions: true,
+      noteMentionsLowConfidenceFallback: false,
+      noteMentionsNearbyRowRanking: false,
+      noteMentionsProxyAirborneCompanions: false,
       readyForPlannedSolver: false,
-      supported: ["Rw", "Ctr", "Ln,w"],
-      unsupported: ["DeltaLw"],
-      warningMentionsProxyAirborne: true,
+      supported: [],
+      unsupported: ["Rw", "Ctr", "Ln,w", "DeltaLw"],
+      warningMentionsHeavyConcreteFormulaNeedsInput: true,
+      warningMentionsProxyAirborne: false,
       warningMentionsPublishedLowConfidenceFit: false,
-      warningMentionsUnsupportedRwCtr: false,
+      warningMentionsUnsupportedRwCtr: true,
       warningMentionsVisibleDerivedTopology: false,
       warningMentionsWithheldClosestCandidate: false
     }
   },
   {
-    id: "visible-derived reinforced concrete keeps the same low-confidence provenance with explicit derived-topology honesty",
+    id: "visible-derived reinforced concrete parks impact on needs-input with explicit derived-topology honesty",
     evaluate: () =>
       calculateAssembly(
         [
@@ -163,27 +162,28 @@ const CASES: readonly OriginCase[] = [
         }
       ),
     expected: {
-      candidateIds: LOW_CONFIDENCE_CANDIDATE_IDS,
-      confidenceLevel: "low",
-      confidenceProvenance: "published_family_estimate",
-      confidenceScore: 0.54,
-      estimateKind: "low_confidence",
-      fitPercent: 29,
+      candidateIds: null,
+      confidenceLevel: null,
+      confidenceProvenance: null,
+      confidenceScore: null,
+      estimateKind: null,
+      fitPercent: null,
       formulaNotesMentionAnnexC: false,
       formulaNotesMentionBareFloorPath: false,
       formulaNotesMentionFloatingBranch: false,
-      impactBasis: "predictor_floor_system_low_confidence_estimate",
+      impactBasis: null,
       implementedFormulaEstimate: false,
-      implementedLowConfidenceEstimate: true,
+      implementedLowConfidenceEstimate: false,
       inputMode: "derived_from_visible_layers",
-      noteMentionsLowConfidenceFallback: true,
-      noteMentionsNearbyRowRanking: true,
-      noteMentionsProxyAirborneCompanions: true,
+      noteMentionsLowConfidenceFallback: false,
+      noteMentionsNearbyRowRanking: false,
+      noteMentionsProxyAirborneCompanions: false,
       readyForPlannedSolver: false,
-      supported: ["Rw", "Ctr", "Ln,w"],
-      unsupported: ["DeltaLw"],
-      warningMentionsProxyAirborne: true,
-      warningMentionsPublishedLowConfidenceFit: true,
+      supported: ["Rw", "Ctr"],
+      unsupported: ["Ln,w", "DeltaLw"],
+      warningMentionsHeavyConcreteFormulaNeedsInput: true,
+      warningMentionsProxyAirborne: false,
+      warningMentionsPublishedLowConfidenceFit: false,
       warningMentionsUnsupportedRwCtr: false,
       warningMentionsVisibleDerivedTopology: true,
       warningMentionsWithheldClosestCandidate: false
@@ -210,28 +210,29 @@ const CASES: readonly OriginCase[] = [
       ),
     expected: {
       candidateIds: null,
-      confidenceLevel: "medium",
-      confidenceProvenance: "formula_estimate_narrow_scope",
-      confidenceScore: 0.68,
+      confidenceLevel: null,
+      confidenceProvenance: null,
+      confidenceScore: null,
       estimateKind: null,
       fitPercent: null,
-      formulaNotesMentionAnnexC: true,
-      formulaNotesMentionBareFloorPath: true,
+      formulaNotesMentionAnnexC: false,
+      formulaNotesMentionBareFloorPath: false,
       formulaNotesMentionFloatingBranch: false,
-      impactBasis: "predictor_heavy_bare_floor_iso12354_annexc_estimate",
-      implementedFormulaEstimate: true,
+      impactBasis: null,
+      implementedFormulaEstimate: false,
       implementedLowConfidenceEstimate: false,
-      inputMode: null,
+      inputMode: "derived_from_visible_layers",
       noteMentionsLowConfidenceFallback: false,
       noteMentionsNearbyRowRanking: false,
       noteMentionsProxyAirborneCompanions: false,
       readyForPlannedSolver: false,
-      supported: ["Rw", "Ctr", "Ln,w"],
-      unsupported: ["DeltaLw"],
+      supported: ["Rw", "Ctr"],
+      unsupported: ["Ln,w", "DeltaLw"],
+      warningMentionsHeavyConcreteFormulaNeedsInput: true,
       warningMentionsProxyAirborne: false,
       warningMentionsPublishedLowConfidenceFit: false,
       warningMentionsUnsupportedRwCtr: false,
-      warningMentionsVisibleDerivedTopology: false,
+      warningMentionsVisibleDerivedTopology: true,
       warningMentionsWithheldClosestCandidate: true
     }
   },
@@ -269,6 +270,7 @@ const CASES: readonly OriginCase[] = [
       readyForPlannedSolver: true,
       supported: ["Ln,w", "DeltaLw"],
       unsupported: ["Rw", "Ctr"],
+      warningMentionsHeavyConcreteFormulaNeedsInput: false,
       warningMentionsProxyAirborne: false,
       warningMentionsPublishedLowConfidenceFit: false,
       warningMentionsUnsupportedRwCtr: true,
@@ -289,11 +291,14 @@ describe("reinforced concrete low-confidence follow-up origin matrix", () => {
     const expandedBoardBoundary = snapshot(CASES[2].evaluate());
     const heavyFloatingFormula = snapshot(CASES[3].evaluate());
 
-    expect(explicitPredictor.confidenceProvenance).toBe("published_family_estimate");
-    expect(visibleDerived.confidenceProvenance).toBe("published_family_estimate");
+    expect(explicitPredictor.confidenceProvenance).toBeNull();
+    expect(explicitPredictor.warningMentionsHeavyConcreteFormulaNeedsInput).toBe(true);
+    expect(visibleDerived.confidenceProvenance).toBeNull();
+    expect(visibleDerived.warningMentionsHeavyConcreteFormulaNeedsInput).toBe(true);
     expect(visibleDerived.warningMentionsVisibleDerivedTopology).toBe(true);
 
-    expect(expandedBoardBoundary.confidenceProvenance).toBe("formula_estimate_narrow_scope");
+    expect(expandedBoardBoundary.confidenceProvenance).toBeNull();
+    expect(expandedBoardBoundary.warningMentionsHeavyConcreteFormulaNeedsInput).toBe(true);
     expect(expandedBoardBoundary.warningMentionsWithheldClosestCandidate).toBe(true);
 
     expect(heavyFloatingFormula.confidenceProvenance).toBe("formula_estimate_narrow_scope");

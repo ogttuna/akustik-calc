@@ -18,19 +18,9 @@ const LAB_UNSUPPORTED_OUTPUTS = ["Ln,w+CI", "DeltaLw"] as const;
 const FIELD_OUTPUTS = ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"] as const;
 const FIELD_UNSUPPORTED_OUTPUTS = ["L'nT,50"] as const;
 
-const ESTIMATE_CANDIDATE_IDS = [
-  "pliteq_steel_joist_250_rst02_vinyl_lab_2026",
-  "ubiq_fl32_steel_200_lab_2026",
-  "ubiq_fl32_steel_300_lab_2026",
-  "pliteq_steel_joist_250_rst12_porcelain_lab_2026",
-  "pliteq_steel_joist_250_rst02_wood_lab_2026"
-] as const;
+const ESTIMATE_CANDIDATE_IDS = ["pliteq_steel_joist_250_rst02_vinyl_lab_2026"] as const;
 
-const SELECTED_PLITEQ_SOURCE_IDS = [
-  "pliteq_steel_joist_250_rst02_vinyl_lab_2026",
-  "pliteq_steel_joist_250_rst12_porcelain_lab_2026",
-  "pliteq_steel_joist_250_rst02_wood_lab_2026"
-] as const;
+const SELECTED_PLITEQ_SOURCE_IDS = ["pliteq_steel_joist_250_rst02_vinyl_lab_2026"] as const;
 
 const UBIQ_STEEL_BOUND_IDS = [
   "ubiq_fl32_steel_200_lab_2026",
@@ -49,7 +39,7 @@ const FLOOR_FALLBACK_GATE_A_AUDIT = {
 } as const;
 
 const GATE_A_SOURCE_DECISION = {
-  currentLane: "low_confidence_fallback",
+  currentLane: "family_archetype_estimate",
   exactPromotionAllowedNow: false,
   boundPromotionAllowedNow: false,
   formulaPromotionAllowedNow: false,
@@ -154,16 +144,16 @@ describe("floor fallback low-confidence Gate A audit contract", () => {
       dnTw: null,
       dnW: null,
       dynamicFamily: null,
-      floorSystemEstimateBasis: "predictor_floor_system_low_confidence_estimate",
-      floorSystemEstimateKind: "low_confidence",
+      floorSystemEstimateBasis: "predictor_floor_system_family_archetype_estimate",
+      floorSystemEstimateKind: "family_archetype",
       floorSystemMatchId: null,
-      impactBasis: "predictor_floor_system_low_confidence_estimate",
+      impactBasis: "predictor_floor_system_family_archetype_estimate",
       lPrimeNT50: null,
       lPrimeNTw: null,
       lPrimeNW: null,
-      lnW: 58.3,
+      lnW: 58,
       lnWPlusCI: null,
-      rw: 61,
+      rw: 60,
       rwDb: 72.2,
       rwPrimeDb: null,
       stc: 72,
@@ -173,9 +163,7 @@ describe("floor fallback low-confidence Gate A audit contract", () => {
         "Screening estimate only. This result is coming from the local calibrated seed lane.",
         "Derived C, Ctr, and STC values are currently built from a calibrated mass-law curve anchored to the screening Rw estimate.",
         "Some requested impact sound outputs are still unavailable for the current input/path: Ln,w+CI, DeltaLw. DynEcho kept those outputs explicit instead of fabricating unsupported ratings.",
-        "Impact predictor input is active. DynEcho is resolving the impact lane against a dedicated predictor topology while preserving the visible assembly stack for airborne screening and UI continuity.",
-        "Impact predictor topology was derived from visible floor-role layers, so curated family and predictor lanes can activate without a hidden selector.",
-        "Published low-confidence fallback active: lightweight steel at 28% fit."
+        "Published family estimate active: lightweight steel family archetype at 63% fit."
       ]
     });
 
@@ -188,16 +176,16 @@ describe("floor fallback low-confidence Gate A audit contract", () => {
       dnTw: 72,
       dnW: 69,
       dynamicFamily: null,
-      floorSystemEstimateBasis: "predictor_floor_system_low_confidence_estimate",
-      floorSystemEstimateKind: "low_confidence",
+      floorSystemEstimateBasis: "predictor_floor_system_family_archetype_estimate",
+      floorSystemEstimateKind: "family_archetype",
       floorSystemMatchId: null,
       impactBasis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
       lPrimeNT50: null,
-      lPrimeNTw: 58.5,
-      lPrimeNW: 61.3,
-      lnW: 58.3,
+      lPrimeNTw: 58.2,
+      lPrimeNW: 61,
+      lnW: 58,
       lnWPlusCI: null,
-      rw: 61,
+      rw: 60,
       rwDb: 70.2,
       rwPrimeDb: 70,
       stc: 70,
@@ -208,9 +196,7 @@ describe("floor fallback low-confidence Gate A audit contract", () => {
         "Derived C, Ctr, and STC values are currently built from a calibrated mass-law curve anchored to the screening Rw estimate.",
         "Airborne field-side overlay active. The current building prediction context is carrying a conservative flanking penalty of 1.8 dB.",
         "Some requested impact sound outputs are still unavailable for the current input/path: L'nT,50. DynEcho kept those outputs explicit instead of fabricating unsupported ratings.",
-        "Impact predictor input is active. DynEcho is resolving the impact lane against a dedicated predictor topology while preserving the visible assembly stack for airborne screening and UI continuity.",
-        "Impact predictor topology was derived from visible floor-role layers, so curated family and predictor lanes can activate without a hidden selector.",
-        "Published low-confidence fallback active: lightweight steel at 28% fit.",
+        "Published family estimate active: lightweight steel family archetype at 63% fit.",
         "Live field-side supplement is active on the main impact lane. K and receiving-room context are now carried through the engine boundary, not only the guide lane."
       ]
     });
@@ -222,35 +208,35 @@ describe("floor fallback low-confidence Gate A audit contract", () => {
     const field = calculateAssembly(testCase.rows, testCase.fieldOptions);
 
     expect(lab.floorSystemEstimate).toMatchObject({
-      fitPercent: 28,
-      kind: "low_confidence",
+      fitPercent: 63,
+      kind: "family_archetype",
       structuralFamily: "lightweight steel"
     });
     expect(lab.impact).toMatchObject({
-      LnW: 58.3,
+      LnW: 58,
       availableOutputs: ["Ln,w"],
-      basis: "predictor_floor_system_low_confidence_estimate",
+      basis: "predictor_floor_system_family_archetype_estimate",
       confidence: {
-        level: "low",
+        level: "medium",
         provenance: "published_family_estimate",
-        score: 0.54
+        score: 0.78
       },
       estimateCandidateIds: [...ESTIMATE_CANDIDATE_IDS],
       metricBasis: {
-        LnW: "predictor_floor_system_low_confidence_estimate"
+        LnW: "predictor_floor_system_family_archetype_estimate"
       },
       scope: "family_estimate"
     });
     expect(lab.dynamicImpactTrace).toMatchObject({
-      confidenceClass: "low",
-      confidenceScore: 0.54,
+      confidenceClass: "medium",
+      confidenceScore: 0.78,
       detectedSupportFamily: "steel_joists",
-      estimateTier: "low_confidence",
+      estimateTier: "family_archetype",
       evidenceTier: "estimate",
       fieldContinuation: "none",
       fieldOutputsActive: false,
-      fitPercent: 28,
-      impactBasis: "predictor_floor_system_low_confidence_estimate",
+      fitPercent: 63,
+      impactBasis: "predictor_floor_system_family_archetype_estimate",
       selectedSourceIds: [...SELECTED_PLITEQ_SOURCE_IDS],
       selectionKind: "family_estimate",
       structuralSupportType: "steel_joists",
@@ -259,14 +245,14 @@ describe("floor fallback low-confidence Gate A audit contract", () => {
     });
 
     expect(field.floorSystemEstimate).toMatchObject({
-      fitPercent: 28,
-      kind: "low_confidence",
+      fitPercent: 63,
+      kind: "family_archetype",
       structuralFamily: "lightweight steel"
     });
     expect(field.impact).toMatchObject({
-      LPrimeNTw: 58.5,
-      LPrimeNW: 61.3,
-      LnW: 58.3,
+      LPrimeNTw: 58.2,
+      LPrimeNW: 61,
+      LnW: 58,
       availableOutputs: ["Ln,w", "L'n,w", "L'nT,w"],
       basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
       confidence: {
@@ -280,7 +266,7 @@ describe("floor fallback low-confidence Gate A audit contract", () => {
       metricBasis: {
         LPrimeNTw: "estimated_standardized_field_lprimentw_from_lprimenw_plus_room_volume",
         LPrimeNW: "estimated_field_lprimenw_from_lnw_plus_k",
-        LnW: "predictor_floor_system_low_confidence_estimate"
+        LnW: "predictor_floor_system_family_archetype_estimate"
       },
       scope: "family_estimate"
     });
@@ -288,11 +274,11 @@ describe("floor fallback low-confidence Gate A audit contract", () => {
       confidenceClass: "medium",
       confidenceScore: 0.72,
       detectedSupportFamily: "steel_joists",
-      estimateTier: "low_confidence",
+      estimateTier: "family_archetype",
       evidenceTier: "estimate",
       fieldContinuation: "standardized_room_volume",
       fieldOutputsActive: true,
-      fitPercent: 28,
+      fitPercent: 63,
       impactBasis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
       selectedSourceIds: [...SELECTED_PLITEQ_SOURCE_IDS],
       selectionKind: "family_estimate",
@@ -357,7 +343,7 @@ describe("floor fallback low-confidence Gate A audit contract", () => {
     });
 
     expect(GATE_A_SOURCE_DECISION).toEqual({
-      currentLane: "low_confidence_fallback",
+      currentLane: "family_archetype_estimate",
       exactPromotionAllowedNow: false,
       boundPromotionAllowedNow: false,
       formulaPromotionAllowedNow: false,

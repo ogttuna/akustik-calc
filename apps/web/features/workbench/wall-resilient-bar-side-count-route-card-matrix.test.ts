@@ -142,9 +142,9 @@ const LEGACY_AUTO_CASES: readonly PairContextCase[] = [
     cards: {
       Rw: { status: "unsupported", value: "Not ready" },
       ...BUILDING_PREDICTION_FIELD_CARDS,
-      STC: { status: "live", value: "55 dB" },
-      C: { status: "live", value: "-0.9 dB" },
-      Ctr: { status: "live", value: "-6 dB" }
+      STC: { status: "unsupported", value: "Not ready" },
+      C: { status: "unsupported", value: "Not ready" },
+      Ctr: { status: "unsupported", value: "Not ready" }
     }
   },
   {
@@ -233,9 +233,9 @@ const LEGACY_AUTO_CASES: readonly PairContextCase[] = [
     cards: {
       Rw: { status: "unsupported", value: "Not ready" },
       ...BUILDING_PREDICTION_FIELD_CARDS,
-      STC: { status: "live", value: "50 dB" },
-      C: { status: "live", value: "-1 dB" },
-      Ctr: { status: "live", value: "-5.8 dB" }
+      STC: { status: "unsupported", value: "Not ready" },
+      C: { status: "unsupported", value: "Not ready" },
+      Ctr: { status: "unsupported", value: "Not ready" }
     }
   }
 ] as const;
@@ -389,9 +389,9 @@ const EXPLICIT_SIDE_COUNT_CASES: readonly PairContextCase[] = [
     cards: {
       Rw: { status: "unsupported", value: "Not ready" },
       ...BUILDING_PREDICTION_FIELD_CARDS,
-      STC: { status: "live", value: "50 dB" },
-      C: { status: "live", value: "-1.3 dB" },
-      Ctr: { status: "live", value: "-6.4 dB" }
+      STC: { status: "unsupported", value: "Not ready" },
+      C: { status: "unsupported", value: "Not ready" },
+      Ctr: { status: "unsupported", value: "Not ready" }
     }
   },
   {
@@ -418,9 +418,9 @@ const EXPLICIT_SIDE_COUNT_CASES: readonly PairContextCase[] = [
     cards: {
       Rw: { status: "unsupported", value: "Not ready" },
       ...BUILDING_PREDICTION_FIELD_CARDS,
-      STC: { status: "live", value: "53 dB" },
-      C: { status: "live", value: "-1.3 dB" },
-      Ctr: { status: "live", value: "-6.4 dB" }
+      STC: { status: "unsupported", value: "Not ready" },
+      C: { status: "unsupported", value: "Not ready" },
+      Ctr: { status: "unsupported", value: "Not ready" }
     }
   },
   {
@@ -571,9 +571,9 @@ const EXPLICIT_SIDE_COUNT_CASES: readonly PairContextCase[] = [
     cards: {
       Rw: { status: "unsupported", value: "Not ready" },
       ...BUILDING_PREDICTION_FIELD_CARDS,
-      STC: { status: "live", value: "50 dB" },
-      C: { status: "live", value: "-0.8 dB" },
-      Ctr: { status: "live", value: "-5.6 dB" }
+      STC: { status: "unsupported", value: "Not ready" },
+      C: { status: "unsupported", value: "Not ready" },
+      Ctr: { status: "unsupported", value: "Not ready" }
     }
   },
   {
@@ -600,9 +600,9 @@ const EXPLICIT_SIDE_COUNT_CASES: readonly PairContextCase[] = [
     cards: {
       Rw: { status: "unsupported", value: "Not ready" },
       ...BUILDING_PREDICTION_FIELD_CARDS,
-      STC: { status: "live", value: "53 dB" },
-      C: { status: "live", value: "-0.8 dB" },
-      Ctr: { status: "live", value: "-5.6 dB" }
+      STC: { status: "unsupported", value: "Not ready" },
+      C: { status: "unsupported", value: "Not ready" },
+      Ctr: { status: "unsupported", value: "Not ready" }
     }
   }
 ] as const;

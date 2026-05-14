@@ -33,6 +33,9 @@ import {
   type WorkbenchOpeningLeakCompositeInputSurfaceDraft
 } from "./opening-leak-composite-input-surface";
 import {
+  buildWorkbenchOpeningLeakFieldBuildingInputSurface
+} from "./opening-leak-field-building-input-surface";
+import {
   buildWorkbenchHeavyConcreteCombinedImpactInputSurface,
   formatWorkbenchHeavyConcreteCombinedImpactMissingInputWarning,
   type WorkbenchHeavyConcreteCombinedImpactInputSurfaceDraft
@@ -147,6 +150,12 @@ export function evaluateScenario(input: {
           targetOutputs
         })
       : null;
+  const openingLeakFieldBuildingInputSurface = buildWorkbenchOpeningLeakFieldBuildingInputSurface({
+    contextMode: airborneFieldContextInputSurface?.airborneContext.contextMode ?? input.airborneContext?.contextMode,
+    openingLeakCompositeInputSurface,
+    studyMode: input.studyMode,
+    targetOutputs
+  });
   const advancedWallInputSurface =
     input.studyMode === "wall" && input.advancedWallInputSurface
       ? buildWorkbenchAdvancedWallInputSurface({
@@ -167,7 +176,8 @@ export function evaluateScenario(input: {
     openingLeakCompositeInputSurface && openingLeakCompositeInputSurface.status !== "inactive"
       ? {
           ...(advancedWallAirborneContext ?? { contextMode: "element_lab" as const }),
-          ...openingLeakCompositeInputSurface.airborneContextPatch
+          ...openingLeakCompositeInputSurface.airborneContextPatch,
+          ...openingLeakFieldBuildingInputSurface.airborneContextPatch
         }
       : advancedWallAirborneContext;
   const inputWarnings = collectScenarioInputWarnings({

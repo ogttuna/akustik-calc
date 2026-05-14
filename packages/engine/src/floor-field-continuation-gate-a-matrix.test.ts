@@ -193,12 +193,6 @@ const FIELD_WITHOUT_VOLUME_UNSUPPORTED = [
   "L'nT,50"
 ] as const satisfies readonly RequestedOutputId[];
 
-const LOW_CONFIDENCE_CANDIDATE_IDS = [
-  "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
-  "euracoustics_f1_rigid_ceiling_concrete_lab_2026",
-  "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
-] as const;
-
 const CASES: readonly GateACase[] = [
   {
     id: "ubiq exact supported-band open-web row",
@@ -471,21 +465,21 @@ const CASES: readonly GateACase[] = [
     }
   },
   {
-    id: "reinforced concrete low-confidence formula row",
+    id: "reinforced concrete combined route missing formula owners",
     layers: REINFORCED_CONCRETE_LOW_CONFIDENCE_LAYERS,
     expected: {
       lab: {
         origin: makeOrigin({
           boundFloorSystemMatchId: null,
-          candidateIds: LOW_CONFIDENCE_CANDIDATE_IDS,
-          floorRatingsBasis: "predictor_floor_system_low_confidence_estimate",
+          candidateIds: null,
+          floorRatingsBasis: "screening_mass_law_curve_seed_v3",
           floorSystemMatchId: null,
-          impactBasis: "predictor_floor_system_low_confidence_estimate",
+          impactBasis: null,
           lowerBoundBasis: null,
-          systemEstimateKind: "low_confidence"
+          systemEstimateKind: null
         }),
-        supported: ["Rw", "Ln,w", "Ctr"],
-        unsupported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
+        supported: ["Rw", "Ctr"],
+        unsupported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "Ln,w", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
         values: {
           deltaLw: null,
           dnA: null,
@@ -495,9 +489,9 @@ const CASES: readonly GateACase[] = [
           lPrimeNT50: null,
           lPrimeNTw: null,
           lPrimeNW: null,
-          lnW: 50,
+          lnW: null,
           lnWPlusCI: null,
-          rw: 65.9,
+          rw: 60,
           rwDb: 60.3,
           rwPrimeDb: null
         }
@@ -505,15 +499,15 @@ const CASES: readonly GateACase[] = [
       field: {
         origin: makeOrigin({
           boundFloorSystemMatchId: null,
-          candidateIds: LOW_CONFIDENCE_CANDIDATE_IDS,
-          floorRatingsBasis: "predictor_floor_system_low_confidence_estimate",
+          candidateIds: null,
+          floorRatingsBasis: "screening_mass_law_curve_seed_v3",
           floorSystemMatchId: null,
-          impactBasis: "predictor_floor_system_low_confidence_estimate",
+          impactBasis: null,
           lowerBoundBasis: null,
-          systemEstimateKind: "low_confidence"
+          systemEstimateKind: null
         }),
-        supported: ["Rw", "R'w", "Dn,w", "Dn,A", "Ln,w", "Ctr"],
-        unsupported: ["DnT,w", "DnT,A", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
+        supported: ["R'w", "Dn,w", "Dn,A", "Ctr"],
+        unsupported: ["Rw", "DnT,w", "DnT,A", "Ln,w", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
         values: {
           deltaLw: null,
           dnA: 55.7,
@@ -523,9 +517,9 @@ const CASES: readonly GateACase[] = [
           lPrimeNT50: null,
           lPrimeNTw: null,
           lPrimeNW: null,
-          lnW: 50,
+          lnW: null,
           lnWPlusCI: null,
-          rw: 65.9,
+          rw: 58,
           rwDb: 58.3,
           rwPrimeDb: 58
         }
@@ -533,15 +527,15 @@ const CASES: readonly GateACase[] = [
       building: {
         origin: makeOrigin({
           boundFloorSystemMatchId: null,
-          candidateIds: LOW_CONFIDENCE_CANDIDATE_IDS,
-          floorRatingsBasis: "predictor_floor_system_low_confidence_estimate",
+          candidateIds: null,
+          floorRatingsBasis: "screening_mass_law_curve_seed_v3",
           floorSystemMatchId: null,
-          impactBasis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+          impactBasis: null,
           lowerBoundBasis: null,
-          systemEstimateKind: "low_confidence"
+          systemEstimateKind: null
         }),
-        supported: ["Rw", "R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "Ln,w", "L'n,w", "L'nT,w", "Ctr"],
-        unsupported: ["Ln,w+CI", "DeltaLw", "L'nT,50"],
+        supported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "Ctr"],
+        unsupported: ["Rw", "Ln,w", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
         values: {
           deltaLw: null,
           dnA: 55.7,
@@ -549,11 +543,11 @@ const CASES: readonly GateACase[] = [
           dnTw: 59,
           dnW: 57,
           lPrimeNT50: null,
-          lPrimeNTw: 50.2,
-          lPrimeNW: 53,
-          lnW: 50,
+          lPrimeNTw: null,
+          lPrimeNW: null,
+          lnW: null,
           lnWPlusCI: null,
-          rw: 65.9,
+          rw: 58,
           rwDb: 58.3,
           rwPrimeDb: 58
         }

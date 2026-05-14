@@ -78,7 +78,7 @@ const LAB_CONTEXT: AirborneContext = {
 
 const FIELD_CONTEXT_WITH_FRAMING_METADATA: AirborneContext = {
   connectionType: "line_connection",
-  contextMode: "building_prediction",
+  contextMode: "field_between_rooms",
   panelHeightMm: 2800,
   panelWidthMm: 3600,
   receivingRoomRt60S: 0.6,

@@ -391,7 +391,7 @@ const V20_RERANK_CANDIDATES: readonly V20Candidate[] = [
 ] as const;
 
 const COMPLETE_TRIPLE_LEAF_BUILDING_CONTEXT: AirborneContext = {
-  contextMode: "building_prediction",
+  contextMode: "field_between_rooms",
   panelHeightMm: 2500,
   panelWidthMm: 4000,
   receivingRoomRt60S: 0.6,

@@ -19,6 +19,10 @@ import {
   getGateSOpeningLeakCompositeOutputDetail,
   getGateSOpeningLeakCompositeSurface
 } from "./opening-leak-composite-surface";
+import {
+  getCompanyInternalOpeningLeakFieldBuildingOutputDetail,
+  getCompanyInternalOpeningLeakFieldBuildingSurface
+} from "./opening-leak-field-building-surface";
 import type { StudyMode } from "./preset-definitions";
 import {
   describeAirborneValidationPosture,
@@ -109,6 +113,30 @@ export function buildSimpleWorkbenchOutputPosture(input: {
     studyMode === "wall" ? getGateAYAdvancedWallSurface(result) : null;
   const gateSOpeningLeakSurface =
     studyMode === "wall" ? getGateSOpeningLeakCompositeSurface(result) : null;
+  const companyInternalOpeningLeakFieldBuildingSurface =
+    studyMode === "wall" ? getCompanyInternalOpeningLeakFieldBuildingSurface(result) : null;
+
+  if (companyInternalOpeningLeakFieldBuildingSurface) {
+    const detail =
+      getCompanyInternalOpeningLeakFieldBuildingOutputDetail(output, result) ??
+      companyInternalOpeningLeakFieldBuildingSurface.postureDetail;
+
+    if (status === "live" && (output === "R'w" || output === "Dn,w" || output === "DnT,w")) {
+      return {
+        detail,
+        label: companyInternalOpeningLeakFieldBuildingSurface.label,
+        tone: "accent"
+      };
+    }
+
+    if (status === "unsupported") {
+      return {
+        detail,
+        label: "Opening/leak field/building boundary",
+        tone: "neutral"
+      };
+    }
+  }
 
   if (gateARBuildingSurface) {
     const detail =

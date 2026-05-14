@@ -9,6 +9,7 @@ import {
 import { getDoubleLeafFramedBridgeAirbornePromptInputs } from "./airborne-physical-input-prompt";
 import { getGateARAirborneBuildingPredictionSurface } from "./airborne-building-prediction-surface";
 import { getGateSOpeningLeakCompositeSurface } from "./opening-leak-composite-surface";
+import { getCompanyInternalOpeningLeakFieldBuildingSurface } from "./opening-leak-field-building-surface";
 import { isSteelBoundSupportFormLane, STEEL_BOUND_SUPPORT_FORM_ROUTE_NOTE } from "./steel-bound-support-form-lane";
 
 export type DynamicCalcBranchSummary = {
@@ -145,8 +146,18 @@ export function getDynamicCalcBranchSummary(input: {
   }
 
   const airborneTrace = result.dynamicAirborneTrace ?? null;
+  const companyInternalOpeningLeakFieldBuildingSurface =
+    getCompanyInternalOpeningLeakFieldBuildingSurface(result);
   const gateARBuildingSurface = getGateARAirborneBuildingPredictionSurface(result);
   const gateSOpeningLeakSurface = getGateSOpeningLeakCompositeSurface(result);
+  if (companyInternalOpeningLeakFieldBuildingSurface) {
+    return {
+      detail: companyInternalOpeningLeakFieldBuildingSurface.detail,
+      tone: "ready",
+      value: companyInternalOpeningLeakFieldBuildingSurface.label
+    };
+  }
+
   if (gateSOpeningLeakSurface) {
     return {
       detail: gateSOpeningLeakSurface.detail,

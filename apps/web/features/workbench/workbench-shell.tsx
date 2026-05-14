@@ -297,6 +297,7 @@ export function WorkbenchShell() {
   const referenceImpact = improvementReferenceImpact ?? manualReferenceImpact;
   const liveImpactFieldContext =
     {
+      ci50_2500Db: impactGuideSource === "live_stack" ? parsedImpactGuideCi50_2500Db : undefined,
       directPathOffsetDb: parsedImpactDirectPathOffsetDb,
       enableSmallRoomEstimate: impactGuideSource === "live_stack" ? impactGuideSmallRoomMode : undefined,
       fieldKDb: impactGuideSource === "live_stack" ? parsedImpactGuideKDb : undefined,
@@ -429,6 +430,7 @@ export function WorkbenchShell() {
         impactFieldContext:
           scenario.impactGuideSource === "live_stack"
             ? {
+                ci50_2500Db: parseFiniteNumber(scenario.impactGuideCi50_2500Db),
                 enableSmallRoomEstimate: scenario.impactGuideSmallRoomMode,
                 fieldKDb: parseFiniteNumber(scenario.impactGuideKDb),
                 guideHdDb: parseFiniteNumber(scenario.impactGuideHdDb),

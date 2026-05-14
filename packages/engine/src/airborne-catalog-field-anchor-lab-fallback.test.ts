@@ -78,7 +78,7 @@ describe("applyVerifiedAirborneCatalogAnchor lab-fallback in field context", () 
     expect(field.ratings.field?.RwPrime ?? Number.POSITIVE_INFINITY).toBeLessThanOrEqual(41);
   });
 
-  it("still anchors Porotherm field run under the building_prediction context", () => {
+  it("keeps the Porotherm lab ceiling under building_prediction while parking field metrics", () => {
     const layers = [
       { materialId: "dense_plaster", thicknessMm: 13 },
       { materialId: "porotherm_pls_190", thicknessMm: 190 },
@@ -106,7 +106,9 @@ describe("applyVerifiedAirborneCatalogAnchor lab-fallback in field context", () 
 
     expect(lab.ratings.iso717.Rw).toBe(48);
     expect(field.ratings.iso717.Rw).toBeLessThanOrEqual(48);
-    expect(field.ratings.field?.RwPrime ?? Number.POSITIVE_INFINITY).toBeLessThanOrEqual(48);
+    expect(field.ratings.field?.RwPrime ?? null).toBeNull();
+    expect(field.supportedTargetOutputs).toEqual([]);
+    expect(field.unsupportedTargetOutputs).toEqual(["Rw", "R'w", "DnT,w"]);
   });
 
   it("leaves lab-mode Porotherm anchoring behaviour unchanged", () => {

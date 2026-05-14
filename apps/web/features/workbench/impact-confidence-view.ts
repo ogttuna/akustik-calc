@@ -70,6 +70,10 @@ export function formatConfidenceProvenanceForImpact(input: {
     return "Steel formula corridor";
   }
 
+  if (input.basis === "predictor_lightweight_steel_suspended_ceiling_corridor_estimate") {
+    return "Steel suspended-ceiling formula corridor";
+  }
+
   return formatConfidenceProvenance(input.provenance);
 }
 

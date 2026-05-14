@@ -136,12 +136,6 @@ const FIELD_IMPACT_NEEDS_INPUT_CARDS = {
   "L'nT,50": { status: "needs_input", value: "Not ready" }
 } as const satisfies Partial<Record<RequestedOutputId, CardSnapshot>>;
 
-const LOW_CONFIDENCE_CANDIDATE_IDS = [
-  "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
-  "euracoustics_f1_rigid_ceiling_concrete_lab_2026",
-  "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
-] as const;
-
 function snapshot(testCase: RouteCase, context: ContextKind): RouteSnapshot {
   const scenario = evaluateScenario({
     airborneContext: context === "lab" ? null : context === "field" ? FIELD_CONTEXT : BUILDING_CONTEXT,
@@ -437,83 +431,83 @@ const CASES: readonly RouteCase[] = [
     }
   },
   {
-    id: "reinforced concrete low-confidence formula row",
+    id: "reinforced concrete combined route missing formula owners",
     rows: REINFORCED_CONCRETE_LOW_CONFIDENCE_ROWS,
     expected: {
       lab: {
         origin: expectedOrigin({
           boundFloorSystemMatchId: null,
-          candidateIds: LOW_CONFIDENCE_CANDIDATE_IDS,
-          floorRatingsBasis: "predictor_floor_system_low_confidence_estimate",
+          candidateIds: null,
+          floorRatingsBasis: "screening_mass_law_curve_seed_v3",
           floorSystemMatchId: null,
-          impactBasis: "predictor_floor_system_low_confidence_estimate",
+          impactBasis: null,
           lowerBoundBasis: null,
-          systemEstimateKind: "low_confidence"
+          systemEstimateKind: null
         }),
-        supported: ["Rw", "Ln,w", "Ctr"],
-        unsupported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
+        supported: ["Rw", "Ctr"],
+        unsupported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "Ln,w", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
         cards: {
           ...FIELD_OUTPUT_NEEDS_INPUT_CARDS,
           ...FIELD_IMPACT_NEEDS_INPUT_CARDS,
-          Rw: { status: "live", value: "65.9 dB" },
-          "Ln,w": { status: "live", value: "50 dB" },
+          Rw: { status: "live", value: "60 dB" },
+          "Ln,w": { status: "needs_input", value: "Not ready" },
           "Ln,w+CI": { status: "unsupported", value: "Not ready" },
-          DeltaLw: { status: "unsupported", value: "Not ready" },
-          Ctr: { status: "live", value: "-8.9 dB" }
+          DeltaLw: { status: "needs_input", value: "Not ready" },
+          Ctr: { status: "live", value: "-6.2 dB" }
         }
       },
       field: {
         origin: expectedOrigin({
           boundFloorSystemMatchId: null,
-          candidateIds: LOW_CONFIDENCE_CANDIDATE_IDS,
-          floorRatingsBasis: "predictor_floor_system_low_confidence_estimate",
+          candidateIds: null,
+          floorRatingsBasis: "screening_mass_law_curve_seed_v3",
           floorSystemMatchId: null,
-          impactBasis: "predictor_floor_system_low_confidence_estimate",
+          impactBasis: null,
           lowerBoundBasis: null,
-          systemEstimateKind: "low_confidence"
+          systemEstimateKind: null
         }),
-        supported: ["Rw", "R'w", "Dn,w", "Dn,A", "Ln,w", "Ctr"],
-        unsupported: ["DnT,w", "DnT,A", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
+        supported: ["R'w", "Dn,w", "Dn,A", "Ctr"],
+        unsupported: ["Rw", "DnT,w", "DnT,A", "Ln,w", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
         cards: {
           ...FIELD_IMPACT_NEEDS_INPUT_CARDS,
-          Rw: { status: "live", value: "65.9 dB" },
+          Rw: { status: "unsupported", value: "Not ready" },
           "R'w": { status: "live", value: "58 dB" },
           "Dn,w": { status: "live", value: "57 dB" },
           "Dn,A": { status: "live", value: "55.7 dB" },
           "DnT,w": { status: "needs_input", value: "Not ready" },
           "DnT,A": { status: "needs_input", value: "Not ready" },
-          "Ln,w": { status: "live", value: "50 dB" },
+          "Ln,w": { status: "needs_input", value: "Not ready" },
           "Ln,w+CI": { status: "unsupported", value: "Not ready" },
-          DeltaLw: { status: "unsupported", value: "Not ready" },
-          Ctr: { status: "live", value: "-8.9 dB" }
+          DeltaLw: { status: "needs_input", value: "Not ready" },
+          Ctr: { status: "live", value: "-6.1 dB" }
         }
       },
       building: {
         origin: expectedOrigin({
           boundFloorSystemMatchId: null,
-          candidateIds: LOW_CONFIDENCE_CANDIDATE_IDS,
-          floorRatingsBasis: "predictor_floor_system_low_confidence_estimate",
+          candidateIds: null,
+          floorRatingsBasis: "screening_mass_law_curve_seed_v3",
           floorSystemMatchId: null,
-          impactBasis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+          impactBasis: null,
           lowerBoundBasis: null,
-          systemEstimateKind: "low_confidence"
+          systemEstimateKind: null
         }),
-        supported: ["Rw", "R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "Ln,w", "L'n,w", "L'nT,w", "Ctr"],
-        unsupported: ["Ln,w+CI", "DeltaLw", "L'nT,50"],
+        supported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "Ctr"],
+        unsupported: ["Rw", "Ln,w", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
         cards: {
-          Rw: { status: "live", value: "65.9 dB" },
+          Rw: { status: "unsupported", value: "Not ready" },
           "R'w": { status: "live", value: "58 dB" },
           "Dn,w": { status: "live", value: "57 dB" },
           "Dn,A": { status: "live", value: "55.7 dB" },
           "DnT,w": { status: "live", value: "59 dB" },
           "DnT,A": { status: "live", value: "58.2 dB" },
-          "Ln,w": { status: "live", value: "50 dB" },
+          "Ln,w": { status: "needs_input", value: "Not ready" },
           "Ln,w+CI": { status: "unsupported", value: "Not ready" },
-          DeltaLw: { status: "unsupported", value: "Not ready" },
-          "L'n,w": { status: "live", value: "53 dB" },
-          "L'nT,w": { status: "live", value: "50.2 dB" },
-          "L'nT,50": { status: "unsupported", value: "Not ready" },
-          Ctr: { status: "live", value: "-8.9 dB" }
+          DeltaLw: { status: "needs_input", value: "Not ready" },
+          "L'n,w": { status: "needs_input", value: "Not ready" },
+          "L'nT,w": { status: "needs_input", value: "Not ready" },
+          "L'nT,50": { status: "needs_input", value: "Not ready" },
+          Ctr: { status: "live", value: "-6.1 dB" }
         }
       }
     }

@@ -101,7 +101,7 @@ const COMPLETE_TRIPLE_LEAF_CONTEXT: AirborneContext = {
 
 const FIELD_TRIPLE_LEAF_CONTEXT: AirborneContext = {
   ...COMPLETE_TRIPLE_LEAF_CONTEXT,
-  contextMode: "building_prediction",
+  contextMode: "field_between_rooms",
   panelHeightMm: 2800,
   panelWidthMm: 3600,
   receivingRoomRt60S: 0.6,

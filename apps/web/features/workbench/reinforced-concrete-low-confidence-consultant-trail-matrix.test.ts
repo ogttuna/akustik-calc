@@ -25,7 +25,7 @@ const TARGET_OUTPUTS = ["Rw", "Ctr", "Ln,w", "DeltaLw"] as const;
 
 const CASES: readonly TrailCase[] = [
   {
-    id: "visible reinforced low-confidence route keeps consultant trail in screening territory",
+    id: "visible reinforced cleanup route keeps consultant trail parked on missing impact owners",
     rows: [
       { materialId: "concrete", thicknessMm: "180", floorRole: "base_structure" },
       { materialId: "generic_resilient_underlay", thicknessMm: "8", floorRole: "resilient_layer" },
@@ -37,13 +37,13 @@ const CASES: readonly TrailCase[] = [
     ],
     expected: {
       headline:
-        "Low-confidence fallback on reinforced concrete is the current floor-side screening posture. Screening seed is the current airborne reading.",
+        "No live lane is the current floor-side posture. Screening seed is the current airborne reading.",
       items: [
         {
           detail:
-            "Low-confidence family fallback on reinforced concrete. The active impact lane is the final reinforced-concrete mixed-row fallback. 29% fit inside the active low-confidence ceiling. Ln,w stays on a mixed nearby-row concrete lane rather than a narrow same-stack family fit. Ranking keeps the elastic-ceiling nearby row first, the rigid-ceiling row second, and the timber-underlay row as a farther fallback when cavity and board geometry drift away from the mixed-row corridor. Keep the current floor-side read in screening territory and do not treat it as delivery-ready.",
+            "No live lane. No supported impact output is active on the current stack.",
           label: "Impact corridor",
-          tone: "warning"
+          tone: "neutral"
         },
         {
           detail:
@@ -53,19 +53,13 @@ const CASES: readonly TrailCase[] = [
         },
         {
           detail:
-            "Low-confidence fallback remains active on the current floor-side route. Keep nearby-row evidence, warnings, and corridor notes attached, and do not present the package as delivery-ready.",
-          label: "Delivery posture",
-          tone: "warning"
-        },
-        {
-          detail:
-            "4 requested outputs are armed. 3 currently resolve through live, bound, guide-backed, or screening-fallback lanes. Still explicit: DeltaLw. Keep the current package in screening mode until a narrower lane is proven.",
+            "4 requested outputs are armed. 2 currently resolve through live, bound, or guide-backed lanes. Still explicit: Ln,w, DeltaLw.",
           label: "Output coverage",
           tone: "warning"
         },
         {
           detail:
-            "6 active warnings. First signal: Low-confidence reinforced-concrete combined fallback is active. Ln,w stays on a mixed nearby-row concrete lane, while Rw and Ctr remain proxy airborne companions instead of a narrow same-stack family claim.",
+            "7 active warnings. First signal: Screening estimate only. This result is coming from the local calibrated seed lane.",
           label: "Active warnings",
           tone: "warning"
         }
@@ -73,7 +67,7 @@ const CASES: readonly TrailCase[] = [
     }
   },
   {
-    id: "expanded-board reinforced boundary keeps consultant trail on scoped formula posture",
+    id: "expanded-board reinforced boundary keeps consultant trail on missing impact owners",
     rows: [
       { materialId: "concrete", thicknessMm: "180", floorRole: "base_structure" },
       { materialId: "generic_resilient_underlay", thicknessMm: "8", floorRole: "resilient_layer" },
@@ -87,13 +81,13 @@ const CASES: readonly TrailCase[] = [
     ],
     expected: {
       headline:
-        "Scoped formula estimate on reinforced concrete is the current floor-side posture. Screening seed is the current airborne reading.",
+        "No live lane is the current floor-side posture. Screening seed is the current airborne reading.",
       items: [
         {
           detail:
-            "Heavy-floor formula estimate on reinforced concrete. The active floor lane is a scoped estimate. It is benchmark-guarded, but it still needs explicit source citation or tolerance notes before it is presented as a final acoustic claim.",
+            "No live lane. No supported impact output is active on the current stack.",
           label: "Impact corridor",
-          tone: "accent"
+          tone: "neutral"
         },
         {
           detail:
@@ -103,13 +97,13 @@ const CASES: readonly TrailCase[] = [
         },
         {
           detail:
-            "4 requested outputs are armed. 3 currently resolve through live, bound, or guide-backed lanes. Still explicit: DeltaLw.",
+            "4 requested outputs are armed. 2 currently resolve through live, bound, or guide-backed lanes. Still explicit: Ln,w, DeltaLw.",
           label: "Output coverage",
           tone: "warning"
         },
         {
           detail:
-            "4 active warnings. First signal: Screening estimate only. This result is coming from the local calibrated seed lane.",
+            "7 active warnings. First signal: Screening estimate only. This result is coming from the local calibrated seed lane.",
           label: "Active warnings",
           tone: "warning"
         }
@@ -193,20 +187,19 @@ describe("reinforced concrete low-confidence consultant trail matrix", () => {
     expect(snapshot(testCase)).toEqual(testCase.expected);
   });
 
-  it("keeps reinforced screening trails distinct from adjacent formula-owned concrete trails", () => {
-    const lowConfidence = snapshot(CASES[0]);
+  it("keeps reinforced missing-owner trails distinct from adjacent formula-owned concrete trails", () => {
+    const needsInput = snapshot(CASES[0]);
     const expandedBoardBoundary = snapshot(CASES[1]);
     const floatingBoundary = snapshot(CASES[2]);
 
-    expect(lowConfidence.headline).toContain("screening posture");
-    expect(lowConfidence.items[2]).toEqual({
-      detail:
-        "Low-confidence fallback remains active on the current floor-side route. Keep nearby-row evidence, warnings, and corridor notes attached, and do not present the package as delivery-ready.",
-      label: "Delivery posture",
-      tone: "warning"
+    expect(needsInput.headline).toContain("No live lane");
+    expect(needsInput.items[0]).toEqual({
+      detail: "No live lane. No supported impact output is active on the current stack.",
+      label: "Impact corridor",
+      tone: "neutral"
     });
 
-    expect(expandedBoardBoundary.headline).toContain("Scoped formula estimate on reinforced concrete");
+    expect(expandedBoardBoundary.headline).toContain("No live lane");
     expect(expandedBoardBoundary.items[2]?.tone).toBe("warning");
 
     expect(floatingBoundary.items[2]).toEqual({

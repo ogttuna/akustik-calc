@@ -6,11 +6,14 @@ import {
 } from "@dynecho/engine";
 import type {
   AirborneCalculatorId,
+  AirborneBuildingPredictionOutputBasis,
   AirborneConnectionType,
+  AirborneConservativeFlankingAssumption,
   AirborneResilientBarSideCount,
   AirborneStudType,
   AirtightnessClass,
   AirborneContextMode,
+  AirborneFlankingJunctionClass,
   ElectricalBoxState,
   ExactImpactSourceLabOrField,
   FloorRole,
@@ -88,10 +91,14 @@ type AppendLayerDraftInput = Pick<LayerDraft, "densityKgM3" | "dynamicStiffnessM
 type ScenarioSnapshot = WorkbenchWallTopologyDraft & {
   calculatorId: AirborneCalculatorId;
   airborneAirtightness: AirtightnessClass;
+  airborneBuildingPredictionOutputBasis?: AirborneBuildingPredictionOutputBasis;
   airborneConnectionType: AirborneConnectionType;
+  airborneConservativeFlankingAssumption?: AirborneConservativeFlankingAssumption;
   airborneContextMode: AirborneContextMode;
   airborneElectricalBoxes: ElectricalBoxState;
+  airborneFlankingJunctionClass?: AirborneFlankingJunctionClass;
   airborneJunctionQuality: JunctionQuality;
+  airborneJunctionCouplingLengthM?: string;
   airborneAdvancedWallInputSurface?: WorkbenchAdvancedWallInputSurfaceDraft;
   airborneOpeningLeakElements: WorkbenchOpeningLeakElementDraft[];
   airborneOpeningLeakHostWallAreaM2: string;
@@ -103,6 +110,7 @@ type ScenarioSnapshot = WorkbenchWallTopologyDraft & {
   airborneReceivingRoomVolumeM3: string;
   airborneResilientBarSideCount?: AirborneResilientBarSideCount;
   airborneSharedTrack: SharedTrackClass;
+  airborneSourceRoomVolumeM3?: string;
   airborneStudSpacingMm: string;
   airborneStudType: AirborneStudType;
   briefNote: string;
@@ -192,10 +200,14 @@ type WorkbenchStore = WorkbenchWallTopologyDraft & {
   activePresetId: PresetId;
   calculatorId: AirborneCalculatorId;
   airborneAirtightness: AirtightnessClass;
+  airborneBuildingPredictionOutputBasis: AirborneBuildingPredictionOutputBasis;
   airborneConnectionType: AirborneConnectionType;
+  airborneConservativeFlankingAssumption: AirborneConservativeFlankingAssumption;
   airborneContextMode: AirborneContextMode;
   airborneElectricalBoxes: ElectricalBoxState;
+  airborneFlankingJunctionClass: AirborneFlankingJunctionClass;
   airborneJunctionQuality: JunctionQuality;
+  airborneJunctionCouplingLengthM: string;
   airborneAdvancedWallInputSurface: WorkbenchAdvancedWallInputSurfaceDraft;
   airborneOpeningLeakElements: WorkbenchOpeningLeakElementDraft[];
   airborneOpeningLeakHostWallAreaM2: string;
@@ -207,6 +219,7 @@ type WorkbenchStore = WorkbenchWallTopologyDraft & {
   airborneReceivingRoomVolumeM3: string;
   airborneResilientBarSideCount: AirborneResilientBarSideCount;
   airborneSharedTrack: SharedTrackClass;
+  airborneSourceRoomVolumeM3: string;
   airborneStudSpacingMm: string;
   airborneStudType: AirborneStudType;
   briefNote: string;
@@ -306,9 +319,13 @@ type WorkbenchStore = WorkbenchWallTopologyDraft & {
   saveCurrentScenario: () => void;
   setCalculatorId: (value: AirborneCalculatorId) => void;
   setAirborneAirtightness: (value: AirtightnessClass) => void;
+  setAirborneBuildingPredictionOutputBasis: (value: AirborneBuildingPredictionOutputBasis) => void;
   setAirborneConnectionType: (value: AirborneConnectionType) => void;
+  setAirborneConservativeFlankingAssumption: (value: AirborneConservativeFlankingAssumption) => void;
   setAirborneContextMode: (value: AirborneContextMode) => void;
   setAirborneElectricalBoxes: (value: ElectricalBoxState) => void;
+  setAirborneFlankingJunctionClass: (value: AirborneFlankingJunctionClass) => void;
+  setAirborneJunctionCouplingLengthM: (value: string) => void;
   setAirborneJunctionQuality: (value: JunctionQuality) => void;
   replaceAirborneAdvancedWallInputSurface: (surface: WorkbenchAdvancedWallInputSurfaceDraft) => void;
   addAirborneOpeningLeakElement: () => void;
@@ -325,6 +342,7 @@ type WorkbenchStore = WorkbenchWallTopologyDraft & {
   setAirborneReceivingRoomVolumeM3: (value: string) => void;
   setAirborneResilientBarSideCount: (value: AirborneResilientBarSideCount) => void;
   setAirborneSharedTrack: (value: SharedTrackClass) => void;
+  setAirborneSourceRoomVolumeM3: (value: string) => void;
   setAirborneStudSpacingMm: (value: string) => void;
   setAirborneStudType: (value: AirborneStudType) => void;
   setAirborneWallCavity1AbsorptionClass: (value: WallCavityAbsorptionClass) => void;
@@ -647,10 +665,14 @@ function makeDefaultState(input?: {
     activePresetId: preset.id,
     calculatorId: "dynamic" as const,
     airborneAirtightness: "good" as const,
+    airborneBuildingPredictionOutputBasis: "unknown" as const,
     airborneConnectionType: "auto" as const,
+    airborneConservativeFlankingAssumption: "unknown" as const,
     airborneContextMode: "element_lab" as const,
     airborneElectricalBoxes: "none" as const,
+    airborneFlankingJunctionClass: "unknown" as const,
     airborneJunctionQuality: "good" as const,
+    airborneJunctionCouplingLengthM: "",
     airborneAdvancedWallInputSurface: makeWorkbenchAdvancedWallInputSurfaceDraft(),
     airborneOpeningLeakElements: [makeWorkbenchOpeningLeakElementDraft()],
     airborneOpeningLeakHostWallAreaM2: "",
@@ -662,6 +684,7 @@ function makeDefaultState(input?: {
     airborneReceivingRoomVolumeM3: "",
     airborneResilientBarSideCount: "auto" as const,
     airborneSharedTrack: "independent" as const,
+    airborneSourceRoomVolumeM3: "",
     airborneStudSpacingMm: "",
     airborneStudType: "auto" as const,
     ...DEFAULT_WORKBENCH_WALL_TOPOLOGY_DRAFT,
@@ -778,10 +801,14 @@ function buildLoadedScenarioState(
     activePresetId: scenario.presetId,
     calculatorId: scenario.calculatorId ?? "dynamic",
     airborneAirtightness: scenario.airborneAirtightness ?? "good",
+    airborneBuildingPredictionOutputBasis: scenario.airborneBuildingPredictionOutputBasis ?? "unknown",
     airborneConnectionType: scenario.airborneConnectionType ?? "auto",
+    airborneConservativeFlankingAssumption: scenario.airborneConservativeFlankingAssumption ?? "unknown",
     airborneContextMode: scenario.airborneContextMode ?? "element_lab",
     airborneElectricalBoxes: scenario.airborneElectricalBoxes ?? "none",
+    airborneFlankingJunctionClass: scenario.airborneFlankingJunctionClass ?? "unknown",
     airborneJunctionQuality: scenario.airborneJunctionQuality ?? "good",
+    airborneJunctionCouplingLengthM: scenario.airborneJunctionCouplingLengthM ?? "",
     airborneAdvancedWallInputSurface: scenario.airborneAdvancedWallInputSurface
       ? cloneAdvancedWallInputSurface(scenario.airborneAdvancedWallInputSurface)
       : makeWorkbenchAdvancedWallInputSurfaceDraft(),
@@ -798,6 +825,7 @@ function buildLoadedScenarioState(
     airborneReceivingRoomVolumeM3: scenario.airborneReceivingRoomVolumeM3 ?? "",
     airborneResilientBarSideCount: scenario.airborneResilientBarSideCount ?? "auto",
     airborneSharedTrack: scenario.airborneSharedTrack ?? "independent",
+    airborneSourceRoomVolumeM3: scenario.airborneSourceRoomVolumeM3 ?? "",
     airborneStudSpacingMm: scenario.airborneStudSpacingMm ?? "",
     airborneStudType: scenario.airborneStudType ?? "auto",
     airborneWallCavity1AbsorptionClass:
@@ -1091,10 +1119,14 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
               id: crypto.randomUUID(),
               criteriaPackId: state.criteriaPackId,
               airborneAirtightness: state.airborneAirtightness,
+              airborneBuildingPredictionOutputBasis: state.airborneBuildingPredictionOutputBasis,
               airborneConnectionType: state.airborneConnectionType,
+              airborneConservativeFlankingAssumption: state.airborneConservativeFlankingAssumption,
               airborneContextMode: state.airborneContextMode,
               airborneElectricalBoxes: state.airborneElectricalBoxes,
+              airborneFlankingJunctionClass: state.airborneFlankingJunctionClass,
               airborneJunctionQuality: state.airborneJunctionQuality,
+              airborneJunctionCouplingLengthM: state.airborneJunctionCouplingLengthM,
               airborneAdvancedWallInputSurface: cloneAdvancedWallInputSurface(state.airborneAdvancedWallInputSurface),
               airborneOpeningLeakElements: state.airborneOpeningLeakElements.map((element) => ({ ...element })),
               airborneOpeningLeakHostWallAreaM2: state.airborneOpeningLeakHostWallAreaM2,
@@ -1106,6 +1138,7 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
               airborneReceivingRoomVolumeM3: state.airborneReceivingRoomVolumeM3,
               airborneResilientBarSideCount: state.airborneResilientBarSideCount,
               airborneSharedTrack: state.airborneSharedTrack,
+              airborneSourceRoomVolumeM3: state.airborneSourceRoomVolumeM3,
               airborneStudSpacingMm: state.airborneStudSpacingMm,
               airborneStudType: state.airborneStudType,
               airborneWallCavity1AbsorptionClass: state.airborneWallCavity1AbsorptionClass,
@@ -1209,9 +1242,13 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
         })),
       setCalculatorId: (value) => set({ calculatorId: value }),
       setAirborneAirtightness: (value) => set({ airborneAirtightness: value }),
+      setAirborneBuildingPredictionOutputBasis: (value) => set({ airborneBuildingPredictionOutputBasis: value }),
       setAirborneConnectionType: (value) => set({ airborneConnectionType: value }),
+      setAirborneConservativeFlankingAssumption: (value) => set({ airborneConservativeFlankingAssumption: value }),
       setAirborneContextMode: (value) => set({ airborneContextMode: value }),
       setAirborneElectricalBoxes: (value) => set({ airborneElectricalBoxes: value }),
+      setAirborneFlankingJunctionClass: (value) => set({ airborneFlankingJunctionClass: value }),
+      setAirborneJunctionCouplingLengthM: (value) => set({ airborneJunctionCouplingLengthM: value }),
       setAirborneJunctionQuality: (value) => set({ airborneJunctionQuality: value }),
       replaceAirborneAdvancedWallInputSurface: (surface) =>
         set({ airborneAdvancedWallInputSurface: cloneAdvancedWallInputSurface(surface) }),
@@ -1271,6 +1308,7 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
       setAirborneReceivingRoomVolumeM3: (value) => set({ airborneReceivingRoomVolumeM3: value }),
       setAirborneResilientBarSideCount: (value) => set({ airborneResilientBarSideCount: value }),
       setAirborneSharedTrack: (value) => set({ airborneSharedTrack: value }),
+      setAirborneSourceRoomVolumeM3: (value) => set({ airborneSourceRoomVolumeM3: value }),
       setAirborneStudSpacingMm: (value) => set({ airborneStudSpacingMm: value }),
       setAirborneStudType: (value) => set({ airborneStudType: value }),
       setAirborneWallCavity1AbsorptionClass: (value) => set({ airborneWallCavity1AbsorptionClass: value }),

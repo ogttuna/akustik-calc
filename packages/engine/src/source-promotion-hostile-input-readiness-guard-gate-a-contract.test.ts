@@ -181,7 +181,7 @@ const GROUPED_SPLIT_ROCKWOOL_CONTEXT: AirborneContext = {
 const GROUPED_SPLIT_ROCKWOOL_FIELD_CONTEXT: AirborneContext = {
   ...GROUPED_SPLIT_ROCKWOOL_CONTEXT,
   connectionType: "line_connection",
-  contextMode: "building_prediction",
+  contextMode: "field_between_rooms",
   panelHeightMm: 2800,
   panelWidthMm: 3600,
   receivingRoomRt60S: 0.6,

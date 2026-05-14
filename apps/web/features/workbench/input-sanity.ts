@@ -18,6 +18,7 @@ type LayerThicknessGuidance = {
 };
 
 export const GUIDED_INPUT_SANITY_BANDS = {
+  ci50_2500Db: { max: 20, min: -15, unit: "dB" },
   fieldKDb: { max: 20, min: -15, unit: "dB" },
   layerThicknessMm: { max: 1000, min: 0.5, unit: "mm" },
   panelHeightMm: { max: 6000, min: 1500, unit: "mm" },
@@ -391,6 +392,18 @@ export function collectScenarioInputWarnings(input: {
     });
     if (impactVolumeWarning) {
       warnings.push(impactVolumeWarning);
+    }
+  }
+
+  if (requestedOutputs.includes("L'nT,50")) {
+    const ci50Warning = getGuidedNumericSanityWarning({
+      band: GUIDED_INPUT_SANITY_BANDS.ci50_2500Db,
+      label: "Impact CI,50-2500",
+      suffix: "Check the low-frequency companion source before trusting L'nT,50.",
+      value: input.impactFieldContext?.ci50_2500Db
+    });
+    if (ci50Warning) {
+      warnings.push(ci50Warning);
     }
   }
 

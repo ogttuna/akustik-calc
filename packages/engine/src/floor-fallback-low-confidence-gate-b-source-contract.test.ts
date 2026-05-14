@@ -77,7 +77,7 @@ const GATE_B_BLOCKERS = {
   failClosedCorrectionBlockers: [
     "unsupported_lprimen_t50_is_already_explicitly_unsupported",
     "lnw_plus_ci_and_delta_lw_are_explicitly_unsupported_on_the_lab_lane",
-    "low_confidence_warnings_and_web_card_posture_are_already_visible"
+      "family_archetype_warnings_and_web_card_posture_are_already_visible"
   ]
 } as const;
 
@@ -169,23 +169,23 @@ describe("floor fallback low-confidence Gate B source/formula contract", () => {
     expect(field.boundFloorSystemMatch).toBeNull();
     expect(field.boundFloorSystemEstimate).toBeNull();
     expect(resultSnapshot(field)).toMatchObject({
-      floorSystemEstimateBasis: "predictor_floor_system_low_confidence_estimate",
-      floorSystemEstimateKind: "low_confidence",
+      floorSystemEstimateBasis: "predictor_floor_system_family_archetype_estimate",
+      floorSystemEstimateKind: "family_archetype",
       impactBasis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
       lPrimeNT50: null,
-      lPrimeNTw: 58.5,
-      lPrimeNW: 61.3,
-      lnW: 58.3,
+      lPrimeNTw: 58.2,
+      lPrimeNW: 61,
+      lnW: 58,
       lnWPlusCI: null,
-      rw: 61,
+      rw: 60,
       rwPrimeDb: 70,
       unsupportedTargetOutputs: ["L'nT,50"]
     });
     expect(field.dynamicImpactTrace).toMatchObject({
-      estimateTier: "low_confidence",
+      estimateTier: "family_archetype",
       evidenceTier: "estimate",
-      fitPercent: 28,
-      selectionKindLabel: "Low-confidence fallback"
+      fitPercent: 63,
+      selectionKindLabel: "Published family estimate"
     });
   });
 
@@ -253,7 +253,7 @@ describe("floor fallback low-confidence Gate B source/formula contract", () => {
     expect(field.unsupportedTargetOutputs).toEqual(["L'nT,50"]);
     expect(field.impact?.LPrimeNT50).toBeUndefined();
     expect(field.warnings.some((warning: string) => /L'nT,50/i.test(warning))).toBe(true);
-    expect(field.warnings.some((warning: string) => /Published low-confidence fallback active/i.test(warning)))
+    expect(field.warnings.some((warning: string) => /Published family estimate active/i.test(warning)))
       .toBe(true);
 
     expect(GATE_B_BLOCKERS).toEqual({
@@ -273,7 +273,7 @@ describe("floor fallback low-confidence Gate B source/formula contract", () => {
       failClosedCorrectionBlockers: [
         "unsupported_lprimen_t50_is_already_explicitly_unsupported",
         "lnw_plus_ci_and_delta_lw_are_explicitly_unsupported_on_the_lab_lane",
-        "low_confidence_warnings_and_web_card_posture_are_already_visible"
+        "family_archetype_warnings_and_web_card_posture_are_already_visible"
       ]
     });
     expect(ACTIVE_BOUNDARIES.disallowedMoves).toEqual([

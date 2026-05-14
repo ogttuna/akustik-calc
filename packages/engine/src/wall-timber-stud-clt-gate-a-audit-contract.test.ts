@@ -11,7 +11,6 @@ import {
   findVerifiedAirborneAssemblyMatchWithLabFallback
 } from "./airborne-verified-catalog";
 import { calculateAssembly } from "./calculate-assembly";
-import { GATE_L_AIRBORNE_BUILDING_PREDICTION_BOUNDARY_WARNING } from "./dynamic-airborne-gate-l-building-prediction-boundary";
 import {
   ENGINE_MIXED_GENERATED_CASES,
   resultSnapshot
@@ -195,8 +194,9 @@ describe("wall timber stud + CLT Gate A audit contract", () => {
     expect(findVerifiedAirborneAssemblyMatch(lab.layers, labContext)).toBeNull();
     expect(findVerifiedAirborneAssemblyMatch(field.layers, fieldContext)).toBeNull();
     expect(findVerifiedAirborneAssemblyMatchWithLabFallback(field.layers, fieldContext)).toBeNull();
-    expect(field.warnings).toContain(GATE_L_AIRBORNE_BUILDING_PREDICTION_BOUNDARY_WARNING);
-    expect(field.warnings.some((warning: string) => /field-side overlay active/i.test(warning))).toBe(false);
+    expect(field.warnings.some((warning: string) => /building-prediction route is parked/i.test(warning)))
+      .toBe(false);
+    expect(field.warnings.some((warning: string) => /field-side overlay active/i.test(warning))).toBe(true);
     expect(field.warnings.some((warning: string) => /Curated exact airborne lab match active/i.test(warning)))
       .toBe(false);
   });

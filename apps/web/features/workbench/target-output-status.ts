@@ -46,6 +46,7 @@ import {
 } from "./steel-bound-support-form-lane";
 import { getGateARAirborneBuildingPredictionOutputDetail } from "./airborne-building-prediction-surface";
 import { getGateSOpeningLeakCompositeOutputDetail } from "./opening-leak-composite-surface";
+import { getCompanyInternalOpeningLeakFieldBuildingOutputDetail } from "./opening-leak-field-building-surface";
 
 export type TargetOutputStatus = {
   kind:
@@ -322,6 +323,8 @@ export function getTargetOutputStatus(input: {
   if (result?.supportedTargetOutputs.includes(output)) {
     const label = getEngineLiveLabel(output, result);
     const gateSOpeningLeakDetail = getGateSOpeningLeakCompositeOutputDetail(output, result);
+    const companyInternalOpeningLeakFieldBuildingDetail =
+      getCompanyInternalOpeningLeakFieldBuildingOutputDetail(output, result);
     const gateARBuildingDetail = getGateARAirborneBuildingPredictionOutputDetail(output, result);
     const customEngineLiveNote = isFieldAirborneOutput(output)
       ? getFieldAirborneLiveDetail(output, result)
@@ -349,6 +352,7 @@ export function getTargetOutputStatus(input: {
       label,
       note:
         gateSOpeningLeakDetail ??
+        companyInternalOpeningLeakFieldBuildingDetail ??
         gateARBuildingDetail ??
         customEngineLiveNote ??
         (label === "Bound support"
@@ -383,6 +387,18 @@ export function getTargetOutputStatus(input: {
         kind: needsInput ? "pending_input" : "unavailable",
         label: needsInput ? "Needs opening input" : "Unsupported opening basis",
         note: gateSOpeningLeakDetail,
+        output,
+        tone: "warning"
+      };
+    }
+
+    const companyInternalOpeningLeakFieldBuildingDetail =
+      getCompanyInternalOpeningLeakFieldBuildingOutputDetail(output, result);
+    if (companyInternalOpeningLeakFieldBuildingDetail) {
+      return {
+        kind: "unavailable",
+        label: "Unsupported opening field/building basis",
+        note: companyInternalOpeningLeakFieldBuildingDetail,
         output,
         tone: "warning"
       };
@@ -488,11 +504,14 @@ export function getTargetOutputCorridor(input: {
   if (LIVE_OUTPUTS.has(output)) {
     const airbornePosture = describeAirborneValidationPosture(result);
     const gateSOpeningLeakDetail = getGateSOpeningLeakCompositeOutputDetail(output, result);
+    const companyInternalOpeningLeakFieldBuildingDetail =
+      getCompanyInternalOpeningLeakFieldBuildingOutputDetail(output, result);
     const gateARBuildingDetail = getGateARAirborneBuildingPredictionOutputDetail(output, result);
 
     return {
       detail:
         gateSOpeningLeakDetail ??
+        companyInternalOpeningLeakFieldBuildingDetail ??
         gateARBuildingDetail ??
         (isReinforcedConcreteLowConfidenceLane && (output === "Rw" || output === "Ctr")
           ? status.note

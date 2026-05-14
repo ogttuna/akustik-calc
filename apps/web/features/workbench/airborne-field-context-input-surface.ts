@@ -1,7 +1,10 @@
 import type {
   AcousticInputFieldId,
+  AirborneBuildingPredictionOutputBasis,
+  AirborneConservativeFlankingAssumption,
   AirborneContext,
   AirborneContextMode,
+  AirborneFlankingJunctionClass,
   AirtightnessClass,
   RequestedOutputId
 } from "@dynecho/shared";
@@ -30,13 +33,28 @@ export type WorkbenchAirborneFieldContextInputSurfaceDraft = {
   airtightness?: AirtightnessClass;
   baseContext?: Omit<
     AirborneContext,
-    "airtightness" | "contextMode" | "panelHeightMm" | "panelWidthMm" | "receivingRoomRt60S" | "receivingRoomVolumeM3"
+    | "airtightness"
+    | "buildingPredictionOutputBasis"
+    | "conservativeFlankingAssumption"
+    | "contextMode"
+    | "flankingJunctionClass"
+    | "junctionCouplingLengthM"
+    | "panelHeightMm"
+    | "panelWidthMm"
+    | "receivingRoomRt60S"
+    | "receivingRoomVolumeM3"
+    | "sourceRoomVolumeM3"
   >;
+  buildingPredictionOutputBasis?: AirborneBuildingPredictionOutputBasis;
+  conservativeFlankingAssumption?: AirborneConservativeFlankingAssumption;
   contextMode: AirborneContextMode;
+  flankingJunctionClass?: AirborneFlankingJunctionClass;
+  junctionCouplingLengthM?: string;
   panelHeightMm: string;
   panelWidthMm: string;
   receivingRoomRt60S: string;
   receivingRoomVolumeM3: string;
+  sourceRoomVolumeM3?: string;
 };
 
 export type WorkbenchAirborneFieldContextInputSurfaceResult = {
@@ -55,18 +73,25 @@ export function buildWorkbenchAirborneFieldContextInputSurface(input: {
   surface: WorkbenchAirborneFieldContextInputSurfaceDraft;
   targetOutputs: readonly RequestedOutputId[];
 }): WorkbenchAirborneFieldContextInputSurfaceResult {
+  const junctionCouplingLengthM = parsePositiveWorkbenchNumber(input.surface.junctionCouplingLengthM ?? "");
   const panelHeightMm = parsePositiveWorkbenchNumber(input.surface.panelHeightMm);
   const panelWidthMm = parsePositiveWorkbenchNumber(input.surface.panelWidthMm);
   const receivingRoomRt60S = parsePositiveWorkbenchNumber(input.surface.receivingRoomRt60S);
   const receivingRoomVolumeM3 = parsePositiveWorkbenchNumber(input.surface.receivingRoomVolumeM3);
+  const sourceRoomVolumeM3 = parsePositiveWorkbenchNumber(input.surface.sourceRoomVolumeM3 ?? "");
   const airborneContext: AirborneContext = {
     ...(input.surface.baseContext ?? {}),
     airtightness: input.surface.airtightness,
+    buildingPredictionOutputBasis: input.surface.buildingPredictionOutputBasis,
+    conservativeFlankingAssumption: input.surface.conservativeFlankingAssumption,
     contextMode: input.surface.contextMode,
+    flankingJunctionClass: input.surface.flankingJunctionClass,
+    junctionCouplingLengthM,
     panelHeightMm,
     panelWidthMm,
     receivingRoomRt60S,
-    receivingRoomVolumeM3
+    receivingRoomVolumeM3,
+    sourceRoomVolumeM3
   };
 
   if (input.studyMode !== "wall" || !hasFieldAirborneOutputs(input.targetOutputs)) {
@@ -90,19 +115,33 @@ export function buildWorkbenchAirborneFieldContextInputSurface(input: {
     if (typeof receivingRoomRt60S !== "number") {
       missingPhysicalInputs.push("receivingRoomRt60S");
     }
-    missingPhysicalInputs.push(
-      "sourceRoomVolumeM3",
-      "flankingJunctionClass",
-      "conservativeFlankingAssumption",
-      "junctionCouplingLengthM",
-      "buildingPredictionOutputBasis"
-    );
+    if (typeof sourceRoomVolumeM3 !== "number") {
+      missingPhysicalInputs.push("sourceRoomVolumeM3");
+    }
+    if (!input.surface.flankingJunctionClass || input.surface.flankingJunctionClass === "unknown") {
+      missingPhysicalInputs.push("flankingJunctionClass");
+    }
+    if (
+      !input.surface.conservativeFlankingAssumption ||
+      input.surface.conservativeFlankingAssumption === "unknown"
+    ) {
+      missingPhysicalInputs.push("conservativeFlankingAssumption");
+    }
+    if (typeof junctionCouplingLengthM !== "number") {
+      missingPhysicalInputs.push("junctionCouplingLengthM");
+    }
+    if (
+      !input.surface.buildingPredictionOutputBasis ||
+      input.surface.buildingPredictionOutputBasis === "unknown"
+    ) {
+      missingPhysicalInputs.push("buildingPredictionOutputBasis");
+    }
 
     return {
       airborneContext,
       id: WORKBENCH_AIRBORNE_FIELD_CONTEXT_INPUT_SURFACE_ID,
       missingPhysicalInputs,
-      status: "needs_input"
+      status: missingPhysicalInputs.length > 0 ? "needs_input" : "complete"
     };
   }
 

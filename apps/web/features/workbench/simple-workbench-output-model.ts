@@ -42,6 +42,7 @@ import {
   WEB_GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD,
   getGateSOpeningLeakCompositeOutputDetail
 } from "./opening-leak-composite-surface";
+import { getCompanyInternalOpeningLeakFieldBuildingOutputDetail } from "./opening-leak-field-building-surface";
 import {
   getRockwoolSplitTripleLeafWithheldOutputDetail,
   getRockwoolTripleLeafScreeningPolicyCopy
@@ -69,6 +70,22 @@ function hasFloorRolePromptGuard(result: AssemblyCalculation | null | undefined)
   return Boolean(
     result?.warnings?.some((warning: string) =>
       /Floor roles needed before (?:impact output|exact floor-family) promotion/i.test(warning)
+    )
+  );
+}
+
+function hasSteelFormulaPhysicalInputPrompt(result: AssemblyCalculation | null | undefined): boolean {
+  return Boolean(
+    result?.warnings?.some((warning: string) =>
+      /Steel-floor formula lane needs these physical inputs before calculating (?:Ln,w|Ln,w \/ DeltaLw)/i.test(warning)
+    )
+  );
+}
+
+function hasHeavyConcreteCombinedPhysicalInputPrompt(result: AssemblyCalculation | null | undefined): boolean {
+  return Boolean(
+    result?.warnings?.some((warning: string) =>
+      /reinforced-concrete combined upper\/lower impact runtime is waiting/i.test(warning)
     )
   );
 }
@@ -102,6 +119,18 @@ function isExplicitUnsupportedMissingInput(input: {
   }
 
   if (!FIELD_IMPACT_OUTPUTS.has(output) || studyMode !== "floor") {
+    if (output === "Ln,w" && studyMode === "floor" && hasSteelFormulaPhysicalInputPrompt(result)) {
+      return true;
+    }
+
+    if (
+      studyMode === "floor" &&
+      (output === "Ln,w" || output === "DeltaLw") &&
+      hasHeavyConcreteCombinedPhysicalInputPrompt(result)
+    ) {
+      return true;
+    }
+
     return false;
   }
 
@@ -145,6 +174,12 @@ function buildExplicitUnsupportedOutputDetail(input: {
   const gateSOpeningLeakDetail = getGateSOpeningLeakCompositeOutputDetail(output, result ?? null);
   if (gateSOpeningLeakDetail && studyMode === "wall") {
     return gateSOpeningLeakDetail;
+  }
+
+  const companyInternalOpeningLeakFieldBuildingDetail =
+    getCompanyInternalOpeningLeakFieldBuildingOutputDetail(output, result ?? null);
+  if (companyInternalOpeningLeakFieldBuildingDetail && studyMode === "wall") {
+    return companyInternalOpeningLeakFieldBuildingDetail;
   }
 
   const gateAYAdvancedWallDetail = getGateAYAdvancedWallOutputDetail(output, result ?? null);
@@ -203,6 +238,12 @@ export function buildUnavailableOutputDetail(input: {
     return gateSOpeningLeakDetail;
   }
 
+  const companyInternalOpeningLeakFieldBuildingDetail =
+    getCompanyInternalOpeningLeakFieldBuildingOutputDetail(output, result);
+  if (companyInternalOpeningLeakFieldBuildingDetail && studyMode === "wall") {
+    return companyInternalOpeningLeakFieldBuildingDetail;
+  }
+
   const gateAYAdvancedWallDetail = getGateAYAdvancedWallOutputDetail(output, result);
   if (gateAYAdvancedWallDetail && studyMode === "wall") {
     return gateAYAdvancedWallDetail;
@@ -215,6 +256,18 @@ export function buildUnavailableOutputDetail(input: {
 
   if (isImpactOnlyLowConfidenceLane && isImpactOnlyLowConfidenceUnavailableOutput(output)) {
     return IMPACT_ONLY_LOW_CONFIDENCE_UNAVAILABLE_DETAIL;
+  }
+
+  if (output === "Ln,w" && studyMode === "floor" && hasSteelFormulaPhysicalInputPrompt(result)) {
+    return "Enter the missing steel-floor physical inputs before treating the suspended-ceiling Ln,w lane as calculated.";
+  }
+
+  if (
+    studyMode === "floor" &&
+    (output === "Ln,w" || output === "DeltaLw") &&
+    hasHeavyConcreteCombinedPhysicalInputPrompt(result)
+  ) {
+    return "Enter resilientLayerDynamicStiffnessMNm3, loadBasisKgM2, and ceilingOrLowerAssembly before treating the reinforced-concrete combined upper/lower impact lane as calculated.";
   }
 
   if (output === "Ln,w+CI" || output === "CI" || output === "CI,50-2500") {
@@ -372,9 +425,14 @@ export function buildOutputCard(input: {
     case "R'w":
       if (typeof result?.metrics.estimatedRwPrimeDb === "number") {
         const gateARBuildingDetail = getGateARAirborneBuildingPredictionOutputDetail(output, result);
+        const companyInternalOpeningLeakFieldBuildingDetail =
+          getCompanyInternalOpeningLeakFieldBuildingOutputDetail(output, result);
 
         return {
-          detail: gateARBuildingDetail ?? getFieldAirborneLiveDetail("R'w", result),
+          detail:
+            companyInternalOpeningLeakFieldBuildingDetail ??
+            gateARBuildingDetail ??
+            getFieldAirborneLiveDetail("R'w", result),
           label: "R'w",
           output,
           status: "live",
@@ -456,9 +514,14 @@ export function buildOutputCard(input: {
     case "DnT,w":
       if (typeof result?.metrics.estimatedDnTwDb === "number") {
         const gateARBuildingDetail = getGateARAirborneBuildingPredictionOutputDetail(output, result);
+        const companyInternalOpeningLeakFieldBuildingDetail =
+          getCompanyInternalOpeningLeakFieldBuildingOutputDetail(output, result);
 
         return {
-          detail: gateARBuildingDetail ?? getFieldAirborneLiveDetail("DnT,w", result),
+          detail:
+            companyInternalOpeningLeakFieldBuildingDetail ??
+            gateARBuildingDetail ??
+            getFieldAirborneLiveDetail("DnT,w", result),
           label: "DnT,w",
           output,
           status: "live",
@@ -490,8 +553,13 @@ export function buildOutputCard(input: {
       break;
     case "Dn,w":
       if (typeof result?.metrics.estimatedDnWDb === "number") {
+        const companyInternalOpeningLeakFieldBuildingDetail =
+          getCompanyInternalOpeningLeakFieldBuildingOutputDetail(output, result);
+
         return {
-          detail: getFieldAirborneLiveDetail("Dn,w", result),
+          detail:
+            companyInternalOpeningLeakFieldBuildingDetail ??
+            getFieldAirborneLiveDetail("Dn,w", result),
           label: "Dn,w",
           output,
           status: "live",
@@ -545,8 +613,10 @@ export function buildOutputCard(input: {
     case "L'n,w":
       if (typeof result?.impact?.LPrimeNW === "number") {
         return {
-          detail:
-            `Field-side impact value after K or direct-path carry-over; this is a field-impact continuation, not an independent exact field measurement. ${FIELD_OUTPUT_OWNER_POLICY_GUARD}`,
+          detail: isSteelFloorFormulaCorridor
+            ? getSteelFloorFormulaCorridorOutputDetail("L'n,w", result.impact) ??
+              `Field-side impact value after K or direct-path carry-over; this is a field-impact continuation, not an independent exact field measurement. ${FIELD_OUTPUT_OWNER_POLICY_GUARD}`
+            : `Field-side impact value after K or direct-path carry-over; this is a field-impact continuation, not an independent exact field measurement. ${FIELD_OUTPUT_OWNER_POLICY_GUARD}`,
           label: "L'n,w",
           output,
           status: "live",
@@ -641,8 +711,10 @@ export function buildOutputCard(input: {
     case "L'nT,w":
       if (typeof result?.impact?.LPrimeNTw === "number") {
         return {
-          detail:
-            `Standardized field impact result with receiving-room normalization; this is a field-impact continuation, not an independent exact field measurement. ${FIELD_OUTPUT_OWNER_POLICY_GUARD}`,
+          detail: isSteelFloorFormulaCorridor
+            ? getSteelFloorFormulaCorridorOutputDetail("L'nT,w", result.impact) ??
+              `Standardized field impact result with receiving-room normalization; this is a field-impact continuation, not an independent exact field measurement. ${FIELD_OUTPUT_OWNER_POLICY_GUARD}`
+            : `Standardized field impact result with receiving-room normalization; this is a field-impact continuation, not an independent exact field measurement. ${FIELD_OUTPUT_OWNER_POLICY_GUARD}`,
           label: "L'nT,w",
           output,
           status: "live",
@@ -664,8 +736,10 @@ export function buildOutputCard(input: {
     case "L'nT,50":
       if (typeof result?.impact?.LPrimeNT50 === "number") {
         return {
-          detail:
-            `Standardized field impact value with the extended low-frequency companion; this is a field-impact continuation, not an independent exact field measurement. ${FIELD_OUTPUT_OWNER_POLICY_GUARD}`,
+          detail: isSteelFloorFormulaCorridor
+            ? getSteelFloorFormulaCorridorOutputDetail("L'nT,50", result.impact) ??
+              `Standardized field impact value with the extended low-frequency companion; this is a field-impact continuation, not an independent exact field measurement. ${FIELD_OUTPUT_OWNER_POLICY_GUARD}`
+            : `Standardized field impact value with the extended low-frequency companion; this is a field-impact continuation, not an independent exact field measurement. ${FIELD_OUTPUT_OWNER_POLICY_GUARD}`,
           label: "L'nT,50",
           output,
           status: "live",

@@ -27,7 +27,11 @@ import {
 } from "./impact-supporting-element-family";
 import { maybeBuildImpactPredictorInputFromLayerStack } from "./impact-predictor-input";
 import { HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS } from "./heavy-concrete-combined-impact-formula-corridor";
-import { STEEL_FLOOR_FORMULA_BASIS } from "./steel-floor-impact-formula-corridor";
+import {
+  STEEL_FLOOR_FORMULA_BASIS,
+  STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_BASIS,
+  STEEL_FLOOR_SUSPENDED_CEILING_REFERENCE_FLOOR_TYPE
+} from "./steel-floor-impact-formula-corridor";
 import {
   MASS_TIMBER_CLT_DELTA_LW_FORMULA_BASIS,
   TIMBER_JOIST_DELTA_LW_FORMULA_BASIS
@@ -105,7 +109,15 @@ function getScopedFormulaSelectionLabel(
   }
 
   if (basisLabels.has(STEEL_FLOOR_FORMULA_BASIS)) {
+    if (impact?.referenceFloorType === STEEL_FLOOR_SUSPENDED_CEILING_REFERENCE_FLOOR_TYPE) {
+      return "Lightweight-steel suspended-ceiling DeltaLw formula corridor";
+    }
+
     return "Lightweight-steel formula corridor";
+  }
+
+  if (basisLabels.has(STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_BASIS)) {
+    return "Lightweight-steel suspended-ceiling formula corridor";
   }
 
   if (basisLabels.has(TIMBER_JOIST_DELTA_LW_FORMULA_BASIS)) {
@@ -325,6 +337,8 @@ function formatImpactBasisLabel(value: ImpactCalculation["basis"] | ImpactBoundC
       return "Lightweight-steel FL-28 interpolation";
     case "predictor_lightweight_steel_mass_spring_holdout_corridor_estimate":
       return "Lightweight-steel formula corridor";
+    case "predictor_lightweight_steel_suspended_ceiling_corridor_estimate":
+      return "Lightweight-steel suspended-ceiling formula corridor";
     case "predictor_lightweight_steel_bound_interpolation_estimate":
       return "Lightweight-steel bound interpolation";
     case "predictor_lightweight_steel_missing_support_form_bound_estimate":

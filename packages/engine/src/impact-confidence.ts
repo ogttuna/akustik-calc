@@ -22,6 +22,42 @@ function levelFromScore(score: number): ImpactConfidenceLevel {
 }
 
 export function getImpactConfidenceForBasis(basis: ImpactEstimateBasis): ImpactConfidence {
+  if (basis === "mixed_exact_plus_estimated_direct_flanking_energy_sum") {
+    return {
+      level: "medium",
+      provenance: "exact_floor_system_family",
+      score: 0.8,
+      summary: "Exact lab-side impact evidence carried through an explicit direct+flanking field path energy estimate."
+    };
+  }
+
+  if (basis === "mixed_exact_plus_estimated_standardized_direct_flanking_energy_sum") {
+    return {
+      level: "medium",
+      provenance: "exact_floor_system_family",
+      score: 0.78,
+      summary: "Exact lab-side impact evidence carried through direct+flanking path summation and standardized receiving-room volume normalization."
+    };
+  }
+
+  if (basis === "mixed_predicted_plus_estimated_direct_flanking_energy_sum") {
+    return {
+      level: "medium",
+      provenance: "formula_estimate_narrow_scope",
+      score: 0.67,
+      summary: "Predicted lab-side impact evidence carried through an explicit direct+flanking field path energy estimate with a source-absent adapter budget."
+    };
+  }
+
+  if (basis === "mixed_predicted_plus_estimated_standardized_direct_flanking_energy_sum") {
+    return {
+      level: "medium",
+      provenance: "formula_estimate_narrow_scope",
+      score: 0.66,
+      summary: "Predicted lab-side impact evidence carried through direct+flanking path summation, room-volume normalization, and a source-absent adapter budget."
+    };
+  }
+
   if (basis === "mixed_exact_plus_estimated_field_k_correction") {
     return {
       level: "high",
@@ -244,6 +280,15 @@ export function getImpactConfidenceForBasis(basis: ImpactEstimateBasis): ImpactC
       provenance: "formula_estimate_narrow_scope",
       score: 0.72,
       summary: "Lightweight-steel floor mass-spring formula corridor with explicit carrier geometry, dynamic stiffness, lower isolation, and same-family holdout checks."
+    };
+  }
+
+  if (basis === "predictor_lightweight_steel_suspended_ceiling_corridor_estimate") {
+    return {
+      level: "medium",
+      provenance: "formula_estimate_narrow_scope",
+      score: 0.68,
+      summary: "Lightweight-steel suspended-ceiling-only formula corridor with explicit support form, carrier geometry, lower isolation, and source-absent error budget."
     };
   }
 

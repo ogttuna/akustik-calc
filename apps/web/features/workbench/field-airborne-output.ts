@@ -2,6 +2,7 @@ import type { AssemblyCalculation, RequestedOutputId } from "@dynecho/shared";
 
 import { getGateARAirborneBuildingPredictionSurface } from "./airborne-building-prediction-surface";
 import { getGateIAirborneFieldContextSurface } from "./airborne-field-context-surface";
+import { getCompanyInternalOpeningLeakFieldBuildingSurface } from "./opening-leak-field-building-surface";
 import { getDnTAkDetail, getDnTAkLiveLabel } from "./dntak-source-mode";
 import { FIELD_OUTPUT_CONTINUATION_BASIS_GUARD as FIELD_CONTINUATION_BASIS_GUARD } from "./field-output-owner-policy-copy";
 import { getRockwoolTripleLeafScreeningPolicyCopy } from "./rockwool-triple-leaf-screening-policy-copy";
@@ -214,6 +215,12 @@ export function getFieldAirborneStatusLabel(
   output: RequestedOutputId,
   result: AssemblyCalculation | null
 ): string {
+  const companyInternalOpeningLeakFieldBuildingSurface =
+    getCompanyInternalOpeningLeakFieldBuildingSurface(result);
+  if (companyInternalOpeningLeakFieldBuildingSurface?.routeBasis === "building_prediction") {
+    return output === "R'w" ? "Building apparent" : "Building standardized";
+  }
+
   if (getGateARAirborneBuildingPredictionSurface(result)) {
     return output === "R'w" ? "Building apparent" : "Building standardized";
   }
@@ -245,10 +252,14 @@ export function getFieldAirborneLiveDetail(
   const curveLabel = getApparentCurveLabel(result);
   const rockwoolPolicy = getRockwoolTripleLeafScreeningPolicyCopy(result);
   const rockwoolScreeningBridge = rockwoolPolicy ? `${rockwoolPolicy.fieldDetail} ` : "";
+  const companyInternalOpeningLeakFieldBuildingSurface =
+    getCompanyInternalOpeningLeakFieldBuildingSurface(result);
   const gateARSurface = getGateARAirborneBuildingPredictionSurface(result);
   const gateISurface = getGateIAirborneFieldContextSurface(result);
-  const basisGuard = gateARSurface
-    ? `${FIELD_CONTINUATION_BASIS_GUARD} ${gateARSurface.detail}`
+  const basisGuard = companyInternalOpeningLeakFieldBuildingSurface
+    ? `${FIELD_CONTINUATION_BASIS_GUARD} ${companyInternalOpeningLeakFieldBuildingSurface.detail}`
+    : gateARSurface
+      ? `${FIELD_CONTINUATION_BASIS_GUARD} ${gateARSurface.detail}`
     : gateISurface
       ? `${FIELD_CONTINUATION_BASIS_GUARD} ${gateISurface.detail}`
       : FIELD_CONTINUATION_BASIS_GUARD;

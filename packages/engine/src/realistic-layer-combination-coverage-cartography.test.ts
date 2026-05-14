@@ -452,18 +452,18 @@ const CARTOGRAPHY_CELLS: readonly CartographyCell[] = [
     mode: "field",
     studyMode: "floor",
     family: "floor_open_web_or_open_box",
-    evidenceTier: "screening",
-    originBasisId: "predictor_floor_system_low_confidence_estimate",
-    confidencePosture: "low-confidence fallback",
+    evidenceTier: "family",
+    originBasisId: "predictor_floor_system_family_archetype_estimate",
+    confidencePosture: "same-family archetype estimate",
     engineSupportBucket: "partial",
     webCardStatus: "covered",
     candidateType: "runtime_widening",
     candidateRank: 5,
-    expectedFloorSystemEstimateKind: "low_confidence",
+    expectedFloorSystemEstimateKind: "family_archetype",
     expectedImpactBasisIncludes: "mixed_predicted",
     expectedSupported: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"],
     expectedUnsupported: ["L'nT,50"],
-    invariants: ["fallback remains explicitly low-confidence", "low-frequency field output remains unsupported"],
+    invariants: ["fallback remains an explicit family estimate", "low-frequency field output remains unsupported"],
     evidencePaths: [
       "packages/engine/src/raw-floor-screening-carrier-support.test.ts",
       "apps/web/features/workbench/raw-floor-screening-route-support.test.ts"
@@ -669,8 +669,8 @@ const CARTOGRAPHY_CELLS: readonly CartographyCell[] = [
     candidateType: "coverage_confirmed",
     expectedDynamicFamily: "stud_wall_system",
     expectedRwPrimeDb: 55,
-    expectedSupported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"],
-    expectedUnsupported: ["Rw"],
+    expectedSupported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A"],
+    expectedUnsupported: ["Rw", "STC", "C", "Ctr"],
     invariants: ["auto remains side-count blind", "building field outputs stay finite"],
     evidencePaths: [
       "packages/engine/src/wall-resilient-bar-side-count-blind-audit.test.ts",
@@ -692,8 +692,8 @@ const CARTOGRAPHY_CELLS: readonly CartographyCell[] = [
     candidateType: "coverage_confirmed",
     expectedDynamicFamily: "stud_wall_system",
     expectedRwPrimeDb: 50,
-    expectedSupported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"],
-    expectedUnsupported: ["Rw"],
+    expectedSupported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A"],
+    expectedUnsupported: ["Rw", "STC", "C", "Ctr"],
     invariants: ["explicit one-side row does not collapse to auto", "side-count exact import stays selected"],
     evidencePaths: [
       "packages/engine/src/airborne-verified-catalog.test.ts",
@@ -715,8 +715,8 @@ const CARTOGRAPHY_CELLS: readonly CartographyCell[] = [
     candidateType: "coverage_confirmed",
     expectedDynamicFamily: "stud_wall_system",
     expectedRwPrimeDb: 53,
-    expectedSupported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"],
-    expectedUnsupported: ["Rw"],
+    expectedSupported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A"],
+    expectedUnsupported: ["Rw", "STC", "C", "Ctr"],
     invariants: ["both-sides row remains distinct from one-side row", "side-count exact import stays selected"],
     evidencePaths: [
       "packages/engine/src/airborne-verified-catalog.test.ts",
@@ -864,12 +864,17 @@ function resilientBuildingContext(
 ): AirborneContext {
   return {
     ...row.airborneContext,
+    buildingPredictionOutputBasis: "apparent_and_standardized",
+    conservativeFlankingAssumption: "multi_path_conservative",
     contextMode: "building_prediction",
+    flankingJunctionClass: "rigid_t_junction",
+    junctionCouplingLengthM: 4.8,
     panelHeightMm: 3000,
     panelWidthMm: 4200,
     receivingRoomRt60S: 0.7,
     receivingRoomVolumeM3: 55,
-    resilientBarSideCount: sideCount
+    resilientBarSideCount: sideCount,
+    sourceRoomVolumeM3: 48
   };
 }
 
@@ -1033,7 +1038,7 @@ describe("realistic layer-combination coverage cartography Gate A", () => {
         rank: 3
       },
       {
-        evidenceTier: "screening",
+        evidenceTier: "family",
         family: "floor_open_web_or_open_box",
         id: "floor.steel_fallback_low_confidence.field",
         rank: 5

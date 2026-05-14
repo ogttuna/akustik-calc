@@ -9,11 +9,16 @@ const LAB_CONTEXT: AirborneContext = {
 };
 
 const BUILDING_CONTEXT: AirborneContext = {
+  buildingPredictionOutputBasis: "apparent_and_standardized",
+  conservativeFlankingAssumption: "multi_path_conservative",
   contextMode: "building_prediction",
+  flankingJunctionClass: "rigid_t_junction",
+  junctionCouplingLengthM: 4.8,
   panelHeightMm: 2800,
   panelWidthMm: 3600,
   receivingRoomRt60S: 0.6,
-  receivingRoomVolumeM3: 45
+  receivingRoomVolumeM3: 45,
+  sourceRoomVolumeM3: 38
 };
 
 const HOLD_SCAN_PREFIXES: readonly (readonly LayerInput[])[] = [

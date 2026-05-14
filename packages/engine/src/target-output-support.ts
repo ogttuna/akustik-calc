@@ -55,6 +55,10 @@ const IMPACT_OUTPUTS = new Set<RequestedOutputId>([
   "HIIC"
 ]);
 
+const ASTM_E989_BRIDGE_BASIS = "astm_e989_impact_rating_metric_schema_adapter_bridge";
+const ASTM_E989_AIIC_METRIC_BASIS = "astm_e989_aiic_metric_schema_adapter_bridge";
+const ASTM_E989_IIC_METRIC_BASIS = "astm_e989_iic_metric_schema_adapter_bridge";
+
 function isFiniteNumber(value: number | null | undefined): boolean {
   return typeof value === "number" && Number.isFinite(value);
 }
@@ -64,6 +68,29 @@ function hasAvailableImpactOutput(
   output: RequestedOutputId
 ): boolean {
   return Boolean(impact?.availableOutputs.includes(output));
+}
+
+function hasAstmE989ImpactOutput(
+  impact: ImpactCalculation | null,
+  output: Extract<RequestedOutputId, "AIIC" | "IIC">
+): boolean {
+  if (!impact || impact.basis !== ASTM_E989_BRIDGE_BASIS || !hasAvailableImpactOutput(impact, output)) {
+    return false;
+  }
+
+  if (output === "IIC") {
+    return (
+      impact.labOrField === "lab" &&
+      isFiniteNumber(impact.IIC) &&
+      impact.metricBasis?.IIC === ASTM_E989_IIC_METRIC_BASIS
+    );
+  }
+
+  return (
+    impact.labOrField === "field" &&
+    isFiniteNumber(impact.AIIC) &&
+    impact.metricBasis?.AIIC === ASTM_E989_AIIC_METRIC_BASIS
+  );
 }
 
 function getCarrierRw(input: TargetOutputSupportInput): number | null {
@@ -207,8 +234,10 @@ function isTargetOutputAvailable(
       return hasAvailableImpactOutput(input.impact, output);
     case "LnT,A":
       return hasAvailableImpactOutput(input.impact, output);
-    case "IIC":
     case "AIIC":
+      return hasAstmE989ImpactOutput(input.impact, output);
+    case "IIC":
+      return hasAstmE989ImpactOutput(input.impact, output);
     case "NISR":
     case "ISR":
     case "LIIC":

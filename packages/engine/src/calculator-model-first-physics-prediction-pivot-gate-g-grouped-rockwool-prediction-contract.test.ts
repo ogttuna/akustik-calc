@@ -6,7 +6,6 @@ import type { AirborneCandidate, AirborneContext, LayerInput, RequestedOutputId 
 import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
-import { GATE_L_AIRBORNE_BUILDING_PREDICTION_BOUNDARY_WARNING } from "./dynamic-airborne-gate-l-building-prediction-boundary";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
@@ -81,7 +80,7 @@ const GROUPED_SPLIT_ROCKWOOL_CONTEXT: AirborneContext = {
 
 const GROUPED_SPLIT_ROCKWOOL_FIELD_CONTEXT: AirborneContext = {
   ...GROUPED_SPLIT_ROCKWOOL_CONTEXT,
-  contextMode: "building_prediction",
+  contextMode: "field_between_rooms",
   panelHeightMm: 2800,
   panelWidthMm: 3600,
   receivingRoomRt60S: 0.6,
@@ -198,8 +197,8 @@ describe("calculator model-first physics prediction pivot Gate G", () => {
     expect(result.metrics.estimatedStc).toBe(54);
     expect(result.supportedTargetOutputs).toEqual(["R'w", "DnT,w", "DnT,A", "Dn,w", "Dn,A"]);
     expect(result.dynamicAirborneTrace?.selectedMethod).toBe("triple_leaf_two_cavity_frequency_solver");
-    expect(result.warnings.join("\n")).toContain(GATE_L_AIRBORNE_BUILDING_PREDICTION_BOUNDARY_WARNING);
-    expect(result.warnings.join("\n")).not.toContain("Airborne field-side overlay active");
+    expect(result.warnings.join("\n")).toContain("Airborne field-side overlay active");
+    expect(result.warnings.join("\n")).not.toContain("Airborne building-prediction route is parked");
   });
 
   it("populates model-first basis and selected/rejected candidate metadata for runtime movement", () => {

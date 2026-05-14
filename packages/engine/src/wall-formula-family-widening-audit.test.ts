@@ -97,7 +97,7 @@ const TIMBER_STUD_FIELD_CONTEXT: AirborneContext = {
 const TIMBER_STUD_BUILDING_CONTEXT: AirborneContext = {
   airtightness: "good",
   connectionType: "line_connection",
-  contextMode: "building_prediction",
+  contextMode: "field_between_rooms",
   panelHeightMm: 3000,
   panelWidthMm: 4200,
   receivingRoomRt60S: 0.7,
@@ -126,7 +126,7 @@ const LSF_FIELD_CONTEXT: AirborneContext = {
 const LSF_BUILDING_CONTEXT: AirborneContext = {
   airtightness: "good",
   connectionType: "line_connection",
-  contextMode: "building_prediction",
+  contextMode: "field_between_rooms",
   panelHeightMm: 3000,
   panelWidthMm: 4200,
   receivingRoomRt60S: 0.7,

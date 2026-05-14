@@ -63,7 +63,7 @@ describe("reinforced concrete low-confidence proposal honesty", () => {
     vi.unstubAllGlobals();
   });
 
-  it("keeps diagnostics evidence explicit on the low-confidence fallback branch", () => {
+  it("keeps diagnostics evidence explicit on the reinforced-concrete missing-owner branch", () => {
     const { branchSummary, evidence, scenario, validationSummary } = buildReinforcedConcreteLowConfidenceScenario();
     const dossier = buildSimpleWorkbenchDiagnosticsDossier({
       branchLabel: branchSummary.value,
@@ -76,69 +76,48 @@ describe("reinforced concrete low-confidence proposal honesty", () => {
       warnings: scenario.warnings
     });
 
-    expect(scenario.result?.floorSystemEstimate?.kind).toBe("low_confidence");
-    expect(scenario.result?.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
-    expect(scenario.result?.dynamicImpactTrace?.selectionKindLabel).toBe("Low-confidence fallback");
-    expect(selectSimpleWorkbenchTraceNotes(scenario.result?.dynamicImpactTrace?.notes ?? []).notes).toContain(
-      "Low-confidence fallback is active on the current impact lane."
-    );
-    expect(branchSummary.detail).toContain("Low-confidence reinforced-concrete combined fallback is active.");
-    expect(validationSummary.value).toBe("Low-confidence fallback");
-    expect(validationSummary.detail).toContain("mixed nearby-row concrete lane");
-    expect(evidence.decisionTrailHeadline).toContain("screening posture");
-    expect(evidence.decisionTrailItems).toContainEqual(
-      expect.objectContaining({
-        label: "Delivery posture",
-        tone: "warning"
-      })
-    );
+    expect(scenario.result?.floorSystemEstimate?.kind).toBeUndefined();
+    expect(scenario.result?.impact).toBeNull();
+    expect(scenario.result?.dynamicImpactTrace).toBeUndefined();
+    expect(selectSimpleWorkbenchTraceNotes(scenario.result?.dynamicImpactTrace?.notes ?? []).notes).toEqual([]);
+    expect(branchSummary.value).toBe("Awaiting supported topology");
+    expect(branchSummary.detail).toContain("No supported floor impact branch is live yet");
+    expect(validationSummary.value).toBe("Waiting for supported lane");
+    expect(validationSummary.detail).toContain("Build a supported floor topology");
+    expect(evidence.decisionTrailHeadline).toContain("No live lane");
     expect(evidence.decisionTrailItems).toContainEqual(
       expect.objectContaining({
         label: "Output coverage",
         tone: "warning"
       })
     );
-    expect(evidence.citations.length).toBeGreaterThan(0);
-    expect(evidence.citations[0]?.label).toBe("Dynamic impact anchor");
-    expect(evidence.citations[1]?.label).toBe("Nearby-row fallback rationale");
-    expect(
-      evidence.citations.some((citation) =>
-        citation.label.startsWith("Nearby row 1 · elastic-ceiling anchor:")
-      )
-    ).toBe(true);
-    expect(
-      evidence.citations.some((citation) =>
-        citation.label.startsWith("Nearby row 2 · rigid-ceiling cross-check:")
-      )
-    ).toBe(true);
+    expect(evidence.citations).toHaveLength(1);
+    expect(evidence.citations[0]?.label).toBe("Source posture");
     expect(evidence.citations.some((citation) => citation.label === "Estimate anchor 1: Knauf CC60.1A | 150 mm concrete | timber + acoustic underlay")).toBe(
       false
     );
     expect(evidence.citations.some((citation) => citation.detail.includes("estimate anchor rows remain in the current family corridor"))).toBe(false);
-    expect(evidence.citations.map((citation) => citation.detail).join(" ")).toContain("proxy airborne companions");
-    expect(evidence.citations.map((citation) => citation.detail).join(" ")).toContain(
-      "Nearby published rows ranked for the current mixed-row fallback"
-    );
+    expect(evidence.citations.map((citation) => citation.detail).join(" ")).toContain("No exact family row");
     expect(evidence.citations.map((citation) => citation.detail).join(" ")).not.toContain("Published family estimate is active.");
-    expect(dossier.headline).toContain("screening-route low-confidence posture");
+    expect(dossier.headline).toContain("waiting for supported lane posture");
     expect(dossier.cards).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           label: "Validation posture",
-          value: "Low-confidence fallback"
+          value: "Waiting for supported lane"
         }),
         expect.objectContaining({
           label: "Trace coverage",
-          tone: "accent",
-          value: "1 screening"
+          tone: "warning",
+          value: "0 live"
         })
       ])
     );
     expect(dossier.cards.find((card) => card.label === "Validation posture")?.detail).toContain(
-      "proxy airborne companions"
+      "Build a supported floor topology"
     );
     expect(dossier.cards.find((card) => card.label === "Evidence courier")?.detail).toContain(
-      "screening package"
+      "guided package"
     );
   });
 
@@ -165,13 +144,13 @@ describe("reinforced concrete low-confidence proposal honesty", () => {
       warnings: scenario.warnings
     });
 
-    expect(brief.executiveSummary).toContain("screening-only low-confidence fallback route");
-    expect(brief.executiveSummary).toContain("nearby-row citations are attached");
+    expect(brief.executiveSummary).toContain("awaiting supported topology route");
+    expect(brief.executiveSummary).toContain("waiting for supported lane posture");
     expect(brief.assumptionItems.find((item) => item.label === "Evidence posture")?.detail).toContain(
-      "Low-confidence fallback."
+      "Waiting for supported lane."
     );
     expect(brief.assumptionItems.find((item) => item.label === "Active route")?.detail).toContain(
-      "mixed nearby-row concrete lane"
+      "No supported floor impact branch is live yet"
     );
     expect(brief.assumptionItems.find((item) => item.label === "Live warning state")).toEqual(
       expect.objectContaining({
@@ -179,7 +158,7 @@ describe("reinforced concrete low-confidence proposal honesty", () => {
       })
     );
     expect(brief.assumptionItems.find((item) => item.label === "Live warning state")?.detail).toContain(
-      "screening-only fallback mode"
+      "Screening estimate only"
     );
     expect(brief.assumptionItems.find((item) => item.label === "Citation coverage")).toEqual(
       expect.objectContaining({
@@ -187,31 +166,25 @@ describe("reinforced concrete low-confidence proposal honesty", () => {
       })
     );
     expect(brief.assumptionItems.find((item) => item.label === "Citation coverage")?.detail).toContain(
-      "screening audit follow-up"
+      "source line"
     );
     expect(brief.recommendationItems).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          label: "Keep screening language explicit",
+          label: "Resolve the first live blocker",
           tone: "warning"
         }),
         expect.objectContaining({
-          label: "Carry the nearby-row appendix",
-          tone: "accent"
+          label: "Do not flatten provenance",
+          tone: "warning"
         })
       ])
     );
-    expect(brief.recommendationItems.find((item) => item.label === "Keep screening language explicit")?.detail).toContain(
-      "Use this only for option screening"
-    );
-    expect(brief.recommendationItems.find((item) => item.label === "Keep screening language explicit")?.detail).toContain(
-      "do not present it as delivery-ready"
-    );
-    expect(brief.recommendationItems.find((item) => item.label === "Carry the nearby-row appendix")?.detail).toContain(
-      "screening package"
-    );
     expect(brief.recommendationItems.find((item) => item.label === "Resolve the first live blocker")?.detail).toContain(
-      "Keep the package in screening mode"
+      "Screening estimate only"
+    );
+    expect(brief.recommendationItems.find((item) => item.label === "Do not flatten provenance")?.detail).toContain(
+      "source posture visible"
     );
     expect(brief.recommendationItems.some((item) => item.label === "Keep the stack as a screening snapshot")).toBe(false);
     expect(brief.recommendationItems.some((item) => item.label === "Freeze the current stack")).toBe(false);
@@ -235,20 +208,20 @@ describe("reinforced concrete low-confidence proposal honesty", () => {
         {
           detail: "Weighted airborne element rating from the active airborne calculator.",
           label: "Rw",
-          postureDetail: "Low-confidence fallback remains explicit.",
-          postureLabel: "Low-confidence fallback",
-          postureTone: "warning",
+          postureDetail: "Airborne screening remains visible while impact owners are incomplete.",
+          postureLabel: "Airborne screening",
+          postureTone: "accent",
           status: "live",
-          value: "65.9 dB"
+          value: "60 dB"
         },
         {
-          detail: "Weighted impact rating from the active impact calculator.",
+          detail: "Impact rating is parked until the reinforced-concrete owner fields are complete.",
           label: "Ln,w",
-          postureDetail: "Low-confidence fallback remains explicit.",
-          postureLabel: "Low-confidence fallback",
+          postureDetail: "Missing physical owners are blocking the impact corridor.",
+          postureLabel: "Waiting for supported lane",
           postureTone: "warning",
-          status: "bound",
-          value: "50 dB"
+          status: "needs_input",
+          value: "Not ready"
         },
         {
           detail: "Need more project-specific evidence before a narrower lane can be claimed.",
@@ -300,23 +273,21 @@ describe("reinforced concrete low-confidence proposal honesty", () => {
       warnings: scenario.warnings
     });
 
-    expect(dossier.headline).toContain("screening route");
-    expect(dossier.headline).toContain("2 screening outputs");
-    expect(dossier.items.find((item) => item.label === "Coverage posture")?.value).toBe("2 screening / 1 parked");
-    expect(dossier.items.find((item) => item.label === "Audit package")?.detail).toContain("screening package");
+    expect(dossier.headline).toContain("awaiting supported topology");
+    expect(dossier.items.find((item) => item.label === "Coverage posture")?.value).toBe("1 ready / 2 parked");
+    expect(dossier.items.find((item) => item.label === "Audit package")?.detail).toContain("1 citation");
   });
 
-  it("keeps trace lineage and report source-row wording on nearby published rows instead of a narrow family claim", () => {
+  it("keeps trace lineage and report wording on missing physical owners instead of nearby published rows", () => {
     const { scenario } = buildReinforcedConcreteLowConfidenceScenario();
     vi.stubGlobal("React", React);
     const traceHtml = renderToStaticMarkup(React.createElement(ImpactTracePanel, { result: scenario.result }));
 
-    expect(traceHtml).toContain("Nearby published rows");
-    expect(traceHtml).toContain("Nearby row 1 · elastic-ceiling anchor");
-    expect(traceHtml).toContain("Nearby row 2 · rigid-ceiling cross-check");
-    expect(traceHtml).not.toContain("Candidate lineage");
-    expect(traceHtml).toContain("Nearby published rows ranked for the current mixed-row fallback");
-    expect(traceHtml).toContain("elastic-ceiling nearby row first");
+    expect(traceHtml).toContain("Future supported outputs");
+    expect(traceHtml).toContain("Ln,w");
+    expect(traceHtml).toContain("reinforced-concrete combined upper/lower impact runtime is waiting");
+    expect(traceHtml).not.toContain("Nearby published rows");
+    expect(traceHtml).not.toContain("Nearby row 1 · elastic-ceiling anchor");
 
     const report = composeWorkbenchReport({
       activeCriteriaPack: CRITERIA_PACKS[0],
@@ -340,13 +311,14 @@ describe("reinforced concrete low-confidence proposal honesty", () => {
       targetRwDb: "60"
     });
 
-    expect(report).toContain("- Low-confidence fallback family: reinforced concrete");
-    expect(report).toContain("- Nearby published rows:");
-    expect(report).toContain("Nearby row 1 · elastic-ceiling anchor: 140 mm concrete slab | elastic hanger ceiling | 2 x 13 mm boards");
-    expect(report).toContain("Nearby row 3 · farther fallback: Knauf CC60.1A | 150 mm concrete | timber + acoustic underlay");
-    expect(report).toContain("- Impact nearby published row ids:");
-    expect(report).toContain("- Impact nearby-row ranking: elastic-ceiling row first, rigid-ceiling row second, timber-underlay row held as a farther fallback when cavity and board geometry drift.");
-    expect(report).toContain("- Support note: Nearby-row ranking stays elastic-ceiling first, rigid-ceiling second, with timber-underlay held as a farther fallback when cavity and board geometry drift.");
+    expect(report).toContain("- Predictor active: yes");
+    expect(report).toContain("- Predictor input mode: derived_from_visible_layers");
+    expect(report).toContain(
+      "- Predictor warning: Dynamic Calculator reinforced-concrete combined upper/lower impact runtime is waiting for resilientLayerDynamicStiffnessMNm3, loadBasisKgM2, ceilingOrLowerAssembly before promoting Ln,w / DeltaLw from the heavy-concrete combined formula corridor."
+    );
+    expect(report).not.toContain("- Low-confidence fallback family: reinforced concrete");
+    expect(report).not.toContain("- Nearby published rows:");
+    expect(report).not.toContain("- Impact nearby published row ids:");
     expect(report).not.toContain("- Source rows:");
     expect(report).not.toContain("- Impact estimate candidate ids:");
   });

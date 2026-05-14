@@ -92,6 +92,11 @@ import {
   maybeBuildGateHLinedMasonryCltWallBasis
 } from "./dynamic-airborne-gate-h-lined-masonry-clt";
 import {
+  COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_WARNING,
+  isCompanyInternalHeavyCompositeWallTopologyComplete,
+  maybeBuildCompanyInternalHeavyCompositeWallBasis
+} from "./dynamic-airborne-company-internal-heavy-composite-wall";
+import {
   GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING,
   maybeBuildGateIAirborneFieldContextBasis
 } from "./dynamic-airborne-gate-i-airborne-field-context";
@@ -1088,6 +1093,12 @@ export function calculateDynamicAirborneResult(
     framingHint,
     family.family
   );
+  const heavyCompositeWallTopologyComplete = isCompanyInternalHeavyCompositeWallTopologyComplete({
+    family: family.family,
+    framingHint,
+    layers: analysisLayers,
+    topology
+  });
   const blendSelection = chooseBlend(family.family, analysisLayers, framingHint);
   const effectiveScreeningEstimatedRwDb = trimmedOuterSpan.trimmed
     ? estimateRwDb(analysisLayers)
@@ -1488,7 +1499,7 @@ export function calculateDynamicAirborneResult(
     .filter((value) => Number.isFinite(value) && value > 0);
   const solverSpreadRwDb =
     rwValues.length > 1 ? ksRound1(Math.max(...rwValues) - Math.min(...rwValues)) : 0;
-  const confidenceScore = buildConfidenceScore(
+  const rawConfidenceScore = buildConfidenceScore(
     family.family,
     topology,
     solverSpreadRwDb,
@@ -1503,6 +1514,9 @@ export function calculateDynamicAirborneResult(
       trimmedOuterLayers: trimmedOuterSpan.trimmed
     }
   );
+  const confidenceScore = heavyCompositeWallTopologyComplete
+    ? ksRound1(Math.max(rawConfidenceScore, 0.6))
+    : rawConfidenceScore;
   const confidenceClass = classifyConfidence(confidenceScore);
   const warnings: string[] = [];
   const selectedCandidate = delegates.find((delegate) => delegate.method === blendSelection.blend.selectedMethod);
@@ -1921,6 +1935,20 @@ export function calculateDynamicAirborneResult(
         : GATE_H_CLT_MASS_TIMBER_WALL_WARNING
     );
   }
+  const companyInternalHeavyCompositeWallBasis = maybeBuildCompanyInternalHeavyCompositeWallBasis({
+    curve: dynamicCurve,
+    family: family.family,
+    framingHint,
+    layers: analysisLayers,
+    options,
+    selectedMethod: blendSelection.blend.selectedMethod,
+    strategy,
+    topology
+  });
+
+  if (companyInternalHeavyCompositeWallBasis) {
+    warnings.push(COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_WARNING);
+  }
   const gateIAirborneFieldContextBasis = maybeBuildGateIAirborneFieldContextBasis({
     confidenceClass,
     curve: dynamicCurve,
@@ -1955,6 +1983,7 @@ export function calculateDynamicAirborneResult(
       gateARAirborneBuildingPredictionBasis ??
       gateIAirborneFieldContextBasis ??
       gateHLinedMasonryCltWallBasis ??
+      companyInternalHeavyCompositeWallBasis ??
       gateXAacNonHomogeneousMasonryBasis ??
       gateOSingleLeafMassivePanelBasis ??
       undefined,

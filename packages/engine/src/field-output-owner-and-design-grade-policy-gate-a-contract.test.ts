@@ -238,7 +238,7 @@ const FIELD_OUTPUTS = [
 const SPLIT_ROCKWOOL_FIELD_OUTPUTS = ["R'w", "DnT,w"] as const satisfies readonly RequestedOutputId[];
 
 const COMPLETE_TRIPLE_LEAF_BUILDING_CONTEXT: AirborneContext = {
-  contextMode: "building_prediction",
+  contextMode: "field_between_rooms",
   panelHeightMm: 2500,
   panelWidthMm: 4000,
   receivingRoomRt60S: 0.6,
@@ -268,7 +268,7 @@ const FLOOR_FIELD_CONTEXT: AirborneContext = {
 };
 
 const FLOOR_BUILDING_CONTEXT: AirborneContext = {
-  contextMode: "building_prediction",
+  contextMode: "field_between_rooms",
   panelHeightMm: 3000,
   panelWidthMm: 4200,
   receivingRoomRt60S: 0.7,
@@ -470,13 +470,13 @@ describe("field-output owner and design-grade policy Gate A contract", () => {
 
     expect(lowConfidenceFloor).toMatchObject({
       dnTw: 59,
-      floorRatingsBasis: "predictor_floor_system_low_confidence_estimate",
-      impactBasis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
-      lPrimeNTw: 50.2,
-      lPrimeNW: 53,
-      rw: 65.9,
+      floorRatingsBasis: "screening_mass_law_curve_seed_v3",
+      impactBasis: null,
+      lPrimeNTw: null,
+      lPrimeNW: null,
+      rw: 58,
       rwPrime: 58,
-      systemEstimateKind: "low_confidence"
+      systemEstimateKind: null
     });
 
     expect(rawFallbackFloor).toMatchObject({

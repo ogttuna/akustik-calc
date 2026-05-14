@@ -197,6 +197,47 @@ checkpoint read
 [CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BH_HANDOFF.md](./CHECKPOINT_2026-05-13_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BH_HANDOFF.md).
 If you need the latest post-Gate-BH plan and test review read
 [CHECKPOINT_2026-05-13_POST_GATE_BH_PLAN_AND_TEST_REVIEW.md](./CHECKPOINT_2026-05-13_POST_GATE_BH_PLAN_AND_TEST_REVIEW.md).
+If you need the current Personal-Use MVP Coverage Sprint Gate BI
+checkpoint read
+[CHECKPOINT_2026-05-14_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BI_HANDOFF.md](./CHECKPOINT_2026-05-14_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BI_HANDOFF.md).
+If you need the current Personal-Use MVP Coverage Sprint Gate BJ
+checkpoint read
+[CHECKPOINT_2026-05-14_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BJ_HANDOFF.md](./CHECKPOINT_2026-05-14_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BJ_HANDOFF.md).
+If you need the current Personal-Use MVP Coverage Sprint Gate BK
+checkpoint read
+[CHECKPOINT_2026-05-14_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BK_HANDOFF.md](./CHECKPOINT_2026-05-14_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BK_HANDOFF.md).
+If you need the current Personal-Use MVP Coverage Sprint Gate BL
+checkpoint read
+[CHECKPOINT_2026-05-14_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BL_HANDOFF.md](./CHECKPOINT_2026-05-14_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BL_HANDOFF.md).
+If you need the current Personal-Use MVP Coverage Sprint Gate BM
+checkpoint read
+[CHECKPOINT_2026-05-14_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BM_HANDOFF.md](./CHECKPOINT_2026-05-14_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BM_HANDOFF.md).
+If you need the current Personal-Use MVP Coverage Sprint Gate BN
+checkpoint read
+[CHECKPOINT_2026-05-14_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BN_HANDOFF.md](./CHECKPOINT_2026-05-14_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BN_HANDOFF.md).
+If you need the current heavy-composite wall solver cleanup checkpoint
+read
+[CHECKPOINT_2026-05-14_HEAVY_COMPOSITE_WALL_SOLVER_CLEANUP_HANDOFF.md](./CHECKPOINT_2026-05-14_HEAVY_COMPOSITE_WALL_SOLVER_CLEANUP_HANDOFF.md).
+If you need the current company-internal matrix refresh checkpoint read
+[CHECKPOINT_2026-05-14_COMPANY_INTERNAL_MATRIX_REFRESH_AFTER_HEAVY_COMPOSITE_HANDOFF.md](./CHECKPOINT_2026-05-14_COMPANY_INTERNAL_MATRIX_REFRESH_AFTER_HEAVY_COMPOSITE_HANDOFF.md).
+If you need the current company-internal steel suspended-ceiling
+`DeltaLw` owner checkpoint read
+[CHECKPOINT_2026-05-14_COMPANY_INTERNAL_STEEL_SUSPENDED_CEILING_DELTA_LW_OWNER_HANDOFF.md](./CHECKPOINT_2026-05-14_COMPANY_INTERNAL_STEEL_SUSPENDED_CEILING_DELTA_LW_OWNER_HANDOFF.md).
+If you need the current company-internal airborne building-prediction
+reconciliation checkpoint read
+[CHECKPOINT_2026-05-14_COMPANY_INTERNAL_AIRBORNE_BUILDING_PREDICTION_RECONCILIATION_HANDOFF.md](./CHECKPOINT_2026-05-14_COMPANY_INTERNAL_AIRBORNE_BUILDING_PREDICTION_RECONCILIATION_HANDOFF.md).
+If you need the current company-internal matrix v2 refresh checkpoint
+read
+[CHECKPOINT_2026-05-14_COMPANY_INTERNAL_MATRIX_V2_REFRESH_HANDOFF.md](./CHECKPOINT_2026-05-14_COMPANY_INTERNAL_MATRIX_V2_REFRESH_HANDOFF.md).
+If you need the internet-researched remaining-road analysis and plain
+company-internal acceptance direction read
+[CHECKPOINT_2026-05-14_RESEARCH_BACKED_COMPANY_INTERNAL_ROADMAP.md](./CHECKPOINT_2026-05-14_RESEARCH_BACKED_COMPANY_INTERNAL_ROADMAP.md).
+If you need the current company-internal opening/leak field/building
+input-surface checkpoint read
+[CHECKPOINT_2026-05-14_COMPANY_INTERNAL_OPENING_LEAK_BUILDING_INPUT_SURFACE_HANDOFF.md](./CHECKPOINT_2026-05-14_COMPANY_INTERNAL_OPENING_LEAK_BUILDING_INPUT_SURFACE_HANDOFF.md).
+If you need the latest checkpoint review and validation stopping point
+read
+[CHECKPOINT_2026-05-15_COMPANY_INTERNAL_CHECKPOINT_REVIEW_AND_VALIDATION.md](./CHECKPOINT_2026-05-15_COMPANY_INTERNAL_CHECKPOINT_REVIEW_AND_VALIDATION.md).
 
 ---
 
@@ -204,29 +245,833 @@ If you need the latest post-Gate-BH plan and test review read
 
 Current selected slice:
 
-`personal_use_mvp_coverage_sprint_after_gate_bh_floor_impact_source_absent_coverage_matrix_refresh`
+`company_internal_calculation_grade_mainline`
 
 Source label:
 
-Personal-Use MVP Coverage Sprint after Gate BH landed the no-runtime
-floor-impact source-absent coverage matrix refresh and selected the
-field/building adapter contract.
+The active calculator lane is realigned to company-internal
+calculation-grade work: ISO floor-impact `Ln,w` / `DeltaLw`, wall
+`Rw` / `R'w` / `DnT,w`, field/building missing-input safety, and cleanup
+of common `screening_fallback` / `low_confidence` answers. Read
+[CHECKPOINT_2026-05-14_COMPANY_INTERNAL_MAINLINE_REALIGNMENT_HANDOFF.md](./CHECKPOINT_2026-05-14_COMPANY_INTERNAL_MAINLINE_REALIGNMENT_HANDOFF.md)
+and
+[SLICE_COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_PLAN.md](./SLICE_COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_PLAN.md)
+before continuing implementation.
 
-Current selected status:
+Parked ASTM source label:
 
-`gate_bh_personal_use_mvp_floor_impact_source_absent_coverage_matrix_refresh_landed_no_runtime_selected_field_building_adapter_gate_bi`
+Personal-Use MVP Coverage Sprint Gate BV has landed the no-runtime
+floor-impact ASTM `IIC` / `AIIC` rating curve owner scaffold. Gate BV
+owns the declared ASTM impact one-third-octave curve completeness
+surface for lab `IIC` and field `AIIC`, but ASTM runtime work is now
+parked as boundary history. Gate BT bridge probes and Gate BV curve
+probes are not runtime evidence, not source rows, and not ASTM rating
+results. ISO `Ln,w` / `DeltaLw`, field `L'n,w` / `L'nT,w`,
+building-prediction metrics, and ASTM E413/STC rows must not alias to
+ASTM E989 impact ratings.
 
-Selected next implementation file:
+Landed Gate BV action:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bi-floor-impact-field-building-adapter-contract.test.ts`
+`gate_bv_personal_use_mvp_floor_impact_astm_iic_aiic_rating_curve_owner_scaffold_plan`
 
-Selected next action:
+Gate BV selection status:
 
-`gate_bi_personal_use_mvp_floor_impact_field_building_adapter_contract_plan`
+`gate_bv_personal_use_mvp_floor_impact_astm_iic_aiic_rating_curve_owner_scaffold_landed_no_runtime_selected_contour_rating_owner_gate_bw`
+
+Latest company-internal runtime movement:
+
+The heavy-composite wall cleanup has landed. Complete
+`wall-heavy-composite-hint-suppression` style heavy mineral/composite
+double-leaf stacks now select
+`company_internal_heavy_composite_wall_mass_air_mass_capped_family_physics_runtime`
+instead of `screening_fallback`, keep lab `Rw 63 / STC 63` and field
+`R'w 60 / DnT,w 61`, expose lab `errorBudgetDb: 8`, and wrap field
+requests through the field adapter with `errorBudgetDb: 10`.
+
+Latest company-internal matrix refresh:
+
+`company_internal_calculation_grade_matrix_refresh_after_heavy_composite_plan`
+has landed as a no-runtime executable matrix refresh. The matrix now has
+61 rows, keeps the heavy-composite lab/field values pinned, keeps wall
+building-prediction missing-input requests parked, keeps ASTM `IIC` /
+`AIIC` parked as boundary history, and selects the next ISO lane:
+`company_internal_steel_suspended_ceiling_delta_lw_owner_contract_plan`.
+The matrix refresh selected file was
+`packages/engine/src/company-internal-steel-suspended-ceiling-delta-lw-owner-contract.test.ts`.
+
+Latest company-internal input-owner movement:
+
+`company_internal_steel_suspended_ceiling_delta_lw_owner_contract_plan`
+has landed. Steel suspended-ceiling-only floor input still returns lab
+`Ln,w 62.2`, but `DeltaLw` is no longer just a silent unsupported gap:
+the input surface now exposes the exact upper/reference package fields
+needed before calculating it:
+`toppingOrFloatingLayer`, `resilientLayerDynamicStiffnessMNm3`, and
+`loadBasisKgM2`. Mixed `Ln,w` / `DeltaLw` requests preserve supported
+`Ln,w` while prompting only for the missing `DeltaLw` owner inputs. No
+numeric `DeltaLw`, ASTM alias, field alias, or building alias was added.
+
+Current next implementation focus:
+
+The selected airborne building-prediction runtime terms owner contract
+has landed as
+`company_internal_airborne_building_prediction_runtime_terms_owner_contract_plan`.
+Selection status:
+`company_internal_airborne_building_prediction_runtime_terms_owner_contract_landed_selected_matrix_v2_refresh`.
+It proved the existing Gate AR/AS/AT complete-context building runtime
+inside the company-internal envelope without moving runtime values:
+`R'w 58` / `DnT,w 59`, the
+`gate_ar_airborne_building_prediction_all_owner_runtime_corridor` basis,
+visible `+/-9 dB` budget, precise partial-context prompts, lab-alias
+negatives, and unsupported opening/leak building boundary.
+
+Latest landed contract file:
+`packages/engine/src/company-internal-airborne-building-prediction-runtime-terms-owner-contract.test.ts`.
+Reconciliation selected next file, now landed by Matrix V2:
+`packages/engine/src/company-internal-calculation-grade-mainline-matrix-v2-contract.test.ts`.
+
+The matrix v2 refresh has also landed as
+`company_internal_calculation_grade_mainline_matrix_v2_refresh_plan`.
+Selection status:
+`company_internal_calculation_grade_mainline_matrix_v2_refresh_landed_selected_steel_suspended_ceiling_delta_lw_runtime_corridor`.
+It preserves Gate AT building runtime rows, retires the stale building
+missing-context row, preserves partial building `needs_input`, changes
+the steel suspended-ceiling `DeltaLw` row to a precise `needs_input`
+owner prompt, and normalizes the heavy-floating floor matrix origin away
+from hidden `screening_fallback`.
+
+Current selected next action:
+`company_internal_calculation_grade_mainline_matrix_v3_refresh_after_steel_delta_lw_surface_parity_plan`.
+
+Current selected next file:
+`packages/engine/src/company-internal-calculation-grade-mainline-matrix-v3-contract.test.ts`.
+
+The selected steel suspended-ceiling `DeltaLw` runtime corridor has now
+landed as
+`company_internal_steel_suspended_ceiling_delta_lw_runtime_corridor_plan`.
+Matrix V2 selected next file, now landed by that runtime corridor:
+`packages/engine/src/company-internal-steel-suspended-ceiling-delta-lw-runtime-corridor-contract.test.ts`.
+Complete lower suspended-ceiling plus upper/reference package input now
+returns lab `Ln,w 51.6` / `DeltaLw 22.4` through
+`predictor_lightweight_steel_mass_spring_holdout_corridor_estimate`.
+Missing `toppingOrFloatingLayer` blocks the formula instead of
+fabricating a broad fallback. Selection status:
+`company_internal_steel_suspended_ceiling_delta_lw_runtime_corridor_landed_selected_surface_parity`.
+
+Current selected next action:
+`company_internal_steel_suspended_ceiling_delta_lw_surface_parity_plan`.
+
+Current selected next file:
+`packages/engine/src/company-internal-steel-suspended-ceiling-delta-lw-surface-parity-contract.test.ts`.
+
+The steel suspended-ceiling `DeltaLw` surface parity gate has now landed
+as
+`company_internal_steel_suspended_ceiling_delta_lw_surface_parity_plan`.
+Cards, corridor dossier, local saved replay, server snapshot replay,
+calculator API payload, impact-only API payload, and Markdown report now
+show the same lab `Ln,w 51.6` / `DeltaLw 22.4`,
+`steel_suspended_ceiling_lower_reference`, and source-absent `+/-4.5 dB`
+/ `+/-2.0 dB` budget posture. Selection status:
+`company_internal_steel_suspended_ceiling_delta_lw_surface_parity_landed_selected_matrix_v3_refresh`.
+
+Current selected next action:
+`company_internal_calculation_grade_mainline_matrix_v3_refresh_after_steel_delta_lw_surface_parity_plan`.
+
+Current selected next file:
+`packages/engine/src/company-internal-calculation-grade-mainline-matrix-v3-contract.test.ts`.
+
+The company-internal Matrix V3 refresh has now landed as
+`company_internal_calculation_grade_mainline_matrix_v3_refresh_after_steel_delta_lw_surface_parity_plan`.
+It records the already-landed steel suspended-ceiling runtime as
+calculation-grade matrix evidence: the old
+`floor.lightweight_steel_suspended_ceiling_delta_lw.needs_input` owner
+prompt is retired, and
+`floor.lightweight_steel_suspended_ceiling_delta_lw.runtime` now pins
+lab `Ln,w 51.6` / `DeltaLw 22.4` through
+`predictor_lightweight_steel_mass_spring_holdout_corridor_estimate`
+with `steel_suspended_ceiling_lower_reference`, `+/-4.5 dB` `Ln,w`
+budget, and `+/-2.0 dB` `DeltaLw` budget. Selection status:
+`company_internal_calculation_grade_mainline_matrix_v3_refresh_after_steel_delta_lw_surface_parity_landed_selected_steel_suspended_ceiling_low_frequency_lnt50_owner`.
+Matrix V3 selected next file, now landed by the owner contract:
+`packages/engine/src/company-internal-steel-suspended-ceiling-low-frequency-lnt50-owner-contract.test.ts`.
+
+The preceding low-frequency `L'nT,50` owner contract landed as
+`company_internal_steel_suspended_ceiling_low_frequency_lnt50_owner_contract_plan`
+with selection status
+`company_internal_steel_suspended_ceiling_low_frequency_lnt50_owner_contract_landed_no_runtime_selected_runtime_corridor`.
+It keeps source-absent `L'nT,50` blocked until
+`lowFrequencyImpactSpectrumOrCI50_2500Owner` exists. Owner selected next
+file, now landed by the runtime corridor:
+`packages/engine/src/company-internal-steel-suspended-ceiling-low-frequency-lnt50-runtime-corridor-contract.test.ts`.
+
+The steel suspended-ceiling low-frequency `L'nT,50` surface parity gate
+has now landed as
+`company_internal_steel_suspended_ceiling_low_frequency_lnt50_surface_parity_plan`.
+Lab `Ln,w 51.6` / `DeltaLw 22.4` remains frozen. Complete field context
+with `fieldKDb = 3`, receiving-room volume `60 m3`, and
+`CI,50-2500 = -1 dB` now returns `L'n,w 54.6`, `L'nT,w 51.8`, and
+`L'nT,50 50.8` through
+`estimated_standardized_field_lpriment50_from_lprimentw_plus_ci50_2500`.
+The `L'nT,50` source-absent field adapter budget is `+/-7 dB`, and that
+value/basis/budget now appears consistently in cards, corridor dossier,
+local saved replay, server snapshot replay, calculator API payload,
+impact-only API payload, and Markdown report. Missing `CI,50-2500` /
+low-frequency spectrum ownership still blocks `L'nT,50`, exact field
+band packets remain exact precedence, and ASTM `IIC` / `AIIC` remain
+unsupported. Selection status:
+`company_internal_steel_suspended_ceiling_low_frequency_lnt50_surface_parity_landed_selected_matrix_v4_refresh`.
+Surface parity selected next action, now landed by Matrix V4:
+`company_internal_calculation_grade_mainline_matrix_v4_refresh_after_lnt50_surface_parity_plan`.
+Surface parity selected next file, now landed by Matrix V4:
+`packages/engine/src/company-internal-calculation-grade-mainline-matrix-v4-contract.test.ts`.
+Surface parity selected next label, now landed by Matrix V4:
+company-internal matrix v4 refresh after steel L'nT,50 surface parity.
+
+Matrix V4 has now landed as
+`company_internal_calculation_grade_mainline_matrix_v4_refresh_after_lnt50_surface_parity_plan`.
+It records the complete steel suspended-ceiling field route as supported
+`Ln,w 51.6` / `DeltaLw 22.4` / `L'n,w 54.6` / `L'nT,w 51.8` /
+`L'nT,50 50.8`, keeps missing `CI,50-2500` / low-frequency spectrum
+ownership blocked without an `L'nT,50` budget, and keeps exact
+field-band `L'nT,50` precedence separate from the source-absent steel
+adapter. ASTM `IIC` / `AIIC` remain unsupported. Selection status:
+`company_internal_calculation_grade_mainline_matrix_v4_refresh_after_lnt50_surface_parity_landed_selected_opening_leak_building_adapter_owner`.
+
+The preceding low-frequency runtime corridor landed as
+`company_internal_steel_suspended_ceiling_low_frequency_lnt50_runtime_corridor_plan`
+with selection status
+`company_internal_steel_suspended_ceiling_low_frequency_lnt50_runtime_corridor_landed_selected_surface_parity`.
+Runtime selected next action, now landed by surface parity:
+`company_internal_steel_suspended_ceiling_low_frequency_lnt50_surface_parity_plan`.
+Runtime selected next file, now landed by surface parity:
+`packages/engine/src/company-internal-steel-suspended-ceiling-low-frequency-lnt50-surface-parity-contract.test.ts`.
+Runtime selected next label, now landed by surface parity:
+steel suspended-ceiling L'nT,50 card/report/API parity.
+
+Matrix V4 selected next action, now landed:
+`company_internal_opening_leak_building_adapter_owner_contract_plan`.
+
+Matrix V4 selected next file, now landed:
+`packages/engine/src/company-internal-opening-leak-building-adapter-owner-contract.test.ts`.
+
+Matrix V4 selected next label, now landed:
+opening/leak building-context adapter owner contract.
+
+The opening/leak field/building adapter owner contract has now landed as
+`company_internal_opening_leak_building_adapter_owner_contract_plan`.
+It is a no-runtime owner boundary after Matrix V4. Gate S lab
+opening/leak `Rw 38.2` / `STC 39` remains the only supported runtime for
+the opening/leak route; field/apparent and building-prediction
+`R'w` / `DnT,w` are not aliases of that lab value. The field owner group
+now requires explicit opening/leak physical inputs plus panel geometry,
+receiving-room volume, and receiving-room RT60. The building owner group
+adds source-room volume, flanking/junction class, conservative flanking
+assumption, junction coupling length, and building output basis. Missing
+physical fields return `needs_input`; missing runtime owners return
+`runtime_owner_missing`; element-lab and ASTM requests stay outside this
+adapter.
+
+Selection status:
+`company_internal_opening_leak_building_adapter_owner_contract_landed_no_runtime_selected_runtime_corridor`.
+
+Current selected next action:
+`company_internal_opening_leak_building_runtime_corridor_plan`.
+
+Current selected next file:
+`packages/engine/src/company-internal-opening-leak-building-runtime-corridor-contract.test.ts`.
+
+Current selected next label:
+opening/leak field/building runtime corridor.
+
+Latest landed opening/leak field/building runtime corridor:
+
+- `company_internal_opening_leak_building_runtime_corridor_plan`
+  has landed.
+- Selection status:
+  `company_internal_opening_leak_building_runtime_corridor_landed_selected_surface_parity`.
+- Complete explicit field opening/leak context with
+  `openingLeakFieldBuildingAdapterBoundary` returns `R'w 36.4` /
+  `Dn,w 36.7` / `DnT,w 36.9` through
+  `company_internal_opening_leak_field_area_energy_runtime_corridor`
+  with a `+/-8 dB` source-absent field budget.
+- Complete explicit building opening/leak context returns `R'w 31.6` /
+  `DnT,w 32.1` through
+  `company_internal_opening_leak_building_area_energy_runtime_corridor`
+  with a `+/-10 dB` source-absent building budget.
+- Gate S lab opening/leak `Rw 38.2` / `STC 39` remains unchanged.
+  `Dn,A` / `DnT,A` remain unsupported until a separate spectrum adapter
+  owns them.
+- Runtime corridor selected next action, now landed by surface parity:
+  `company_internal_opening_leak_building_surface_parity_plan`.
+- Runtime corridor selected next file, now landed by surface parity:
+  `packages/engine/src/company-internal-opening-leak-building-surface-parity-contract.test.ts`.
+- Runtime corridor selected next label, now landed by surface parity:
+  opening/leak field/building card/report/API parity.
+
+Latest landed opening/leak field/building surface parity:
+
+- `company_internal_opening_leak_building_surface_parity_plan`
+  has landed.
+- Selection status:
+  `company_internal_opening_leak_building_surface_parity_landed_selected_input_surface`.
+- Cards, route posture, scenario summary, method/corridor dossiers,
+  saved replay, calculator API payload, and Markdown report now preserve
+  the same field `R'w 36.4` / `Dn,w 36.7` / `DnT,w 36.9` with `+/-8 dB`
+  and building `R'w 31.6` / `DnT,w 32.1` with `+/-10 dB`.
+- The visible basis names
+  `company_internal_opening_leak_field_area_energy_runtime_corridor` and
+  `company_internal_opening_leak_building_area_energy_runtime_corridor`
+  remain source-absent field/building predictions, not measured evidence
+  and not lab `Rw` / `STC` aliases.
+- Selected next action, now landed by the input surface:
+  `company_internal_opening_leak_building_input_surface_plan`.
+- Selected next file, now landed by the input surface:
+  `apps/web/features/workbench/company-internal-opening-leak-building-input-surface.test.ts`.
+- Selected next label, now landed by the input surface:
+  opening/leak field/building input surface.
+
+Latest landed opening/leak field/building input surface:
+
+- `company_internal_opening_leak_building_input_surface_plan` has
+  landed.
+- Selection status:
+  `company_internal_opening_leak_building_input_surface_landed_selected_matrix_v5_refresh`.
+- The Dynamic Calculator wall input surface now owns the opening/leak
+  field/building physical input package: host wall area, stable opening
+  ids, opening area/count/element `Rw`/basis/seal/origin, partition
+  width/height, receiving-room volume/RT60, source-room volume,
+  flanking/junction class, conservative flanking assumption, junction
+  coupling length, and building output basis.
+- UI-derived field input reaches `R'w 36.4` / `Dn,w 36.7` /
+  `DnT,w 36.9` with `+/-8 dB`; UI-derived building input reaches
+  `R'w 31.6` / `DnT,w 32.1` with `+/-10 dB`.
+- Local saved replay, server snapshot replay, report payload, and
+  calculator API payload preserve the same basis. Missing building owner
+  fields return `needs_input`; duplicate opening inputs fail closed.
+- Selected next action:
+  `company_internal_calculation_grade_mainline_matrix_v5_refresh_after_opening_leak_building_input_surface_plan`.
+- Selected next file:
+  `packages/engine/src/company-internal-calculation-grade-mainline-matrix-v5-contract.test.ts`.
+- Selected next label:
+  company-internal matrix v5 refresh after opening/leak field/building
+  input surface.
+
+Latest landed Matrix V5 refresh after opening/leak input surface:
+
+- `company_internal_calculation_grade_mainline_matrix_v5_refresh_after_opening_leak_building_input_surface_plan`
+  has landed.
+- Selection status:
+  `company_internal_calculation_grade_mainline_matrix_v5_refresh_after_opening_leak_building_input_surface_landed_selected_opening_leak_a_weighted_adapter_owner`.
+- Matrix V5 records supported opening/leak field/building runtime rows:
+  field `R'w 36.4` / `Dn,w 36.7` / `DnT,w 36.9` with `+/-8 dB`, and
+  building `R'w 31.6` / `DnT,w 32.1` with `+/-10 dB`.
+- The stale
+  `wall.opening_leak_composite_building_boundary.unsupported` row is
+  retired only after those supported rows are pinned.
+- `Dn,A` and `DnT,A` remain unsupported for opening/leak field/building
+  requests until a spectrum-adapter owner exists; missing building
+  owners still return precise `needs_input`.
+- Selected next action, now landed:
+  `company_internal_opening_leak_a_weighted_spectrum_adapter_owner_contract_plan`.
+- Selected next file, now landed:
+  `packages/engine/src/company-internal-opening-leak-a-weighted-spectrum-adapter-owner-contract.test.ts`.
+- Selected next label, now landed:
+  opening/leak `Dn,A` / `DnT,A` spectrum-adapter owner contract.
+
+Do not continue ASTM runtime work, broad source crawling, or unrelated
+building-prediction runtime work before the opening/leak A-weighted
+formula corridor unless a later active plan explicitly re-ranks them.
+
+Latest landed opening/leak A-weighted spectrum-adapter owner:
+
+- `company_internal_opening_leak_a_weighted_spectrum_adapter_owner_contract_plan`
+  has landed.
+- Selection status:
+  `company_internal_opening_leak_a_weighted_spectrum_adapter_owner_contract_landed_no_runtime_selected_formula_corridor`.
+- The owner gate keeps existing runtime values frozen: field
+  opening/leak `R'w 36.4` / `Dn,w 36.7` / `DnT,w 36.9` with `+/-8 dB`,
+  and building opening/leak `R'w 31.6` / `DnT,w 32.1` with `+/-10 dB`.
+- Field `Dn,A` / `DnT,A` and building `DnT,A` remain unsupported until
+  a formula corridor owns `frequencyBandSet`, the same-route
+  opening/leak spectrum curve, ISO 717 C or A-weighted adapter,
+  A-weighted uncertainty budget, exact A-weighted packet precedence,
+  and the lab `Rw` / `STC` alias guard.
+- Building `Dn,A` remains outside this owner.
+- Current selected next action:
+  `company_internal_opening_leak_a_weighted_spectrum_adapter_formula_corridor_plan`.
+- Current selected next file:
+  `packages/engine/src/company-internal-opening-leak-a-weighted-spectrum-adapter-formula-corridor-contract.test.ts`.
+- Current selected next label:
+  opening/leak Dn,A / DnT,A spectrum-adapter formula corridor.
+
+Latest roadmap sharpening:
+
+[CHECKPOINT_2026-05-14_RESEARCH_BACKED_COMPANY_INTERNAL_ROADMAP.md](./CHECKPOINT_2026-05-14_RESEARCH_BACKED_COMPANY_INTERNAL_ROADMAP.md)
+records the standards/tooling research, implementation-vs-doc audit, and
+remaining-road decision. The company-internal bar is executable scenario
+quality: complete in-scope scenarios must resolve to exact/source,
+calibrated or family physics, bounded formula, precise `needs_input`, or
+true `unsupported`. They must not finish as `low_confidence`,
+`screening_fallback`, live nearby-row proxy fallback, or
+lab/field/building alias. Source rows remain useful as exact overrides,
+calibration anchors, holdouts, and negative boundaries; broad source
+crawling is not the next mainline path.
+
+Known audit corrections before calling the company-internal matrix final:
+
+- complete after matrix v2: Gate AT complete building runtime is imported
+  into the active company-internal matrix;
+- complete after matrix v2: the latest steel suspended-ceiling
+  `DeltaLw` owner prompt is represented as `needs_input`, separate from
+  missing numeric `DeltaLw` runtime;
+- complete after matrix v2: `floor.heavy_concrete_floating_floor.lab`
+  no longer hides `screening_fallback` as the matrix origin.
+
+Parked ASTM selected next implementation file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bw-floor-impact-astm-iic-aiic-contour-rating-owner-contract.test.ts`
+
+Parked ASTM selected next action:
+
+`gate_bw_personal_use_mvp_floor_impact_astm_iic_aiic_contour_rating_owner_plan`
+
+Current next plain label: company-internal ISO floor / wall
+calculation-grade coverage and missing-input safety.
+
+Parked ASTM next plain label: floor-impact ASTM IIC/AIIC contour rating
+owner.
+
+Parked ASTM exact label: floor-impact ASTM IIC/AIIC contour rating owner.
+
+Company-internal opening/leak field/building input-surface validation
+on 2026-05-14:
+
+- focused web input-surface / adjacent continuity set: 3 files / 12
+  tests passed
+- `@dynecho/web` typecheck passed
+- `@dynecho/web` lint passed
+- the package-level web test wrapper was stopped after entering the full
+  long-runner expansion and replaced with direct focused Vitest
+  execution for the files above
+
+Company-internal steel suspended-ceiling `DeltaLw` runtime validation on
+2026-05-14:
+
+- focused runtime corridor contract: 1 file / 6 tests passed
+- nearby company-internal continuity set: 5 files / 25 tests passed
+- `@dynecho/engine` typecheck passed
+- scoped engine eslint passed for the steel runtime, input-surface, and
+  matrix-v2 files touched by this slice
+
+Company-internal steel suspended-ceiling `DeltaLw` surface parity
+validation on 2026-05-14:
+
+- focused surface parity contract: 1 file / 3 tests passed
+- focused web surface parity: 1 file / 3 tests passed
+- nearby company-internal engine continuity set: 6 files / 28 tests
+  passed
+- nearby steel web continuity set: 4 files / 11 tests passed
+- `@dynecho/engine` and `@dynecho/web` typecheck passed
+- scoped engine/web eslint passed for the files touched by this surface
+  parity slice
+- `pnpm calculator:gate:current` passed with engine 419 files / 2429
+  tests, web 79 files / 337 passed + 18 skipped, repo build 5/5, and
+  whitespace guard clean
+- known non-fatal warnings: transient `fonts.googleapis.com` DNS
+  retries, optional `sharp/@img` build packages, and Zustand unavailable
+  test storage
+
+Company-internal Matrix V3 validation on 2026-05-14:
+
+- focused Matrix V3 contract: 1 file / 6 tests passed
+- nearby company-internal continuity set: 6 files / 31 tests passed
+- `@dynecho/engine` typecheck passed
+- scoped engine eslint passed for the Matrix V3 slice files
+- `pnpm calculator:gate:current` passed with engine 420 files / 2435
+  tests, web 79 files / 337 passed + 18 skipped, repo build 5/5, and
+  whitespace guard clean
+- known non-fatal warnings: optional `sharp/@img` build packages and
+  Zustand unavailable test storage
+
+Company-internal steel suspended-ceiling low-frequency `L'nT,50` owner
+validation on 2026-05-14:
+
+- focused owner contract: 1 file / 6 tests passed
+- nearby company-internal continuity with Matrix V3 and steel
+  `DeltaLw` runtime/surface parity: 4 files / 21 tests passed
+- `@dynecho/engine` typecheck passed
+- scoped engine eslint passed for the low-frequency owner contract files
+- `pnpm calculator:gate:current` passed with engine 421 files / 2441
+  tests, web 79 files / 337 passed + 18 skipped, repo build 5/5, and
+  whitespace guard clean
+- known non-fatal warnings: optional `sharp/@img` build packages and
+  Zustand unavailable test storage
+
+Gate BV validation on 2026-05-14:
+
+- focused Gate BV contract: 1 file / 8 tests passed
+- focused Gate BT + Gate BV continuity: 2 files / 15 tests passed
+- `@dynecho/engine` typecheck passed
+- `pnpm calculator:gate:current` passed with engine 415 files / 2409
+  tests, web 78 files / 334 passed + 18 skipped, repo build 5/5, and
+  whitespace guard clean
+- known non-fatal warnings: optional `sharp/@img` build packages and
+  Zustand unavailable test storage
+
+Heavy-composite cleanup validation on 2026-05-14:
+
+- focused engine cleanup: 4 files / 18 tests passed
+- web mixed study-mode replay: 1 file / 5 tests passed
+
+Preceding Gate BU action:
+
+`gate_bu_personal_use_mvp_floor_impact_astm_iic_aiic_rating_procedure_and_exact_source_owner_plan`
+
+Gate BU selection status:
+
+`gate_bu_personal_use_mvp_floor_impact_astm_iic_aiic_rating_procedure_exact_source_owner_closed_no_runtime_selected_rating_curve_owner_scaffold_gate_bv`
+
+Gate BU selected next action:
+
+`gate_bv_personal_use_mvp_floor_impact_astm_iic_aiic_rating_curve_owner_scaffold_plan`
+
+Gate BU selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bv-floor-impact-astm-iic-aiic-rating-curve-owner-scaffold-contract.test.ts`
+
+Gate BU next plain label: floor-impact ASTM IIC/AIIC rating curve owner scaffold.
+
+Gate BU validation on 2026-05-14:
+
+- focused Gate BU contract: 1 file / 8 tests passed
+- Gate BT + Gate BU continuity: 2 files / 15 tests passed
+- `@dynecho/engine` typecheck passed
+- `pnpm calculator:gate:current` passed with engine 414 files / 2401
+  tests, web 78 files / 334 passed + 18 skipped, repo build 5/5, and
+  whitespace guard clean
+- known non-fatal warnings: optional `sharp/@img` build packages and
+  Zustand unavailable test storage
+
+Preceding Gate BT action:
+
+`gate_bt_personal_use_mvp_floor_impact_astm_iic_aiic_metric_schema_and_adapter_bridge_plan`
+
+Gate BT selection status:
+
+`gate_bt_personal_use_mvp_floor_impact_astm_iic_aiic_metric_schema_adapter_bridge_landed_no_runtime_selected_rating_procedure_exact_source_owner_gate_bu`
+
+Gate BT selected next action:
+
+`gate_bu_personal_use_mvp_floor_impact_astm_iic_aiic_rating_procedure_and_exact_source_owner_plan`
+
+Gate BT selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bu-floor-impact-astm-iic-aiic-rating-procedure-and-exact-source-owner-contract.test.ts`
+
+Gate BT next plain label: floor-impact ASTM IIC/AIIC rating procedure and exact-source owner.
+
+Gate BT validation on 2026-05-14:
+
+- focused Gate BT contract: 1 file / 7 tests passed
+- Gate BS + Gate BT continuity: 2 files / 15 tests passed
+- `@dynecho/shared` and `@dynecho/engine` typecheck passed
+- `pnpm calculator:gate:current` passed with engine 413 files / 2393
+  tests, web 78 files / 334 passed + 18 skipped, repo build 5/5, and
+  whitespace guard clean
+- known non-fatal warnings: optional `sharp/@img` build packages and
+  Zustand unavailable test storage
+
+Preceding Gate BS action:
+
+`gate_bs_personal_use_mvp_floor_impact_astm_iic_aiic_runtime_corridor_plan`
+
+Gate BS selection status:
+
+`gate_bs_personal_use_mvp_floor_impact_astm_iic_aiic_runtime_corridor_closed_no_runtime_selected_metric_schema_adapter_bridge_gate_bt`
+
+Gate BS selected next action:
+
+`gate_bt_personal_use_mvp_floor_impact_astm_iic_aiic_metric_schema_and_adapter_bridge_plan`
+
+Gate BS selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bt-floor-impact-astm-iic-aiic-metric-schema-and-adapter-bridge-contract.test.ts`
+
+Gate BS next plain label: floor-impact ASTM IIC/AIIC metric schema and adapter bridge.
+
+Preceding Gate BR action:
+
+`gate_br_personal_use_mvp_floor_impact_astm_iic_aiic_adapter_contract_plan`
+
+Gate BR selection status:
+
+`gate_br_personal_use_mvp_floor_impact_astm_iic_aiic_adapter_contract_landed_no_runtime_selected_runtime_corridor_gate_bs`
+
+Gate BR selected next action:
+
+`gate_bs_personal_use_mvp_floor_impact_astm_iic_aiic_runtime_corridor_plan`
+
+Gate BR selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bs-floor-impact-astm-iic-aiic-runtime-corridor-contract.test.ts`
+
+Gate BR next plain label: floor-impact ASTM IIC/AIIC runtime corridor.
+
+Personal-Use MVP Coverage Sprint Gate BP has landed the no-retune
+reinforced-concrete cleanup surface parity. Gate BP keeps the Gate BO
+runtime values and basis frozen while making the new posture visible on
+output cards, route card, impact trace, diagnostics/method/report
+surfaces, saved replay, calculator API, and impact-only API. Complete
+explicit or UI-derived owner input still returns lab `Ln,w 58.1` /
+`DeltaLw 13.7` through
+`predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate`
+with `+/-6.5 dB` / `+/-5.5 dB` source-absent budgets. Incomplete
+explicit or visible-derived owner input shows impact cards as
+`needs_input` with named missing physical owners instead of
+unsupported-looking low-confidence output.
+
+Landed Gate BP action:
+
+`gate_bp_personal_use_mvp_reinforced_concrete_cleanup_surface_parity_plan`
+
+Gate BP selects Gate BQ because the executable coverage matrix should
+now be refreshed after the reinforced-concrete cleanup changed visible
+posture from unsupported/low-confidence to precise needs-input or named
+formula support.
+
+Personal-Use MVP Coverage Sprint Gate BO has landed the
+reinforced-concrete low-confidence cleanup. The old incomplete
+reinforced-concrete combined upper/lower route no longer returns
+`predictor_floor_system_low_confidence_estimate`, `Ln,w 50`, proxy
+`Rw 65.9`, or proxy `Ctr 57`. Complete explicit owner input now returns
+lab `Ln,w 58.1` / `DeltaLw 13.7` through
+`predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate`.
+Incomplete explicit or visible-derived owner input is parked as
+`needs_input` for impact outputs with named missing physical owners.
+Gate BO selects Gate BP because card/report/API surfaces must now show
+the new needs-input and formula corridor posture consistently.
+
+Preceding Gate BO action:
+
+`gate_bo_personal_use_mvp_reinforced_concrete_low_confidence_cleanup_plan`
+
+Gate BO selection status:
+
+`gate_bo_personal_use_mvp_reinforced_concrete_low_confidence_cleanup_landed_selected_surface_parity_gate_bp`
+
+Gate BO selected next action:
+
+`gate_bp_personal_use_mvp_reinforced_concrete_cleanup_surface_parity_plan`
+
+Gate BO selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bp-reinforced-concrete-cleanup-surface-parity-contract.test.ts`
+
+Personal-Use MVP Coverage Sprint Gate BN has landed the no-runtime
+coverage matrix refresh after steel suspended-ceiling. Gate BN selected
+Gate BO after identifying the reinforced-concrete low-confidence cleanup
+candidate in the refreshed matrix.
+
+Gate BN selection status:
+
+`gate_bn_personal_use_mvp_coverage_matrix_refresh_after_steel_suspended_ceiling_landed_no_runtime_selected_reinforced_concrete_low_confidence_cleanup_gate_bo`
+
+Gate BN selected next action:
+
+`gate_bo_personal_use_mvp_reinforced_concrete_low_confidence_cleanup_plan`
+
+Gate BN selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bo-reinforced-concrete-low-confidence-cleanup-contract.test.ts`
+
+Personal-Use MVP Coverage Sprint Gate BM has landed the post steel
+suspended-ceiling input-surface revalidation. Gate BM is no-runtime: it
+revalidates complete and safe-reordered UI-derived steel
+suspended-ceiling input at Gate BK lab `Ln,w 62.2` / `+/-6 dB`, keeps
+partial steel input as precise missing physical owner prompts, keeps
+duplicate steel carriers refused, preserves exact-source precedence,
+and keeps Gate AD steel upper/lower values frozen at `Ln,w 55.6` /
+`DeltaLw 22.4`.
+
+Personal-Use MVP Coverage Sprint Gate BL has landed the steel-floor
+suspended-ceiling input surface. Complete UI-derived steel
+suspended-ceiling-only input now flows through the existing Dynamic
+Calculator floor input surface to
+`predictor_lightweight_steel_suspended_ceiling_corridor_estimate` and
+keeps the Gate BK lab `Ln,w 62.2` / `+/-6 dB` source-absent budget.
+Partial UI-derived input names `steelCarrierSpacingMm` and
+`lowerCeilingIsolationSupportForm` instead of ending as a final
+low-confidence answer.
+
+Personal-Use MVP Coverage Sprint Gate BK has landed the steel-floor
+low-confidence fallback cleanup. Complete steel suspended-ceiling-only
+predictor input now gets the named
+`predictor_lightweight_steel_suspended_ceiling_corridor_estimate` lab
+`Ln,w` corridor instead of the broad low-confidence Pliteq/UBIQ
+fallback. Gate AD steel upper/lower values stay frozen at
+`Ln,w 55.6` / `DeltaLw 22.4`; exact source rows still win first.
+
+Personal-Use MVP Coverage Sprint Gate BQ has landed the reinforced-
+concrete cleanup matrix refresh. It is no-runtime: Gate BO/BP values
+stay lab `Ln,w 58.1` / `DeltaLw 13.7` through
+`predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate`
+with `+/-6.5 dB` / `+/-5.5 dB` source-absent budgets. The executable
+matrix now replaces the old reinforced-concrete low-confidence
+coverage-gap row with complete formula, visible-derived `needs_input`,
+incomplete explicit `needs_input`, exact-source precedence, bare
+heavy-floor, upper-only floating-floor, field/building non-alias, and
+ASTM `IIC` / `AIIC` unsupported rows. The matrix has 58 rows and zero
+calculation-grade `coverage_gap` rows.
+
+Gate BQ landed action:
+
+`gate_bq_personal_use_mvp_coverage_matrix_refresh_after_reinforced_concrete_cleanup_plan`
+
+Preceding Gate BP landed action:
+
+`gate_bp_personal_use_mvp_reinforced_concrete_cleanup_surface_parity_plan`
+
+Gate BP selection status:
+
+`gate_bp_personal_use_mvp_reinforced_concrete_cleanup_surface_parity_landed_selected_matrix_refresh_gate_bq`
+
+Gate BP selected next action:
+
+`gate_bq_personal_use_mvp_coverage_matrix_refresh_after_reinforced_concrete_cleanup_plan`
+
+Gate BP selected next file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bq-coverage-matrix-refresh-after-reinforced-concrete-cleanup-contract.test.ts`
+
+Preceding Gate BQ selection status:
+
+`gate_bq_personal_use_mvp_coverage_matrix_refresh_after_reinforced_concrete_cleanup_landed_no_runtime_selected_floor_impact_astm_iic_aiic_adapter_gate_br`
+
+Gate BQ selected implementation file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-br-floor-impact-astm-iic-aiic-adapter-contract.test.ts`
+
+Gate BQ selected action:
+
+`gate_br_personal_use_mvp_floor_impact_astm_iic_aiic_adapter_contract_plan`
+
+Gate BQ next plain label: floor-impact ASTM IIC/AIIC adapter contract.
 
 Latest checkpoint review:
 
-`CHECKPOINT_2026-05-13_POST_GATE_BH_PLAN_AND_TEST_REVIEW.md`
+`CHECKPOINT_2026-05-14_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BR_HANDOFF.md`
+
+Clean Gate BR implementation plan:
+
+`SLICE_PERSONAL_USE_MVP_GATE_BR_FLOOR_IMPACT_ASTM_IIC_AIIC_ADAPTER_CONTRACT_PLAN.md`
+
+Preceding Gate BQ implementation plan:
+
+`SLICE_PERSONAL_USE_MVP_GATE_BQ_COVERAGE_MATRIX_REFRESH_AFTER_REINFORCED_CONCRETE_CLEANUP_PLAN.md`
+
+Preceding Gate BP implementation plan:
+
+`SLICE_PERSONAL_USE_MVP_GATE_BP_REINFORCED_CONCRETE_CLEANUP_SURFACE_PARITY_PLAN.md`
+
+Preceding Gate BO implementation plan:
+
+`SLICE_PERSONAL_USE_MVP_GATE_BO_REINFORCED_CONCRETE_LOW_CONFIDENCE_CLEANUP_PLAN.md`
+
+Preceding Gate BN implementation plan:
+
+`SLICE_PERSONAL_USE_MVP_GATE_BN_COVERAGE_MATRIX_REFRESH_AFTER_STEEL_SUSPENDED_CEILING_PLAN.md`
+
+Preceding Gate BM implementation plan:
+
+`SLICE_PERSONAL_USE_MVP_GATE_BM_POST_STEEL_SUSPENDED_CEILING_INPUT_SURFACE_REVALIDATION_PLAN.md`
+
+Gate BM selection status:
+
+`gate_bm_personal_use_mvp_post_steel_suspended_ceiling_input_surface_revalidation_landed_no_runtime_selected_matrix_refresh_gate_bn`
+
+Gate BM selected action:
+
+`gate_bn_personal_use_mvp_coverage_matrix_refresh_after_steel_suspended_ceiling_plan`
+
+Gate BM selected file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bn-coverage-matrix-refresh-after-steel-suspended-ceiling-contract.test.ts`
+
+Preceding Gate BL implementation plan:
+
+`SLICE_PERSONAL_USE_MVP_GATE_BL_STEEL_FLOOR_SUSPENDED_CEILING_INPUT_SURFACE_PLAN.md`
+
+Gate BL selection status:
+
+`gate_bl_personal_use_mvp_steel_floor_suspended_ceiling_input_surface_landed_selected_post_input_surface_revalidation_gate_bm`
+
+Gate BL selected action:
+
+`gate_bm_personal_use_mvp_post_steel_suspended_ceiling_input_surface_revalidation_plan`
+
+Gate BL selected file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bm-post-steel-suspended-ceiling-input-surface-revalidation-contract.test.ts`
+
+Preceding Gate BK continuity:
+
+`SLICE_PERSONAL_USE_MVP_GATE_BK_STEEL_FLOOR_LOW_CONFIDENCE_FALLBACK_CLEANUP_PLAN.md`
+
+Gate BK selection status:
+
+`gate_bk_personal_use_mvp_steel_floor_low_confidence_fallback_cleanup_landed_selected_suspended_ceiling_input_surface_gate_bl`
+
+Gate BK selected action:
+
+`gate_bl_personal_use_mvp_steel_floor_suspended_ceiling_input_surface_plan`
+
+Gate BK selected file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bl-steel-floor-suspended-ceiling-input-surface-contract.test.ts`
+
+Preceding Gate BJ continuity:
+
+`gate_bj_personal_use_mvp_floor_impact_field_building_runtime_corridor_plan`
+
+Gate BJ selection status:
+
+`gate_bj_personal_use_mvp_floor_impact_field_building_runtime_corridor_landed_selected_steel_floor_low_confidence_cleanup_gate_bk`
+
+Gate BJ selected action:
+
+`gate_bk_personal_use_mvp_steel_floor_low_confidence_fallback_cleanup_plan`
+
+Gate BJ selected file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bk-steel-floor-low-confidence-fallback-cleanup-contract.test.ts`
+
+Gate BJ next plain label: steel-floor low-confidence fallback cleanup.
+
+Gate BJ budget origin and low-frequency boundary:
+
+`source_absent_field_building_adapter_error_budget`; `L'nT,50`.
+
+Preceding Gate BI closeout:
+
+`gate_bi_personal_use_mvp_floor_impact_field_building_adapter_contract_plan`
+
+Gate BI selection status:
+
+`gate_bi_personal_use_mvp_floor_impact_field_building_adapter_contract_landed_no_runtime_selected_field_building_runtime_corridor_gate_bj`
+
+Gate BI selected action:
+
+`gate_bj_personal_use_mvp_floor_impact_field_building_runtime_corridor_plan`
+
+Gate BI selected file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bj-floor-impact-field-building-runtime-corridor-contract.test.ts`
+
+Gate BI next plain label: floor-impact field/building runtime corridor.
+
+Company-internal calculation-grade review:
+
+`CHECKPOINT_2026-05-14_COMPANY_INTERNAL_CALCULATION_GRADE_REVIEW.md`
 
 Strategic ROI replan:
 
@@ -238,6 +1083,19 @@ Latest strategic ROI revalidation:
 
 Current strategy:
 
+- Personal-Use MVP Coverage Sprint Gate BJ has now landed
+  `gate_bj_personal_use_mvp_floor_impact_field_building_runtime_corridor_plan`
+  with selection status
+  `gate_bj_personal_use_mvp_floor_impact_field_building_runtime_corridor_landed_selected_steel_floor_low_confidence_cleanup_gate_bk`.
+  Field-volume source-absent impact now returns `L'n,w 52.3` /
+  `L'nT,w 49.9`; building direct+flanking returns `L'nT,w 52.4`;
+  direct+flanking is medium confidence instead of a default low bucket;
+  and the structured
+  `source_absent_field_building_adapter_error_budget` stays separate
+  from measured lab evidence. Gate BJ selects
+  `gate_bk_personal_use_mvp_steel_floor_low_confidence_fallback_cleanup_plan`
+  in
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-bk-steel-floor-low-confidence-fallback-cleanup-contract.test.ts`.
 - Personal-Use MVP Coverage Sprint Gate AU has now landed the
   company-internal daily-use ready handoff. Gate AV post-release
   accuracy roadmap is now landed as no-runtime planning. Gate AU

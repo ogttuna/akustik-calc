@@ -24,6 +24,7 @@ import {
 import { buildWorkbenchAirborneFieldContextInputSurface } from "./airborne-field-context-input-surface";
 import { buildWorkbenchAdvancedWallInputSurface } from "./advanced-wall-source-absent-input-surface";
 import { buildWorkbenchOpeningLeakCompositeInputSurface } from "./opening-leak-composite-input-surface";
+import { buildWorkbenchOpeningLeakFieldBuildingInputSurface } from "./opening-leak-field-building-input-surface";
 import { formatUnlockOutputs, getGuidedOutputUnlocks } from "./guided-output-unlocks";
 import { getGuidedTopologyGap } from "./guided-topology-gap";
 import { deriveGuidedRouteSignals } from "./guided-route-signals";
@@ -279,6 +280,10 @@ export function SimpleWorkbenchShell() {
   const airborneAdvancedWallInputSurface = useWorkbenchStore((state) => state.airborneAdvancedWallInputSurface);
   const airborneOpeningLeakElements = useWorkbenchStore((state) => state.airborneOpeningLeakElements);
   const airborneOpeningLeakHostWallAreaM2 = useWorkbenchStore((state) => state.airborneOpeningLeakHostWallAreaM2);
+  const airborneBuildingPredictionOutputBasis = useWorkbenchStore((state) => state.airborneBuildingPredictionOutputBasis);
+  const airborneConservativeFlankingAssumption = useWorkbenchStore((state) => state.airborneConservativeFlankingAssumption);
+  const airborneFlankingJunctionClass = useWorkbenchStore((state) => state.airborneFlankingJunctionClass);
+  const airborneJunctionCouplingLengthM = useWorkbenchStore((state) => state.airborneJunctionCouplingLengthM);
   const airbornePanelHeightMm = useWorkbenchStore((state) => state.airbornePanelHeightMm);
   const airbornePanelWidthMm = useWorkbenchStore((state) => state.airbornePanelWidthMm);
   const airbornePenetrationState = useWorkbenchStore((state) => state.airbornePenetrationState);
@@ -287,6 +292,7 @@ export function SimpleWorkbenchShell() {
   const airborneReceivingRoomVolumeM3 = useWorkbenchStore((state) => state.airborneReceivingRoomVolumeM3);
   const airborneResilientBarSideCount = useWorkbenchStore((state) => state.airborneResilientBarSideCount);
   const airborneSharedTrack = useWorkbenchStore((state) => state.airborneSharedTrack);
+  const airborneSourceRoomVolumeM3 = useWorkbenchStore((state) => state.airborneSourceRoomVolumeM3);
   const airborneStudSpacingMm = useWorkbenchStore((state) => state.airborneStudSpacingMm);
   const airborneStudType = useWorkbenchStore((state) => state.airborneStudType);
   const airborneWallCavity1AbsorptionClass = useWorkbenchStore((state) => state.airborneWallCavity1AbsorptionClass);
@@ -363,9 +369,13 @@ export function SimpleWorkbenchShell() {
   const reset = useWorkbenchStore((state) => state.reset);
   const startStudyMode = useWorkbenchStore((state) => state.startStudyMode);
   const setAirborneAirtightness = useWorkbenchStore((state) => state.setAirborneAirtightness);
+  const setAirborneBuildingPredictionOutputBasis = useWorkbenchStore((state) => state.setAirborneBuildingPredictionOutputBasis);
   const setAirborneConnectionType = useWorkbenchStore((state) => state.setAirborneConnectionType);
+  const setAirborneConservativeFlankingAssumption = useWorkbenchStore((state) => state.setAirborneConservativeFlankingAssumption);
   const setAirborneContextMode = useWorkbenchStore((state) => state.setAirborneContextMode);
   const setAirborneElectricalBoxes = useWorkbenchStore((state) => state.setAirborneElectricalBoxes);
+  const setAirborneFlankingJunctionClass = useWorkbenchStore((state) => state.setAirborneFlankingJunctionClass);
+  const setAirborneJunctionCouplingLengthM = useWorkbenchStore((state) => state.setAirborneJunctionCouplingLengthM);
   const setAirborneJunctionQuality = useWorkbenchStore((state) => state.setAirborneJunctionQuality);
   const addAirborneOpeningLeakElement = useWorkbenchStore((state) => state.addAirborneOpeningLeakElement);
   const moveAirborneOpeningLeakElement = useWorkbenchStore((state) => state.moveAirborneOpeningLeakElement);
@@ -380,6 +390,7 @@ export function SimpleWorkbenchShell() {
   const setAirborneReceivingRoomVolumeM3 = useWorkbenchStore((state) => state.setAirborneReceivingRoomVolumeM3);
   const setAirborneResilientBarSideCount = useWorkbenchStore((state) => state.setAirborneResilientBarSideCount);
   const setAirborneSharedTrack = useWorkbenchStore((state) => state.setAirborneSharedTrack);
+  const setAirborneSourceRoomVolumeM3 = useWorkbenchStore((state) => state.setAirborneSourceRoomVolumeM3);
   const setAirborneStudSpacingMm = useWorkbenchStore((state) => state.setAirborneStudSpacingMm);
   const setAirborneStudType = useWorkbenchStore((state) => state.setAirborneStudType);
   const setAirborneWallCavity1AbsorptionClass = useWorkbenchStore((state) => state.setAirborneWallCavity1AbsorptionClass);
@@ -629,7 +640,17 @@ export function SimpleWorkbenchShell() {
 
   const liveAirborneBaseContext: Omit<
     AirborneContext,
-    "airtightness" | "contextMode" | "panelHeightMm" | "panelWidthMm" | "receivingRoomRt60S" | "receivingRoomVolumeM3"
+    | "airtightness"
+    | "buildingPredictionOutputBasis"
+    | "conservativeFlankingAssumption"
+    | "contextMode"
+    | "flankingJunctionClass"
+    | "junctionCouplingLengthM"
+    | "panelHeightMm"
+    | "panelWidthMm"
+    | "receivingRoomRt60S"
+    | "receivingRoomVolumeM3"
+    | "sourceRoomVolumeM3"
   > = {
     connectionType: airborneConnectionType,
     electricalBoxes: airborneElectricalBoxes,
@@ -681,12 +702,23 @@ export function SimpleWorkbenchShell() {
     surface: {
       airtightness: airborneAirtightness,
       baseContext: liveAirborneBaseContextWithOpenings,
+      buildingPredictionOutputBasis: airborneBuildingPredictionOutputBasis,
+      conservativeFlankingAssumption: airborneConservativeFlankingAssumption,
       contextMode: airborneContextMode,
+      flankingJunctionClass: airborneFlankingJunctionClass,
+      junctionCouplingLengthM: airborneJunctionCouplingLengthM,
       panelHeightMm: airbornePanelHeightMm,
       panelWidthMm: airbornePanelWidthMm,
       receivingRoomRt60S: airborneReceivingRoomRt60S,
-      receivingRoomVolumeM3: airborneReceivingRoomVolumeM3
+      receivingRoomVolumeM3: airborneReceivingRoomVolumeM3,
+      sourceRoomVolumeM3: airborneSourceRoomVolumeM3
     },
+    targetOutputs: automaticOutputs
+  });
+  const openingLeakFieldBuildingInputSurface = buildWorkbenchOpeningLeakFieldBuildingInputSurface({
+    contextMode: airborneFieldContextInputSurface.airborneContext.contextMode,
+    openingLeakCompositeInputSurface,
+    studyMode,
     targetOutputs: automaticOutputs
   });
   const liveAirborneContext: AirborneContext = {
@@ -697,12 +729,18 @@ export function SimpleWorkbenchShell() {
     ...(openingLeakCompositeInputSurface.status !== "inactive"
       ? openingLeakCompositeInputSurface.airborneContextPatch
       : {}),
+    ...openingLeakFieldBuildingInputSurface.airborneContextPatch,
     airtightness: airborneAirtightness,
+    buildingPredictionOutputBasis: airborneBuildingPredictionOutputBasis,
+    conservativeFlankingAssumption: airborneConservativeFlankingAssumption,
     contextMode: airborneContextMode,
+    flankingJunctionClass: airborneFlankingJunctionClass,
+    junctionCouplingLengthM: parsePositiveNumber(airborneJunctionCouplingLengthM),
     panelHeightMm: parsePositiveNumber(airbornePanelHeightMm),
     panelWidthMm: parsePositiveNumber(airbornePanelWidthMm),
     receivingRoomRt60S: parsePositiveNumber(airborneReceivingRoomRt60S),
-    receivingRoomVolumeM3: parsePositiveNumber(airborneReceivingRoomVolumeM3)
+    receivingRoomVolumeM3: parsePositiveNumber(airborneReceivingRoomVolumeM3),
+    sourceRoomVolumeM3: parsePositiveNumber(airborneSourceRoomVolumeM3)
   };
 
   const liveImpactFieldContext: ImpactFieldContext | null =
@@ -717,11 +755,16 @@ export function SimpleWorkbenchShell() {
     airborneFieldContextInputSurface: {
       airtightness: airborneAirtightness,
       baseContext: liveAirborneBaseContextWithSurfaceInputs,
+      buildingPredictionOutputBasis: airborneBuildingPredictionOutputBasis,
+      conservativeFlankingAssumption: airborneConservativeFlankingAssumption,
       contextMode: airborneContextMode,
+      flankingJunctionClass: airborneFlankingJunctionClass,
+      junctionCouplingLengthM: airborneJunctionCouplingLengthM,
       panelHeightMm: airbornePanelHeightMm,
       panelWidthMm: airbornePanelWidthMm,
       receivingRoomRt60S: airborneReceivingRoomRt60S,
-      receivingRoomVolumeM3: airborneReceivingRoomVolumeM3
+      receivingRoomVolumeM3: airborneReceivingRoomVolumeM3,
+      sourceRoomVolumeM3: airborneSourceRoomVolumeM3
     },
     airborneContext: liveAirborneContext,
     calculator: calculatorId,
@@ -918,8 +961,12 @@ export function SimpleWorkbenchShell() {
       airborneAirtightness,
       airborneConnectionType,
       airborneContextMode,
+      airborneBuildingPredictionOutputBasis,
+      airborneConservativeFlankingAssumption,
       airborneElectricalBoxes,
+      airborneFlankingJunctionClass,
       airborneJunctionQuality,
+      airborneJunctionCouplingLengthM,
       airborneAdvancedWallInputSurface: {
         ...airborneAdvancedWallInputSurface,
         cavities: airborneAdvancedWallInputSurface.cavities.map((cavity) => ({ ...cavity })),
@@ -937,6 +984,7 @@ export function SimpleWorkbenchShell() {
       airborneReceivingRoomVolumeM3,
       airborneResilientBarSideCount,
       airborneSharedTrack,
+      airborneSourceRoomVolumeM3,
       airborneStudSpacingMm,
       airborneStudType,
       airborneWallCavity1AbsorptionClass,
@@ -1414,9 +1462,13 @@ export function SimpleWorkbenchShell() {
         <SimpleWorkbenchRoutePanel
           activeWorkspacePanel={activeWorkspacePanel}
           airborneAirtightness={airborneAirtightness}
+          airborneBuildingPredictionOutputBasis={airborneBuildingPredictionOutputBasis}
           airborneConnectionType={airborneConnectionType}
+          airborneConservativeFlankingAssumption={airborneConservativeFlankingAssumption}
           airborneContextMode={airborneContextMode}
           airborneElectricalBoxes={airborneElectricalBoxes}
+          airborneFlankingJunctionClass={airborneFlankingJunctionClass}
+          airborneJunctionCouplingLengthM={airborneJunctionCouplingLengthM}
           airborneJunctionQuality={airborneJunctionQuality}
           airborneOpeningLeakElements={airborneOpeningLeakElements}
           airborneOpeningLeakHostWallAreaM2={airborneOpeningLeakHostWallAreaM2}
@@ -1428,6 +1480,7 @@ export function SimpleWorkbenchShell() {
           airborneReceivingRoomVolumeM3={airborneReceivingRoomVolumeM3}
           airborneResilientBarSideCount={airborneResilientBarSideCount}
           airborneSharedTrack={airborneSharedTrack}
+          airborneSourceRoomVolumeM3={airborneSourceRoomVolumeM3}
           airborneStudSpacingMm={airborneStudSpacingMm}
           airborneStudType={airborneStudType}
           airborneWallCavity1AbsorptionClass={airborneWallCavity1AbsorptionClass}
@@ -1518,8 +1571,12 @@ export function SimpleWorkbenchShell() {
           serverProjectOptions={serverProjectOptions}
           serverProjectStatusLabel={serverProjectStatusLabel}
           setAirborneAirtightness={setAirborneAirtightness}
+          setAirborneBuildingPredictionOutputBasis={setAirborneBuildingPredictionOutputBasis}
           setAirborneConnectionType={setAirborneConnectionType}
+          setAirborneConservativeFlankingAssumption={setAirborneConservativeFlankingAssumption}
           setAirborneElectricalBoxes={setAirborneElectricalBoxes}
+          setAirborneFlankingJunctionClass={setAirborneFlankingJunctionClass}
+          setAirborneJunctionCouplingLengthM={setAirborneJunctionCouplingLengthM}
           setAirborneJunctionQuality={setAirborneJunctionQuality}
           addAirborneOpeningLeakElement={addAirborneOpeningLeakElement}
           moveAirborneOpeningLeakElement={moveAirborneOpeningLeakElement}
@@ -1534,6 +1591,7 @@ export function SimpleWorkbenchShell() {
           setAirborneReceivingRoomVolumeM3={setAirborneReceivingRoomVolumeM3}
           setAirborneResilientBarSideCount={setAirborneResilientBarSideCount}
           setAirborneSharedTrack={setAirborneSharedTrack}
+          setAirborneSourceRoomVolumeM3={setAirborneSourceRoomVolumeM3}
           setAirborneStudSpacingMm={setAirborneStudSpacingMm}
           setAirborneStudType={setAirborneStudType}
           setAirborneWallCavity1AbsorptionClass={setAirborneWallCavity1AbsorptionClass}

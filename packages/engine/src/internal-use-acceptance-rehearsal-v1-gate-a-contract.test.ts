@@ -549,23 +549,23 @@ describe("internal use acceptance rehearsal v1 Gate A contract", () => {
     });
 
     expect(resultSnapshot(steelField)).toMatchObject({
-      floorSystemEstimateBasis: "predictor_floor_system_low_confidence_estimate",
-      floorSystemEstimateKind: "low_confidence",
+      floorSystemEstimateBasis: "predictor_floor_system_family_archetype_estimate",
+      floorSystemEstimateKind: "family_archetype",
       impactBasis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
       lPrimeNT50: null,
-      lPrimeNTw: 58.5,
-      lPrimeNW: 61.3,
-      lnW: 58.3,
-      rw: 61,
+      lPrimeNTw: 58.2,
+      lPrimeNW: 61,
+      lnW: 58,
+      rw: 60,
       rwPrimeDb: 70,
       unsupportedTargetOutputs: ["L'nT,50"]
     });
     expect(steelField.dynamicImpactTrace).toMatchObject({
-      estimateTier: "low_confidence",
+      estimateTier: "family_archetype",
       evidenceTier: "estimate",
-      fitPercent: 28
+      fitPercent: 63
     });
-    expect(steelField.warnings.some((warning: string) => /Published low-confidence fallback active/i.test(warning))).toBe(
+    expect(steelField.warnings.some((warning: string) => /Published family estimate active/i.test(warning))).toBe(
       true
     );
 

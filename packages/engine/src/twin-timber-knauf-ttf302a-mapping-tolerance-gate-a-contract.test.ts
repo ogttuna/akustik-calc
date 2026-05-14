@@ -372,7 +372,7 @@ describe("twin timber Knauf TTF30.2A mapping / tolerance Gate A contract", () =>
     });
     expect(fieldContext).toMatchObject({
       connectionType: "line_connection",
-      contextMode: "building_prediction",
+      contextMode: "field_between_rooms",
       studSpacingMm: 600,
       studType: "wood_stud"
     });

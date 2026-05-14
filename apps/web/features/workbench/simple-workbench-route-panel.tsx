@@ -2,8 +2,11 @@
 
 import type {
   AirborneCalculatorId,
+  AirborneBuildingPredictionOutputBasis,
   AirborneConnectionType,
+  AirborneConservativeFlankingAssumption,
   AirborneContextMode,
+  AirborneFlankingJunctionClass,
   AirborneOpeningOrigin,
   AirborneOpeningRatingBasis,
   AirborneOpeningSealLeakageClass,
@@ -34,9 +37,12 @@ import { GUIDED_INPUT_SANITY_BANDS, formatGuidedSanityBand } from "./input-sanit
 import {
   AIRBORNE_CONTEXT_OPTIONS,
   AIRTIGHTNESS_OPTIONS,
+  BUILDING_PREDICTION_OUTPUT_BASIS_OPTIONS,
   CALCULATOR_OPTIONS,
   CONNECTION_OPTIONS,
+  CONSERVATIVE_FLANKING_ASSUMPTION_OPTIONS,
   ELECTRICAL_BOX_OPTIONS,
+  FLANKING_JUNCTION_CLASS_OPTIONS,
   JUNCTION_OPTIONS,
   OPENING_LEAK_ORIGIN_OPTIONS,
   OPENING_LEAK_RATING_BASIS_OPTIONS,
@@ -97,9 +103,13 @@ const EMPTY_EXAMPLE_VALUE = "__start_empty__";
 type SimpleWorkbenchRoutePanelProps = {
   activeWorkspacePanel: WorkspacePanelId;
   airborneAirtightness: AirtightnessClass;
+  airborneBuildingPredictionOutputBasis: AirborneBuildingPredictionOutputBasis;
   airborneConnectionType: AirborneConnectionType;
+  airborneConservativeFlankingAssumption: AirborneConservativeFlankingAssumption;
   airborneContextMode: AirborneContextMode;
   airborneElectricalBoxes: ElectricalBoxState;
+  airborneFlankingJunctionClass: AirborneFlankingJunctionClass;
+  airborneJunctionCouplingLengthM: string;
   airborneJunctionQuality: JunctionQuality;
   airbornePanelHeightMm: string;
   airbornePanelWidthMm: string;
@@ -109,6 +119,7 @@ type SimpleWorkbenchRoutePanelProps = {
   airborneReceivingRoomVolumeM3: string;
   airborneResilientBarSideCount: AirborneResilientBarSideCount;
   airborneSharedTrack: SharedTrackClass;
+  airborneSourceRoomVolumeM3: string;
   airborneStudSpacingMm: string;
   airborneStudType: AirborneStudType;
   airborneWallCavity1AbsorptionClass: WallCavityAbsorptionClass;
@@ -208,8 +219,12 @@ type SimpleWorkbenchRoutePanelProps = {
   serverProjectStatusLabel: string;
   removeAirborneOpeningLeakElement: (id: string) => void;
   setAirborneAirtightness: (value: AirtightnessClass) => void;
+  setAirborneBuildingPredictionOutputBasis: (value: AirborneBuildingPredictionOutputBasis) => void;
   setAirborneConnectionType: (value: AirborneConnectionType) => void;
+  setAirborneConservativeFlankingAssumption: (value: AirborneConservativeFlankingAssumption) => void;
   setAirborneElectricalBoxes: (value: ElectricalBoxState) => void;
+  setAirborneFlankingJunctionClass: (value: AirborneFlankingJunctionClass) => void;
+  setAirborneJunctionCouplingLengthM: (value: string) => void;
   setAirborneJunctionQuality: (value: JunctionQuality) => void;
   setAirborneOpeningLeakHostWallAreaM2: (value: string) => void;
   setAirbornePanelHeightMm: (value: string) => void;
@@ -220,6 +235,7 @@ type SimpleWorkbenchRoutePanelProps = {
   setAirborneReceivingRoomVolumeM3: (value: string) => void;
   setAirborneResilientBarSideCount: (value: AirborneResilientBarSideCount) => void;
   setAirborneSharedTrack: (value: SharedTrackClass) => void;
+  setAirborneSourceRoomVolumeM3: (value: string) => void;
   setAirborneStudSpacingMm: (value: string) => void;
   setAirborneStudType: (value: AirborneStudType) => void;
   setAirborneWallCavity1AbsorptionClass: (value: WallCavityAbsorptionClass) => void;
@@ -293,9 +309,13 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
   const {
     activeWorkspacePanel,
     airborneAirtightness,
+    airborneBuildingPredictionOutputBasis,
     airborneConnectionType,
+    airborneConservativeFlankingAssumption,
     airborneContextMode,
     airborneElectricalBoxes,
+    airborneFlankingJunctionClass,
+    airborneJunctionCouplingLengthM,
     airborneJunctionQuality,
     airbornePanelHeightMm,
     airbornePanelWidthMm,
@@ -305,6 +325,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
     airborneReceivingRoomVolumeM3,
     airborneResilientBarSideCount,
     airborneSharedTrack,
+    airborneSourceRoomVolumeM3,
     airborneStudSpacingMm,
     airborneStudType,
     airborneWallCavity1AbsorptionClass,
@@ -401,8 +422,12 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
     serverProjectStatusLabel,
     removeAirborneOpeningLeakElement,
     setAirborneAirtightness,
+    setAirborneBuildingPredictionOutputBasis,
     setAirborneConnectionType,
+    setAirborneConservativeFlankingAssumption,
     setAirborneElectricalBoxes,
+    setAirborneFlankingJunctionClass,
+    setAirborneJunctionCouplingLengthM,
     setAirborneJunctionQuality,
     setAirborneOpeningLeakHostWallAreaM2,
     setAirbornePanelHeightMm,
@@ -413,6 +438,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
     setAirborneReceivingRoomVolumeM3,
     setAirborneResilientBarSideCount,
     setAirborneSharedTrack,
+    setAirborneSourceRoomVolumeM3,
     setAirborneStudSpacingMm,
     setAirborneStudType,
     setAirborneWallCavity1AbsorptionClass,
@@ -651,7 +677,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
                 >
                   {openingLeakCompositeInputSurfaceActive ? (
                     <ContextSubsection
-                      note="These fields feed the Gate S lab Rw opening/leak corridor."
+                      note="These fields feed the opening/leak lab, field, and building corridors."
                       title="Opening/leak composite"
                     >
                       <div className="grid gap-3">
@@ -875,7 +901,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
                           label="Steel support form"
                           note="Carrier family for the steel transfer path."
                           relevance="required"
-                          usage="Ln,w and DeltaLw"
+                          usage="Ln,w; DeltaLw with upper package"
                         >
                           <select
                             aria-label="Steel support form"
@@ -896,7 +922,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
                           label="Steel carrier depth (mm)"
                           note="Overrides the base_structure layer depth when entered."
                           relevance="required"
-                          usage="Ln,w and DeltaLw"
+                          usage="Ln,w; DeltaLw with upper package"
                         >
                           <input
                             className={getTextInputClassName(false)}
@@ -911,7 +937,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
                           label="Steel carrier spacing (mm)"
                           note="Centre-to-centre spacing for the steel carrier."
                           relevance="required"
-                          usage="Ln,w and DeltaLw"
+                          usage="Ln,w; DeltaLw with upper package"
                         >
                           <input
                             className={getTextInputClassName(false)}
@@ -1563,6 +1589,107 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
                             />
                           </FieldShell>
                         </>
+                      ) : null}
+
+                      {airborneContextMode === "building_prediction" ? (
+                        <div className="grid gap-3">
+                          <FieldShell
+                            label="Source room volume (m³)"
+                            note="Source-side room volume for the building prediction adapter."
+                            relevance="required"
+                            usage="R'w and DnT,w"
+                          >
+                            <input
+                              className={getTextInputClassName(false)}
+                              inputMode="decimal"
+                              onChange={(event) => setAirborneSourceRoomVolumeM3(event.target.value)}
+                              placeholder="e.g. 38"
+                              value={airborneSourceRoomVolumeM3}
+                            />
+                          </FieldShell>
+
+                          <FieldShell
+                            label="Flanking/junction class"
+                            note="Owned junction boundary for the building prediction path."
+                            relevance="required"
+                            usage="R'w and DnT,w"
+                          >
+                            <select
+                              className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                              onChange={(event) =>
+                                setAirborneFlankingJunctionClass(event.target.value as AirborneFlankingJunctionClass)
+                              }
+                              value={airborneFlankingJunctionClass}
+                            >
+                              {FLANKING_JUNCTION_CLASS_OPTIONS.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </select>
+                          </FieldShell>
+
+                          <FieldShell
+                            label="Conservative flanking assumption"
+                            note="Explicit conservative flanking owner required before building outputs promote."
+                            relevance="required"
+                            usage="R'w and DnT,w"
+                          >
+                            <select
+                              className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                              onChange={(event) =>
+                                setAirborneConservativeFlankingAssumption(
+                                  event.target.value as AirborneConservativeFlankingAssumption
+                                )
+                              }
+                              value={airborneConservativeFlankingAssumption}
+                            >
+                              {CONSERVATIVE_FLANKING_ASSUMPTION_OPTIONS.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </select>
+                          </FieldShell>
+
+                          <FieldShell
+                            label="Junction coupling length (m)"
+                            note="Coupling length used by the building prediction adapter."
+                            relevance="required"
+                            usage="R'w and DnT,w"
+                          >
+                            <input
+                              className={getTextInputClassName(false)}
+                              inputMode="decimal"
+                              onChange={(event) => setAirborneJunctionCouplingLengthM(event.target.value)}
+                              placeholder="e.g. 4.8"
+                              value={airborneJunctionCouplingLengthM}
+                            />
+                          </FieldShell>
+
+                          <FieldShell
+                            label="Building output basis"
+                            note="Select which building metrics the physical context owns."
+                            relevance="required"
+                            usage="R'w and DnT,w"
+                          >
+                            <select
+                              className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                              onChange={(event) =>
+                                setAirborneBuildingPredictionOutputBasis(
+                                  event.target.value as AirborneBuildingPredictionOutputBasis
+                                )
+                              }
+                              value={airborneBuildingPredictionOutputBasis}
+                            >
+                              {BUILDING_PREDICTION_OUTPUT_BASIS_OPTIONS.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </select>
+                          </FieldShell>
+                        </div>
                       ) : null}
                     </ContextSubsection>
                   ) : null}

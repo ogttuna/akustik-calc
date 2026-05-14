@@ -48,6 +48,9 @@ import {
   maybeBuildGateSOpeningLeakCompositeRuntimeCorridor
 } from "./dynamic-airborne-gate-s-opening-leak-composite-transmission-loss-runtime-corridor";
 import {
+  maybeBuildCompanyInternalOpeningLeakFieldBuildingRuntimeCorridor
+} from "./company-internal-opening-leak-building-runtime-corridor";
+import {
   maybeBuildGateAHOpeningLeakStcSpectrumAdapter
 } from "./dynamic-airborne-gate-ah-opening-leak-stc-spectrum-adapter";
 import {
@@ -94,9 +97,13 @@ import {
 import { computeLayerSurfaceMassKgM2 } from "./layer-surface-mass";
 import { getDefaultMaterialCatalog, resolveMaterial } from "./material-catalog";
 import {
+  buildHeavyConcreteCombinedImpactFormulaFallbackBlockerWarning
+} from "./heavy-concrete-combined-impact-formula-corridor";
+import {
   hasReinforcedConcreteLowConfidenceProxyAirborne,
   REINFORCED_CONCRETE_LOW_CONFIDENCE_PROXY_AIRBORNE_WARNING
 } from "./reinforced-concrete-low-confidence-airborne";
+import { buildSteelFloorImpactFormulaFallbackBlockerWarning } from "./steel-floor-impact-formula-corridor";
 import {
   detectMixedPlainFilledSingleBoardFamily,
   getMixedPlainFilledSingleBoardProfile,
@@ -152,16 +159,8 @@ const GATE_W_FLOOR_IMPACT_OUTPUTS = new Set<RequestedOutputId>([
 ]);
 
 const GATE_Z_FIELD_IMPACT_OUTPUTS = new Set<RequestedOutputId>(["L'n,w", "L'nT,w", "L'nT,50"]);
-const GATE_Z_RUNTIME_READY_FIELD_IMPACT_OUTPUTS = new Set<RequestedOutputId>(["L'n,w", "L'nT,w"]);
+const GATE_Z_RUNTIME_READY_FIELD_IMPACT_OUTPUTS = new Set<RequestedOutputId>(["L'n,w", "L'nT,w", "L'nT,50"]);
 const GATE_Z_LOW_FREQUENCY_OWNER = "lowFrequencyImpactSpectrumOrCI50_2500Owner";
-const GATE_P_AIRBORNE_BUILDING_PREDICTION_OUTPUTS = new Set<RequestedOutputId>([
-  "Dn,A",
-  "Dn,w",
-  "DnT,A",
-  "DnT,A,k",
-  "DnT,w",
-  "R'w"
-]);
 const GATE_AR_AIRBORNE_BUILDING_PREDICTION_LAB_ALIAS_OUTPUTS = new Set<RequestedOutputId>([
   "C",
   "Ctr",
@@ -203,6 +202,10 @@ function gateZFloorImpactFieldRuntimeReady(
       assessment.missingOwnerInputs.every((owner) => owner === GATE_Z_LOW_FREQUENCY_OWNER) &&
       assessment.readyOutputs.some((output) => GATE_Z_RUNTIME_READY_FIELD_IMPACT_OUTPUTS.has(output))
   );
+}
+
+function hasLowFrequencyImpactOwner(input: ImpactFieldContext | null): boolean {
+  return typeof input?.ci50_2500Db === "number" && Number.isFinite(input.ci50_2500Db);
 }
 
 function buildGateZFieldImpactRuntimeWarning(
@@ -1168,6 +1171,7 @@ export function calculateAssembly(
           floorImpactContext: floorImpactContext ?? undefined,
           impactFieldContext: impactFieldContext ?? undefined,
           layers,
+          lowFrequencyImpactOwnerAvailable: hasLowFrequencyImpactOwner(impactFieldContext),
           scenarioId: "gate_y_complete_lab_anchor_and_field_context_ready_except_low_frequency",
           targetOutputs
         })
@@ -1290,10 +1294,46 @@ export function calculateAssembly(
     : null;
   const visibleEstimatedStcDb =
     gateAHOpeningLeakStcSpectrumAdapter?.runtimeStcDb ?? ratings.astmE413.STC;
+  const companyInternalOpeningLeakFieldBuildingRuntime = options.calculator === "dynamic"
+    ? maybeBuildCompanyInternalOpeningLeakFieldBuildingRuntimeCorridor({
+        airborneContext,
+        fieldFlankingPenaltyDb: airborneOverlayResult.overlay?.fieldFlankingPenaltyDb,
+        hostWallRatingBasis: resolveOpeningLeakHostWallBasis({
+          dynamicRuntimeActive: Boolean(dynamicAirborneResult),
+          importedCalculatorActive: Boolean(importedCalculatorResult),
+          verifiedLabAnchorApplied: Boolean(
+            verifiedAirborneAnchorResult.applied &&
+              verifiedAirborneAnchorResult.match?.sourceMode === "lab"
+          )
+        }),
+        hostWallRwDb: adjustedEstimatedRwDb,
+        targetOutputs
+      })
+    : null;
+  const ratingsWithOpeningLeakFieldBuildingRuntime =
+    companyInternalOpeningLeakFieldBuildingRuntime?.status === "runtime_corridor_promoted" &&
+    companyInternalOpeningLeakFieldBuildingRuntime.fieldRating
+      ? {
+          ...ratings,
+          field: companyInternalOpeningLeakFieldBuildingRuntime.fieldRating,
+          iso717: {
+            ...ratings.iso717,
+            RwPrime: companyInternalOpeningLeakFieldBuildingRuntime.rwPrimeDb ?? ratings.iso717.RwPrime,
+            apparent: true
+        }
+      }
+      : ratings;
+  const visibleEstimatedRwDbWithOpeningLeakFieldBuildingRuntime =
+    companyInternalOpeningLeakFieldBuildingRuntime?.labCompositeRwDb ?? visibleEstimatedRwDb;
   const gateSOpeningLeakBlockedOutputs =
     gateAHOpeningLeakStcSpectrumAdapter
-      ? gateSOpeningLeakCompositeRuntime?.blockedOutputs.filter((output) => output !== "STC") ?? []
-      : gateSOpeningLeakCompositeRuntime?.blockedOutputs ?? [];
+      ? gateSOpeningLeakCompositeRuntime?.blockedOutputs.filter((output) =>
+          output !== "STC" &&
+          !(companyInternalOpeningLeakFieldBuildingRuntime?.supportedOutputs.includes(output) ?? false)
+        ) ?? []
+      : gateSOpeningLeakCompositeRuntime?.blockedOutputs.filter(
+          (output) => !(companyInternalOpeningLeakFieldBuildingRuntime?.supportedOutputs.includes(output) ?? false)
+        ) ?? [];
   const exactImpact = exactImpactSource ? buildExactImpactFromSource(exactImpactSource) : null;
   const directImpactLane = resolveLayerBasedImpactLane({
     catalog,
@@ -1377,9 +1417,12 @@ export function calculateAssembly(
         resolvedLayers: derivedImpactResolvedLayers,
         targetOutputs: options.targetOutputs
       });
+      const derivedHeavyConcreteCombinedFormulaFallbackBlockerWarning =
+        buildHeavyConcreteCombinedImpactFormulaFallbackBlockerWarning(derivedPredictorInput);
       const shouldUseDerived =
         !blocksBoundOnlyUbiqOpenWebCarpetDerivedEstimate &&
         (
+          Boolean(derivedHeavyConcreteCombinedFormulaFallbackBlockerWarning) ||
           Boolean(
               derivedImpactLane.floorSystemMatch ||
               derivedImpactLane.boundFloorSystemMatch ||
@@ -1529,16 +1572,17 @@ export function calculateAssembly(
     impact,
     lowerBoundImpact,
     metrics: {
-      airborneIsoDescriptor: ratings.iso717.descriptor,
-      estimatedCDb: ratings.iso717.C,
-      estimatedCtrDb: ratings.iso717.Ctr,
-      estimatedDnADb: ratings.field?.DnA,
-      estimatedDnTADb: ratings.field?.DnTA,
-      estimatedDnTAkDb: ratings.field?.DnTAk,
-      estimatedDnTwDb: ratings.field?.DnTw,
-      estimatedDnWDb: ratings.field?.DnW,
-      estimatedRwDb: visibleEstimatedRwDb,
-      estimatedRwPrimeDb: ratings.field?.RwPrime ?? ratings.iso717.RwPrime,
+      airborneIsoDescriptor: ratingsWithOpeningLeakFieldBuildingRuntime.iso717.descriptor,
+      estimatedCDb: ratingsWithOpeningLeakFieldBuildingRuntime.iso717.C,
+      estimatedCtrDb: ratingsWithOpeningLeakFieldBuildingRuntime.iso717.Ctr,
+      estimatedDnADb: ratingsWithOpeningLeakFieldBuildingRuntime.field?.DnA,
+      estimatedDnTADb: ratingsWithOpeningLeakFieldBuildingRuntime.field?.DnTA,
+      estimatedDnTAkDb: ratingsWithOpeningLeakFieldBuildingRuntime.field?.DnTAk,
+      estimatedDnTwDb: ratingsWithOpeningLeakFieldBuildingRuntime.field?.DnTw,
+      estimatedDnWDb: ratingsWithOpeningLeakFieldBuildingRuntime.field?.DnW,
+      estimatedRwDb: visibleEstimatedRwDbWithOpeningLeakFieldBuildingRuntime,
+      estimatedRwPrimeDb: ratingsWithOpeningLeakFieldBuildingRuntime.field?.RwPrime ??
+        ratingsWithOpeningLeakFieldBuildingRuntime.iso717.RwPrime,
       estimatedStc: visibleEstimatedStcDb
     },
     targetOutputs: options.targetOutputs ?? []
@@ -1568,6 +1612,14 @@ export function calculateAssembly(
     !impact && !lowerBoundImpact && targetOutputSupport.unsupportedImpactOutputs.length > 0 && floorFamilySourceGuard
       ? [floorFamilySourceGuard.warning]
       : [];
+  const steelFloorFormulaFallbackBlockerWarning = buildSteelFloorImpactFormulaFallbackBlockerWarning(predictorInput);
+  const heavyConcreteCombinedFormulaFallbackBlockerWarning =
+    buildHeavyConcreteCombinedImpactFormulaFallbackBlockerWarning(predictorInput);
+  const impactPredictorAdditionalWarnings = [
+    ...floorFamilySourceGuardWarnings,
+    ...(heavyConcreteCombinedFormulaFallbackBlockerWarning ? [heavyConcreteCombinedFormulaFallbackBlockerWarning] : []),
+    ...(steelFloorFormulaFallbackBlockerWarning ? [steelFloorFormulaFallbackBlockerWarning] : [])
+  ];
   const {
     dynamicImpactTrace,
     impactPredictorStatus,
@@ -1581,7 +1633,7 @@ export function calculateAssembly(
     impact,
     impactCatalogMatch,
     impactFieldContext,
-    impactPredictorAdditionalWarnings: floorFamilySourceGuardWarnings,
+    impactPredictorAdditionalWarnings,
     lowerBoundImpact,
     predictorInput,
     predictorInputMode,
@@ -1597,7 +1649,16 @@ export function calculateAssembly(
           layers,
           targetOutputs: targetOutputSupport.targetOutputs
         }),
-        runtimeSignal: dynamicAirborneResult
+        runtimeSignal: companyInternalOpeningLeakFieldBuildingRuntime?.basis
+          ? {
+              airborneBasis: companyInternalOpeningLeakFieldBuildingRuntime.basis,
+              detectedFamily: dynamicAirborneResult?.trace.detectedFamily,
+              runtimeValueMovement:
+                companyInternalOpeningLeakFieldBuildingRuntime.status === "runtime_corridor_promoted",
+              selectedMethod: dynamicAirborneResult?.trace.selectedMethod,
+              strategy: dynamicAirborneResult?.trace.strategy ?? "company_internal_opening_leak_field_building_adapter"
+            }
+          : dynamicAirborneResult
           ? {
               airborneBasis: gateYCltMassTimberCtrSpectrumAdapterBasis ?? dynamicAirborneResult.airborneBasis,
               detectedFamily: dynamicAirborneResult.trace.detectedFamily,
@@ -1626,7 +1687,6 @@ export function calculateAssembly(
     : null;
   const shouldParkAirborneBuildingPredictionRuntime =
     dynamicCandidateResolverRuntime?.routeInputAssessment.outputBasis === "building_prediction" &&
-    typeof airborneContext?.buildingPredictionOutputBasis === "string" &&
     (
       dynamicCandidateResolverRuntime.resolution.selectedOrigin === "needs_input" ||
       dynamicCandidateResolverRuntime.resolution.selectedOrigin === "unsupported"
@@ -1638,9 +1698,7 @@ export function calculateAssembly(
       dynamicCandidateResolverRuntime.resolution.selectedOrigin === "unsupported"
     );
   const parkedAirborneBuildingPredictionOutputs = shouldParkAirborneBuildingPredictionRuntime
-    ? targetOutputSupport.targetOutputs.filter((output) =>
-        GATE_P_AIRBORNE_BUILDING_PREDICTION_OUTPUTS.has(output)
-      )
+    ? [...targetOutputSupport.targetOutputs]
     : [];
   const gateARAirborneBuildingPredictionActive =
     dynamicCandidateResolverRuntime?.resolution.selectedBasis?.method ===
@@ -1669,6 +1727,16 @@ export function calculateAssembly(
   const parkedAirborneBuildingPredictionOutputSet = new Set(parkedAirborneBuildingPredictionOutputs);
   const hideParkedAirborneBuildingPredictionMetrics =
     parkedAirborneBuildingPredictionOutputSet.size > 0;
+  const visibleRatings = hideParkedAirborneBuildingPredictionMetrics
+    ? {
+        ...ratingsWithOpeningLeakFieldBuildingRuntime,
+        iso717: {
+          ...ratingsWithOpeningLeakFieldBuildingRuntime.iso717,
+          RwPrime: undefined
+        },
+        field: undefined
+      }
+    : ratingsWithOpeningLeakFieldBuildingRuntime;
   const warnings = buildEstimateWarnings(resolvedLayers, selectedCalculatorLabel);
   warnings.push(...(dynamicAirborneResult?.warnings ?? []));
   if (!suppressParkedBuildingPredictionOverlayWarnings) {
@@ -1681,6 +1749,8 @@ export function calculateAssembly(
   }
   if (gateAHOpeningLeakStcSpectrumAdapter?.warning) {
     warnings.push(gateAHOpeningLeakStcSpectrumAdapter.warning);
+  } else if (companyInternalOpeningLeakFieldBuildingRuntime?.warning) {
+    warnings.push(companyInternalOpeningLeakFieldBuildingRuntime.warning);
   } else if (gateSOpeningLeakCompositeRuntime?.warning) {
     warnings.push(gateSOpeningLeakCompositeRuntime.warning);
   }
@@ -1689,6 +1759,12 @@ export function calculateAssembly(
   }
   warnings.push(...buildTargetOutputWarnings(visibleTargetOutputSupport));
   warnings.push(...floorFamilySourceGuardWarnings);
+  if (heavyConcreteCombinedFormulaFallbackBlockerWarning) {
+    warnings.push(heavyConcreteCombinedFormulaFallbackBlockerWarning);
+  }
+  if (steelFloorFormulaFallbackBlockerWarning) {
+    warnings.push(steelFloorFormulaFallbackBlockerWarning);
+  }
   if (
     dynamicCandidateResolverRuntime?.routeInputAssessment.outputBasis === "building_prediction" &&
     dynamicCandidateResolverRuntime.resolution.selectedOrigin === "needs_input"
@@ -1878,26 +1954,26 @@ export function calculateAssembly(
     curve,
     layers: resolvedLayers,
     metrics: {
-      airborneIsoDescriptor: ratings.iso717.descriptor,
+      airborneIsoDescriptor: visibleRatings.iso717.descriptor,
       totalThicknessMm,
       surfaceMassKgM2,
-      estimatedRwDb: visibleEstimatedRwDb,
+      estimatedRwDb: visibleEstimatedRwDbWithOpeningLeakFieldBuildingRuntime,
       estimatedRwPrimeDb: hideParkedAirborneBuildingPredictionMetrics
         ? undefined
-        : ratings.field?.RwPrime ?? ratings.iso717.RwPrime,
-      estimatedCDb: ratings.iso717.C,
-      estimatedCtrDb: ratings.iso717.Ctr,
-      estimatedDnTwDb: hideParkedAirborneBuildingPredictionMetrics ? undefined : ratings.field?.DnTw,
-      estimatedDnTADb: hideParkedAirborneBuildingPredictionMetrics ? undefined : ratings.field?.DnTA,
-      estimatedDnTAkDb: hideParkedAirborneBuildingPredictionMetrics ? undefined : ratings.field?.DnTAk,
-      estimatedDnWDb: hideParkedAirborneBuildingPredictionMetrics ? undefined : ratings.field?.DnW,
-      estimatedDnADb: hideParkedAirborneBuildingPredictionMetrics ? undefined : ratings.field?.DnA,
+        : visibleRatings.field?.RwPrime ?? visibleRatings.iso717.RwPrime,
+      estimatedCDb: visibleRatings.iso717.C,
+      estimatedCtrDb: visibleRatings.iso717.Ctr,
+      estimatedDnTwDb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatings.field?.DnTw,
+      estimatedDnTADb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatings.field?.DnTA,
+      estimatedDnTAkDb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatings.field?.DnTAk,
+      estimatedDnWDb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatings.field?.DnW,
+      estimatedDnADb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatings.field?.DnA,
       estimatedStc: visibleEstimatedStcDb,
       airGapCount: resolvedLayers.filter((layer) => layer.material.category === "gap").length,
       insulationCount: resolvedLayers.filter((layer) => layer.material.category === "insulation").length,
       method: dynamicAirborneResult?.id ?? importedCalculatorResult?.id ?? "screening_mass_law_curve_seed_v3"
     },
-    ratings,
+    ratings: visibleRatings,
     ratingAdapterBasisSet: gateAHOpeningLeakStcSpectrumAdapter
       ? [gateAHOpeningLeakStcSpectrumAdapter.ratingAdapterBasis]
       : undefined,
@@ -1949,6 +2025,9 @@ export function calculateAssembly(
         ]
       };
     }
+  }
+  if (companyInternalOpeningLeakFieldBuildingRuntime?.basis) {
+    result.airborneBasis = companyInternalOpeningLeakFieldBuildingRuntime.basis;
   }
 
   return AssemblyCalculationSchema.parse(result);

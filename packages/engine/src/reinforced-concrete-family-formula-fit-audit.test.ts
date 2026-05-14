@@ -23,7 +23,7 @@ function buildReinforcedConcreteCombinedInput(overrides: Record<string, unknown>
 }
 
 describe("reinforced concrete family vs formula fit audit", () => {
-  it("keeps the low-confidence combined vinyl lane on the bounded combined-geometry slope", () => {
+  it("parks the old low-confidence combined vinyl lane even when the bounded geometry helper can score it", () => {
     const variants = [
       {
         id: "baseline",
@@ -69,35 +69,17 @@ describe("reinforced concrete family vs formula fit audit", () => {
       });
 
       expect(metrics, `${variant.id} should stay inside the bounded combined geometry`).not.toBeNull();
-      expect(result.floorSystemEstimate?.kind, `${variant.id} should remain low-confidence`).toBe("low_confidence");
-      expect(result.floorSystemEstimate?.fitPercent, `${variant.id} fit should stay capped`).toBe(29);
-      expect(result.dynamicImpactTrace?.fitPercent, `${variant.id} trace fit should stay capped`).toBe(29);
-      expect(result.dynamicImpactTrace?.selectionKindLabel, `${variant.id} should stay explicitly low-confidence`).toBe(
-        "Low-confidence fallback"
+      expect(result.floorSystemEstimate, `${variant.id} should not promote a low-confidence family row`).toBeNull();
+      expect(result.impact, `${variant.id} should park impact until physical owners are complete`).toBeNull();
+      expect(result.dynamicImpactTrace, `${variant.id} should not expose a live low-confidence trace`).toBeUndefined();
+      expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
+      expect(result.warnings).toContain(
+        "Dynamic Calculator reinforced-concrete combined upper/lower impact runtime is waiting for loadBasisKgM2, ceilingOrLowerAssembly before promoting Ln,w / DeltaLw from the heavy-concrete combined formula corridor."
       );
-      expect(result.dynamicImpactTrace?.notes).toContain("Low-confidence fallback is active on the current impact lane.");
-      expect(result.dynamicImpactTrace?.notes).not.toContain(
-        "Published family estimate is active on the current impact lane."
-      );
-      expect(result.impactSupport?.notes).toContain(
-        "Nearby-row ranking stays elastic-ceiling first, rigid-ceiling second, with timber-underlay held as a farther fallback when cavity and board geometry drift."
-      );
-      expect(result.impact?.notes).toContain(
-        "This remains a low-confidence fallback built from nearby published rows, not a narrow published-family claim or an exact lab record."
-      );
-      expect(result.impact?.notes?.join(" ")).not.toContain("This remains a labeled published-family estimate");
-      expect(result.impact?.notes?.join(" ")).not.toContain("Candidate rows:");
-      expect(result.floorSystemEstimate?.notes?.join(" ")).toContain("Nearby published lineage:");
-      expect(result.floorSystemEstimate?.notes?.join(" ")).not.toContain("Curated lineage:");
-      expect(result.impact?.basis, `${variant.id} basis should remain low-confidence`).toBe(
-        "predictor_floor_system_low_confidence_estimate"
-      );
-      expect(result.impact?.LnW, `${variant.id} Ln,w should follow the bounded geometry`).toBe(metrics?.lnW);
-      expect(result.floorSystemRatings?.Rw, `${variant.id} Rw should follow the bounded geometry`).toBe(metrics?.rw);
     }
   });
 
-  it("keeps the low-confidence combined vinyl lane materially separated from the formula-owned heavy-floating corridor", () => {
+  it("keeps the parked combined vinyl branch materially separated from the formula-owned heavy-floating corridor", () => {
     const lowConfidence = calculateImpactOnly([], {
       impactPredictorInput: buildReinforcedConcreteCombinedInput() as never,
       targetOutputs: ["Rw", "Ctr", "Ln,w"]
@@ -115,19 +97,16 @@ describe("reinforced concrete family vs formula fit audit", () => {
       targetOutputs: ["Rw", "Ctr", "Ln,w", "DeltaLw"]
     });
 
-    expect(lowConfidence.floorSystemEstimate?.kind).toBe("low_confidence");
-    expect(lowConfidence.dynamicImpactTrace?.selectionKindLabel).toBe("Low-confidence fallback");
-    expect(lowConfidence.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
+    expect(lowConfidence.floorSystemEstimate).toBeNull();
+    expect(lowConfidence.dynamicImpactTrace).toBeUndefined();
+    expect(lowConfidence.impact).toBeNull();
+    expect(lowConfidence.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
     expect(formula.impact?.basis).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");
     expect(formula.impact?.DeltaLw).toBe(7);
 
-    expect(typeof lowConfidence.impact?.LnW).toBe("number");
     expect(typeof formula.impact?.LnW).toBe("number");
     expect(typeof lowConfidence.floorSystemRatings?.Rw).toBe("number");
     expect(typeof formula.floorSystemRatings?.Rw).toBe("number");
-
-    expect((formula.impact?.LnW ?? 0) - (lowConfidence.impact?.LnW ?? 0)).toBeGreaterThanOrEqual(10);
-    expect((lowConfidence.floorSystemRatings?.Rw ?? 0) - (formula.floorSystemRatings?.Rw ?? 0)).toBeGreaterThanOrEqual(4);
   });
 
   it("does not keep a hidden published-family overlap for the same combined vinyl corridor", () => {
@@ -149,8 +128,9 @@ describe("reinforced concrete family vs formula fit audit", () => {
     });
 
     expect(directPublishedFamily).toBeNull();
-    expect(routed.floorSystemEstimate?.kind).toBe("low_confidence");
-    expect(routed.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
-    expect(routed.dynamicImpactTrace?.selectionKindLabel).toBe("Low-confidence fallback");
+    expect(routed.floorSystemEstimate).toBeNull();
+    expect(routed.impact).toBeNull();
+    expect(routed.dynamicImpactTrace).toBeUndefined();
+    expect(routed.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
   });
 });

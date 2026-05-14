@@ -12,6 +12,15 @@ import {
 } from "@dynecho/shared";
 
 import {
+  FLOOR_IMPACT_FIELD_BUILDING_ADAPTER_ERROR_BUDGET_ORIGIN,
+  FLOOR_IMPACT_FIELD_ADAPTER_LPRIME_NT_W_TOLERANCE_DB,
+  FLOOR_IMPACT_FIELD_ADAPTER_LPRIME_NT_50_TOLERANCE_DB,
+  FLOOR_IMPACT_FIELD_ADAPTER_LPRIME_NW_TOLERANCE_DB,
+  FLOOR_IMPACT_DIRECT_FLANKING_LPRIME_NT_W_TOLERANCE_DB,
+  FLOOR_IMPACT_DIRECT_FLANKING_LPRIME_NT_50_TOLERANCE_DB,
+  FLOOR_IMPACT_DIRECT_FLANKING_LPRIME_NW_TOLERANCE_DB
+} from "./impact-field-adapter-error-budget";
+import {
   HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS,
   HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_DELTA_LW_TOLERANCE_DB,
   HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_LN_W_TOLERANCE_DB
@@ -24,7 +33,10 @@ import {
 import {
   STEEL_FLOOR_FORMULA_BASIS,
   STEEL_FLOOR_FORMULA_DELTA_LW_TOLERANCE_DB,
-  STEEL_FLOOR_FORMULA_LN_W_TOLERANCE_DB
+  STEEL_FLOOR_FORMULA_LN_W_TOLERANCE_DB,
+  STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_BASIS,
+  STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_LN_W_TOLERANCE_DB,
+  STEEL_FLOOR_SUSPENDED_CEILING_REFERENCE_FLOOR_TYPE
 } from "./steel-floor-impact-formula-corridor";
 import {
   MASS_TIMBER_CLT_DELTA_LW_FORMULA_BASIS,
@@ -73,6 +85,16 @@ function buildSteelFormulaErrorBudgetFormulaNote(impact: ImpactCalculation): str
     .join("; ")}; origin source_absent_formula_error_budget; not measured evidence.`;
 }
 
+function buildSteelSuspendedCeilingFormulaErrorBudgetFormulaNote(impact: ImpactCalculation): string | null {
+  const budget = (impact.errorBudgets ?? []).find((item) => item.metricId === "Ln,w");
+
+  if (!budget) {
+    return null;
+  }
+
+  return `Gate BK steel suspended-ceiling error budget is structured: Ln,w ${formatErrorBudgetRange(budget)}; origin source_absent_formula_error_budget; not measured evidence.`;
+}
+
 function buildTimberCltFormulaErrorBudgetFormulaNote(impact: ImpactCalculation): string | null {
   const budget = (impact.errorBudgets ?? []).find((item) => item.metricId === "DeltaLw");
 
@@ -93,6 +115,20 @@ function buildHeavyConcreteCombinedFormulaErrorBudgetFormulaNote(impact: ImpactC
   return `Heavy-concrete combined upper/lower error budgets are structured: ${budgets
     .map((budget) => `${budget.metricId} ${formatErrorBudgetRange(budget)}`)
     .join("; ")}; origin source_absent_formula_error_budget; not measured evidence.`;
+}
+
+function buildFieldBuildingAdapterErrorBudgetFormulaNote(impact: ImpactCalculation): string | null {
+  const budgets = (impact.errorBudgets ?? []).filter(
+    (budget) => budget.origin === FLOOR_IMPACT_FIELD_BUILDING_ADAPTER_ERROR_BUDGET_ORIGIN
+  );
+
+  if (budgets.length === 0) {
+    return null;
+  }
+
+  return `Floor-impact field/building adapter error budgets are structured: ${budgets
+    .map((budget) => `${budget.metricId} ${formatErrorBudgetRange(budget)}`)
+    .join("; ")}; origin ${FLOOR_IMPACT_FIELD_BUILDING_ADAPTER_ERROR_BUDGET_ORIGIN}; not measured evidence.`;
 }
 
 function hasMetricBasis(impact: ImpactCalculation | null, label: string): boolean {
@@ -215,6 +251,12 @@ export function buildImpactSupport(input: BuildImpactSupportInput): ImpactSuppor
   if (input.impact?.basis === STEEL_FLOOR_FORMULA_BASIS || hasMetricBasis(input.impact, STEEL_FLOOR_FORMULA_BASIS)) {
     notes.push("Steel-floor formula corridor is active; exact measured rows still outrank it when a source truly matches.");
     pushUnique(formulaNotes, "Gate AD steel-floor mass-spring formula corridor remains a source-absent lab estimate, not a measured row.");
+    if (input.impact?.referenceFloorType === STEEL_FLOOR_SUSPENDED_CEILING_REFERENCE_FLOOR_TYPE) {
+      pushUnique(
+        formulaNotes,
+        "Steel suspended-ceiling DeltaLw runtime uses the Gate BK lower suspended-ceiling reference before applying the upper-package reduction."
+      );
+    }
     pushUnique(formulaNotes, "Steel DeltaLw uses 13 log10(m'load) - 14.2 log10(s') + 20.8 before steel carrier-transfer correction.");
     const errorBudgetNote = input.impact ? buildSteelFormulaErrorBudgetFormulaNote(input.impact) : null;
     if (errorBudgetNote) {
@@ -223,6 +265,29 @@ export function buildImpactSupport(input: BuildImpactSupportInput): ImpactSuppor
     pushUnique(
       formulaNotes,
       `Corridor tolerance remains +/-${STEEL_FLOOR_FORMULA_LN_W_TOLERANCE_DB} dB for Ln,w and +/-${STEEL_FLOOR_FORMULA_DELTA_LW_TOLERANCE_DB} dB for DeltaLw.`
+    );
+  }
+
+  if (
+    input.impact?.basis === STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_BASIS ||
+    hasMetricBasis(input.impact, STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_BASIS)
+  ) {
+    notes.push("Steel suspended-ceiling formula corridor is active; exact measured rows still outrank it when a source truly matches.");
+    pushUnique(
+      formulaNotes,
+      "Gate BK steel suspended-ceiling-only corridor remains a source-absent lab estimate, not a measured row."
+    );
+    pushUnique(
+      formulaNotes,
+      "Steel suspended-ceiling-only Ln,w uses explicit support form, carrier depth/spacing, lower board mass, cavity depth, and fill thickness."
+    );
+    const errorBudgetNote = input.impact ? buildSteelSuspendedCeilingFormulaErrorBudgetFormulaNote(input.impact) : null;
+    if (errorBudgetNote) {
+      pushUnique(formulaNotes, errorBudgetNote);
+    }
+    pushUnique(
+      formulaNotes,
+      `Corridor tolerance remains +/-${STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_LN_W_TOLERANCE_DB} dB for Ln,w.`
     );
   }
 
@@ -254,6 +319,14 @@ export function buildImpactSupport(input: BuildImpactSupportInput): ImpactSuppor
 
   if (input.impact?.fieldEstimateProfile === "direct_flanking_energy_sum") {
     pushUnique(formulaNotes, "Field-side estimate used a direct+flanking path energy sum on the available impact bands before ISO 717-2 re-rating.");
+    const errorBudgetNote = buildFieldBuildingAdapterErrorBudgetFormulaNote(input.impact);
+    if (errorBudgetNote) {
+      pushUnique(formulaNotes, errorBudgetNote);
+    }
+    pushUnique(
+      formulaNotes,
+      `Floor-impact direct+flanking adapter tolerance remains +/-${FLOOR_IMPACT_DIRECT_FLANKING_LPRIME_NW_TOLERANCE_DB} dB for L'n,w, +/-${FLOOR_IMPACT_DIRECT_FLANKING_LPRIME_NT_W_TOLERANCE_DB} dB for L'nT,w, and +/-${FLOOR_IMPACT_DIRECT_FLANKING_LPRIME_NT_50_TOLERANCE_DB} dB for L'nT,50 when a low-frequency owner is active.`
+    );
     if (typeof input.impact.fieldEstimateDirectOffsetDb === "number") {
       pushUnique(
         formulaNotes,
@@ -307,6 +380,14 @@ export function buildImpactSupport(input: BuildImpactSupportInput): ImpactSuppor
 
   if (input.impact?.metricBasis?.LPrimeNTw === "estimated_standardized_field_lprimentw_from_lprimenw_plus_room_volume") {
     pushUnique(formulaNotes, "L'nT,w = L'n,w + 10 log10(31.3 / V) on the standardized field-volume path.");
+    const errorBudgetNote = buildFieldBuildingAdapterErrorBudgetFormulaNote(input.impact);
+    if (errorBudgetNote) {
+      pushUnique(formulaNotes, errorBudgetNote);
+    }
+    pushUnique(
+      formulaNotes,
+      `Floor-impact field-volume adapter tolerance remains +/-${FLOOR_IMPACT_FIELD_ADAPTER_LPRIME_NW_TOLERANCE_DB} dB for L'n,w, +/-${FLOOR_IMPACT_FIELD_ADAPTER_LPRIME_NT_W_TOLERANCE_DB} dB for L'nT,w, and +/-${FLOOR_IMPACT_FIELD_ADAPTER_LPRIME_NT_50_TOLERANCE_DB} dB for L'nT,50 when a low-frequency owner is active.`
+    );
   }
 
   if (input.impact?.metricBasis?.LPrimeNW === "estimated_field_lprimenw_from_lnw_plus_k") {

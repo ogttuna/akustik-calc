@@ -32,7 +32,7 @@ const TARGET_OUTPUTS = ["Rw", "Ctr", "Ln,w", "DeltaLw"] as const;
 
 const CASES: readonly DossierCase[] = [
   {
-    id: "visible reinforced low-confidence route keeps diagnostics dossier in screening posture",
+    id: "visible reinforced cleanup route keeps diagnostics dossier on waiting posture",
     rows: [
       { materialId: "concrete", thicknessMm: "180", floorRole: "base_structure" },
       { materialId: "generic_resilient_underlay", thicknessMm: "8", floorRole: "resilient_layer" },
@@ -46,42 +46,42 @@ const CASES: readonly DossierCase[] = [
       cards: [
         {
           detail:
-            "Low-confidence fallback is active. Low-confidence reinforced-concrete combined fallback is active. Ln,w stays on a mixed nearby-row concrete lane, while Rw and Ctr remain proxy airborne companions instead of a narrow same-stack family claim.",
+            "Build a supported floor topology before reading delivery confidence.",
           label: "Validation posture",
-          tone: "warning",
-          value: "Low-confidence fallback"
+          tone: "neutral",
+          value: "Waiting for supported lane"
         },
         {
           detail:
-            "1 screening trace are available for audit. Dynamic airborne, dynamic impact, and airborne overlay remain separate instead of being collapsed into one confidence claim or being read as a delivery-ready package.",
+            "No explicit trace block is active yet. Build a supported route first so diagnostics can expose the solver lineage.",
           label: "Trace coverage",
-          tone: "accent",
-          value: "1 screening"
+          tone: "warning",
+          value: "0 live"
         },
         {
           detail:
-            "5 decision lines and 5 citations travel with the screening package. 3 linked sources are directly openable from the diagnostics surface.",
+            "4 decision lines and 1 citation travel with the guided package. 0 linked sources are directly openable from the diagnostics surface.",
           label: "Evidence courier",
           tone: "accent",
-          value: "5 decisions / 5 citations"
+          value: "4 decisions / 1 citations"
         },
         {
           detail:
-            "6 live warnings remain explicit. First signal: Low-confidence reinforced-concrete combined fallback is active. Ln,w stays on a mixed nearby-row concrete lane, while Rw and Ctr remain proxy airborne companions instead of a narrow same-stack family claim.",
+            "7 live warnings remain explicit. First signal: Screening estimate only. This result is coming from the local calibrated seed lane.",
           label: "Warning board",
           tone: "warning",
-          value: "6 active"
+          value: "7 active"
         }
       ],
       headline:
-        "Combined upper and lower system is active with screening-route low-confidence posture. 1 trace group and 5 citation lines remain visible so the guided flow can explain why the current route was chosen.",
-      linkedCitationCount: 3,
-      traceCount: 1,
-      warningCount: 6
+        "Awaiting supported topology is active with waiting for supported lane posture. 0 trace groups and 1 citation line remain visible so the guided flow can explain why the current route was chosen.",
+      linkedCitationCount: 0,
+      traceCount: 0,
+      warningCount: 7
     }
   },
   {
-    id: "expanded-board reinforced boundary keeps diagnostics dossier on scoped formula posture",
+    id: "expanded-board reinforced boundary keeps diagnostics dossier on waiting posture",
     rows: [
       { materialId: "concrete", thicknessMm: "180", floorRole: "base_structure" },
       { materialId: "generic_resilient_underlay", thicknessMm: "8", floorRole: "resilient_layer" },
@@ -96,17 +96,17 @@ const CASES: readonly DossierCase[] = [
     expected: {
       cards: [
         {
-          detail: "Scoped formula estimate is active. Read this as a supported floor estimate, not as a measured claim.",
+          detail: "Build a supported floor topology before reading delivery confidence.",
           label: "Validation posture",
-          tone: "accent",
-          value: "Scoped estimate"
+          tone: "neutral",
+          value: "Waiting for supported lane"
         },
         {
           detail:
-            "1 live trace are available for audit. Dynamic airborne, dynamic impact, and airborne overlay remain separate instead of being collapsed into one confidence claim.",
+            "No explicit trace block is active yet. Build a supported route first so diagnostics can expose the solver lineage.",
           label: "Trace coverage",
-          tone: "success",
-          value: "1 live"
+          tone: "warning",
+          value: "0 live"
         },
         {
           detail:
@@ -117,17 +117,17 @@ const CASES: readonly DossierCase[] = [
         },
         {
           detail:
-            "4 live warnings remain explicit. First signal: Screening estimate only. This result is coming from the local calibrated seed lane.",
+            "7 live warnings remain explicit. First signal: Screening estimate only. This result is coming from the local calibrated seed lane.",
           label: "Warning board",
           tone: "warning",
-          value: "4 active"
+          value: "7 active"
         }
       ],
       headline:
-        "Combined upper and lower system is active with scoped estimate posture. 1 trace group and 1 citation line remain visible so the guided flow can explain why the current route was chosen.",
+        "Awaiting supported topology is active with waiting for supported lane posture. 0 trace groups and 1 citation line remain visible so the guided flow can explain why the current route was chosen.",
       linkedCitationCount: 0,
-      traceCount: 1,
-      warningCount: 4
+      traceCount: 0,
+      warningCount: 7
     }
   },
   {
@@ -234,22 +234,21 @@ describe("reinforced concrete low-confidence diagnostics dossier matrix", () => 
     expect(snapshot(testCase)).toEqual(testCase.expected);
   });
 
-  it("keeps the reinforced screening dossier explicit while nearby formula-owned concrete boundaries stay scoped", () => {
-    const lowConfidence = snapshot(CASES[0]);
+  it("keeps the reinforced missing-owner dossier explicit while upper-only concrete boundaries stay scoped", () => {
+    const needsInput = snapshot(CASES[0]);
     const expandedBoardBoundary = snapshot(CASES[1]);
     const floatingBoundary = snapshot(CASES[2]);
 
-    expect(lowConfidence.headline).toContain("screening-route low-confidence posture");
-    expect(lowConfidence.cards[0]).toEqual({
-      detail:
-        "Low-confidence fallback is active. Low-confidence reinforced-concrete combined fallback is active. Ln,w stays on a mixed nearby-row concrete lane, while Rw and Ctr remain proxy airborne companions instead of a narrow same-stack family claim.",
+    expect(needsInput.headline).toContain("waiting for supported lane posture");
+    expect(needsInput.cards[0]).toEqual({
+      detail: "Build a supported floor topology before reading delivery confidence.",
       label: "Validation posture",
-      tone: "warning",
-      value: "Low-confidence fallback"
+      tone: "neutral",
+      value: "Waiting for supported lane"
     });
 
-    expect(expandedBoardBoundary.headline).toContain("scoped estimate posture");
-    expect(expandedBoardBoundary.cards[0]?.value).toBe("Scoped estimate");
+    expect(expandedBoardBoundary.headline).toContain("waiting for supported lane posture");
+    expect(expandedBoardBoundary.cards[0]?.value).toBe("Waiting for supported lane");
 
     expect(floatingBoundary.headline).toContain("Dry floating floor");
     expect(floatingBoundary.cards[3]?.value).toBe("3 active");

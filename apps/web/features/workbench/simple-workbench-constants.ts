@@ -1,7 +1,10 @@
 import type {
   AirborneCalculatorId,
+  AirborneBuildingPredictionOutputBasis,
   AirborneConnectionType,
   AirborneContextMode,
+  AirborneConservativeFlankingAssumption,
+  AirborneFlankingJunctionClass,
   AirborneOpeningOrigin,
   AirborneOpeningRatingBasis,
   AirborneOpeningSealLeakageClass,
@@ -596,6 +599,37 @@ export const OPENING_LEAK_ORIGIN_OPTIONS: readonly ControlOption<AirborneOpening
   { label: "Measured", note: "Direct measured opening element.", value: "measured" },
   { label: "Catalogued", note: "Manufacturer or catalogued opening element.", value: "catalogued" },
   { label: "Source absent", note: "Source-absent opening value; parked for this corridor.", value: "source_absent" }
+] as const;
+
+export const BUILDING_PREDICTION_OUTPUT_BASIS_OPTIONS: readonly ControlOption<
+  AirborneBuildingPredictionOutputBasis
+>[] = [
+  { label: "Unknown", note: "No building output basis declared.", value: "unknown" },
+  { label: "Apparent", note: "R'w building prediction only.", value: "apparent" },
+  { label: "Standardized", note: "DnT,w building prediction only.", value: "standardized" },
+  {
+    label: "Apparent + standardized",
+    note: "Both R'w and DnT,w building outputs are requested from the same physical context.",
+    value: "apparent_and_standardized"
+  }
+] as const;
+
+export const CONSERVATIVE_FLANKING_ASSUMPTION_OPTIONS: readonly ControlOption<
+  AirborneConservativeFlankingAssumption
+>[] = [
+  { label: "Unknown", note: "No flanking assumption declared.", value: "unknown" },
+  { label: "Single conservative path", note: "One conservative flanking path is owned.", value: "single_conservative_path" },
+  { label: "Multi-path conservative", note: "Multiple conservative flanking paths are owned.", value: "multi_path_conservative" },
+  { label: "Worst-case screening", note: "Worst-case flanking screen, not a calibrated building model.", value: "worst_case_screening" }
+] as const;
+
+export const FLANKING_JUNCTION_CLASS_OPTIONS: readonly ControlOption<AirborneFlankingJunctionClass>[] = [
+  { label: "Unknown", note: "No junction class declared.", value: "unknown" },
+  { label: "Rigid cross junction", note: "Rigid cross-junction boundary.", value: "rigid_cross_junction" },
+  { label: "Rigid T junction", note: "Rigid T-junction boundary.", value: "rigid_t_junction" },
+  { label: "Lightweight junction", note: "Lightweight junction boundary.", value: "lightweight_junction" },
+  { label: "Isolated junction", note: "Isolated or decoupled junction boundary.", value: "isolated_junction" },
+  { label: "Mixed junction", note: "Mixed junction boundary.", value: "mixed_junction" }
 ] as const;
 
 export const CONNECTION_OPTIONS: readonly ControlOption<AirborneConnectionType>[] = [

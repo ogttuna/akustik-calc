@@ -47,15 +47,9 @@ function snapshot(result: DynamicResult): FollowUpSnapshot {
   };
 }
 
-const LOW_CONFIDENCE_CANDIDATE_IDS = [
-  "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
-  "euracoustics_f1_rigid_ceiling_concrete_lab_2026",
-  "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
-] as const;
-
 const CASES: readonly FollowUpCase[] = [
   {
-    id: "explicit predictor input stays on the bounded low-confidence reinforced-concrete lane",
+    id: "explicit predictor input now parks reinforced-concrete combined impact as needs-input",
     evaluate: () =>
       calculateImpactOnly([], {
         impactPredictorInput: {
@@ -75,24 +69,24 @@ const CASES: readonly FollowUpCase[] = [
         targetOutputs: ["Rw", "Ctr", "Ln,w", "DeltaLw"]
       }),
     expected: {
-      candidateIds: LOW_CONFIDENCE_CANDIDATE_IDS,
+      candidateIds: null,
       deltaLw: null,
-      estimateKind: "low_confidence",
-      fitPercent: 29,
-      impactBasis: "predictor_floor_system_low_confidence_estimate",
-      implementedFamilyEstimate: true,
+      estimateKind: null,
+      fitPercent: null,
+      impactBasis: null,
+      implementedFamilyEstimate: false,
       implementedFormulaEstimate: false,
-      implementedLowConfidenceEstimate: true,
+      implementedLowConfidenceEstimate: false,
       inputMode: "explicit_predictor_input",
-      lnW: 50,
-      rw: 65.9,
-      rwCtr: 57,
-      supported: ["Rw", "Ctr", "Ln,w"],
-      unsupported: ["DeltaLw"]
+      lnW: null,
+      rw: 60,
+      rwCtr: 53.8,
+      supported: [],
+      unsupported: ["Rw", "Ctr", "Ln,w", "DeltaLw"]
     }
   },
   {
-    id: "visible layer derivation lands on the same low-confidence reinforced-concrete lane",
+    id: "visible layer derivation preserves airborne Rw/Ctr but parks reinforced-concrete impact as needs-input",
     evaluate: () =>
       calculateAssembly(
         [
@@ -109,24 +103,24 @@ const CASES: readonly FollowUpCase[] = [
         }
       ),
     expected: {
-      candidateIds: LOW_CONFIDENCE_CANDIDATE_IDS,
+      candidateIds: null,
       deltaLw: null,
-      estimateKind: "low_confidence",
-      fitPercent: 29,
-      impactBasis: "predictor_floor_system_low_confidence_estimate",
-      implementedFamilyEstimate: true,
+      estimateKind: null,
+      fitPercent: null,
+      impactBasis: null,
+      implementedFamilyEstimate: false,
       implementedFormulaEstimate: false,
-      implementedLowConfidenceEstimate: true,
+      implementedLowConfidenceEstimate: false,
       inputMode: "derived_from_visible_layers",
-      lnW: 50,
-      rw: 65.9,
-      rwCtr: 57,
-      supported: ["Rw", "Ctr", "Ln,w"],
-      unsupported: ["DeltaLw"]
+      lnW: null,
+      rw: 60,
+      rwCtr: 53.8,
+      supported: ["Rw", "Ctr"],
+      unsupported: ["Ln,w", "DeltaLw"]
     }
   },
   {
-    id: "expanded board schedule breaks the bounded low-confidence lane and falls back to heavy bare-floor formula",
+    id: "expanded board schedule also parks combined impact instead of falling through to bare-floor impact",
     evaluate: () =>
       calculateAssembly(
         [
@@ -149,16 +143,16 @@ const CASES: readonly FollowUpCase[] = [
       deltaLw: null,
       estimateKind: null,
       fitPercent: null,
-      impactBasis: "predictor_heavy_bare_floor_iso12354_annexc_estimate",
+      impactBasis: null,
       implementedFamilyEstimate: false,
-      implementedFormulaEstimate: true,
+      implementedFormulaEstimate: false,
       implementedLowConfidenceEstimate: false,
-      inputMode: null,
-      lnW: 71.8,
+      inputMode: "derived_from_visible_layers",
+      lnW: null,
       rw: 60,
       rwCtr: 53.8,
-      supported: ["Rw", "Ctr", "Ln,w"],
-      unsupported: ["DeltaLw"]
+      supported: ["Rw", "Ctr"],
+      unsupported: ["Ln,w", "DeltaLw"]
     }
   },
   {
@@ -199,19 +193,23 @@ describe("reinforced concrete low-confidence follow-up matrix", () => {
     expect(snapshot(evaluate())).toEqual(expected);
   });
 
-  it("keeps the guarded low-confidence corridor explicit without collapsing nearby formula-owned lanes onto it", () => {
+  it("removes the guarded low-confidence corridor without collapsing nearby formula-owned lanes", () => {
     const explicitPredictor = snapshot(CASES[0].evaluate());
     const derivedVisible = snapshot(CASES[1].evaluate());
     const expandedBoardBoundary = snapshot(CASES[2].evaluate());
     const heavyFloatingFormula = snapshot(CASES[3].evaluate());
 
-    expect(explicitPredictor).toEqual({
-      ...derivedVisible,
-      inputMode: "explicit_predictor_input"
-    });
+    expect(explicitPredictor.implementedLowConfidenceEstimate).toBe(false);
+    expect(explicitPredictor.impactBasis).toBeNull();
+    expect(explicitPredictor.supported).toEqual([]);
 
-    expect(expandedBoardBoundary.impactBasis).toBe("predictor_heavy_bare_floor_iso12354_annexc_estimate");
+    expect(derivedVisible.implementedLowConfidenceEstimate).toBe(false);
+    expect(derivedVisible.inputMode).toBe("derived_from_visible_layers");
+    expect(derivedVisible.supported).toEqual(["Rw", "Ctr"]);
+
+    expect(expandedBoardBoundary.impactBasis).toBeNull();
     expect(expandedBoardBoundary.candidateIds).toBeNull();
+    expect(expandedBoardBoundary.inputMode).toBe("derived_from_visible_layers");
     expect(expandedBoardBoundary.implementedLowConfidenceEstimate).toBe(false);
 
     expect(heavyFloatingFormula.impactBasis).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");

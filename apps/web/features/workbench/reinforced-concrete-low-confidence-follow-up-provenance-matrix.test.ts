@@ -33,7 +33,7 @@ const TARGET_OUTPUTS = ["Rw", "Ctr", "Ln,w", "DeltaLw"] as const;
 
 const CASES: readonly ProvenanceCase[] = [
   {
-    id: "visible reinforced low-confidence route keeps nearby-row provenance explicit",
+    id: "visible reinforced cleanup route keeps missing-owner provenance explicit",
     rows: [
       { materialId: "concrete", thicknessMm: "180", floorRole: "base_structure" },
       { materialId: "generic_resilient_underlay", thicknessMm: "8", floorRole: "resilient_layer" },
@@ -44,47 +44,22 @@ const CASES: readonly ProvenanceCase[] = [
       { materialId: "firestop_board", thicknessMm: "16", floorRole: "ceiling_board" }
     ],
     expected: {
-      citationCount: 5,
+      citationCount: 1,
       citations: [
         {
           detail:
-            "Low-confidence fallback · reinforced concrete · Estimated evidence · 29% fit inside the active low-confidence ceiling. Ln,w stays on a mixed nearby-row concrete lane rather than a narrow same-stack family fit. Ranking keeps the elastic-ceiling nearby row first, the rigid-ceiling row second, and the timber-underlay row as a farther fallback when cavity and board geometry drift away from the mixed-row corridor.",
-          label: "Dynamic impact anchor",
-          tone: "accent"
-        },
-        {
-          detail:
-            "Nearby published rows ranked for the current mixed-row fallback. DAC keeps this corridor live without claiming a narrow same-stack family estimate. Ranking keeps the elastic-ceiling nearby row first, the rigid-ceiling row second, and the timber-underlay row as a farther fallback when cavity and board geometry drift away from the mixed-row corridor.",
-          label: "Nearby-row fallback rationale",
-          tone: "warning"
-        },
-        {
-          detail:
-            "Low-confidence reinforced-concrete mixed-row estimate at 29% fit. Ln,w stays on a mixed nearby-row concrete lane, while Rw and Ctr remain proxy airborne companions instead of a narrow same-stack family claim. Ranking keeps the elastic-ceiling nearby row first, the rigid-ceiling row second, and the timber-underlay row as a farther fallback when cavity and board geometry drift away from the mixed-row corridor. Euracoustics FA2023 concrete ceiling study · Open measured dataset · Peer-reviewed open access · system id euracoustics_f2_elastic_ceiling_concrete_lab_2026.",
-          label: "Nearby row 1 · elastic-ceiling anchor: 140 mm concrete slab | elastic hanger ceiling | 2 x 13 mm boards",
-          tone: "warning"
-        },
-        {
-          detail:
-            "Low-confidence reinforced-concrete mixed-row estimate at 29% fit. Ln,w stays on a mixed nearby-row concrete lane, while Rw and Ctr remain proxy airborne companions instead of a narrow same-stack family claim. Ranking keeps the elastic-ceiling nearby row first, the rigid-ceiling row second, and the timber-underlay row as a farther fallback when cavity and board geometry drift away from the mixed-row corridor. Euracoustics FA2023 concrete ceiling study · Open measured dataset · Peer-reviewed open access · system id euracoustics_f1_rigid_ceiling_concrete_lab_2026.",
-          label: "Nearby row 2 · rigid-ceiling cross-check: 140 mm concrete slab | rigid hanger ceiling | 2 x 13 mm boards",
-          tone: "warning"
-        },
-        {
-          detail:
-            "Low-confidence reinforced-concrete mixed-row estimate at 29% fit. Ln,w stays on a mixed nearby-row concrete lane, while Rw and Ctr remain proxy airborne companions instead of a narrow same-stack family claim. Ranking keeps the elastic-ceiling nearby row first, the rigid-ceiling row second, and the timber-underlay row as a farther fallback when cavity and board geometry drift away from the mixed-row corridor. Knauf AU official system table · Official manufacturer system table · Official manufacturer · system id knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026.",
-          label: "Nearby row 3 · farther fallback: Knauf CC60.1A | 150 mm concrete | timber + acoustic underlay",
+            "No exact family row, product catalog row, or explicit field provenance citation is active yet. Keep the result framed as a scoped dynamic screening route.",
+          label: "Source posture",
           tone: "warning"
         }
       ],
       decisionHeadline:
-        "Low-confidence fallback on reinforced concrete is the current floor-side screening posture. Screening seed is the current airborne reading.",
+        "No live lane is the current floor-side posture. Screening seed is the current airborne reading.",
       decisionItems: [
         {
-          detail:
-            "Low-confidence family fallback on reinforced concrete. The active impact lane is the final reinforced-concrete mixed-row fallback. 29% fit inside the active low-confidence ceiling. Ln,w stays on a mixed nearby-row concrete lane rather than a narrow same-stack family fit. Ranking keeps the elastic-ceiling nearby row first, the rigid-ceiling row second, and the timber-underlay row as a farther fallback when cavity and board geometry drift away from the mixed-row corridor. Keep the current floor-side read in screening territory and do not treat it as delivery-ready.",
+          detail: "No live lane. No supported impact output is active on the current stack.",
           label: "Impact corridor",
-          tone: "warning"
+          tone: "neutral"
         },
         {
           detail:
@@ -94,21 +69,21 @@ const CASES: readonly ProvenanceCase[] = [
         },
         {
           detail:
-            "Low-confidence fallback remains active on the current floor-side route. Keep nearby-row evidence, warnings, and corridor notes attached, and do not present the package as delivery-ready.",
-          label: "Delivery posture",
+            "4 requested outputs are armed. 2 currently resolve through live, bound, or guide-backed lanes. Still explicit: Ln,w, DeltaLw.",
+          label: "Output coverage",
           tone: "warning"
         },
         {
           detail:
-            "4 requested outputs are armed. 3 currently resolve through live, bound, guide-backed, or screening-fallback lanes. Still explicit: DeltaLw. Keep the current package in screening mode until a narrower lane is proven.",
-          label: "Output coverage",
+            "7 active warnings. First signal: Screening estimate only. This result is coming from the local calibrated seed lane.",
+          label: "Active warnings",
           tone: "warning"
         }
       ]
     }
   },
   {
-    id: "expanded-board boundary keeps evidence on the heavy bare-floor formula surface",
+    id: "expanded-board boundary keeps evidence on the same missing-owner surface",
     rows: [
       { materialId: "concrete", thicknessMm: "180", floorRole: "base_structure" },
       { materialId: "generic_resilient_underlay", thicknessMm: "8", floorRole: "resilient_layer" },
@@ -124,19 +99,19 @@ const CASES: readonly ProvenanceCase[] = [
       citationCount: 1,
       citations: [
         {
-          detail: "Heavy bare-floor formula · Estimated evidence · Heavy bare-floor Annex C style estimate.",
-          label: "Dynamic impact anchor",
-          tone: "accent"
+          detail:
+            "No exact family row, product catalog row, or explicit field provenance citation is active yet. Keep the result framed as a scoped dynamic screening route.",
+          label: "Source posture",
+          tone: "warning"
         }
       ],
       decisionHeadline:
-        "Scoped formula estimate on reinforced concrete is the current floor-side posture. Screening seed is the current airborne reading.",
+        "No live lane is the current floor-side posture. Screening seed is the current airborne reading.",
       decisionItems: [
         {
-          detail:
-            "Heavy-floor formula estimate on reinforced concrete. The active floor lane is a scoped estimate. It is benchmark-guarded, but it still needs explicit source citation or tolerance notes before it is presented as a final acoustic claim.",
+          detail: "No live lane. No supported impact output is active on the current stack.",
           label: "Impact corridor",
-          tone: "accent"
+          tone: "neutral"
         },
         {
           detail:
@@ -146,13 +121,13 @@ const CASES: readonly ProvenanceCase[] = [
         },
         {
           detail:
-            "4 requested outputs are armed. 3 currently resolve through live, bound, or guide-backed lanes. Still explicit: DeltaLw.",
+            "4 requested outputs are armed. 2 currently resolve through live, bound, or guide-backed lanes. Still explicit: Ln,w, DeltaLw.",
           label: "Output coverage",
           tone: "warning"
         },
         {
           detail:
-            "4 active warnings. First signal: Screening estimate only. This result is coming from the local calibrated seed lane.",
+            "7 active warnings. First signal: Screening estimate only. This result is coming from the local calibrated seed lane.",
           label: "Active warnings",
           tone: "warning"
         }
@@ -249,16 +224,16 @@ describe("reinforced concrete low-confidence follow-up provenance matrix", () =>
     expect(snapshot(testCase)).toEqual(testCase.expected);
   });
 
-  it("keeps reinforced low-confidence provenance separate from the adjacent formula-owned concrete boundaries", () => {
-    const lowConfidence = snapshot(CASES[0]);
+  it("keeps reinforced missing-owner provenance separate from the adjacent formula-owned concrete boundary", () => {
+    const needsInput = snapshot(CASES[0]);
     const expandedBoardBoundary = snapshot(CASES[1]);
     const floatingBoundary = snapshot(CASES[2]);
 
-    expect(lowConfidence.citationCount).toBeGreaterThan(expandedBoardBoundary.citationCount);
-    expect(lowConfidence.decisionHeadline).toContain("Low-confidence fallback on reinforced concrete");
-    expect(lowConfidence.citations[1]?.label).toBe("Nearby-row fallback rationale");
+    expect(needsInput.citationCount).toBe(expandedBoardBoundary.citationCount);
+    expect(needsInput.decisionHeadline).toContain("No live lane");
+    expect(needsInput.citations[0]?.label).toBe("Source posture");
 
-    expect(expandedBoardBoundary.citations[0]?.detail).toContain("Heavy bare-floor formula");
+    expect(expandedBoardBoundary.citations[0]?.detail).toContain("No exact family row");
     expect(floatingBoundary.citations[0]?.detail).toContain("Heavy floating-floor formula");
     expect(floatingBoundary.decisionItems[2]).toEqual({
       detail:

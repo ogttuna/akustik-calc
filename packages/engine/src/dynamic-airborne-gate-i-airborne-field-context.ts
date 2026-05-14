@@ -9,8 +9,10 @@ import type {
 } from "@dynecho/shared";
 
 import type { AirborneTopologySummary } from "./airborne-topology";
+import { normalizeFramingHint } from "./dynamic-airborne-family-detection";
 import type { DynamicAirborneOptions } from "./dynamic-airborne-helpers";
 import { maybeBuildGateHLinedMasonryCltWallBasis } from "./dynamic-airborne-gate-h-lined-masonry-clt";
+import { maybeBuildCompanyInternalHeavyCompositeWallBasis } from "./dynamic-airborne-company-internal-heavy-composite-wall";
 
 export const GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD =
   "gate_i_airborne_field_apparent_context_adapter_runtime";
@@ -125,18 +127,28 @@ export function maybeBuildGateIAirborneFieldContextBasis(input: {
     return null;
   }
 
+  const labOptions: DynamicAirborneOptions = {
+    ...input.options,
+    airborneContext: {
+      ...(context ?? {}),
+      contextMode: "element_lab"
+    }
+  };
   const baseBasis = maybeBuildGateHLinedMasonryCltWallBasis({
     confidenceClass: input.confidenceClass,
     curve: input.curve,
     family: input.family,
     layers: input.layers,
-    options: {
-      ...input.options,
-      airborneContext: {
-        ...(context ?? {}),
-        contextMode: "element_lab"
-      }
-    },
+    options: labOptions,
+    selectedMethod: input.selectedMethod,
+    strategy: input.strategy,
+    topology: input.topology
+  }) ?? maybeBuildCompanyInternalHeavyCompositeWallBasis({
+    curve: input.curve,
+    family: input.family,
+    framingHint: normalizeFramingHint(input.options.airborneContext),
+    layers: input.layers,
+    options: labOptions,
     selectedMethod: input.selectedMethod,
     strategy: input.strategy,
     topology: input.topology

@@ -13,6 +13,7 @@ import type { AssemblyCalculation, DynamicAirborneTrace } from "@dynecho/shared"
 import { getGateARAirborneBuildingPredictionSurface } from "./airborne-building-prediction-surface";
 import { getGateIAirborneFieldContextSurface } from "./airborne-field-context-surface";
 import { getGateSOpeningLeakCompositeSurface } from "./opening-leak-composite-surface";
+import { getCompanyInternalOpeningLeakFieldBuildingSurface } from "./opening-leak-field-building-surface";
 import { getImpactLaneKind, getImpactLanePillLabel } from "./impact-lane-view";
 import {
   isReinforcedConcreteLowConfidenceFloorLane,
@@ -261,6 +262,16 @@ export function describeAirborneValidationPosture(result: AssemblyCalculation | 
           : gateSOpeningLeakSurface.origin === "needs_input"
             ? "inactive"
             : "low_confidence"
+    };
+  }
+
+  const companyInternalOpeningLeakFieldBuildingSurface =
+    getCompanyInternalOpeningLeakFieldBuildingSurface(result);
+  if (companyInternalOpeningLeakFieldBuildingSurface) {
+    return {
+      detail: companyInternalOpeningLeakFieldBuildingSurface.postureDetail,
+      label: companyInternalOpeningLeakFieldBuildingSurface.label,
+      posture: "estimate"
     };
   }
 

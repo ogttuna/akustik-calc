@@ -50,8 +50,8 @@ const HEAVY_CORE_CONCRETE_SURFACE_BOUNDARIES = {
     mayRetuneInThisSlice: false
   },
   heavyCompositeSibling: {
-    authority: "adjacent double-leaf screening sibling, not the selected target",
-    evidenceTier: "screening",
+    authority: "adjacent double-leaf heavy-composite family-physics sibling, not the selected target",
+    evidenceTier: "family_physics_prediction",
     id: "wall-heavy-composite-hint-suppression",
     mayRetuneInThisSlice: false
   }
@@ -264,8 +264,8 @@ describe("wall heavy-core concrete Gate B audit contract", () => {
         mayRetuneInThisSlice: false
       },
       heavyCompositeSibling: {
-        authority: "adjacent double-leaf screening sibling, not the selected target",
-        evidenceTier: "screening",
+        authority: "adjacent double-leaf heavy-composite family-physics sibling, not the selected target",
+        evidenceTier: "family_physics_prediction",
         id: "wall-heavy-composite-hint-suppression",
         mayRetuneInThisSlice: false
       }
@@ -279,7 +279,8 @@ describe("wall heavy-core concrete Gate B audit contract", () => {
     expect(sibling.dynamicAirborneTrace?.strategy).toBe(
       "double_leaf_empty_cavity_delegate+heavy_unframed_cavity_cap"
     );
-    expect(sibling.dynamicAirborneTrace?.confidenceClass).toBe("low");
+    expect(sibling.dynamicAirborneTrace?.confidenceClass).toBe("medium");
+    expect(sibling.airborneBasis?.origin).toBe("family_physics_prediction");
     expect(resultSnapshot(sibling).rwPrimeDb).toBe(60);
   });
 });

@@ -188,7 +188,7 @@ const WALL_FIELD_CONTEXT: AirborneContext = {
 
 const WALL_BUILDING_CONTEXT: AirborneContext = {
   ...WALL_FIELD_CONTEXT,
-  contextMode: "building_prediction",
+  contextMode: "field_between_rooms",
   receivingRoomRt60S: 0.7,
   receivingRoomVolumeM3: 55
 };
@@ -202,7 +202,7 @@ const LSF_EXACT_CONTEXT: AirborneContext = {
 };
 
 const FLOOR_AIRBORNE_CONTEXT: AirborneContext = {
-  contextMode: "building_prediction",
+  contextMode: "field_between_rooms",
   panelHeightMm: 3000,
   panelWidthMm: 4200,
   receivingRoomRt60S: 0.7,
@@ -237,7 +237,7 @@ const GROUPED_SPLIT_ROCKWOOL_CONTEXT: AirborneContext = {
 const GROUPED_SPLIT_ROCKWOOL_FIELD_CONTEXT: AirborneContext = {
   ...GROUPED_SPLIT_ROCKWOOL_CONTEXT,
   connectionType: "line_connection",
-  contextMode: "building_prediction",
+  contextMode: "field_between_rooms",
   panelHeightMm: 2800,
   panelWidthMm: 3600,
   receivingRoomRt60S: 0.6,
@@ -646,11 +646,11 @@ describe("company-internal controlled-use handoff v1 Gate A contract", () => {
       rwPrimeDb: 55
     });
     expect(resultSnapshot(calculateAssembly(steelFallback.rows, steelFallback.fieldOptions))).toMatchObject({
-      floorSystemEstimateKind: "low_confidence",
-      lPrimeNTw: 58.5,
-      lPrimeNW: 61.3,
-      lnW: 58.3,
-      rw: 61,
+      floorSystemEstimateKind: "family_archetype",
+      lPrimeNTw: 58.2,
+      lPrimeNW: 61,
+      lnW: 58,
+      rw: 60,
       unsupportedTargetOutputs: ["L'nT,50"]
     });
 

@@ -20,7 +20,10 @@ import {
 import { getDefaultMaterialCatalog } from "./material-catalog";
 import {
   estimateSteelFloorImpactFromPredictorInput,
-  STEEL_FLOOR_FORMULA_BASIS
+  estimateSteelFloorSuspendedCeilingOnlyImpactFromPredictorInput,
+  getMissingSteelFloorSuspendedCeilingFormulaInputs,
+  STEEL_FLOOR_FORMULA_BASIS,
+  STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_BASIS
 } from "./steel-floor-impact-formula-corridor";
 
 export type SteelFloorLowerCeilingIsolationSupportForm =
@@ -43,13 +46,18 @@ export type SteelFloorFormulaInputSurfaceStatus =
   | "ready_for_formula_corridor"
   | "unsafe_topology";
 
+export type SteelFloorFormulaInputSurfaceBasis =
+  | typeof STEEL_FLOOR_FORMULA_BASIS
+  | typeof STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_BASIS;
+
 export type SteelFloorFormulaInputSurfaceResult = {
-  formulaBasis: typeof STEEL_FLOOR_FORMULA_BASIS;
+  formulaBasis: SteelFloorFormulaInputSurfaceBasis;
   formulaTargetOutputRequested: boolean;
   impactPredictorInput: ImpactPredictorInput | null;
   missingPhysicalInputs: readonly AcousticInputFieldId[];
   status: SteelFloorFormulaInputSurfaceStatus;
   steelFloorStackDetected: boolean;
+  targetOutputMissingPhysicalInputs: Partial<Record<RequestedOutputId, readonly AcousticInputFieldId[]>>;
 };
 
 export type GateAFSteelFloorFormulaInputSurfaceContractInput = {
@@ -83,6 +91,7 @@ export const STEEL_FLOOR_FORMULA_INPUT_SURFACE_FIELDS = [
   "steelSupportForm",
   "steelCarrierDepthMm",
   "steelCarrierSpacingMm",
+  "toppingOrFloatingLayer",
   "resilientLayerDynamicStiffnessMNm3",
   "loadBasisKgM2",
   "lowerCeilingIsolationSupportForm"
@@ -94,8 +103,15 @@ export const STEEL_FLOOR_FORMULA_INPUT_SURFACE_LABELS = {
   resilientLayerDynamicStiffnessMNm3: "Upper resilient dynamic stiffness (MN/m3)",
   steelCarrierDepthMm: "Steel carrier depth (mm)",
   steelCarrierSpacingMm: "Steel carrier spacing (mm)",
-  steelSupportForm: "Steel support form"
+  steelSupportForm: "Steel support form",
+  toppingOrFloatingLayer: "Topping or floating layer"
 } as const satisfies Partial<Record<AcousticInputFieldId, string>>;
+
+export const STEEL_FLOOR_SUSPENDED_CEILING_DELTA_LW_OWNER_INPUTS = [
+  "toppingOrFloatingLayer",
+  "resilientLayerDynamicStiffnessMNm3",
+  "loadBasisKgM2"
+] as const satisfies readonly AcousticInputFieldId[];
 
 const STEEL_FLOOR_BASE_MATERIAL_IDS = new Set([
   "lightweight_steel_floor",
@@ -115,6 +131,17 @@ const STEEL_FLOOR_FORMULA_TARGET_OUTPUTS = new Set<RequestedOutputId>([
 
 function hasPositiveNumber(value: unknown): value is number {
   return typeof value === "number" && Number.isFinite(value) && value > 0;
+}
+
+function hasUpperToppingOrFloatingLayer(input: ImpactPredictorInput): boolean {
+  return [input.floatingScreed, input.upperFill].some((layer) =>
+    hasPositiveNumber(layer?.thicknessMm) &&
+      (
+        hasPositiveNumber(layer?.densityKgM3) ||
+        typeof layer?.materialClass === "string" ||
+        typeof layer?.productId === "string"
+      )
+  );
 }
 
 function normalizeLayers(layers: readonly LayerInput[]): LayerInput[] {
@@ -166,10 +193,23 @@ function lowerTreatmentPatch(
   return supportForm ? map[supportForm] : undefined;
 }
 
+function hasUpperFormulaIntent(surface: SteelFloorFormulaInputSurface | undefined): boolean {
+  return (
+    hasPositiveNumber(surface?.loadBasisKgM2) ||
+    hasPositiveNumber(surface?.resilientLayerDynamicStiffnessMNm3)
+  );
+}
+
 function buildExplicitPredictorSeed(
-  surface: SteelFloorFormulaInputSurface | undefined
+  surface: SteelFloorFormulaInputSurface | undefined,
+  input: {
+    hasVisibleUpperPackage: boolean;
+  }
 ): ImpactPredictorInput {
   const lowerTreatment = lowerTreatmentPatch(surface?.lowerCeilingIsolationSupportForm);
+  const impactSystemType = hasUpperFormulaIntent(surface) || input.hasVisibleUpperPackage
+    ? "combined_upper_lower_system"
+    : "suspended_ceiling_only";
 
   return ImpactPredictorInputSchema.parse({
     baseSlab: hasPositiveNumber(surface?.steelCarrierDepthMm)
@@ -179,7 +219,7 @@ function buildExplicitPredictorSeed(
         }
       : undefined,
     carrierSpacingMm: surface?.steelCarrierSpacingMm,
-    impactSystemType: "combined_upper_lower_system",
+    impactSystemType,
     loadBasisKgM2: surface?.loadBasisKgM2,
     lowerTreatment,
     resilientLayer: hasPositiveNumber(surface?.resilientLayerDynamicStiffnessMNm3)
@@ -215,9 +255,27 @@ function buildFallbackSteelPredictorInput(input: {
   });
 }
 
+function resolveFormulaBasisForPredictorInput(
+  input: ImpactPredictorInput | null
+): SteelFloorFormulaInputSurfaceBasis {
+  return input?.impactSystemType === "suspended_ceiling_only"
+    ? STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_BASIS
+    : STEEL_FLOOR_FORMULA_BASIS;
+}
+
+function estimateSteelFloorFormulaSurfaceImpact(input: ImpactPredictorInput): ImpactCalculation | null {
+  return input.impactSystemType === "suspended_ceiling_only"
+    ? estimateSteelFloorSuspendedCeilingOnlyImpactFromPredictorInput(input)
+    : estimateSteelFloorImpactFromPredictorInput(input);
+}
+
 function collectMissingPhysicalInputs(input: ImpactPredictorInput | null): AcousticInputFieldId[] {
   if (!input || input.structuralSupportType !== "steel_joists") {
     return [];
+  }
+
+  if (input.impactSystemType === "suspended_ceiling_only") {
+    return getMissingSteelFloorSuspendedCeilingFormulaInputs(input);
   }
 
   const missing: AcousticInputFieldId[] = [];
@@ -233,6 +291,10 @@ function collectMissingPhysicalInputs(input: ImpactPredictorInput | null): Acous
 
   if (!hasPositiveNumber(input.carrierSpacingMm)) {
     missing.push("steelCarrierSpacingMm");
+  }
+
+  if (!hasUpperToppingOrFloatingLayer(input)) {
+    missing.push("toppingOrFloatingLayer");
   }
 
   if (!hasPositiveNumber(input.resilientLayer?.dynamicStiffnessMNm3)) {
@@ -259,6 +321,23 @@ function collectMissingPhysicalInputs(input: ImpactPredictorInput | null): Acous
   return missing;
 }
 
+function collectTargetOutputMissingPhysicalInputs(input: {
+  predictorInput: ImpactPredictorInput | null;
+  targetOutputs?: readonly RequestedOutputId[];
+}): Partial<Record<RequestedOutputId, readonly AcousticInputFieldId[]>> {
+  if (
+    !input.targetOutputs?.includes("DeltaLw") ||
+    input.predictorInput?.structuralSupportType !== "steel_joists" ||
+    input.predictorInput.impactSystemType !== "suspended_ceiling_only"
+  ) {
+    return {};
+  }
+
+  return {
+    DeltaLw: STEEL_FLOOR_SUSPENDED_CEILING_DELTA_LW_OWNER_INPUTS
+  };
+}
+
 export function buildSteelFloorFormulaPredictorInputFromSurface(input: {
   catalog?: readonly MaterialDefinition[];
   layers: readonly LayerInput[];
@@ -280,11 +359,17 @@ export function buildSteelFloorFormulaPredictorInputFromSurface(input: {
       impactPredictorInput: null,
       missingPhysicalInputs: [],
       status: "inactive",
-      steelFloorStackDetected
+      steelFloorStackDetected,
+      targetOutputMissingPhysicalInputs: {}
     };
   }
 
-  const seed = buildExplicitPredictorSeed(input.surface);
+  const hasVisibleUpperPackage = layers.some((layer) =>
+    layer.floorRole === "floating_screed" ||
+      layer.floorRole === "resilient_layer" ||
+      layer.floorRole === "upper_fill"
+  );
+  const seed = buildExplicitPredictorSeed(input.surface, { hasVisibleUpperPackage });
   const catalog = input.catalog ?? getDefaultMaterialCatalog();
   const derivedInput = maybeBuildImpactPredictorInputFromLayerStack(layers, seed, undefined, catalog);
   const predictorInput = derivedInput ?? buildFallbackSteelPredictorInput({ layers, seed });
@@ -296,19 +381,26 @@ export function buildSteelFloorFormulaPredictorInputFromSurface(input: {
       impactPredictorInput: null,
       missingPhysicalInputs: [...STEEL_FLOOR_FORMULA_INPUT_SURFACE_FIELDS],
       status: "unsafe_topology",
-      steelFloorStackDetected
+      steelFloorStackDetected,
+      targetOutputMissingPhysicalInputs: {}
     };
   }
 
   const missingPhysicalInputs = collectMissingPhysicalInputs(predictorInput);
+  const formulaBasis = resolveFormulaBasisForPredictorInput(predictorInput);
+  const targetOutputMissingPhysicalInputs = collectTargetOutputMissingPhysicalInputs({
+    predictorInput,
+    targetOutputs: input.targetOutputs
+  });
 
   return {
-    formulaBasis: STEEL_FLOOR_FORMULA_BASIS,
+    formulaBasis,
     formulaTargetOutputRequested,
     impactPredictorInput: predictorInput,
     missingPhysicalInputs,
     status: missingPhysicalInputs.length > 0 ? "needs_input" : "ready_for_formula_corridor",
-    steelFloorStackDetected
+    steelFloorStackDetected,
+    targetOutputMissingPhysicalInputs
   };
 }
 
@@ -326,7 +418,7 @@ export function buildGateAFSteelFloorFormulaInputSurfaceContract(
     : surfaceResult.status;
   const runtimeFormulaImpact =
     status === "ready_for_formula_corridor" && surfaceResult.impactPredictorInput
-      ? estimateSteelFloorImpactFromPredictorInput(surfaceResult.impactPredictorInput)
+      ? estimateSteelFloorFormulaSurfaceImpact(surfaceResult.impactPredictorInput)
       : null;
 
   return {

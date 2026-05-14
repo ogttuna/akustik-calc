@@ -20,8 +20,8 @@ function evaluate(layers: readonly Record<string, unknown>[]) {
   });
 }
 
-describe("reinforced concrete visible low-confidence edge continuity", () => {
-  it("keeps neutral visible-stack reorder and alias variants on the same derived low-confidence lane", () => {
+describe("reinforced concrete visible low-confidence cleanup edge continuity", () => {
+  it("keeps neutral visible-stack reorder and alias variants on the same derived needs-input boundary", () => {
     const baseline = evaluate(BASELINE_VISIBLE_STACK);
     const variants = [
       evaluate([
@@ -64,27 +64,33 @@ describe("reinforced concrete visible low-confidence edge continuity", () => {
       ])
     ];
 
-    expect(baseline.floorSystemEstimate?.kind).toBe("low_confidence");
-    expect(baseline.floorSystemEstimate?.fitPercent).toBe(29);
-    expect(baseline.dynamicImpactTrace?.fitPercent).toBe(29);
-    expect(baseline.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
+    expect(baseline.floorSystemEstimate).toBeNull();
+    expect(baseline.dynamicImpactTrace?.fitPercent).toBeUndefined();
+    expect(baseline.impact).toBeNull();
     expect(baseline.impactPredictorStatus?.inputMode).toBe("derived_from_visible_layers");
+    expect(baseline.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
+    expect(baseline.impactPredictorStatus?.warnings).toEqual(expect.arrayContaining([
+      expect.stringMatching(/reinforced-concrete combined upper\/lower impact runtime is waiting/i)
+    ]));
+    expect(baseline.supportedTargetOutputs).toEqual(["Rw", "Ctr"]);
+    expect(baseline.unsupportedTargetOutputs).toEqual(["Ln,w"]);
 
     for (const result of variants) {
-      expect(result.floorSystemEstimate?.kind).toBe("low_confidence");
-      expect(result.floorSystemEstimate?.fitPercent).toBe(29);
-      expect(result.dynamicImpactTrace?.fitPercent).toBe(29);
-      expect(result.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
+      expect(result.floorSystemEstimate).toBeNull();
+      expect(result.dynamicImpactTrace?.fitPercent).toBeUndefined();
+      expect(result.impact).toBeNull();
       expect(result.impactPredictorStatus?.inputMode).toBe("derived_from_visible_layers");
-      expect(result.impact?.LnW).toBe(baseline.impact?.LnW);
+      expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
+      expect(result.impactPredictorStatus?.warnings).toEqual(baseline.impactPredictorStatus?.warnings);
+      expect(result.supportedTargetOutputs).toEqual(baseline.supportedTargetOutputs);
+      expect(result.unsupportedTargetOutputs).toEqual(baseline.unsupportedTargetOutputs);
       expect(result.floorSystemRatings?.Rw).toBe(baseline.floorSystemRatings?.Rw);
       expect(result.floorSystemRatings?.RwCtr).toBe(baseline.floorSystemRatings?.RwCtr);
-      expect(result.impact?.estimateCandidateIds).toEqual(baseline.impact?.estimateCandidateIds);
       expect(result.impactPredictorStatus?.notes).toEqual(baseline.impactPredictorStatus?.notes);
     }
   });
 
-  it("treats an expanded ceiling-board schedule as an intentional boundary instead of fabricating the derived low-confidence lane", () => {
+  it("treats an expanded ceiling-board schedule as the same missing-owner boundary instead of falling through to bare impact", () => {
     const baseline = evaluate(BASELINE_VISIBLE_STACK);
     const expandedBoardSchedule = evaluate([
       BASELINE_VISIBLE_STACK[0],
@@ -98,25 +104,25 @@ describe("reinforced concrete visible low-confidence edge continuity", () => {
       { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 8 }
     ]);
 
-    expect(baseline.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
-    expect(expandedBoardSchedule.impact?.basis).toBe("predictor_heavy_bare_floor_iso12354_annexc_estimate");
-    expect(expandedBoardSchedule.floorSystemEstimate?.kind).toBeUndefined();
-    expect(expandedBoardSchedule.floorSystemEstimate?.fitPercent).toBeUndefined();
+    expect(baseline.impact).toBeNull();
+    expect(expandedBoardSchedule.impact).toBeNull();
+    expect(expandedBoardSchedule.floorSystemEstimate).toBeNull();
     expect(expandedBoardSchedule.dynamicImpactTrace?.fitPercent).toBeUndefined();
-    expect(expandedBoardSchedule.impactPredictorStatus?.inputMode).toBeUndefined();
-    expect(expandedBoardSchedule.impactPredictorStatus?.implementedFormulaEstimate).toBe(true);
+    expect(expandedBoardSchedule.impactPredictorStatus?.inputMode).toBe("derived_from_visible_layers");
+    expect(expandedBoardSchedule.impactPredictorStatus?.implementedFormulaEstimate).toBe(false);
     expect(expandedBoardSchedule.impactPredictorStatus?.implementedFamilyEstimate).toBe(false);
     expect(expandedBoardSchedule.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
-    expect(expandedBoardSchedule.impactPredictorStatus?.notes).toEqual([
-      "Implemented formula estimate is active.",
-      "Annex C style relation is active on the current impact lane."
-    ]);
+    expect(expandedBoardSchedule.impactPredictorStatus?.warnings).toEqual(expect.arrayContaining([
+      expect.stringMatching(/reinforced-concrete combined upper\/lower impact runtime is waiting/i)
+    ]));
     expect(
       expandedBoardSchedule.warnings.some((warning: string) =>
         /withheld the closest candidate label because it drifted outside the defended same-family route/i.test(warning)
       )
     ).toBe(true);
-    expect((expandedBoardSchedule.impact?.LnW ?? 0) - (baseline.impact?.LnW ?? 0)).toBeGreaterThanOrEqual(20);
-    expect((baseline.floorSystemRatings?.Rw ?? 0) - (expandedBoardSchedule.floorSystemRatings?.Rw ?? 0)).toBeGreaterThanOrEqual(5);
+    expect(expandedBoardSchedule.supportedTargetOutputs).toEqual(["Rw", "Ctr"]);
+    expect(expandedBoardSchedule.unsupportedTargetOutputs).toEqual(["Ln,w"]);
+    expect(expandedBoardSchedule.floorSystemRatings?.Rw).toBe(baseline.floorSystemRatings?.Rw);
+    expect(expandedBoardSchedule.floorSystemRatings?.RwCtr).toBe(baseline.floorSystemRatings?.RwCtr);
   });
 });

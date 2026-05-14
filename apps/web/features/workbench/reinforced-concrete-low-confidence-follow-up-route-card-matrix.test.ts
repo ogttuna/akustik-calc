@@ -35,15 +35,9 @@ type RouteCase = {
 
 const ROUTE_OUTPUTS = ["Rw", "Ln,w", "DeltaLw"] as const satisfies readonly RequestedOutputId[];
 
-const LOW_CONFIDENCE_CANDIDATE_IDS = [
-  "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
-  "euracoustics_f1_rigid_ceiling_concrete_lab_2026",
-  "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
-] as const;
-
 const CASES: readonly RouteCase[] = [
   {
-    id: "visible low-confidence reinforced-concrete follow-up route stays explicit",
+    id: "visible reinforced-concrete follow-up route parks impact until owners are complete",
     rows: [
       { materialId: "concrete", thicknessMm: "180", floorRole: "base_structure" },
       { materialId: "generic_resilient_underlay", thicknessMm: "8", floorRole: "resilient_layer" },
@@ -54,27 +48,27 @@ const CASES: readonly RouteCase[] = [
       { materialId: "firestop_board", thicknessMm: "16", floorRole: "ceiling_board" }
     ],
     expected: {
-      basis: "predictor_floor_system_low_confidence_estimate",
+      basis: null,
       branchDetailMentionsHeavyBareFormula: false,
       branchDetailMentionsHeavyFloatingFormula: false,
-      branchDetailMentionsLowConfidenceFallback: true,
-      branchDetailMentionsMixedRowConcreteLane: true,
-      branchDetailMentionsProxyAirborneCompanions: true,
+      branchDetailMentionsLowConfidenceFallback: false,
+      branchDetailMentionsMixedRowConcreteLane: false,
+      branchDetailMentionsProxyAirborneCompanions: false,
       branchTone: "warning",
-      branchValue: "Combined upper and lower system",
-      candidateIds: LOW_CONFIDENCE_CANDIDATE_IDS,
+      branchValue: "Awaiting supported topology",
+      candidateIds: null,
       cards: {
-        Rw: { status: "live", value: "65.9 dB" },
-        "Ln,w": { status: "live", value: "50 dB" },
-        DeltaLw: { status: "unsupported", value: "Not ready" }
+        Rw: { status: "live", value: "60 dB" },
+        "Ln,w": { status: "needs_input", value: "Not ready" },
+        DeltaLw: { status: "needs_input", value: "Not ready" }
       },
-      estimateKind: "low_confidence",
-      supported: ["Rw", "Ctr", "Ln,w"],
-      unsupported: ["DeltaLw"]
+      estimateKind: null,
+      supported: ["Rw", "Ctr"],
+      unsupported: ["Ln,w", "DeltaLw"]
     }
   },
   {
-    id: "expanded board schedule stays outside the bounded follow-up route and falls back to heavy bare-floor formula cards",
+    id: "expanded board schedule stays on the same missing-owner boundary",
     rows: [
       { materialId: "concrete", thicknessMm: "180", floorRole: "base_structure" },
       { materialId: "generic_resilient_underlay", thicknessMm: "8", floorRole: "resilient_layer" },
@@ -87,23 +81,23 @@ const CASES: readonly RouteCase[] = [
       { materialId: "firestop_board", thicknessMm: "8", floorRole: "ceiling_board" }
     ],
     expected: {
-      basis: "predictor_heavy_bare_floor_iso12354_annexc_estimate",
-      branchDetailMentionsHeavyBareFormula: true,
+      basis: null,
+      branchDetailMentionsHeavyBareFormula: false,
       branchDetailMentionsHeavyFloatingFormula: false,
       branchDetailMentionsLowConfidenceFallback: false,
       branchDetailMentionsMixedRowConcreteLane: false,
       branchDetailMentionsProxyAirborneCompanions: false,
       branchTone: "warning",
-      branchValue: "Combined upper and lower system",
+      branchValue: "Awaiting supported topology",
       candidateIds: null,
       cards: {
         Rw: { status: "live", value: "60 dB" },
-        "Ln,w": { status: "live", value: "71.8 dB" },
-        DeltaLw: { status: "unsupported", value: "Not ready" }
+        "Ln,w": { status: "needs_input", value: "Not ready" },
+        DeltaLw: { status: "needs_input", value: "Not ready" }
       },
       estimateKind: null,
-      supported: ["Rw", "Ctr", "Ln,w"],
-      unsupported: ["DeltaLw"]
+      supported: ["Rw", "Ctr"],
+      unsupported: ["Ln,w", "DeltaLw"]
     }
   },
   {
@@ -189,18 +183,22 @@ describe("reinforced concrete low-confidence follow-up route card matrix", () =>
     expect(snapshot(testCase)).toEqual(testCase.expected);
   });
 
-  it("keeps the low-confidence follow-up surface distinct from nearby formula-owned reinforced-concrete routes", () => {
-    const lowConfidenceVisible = snapshot(CASES[0]);
+  it("keeps the missing-owner follow-up surface distinct from upper-only formula-owned reinforced-concrete routes", () => {
+    const visibleNeedsInput = snapshot(CASES[0]);
     const expandedBoardBoundary = snapshot(CASES[1]);
     const dryFloatingFormula = snapshot(CASES[2]);
 
-    expect(lowConfidenceVisible.cards.DeltaLw).toEqual({
-      status: "unsupported",
+    expect(visibleNeedsInput.cards.DeltaLw).toEqual({
+      status: "needs_input",
       value: "Not ready"
     });
-    expect(lowConfidenceVisible.branchDetailMentionsLowConfidenceFallback).toBe(true);
+    expect(visibleNeedsInput.cards["Ln,w"]).toEqual({
+      status: "needs_input",
+      value: "Not ready"
+    });
+    expect(visibleNeedsInput.branchDetailMentionsLowConfidenceFallback).toBe(false);
 
-    expect(expandedBoardBoundary.branchDetailMentionsHeavyBareFormula).toBe(true);
+    expect(expandedBoardBoundary.branchDetailMentionsHeavyBareFormula).toBe(false);
     expect(expandedBoardBoundary.branchDetailMentionsLowConfidenceFallback).toBe(false);
 
     expect(dryFloatingFormula.branchValue).toBe("Dry floating floor");

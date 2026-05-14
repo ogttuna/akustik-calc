@@ -12,17 +12,24 @@ import { buildUniformImpactMetricBasis } from "./impact-metric-basis";
 import { clamp, ksRound1, log10Safe, round1 } from "./math";
 
 export const STEEL_FLOOR_FORMULA_BASIS = "predictor_lightweight_steel_mass_spring_holdout_corridor_estimate" as const;
+export const STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_BASIS =
+  "predictor_lightweight_steel_suspended_ceiling_corridor_estimate" as const;
+export const STEEL_FLOOR_SUSPENDED_CEILING_REFERENCE_FLOOR_TYPE =
+  "steel_suspended_ceiling_lower_reference" as const;
 export const STEEL_FLOOR_FORMULA_LN_W_TOLERANCE_DB = 4.5;
 export const STEEL_FLOOR_FORMULA_DELTA_LW_TOLERANCE_DB = 2;
+export const STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_LN_W_TOLERANCE_DB = 6;
 
 export type SteelFloorFormulaErrorBudgetMetricId = "DeltaLw" | "Ln,w";
 
 type SteelFloorFormulaErrorBudgetTermId =
   | "dynamic_stiffness_precision"
+  | "carrier_spacing_precision"
   | "load_basis_precision"
   | "lower_support_class_simplification"
   | "source_absent_bare_steel_reference_model"
   | "source_owned_delta_lw_holdout_absence"
+  | "source_owned_suspended_only_holdout_absence"
   | "support_form_transfer_efficiency"
   | "upper_resilient_topology_simplification";
 
@@ -36,8 +43,15 @@ const REQUIRED_PHYSICAL_INPUTS = [
   "steelSupportForm",
   "steelCarrierDepthMm",
   "steelCarrierSpacingMm",
+  "toppingOrFloatingLayer",
   "resilientLayerDynamicStiffnessMNm3",
   "loadBasisKgM2",
+  "lowerCeilingIsolationSupportForm"
+] as const satisfies readonly AcousticInputFieldId[];
+const SUSPENDED_CEILING_REQUIRED_PHYSICAL_INPUTS = [
+  "steelSupportForm",
+  "steelCarrierDepthMm",
+  "steelCarrierSpacingMm",
   "lowerCeilingIsolationSupportForm"
 ] as const satisfies readonly AcousticInputFieldId[];
 const BASIS_BOUNDARIES = [
@@ -207,6 +221,44 @@ const deltaLwErrorBudgetTerms = (): ImpactErrorBudgetTerm[] => [
   )
 ];
 
+const suspendedCeilingLnWErrorBudgetTerms = (): ImpactErrorBudgetTerm[] => [
+  term(
+    "source_owned_suspended_only_holdout_absence",
+    1.5,
+    "missing_source_owned_holdout",
+    "No accepted source-owned steel suspended-ceiling-only ISO Ln,w holdout packet exists for this exact owner set.",
+    ["accepted_source_owned_steel_suspended_ceiling_only_lnw_holdouts"]
+  ),
+  term(
+    "source_absent_bare_steel_reference_model",
+    1.3,
+    "source_absent_formula_assumption",
+    "Bare steel reference Ln,w is modelled from support form, carrier depth, lower board mass, cavity, and fill instead of a measured same-stack row.",
+    ["same_stack_bare_steel_suspended_ceiling_reference_rows"]
+  ),
+  term(
+    "support_form_transfer_efficiency",
+    1,
+    "source_absent_formula_assumption",
+    "Steel carrier transfer is reduced to joist/open-web support form until a source-owned transfer curve exists.",
+    ["source_owned_steel_suspended_ceiling_transfer_curve"]
+  ),
+  term(
+    "lower_support_class_simplification",
+    0.9,
+    "topology_simplification",
+    "Lower isolation support is explicit but still represented by support class, board mass, cavity depth, and fill thickness.",
+    ["lower_ceiling_support_family_holdouts"]
+  ),
+  term(
+    "carrier_spacing_precision",
+    0.7,
+    "explicit_user_input_precision",
+    "Carrier spacing is a scalar owner input rather than a measured steel layout packet.",
+    ["source_owned_carrier_spacing_layout_packet"]
+  )
+];
+
 export function buildSteelFloorFormulaErrorBudgetFor(
   metricId: SteelFloorFormulaErrorBudgetMetricId,
   estimate: number
@@ -226,6 +278,22 @@ export function buildSteelFloorFormulaErrorBudgetFor(
     origin: "source_absent_formula_error_budget",
     terms,
     toleranceDb,
+    totalBudgetDb: sumTermDb(terms)
+  };
+}
+
+export function buildSteelFloorSuspendedCeilingFormulaErrorBudgetFor(estimate: number): ImpactErrorBudget {
+  const terms = suspendedCeilingLnWErrorBudgetTerms();
+
+  return {
+    estimate,
+    max: ksRound1(estimate + STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_LN_W_TOLERANCE_DB),
+    metricId: "Ln,w",
+    min: ksRound1(estimate - STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_LN_W_TOLERANCE_DB),
+    notMeasuredEvidence: true,
+    origin: "source_absent_formula_error_budget",
+    terms,
+    toleranceDb: STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_LN_W_TOLERANCE_DB,
     totalBudgetDb: sumTermDb(terms)
   };
 }
@@ -419,10 +487,22 @@ function hardFinishCouplingPenaltyDb(input: ImpactPredictorInput): number {
   return dynamicStiffness <= 80 ? 3.7 : 2.4;
 }
 
+function hasUpperToppingOrFloatingLayer(input: ImpactPredictorInput): boolean {
+  return [input.floatingScreed, input.upperFill].some((layer) =>
+    hasPositiveNumber(layer?.thicknessMm) &&
+      (
+        hasPositiveNumber(layer?.densityKgM3) ||
+        typeof layer?.materialClass === "string" ||
+        typeof layer?.productId === "string"
+      )
+  );
+}
+
 const STEEL_FORMULA_MISSING_INPUT_CHECKS = {
   steelSupportForm: (input: ImpactPredictorInput) => !input.supportForm,
   steelCarrierDepthMm: (input: ImpactPredictorInput) => !hasPositiveNumber(input.baseSlab?.thicknessMm),
   steelCarrierSpacingMm: (input: ImpactPredictorInput) => !hasPositiveNumber(input.carrierSpacingMm),
+  toppingOrFloatingLayer: (input: ImpactPredictorInput) => !hasUpperToppingOrFloatingLayer(input),
   resilientLayerDynamicStiffnessMNm3: (input: ImpactPredictorInput) =>
     !hasPositiveNumber(input.resilientLayer?.dynamicStiffnessMNm3),
   loadBasisKgM2: (input: ImpactPredictorInput) => !hasPositiveNumber(input.loadBasisKgM2),
@@ -450,6 +530,16 @@ function missingSteelFormulaInputs(input: ImpactPredictorInput | null | undefine
   return REQUIRED_PHYSICAL_INPUTS.filter((field) => STEEL_FORMULA_MISSING_INPUT_CHECKS[field](input));
 }
 
+export function getMissingSteelFloorSuspendedCeilingFormulaInputs(
+  input: ImpactPredictorInput | null | undefined
+): AcousticInputFieldId[] {
+  if (!input || input.structuralSupportType !== "steel_joists") {
+    return [];
+  }
+
+  return SUSPENDED_CEILING_REQUIRED_PHYSICAL_INPUTS.filter((field) => STEEL_FORMULA_MISSING_INPUT_CHECKS[field](input));
+}
+
 function isSourceAbsentSteelFormulaRoute(input: ImpactPredictorInput | null | undefined): boolean {
   return Boolean(
     input &&
@@ -462,21 +552,69 @@ function isSourceAbsentSteelFormulaRoute(input: ImpactPredictorInput | null | un
   );
 }
 
+function isSourceAbsentSteelSuspendedCeilingOnlyRoute(input: ImpactPredictorInput | null | undefined): boolean {
+  return Boolean(
+    input &&
+      input.structuralSupportType === "steel_joists" &&
+      input.impactSystemType === "suspended_ceiling_only"
+  );
+}
+
 export function shouldBlockSteelFloorImpactFormulaFallback(
   input: ImpactPredictorInput | null | undefined
 ): boolean {
   const missing = missingSteelFormulaInputs(input);
+  const suspendedCeilingMissing = getMissingSteelFloorSuspendedCeilingFormulaInputs(input);
   const hasFormulaIntent = Boolean(
     hasPositiveNumber(input?.loadBasisKgM2) ||
       hasPositiveNumber(input?.resilientLayer?.dynamicStiffnessMNm3)
   );
+  const hasSuspendedCeilingFormulaIntent = Boolean(
+    input?.lowerTreatment?.type ||
+      input?.supportForm ||
+      hasPositiveNumber(input?.baseSlab?.thicknessMm) ||
+      hasPositiveNumber(input?.carrierSpacingMm)
+  );
 
   return (
-    isSourceAbsentSteelFormulaRoute(input) &&
-    hasFormulaIntent &&
-    missing.length > 0 &&
-    !missing.includes("steelSupportForm")
+    (
+      isSourceAbsentSteelFormulaRoute(input) &&
+      hasFormulaIntent &&
+      missing.length > 0 &&
+      !missing.includes("steelSupportForm")
+    ) ||
+    (
+      isSourceAbsentSteelSuspendedCeilingOnlyRoute(input) &&
+      hasSuspendedCeilingFormulaIntent &&
+      suspendedCeilingMissing.length > 0
+    )
   );
+}
+
+export function getBlockedSteelFloorImpactFormulaFallbackInputs(
+  input: ImpactPredictorInput | null | undefined
+): AcousticInputFieldId[] {
+  if (!shouldBlockSteelFloorImpactFormulaFallback(input)) {
+    return [];
+  }
+
+  return isSourceAbsentSteelSuspendedCeilingOnlyRoute(input)
+    ? getMissingSteelFloorSuspendedCeilingFormulaInputs(input)
+    : missingSteelFormulaInputs(input);
+}
+
+export function buildSteelFloorImpactFormulaFallbackBlockerWarning(
+  input: ImpactPredictorInput | null | undefined
+): string | null {
+  const missing = getBlockedSteelFloorImpactFormulaFallbackInputs(input);
+
+  if (missing.length === 0) {
+    return null;
+  }
+
+  const metricLabel = isSourceAbsentSteelSuspendedCeilingOnlyRoute(input) ? "Ln,w" : "Ln,w / DeltaLw";
+
+  return `Steel-floor formula corridor needs ${missing.join(", ")} before calculating lab ${metricLabel}. DynEcho blocked the broad family fallback instead of fabricating impact ratings.`;
 }
 
 export function estimateSteelFloorImpactFromPredictorInput(
@@ -532,9 +670,55 @@ export function estimateSteelFloorImpactFromPredictorInput(
       `Corridor tolerance is +/-${STEEL_FLOOR_FORMULA_LN_W_TOLERANCE_DB} dB for Ln,w and +/-${STEEL_FLOOR_FORMULA_DELTA_LW_TOLERANCE_DB} dB for DeltaLw until the next source-calibration gate tightens it.`
     ],
     predictorResonanceHz: ksRound1(predictorResonanceHz),
+    referenceFloorType: input.supportForm === "joist_or_purlin" &&
+      input.lowerTreatment?.type === "suspended_ceiling_elastic_hanger"
+      ? STEEL_FLOOR_SUSPENDED_CEILING_REFERENCE_FLOOR_TYPE
+      : undefined,
     resilientDynamicStiffnessMNm3: ksRound1(dynamicStiffnessMNm3),
     scope: "steel_floor_formula_corridor",
     standardMethod: "gate_ad_steel_floor_mass_spring_holdout_corridor_v1"
+  };
+}
+
+export function estimateSteelFloorSuspendedCeilingOnlyImpactFromPredictorInput(
+  input: ImpactPredictorInput
+): ImpactCalculation | null {
+  if (
+    !isSourceAbsentSteelSuspendedCeilingOnlyRoute(input) ||
+    getMissingSteelFloorSuspendedCeilingFormulaInputs(input).length > 0
+  ) {
+    return null;
+  }
+
+  const bareReferenceLnW = baseSteelBareReferenceLnW(input);
+
+  if (!hasPositiveNumber(bareReferenceLnW)) {
+    return null;
+  }
+
+  const lnW = ksRound1(bareReferenceLnW);
+
+  return {
+    LnW: lnW,
+    availableOutputs: ["Ln,w"],
+    bareReferenceLnW: lnW,
+    basis: STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_BASIS,
+    confidence: getImpactConfidenceForBasis(STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_BASIS),
+    errorBudgets: [buildSteelFloorSuspendedCeilingFormulaErrorBudgetFor(lnW)],
+    labOrField: "lab",
+    metricBasis: buildUniformImpactMetricBasis(
+      {
+        LnW: lnW
+      },
+      STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_BASIS
+    ),
+    notes: [
+      "Steel suspended-ceiling-only estimate used the Gate BK source-absent lower-treatment corridor instead of the broad low-confidence floor-system family blend.",
+      `Bare steel reference Ln,w used explicit support form, carrier depth, carrier spacing, lower board mass, cavity depth, and fill thickness; resolved Ln,w = ${lnW} dB.`,
+      `Corridor tolerance is +/-${STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_LN_W_TOLERANCE_DB} dB for Ln,w until source-owned suspended-ceiling holdouts tighten it.`
+    ],
+    scope: "steel_floor_formula_corridor",
+    standardMethod: "gate_bk_steel_floor_suspended_ceiling_only_corridor_v1"
   };
 }
 

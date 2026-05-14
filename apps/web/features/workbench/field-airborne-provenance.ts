@@ -5,6 +5,10 @@ import {
   getGateARAirborneBuildingPredictionSurface
 } from "./airborne-building-prediction-surface";
 import { getGateIAirborneFieldContextSurface } from "./airborne-field-context-surface";
+import {
+  getCompanyInternalOpeningLeakFieldBuildingReportLines,
+  getCompanyInternalOpeningLeakFieldBuildingSurface
+} from "./opening-leak-field-building-surface";
 import { getDnTAkSourceMode } from "./dntak-source-mode";
 import { getFieldAirborneModeLabel, getFieldAirborneRouteLabel } from "./field-airborne-output";
 
@@ -39,8 +43,17 @@ export function getFieldAirborneProvenanceSummary(
   const routeLabel = getFieldAirborneRouteLabel(result);
   const modeLabel = getFieldAirborneModeLabel(result);
   const dntakMode = getDnTAkSourceMode(result);
+  const openingLeakFieldBuildingSurface = getCompanyInternalOpeningLeakFieldBuildingSurface(result);
   const gateARSurface = getGateARAirborneBuildingPredictionSurface(result);
   const gateISurface = getGateIAirborneFieldContextSurface(result);
+
+  if (openingLeakFieldBuildingSurface) {
+    return {
+      detail: `${routeLabel} is active. ${openingLeakFieldBuildingSurface.detail}`,
+      label: openingLeakFieldBuildingSurface.label,
+      modeLabel
+    };
+  }
 
   if (gateARSurface) {
     return {
@@ -113,10 +126,12 @@ export function getFieldAirborneReportLines(result: AssemblyCalculation | null):
   }
 
   const gateISurface = getGateIAirborneFieldContextSurface(result);
+  const openingLeakFieldBuildingSurface = getCompanyInternalOpeningLeakFieldBuildingSurface(result);
   const gateARSurface = getGateARAirborneBuildingPredictionSurface(result);
   const lines = [
     `- Airborne field route: ${summary.modeLabel}`,
     `- Airborne field provenance: ${summary.label}. ${summary.detail}`,
+    ...(openingLeakFieldBuildingSurface ? getCompanyInternalOpeningLeakFieldBuildingReportLines(result) : []),
     ...(gateARSurface ? getGateARAirborneBuildingPredictionReportLines(result) : []),
     ...(gateISurface ? gateISurface.reportLines : [])
   ];

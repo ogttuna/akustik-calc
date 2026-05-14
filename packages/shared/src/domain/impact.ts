@@ -32,6 +32,7 @@ export const ImpactEstimateBasisSchema = z.enum([
   "predictor_timber_joist_delta_lw_formula_corridor_estimate",
   "predictor_lightweight_steel_fl28_interpolation_estimate",
   "predictor_lightweight_steel_mass_spring_holdout_corridor_estimate",
+  "predictor_lightweight_steel_suspended_ceiling_corridor_estimate",
   "predictor_lightweight_steel_bound_interpolation_estimate",
   "predictor_lightweight_steel_missing_support_form_bound_estimate",
   "predictor_floor_system_family_archetype_estimate",
@@ -40,6 +41,7 @@ export const ImpactEstimateBasisSchema = z.enum([
   "predictor_catalog_exact_match_official",
   "predictor_catalog_lower_bound_official",
   "predictor_catalog_product_delta_official",
+  "astm_e989_impact_rating_metric_schema_adapter_bridge",
   "predictor_explicit_delta_heavy_reference_derived",
   "predictor_heavy_bare_floor_iso12354_annexc_estimate",
   "predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate",
@@ -70,6 +72,8 @@ export const ImpactMetricBasisLabelSchema = z.union([
     "estimated_standardized_field_lprimentw_from_direct_flanking_energy_sum_plus_room_volume",
     "estimated_standardized_field_lprimentw_from_lprimenw_plus_room_volume",
     "exact_source_rating_override",
+    "astm_e989_aiic_metric_schema_adapter_bridge",
+    "astm_e989_iic_metric_schema_adapter_bridge",
     "predictor_bare_massive_floor_iso12354_annexc_estimate",
     "predictor_explicit_delta_user_input",
     "predictor_catalog_product_delta_heavy_reference_derived"
@@ -81,6 +85,8 @@ export const ImpactMetricBasisSchema = z
     CI: ImpactMetricBasisLabelSchema.optional(),
     CI50_2500: ImpactMetricBasisLabelSchema.optional(),
     DeltaLw: ImpactMetricBasisLabelSchema.optional(),
+    AIIC: ImpactMetricBasisLabelSchema.optional(),
+    IIC: ImpactMetricBasisLabelSchema.optional(),
     LPrimeNW: ImpactMetricBasisLabelSchema.optional(),
     LPrimeNT50: ImpactMetricBasisLabelSchema.optional(),
     LPrimeNTw: ImpactMetricBasisLabelSchema.optional(),
@@ -160,6 +166,7 @@ export const ImpactCalculationSchema = z
     CI: z.number().optional(),
     CI50_2500: z.number().optional(),
     DeltaLw: z.number().nonnegative().optional(),
+    AIIC: z.number().positive().optional(),
     guideEstimateHdCorrectionDb: z.number().optional(),
     guideEstimateHdSource: z.enum(["explicit_input", "lookup_from_receiving_room_volume"]).optional(),
     guideEstimateKCorrectionDb: z.number().optional(),
@@ -169,6 +176,7 @@ export const ImpactCalculationSchema = z
     guideEstimateProfile: z.literal("tr_simple_method_lnt50_from_lnwci_plus_k_plus_hd").optional(),
     guideEstimateReceivingRoomVolumeBracket: z.string().min(1).optional(),
     guideEstimateReceivingRoomVolumeM3: z.number().positive().optional(),
+    IIC: z.number().positive().optional(),
     LPrimeNW: z.number().positive().optional(),
     LPrimeNT50: z.number().positive().optional(),
     LPrimeNTw: z.number().positive().optional(),
@@ -219,11 +227,89 @@ export const ImpactCalculationSchema = z
     treatedReferenceLnW: z.number().positive().optional()
   })
   .superRefine((value, ctx) => {
-    if (!Number.isFinite(value.LnW) && !Number.isFinite(value.LPrimeNTw) && !Number.isFinite(value.DeltaLw)) {
+    const astmE989BridgeBasis = "astm_e989_impact_rating_metric_schema_adapter_bridge";
+    const hasIic = Number.isFinite(value.IIC);
+    const hasAiic = Number.isFinite(value.AIIC);
+
+    if (
+      !Number.isFinite(value.LnW) &&
+      !Number.isFinite(value.LPrimeNTw) &&
+      !Number.isFinite(value.DeltaLw) &&
+      !hasIic &&
+      !hasAiic
+    ) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Impact calculation requires LnW, LPrimeNTw, or DeltaLw."
+        message: "Impact calculation requires LnW, LPrimeNTw, DeltaLw, IIC, or AIIC."
       });
+    }
+
+    if (value.availableOutputs.includes("IIC") && !hasIic) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "IIC cannot be listed as available without an IIC value.",
+        path: ["availableOutputs"]
+      });
+    }
+
+    if (value.availableOutputs.includes("AIIC") && !hasAiic) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "AIIC cannot be listed as available without an AIIC value.",
+        path: ["availableOutputs"]
+      });
+    }
+
+    if (hasIic) {
+      if (value.basis !== astmE989BridgeBasis) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "IIC requires the ASTM E989 impact rating metric schema bridge basis.",
+          path: ["basis"]
+        });
+      }
+
+      if (value.metricBasis?.IIC !== "astm_e989_iic_metric_schema_adapter_bridge") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "IIC requires an ASTM E989 IIC metric-basis owner.",
+          path: ["metricBasis", "IIC"]
+        });
+      }
+
+      if (value.labOrField !== "lab") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "IIC is a lab impact rating and requires labOrField to be lab.",
+          path: ["labOrField"]
+        });
+      }
+    }
+
+    if (hasAiic) {
+      if (value.basis !== astmE989BridgeBasis) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "AIIC requires the ASTM E989 impact rating metric schema bridge basis.",
+          path: ["basis"]
+        });
+      }
+
+      if (value.metricBasis?.AIIC !== "astm_e989_aiic_metric_schema_adapter_bridge") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "AIIC requires an ASTM E989 AIIC metric-basis owner.",
+          path: ["metricBasis", "AIIC"]
+        });
+      }
+
+      if (value.labOrField !== "field") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "AIIC requires field labOrField context.",
+          path: ["labOrField"]
+        });
+      }
     }
   });
 

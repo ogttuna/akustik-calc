@@ -189,7 +189,7 @@ const CASES: readonly CloseoutCase[] = [
     }
   },
   {
-    id: "combined wet elastic ceiling keeps family LnW with Annex C DeltaLw companion",
+    id: "combined wet elastic ceiling parks impact until reinforced-concrete formula owners are complete",
     evaluate: () =>
       calculateAssembly(
         [
@@ -207,31 +207,31 @@ const CASES: readonly CloseoutCase[] = [
         }
       ),
     expected: {
-      candidateIds: ["euracoustics_f2_elastic_ceiling_concrete_lab_2026"],
-      companionDeltaLwFromAnnexC: true,
-      floorRatingsBasis: "predictor_heavy_concrete_published_upper_treatment_estimate",
-      floorSystemEstimateKind: "family_general",
-      impactBasis: "predictor_heavy_concrete_published_upper_treatment_estimate",
-      impactDeltaLw: 26.7,
-      impactLnW: 43,
-      metricBasisDeltaLw: "predictor_heavy_floating_floor_iso12354_annexc_estimate",
-      metricBasisLnW: "predictor_heavy_concrete_published_upper_treatment_estimate",
+      candidateIds: null,
+      companionDeltaLwFromAnnexC: false,
+      floorRatingsBasis: "screening_mass_law_curve_seed_v3",
+      floorSystemEstimateKind: null,
+      impactBasis: null,
+      impactDeltaLw: null,
+      impactLnW: null,
+      metricBasisDeltaLw: null,
+      metricBasisLnW: null,
       noteMentionsLowConfidenceFallback: false,
       noteMentionsNearbyRowRankingSupport: false,
-      noteMentionsPublishedFamily: true,
+      noteMentionsPublishedFamily: false,
       noteMentionsProxyAirborneHonesty: false,
       rawEstimateNotesMentionNearbyPublishedLineage: false,
       rawEstimateNotesMentionCuratedLineage: false,
       rawImpactNotesMentionLowConfidenceFallbackRecord: false,
       rawImpactNotesMentionPublishedFamilyRecord: false,
-      rw: 77,
-      rwCtr: null,
-      supportedTargetOutputs: ["Rw", "Ln,w", "DeltaLw"],
-      unsupportedTargetOutputs: []
+      rw: 61,
+      rwCtr: 55,
+      supportedTargetOutputs: ["Rw"],
+      unsupportedTargetOutputs: ["Ln,w", "DeltaLw"]
     }
   },
   {
-    id: "carpet archetype stays family-owned with DeltaLw unsupported",
+    id: "carpet archetype parks impact until reinforced-concrete formula owners are complete",
     evaluate: () =>
       calculateImpactOnly([], {
         impactPredictorInput: {
@@ -260,31 +260,31 @@ const CASES: readonly CloseoutCase[] = [
         targetOutputs: ["Rw", "Ctr", "Ln,w", "DeltaLw"]
       }),
     expected: {
-      candidateIds: ["knauf_cc60_1a_concrete150_carpet_lab_2026"],
+      candidateIds: null,
       companionDeltaLwFromAnnexC: false,
-      floorRatingsBasis: "predictor_floor_system_family_archetype_estimate",
-      floorSystemEstimateKind: "family_archetype",
-      impactBasis: "predictor_floor_system_family_archetype_estimate",
+      floorRatingsBasis: "screening_mass_law_curve_seed_v3",
+      floorSystemEstimateKind: null,
+      impactBasis: null,
       impactDeltaLw: null,
-      impactLnW: 31,
+      impactLnW: null,
       metricBasisDeltaLw: null,
-      metricBasisLnW: "predictor_floor_system_family_archetype_estimate",
+      metricBasisLnW: null,
       noteMentionsLowConfidenceFallback: false,
       noteMentionsNearbyRowRankingSupport: false,
-      noteMentionsPublishedFamily: true,
+      noteMentionsPublishedFamily: false,
       noteMentionsProxyAirborneHonesty: false,
       rawEstimateNotesMentionNearbyPublishedLineage: false,
-      rawEstimateNotesMentionCuratedLineage: true,
+      rawEstimateNotesMentionCuratedLineage: false,
       rawImpactNotesMentionLowConfidenceFallbackRecord: false,
-      rawImpactNotesMentionPublishedFamilyRecord: true,
-      rw: 63,
-      rwCtr: 57,
-      supportedTargetOutputs: ["Rw", "Ctr", "Ln,w"],
-      unsupportedTargetOutputs: ["DeltaLw"]
+      rawImpactNotesMentionPublishedFamilyRecord: false,
+      rw: 59,
+      rwCtr: 53.2,
+      supportedTargetOutputs: [],
+      unsupportedTargetOutputs: ["Rw", "Ctr", "Ln,w", "DeltaLw"]
     }
   },
   {
-    id: "carpet plus extra generic underlay remains formula-owned and unproven",
+    id: "carpet plus extra generic underlay parks impact until reinforced-concrete formula owners are complete",
     evaluate: () =>
       calculateImpactOnly([], {
         impactPredictorInput: {
@@ -318,13 +318,13 @@ const CASES: readonly CloseoutCase[] = [
     expected: {
       candidateIds: null,
       companionDeltaLwFromAnnexC: false,
-      floorRatingsBasis: "predictor_heavy_concrete_floor_airborne_companion_estimate",
+      floorRatingsBasis: "screening_mass_law_curve_seed_v3",
       floorSystemEstimateKind: null,
-      impactBasis: "predictor_heavy_bare_floor_iso12354_annexc_estimate",
+      impactBasis: null,
       impactDeltaLw: null,
-      impactLnW: 72,
+      impactLnW: null,
       metricBasisDeltaLw: null,
-      metricBasisLnW: "predictor_bare_massive_floor_iso12354_annexc_estimate",
+      metricBasisLnW: null,
       noteMentionsLowConfidenceFallback: false,
       noteMentionsNearbyRowRankingSupport: false,
       noteMentionsPublishedFamily: false,
@@ -335,12 +335,12 @@ const CASES: readonly CloseoutCase[] = [
       rawImpactNotesMentionPublishedFamilyRecord: false,
       rw: 59,
       rwCtr: 53.2,
-      supportedTargetOutputs: ["Ln,w"],
-      unsupportedTargetOutputs: ["Rw", "Ctr", "DeltaLw"]
+      supportedTargetOutputs: [],
+      unsupportedTargetOutputs: ["Rw", "Ctr", "Ln,w", "DeltaLw"]
     }
   },
   {
-    id: "timber-underlay archetype keeps DeltaLw unsupported",
+    id: "timber-underlay archetype keeps airborne screening but parks impact owners",
     evaluate: () =>
       calculateAssembly(
         [
@@ -357,31 +357,31 @@ const CASES: readonly CloseoutCase[] = [
         }
       ),
     expected: {
-      candidateIds: ["knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"],
+      candidateIds: null,
       companionDeltaLwFromAnnexC: false,
-      floorRatingsBasis: "predictor_floor_system_family_archetype_estimate",
-      floorSystemEstimateKind: "family_archetype",
-      impactBasis: "predictor_floor_system_family_archetype_estimate",
+      floorRatingsBasis: "screening_mass_law_curve_seed_v3",
+      floorSystemEstimateKind: null,
+      impactBasis: null,
       impactDeltaLw: null,
-      impactLnW: 51,
+      impactLnW: null,
       metricBasisDeltaLw: null,
-      metricBasisLnW: "predictor_floor_system_family_archetype_estimate",
+      metricBasisLnW: null,
       noteMentionsLowConfidenceFallback: false,
       noteMentionsNearbyRowRankingSupport: false,
-      noteMentionsPublishedFamily: true,
+      noteMentionsPublishedFamily: false,
       noteMentionsProxyAirborneHonesty: false,
       rawEstimateNotesMentionNearbyPublishedLineage: false,
-      rawEstimateNotesMentionCuratedLineage: true,
+      rawEstimateNotesMentionCuratedLineage: false,
       rawImpactNotesMentionLowConfidenceFallbackRecord: false,
-      rawImpactNotesMentionPublishedFamilyRecord: true,
-      rw: 63,
-      rwCtr: 57,
-      supportedTargetOutputs: ["Rw", "Ctr", "Ln,w"],
-      unsupportedTargetOutputs: ["DeltaLw"]
+      rawImpactNotesMentionPublishedFamilyRecord: false,
+      rw: 60,
+      rwCtr: 53.5,
+      supportedTargetOutputs: ["Rw", "Ctr"],
+      unsupportedTargetOutputs: ["Ln,w", "DeltaLw"]
     }
   },
   {
-    id: "vinyl plus elastic ceiling remains low-confidence",
+    id: "vinyl plus elastic ceiling parks the old low-confidence branch",
     evaluate: () =>
       calculateImpactOnly([], {
         impactPredictorInput: {
@@ -413,31 +413,27 @@ const CASES: readonly CloseoutCase[] = [
         targetOutputs: ["Rw", "Ctr", "Ln,w"]
       }),
     expected: {
-      candidateIds: [
-        "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
-        "euracoustics_f1_rigid_ceiling_concrete_lab_2026",
-        "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
-      ],
+      candidateIds: null,
       companionDeltaLwFromAnnexC: false,
-      floorRatingsBasis: "predictor_floor_system_low_confidence_estimate",
-      floorSystemEstimateKind: "low_confidence",
-      impactBasis: "predictor_floor_system_low_confidence_estimate",
+      floorRatingsBasis: "screening_mass_law_curve_seed_v3",
+      floorSystemEstimateKind: null,
+      impactBasis: null,
       impactDeltaLw: null,
-      impactLnW: 50,
+      impactLnW: null,
       metricBasisDeltaLw: null,
-      metricBasisLnW: "predictor_floor_system_low_confidence_estimate",
-      noteMentionsLowConfidenceFallback: true,
-      noteMentionsNearbyRowRankingSupport: true,
+      metricBasisLnW: null,
+      noteMentionsLowConfidenceFallback: false,
+      noteMentionsNearbyRowRankingSupport: false,
       noteMentionsPublishedFamily: false,
-      noteMentionsProxyAirborneHonesty: true,
-      rawEstimateNotesMentionNearbyPublishedLineage: true,
+      noteMentionsProxyAirborneHonesty: false,
+      rawEstimateNotesMentionNearbyPublishedLineage: false,
       rawEstimateNotesMentionCuratedLineage: false,
-      rawImpactNotesMentionLowConfidenceFallbackRecord: true,
+      rawImpactNotesMentionLowConfidenceFallbackRecord: false,
       rawImpactNotesMentionPublishedFamilyRecord: false,
-      rw: 65.9,
-      rwCtr: 57,
-      supportedTargetOutputs: ["Rw", "Ctr", "Ln,w"],
-      unsupportedTargetOutputs: []
+      rw: 60,
+      rwCtr: 53.8,
+      supportedTargetOutputs: [],
+      unsupportedTargetOutputs: ["Rw", "Ctr", "Ln,w"]
     }
   }
 ];

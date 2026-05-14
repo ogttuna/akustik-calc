@@ -3,6 +3,7 @@ import type { AssemblyCalculation } from "@dynecho/shared";
 import { getGateARAirborneBuildingPredictionSurface } from "./airborne-building-prediction-surface";
 import { getGateIAirborneFieldContextSurface } from "./airborne-field-context-surface";
 import { getGateSOpeningLeakCompositeSurface } from "./opening-leak-composite-surface";
+import { getCompanyInternalOpeningLeakFieldBuildingSurface } from "./opening-leak-field-building-surface";
 import type {
   SimpleWorkbenchProposalCoverageItem,
   SimpleWorkbenchProposalLayer
@@ -109,10 +110,14 @@ function buildAirborneTraceGroup(result: AssemblyCalculation | null): SimpleWork
   const noteSelection = selectSimpleWorkbenchTraceNotes(trace.notes, {
     fallbackNotes: [`Strategy ${trace.strategy.replaceAll("_", " ")} selected ${trace.selectedLabel}.`]
   });
+  const companyInternalOpeningLeakFieldBuildingSurface =
+    getCompanyInternalOpeningLeakFieldBuildingSurface(result);
   const gateARBuildingSurface = getGateARAirborneBuildingPredictionSurface(result);
   const gateISurface = getGateIAirborneFieldContextSurface(result);
   const gateSOpeningLeakSurface = getGateSOpeningLeakCompositeSurface(result);
-  const notes = gateSOpeningLeakSurface
+  const notes = companyInternalOpeningLeakFieldBuildingSurface
+    ? [...noteSelection.notes.slice(0, 2), ...companyInternalOpeningLeakFieldBuildingSurface.notes]
+    : gateSOpeningLeakSurface
     ? [...noteSelection.notes.slice(0, 2), ...gateSOpeningLeakSurface.notes]
     : gateARBuildingSurface
       ? [...noteSelection.notes.slice(0, 2), ...gateARBuildingSurface.notes]
@@ -124,7 +129,9 @@ function buildAirborneTraceGroup(result: AssemblyCalculation | null): SimpleWork
     detail:
       `${trace.detectedFamilyLabel} with ${formatPercent(trace.confidenceScore)} ${trace.confidenceClass} confidence. ` +
       `${formatDb(trace.solverSpreadRwDb)} solver spread across ${trace.candidateMethods.length} candidate method${trace.candidateMethods.length === 1 ? "" : "s"}.` +
-      (gateSOpeningLeakSurface
+      (companyInternalOpeningLeakFieldBuildingSurface
+        ? ` ${companyInternalOpeningLeakFieldBuildingSurface.detail}`
+        : gateSOpeningLeakSurface
         ? ` ${gateSOpeningLeakSurface.detail}`
         : gateARBuildingSurface
           ? ` ${gateARBuildingSurface.detail}`
@@ -134,7 +141,12 @@ function buildAirborneTraceGroup(result: AssemblyCalculation | null): SimpleWork
     label: "Airborne lane",
     notes,
     tone: mapAirborneTone(trace.confidenceClass),
-    value: gateSOpeningLeakSurface?.label ?? gateARBuildingSurface?.label ?? gateISurface?.label ?? trace.selectedLabel
+    value:
+      companyInternalOpeningLeakFieldBuildingSurface?.label ??
+      gateSOpeningLeakSurface?.label ??
+      gateARBuildingSurface?.label ??
+      gateISurface?.label ??
+      trace.selectedLabel
   };
 }
 

@@ -120,12 +120,12 @@ const PAIR_CASES: readonly PairCase[] = [
       building: {
         c: -0.9,
         ctr: -6,
-        dnA: 53.1,
-        dnTA: 55.6,
-        dnTw: 57,
-        dnW: 54,
+        dnA: null,
+        dnTA: null,
+        dnTw: null,
+        dnW: null,
         rw: 55,
-        rwPrime: 55,
+        rwPrime: null,
         strategy: "stud_surrogate_blend+framed_wall_calibration+reinforcement_monotonic_floor"
       }
     }
@@ -163,12 +163,12 @@ const PAIR_CASES: readonly PairCase[] = [
       building: {
         c: -1,
         ctr: -5.8,
-        dnA: 48,
-        dnTA: 50.5,
-        dnTw: 51,
-        dnW: 49,
+        dnA: null,
+        dnTA: null,
+        dnTw: null,
+        dnW: null,
         rw: 50,
-        rwPrime: 50,
+        rwPrime: null,
         strategy: "stud_surrogate_blend+framed_wall_calibration"
       }
     }
@@ -301,7 +301,7 @@ describe("wall resilient-bar side-count blind audit", () => {
             explicitBothSidesEval.warnings.some((warning) => /Curated exact airborne lab match active/i.test(warning)),
             `${pair.pairId} both-sides exact warning`
           ).toBe(true);
-        } else {
+        } else if (contextId === "field") {
           expect(
             explicitBothSidesEval.rwPrime! - explicitOneSideEval.rwPrime!,
             `${pair.pairId} ${contextId} explicit R'w delta`
@@ -322,6 +322,11 @@ describe("wall resilient-bar side-count blind audit", () => {
             explicitBothSidesEval.warnings.some((warning) => /Curated airborne lab fallback active/i.test(warning)),
             `${pair.pairId} both-sides lab fallback warning`
           ).toBe(true);
+        } else {
+          expect(explicitOneSideEval.rwPrime, `${pair.pairId} building one-side R'w parked`).toBeNull();
+          expect(explicitBothSidesEval.rwPrime, `${pair.pairId} building both-sides R'w parked`).toBeNull();
+          expect(explicitOneSideEval.dnW, `${pair.pairId} building one-side Dn,w parked`).toBeNull();
+          expect(explicitBothSidesEval.dnW, `${pair.pairId} building both-sides Dn,w parked`).toBeNull();
         }
       }
     }

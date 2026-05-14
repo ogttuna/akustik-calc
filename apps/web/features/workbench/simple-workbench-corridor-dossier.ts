@@ -5,6 +5,7 @@ import { getGateIAirborneFieldContextSurface } from "./airborne-field-context-su
 import { getFieldAirborneProvenanceSummary } from "./field-airborne-provenance";
 import { getGateAYAdvancedWallSurface } from "./advanced-wall-source-absent-surface";
 import { getGateSOpeningLeakCompositeSurface } from "./opening-leak-composite-surface";
+import { getCompanyInternalOpeningLeakFieldBuildingSurface } from "./opening-leak-field-building-surface";
 import type { StudyMode } from "./preset-definitions";
 import { getScenarioCorridorSummary, getValidationPostureTone } from "./scenario-corridor-summary";
 import {
@@ -278,8 +279,11 @@ function buildWallCorridorDossier(result: AssemblyCalculation): SimpleWorkbenchC
   const gateISurface = getGateIAirborneFieldContextSurface(result);
   const gateAYAdvancedWallSurface = getGateAYAdvancedWallSurface(result);
   const gateSOpeningLeakSurface = getGateSOpeningLeakCompositeSurface(result);
+  const companyInternalOpeningLeakFieldBuildingSurface =
+    getCompanyInternalOpeningLeakFieldBuildingSurface(result);
   const trace = result.dynamicAirborneTrace ?? null;
   const laneValue =
+    companyInternalOpeningLeakFieldBuildingSurface?.label ??
     gateAYAdvancedWallSurface?.label ??
     gateSOpeningLeakSurface?.label ??
     gateARBuildingSurface?.label ??
@@ -293,7 +297,7 @@ function buildWallCorridorDossier(result: AssemblyCalculation): SimpleWorkbenchC
     cards: [
       {
         detail: trace
-          ? `${trace.detectedFamilyLabel} is the current airborne family read across ${formatCount(trace.candidateMethods.length, "candidate method")} with ${formatPercent(trace.confidenceScore)} confidence.${gateAYAdvancedWallSurface ? ` ${gateAYAdvancedWallSurface.detail}` : gateSOpeningLeakSurface ? ` ${gateSOpeningLeakSurface.detail}` : gateARBuildingSurface ? ` ${gateARBuildingSurface.detail}` : gateISurface ? ` ${gateISurface.detail}` : ""}`
+          ? `${trace.detectedFamilyLabel} is the current airborne family read across ${formatCount(trace.candidateMethods.length, "candidate method")} with ${formatPercent(trace.confidenceScore)} confidence.${companyInternalOpeningLeakFieldBuildingSurface ? ` ${companyInternalOpeningLeakFieldBuildingSurface.detail}` : gateAYAdvancedWallSurface ? ` ${gateAYAdvancedWallSurface.detail}` : gateSOpeningLeakSurface ? ` ${gateSOpeningLeakSurface.detail}` : gateARBuildingSurface ? ` ${gateARBuildingSurface.detail}` : gateISurface ? ` ${gateISurface.detail}` : ""}`
           : `${laneValue} remains the local airborne curve anchor. No family-ranked dynamic selector is attached yet.`,
         label: "Airborne lane",
         tone: trace ? mapAirborneConfidenceTone(trace.confidenceClass) : "neutral",
@@ -317,11 +321,13 @@ function buildWallCorridorDossier(result: AssemblyCalculation): SimpleWorkbenchC
       },
       {
         detail: provenance
-          ? `${provenance.label}. ${provenance.detail}${gateARBuildingSurface ? ` ${gateARBuildingSurface.candidateId} keeps ${gateARBuildingSurface.budgetLabel} visible.` : gateISurface ? ` ${gateISurface.candidateId} keeps ${gateISurface.budgetLabel} visible.` : ""}`
+          ? `${provenance.label}. ${provenance.detail}${companyInternalOpeningLeakFieldBuildingSurface ? ` ${companyInternalOpeningLeakFieldBuildingSurface.candidateId} keeps ${companyInternalOpeningLeakFieldBuildingSurface.budgetLabel} visible.` : gateARBuildingSurface ? ` ${gateARBuildingSurface.candidateId} keeps ${gateARBuildingSurface.budgetLabel} visible.` : gateISurface ? ` ${gateISurface.candidateId} keeps ${gateISurface.budgetLabel} visible.` : ""}`
           : gateSOpeningLeakSurface
             ? `${gateSOpeningLeakSurface.label} is lab-side only. ${gateSOpeningLeakSurface.detail}`
             : gateAYAdvancedWallSurface
               ? `${gateAYAdvancedWallSurface.label} is lab-side only. ${gateAYAdvancedWallSurface.detail}`
+            : companyInternalOpeningLeakFieldBuildingSurface
+              ? `${companyInternalOpeningLeakFieldBuildingSurface.label} is field/building-side opening/leak only. ${companyInternalOpeningLeakFieldBuildingSurface.detail}`
             : gateARBuildingSurface
               ? `${gateARBuildingSurface.label} is building-prediction only. ${gateARBuildingSurface.detail}`
             : "No apparent-field or room-standardized airborne continuation is active on this wall route yet. Add geometry and room context before treating the read as an on-site apparent-field claim.",
@@ -337,7 +343,7 @@ function buildWallCorridorDossier(result: AssemblyCalculation): SimpleWorkbenchC
           ? `${trace.selectedLabel} is screening ${trace.detectedFamilyLabel} at ${formatPercent(trace.confidenceScore)} confidence with ${trace.solverSpreadRwDb} dB selector spread. `
           : `${laneValue} remains the active local curve anchor without a family-ranked airborne selector. `
       }` +
-      `${provenance ? `${provenance.modeLabel} stays explicit on the field-side airborne chain${gateARBuildingSurface ? ` with ${gateARBuildingSurface.label}.` : gateISurface ? ` with ${gateISurface.label}.` : "."}` : gateAYAdvancedWallSurface ? `${gateAYAdvancedWallSurface.label} stays explicit as a lab-side advanced-wall route.` : gateSOpeningLeakSurface ? `${gateSOpeningLeakSurface.label} stays explicit as a lab-side opening/leak route.` : gateARBuildingSurface ? `${gateARBuildingSurface.label} stays explicit as a building-prediction route.` : "No field-side airborne continuation is active, so this route should still be read as lab-side only."}`
+      `${provenance ? `${provenance.modeLabel} stays explicit on the field-side airborne chain${companyInternalOpeningLeakFieldBuildingSurface ? ` with ${companyInternalOpeningLeakFieldBuildingSurface.label}.` : gateARBuildingSurface ? ` with ${gateARBuildingSurface.label}.` : gateISurface ? ` with ${gateISurface.label}.` : "."}` : gateAYAdvancedWallSurface ? `${gateAYAdvancedWallSurface.label} stays explicit as a lab-side advanced-wall route.` : gateSOpeningLeakSurface ? `${gateSOpeningLeakSurface.label} stays explicit as a lab-side opening/leak route.` : companyInternalOpeningLeakFieldBuildingSurface ? `${companyInternalOpeningLeakFieldBuildingSurface.label} stays explicit as an opening/leak field/building route.` : gateARBuildingSurface ? `${gateARBuildingSurface.label} stays explicit as a building-prediction route.` : "No field-side airborne continuation is active, so this route should still be read as lab-side only."}`
   };
 }
 
