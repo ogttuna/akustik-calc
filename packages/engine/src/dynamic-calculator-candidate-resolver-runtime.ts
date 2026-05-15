@@ -57,6 +57,8 @@ import {
   GATE_AR_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID
 } from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
 import {
+  COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD,
+  COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_SELECTED_CANDIDATE_ID,
   COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD,
   COMPANY_INTERNAL_OPENING_LEAK_BUILDING_SELECTED_CANDIDATE_ID,
   COMPANY_INTERNAL_OPENING_LEAK_FIELD_RUNTIME_METHOD,
@@ -506,6 +508,7 @@ function selectLane(input: {
 
   if (input.assessment.outputBasis === "building_prediction") {
     return input.runtimeSignal?.airborneBasis?.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD ||
+      input.runtimeSignal?.airborneBasis?.method === COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD ||
       input.runtimeSignal?.airborneBasis?.method === COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD
       ? "family_physics"
       : "unsupported";
@@ -534,6 +537,10 @@ function familyPhysicsCandidateId(runtimeBasis?: AirborneResultBasis): string {
 
   if (runtimeBasis?.method === COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD) {
     return COMPANY_INTERNAL_OPENING_LEAK_BUILDING_SELECTED_CANDIDATE_ID;
+  }
+
+  if (runtimeBasis?.method === COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD) {
+    return COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_SELECTED_CANDIDATE_ID;
   }
 
   if (runtimeBasis?.method === COMPANY_INTERNAL_OPENING_LEAK_FIELD_RUNTIME_METHOD) {

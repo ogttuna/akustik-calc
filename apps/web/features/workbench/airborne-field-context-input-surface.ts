@@ -19,6 +19,7 @@ export const WORKBENCH_AIRBORNE_FIELD_CONTEXT_INPUT_LABELS: Partial<Record<Acous
   buildingPredictionOutputBasis: "Building output basis",
   conservativeFlankingAssumption: "Conservative flanking assumption",
   contextMode: "Context mode",
+  frequencyBandSet: "Frequency band set",
   flankingJunctionClass: "Flanking/junction class",
   junctionCouplingLengthM: "Junction coupling length",
   partitionAreaM2: "Partition width and height",
@@ -28,6 +29,8 @@ export const WORKBENCH_AIRBORNE_FIELD_CONTEXT_INPUT_LABELS: Partial<Record<Acous
 };
 
 const AIRBORNE_FIELD_OUTPUTS = new Set<RequestedOutputId>(["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "DnT,A,k"]);
+
+export type WorkbenchAirborneFrequencyBandSet = "" | "third_octave_100_3150";
 
 export type WorkbenchAirborneFieldContextInputSurfaceDraft = {
   airtightness?: AirtightnessClass;
@@ -48,6 +51,7 @@ export type WorkbenchAirborneFieldContextInputSurfaceDraft = {
   buildingPredictionOutputBasis?: AirborneBuildingPredictionOutputBasis;
   conservativeFlankingAssumption?: AirborneConservativeFlankingAssumption;
   contextMode: AirborneContextMode;
+  frequencyBandSet?: WorkbenchAirborneFrequencyBandSet;
   flankingJunctionClass?: AirborneFlankingJunctionClass;
   junctionCouplingLengthM?: string;
   panelHeightMm: string;
@@ -85,6 +89,7 @@ export function buildWorkbenchAirborneFieldContextInputSurface(input: {
     buildingPredictionOutputBasis: input.surface.buildingPredictionOutputBasis,
     conservativeFlankingAssumption: input.surface.conservativeFlankingAssumption,
     contextMode: input.surface.contextMode,
+    frequencyBandSet: input.surface.frequencyBandSet || input.surface.baseContext?.frequencyBandSet,
     flankingJunctionClass: input.surface.flankingJunctionClass,
     junctionCouplingLengthM,
     panelHeightMm,

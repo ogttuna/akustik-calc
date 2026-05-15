@@ -139,7 +139,7 @@ describe("getDynamicCalcBranchSummary", () => {
     expect(summary.detail).toContain("Dry floating floor topology");
   });
 
-  it("keeps the steel suspended sample on the upstream low-confidence lane", () => {
+  it("keeps the steel suspended sample on the published family-archetype lane", () => {
     const scenario = evaluatePreset("steel_suspended_fallback");
 
     const summary = getDynamicCalcBranchSummary({
@@ -148,9 +148,9 @@ describe("getDynamicCalcBranchSummary", () => {
     });
 
     expect(summary.value).toBe("Suspended ceiling only");
-    expect(summary.tone).toBe("warning");
-    expect(summary.detail).toContain("Low-confidence fallback · lightweight steel is active.");
-    expect(summary.detail).toContain("Final published-family fallback");
+    expect(summary.tone).toBe("neutral");
+    expect(summary.detail).toContain("Published family estimate is active through Archetype family · lightweight steel.");
+    expect(summary.detail).toContain("Same-family archetype estimate on the suspended ceiling only topology.");
   });
 
   it("keeps support-form-unspecified lightweight steel bounds explicit as crossover support", () => {

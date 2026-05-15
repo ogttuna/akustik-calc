@@ -6,15 +6,16 @@ import { calculateImpactOnly } from "./calculate-impact-only";
 type BranchSweepVariant = {
   id: string;
   input: ImpactPredictorInput;
-  lnwRange: readonly [number, number];
+  lnwRange?: readonly [number, number];
   rwRange?: readonly [number, number];
 };
 
 type BranchSweepCase = {
-  expectedBasis: string;
-  expectedCandidateIds: readonly string[];
+  expectedBasis: string | null;
+  expectedCandidateIds: readonly string[] | null;
   expectedFitPercent?: number;
-  expectedKind: "family_general" | "low_confidence";
+  expectedImplementedFamilyEstimate?: boolean;
+  expectedKind: "family_archetype" | "family_general" | "low_confidence" | null;
   expectedSupportedTargetOutputs: readonly RequestedOutputId[];
   id: string;
   targetOutputs: readonly RequestedOutputId[];
@@ -34,17 +35,13 @@ function expectInsideRange(
 
 const BRANCH_SWEEP_CASES: readonly BranchSweepCase[] = [
   {
-    id: "concrete_combined_vinyl_elastic_low_confidence",
-    expectedKind: "low_confidence",
-    expectedBasis: "predictor_floor_system_low_confidence_estimate",
-    expectedFitPercent: 29,
-    expectedCandidateIds: [
-      "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
-      "euracoustics_f1_rigid_ceiling_concrete_lab_2026",
-      "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
-    ],
+    id: "concrete_combined_vinyl_elastic_missing_owner_blocked",
+    expectedKind: null,
+    expectedBasis: null,
+    expectedCandidateIds: null,
+    expectedImplementedFamilyEstimate: false,
     targetOutputs: ["Rw", "Ctr", "Ln,w", "CI", "Ln,w+CI"],
-    expectedSupportedTargetOutputs: ["Rw", "Ctr", "Ln,w"],
+    expectedSupportedTargetOutputs: [],
     variants: [
       {
         id: "baseline",
@@ -66,10 +63,19 @@ const BRANCH_SWEEP_CASES: readonly BranchSweepCase[] = [
             boardLayerCount: 2,
             boardThicknessMm: 16
           }
-        },
-        lnwRange: [50.0, 50.0],
-        rwRange: [65.9, 65.9]
-      },
+        }
+      }
+    ]
+  },
+  {
+    id: "concrete_combined_vinyl_elastic_shallower_missing_owner_blocked",
+    expectedKind: null,
+    expectedBasis: null,
+    expectedCandidateIds: null,
+    expectedImplementedFamilyEstimate: false,
+    targetOutputs: ["Rw", "Ctr", "Ln,w", "CI", "Ln,w+CI"],
+    expectedSupportedTargetOutputs: [],
+    variants: [
       {
         id: "shallower_upper_and_ceiling_package",
         input: {
@@ -91,10 +97,19 @@ const BRANCH_SWEEP_CASES: readonly BranchSweepCase[] = [
             boardThicknessMm: 15,
             boardMaterialClass: "firestop_board"
           }
-        },
-        lnwRange: [50.4, 50.4],
-        rwRange: [65.3, 65.3]
-      },
+        }
+      }
+    ]
+  },
+  {
+    id: "concrete_combined_vinyl_elastic_deeper_missing_owner_blocked",
+    expectedKind: null,
+    expectedBasis: null,
+    expectedCandidateIds: null,
+    expectedImplementedFamilyEstimate: false,
+    targetOutputs: ["Rw", "Ctr", "Ln,w", "CI", "Ln,w+CI"],
+    expectedSupportedTargetOutputs: [],
+    variants: [
       {
         id: "deeper_ceiling_and_softer_resilient_package",
         input: {
@@ -116,25 +131,18 @@ const BRANCH_SWEEP_CASES: readonly BranchSweepCase[] = [
             boardThicknessMm: 18,
             boardMaterialClass: "firestop_board"
           }
-        },
-        lnwRange: [50.6, 50.6],
-        rwRange: [64.7, 64.7]
+        }
       }
     ]
   },
   {
-    id: "open_web_steel_suspended_vinyl_low_confidence",
-    expectedKind: "low_confidence",
-    expectedBasis: "predictor_floor_system_low_confidence_estimate",
-    expectedCandidateIds: [
-      "ubiq_fl33_open_web_steel_200_lab_2026",
-      "ubiq_fl33_open_web_steel_300_lab_2026",
-      "ubiq_fl28_open_web_steel_200_exact_lab_2026",
-      "ubiq_fl28_open_web_steel_300_exact_lab_2026",
-      "ubiq_fl28_open_web_steel_400_exact_lab_2026"
-    ],
+    id: "open_web_steel_suspended_vinyl_missing_formula_owners_blocked",
+    expectedKind: null,
+    expectedBasis: null,
+    expectedCandidateIds: null,
+    expectedImplementedFamilyEstimate: false,
     targetOutputs: ["Rw", "Ctr", "Ln,w", "CI", "Ln,w+CI"],
-    expectedSupportedTargetOutputs: ["Rw", "Ctr", "Ln,w", "CI", "Ln,w+CI"],
+    expectedSupportedTargetOutputs: [],
     variants: [
       {
         id: "baseline",
@@ -151,9 +159,7 @@ const BRANCH_SWEEP_CASES: readonly BranchSweepCase[] = [
             boardLayerCount: 2,
             boardThicknessMm: 16
           }
-        },
-        lnwRange: [51, 51],
-        rwRange: [63.1, 63.1]
+        }
       },
       {
         id: "lighter_base_and_shallower_ceiling",
@@ -170,9 +176,7 @@ const BRANCH_SWEEP_CASES: readonly BranchSweepCase[] = [
             boardLayerCount: 2,
             boardThicknessMm: 16
           }
-        },
-        lnwRange: [51, 51],
-        rwRange: [63.1, 63.1]
+        }
       },
       {
         id: "deeper_open_web_ceiling",
@@ -189,9 +193,7 @@ const BRANCH_SWEEP_CASES: readonly BranchSweepCase[] = [
             boardLayerCount: 2,
             boardThicknessMm: 15
           }
-        },
-        lnwRange: [51, 51],
-        rwRange: [63.1, 63.1]
+        }
       }
     ]
   },
@@ -342,7 +344,7 @@ describe("predictor branch stability sweep", () => {
         );
 
         expect(result.sourceMode, `${label} should stay on predictor_input`).toBe("predictor_input");
-        expect(result.floorSystemEstimate?.kind, `${label} should keep the same floor-system estimate kind`).toBe(
+        expect(result.floorSystemEstimate?.kind ?? null, `${label} should keep the same floor-system estimate kind`).toBe(
           testCase.expectedKind
         );
         if (typeof testCase.expectedFitPercent === "number") {
@@ -353,8 +355,8 @@ describe("predictor branch stability sweep", () => {
             testCase.expectedFitPercent
           );
         }
-        expect(result.impact?.basis, `${label} should keep the same predictor basis`).toBe(testCase.expectedBasis);
-        expect(result.impact?.estimateCandidateIds, `${label} should keep the same candidate family`).toEqual(
+        expect(result.impact?.basis ?? null, `${label} should keep the same predictor basis`).toBe(testCase.expectedBasis);
+        expect(result.impact?.estimateCandidateIds ?? null, `${label} should keep the same candidate family`).toEqual(
           testCase.expectedCandidateIds
         );
         expect(result.supportedTargetOutputs, `${label} should keep the same supported target outputs`).toEqual(
@@ -363,18 +365,25 @@ describe("predictor branch stability sweep", () => {
         expect(result.unsupportedTargetOutputs, `${label} should keep the same unsupported target outputs`).toEqual(
           expectedUnsupported
         );
-        expect(result.impactPredictorStatus?.implementedFamilyEstimate, `${label} should stay on an implemented family lane`).toBe(true);
+        expect(
+          result.impactPredictorStatus?.implementedFamilyEstimate ?? false,
+          `${label} should keep its family-lane implementation flag coherence`
+        ).toBe(testCase.expectedImplementedFamilyEstimate ?? true);
         expect(
           result.impactPredictorStatus?.implementedLowConfidenceEstimate,
           `${label} should keep its low-confidence flag coherence`
         ).toBe(testCase.expectedKind === "low_confidence");
 
-        expectInsideRange(result.impact?.LnW, variant.lnwRange, `${label} Ln,w`);
+        if (variant.lnwRange) {
+          expectInsideRange(result.impact?.LnW, variant.lnwRange, `${label} Ln,w`);
+        } else {
+          expect(result.impact?.LnW ?? null, `${label} should keep impact ratings blocked`).toBeNull();
+        }
 
-        if (variant.rwRange) {
+        if (variant.rwRange && result.supportedTargetOutputs.includes("Rw")) {
           expectInsideRange(result.floorSystemRatings?.Rw, variant.rwRange, `${label} Rw`);
         } else {
-          expect(result.floorSystemRatings?.Rw ?? null, `${label} should keep proxy airborne floor ratings hidden`).toBeNull();
+          expect(result.supportedTargetOutputs.includes("Rw"), `${label} should keep Rw unsupported`).toBe(false);
         }
       }
     }

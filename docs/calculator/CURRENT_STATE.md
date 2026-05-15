@@ -238,6 +238,9 @@ input-surface checkpoint read
 If you need the latest checkpoint review and validation stopping point
 read
 [CHECKPOINT_2026-05-15_COMPANY_INTERNAL_CHECKPOINT_REVIEW_AND_VALIDATION.md](./CHECKPOINT_2026-05-15_COMPANY_INTERNAL_CHECKPOINT_REVIEW_AND_VALIDATION.md).
+If you need the current remaining-gap analysis and concrete
+company-internal readiness sequence read
+[CHECKPOINT_2026-05-15_COMPANY_INTERNAL_REMAINING_GAP_ANALYSIS_AND_PLAN.md](./CHECKPOINT_2026-05-15_COMPANY_INTERNAL_REMAINING_GAP_ANALYSIS_AND_PLAN.md).
 
 ---
 
@@ -597,12 +600,111 @@ Latest landed opening/leak A-weighted spectrum-adapter owner:
   A-weighted uncertainty budget, exact A-weighted packet precedence,
   and the lab `Rw` / `STC` alias guard.
 - Building `Dn,A` remains outside this owner.
-- Current selected next action:
+- Owner selected next action, now landed:
   `company_internal_opening_leak_a_weighted_spectrum_adapter_formula_corridor_plan`.
-- Current selected next file:
+- Owner selected next file, now landed:
   `packages/engine/src/company-internal-opening-leak-a-weighted-spectrum-adapter-formula-corridor-contract.test.ts`.
-- Current selected next label:
+- Owner selected next label, now landed:
   opening/leak Dn,A / DnT,A spectrum-adapter formula corridor.
+
+Latest landed opening/leak A-weighted formula corridor:
+
+- `company_internal_opening_leak_a_weighted_spectrum_adapter_formula_corridor_plan`
+  has landed.
+- Selection status:
+  `company_internal_opening_leak_a_weighted_spectrum_adapter_formula_corridor_landed_no_runtime_selected_runtime_corridor`.
+- This is a no-runtime formula corridor. It defines field `Dn,A 35.9`,
+  field `DnT,A 36.1`, and building `DnT,A 31.3` from the same-route
+  base values plus the owned `-0.8 dB` A-weighted adapter.
+- Field A-weighted budget is base `+/-8 dB` plus `+/-1 dB` adapter
+  term, total `+/-9 dB`. Building A-weighted budget is base `+/-10 dB`
+  plus `+/-1 dB` adapter term, total `+/-11 dB`.
+- Formula selected next action, now landed:
+  `company_internal_opening_leak_a_weighted_spectrum_adapter_runtime_corridor_plan`.
+- Formula selected next file, now landed:
+  `packages/engine/src/company-internal-opening-leak-a-weighted-spectrum-adapter-runtime-corridor-contract.test.ts`.
+- Formula selected next label, now landed:
+  opening/leak Dn,A / DnT,A spectrum-adapter runtime corridor.
+
+Latest landed opening/leak A-weighted runtime corridor:
+
+- `company_internal_opening_leak_a_weighted_spectrum_adapter_runtime_corridor_plan`
+  has landed.
+- Selection status:
+  `company_internal_opening_leak_a_weighted_spectrum_adapter_runtime_corridor_landed_selected_surface_parity`.
+- The runtime now supports complete A-weighted opening/leak requests
+  when `frequencyBandSet` is present: field `Dn,A 35.9`, field
+  `DnT,A 36.1`, and building `DnT,A 31.3`.
+- Base values remain stable: field opening/leak `R'w 36.4` /
+  `Dn,w 36.7` / `DnT,w 36.9`; building opening/leak `R'w 31.6` /
+  `DnT,w 32.1`.
+- Field A-weighted budget is `+/-9 dB`; building A-weighted budget is
+  `+/-11 dB`; both remain source-absent and not measured evidence.
+- Missing `frequencyBandSet` keeps A-weighted outputs unsupported with a
+  precise missing-input warning. Building `Dn,A`, lab `Rw` / `STC`, and
+  ASTM `IIC` / `AIIC` remain non-alias boundaries.
+- Current selected next action, now landed:
+  `company_internal_opening_leak_a_weighted_spectrum_adapter_surface_parity_plan`.
+- Current selected next file, now landed:
+  `packages/engine/src/company-internal-opening-leak-a-weighted-spectrum-adapter-surface-parity-contract.test.ts`.
+- Current selected next label, now landed:
+  opening/leak Dn,A / DnT,A card/report/API parity.
+
+Latest landed opening/leak A-weighted surface parity:
+
+- `company_internal_opening_leak_a_weighted_spectrum_adapter_surface_parity_plan`
+  has landed.
+- Selection status:
+  `company_internal_opening_leak_a_weighted_spectrum_adapter_surface_parity_landed_selected_matrix_v6_refresh`.
+- Surface parity keeps field `Dn,A 35.9`, field `DnT,A 36.1`, and
+  building `DnT,A 31.3` frozen while exposing method/candidate ids,
+  `+/-9 dB` / `+/-11 dB` budgets, warning copy, and the frequency band set
+  across output cards, route posture, scenario summary, dossiers,
+  saved/server replay, API payloads, Markdown report, and the workbench
+  input surface.
+- Selected next action:
+  `company_internal_calculation_grade_mainline_matrix_v6_refresh_after_opening_leak_a_weighted_surface_parity_plan`.
+- Selected next file:
+  `packages/engine/src/company-internal-calculation-grade-mainline-matrix-v6-contract.test.ts`.
+- Selected next label:
+  company-internal matrix v6 refresh after opening/leak Dn,A / DnT,A surface parity.
+
+Latest landed company-internal Matrix V6 refresh:
+
+- `company_internal_calculation_grade_mainline_matrix_v6_refresh_after_opening_leak_a_weighted_surface_parity_plan`
+  has landed.
+- Selection status:
+  `company_internal_calculation_grade_mainline_matrix_v6_refresh_after_opening_leak_a_weighted_surface_parity_landed_selected_boundary_revalidation`.
+- Matrix V6 has 71 executable rows and retires
+  `wall.opening_leak_a_weighted_boundary.unsupported`.
+- It keeps field `Dn,A 35.9`, field `DnT,A 36.1`, and building
+  `DnT,A 31.3` frozen as source-absent family-physics values, while
+  building `Dn,A`, missing `frequencyBandSet`, lab aliases, ASTM
+  aliases, and exact-source precedence stay explicit boundary rows.
+- Current selected next action:
+  `company_internal_building_astm_boundary_revalidation_after_a_weighted_matrix_plan`.
+- Current selected next file:
+  `packages/engine/src/company-internal-building-astm-boundary-revalidation-contract.test.ts`.
+- Current selected next label:
+  building partial-context and ASTM parked-boundary revalidation.
+
+Latest landed building/ASTM boundary revalidation:
+
+- `company_internal_building_astm_boundary_revalidation_after_a_weighted_matrix_plan`
+  has landed.
+- Selection status:
+  `company_internal_building_astm_boundary_revalidation_after_a_weighted_matrix_landed_selected_final_internal_use_rehearsal`.
+- Building partial-context and opening/leak building missing-owner rows
+  remain precise `needs_input` rows with named physical owners such as
+  `sourceRoomVolumeM3`, no value pins, and no budget.
+- Floor ASTM `IIC` / `AIIC` rows and the airborne A-weighted-to-ASTM
+  alias row remain unsupported without ISO alias values or budgets.
+- Current selected next action:
+  `company_internal_final_internal_use_rehearsal_after_boundary_revalidation_plan`.
+- Current selected next file:
+  `packages/engine/src/company-internal-final-internal-use-rehearsal-contract.test.ts`.
+- Current selected next label:
+  final internal-use rehearsal and operating envelope.
 
 Latest roadmap sharpening:
 
@@ -616,6 +718,26 @@ true `unsupported`. They must not finish as `low_confidence`,
 lab/field/building alias. Source rows remain useful as exact overrides,
 calibration anchors, holdouts, and negative boundaries; broad source
 crawling is not the next mainline path.
+
+Current remaining-gap analysis:
+
+[CHECKPOINT_2026-05-15_COMPANY_INTERNAL_REMAINING_GAP_ANALYSIS_AND_PLAN.md](./CHECKPOINT_2026-05-15_COMPANY_INTERNAL_REMAINING_GAP_ANALYSIS_AND_PLAN.md)
+records the current 71-row Matrix V6 posture and the controlled
+internal-use sequence. The formula, runtime, surface, and Matrix V6
+steps and the building/ASTM boundary revalidation have now landed as
+`company_internal_opening_leak_a_weighted_spectrum_adapter_formula_corridor_plan`
+and
+`company_internal_opening_leak_a_weighted_spectrum_adapter_runtime_corridor_plan`,
+`company_internal_opening_leak_a_weighted_spectrum_adapter_surface_parity_plan`,
+and
+`company_internal_calculation_grade_mainline_matrix_v6_refresh_after_opening_leak_a_weighted_surface_parity_plan`,
+then
+`company_internal_building_astm_boundary_revalidation_after_a_weighted_matrix_plan`;
+the remaining sequence is final internal-use rehearsal. The previous
+implementation caveat is now closed: `frequencyBandSet` exists in the
+shared schema, engine runtime, workbench input surface, store, saved
+snapshot, server snapshot, live scenario assembly, cards, reports, and
+API payloads.
 
 Known audit corrections before calling the company-internal matrix final:
 

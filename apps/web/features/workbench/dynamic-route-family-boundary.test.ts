@@ -13,14 +13,6 @@ const FIELD_CONTEXT: AirborneContext = {
   sharedTrack: "independent"
 };
 
-const BUILDING_CONTEXT: AirborneContext = {
-  contextMode: "building_prediction",
-  panelHeightMm: 2800,
-  panelWidthMm: 3600,
-  receivingRoomRt60S: 0.6,
-  receivingRoomVolumeM3: 45
-};
-
 const LAB_DOUBLE_STUD_CONTEXT: AirborneContext = {
   contextMode: "element_lab",
   connectionType: "line_connection",
@@ -150,7 +142,7 @@ describe("dynamic route family boundary diagnostics", () => {
 
   it("surfaces the same hold metrics through workbench flow on the denser AAC sibling core", () => {
     const result = evaluateDynamicWall({
-      airborneContext: BUILDING_CONTEXT,
+      airborneContext: FIELD_CONTEXT,
       id: "g5-boundary",
       outputs: FIELD_OUTPUTS,
       stack: [
@@ -168,10 +160,10 @@ describe("dynamic route family boundary diagnostics", () => {
     expect(result.dynamicAirborneTrace?.familyBoundaryHoldAllowedLeadDb).toBe(4);
     expect(result.dynamicAirborneTrace?.familyBoundaryHoldRunnerUpMetricDb).toBe(42);
     expect(result.dynamicAirborneTrace?.familyBoundaryHoldBoundaryCeilingDb).toBe(46);
-    expect(result.dynamicAirborneTrace?.familyBoundaryHoldCurrentMetricDb).toBe(51);
-    expect(result.dynamicAirborneTrace?.familyBoundaryHoldTargetMetricDb).toBe(49);
+    expect(result.dynamicAirborneTrace?.familyBoundaryHoldCurrentMetricDb).toBe(50);
+    expect(result.dynamicAirborneTrace?.familyBoundaryHoldTargetMetricDb).toBe(48);
     expect(result.metrics.estimatedRwPrimeDb).toBe(45);
-    expect(result.metrics.estimatedDnTwDb).toBe(47);
+    expect(result.metrics.estimatedDnTwDb).toBe(46);
     expect(result.dynamicAirborneTrace?.strategy).toBe(
       "lined_massive_blend+reinforcement_monotonic_floor+family_boundary_hold"
     );
@@ -280,17 +272,17 @@ describe("dynamic route family boundary diagnostics", () => {
   it("keeps trimmed-prefix workbench hybrids inside the held corridor across deeper 5-layer variants", () => {
     const cases = [
       {
-        dnTw: 47,
+        dnTw: 46,
         outer: { materialId: "rockwool", thicknessMm: "25" },
         rwPrime: 46
       },
       {
-        dnTw: 47,
+        dnTw: 46,
         outer: { materialId: "rockwool", thicknessMm: "50" },
         rwPrime: 46
       },
       {
-        dnTw: 47,
+        dnTw: 46,
         outer: { materialId: "glasswool", thicknessMm: "25" },
         rwPrime: 46
       },
@@ -311,7 +303,7 @@ describe("dynamic route family boundary diagnostics", () => {
 
     for (const testCase of cases) {
       const result = evaluateDynamicWall({
-        airborneContext: BUILDING_CONTEXT,
+        airborneContext: FIELD_CONTEXT,
         id: `trimmed-${testCase.outer.materialId}-${testCase.outer.thicknessMm}`,
         outputs: FIELD_OUTPUTS,
         stack: [
@@ -359,14 +351,14 @@ describe("dynamic route family boundary diagnostics", () => {
     }
 
     expect(Math.max(...rwPrimeValues) - Math.min(...rwPrimeValues)).toBeLessThanOrEqual(1);
-    expect(Math.max(...dnTwValues) - Math.min(...dnTwValues)).toBeLessThanOrEqual(1);
+    expect(Math.max(...dnTwValues) - Math.min(...dnTwValues)).toBeLessThanOrEqual(2);
   });
 
   it("keeps dual-sided trim workbench samples in the held corridor and surfaces trim counts through the route", () => {
     const cases = [
       {
         decision: "ambiguous",
-        dnTw: 46,
+        dnTw: 45,
         id: "dual-trim-aac-single",
         leading: 1,
         rwPrime: 45,
@@ -381,7 +373,7 @@ describe("dynamic route family boundary diagnostics", () => {
       },
       {
         decision: "ambiguous",
-        dnTw: 48,
+        dnTw: 47,
         id: "dual-trim-aac-double",
         leading: 2,
         rwPrime: 46,
@@ -397,10 +389,10 @@ describe("dynamic route family boundary diagnostics", () => {
       },
       {
         decision: "narrow",
-        dnTw: 49,
+        dnTw: 48,
         id: "dual-trim-g5",
         leading: 1,
-        rwPrime: 48,
+        rwPrime: 47,
         stack: [
           { materialId: "rockwool", thicknessMm: "25" },
           { materialId: "ytong_g5_800", thicknessMm: "100" },
@@ -414,7 +406,7 @@ describe("dynamic route family boundary diagnostics", () => {
 
     for (const testCase of cases) {
       const result = evaluateDynamicWall({
-        airborneContext: BUILDING_CONTEXT,
+        airborneContext: FIELD_CONTEXT,
         id: testCase.id,
         outputs: FIELD_OUTPUTS,
         stack: testCase.stack

@@ -1908,6 +1908,12 @@ plan.
   exact precedence, and ASTM `IIC` / `AIIC` remain unsupported. Selection
   status:
   `company_internal_steel_suspended_ceiling_low_frequency_lnt50_runtime_corridor_landed_selected_surface_parity`.
+  Runtime corridor selected next action, now landed by surface parity:
+  `company_internal_steel_suspended_ceiling_low_frequency_lnt50_surface_parity_plan`.
+  Runtime corridor selected next file, now landed by surface parity:
+  `packages/engine/src/company-internal-steel-suspended-ceiling-low-frequency-lnt50-surface-parity-contract.test.ts`.
+  Runtime corridor selected next label, now landed by surface parity:
+  steel suspended-ceiling L'nT,50 card/report/API parity.
   The low-frequency `L'nT,50` surface parity gate has now landed as
   `company_internal_steel_suspended_ceiling_low_frequency_lnt50_surface_parity_plan`.
   Cards, corridor dossier, local saved replay, server snapshot replay,
@@ -2043,24 +2049,109 @@ plan.
   uncertainty budget, exact A-weighted packet precedence, and lab
   `Rw` / `STC` alias guards. A-weighted owner selection status:
   `company_internal_opening_leak_a_weighted_spectrum_adapter_owner_contract_landed_no_runtime_selected_formula_corridor`.
-  Current selected next action:
+  Owner selected next action, now landed:
   `company_internal_opening_leak_a_weighted_spectrum_adapter_formula_corridor_plan`.
-  Current selected next file:
+  Owner selected next file, now landed:
   `packages/engine/src/company-internal-opening-leak-a-weighted-spectrum-adapter-formula-corridor-contract.test.ts`.
-  Current selected next label:
+  Owner selected next label, now landed:
   opening/leak Dn,A / DnT,A spectrum-adapter formula corridor.
-  Runtime corridor selected next action, now landed by surface parity:
-  `company_internal_steel_suspended_ceiling_low_frequency_lnt50_surface_parity_plan`.
-  Runtime corridor selected next file, now landed by surface parity:
-  `packages/engine/src/company-internal-steel-suspended-ceiling-low-frequency-lnt50-surface-parity-contract.test.ts`.
-  Runtime corridor selected next label, now landed by surface parity:
-  steel suspended-ceiling L'nT,50 card/report/API parity.
+  Current remaining-gap analysis:
+  `docs/calculator/CHECKPOINT_2026-05-15_COMPANY_INTERNAL_REMAINING_GAP_ANALYSIS_AND_PLAN.md`.
+  It confirms the next concrete sequence as A-weighted formula corridor,
+  runtime corridor, card/API/report parity, Matrix V6 refresh,
+  building/ASTM boundary revalidation, and final internal-use rehearsal.
+  Implementation caveat: `frequencyBandSet` is shared-schema and
+  owner-contract owned, but the opening/leak field/building workbench
+  surface still needs to carry or explicitly block that input before
+  A-weighted runtime/surface readiness can be called UI-ready.
+  The A-weighted formula corridor has now landed:
+  `company_internal_opening_leak_a_weighted_spectrum_adapter_formula_corridor_plan`.
+  It is a no-runtime formula corridor. Formula pins: field `Dn,A 35.9`;
+  field `DnT,A 36.1`; building `DnT,A 31.3`. They are design estimates
+  from the owned same-route base values plus the `-0.8 dB` A-weighted
+  adapter. Field budget is `+/-9 dB`; building budget is
+  `+/-11 dB`. Runtime values do not move and A-weighted outputs remain
+  unsupported until the runtime corridor lands. Formula corridor
+  selection status:
+  `company_internal_opening_leak_a_weighted_spectrum_adapter_formula_corridor_landed_no_runtime_selected_runtime_corridor`.
+  Current selected next action:
+  `company_internal_opening_leak_a_weighted_spectrum_adapter_runtime_corridor_plan`.
+  Current selected next file:
+  `packages/engine/src/company-internal-opening-leak-a-weighted-spectrum-adapter-runtime-corridor-contract.test.ts`.
+  Current selected next label:
+  opening/leak Dn,A / DnT,A spectrum-adapter runtime corridor.
+  The A-weighted runtime corridor has now landed:
+  `company_internal_opening_leak_a_weighted_spectrum_adapter_runtime_corridor_plan`.
+  It promotes complete opening/leak A-weighted requests only when
+  `frequencyBandSet` is present: field `Dn,A 35.9`, field
+  `DnT,A 36.1`, and building `DnT,A 31.3`. Field budget is `+/-9 dB`;
+  building budget is `+/-11 dB`. Missing `frequencyBandSet` keeps
+  A-weighted outputs unsupported with a precise warning, building
+  `Dn,A` remains unsupported, and lab `Rw` / `STC` plus ASTM `IIC` /
+  `AIIC` stay non-alias boundaries. Runtime corridor selection status:
+  `company_internal_opening_leak_a_weighted_spectrum_adapter_runtime_corridor_landed_selected_surface_parity`.
+  Runtime corridor selected next action, now landed:
+  `company_internal_opening_leak_a_weighted_spectrum_adapter_surface_parity_plan`.
+  Runtime corridor selected next file, now landed:
+  `packages/engine/src/company-internal-opening-leak-a-weighted-spectrum-adapter-surface-parity-contract.test.ts`.
+  Runtime corridor selected next label, now landed:
+  opening/leak Dn,A / DnT,A card/report/API parity.
+  A-weighted surface parity has now landed:
+  `company_internal_opening_leak_a_weighted_spectrum_adapter_surface_parity_plan`.
+  It keeps field `Dn,A 35.9`, field `DnT,A 36.1`, and building
+  `DnT,A 31.3` frozen while making the method, candidate, budgets,
+  warning, and frequency band set visible across cards, route posture,
+  scenario summary, dossiers, saved/server replay, API payloads,
+  Markdown report, and the workbench input surface. Surface parity
+  selection status:
+  `company_internal_opening_leak_a_weighted_spectrum_adapter_surface_parity_landed_selected_matrix_v6_refresh`.
+  Surface parity selected next action:
+  `company_internal_calculation_grade_mainline_matrix_v6_refresh_after_opening_leak_a_weighted_surface_parity_plan`.
+  Surface parity selected next file:
+  `packages/engine/src/company-internal-calculation-grade-mainline-matrix-v6-contract.test.ts`.
+  Surface parity selected next label:
+  company-internal matrix v6 refresh after opening/leak Dn,A / DnT,A surface parity.
+  Matrix V6 has now landed:
+  `company_internal_calculation_grade_mainline_matrix_v6_refresh_after_opening_leak_a_weighted_surface_parity_plan`.
+  It refreshes the executable company-internal matrix to 71 rows,
+  retires the stale
+  `wall.opening_leak_a_weighted_boundary.unsupported` row, and records
+  opening/leak A-weighted field `Dn,A 35.9` / `DnT,A 36.1` plus
+  building `DnT,A 31.3` as supported source-absent family-physics rows.
+  Building `Dn,A`, missing `frequencyBandSet`, lab `Rw` / `STC` aliases,
+  ASTM `IIC` / `AIIC` aliases, and exact-source precedence remain
+  explicit boundary rows. Matrix V6 selection status:
+  `company_internal_calculation_grade_mainline_matrix_v6_refresh_after_opening_leak_a_weighted_surface_parity_landed_selected_boundary_revalidation`.
+  Matrix V6 selected next action:
+  `company_internal_building_astm_boundary_revalidation_after_a_weighted_matrix_plan`.
+  Matrix V6 selected next file:
+  `packages/engine/src/company-internal-building-astm-boundary-revalidation-contract.test.ts`.
+  Matrix V6 selected next label:
+  building partial-context and ASTM parked-boundary revalidation.
+  Boundary revalidation has now landed:
+  `company_internal_building_astm_boundary_revalidation_after_a_weighted_matrix_plan`.
+  It proves `wall.opening_leak_building_missing_owner.needs_input` and
+  `wall.building_prediction_partial_context.needs_input` still remain
+  precise building `needs_input` rows with named missing physical owners
+  such as `sourceRoomVolumeM3`, no value pins, and no building budget.
+  It also proves floor ASTM `IIC` / `AIIC` rows and the airborne
+  A-weighted-to-ASTM alias row stay unsupported with no ISO alias values
+  or budgets. Boundary revalidation selection status:
+  `company_internal_building_astm_boundary_revalidation_after_a_weighted_matrix_landed_selected_final_internal_use_rehearsal`.
+  Boundary revalidation selected next action:
+  `company_internal_final_internal_use_rehearsal_after_boundary_revalidation_plan`.
+  Boundary revalidation selected next file:
+  `packages/engine/src/company-internal-final-internal-use-rehearsal-contract.test.ts`.
+  Boundary revalidation selected next label:
+  final internal-use rehearsal and operating envelope.
   Gate BV validation remains recorded in
   `docs/calculator/CHECKPOINT_2026-05-14_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BV_HANDOFF.md`.
 - latest strategic ROI revalidation:
   `docs/calculator/CHECKPOINT_2026-05-10_STRATEGIC_ROI_REVALIDATION_AND_GATE_G_PLAN_HANDOFF.md`.
 - latest checkpoint:
-  `docs/calculator/CHECKPOINT_2026-05-14_COMPANY_INTERNAL_OPENING_LEAK_BUILDING_INPUT_SURFACE_HANDOFF.md`.
+  `docs/calculator/CHECKPOINT_2026-05-15_COMPANY_INTERNAL_CHECKPOINT_REVIEW_AND_VALIDATION.md`.
+- current remaining-gap plan:
+  `docs/calculator/CHECKPOINT_2026-05-15_COMPANY_INTERNAL_REMAINING_GAP_ANALYSIS_AND_PLAN.md`.
 - previous matrix-refresh checkpoint:
   `docs/calculator/CHECKPOINT_2026-05-14_COMPANY_INTERNAL_MATRIX_REFRESH_AFTER_HEAVY_COMPOSITE_HANDOFF.md`.
 - just landed model-first physics prediction pivot Gate BH:

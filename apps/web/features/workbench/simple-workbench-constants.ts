@@ -39,6 +39,7 @@ import type {
   WorkbenchTimberCltDeltaLwLowerSupportClass,
   WorkbenchTimberCltDeltaLwStructuralSupportType
 } from "./timber-clt-delta-lw-input-surface";
+import type { WorkbenchAirborneFrequencyBandSet } from "./airborne-field-context-input-surface";
 
 export type MaterialIdGroup = {
   ids: readonly string[];
@@ -611,6 +612,21 @@ export const BUILDING_PREDICTION_OUTPUT_BASIS_OPTIONS: readonly ControlOption<
     label: "Apparent + standardized",
     note: "Both R'w and DnT,w building outputs are requested from the same physical context.",
     value: "apparent_and_standardized"
+  }
+] as const;
+
+export const AIRBORNE_FREQUENCY_BAND_SET_OPTIONS: readonly ControlOption<
+  WorkbenchAirborneFrequencyBandSet
+>[] = [
+  {
+    label: "Not selected",
+    note: "A-weighted Dn,A / DnT,A stays parked until the band set is explicit.",
+    value: ""
+  },
+  {
+    label: "Third-octave 100-3150 Hz",
+    note: "Owned ISO 717-1 A-weighted adapter input for the opening/leak field/building route.",
+    value: "third_octave_100_3150"
   }
 ] as const;
 

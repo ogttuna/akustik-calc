@@ -128,7 +128,7 @@ describe("consultant decision trail", () => {
     expect(lines).toContainEqual(expect.stringContaining("protected corridor hold"));
   });
 
-  it("keeps low-confidence reinforced-concrete trails in screening territory", () => {
+  it("keeps incomplete reinforced-concrete impact trails fail-closed", () => {
     const scenario = evaluateScenario({
       id: "consultant-trail-reinforced-concrete-low-confidence",
       name: "Consultant trail reinforced concrete low confidence",
@@ -151,24 +151,15 @@ describe("consultant decision trail", () => {
       warnings: scenario.warnings
     });
 
-    expect(trail.headline).toContain("screening posture");
-    expect(trail.items).toContainEqual(
-      expect.objectContaining({
-        label: "Delivery posture",
-        tone: "warning"
-      })
-    );
+    expect(trail.headline).toContain("No live lane");
     expect(trail.items.find((item) => item.label === "Impact corridor")?.detail).toContain(
-      "do not treat it as delivery-ready"
+      "No supported impact output is active"
     );
     expect(trail.items.find((item) => item.label === "Output coverage")?.detail).toContain(
-      "screening-fallback lanes"
-    );
-    expect(trail.items.find((item) => item.label === "Output coverage")?.detail).toContain(
-      "Keep the current package in screening mode"
+      "Still explicit: Ln,w"
     );
     expect(trail.items.find((item) => item.label === "Output coverage")?.tone).toBe("warning");
-    expect(lines).toContainEqual(expect.stringContaining("Decision trail headline: Low-confidence fallback on reinforced concrete is the current floor-side screening posture."));
-    expect(lines).toContainEqual(expect.stringContaining("Delivery posture: Low-confidence fallback remains active on the current floor-side route."));
+    expect(lines).toContainEqual(expect.stringContaining("Decision trail headline: No live lane is the current floor-side posture."));
+    expect(lines).toContainEqual(expect.stringContaining("Impact corridor: No live lane."));
   });
 });

@@ -75,15 +75,18 @@ describe("reinforced concrete floor monotonicity", () => {
       { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 }
     ]);
 
-    expect(wetTile150WithCeiling.lab.impact?.basis).toBe("predictor_heavy_concrete_published_upper_treatment_estimate");
-    expect(wetTile150WithCeiling.lab.floorSystemEstimate?.kind).toBe("family_general");
-    expect(wetTile150WithCeiling.lab.floorSystemRatings?.Rw ?? 0).toBeGreaterThan(wetTile150.lab.floorSystemRatings?.Rw ?? 0);
+    expect(wetTile150WithCeiling.lab.impact).toBeNull();
+    expect(wetTile150WithCeiling.lab.floorSystemEstimate).toBeNull();
+    expect(wetTile150WithCeiling.lab.supportedTargetOutputs).toEqual(["Rw"]);
+    expect(wetTile150WithCeiling.lab.unsupportedTargetOutputs).toEqual(["Ln,w", "DeltaLw"]);
+    expect(wetTile150WithCeiling.lab.warnings.join("\n")).toContain(
+      "reinforced-concrete combined upper/lower impact runtime is waiting for"
+    );
     expect(wetTile150WithCeiling.field.metrics.estimatedRwPrimeDb ?? 0).toBeGreaterThanOrEqual(
       wetTile150.field.metrics.estimatedRwPrimeDb ?? 0
     );
-    expect(wetTile150WithCeiling.lab.impact?.LnW ?? Infinity).toBeLessThanOrEqual((wetTile150.lab.impact?.LnW ?? 0) + 0.5);
-    expect(wetTile150WithCeiling.field.impact?.LPrimeNTw ?? Infinity).toBeLessThanOrEqual(
-      (wetTile150.field.impact?.LPrimeNTw ?? 0) + 0.5
-    );
+    expect(wetTile150WithCeiling.field.impact).toBeNull();
+    expect(wetTile150WithCeiling.field.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
+    expect(wetTile150WithCeiling.field.unsupportedTargetOutputs).toEqual(["Rw", "Ln,w", "L'n,w", "L'nT,w"]);
   });
 });

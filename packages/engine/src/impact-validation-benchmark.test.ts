@@ -73,6 +73,13 @@ function numberOrNull(value: number | null | undefined): number | null {
   return typeof value === "number" && Number.isFinite(value) ? value : null;
 }
 
+const OWNER_BLOCKED_BENCHMARK_IDS = new Set([
+  "ubiq_steel_ceiling_only_family_general_estimate",
+  "ubiq_steel_suspended_only_family_general_estimate",
+  "pliteq_steel_joist_suspended_only_family_general_estimate",
+  "knauf_euracoustics_concrete_combined_family_general_estimate"
+]);
+
 describe("impact validation benchmark corpus", () => {
   it("stays well-formed and source-backed", () => {
     const dataset = loadDataset();
@@ -142,6 +149,13 @@ describe("impact validation benchmark corpus", () => {
       }
 
       if (!impact && !lowerBound && !result.floorSystemMatch && !result.boundFloorSystemMatch && !result.impactCatalogMatch) {
+        if (OWNER_BLOCKED_BENCHMARK_IDS.has(entry.id)) {
+          if (result.supportedImpactOutputs.length > 0) {
+            errors.push(`${entry.id}: owner-blocked benchmark should keep impact outputs unsupported`);
+          }
+          continue;
+        }
+
         errors.push(`${entry.id}: calculateImpactOnly returned no usable benchmark lane`);
         continue;
       }

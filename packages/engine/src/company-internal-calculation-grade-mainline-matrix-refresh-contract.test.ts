@@ -241,8 +241,10 @@ describe("company-internal calculation-grade mainline matrix refresh after heavy
     for (const path of CURRENT_SELECTION_DOCS) {
       const content = readRepoFile(path);
 
-      expect(content, path).toContain(
-        "CHECKPOINT_2026-05-14_COMPANY_INTERNAL_MATRIX_REFRESH_AFTER_HEAVY_COMPOSITE_HANDOFF.md"
+      expect(content, path).toEqual(
+        expect.stringMatching(
+          /CHECKPOINT_2026-05-14_COMPANY_INTERNAL_MATRIX_REFRESH_AFTER_HEAVY_COMPOSITE_HANDOFF\.md|CHECKPOINT_2026-05-15_COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_SURFACE_PARITY_HANDOFF\.md/
+        )
       );
       expect(content, path).toContain(COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_REFRESH_SELECTED_NEXT_ACTION);
       expect(content, path).toContain(COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_REFRESH_SELECTED_NEXT_FILE);

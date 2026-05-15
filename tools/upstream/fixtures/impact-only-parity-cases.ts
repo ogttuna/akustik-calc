@@ -1186,9 +1186,18 @@ export const IMPACT_ONLY_PARITY_CASES: readonly ImpactOnlyParityCase[] = [
     compare: {
       acceptedLocalDivergences: [
         {
-          metrics: ["impact.estimateCandidateIds"],
+          metrics: [
+            "impact.LnW",
+            "impact.metricBasis.LnW",
+            "floor.Rw",
+            "floor.RwCtr",
+            "impact.basis",
+            "impact.estimateCandidateIds",
+            "supportedImpactOutputs",
+            "unsupportedImpactOutputs"
+          ],
           reason:
-            "DynEcho now keeps the reinforced-concrete low-confidence fallback on the mixed nearby-row ranking that was tightened in the owned corridor, while upstream still carries the older broader candidate list."
+            "DynEcho now blocks the old reinforced-concrete combined low-confidence fallback until the Gate BO/BP physical owners are present instead of carrying upstream proxy impact ratings."
         }
       ],
       compareImpactBasis: true,
@@ -1248,6 +1257,26 @@ export const IMPACT_ONLY_PARITY_CASES: readonly ImpactOnlyParityCase[] = [
       targetOutputs: ["Ln,w", "CI", "Ln,w+CI"]
     },
     compare: {
+      acceptedLocalDivergences: [
+        {
+          metrics: [
+            "impact.LnW",
+            "impact.metricBasis.LnW",
+            "impact.CI",
+            "impact.metricBasis.CI",
+            "impact.LnWPlusCI",
+            "impact.metricBasis.LnWPlusCI",
+            "floor.Rw",
+            "floor.RwCtr",
+            "impact.basis",
+            "impact.estimateCandidateIds",
+            "supportedImpactOutputs",
+            "unsupportedImpactOutputs"
+          ],
+          reason:
+            "DynEcho now blocks incomplete steel suspended predictor input until the steel support-form and lower-isolation owners are explicit instead of carrying upstream low-confidence impact ratings."
+        }
+      ],
       compareImpactBasis: true,
       compareImpactEstimateCandidateIds: true,
       compareFloorMetrics: true,
@@ -1307,6 +1336,22 @@ export const IMPACT_ONLY_PARITY_CASES: readonly ImpactOnlyParityCase[] = [
       targetOutputs: ["Ln,w"]
     },
     compare: {
+      acceptedLocalDivergences: [
+        {
+          metrics: [
+            "impact.LnW",
+            "impact.metricBasis.LnW",
+            "floor.Rw",
+            "floor.RwCtr",
+            "impact.basis",
+            "impact.estimateCandidateIds",
+            "supportedImpactOutputs",
+            "unsupportedImpactOutputs"
+          ],
+          reason:
+            "DynEcho now blocks incomplete steel joist predictor input until the steel support-form and lower-isolation owners are explicit instead of carrying upstream low-confidence impact ratings."
+        }
+      ],
       compareImpactBasis: true,
       compareImpactEstimateCandidateIds: true,
       compareFloorMetrics: true,

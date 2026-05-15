@@ -115,6 +115,14 @@ const CASES = BASES.flatMap((base) =>
 );
 
 const FIELD_CONTINUATION_FAIL_CLOSED_CASE_IDS = new Set([
+  "concrete_150__tile_wet__resilient_channel",
+  "concrete_150__tile_wet__stud_ceiling",
+  "concrete_150__vinyl_wet__resilient_channel",
+  "concrete_150__vinyl_wet__stud_ceiling",
+  "concrete_150__laminate_dry__resilient_channel",
+  "concrete_150__laminate_dry__stud_ceiling",
+  "concrete_150__timber_acoustic__resilient_channel",
+  "concrete_150__timber_acoustic__stud_ceiling",
   "hollow_core_200__laminate_dry__resilient_channel",
   "hollow_core_200__laminate_dry__stud_ceiling",
   "hollow_core_200__timber_acoustic__resilient_channel",

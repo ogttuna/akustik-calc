@@ -5,7 +5,7 @@ import { getPresetById, type PresetId } from "./preset-definitions";
 import { evaluateScenario } from "./scenario-analysis";
 import { buildCustomMaterialDefinition, createEmptyCustomMaterialDraft } from "./workbench-materials";
 import { IMPACT_ONLY_LOW_CONFIDENCE_FLOOR_FAMILY_NOTE } from "./impact-only-low-confidence-floor-lane";
-import { EXACT_FLOOR_FAMILY_CURVE_NOTE, LOW_CONFIDENCE_FLOOR_FAMILY_NOTE } from "./workbench-warning-notes";
+import { EXACT_FLOOR_FAMILY_CURVE_NOTE } from "./workbench-warning-notes";
 
 const TARGET_OUTPUTS: readonly RequestedOutputId[] = ["Rw", "Ln,w", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w"];
 const SINGLE_ENTRY_ROLE_SPLIT_PREFERENCE: readonly FloorRole[] = [
@@ -1474,12 +1474,12 @@ describe("scenario analysis", () => {
     expect(failures).toEqual([]);
   });
 
-  it("keeps the steel suspended sample on the low-confidence fallback lane with explicit warning copy", () => {
+  it("keeps the steel suspended sample on the published family-archetype lane with explicit warning copy", () => {
     const scenario = evaluatePresetScenario("steel_suspended_fallback");
 
     expect(scenario.result).not.toBeNull();
-    expect(scenario.result?.dynamicImpactTrace?.estimateTier).toBe("low_confidence");
-    expect(scenario.warnings).toContain(LOW_CONFIDENCE_FLOOR_FAMILY_NOTE);
+    expect(scenario.result?.dynamicImpactTrace?.estimateTier).toBe("family_archetype");
+    expect(scenario.warnings).toContain("Published family estimate active: lightweight steel family archetype at 63% fit.");
     expect(scenario.warnings).toContain(
       "Screening estimate only. This result is coming from the local calibrated seed lane."
     );

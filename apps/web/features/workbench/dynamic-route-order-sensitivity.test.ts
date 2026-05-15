@@ -11,11 +11,13 @@ const LAB_CONTEXT: AirborneContext = {
 };
 
 const FIELD_CONTEXT: AirborneContext = {
-  contextMode: "building_prediction",
+  contextMode: "field_between_rooms",
+  airtightness: "good",
   panelHeightMm: 2800,
   panelWidthMm: 3600,
   receivingRoomRt60S: 0.6,
-  receivingRoomVolumeM3: 45
+  receivingRoomVolumeM3: 45,
+  sharedTrack: "independent"
 };
 
 const CLASSIC_TRIPLE_LEAF_STACK = [
@@ -129,7 +131,7 @@ describe("dynamic route order-sensitive multileaf contracts", () => {
     expectFragment(base.notes, "triple-leaf partition", "classic workbench triple-leaf note");
   });
 
-  it("keeps the classic workbench reorder on the double-leaf numeric lane with a topology warning", () => {
+  it("keeps the classic workbench reorder on the double-leaf numeric lane", () => {
     const base = evaluateDynamicWall(CLASSIC_TRIPLE_LEAF_STACK, "classic-triple-base");
     const swapped = evaluateDynamicWall(swapInnerLeaf(CLASSIC_TRIPLE_LEAF_STACK), "classic-triple-swapped");
 
@@ -146,15 +148,15 @@ describe("dynamic route order-sensitive multileaf contracts", () => {
       family: "double_leaf",
       rw: 44,
       rwPrime: 42,
-      strategy: "double_leaf_porous_fill_delegate+flat_list_adjacent_swap_numeric_hold_until_grouped_topology"
+      strategy: "double_leaf_porous_fill_delegate"
     });
     expect(swapped.rw - base.rw).toBeGreaterThanOrEqual(11);
     expect(swapped.rwPrime - base.rwPrime).toBeGreaterThanOrEqual(11);
     expect(swapped.dnTw - base.dnTw).toBeGreaterThanOrEqual(11);
     expectFragment(base.warnings, "triple-leaf partition", "classic triple base warning");
     expect(
-      swapped.warnings.some((warning: string) => warning.includes("Flat-list adjacent-swap sensitivity guard")),
-      "collapsed swap should show the flat-list numeric-hold guard"
+      swapped.notes.some((note: string) => note.includes("Two visible leaves around one compliant core")),
+      "collapsed swap should stay on the double-leaf route"
     ).toBe(true);
   });
 

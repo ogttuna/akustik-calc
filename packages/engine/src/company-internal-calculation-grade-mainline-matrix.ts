@@ -49,8 +49,21 @@ import {
 } from "./company-internal-opening-leak-building-runtime-corridor-contract";
 import {
   COMPANY_INTERNAL_OPENING_LEAK_BUILDING_TOLERANCE_DB,
+  COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_BUILDING_TOLERANCE_DB,
+  COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FIELD_TOLERANCE_DB,
+  COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FREQUENCY_BAND_SET,
   COMPANY_INTERNAL_OPENING_LEAK_FIELD_TOLERANCE_DB
 } from "./company-internal-opening-leak-building-runtime-corridor";
+import {
+  COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_BUILDING_CONTEXT,
+  COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_FIELD_CONTEXT
+} from "./company-internal-opening-leak-a-weighted-spectrum-adapter-runtime-corridor-contract";
+import {
+  COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_SURFACE_PARITY_LANDED_GATE,
+  COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_SURFACE_PARITY_SELECTED_NEXT_ACTION,
+  COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_SURFACE_PARITY_SELECTED_NEXT_FILE,
+  COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_SURFACE_PARITY_SELECTION_STATUS
+} from "./company-internal-opening-leak-a-weighted-spectrum-adapter-surface-parity-contract";
 import {
   ENGINE_MIXED_GENERATED_CASES,
   resultSnapshot
@@ -216,6 +229,92 @@ export const COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V5_RETIRED_ROW_IDS = [
   "wall.opening_leak_composite_building_boundary.unsupported"
 ] as const;
 
+export const COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V6_LANDED_GATE =
+  "company_internal_calculation_grade_mainline_matrix_v6_refresh_after_opening_leak_a_weighted_surface_parity_plan";
+
+export const COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V6_SELECTION_STATUS =
+  "company_internal_calculation_grade_mainline_matrix_v6_refresh_after_opening_leak_a_weighted_surface_parity_landed_selected_boundary_revalidation";
+
+export const COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V6_SELECTED_NEXT_ACTION =
+  "company_internal_building_astm_boundary_revalidation_after_a_weighted_matrix_plan";
+
+export const COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V6_SELECTED_NEXT_FILE =
+  "packages/engine/src/company-internal-building-astm-boundary-revalidation-contract.test.ts";
+
+export const COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V6_SELECTED_NEXT_LABEL =
+  "building partial-context and ASTM parked-boundary revalidation";
+
+export const COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_FIELD_ROW_ID =
+  "wall.opening_leak_a_weighted_field_runtime.input_surface";
+
+export const COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_BUILDING_ROW_ID =
+  "wall.opening_leak_a_weighted_building_runtime.input_surface";
+
+export const COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_BUILDING_DNA_ROW_ID =
+  "wall.opening_leak_a_weighted_building_dna.unsupported";
+
+export const COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_MISSING_BAND_ROW_ID =
+  "wall.opening_leak_a_weighted_missing_frequency.needs_input";
+
+export const COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_LAB_ALIAS_ROW_ID =
+  "wall.opening_leak_a_weighted_lab_alias.unsupported";
+
+export const COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_ASTM_ALIAS_ROW_ID =
+  "wall.opening_leak_a_weighted_astm_alias.unsupported";
+
+export const COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_EXACT_SOURCE_ROW_ID =
+  "wall.opening_leak_a_weighted_exact_source_precedence.boundary";
+
+export const COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_IMPORTED_ROW_IDS = [
+  COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_FIELD_ROW_ID,
+  COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_BUILDING_ROW_ID,
+  COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_BUILDING_DNA_ROW_ID,
+  COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_MISSING_BAND_ROW_ID,
+  COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_LAB_ALIAS_ROW_ID,
+  COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_ASTM_ALIAS_ROW_ID,
+  COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_EXACT_SOURCE_ROW_ID
+] as const;
+
+export const COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_RETIRED_ROW_IDS = [
+  COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V5_OPENING_A_WEIGHTED_ROW_ID
+] as const;
+
+export const COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_LANDED_GATE =
+  "company_internal_building_astm_boundary_revalidation_after_a_weighted_matrix_plan";
+
+export const COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_SELECTION_STATUS =
+  "company_internal_building_astm_boundary_revalidation_after_a_weighted_matrix_landed_selected_final_internal_use_rehearsal";
+
+export const COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_SELECTED_NEXT_ACTION =
+  "company_internal_final_internal_use_rehearsal_after_boundary_revalidation_plan";
+
+export const COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_SELECTED_NEXT_FILE =
+  "packages/engine/src/company-internal-final-internal-use-rehearsal-contract.test.ts";
+
+export const COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_SELECTED_NEXT_LABEL =
+  "final internal-use rehearsal and operating envelope";
+
+export const COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_BUILDING_ROW_IDS = [
+  COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V5_OPENING_BUILDING_MISSING_OWNER_ROW_ID,
+  "wall.building_prediction_partial_context.needs_input"
+] as const;
+
+export const COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_FLOOR_ASTM_ROW_IDS = [
+  "floor.astm_iic_aiic_boundary.unsupported",
+  "floor.lightweight_steel_suspended_ceiling_astm.unsupported",
+  "floor.reinforced_concrete_combined_astm_iic.unsupported"
+] as const;
+
+export const COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_CROSS_ROUTE_ASTM_ROW_IDS = [
+  COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_ASTM_ALIAS_ROW_ID
+] as const;
+
+export const COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_ROW_IDS = [
+  ...COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_BUILDING_ROW_IDS,
+  ...COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_FLOOR_ASTM_ROW_IDS,
+  ...COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_CROSS_ROUTE_ASTM_ROW_IDS
+] as const;
+
 const COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V5_PREVIOUS_INPUT_SURFACE_LANDED_GATE =
   "company_internal_opening_leak_building_input_surface_plan";
 
@@ -246,6 +345,9 @@ const WALL_BUILDING_OUTPUTS = ["R'w", "DnT,w"] as const satisfies readonly Reque
 const OPENING_LEAK_FIELD_SUPPORTED_OUTPUTS = ["R'w", "Dn,w", "DnT,w"] as const satisfies readonly RequestedOutputId[];
 const OPENING_LEAK_BUILDING_SUPPORTED_OUTPUTS = ["R'w", "DnT,w"] as const satisfies readonly RequestedOutputId[];
 const OPENING_LEAK_A_WEIGHTED_OUTPUTS = ["Dn,A", "DnT,A"] as const satisfies readonly RequestedOutputId[];
+const OPENING_LEAK_A_WEIGHTED_BUILDING_OUTPUTS = ["DnT,A"] as const satisfies readonly RequestedOutputId[];
+const OPENING_LEAK_A_WEIGHTED_BUILDING_DNA_OUTPUTS = ["Dn,A"] as const satisfies readonly RequestedOutputId[];
+const OPENING_LEAK_A_WEIGHTED_ASTM_OUTPUTS = ["IIC", "AIIC"] as const satisfies readonly RequestedOutputId[];
 const STEEL_LNT50_MATRIX_TARGET_OUTPUTS = [
   "Ln,w",
   "DeltaLw",
@@ -644,6 +746,135 @@ export type CompanyInternalCalculationGradeMainlineMatrixV5Summary = {
   selectedLane: CompanyInternalCalculationGradeV5LaneId;
   selectedNextAction: typeof COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V5_SELECTED_NEXT_ACTION;
   selectedNextFile: typeof COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V5_SELECTED_NEXT_FILE;
+};
+
+export type CompanyInternalCalculationGradeV6LaneId =
+  | "boundary_revalidation_building_partial_context_and_astm"
+  | "broad_source_crawl"
+  | "final_internal_use_rehearsal";
+
+export type CompanyInternalCalculationGradeV6LaneCandidate = {
+  basisLeakageRisk: number;
+  calculationGradeRisk: number;
+  evidenceRowIds: readonly string[];
+  id: CompanyInternalCalculationGradeV6LaneId;
+  implementationCost: number;
+  reason: string;
+  score: number;
+  selected: boolean;
+  sourceRowsRequiredForRuntimeSelection: boolean;
+  userFrequency: number;
+};
+
+export type CompanyInternalCalculationGradeV6LaneSelection = {
+  candidates: readonly CompanyInternalCalculationGradeV6LaneCandidate[];
+  selectedCandidate: CompanyInternalCalculationGradeV6LaneCandidate;
+  selectedNextAction: typeof COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V6_SELECTED_NEXT_ACTION;
+  selectedNextFile: typeof COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V6_SELECTED_NEXT_FILE;
+  selectionPolicy: readonly string[];
+};
+
+export type CompanyInternalCalculationGradeMainlineMatrixV6Contract = {
+  importedOpeningLeakAWeightedRowIds: typeof COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_IMPORTED_ROW_IDS;
+  landedGate: typeof COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V6_LANDED_GATE;
+  matrixRows: 71;
+  newRuntimeBehaviorChangeInRefresh: false;
+  previousMatrixRows: 65;
+  previousSurfaceParityLandedGate: typeof COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_SURFACE_PARITY_LANDED_GATE;
+  previousSurfaceParitySelectedNextAction: typeof COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_SURFACE_PARITY_SELECTED_NEXT_ACTION;
+  previousSurfaceParitySelectedNextFile: typeof COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_SURFACE_PARITY_SELECTED_NEXT_FILE;
+  previousSurfaceParitySelectionStatus: typeof COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_SURFACE_PARITY_SELECTION_STATUS;
+  retiredRowIds: typeof COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_RETIRED_ROW_IDS;
+  selectedImplementationSlice: "company_internal_calculation_grade_mainline";
+  selectedNextAction: typeof COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V6_SELECTED_NEXT_ACTION;
+  selectedNextFile: typeof COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V6_SELECTED_NEXT_FILE;
+  selectedNextLabel: typeof COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V6_SELECTED_NEXT_LABEL;
+  selectionStatus: typeof COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V6_SELECTION_STATUS;
+  sourceRowsRequiredForRuntimeSelection: false;
+};
+
+export type CompanyInternalCalculationGradeMainlineMatrixV6Summary = {
+  basisCoverage: readonly PersonalUseMvpCoverageOutputBasis[];
+  correctlyBlockedRowIds: readonly string[];
+  currentPostureCoverage: readonly PersonalUseMvpCoveragePosture[];
+  exactSourcePrecedenceRowIds: readonly string[];
+  failureClassCounts: Readonly<Record<PersonalUseMvpCoverageFailureClass, number>>;
+  hiddenScreeningOriginRowIds: readonly [];
+  importedOpeningLeakAWeightedRowIds: typeof COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_IMPORTED_ROW_IDS;
+  noRuntimeValueMovementInRefresh: true;
+  parkedAstmBoundaryRowIds: readonly string[];
+  promotedOpeningLeakAWeightedBuildingRowId: typeof COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_BUILDING_ROW_ID;
+  promotedOpeningLeakAWeightedFieldRowId: typeof COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_FIELD_ROW_ID;
+  remainingCalculationGradeBlockerRowIds: readonly string[];
+  retiredRowIds: typeof COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_RETIRED_ROW_IDS;
+  routeCoverage: readonly PersonalUseMvpCoverageRoute[];
+  rowCount: 71;
+  selectedLane: CompanyInternalCalculationGradeV6LaneId;
+  selectedNextAction: typeof COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V6_SELECTED_NEXT_ACTION;
+  selectedNextFile: typeof COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V6_SELECTED_NEXT_FILE;
+};
+
+export type CompanyInternalBuildingAstmBoundaryRevalidationLaneId =
+  | "astm_runtime_adapter"
+  | "broad_source_crawl"
+  | "final_internal_use_rehearsal";
+
+export type CompanyInternalBuildingAstmBoundaryRevalidationLaneCandidate = {
+  basisLeakageRisk: number;
+  calculationGradeRisk: number;
+  evidenceRowIds: readonly string[];
+  id: CompanyInternalBuildingAstmBoundaryRevalidationLaneId;
+  implementationCost: number;
+  reason: string;
+  score: number;
+  selected: boolean;
+  sourceRowsRequiredForRuntimeSelection: boolean;
+  userFrequency: number;
+};
+
+export type CompanyInternalBuildingAstmBoundaryRevalidationLaneSelection = {
+  candidates: readonly CompanyInternalBuildingAstmBoundaryRevalidationLaneCandidate[];
+  selectedCandidate: CompanyInternalBuildingAstmBoundaryRevalidationLaneCandidate;
+  selectedNextAction: typeof COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_SELECTED_NEXT_ACTION;
+  selectedNextFile: typeof COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_SELECTED_NEXT_FILE;
+  selectionPolicy: readonly string[];
+};
+
+export type CompanyInternalBuildingAstmBoundaryRevalidationContract = {
+  astmBoundaryRowsStayUnsupported: true;
+  buildingBoundaryRowsStayNeedsInput: true;
+  landedGate: typeof COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_LANDED_GATE;
+  matrixRows: 71;
+  newRuntimeBehaviorChangeInRevalidation: false;
+  previousMatrixV6LandedGate: typeof COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V6_LANDED_GATE;
+  previousMatrixV6SelectedNextAction: typeof COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V6_SELECTED_NEXT_ACTION;
+  previousMatrixV6SelectedNextFile: typeof COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V6_SELECTED_NEXT_FILE;
+  previousMatrixV6SelectionStatus: typeof COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V6_SELECTION_STATUS;
+  revalidatedBoundaryRowIds: typeof COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_ROW_IDS;
+  revalidatedBuildingRowIds: typeof COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_BUILDING_ROW_IDS;
+  revalidatedCrossRouteAstmRowIds: typeof COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_CROSS_ROUTE_ASTM_ROW_IDS;
+  revalidatedFloorAstmRowIds: typeof COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_FLOOR_ASTM_ROW_IDS;
+  selectedImplementationSlice: "company_internal_calculation_grade_mainline";
+  selectedNextAction: typeof COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_SELECTED_NEXT_ACTION;
+  selectedNextFile: typeof COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_SELECTED_NEXT_FILE;
+  selectedNextLabel: typeof COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_SELECTED_NEXT_LABEL;
+  selectionStatus: typeof COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_SELECTION_STATUS;
+  sourceRowsRequiredForRuntimeSelection: false;
+};
+
+export type CompanyInternalBuildingAstmBoundaryRevalidationSummary = {
+  astmUnsupportedRowIds: typeof COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_FLOOR_ASTM_ROW_IDS;
+  boundaryRowsWithoutErrorBudget: typeof COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_ROW_IDS;
+  boundaryRowsWithoutValuePins: typeof COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_ROW_IDS;
+  buildingMissingPhysicalInputsByRowId: Readonly<Record<string, readonly string[]>>;
+  buildingNeedsInputRowIds: typeof COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_BUILDING_ROW_IDS;
+  crossRouteAstmUnsupportedRowIds: typeof COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_CROSS_ROUTE_ASTM_ROW_IDS;
+  finalRehearsalReady: true;
+  matrixRows: 71;
+  matrixV6AWeightedValuePinsPreserved: true;
+  selectedLane: CompanyInternalBuildingAstmBoundaryRevalidationLaneId;
+  selectedNextAction: typeof COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_SELECTED_NEXT_ACTION;
+  selectedNextFile: typeof COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_SELECTED_NEXT_FILE;
 };
 
 function round1(value: number): number {
@@ -2118,8 +2349,10 @@ function openingLeakAWeightedBoundaryMatrixRow(): PersonalUseMvpCoverageScenario
 }
 
 function openingLeakBuildingMissingOwnerMatrixRow(): PersonalUseMvpCoverageScenarioRow {
-  const { sourceRoomVolumeM3: _sourceRoomVolumeM3, ...partialContext } =
-    COMPANY_INTERNAL_OPENING_LEAK_RUNTIME_BUILDING_CONTEXT;
+  const partialContext: AirborneContext = {
+    ...COMPANY_INTERNAL_OPENING_LEAK_RUNTIME_BUILDING_CONTEXT
+  };
+  delete partialContext.sourceRoomVolumeM3;
   const result = calculateOpeningLeakFieldBuilding({
     airborneContext: partialContext,
     targetOutputs: OPENING_LEAK_BUILDING_SUPPORTED_OUTPUTS
@@ -2374,6 +2607,701 @@ export function summarizeCompanyInternalCalculationGradeMainlineMatrixV5(
     retiredRowIds: COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V5_RETIRED_ROW_IDS,
     routeCoverage: orderedSubset(matrix.map((row) => row.route), ROUTE_ORDER),
     rowCount: 65,
+    selectedLane: laneSelection.selectedCandidate.id,
+    selectedNextAction: laneSelection.selectedNextAction,
+    selectedNextFile: laneSelection.selectedNextFile
+  };
+}
+
+function openingLeakAWeightedFieldRuntimeMatrixRow(): PersonalUseMvpCoverageScenarioRow {
+  const result = calculateOpeningLeakFieldBuilding({
+    airborneContext: COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_FIELD_CONTEXT,
+    targetOutputs: OPENING_LEAK_A_WEIGHTED_OUTPUTS
+  });
+
+  return {
+    basis: "field_apparent",
+    currentPosture: "family_physics",
+    expectedPosture: "family_physics",
+    failureClass: "none",
+    family: "wall_opening_leak_a_weighted_field_adapter",
+    hostileVariant: "ui_derived_complete_field_opening_leak_a_weighted_context_after_surface_parity",
+    id: COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_FIELD_ROW_ID,
+    inputCompleteness: "complete",
+    nextAction: "regression_guard",
+    originSupportBucket: "source_absent_opening_leak_a_weighted_field_spectrum_adapter_runtime_corridor",
+    requestedMetrics: OPENING_LEAK_A_WEIGHTED_OUTPUTS,
+    route: "wall",
+    runtime: {
+      basisId: result.airborneBasis?.method ?? null,
+      errorBudgetDb: result.airborneBasis?.errorBudgetDb ?? null,
+      missingPhysicalInputs: result.airborneBasis?.missingPhysicalInputs ?? [],
+      origin: result.airborneBasis?.origin ?? null,
+      publicEntryPoint: "calculateAssembly",
+      selectedMethod: result.airborneCandidateResolution?.selectedCandidateId ?? null,
+      supportedTargetOutputs: result.supportedTargetOutputs,
+      unsupportedTargetOutputs: result.unsupportedTargetOutputs,
+      valuePins: metricPins({
+        "Dn,A": result.metrics.estimatedDnADb,
+        "DnT,A": result.metrics.estimatedDnTADb
+      })
+    },
+    toleranceOrErrorBudget: `Dn,A/DnT,A +/-${COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FIELD_TOLERANCE_DB} dB source_absent opening/leak A-weighted field budget`,
+    valueOrBlockedReason: "Dn,A 35.9 / DnT,A 36.1 from UI-owned opening/leak A-weighted field input surface",
+    visibleSurfaceParityTarget: WALL_VISIBLE_SURFACES
+  };
+}
+
+function openingLeakAWeightedBuildingRuntimeMatrixRow(): PersonalUseMvpCoverageScenarioRow {
+  const result = calculateOpeningLeakFieldBuilding({
+    airborneContext: COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_BUILDING_CONTEXT,
+    targetOutputs: OPENING_LEAK_A_WEIGHTED_BUILDING_OUTPUTS
+  });
+
+  return {
+    basis: "building_prediction",
+    currentPosture: "family_physics",
+    expectedPosture: "family_physics",
+    failureClass: "none",
+    family: "wall_opening_leak_a_weighted_building_adapter",
+    hostileVariant: "ui_derived_complete_building_opening_leak_a_weighted_context_after_surface_parity",
+    id: COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_BUILDING_ROW_ID,
+    inputCompleteness: "complete",
+    nextAction: "regression_guard",
+    originSupportBucket: "source_absent_opening_leak_a_weighted_building_spectrum_adapter_runtime_corridor",
+    requestedMetrics: OPENING_LEAK_A_WEIGHTED_BUILDING_OUTPUTS,
+    route: "wall",
+    runtime: {
+      basisId: result.airborneBasis?.method ?? null,
+      errorBudgetDb: result.airborneBasis?.errorBudgetDb ?? null,
+      missingPhysicalInputs: result.airborneBasis?.missingPhysicalInputs ?? [],
+      origin: result.airborneBasis?.origin ?? null,
+      publicEntryPoint: "calculateAssembly",
+      selectedMethod: result.airborneCandidateResolution?.selectedCandidateId ?? null,
+      supportedTargetOutputs: result.supportedTargetOutputs,
+      unsupportedTargetOutputs: result.unsupportedTargetOutputs,
+      valuePins: metricPins({
+        "DnT,A": result.metrics.estimatedDnTADb
+      })
+    },
+    toleranceOrErrorBudget: `DnT,A +/-${COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_BUILDING_TOLERANCE_DB} dB source_absent opening/leak A-weighted building budget`,
+    valueOrBlockedReason: "DnT,A 31.3 from UI-owned opening/leak A-weighted building input surface",
+    visibleSurfaceParityTarget: WALL_VISIBLE_SURFACES
+  };
+}
+
+function openingLeakAWeightedBuildingDnABoundaryMatrixRow(): PersonalUseMvpCoverageScenarioRow {
+  const result = calculateOpeningLeakFieldBuilding({
+    airborneContext: COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_BUILDING_CONTEXT,
+    targetOutputs: OPENING_LEAK_A_WEIGHTED_BUILDING_DNA_OUTPUTS
+  });
+
+  return {
+    basis: "building_prediction",
+    currentPosture: "unsupported",
+    expectedPosture: "unsupported",
+    failureClass: "unsupported_metric",
+    family: "wall_opening_leak_a_weighted_building_dna_boundary",
+    hostileVariant: "building_opening_leak_dna_requested_even_though_only_dnta_is_owned",
+    id: COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_BUILDING_DNA_ROW_ID,
+    inputCompleteness: "complete",
+    nextAction: "keep_building_dna_unsupported_until_metric_owner_exists",
+    originSupportBucket: "opening_leak_a_weighted_building_dna_metric_owner_missing",
+    requestedMetrics: OPENING_LEAK_A_WEIGHTED_BUILDING_DNA_OUTPUTS,
+    route: "wall",
+    runtime: {
+      basisId: result.airborneBasis?.method ?? null,
+      errorBudgetDb: null,
+      missingPhysicalInputs: [],
+      origin: "unsupported",
+      publicEntryPoint: "calculateAssembly",
+      selectedMethod: result.airborneCandidateResolution?.selectedCandidateId ?? null,
+      supportedTargetOutputs: result.supportedTargetOutputs,
+      unsupportedTargetOutputs: result.unsupportedTargetOutputs,
+      valuePins: []
+    },
+    toleranceOrErrorBudget: "blocked_no_building_dn_a_budget_until_a_metric_owner_exists",
+    valueOrBlockedReason: "Building Dn,A remains unsupported; Gate V6 owns building DnT,A only and does not alias DnT,A to Dn,A",
+    visibleSurfaceParityTarget: WALL_VISIBLE_SURFACES
+  };
+}
+
+function openingLeakAWeightedMissingBandMatrixRow(): PersonalUseMvpCoverageScenarioRow {
+  const result = calculateOpeningLeakFieldBuilding({
+    airborneContext: COMPANY_INTERNAL_OPENING_LEAK_RUNTIME_FIELD_CONTEXT,
+    targetOutputs: OPENING_LEAK_A_WEIGHTED_OUTPUTS
+  });
+
+  return {
+    basis: "field_apparent",
+    currentPosture: "needs_input",
+    expectedPosture: "needs_input",
+    failureClass: "correct_block",
+    family: "wall_opening_leak_a_weighted_missing_frequency_band",
+    hostileVariant: "field_opening_leak_a_weighted_requested_without_frequency_band_set",
+    id: COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_MISSING_BAND_ROW_ID,
+    inputCompleteness: "partial",
+    nextAction: "keep_frequency_band_set_prompt",
+    originSupportBucket: "opening_leak_a_weighted_frequency_band_set_missing",
+    requestedMetrics: OPENING_LEAK_A_WEIGHTED_OUTPUTS,
+    route: "wall",
+    runtime: {
+      basisId: result.airborneBasis?.method ?? null,
+      errorBudgetDb: null,
+      missingPhysicalInputs: ["frequencyBandSet"],
+      origin: result.airborneBasis?.origin ?? null,
+      publicEntryPoint: "calculateAssembly",
+      selectedMethod: result.airborneCandidateResolution?.selectedCandidateId ?? null,
+      supportedTargetOutputs: result.supportedTargetOutputs,
+      unsupportedTargetOutputs: result.unsupportedTargetOutputs,
+      valuePins: []
+    },
+    toleranceOrErrorBudget: "blocked_no_a_weighted_budget_until_frequencyBandSet_is_explicit",
+    valueOrBlockedReason: "Needs frequencyBandSet third_octave_100_3150 before opening/leak Dn,A / DnT,A can promote",
+    visibleSurfaceParityTarget: WALL_VISIBLE_SURFACES
+  };
+}
+
+function openingLeakAWeightedLabAliasBoundaryMatrixRow(): PersonalUseMvpCoverageScenarioRow {
+  const result = calculateOpeningLeakFieldBuilding({
+    airborneContext: {
+      contextMode: "element_lab",
+      frequencyBandSet: COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FREQUENCY_BAND_SET,
+      hostWallAreaM2: COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_FIELD_CONTEXT.hostWallAreaM2,
+      openingLeakElements: COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_FIELD_CONTEXT.openingLeakElements
+    },
+    targetOutputs: OPENING_LEAK_A_WEIGHTED_OUTPUTS
+  });
+
+  return {
+    basis: "element_lab",
+    currentPosture: "unsupported",
+    expectedPosture: "unsupported",
+    failureClass: "basis_boundary",
+    family: "wall_opening_leak_a_weighted_lab_alias_boundary",
+    hostileVariant: "lab_opening_leak_rw_stc_requested_as_dn_a_or_dnta",
+    id: COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_LAB_ALIAS_ROW_ID,
+    inputCompleteness: "complete",
+    nextAction: "keep_lab_rw_stc_out_of_a_weighted_field_building_route",
+    originSupportBucket: "opening_leak_a_weighted_lab_alias_blocked",
+    requestedMetrics: OPENING_LEAK_A_WEIGHTED_OUTPUTS,
+    route: "wall",
+    runtime: {
+      basisId: result.airborneBasis?.method ?? null,
+      errorBudgetDb: null,
+      missingPhysicalInputs: [],
+      origin: "unsupported",
+      publicEntryPoint: "calculateAssembly",
+      selectedMethod: result.airborneCandidateResolution?.selectedCandidateId ?? null,
+      supportedTargetOutputs: result.supportedTargetOutputs,
+      unsupportedTargetOutputs: result.unsupportedTargetOutputs,
+      valuePins: []
+    },
+    toleranceOrErrorBudget: "blocked_no_lab_to_field_or_building_a_weighted_alias_budget",
+    valueOrBlockedReason: "Lab Rw/STC opening/leak results are not aliases for Dn,A / DnT,A field or building outputs",
+    visibleSurfaceParityTarget: WALL_VISIBLE_SURFACES
+  };
+}
+
+function openingLeakAWeightedAstmAliasBoundaryMatrixRow(): PersonalUseMvpCoverageScenarioRow {
+  const result = calculateOpeningLeakFieldBuilding({
+    airborneContext: COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_FIELD_CONTEXT,
+    targetOutputs: OPENING_LEAK_A_WEIGHTED_ASTM_OUTPUTS
+  });
+
+  return {
+    basis: "astm_rating_boundary",
+    currentPosture: "unsupported",
+    expectedPosture: "unsupported",
+    failureClass: "basis_boundary",
+    family: "wall_opening_leak_a_weighted_astm_alias_boundary",
+    hostileVariant: "astm_iic_aiic_requested_from_airborne_opening_leak_a_weighted_route",
+    id: COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_ASTM_ALIAS_ROW_ID,
+    inputCompleteness: "complete",
+    nextAction: "keep_airborne_a_weighted_out_of_impact_astm_route",
+    originSupportBucket: "opening_leak_a_weighted_astm_iic_aiic_alias_blocked",
+    requestedMetrics: OPENING_LEAK_A_WEIGHTED_ASTM_OUTPUTS,
+    route: "wall",
+    runtime: {
+      basisId: result.airborneBasis?.method ?? null,
+      errorBudgetDb: null,
+      missingPhysicalInputs: [],
+      origin: "unsupported",
+      publicEntryPoint: "calculateAssembly",
+      selectedMethod: result.airborneCandidateResolution?.selectedCandidateId ?? null,
+      supportedTargetOutputs: result.supportedTargetOutputs,
+      unsupportedTargetOutputs: result.unsupportedTargetOutputs,
+      valuePins: []
+    },
+    toleranceOrErrorBudget: "blocked_no_airborne_to_impact_astm_alias_budget",
+    valueOrBlockedReason: "Opening/leak Dn,A / DnT,A is an airborne ISO route; it does not calculate impact ASTM IIC / AIIC",
+    visibleSurfaceParityTarget: WALL_VISIBLE_SURFACES
+  };
+}
+
+function openingLeakAWeightedExactSourcePrecedenceMatrixRow(): PersonalUseMvpCoverageScenarioRow {
+  const result = calculateOpeningLeakFieldBuilding({
+    airborneContext: COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_FIELD_CONTEXT,
+    targetOutputs: OPENING_LEAK_A_WEIGHTED_OUTPUTS
+  });
+
+  return {
+    basis: "field_apparent",
+    currentPosture: "family_physics",
+    expectedPosture: "family_physics",
+    failureClass: "none",
+    family: "wall_opening_leak_a_weighted_exact_source_precedence_boundary",
+    hostileVariant: "source_absent_a_weighted_formula_keeps_exact_source_precedence_reserved",
+    id: COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_EXACT_SOURCE_ROW_ID,
+    inputCompleteness: "complete",
+    nextAction: "regression_guard",
+    originSupportBucket: "source_absent_a_weighted_formula_with_exact_source_precedence_reserved",
+    requestedMetrics: OPENING_LEAK_A_WEIGHTED_OUTPUTS,
+    route: "wall",
+    runtime: {
+      basisId: result.airborneBasis?.method ?? null,
+      errorBudgetDb: result.airborneBasis?.errorBudgetDb ?? null,
+      missingPhysicalInputs: result.airborneBasis?.missingPhysicalInputs ?? [],
+      origin: result.airborneBasis?.origin ?? null,
+      publicEntryPoint: "calculateAssembly",
+      selectedMethod: result.airborneCandidateResolution?.selectedCandidateId ?? null,
+      supportedTargetOutputs: result.supportedTargetOutputs,
+      unsupportedTargetOutputs: result.unsupportedTargetOutputs,
+      valuePins: metricPins({
+        "Dn,A": result.metrics.estimatedDnADb,
+        "DnT,A": result.metrics.estimatedDnTADb
+      })
+    },
+    toleranceOrErrorBudget: `source_absent formula +/-${COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FIELD_TOLERANCE_DB} dB; true same-basis exact A-weighted source rows still outrank this candidate`,
+    valueOrBlockedReason: "Dn,A 35.9 / DnT,A 36.1 remain source-absent family physics, not exact measured evidence",
+    visibleSurfaceParityTarget: WALL_VISIBLE_SURFACES
+  };
+}
+
+export function buildCompanyInternalCalculationGradeMainlineMatrixV6():
+  readonly PersonalUseMvpCoverageScenarioRow[] {
+  const baseRows = buildCompanyInternalCalculationGradeMainlineMatrixV5();
+  requireRow(
+    baseRows,
+    COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V5_OPENING_A_WEIGHTED_ROW_ID,
+    "matrix v5 opening/leak A-weighted unsupported boundary"
+  );
+  const retired = new Set<string>(COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_RETIRED_ROW_IDS);
+  const rows = [
+    ...baseRows.filter((row) => !retired.has(row.id)),
+    openingLeakAWeightedFieldRuntimeMatrixRow(),
+    openingLeakAWeightedBuildingRuntimeMatrixRow(),
+    openingLeakAWeightedBuildingDnABoundaryMatrixRow(),
+    openingLeakAWeightedMissingBandMatrixRow(),
+    openingLeakAWeightedLabAliasBoundaryMatrixRow(),
+    openingLeakAWeightedAstmAliasBoundaryMatrixRow(),
+    openingLeakAWeightedExactSourcePrecedenceMatrixRow()
+  ];
+  const ids = rows.map((row) => row.id);
+
+  if (new Set(ids).size !== ids.length) {
+    throw new Error("Company-internal matrix v6 contains duplicate row ids.");
+  }
+
+  return rows;
+}
+
+export function buildCompanyInternalCalculationGradeMainlineMatrixV6Contract():
+  CompanyInternalCalculationGradeMainlineMatrixV6Contract {
+  return {
+    importedOpeningLeakAWeightedRowIds: COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_IMPORTED_ROW_IDS,
+    landedGate: COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V6_LANDED_GATE,
+    matrixRows: 71,
+    newRuntimeBehaviorChangeInRefresh: false,
+    previousMatrixRows: 65,
+    previousSurfaceParityLandedGate: COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_SURFACE_PARITY_LANDED_GATE,
+    previousSurfaceParitySelectedNextAction:
+      COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_SURFACE_PARITY_SELECTED_NEXT_ACTION,
+    previousSurfaceParitySelectedNextFile:
+      COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_SURFACE_PARITY_SELECTED_NEXT_FILE,
+    previousSurfaceParitySelectionStatus:
+      COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_SURFACE_PARITY_SELECTION_STATUS,
+    retiredRowIds: COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_RETIRED_ROW_IDS,
+    selectedImplementationSlice: "company_internal_calculation_grade_mainline",
+    selectedNextAction: COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V6_SELECTED_NEXT_ACTION,
+    selectedNextFile: COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V6_SELECTED_NEXT_FILE,
+    selectedNextLabel: COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V6_SELECTED_NEXT_LABEL,
+    selectionStatus: COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V6_SELECTION_STATUS,
+    sourceRowsRequiredForRuntimeSelection: false
+  };
+}
+
+export function rankCompanyInternalCalculationGradeV6NextLanes(
+  matrix: readonly PersonalUseMvpCoverageScenarioRow[] = buildCompanyInternalCalculationGradeMainlineMatrixV6()
+): CompanyInternalCalculationGradeV6LaneSelection {
+  const candidateSeeds = [
+    {
+      basisLeakageRisk: 2,
+      calculationGradeRisk: 4,
+      evidenceRowIds: [
+        COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V5_OPENING_BUILDING_MISSING_OWNER_ROW_ID,
+        "wall.building_prediction_partial_context.needs_input",
+        "floor.astm_iic_aiic_boundary.unsupported",
+        "floor.lightweight_steel_suspended_ceiling_astm.unsupported",
+        "floor.reinforced_concrete_combined_astm_iic.unsupported"
+      ],
+      id: "boundary_revalidation_building_partial_context_and_astm",
+      implementationCost: 3,
+      reason:
+        "After A-weighted support lands in the matrix, the remaining high-value closeout is proving building partial-context prompts and parked ASTM boundaries still fail closed.",
+      sourceRowsRequiredForRuntimeSelection: false,
+      userFrequency: 5
+    },
+    {
+      basisLeakageRisk: 2,
+      calculationGradeRisk: 3,
+      evidenceRowIds: [
+        COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_FIELD_ROW_ID,
+        COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_BUILDING_ROW_ID,
+        COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_MISSING_BAND_ROW_ID
+      ],
+      id: "final_internal_use_rehearsal",
+      implementationCost: 5,
+      reason:
+        "The final operating-envelope rehearsal comes after boundary rows are revalidated, so the release note does not hide any parked basis route.",
+      sourceRowsRequiredForRuntimeSelection: false,
+      userFrequency: 6
+    },
+    {
+      basisLeakageRisk: 8,
+      calculationGradeRisk: 2,
+      evidenceRowIds: [
+        "floor.lightweight_steel_exact_source_precedence.lab",
+        COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_EXACT_SOURCE_ROW_ID
+      ],
+      id: "broad_source_crawl",
+      implementationCost: 9,
+      reason:
+        "More sources can tighten budgets later, but the matrix still has bounded source-absent and basis-boundary closeout work ahead of broad crawling.",
+      sourceRowsRequiredForRuntimeSelection: true,
+      userFrequency: 3
+    }
+  ] as const satisfies readonly Omit<CompanyInternalCalculationGradeV6LaneCandidate, "score" | "selected">[];
+  const matrixIds = new Set(matrix.map((row) => row.id));
+  const candidatesWithoutSelection = candidateSeeds.map((candidate) => {
+    const missingRows = candidate.evidenceRowIds.filter((id) => !matrixIds.has(id));
+
+    if (missingRows.length > 0) {
+      throw new Error(`Company-internal matrix v6 lane ${candidate.id} references missing rows: ${missingRows.join(", ")}`);
+    }
+
+    return {
+      ...candidate,
+      score: scoreLane(candidate),
+      selected: false
+    };
+  });
+  const [selected] = [...candidatesWithoutSelection].sort((left, right) => {
+    const scoreDelta = right.score - left.score;
+    return scoreDelta === 0 ? left.id.localeCompare(right.id) : scoreDelta;
+  });
+
+  if (!selected) {
+    throw new Error("Company-internal matrix v6 requires one selected next lane.");
+  }
+
+  const candidates = candidatesWithoutSelection.map((candidate) => ({
+    ...candidate,
+    selected: candidate.id === selected.id
+  }));
+  const selectedCandidate = candidates.find((candidate) => candidate.selected);
+
+  if (!selectedCandidate) {
+    throw new Error("Company-internal matrix v6 did not mark a selected next lane.");
+  }
+
+  return {
+    candidates,
+    selectedCandidate,
+    selectedNextAction: COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V6_SELECTED_NEXT_ACTION,
+    selectedNextFile: COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V6_SELECTED_NEXT_FILE,
+    selectionPolicy: [
+      "retire the stale A-weighted unsupported matrix row only after field and building A-weighted values are pinned",
+      "keep missing frequencyBandSet as a user input prompt instead of falling back to base field/building values",
+      "keep building Dn,A, lab aliases, and ASTM aliases unsupported unless a later owner explicitly promotes them",
+      "revalidate building partial-context and ASTM parked-boundary rows before the final internal-use rehearsal",
+      "do not choose broad source crawling while source-absent matrix closeout remains executable"
+    ]
+  };
+}
+
+export function summarizeCompanyInternalCalculationGradeMainlineMatrixV6(
+  matrix: readonly PersonalUseMvpCoverageScenarioRow[] = buildCompanyInternalCalculationGradeMainlineMatrixV6()
+): CompanyInternalCalculationGradeMainlineMatrixV6Summary {
+  requireRows(matrix, COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_IMPORTED_ROW_IDS, "opening/leak A-weighted v6");
+  const ids = new Set(matrix.map((row) => row.id));
+  const retiredStillPresent = COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_RETIRED_ROW_IDS.filter((id) => ids.has(id));
+
+  if (retiredStillPresent.length > 0) {
+    throw new Error(`Company-internal matrix v6 still contains retired row ids: ${retiredStillPresent.join(", ")}`);
+  }
+
+  const hiddenScreeningOriginRowIds = matrix
+    .filter((row) =>
+      row.inputCompleteness === "complete" &&
+      row.currentPosture === "family_physics" &&
+      row.runtime.origin === "screening_fallback"
+    )
+    .map((row) => row.id);
+
+  if (hiddenScreeningOriginRowIds.length > 0) {
+    throw new Error(`Company-internal matrix v6 still hides screening origins: ${hiddenScreeningOriginRowIds.join(", ")}`);
+  }
+
+  const laneSelection = rankCompanyInternalCalculationGradeV6NextLanes(matrix);
+
+  return {
+    basisCoverage: orderedSubset(matrix.map((row) => row.basis), BASIS_ORDER),
+    correctlyBlockedRowIds: matrix
+      .filter((row) => row.failureClass !== "none")
+      .map((row) => row.id),
+    currentPostureCoverage: orderedSubset(matrix.map((row) => row.currentPosture), POSTURE_ORDER),
+    exactSourcePrecedenceRowIds: [
+      "floor.lightweight_steel_exact_source_precedence.lab",
+      "floor.lightweight_steel_suspended_ceiling_exact_source_precedence.lab",
+      "floor.reinforced_concrete_combined_exact_source_precedence.lab",
+      COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V4_STEEL_LNT50_EXACT_FIELD_ROW_ID
+    ],
+    failureClassCounts: failureClassCounts(matrix),
+    hiddenScreeningOriginRowIds: [],
+    importedOpeningLeakAWeightedRowIds: COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_IMPORTED_ROW_IDS,
+    noRuntimeValueMovementInRefresh: true,
+    parkedAstmBoundaryRowIds: [
+      "floor.astm_iic_aiic_boundary.unsupported",
+      "floor.lightweight_steel_suspended_ceiling_astm.unsupported",
+      "floor.reinforced_concrete_combined_astm_iic.unsupported"
+    ],
+    promotedOpeningLeakAWeightedBuildingRowId:
+      COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_BUILDING_ROW_ID,
+    promotedOpeningLeakAWeightedFieldRowId:
+      COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_FIELD_ROW_ID,
+    remainingCalculationGradeBlockerRowIds: [
+      COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_BUILDING_DNA_ROW_ID,
+      COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_MISSING_BAND_ROW_ID,
+      COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_LAB_ALIAS_ROW_ID,
+      COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_ASTM_ALIAS_ROW_ID,
+      COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V5_OPENING_BUILDING_MISSING_OWNER_ROW_ID,
+      "wall.building_prediction_partial_context.needs_input",
+      "floor.astm_iic_aiic_boundary.unsupported",
+      "floor.lightweight_steel_suspended_ceiling_astm.unsupported",
+      "floor.reinforced_concrete_combined_astm_iic.unsupported"
+    ],
+    retiredRowIds: COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_RETIRED_ROW_IDS,
+    routeCoverage: orderedSubset(matrix.map((row) => row.route), ROUTE_ORDER),
+    rowCount: 71,
+    selectedLane: laneSelection.selectedCandidate.id,
+    selectedNextAction: laneSelection.selectedNextAction,
+    selectedNextFile: laneSelection.selectedNextFile
+  };
+}
+
+function valueMap(row: PersonalUseMvpCoverageScenarioRow): Record<string, number> {
+  return Object.fromEntries(row.runtime.valuePins.map((pin) => [pin.metric, pin.value]));
+}
+
+export function buildCompanyInternalBuildingAstmBoundaryRevalidationContract():
+  CompanyInternalBuildingAstmBoundaryRevalidationContract {
+  return {
+    astmBoundaryRowsStayUnsupported: true,
+    buildingBoundaryRowsStayNeedsInput: true,
+    landedGate: COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_LANDED_GATE,
+    matrixRows: 71,
+    newRuntimeBehaviorChangeInRevalidation: false,
+    previousMatrixV6LandedGate: COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V6_LANDED_GATE,
+    previousMatrixV6SelectedNextAction: COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V6_SELECTED_NEXT_ACTION,
+    previousMatrixV6SelectedNextFile: COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V6_SELECTED_NEXT_FILE,
+    previousMatrixV6SelectionStatus: COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V6_SELECTION_STATUS,
+    revalidatedBoundaryRowIds: COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_ROW_IDS,
+    revalidatedBuildingRowIds: COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_BUILDING_ROW_IDS,
+    revalidatedCrossRouteAstmRowIds: COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_CROSS_ROUTE_ASTM_ROW_IDS,
+    revalidatedFloorAstmRowIds: COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_FLOOR_ASTM_ROW_IDS,
+    selectedImplementationSlice: "company_internal_calculation_grade_mainline",
+    selectedNextAction: COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_SELECTED_NEXT_ACTION,
+    selectedNextFile: COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_SELECTED_NEXT_FILE,
+    selectedNextLabel: COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_SELECTED_NEXT_LABEL,
+    selectionStatus: COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_SELECTION_STATUS,
+    sourceRowsRequiredForRuntimeSelection: false
+  };
+}
+
+export function rankCompanyInternalBuildingAstmBoundaryRevalidationNextLanes(
+  matrix: readonly PersonalUseMvpCoverageScenarioRow[] = buildCompanyInternalCalculationGradeMainlineMatrixV6()
+): CompanyInternalBuildingAstmBoundaryRevalidationLaneSelection {
+  const candidateSeeds = [
+    {
+      basisLeakageRisk: 1,
+      calculationGradeRisk: 4,
+      evidenceRowIds: COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_ROW_IDS,
+      id: "final_internal_use_rehearsal",
+      implementationCost: 2,
+      reason:
+        "After the remaining building and ASTM boundaries are proven fail-closed, the highest-value next step is a final internal-use operating-envelope rehearsal.",
+      sourceRowsRequiredForRuntimeSelection: false,
+      userFrequency: 7
+    },
+    {
+      basisLeakageRisk: 5,
+      calculationGradeRisk: 3,
+      evidenceRowIds: COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_FLOOR_ASTM_ROW_IDS,
+      id: "astm_runtime_adapter",
+      implementationCost: 8,
+      reason:
+        "ASTM IIC/AIIC runtime can be useful later, but it is outside the ISO-first company-internal closeout and must not alias Ln,w or DeltaLw.",
+      sourceRowsRequiredForRuntimeSelection: false,
+      userFrequency: 3
+    },
+    {
+      basisLeakageRisk: 6,
+      calculationGradeRisk: 2,
+      evidenceRowIds: [
+        "floor.lightweight_steel_exact_source_precedence.lab",
+        COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_EXACT_SOURCE_ROW_ID
+      ],
+      id: "broad_source_crawl",
+      implementationCost: 9,
+      reason:
+        "More source rows are useful for later calibration, but they are not required to close the current company-internal operating envelope.",
+      sourceRowsRequiredForRuntimeSelection: true,
+      userFrequency: 3
+    }
+  ] as const satisfies readonly Omit<
+    CompanyInternalBuildingAstmBoundaryRevalidationLaneCandidate,
+    "score" | "selected"
+  >[];
+  const matrixIds = new Set(matrix.map((row) => row.id));
+  const candidatesWithoutSelection = candidateSeeds.map((candidate) => {
+    const missingRows = candidate.evidenceRowIds.filter((id) => !matrixIds.has(id));
+
+    if (missingRows.length > 0) {
+      throw new Error(
+        `Company-internal boundary revalidation lane ${candidate.id} references missing rows: ${missingRows.join(", ")}`
+      );
+    }
+
+    return {
+      ...candidate,
+      score: scoreLane(candidate),
+      selected: false
+    };
+  });
+  const [selected] = [...candidatesWithoutSelection].sort((left, right) => {
+    const scoreDelta = right.score - left.score;
+    return scoreDelta === 0 ? left.id.localeCompare(right.id) : scoreDelta;
+  });
+
+  if (!selected) {
+    throw new Error("Company-internal boundary revalidation requires one selected next lane.");
+  }
+
+  const candidates = candidatesWithoutSelection.map((candidate) => ({
+    ...candidate,
+    selected: candidate.id === selected.id
+  }));
+  const selectedCandidate = candidates.find((candidate) => candidate.selected);
+
+  if (!selectedCandidate) {
+    throw new Error("Company-internal boundary revalidation did not mark a selected next lane.");
+  }
+
+  return {
+    candidates,
+    selectedCandidate,
+    selectedNextAction: COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_SELECTED_NEXT_ACTION,
+    selectedNextFile: COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_SELECTED_NEXT_FILE,
+    selectionPolicy: [
+      "building prediction partial contexts must remain needs_input with named physical owners and no value pins",
+      "opening/leak building missing-owner rows must not borrow field values or expose a building budget",
+      "ASTM IIC/AIIC rows must remain unsupported until a real ASTM rating adapter owns the route",
+      "A-weighted airborne Dn,A/DnT,A rows must not become impact ASTM aliases",
+      "after these boundaries are stable, run the final internal-use rehearsal instead of broad source crawling"
+    ]
+  };
+}
+
+export function summarizeCompanyInternalBuildingAstmBoundaryRevalidation(
+  matrix: readonly PersonalUseMvpCoverageScenarioRow[] = buildCompanyInternalCalculationGradeMainlineMatrixV6()
+): CompanyInternalBuildingAstmBoundaryRevalidationSummary {
+  requireRows(matrix, COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_ROW_IDS, "building/ASTM boundary revalidation");
+
+  const rowsById = new Map(matrix.map((row) => [row.id, row]));
+  const boundaryRows = COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_ROW_IDS.map((rowId) =>
+    requireRow(matrix, rowId, "building/ASTM boundary revalidation")
+  );
+  const buildingRows = COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_BUILDING_ROW_IDS.map((rowId) =>
+    requireRow(matrix, rowId, "building boundary revalidation")
+  );
+  const floorAstmRows = COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_FLOOR_ASTM_ROW_IDS.map((rowId) =>
+    requireRow(matrix, rowId, "floor ASTM boundary revalidation")
+  );
+  const crossRouteAstmRows = COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_CROSS_ROUTE_ASTM_ROW_IDS.map((rowId) =>
+    requireRow(matrix, rowId, "cross-route ASTM boundary revalidation")
+  );
+  const invalidBuildingRows = buildingRows
+    .filter((row) =>
+      row.basis !== "building_prediction" ||
+      row.currentPosture !== "needs_input" ||
+      row.expectedPosture !== "needs_input" ||
+      row.failureClass !== "correct_block" ||
+      row.runtime.errorBudgetDb !== null ||
+      row.runtime.supportedTargetOutputs.length > 0 ||
+      row.runtime.valuePins.length > 0 ||
+      row.runtime.missingPhysicalInputs.length === 0
+    )
+    .map((row) => row.id);
+
+  if (invalidBuildingRows.length > 0) {
+    throw new Error(`Company-internal building boundary rows no longer fail closed: ${invalidBuildingRows.join(", ")}`);
+  }
+
+  const invalidAstmRows = [...floorAstmRows, ...crossRouteAstmRows]
+    .filter((row) =>
+      row.basis !== "astm_rating_boundary" ||
+      row.currentPosture !== "unsupported" ||
+      row.expectedPosture !== "unsupported" ||
+      row.runtime.errorBudgetDb !== null ||
+      row.runtime.supportedTargetOutputs.length > 0 ||
+      row.runtime.valuePins.length > 0 ||
+      !row.runtime.unsupportedTargetOutputs.includes("IIC") ||
+      !row.runtime.unsupportedTargetOutputs.includes("AIIC")
+    )
+    .map((row) => row.id);
+
+  if (invalidAstmRows.length > 0) {
+    throw new Error(`Company-internal ASTM boundary rows no longer fail closed: ${invalidAstmRows.join(", ")}`);
+  }
+
+  const fieldAWeighted = rowsById.get(COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_FIELD_ROW_ID);
+  const buildingAWeighted = rowsById.get(COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V6_OPENING_A_WEIGHTED_BUILDING_ROW_ID);
+  const fieldPins = fieldAWeighted ? valueMap(fieldAWeighted) : {};
+  const buildingPins = buildingAWeighted ? valueMap(buildingAWeighted) : {};
+  const matrixV6AWeightedValuePinsPreserved =
+    fieldPins["Dn,A"] === 35.9 &&
+    fieldPins["DnT,A"] === 36.1 &&
+    buildingPins["DnT,A"] === 31.3;
+
+  if (!matrixV6AWeightedValuePinsPreserved) {
+    throw new Error("Company-internal boundary revalidation moved Matrix V6 A-weighted value pins.");
+  }
+
+  const laneSelection = rankCompanyInternalBuildingAstmBoundaryRevalidationNextLanes(matrix);
+
+  return {
+    astmUnsupportedRowIds: COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_FLOOR_ASTM_ROW_IDS,
+    boundaryRowsWithoutErrorBudget: COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_ROW_IDS,
+    boundaryRowsWithoutValuePins: COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_ROW_IDS,
+    buildingMissingPhysicalInputsByRowId: Object.fromEntries(
+      buildingRows.map((row) => [row.id, row.runtime.missingPhysicalInputs])
+    ),
+    buildingNeedsInputRowIds: COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_BUILDING_ROW_IDS,
+    crossRouteAstmUnsupportedRowIds: COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_CROSS_ROUTE_ASTM_ROW_IDS,
+    finalRehearsalReady: true,
+    matrixRows: 71,
+    matrixV6AWeightedValuePinsPreserved: true,
     selectedLane: laneSelection.selectedCandidate.id,
     selectedNextAction: laneSelection.selectedNextAction,
     selectedNextFile: laneSelection.selectedNextFile

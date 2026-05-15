@@ -203,7 +203,7 @@ export function resolveLayerBasedImpactLane(
     !explicitDeltaImpact
       ? estimateTimberCltDeltaLwFromPredictorInput(input.explicitPredictorInput)
       : null;
-  const predictorSpecificFloorSystemEstimate =
+  const rawPredictorSpecificFloorSystemEstimate =
     input.predictorInput &&
     !input.officialFloorSystemId &&
     !floorSystemMatch &&
@@ -214,6 +214,7 @@ export function resolveLayerBasedImpactLane(
     !blockHeavyConcreteCombinedFormulaFallback
       ? derivePredictorSpecificFloorSystemEstimate(input.predictorInput)
       : null;
+  const predictorSpecificFloorSystemEstimate = rawPredictorSpecificFloorSystemEstimate;
   const narrowImpact =
     input.officialFloorSystemId ||
       explicitDeltaImpact ||
@@ -234,12 +235,10 @@ export function resolveLayerBasedImpactLane(
     !blockHeavyConcreteCombinedFormulaFallback
       ? deriveBoundFloorSystemEstimate(input.resolvedLayers)
       : null;
-  const floorSystemEstimate =
-    explicitDeltaImpact
+  const rawFloorSystemEstimate =
+    explicitDeltaImpact || predictorSpecificFloorSystemEstimate
       ? null
-      : predictorSpecificFloorSystemEstimate ??
-        (
-          !input.exactImpact &&
+      : !input.exactImpact &&
           !floorSystemMatch &&
           !boundFloorSystemMatch &&
           !boundFloorSystemEstimate &&
@@ -247,9 +246,9 @@ export function resolveLayerBasedImpactLane(
           !narrowImpact &&
           !blockSteelFormulaFallback &&
           !blockHeavyConcreteCombinedFormulaFallback
-            ? deriveFloorSystemEstimate(input.resolvedLayers, floorSystemRecommendations)
-            : null
-        );
+        ? deriveFloorSystemEstimate(input.resolvedLayers, floorSystemRecommendations)
+        : null;
+  const floorSystemEstimate = predictorSpecificFloorSystemEstimate ?? rawFloorSystemEstimate;
 
   return {
     boundFloorSystemEstimate,

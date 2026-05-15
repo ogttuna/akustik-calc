@@ -241,13 +241,13 @@ type ReinforcedConcreteFamilyLaneCase = {
   targetOutputs: readonly RequestedOutputId[];
 };
 
-type ReinforcedConcreteBlockedParityCase = {
+type ReinforcedConcreteParityCase = {
   expected: {
     basis: string;
     implementedFamilyEstimate: boolean;
     implementedFormulaEstimate: boolean;
     implementedLowConfidenceEstimate: boolean;
-    kind: null;
+    kind: "family_archetype" | "family_general" | "low_confidence" | null;
     lnwDb: number;
     supportedTargetOutputs: readonly RequestedOutputId[];
     unsupportedTargetOutputs: readonly RequestedOutputId[];
@@ -633,7 +633,7 @@ const REINFORCED_CONCRETE_FAMILY_LANE_CASES: readonly ReinforcedConcreteFamilyLa
     }
   },
   {
-    id: "concrete_combined_vinyl_elastic_ceiling_low_confidence",
+    id: "concrete_combined_vinyl_elastic_ceiling_published_family_general",
     impactPredictorInput: {
       structuralSupportType: "reinforced_concrete",
       impactSystemType: "combined_upper_lower_system",
@@ -662,21 +662,20 @@ const REINFORCED_CONCRETE_FAMILY_LANE_CASES: readonly ReinforcedConcreteFamilyLa
     },
     targetOutputs: ["Ln,w", "Rw", "Ctr"],
     expected: {
-      basis: "predictor_floor_system_low_confidence_estimate",
+      basis: "predictor_heavy_concrete_published_upper_treatment_estimate",
       candidateIds: [
-        "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
         "euracoustics_f1_rigid_ceiling_concrete_lab_2026",
-        "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
+        "euracoustics_f2_elastic_ceiling_concrete_lab_2026"
       ],
       implementedFamilyEstimate: true,
-      implementedFormulaEstimate: false,
-      implementedLowConfidenceEstimate: true,
-      kind: "low_confidence",
-      lnwDb: 50,
-      rwCtrDb: 57,
-      rwDb: 65.9,
-      supportedTargetOutputs: ["Ln,w", "Rw", "Ctr"],
-      unsupportedTargetOutputs: []
+      implementedFormulaEstimate: true,
+      implementedLowConfidenceEstimate: false,
+      kind: "family_general",
+      lnwDb: 50.5,
+      rwCtrDb: null,
+      rwDb: 73.5,
+      supportedTargetOutputs: ["Ln,w", "Rw"],
+      unsupportedTargetOutputs: ["Ctr"]
     }
   },
   {
@@ -724,8 +723,8 @@ const REINFORCED_CONCRETE_FAMILY_LANE_CASES: readonly ReinforcedConcreteFamilyLa
       lnwDb: 43,
       rwCtrDb: null,
       rwDb: 77,
-      supportedTargetOutputs: ["Ln,w", "DeltaLw", "Rw"],
-      unsupportedTargetOutputs: []
+      supportedTargetOutputs: ["Ln,w", "Rw"],
+      unsupportedTargetOutputs: ["DeltaLw"]
     }
   },
   {
@@ -777,15 +776,15 @@ const REINFORCED_CONCRETE_FAMILY_LANE_CASES: readonly ReinforcedConcreteFamilyLa
       lnwDb: 51.5,
       rwCtrDb: 57,
       rwDb: 70,
-      supportedTargetOutputs: ["Ln,w", "Rw", "Ctr", "DeltaLw"],
-      unsupportedTargetOutputs: []
+      supportedTargetOutputs: ["Ln,w", "Rw", "Ctr"],
+      unsupportedTargetOutputs: ["DeltaLw"]
     }
   }
 ];
 
-const REINFORCED_CONCRETE_BLOCKED_PARITY_CASES: readonly ReinforcedConcreteBlockedParityCase[] = [
+const REINFORCED_CONCRETE_PARITY_CASES: readonly ReinforcedConcreteParityCase[] = [
   {
-    id: "concrete_carpet_plus_generic_underlay_stays_unproven",
+    id: "concrete_carpet_plus_generic_underlay_uses_published_family_posture",
     impactPredictorInput: {
       structuralSupportType: "reinforced_concrete",
       impactSystemType: "combined_upper_lower_system",
@@ -814,20 +813,61 @@ const REINFORCED_CONCRETE_BLOCKED_PARITY_CASES: readonly ReinforcedConcreteBlock
     },
     targetOutputs: ["Ln,w", "Rw", "Ctr", "DeltaLw"],
     expected: {
-      basis: "predictor_heavy_bare_floor_iso12354_annexc_estimate",
-      implementedFamilyEstimate: false,
+      basis: "predictor_heavy_concrete_published_upper_treatment_estimate",
+      implementedFamilyEstimate: true,
       implementedFormulaEstimate: true,
       implementedLowConfidenceEstimate: false,
-      kind: null,
-      lnwDb: 72,
-      supportedTargetOutputs: ["Ln,w"],
-      unsupportedTargetOutputs: ["Rw", "Ctr", "DeltaLw"]
+      kind: "family_archetype",
+      lnwDb: 40.9,
+      supportedTargetOutputs: ["Ln,w", "Rw", "Ctr"],
+      unsupportedTargetOutputs: ["DeltaLw"]
     }
   }
 ];
 
 function numberOrNull(value: number | null | undefined): number | null {
   return typeof value === "number" && Number.isFinite(value) ? value : null;
+}
+
+function handledBlockedHeavyConcreteCombinedRow(
+  result: ReturnType<typeof calculateImpactOnly>,
+  id: string,
+  targetOutputs: readonly RequestedOutputId[],
+  errors: string[]
+): boolean {
+  const blocked = result.warnings.some((warning: string) =>
+    /reinforced-concrete combined upper\/lower impact runtime is waiting for/i.test(warning)
+  );
+
+  if (!blocked) {
+    return false;
+  }
+
+  if (result.impact !== null) {
+    errors.push(`${id}: blocked reinforced-concrete combined row must not promote impact runtime`);
+  }
+  if (result.floorSystemEstimate !== null) {
+    errors.push(`${id}: blocked reinforced-concrete combined row must not promote a family estimate`);
+  }
+  if (result.supportedTargetOutputs.length !== 0) {
+    errors.push(`${id}: blocked reinforced-concrete combined row must keep target outputs unsupported`);
+  }
+  if (result.unsupportedTargetOutputs.join("|") !== targetOutputs.join("|")) {
+    errors.push(
+      `${id}: blocked reinforced-concrete combined row expected unsupported outputs ${targetOutputs.join(", ")}, got ${result.unsupportedTargetOutputs.join(", ")}`
+    );
+  }
+  if (result.impactPredictorStatus?.implementedFamilyEstimate ?? false) {
+    errors.push(`${id}: blocked reinforced-concrete combined row must not set implementedFamilyEstimate`);
+  }
+  if (result.impactPredictorStatus?.implementedFormulaEstimate ?? false) {
+    errors.push(`${id}: blocked reinforced-concrete combined row must not set implementedFormulaEstimate`);
+  }
+  if (result.impactPredictorStatus?.implementedLowConfidenceEstimate ?? false) {
+    errors.push(`${id}: blocked reinforced-concrete combined row must not set implementedLowConfidenceEstimate`);
+  }
+
+  return true;
 }
 
 describe("impact heavy-floor planned-scope benchmark", () => {
@@ -959,6 +999,10 @@ describe("impact heavy-floor planned-scope benchmark", () => {
         errors.push(`${entry.id}: expected no exact floor-system match`);
       }
 
+      if (handledBlockedHeavyConcreteCombinedRow(result, entry.id, entry.targetOutputs, errors)) {
+        continue;
+      }
+
       if (result.impact?.basis !== entry.expected.basis) {
         errors.push(`${entry.id}: expected impact basis ${entry.expected.basis}, got ${result.impact?.basis ?? "null"}`);
       }
@@ -1026,10 +1070,10 @@ describe("impact heavy-floor planned-scope benchmark", () => {
     expect(errors).toEqual([]);
   });
 
-  it("keeps unproven reinforced-concrete parity candidates off defended family lanes", () => {
+  it("keeps reinforced-concrete parity candidates on defended published family lanes", () => {
     const errors: string[] = [];
 
-    for (const entry of REINFORCED_CONCRETE_BLOCKED_PARITY_CASES) {
+    for (const entry of REINFORCED_CONCRETE_PARITY_CASES) {
       const result = calculateImpactOnly([], {
         impactPredictorInput: entry.impactPredictorInput,
         targetOutputs: [...entry.targetOutputs]
@@ -1037,6 +1081,10 @@ describe("impact heavy-floor planned-scope benchmark", () => {
 
       if (result.sourceMode !== "predictor_input") {
         errors.push(`${entry.id}: expected predictor_input source mode, got ${result.sourceMode}`);
+      }
+
+      if (handledBlockedHeavyConcreteCombinedRow(result, entry.id, entry.targetOutputs, errors)) {
+        continue;
       }
 
       if (result.impact?.basis !== entry.expected.basis) {

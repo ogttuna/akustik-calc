@@ -30,7 +30,7 @@ import { buildWorkbenchMaterialCatalog } from "./workbench-materials";
 import { FLOOR_ROLE_LABELS, REPORT_PROFILE_LABELS } from "./workbench-data";
 import type { LayerDraft } from "./workbench-store";
 
-const REINFORCED_CONCRETE_LOW_CONFIDENCE_ROWS: readonly Omit<LayerDraft, "id">[] = [
+const REINFORCED_CONCRETE_INCOMPLETE_COMBINED_ROWS: readonly Omit<LayerDraft, "id">[] = [
   { floorRole: "base_structure", materialId: "concrete", thicknessMm: "180" },
   { floorRole: "resilient_layer", materialId: "generic_resilient_underlay", thicknessMm: "8" },
   { floorRole: "floor_covering", materialId: "vinyl_flooring", thicknessMm: "3" },
@@ -368,38 +368,41 @@ function expectHtmlToUseLongTextWrapGuards(html: string): void {
 }
 
 describe("simple workbench generated proposal document honesty", () => {
-  it("keeps low-confidence floor live, missing-input, and unsupported posture visible in proposal text", () => {
+  it("keeps incomplete floor missing-input and unsupported posture visible in proposal text", () => {
     const { coverageItems, document, scenario } = buildGeneratedProposalDocument({
       contextLabel: "Building prediction",
-      id: "generated-rc-low-confidence-report",
-      projectName: "Generated RC Low-Confidence Report",
-      rows: REINFORCED_CONCRETE_LOW_CONFIDENCE_ROWS,
+      id: "generated-rc-missing-input-report",
+      projectName: "Generated RC Missing-Input Report",
+      rows: REINFORCED_CONCRETE_INCOMPLETE_COMBINED_ROWS,
       studyContextLabel: "Option screening",
       studyMode: "floor",
       targetOutputs: ["Ln,w", "Rw", "Ctr", "L'n,w", "L'nT,w", "DeltaLw"]
     });
 
-    expect(scenario.result?.floorSystemEstimate?.kind).toBe("low_confidence");
-    expect(scenario.result?.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
+    expect(scenario.result?.floorSystemEstimate).toBeNull();
+    expect(scenario.result?.impact).toBeNull();
+    expect(scenario.result?.supportedTargetOutputs).toEqual(["Rw", "Ctr"]);
+    expect(scenario.result?.unsupportedTargetOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w", "DeltaLw"]);
     expect(coverageItems.find((item) => item.label === "Ln,w")).toEqual(
-      expect.objectContaining({ postureLabel: "Low-confidence fallback", status: "live", value: "50 dB" })
+      expect.objectContaining({ postureLabel: "Awaiting route input", status: "needs_input", value: "Not ready" })
     );
     expect(coverageItems.find((item) => item.label === "L'n,w")).toEqual(
       expect.objectContaining({ postureLabel: "Awaiting field input", status: "needs_input", value: "Not ready" })
     );
     expect(coverageItems.find((item) => item.label === "DeltaLw")).toEqual(
-      expect.objectContaining({ postureLabel: "Unsupported on route", status: "unsupported", value: "Not ready" })
+      expect.objectContaining({ postureLabel: "Awaiting route input", status: "needs_input", value: "Not ready" })
     );
 
     expectProposalTextToContain(document, [
-      "Low-confidence fallback",
-      "mixed nearby-row concrete lane",
+      "Awaiting route input",
+      "resilientLayerDynamicStiffnessMNm3",
+      "loadBasisKgM2",
+      "ceilingOrLowerAssembly",
       "L'n,w",
       "Awaiting field input",
-      "DeltaLw",
-      "Unsupported on route"
+      "DeltaLw"
     ]);
-    expectOfferPreviewsToOmitInternalPosture(document, ["Awaiting field input", "Unsupported on route"]);
+    expectOfferPreviewsToOmitInternalPosture(document, ["Awaiting route input", "Awaiting field input"]);
   });
 
   it("keeps wall field-airborne support posture and blocked Rw visible in proposal text", () => {

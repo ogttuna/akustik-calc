@@ -76,6 +76,7 @@ import {
   makeWorkbenchAdvancedWallInputSurfaceDraft,
   type WorkbenchAdvancedWallInputSurfaceDraft
 } from "./advanced-wall-source-absent-input-surface";
+import type { WorkbenchAirborneFrequencyBandSet } from "./airborne-field-context-input-surface";
 
 type LayerDraft = {
   densityKgM3?: string;
@@ -96,6 +97,7 @@ type ScenarioSnapshot = WorkbenchWallTopologyDraft & {
   airborneConservativeFlankingAssumption?: AirborneConservativeFlankingAssumption;
   airborneContextMode: AirborneContextMode;
   airborneElectricalBoxes: ElectricalBoxState;
+  airborneFrequencyBandSet?: WorkbenchAirborneFrequencyBandSet;
   airborneFlankingJunctionClass?: AirborneFlankingJunctionClass;
   airborneJunctionQuality: JunctionQuality;
   airborneJunctionCouplingLengthM?: string;
@@ -205,6 +207,7 @@ type WorkbenchStore = WorkbenchWallTopologyDraft & {
   airborneConservativeFlankingAssumption: AirborneConservativeFlankingAssumption;
   airborneContextMode: AirborneContextMode;
   airborneElectricalBoxes: ElectricalBoxState;
+  airborneFrequencyBandSet: WorkbenchAirborneFrequencyBandSet;
   airborneFlankingJunctionClass: AirborneFlankingJunctionClass;
   airborneJunctionQuality: JunctionQuality;
   airborneJunctionCouplingLengthM: string;
@@ -324,6 +327,7 @@ type WorkbenchStore = WorkbenchWallTopologyDraft & {
   setAirborneConservativeFlankingAssumption: (value: AirborneConservativeFlankingAssumption) => void;
   setAirborneContextMode: (value: AirborneContextMode) => void;
   setAirborneElectricalBoxes: (value: ElectricalBoxState) => void;
+  setAirborneFrequencyBandSet: (value: WorkbenchAirborneFrequencyBandSet) => void;
   setAirborneFlankingJunctionClass: (value: AirborneFlankingJunctionClass) => void;
   setAirborneJunctionCouplingLengthM: (value: string) => void;
   setAirborneJunctionQuality: (value: JunctionQuality) => void;
@@ -670,6 +674,7 @@ function makeDefaultState(input?: {
     airborneConservativeFlankingAssumption: "unknown" as const,
     airborneContextMode: "element_lab" as const,
     airborneElectricalBoxes: "none" as const,
+    airborneFrequencyBandSet: "" as const,
     airborneFlankingJunctionClass: "unknown" as const,
     airborneJunctionQuality: "good" as const,
     airborneJunctionCouplingLengthM: "",
@@ -806,6 +811,7 @@ function buildLoadedScenarioState(
     airborneConservativeFlankingAssumption: scenario.airborneConservativeFlankingAssumption ?? "unknown",
     airborneContextMode: scenario.airborneContextMode ?? "element_lab",
     airborneElectricalBoxes: scenario.airborneElectricalBoxes ?? "none",
+    airborneFrequencyBandSet: scenario.airborneFrequencyBandSet ?? "",
     airborneFlankingJunctionClass: scenario.airborneFlankingJunctionClass ?? "unknown",
     airborneJunctionQuality: scenario.airborneJunctionQuality ?? "good",
     airborneJunctionCouplingLengthM: scenario.airborneJunctionCouplingLengthM ?? "",
@@ -1124,6 +1130,7 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
               airborneConservativeFlankingAssumption: state.airborneConservativeFlankingAssumption,
               airborneContextMode: state.airborneContextMode,
               airborneElectricalBoxes: state.airborneElectricalBoxes,
+              airborneFrequencyBandSet: state.airborneFrequencyBandSet,
               airborneFlankingJunctionClass: state.airborneFlankingJunctionClass,
               airborneJunctionQuality: state.airborneJunctionQuality,
               airborneJunctionCouplingLengthM: state.airborneJunctionCouplingLengthM,
@@ -1247,6 +1254,7 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
       setAirborneConservativeFlankingAssumption: (value) => set({ airborneConservativeFlankingAssumption: value }),
       setAirborneContextMode: (value) => set({ airborneContextMode: value }),
       setAirborneElectricalBoxes: (value) => set({ airborneElectricalBoxes: value }),
+      setAirborneFrequencyBandSet: (value) => set({ airborneFrequencyBandSet: value }),
       setAirborneFlankingJunctionClass: (value) => set({ airborneFlankingJunctionClass: value }),
       setAirborneJunctionCouplingLengthM: (value) => set({ airborneJunctionCouplingLengthM: value }),
       setAirborneJunctionQuality: (value) => set({ airborneJunctionQuality: value }),

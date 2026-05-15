@@ -1749,8 +1749,8 @@ export function calculateAssembly(
   }
   if (gateAHOpeningLeakStcSpectrumAdapter?.warning) {
     warnings.push(gateAHOpeningLeakStcSpectrumAdapter.warning);
-  } else if (companyInternalOpeningLeakFieldBuildingRuntime?.warning) {
-    warnings.push(companyInternalOpeningLeakFieldBuildingRuntime.warning);
+  } else if (companyInternalOpeningLeakFieldBuildingRuntime?.warnings.length) {
+    warnings.push(...companyInternalOpeningLeakFieldBuildingRuntime.warnings);
   } else if (gateSOpeningLeakCompositeRuntime?.warning) {
     warnings.push(gateSOpeningLeakCompositeRuntime.warning);
   }

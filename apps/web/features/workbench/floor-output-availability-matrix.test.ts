@@ -374,7 +374,7 @@ describe("floor output availability matrix", () => {
     expect(familyCards.get("Ln,w")).toEqual(
       expect.objectContaining({
         status: "live",
-        value: "58.3 dB"
+        value: "58 dB"
       })
     );
     expect(familyCards.get("Ln,w+CI")).toEqual(
@@ -386,7 +386,7 @@ describe("floor output availability matrix", () => {
     expect(familyCards.get("L'nT,w")).toEqual(
       expect.objectContaining({
         status: "live",
-        value: "58.5 dB"
+        value: "58.2 dB"
       })
     );
     expect(familyCards.get("L'nT,50")).toEqual(

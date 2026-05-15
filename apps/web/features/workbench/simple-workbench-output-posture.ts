@@ -121,7 +121,7 @@ export function buildSimpleWorkbenchOutputPosture(input: {
       getCompanyInternalOpeningLeakFieldBuildingOutputDetail(output, result) ??
       companyInternalOpeningLeakFieldBuildingSurface.postureDetail;
 
-    if (status === "live" && (output === "R'w" || output === "Dn,w" || output === "DnT,w")) {
+    if (status === "live" && result?.supportedTargetOutputs.includes(output)) {
       return {
         detail,
         label: companyInternalOpeningLeakFieldBuildingSurface.label,

@@ -167,12 +167,10 @@ const CASES: readonly WallSelectorCardCase[] = [
     expected: {
       boundaryDetailIncludes: [/ambiguous boundary with Double Leaf/i, /family-boundary hold/i],
       detectedFamily: "lined_massive_wall",
-      dnTwDb: 47,
       postureIncludes: [/ambiguous boundary with Double Leaf/i, /family-boundary hold/i],
       rwDb: 45,
-      rwPrimeDb: 45,
-      supported: ["R'w", "DnT,w"],
-      unsupported: ["Rw"]
+      supported: [],
+      unsupported: ["Rw", "R'w", "DnT,w"]
     },
     branch: {
       detailIncludes: [/ambiguous boundary with Double Leaf/i, /conservative family-boundary hold/i],
@@ -197,11 +195,9 @@ const CASES: readonly WallSelectorCardCase[] = [
     ],
     expected: {
       detectedFamily: "lined_massive_wall",
-      dnTwDb: 49,
       rwDb: 47,
-      rwPrimeDb: 47,
-      supported: ["R'w", "DnT,w"],
-      unsupported: ["Rw"],
+      supported: [],
+      unsupported: ["Rw", "R'w", "DnT,w"],
       withoutBoundaryPosture: true
     },
     branch: {

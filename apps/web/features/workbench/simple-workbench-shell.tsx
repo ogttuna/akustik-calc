@@ -276,6 +276,7 @@ export function SimpleWorkbenchShell() {
   const airborneAirtightness = useWorkbenchStore((state) => state.airborneAirtightness);
   const airborneConnectionType = useWorkbenchStore((state) => state.airborneConnectionType);
   const airborneElectricalBoxes = useWorkbenchStore((state) => state.airborneElectricalBoxes);
+  const airborneFrequencyBandSet = useWorkbenchStore((state) => state.airborneFrequencyBandSet);
   const airborneJunctionQuality = useWorkbenchStore((state) => state.airborneJunctionQuality);
   const airborneAdvancedWallInputSurface = useWorkbenchStore((state) => state.airborneAdvancedWallInputSurface);
   const airborneOpeningLeakElements = useWorkbenchStore((state) => state.airborneOpeningLeakElements);
@@ -374,6 +375,7 @@ export function SimpleWorkbenchShell() {
   const setAirborneConservativeFlankingAssumption = useWorkbenchStore((state) => state.setAirborneConservativeFlankingAssumption);
   const setAirborneContextMode = useWorkbenchStore((state) => state.setAirborneContextMode);
   const setAirborneElectricalBoxes = useWorkbenchStore((state) => state.setAirborneElectricalBoxes);
+  const setAirborneFrequencyBandSet = useWorkbenchStore((state) => state.setAirborneFrequencyBandSet);
   const setAirborneFlankingJunctionClass = useWorkbenchStore((state) => state.setAirborneFlankingJunctionClass);
   const setAirborneJunctionCouplingLengthM = useWorkbenchStore((state) => state.setAirborneJunctionCouplingLengthM);
   const setAirborneJunctionQuality = useWorkbenchStore((state) => state.setAirborneJunctionQuality);
@@ -705,6 +707,7 @@ export function SimpleWorkbenchShell() {
       buildingPredictionOutputBasis: airborneBuildingPredictionOutputBasis,
       conservativeFlankingAssumption: airborneConservativeFlankingAssumption,
       contextMode: airborneContextMode,
+      frequencyBandSet: airborneFrequencyBandSet,
       flankingJunctionClass: airborneFlankingJunctionClass,
       junctionCouplingLengthM: airborneJunctionCouplingLengthM,
       panelHeightMm: airbornePanelHeightMm,
@@ -734,6 +737,7 @@ export function SimpleWorkbenchShell() {
     buildingPredictionOutputBasis: airborneBuildingPredictionOutputBasis,
     conservativeFlankingAssumption: airborneConservativeFlankingAssumption,
     contextMode: airborneContextMode,
+    frequencyBandSet: airborneFrequencyBandSet || undefined,
     flankingJunctionClass: airborneFlankingJunctionClass,
     junctionCouplingLengthM: parsePositiveNumber(airborneJunctionCouplingLengthM),
     panelHeightMm: parsePositiveNumber(airbornePanelHeightMm),
@@ -758,6 +762,7 @@ export function SimpleWorkbenchShell() {
       buildingPredictionOutputBasis: airborneBuildingPredictionOutputBasis,
       conservativeFlankingAssumption: airborneConservativeFlankingAssumption,
       contextMode: airborneContextMode,
+      frequencyBandSet: airborneFrequencyBandSet,
       flankingJunctionClass: airborneFlankingJunctionClass,
       junctionCouplingLengthM: airborneJunctionCouplingLengthM,
       panelHeightMm: airbornePanelHeightMm,
@@ -1467,6 +1472,7 @@ export function SimpleWorkbenchShell() {
           airborneConservativeFlankingAssumption={airborneConservativeFlankingAssumption}
           airborneContextMode={airborneContextMode}
           airborneElectricalBoxes={airborneElectricalBoxes}
+          airborneFrequencyBandSet={airborneFrequencyBandSet}
           airborneFlankingJunctionClass={airborneFlankingJunctionClass}
           airborneJunctionCouplingLengthM={airborneJunctionCouplingLengthM}
           airborneJunctionQuality={airborneJunctionQuality}
@@ -1575,6 +1581,7 @@ export function SimpleWorkbenchShell() {
           setAirborneConnectionType={setAirborneConnectionType}
           setAirborneConservativeFlankingAssumption={setAirborneConservativeFlankingAssumption}
           setAirborneElectricalBoxes={setAirborneElectricalBoxes}
+          setAirborneFrequencyBandSet={setAirborneFrequencyBandSet}
           setAirborneFlankingJunctionClass={setAirborneFlankingJunctionClass}
           setAirborneJunctionCouplingLengthM={setAirborneJunctionCouplingLengthM}
           setAirborneJunctionQuality={setAirborneJunctionQuality}

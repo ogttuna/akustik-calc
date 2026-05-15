@@ -336,6 +336,7 @@ const AirborneContextShape = {
   conservativeFlankingAssumption: AirborneConservativeFlankingAssumptionSchema.optional(),
   junctionCouplingLengthM: z.number().positive().optional(),
   buildingPredictionOutputBasis: AirborneBuildingPredictionOutputBasisSchema.optional(),
+  frequencyBandSet: z.literal("third_octave_100_3150").optional(),
   hostWallAreaM2: z.number().positive().optional(),
   openingLeakFieldBuildingAdapterBoundary: z.literal(true).optional(),
   openingLeakElements: z.array(AirborneOpeningLeakElementSchema).optional(),

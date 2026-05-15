@@ -194,6 +194,10 @@ export function parseServerProjectWorkbenchSnapshot(value: unknown): ScenarioSna
     airborneConservativeFlankingAssumption: parseAirborneConservativeFlankingAssumption(
       value.airborneConservativeFlankingAssumption
     ),
+    airborneFrequencyBandSet:
+      value.airborneFrequencyBandSet === "third_octave_100_3150"
+        ? "third_octave_100_3150"
+        : "",
     airborneFlankingJunctionClass: parseAirborneFlankingJunctionClass(value.airborneFlankingJunctionClass),
     airborneJunctionCouplingLengthM:
       typeof value.airborneJunctionCouplingLengthM === "string" ? value.airborneJunctionCouplingLengthM : "",

@@ -2,6 +2,23 @@ import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
 
+function expectBlockedHeavyConcreteCombinedAssembly(
+  result: ReturnType<typeof calculateAssembly>,
+  supportedTargetOutputs: readonly string[],
+  unsupportedTargetOutputs: readonly string[]
+): void {
+  expect(result.impact).toBeNull();
+  expect(result.floorSystemEstimate).toBeNull();
+  expect(result.supportedTargetOutputs).toEqual(supportedTargetOutputs);
+  expect(result.unsupportedTargetOutputs).toEqual(unsupportedTargetOutputs);
+  expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(false);
+  expect(result.impactPredictorStatus?.implementedFormulaEstimate).toBe(false);
+  expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
+  expect(result.warnings.join("\n")).toContain(
+    "Dynamic Calculator reinforced-concrete combined upper/lower impact runtime is waiting for"
+  );
+}
+
 const EXACT_IMPACT_SOURCE_19 = {
   frequenciesHz: [50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150],
   labOrField: "lab" as const,
@@ -3323,10 +3340,7 @@ describe("calculateAssembly", () => {
       { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 25 }
     ]);
 
-    expect(result.impact).not.toBeNull();
-    expect(result.impact?.basis).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");
-    expect(result.impact?.LnW).toBe(41.1);
-    expect(result.impact?.DeltaLw).toBe(33.4);
+    expectBlockedHeavyConcreteCombinedAssembly(result, [], []);
   });
 
   it("prioritizes an exact lab-side impact source over the scoped predictor", () => {
@@ -6090,16 +6104,7 @@ describe("calculateAssembly", () => {
     ]);
 
     expect(result.floorSystemMatch).toBeNull();
-    expect(result.floorSystemEstimate?.kind).toBe("family_archetype");
-    expect(result.impact?.basis).toBe("predictor_floor_system_family_archetype_estimate");
-    expect(result.impact?.LnW).toBe(51);
-    expect(result.floorSystemRatings?.Rw).toBe(63);
-    expect(result.floorSystemRatings?.RwCtr).toBe(57);
-    expect(result.impact?.estimateCandidateIds).toEqual([
-      "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
-    ]);
-    expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
-    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
+    expectBlockedHeavyConcreteCombinedAssembly(result, [], []);
   });
 
   it("keeps split timber flooring plus generic underlay concrete visible-layer stacks on the Knauf concrete archetype lane", () => {
@@ -6114,17 +6119,8 @@ describe("calculateAssembly", () => {
     ]);
 
     expect(result.floorSystemMatch).toBeNull();
-    expect(result.floorSystemEstimate?.kind).toBe("family_archetype");
-    expect(result.impact?.basis).toBe("predictor_floor_system_family_archetype_estimate");
-    expect(result.impact?.LnW).toBe(51);
-    expect(result.floorSystemRatings?.Rw).toBe(63);
-    expect(result.floorSystemRatings?.RwCtr).toBe(57);
-    expect(result.impact?.estimateCandidateIds).toEqual([
-      "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
-    ]);
     expect(result.impactPredictorStatus?.inputMode).toBe("derived_from_visible_layers");
-    expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
-    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
+    expectBlockedHeavyConcreteCombinedAssembly(result, [], []);
   });
 
   it("keeps near-match concrete tile-ceiling visible-layer stacks on the Knauf tile archetype lane", () => {
@@ -6167,19 +6163,7 @@ describe("calculateAssembly", () => {
     );
 
     expect(result.floorSystemMatch).toBeNull();
-    expect(result.floorSystemEstimate?.kind).toBe("family_archetype");
-    expect(result.impact?.basis).toBe("predictor_floor_system_family_archetype_estimate");
-    expect(result.impact?.LnW).toBe(45);
-    expect(result.impact?.DeltaLw).toBeUndefined();
-    expect(result.floorSystemRatings?.Rw).toBe(69);
-    expect(result.floorSystemRatings?.RwCtr).toBe(64);
-    expect(result.impact?.estimateCandidateIds).toEqual([
-      "knauf_cc60_1b_concrete200_tile_acoustic_underlay_lab_2026"
-    ]);
-    expect(result.supportedImpactOutputs).toEqual(["Ln,w"]);
-    expect(result.unsupportedImpactOutputs).toEqual(["DeltaLw"]);
-    expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
-    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
+    expectBlockedHeavyConcreteCombinedAssembly(result, [], ["Ln,w", "DeltaLw"]);
   });
 
   it("carries exact family rows into direct standardized field outputs on the main impact lane", () => {
@@ -6806,16 +6790,7 @@ describe("calculateAssembly", () => {
       }
     );
 
-    expect(result.impact?.basis).toBe("predictor_heavy_concrete_published_upper_treatment_estimate");
-    expect(result.floorSystemEstimate?.kind).toBe("family_general");
-    expect(result.impact?.LnW).toBe(43);
-    expect(result.impact?.DeltaLw).toBe(33.4);
-    expect(result.floorSystemRatings?.Rw).toBe(77);
-    expect(result.floorSystemRatings?.RwCtr).toBeUndefined();
-    expect(result.impact?.estimateCandidateIds).toEqual(["euracoustics_f2_elastic_ceiling_concrete_lab_2026"]);
-    expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
-    expect(result.impactPredictorStatus?.implementedFormulaEstimate).toBe(true);
-    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
+    expectBlockedHeavyConcreteCombinedAssembly(result, ["Rw"], ["Ln,w", "DeltaLw"]);
   });
 
   it("routes reinforced-concrete combined wet predictor input with a rigid gypsum ceiling onto the defended published upper-treatment lane on the assembly route", () => {
@@ -6862,20 +6837,7 @@ describe("calculateAssembly", () => {
       }
     );
 
-    expect(result.impact?.basis).toBe("predictor_heavy_concrete_published_upper_treatment_estimate");
-    expect(result.floorSystemEstimate?.kind).toBe("family_general");
-    expect(result.impact?.LnW).toBe(51.5);
-    expect(result.impact?.DeltaLw).toBe(33.4);
-    expect(result.floorSystemRatings?.Rw).toBe(70);
-    expect(result.floorSystemRatings?.RwCtr).toBe(57);
-    expect(result.impact?.estimateCandidateIds).toEqual([
-      "euracoustics_f1_rigid_ceiling_concrete_lab_2026",
-      "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
-      "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
-    ]);
-    expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
-    expect(result.impactPredictorStatus?.implementedFormulaEstimate).toBe(true);
-    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
+    expectBlockedHeavyConcreteCombinedAssembly(result, ["Rw", "Ctr"], ["Ln,w", "DeltaLw"]);
   });
 
   it("derives the defended published upper-treatment lane from a visible combined wet stack with an elastic gypsum ceiling on the assembly route", () => {
@@ -6895,13 +6857,7 @@ describe("calculateAssembly", () => {
       }
     );
 
-    expect(result.impact?.basis).toBe("predictor_heavy_concrete_published_upper_treatment_estimate");
-    expect(result.floorSystemEstimate?.kind).toBe("family_general");
-    expect(result.impact?.LnW).toBe(43);
-    expect(result.impact?.DeltaLw).toBe(26.7);
-    expect(result.floorSystemRatings?.Rw).toBe(77);
-    expect(result.floorSystemRatings?.RwCtr).toBeUndefined();
-    expect(result.impact?.estimateCandidateIds).toEqual(["euracoustics_f2_elastic_ceiling_concrete_lab_2026"]);
+    expectBlockedHeavyConcreteCombinedAssembly(result, ["Rw"], ["Ln,w", "DeltaLw"]);
   });
 
   it("derives the defended published upper-treatment lane from a visible combined wet stack with a rigid gypsum ceiling on the assembly route", () => {
@@ -6921,17 +6877,7 @@ describe("calculateAssembly", () => {
       }
     );
 
-    expect(result.impact?.basis).toBe("predictor_heavy_concrete_published_upper_treatment_estimate");
-    expect(result.floorSystemEstimate?.kind).toBe("family_general");
-    expect(result.impact?.LnW).toBe(51.5);
-    expect(result.impact?.DeltaLw).toBe(26.7);
-    expect(result.floorSystemRatings?.Rw).toBe(70);
-    expect(result.floorSystemRatings?.RwCtr).toBe(57);
-    expect(result.impact?.estimateCandidateIds).toEqual([
-      "euracoustics_f1_rigid_ceiling_concrete_lab_2026",
-      "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
-      "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
-    ]);
+    expectBlockedHeavyConcreteCombinedAssembly(result, ["Rw", "Ctr"], ["Ln,w", "DeltaLw"]);
   });
 
   it("keeps lightweight-concrete floating floors off the heavy-concrete-specific impact lanes", () => {
@@ -7117,7 +7063,7 @@ describe("calculateAssembly", () => {
     expect(result.unsupportedTargetOutputs).toEqual(["Ctr"]);
   });
 
-  it("keeps combined reinforced-concrete predictor input on the upstream low-confidence lane", () => {
+  it("keeps combined reinforced-concrete predictor input off the old low-confidence lane", () => {
     const result = calculateAssembly(
       [
         { materialId: "gypsum_board", thicknessMm: 12.5 },
@@ -7144,43 +7090,31 @@ describe("calculateAssembly", () => {
       }
     );
 
-    expect(result.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
-    expect(result.floorSystemEstimate?.fitPercent).toBe(29);
-    expect(result.dynamicImpactTrace?.fitPercent).toBe(29);
-    expect(result.impact?.LnW).toBe(50);
-    expect(result.floorSystemRatings?.Rw).toBe(65.9);
-    expect(result.floorSystemRatings?.RwCtr).toBe(57);
-    expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
-    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(true);
+    expectBlockedHeavyConcreteCombinedAssembly(result, [], ["Ln,w"]);
     expect(
       result.impactPredictorStatus?.notes.some((note: string) => /implemented low-confidence fallback estimate is active/i.test(note))
-    ).toBe(true);
+    ).toBe(false);
     expect(
       result.impactPredictorStatus?.notes.some((note: string) => /^Implemented family estimate is active\.$/i.test(note))
     ).toBe(false);
     expect(
       result.impactPredictorStatus?.notes.some((note: string) => /proxy values from the same mixed-row reinforced-concrete fallback/i.test(note))
-    ).toBe(true);
+    ).toBe(false);
     expect(
-      result.impactSupport?.notes.some((note: string) => /Published floor-system low-confidence fallback is active: reinforced concrete/i.test(note))
-    ).toBe(true);
+      result.impactSupport?.notes.some((note: string) => /Published floor-system low-confidence fallback is active: reinforced concrete/i.test(note)) ?? false
+    ).toBe(false);
     expect(
-      result.impactSupport?.notes.some((note: string) => /proxy airborne companions from mixed nearby concrete rows/i.test(note))
-    ).toBe(true);
+      result.impactSupport?.notes.some((note: string) => /proxy airborne companions from mixed nearby concrete rows/i.test(note)) ?? false
+    ).toBe(false);
     expect(
-      result.impactSupport?.notes.some((note: string) => /Nearby-row ranking stays elastic-ceiling first, rigid-ceiling second/i.test(note))
-    ).toBe(true);
+      result.impactSupport?.notes.some((note: string) => /Nearby-row ranking stays elastic-ceiling first, rigid-ceiling second/i.test(note)) ?? false
+    ).toBe(false);
     expect(
       result.warnings.some((warning: string) => /low-confidence reinforced-concrete fallback is active with proxy airborne companions/i.test(warning))
-    ).toBe(true);
+    ).toBe(false);
     expect(
       result.warnings.some((warning: string) => /Published low-confidence fallback active: reinforced concrete at 29% fit\./i.test(warning))
-    ).toBe(true);
-    expect(result.impact?.estimateCandidateIds).toEqual([
-      "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
-      "euracoustics_f1_rigid_ceiling_concrete_lab_2026",
-      "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
-    ]);
+    ).toBe(false);
   });
 
   it("applies structured airborne leakage and field-flanking overlays without altering the impact lane", () => {

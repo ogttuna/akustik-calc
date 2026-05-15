@@ -116,7 +116,7 @@ describe("getGuidedValidationSummary", () => {
     expect(summary.detail).toContain("supported wall estimate");
   });
 
-  it("keeps the steel suspended sample on a low-confidence fallback posture", () => {
+  it("keeps the steel suspended sample on a scoped published-family estimate posture", () => {
     const scenario = evaluatePreset("steel_suspended_fallback");
 
     const summary = getGuidedValidationSummary({
@@ -124,10 +124,10 @@ describe("getGuidedValidationSummary", () => {
       studyMode: "floor"
     });
 
-    expect(summary.value).toBe("Low-confidence fallback");
-    expect(summary.tone).toBe("warning");
-    expect(summary.detail).toContain("final published-family fallback");
-    expect(summary.detail).toContain("last-resort estimate");
+    expect(summary.value).toBe("Scoped estimate");
+    expect(summary.tone).toBe("neutral");
+    expect(summary.detail).toContain("Published family estimate is active.");
+    expect(summary.detail).toContain("supported floor estimate");
   });
 
   it("calls out missing support-form detail on conservative steel crossover bounds", () => {

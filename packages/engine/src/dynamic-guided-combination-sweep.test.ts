@@ -14,7 +14,8 @@ const FLOOR_LAB_OUTPUTS: readonly RequestedOutputId[] = ["Rw", "Ln,w", "DeltaLw"
 const FLOOR_FIELD_OUTPUTS: readonly RequestedOutputId[] = ["Rw", "Ln,w", "L'n,w", "L'nT,w"];
 
 const WALL_FIELD_CONTEXT = {
-  contextMode: "building_prediction" as const,
+  contextMode: "field_between_rooms" as const,
+  frequencyBandSet: "third_octave_100_3150" as const,
   panelHeightMm: 2800,
   panelWidthMm: 3600,
   receivingRoomRt60S: 0.6,

@@ -21,6 +21,83 @@ As of 2026-05-15, the current active slice is
 `company_internal_calculation_grade_mainline`.
 The active checkpoint is
 [CHECKPOINT_2026-05-15_COMPANY_INTERNAL_CHECKPOINT_REVIEW_AND_VALIDATION.md](./CHECKPOINT_2026-05-15_COMPANY_INTERNAL_CHECKPOINT_REVIEW_AND_VALIDATION.md).
+The current remaining-gap analysis and execution plan is
+[CHECKPOINT_2026-05-15_COMPANY_INTERNAL_REMAINING_GAP_ANALYSIS_AND_PLAN.md](./CHECKPOINT_2026-05-15_COMPANY_INTERNAL_REMAINING_GAP_ANALYSIS_AND_PLAN.md).
+Use it for the concrete controlled company-internal readiness sequence:
+A-weighted surface parity, Matrix V6, boundary revalidation, and final
+internal-use rehearsal. Matrix V6 has now landed; the active next slice
+is boundary revalidation.
+The opening/leak A-weighted formula-corridor handoff is
+[CHECKPOINT_2026-05-15_COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FORMULA_CORRIDOR_HANDOFF.md](./CHECKPOINT_2026-05-15_COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FORMULA_CORRIDOR_HANDOFF.md).
+`company_internal_opening_leak_a_weighted_spectrum_adapter_formula_corridor_plan`
+has landed with selection status
+`company_internal_opening_leak_a_weighted_spectrum_adapter_formula_corridor_landed_no_runtime_selected_runtime_corridor`.
+Formula pins: field `Dn,A 35.9`; field `DnT,A 36.1`; building `DnT,A 31.3`.
+The selected next action, now landed, is
+`company_internal_opening_leak_a_weighted_spectrum_adapter_runtime_corridor_plan`;
+selected next file, now landed:
+`packages/engine/src/company-internal-opening-leak-a-weighted-spectrum-adapter-runtime-corridor-contract.test.ts`;
+selected next label, now landed: opening/leak Dn,A / DnT,A
+spectrum-adapter runtime corridor.
+The current opening/leak A-weighted surface-parity handoff is
+[CHECKPOINT_2026-05-15_COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_SURFACE_PARITY_HANDOFF.md](./CHECKPOINT_2026-05-15_COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_SURFACE_PARITY_HANDOFF.md).
+`company_internal_opening_leak_a_weighted_spectrum_adapter_surface_parity_plan`
+has landed with selection status
+`company_internal_opening_leak_a_weighted_spectrum_adapter_surface_parity_landed_selected_matrix_v6_refresh`.
+It keeps field `Dn,A 35.9`, field `DnT,A 36.1`, and building
+`DnT,A 31.3` frozen while making the A-weighted basis, budget, and
+frequency band set visible across cards, posture, scenario summaries,
+dossiers, saved replay, server snapshot replay, API payloads, Markdown
+reports, and the workbench input surface. The selected next action is
+`company_internal_calculation_grade_mainline_matrix_v6_refresh_after_opening_leak_a_weighted_surface_parity_plan`;
+selected next file:
+`packages/engine/src/company-internal-calculation-grade-mainline-matrix-v6-contract.test.ts`;
+selected next label: company-internal matrix v6 refresh after
+opening/leak Dn,A / DnT,A surface parity.
+
+The current company-internal Matrix V6 handoff is
+[CHECKPOINT_2026-05-15_COMPANY_INTERNAL_MATRIX_V6_REFRESH_AFTER_A_WEIGHTED_SURFACE_HANDOFF.md](./CHECKPOINT_2026-05-15_COMPANY_INTERNAL_MATRIX_V6_REFRESH_AFTER_A_WEIGHTED_SURFACE_HANDOFF.md).
+`company_internal_calculation_grade_mainline_matrix_v6_refresh_after_opening_leak_a_weighted_surface_parity_plan`
+has landed with selection status
+`company_internal_calculation_grade_mainline_matrix_v6_refresh_after_opening_leak_a_weighted_surface_parity_landed_selected_boundary_revalidation`.
+Matrix V6 refreshes the executable matrix to 71 rows, preserves field
+`Dn,A 35.9`, field `DnT,A 36.1`, and building `DnT,A 31.3`, retires the
+stale A-weighted unsupported row, and keeps building `Dn,A`, missing
+`frequencyBandSet`, lab aliases, ASTM aliases, and exact-source
+precedence as explicit boundaries. Selected next action:
+`company_internal_building_astm_boundary_revalidation_after_a_weighted_matrix_plan`;
+selected next file:
+`packages/engine/src/company-internal-building-astm-boundary-revalidation-contract.test.ts`;
+selected next label: building partial-context and ASTM parked-boundary revalidation.
+
+The current building/ASTM boundary revalidation handoff is
+[CHECKPOINT_2026-05-15_COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-15_COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_HANDOFF.md).
+`company_internal_building_astm_boundary_revalidation_after_a_weighted_matrix_plan`
+has landed with selection status
+`company_internal_building_astm_boundary_revalidation_after_a_weighted_matrix_landed_selected_final_internal_use_rehearsal`.
+It keeps building partial-context and opening/leak building missing-owner
+rows as `needs_input` with named physical owners such as
+`sourceRoomVolumeM3`, no value pins, and no budget. It also keeps floor
+ASTM `IIC` / `AIIC` and airborne A-weighted-to-ASTM alias rows
+unsupported without ISO alias values or budgets. Selected next action:
+`company_internal_final_internal_use_rehearsal_after_boundary_revalidation_plan`;
+selected next file:
+`packages/engine/src/company-internal-final-internal-use-rehearsal-contract.test.ts`;
+selected next label: final internal-use rehearsal and operating envelope.
+
+The previous opening/leak A-weighted runtime-corridor handoff is
+[CHECKPOINT_2026-05-15_COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_CORRIDOR_HANDOFF.md](./CHECKPOINT_2026-05-15_COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_CORRIDOR_HANDOFF.md).
+`company_internal_opening_leak_a_weighted_spectrum_adapter_runtime_corridor_plan`
+has landed with selection status
+`company_internal_opening_leak_a_weighted_spectrum_adapter_runtime_corridor_landed_selected_surface_parity`.
+Runtime pins: field `Dn,A 35.9`; field `DnT,A 36.1`; building
+`DnT,A 31.3`. `frequencyBandSet` is now a runtime input; missing it
+keeps A-weighted outputs unsupported. The selected next action, now
+landed, is
+`company_internal_opening_leak_a_weighted_spectrum_adapter_surface_parity_plan`;
+selected next file, now landed:
+`packages/engine/src/company-internal-opening-leak-a-weighted-spectrum-adapter-surface-parity-contract.test.ts`;
+selected next label, now landed: opening/leak Dn,A / DnT,A card/report/API parity.
 The active tactical plan is
 [SLICE_COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_PLAN.md](./SLICE_COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_PLAN.md).
 The research-backed remaining-road checkpoint is
@@ -31,8 +108,13 @@ lab/field/building separation, implementation-vs-doc drift cleanup, and
 zero complete in-scope `low_confidence` / `screening_fallback` final
 answers.
 
-Latest mainline runtime movement: complete heavy-composite double-leaf wall
-stacks now use
+Latest mainline runtime movement: complete opening/leak A-weighted
+field/building requests now use
+`company_internal_opening_leak_a_weighted_spectrum_adapter_runtime_corridor`
+for field `Dn,A 35.9`, field `DnT,A 36.1`, and building `DnT,A 31.3`
+when `frequencyBandSet` is present. Missing `frequencyBandSet`,
+building `Dn,A`, lab `Rw` / `STC`, and ASTM `IIC` / `AIIC` remain
+blocked. Preceding heavy-composite double-leaf wall stacks use
 `company_internal_heavy_composite_wall_mass_air_mass_capped_family_physics_runtime`
 instead of `screening_fallback` / low confidence. The solver keeps lab
 `Rw 63 / STC 63 / C -1.4 / Ctr -6.3`, field `R'w 60 / Dn,w 60 /
@@ -292,14 +374,59 @@ guard.
 Selection status:
 `company_internal_opening_leak_a_weighted_spectrum_adapter_owner_contract_landed_no_runtime_selected_formula_corridor`.
 
-Current selected next action:
+Owner selected next action, now landed:
 `company_internal_opening_leak_a_weighted_spectrum_adapter_formula_corridor_plan`.
 
-Current selected next file:
+Owner selected next file, now landed:
 `packages/engine/src/company-internal-opening-leak-a-weighted-spectrum-adapter-formula-corridor-contract.test.ts`.
 
-Current selected next label:
+Owner selected next label, now landed:
 opening/leak Dn,A / DnT,A spectrum-adapter formula corridor.
+
+Latest landed A-weighted formula corridor:
+
+`company_internal_opening_leak_a_weighted_spectrum_adapter_formula_corridor_plan`.
+Selection status:
+`company_internal_opening_leak_a_weighted_spectrum_adapter_formula_corridor_landed_no_runtime_selected_runtime_corridor`.
+Formula pins: field `Dn,A 35.9`; field `DnT,A 36.1`; building `DnT,A 31.3`.
+Formula selected next action, now landed:
+`company_internal_opening_leak_a_weighted_spectrum_adapter_runtime_corridor_plan`.
+Formula selected next file, now landed:
+`packages/engine/src/company-internal-opening-leak-a-weighted-spectrum-adapter-runtime-corridor-contract.test.ts`.
+Formula selected next label, now landed:
+opening/leak Dn,A / DnT,A spectrum-adapter runtime corridor.
+
+Latest landed A-weighted runtime corridor:
+
+`company_internal_opening_leak_a_weighted_spectrum_adapter_runtime_corridor_plan`.
+Selection status:
+`company_internal_opening_leak_a_weighted_spectrum_adapter_runtime_corridor_landed_selected_surface_parity`.
+Runtime pins: field `Dn,A 35.9`; field `DnT,A 36.1`; building `DnT,A 31.3`.
+`frequencyBandSet` is now required by runtime. Missing it keeps
+A-weighted outputs unsupported, and building `Dn,A` plus lab/ASTM
+aliases remain blocked. Current selected next action, now landed:
+`company_internal_opening_leak_a_weighted_spectrum_adapter_surface_parity_plan`.
+Current selected next file, now landed:
+`packages/engine/src/company-internal-opening-leak-a-weighted-spectrum-adapter-surface-parity-contract.test.ts`.
+Current selected next label, now landed:
+opening/leak Dn,A / DnT,A card/report/API parity.
+
+Latest landed A-weighted surface parity:
+
+`company_internal_opening_leak_a_weighted_spectrum_adapter_surface_parity_plan`.
+Selection status:
+`company_internal_opening_leak_a_weighted_spectrum_adapter_surface_parity_landed_selected_matrix_v6_refresh`.
+Surface parity keeps field `Dn,A 35.9`, field `DnT,A 36.1`, and
+building `DnT,A 31.3` frozen while exposing the A-weighted method,
+candidate, budgets, warning, and frequency band set across cards,
+route posture, scenario summary, dossiers, saved/server replay, API
+payloads, Markdown report, and workbench inputs. Surface selected next
+action:
+`company_internal_calculation_grade_mainline_matrix_v6_refresh_after_opening_leak_a_weighted_surface_parity_plan`.
+Surface selected next file:
+`packages/engine/src/company-internal-calculation-grade-mainline-matrix-v6-contract.test.ts`.
+Surface selected next label:
+company-internal matrix v6 refresh after opening/leak Dn,A / DnT,A surface parity.
 
 Preceding low-frequency runtime corridor:
 

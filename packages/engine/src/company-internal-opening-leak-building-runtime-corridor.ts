@@ -34,20 +34,39 @@ export const COMPANY_INTERNAL_OPENING_LEAK_FIELD_RUNTIME_METHOD =
 export const COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD =
   "company_internal_opening_leak_building_area_energy_runtime_corridor";
 
+export const COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD =
+  "company_internal_opening_leak_a_weighted_spectrum_adapter_runtime_corridor";
+
 export const COMPANY_INTERNAL_OPENING_LEAK_FIELD_SELECTED_CANDIDATE_ID =
   "candidate_company_internal_opening_leak_field_family_physics_prediction";
 
 export const COMPANY_INTERNAL_OPENING_LEAK_BUILDING_SELECTED_CANDIDATE_ID =
   "candidate_company_internal_opening_leak_building_family_physics_prediction";
 
+export const COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_SELECTED_CANDIDATE_ID =
+  "candidate_company_internal_opening_leak_a_weighted_family_physics_prediction";
+
 export const COMPANY_INTERNAL_OPENING_LEAK_FIELD_TOLERANCE_DB = 8;
 export const COMPANY_INTERNAL_OPENING_LEAK_BUILDING_TOLERANCE_DB = 10;
+export const COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_ADAPTER_DB_RUNTIME = -0.8;
+export const COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_ADAPTER_BUDGET_DB_RUNTIME = 1;
+export const COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FIELD_TOLERANCE_DB = 9;
+export const COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_BUILDING_TOLERANCE_DB = 11;
+export const COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FREQUENCY_BAND_SET =
+  "third_octave_100_3150";
 
 export const COMPANY_INTERNAL_OPENING_LEAK_RUNTIME_WARNING =
   "Opening/leak field/building runtime corridor active: field and building outputs are calculated from the Gate S lab composite opening/leak Rw plus explicit flanking, junction, and room-normalization terms. The result is source-absent, not measured field/building evidence.";
 
+export const COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_WARNING =
+  "Opening/leak A-weighted runtime corridor active: Dn,A / DnT,A are calculated from the same-route opening/leak field/building value plus the owned -0.8 dB A-weighted adapter over third-octave 100-3150 Hz input. The result is source-absent, not measured A-weighted evidence.";
+
+export const COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_MISSING_FREQUENCY_WARNING =
+  "Opening/leak A-weighted runtime is waiting for frequencyBandSet before promoting Dn,A / DnT,A.";
+
 type CompleteOpeningLeakFieldContext = AirborneContext & {
   contextMode: "field_between_rooms";
+  frequencyBandSet?: typeof COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FREQUENCY_BAND_SET;
   openingLeakFieldBuildingAdapterBoundary: true;
   panelHeightMm: number;
   panelWidthMm: number;
@@ -66,6 +85,7 @@ type CompleteOpeningLeakBuildingContext = AirborneContext & {
     | "rigid_cross_junction"
     | "rigid_t_junction";
   junctionCouplingLengthM: number;
+  frequencyBandSet?: typeof COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FREQUENCY_BAND_SET;
   openingLeakFieldBuildingAdapterBoundary: true;
   panelHeightMm: number;
   panelWidthMm: number;
@@ -84,7 +104,11 @@ export type CompanyInternalOpeningLeakRuntimeStatus =
 
 export type CompanyInternalOpeningLeakRuntimeResult = {
   basis: AirborneResultBasis | null;
-  basisId: typeof COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD | typeof COMPANY_INTERNAL_OPENING_LEAK_FIELD_RUNTIME_METHOD | null;
+  basisId:
+    | typeof COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD
+    | typeof COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD
+    | typeof COMPANY_INTERNAL_OPENING_LEAK_FIELD_RUNTIME_METHOD
+    | null;
   blockedOutputs: readonly RequestedOutputId[];
   dnTwDb: number | null;
   dnWDb: number | null;
@@ -99,10 +123,12 @@ export type CompanyInternalOpeningLeakRuntimeResult = {
   status: CompanyInternalOpeningLeakRuntimeStatus;
   supportedOutputs: readonly RequestedOutputId[];
   warning: string | null;
+  warnings: readonly string[];
 };
 
 const FIELD_OUTPUTS = new Set<RequestedOutputId>(["R'w", "Dn,w", "DnT,w"]);
 const BUILDING_OUTPUTS = new Set<RequestedOutputId>(["R'w", "DnT,w"]);
+const A_WEIGHTED_OUTPUTS = new Set<RequestedOutputId>(["Dn,A", "DnT,A"]);
 const OPENING_ROUTE_OUTPUTS = new Set<RequestedOutputId>([
   "Dn,w",
   "Dn,A",
@@ -131,6 +157,14 @@ function openingRouteRequested(context: AirborneContext | null | undefined): boo
 
 function requestedOpeningFieldBuildingOutputs(outputs: readonly RequestedOutputId[]): RequestedOutputId[] {
   return outputs.filter((output) => OPENING_ROUTE_OUTPUTS.has(output));
+}
+
+function requestedAWeightedOpeningOutputs(outputs: readonly RequestedOutputId[]): RequestedOutputId[] {
+  return outputs.filter((output) => A_WEIGHTED_OUTPUTS.has(output));
+}
+
+function hasAWeightedFrequencyBandSet(context: AirborneContext): boolean {
+  return context.frequencyBandSet === COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FREQUENCY_BAND_SET;
 }
 
 function missingCommonFieldInputs(context: AirborneContext): string[] {
@@ -183,11 +217,12 @@ function completeBuildingContext(
 }
 
 function requestedSupportedOutputs(input: {
+  aWeightedRuntimeOwned: boolean;
   basis: CompanyInternalOpeningLeakRuntimeBasis;
   buildingOutputBasis?: CompleteOpeningLeakBuildingContext["buildingPredictionOutputBasis"];
   targetOutputs: readonly RequestedOutputId[];
 }): RequestedOutputId[] {
-  const supportSet =
+  const baseSupportSet =
     input.basis === "field_apparent"
       ? FIELD_OUTPUTS
       : input.buildingOutputBasis === "apparent"
@@ -195,6 +230,16 @@ function requestedSupportedOutputs(input: {
         : input.buildingOutputBasis === "standardized"
           ? new Set<RequestedOutputId>(["DnT,w"])
           : BUILDING_OUTPUTS;
+  const supportSet = new Set<RequestedOutputId>(baseSupportSet);
+
+  if (input.aWeightedRuntimeOwned) {
+    if (input.basis === "field_apparent") {
+      supportSet.add("Dn,A");
+      supportSet.add("DnT,A");
+    } else if (input.buildingOutputBasis !== "apparent") {
+      supportSet.add("DnT,A");
+    }
+  }
 
   return input.targetOutputs.filter((output) => supportSet.has(output));
 }
@@ -263,6 +308,7 @@ function junctionPenaltyDb(context: CompleteOpeningLeakBuildingContext): number 
 }
 
 function basisForPromotedRuntime(input: {
+  aWeightedRuntimeSelected: boolean;
   basis: CompanyInternalOpeningLeakRuntimeBasis;
   buildingJunctionPenaltyDb?: number;
   errorBudgetDb: number;
@@ -272,9 +318,11 @@ function basisForPromotedRuntime(input: {
   roomNormalizationDb: number;
 }): AirborneResultBasis {
   const isBuilding = input.basis === "building_prediction";
-  const method = isBuilding
-    ? COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD
-    : COMPANY_INTERNAL_OPENING_LEAK_FIELD_RUNTIME_METHOD;
+  const method = input.aWeightedRuntimeSelected
+    ? COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD
+    : isBuilding
+      ? COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD
+      : COMPANY_INTERNAL_OPENING_LEAK_FIELD_RUNTIME_METHOD;
 
   return AirborneResultBasisSchema.parse({
     assumptions: [
@@ -285,11 +333,21 @@ function basisForPromotedRuntime(input: {
         : []),
       `room standardization term for DnT,w: ${input.roomNormalizationDb.toFixed(1)} dB`,
       `partition area: ${input.partitionAreaM2.toFixed(1)} m2`,
+      ...(input.aWeightedRuntimeSelected
+        ? [
+            `A-weighted adapter term: ${COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_ADAPTER_DB_RUNTIME.toFixed(1)} dB`,
+            `A-weighted adapter budget term: +/-${COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_ADAPTER_BUDGET_DB_RUNTIME} dB`,
+            `frequency band set: ${COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FREQUENCY_BAND_SET}`
+          ]
+        : []),
       `source-absent opening/leak field/building budget is +/-${input.errorBudgetDb} dB and is not measured evidence`
     ],
     calculationStandard: "ISO 12354-1",
     curveBasis: "calculated_single_number_estimate",
     errorBudgetDb: input.errorBudgetDb,
+    frequencyBands: input.aWeightedRuntimeSelected
+      ? { bandSet: COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FREQUENCY_BAND_SET }
+      : undefined,
     kind: "airborne_physics_prediction",
     measurementStandard: "none",
     method,
@@ -308,6 +366,7 @@ function basisForPromotedRuntime(input: {
       "panelHeightMm",
       "receivingRoomVolumeM3",
       "receivingRoomRt60S",
+      ...(input.aWeightedRuntimeSelected ? ["frequencyBandSet"] : []),
       ...(isBuilding
         ? [
             "sourceRoomVolumeM3",
@@ -363,21 +422,44 @@ function promotedResult(input: {
       ? round1(rwPrimeDb + dnOffsetDb(input.context))
       : null;
   const dnTwDb = round1(rwPrimeDb + roomNormalization);
+  const requestedAWeightedOutputs = requestedAWeightedOpeningOutputs(input.targetOutputs);
+  const aWeightedRuntimeOwned = hasAWeightedFrequencyBandSet(input.context);
   const supportedOutputs = requestedSupportedOutputs({
+    aWeightedRuntimeOwned,
     basis: input.basis,
     buildingOutputBasis: input.buildingOutputBasis,
     targetOutputs: input.targetOutputs
   });
+  const aWeightedRuntimeSelected = supportedOutputs.some((output) => A_WEIGHTED_OUTPUTS.has(output));
+  const errorBudgetDb = aWeightedRuntimeSelected
+    ? input.basis === "building_prediction"
+      ? COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_BUILDING_TOLERANCE_DB
+      : COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FIELD_TOLERANCE_DB
+    : input.errorBudgetDb;
+  const dnADb = supportedOutputs.includes("Dn,A") && dnWDb !== null
+    ? round1(dnWDb + COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_ADAPTER_DB_RUNTIME)
+    : null;
+  const dnTADb = supportedOutputs.includes("DnT,A")
+    ? round1(dnTwDb + COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_ADAPTER_DB_RUNTIME)
+    : null;
+  const missingAWeightedInputs =
+    requestedAWeightedOutputs.length > 0 && !aWeightedRuntimeOwned
+      ? ["frequencyBandSet"]
+      : [];
   const blockedOutputs = requestedOpeningFieldBuildingOutputs(input.targetOutputs).filter(
     (output) => !supportedOutputs.includes(output)
   );
   const fieldRating: FieldAirborneRating = {
+    ...(dnADb === null ? {} : { DnA: dnADb }),
     ...(dnWDb === null ? {} : { DnW: dnWDb }),
+    ...(dnTADb === null ? {} : { DnTA: dnTADb }),
     DnTw: dnTwDb,
     RwPrime: rwPrimeDb,
-    basis: input.basis === "building_prediction"
-      ? "company_internal_opening_leak_building_prediction_area_energy_adapter"
-      : "company_internal_opening_leak_field_area_energy_adapter",
+    basis: aWeightedRuntimeSelected
+      ? "company_internal_opening_leak_a_weighted_spectrum_adapter"
+      : input.basis === "building_prediction"
+        ? "company_internal_opening_leak_building_prediction_area_energy_adapter"
+        : "company_internal_opening_leak_field_area_energy_adapter",
     dnBasis: "ISO_12354_1_area_room_normalization",
     estimated: true,
     normalizationDb: roomNormalization,
@@ -386,33 +468,46 @@ function promotedResult(input: {
     receivingRoomVolumeM3: input.context.receivingRoomVolumeM3
   };
 
+  const warnings = [
+    aWeightedRuntimeSelected
+      ? COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_WARNING
+      : COMPANY_INTERNAL_OPENING_LEAK_RUNTIME_WARNING,
+    ...(missingAWeightedInputs.length > 0
+      ? [COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_MISSING_FREQUENCY_WARNING]
+      : [])
+  ];
+
   return {
     basis: basisForPromotedRuntime({
+      aWeightedRuntimeSelected,
       basis: input.basis,
       buildingJunctionPenaltyDb: input.buildingJunctionPenaltyDb,
-      errorBudgetDb: input.errorBudgetDb,
+      errorBudgetDb,
       fieldFlankingPenaltyDb: input.fieldFlankingPenaltyDb,
       labCompositeRwDb: input.labCompositeRwDb,
       partitionAreaM2: areaM2,
       roomNormalizationDb: roomNormalization
     }),
-    basisId: input.basis === "building_prediction"
-      ? COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD
-      : COMPANY_INTERNAL_OPENING_LEAK_FIELD_RUNTIME_METHOD,
+    basisId: aWeightedRuntimeSelected
+      ? COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD
+      : input.basis === "building_prediction"
+        ? COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD
+        : COMPANY_INTERNAL_OPENING_LEAK_FIELD_RUNTIME_METHOD,
     blockedOutputs,
     dnTwDb,
     dnWDb,
-    errorBudgetDb: input.errorBudgetDb,
+    errorBudgetDb,
     fieldRating,
     labCompositeRwDb: input.labCompositeRwDb,
-    missingPhysicalInputs: [],
+    missingPhysicalInputs: missingAWeightedInputs,
     partitionAreaM2: areaM2,
     requestedOutputs: input.targetOutputs,
     roomNormalizationDb: roomNormalization,
     rwPrimeDb,
     status: "runtime_corridor_promoted",
     supportedOutputs,
-    warning: COMPANY_INTERNAL_OPENING_LEAK_RUNTIME_WARNING
+    warning: warnings[0] ?? null,
+    warnings
   };
 }
 
@@ -446,6 +541,9 @@ export function maybeBuildCompanyInternalOpeningLeakFieldBuildingRuntimeCorridor
     : missingCommonFieldInputs(context);
 
   if (physicalMissing.length > 0) {
+    const warning =
+      `Opening/leak field/building runtime is waiting for ${unique(physicalMissing).join(", ")} before promoting R'w / DnT,w.`;
+
     return {
       basis: blockedBasis({
         missingPhysicalInputs: unique(physicalMissing),
@@ -465,7 +563,8 @@ export function maybeBuildCompanyInternalOpeningLeakFieldBuildingRuntimeCorridor
       rwPrimeDb: null,
       status: "blocked_missing_input",
       supportedOutputs: [],
-      warning: `Opening/leak field/building runtime is waiting for ${unique(physicalMissing).join(", ")} before promoting R'w / DnT,w.`
+      warning,
+      warnings: [warning]
     };
   }
 
@@ -477,6 +576,9 @@ export function maybeBuildCompanyInternalOpeningLeakFieldBuildingRuntimeCorridor
   const labCompositeRwDb = labCompositeRuntime?.runtimeRwDb;
 
   if (!finitePositive(labCompositeRwDb)) {
+    const warning =
+      labCompositeRuntime?.warning ??
+      "Opening/leak field/building runtime is blocked because the lab composite opening/leak anchor is unavailable.";
     const missing = unique([
       ...(labCompositeRuntime?.basis?.missingPhysicalInputs ?? []),
       ...requestedOutputs
@@ -501,7 +603,8 @@ export function maybeBuildCompanyInternalOpeningLeakFieldBuildingRuntimeCorridor
       rwPrimeDb: null,
       status: labCompositeRuntime?.status === "blocked_missing_input" ? "blocked_missing_input" : "blocked_unsupported",
       supportedOutputs: [],
-      warning: labCompositeRuntime?.warning ?? "Opening/leak field/building runtime is blocked because the lab composite opening/leak anchor is unavailable."
+      warning,
+      warnings: [warning]
     };
   }
 

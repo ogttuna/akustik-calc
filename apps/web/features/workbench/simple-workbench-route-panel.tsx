@@ -36,6 +36,7 @@ import type { PresetDefinition, PresetId, StudyMode } from "./preset-definitions
 import { GUIDED_INPUT_SANITY_BANDS, formatGuidedSanityBand } from "./input-sanity";
 import {
   AIRBORNE_CONTEXT_OPTIONS,
+  AIRBORNE_FREQUENCY_BAND_SET_OPTIONS,
   AIRTIGHTNESS_OPTIONS,
   BUILDING_PREDICTION_OUTPUT_BASIS_OPTIONS,
   CALCULATOR_OPTIONS,
@@ -70,6 +71,7 @@ import {
   type WorkspacePanelId
 } from "./simple-workbench-constants";
 import type { WorkbenchOpeningLeakElementDraft } from "./opening-leak-composite-input-surface";
+import type { WorkbenchAirborneFrequencyBandSet } from "./airborne-field-context-input-surface";
 import {
   workbenchSectionCardClass,
   workbenchSectionEyebrowClass,
@@ -108,6 +110,7 @@ type SimpleWorkbenchRoutePanelProps = {
   airborneConservativeFlankingAssumption: AirborneConservativeFlankingAssumption;
   airborneContextMode: AirborneContextMode;
   airborneElectricalBoxes: ElectricalBoxState;
+  airborneFrequencyBandSet: WorkbenchAirborneFrequencyBandSet;
   airborneFlankingJunctionClass: AirborneFlankingJunctionClass;
   airborneJunctionCouplingLengthM: string;
   airborneJunctionQuality: JunctionQuality;
@@ -223,6 +226,7 @@ type SimpleWorkbenchRoutePanelProps = {
   setAirborneConnectionType: (value: AirborneConnectionType) => void;
   setAirborneConservativeFlankingAssumption: (value: AirborneConservativeFlankingAssumption) => void;
   setAirborneElectricalBoxes: (value: ElectricalBoxState) => void;
+  setAirborneFrequencyBandSet: (value: WorkbenchAirborneFrequencyBandSet) => void;
   setAirborneFlankingJunctionClass: (value: AirborneFlankingJunctionClass) => void;
   setAirborneJunctionCouplingLengthM: (value: string) => void;
   setAirborneJunctionQuality: (value: JunctionQuality) => void;
@@ -314,6 +318,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
     airborneConservativeFlankingAssumption,
     airborneContextMode,
     airborneElectricalBoxes,
+    airborneFrequencyBandSet,
     airborneFlankingJunctionClass,
     airborneJunctionCouplingLengthM,
     airborneJunctionQuality,
@@ -426,6 +431,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
     setAirborneConnectionType,
     setAirborneConservativeFlankingAssumption,
     setAirborneElectricalBoxes,
+    setAirborneFrequencyBandSet,
     setAirborneFlankingJunctionClass,
     setAirborneJunctionCouplingLengthM,
     setAirborneJunctionQuality,
@@ -1588,8 +1594,30 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
                               value={airborneReceivingRoomRt60S}
                             />
                           </FieldShell>
+
                         </>
                       ) : null}
+
+                      <FieldShell
+                        label="Frequency band set"
+                        note="Required when Dn,A or DnT,A is requested on the opening/leak field/building route."
+                        relevance="required"
+                        usage="Dn,A and DnT,A"
+                      >
+                        <select
+                          className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                          onChange={(event) =>
+                            setAirborneFrequencyBandSet(event.target.value as WorkbenchAirborneFrequencyBandSet)
+                          }
+                          value={airborneFrequencyBandSet}
+                        >
+                          {AIRBORNE_FREQUENCY_BAND_SET_OPTIONS.map((option) => (
+                            <option key={option.value || "not_selected"} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </select>
+                      </FieldShell>
 
                       {airborneContextMode === "building_prediction" ? (
                         <div className="grid gap-3">

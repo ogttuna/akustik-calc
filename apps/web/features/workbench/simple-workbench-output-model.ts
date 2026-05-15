@@ -531,8 +531,13 @@ export function buildOutputCard(input: {
       break;
     case "DnT,A":
       if (typeof result?.metrics.estimatedDnTADb === "number") {
+        const companyInternalOpeningLeakFieldBuildingDetail =
+          getCompanyInternalOpeningLeakFieldBuildingOutputDetail(output, result);
+
         return {
-          detail: getFieldAirborneLiveDetail("DnT,A", result),
+          detail:
+            companyInternalOpeningLeakFieldBuildingDetail ??
+            getFieldAirborneLiveDetail("DnT,A", result),
           label: "DnT,A",
           output,
           status: "live",
@@ -569,8 +574,13 @@ export function buildOutputCard(input: {
       break;
     case "Dn,A":
       if (typeof result?.metrics.estimatedDnADb === "number") {
+        const companyInternalOpeningLeakFieldBuildingDetail =
+          getCompanyInternalOpeningLeakFieldBuildingOutputDetail(output, result);
+
         return {
-          detail: getFieldAirborneLiveDetail("Dn,A", result),
+          detail:
+            companyInternalOpeningLeakFieldBuildingDetail ??
+            getFieldAirborneLiveDetail("Dn,A", result),
           label: "Dn,A",
           output,
           status: "live",

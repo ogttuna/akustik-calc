@@ -11,11 +11,13 @@ const LAB_CONTEXT: AirborneContext = {
 };
 
 const FIELD_CONTEXT: AirborneContext = {
-  contextMode: "building_prediction",
+  contextMode: "field_between_rooms",
+  airtightness: "good",
   panelHeightMm: 2800,
   panelWidthMm: 3600,
   receivingRoomRt60S: 0.6,
-  receivingRoomVolumeM3: 45
+  receivingRoomVolumeM3: 45,
+  sharedTrack: "independent"
 };
 
 const DUPLICATE_STACK = [
@@ -203,7 +205,7 @@ const COMPLEX_STACK_CASES = [
       dnTw: 45,
       family: "multileaf_multicavity",
       rw: 44,
-      rwPrime: 43,
+      rwPrime: 44,
       strategy: "multileaf_screening_blend"
     },
     duplicated: {
@@ -235,14 +237,14 @@ const COMPLEX_STACK_CASES = [
       dnTw: 45,
       family: "multileaf_multicavity",
       rw: 44,
-      rwPrime: 43,
+      rwPrime: 44,
       strategy: "multileaf_screening_blend"
     }
   },
   {
     base: {
       confidence: "low",
-      dnTw: 44,
+      dnTw: 45,
       family: "multileaf_multicavity",
       rw: 44,
       rwPrime: 43,
@@ -274,7 +276,7 @@ const COMPLEX_STACK_CASES = [
     swapIndex: 6,
     swapped: {
       confidence: "low",
-      dnTw: 44,
+      dnTw: 45,
       family: "multileaf_multicavity",
       rw: 44,
       rwPrime: 43,
