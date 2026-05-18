@@ -14,6 +14,10 @@ it keeps the controlled 71-row envelope separate from the broader
 measured/reference residual bar.
 The active broad-accuracy slice plan is
 [SLICE_BROAD_ACCURACY_REFERENCE_BENCHMARK_AND_SIMILARITY_SOLVER_PLAN.md](./SLICE_BROAD_ACCURACY_REFERENCE_BENCHMARK_AND_SIMILARITY_SOLVER_PLAN.md).
+The latest end-of-day checkpoint is
+[CHECKPOINT_2026-05-18_END_OF_DAY_BROAD_ACCURACY.md](./CHECKPOINT_2026-05-18_END_OF_DAY_BROAD_ACCURACY.md);
+it maps commit `c248db8` back to docs and explicitly lists the
+open-box timber formula/runtime/surface-parity work that has not landed.
 That active slice treats historical `low_confidence`,
 `screening_fallback`, and screening-only lanes as calculation debt to
 rank and convert into exact/source, similarity, calibrated solver,

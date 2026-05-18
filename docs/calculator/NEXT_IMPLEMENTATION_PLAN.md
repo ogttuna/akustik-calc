@@ -53,6 +53,9 @@ input-surface handoff read
 For the 2026-05-14 company-internal matrix refresh after heavy-composite
 handoff read
 [CHECKPOINT_2026-05-14_COMPANY_INTERNAL_MATRIX_REFRESH_AFTER_HEAVY_COMPOSITE_HANDOFF.md](./CHECKPOINT_2026-05-14_COMPANY_INTERNAL_MATRIX_REFRESH_AFTER_HEAVY_COMPOSITE_HANDOFF.md).
+For the 2026-05-18 broad-accuracy end-of-day checkpoint, commit map, and
+explicit not-yet-landed items read
+[CHECKPOINT_2026-05-18_END_OF_DAY_BROAD_ACCURACY.md](./CHECKPOINT_2026-05-18_END_OF_DAY_BROAD_ACCURACY.md).
 For the Gate X AAC / non-homogeneous masonry family solver and Gate Y
 handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_X_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_X_HANDOFF.md).

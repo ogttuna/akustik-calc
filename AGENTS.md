@@ -51,6 +51,14 @@ and hostile layer combinations across wall and floor routes with named
 algorithms, bounded uncertainty, and visible missing-input prompts. It is
 not ready just because a finite catalog of known assemblies passes.
 
+Latest end-of-day checkpoint: after commit `c248db8`, read
+`docs/calculator/CHECKPOINT_2026-05-18_END_OF_DAY_BROAD_ACCURACY.md`
+before continuing. It maps the landed broad-accuracy implementation back
+to docs and explicitly leaves the open-box timber formula corridor,
+runtime promotion, surface parity, residual movement, raw open-box
+reopening, field/building aliases, and ASTM/IIC aliases as not yet
+landed work.
+
 Before implementing calculator behavior, re-read the current local engine
 shape in `packages/engine/src/airborne-calculator.ts` and
 `packages/engine/src/dynamic-airborne.ts`. The existing KS, mass-law,

@@ -425,6 +425,11 @@ selected next file:
 Selected next label: floor open-box timber similarity formula corridor.
 Current checkpoint:
 [CHECKPOINT_2026-05-18_OPEN_BOX_TIMBER_TRANSFER_OWNER.md](./CHECKPOINT_2026-05-18_OPEN_BOX_TIMBER_TRANSFER_OWNER.md).
+End-of-day checkpoint:
+[CHECKPOINT_2026-05-18_END_OF_DAY_BROAD_ACCURACY.md](./CHECKPOINT_2026-05-18_END_OF_DAY_BROAD_ACCURACY.md).
+Use it first when resuming after commit `c248db8`; it maps the landed
+broad-accuracy slice to implementation/docs and lists the open-box timber
+formula/runtime/surface-parity work that did not land.
 The opening/leak A-weighted formula-corridor handoff is
 [CHECKPOINT_2026-05-15_COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FORMULA_CORRIDOR_HANDOFF.md](./CHECKPOINT_2026-05-15_COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FORMULA_CORRIDOR_HANDOFF.md).
 `company_internal_opening_leak_a_weighted_spectrum_adapter_formula_corridor_plan`
