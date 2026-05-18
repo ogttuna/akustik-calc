@@ -10,9 +10,7 @@ import {
   FIELD_OUTPUT_OWNER_POLICY_GUARD
 } from "./field-output-owner-policy-copy";
 import {
-  ROCKWOOL_GROUPED_TRIPLE_LEAF_SCREENING_ONLY_GUARD,
-  ROCKWOOL_TRIPLE_LEAF_FIELD_CONTINUATION_GUARD,
-  ROCKWOOL_TRIPLE_LEAF_SCREENING_ONLY_LABEL
+  ROCKWOOL_GROUPED_TRIPLE_LEAF_SCREENING_ONLY_GUARD
 } from "./rockwool-triple-leaf-screening-policy-copy";
 import {
   addOutputCardPosture,
@@ -95,6 +93,7 @@ const VISIBLE_ROCKWOOL_SCREENING_POLICY_ARTIFACTS = [
 
 const WALL_LAB_OUTPUTS = ["Rw", "STC", "C", "Ctr"] as const satisfies readonly RequestedOutputId[];
 const WALL_FIELD_OUTPUTS = ["R'w", "DnT,w"] as const satisfies readonly RequestedOutputId[];
+const WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LABEL = "Wall triple-leaf local substitution";
 
 const SPLIT_ROCKWOOL_ROWS: readonly Omit<LayerDraft, "id">[] = [
   { materialId: "gypsum_board", thicknessMm: "12.5" },
@@ -402,7 +401,7 @@ describe("Rockwool triple-leaf explicit screening-only policy Gate B visible gua
     expect(existsSync(join(REPO_ROOT, ROCKWOOL_TRIPLE_LEAF_SCREENING_POLICY_GATE_B.selectedNextFile))).toBe(true);
   });
 
-  it("pins grouped Rockwool Rw 50 output card copy as source-gated prediction, not exact or design-grade", () => {
+  it("pins grouped Rockwool Rw output card copy as local-substitution, not exact or calibrated evidence", () => {
     const snapshot = evaluate({
       airborneContext: completeTripleLeafContext(WALL_LAB_CONTEXT),
       id: "gate-b-rockwool-grouped-lab",
@@ -414,21 +413,21 @@ describe("Rockwool triple-leaf explicit screening-only policy Gate B visible gua
     expect(snapshot.result.dynamicAirborneTrace).toMatchObject({
       confidenceClass: "medium",
       detectedFamily: "multileaf_multicavity",
-      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
+      strategy: "broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor"
     });
     expect(rwCard).toMatchObject({
-      detail: ROCKWOOL_GROUPED_TRIPLE_LEAF_SCREENING_ONLY_GUARD,
-      postureLabel: ROCKWOOL_TRIPLE_LEAF_SCREENING_ONLY_LABEL,
+      detail: expect.stringContaining("source-absent grouped triple-leaf"),
+      postureLabel: WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LABEL,
       status: "live",
-      value: "50 dB"
+      value: "53 dB"
     });
-    expect(rwCard.postureDetail).toContain(ROCKWOOL_GROUPED_TRIPLE_LEAF_SCREENING_ONLY_GUARD);
-    expect(rwCard.postureDetail).toContain("No exact wall source row is active");
-    expect(rwCard.detail).toContain("not measured exact");
-    expect(rwCard.detail).toContain("not source-validated");
-    expect(rwCard.detail).toContain("not design-grade");
-    expect(snapshot.warnings.join("\n")).toContain("Grouped Rockwool triple-leaf family physics prediction");
-    expect(snapshot.warnings.join("\n")).toContain("5 dB uncalibrated error budget");
+    expect(rwCard.postureDetail).toContain(WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LABEL);
+    expect(rwCard.detail).toContain("+/-8 dB not-measured budget");
+    expect(rwCard.detail).toContain("not exact measured evidence");
+    expect(rwCard.detail).toContain("not NRC calibrated evidence");
+    expect(rwCard.detail).toContain("lab STC 64 dB, C 1.6 dB, and Ctr -7.2 dB are rated from the calculated curve");
+    expect(snapshot.warnings.join("\n")).toContain("lab spectrum adapter is active");
+    expect(snapshot.warnings.join("\n")).toContain("keeps the parent not-measured budget");
   });
 
   it("keeps Rockwool flat-list adjacent swaps on the double-leaf numeric lane, not screening-only copy", () => {
@@ -469,29 +468,29 @@ describe("Rockwool triple-leaf explicit screening-only policy Gate B visible gua
     expect(snapshot.result.dynamicAirborneTrace).toMatchObject({
       confidenceClass: "medium",
       detectedFamily: "multileaf_multicavity",
-      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
+      strategy: "broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor"
     });
     expect(rwPrime).toMatchObject({
       postureLabel: "Airborne field-context prediction",
       status: "live",
-      value: "49 dB"
+      value: "51 dB"
     });
     expect(dnTw).toMatchObject({
       postureLabel: "Airborne field-context prediction",
       status: "live",
-      value: "50 dB"
+      value: "53 dB"
     });
 
     for (const card of [rwPrime, dnTw]) {
-      expect(card.detail).toContain(ROCKWOOL_TRIPLE_LEAF_FIELD_CONTINUATION_GUARD);
+      expect(card.detail).toContain("Local-substitution field-context harmonization is active");
       expect(card.detail).toContain(FIELD_OUTPUT_OWNER_POLICY_GUARD);
-      expect(card.detail).toContain("not exact");
-      expect(card.detail).toContain("not design-grade");
+      expect(card.detail).toContain("not an independent exact field measurement");
+      expect(card.detail).toContain("No design-grade field owner is active");
       expect(card.postureDetail).toContain("not measured field evidence");
     }
   });
 
-  it("carries the Rockwool source-gated prediction policy into proposal/report text", () => {
+  it("carries the Rockwool local-substitution policy into proposal/report text", () => {
     const lab = evaluate({
       airborneContext: completeTripleLeafContext(WALL_LAB_CONTEXT),
       id: "gate-b-rockwool-lab-report",
@@ -520,14 +519,14 @@ describe("Rockwool triple-leaf explicit screening-only policy Gate B visible gua
       warnings: field.warnings
     });
 
-    expect(labText).toContain(`Rw: Live now | ${ROCKWOOL_TRIPLE_LEAF_SCREENING_ONLY_LABEL} | 50 dB`);
-    expect(labText).toContain(ROCKWOOL_GROUPED_TRIPLE_LEAF_SCREENING_ONLY_GUARD);
-    expect(labText).toContain("not measured exact");
-    expect(labText).toContain("not source-validated");
-    expect(labText).toContain("not design-grade");
-    expect(fieldText).toContain("R'w: Live now | Airborne field-context prediction | 49 dB");
-    expect(fieldText).toContain("DnT,w: Live now | Airborne field-context prediction | 50 dB");
-    expect(fieldText).toContain(ROCKWOOL_TRIPLE_LEAF_FIELD_CONTINUATION_GUARD);
+    expect(labText).toContain(`Rw: Live now | ${WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LABEL} | 53 dB`);
+    expect(labText).toContain("source-absent grouped triple-leaf");
+    expect(labText).toContain("not exact measured evidence");
+    expect(labText).toContain("not NRC calibrated evidence");
+    expect(labText).toContain("lab STC 64 dB, C 1.6 dB, and Ctr -7.2 dB are rated from the calculated curve");
+    expect(fieldText).toContain("R'w: Live now | Airborne field-context prediction | 51 dB");
+    expect(fieldText).toContain("DnT,w: Live now | Airborne field-context prediction | 53 dB");
+    expect(fieldText).toContain("Local-substitution field-context harmonization is active");
     expect(fieldText).toContain(FIELD_OUTPUT_OWNER_POLICY_GUARD);
     expect(fieldText).toContain("does not replace accredited laboratory, site, or design-grade field measurements");
   });

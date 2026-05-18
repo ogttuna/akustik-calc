@@ -7,6 +7,11 @@ import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
 import {
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD,
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_WARNING
+} from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-field-context-harmonization";
+import {
   GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD,
   GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
   GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING
@@ -159,28 +164,37 @@ describe("Personal-Use MVP Coverage Sprint Gate J airborne field-context surface
     }
   });
 
-  it("keeps complete field-context grouped, lined, and CLT examples on the same Gate I basis", () => {
+  it("keeps complete field-context grouped, lined, and CLT examples on their owned field bases", () => {
     const cases = [
       {
+        candidateId: GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
         context: WALL_FIELD_CONTEXT,
         dnt: 59,
         errorBudgetDb: 8,
         layers: LINED_MASSIVE_WALL,
-        rwPrime: 58
+        method: GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD,
+        rwPrime: 58,
+        warning: GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING
       },
       {
+        candidateId: GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
         context: WALL_FIELD_CONTEXT,
         dnt: 41,
         errorBudgetDb: 8,
         layers: CLT_WALL,
-        rwPrime: 40
+        method: GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD,
+        rwPrime: 40,
+        warning: GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING
       },
       {
+        candidateId: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
         context: GROUPED_TRIPLE_LEAF_FIELD_CONTEXT,
-        dnt: 51,
-        errorBudgetDb: 7,
+        dnt: 53,
+        errorBudgetDb: 10,
         layers: GROUPED_TRIPLE_LEAF_STACK,
-        rwPrime: 50
+        method: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD,
+        rwPrime: 52,
+        warning: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_WARNING
       }
     ] as const;
 
@@ -194,18 +208,18 @@ describe("Personal-Use MVP Coverage Sprint Gate J airborne field-context surface
       expect(result.metrics.estimatedRwPrimeDb).toBe(testCase.rwPrime);
       expect(result.metrics.estimatedDnTwDb).toBe(testCase.dnt);
       expect(result.airborneCandidateResolution).toMatchObject({
-        selectedCandidateId: GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
+        selectedCandidateId: testCase.candidateId,
         selectedOrigin: "family_physics_prediction"
       });
       expect(result.airborneBasis).toMatchObject({
         calculationStandard: "ISO 12354-1",
         errorBudgetDb: testCase.errorBudgetDb,
-        method: GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD,
+        method: testCase.method,
         origin: "family_physics_prediction",
         ratingStandard: "ISO 717-1",
         toleranceClass: "uncalibrated_prediction"
       });
-      expect(result.warnings).toContain(GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING);
+      expect(result.warnings).toContain(testCase.warning);
     }
   });
 

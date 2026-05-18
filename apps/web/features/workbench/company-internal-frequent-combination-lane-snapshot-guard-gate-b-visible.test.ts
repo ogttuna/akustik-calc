@@ -81,6 +81,7 @@ const REQUIRED_GATE_B_DOC_TOKENS = [
 const WALL_LAB_OUTPUTS = ["Rw", "STC", "C", "Ctr"] as const satisfies readonly RequestedOutputId[];
 const WALL_FIELD_OUTPUTS = ["R'w", "DnT,w"] as const satisfies readonly RequestedOutputId[];
 const FLOOR_ROLE_OUTPUTS = ["Rw", "Ln,w", "Ln,w+CI"] as const satisfies readonly RequestedOutputId[];
+const WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LABEL = "Wall triple-leaf local substitution";
 
 const WALL_LAB_CONTEXT: AirborneContext = {
   airtightness: "good",
@@ -404,7 +405,7 @@ describe("company-internal frequent-combination lane snapshot guard Gate B visib
     }
   });
 
-  it("keeps grouped rockwool triple-leaf visibly source-gated and not exact", () => {
+  it("keeps grouped rockwool triple-leaf visibly local-substitution and not exact", () => {
     const grouped = evaluate({
       airborneContext: completeTripleLeafContext(WALL_LAB_CONTEXT),
       id: "company-gate-b-grouped-rockwool",
@@ -417,26 +418,28 @@ describe("company-internal frequent-combination lane snapshot guard Gate B visib
     expect(grouped.result.dynamicAirborneTrace).toMatchObject({
       confidenceClass: "medium",
       detectedFamily: "multileaf_multicavity",
-      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
+      strategy: "broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor"
     });
     expect(grouped.branch).toMatchObject({
-      tone: "neutral",
-      value: "Multi-Leaf / Multi-Cavity"
+      tone: "ready",
+      value: WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LABEL
     });
     expect(grouped.topologyGap).toMatchObject({
-      value: "Source validation blocked"
+      value: "Triple-leaf prediction"
     });
-    expect(grouped.topologyGap?.detail).toContain("family physics prediction");
+    expect(grouped.topologyGap?.detail).toContain("triple-leaf prediction route");
     expect(rwCard).toMatchObject({
-      postureLabel: "Rockwool source-gated prediction",
+      postureLabel: WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LABEL,
       status: "live",
-      value: "50 dB"
+      value: "53 dB"
     });
-    expect(rwCard.detail).toContain("not measured exact");
-    expect(rwCard.detail).toContain("not source-validated");
-    expect(rwCard.detail).toContain("not design-grade");
-    expect(rwCard.postureDetail).toContain("No exact wall source row is active");
-    expect(grouped.warnings.join("\n")).toMatch(/Grouped Rockwool triple-leaf family physics prediction/i);
+    expect(rwCard.detail).toContain("source-absent grouped triple-leaf");
+    expect(rwCard.detail).toContain("+/-8 dB not-measured budget");
+    expect(rwCard.detail).toContain("not exact measured evidence");
+    expect(rwCard.detail).toContain("not NRC calibrated evidence");
+    expect(rwCard.detail).toContain("lab STC 64 dB, C 1.6 dB, and Ctr -7.2 dB are rated from the calculated curve");
+    expect(rwCard.postureDetail).toContain(WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LABEL);
+    expect(grouped.warnings.join("\n")).toMatch(/lab spectrum adapter is active/i);
     expectNoExactSourceWarning(grouped.warnings, "grouped rockwool");
   });
 
@@ -646,17 +649,17 @@ describe("company-internal frequent-combination lane snapshot guard Gate B visib
     expect(field.result.dynamicAirborneTrace).toMatchObject({
       confidenceClass: "medium",
       detectedFamily: "multileaf_multicavity",
-      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
+      strategy: "broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor"
     });
     expect(rwPrime).toMatchObject({
       postureLabel: "Airborne field-context prediction",
       status: "live",
-      value: "49 dB"
+      value: "51 dB"
     });
     expect(dnTw).toMatchObject({
       postureLabel: "Airborne field-context prediction",
       status: "live",
-      value: "50 dB"
+      value: "53 dB"
     });
     expect(rwPrime.postureDetail).toContain("not measured field evidence");
     expect(dnTw.postureDetail).toContain("not measured field evidence");

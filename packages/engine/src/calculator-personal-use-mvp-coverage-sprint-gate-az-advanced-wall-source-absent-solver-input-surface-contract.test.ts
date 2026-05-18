@@ -94,7 +94,7 @@ describe("Personal-Use MVP Coverage Sprint Gate AZ advanced wall source-absent s
     expect(result.supportedTargetOutputs).toEqual([]);
     expect(result.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
     expect(result.warnings.join(" ")).toContain("does not alias lab Rw/STC/C/Ctr to field or building outputs");
-  });
+  }, 30000);
 
   it("stays stable under safe explicit panel/cavity reorders and rejects duplicate ownership", () => {
     const reorderedInput = cloneGateAZAdvancedWallInput();

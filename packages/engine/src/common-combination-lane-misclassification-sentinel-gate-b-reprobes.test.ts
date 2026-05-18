@@ -439,10 +439,10 @@ describe("common-combination lane-misclassification sentinel Gate B reprobes", (
       confidence: "medium",
       dnTw: 40,
       family: "multileaf_multicavity",
-      rw: 50,
+      rw: 53,
       rwPrime: 39,
-      stc: 55,
-      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
+      stc: 64,
+      strategy: "broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor"
     });
     expect(flat).toMatchObject({
       confidence: "low",

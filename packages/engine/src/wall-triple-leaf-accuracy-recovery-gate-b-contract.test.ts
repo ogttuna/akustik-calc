@@ -148,9 +148,9 @@ describe("wall triple-leaf accuracy recovery Gate B", () => {
       visibleLeafCount: result.dynamicAirborneTrace?.visibleLeafCount ?? 0
     });
 
-    expect(result.metrics.estimatedRwDb).toBe(50);
+    expect(result.metrics.estimatedRwDb).toBe(53);
     expect(result.dynamicAirborneTrace?.strategy).toBe(
-      "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
+      "broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor"
     );
     expect(readiness).toEqual({
       applies: true,
@@ -158,8 +158,8 @@ describe("wall triple-leaf accuracy recovery Gate B", () => {
       missingTopologyFields: [],
       readyForExactTripleLeafCalculation: false
     });
-    expectWarning(result, "family physics prediction");
-    expectWarning(result, "5 dB uncalibrated error budget");
+    expectWarning(result, "source-absent formula corridor");
+    expectWarning(result, "+/-8 dB source-absent error budget");
   });
 
   it("reports only the missing grouped fields when partial topology is supplied", () => {

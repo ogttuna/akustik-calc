@@ -188,8 +188,8 @@ describe("wall triple-leaf source curve digitization intake Gate G2", () => {
     expect(evaluation.blockers).toEqual([]);
     expect(evaluation.qcPassed).toBe(false);
     expect(evaluation.runtimeImportReadyNow).toBe(false);
-    expect(liveResult.metrics.estimatedRwDb).toBe(50);
-    expect(liveResult.dynamicAirborneTrace?.strategy).toBe("triple_leaf_two_cavity_frequency_solver_family_physics_prediction");
+    expect(liveResult.metrics.estimatedRwDb).toBe(53);
+    expect(liveResult.dynamicAirborneTrace?.strategy).toBe("broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor");
   });
 
   it("keeps active docs aligned with Gate G2 and the selected reproducible digitization QC gate", () => {

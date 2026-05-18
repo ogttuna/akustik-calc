@@ -288,10 +288,10 @@ describe("Personal-Use MVP Coverage Sprint Gate H lined masonry and CLT wall upg
     expect(doubleLeaf.airborneBasis?.method).not.toBe(GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD);
     expect(doubleLeaf.airborneBasis?.method).not.toBe(GATE_H_CLT_MASS_TIMBER_WALL_RUNTIME_METHOD);
     expect(grouped.airborneCandidateResolution).toMatchObject({
-      selectedCandidateId: "candidate_grouped_rockwool_family_physics_prediction",
+      selectedCandidateId: "candidate_broad_accuracy_wall_triple_leaf_local_substitution_lab_spectrum_adapter_family_physics_prediction",
       selectedOrigin: "family_physics_prediction"
     });
-    expect(grouped.airborneBasis?.method).toBe("triple_leaf_two_cavity_frequency_solver");
+    expect(grouped.airborneBasis?.method).toBe("broad_accuracy_wall_triple_leaf_local_substitution_lab_spectrum_adapter_runtime");
   });
 
   it("blocks partial explicit lined and mass-timber wall inputs as needs_input", () => {

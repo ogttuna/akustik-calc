@@ -9,6 +9,8 @@ import {
 import { getDoubleLeafFramedBridgeAirbornePromptInputs } from "./airborne-physical-input-prompt";
 import { getGateARAirborneBuildingPredictionSurface } from "./airborne-building-prediction-surface";
 import { getGateSOpeningLeakCompositeSurface } from "./opening-leak-composite-surface";
+import { getWallTripleLeafCalibratedSolverSurface } from "./wall-triple-leaf-calibrated-solver-surface";
+import { getWallTripleLeafLocalSubstitutionSurface } from "./wall-triple-leaf-local-substitution-surface";
 import { getCompanyInternalOpeningLeakFieldBuildingSurface } from "./opening-leak-field-building-surface";
 import { isSteelBoundSupportFormLane, STEEL_BOUND_SUPPORT_FORM_ROUTE_NOTE } from "./steel-bound-support-form-lane";
 
@@ -149,12 +151,30 @@ export function getDynamicCalcBranchSummary(input: {
   const companyInternalOpeningLeakFieldBuildingSurface =
     getCompanyInternalOpeningLeakFieldBuildingSurface(result);
   const gateARBuildingSurface = getGateARAirborneBuildingPredictionSurface(result);
+  const wallTripleLeafCalibratedSurface = getWallTripleLeafCalibratedSolverSurface(result);
+  const wallTripleLeafLocalSubstitutionSurface = getWallTripleLeafLocalSubstitutionSurface(result);
   const gateSOpeningLeakSurface = getGateSOpeningLeakCompositeSurface(result);
   if (companyInternalOpeningLeakFieldBuildingSurface) {
     return {
       detail: companyInternalOpeningLeakFieldBuildingSurface.detail,
       tone: "ready",
       value: companyInternalOpeningLeakFieldBuildingSurface.label
+    };
+  }
+
+  if (wallTripleLeafCalibratedSurface) {
+    return {
+      detail: wallTripleLeafCalibratedSurface.detail,
+      tone: "ready",
+      value: wallTripleLeafCalibratedSurface.label
+    };
+  }
+
+  if (wallTripleLeafLocalSubstitutionSurface) {
+    return {
+      detail: wallTripleLeafLocalSubstitutionSurface.detail,
+      tone: "ready",
+      value: wallTripleLeafLocalSubstitutionSurface.label
     };
   }
 

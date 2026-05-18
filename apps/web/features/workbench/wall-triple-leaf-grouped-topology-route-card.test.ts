@@ -232,19 +232,19 @@ describe("wall triple-leaf grouped topology route-card Gate I", () => {
     });
 
     expect(snapshot.result.dynamicAirborneTrace?.strategy).toBe(
-      "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
+      "broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor"
     );
     expect(snapshot.result.dynamicAirborneTrace?.confidenceClass).toBe("medium");
-    expect(snapshot.rwCard).toMatchObject({ status: "live", value: "50 dB" });
+    expect(snapshot.rwCard).toMatchObject({ status: "live", value: "53 dB" });
     expect(snapshot.branch).toMatchObject({
-      tone: "neutral",
-      value: "Multi-Leaf / Multi-Cavity"
+      tone: "ready",
+      value: "Wall triple-leaf local substitution"
     });
     expect(snapshot.topologyGap).toMatchObject({
-      value: "Source validation blocked"
+      value: "Triple-leaf prediction"
     });
-    expect(snapshot.topologyGap?.detail).toContain("Grouped Rockwool triple-leaf family physics prediction");
+    expect(snapshot.topologyGap?.detail).toContain("triple-leaf prediction route");
     expect(snapshot.topologyGap?.detail).not.toContain("Missing:");
-    expect(snapshot.warnings.some((warning) => /family physics prediction/i.test(warning))).toBe(true);
+    expect(snapshot.warnings.some((warning) => /lab spectrum adapter is active/i.test(warning))).toBe(true);
   });
 });

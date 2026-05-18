@@ -6,7 +6,260 @@ here" read the latest checkpoint named below before older handoffs.
 If you need the strategic plan read [MASTER_PLAN.md](./MASTER_PLAN.md).
 If you need the tactical detail on the active slice read
 [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md). If you
-need the private-use readiness chain read
+need the 2026-05-15 broad-accuracy refocus read
+[BROAD_ACCURACY_CALCULATOR_PLAN.md](./BROAD_ACCURACY_CALCULATOR_PLAN.md).
+The executable refocus contract is
+`packages/engine/src/broad-accuracy-calculator-readiness-contract.test.ts`;
+it keeps the controlled 71-row envelope separate from the broader
+measured/reference residual bar.
+The active broad-accuracy slice plan is
+[SLICE_BROAD_ACCURACY_REFERENCE_BENCHMARK_AND_SIMILARITY_SOLVER_PLAN.md](./SLICE_BROAD_ACCURACY_REFERENCE_BENCHMARK_AND_SIMILARITY_SOLVER_PLAN.md).
+That active slice treats historical `low_confidence`,
+`screening_fallback`, and screening-only lanes as calculation debt to
+rank and convert into exact/source, similarity, calibrated solver,
+source-absent solver, precise `needs_input`, or precise `unsupported`
+outcomes; those weak lanes are not supported readiness coverage.
+It has now landed as
+`broad_accuracy_reference_benchmark_expansion_and_similarity_solver_plan`
+with selection status
+`broad_accuracy_reference_benchmark_expansion_landed_no_runtime_selected_floor_system_similarity_anchor`.
+The landed contract is
+`packages/engine/src/broad-accuracy-reference-benchmark-expansion-contract.test.ts`.
+It creates the first weak-lane debt ledger and counts zero weak-lane
+rows as supported readiness coverage.
+The selected next action is
+`broad_accuracy_floor_system_similarity_anchor_runtime_plan`; selected
+next file:
+`packages/engine/src/broad-accuracy-floor-system-similarity-anchor-contract.test.ts`.
+That selected floor-system anchor admission gate has now landed as
+`broad_accuracy_floor_system_similarity_anchor_runtime_plan` with
+selection status
+`broad_accuracy_floor_system_similarity_anchor_landed_no_runtime_selected_open_web_supported_band_runtime_corridor`.
+The landed contract is
+`packages/engine/src/broad-accuracy-floor-system-similarity-anchor-contract.test.ts`.
+It classifies 90 UBIQ open-web exact rows, 21 open-web bound rows, and
+15 TUAS open-box exact rows, keeps weak-lane and source inventory out of
+supported readiness, and pins the existing FL-28 250 mm
+`predictor_lightweight_steel_fl28_interpolation_estimate` seed without
+moving runtime values. The selected next action is
+`broad_accuracy_open_web_supported_band_similarity_runtime_corridor_plan`;
+selected next file:
+`packages/engine/src/broad-accuracy-open-web-supported-band-similarity-runtime-contract.test.ts`.
+Selected next label: open-web steel supported-band similarity runtime
+corridor.
+That selected runtime corridor has now landed as
+`broad_accuracy_open_web_supported_band_similarity_runtime_corridor_plan`
+with selection status
+`broad_accuracy_open_web_supported_band_similarity_runtime_corridor_landed_selected_surface_parity`.
+The implementation is
+`packages/engine/src/lightweight-steel-open-web-supported-band-estimate.ts`
+plus the contract
+`packages/engine/src/broad-accuracy-open-web-supported-band-similarity-runtime-contract.test.ts`.
+It promotes only complete element-lab FL-24/FL-26 open-web steel
+supported-band stacks through
+`predictor_lightweight_steel_open_web_supported_band_similarity_estimate`:
+FL-26 250 mm timber returns `Ln,w 53.5`, `Ln,w+CI 52`, `Rw 61.5`;
+FL-24 250 mm timber returns `Ln,w 54.5`, `Ln,w+CI 53`, `Rw 60.5`; and
+FL-26 250 mm bare returns `Ln,w 61.5`, `Ln,w+CI 60`, `Rw 61.5`. Exact
+source rows still win, the existing FL-28 interpolation seed is frozen,
+and carpet, missing-fill, field/building, and ASTM/IIC aliases remain
+outside the promoted runtime. The selected next action is
+`broad_accuracy_open_web_supported_band_similarity_surface_parity_plan`;
+selected next file:
+`packages/engine/src/broad-accuracy-open-web-supported-band-similarity-surface-parity-contract.test.ts`.
+Selected next label: open-web supported-band similarity surface parity.
+That selected surface parity has now landed as
+`broad_accuracy_open_web_supported_band_similarity_surface_parity_plan`
+with selection status
+`broad_accuracy_open_web_supported_band_similarity_surface_parity_landed_selected_coverage_refresh`.
+It keeps runtime values frozen while cards, method dossier, saved
+replay, server snapshot replay, calculator API, impact-only API, and
+Markdown report all show `Open-web steel supported-band similarity`
+with the same
+`predictor_lightweight_steel_open_web_supported_band_similarity_estimate`
+basis, `89.5%` fit, exact-source precedence, and field/building,
+ASTM/IIC boundaries. FL-26 250 mm timber remains `Ln,w 53.5`,
+`Ln,w+CI 52`, `Rw 61.5`. Selected next action:
+`broad_accuracy_open_web_supported_band_similarity_coverage_refresh_plan`;
+selected next file:
+`packages/engine/src/broad-accuracy-open-web-supported-band-similarity-coverage-refresh-contract.test.ts`.
+Selected next label: open-web supported-band similarity coverage refresh.
+
+That coverage refresh has now landed as
+`broad_accuracy_open_web_supported_band_similarity_coverage_refresh_plan`
+with selection status
+`broad_accuracy_open_web_supported_band_similarity_coverage_refresh_landed_selected_wall_multileaf_triple_leaf_solver`.
+It keeps the open-web steel supported-band similarity runtime frozen
+while the refreshed matrix pins FL-26 250 mm timber at `Ln,w 53.5`,
+keeps exact-source precedence and FL-28 seed precedence, blocks carpet,
+missing-fill, field, building, and ASTM/IIC aliases, and leaves
+direct-fixed open-web and open-box timber as ranked follow-ups. Selected
+next action:
+`broad_accuracy_wall_multileaf_triple_leaf_calibrated_solver_plan`;
+selected next file:
+`packages/engine/src/broad-accuracy-wall-multileaf-triple-leaf-calibrated-solver-contract.test.ts`.
+Selected next label: wall multileaf triple-leaf calibrated solver.
+
+That calibrated solver has now landed as
+`broad_accuracy_wall_multileaf_triple_leaf_calibrated_solver_plan`
+with selection status
+`broad_accuracy_wall_multileaf_triple_leaf_calibrated_solver_landed_selected_surface_parity`.
+It promotes only explicit NRC 2024 source-family Type C / glass-fiber
+grouped triple-leaf element-lab stacks through
+`broad_accuracy_wall_triple_leaf_nrc2024_calibrated_two_cavity_solver`.
+Assembly B now returns `Rw 49 / STC 60 / C 1.4 / Ctr -7.4`, while
+Assembly A and D return `Rw 58` and `Rw 55` respectively with the same
+calibrated lab basis and `+/-4 dB` budget. Rockwool / MLV / plaster,
+generic gypsum or glasswool, duplicate or missing grouped topology,
+field outputs, and building outputs stay outside this calibrated lane.
+Selected next action:
+`broad_accuracy_wall_multileaf_triple_leaf_calibrated_solver_surface_parity_plan`;
+selected next file:
+`apps/web/features/workbench/wall-triple-leaf-calibrated-solver-surface-parity.test.ts`.
+Selected next label: wall triple-leaf calibrated solver surface parity.
+
+That surface parity has now landed with selection status
+`broad_accuracy_wall_multileaf_triple_leaf_calibrated_solver_surface_parity_landed_selected_coverage_refresh`.
+Cards, route posture, dynamic branch copy, method/corridor dossiers,
+Markdown reports, local saved replay, server snapshot replay, and the
+calculator API now expose `Wall triple-leaf calibrated solver`, the
+`candidate_broad_accuracy_nrc2024_triple_leaf_calibrated` candidate, and
+the same `+/-4 dB` calibrated source-family budget. Mixed lab-plus-field
+requests keep `R'w` and `DnT,w` parked as field input prompts instead of
+aliasing lab `Rw`; this can make the aggregate airborne basis read
+`needs_input` while the lab calibrated candidate stays visible for
+`Rw` / `STC` / `C` / `Ctr`. Selected next action:
+`broad_accuracy_wall_multileaf_triple_leaf_calibrated_solver_coverage_refresh_plan`;
+selected next file:
+`packages/engine/src/broad-accuracy-wall-multileaf-triple-leaf-calibrated-solver-coverage-refresh-contract.test.ts`.
+Selected next label: wall triple-leaf calibrated solver coverage refresh.
+
+That coverage refresh has now landed as
+`broad_accuracy_wall_multileaf_triple_leaf_calibrated_solver_coverage_refresh_plan`
+with selection status
+`broad_accuracy_wall_multileaf_triple_leaf_calibrated_solver_coverage_refresh_landed_selected_local_substitution_mapping`.
+It is a no-runtime executable matrix refresh: NRC 2024 Assembly B stays
+`Rw 49 / STC 60 / C 1.4 / Ctr -7.4`, Assembly A stays `Rw 58`, and
+Assembly D stays `Rw 55` through
+`broad_accuracy_wall_triple_leaf_nrc2024_calibrated_two_cavity_solver`.
+Mixed `R'w` / `DnT,w`, building prediction, exact-source admission,
+duplicate grouped topology, and partial grouped topology remain
+separate boundaries. Generic gypsum / glasswool and local Rockwool /
+MLV / plaster substitution are now the selected narrow lane for broader
+wall coverage; direct-fixed open-web and open-box timber remain ranked
+follow-ups. Selected next action:
+`broad_accuracy_wall_multileaf_triple_leaf_local_substitution_mapping_plan`;
+selected next file:
+`packages/engine/src/broad-accuracy-wall-multileaf-triple-leaf-local-substitution-mapping-contract.test.ts`.
+Selected next label: wall triple-leaf local substitution mapping.
+
+That local substitution mapping has now landed as
+`broad_accuracy_wall_multileaf_triple_leaf_local_substitution_mapping_plan`
+with selection status
+`broad_accuracy_wall_multileaf_triple_leaf_local_substitution_mapping_landed_no_runtime_selected_formula_corridor`.
+It is a no-runtime owner/mapping gate. The NRC Type C / glass-fiber
+control remains the only supported calibrated triple-leaf runtime, while
+generic gypsum / glasswool grouped stacks and local Rockwool / MLV /
+plaster grouped stacks are admitted only as formula-corridor candidates.
+Generic stacks require board surface-mass/stiffness, glasswool
+flow-resistivity, cavity/support, and substitution budget owners. Local
+Rockwool / MLV / plaster stacks require additional rockwool,
+limp-mass, plaster, short-cavity, and paired negative-boundary owners.
+Field/building basis, duplicate grouping, and partial grouped topology
+remain boundaries. Selected next action:
+`broad_accuracy_wall_multileaf_triple_leaf_local_substitution_formula_corridor_plan`;
+selected next file:
+`packages/engine/src/broad-accuracy-wall-multileaf-triple-leaf-local-substitution-formula-corridor-contract.test.ts`.
+Selected next label: wall triple-leaf local substitution formula
+corridor.
+
+That formula corridor has now landed as
+`broad_accuracy_wall_multileaf_triple_leaf_local_substitution_formula_corridor_plan`
+with selection status
+`broad_accuracy_wall_multileaf_triple_leaf_local_substitution_formula_corridor_landed_no_runtime_selected_runtime_corridor`.
+It is a no-runtime formula-definition gate. Generic gypsum / glasswool
+now has an executable source-absent lab `Rw 49.3` design corridor with a
+`+/-6 dB` not-measured budget; local Rockwool / MLV / plaster now has an
+executable source-absent lab `Rw 52.8` design corridor with a `+/-8 dB`
+not-measured budget. These values are not live runtime outputs yet:
+exact measured rows still win, the NRC Type C / glass-fiber calibrated
+control stays unchanged, generic/local live stacks remain unpromoted, and
+`STC`, `C`, `Ctr`, field, and building outputs stay blocked until later
+adapters own them. Selected next action:
+`broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor_plan`;
+selected next file:
+`packages/engine/src/broad-accuracy-wall-multileaf-triple-leaf-local-substitution-runtime-corridor-contract.test.ts`.
+Selected next label: wall triple-leaf local substitution runtime
+corridor.
+
+That runtime corridor has now landed as
+`broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor_plan`
+with selection status
+`broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor_landed_selected_surface_parity`.
+It promotes only lab `Rw` for complete grouped local-substitution
+triple-leaf stacks. Generic gypsum / glasswool now returns live
+ISO-rounded `Rw 50` from a `Rw 49.3` formula design corridor with a
+`+/-6 dB` source-absent budget. Local Rockwool / MLV / plaster now
+returns live ISO-rounded `Rw 53` from a `Rw 52.8` formula design corridor
+with a `+/-8 dB` source-absent budget, superseding the older Gate G
+`Rw 50` fixture for that exact local custom stack. Exact measured rows
+and the NRC Type C / glass-fiber calibrated control still outrank the
+corridor. `STC`, `C`, `Ctr`, field, and building outputs remain
+unsupported adapter boundaries.
+Selected next action:
+`broad_accuracy_wall_multileaf_triple_leaf_local_substitution_surface_parity_plan`;
+selected next file:
+`packages/engine/src/broad-accuracy-wall-multileaf-triple-leaf-local-substitution-surface-parity-contract.test.ts`.
+Selected next label: wall triple-leaf local substitution surface parity.
+
+That surface parity closeout has now landed as
+`broad_accuracy_wall_multileaf_triple_leaf_local_substitution_surface_parity_plan`
+with selection status
+`broad_accuracy_wall_multileaf_triple_leaf_local_substitution_surface_parity_landed_selected_coverage_refresh`.
+It does not move runtime values. Output cards, route posture, dynamic
+branch copy, method dossier, local saved replay, server snapshot replay,
+calculator API payloads, and Markdown reports now show `Wall triple-leaf
+local substitution` with the same Rw-only candidate id, method, warning,
+and not-measured budgets. Generic gypsum / glasswool remains `Rw 50`
+with `+/-6 dB`; local Rockwool / MLV / plaster remains `Rw 53` with
+`+/-8 dB`. `STC`, `C`, and `Ctr` stay unsupported, while `R'w` and
+`DnT,w` stay field-input prompts rather than lab aliases.
+Selected next action:
+`broad_accuracy_wall_multileaf_triple_leaf_local_substitution_coverage_refresh_plan`;
+selected next file:
+`packages/engine/src/broad-accuracy-wall-multileaf-triple-leaf-local-substitution-coverage-refresh-contract.test.ts`.
+Selected next label: wall triple-leaf local substitution coverage
+refresh.
+
+That coverage refresh has now landed as
+`broad_accuracy_wall_multileaf_triple_leaf_local_substitution_coverage_refresh_plan`
+with selection status
+`broad_accuracy_wall_multileaf_triple_leaf_local_substitution_coverage_refresh_landed_selected_lab_spectrum_adapter`.
+It is no-runtime: generic stays `Rw 50`, local Rockwool / MLV / plaster
+stays `Rw 53`, `R'w` and `DnT,w` stay field-input prompts, and
+field/building plus exact/calibrated precedence boundaries remain
+protected. Direct-fixed open-web and open-box timber stay ranked floor
+follow-ups. Selected next action:
+`broad_accuracy_wall_multileaf_triple_leaf_local_substitution_lab_spectrum_adapter_plan`;
+selected next file:
+`packages/engine/src/broad-accuracy-wall-multileaf-triple-leaf-local-substitution-lab-spectrum-adapter-contract.test.ts`.
+Selected next label: wall triple-leaf local substitution lab STC/C/Ctr
+spectrum adapter.
+
+That lab spectrum adapter has now landed as
+`broad_accuracy_wall_multileaf_triple_leaf_local_substitution_lab_spectrum_adapter_plan`
+with selection status
+`broad_accuracy_wall_multileaf_triple_leaf_local_substitution_lab_spectrum_adapter_landed_selected_surface_parity`.
+It promotes complete element-lab local-substitution `STC`, `C`, and
+`Ctr` from the calculated curve while preserving `Rw 50` / `Rw 53`.
+Generic is `STC 61 / C 1.6 / Ctr -7.2`; local Rockwool / MLV / plaster
+is `STC 64 / C 1.6 / Ctr -7.2`. Field and building outputs remain
+separate route owners, not lab aliases. Selected next action:
+`broad_accuracy_wall_multileaf_triple_leaf_local_substitution_lab_spectrum_adapter_surface_parity_plan`;
+selected next file:
+`packages/engine/src/broad-accuracy-wall-multileaf-triple-leaf-local-substitution-lab-spectrum-adapter-surface-parity-contract.test.ts`.
+
+If you need the private-use readiness chain read
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 If you need the immediate user-reported triple-leaf / rockwool reorder
 defect handoff read
@@ -738,6 +991,260 @@ implementation caveat is now closed: `frequencyBandSet` exists in the
 shared schema, engine runtime, workbench input surface, store, saved
 snapshot, server snapshot, live scenario assembly, cards, reports, and
 API payloads.
+
+Current final-rehearsal planning checkpoint:
+
+[CHECKPOINT_2026-05-15_COMPANY_INTERNAL_FINAL_REHEARSAL_PLANNING_HANDOFF.md](./CHECKPOINT_2026-05-15_COMPANY_INTERNAL_FINAL_REHEARSAL_PLANNING_HANDOFF.md)
+
+This checkpoint compares the implementation with the living docs and
+confirms the next file is
+`packages/engine/src/company-internal-final-internal-use-rehearsal-contract.test.ts`.
+The final rehearsal should classify all 71 Matrix V6 rows into release
+buckets, prove values/basis/budgets/missing-input behavior, verify
+surface proof owners, join `pnpm calculator:gate:current`, and then
+produce the operating envelope.
+
+Controlled company-internal operating envelope:
+
+[COMPANY_INTERNAL_OPERATING_ENVELOPE.md](./COMPANY_INTERNAL_OPERATING_ENVELOPE.md)
+
+Current open-box timber checkpoint:
+
+[CHECKPOINT_2026-05-18_OPEN_BOX_TIMBER_TRANSFER_OWNER.md](./CHECKPOINT_2026-05-18_OPEN_BOX_TIMBER_TRANSFER_OWNER.md)
+
+The final rehearsal contract, operating envelope, broad-readiness
+refocus, broad benchmark expansion, wall triple-leaf calibrated solver
+coverage refresh, local substitution formula/runtime/surface/coverage
+gates, lab spectrum adapter gates, field-context gates, and direct-fixed
+open-web owner/formula/runtime/surface/coverage gates are green in the
+2026-05-18 current gate. Full `pnpm calculator:gate:current` passed
+after the open-box timber similarity transfer owner gate with engine 459
+files / 2635 tests, web 87 files / 363 passed + 18 skipped, repo build
+5/5, and whitespace guard clean. Only the known non-fatal optional
+`sharp/@img` build warnings appeared. The direct-fixed open-web coverage
+refresh has now landed as
+`broad_accuracy_floor_open_web_direct_fixed_lining_coverage_refresh_plan`
+with selection status
+`broad_accuracy_floor_open_web_direct_fixed_lining_coverage_refresh_landed_selected_open_box_timber_transfer_owner`.
+The next broad-accuracy implementation target is the open-box timber
+similarity transfer owner:
+`packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-transfer-owner-contract.test.ts`.
+The earlier lab spectrum adapter remains landed with selection status
+`broad_accuracy_wall_multileaf_triple_leaf_local_substitution_lab_spectrum_adapter_landed_selected_surface_parity`.
+It supports complete element-lab local-substitution `STC`, `C`, and
+`Ctr` from the calculated curve without moving `Rw 50` / `Rw 53`.
+Generic returns `STC 61 / C 1.6 / Ctr -7.2`; local Rockwool / MLV /
+plaster returns `STC 64 / C 1.6 / Ctr -7.2`. Field and building outputs
+remain separate route owners. The next implementation target is
+`broad_accuracy_wall_multileaf_triple_leaf_local_substitution_lab_spectrum_adapter_surface_parity_plan`;
+selected next file:
+`packages/engine/src/broad-accuracy-wall-multileaf-triple-leaf-local-substitution-lab-spectrum-adapter-surface-parity-contract.test.ts`.
+That surface parity closeout has now landed with selection status
+`broad_accuracy_wall_multileaf_triple_leaf_local_substitution_lab_spectrum_adapter_surface_parity_landed_selected_coverage_refresh`.
+It is no-runtime: cards, route posture, dynamic trace, method dossiers,
+local saved replay, server snapshot replay, calculator API, and
+Markdown reports now expose the same lab spectrum adapter candidate,
+method, warning, values, and not-measured budgets. Generic remains
+`Rw 50 / STC 61 / C 1.6 / Ctr -7.2`; local Rockwool / MLV / plaster
+remains `Rw 53 / STC 64 / C 1.6 / Ctr -7.2`. Field/building outputs,
+exact precedence, and hostile topology remain protected. The next target
+is now
+`broad_accuracy_wall_multileaf_triple_leaf_local_substitution_lab_spectrum_adapter_coverage_refresh_plan`;
+selected next file:
+`packages/engine/src/broad-accuracy-wall-multileaf-triple-leaf-local-substitution-lab-spectrum-adapter-coverage-refresh-contract.test.ts`.
+That adapter coverage refresh has now landed with selection status
+`broad_accuracy_wall_multileaf_triple_leaf_local_substitution_lab_spectrum_adapter_coverage_refresh_landed_selected_field_context_harmonization`.
+It is no-runtime: generic remains `Rw 50 / STC 61 / C 1.6 / Ctr -7.2`,
+local Rockwool / MLV / plaster remains `Rw 53 / STC 64 / C 1.6 / Ctr
+-7.2`, and STC-only stays on the calculated lab spectrum adapter.
+Exact/calibrated precedence, mixed field `R'w` / `DnT,w`, building,
+duplicate grouping, and partial topology remain protected. Direct-fixed
+open-web and open-box timber stay ranked follow-ups. The selected next
+action is
+`broad_accuracy_wall_multileaf_triple_leaf_local_substitution_field_context_harmonization_plan`;
+selected next file:
+`packages/engine/src/broad-accuracy-wall-multileaf-triple-leaf-local-substitution-field-context-harmonization-contract.test.ts`.
+
+The field context harmonization has now landed:
+
+- landed gate:
+  `broad_accuracy_wall_multileaf_triple_leaf_local_substitution_field_context_harmonization_plan`
+- selection status:
+  `broad_accuracy_wall_multileaf_triple_leaf_local_substitution_field_context_harmonization_landed_selected_field_context_surface_parity`
+- landed implementation:
+  `packages/engine/src/broad-accuracy-wall-multileaf-triple-leaf-local-substitution-field-context-harmonization.ts`
+- landed contract:
+  `packages/engine/src/broad-accuracy-wall-multileaf-triple-leaf-local-substitution-field-context-harmonization-contract.test.ts`
+- selected next action:
+  `broad_accuracy_wall_multileaf_triple_leaf_local_substitution_field_context_surface_parity_plan`
+- selected next file:
+  `packages/engine/src/broad-accuracy-wall-multileaf-triple-leaf-local-substitution-field-context-surface-parity-contract.test.ts`
+- selected next label:
+  wall triple-leaf local substitution field context surface parity
+
+This is runtime movement for complete local Rockwool / MLV / plaster
+grouped triple-leaf `field_between_rooms` requests. The lab
+local-substitution curve (`Rw 53 / STC 64 / C 1.6 / Ctr -7.2`) is now
+the direct separating-element anchor, and the current contract fixture
+returns `R'w 51` and `DnT,w 53` with a `+/-10 dB` source-absent field
+error budget. Missing field context remains `needs_input`, building
+prediction remains unsupported until flanking/junction owners exist, and
+exact measured rows still win. Direct-fixed open-web and open-box timber
+remain ranked follow-ups behind the selected surface-parity closeout.
+
+The field-context surface parity closeout has now landed:
+
+- landed gate:
+  `broad_accuracy_wall_multileaf_triple_leaf_local_substitution_field_context_surface_parity_plan`
+- selection status:
+  `broad_accuracy_wall_multileaf_triple_leaf_local_substitution_field_context_surface_parity_landed_selected_open_web_direct_fixed_lining_transfer_owner`
+- landed implementation:
+  `packages/engine/src/broad-accuracy-wall-multileaf-triple-leaf-local-substitution-field-context-surface-parity.ts`
+- landed contract:
+  `packages/engine/src/broad-accuracy-wall-multileaf-triple-leaf-local-substitution-field-context-surface-parity-contract.test.ts`
+- selected next action:
+  `broad_accuracy_floor_open_web_direct_fixed_lining_transfer_owner_contract_plan`
+- selected next file:
+  `packages/engine/src/broad-accuracy-floor-open-web-direct-fixed-lining-transfer-owner-contract.test.ts`
+- selected next label:
+  floor open-web direct-fixed lining transfer owner contract
+
+This closeout is no-runtime: cards, route posture, dynamic trace, method
+dossiers, saved replay, server snapshot replay, calculator API payloads,
+and Markdown reports now expose the same local-substitution
+field-context basis, warning, candidate, values, and budget. The current
+contract field fixture remains `R'w 51 / DnT,w 53`, the workbench/API
+fixture remains `R'w 52 / DnT,w 53`, and both carry the `+/-10 dB`
+source-absent field budget without treating it as measured field
+evidence or a lab `Rw`/`STC` relabel. Missing field context, lab
+outputs, building prediction, and exact source precedence remain
+protected. Direct-fixed open-web is selected next because it still lacks
+a lower-support transfer owner; open-box timber remains the ranked
+follow-up.
+
+The direct-fixed open-web transfer-owner contract has now landed:
+
+- landed gate:
+  `broad_accuracy_floor_open_web_direct_fixed_lining_transfer_owner_contract_plan`
+- selection status:
+  `broad_accuracy_floor_open_web_direct_fixed_lining_transfer_owner_landed_no_runtime_selected_formula_corridor`
+- landed implementation:
+  `packages/engine/src/broad-accuracy-floor-open-web-direct-fixed-lining-transfer-owner.ts`
+- landed contract:
+  `packages/engine/src/broad-accuracy-floor-open-web-direct-fixed-lining-transfer-owner-contract.test.ts`
+- selected next action:
+  `broad_accuracy_floor_open_web_direct_fixed_lining_formula_corridor_plan`
+- selected next file:
+  `packages/engine/src/broad-accuracy-floor-open-web-direct-fixed-lining-formula-corridor-contract.test.ts`
+- selected next label:
+  floor open-web direct-fixed lining formula corridor
+
+This gate is no-runtime owner work. It classifies 54 UBIQ direct-fixed
+open-web exact rows across FL-23, FL-25, and FL-27, with 200/300/400 mm
+carriers, 16/19 mm INEX decks, bare/timber-underlay/carpet finishes,
+and 2x13 / 2x16 / 3x16 direct linings. It owns carrier geometry, deck
+mass, upper finish delta, direct lining attachment, `Ln,w` / `CI` /
+`Ln,w+CI` transfer, `Rw` bridge, exact precedence, source-absent budget,
+and negative boundaries before runtime can promote. Resilient
+suspended-ceiling rows, open-box timber, field/building outputs, and
+ASTM/IIC aliases remain blocked.
+
+The direct-fixed open-web formula corridor has now landed as
+`broad_accuracy_floor_open_web_direct_fixed_lining_formula_corridor_plan`
+with selection status
+`broad_accuracy_floor_open_web_direct_fixed_lining_formula_corridor_landed_no_runtime_selected_runtime_corridor`.
+This is no-runtime formula-corridor work: it defines same-family
+direct-fixed interpolation from the 54 UBIQ exact rows by FL-23 / FL-25
+/ FL-27 board schedule, 16/19 mm INEX deck, finish package, and
+200/300/400 mm carrier depth. The representative 250 mm FL-23 / 19 mm
+timber-underlay design row is `Ln,w 71`, `CI -0.5`, `Ln,w+CI 70.5`,
+`Rw 51`, and `Rw+Ctr 43.5`, with source-absent design budgets of
+`+/-4 dB` for `Ln,w` and `+/-3 dB` for `Rw`. Exact rows still win;
+out-of-band carrier depths, field/building outputs, and ASTM/IIC aliases
+remain blocked. Selected next action:
+`broad_accuracy_floor_open_web_direct_fixed_lining_runtime_corridor_plan`;
+selected next file:
+`packages/engine/src/broad-accuracy-floor-open-web-direct-fixed-lining-runtime-corridor-contract.test.ts`.
+Selected next label: floor open-web direct-fixed lining runtime corridor.
+
+The direct-fixed open-web runtime corridor has now landed as
+`broad_accuracy_floor_open_web_direct_fixed_lining_runtime_corridor_plan`
+with selection status
+`broad_accuracy_floor_open_web_direct_fixed_lining_runtime_corridor_landed_selected_surface_parity`.
+It promotes complete source-absent element-lab direct-fixed open-web
+stacks through
+`broad_accuracy_floor_open_web_direct_fixed_lining_direct_source_interpolation_formula_corridor`
+instead of the broad floor-family fallback. FL-23/FL-25/FL-27
+same-family source anchors now cover mid-depth direct-fixed variants:
+the 250 mm FL-23 / 19 mm timber-underlay runtime returns `Ln,w 71`,
+`CI -0.5`, `Ln,w+CI 70.5`, `Rw 51`, and `Rw+Ctr 43.5`; FL-25 bare and
+FL-27 carpet variants keep their formula-corridor pins. Runtime impact
+budgets stay visible as not-measured source-absent budgets (`+/-4 dB`
+for `Ln,w`, `+/-1.5 dB` for `CI`, `+/-4.5 dB` for `Ln,w+CI`; the
+formula owner still carries `+/-3 dB` for `Rw`). Exact rows still win;
+resilient supported-band stacks, out-of-band depths, duplicate carriers,
+field/building outputs, and ASTM/IIC aliases remain outside the runtime.
+Selected next action:
+`broad_accuracy_floor_open_web_direct_fixed_lining_surface_parity_plan`;
+selected next file:
+`packages/engine/src/broad-accuracy-floor-open-web-direct-fixed-lining-surface-parity-contract.test.ts`.
+Selected next label: floor open-web direct-fixed lining surface parity.
+
+The direct-fixed open-web surface parity gate has now landed as
+`broad_accuracy_floor_open_web_direct_fixed_lining_surface_parity_plan`
+with selection status
+`broad_accuracy_floor_open_web_direct_fixed_lining_surface_parity_landed_selected_coverage_refresh`.
+It keeps output cards, route posture, impact lane labels, confidence
+provenance, metric-basis copy, corridor/method dossier, local saved
+replay, server snapshot replay, calculator API, impact-only API, and
+Markdown report on the same source-absent direct-fixed lab basis without
+moving runtime values. The visible FL-23 timber pin still reports
+`Ln,w 71`, `CI -0.5`, `Ln,w+CI 70.5`, `Rw 51`, and `Rw+Ctr 43.5` inside
+the FL-23/FL-25/FL-27 direct-fixed source grid with source-absent
+budgets. Exact rows, resilient supported-band stacks, out-of-band
+depths, duplicate carriers, field/building outputs, and ASTM/IIC aliases
+remain outside this lane. Selected next action:
+`broad_accuracy_floor_open_web_direct_fixed_lining_coverage_refresh_plan`;
+selected next file:
+`packages/engine/src/broad-accuracy-floor-open-web-direct-fixed-lining-coverage-refresh-contract.test.ts`.
+Selected next label: floor open-web direct-fixed lining coverage refresh.
+
+The direct-fixed open-web coverage refresh has now landed as
+`broad_accuracy_floor_open_web_direct_fixed_lining_coverage_refresh_plan`
+with selection status
+`broad_accuracy_floor_open_web_direct_fixed_lining_coverage_refresh_landed_selected_open_box_timber_transfer_owner`.
+This no-runtime coverage refresh moves the FL-23/FL-25/FL-27
+direct-fixed lane out of follow-up status and into the broad matrix:
+FL-23 keeps `Ln,w 71`, `CI -0.5`, `Ln,w+CI 70.5`, `Rw 51`, and
+`Rw+Ctr 43.5`; FL-25 keeps `Ln,w 77`; FL-27 keeps `Ln,w 63`. Exact
+source precedence stays first for the 300 mm FL-23 exact row, resilient
+supported-band stacks stay on their separate lane, out-of-band depths
+and duplicate carriers stay outside direct-fixed, and field/building
+plus ASTM/IIC outputs remain boundary rows. Selected next action:
+`broad_accuracy_floor_open_box_timber_similarity_transfer_owner_contract_plan`;
+selected next file:
+`packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-transfer-owner-contract.test.ts`.
+Selected next label: floor open-box timber similarity transfer owner.
+
+The open-box timber similarity transfer-owner contract has now landed as
+`broad_accuracy_floor_open_box_timber_similarity_transfer_owner_contract_plan`
+with selection status
+`broad_accuracy_floor_open_box_timber_similarity_transfer_owner_landed_no_runtime_selected_formula_corridor`.
+It is no-runtime owner work before formula promotion. It classifies 15
+TUAS open-box timber exact rows on the 370 mm `open_box_timber_slab`
+carrier, separates 10 predictor-owned rows from 5 exact-only hybrid /
+fragmented package rows, and owns the open-box support family, laminate
+/ EPS finish pair, upper package interaction, lower ceiling family,
+fragmented-package exact equivalence, ISO lab `Ln,w` / `CI` /
+`CI,50-2500` / `Ln,w+CI` transfer, `Rw` / companion `Rw+C` semantics,
+exact precedence, source-absent budget, and negative boundaries. Open-web
+steel, raw bare open-box carriers, disjoint duplicate roles, partial
+laminate/EPS finishes, field/building outputs, and ASTM/IIC aliases stay
+blocked. Selected next action:
+`broad_accuracy_floor_open_box_timber_similarity_formula_corridor_plan`;
+selected next file:
+`packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-formula-corridor-contract.test.ts`.
+Selected next label: floor open-box timber similarity formula corridor.
 
 Known audit corrections before calling the company-internal matrix final:
 

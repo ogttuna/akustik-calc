@@ -11,6 +11,14 @@ type SelectSimpleWorkbenchTraceNotesOptions = {
 
 const NOTE_PRIORITY_RULES: ReadonlyArray<{ pattern: RegExp; score: number }> = [
   {
+    pattern: /\b(NRC 2024|Type C|glass-fiber|calibrated triple-leaf|source-family)\b/i,
+    score: 118
+  },
+  {
+    pattern: /\b(open-web|supported-band|UBIQ|source grid)\b/i,
+    score: 115
+  },
+  {
     pattern:
       /\b(exact|official|curated|bound(?:-only)?|conservative bound|family estimate|screening seed|selected lane|strategy|active on the current|matched curated|matched catalog|anchor)\b/i,
     score: 120

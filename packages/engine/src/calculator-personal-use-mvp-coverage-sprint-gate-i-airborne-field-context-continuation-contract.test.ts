@@ -9,6 +9,11 @@ import { calculateAssembly } from "./calculate-assembly";
 import { buildDynamicCalculatorCandidateResolverRuntime } from "./dynamic-calculator-candidate-resolver-runtime";
 import { buildDynamicCalculatorRouteInputTopologyAssessment } from "./dynamic-calculator-route-input-topology";
 import {
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD,
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_WARNING
+} from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-field-context-harmonization";
+import {
   GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD,
   GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
   GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING
@@ -219,20 +224,21 @@ describe("Personal-Use MVP Coverage Sprint Gate I airborne field-context continu
     });
 
     expect(grouped.metrics).toMatchObject({
-      estimatedDnTwDb: 51,
-      estimatedRwDb: 50,
-      estimatedRwPrimeDb: 50
+      estimatedDnTwDb: 53,
+      estimatedRwDb: 52,
+      estimatedRwPrimeDb: 52
     });
     expect(grouped.dynamicAirborneTrace?.selectedMethod).toBe("triple_leaf_two_cavity_frequency_solver");
     expect(grouped.airborneCandidateResolution).toMatchObject({
-      selectedCandidateId: GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
+      selectedCandidateId: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
       selectedOrigin: "family_physics_prediction"
     });
     expect(grouped.airborneBasis).toMatchObject({
       family: "multileaf_multicavity",
-      method: GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD,
+      method: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD,
       origin: "family_physics_prediction"
     });
+    expect(grouped.warnings).toContain(BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_WARNING);
   });
 
   it("keeps missing field context, building prediction, and lab outputs outside the Gate I runtime lane", () => {

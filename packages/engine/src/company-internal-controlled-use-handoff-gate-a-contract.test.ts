@@ -610,9 +610,9 @@ describe("company-internal controlled-use handoff v1 Gate A contract", () => {
     expect(grouped).toMatchObject({
       confidence: "medium",
       family: "multileaf_multicavity",
-      rw: 50,
-      stc: 55,
-      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
+      rw: 53,
+      stc: 64,
+      strategy: "broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor"
     });
     expect(flatSwap).toMatchObject({
       confidence: "medium",
@@ -622,10 +622,10 @@ describe("company-internal controlled-use handoff v1 Gate A contract", () => {
     });
     expect(field).toMatchObject({
       confidence: "medium",
-      dnTw: 50,
+      dnTw: 53,
       family: "multileaf_multicavity",
-      rwPrime: 49,
-      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
+      rwPrime: 51,
+      strategy: "broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor"
     });
     expect(exactSource).toMatchObject({ confidence: "low", family: "stud_wall_system", rw: 55 });
     expect(exactSource.warnings).toMatch(/Curated exact airborne lab match active/i);

@@ -247,18 +247,18 @@ describe("calculator model-first physics prediction pivot Gate J", () => {
     });
 
     expect(result.metrics).toMatchObject({
-      estimatedCDb: 0.8,
-      estimatedCtrDb: -7.3,
-      estimatedRwDb: 50,
-      estimatedStc: 55
+      estimatedCDb: 1.6,
+      estimatedCtrDb: -7.2,
+      estimatedRwDb: 53,
+      estimatedStc: 64
     });
     expect(result.dynamicAirborneTrace).toMatchObject({
       detectedFamily: "multileaf_multicavity",
       selectedMethod: "triple_leaf_two_cavity_frequency_solver",
-      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
+      strategy: "broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor"
     });
     expect(result.airborneBasis).toMatchObject({
-      errorBudgetDb: 5,
+      errorBudgetDb: 8,
       origin: "family_physics_prediction",
       toleranceClass: "uncalibrated_prediction"
     });

@@ -36,6 +36,8 @@ import {
   MASS_TIMBER_CLT_DELTA_LW_FORMULA_BASIS,
   TIMBER_JOIST_DELTA_LW_FORMULA_BASIS
 } from "./timber-clt-floor-impact-delta-lw-runtime-corridor";
+import { OPEN_WEB_DIRECT_FIXED_LINING_BASIS } from "./lightweight-steel-open-web-direct-fixed-lining-estimate";
+import { OPEN_WEB_SUPPORTED_BAND_SIMILARITY_BASIS } from "./lightweight-steel-open-web-supported-band-estimate";
 
 type BuildDynamicImpactTraceInput = {
   boundFloorSystemEstimate?: FloorSystemBoundEstimateResult | null;
@@ -126,6 +128,31 @@ function getScopedFormulaSelectionLabel(
 
   if (basisLabels.has(MASS_TIMBER_CLT_DELTA_LW_FORMULA_BASIS)) {
     return "Mass-timber CLT DeltaLw formula corridor";
+  }
+
+  return null;
+}
+
+function getScopedFamilySelectionLabel(
+  impact: ImpactCalculation | null,
+  impactBasis: ImpactCalculation["basis"] | undefined
+): string | null {
+  const basisLabels = new Set<string>();
+
+  if (impactBasis) {
+    basisLabels.add(impactBasis);
+  }
+
+  for (const value of Object.values(impact?.metricBasis ?? {})) {
+    basisLabels.add(value);
+  }
+
+  if (basisLabels.has(OPEN_WEB_SUPPORTED_BAND_SIMILARITY_BASIS)) {
+    return "Open-web steel supported-band similarity";
+  }
+
+  if (basisLabels.has(OPEN_WEB_DIRECT_FIXED_LINING_BASIS)) {
+    return "Open-web steel direct-fixed lining interpolation";
   }
 
   return null;
@@ -335,6 +362,10 @@ function formatImpactBasisLabel(value: ImpactCalculation["basis"] | ImpactBoundC
       return "Timber joist DeltaLw formula corridor";
     case "predictor_lightweight_steel_fl28_interpolation_estimate":
       return "Lightweight-steel FL-28 interpolation";
+    case "predictor_lightweight_steel_open_web_supported_band_similarity_estimate":
+      return "Open-web steel supported-band similarity";
+    case "broad_accuracy_floor_open_web_direct_fixed_lining_direct_source_interpolation_formula_corridor":
+      return "Open-web steel direct-fixed lining interpolation";
     case "predictor_lightweight_steel_mass_spring_holdout_corridor_estimate":
       return "Lightweight-steel formula corridor";
     case "predictor_lightweight_steel_suspended_ceiling_corridor_estimate":
@@ -526,6 +557,7 @@ export function buildDynamicImpactTrace(
   });
   const impactBasis = input.impact?.basis ?? input.lowerBoundImpact?.basis;
   const formulaSelectionLabel = getScopedFormulaSelectionLabel(input.impact, input.impact?.basis);
+  const familySelectionLabel = getScopedFamilySelectionLabel(input.impact, input.impact?.basis);
   const availableMetricLabels = collectMetricLabels(input.impact, input.lowerBoundImpact);
   const structuralSupportType =
     resolvedPredictorInput?.structuralSupportType ?? structuralSupportTypeFromFamily(supportFamily ?? undefined);
@@ -585,7 +617,9 @@ export function buildDynamicImpactTrace(
     selectionKind = "family_estimate";
     evidenceTier = "estimate";
     estimateTier = input.floorSystemEstimate.kind;
-    selectedLabel = `${formatEstimateTier(estimateTier) ?? "Published family"} · ${input.floorSystemEstimate.structuralFamily}`;
+    selectedLabel =
+      familySelectionLabel ??
+      `${formatEstimateTier(estimateTier) ?? "Published family"} · ${input.floorSystemEstimate.structuralFamily}`;
     selectedSourceIds = input.floorSystemEstimate.sourceSystems.map((system) => system.id);
     selectedSourceLabels = input.floorSystemEstimate.sourceSystems.map((system) => system.label);
     candidateRowCount = input.floorSystemEstimate.sourceSystems.length;
@@ -625,6 +659,18 @@ export function buildDynamicImpactTrace(
 
   if (supportFamily) {
     notes.push(`Detected support family: ${formatImpactSupportingElementFamily(supportFamily)}.`);
+  }
+
+  if (input.impact?.basis === OPEN_WEB_SUPPORTED_BAND_SIMILARITY_BASIS) {
+    notes.push(
+      "Open-web steel supported-band similarity stayed inside the UBIQ FL-24/FL-26 elastic suspended-ceiling source grid."
+    );
+  }
+
+  if (input.impact?.basis === OPEN_WEB_DIRECT_FIXED_LINING_BASIS) {
+    notes.push(
+      "Open-web steel direct-fixed lining interpolation stayed inside the UBIQ FL-23/FL-25/FL-27 direct-fixed source grid."
+    );
   }
 
   if (estimateTier && typeof fitPercent === "number") {

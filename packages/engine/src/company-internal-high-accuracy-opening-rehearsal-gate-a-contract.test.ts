@@ -846,13 +846,13 @@ describe("company-internal high-accuracy opening rehearsal v1 Gate A contract", 
     expect(groupedRockwool).toMatchObject({
       confidence: "medium",
       family: "multileaf_multicavity",
-      rw: 50,
-      stc: 55,
-      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction",
+      rw: 53,
+      stc: 64,
+      strategy: "broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor",
       supported: ["Rw", "STC", "C", "Ctr"]
     });
-    expect(groupedRockwool.warnings).toContain("family physics prediction");
-    expect(groupedRockwool.warnings).toContain("Dynamic airborne confidence is medium");
+    expect(groupedRockwool.warnings).toContain("lab spectrum adapter is active");
+    expect(groupedRockwool.warnings).toContain("keeps the parent not-measured budget");
 
     expect(flatSwapRockwool).toMatchObject({
       confidence: "medium",
@@ -863,10 +863,10 @@ describe("company-internal high-accuracy opening rehearsal v1 Gate A contract", 
     });
     expect(fieldRockwool).toMatchObject({
       confidence: "medium",
-      dnTw: 50,
+      dnTw: 53,
       family: "multileaf_multicavity",
-      rwPrime: 49,
-      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction",
+      rwPrime: 51,
+      strategy: "broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor",
       supported: ["R'w", "DnT,w"]
     });
 

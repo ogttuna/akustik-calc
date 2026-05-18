@@ -206,9 +206,9 @@ describe("wall triple-leaf frequency solver Gate F", () => {
       targetOutputs: ["Rw"]
     });
 
-    expect(liveResult.metrics.estimatedRwDb).toBe(50);
-    expect(liveResult.dynamicAirborneTrace?.strategy).toBe("triple_leaf_two_cavity_frequency_solver_family_physics_prediction");
-    expect(liveResult.warnings.some((warning: string) => warning.includes("family physics prediction"))).toBe(true);
+    expect(liveResult.metrics.estimatedRwDb).toBe(53);
+    expect(liveResult.dynamicAirborneTrace?.strategy).toBe("broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor");
+    expect(liveResult.warnings.some((warning: string) => warning.includes("source-absent formula corridor"))).toBe(true);
   });
 
   it("keeps active docs aligned with Gate F and the selected Gate G calibration gate", () => {

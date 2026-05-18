@@ -380,7 +380,7 @@ describe("calculator model-first physics prediction pivot Gate Q", () => {
       "gate_q_double_leaf_framed_bridge_route_inputs"
     );
 
-    expect(groupedRockwool.metrics).toMatchObject({ estimatedRwDb: 50, estimatedStc: 55 });
+    expect(groupedRockwool.metrics).toMatchObject({ estimatedRwDb: 53, estimatedStc: 64 });
     expect(groupedRockwool.airborneCandidateResolution).toMatchObject({
       runtimeValueMovement: true,
       selectedOrigin: "family_physics_prediction"

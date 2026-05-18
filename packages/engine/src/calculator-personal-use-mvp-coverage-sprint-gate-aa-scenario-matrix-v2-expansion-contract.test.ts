@@ -202,14 +202,14 @@ describe("Personal-Use MVP Coverage Sprint Gate AA scenario matrix v2 expansion"
     expect(safeTripleLeaf).toMatchObject({
       currentPosture: "family_physics",
       runtime: {
-        basisId: "triple_leaf_two_cavity_frequency_solver",
-        errorBudgetDb: 5,
+        basisId: "broad_accuracy_wall_triple_leaf_local_substitution_lab_spectrum_adapter_runtime",
+        errorBudgetDb: 8,
         origin: "family_physics_prediction",
         supportedTargetOutputs: ["Rw", "STC", "C", "Ctr"],
         unsupportedTargetOutputs: []
       }
     });
-    expect(values(safeTripleLeaf)).toEqual({ C: 0.8, Ctr: -7.3, Rw: 50, STC: 55 });
+    expect(values(safeTripleLeaf)).toEqual({ C: 1.6, Ctr: -7.2, Rw: 53, STC: 64 });
 
     expect(openingTwo).toMatchObject({
       currentPosture: "family_physics",

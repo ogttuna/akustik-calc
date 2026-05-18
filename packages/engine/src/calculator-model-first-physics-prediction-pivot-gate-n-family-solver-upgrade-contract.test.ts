@@ -292,8 +292,8 @@ describe("calculator model-first physics prediction pivot Gate N", () => {
     });
 
     expect(groupedRockwool.metrics).toMatchObject({
-      estimatedRwDb: 50,
-      estimatedStc: 55
+      estimatedRwDb: 53,
+      estimatedStc: 64
     });
     expect(groupedRockwool.airborneCandidateResolution).toMatchObject({
       runtimeValueMovement: true,

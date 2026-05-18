@@ -8,6 +8,14 @@ import {
   getHeavyConcreteCombinedFormulaCorridorNarrative,
   isHeavyConcreteCombinedFormulaCorridorImpact
 } from "./heavy-concrete-combined-impact-corridor-view";
+import {
+  OPEN_WEB_SUPPORTED_BAND_SIMILARITY_LABEL,
+  isOpenWebSupportedBandSimilarityImpact
+} from "./open-web-supported-band-similarity-surface";
+import {
+  OPEN_WEB_DIRECT_FIXED_LINING_LABEL,
+  isOpenWebDirectFixedLiningImpact
+} from "./open-web-direct-fixed-lining-surface";
 
 export type ImpactLaneKind =
   | "bound_only"
@@ -16,6 +24,8 @@ export type ImpactLaneKind =
   | "heavy_concrete_combined_formula_corridor"
   | "low_confidence_fallback"
   | "official_catalog"
+  | "open_web_direct_fixed_lining"
+  | "open_web_supported_band_similarity"
   | "published_family"
   | "scoped_formula"
   | "steel_formula_corridor"
@@ -58,6 +68,14 @@ export function getImpactLaneKind(input: {
     return "steel_formula_corridor";
   }
 
+  if (isOpenWebSupportedBandSimilarityImpact(impact)) {
+    return "open_web_supported_band_similarity";
+  }
+
+  if (isOpenWebDirectFixedLiningImpact(impact)) {
+    return "open_web_direct_fixed_lining";
+  }
+
   if (impact.confidence.provenance === "published_family_estimate" && impact.scope === "family_estimate") {
     return "published_family";
   }
@@ -77,6 +95,10 @@ export function getImpactLanePillLabel(kind: ImpactLaneKind): string {
       return "Family estimate live";
     case "official_catalog":
       return "Official live";
+    case "open_web_supported_band_similarity":
+      return "Open-web similarity live";
+    case "open_web_direct_fixed_lining":
+      return "Direct-fixed open-web live";
     case "bound_only":
       return "Bound support live";
     case "scoped_formula":
@@ -102,6 +124,10 @@ export function getImpactLaneHeadline(kind: ImpactLaneKind): string {
       return "Published family estimate";
     case "official_catalog":
       return "Official impact outputs";
+    case "open_web_supported_band_similarity":
+      return OPEN_WEB_SUPPORTED_BAND_SIMILARITY_LABEL;
+    case "open_web_direct_fixed_lining":
+      return OPEN_WEB_DIRECT_FIXED_LINING_LABEL;
     case "bound_only":
       return "Conservative upper-bound support";
     case "scoped_formula":
@@ -123,6 +149,10 @@ export function getImpactLaneNarrative(kind: ImpactLaneKind, hasExactFamilyCompa
         ? "Curated exact floor families now feed the main impact lane as well. Published Ln,w and companion terms from exact floor rows are no longer stranded in a side panel."
         : kind === "low_confidence_fallback"
           ? "This lane stays source-backed and non-empty, but it is the final low-confidence fallback built from nearby published rows rather than a narrow same-family estimate. Keep it explicit as a fallback and do not present it as a family-calibrated result."
+        : kind === "open_web_supported_band_similarity"
+          ? "This floor lane stays inside the UBIQ FL-24/FL-26 open-web steel supported-band source grid. Exact rows still win on true matches; FL-28 interpolation, carpet/bound-only support, field, building, ASTM, and IIC outputs stay outside this lab estimate."
+        : kind === "open_web_direct_fixed_lining"
+          ? "This floor lane stays inside the UBIQ FL-23/FL-25/FL-27 open-web steel direct-fixed source grid. Exact rows still win on true matches; resilient suspended-ceiling rows, broad steel blends, field, building, ASTM, and IIC outputs stay outside this lab estimate."
         : kind === "published_family"
           ? "When no exact floor row lands, DAC can now keep the estimate inside the right physical family and label the result with the published branch it came from instead of returning an empty impact lane."
           : kind === "official_catalog"

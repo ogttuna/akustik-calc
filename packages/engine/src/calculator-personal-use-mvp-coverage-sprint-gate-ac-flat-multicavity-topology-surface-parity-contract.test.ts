@@ -157,14 +157,14 @@ describe("Personal-Use MVP Coverage Sprint Gate AC flat multicavity topology sur
     expect(flatRuntime.supportedTargetOutputs).toEqual(["Rw", "STC", "C", "Ctr"]);
 
     expect(pinnedRuntime.metrics).toMatchObject({
-      estimatedRwDb: 50,
-      estimatedCDb: 0.8,
-      estimatedCtrDb: -7.3,
-      estimatedStc: 55
+      estimatedRwDb: 53,
+      estimatedCDb: 1.6,
+      estimatedCtrDb: -7.2,
+      estimatedStc: 64
     });
     expect(pinnedRuntime.airborneBasis).toMatchObject({
-      errorBudgetDb: 5,
-      method: "triple_leaf_two_cavity_frequency_solver",
+      errorBudgetDb: 8,
+      method: "broad_accuracy_wall_triple_leaf_local_substitution_lab_spectrum_adapter_runtime",
       origin: "family_physics_prediction"
     });
   });

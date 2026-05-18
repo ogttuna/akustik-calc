@@ -107,6 +107,9 @@ import {
 import { maybeCalculateGateAYAdvancedWallRuntime } from "./dynamic-airborne-gate-ay-advanced-wall";
 import { maybeCalculateGateSDoubleLeafFramedBridgeRuntime } from "./dynamic-airborne-gate-s-double-leaf-framed";
 import { ROCKWOOL_TRIPLE_LEAF_SOURCE_REQUIRED_RUNTIME_WARNING } from "./rockwool-triple-leaf-source-required-boundary";
+import {
+  maybeCalculateBroadAccuracyWallTripleLeafLocalSubstitutionRuntimeCorridor
+} from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-runtime-corridor";
 
 const FAMILY_LABELS: Record<DynamicAirborneFamily, string> = {
   double_leaf: "Double Leaf",
@@ -1060,6 +1063,15 @@ export function calculateDynamicAirborneResult(
     detectedFamily: family.family,
     visibleLeafCount: topology.visibleLeafCount
   });
+  const localSubstitutionRuntime = maybeCalculateBroadAccuracyWallTripleLeafLocalSubstitutionRuntimeCorridor({
+    family,
+    layers: analysisLayers,
+    options,
+    topology
+  });
+  if (localSubstitutionRuntime) {
+    return localSubstitutionRuntime;
+  }
   const gateGGroupedRockwoolPrediction = maybeCalculateGateGGroupedRockwoolPrediction({
     family,
     layers: analysisLayers,

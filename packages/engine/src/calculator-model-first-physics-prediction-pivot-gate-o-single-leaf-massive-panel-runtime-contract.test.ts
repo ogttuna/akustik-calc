@@ -292,8 +292,8 @@ describe("calculator model-first physics prediction pivot Gate O", () => {
     expect(clt.warnings).toContain(GATE_Y_CLT_MASS_TIMBER_CTR_SPECTRUM_ADAPTER_WARNING);
 
     expect(groupedRockwool.metrics).toMatchObject({
-      estimatedRwDb: 50,
-      estimatedStc: 55
+      estimatedRwDb: 53,
+      estimatedStc: 64
     });
     expect(groupedRockwool.airborneCandidateResolution).toMatchObject({
       runtimeValueMovement: true,
@@ -301,7 +301,7 @@ describe("calculator model-first physics prediction pivot Gate O", () => {
     });
     expect(groupedRockwool.airborneBasis).toMatchObject({
       family: "multileaf_multicavity",
-      method: "triple_leaf_two_cavity_frequency_solver",
+      method: "broad_accuracy_wall_triple_leaf_local_substitution_lab_spectrum_adapter_runtime",
       origin: "family_physics_prediction"
     });
   });

@@ -46,6 +46,15 @@ type ResolvedApproximateAirborneFieldCompanionEntry = ApproximateAirborneFieldCo
   resolvedLayers: ResolvedLayer[];
 };
 
+export type VerifiedAirborneCatalogStats = {
+  approximateFieldCompanionEntries: number;
+  fieldEntries: number;
+  labEntries: number;
+  metricCounts: Record<VerifiedAirborneMetricLabel, number>;
+  sourceCount: number;
+  verifiedEntries: number;
+};
+
 type CanonicalMatchLayer = {
   materialId: string;
   role: "gap" | "porous" | "solid";
@@ -863,6 +872,28 @@ const APPROXIMATE_AIRBORNE_FIELD_COMPANION_CATALOG: ResolvedApproximateAirborneF
     };
   })
 }));
+
+export function getVerifiedAirborneCatalogStats(): VerifiedAirborneCatalogStats {
+  const metricCounts = VERIFIED_AIRBORNE_CATALOG.reduce<Record<VerifiedAirborneMetricLabel, number>>(
+    (counts, entry) => {
+      counts[entry.metricLabel] += 1;
+      return counts;
+    },
+    {
+      "DnT,A,k": 0,
+      Rw: 0
+    }
+  );
+
+  return {
+    approximateFieldCompanionEntries: APPROXIMATE_AIRBORNE_FIELD_COMPANION_CATALOG.length,
+    fieldEntries: VERIFIED_AIRBORNE_CATALOG.filter((entry) => entry.sourceMode === "field").length,
+    labEntries: VERIFIED_AIRBORNE_CATALOG.filter((entry) => entry.sourceMode === "lab").length,
+    metricCounts,
+    sourceCount: new Set(VERIFIED_AIRBORNE_CATALOG.map((entry) => entry.source)).size,
+    verifiedEntries: VERIFIED_AIRBORNE_CATALOG.length
+  };
+}
 
 function canonicalMatchLayer(layer: ResolvedLayer): CanonicalMatchLayer {
   return {

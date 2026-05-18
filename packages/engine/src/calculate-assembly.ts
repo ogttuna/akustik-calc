@@ -74,6 +74,8 @@ import { hasBoundOnlyUbiqOpenWebCarpetCombinedProfile } from "./bound-only-floor
 import { getFloorFamilySourceGuard } from "./floor-family-source-guard";
 import { buildFloorSystemRatings } from "./floor-system-ratings";
 import { buildExactImpactFromSource } from "./impact-exact";
+import { OPEN_WEB_DIRECT_FIXED_LINING_BASIS } from "./lightweight-steel-open-web-direct-fixed-lining-estimate";
+import { OPEN_WEB_SUPPORTED_BAND_SIMILARITY_BASIS } from "./lightweight-steel-open-web-supported-band-estimate";
 import {
   adaptImpactPredictorInput,
   getRawFloorParityGuardWarning,
@@ -133,6 +135,13 @@ import {
 } from "./symmetric-enhanced-filled-single-board-corridor";
 import { withholdRockwoolSplitTripleLeafExactTargetOutputs } from "./rockwool-split-triple-leaf-numeric-source-closure";
 import { analyzeTargetOutputSupport, buildTargetOutputWarnings } from "./target-output-support";
+import {
+  getBroadAccuracyWallTripleLeafLocalSubstitutionRuntimeBlockedOutputs
+} from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-runtime-corridor";
+import {
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_WARNING,
+  maybeBuildBroadAccuracyWallTripleLeafLocalSubstitutionLabSpectrumAdapter
+} from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-lab-spectrum-adapter";
 
 export type CalculateAssemblyOptions = {
   airborneContext?: AirborneContext | null;
@@ -1462,6 +1471,8 @@ export function calculateAssembly(
   const shouldWithholdUnreadyDynamicFloorImpactRuntime = Boolean(
     options.calculator === "dynamic" &&
       gateWFloorImpactContract &&
+      floorSystemEstimate?.impact.basis !== OPEN_WEB_SUPPORTED_BAND_SIMILARITY_BASIS &&
+      floorSystemEstimate?.impact.basis !== OPEN_WEB_DIRECT_FIXED_LINING_BASIS &&
       !gateWLabRuntimeReady &&
       !gateZFieldImpactRuntimeReady &&
       !exactImpact &&
@@ -1598,11 +1609,57 @@ export function calculateAssembly(
   const targetOutputSupportWithGateYCltCtr = gateYCltMassTimberCtrSpectrumAdapterBasis
     ? moveUnsupportedOutputsToSupported(initialTargetOutputSupport, ["Ctr"])
     : initialTargetOutputSupport;
+  const localSubstitutionLabSpectrumAdapter =
+    options.calculator === "dynamic"
+      ? maybeBuildBroadAccuracyWallTripleLeafLocalSubstitutionLabSpectrumAdapter({
+          airborneContext,
+          basis: dynamicAirborneResult?.airborneBasis ?? null,
+          sourceAnchorApplied: verifiedAirborneAnchorResult.applied,
+          targetOutputs: targetOutputSupportWithGateYCltCtr.targetOutputs
+        })
+      : null;
+  const visibleDynamicAirborneTrace =
+    localSubstitutionLabSpectrumAdapter && dynamicAirborneResult?.trace
+      ? {
+          ...dynamicAirborneResult.trace,
+          notes: [
+            ...dynamicAirborneResult.trace.notes.filter(
+              (note) => !/STC, C, Ctr, field, and building adapters remain blocked/i.test(note)
+            ),
+            "Local substitution lab spectrum adapter now rates STC, C, and Ctr from the calculated element-lab curve; field and building adapters remain blocked."
+          ]
+        }
+      : dynamicAirborneResult?.trace;
+  const localSubstitutionRuntimeBlockedOutputs =
+    options.calculator === "dynamic"
+      ? getBroadAccuracyWallTripleLeafLocalSubstitutionRuntimeBlockedOutputs({
+          airborneContext,
+          catalog,
+          layers: airborneResolvedLayers.map((layer) => ({
+            floorRole: layer.floorRole,
+            materialId: layer.material.id,
+            thicknessMm: layer.thicknessMm
+          })),
+          targetOutputs: targetOutputSupportWithGateYCltCtr.targetOutputs
+        })
+      : [];
+  const targetOutputSupportWithLocalSubstitutionLabSpectrumAdapter = localSubstitutionLabSpectrumAdapter
+    ? moveUnsupportedOutputsToSupported(
+        moveSupportedOutputsToUnsupported(
+          targetOutputSupportWithGateYCltCtr,
+          localSubstitutionRuntimeBlockedOutputs
+        ),
+        localSubstitutionLabSpectrumAdapter.supportedOutputs
+      )
+    : moveSupportedOutputsToUnsupported(
+        targetOutputSupportWithGateYCltCtr,
+        localSubstitutionRuntimeBlockedOutputs
+      );
   const rockwoolSplitTripleLeafExactOutputWithhold =
     withholdRockwoolSplitTripleLeafExactTargetOutputs({
       airborneContext,
       layers: resolvedLayers,
-      targetOutputSupport: targetOutputSupportWithGateYCltCtr,
+      targetOutputSupport: targetOutputSupportWithLocalSubstitutionLabSpectrumAdapter,
       trace: dynamicAirborneResult?.trace
     });
   const targetOutputSupport = rockwoolSplitTripleLeafExactOutputWithhold.targetOutputSupport;
@@ -1660,7 +1717,10 @@ export function calculateAssembly(
             }
           : dynamicAirborneResult
           ? {
-              airborneBasis: gateYCltMassTimberCtrSpectrumAdapterBasis ?? dynamicAirborneResult.airborneBasis,
+              airborneBasis:
+                localSubstitutionLabSpectrumAdapter?.basis ??
+                gateYCltMassTimberCtrSpectrumAdapterBasis ??
+                dynamicAirborneResult.airborneBasis,
               detectedFamily: dynamicAirborneResult.trace.detectedFamily,
               runtimeValueMovement:
                 dynamicAirborneResult.airborneBasis?.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD
@@ -1738,7 +1798,15 @@ export function calculateAssembly(
       }
     : ratingsWithOpeningLeakFieldBuildingRuntime;
   const warnings = buildEstimateWarnings(resolvedLayers, selectedCalculatorLabel);
-  warnings.push(...(dynamicAirborneResult?.warnings ?? []));
+  warnings.push(
+    ...(localSubstitutionLabSpectrumAdapter
+      ? (dynamicAirborneResult?.warnings ?? []).filter(
+          (warning) =>
+            !/STC, C, Ctr, field, and building adapters remain blocked/i.test(warning) &&
+            !/source-absent error budget for Rw only/i.test(warning)
+        )
+      : (dynamicAirborneResult?.warnings ?? []))
+  );
   if (!suppressParkedBuildingPredictionOverlayWarnings) {
     warnings.push(...airborneOverlayResult.warnings);
   }
@@ -1756,6 +1824,9 @@ export function calculateAssembly(
   }
   if (gateYCltMassTimberCtrSpectrumAdapterBasis) {
     warnings.push(GATE_Y_CLT_MASS_TIMBER_CTR_SPECTRUM_ADAPTER_WARNING);
+  }
+  if (localSubstitutionLabSpectrumAdapter) {
+    warnings.push(BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_WARNING);
   }
   warnings.push(...buildTargetOutputWarnings(visibleTargetOutputSupport));
   warnings.push(...floorFamilySourceGuardWarnings);
@@ -1838,6 +1909,11 @@ export function calculateAssembly(
     warnings.push(
       floorSystemEstimate.impact.basis === "predictor_lightweight_steel_fl28_interpolation_estimate"
         ? `Published family estimate active: lightweight steel FL-28 interpolation at ${floorSystemEstimate.fitPercent}% fit. DynEcho stayed inside the curated UBIQ open-web family instead of drifting into a broad steel blend.`
+        : floorSystemEstimate.impact.basis ===
+            "predictor_lightweight_steel_open_web_supported_band_similarity_estimate"
+          ? `Published family estimate active: open-web steel supported-band similarity at ${floorSystemEstimate.fitPercent}% fit. DynEcho stayed inside the UBIQ FL-24/FL-26 elastic suspended-ceiling source grid instead of falling back to a broad steel blend or bound-only row.`
+        : floorSystemEstimate.impact.basis === OPEN_WEB_DIRECT_FIXED_LINING_BASIS
+          ? `Published family estimate active: open-web steel direct-fixed lining interpolation at ${floorSystemEstimate.fitPercent}% fit. DynEcho stayed inside the UBIQ FL-23/FL-25/FL-27 direct-fixed source grid instead of borrowing resilient suspended-ceiling rows or the broad steel blend.`
         : floorSystemEstimate.kind === "low_confidence"
           ? `Published low-confidence fallback active: ${floorSystemEstimate.structuralFamily} at ${floorSystemEstimate.fitPercent}% fit.`
           : `Published family estimate active: ${floorSystemEstimate.structuralFamily} ${floorSystemEstimate.kind.replaceAll("_", " ")} at ${floorSystemEstimate.fitPercent}% fit.`
@@ -1932,6 +2008,11 @@ export function calculateAssembly(
     );
   }
 
+  const ratingAdapterBasisSet = [
+    ...(gateAHOpeningLeakStcSpectrumAdapter ? [gateAHOpeningLeakStcSpectrumAdapter.ratingAdapterBasis] : []),
+    ...(localSubstitutionLabSpectrumAdapter?.ratingAdapterBasisSet ?? [])
+  ];
+
   const result: AssemblyCalculation = {
     availableCalculators: [...availableCalculators],
     boundFloorSystemEstimate,
@@ -1939,7 +2020,7 @@ export function calculateAssembly(
     airborneOverlay: airborneOverlayResult.overlay,
     calculatorId: dynamicAirborneResult?.id ?? importedCalculatorResult?.id,
     calculatorLabel: dynamicAirborneResult?.label ?? importedCalculatorResult?.label,
-    dynamicAirborneTrace: dynamicAirborneResult?.trace,
+    dynamicAirborneTrace: visibleDynamicAirborneTrace,
     dynamicImpactTrace: dynamicImpactTrace ?? undefined,
     impact,
     impactCatalogMatch,
@@ -1974,9 +2055,7 @@ export function calculateAssembly(
       method: dynamicAirborneResult?.id ?? importedCalculatorResult?.id ?? "screening_mass_law_curve_seed_v3"
     },
     ratings: visibleRatings,
-    ratingAdapterBasisSet: gateAHOpeningLeakStcSpectrumAdapter
-      ? [gateAHOpeningLeakStcSpectrumAdapter.ratingAdapterBasis]
-      : undefined,
+    ratingAdapterBasisSet: ratingAdapterBasisSet.length > 0 ? ratingAdapterBasisSet : undefined,
     supportedImpactOutputs: visibleTargetOutputSupport.supportedImpactOutputs,
     supportedTargetOutputs: visibleTargetOutputSupport.supportedTargetOutputs,
     targetOutputs: visibleTargetOutputSupport.targetOutputs,

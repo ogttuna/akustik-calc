@@ -624,8 +624,8 @@ describe("PABCO QuietRock Sound Design Guide source-pack extraction Gate A contr
     expect(PROTECTED_NEGATIVE_BOUNDARIES.join("\n")).toContain("do_not_fix_the_uris_2006_split_rockwool");
     expect(PROTECTED_NEGATIVE_BOUNDARIES.join("\n")).toContain("do_not_coalesce_with_generic_gypsum_or_mlv");
     expect(PROTECTED_NEGATIVE_BOUNDARIES.join("\n")).toContain("summary_report_download_links_are_not_runtime_truth");
-    expect(liveResult.metrics.estimatedRwDb).toBe(50);
-    expect(liveResult.dynamicAirborneTrace?.strategy).toBe("triple_leaf_two_cavity_frequency_solver_family_physics_prediction");
+    expect(liveResult.metrics.estimatedRwDb).toBe(53);
+    expect(liveResult.dynamicAirborneTrace?.strategy).toBe("broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor");
     expect(liveResult.dynamicAirborneTrace?.confidenceClass).toBe("medium");
   });
 

@@ -9,6 +9,16 @@ broader and more accurate ISO floor-impact and wall-airborne
 calculation, with missing physical inputs surfaced as prompts instead
 of unsupported guesses or low-confidence final answers.
 
+2026-05-15 refocus: the final rehearsal and operating envelope close a
+controlled internal-use guardrail only. They do not close the broader
+accuracy target. The follow-on active direction is
+[BROAD_ACCURACY_CALCULATOR_PLAN.md](./BROAD_ACCURACY_CALCULATOR_PLAN.md):
+global measured/reference benchmark, first-class similarity anchors,
+and family-solver residual loops before claiming broad company-internal
+calculator readiness.
+The detailed follow-on slice is
+[SLICE_BROAD_ACCURACY_REFERENCE_BENCHMARK_AND_SIMILARITY_SOLVER_PLAN.md](./SLICE_BROAD_ACCURACY_REFERENCE_BENCHMARK_AND_SIMILARITY_SOLVER_PLAN.md).
+
 Research-backed roadmap checkpoint:
 [CHECKPOINT_2026-05-14_RESEARCH_BACKED_COMPANY_INTERNAL_ROADMAP.md](./CHECKPOINT_2026-05-14_RESEARCH_BACKED_COMPANY_INTERNAL_ROADMAP.md).
 That checkpoint confirms the source-plus-solver strategy against
@@ -26,12 +36,28 @@ The opening/leak `Dn,A` / `DnT,A` surface parity has now landed after
 the runtime corridor. Field `Dn,A 35.9`, field `DnT,A 36.1`, and
 building `DnT,A 31.3` remain frozen, and the workbench now carries the
 frequency band set through cards, report, API, saved replay, server
-snapshot replay, and input surface. The active next slice is Matrix V6
-refresh, then boundary revalidation and final internal-use rehearsal.
-Matrix V6 has now landed; the active next slice is boundary
-revalidation, followed by final internal-use rehearsal. Boundary
-revalidation has now landed; the active next slice is final internal-use
-rehearsal.
+snapshot replay, and input surface. Matrix V6 and building/ASTM
+boundary revalidation have now landed. The active next slice is final
+internal-use rehearsal and operating-envelope declaration.
+
+Final rehearsal planning checkpoint:
+[CHECKPOINT_2026-05-15_COMPANY_INTERNAL_FINAL_REHEARSAL_PLANNING_HANDOFF.md](./CHECKPOINT_2026-05-15_COMPANY_INTERNAL_FINAL_REHEARSAL_PLANNING_HANDOFF.md).
+Use that checkpoint for the ordered test plan, release buckets,
+proof-owner ledger, and stop conditions.
+
+Implementation update: the final rehearsal contract and operating
+envelope exist and pass focused checks. The remaining controlled-envelope
+hygiene is the normal current-gate timeout issue: three older
+long-running contract tests exceed the default 5 s Vitest timeout in
+`pnpm calculator:gate:current`, while passing with
+`--testTimeout=30000`. Close that before declaring the controlled gate
+fully green.
+
+Controlled operating envelope:
+[COMPANY_INTERNAL_OPERATING_ENVELOPE.md](./COMPANY_INTERNAL_OPERATING_ENVELOPE.md).
+Keep `COMPANY_INTERNAL_OPERATING_ENVELOPE.md` aligned with the final
+rehearsal test before calling the slice controlled company-internal
+ready.
 
 Latest landed A-weighted formula corridor:
 `company_internal_opening_leak_a_weighted_spectrum_adapter_formula_corridor_plan`.
@@ -104,6 +130,39 @@ Current selected next file:
 `packages/engine/src/company-internal-final-internal-use-rehearsal-contract.test.ts`.
 Current selected next label:
 final internal-use rehearsal and operating envelope.
+
+## Final Internal-Use Rehearsal Implementation Order
+
+The final rehearsal should prove the current calculator is controlled
+for company-internal use. It should not add new runtime physics unless
+the proof exposes a concrete implementation mismatch.
+
+1. Create
+   `packages/engine/src/company-internal-final-internal-use-rehearsal-contract.test.ts`
+   from the current Matrix V6 and boundary-revalidation exports.
+2. Fail fast on global invariants: 71 rows, wall 36, floor 35,
+   element-lab 44, field/apparent 15, ASTM-boundary 4, building 8,
+   family-physics 39, `needs_input` 17, exact 5, source-anchored delta 2,
+   unsupported 8, and no `low_confidence` / `screening_fallback` /
+   live-proxy / basis-alias final rows.
+3. Bucket rows as supported, needs-input, unsupported-boundary,
+   hostile-refusal, and exact-precedence. The bucket labels should be
+   release-facing and plain enough for the operating envelope.
+4. Pin representative supported values across wall lab, wall
+   field/building, floor lab/field, exact-source, source-anchored, and
+   source-absent formula routes.
+5. Pin blocked rows by exact missing physical owners or unsupported
+   basis/metric. Blocked rows must not carry guessed values or
+   source-absent budgets.
+6. Add a proof-owner ledger that points to existing workbench/API/report
+   and card parity tests. If a supported family has no surface owner, add
+   the smallest missing parity assertion before readiness is declared.
+7. Add the final rehearsal test to
+   `tools/dev/run-calculator-current-gate.ts`.
+8. After the focused test and `pnpm calculator:gate:current` pass, write
+   or confirm `COMPANY_INTERNAL_OPERATING_ENVELOPE.md`: supported
+   scenarios, input-prompt scenarios, intentionally unsupported
+   scenarios, exact-source precedence, and current error-budget posture.
 
 This is the active mainline. ASTM `IIC` / `AIIC` work remains preserved
 as a no-runtime boundary/history lane, but it is not the next

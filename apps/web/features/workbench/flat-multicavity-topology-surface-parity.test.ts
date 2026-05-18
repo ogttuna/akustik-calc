@@ -387,14 +387,14 @@ describe("flat multicavity topology surface parity", () => {
     expect(response.status).toBe(200);
     expect(body.ok).toBe(true);
     expect(body.result?.metrics).toMatchObject({
-      estimatedRwDb: 50,
-      estimatedCDb: 0.8,
-      estimatedCtrDb: -7.3,
-      estimatedStc: 55
+      estimatedRwDb: 53,
+      estimatedCDb: 1.6,
+      estimatedCtrDb: -7.2,
+      estimatedStc: 64
     });
     expect(body.result?.airborneBasis).toMatchObject({
-      errorBudgetDb: 5,
-      method: "triple_leaf_two_cavity_frequency_solver",
+      errorBudgetDb: 8,
+      method: "broad_accuracy_wall_triple_leaf_local_substitution_lab_spectrum_adapter_runtime",
       origin: "family_physics_prediction"
     });
     expect(

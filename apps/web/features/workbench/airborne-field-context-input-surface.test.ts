@@ -1,4 +1,7 @@
 import {
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD,
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_WARNING,
   GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD,
   GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
   GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING
@@ -244,16 +247,37 @@ describe("airborne field-context input surface", () => {
     );
   });
 
-  it("feeds complete UI-derived lined, CLT, and grouped contexts into the Gate I/J runtime and surface", () => {
+  it("feeds complete UI-derived lined, CLT, and grouped contexts into the owned field runtime and surface", () => {
     const cases = [
-      { dnt: "59 dB", id: "gate_k_lined_massive", layers: LINED_MASSIVE_WALL, rwPrime: "58 dB", surface: undefined },
-      { dnt: "41 dB", id: "gate_k_clt", layers: CLT_WALL, rwPrime: "40 dB", surface: undefined },
       {
-        dnt: "51 dB",
+        candidateId: GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
+        dnt: "59 dB",
+        id: "gate_k_lined_massive",
+        layers: LINED_MASSIVE_WALL,
+        method: GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD,
+        rwPrime: "58 dB",
+        surface: undefined,
+        warning: GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING
+      },
+      {
+        candidateId: GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
+        dnt: "41 dB",
+        id: "gate_k_clt",
+        layers: CLT_WALL,
+        method: GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD,
+        rwPrime: "40 dB",
+        surface: undefined,
+        warning: GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING
+      },
+      {
+        candidateId: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
+        dnt: "53 dB",
         id: "gate_k_grouped_triple_leaf",
         layers: GROUPED_TRIPLE_LEAF_STACK,
-        rwPrime: "50 dB",
-        surface: completeDraft({ baseContext: { wallTopology: GROUPED_TRIPLE_LEAF_TOPOLOGY } })
+        method: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD,
+        rwPrime: "52 dB",
+        surface: completeDraft({ baseContext: { wallTopology: GROUPED_TRIPLE_LEAF_TOPOLOGY } }),
+        warning: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_WARNING
       }
     ] as const;
 
@@ -267,12 +291,10 @@ describe("airborne field-context input surface", () => {
       const surface = getGateIAirborneFieldContextSurface(scenario.result);
       const [rwPrimeCard, dntCard] = buildCards(scenario.result);
 
-      expect(scenario.result.airborneCandidateResolution?.selectedCandidateId).toBe(
-        GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID
-      );
-      expect(scenario.result.airborneBasis?.method).toBe(GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD);
-      expect(scenario.result.warnings).toContain(GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING);
-      expect(surface?.detail).toContain(GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD);
+      expect(scenario.result.airborneCandidateResolution?.selectedCandidateId).toBe(testCase.candidateId);
+      expect(scenario.result.airborneBasis?.method).toBe(testCase.method);
+      expect(scenario.result.warnings).toContain(testCase.warning);
+      expect(surface?.detail).toContain(testCase.method);
       expect(rwPrimeCard).toMatchObject({
         postureLabel: "Airborne field-context prediction",
         status: "live",

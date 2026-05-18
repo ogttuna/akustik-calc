@@ -449,9 +449,9 @@ describe("post company-internal high-accuracy opening rehearsal Gate C next-slic
     expect(grouped).toMatchObject({
       confidence: "medium",
       family: "multileaf_multicavity",
-      rw: 50,
-      stc: 55,
-      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
+      rw: 53,
+      stc: 64,
+      strategy: "broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor"
     });
     expect(flatSwap).toMatchObject({
       confidence: "medium",
@@ -461,10 +461,10 @@ describe("post company-internal high-accuracy opening rehearsal Gate C next-slic
     });
     expect(field).toMatchObject({
       confidence: "medium",
-      dnTw: 50,
+      dnTw: 53,
       family: "multileaf_multicavity",
-      rwPrime: 49,
-      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
+      rwPrime: 51,
+      strategy: "broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor"
     });
 
     expect(estimateNonFinite.success).toBe(false);

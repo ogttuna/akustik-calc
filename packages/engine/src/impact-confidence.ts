@@ -274,6 +274,25 @@ export function getImpactConfidenceForBasis(basis: ImpactEstimateBasis): ImpactC
     };
   }
 
+  if (basis === "predictor_lightweight_steel_open_web_supported_band_similarity_estimate") {
+    return {
+      level: "medium",
+      provenance: "published_family_estimate",
+      score: 0.8,
+      summary: "Open-web steel supported-band similarity estimate anchored to same-source UBIQ FL-24/FL-26 elastic suspended-ceiling rows."
+    };
+  }
+
+  if (basis === "broad_accuracy_floor_open_web_direct_fixed_lining_direct_source_interpolation_formula_corridor") {
+    return {
+      level: "medium",
+      provenance: "published_family_estimate",
+      score: 0.79,
+      summary:
+        "Open-web steel direct-fixed lining interpolation anchored to same-source UBIQ FL-23/FL-25/FL-27 direct-fixed rows with source-absent error budgets."
+    };
+  }
+
   if (basis === "predictor_lightweight_steel_mass_spring_holdout_corridor_estimate") {
     return {
       level: "medium",

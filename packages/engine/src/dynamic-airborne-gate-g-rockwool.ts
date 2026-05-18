@@ -27,6 +27,7 @@ import {
   GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING,
   maybeBuildGateIAirborneFieldContextBasisFromBase
 } from "./dynamic-airborne-gate-i-airborne-field-context";
+import { maybeCalculateBroadAccuracyWallTripleLeafCalibratedPrediction } from "./dynamic-airborne-broad-accuracy-wall-triple-leaf-calibrated";
 
 const GROUPED_ROCKWOOL_TRIPLE_LEAF_PREDICTION_STRATEGY =
   "triple_leaf_two_cavity_frequency_solver_family_physics_prediction";
@@ -310,6 +311,11 @@ export function maybeCalculateGateGGroupedRockwoolPrediction(input: {
   options: DynamicAirborneOptions;
   topology: AirborneTopologySummary;
 }): DynamicAirborneResult | null {
+  const calibratedPrediction = maybeCalculateBroadAccuracyWallTripleLeafCalibratedPrediction(input);
+  if (calibratedPrediction) {
+    return calibratedPrediction;
+  }
+
   if (input.family.family !== "multileaf_multicavity") {
     return null;
   }

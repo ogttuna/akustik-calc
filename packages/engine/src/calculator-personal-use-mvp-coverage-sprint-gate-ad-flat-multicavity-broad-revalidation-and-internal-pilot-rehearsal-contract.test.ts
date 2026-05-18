@@ -131,7 +131,7 @@ describe("Personal-Use MVP Coverage Sprint Gate AD broad revalidation and intern
     expect(gateADSummary.blockedRowIds).toContain("floor.lightweight_steel_formula_missing_spacing.needs_input");
     expect(gateADSummary.controlledUseRowIds).toContain("wall.opening_leak_two_openings.lab");
     expect(gateADSummary.pilotReadyRowIds).toContain("wall.double_leaf_split_board_layers.lab");
-    expect(gateADSummary.pilotReadyRowIds).toContain("wall.grouped_triple_leaf_safe_reverse_order.lab");
+    expect(gateADSummary.controlledUseRowIds).toContain("wall.grouped_triple_leaf_safe_reverse_order.lab");
   });
 
   it("proves the flat grouped stack is visible and now routes through the Gate AE solver", () => {
@@ -170,14 +170,14 @@ describe("Personal-Use MVP Coverage Sprint Gate AD broad revalidation and intern
     });
 
     expect(pinnedRuntime.metrics).toMatchObject({
-      estimatedCDb: 0.8,
-      estimatedCtrDb: -7.3,
-      estimatedRwDb: 50,
-      estimatedStc: 55
+      estimatedCDb: 1.6,
+      estimatedCtrDb: -7.2,
+      estimatedRwDb: 53,
+      estimatedStc: 64
     });
     expect(pinnedRuntime.airborneBasis).toMatchObject({
-      errorBudgetDb: 5,
-      method: "triple_leaf_two_cavity_frequency_solver",
+      errorBudgetDb: 8,
+      method: "broad_accuracy_wall_triple_leaf_local_substitution_lab_spectrum_adapter_runtime",
       origin: "family_physics_prediction"
     });
   });

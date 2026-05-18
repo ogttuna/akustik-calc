@@ -414,8 +414,8 @@ describe("National Gypsum Fire & Sound Selector source-pack extraction Gate B co
       "steel_partition_v438_adjacent_to_lsf_not_same_anchor",
       "load_bearing_w469_not_existing_lsf_anchor"
     ]);
-    expect(splitRockwool.metrics.estimatedRwDb).toBe(50);
-    expect(splitRockwool.dynamicAirborneTrace?.strategy).toBe("triple_leaf_two_cavity_frequency_solver_family_physics_prediction");
+    expect(splitRockwool.metrics.estimatedRwDb).toBe(53);
+    expect(splitRockwool.dynamicAirborneTrace?.strategy).toBe("broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor");
     expect(splitRockwool.dynamicAirborneTrace?.confidenceClass).toBe("medium");
   });
 

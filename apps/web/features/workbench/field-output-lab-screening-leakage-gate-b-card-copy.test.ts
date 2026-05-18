@@ -392,10 +392,10 @@ describe("field-output lab/screening leakage Gate B visible copy guard", () => {
     expect(snapshot.result.dynamicAirborneTrace).toMatchObject({
       confidenceClass: "medium",
       detectedFamily: "multileaf_multicavity",
-      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
+      strategy: "broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor"
     });
-    expect(rwPrime).toMatchObject({ status: "live", value: "49 dB" });
-    expect(dnTw).toMatchObject({ status: "live", value: "50 dB" });
+    expect(rwPrime).toMatchObject({ status: "live", value: "51 dB" });
+    expect(dnTw).toMatchObject({ status: "live", value: "53 dB" });
     expect(rwPrime.detail).toContain("apparent on-site airborne single number");
     expect(rwPrime.detail).toContain(FIELD_COPY_GUARD);
     expect(dnTw.detail).toContain("same apparent field curve");
@@ -442,8 +442,8 @@ describe("field-output lab/screening leakage Gate B visible copy guard", () => {
       snapshot
     });
 
-    expect(proposalText).toContain(`R'w: Live now | Airborne field-context prediction | 49 dB`);
-    expect(proposalText).toContain("DnT,w: Live now | Airborne field-context prediction | 50 dB");
+    expect(proposalText).toContain(`R'w: Live now | Airborne field-context prediction | 51 dB`);
+    expect(proposalText).toContain("DnT,w: Live now | Airborne field-context prediction | 53 dB");
     expect(proposalText).toContain(FIELD_COPY_GUARD);
     expect(proposalText).toContain("not measured field evidence");
     expect(proposalText).toContain("does not replace accredited laboratory or site measurements");

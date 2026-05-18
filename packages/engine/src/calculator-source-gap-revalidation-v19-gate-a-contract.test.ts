@@ -452,8 +452,8 @@ describe("calculator source-gap revalidation v19 Gate A contract", () => {
     expect(grouped).toMatchObject({
       confidence: "medium",
       family: "multileaf_multicavity",
-      rw: 50,
-      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
+      rw: 53,
+      strategy: "broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor"
     });
     expect(flatSwap).toMatchObject({
       confidence: "medium",

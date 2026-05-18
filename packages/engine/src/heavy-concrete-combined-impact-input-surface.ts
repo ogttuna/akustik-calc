@@ -14,10 +14,6 @@ import {
 } from "@dynecho/shared";
 
 import {
-  GATE_BD_HEAVY_CONCRETE_COMBINED_RUNTIME_INPUT,
-  PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BD_RUNTIME_BASIS
-} from "./calculator-personal-use-mvp-coverage-sprint-gate-bd";
-import {
   PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BE_LANDED_GATE,
   PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BE_SELECTED_NEXT_ACTION,
   PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BE_SELECTED_NEXT_FILE,
@@ -381,42 +377,41 @@ export function buildGateBFHeavyConcreteCombinedImpactInputSurfaceContract(
 }
 
 export const GATE_BF_HEAVY_CONCRETE_COMBINED_INPUT_SURFACE = {
-  baseSlabDensityKgM3: GATE_BD_HEAVY_CONCRETE_COMBINED_RUNTIME_INPUT.baseSlab.densityKgM3,
-  baseSlabThicknessMm: GATE_BD_HEAVY_CONCRETE_COMBINED_RUNTIME_INPUT.baseSlab.thicknessMm,
-  loadBasisKgM2: GATE_BD_HEAVY_CONCRETE_COMBINED_RUNTIME_INPUT.loadBasisKgM2,
-  lowerAssemblyType: GATE_BD_HEAVY_CONCRETE_COMBINED_RUNTIME_INPUT.lowerTreatment.type,
-  lowerBoardLayerCount: GATE_BD_HEAVY_CONCRETE_COMBINED_RUNTIME_INPUT.lowerTreatment.boardLayerCount,
-  lowerBoardThicknessMm: GATE_BD_HEAVY_CONCRETE_COMBINED_RUNTIME_INPUT.lowerTreatment.boardThicknessMm,
-  lowerCavityDepthMm: GATE_BD_HEAVY_CONCRETE_COMBINED_RUNTIME_INPUT.lowerTreatment.cavityDepthMm,
-  lowerCavityFillThicknessMm: GATE_BD_HEAVY_CONCRETE_COMBINED_RUNTIME_INPUT.lowerTreatment.cavityFillThicknessMm,
-  lowerSupportClass: GATE_BD_HEAVY_CONCRETE_COMBINED_RUNTIME_INPUT.lowerTreatment.supportClass,
-  resilientLayerDynamicStiffnessMNm3:
-    GATE_BD_HEAVY_CONCRETE_COMBINED_RUNTIME_INPUT.resilientLayer.dynamicStiffnessMNm3,
-  resilientLayerThicknessMm: GATE_BD_HEAVY_CONCRETE_COMBINED_RUNTIME_INPUT.resilientLayer.thicknessMm
+  baseSlabDensityKgM3: 2400,
+  baseSlabThicknessMm: 150,
+  loadBasisKgM2: 100,
+  lowerAssemblyType: "suspended_ceiling_elastic_hanger",
+  lowerBoardLayerCount: 2,
+  lowerBoardThicknessMm: 12.5,
+  lowerCavityDepthMm: 120,
+  lowerCavityFillThicknessMm: 80,
+  lowerSupportClass: "furred_channels",
+  resilientLayerDynamicStiffnessMNm3: 30,
+  resilientLayerThicknessMm: 8
 } as const satisfies HeavyConcreteCombinedImpactInputSurface;
 
 export const GATE_BF_HEAVY_CONCRETE_COMBINED_VISIBLE_STACK = [
   {
     floorRole: "floor_covering",
     materialId: "ceramic_tile",
-    thicknessMm: GATE_BD_HEAVY_CONCRETE_COMBINED_RUNTIME_INPUT.floorCovering?.thicknessMm ?? 8
+    thicknessMm: 8
   },
   {
     floorRole: "floating_screed",
     materialId: "screed",
-    thicknessMm: GATE_BD_HEAVY_CONCRETE_COMBINED_RUNTIME_INPUT.floatingScreed?.thicknessMm ?? 30
+    thicknessMm: 30
   },
   {
     floorRole: "resilient_layer",
     materialId: "generic_resilient_underlay_s30",
-    thicknessMm: GATE_BD_HEAVY_CONCRETE_COMBINED_RUNTIME_INPUT.resilientLayer.thicknessMm ?? 8
+    thicknessMm: 8
   },
   {
     floorRole: "base_structure",
     materialId: "concrete",
-    thicknessMm: GATE_BD_HEAVY_CONCRETE_COMBINED_RUNTIME_INPUT.baseSlab.thicknessMm
+    thicknessMm: 150
   }
 ] as const satisfies readonly LayerInput[];
 
 export const GATE_BF_HEAVY_CONCRETE_COMBINED_RUNTIME_BASIS =
-  PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_BD_RUNTIME_BASIS;
+  HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS;

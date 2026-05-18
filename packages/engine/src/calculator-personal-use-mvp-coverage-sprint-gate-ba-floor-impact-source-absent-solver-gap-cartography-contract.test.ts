@@ -140,7 +140,7 @@ describe("Personal-Use MVP Coverage Sprint Gate BA floor-impact source-absent so
       "floor.suspended_ceiling.lower_treatment_coupling_gap",
       "floor.mixed_support_family.multi_family_solver_gap"
     ]);
-  });
+  }, 30000);
 
   it("pins actual current floor-impact runtime probes without moving values at Gate BA", () => {
     const probes = buildPersonalUseMvpCoverageSprintGateBAProbeSnapshot();

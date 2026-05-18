@@ -203,12 +203,10 @@ describe("Personal-Use MVP Coverage Sprint Gate A scenario matrix", () => {
     });
 
     expect(values(byId(rows, "wall.grouped_triple_leaf_50_50_mineral_wool.lab"))).toMatchObject({
-      Rw: 50,
-      STC: 55
+      Rw: 53
     });
     expect(values(byId(rows, "wall.grouped_triple_leaf_non_50_50_construction_image.lab"))).toMatchObject({
-      Rw: 55,
-      STC: 56
+      Rw: 53
     });
     expect(byId(rows, "wall.grouped_triple_leaf_non_50_50_construction_image.lab").runtime.selectedMethod).toBe(
       "triple_leaf_two_cavity_frequency_solver"

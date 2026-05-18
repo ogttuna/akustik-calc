@@ -299,19 +299,22 @@ describe("calculator model-first physics prediction pivot Gate I", () => {
     });
 
     expect(grouped.metrics).toMatchObject({
-      estimatedCDb: 0.8,
-      estimatedCtrDb: -7.3,
-      estimatedRwDb: 50,
-      estimatedStc: 55
+      estimatedCDb: 1.6,
+      estimatedCtrDb: -7.2,
+      estimatedRwDb: 53,
+      estimatedStc: 64
     });
     expect(grouped.airborneBasis).toMatchObject({
-      errorBudgetDb: 5,
+      errorBudgetDb: 8,
       origin: "family_physics_prediction",
       toleranceClass: "uncalibrated_prediction"
     });
     expect(grouped.airborneBasis?.propertyDefaults.map((entry: { field: string }) => entry.field)).toEqual([
-      "mineralWool.flowResistivity",
-      "tripleLeaf.cavityDamping"
+      "localLeafSurfaceMassDistributionOwner",
+      "rockwoolToGlassFiberFlowResistivityDensityOwner",
+      "shortCavityDepthCorrectionOwner",
+      "mlvLimpMassPositionCorrectionOwner",
+      "gypsumPlasterFinishMassDampingCorrectionOwner"
     ]);
 
     expect(flatList.metrics.estimatedRwDb).toBe(41);

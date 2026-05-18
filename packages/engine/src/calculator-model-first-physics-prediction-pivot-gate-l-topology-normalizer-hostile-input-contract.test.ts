@@ -302,14 +302,14 @@ describe("calculator model-first physics prediction pivot Gate L", () => {
     });
 
     expect(grouped.metrics).toMatchObject({
-      estimatedCDb: 0.8,
-      estimatedCtrDb: -7.3,
-      estimatedRwDb: 50,
-      estimatedStc: 55
+      estimatedCDb: 1.6,
+      estimatedCtrDb: -7.2,
+      estimatedRwDb: 53,
+      estimatedStc: 64
     });
     expect(aconLike.metrics.estimatedRwDb).toBe(40);
     expect(aconLike.supportedTargetOutputs).toEqual([]);
-    expect(aconLike.unsupportedTargetOutputs).toEqual(["Rw", "STC", "C", "Ctr"]);
+    expect(aconLike.unsupportedTargetOutputs).toEqual([...WALL_LAB_OUTPUTS]);
   });
 
   it("keeps docs and current-gate runner aligned with Gate L closeout", () => {

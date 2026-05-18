@@ -42,6 +42,16 @@ import {
   WEB_GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD,
   getGateSOpeningLeakCompositeOutputDetail
 } from "./opening-leak-composite-surface";
+import { getWallTripleLeafCalibratedSolverOutputDetail } from "./wall-triple-leaf-calibrated-solver-surface";
+import { getWallTripleLeafLocalSubstitutionOutputDetail } from "./wall-triple-leaf-local-substitution-surface";
+import {
+  getOpenWebSupportedBandSimilarityOutputDetail,
+  isOpenWebSupportedBandSimilarityResult
+} from "./open-web-supported-band-similarity-surface";
+import {
+  getOpenWebDirectFixedLiningOutputDetail,
+  isOpenWebDirectFixedLiningResult
+} from "./open-web-direct-fixed-lining-surface";
 import { getCompanyInternalOpeningLeakFieldBuildingOutputDetail } from "./opening-leak-field-building-surface";
 import {
   getRockwoolSplitTripleLeafWithheldOutputDetail,
@@ -176,6 +186,17 @@ function buildExplicitUnsupportedOutputDetail(input: {
     return gateSOpeningLeakDetail;
   }
 
+  const wallTripleLeafCalibratedDetail = getWallTripleLeafCalibratedSolverOutputDetail(output, result ?? null);
+  if (wallTripleLeafCalibratedDetail && studyMode === "wall") {
+    return wallTripleLeafCalibratedDetail;
+  }
+
+  const wallTripleLeafLocalSubstitutionDetail =
+    getWallTripleLeafLocalSubstitutionOutputDetail(output, result ?? null);
+  if (wallTripleLeafLocalSubstitutionDetail && studyMode === "wall") {
+    return wallTripleLeafLocalSubstitutionDetail;
+  }
+
   const companyInternalOpeningLeakFieldBuildingDetail =
     getCompanyInternalOpeningLeakFieldBuildingOutputDetail(output, result ?? null);
   if (companyInternalOpeningLeakFieldBuildingDetail && studyMode === "wall") {
@@ -236,6 +257,17 @@ export function buildUnavailableOutputDetail(input: {
   const gateSOpeningLeakDetail = getGateSOpeningLeakCompositeOutputDetail(output, result);
   if (gateSOpeningLeakDetail && studyMode === "wall") {
     return gateSOpeningLeakDetail;
+  }
+
+  const wallTripleLeafCalibratedDetail = getWallTripleLeafCalibratedSolverOutputDetail(output, result);
+  if (wallTripleLeafCalibratedDetail && studyMode === "wall") {
+    return wallTripleLeafCalibratedDetail;
+  }
+
+  const wallTripleLeafLocalSubstitutionDetail =
+    getWallTripleLeafLocalSubstitutionOutputDetail(output, result);
+  if (wallTripleLeafLocalSubstitutionDetail && studyMode === "wall") {
+    return wallTripleLeafLocalSubstitutionDetail;
   }
 
   const companyInternalOpeningLeakFieldBuildingDetail =
@@ -344,6 +376,8 @@ export function buildOutputCard(input: {
   const isHeavyConcreteCombinedFormulaCorridor = isHeavyConcreteCombinedFormulaCorridorImpact(result);
   const isSteelFloorFormulaCorridor = isSteelFloorFormulaCorridorImpact(result);
   const isTimberCltDeltaLwFormulaCorridor = isTimberCltDeltaLwFormulaCorridorImpact(result);
+  const isOpenWebSupportedBandSimilarity = isOpenWebSupportedBandSimilarityResult(result);
+  const isOpenWebDirectFixedLining = isOpenWebDirectFixedLiningResult(result);
   const rockwoolTripleLeafScreeningPolicy = getRockwoolTripleLeafScreeningPolicyCopy(result);
 
   if (isExplicitlyUnsupportedOutput(result, output)) {
@@ -393,7 +427,13 @@ export function buildOutputCard(input: {
     case "Rw":
       if (studyMode === "floor" && typeof result?.floorSystemRatings?.Rw === "number") {
         return {
-          detail: isReinforcedConcreteLowConfidenceLane
+          detail: isOpenWebDirectFixedLining
+            ? getOpenWebDirectFixedLiningOutputDetail("Rw", result) ??
+              "Open-web steel direct-fixed lining companion Rw from the active floor lane."
+            : isOpenWebSupportedBandSimilarity
+            ? getOpenWebSupportedBandSimilarityOutputDetail("Rw", result) ??
+              "Open-web steel supported-band similarity companion Rw from the active floor lane."
+            : isReinforcedConcreteLowConfidenceLane
             ? REINFORCED_CONCRETE_LOW_CONFIDENCE_RW_DETAIL
             : "Companion airborne rating carried on the active floor lane. This can differ from the live airborne estimate shown elsewhere.",
           label: "Rw",
@@ -404,11 +444,16 @@ export function buildOutputCard(input: {
       }
 
       if (typeof result?.metrics.estimatedRwDb === "number") {
+        const wallTripleLeafCalibratedDetail = getWallTripleLeafCalibratedSolverOutputDetail(output, result);
+        const wallTripleLeafLocalSubstitutionDetail =
+          getWallTripleLeafLocalSubstitutionOutputDetail(output, result);
         const gateSOpeningLeakDetail = getGateSOpeningLeakCompositeOutputDetail(output, result);
         const gateAYAdvancedWallDetail = getGateAYAdvancedWallOutputDetail(output, result);
 
         return {
           detail:
+            wallTripleLeafCalibratedDetail ??
+            wallTripleLeafLocalSubstitutionDetail ??
             gateAYAdvancedWallDetail ??
             gateSOpeningLeakDetail ??
             (isImpactOnlyLowConfidenceLane
@@ -442,11 +487,19 @@ export function buildOutputCard(input: {
       break;
     case "STC":
       if (typeof result?.metrics.estimatedStc === "number") {
+        const wallTripleLeafCalibratedDetail = getWallTripleLeafCalibratedSolverOutputDetail(output, result);
+        const wallTripleLeafLocalSubstitutionDetail =
+          getWallTripleLeafLocalSubstitutionOutputDetail(output, result);
         const gateSOpeningLeakDetail = getGateSOpeningLeakCompositeOutputDetail(output, result);
         const gateAYAdvancedWallDetail = getGateAYAdvancedWallOutputDetail(output, result);
 
         return {
-          detail: gateAYAdvancedWallDetail ?? gateSOpeningLeakDetail ?? "ASTM single-number companion from the same airborne curve.",
+          detail:
+            wallTripleLeafCalibratedDetail ??
+            wallTripleLeafLocalSubstitutionDetail ??
+            gateAYAdvancedWallDetail ??
+            gateSOpeningLeakDetail ??
+            "ASTM single-number companion from the same airborne curve.",
           label: "STC",
           output,
           status: "live",
@@ -471,10 +524,17 @@ export function buildOutputCard(input: {
       }
 
       if (typeof result?.metrics.estimatedCDb === "number") {
+        const wallTripleLeafCalibratedDetail = getWallTripleLeafCalibratedSolverOutputDetail(output, result);
+        const wallTripleLeafLocalSubstitutionDetail =
+          getWallTripleLeafLocalSubstitutionOutputDetail(output, result);
         const gateAYAdvancedWallDetail = getGateAYAdvancedWallOutputDetail(output, result);
 
         return {
-          detail: gateAYAdvancedWallDetail ?? "Mid-frequency adaptation term on the airborne lane.",
+          detail:
+            wallTripleLeafCalibratedDetail ??
+            wallTripleLeafLocalSubstitutionDetail ??
+            gateAYAdvancedWallDetail ??
+            "Mid-frequency adaptation term on the airborne lane.",
           label: "C",
           output,
           status: "live",
@@ -500,10 +560,19 @@ export function buildOutputCard(input: {
       }
 
       if (typeof result?.metrics.estimatedCtrDb === "number") {
+        const wallTripleLeafCalibratedDetail = getWallTripleLeafCalibratedSolverOutputDetail(output, result);
+        const wallTripleLeafLocalSubstitutionDetail =
+          getWallTripleLeafLocalSubstitutionOutputDetail(output, result);
         const gateAYAdvancedWallDetail = getGateAYAdvancedWallOutputDetail(output, result);
 
         return {
-          detail: gateAYAdvancedWallDetail ?? (isImpactOnlyLowConfidenceLane ? IMPACT_ONLY_LOW_CONFIDENCE_CTR_DETAIL : "Traffic-noise adaptation term on the airborne lane."),
+          detail:
+            wallTripleLeafCalibratedDetail ??
+            wallTripleLeafLocalSubstitutionDetail ??
+            gateAYAdvancedWallDetail ??
+            (isImpactOnlyLowConfidenceLane
+              ? IMPACT_ONLY_LOW_CONFIDENCE_CTR_DETAIL
+              : "Traffic-noise adaptation term on the airborne lane."),
           label: "Ctr",
           output,
           status: "live",
@@ -601,6 +670,12 @@ export function buildOutputCard(input: {
               : isSteelFloorFormulaCorridor
                 ? getSteelFloorFormulaCorridorOutputDetail("Ln,w", result.impact) ??
                   "Lab-side Ln,w from the active steel formula corridor."
+              : isOpenWebSupportedBandSimilarity
+                ? getOpenWebSupportedBandSimilarityOutputDetail("Ln,w", result) ??
+                  "Lab-side Ln,w from the open-web supported-band similarity lane."
+              : isOpenWebDirectFixedLining
+                ? getOpenWebDirectFixedLiningOutputDetail("Ln,w", result) ??
+                  "Lab-side Ln,w from the open-web direct-fixed lining interpolation lane."
               : "Lab-side weighted normalized impact sound level.",
           label: "Ln,w",
           output,
@@ -648,7 +723,10 @@ export function buildOutputCard(input: {
     case "CI":
       if (typeof result?.impact?.CI === "number") {
         return {
-          detail: "Low-frequency impact companion term.",
+          detail:
+            getOpenWebDirectFixedLiningOutputDetail("CI", result) ??
+            getOpenWebSupportedBandSimilarityOutputDetail("CI", result) ??
+            "Low-frequency impact companion term.",
           label: "CI",
           output,
           status: "live",
@@ -670,7 +748,10 @@ export function buildOutputCard(input: {
     case "Ln,w+CI":
       if (typeof result?.impact?.LnWPlusCI === "number") {
         return {
-          detail: "Combined weighted impact result with CI carry-over.",
+          detail:
+            getOpenWebDirectFixedLiningOutputDetail("Ln,w+CI", result) ??
+            getOpenWebSupportedBandSimilarityOutputDetail("Ln,w+CI", result) ??
+            "Combined weighted impact result with CI carry-over.",
           label: "Ln,w+CI",
           output,
           status: "live",

@@ -388,14 +388,14 @@ describe("calculator model-first physics prediction pivot Gate S", () => {
       targetOutputs: WALL_OUTPUTS
     });
 
-    expect(groupedRockwool.metrics).toMatchObject({ estimatedRwDb: 50, estimatedStc: 55 });
+    expect(groupedRockwool.metrics).toMatchObject({ estimatedRwDb: 53, estimatedStc: 64 });
     expect(groupedRockwool.airborneCandidateResolution).toMatchObject({
       runtimeValueMovement: true,
-      selectedCandidateId: "candidate_grouped_rockwool_family_physics_prediction",
+      selectedCandidateId: "candidate_broad_accuracy_wall_triple_leaf_local_substitution_lab_spectrum_adapter_family_physics_prediction",
       selectedOrigin: "family_physics_prediction"
     });
     expect(groupedRockwool.airborneBasis).toMatchObject({
-      method: "triple_leaf_two_cavity_frequency_solver",
+      method: "broad_accuracy_wall_triple_leaf_local_substitution_lab_spectrum_adapter_runtime",
       origin: "family_physics_prediction"
     });
 

@@ -444,16 +444,16 @@ describe("field-output owner and design-grade policy Gate A contract", () => {
 
     expect(wall).toMatchObject({
       confidence: "medium",
-      dnTw: 52,
+      dnTw: 54,
       family: "multileaf_multicavity",
       fieldBasis: "apparent_curve_overlay + 10log10(0.32V/S)",
-      rwPrime: 50,
-      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction",
+      rwPrime: 52,
+      strategy: "broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor",
       supported: ["R'w", "DnT,w"],
       unsupported: []
     });
-    expect(wall.warnings).toContain("family physics prediction");
-    expect(wall.warnings).toContain("Dynamic airborne confidence is medium");
+    expect(wall.warnings).toContain("local substitution field-context harmonization is active");
+    expect(wall.warnings).toContain("+/-10 dB source-absent error budget");
 
     expect(exactFloor).toMatchObject({
       dnTw: 70,

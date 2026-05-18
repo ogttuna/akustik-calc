@@ -13,6 +13,8 @@ import type { AssemblyCalculation, DynamicAirborneTrace } from "@dynecho/shared"
 import { getGateARAirborneBuildingPredictionSurface } from "./airborne-building-prediction-surface";
 import { getGateIAirborneFieldContextSurface } from "./airborne-field-context-surface";
 import { getGateSOpeningLeakCompositeSurface } from "./opening-leak-composite-surface";
+import { getWallTripleLeafCalibratedSolverSurface } from "./wall-triple-leaf-calibrated-solver-surface";
+import { getWallTripleLeafLocalSubstitutionSurface } from "./wall-triple-leaf-local-substitution-surface";
 import { getCompanyInternalOpeningLeakFieldBuildingSurface } from "./opening-leak-field-building-surface";
 import { getImpactLaneKind, getImpactLanePillLabel } from "./impact-lane-view";
 import {
@@ -21,6 +23,8 @@ import {
 } from "./reinforced-concrete-low-confidence-floor-lane";
 import { HEAVY_CONCRETE_COMBINED_FORMULA_BASIS } from "./heavy-concrete-combined-impact-corridor-view";
 import { STEEL_FLOOR_FORMULA_BASIS } from "./steel-floor-formula-corridor-view";
+import { isOpenWebSupportedBandSimilarityResult } from "./open-web-supported-band-similarity-surface";
+import { isOpenWebDirectFixedLiningResult } from "./open-web-direct-fixed-lining-surface";
 
 export type ValidationPosture = {
   detail: string;
@@ -187,6 +191,24 @@ export function describeImpactValidationPosture(result: AssemblyCalculation | nu
       };
     }
 
+    if (isOpenWebSupportedBandSimilarityResult(result)) {
+      return {
+        detail:
+          "The active floor lane is the open-web steel supported-band similarity corridor, pinned to the UBIQ FL-24/FL-26 supported-band source grid. Keep exact-source precedence, fit percentage, and non-lab boundaries visible.",
+        label: trace.selectedLabel,
+        posture: "estimate"
+      };
+    }
+
+    if (isOpenWebDirectFixedLiningResult(result)) {
+      return {
+        detail:
+          "The active floor lane is the open-web steel direct-fixed lining interpolation corridor, pinned to the UBIQ FL-23/FL-25/FL-27 direct-fixed source grid. Keep exact-source precedence, fit percentage, source-absent budgets, and non-lab boundaries visible.",
+        label: trace.selectedLabel,
+        posture: "estimate"
+      };
+    }
+
     return {
       detail:
         "The active floor lane is a scoped estimate. It is benchmark-guarded, but it still needs explicit source citation or tolerance notes before it is presented as a final acoustic claim.",
@@ -248,6 +270,24 @@ export function describeAirborneValidationPosture(result: AssemblyCalculation | 
       detail: "Airborne screening becomes legible once the layer stack is valid.",
       label: "Waiting for stack",
       posture: "inactive"
+    };
+  }
+
+  const wallTripleLeafCalibratedSurface = getWallTripleLeafCalibratedSolverSurface(result);
+  if (wallTripleLeafCalibratedSurface) {
+    return {
+      detail: wallTripleLeafCalibratedSurface.postureDetail,
+      label: wallTripleLeafCalibratedSurface.label,
+      posture: "estimate"
+    };
+  }
+
+  const wallTripleLeafLocalSubstitutionSurface = getWallTripleLeafLocalSubstitutionSurface(result);
+  if (wallTripleLeafLocalSubstitutionSurface) {
+    return {
+      detail: wallTripleLeafLocalSubstitutionSurface.postureDetail,
+      label: wallTripleLeafLocalSubstitutionSurface.label,
+      posture: "estimate"
     };
   }
 
@@ -409,7 +449,9 @@ export function getActiveValidationMode(result: AssemblyCalculation | null) {
     impactBasis === "predictor_mass_timber_clt_bare_interpolation_estimate" ||
     impactBasis === "predictor_mass_timber_clt_dry_interaction_estimate" ||
     impactBasis === "predictor_mass_timber_clt_dataholz_dry_estimate" ||
-    impactBasis === "predictor_lightweight_steel_fl28_interpolation_estimate"
+    impactBasis === "predictor_lightweight_steel_fl28_interpolation_estimate" ||
+    impactBasis === "predictor_lightweight_steel_open_web_supported_band_similarity_estimate" ||
+    isOpenWebDirectFixedLiningResult(result)
   ) {
     return getImpactValidationModeRegimeById("family_specific_estimate");
   }

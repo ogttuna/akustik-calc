@@ -210,18 +210,18 @@ describe("Personal-Use MVP Coverage Sprint Gate AE flat multicavity solver broad
     });
 
     expect(pinnedResult.metrics).toMatchObject({
-      estimatedCDb: 0.8,
-      estimatedCtrDb: -7.3,
-      estimatedRwDb: 50,
-      estimatedStc: 55
+      estimatedCDb: 1.6,
+      estimatedCtrDb: -7.2,
+      estimatedRwDb: 53,
+      estimatedStc: 64
     });
     expect(pinnedResult.airborneBasis).toMatchObject({
-      errorBudgetDb: 5,
-      method: "triple_leaf_two_cavity_frequency_solver",
+      errorBudgetDb: 8,
+      method: "broad_accuracy_wall_triple_leaf_local_substitution_lab_spectrum_adapter_runtime",
       origin: "family_physics_prediction"
     });
     expect(pinnedResult.airborneCandidateResolution?.selectedCandidateId).toBe(
-      "candidate_grouped_rockwool_family_physics_prediction"
+      "candidate_broad_accuracy_wall_triple_leaf_local_substitution_lab_spectrum_adapter_family_physics_prediction"
     );
 
     for (const result of [staleResult, duplicateResult, noTopologyResult]) {

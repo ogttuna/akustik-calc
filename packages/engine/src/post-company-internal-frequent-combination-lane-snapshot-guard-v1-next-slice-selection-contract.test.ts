@@ -300,13 +300,13 @@ describe("post company-internal frequent-combination Gate C next-slice selection
     expect(grouped).toMatchObject({
       confidence: "medium",
       family: "multileaf_multicavity",
-      rw: 50,
-      stc: 55,
-      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction",
+      rw: 53,
+      stc: 64,
+      strategy: "broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor",
       supported: ["Rw", "STC"]
     });
-    expect(grouped.warnings).toContain("family physics prediction");
-    expect(grouped.warnings).toContain("Dynamic airborne confidence is medium");
+    expect(grouped.warnings).toContain("lab spectrum adapter is active");
+    expect(grouped.warnings).toContain("keeps the parent not-measured budget");
 
     expect(flatSwap).toMatchObject({
       confidence: "medium",

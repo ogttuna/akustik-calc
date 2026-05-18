@@ -20,6 +20,24 @@ import {
   getGateSOpeningLeakCompositeSurface
 } from "./opening-leak-composite-surface";
 import {
+  getWallTripleLeafCalibratedSolverOutputDetail,
+  getWallTripleLeafCalibratedSolverSurface
+} from "./wall-triple-leaf-calibrated-solver-surface";
+import {
+  getWallTripleLeafLocalSubstitutionOutputDetail,
+  getWallTripleLeafLocalSubstitutionSurface
+} from "./wall-triple-leaf-local-substitution-surface";
+import {
+  getOpenWebSupportedBandSimilarityOutputDetail,
+  getOpenWebSupportedBandSimilarityPosture,
+  isOpenWebSupportedBandSimilarityResult
+} from "./open-web-supported-band-similarity-surface";
+import {
+  getOpenWebDirectFixedLiningOutputDetail,
+  getOpenWebDirectFixedLiningPosture,
+  isOpenWebDirectFixedLiningResult
+} from "./open-web-direct-fixed-lining-surface";
+import {
   getCompanyInternalOpeningLeakFieldBuildingOutputDetail,
   getCompanyInternalOpeningLeakFieldBuildingSurface
 } from "./opening-leak-field-building-surface";
@@ -111,6 +129,10 @@ export function buildSimpleWorkbenchOutputPosture(input: {
     studyMode === "wall" ? getGateARAirborneBuildingPredictionSurface(result) : null;
   const gateAYAdvancedWallSurface =
     studyMode === "wall" ? getGateAYAdvancedWallSurface(result) : null;
+  const wallTripleLeafCalibratedSurface =
+    studyMode === "wall" ? getWallTripleLeafCalibratedSolverSurface(result) : null;
+  const wallTripleLeafLocalSubstitutionSurface =
+    studyMode === "wall" ? getWallTripleLeafLocalSubstitutionSurface(result) : null;
   const gateSOpeningLeakSurface =
     studyMode === "wall" ? getGateSOpeningLeakCompositeSurface(result) : null;
   const companyInternalOpeningLeakFieldBuildingSurface =
@@ -188,6 +210,54 @@ export function buildSimpleWorkbenchOutputPosture(input: {
     }
   }
 
+  if (wallTripleLeafCalibratedSurface) {
+    const detail =
+      getWallTripleLeafCalibratedSolverOutputDetail(output, result) ??
+      wallTripleLeafCalibratedSurface.postureDetail;
+
+    if (status === "live" && (output === "Rw" || output === "STC" || output === "C" || output === "Ctr")) {
+      return {
+        detail,
+        label: wallTripleLeafCalibratedSurface.label,
+        tone: "success"
+      };
+    }
+
+    if (status === "unsupported") {
+      return {
+        detail,
+        label: "Wall triple-leaf calibrated boundary",
+        tone: "neutral"
+      };
+    }
+  }
+
+  if (wallTripleLeafLocalSubstitutionSurface) {
+    const detail =
+      getWallTripleLeafLocalSubstitutionOutputDetail(output, result) ??
+      wallTripleLeafLocalSubstitutionSurface.postureDetail;
+
+    if (
+      status === "live" &&
+      result?.supportedTargetOutputs.includes(output) &&
+      (output === "Rw" || output === "STC" || output === "C" || output === "Ctr")
+    ) {
+      return {
+        detail,
+        label: wallTripleLeafLocalSubstitutionSurface.label,
+        tone: "accent"
+      };
+    }
+
+    if (status === "unsupported") {
+      return {
+        detail,
+        label: "Wall triple-leaf local substitution boundary",
+        tone: "neutral"
+      };
+    }
+  }
+
   if (gateSOpeningLeakSurface) {
     const detail = getGateSOpeningLeakCompositeOutputDetail(output, result) ?? gateSOpeningLeakSurface.postureDetail;
 
@@ -247,6 +317,34 @@ export function buildSimpleWorkbenchOutputPosture(input: {
         "DAC is intentionally packaging this as a one-sided support value. It is useful for scoping, but it should not be read as a claimed exact readout, and other live cards can still stay visible beside it.",
       label: "Conservative bound",
       tone: "warning"
+    };
+  }
+
+  if (
+    studyMode === "floor" &&
+    status === "live" &&
+    isOpenWebDirectFixedLiningResult(result) &&
+    (output === "Rw" || output === "Ln,w" || output === "CI" || output === "Ln,w+CI")
+  ) {
+    const posture = getOpenWebDirectFixedLiningPosture();
+
+    return {
+      ...posture,
+      detail: getOpenWebDirectFixedLiningOutputDetail(output, result) ?? posture.detail
+    };
+  }
+
+  if (
+    studyMode === "floor" &&
+    status === "live" &&
+    isOpenWebSupportedBandSimilarityResult(result) &&
+    (output === "Rw" || output === "Ln,w" || output === "CI" || output === "Ln,w+CI")
+  ) {
+    const posture = getOpenWebSupportedBandSimilarityPosture();
+
+    return {
+      ...posture,
+      detail: getOpenWebSupportedBandSimilarityOutputDetail(output, result) ?? posture.detail
     };
   }
 

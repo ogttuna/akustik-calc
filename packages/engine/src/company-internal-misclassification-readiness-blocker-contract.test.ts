@@ -154,22 +154,22 @@ describe("company-internal misclassification readiness blocker contract", () => 
       targetOutputs: WALL_FIELD_OUTPUTS
     });
 
-    expect(lab.metrics.estimatedRwDb).toBe(50);
+    expect(lab.metrics.estimatedRwDb).toBe(53);
     expect(lab.dynamicAirborneTrace).toMatchObject({
       confidenceClass: "medium",
       detectedFamily: "multileaf_multicavity",
-      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
+      strategy: "broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor"
     });
     expect(field.dynamicAirborneTrace).toMatchObject({
       confidenceClass: "medium",
       detectedFamily: "multileaf_multicavity",
-      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
+      strategy: "broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor"
     });
     expect(Number.isFinite(field.metrics.estimatedRwPrimeDb ?? Number.NaN)).toBe(true);
     expect(Number.isFinite(field.metrics.estimatedDnTwDb ?? Number.NaN)).toBe(true);
     expect(
-      hasWarning(lab.warnings, /family physics prediction/i) ||
-        hasWarning(field.warnings, /family physics prediction/i)
+      hasWarning(lab.warnings, /source-absent formula corridor/i) ||
+        hasWarning(field.warnings, /Airborne field-side overlay active/i)
     ).toBe(true);
   });
 

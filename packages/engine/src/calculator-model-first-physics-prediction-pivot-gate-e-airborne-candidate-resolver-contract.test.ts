@@ -693,17 +693,17 @@ describe("calculator model-first physics prediction pivot Gate E", () => {
     expect(adjacent.metrics.estimatedRwDb).toBe(51);
     expect(adjacent.metrics.estimatedStc).toBe(51);
     expect(adjacent.dynamicAirborneTrace?.detectedFamily).toBe("double_leaf");
-    expect(adjacent.supportedTargetOutputs).toEqual(["Rw", "STC", "C", "Ctr"]);
+    expect(adjacent.supportedTargetOutputs).toEqual([...WALL_LAB_OUTPUTS]);
 
-    expect(grouped.metrics.estimatedRwDb).toBe(50);
-    expect(grouped.metrics.estimatedStc).toBe(55);
+    expect(grouped.metrics.estimatedRwDb).toBe(53);
+    expect(grouped.metrics.estimatedStc).toBe(64);
     expect(grouped.dynamicAirborneTrace?.detectedFamily).toBe("multileaf_multicavity");
     expect(grouped.dynamicAirborneTrace?.strategy).toBe(
-      "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
+      "broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor"
     );
     expect(grouped.airborneCandidateResolution).toMatchObject({
       runtimeValueMovement: true,
-      selectedCandidateId: "candidate_grouped_rockwool_family_physics_prediction",
+      selectedCandidateId: "candidate_broad_accuracy_wall_triple_leaf_local_substitution_lab_spectrum_adapter_family_physics_prediction",
       selectedOrigin: "family_physics_prediction"
     });
     expect(grouped.supportedTargetOutputs).toEqual(["Rw", "STC", "C", "Ctr"]);

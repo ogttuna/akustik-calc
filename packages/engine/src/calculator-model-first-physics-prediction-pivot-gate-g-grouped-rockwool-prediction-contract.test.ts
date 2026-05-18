@@ -151,17 +151,17 @@ describe("calculator model-first physics prediction pivot Gate G", () => {
       targetOutputs: WALL_LAB_OUTPUTS
     });
 
-    expect(result.metrics.estimatedRwDb).toBe(50);
-    expect(result.metrics.estimatedStc).toBe(55);
-    expect(result.metrics.estimatedCDb).toBe(0.8);
-    expect(result.metrics.estimatedCtrDb).toBe(-7.3);
+    expect(result.metrics.estimatedRwDb).toBe(53);
+    expect(result.metrics.estimatedStc).toBe(64);
+    expect(result.metrics.estimatedCDb).toBe(1.6);
+    expect(result.metrics.estimatedCtrDb).toBe(-7.2);
     expect(result.supportedTargetOutputs).toEqual(["Rw", "STC", "C", "Ctr"]);
     expect(result.unsupportedTargetOutputs).toEqual([]);
     expect(result.dynamicAirborneTrace).toMatchObject({
       confidenceClass: "medium",
       detectedFamily: "multileaf_multicavity",
       selectedMethod: "triple_leaf_two_cavity_frequency_solver",
-      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
+      strategy: "broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor"
     });
     expect(result.dynamicAirborneTrace?.candidateMethods).toEqual([
       {
@@ -173,31 +173,36 @@ describe("calculator model-first physics prediction pivot Gate G", () => {
       {
         label: "Triple-Leaf Two-Cavity Solver",
         method: "triple_leaf_two_cavity_frequency_solver",
-        rwDb: 50,
+        rwDb: 53,
         selected: true
       }
     ]);
-    expect(result.warnings.join("\n")).toContain("not measured exact or source-validated");
+    expect(result.warnings.join("\n")).toContain("lab spectrum adapter is active");
     expect(result.warnings.join("\n")).not.toContain("source-required screening");
   });
 
-  it("carries field/building outputs through the same predicted curve without lab/field collapse", () => {
+  it("carries field outputs through the local-substitution field context without lab/field collapse", () => {
     const result = calculateAssembly(GROUPED_SPLIT_ROCKWOOL_STACK, {
       airborneContext: GROUPED_SPLIT_ROCKWOOL_FIELD_CONTEXT,
       calculator: "dynamic",
       targetOutputs: WALL_FIELD_OUTPUTS
     });
 
-    expect(result.metrics.estimatedRwDb).toBe(50);
-    expect(result.metrics.estimatedRwPrimeDb).toBe(50);
-    expect(result.metrics.estimatedDnTwDb).toBe(51);
-    expect(result.metrics.estimatedDnTADb).toBe(51.3);
-    expect(result.metrics.estimatedDnWDb).toBe(50);
-    expect(result.metrics.estimatedDnADb).toBe(49.8);
-    expect(result.metrics.estimatedStc).toBe(54);
+    expect(result.metrics.estimatedRwDb).toBe(52);
+    expect(result.metrics.estimatedRwPrimeDb).toBe(52);
+    expect(result.metrics.estimatedDnTwDb).toBe(54);
+    expect(result.metrics.estimatedDnTADb).toBe(55.4);
+    expect(result.metrics.estimatedDnWDb).toBe(52);
+    expect(result.metrics.estimatedDnADb).toBe(53.9);
+    expect(result.metrics.estimatedStc).toBe(63);
     expect(result.supportedTargetOutputs).toEqual(["R'w", "DnT,w", "DnT,A", "Dn,w", "Dn,A"]);
     expect(result.dynamicAirborneTrace?.selectedMethod).toBe("triple_leaf_two_cavity_frequency_solver");
+    expect(result.airborneBasis).toMatchObject({
+      errorBudgetDb: 10,
+      method: "broad_accuracy_wall_triple_leaf_local_substitution_field_context_harmonization_runtime"
+    });
     expect(result.warnings.join("\n")).toContain("Airborne field-side overlay active");
+    expect(result.warnings.join("\n")).toContain("local substitution field-context harmonization is active");
     expect(result.warnings.join("\n")).not.toContain("Airborne building-prediction route is parked");
   });
 
@@ -211,12 +216,16 @@ describe("calculator model-first physics prediction pivot Gate G", () => {
     expect(result.airborneBasis).toMatchObject({
       calculationStandard: "engine_triple_leaf_two_cavity_frequency_solver",
       curveBasis: "calculated_frequency_curve",
-      errorBudgetDb: 5,
+      errorBudgetDb: 8,
       family: "multileaf_multicavity",
       kind: "airborne_physics_prediction",
-      method: "triple_leaf_two_cavity_frequency_solver",
+      method: "broad_accuracy_wall_triple_leaf_local_substitution_lab_spectrum_adapter_runtime",
       missingPhysicalInputs: [],
-      missingSourceEvidence: [],
+      missingSourceEvidence: [
+        "source_owned_same_stack_local_substitution_holdout_absent",
+        "field_building_adapter_owner_absent",
+        "source_owned_same_stack_stc_c_ctr_holdout_absent"
+      ],
       origin: "family_physics_prediction",
       ratingStandard: "ISO 717-1",
       toleranceClass: "uncalibrated_prediction"
@@ -224,7 +233,7 @@ describe("calculator model-first physics prediction pivot Gate G", () => {
     expect(result.airborneCandidateResolution).toMatchObject({
       policyId: "model_first_airborne_candidate_precedence_v1",
       runtimeValueMovement: true,
-      selectedCandidateId: "candidate_grouped_rockwool_family_physics_prediction",
+      selectedCandidateId: "candidate_broad_accuracy_wall_triple_leaf_local_substitution_lab_spectrum_adapter_family_physics_prediction",
       selectedOrigin: "family_physics_prediction"
     });
     expect(result.airborneCandidateResolution?.rejectedCandidateIds).toEqual([

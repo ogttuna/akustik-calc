@@ -6,6 +6,13 @@ import type { AirborneContext, LayerInput, RequestedOutputId } from "@dynecho/sh
 import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
+import {
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_RUNTIME_STRATEGY
+} from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-runtime-corridor";
+import {
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_RUNTIME_METHOD,
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_SELECTED_CANDIDATE_ID
+} from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-lab-spectrum-adapter";
 import { buildDynamicCalculatorCandidateResolverRuntime } from "./dynamic-calculator-candidate-resolver-runtime";
 import { buildDynamicCalculatorRouteInputTopologyAssessment } from "./dynamic-calculator-route-input-topology";
 import { validateWallTripleLeafLayerGroups } from "./wall-triple-leaf-topology-readiness";
@@ -168,33 +175,34 @@ describe("Personal-Use MVP Coverage Sprint Gate G generalized wall multicavity r
     const fixture5050 = calculateGrouped();
     const non5050 = calculateGrouped(GROUPED_NON_50_50_CONTEXT);
 
-    expect(fixture5050.metrics).toMatchObject({
-      estimatedRwDb: 50,
-      estimatedStc: 55
-    });
+    expect(fixture5050.metrics.estimatedRwDb).toBe(53);
     expect(fixture5050.dynamicAirborneTrace).toMatchObject({
       detectedFamily: "multileaf_multicavity",
       selectedMethod: "triple_leaf_two_cavity_frequency_solver",
-      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
+      strategy: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_RUNTIME_STRATEGY
     });
     expect(fixture5050.airborneBasis).toMatchObject({
-      errorBudgetDb: 5,
-      method: "triple_leaf_two_cavity_frequency_solver",
+      errorBudgetDb: 8,
+      method: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_RUNTIME_METHOD,
       origin: "family_physics_prediction",
       toleranceClass: "uncalibrated_prediction"
     });
     expect(fixture5050.airborneCandidateResolution).toMatchObject({
-      selectedCandidateId: "candidate_grouped_rockwool_family_physics_prediction",
+      selectedCandidateId: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_SELECTED_CANDIDATE_ID,
       selectedOrigin: "family_physics_prediction"
     });
+    expect(fixture5050.supportedTargetOutputs).toEqual(["Rw", "STC", "C", "Ctr"]);
+    expect(fixture5050.unsupportedTargetOutputs).toEqual([]);
 
-    expect(non5050.metrics).toMatchObject({
-      estimatedRwDb: 55,
-      estimatedStc: 56
-    });
+    expect(non5050.metrics.estimatedRwDb).toBe(53);
     expect(non5050.dynamicAirborneTrace?.selectedMethod).toBe("triple_leaf_two_cavity_frequency_solver");
+    expect(non5050.dynamicAirborneTrace?.strategy).toBe(
+      BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_RUNTIME_STRATEGY
+    );
     expect(non5050.airborneBasis?.origin).toBe("family_physics_prediction");
-    expect(non5050.warnings.join("\n")).toContain("not measured exact or source-validated");
+    expect(non5050.supportedTargetOutputs).toEqual(["Rw", "STC", "C", "Ctr"]);
+    expect(non5050.unsupportedTargetOutputs).toEqual([]);
+    expect(non5050.warnings.join("\n")).toContain("lab spectrum adapter is active");
   });
 
   it("keeps unequal cavities and safe explicit group reorders stable on the physical route", () => {
@@ -208,10 +216,11 @@ describe("Personal-Use MVP Coverage Sprint Gate G generalized wall multicavity r
       }
     });
 
-    expect(unequal.metrics.estimatedRwDb).toBe(55);
+    expect(unequal.metrics.estimatedRwDb).toBe(53);
     expect(unequal.dynamicAirborneTrace?.selectedMethod).toBe("triple_leaf_two_cavity_frequency_solver");
-    expect(safelyReorderedGroups.metrics.estimatedRwDb).toBe(50);
-    expect(safelyReorderedGroups.metrics.estimatedStc).toBe(55);
+    expect(safelyReorderedGroups.metrics.estimatedRwDb).toBe(53);
+    expect(safelyReorderedGroups.supportedTargetOutputs).toEqual(["Rw", "STC", "C", "Ctr"]);
+    expect(safelyReorderedGroups.unsupportedTargetOutputs).toEqual([]);
     expect(safelyReorderedGroups.dynamicAirborneTrace?.selectedMethod).toBe(
       "triple_leaf_two_cavity_frequency_solver"
     );

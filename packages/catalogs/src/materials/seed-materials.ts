@@ -83,6 +83,25 @@ const BASE_SEED_MATERIALS: readonly MaterialDefinition[] = [
     tags: ["lining", "board", "acoustic-board", "soundbloc", "diamond-board"]
   },
   {
+    id: "nrc_type_c_gypsum_board",
+    name: "NRC 2024 Type C Gypsum Board",
+    category: "finish",
+    densityKgM3: 772,
+    acoustic: {
+      behavior: "panel_leaf",
+      lossFactor: 0.035,
+      notes: [
+        "Source-family identity material for the NRC 2024 internal-board triple-leaf calibration corridor.",
+        "Use only with explicit grouped triple-leaf topology; it is not a generic Type C product claim."
+      ],
+      poissonRatio: 0.25,
+      propertySourceStatus: "source_owned",
+      youngModulusPa: 2800000000
+    },
+    notes: "Represents the 12.7 mm Type C gypsum board at 9.80 kg/m2 used by the NRC 2024 internal gypsum double-stud source-family rows.",
+    tags: ["lining", "board", "gypsum", "type-c", "nrc-2024", "triple-leaf-source-family"]
+  },
+  {
     id: "diamond_board",
     name: "Diamond Board",
     category: "finish",
@@ -899,6 +918,25 @@ const BASE_SEED_MATERIALS: readonly MaterialDefinition[] = [
     },
     notes: "Ported from the Acoustic2 infill catalog for semi-rigid glass wool slab studies.",
     tags: ["cavity-fill", "porous", "glasswool", "board-insulation"]
+  },
+  {
+    id: "nrc_glass_fiber_batt",
+    name: "NRC 2024 Glass-Fiber Batt",
+    category: "insulation",
+    densityKgM3: 12,
+    acoustic: {
+      absorberClass: "porous_absorptive",
+      behavior: "porous_absorber",
+      flowResistivityPaSM2: 10000,
+      notes: [
+        "Source-family identity absorber for the NRC 2024 internal-board triple-leaf calibration corridor.",
+        "Do not use as a Rockwool/mineral-wool equivalence proof outside that corridor."
+      ],
+      porosity: 0.98,
+      propertySourceStatus: "source_owned"
+    },
+    notes: "Represents the 92.1 mm glass-fiber batt named by the NRC 2024 internal gypsum double-stud source-family rows.",
+    tags: ["cavity-fill", "porous", "glass-fiber", "nrc-2024", "triple-leaf-source-family"]
   },
   {
     id: "cellulose_fill",

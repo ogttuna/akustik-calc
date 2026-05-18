@@ -294,14 +294,14 @@ describe("Personal-Use MVP Coverage Sprint Gate AX advanced wall source-absent s
     });
 
     expect(groupedRuntime.metrics).toMatchObject({
-      estimatedCDb: 0.8,
-      estimatedCtrDb: -7.3,
-      estimatedRwDb: 50,
-      estimatedStc: 55
+      estimatedCDb: 1.6,
+      estimatedCtrDb: -7.2,
+      estimatedRwDb: 53,
+      estimatedStc: 64
     });
     expect(groupedRuntime.airborneBasis).toMatchObject({
-      errorBudgetDb: 5,
-      method: "triple_leaf_two_cavity_frequency_solver",
+      errorBudgetDb: 8,
+      method: "broad_accuracy_wall_triple_leaf_local_substitution_lab_spectrum_adapter_runtime",
       origin: "family_physics_prediction"
     });
     expect(buildPersonalUseMvpCoverageSprintGateAXContract().noRuntimeValueMovement).toBe(true);

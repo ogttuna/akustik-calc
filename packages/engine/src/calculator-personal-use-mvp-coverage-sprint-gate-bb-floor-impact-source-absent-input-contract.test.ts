@@ -136,7 +136,7 @@ describe("Personal-Use MVP Coverage Sprint Gate BB floor-impact source-absent in
       ready_for_formula_corridor_gate: 1,
       unsupported_basis: 2
     });
-  });
+  }, 30000);
 
   it("names the physical owner fields and default policy before any wider formula promotion", () => {
     const complete = contractById("gate_bb_complete_combined_upper_lower_ready_for_gate_bc");

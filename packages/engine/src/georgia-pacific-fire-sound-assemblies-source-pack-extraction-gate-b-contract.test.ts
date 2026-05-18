@@ -501,8 +501,8 @@ describe("Georgia-Pacific Fire & Sound Assemblies source-pack extraction Gate B 
     expect(PROTECTED_BOUNDARIES).toContain(
       "georgia_pacific_gate_b_rows_do_not_fix_the_uris_2006_split_rockwool_triple_leaf_rw_41_screening_result"
     );
-    expect(splitRockwool.metrics.estimatedRwDb).toBe(50);
-    expect(splitRockwool.dynamicAirborneTrace?.strategy).toBe("triple_leaf_two_cavity_frequency_solver_family_physics_prediction");
+    expect(splitRockwool.metrics.estimatedRwDb).toBe(53);
+    expect(splitRockwool.dynamicAirborneTrace?.strategy).toBe("broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor");
     expect(splitRockwool.dynamicAirborneTrace?.confidenceClass).toBe("medium");
     expect(GEORGIA_PACIFIC_GATE_B.numericRuntimeBehaviorChange).toBe(false);
     expect(GEORGIA_PACIFIC_GATE_B.runtimeWidening).toBe(false);

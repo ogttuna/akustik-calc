@@ -1,4 +1,6 @@
 import {
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_RUNTIME_METHOD,
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_RUNTIME_METHOD,
   GATE_AE_FLAT_MULTICAVITY_RUNTIME_METHOD,
   GATE_AC_FLAT_MULTICAVITY_TOPOLOGY_SURFACE_LABEL,
   PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AC_LANDED_GATE
@@ -76,6 +78,8 @@ export function getGateACFlatMulticavityTopologySurface(input: {
   const origin = input.result.airborneBasis?.origin ?? "unknown";
   const status =
     method === "triple_leaf_two_cavity_frequency_solver" ||
+    method === BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_RUNTIME_METHOD ||
+    method === BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_RUNTIME_METHOD ||
     method === GATE_AE_FLAT_MULTICAVITY_RUNTIME_METHOD
       ? "solver_with_explicit_topology"
       : "screening_with_explicit_topology";

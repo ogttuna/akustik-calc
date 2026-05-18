@@ -1,4 +1,7 @@
 import {
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD,
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_WARNING,
   calculateAssembly,
   GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD,
   GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
@@ -8,6 +11,9 @@ import type { AirborneContext, AssemblyCalculation, LayerInput, RequestedOutputI
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
+  WEB_BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD,
+  WEB_BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
+  WEB_BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_WARNING,
   WEB_GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD,
   WEB_GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
   WEB_GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING,
@@ -204,33 +210,57 @@ describe("airborne field-context surface parity", () => {
       GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID
     );
     expect(WEB_GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING).toBe(GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING);
+    expect(WEB_BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD).toBe(
+      BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD
+    );
+    expect(WEB_BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID).toBe(
+      BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID
+    );
+    expect(WEB_BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_WARNING).toBe(
+      BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_WARNING
+    );
   });
 
-  it("shows lined, CLT, and grouped field-context values with the same Gate I basis on visible surfaces", () => {
+  it("shows lined, CLT, and grouped field-context values with their owned bases on visible surfaces", () => {
     const cases = [
       {
         airborneContext: WALL_FIELD_CONTEXT,
+        basisLabel: "Gate I airborne field/apparent context adapter",
+        candidateId: GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
         dnt: "59 dB",
         id: "gate_j_lined_massive",
         layers: LINED_MASSIVE_WALL,
+        method: GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD,
         name: "Gate J lined massive field surface",
-        rwPrime: "58 dB"
+        notePrefix: "Gate I field-context candidate",
+        rwPrime: "58 dB",
+        warning: GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING
       },
       {
         airborneContext: WALL_FIELD_CONTEXT,
+        basisLabel: "Gate I airborne field/apparent context adapter",
+        candidateId: GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
         dnt: "41 dB",
         id: "gate_j_clt",
         layers: CLT_WALL,
+        method: GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD,
         name: "Gate J CLT field surface",
-        rwPrime: "40 dB"
+        notePrefix: "Gate I field-context candidate",
+        rwPrime: "40 dB",
+        warning: GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING
       },
       {
-        dnt: "51 dB",
+        airborneContext: GROUPED_TRIPLE_LEAF_FIELD_CONTEXT,
+        basisLabel: "Local-substitution field-context harmonization",
+        candidateId: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
+        dnt: "53 dB",
         id: "gate_j_grouped_triple_leaf",
         layers: GROUPED_TRIPLE_LEAF_STACK,
+        method: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD,
         name: "Gate J grouped triple-leaf field surface",
-        rwPrime: "50 dB",
-        airborneContext: GROUPED_TRIPLE_LEAF_FIELD_CONTEXT
+        notePrefix: "Local-substitution field-context candidate",
+        rwPrime: "52 dB",
+        warning: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_WARNING
       }
     ] as const;
 
@@ -245,12 +275,10 @@ describe("airborne field-context surface parity", () => {
       const surface = getGateIAirborneFieldContextSurface(result);
       const [rwPrimeCard, dntCard] = buildCards(result);
 
-      expect(result.airborneCandidateResolution?.selectedCandidateId).toBe(
-        GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID
-      );
-      expect(result.airborneBasis?.method).toBe(GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD);
+      expect(result.airborneCandidateResolution?.selectedCandidateId).toBe(testCase.candidateId);
+      expect(result.airborneBasis?.method).toBe(testCase.method);
       expect(surface?.budgetLabel).toBe(`+/-${result.airborneBasis?.errorBudgetDb} dB`);
-      expect(result.warnings).toContain(GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING);
+      expect(result.warnings).toContain(testCase.warning);
       const budgetLabel = surface?.budgetLabel ?? "";
 
       expect(rwPrimeCard).toMatchObject({
@@ -265,18 +293,18 @@ describe("airborne field-context surface parity", () => {
       });
 
       for (const card of [rwPrimeCard, dntCard]) {
-        expect(card.detail).toContain(GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID);
-        expect(card.detail).toContain(GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD);
+        expect(card.detail).toContain(testCase.candidateId);
+        expect(card.detail).toContain(testCase.method);
         expect(card.detail).toContain(`${budgetLabel} uncalibrated field prediction budget`);
         expect(card.detail).toContain("not measured field evidence");
-        expect(card.detail).toContain(GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING);
+        expect(card.detail).toContain(testCase.warning);
         expect(card.postureDetail).toContain("not a lab Rw/STC relabel");
       }
 
       const summary = getScenarioCorridorSummary(result);
       expect(summary.airborneLabel).toBe("Airborne field-context prediction");
       expect(summary.airborneProvenanceLabel).toBe("Airborne field-context prediction");
-      expect(summary.airborneProvenanceDetail).toContain(GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD);
+      expect(summary.airborneProvenanceDetail).toContain(testCase.method);
 
       const corridorDossier = buildSimpleWorkbenchCorridorDossier(result, "wall");
       expect(corridorDossier.headline).toContain("Airborne field-context prediction");
@@ -304,21 +332,23 @@ describe("airborne field-context surface parity", () => {
       expect(airborneTraceGroup?.value).toBe("Airborne field-context prediction");
       expect(airborneTraceGroup?.notes).toEqual(
         expect.arrayContaining([
-          `Gate I field-context candidate ${GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID} is selected through ${GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD}.`,
+          `${testCase.notePrefix} ${testCase.candidateId} is selected through ${testCase.method}.`,
           `Field uncertainty remains ${budgetLabel}; this is not measured field evidence and is not a lab Rw/STC relabel.`,
-          GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING
+          testCase.warning
         ])
       );
 
       const report = buildReport(scenario);
       expect(report).toContain("- Airborne field route: Room-to-room field");
-      expect(report).toContain(`- Airborne field basis: Gate I airborne field/apparent context adapter (candidate ${GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID}; method ${GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD}).`);
+      expect(report).toContain(
+        `- Airborne field basis: ${testCase.basisLabel} (candidate ${testCase.candidateId}; method ${testCase.method}).`
+      );
       expect(report).toContain(`- Airborne field error budget: R'w/DnT,w use ${budgetLabel} uncalibrated field prediction budget; not measured field evidence yes.`);
-      expect(report).toContain(`- Airborne field warning: ${GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING}`);
+      expect(report).toContain(`- Airborne field warning: ${testCase.warning}`);
     }
   });
 
-  it("keeps saved replay and calculator API payloads on the same Gate I field basis", async () => {
+  it("keeps saved replay and calculator API payloads on the same field-context bases", async () => {
     const savedScenario = buildScenario({
       airborneContext: WALL_FIELD_CONTEXT,
       id: "gate_j_lined_massive_saved",
@@ -358,6 +388,51 @@ describe("airborne field-context surface parity", () => {
     );
     expect(body.result?.airborneBasis?.method).toBe(GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD);
     expect(body.result?.warnings).toContain(GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING);
+
+    const localSubstitutionSaved = buildScenario({
+      airborneContext: GROUPED_TRIPLE_LEAF_FIELD_CONTEXT,
+      id: "local_substitution_field_saved",
+      layers: GROUPED_TRIPLE_LEAF_STACK,
+      name: "Local substitution saved grouped triple-leaf field surface",
+      source: "saved"
+    });
+    const [localRwPrimeCard, localDntCard] = buildCards(localSubstitutionSaved.result);
+
+    expect(localSubstitutionSaved.source).toBe("saved");
+    expect(localRwPrimeCard.value).toBe("52 dB");
+    expect(localDntCard.value).toBe("53 dB");
+    expect(getGateIAirborneFieldContextSurface(localSubstitutionSaved.result)?.candidateId).toBe(
+      BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID
+    );
+    expect(localRwPrimeCard.detail).toContain("Local-substitution field-context harmonization");
+    expect(localRwPrimeCard.detail).toContain("not a lab Rw/STC relabel");
+
+    const localSubstitutionApi = await estimate(
+      jsonRequest("http://localhost/api/estimate/local_substitution_field_api", {
+        airborneContext: GROUPED_TRIPLE_LEAF_FIELD_CONTEXT,
+        calculator: "dynamic",
+        layers: GROUPED_TRIPLE_LEAF_STACK,
+        targetOutputs: WALL_FIELD_OUTPUTS
+      })
+    );
+    const localBody = (await localSubstitutionApi.json()) as {
+      ok?: boolean;
+      result?: AssemblyCalculation;
+    };
+
+    expect(localSubstitutionApi.status).toBe(200);
+    expect(localBody.ok).toBe(true);
+    expect(localBody.result?.metrics.estimatedRwPrimeDb).toBe(52);
+    expect(localBody.result?.metrics.estimatedDnTwDb).toBe(53);
+    expect(localBody.result?.airborneCandidateResolution?.selectedCandidateId).toBe(
+      BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID
+    );
+    expect(localBody.result?.airborneBasis?.method).toBe(
+      BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD
+    );
+    expect(localBody.result?.warnings).toContain(
+      BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_WARNING
+    );
   });
 
   it("keeps missing context, building prediction, lab outputs, and exact source precedence outside Gate I surface claims", () => {

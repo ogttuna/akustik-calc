@@ -72,6 +72,22 @@ import {
   PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AY_RUNTIME_METHOD,
   PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AY_SELECTED_CANDIDATE_ID
 } from "./gate-ay-advanced-wall-runtime-constants";
+import {
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_CALIBRATED_RUNTIME_METHOD,
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_CALIBRATED_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-broad-accuracy-wall-triple-leaf-calibrated";
+import {
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_RUNTIME_METHOD,
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_SELECTED_CANDIDATE_ID
+} from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-runtime-corridor";
+import {
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_RUNTIME_METHOD,
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_SELECTED_CANDIDATE_ID
+} from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-lab-spectrum-adapter";
+import {
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD,
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID
+} from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-field-context-harmonization";
 
 export type DynamicCalculatorCandidateResolverSourceAnchor = {
   applied: boolean;
@@ -523,7 +539,10 @@ function selectLane(input: {
     return "anchored_delta";
   }
 
-  if (input.runtimeSignal?.airborneBasis?.origin === "family_physics_prediction") {
+  if (
+    input.runtimeSignal?.airborneBasis?.origin === "calibrated_family_physics" ||
+    input.runtimeSignal?.airborneBasis?.origin === "family_physics_prediction"
+  ) {
     return "family_physics";
   }
 
@@ -575,6 +594,10 @@ function familyPhysicsCandidateId(runtimeBasis?: AirborneResultBasis): string {
     return GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID;
   }
 
+  if (runtimeBasis?.method === BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD) {
+    return BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID;
+  }
+
   if (runtimeBasis?.method === GATE_X_AAC_NONHOMOGENEOUS_MASONRY_RUNTIME_METHOD) {
     return GATE_X_AAC_NONHOMOGENEOUS_MASONRY_SELECTED_CANDIDATE_ID;
   }
@@ -583,7 +606,29 @@ function familyPhysicsCandidateId(runtimeBasis?: AirborneResultBasis): string {
     return GATE_Y_CLT_MASS_TIMBER_CTR_SPECTRUM_ADAPTER_SELECTED_CANDIDATE_ID;
   }
 
+  if (runtimeBasis?.method === BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_RUNTIME_METHOD) {
+    return BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_SELECTED_CANDIDATE_ID;
+  }
+
+  if (runtimeBasis?.method === BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_RUNTIME_METHOD) {
+    return BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_SELECTED_CANDIDATE_ID;
+  }
+
   return "candidate_grouped_rockwool_family_physics_prediction";
+}
+
+function calibratedCandidateId(runtimeBasis?: AirborneResultBasis): string {
+  if (runtimeBasis?.method === BROAD_ACCURACY_WALL_TRIPLE_LEAF_CALIBRATED_RUNTIME_METHOD) {
+    return BROAD_ACCURACY_WALL_TRIPLE_LEAF_CALIBRATED_SELECTED_CANDIDATE_ID;
+  }
+
+  return "candidate_calibrated_triple_leaf_family";
+}
+
+function runtimeModelCandidateId(runtimeBasis?: AirborneResultBasis): string {
+  return runtimeBasis?.origin === "calibrated_family_physics"
+    ? calibratedCandidateId(runtimeBasis)
+    : familyPhysicsCandidateId(runtimeBasis);
 }
 
 function candidateIdForLane(
@@ -598,7 +643,7 @@ function candidateIdForLane(
     case "exact_full_stack":
       return "candidate_blocked_rockwool_exact_source";
     case "family_physics":
-      return familyPhysicsCandidateId(runtimeBasis);
+      return runtimeModelCandidateId(runtimeBasis);
     case "needs_input":
       return "candidate_dynamic_needs_input";
     case "screening":
@@ -763,11 +808,13 @@ function buildSeeds(input: {
       outputIds: outputs
     },
     {
-      basis: calibratedBasis({
-        family: input.family,
-        missingSourceEvidence: ["calibration_holdout_curve_absent"]
-      }),
-      id: "candidate_calibrated_triple_leaf_family",
+      basis: input.runtimeBasis?.origin === "calibrated_family_physics"
+        ? input.runtimeBasis
+        : calibratedBasis({
+            family: input.family,
+            missingSourceEvidence: ["calibration_holdout_curve_absent"]
+          }),
+      id: calibratedCandidateId(input.runtimeBasis),
       metricIds: metric,
       origin: "calibrated_family_physics",
       outputIds: outputs
@@ -778,7 +825,9 @@ function buildSeeds(input: {
         family: input.family,
         runtimeBasis: input.runtimeBasis
       }),
-      id: familyPhysicsCandidateId(input.runtimeBasis),
+      id: familyPhysicsCandidateId(
+        input.runtimeBasis?.origin === "family_physics_prediction" ? input.runtimeBasis : undefined
+      ),
       metricIds: metric,
       origin: "family_physics_prediction",
       outputIds: outputs

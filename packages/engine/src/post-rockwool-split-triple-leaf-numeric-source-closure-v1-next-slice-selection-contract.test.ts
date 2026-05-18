@@ -302,11 +302,11 @@ describe("post Rockwool split triple-leaf numeric source closure Gate C next-sli
     expect(grouped.dynamicAirborneTrace).toMatchObject({
       confidenceClass: "medium",
       detectedFamily: "multileaf_multicavity",
-      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
+      strategy: "broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor"
     });
-    expect(grouped.metrics).toMatchObject({ estimatedRwDb: 50, estimatedStc: 55 });
-    expect(grouped.supportedTargetOutputs).toEqual([...WALL_LAB_OUTPUTS]);
-    expect(grouped.warnings.join("\n")).toContain("family physics prediction");
+    expect(grouped.metrics).toMatchObject({ estimatedRwDb: 53, estimatedStc: 64 });
+    expect(grouped.supportedTargetOutputs).toEqual(["Rw", "STC", "C", "Ctr"]);
+    expect(grouped.warnings.join("\n")).toContain("lab spectrum adapter is active");
     expect(grouped.warnings).not.toContain(ROCKWOOL_SPLIT_TRIPLE_LEAF_EXACT_OUTPUT_WITHHOLD_WARNING);
   });
 

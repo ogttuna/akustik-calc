@@ -305,8 +305,8 @@ describe("post route-family lane-drift common-stack watchlist Gate F next-slice 
     expect(splitGrouped).toMatchObject({
       confidence: "medium",
       family: "multileaf_multicavity",
-      rw: 50,
-      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
+      rw: 53,
+      strategy: "broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor"
     });
     expect(splitSwapped).toMatchObject({
       confidence: "medium",

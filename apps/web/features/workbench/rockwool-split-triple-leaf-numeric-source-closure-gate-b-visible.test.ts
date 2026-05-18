@@ -2,10 +2,7 @@ import type { AirborneContext, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import { getGuidedTopologyGap } from "./guided-topology-gap";
-import {
-  ROCKWOOL_GROUPED_TRIPLE_LEAF_SCREENING_ONLY_GUARD,
-  ROCKWOOL_SPLIT_TRIPLE_LEAF_OUTPUT_WITHHELD_GUARD
-} from "./rockwool-triple-leaf-screening-policy-copy";
+import { ROCKWOOL_SPLIT_TRIPLE_LEAF_OUTPUT_WITHHELD_GUARD } from "./rockwool-triple-leaf-screening-policy-copy";
 import { evaluateScenario } from "./scenario-analysis";
 import { buildOutputCard, type BaseOutputCardModel } from "./simple-workbench-output-model";
 import type { LayerDraft } from "./workbench-store";
@@ -219,14 +216,15 @@ describe("Rockwool split triple-leaf numeric source closure Gate B visible guard
     expect(grouped.result.dynamicAirborneTrace).toMatchObject({
       confidenceClass: "medium",
       detectedFamily: "multileaf_multicavity",
-      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
+      strategy: "broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor"
     });
     expect(card(grouped.cards, "Rw")).toMatchObject({
-      detail: ROCKWOOL_GROUPED_TRIPLE_LEAF_SCREENING_ONLY_GUARD,
       status: "live",
-      value: "50 dB"
+      value: "53 dB"
     });
-    expect(grouped.result.supportedTargetOutputs).toEqual([...WALL_LAB_OUTPUTS]);
-    expect(grouped.topologyGap).toMatchObject({ value: "Source validation blocked" });
+    expect(card(grouped.cards, "Rw").detail).toContain("Wall triple-leaf local substitution");
+    expect(card(grouped.cards, "Rw").detail).toContain("+/-8 dB");
+    expect(grouped.result.supportedTargetOutputs).toEqual(["Rw", "STC", "C", "Ctr"]);
+    expect(grouped.topologyGap).toMatchObject({ value: "Triple-leaf prediction" });
   });
 });

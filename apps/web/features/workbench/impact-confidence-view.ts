@@ -74,6 +74,14 @@ export function formatConfidenceProvenanceForImpact(input: {
     return "Steel suspended-ceiling formula corridor";
   }
 
+  if (input.basis === "predictor_lightweight_steel_open_web_supported_band_similarity_estimate") {
+    return "Open-web steel supported-band similarity";
+  }
+
+  if (input.basis === "broad_accuracy_floor_open_web_direct_fixed_lining_direct_source_interpolation_formula_corridor") {
+    return "Open-web steel direct-fixed lining interpolation";
+  }
+
   return formatConfidenceProvenance(input.provenance);
 }
 

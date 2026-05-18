@@ -547,12 +547,12 @@ describe("calculator source-gap revalidation v21 Gate A contract", () => {
     expect(grouped).toMatchObject({
       confidence: "medium",
       family: "multileaf_multicavity",
-      rw: 50,
-      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction",
+      rw: 53,
+      strategy: "broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor",
       supported: ["Rw"]
     });
-    expect(grouped.warnings).toContain("family physics prediction");
-    expect(grouped.warnings).toContain("Dynamic airborne confidence is medium");
+    expect(grouped.warnings).toContain("source-absent formula corridor");
+    expect(grouped.warnings).toContain("Local substitution runtime carries a +/-8 dB source-absent error budget");
 
     expect(flatSwap).toMatchObject({
       confidence: "medium",

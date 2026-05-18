@@ -137,8 +137,8 @@ describe("wall triple-leaf local source acquisition Gate G6", () => {
     });
 
     expect(evaluation.sourceAcquisitionPackReady).toBe(false);
-    expect(liveResult.metrics.estimatedRwDb).toBe(50);
-    expect(liveResult.dynamicAirborneTrace?.strategy).toBe("triple_leaf_two_cavity_frequency_solver_family_physics_prediction");
+    expect(liveResult.metrics.estimatedRwDb).toBe(53);
+    expect(liveResult.dynamicAirborneTrace?.strategy).toBe("broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor");
     expect(liveResult.dynamicAirborneTrace?.confidenceClass).toBe("medium");
   });
 

@@ -463,7 +463,7 @@ describe("field-output owner and design-grade policy Gate B visible guard", () =
     expect(snapshot.result.dynamicAirborneTrace).toMatchObject({
       confidenceClass: "medium",
       detectedFamily: "multileaf_multicavity",
-      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
+      strategy: "broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor"
     });
 
     for (const output of ["R'w", "DnT,w", "DnT,A"] as const satisfies readonly RequestedOutputId[]) {
@@ -481,8 +481,8 @@ describe("field-output owner and design-grade policy Gate B visible guard", () =
       expect(posture.detail, output).toContain("not measured field evidence");
     }
 
-    expect(getCard(snapshot.cards, "R'w")).toMatchObject({ value: "49 dB" });
-    expect(getCard(snapshot.cards, "DnT,w")).toMatchObject({ value: "50 dB" });
+    expect(getCard(snapshot.cards, "R'w")).toMatchObject({ value: "51 dB" });
+    expect(getCard(snapshot.cards, "DnT,w")).toMatchObject({ value: "53 dB" });
 
     const proposalText = buildProposalText({
       outputs: WALL_OUTPUTS,
@@ -490,8 +490,8 @@ describe("field-output owner and design-grade policy Gate B visible guard", () =
       snapshot
     });
 
-    expect(proposalText).toContain("R'w: Live now | Airborne field-context prediction | 49 dB");
-    expect(proposalText).toContain("DnT,w: Live now | Airborne field-context prediction | 50 dB");
+    expect(proposalText).toContain("R'w: Live now | Airborne field-context prediction | 51 dB");
+    expect(proposalText).toContain("DnT,w: Live now | Airborne field-context prediction | 53 dB");
     expect(proposalText).toContain(FIELD_OUTPUT_OWNER_POLICY_GUARD);
     expect(proposalText).toContain(FIELD_OUTPUT_DESIGN_GRADE_POSTURE_GUARD);
     expect(proposalText).toContain("do not replace accredited laboratory, site, or design-grade field measurements");
@@ -615,9 +615,9 @@ describe("field-output owner and design-grade policy Gate B visible guard", () =
     expect(snapshot.result.dynamicAirborneTrace).toMatchObject({
       confidenceClass: "medium",
       detectedFamily: "multileaf_multicavity",
-      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
+      strategy: "broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor"
     });
-    expect(snapshot.warnings.join("\n")).toContain("family physics prediction");
+    expect(snapshot.warnings.join("\n")).toContain("local substitution field-context harmonization is active");
     expect(evidence.citations).toContainEqual(
       expect.objectContaining({
         detail: expect.stringContaining("No exact wall source row is active"),
@@ -628,14 +628,14 @@ describe("field-output owner and design-grade policy Gate B visible guard", () =
     expect({
       artifact: "rockwool_field_output_source_gated_prediction_policy_carry_forward",
       designGradeFieldOwnerActiveNow: false,
-      groupedPredictionAnswer: "Rw 50",
-      groupedStrategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction",
+      groupedPredictionAnswer: "R'w 51 / DnT,w 53",
+      groupedStrategy: "broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor",
       sourceLaneDisposition: "paused_waiting_rights_safe_source_packet"
     }).toEqual({
       artifact: "rockwool_field_output_source_gated_prediction_policy_carry_forward",
       designGradeFieldOwnerActiveNow: false,
-      groupedPredictionAnswer: "Rw 50",
-      groupedStrategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction",
+      groupedPredictionAnswer: "R'w 51 / DnT,w 53",
+      groupedStrategy: "broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor",
       sourceLaneDisposition: "paused_waiting_rights_safe_source_packet"
     });
   });

@@ -472,8 +472,8 @@ describe("USG Acoustical Assemblies source-pack extraction Gate B contract", () 
       "steel_partition_a1_not_existing_lsf_anchor",
       "steel_partition_a8_resilient_channel_not_live_lsf_or_triple_leaf"
     ]);
-    expect(splitRockwool.metrics.estimatedRwDb).toBe(50);
-    expect(splitRockwool.dynamicAirborneTrace?.strategy).toBe("triple_leaf_two_cavity_frequency_solver_family_physics_prediction");
+    expect(splitRockwool.metrics.estimatedRwDb).toBe(53);
+    expect(splitRockwool.dynamicAirborneTrace?.strategy).toBe("broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor");
     expect(splitRockwool.dynamicAirborneTrace?.confidenceClass).toBe("medium");
   });
 

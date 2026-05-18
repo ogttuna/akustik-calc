@@ -87,6 +87,10 @@ export function formatImpactMetricBasisLabel(basis: ImpactMetricBasisLabel): str
       return "Mass-timber CLT DeltaLw formula corridor";
     case "predictor_timber_joist_delta_lw_formula_corridor_estimate":
       return "Timber joist DeltaLw formula corridor";
+    case "predictor_lightweight_steel_open_web_supported_band_similarity_estimate":
+      return "Open-web steel supported-band similarity";
+    case "broad_accuracy_floor_open_web_direct_fixed_lining_direct_source_interpolation_formula_corridor":
+      return "Open-web steel direct-fixed lining interpolation";
     case "predictor_catalog_exact_match_official":
       return "Official product-system row";
     case "predictor_catalog_lower_bound_official":
@@ -146,6 +150,10 @@ export function describeImpactMetricBasis(metric: ImpactMetricKey, basis: Impact
       return `${formatImpactMetricLabel(metric)} came from the source-absent mass-timber CLT DeltaLw formula corridor.`;
     case "predictor_timber_joist_delta_lw_formula_corridor_estimate":
       return `${formatImpactMetricLabel(metric)} came from the source-absent timber joist DeltaLw formula corridor.`;
+    case "predictor_lightweight_steel_open_web_supported_band_similarity_estimate":
+      return `${formatImpactMetricLabel(metric)} came from the UBIQ FL-24/FL-26 open-web steel supported-band similarity lane.`;
+    case "broad_accuracy_floor_open_web_direct_fixed_lining_direct_source_interpolation_formula_corridor":
+      return `${formatImpactMetricLabel(metric)} came from the UBIQ FL-23/FL-25/FL-27 open-web steel direct-fixed lining interpolation lane.`;
     default:
       if (basis.startsWith("predictor_")) {
         return `${formatImpactMetricLabel(metric)} came from the active predictor or curated family-estimate lane.`;

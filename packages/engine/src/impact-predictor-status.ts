@@ -35,7 +35,9 @@ const FAMILY_ESTIMATE_BASES = new Set<ImpactCalculation["basis"]>([
   "predictor_floor_system_family_archetype_estimate",
   "predictor_floor_system_family_general_estimate",
   "predictor_floor_system_low_confidence_estimate",
-  "predictor_lightweight_steel_fl28_interpolation_estimate"
+  "predictor_lightweight_steel_fl28_interpolation_estimate",
+  "predictor_lightweight_steel_open_web_supported_band_similarity_estimate",
+  "broad_accuracy_floor_open_web_direct_fixed_lining_direct_source_interpolation_formula_corridor"
 ]);
 
 const FORMULA_BASIS_LABELS = new Set<string>([

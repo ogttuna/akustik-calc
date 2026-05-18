@@ -3,6 +3,8 @@ import type { AssemblyCalculation } from "@dynecho/shared";
 import { getGateARAirborneBuildingPredictionSurface } from "./airborne-building-prediction-surface";
 import { getGateIAirborneFieldContextSurface } from "./airborne-field-context-surface";
 import { getGateSOpeningLeakCompositeSurface } from "./opening-leak-composite-surface";
+import { getWallTripleLeafCalibratedSolverSurface } from "./wall-triple-leaf-calibrated-solver-surface";
+import { getWallTripleLeafLocalSubstitutionSurface } from "./wall-triple-leaf-local-substitution-surface";
 import { getCompanyInternalOpeningLeakFieldBuildingSurface } from "./opening-leak-field-building-surface";
 import type {
   SimpleWorkbenchProposalCoverageItem,
@@ -114,9 +116,15 @@ function buildAirborneTraceGroup(result: AssemblyCalculation | null): SimpleWork
     getCompanyInternalOpeningLeakFieldBuildingSurface(result);
   const gateARBuildingSurface = getGateARAirborneBuildingPredictionSurface(result);
   const gateISurface = getGateIAirborneFieldContextSurface(result);
+  const wallTripleLeafCalibratedSurface = getWallTripleLeafCalibratedSolverSurface(result);
+  const wallTripleLeafLocalSubstitutionSurface = getWallTripleLeafLocalSubstitutionSurface(result);
   const gateSOpeningLeakSurface = getGateSOpeningLeakCompositeSurface(result);
   const notes = companyInternalOpeningLeakFieldBuildingSurface
     ? [...noteSelection.notes.slice(0, 2), ...companyInternalOpeningLeakFieldBuildingSurface.notes]
+    : wallTripleLeafCalibratedSurface
+    ? [...noteSelection.notes.slice(0, 2), ...wallTripleLeafCalibratedSurface.notes]
+    : wallTripleLeafLocalSubstitutionSurface
+    ? [...noteSelection.notes.slice(0, 2), ...wallTripleLeafLocalSubstitutionSurface.notes]
     : gateSOpeningLeakSurface
     ? [...noteSelection.notes.slice(0, 2), ...gateSOpeningLeakSurface.notes]
     : gateARBuildingSurface
@@ -131,6 +139,10 @@ function buildAirborneTraceGroup(result: AssemblyCalculation | null): SimpleWork
       `${formatDb(trace.solverSpreadRwDb)} solver spread across ${trace.candidateMethods.length} candidate method${trace.candidateMethods.length === 1 ? "" : "s"}.` +
       (companyInternalOpeningLeakFieldBuildingSurface
         ? ` ${companyInternalOpeningLeakFieldBuildingSurface.detail}`
+        : wallTripleLeafCalibratedSurface
+        ? ` ${wallTripleLeafCalibratedSurface.detail}`
+        : wallTripleLeafLocalSubstitutionSurface
+        ? ` ${wallTripleLeafLocalSubstitutionSurface.detail}`
         : gateSOpeningLeakSurface
         ? ` ${gateSOpeningLeakSurface.detail}`
         : gateARBuildingSurface
@@ -143,6 +155,8 @@ function buildAirborneTraceGroup(result: AssemblyCalculation | null): SimpleWork
     tone: mapAirborneTone(trace.confidenceClass),
     value:
       companyInternalOpeningLeakFieldBuildingSurface?.label ??
+      wallTripleLeafCalibratedSurface?.label ??
+      wallTripleLeafLocalSubstitutionSurface?.label ??
       gateSOpeningLeakSurface?.label ??
       gateARBuildingSurface?.label ??
       gateISurface?.label ??

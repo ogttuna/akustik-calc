@@ -2,6 +2,8 @@ import type { AssemblyCalculation, RequestedOutputId } from "@dynecho/shared";
 
 const GROUPED_ROCKWOOL_TRIPLE_LEAF_PREDICTION_STRATEGY =
   "triple_leaf_two_cavity_frequency_solver_family_physics_prediction";
+const GROUPED_ROCKWOOL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_STRATEGY =
+  "broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor";
 
 // Historical Gate B surfaces still import the screening-named constants; the
 // grouped lane is now a labelled physics prediction, while flat-list split
@@ -9,7 +11,7 @@ const GROUPED_ROCKWOOL_TRIPLE_LEAF_PREDICTION_STRATEGY =
 export const ROCKWOOL_TRIPLE_LEAF_SCREENING_ONLY_LABEL = "Rockwool source-gated prediction";
 
 export const ROCKWOOL_GROUPED_TRIPLE_LEAF_SCREENING_ONLY_GUARD =
-  "Rockwool grouped triple-leaf is a source-gated family physics prediction: not measured exact, not source-validated, and not design-grade; use the 5 dB uncalibrated error budget until source calibration and holdout rows land.";
+  "Rockwool grouped triple-leaf lab Rw/STC/C/Ctr is now a source-absent local-substitution lab spectrum adapter: not measured exact, not source-validated, and not design-grade; keep the +/-8 dB not-measured budget visible while field and building adapters remain separately owned.";
 
 export const ROCKWOOL_FLAT_LIST_SCREENING_ONLY_GUARD =
   "Rockwool flat-list adjacent swaps keep the current double-leaf numeric lane until grouped topology proves a physical triple-leaf penalty.";
@@ -85,13 +87,19 @@ export function getRockwoolTripleLeafScreeningPolicyCopy(
     /^Grouped triple-leaf topology is present/u.test(warning)
   );
   const groupedSourceGatedPrediction = warnings.some((warning: string) =>
-    /^Grouped Rockwool triple-leaf family physics prediction/u.test(warning)
+    /^Grouped Rockwool triple-leaf family physics prediction/u.test(warning) ||
+    /lab spectrum adapter is active/i.test(warning) ||
+    /source-absent formula corridor/i.test(warning)
   );
   const flatListFailClosed = warnings.some((warning: string) =>
     /Flat-list adjacent-swap sensitivity guard/i.test(warning)
   );
 
-  if (trace.strategy === GROUPED_ROCKWOOL_TRIPLE_LEAF_PREDICTION_STRATEGY && groupedSourceGatedPrediction) {
+  if (
+    (trace.strategy === GROUPED_ROCKWOOL_TRIPLE_LEAF_PREDICTION_STRATEGY ||
+      trace.strategy === GROUPED_ROCKWOOL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_STRATEGY) &&
+    groupedSourceGatedPrediction
+  ) {
     return {
       fieldDetail: ROCKWOOL_TRIPLE_LEAF_FIELD_CONTINUATION_GUARD,
       label: ROCKWOOL_TRIPLE_LEAF_SCREENING_ONLY_LABEL,

@@ -292,8 +292,8 @@ describe("post National Gypsum Fire & Sound Selector source-pack extraction Gate
       targetOutputs: ["Rw"]
     });
 
-    expect(splitRockwool.metrics.estimatedRwDb).toBe(50);
-    expect(splitRockwool.dynamicAirborneTrace?.strategy).toBe("triple_leaf_two_cavity_frequency_solver_family_physics_prediction");
+    expect(splitRockwool.metrics.estimatedRwDb).toBe(53);
+    expect(splitRockwool.dynamicAirborneTrace?.strategy).toBe("broad_accuracy_wall_multileaf_triple_leaf_local_substitution_runtime_corridor");
     expect(splitRockwool.dynamicAirborneTrace?.confidenceClass).toBe("medium");
     expect(
       NEXT_SLICE_SELECTION_MATRIX.find((candidate) => candidate.id === "wall_triple_leaf_uris_2006_runtime_reopen")

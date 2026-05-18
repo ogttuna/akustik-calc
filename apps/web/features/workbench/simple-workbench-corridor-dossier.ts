@@ -5,6 +5,8 @@ import { getGateIAirborneFieldContextSurface } from "./airborne-field-context-su
 import { getFieldAirborneProvenanceSummary } from "./field-airborne-provenance";
 import { getGateAYAdvancedWallSurface } from "./advanced-wall-source-absent-surface";
 import { getGateSOpeningLeakCompositeSurface } from "./opening-leak-composite-surface";
+import { getWallTripleLeafCalibratedSolverSurface } from "./wall-triple-leaf-calibrated-solver-surface";
+import { getWallTripleLeafLocalSubstitutionSurface } from "./wall-triple-leaf-local-substitution-surface";
 import { getCompanyInternalOpeningLeakFieldBuildingSurface } from "./opening-leak-field-building-surface";
 import type { StudyMode } from "./preset-definitions";
 import { getScenarioCorridorSummary, getValidationPostureTone } from "./scenario-corridor-summary";
@@ -23,6 +25,12 @@ import {
   formatTimberCltDeltaLwFormulaErrorBudgetTerms,
   isTimberCltDeltaLwFormulaCorridorImpact
 } from "./timber-clt-delta-lw-corridor-view";
+import { isOpenWebSupportedBandSimilarityResult } from "./open-web-supported-band-similarity-surface";
+import {
+  formatOpenWebDirectFixedLiningErrorBudgetSummary,
+  formatOpenWebDirectFixedLiningErrorBudgetTerms,
+  isOpenWebDirectFixedLiningResult
+} from "./open-web-direct-fixed-lining-surface";
 import {
   describeAirborneValidationPosture,
   describeImpactValidationPosture,
@@ -125,11 +133,15 @@ function mapSolverSpreadTone(value: number): SimpleWorkbenchCorridorDossierCard[
 
 function buildImpactFormulaErrorBudgetCards(result: AssemblyCalculation): SimpleWorkbenchCorridorDossierCard[] {
   const isHeavyConcreteCombinedFormula = isHeavyConcreteCombinedFormulaCorridorImpact(result);
+  const isOpenWebDirectFixedLining = isOpenWebDirectFixedLiningResult(result);
+  const isOpenWebSupportedBandSimilarity = isOpenWebSupportedBandSimilarityResult(result);
   const isTimberCltFormula = isTimberCltDeltaLwFormulaCorridorImpact(result);
 
   return (result.impact?.errorBudgets ?? []).map((budget: ImpactErrorBudget) => ({
     detail: isHeavyConcreteCombinedFormula
       ? `${formatHeavyConcreteCombinedFormulaErrorBudgetSummary(budget)}. Terms: ${formatHeavyConcreteCombinedFormulaErrorBudgetTerms(budget)}.`
+      : isOpenWebDirectFixedLining
+      ? `${formatOpenWebDirectFixedLiningErrorBudgetSummary(budget)}. Terms: ${formatOpenWebDirectFixedLiningErrorBudgetTerms(budget)}.`
       : isTimberCltFormula
       ? `${formatTimberCltDeltaLwFormulaErrorBudgetSummary(budget)}. Terms: ${formatTimberCltDeltaLwFormulaErrorBudgetTerms(budget)}.`
       : `${formatSteelFloorFormulaErrorBudgetSummary(budget)}. Terms: ${formatSteelFloorFormulaErrorBudgetTerms(budget)}.`,
@@ -213,19 +225,25 @@ function buildFloorCorridorDossier(result: AssemblyCalculation): SimpleWorkbench
   const toleranceLabel = formatImpactValidationTolerance(activeFamily?.maxToleranceDb ?? IMPACT_VALIDATION_CORPUS_SUMMARY.toleranceBandMaxDb);
   const errorBudgetCards = buildImpactFormulaErrorBudgetCards(result);
   const isHeavyConcreteCombinedFormula = isHeavyConcreteCombinedFormulaCorridorImpact(result);
+  const isOpenWebDirectFixedLining = isOpenWebDirectFixedLiningResult(result);
+  const isOpenWebSupportedBandSimilarity = isOpenWebSupportedBandSimilarityResult(result);
   const errorBudgetHeadline =
     errorBudgetCards.length === 0
       ? ""
       : isHeavyConcreteCombinedFormula
         ? " Source-absent heavy-concrete combined upper/lower budgets are structured and marked not measured evidence."
+      : isOpenWebDirectFixedLining
+        ? " Source-absent direct-fixed budgets are structured and marked not measured evidence."
       : isSteelFloorFormulaCorridorImpact(result)
         ? " Source-absent steel formula budgets are structured and marked not measured evidence."
         : isTimberCltDeltaLwFormulaCorridorImpact(result)
           ? " Source-absent timber/CLT DeltaLw formula budget is structured and marked not measured evidence."
           : " Source-absent formula budgets are structured and marked not measured evidence.";
   const primaryRouteLabel =
-    activeMode?.label ??
-    (impactPosture.posture !== "inactive" ? corridorSummary.impactLabel : corridorSummary.airborneLabel);
+    isOpenWebDirectFixedLining || isOpenWebSupportedBandSimilarity
+      ? impactPosture.label
+      : activeMode?.label ??
+        (impactPosture.posture !== "inactive" ? corridorSummary.impactLabel : corridorSummary.airborneLabel);
 
   return {
     cards: [
@@ -238,9 +256,11 @@ function buildFloorCorridorDossier(result: AssemblyCalculation): SimpleWorkbench
         value: activeFamily?.label ?? "No tracked family"
       },
       {
-        detail: activeMode
-          ? `${formatValidationModePostureLabel(activeMode.posture)} with ${formatCount(activeMode.caseCount, "tracked case")}. ${activeMode.note}`
-          : `${impactPosture.detail} No tracked benchmark mode is attached beyond the current visible route label.`,
+        detail: isOpenWebSupportedBandSimilarity
+          ? impactPosture.detail
+          : activeMode
+            ? `${formatValidationModePostureLabel(activeMode.posture)} with ${formatCount(activeMode.caseCount, "tracked case")}. ${activeMode.note}`
+            : `${impactPosture.detail} No tracked benchmark mode is attached beyond the current visible route label.`,
         label: "Benchmark mode",
         tone: activeMode ? mapCoverageTone(activeMode.posture) : getValidationPostureTone(impactPosture.posture),
         value: primaryRouteLabel
@@ -278,12 +298,16 @@ function buildWallCorridorDossier(result: AssemblyCalculation): SimpleWorkbenchC
   const gateARBuildingSurface = getGateARAirborneBuildingPredictionSurface(result);
   const gateISurface = getGateIAirborneFieldContextSurface(result);
   const gateAYAdvancedWallSurface = getGateAYAdvancedWallSurface(result);
+  const wallTripleLeafCalibratedSurface = getWallTripleLeafCalibratedSolverSurface(result);
+  const wallTripleLeafLocalSubstitutionSurface = getWallTripleLeafLocalSubstitutionSurface(result);
   const gateSOpeningLeakSurface = getGateSOpeningLeakCompositeSurface(result);
   const companyInternalOpeningLeakFieldBuildingSurface =
     getCompanyInternalOpeningLeakFieldBuildingSurface(result);
   const trace = result.dynamicAirborneTrace ?? null;
   const laneValue =
     companyInternalOpeningLeakFieldBuildingSurface?.label ??
+    wallTripleLeafCalibratedSurface?.label ??
+    wallTripleLeafLocalSubstitutionSurface?.label ??
     gateAYAdvancedWallSurface?.label ??
     gateSOpeningLeakSurface?.label ??
     gateARBuildingSurface?.label ??
@@ -297,7 +321,7 @@ function buildWallCorridorDossier(result: AssemblyCalculation): SimpleWorkbenchC
     cards: [
       {
         detail: trace
-          ? `${trace.detectedFamilyLabel} is the current airborne family read across ${formatCount(trace.candidateMethods.length, "candidate method")} with ${formatPercent(trace.confidenceScore)} confidence.${companyInternalOpeningLeakFieldBuildingSurface ? ` ${companyInternalOpeningLeakFieldBuildingSurface.detail}` : gateAYAdvancedWallSurface ? ` ${gateAYAdvancedWallSurface.detail}` : gateSOpeningLeakSurface ? ` ${gateSOpeningLeakSurface.detail}` : gateARBuildingSurface ? ` ${gateARBuildingSurface.detail}` : gateISurface ? ` ${gateISurface.detail}` : ""}`
+          ? `${trace.detectedFamilyLabel} is the current airborne family read across ${formatCount(trace.candidateMethods.length, "candidate method")} with ${formatPercent(trace.confidenceScore)} confidence.${companyInternalOpeningLeakFieldBuildingSurface ? ` ${companyInternalOpeningLeakFieldBuildingSurface.detail}` : wallTripleLeafCalibratedSurface ? ` ${wallTripleLeafCalibratedSurface.detail}` : wallTripleLeafLocalSubstitutionSurface ? ` ${wallTripleLeafLocalSubstitutionSurface.detail}` : gateAYAdvancedWallSurface ? ` ${gateAYAdvancedWallSurface.detail}` : gateSOpeningLeakSurface ? ` ${gateSOpeningLeakSurface.detail}` : gateARBuildingSurface ? ` ${gateARBuildingSurface.detail}` : gateISurface ? ` ${gateISurface.detail}` : ""}`
           : `${laneValue} remains the local airborne curve anchor. No family-ranked dynamic selector is attached yet.`,
         label: "Airborne lane",
         tone: trace ? mapAirborneConfidenceTone(trace.confidenceClass) : "neutral",
@@ -324,6 +348,10 @@ function buildWallCorridorDossier(result: AssemblyCalculation): SimpleWorkbenchC
           ? `${provenance.label}. ${provenance.detail}${companyInternalOpeningLeakFieldBuildingSurface ? ` ${companyInternalOpeningLeakFieldBuildingSurface.candidateId} keeps ${companyInternalOpeningLeakFieldBuildingSurface.budgetLabel} visible.` : gateARBuildingSurface ? ` ${gateARBuildingSurface.candidateId} keeps ${gateARBuildingSurface.budgetLabel} visible.` : gateISurface ? ` ${gateISurface.candidateId} keeps ${gateISurface.budgetLabel} visible.` : ""}`
           : gateSOpeningLeakSurface
             ? `${gateSOpeningLeakSurface.label} is lab-side only. ${gateSOpeningLeakSurface.detail}`
+            : wallTripleLeafCalibratedSurface
+              ? `${wallTripleLeafCalibratedSurface.label} is lab-side only. ${wallTripleLeafCalibratedSurface.detail}`
+            : wallTripleLeafLocalSubstitutionSurface
+              ? `${wallTripleLeafLocalSubstitutionSurface.label} is lab-side only. ${wallTripleLeafLocalSubstitutionSurface.detail}`
             : gateAYAdvancedWallSurface
               ? `${gateAYAdvancedWallSurface.label} is lab-side only. ${gateAYAdvancedWallSurface.detail}`
             : companyInternalOpeningLeakFieldBuildingSurface
@@ -343,7 +371,7 @@ function buildWallCorridorDossier(result: AssemblyCalculation): SimpleWorkbenchC
           ? `${trace.selectedLabel} is screening ${trace.detectedFamilyLabel} at ${formatPercent(trace.confidenceScore)} confidence with ${trace.solverSpreadRwDb} dB selector spread. `
           : `${laneValue} remains the active local curve anchor without a family-ranked airborne selector. `
       }` +
-      `${provenance ? `${provenance.modeLabel} stays explicit on the field-side airborne chain${companyInternalOpeningLeakFieldBuildingSurface ? ` with ${companyInternalOpeningLeakFieldBuildingSurface.label}.` : gateARBuildingSurface ? ` with ${gateARBuildingSurface.label}.` : gateISurface ? ` with ${gateISurface.label}.` : "."}` : gateAYAdvancedWallSurface ? `${gateAYAdvancedWallSurface.label} stays explicit as a lab-side advanced-wall route.` : gateSOpeningLeakSurface ? `${gateSOpeningLeakSurface.label} stays explicit as a lab-side opening/leak route.` : companyInternalOpeningLeakFieldBuildingSurface ? `${companyInternalOpeningLeakFieldBuildingSurface.label} stays explicit as an opening/leak field/building route.` : gateARBuildingSurface ? `${gateARBuildingSurface.label} stays explicit as a building-prediction route.` : "No field-side airborne continuation is active, so this route should still be read as lab-side only."}`
+      `${provenance ? `${provenance.modeLabel} stays explicit on the field-side airborne chain${companyInternalOpeningLeakFieldBuildingSurface ? ` with ${companyInternalOpeningLeakFieldBuildingSurface.label}.` : gateARBuildingSurface ? ` with ${gateARBuildingSurface.label}.` : gateISurface ? ` with ${gateISurface.label}.` : "."}` : wallTripleLeafCalibratedSurface ? `${wallTripleLeafCalibratedSurface.label} stays explicit as a lab-side calibrated wall route.` : wallTripleLeafLocalSubstitutionSurface ? `${wallTripleLeafLocalSubstitutionSurface.label} stays explicit as a lab-side local-substitution wall route.` : gateAYAdvancedWallSurface ? `${gateAYAdvancedWallSurface.label} stays explicit as a lab-side advanced-wall route.` : gateSOpeningLeakSurface ? `${gateSOpeningLeakSurface.label} stays explicit as a lab-side opening/leak route.` : companyInternalOpeningLeakFieldBuildingSurface ? `${companyInternalOpeningLeakFieldBuildingSurface.label} stays explicit as an opening/leak field/building route.` : gateARBuildingSurface ? `${gateARBuildingSurface.label} stays explicit as a building-prediction route.` : "No field-side airborne continuation is active, so this route should still be read as lab-side only."}`
   };
 }
 
