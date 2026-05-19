@@ -45,6 +45,19 @@ field/building, and ASTM/IIC aliases stay blocked. Selected next action:
 `broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_plan`;
 selected next file:
 `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-coverage-refresh-contract.test.ts`.
+The coverage refresh has now landed as
+`broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_plan`
+with selection status
+`broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_landed_selected_exact_only_hybrid_fragmentation_policy`.
+It pulls open-box timber package-transfer into the broad coverage matrix
+without runtime movement, preserves exact source precedence, keeps
+`Ln,w 50.8`, `CI,50-2500 3.3`, and `Rw 66`, and leaves raw bare,
+exact-only hybrid, mixed staged, field/building, and ASTM/IIC as
+explicit boundaries. Selected next action: exact-only hybrid
+fragmentation policy,
+`broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_plan`;
+selected next file:
+`packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy-contract.test.ts`.
 The active checkpoint is
 [CHECKPOINT_2026-05-15_COMPANY_INTERNAL_CHECKPOINT_REVIEW_AND_VALIDATION.md](./CHECKPOINT_2026-05-15_COMPANY_INTERNAL_CHECKPOINT_REVIEW_AND_VALIDATION.md).
 The current remaining-gap analysis and execution plan is

@@ -54,6 +54,26 @@ Supported internal-use routes include:
 - exact/source rows where they truly match the same family, topology,
   metric, and basis.
 
+Post-Matrix V6 broad-accuracy addendum:
+
+- `broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_plan`
+  has landed with selection status
+  `broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_landed_selected_exact_only_hybrid_fragmentation_policy`.
+  This no-runtime coverage refresh adds the open-box timber
+  package-transfer lane to the broad operating notes while preserving
+  exact source precedence and without changing the controlled Matrix V6
+  row count above.
+- Complete source-absent open-box timber package-transfer cases remain
+  internally usable only for element-lab package-transfer outputs with
+  visible budgets. Representative dry gypsum-fiber values stay
+  `Ln,w 50.8`, `CI,50-2500 3.3`, and `Rw 66`.
+- Raw bare, exact-only hybrid, mixed staged, field/building, and ASTM/IIC
+  cases remain outside this supported package-transfer envelope. The
+  selected next action is the exact-only hybrid fragmentation policy,
+  `broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_plan`,
+  in
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy-contract.test.ts`.
+
 ## Input-Prompt Scope
 
 The calculator must ask for more information instead of guessing when a

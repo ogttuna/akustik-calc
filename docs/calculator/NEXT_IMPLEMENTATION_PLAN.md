@@ -1016,6 +1016,28 @@ budgets stay `+/-7 dB` for `Ln,w`, `+/-2.5 dB` for `CI,50-2500`, and
 exact-only hybrid, mixed staged, field/building, and ASTM/IIC aliases
 remain blocked.
 
+Broad-accuracy floor open-box timber similarity coverage-refresh status:
+
+- landed gate:
+  `broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_plan`
+- selection status:
+  `broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_landed_selected_exact_only_hybrid_fragmentation_policy`
+- landed contract:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-coverage-refresh-contract.test.ts`
+- selected next action:
+  `broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_plan`
+- selected next file:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy-contract.test.ts`
+- selected next label:
+  floor open-box timber exact-only hybrid fragmentation policy
+
+This coverage refresh is no-runtime work. It moves open-box timber
+package-transfer into the broad coverage matrix, preserves exact source
+precedence, keeps `Ln,w 50.8`, `CI,50-2500 3.3`, and `Rw 66` pinned,
+and records raw bare, exact-only hybrid, mixed staged, field/building,
+and ASTM/IIC as explicit boundaries rather than supported package-transfer
+coverage.
+
 Checkpoint handoff:
 
 - [CHECKPOINT_2026-05-18_OPEN_BOX_TIMBER_TRANSFER_OWNER.md](./CHECKPOINT_2026-05-18_OPEN_BOX_TIMBER_TRANSFER_OWNER.md)
@@ -1031,15 +1053,14 @@ Checkpoint handoff:
 
 Next implementation order:
 
-1. Refresh the broad coverage matrix and company-internal operating
-   envelope notes after surface parity.
+1. Land the exact-only hybrid fragmentation policy selected by the
+   open-box timber coverage refresh.
    - Add
-     `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-coverage-refresh-contract.test.ts`.
-   - Move the open-box timber package-transfer lane into the broad
-     coverage matrix as supported source-absent element-lab coverage
-     while keeping exact TUAS rows first.
-   - Keep raw bare open-box, exact-only hybrid, mixed staged,
-     field/building, and ASTM/IIC rows as explicit boundaries.
+     `packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy-contract.test.ts`.
+   - Decide which exact-only hybrid and mixed staged TUAS packets can
+     become source-equivalent calibration/transfer evidence.
+   - Keep raw bare, field/building, and ASTM/IIC boundaries blocked
+     unless this policy explicitly owns them.
 
 Gate BV / Gate BW ASTM `IIC` / `AIIC` work is now parked as no-runtime
 boundary history. The active implementation path is back to ISO

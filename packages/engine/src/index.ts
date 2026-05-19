@@ -86,6 +86,7 @@ export * from "./broad-accuracy-floor-open-box-timber-similarity-transfer-owner"
 export * from "./broad-accuracy-floor-open-box-timber-similarity-formula-corridor";
 export * from "./broad-accuracy-floor-open-box-timber-similarity-runtime-corridor";
 export * from "./broad-accuracy-floor-open-box-timber-similarity-surface-parity";
+export * from "./broad-accuracy-floor-open-box-timber-similarity-coverage-refresh";
 export * from "./heavy-concrete-combined-impact-formula-corridor";
 export * from "./heavy-concrete-combined-impact-input-surface";
 export * from "./impact-confidence";

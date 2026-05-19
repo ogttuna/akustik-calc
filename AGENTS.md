@@ -108,6 +108,21 @@ ASTM/IIC aliases stay blocked. The selected next action is
 `broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_plan`
 in
 `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-coverage-refresh-contract.test.ts`.
+The open-box timber similarity coverage refresh has now landed as
+`broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_plan`
+with selection status
+`broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_landed_selected_exact_only_hybrid_fragmentation_policy`.
+This no-runtime coverage refresh pulls the open-box timber
+package-transfer lane into the broad coverage matrix, preserves exact
+source precedence, and keeps the dry gypsum-fiber source-absent pin at
+`Ln,w 50.8`, `CI,50-2500 3.3`, and `Rw 66` with the same visible
+not-measured budgets. Raw bare, exact-only hybrid, mixed staged,
+field/building, and ASTM/IIC cases stay explicit boundaries instead of
+silently reusing the package-transfer basis. The selected next action is
+the exact-only hybrid fragmentation policy:
+`broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_plan`
+in
+`packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy-contract.test.ts`.
 
 Before implementing calculator behavior, re-read the current local engine
 shape in `packages/engine/src/airborne-calculator.ts` and

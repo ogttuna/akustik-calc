@@ -769,6 +769,19 @@ Current validation status:
   Selected next file:
   `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-coverage-refresh-contract.test.ts`.
   Selected next label: floor open-box timber similarity coverage refresh.
+- The open-box timber similarity coverage refresh has now landed as
+  `broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_plan`
+  with selection status
+  `broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_landed_selected_exact_only_hybrid_fragmentation_policy`.
+  This no-runtime coverage refresh moves the package-transfer lane into
+  the broad matrix, preserves exact source precedence, keeps `Ln,w 50.8`,
+  `CI,50-2500 3.3`, and `Rw 66`, and leaves raw bare, exact-only
+  hybrid, mixed staged, field/building, and ASTM/IIC as explicit
+  boundaries. Selected next action: exact-only hybrid fragmentation
+  policy,
+  `broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_plan`.
+  Selected next file:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy-contract.test.ts`.
 - Pre-sprint revalidation:
   [CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md](./CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md).
   The full current gate was green before the formula sprint; the
