@@ -927,6 +927,36 @@ formula corridor: define the package-family transfer terms and budgets
 without borrowing open-web steel, reopening raw bare carriers, or
 aliasing lab rows to field/building or ASTM/IIC metrics.
 
+Broad-accuracy floor open-box timber similarity formula-corridor status:
+
+- landed gate:
+  `broad_accuracy_floor_open_box_timber_similarity_formula_corridor_plan`
+- selection status:
+  `broad_accuracy_floor_open_box_timber_similarity_formula_corridor_landed_no_runtime_selected_runtime_corridor`
+- landed implementation:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-formula-corridor.ts`
+- landed contract:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-formula-corridor-contract.test.ts`
+- selected next action:
+  `broad_accuracy_floor_open_box_timber_similarity_runtime_corridor_plan`
+- selected next file:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-runtime-corridor-contract.test.ts`
+- selected next label:
+  floor open-box timber similarity runtime corridor
+
+This formula gate is no-runtime work. It defines TUAS same-family
+open-box timber package-transfer design payloads and not-measured budgets
+without moving public runtime values. Clean predictor-owned package
+probes are now explicit: the dry gypsum-fiber packet is `Ln,w 50.8` /
+`Rw 66`, the thin laminate/EPS packet is `Ln,w 53.5` / `Rw 55.5`, and
+the reinforced-ceiling laminate packet is `Ln,w 53.5` / `Rw 63.5`.
+Budget targets are `+/-7 dB` for `Ln,w`, `+/-2 dB` for `CI`,
+`+/-7.5 dB` for `Ln,w+CI`, `+/-6 dB` for `Rw`, and `+/-6.5 dB` for
+`Rw+C`. Exact TUAS rows still win; raw bare open-box carriers,
+open-web steel borrowing, partial laminate/EPS finishes, disjoint
+duplicate roles, exact-only hybrid and mixed staged packets,
+field/building outputs, and ASTM/IIC/AIIC aliases stay blocked.
+
 Checkpoint handoff:
 
 - [CHECKPOINT_2026-05-18_OPEN_BOX_TIMBER_TRANSFER_OWNER.md](./CHECKPOINT_2026-05-18_OPEN_BOX_TIMBER_TRANSFER_OWNER.md)
@@ -935,46 +965,27 @@ Checkpoint handoff:
   marks the current tree as a good stopping point when generated/local
   artefacts are excluded from commit.
 - [CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md](./CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md)
-- This checkpoint re-runs the full current gate, confirms no
-  implementation fix is needed before the sprint, records the second
-  2026-05-19 implementation/research planning pass, and selects the
-  open-box timber no-runtime formula corridor as the first implementation
-  step.
+- This checkpoint re-ran the full current gate before implementation,
+  recorded the second 2026-05-19 implementation/research planning pass,
+  and has now been executed through the no-runtime formula-corridor gate.
 
-Pre-sprint implementation order:
+Next implementation order:
 
-1. Add
-   `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-formula-corridor-contract.test.ts`
-   and the matching formula-corridor module.
-2. Keep the formula corridor no-runtime: define package-family transfer
-   terms, candidate package probes, metric-specific budgets,
-   exact-precedence behavior, and negative boundaries before moving
-   values.
-   - Formula terms must cover same-family TUAS open-box anchor selection,
-     370 mm open-box support ownership, upper package family deltas,
-     lower ceiling family deltas, laminate/EPS finish-pair deltas,
-     fragmented exact-equivalent package guards, ISO lab `Ln,w` / `CI` /
-     `Ln,w+CI` semantics, `Rw` / `Rw+C` semantics, and source-absent
-     residual budget decomposition.
-   - Candidate probes should start with `dry_gypsum_fiber_upper`,
-     `thin_laminate_eps_no_upper`, and `reinforced_ceiling_laminate`;
-     keep `eps_screed_or_hybrid_upper` split because most hybrid rows are
-     exact-only, and keep `mixed_staged_upper` blocked because it has no
-     predictor-owned rows.
-   - The initial design-budget targets to justify or widen are
-     `+/-7 dB` for `Ln,w`, `+/-2 dB` for `CI`, `+/-7.5 dB` for
-     `Ln,w+CI`, `+/-6 dB` for `Rw`, and `+/-6.5 dB` for `Rw+C`.
-     These are formula-planning budgets, not runtime evidence.
-   - Negative boundaries must cover open-web steel borrowing, raw bare
-     open-box reopening, partial laminate/EPS finish, disjoint duplicate
-     roles, exact-only hybrid transfer, field/building outputs, and
-     ASTM/IIC/AIIC aliases.
-3. Add exports, current-gate inclusion, and docs alignment for the
-   formula-corridor gate before running validation.
-4. Promote a narrow same-family runtime corridor only after the formula
-   contract is executable.
-5. Add workbench/card/API/report surface parity after runtime.
-6. Refresh the broad coverage matrix and company-internal operating
+1. Promote a narrow same-family runtime corridor from the formula
+   contract.
+   - Add
+     `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-runtime-corridor-contract.test.ts`
+     and the matching runtime module.
+   - Runtime can only promote complete source-absent open-box timber
+     inputs that match the clean predictor-owned packets and own the
+     laminate/EPS finish, 370 mm support family, upper package, lower
+     ceiling family, and lab metric basis.
+   - Exact TUAS rows must stay ahead of runtime formula rows.
+   - `eps_screed_or_hybrid_upper` and `mixed_staged_upper` must stay
+     blocked until fragmented-equivalence and staged-package residual
+     owners land.
+2. Add workbench/card/API/report surface parity after runtime.
+3. Refresh the broad coverage matrix and company-internal operating
    envelope notes after surface parity.
 
 Gate BV / Gate BW ASTM `IIC` / `AIIC` work is now parked as no-runtime

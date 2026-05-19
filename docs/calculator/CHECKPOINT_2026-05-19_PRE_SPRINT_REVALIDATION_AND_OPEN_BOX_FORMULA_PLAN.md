@@ -256,3 +256,47 @@ The source tree is otherwise clean except generated/local artifacts:
 - `apps/web/tsconfig.tsbuildinfo`
 
 These remain outside calculator source-of-truth.
+
+## Implementation Closeout - Formula Corridor Landed
+
+The first sprint step has now landed:
+
+- landed gate:
+  `broad_accuracy_floor_open_box_timber_similarity_formula_corridor_plan`
+- selection status:
+  `broad_accuracy_floor_open_box_timber_similarity_formula_corridor_landed_no_runtime_selected_runtime_corridor`
+- landed implementation:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-formula-corridor.ts`
+- landed contract:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-formula-corridor-contract.test.ts`
+- selected next action:
+  `broad_accuracy_floor_open_box_timber_similarity_runtime_corridor_plan`
+- selected next file:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-runtime-corridor-contract.test.ts`
+
+This is no-runtime calculator infrastructure. It defines executable TUAS
+same-family open-box timber package-transfer payloads and budgets, but
+does not promote public runtime formula values. The clean design probes
+are now explicit: dry gypsum-fiber is `Ln,w 50.8` / `Rw 66`, thin
+laminate/EPS is `Ln,w 53.5` / `Rw 55.5`, and reinforced ceiling
+laminate is `Ln,w 53.5` / `Rw 63.5`. The source-absent design budgets
+are `+/-7 dB` for `Ln,w`, `+/-2 dB` for `CI`, `+/-7.5 dB` for
+`Ln,w+CI`, `+/-6 dB` for `Rw`, and `+/-6.5 dB` for `Rw+C`.
+
+Exact TUAS rows still win through `calculateAssembly`. Raw bare
+open-box, open-web steel borrowing, partial laminate/EPS finish,
+disjoint duplicate roles, exact-only hybrid transfer, mixed staged
+packets, field/building outputs, and ASTM/IIC/AIIC aliases remain
+blocked until later owners land.
+
+Validation after implementation:
+
+- targeted contract:
+  `pnpm --filter @dynecho/engine exec vitest run src/broad-accuracy-floor-open-box-timber-similarity-formula-corridor-contract.test.ts`
+  passed 1 file / 6 tests.
+- full current gate:
+  `pnpm calculator:gate:current` passed with engine 460 files / 2641
+  tests, web 87 files / 363 passed + 18 skipped, repo build 5/5, and
+  whitespace guard clean. Known non-fatal warnings remain the optional
+  `sharp/@img` warnings from `@turbodocx/html-to-docx` plus Zustand
+  test-storage warnings.

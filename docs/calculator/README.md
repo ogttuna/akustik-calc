@@ -430,6 +430,21 @@ blocked. Selected next action:
 selected next file:
 `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-formula-corridor-contract.test.ts`.
 Selected next label: floor open-box timber similarity formula corridor.
+The open-box timber similarity formula corridor has now landed as
+`broad_accuracy_floor_open_box_timber_similarity_formula_corridor_plan`
+with selection status
+`broad_accuracy_floor_open_box_timber_similarity_formula_corridor_landed_no_runtime_selected_runtime_corridor`.
+This no-runtime gate defines TUAS same-family package-transfer design
+payloads without moving public runtime values: the dry gypsum-fiber
+packet probe is `Ln,w 50.8` / `Rw 66`, with `+/-7 dB` impact and
+`+/-6 dB` airborne design budgets. Exact TUAS rows still win; raw bare
+open-box carriers, exact-only hybrid and mixed staged packets,
+field/building outputs, and ASTM/IIC aliases stay blocked. Selected
+next action:
+`broad_accuracy_floor_open_box_timber_similarity_runtime_corridor_plan`;
+selected next file:
+`packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-runtime-corridor-contract.test.ts`.
+Selected next label: floor open-box timber similarity runtime corridor.
 Current checkpoint:
 [CHECKPOINT_2026-05-18_OPEN_BOX_TIMBER_TRANSFER_OWNER.md](./CHECKPOINT_2026-05-18_OPEN_BOX_TIMBER_TRANSFER_OWNER.md).
 End-of-day checkpoint:

@@ -651,13 +651,29 @@ Current validation status:
   Selected next file:
   `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-formula-corridor-contract.test.ts`.
   Selected next label: floor open-box timber similarity formula corridor.
+- The open-box timber similarity formula corridor has now landed as
+  `broad_accuracy_floor_open_box_timber_similarity_formula_corridor_plan`
+  with selection status
+  `broad_accuracy_floor_open_box_timber_similarity_formula_corridor_landed_no_runtime_selected_runtime_corridor`.
+  This no-runtime gate defines same-family TUAS open-box package-transfer
+  design payloads and budgets without moving runtime values. The clean
+  dry gypsum-fiber packet probe is `Ln,w 50.8` / `Rw 66`, with
+  `+/-7 dB` impact and `+/-6 dB` airborne design budgets. Exact TUAS
+  rows still win; raw bare open-box carriers, exact-only hybrid and mixed
+  staged packets, field/building outputs, and ASTM/IIC aliases remain
+  blocked. Selected next action:
+  `broad_accuracy_floor_open_box_timber_similarity_runtime_corridor_plan`.
+  Selected next file:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-runtime-corridor-contract.test.ts`.
+  Selected next label: floor open-box timber similarity runtime corridor.
 
 Pre-sprint revalidation checkpoint:
 [CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md](./CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md).
-It confirms the full current gate is green before the sprint and keeps
-the first implementation step on the no-runtime open-box timber formula
-corridor. Runtime, surface parity, and coverage-matrix refresh are later
-steps and must not be collapsed into the formula gate.
+It confirmed the full current gate was green before the sprint and
+provided the implementation detail for the no-runtime open-box timber
+formula corridor that has now landed. Runtime, surface parity, and
+coverage-matrix refresh remain later steps and must not be collapsed into
+the formula gate.
 
 Second planning pass:
 

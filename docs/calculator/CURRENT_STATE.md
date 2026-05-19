@@ -1260,6 +1260,23 @@ selected next file:
 `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-formula-corridor-contract.test.ts`.
 Selected next label: floor open-box timber similarity formula corridor.
 
+The open-box timber similarity formula corridor has now landed as
+`broad_accuracy_floor_open_box_timber_similarity_formula_corridor_plan`
+with selection status
+`broad_accuracy_floor_open_box_timber_similarity_formula_corridor_landed_no_runtime_selected_runtime_corridor`.
+It is no-runtime formula-corridor work. It defines same-family TUAS
+open-box timber package-transfer design payloads and budgets without
+moving runtime values: the dry gypsum-fiber packet probe is
+`Ln,w 50.8` / `Rw 66`, with `+/-7 dB` impact and `+/-6 dB` airborne
+design budgets. Exact TUAS rows still win, raw bare open-box carriers
+stay blocked, exact-only hybrid and mixed staged packets cannot seed
+runtime yet, and field/building plus ASTM/IIC aliases remain outside the
+corridor. Selected next action:
+`broad_accuracy_floor_open_box_timber_similarity_runtime_corridor_plan`;
+selected next file:
+`packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-runtime-corridor-contract.test.ts`.
+Selected next label: floor open-box timber similarity runtime corridor.
+
 Known audit corrections before calling the company-internal matrix final:
 
 - complete after matrix v2: Gate AT complete building runtime is imported

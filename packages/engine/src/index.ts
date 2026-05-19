@@ -83,6 +83,7 @@ export * from "./broad-accuracy-floor-open-web-direct-fixed-lining-runtime-corri
 export * from "./broad-accuracy-floor-open-web-direct-fixed-lining-surface-parity";
 export * from "./broad-accuracy-floor-open-web-direct-fixed-lining-coverage-refresh";
 export * from "./broad-accuracy-floor-open-box-timber-similarity-transfer-owner";
+export * from "./broad-accuracy-floor-open-box-timber-similarity-formula-corridor";
 export * from "./heavy-concrete-combined-impact-formula-corridor";
 export * from "./heavy-concrete-combined-impact-input-surface";
 export * from "./impact-confidence";

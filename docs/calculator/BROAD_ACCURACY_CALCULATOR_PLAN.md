@@ -720,8 +720,22 @@ Current validation status:
   Selected next file:
   `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-formula-corridor-contract.test.ts`.
   Selected next label: floor open-box timber similarity formula corridor.
+- The open-box timber similarity formula corridor has now landed as
+  `broad_accuracy_floor_open_box_timber_similarity_formula_corridor_plan`
+  with selection status
+  `broad_accuracy_floor_open_box_timber_similarity_formula_corridor_landed_no_runtime_selected_runtime_corridor`.
+  It is no-runtime formula-corridor work: TUAS same-family open-box
+  package probes now expose design payloads such as `Ln,w 50.8` /
+  `Rw 66` for dry gypsum-fiber, with `+/-7 dB` impact and `+/-6 dB`
+  airborne design budgets. Exact rows, raw bare open-box carriers,
+  exact-only hybrid and mixed staged packets, field/building outputs, and
+  ASTM/IIC aliases remain blocked. Selected next action:
+  `broad_accuracy_floor_open_box_timber_similarity_runtime_corridor_plan`.
+  Selected next file:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-runtime-corridor-contract.test.ts`.
+  Selected next label: floor open-box timber similarity runtime corridor.
 - Pre-sprint revalidation:
   [CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md](./CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md).
-  The full current gate is green; the first sprint task is the
-  no-runtime formula corridor, then narrow runtime, surface parity, and
-  coverage-matrix refresh.
+  The full current gate was green before the formula sprint; the
+  no-runtime formula corridor has now landed, leaving narrow runtime,
+  surface parity, and coverage-matrix refresh next.

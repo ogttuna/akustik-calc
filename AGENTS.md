@@ -66,6 +66,17 @@ corridor, followed by narrow runtime, surface parity, and matrix refresh.
 That checkpoint now includes the second 2026-05-19 planning pass:
 open-box formula terms, package probes, initial design-budget targets,
 negative boundaries, and the exact files to edit are spelled out there.
+The no-runtime open-box formula corridor has now landed as
+`broad_accuracy_floor_open_box_timber_similarity_formula_corridor_plan`
+with selection status
+`broad_accuracy_floor_open_box_timber_similarity_formula_corridor_landed_no_runtime_selected_runtime_corridor`.
+It defines same-family TUAS package design payloads such as
+`Ln,w 50.8` / `Rw 66` for the dry gypsum-fiber packet with `+/-7 dB`
+impact and `+/-6 dB` airborne design budgets, keeps raw bare, exact-only
+hybrid, field/building, and ASTM/IIC boundaries blocked, and selects
+`broad_accuracy_floor_open_box_timber_similarity_runtime_corridor_plan`
+next in
+`packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-runtime-corridor-contract.test.ts`.
 
 Before implementing calculator behavior, re-read the current local engine
 shape in `packages/engine/src/airborne-calculator.ts` and
@@ -7165,6 +7176,24 @@ plan.
    Selected next file:
    `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-formula-corridor-contract.test.ts`.
    Selected next label: floor open-box timber similarity formula
+   corridor.
+ - Broad Accuracy Floor Open-Box Timber Similarity Formula Corridor has
+   now landed:
+   `broad_accuracy_floor_open_box_timber_similarity_formula_corridor_plan`.
+   This is no-runtime formula-corridor work. It defines TUAS same-family
+   open-box timber package-transfer terms and source-absent design
+   budgets without moving runtime values: the dry gypsum-fiber probe is
+   `Ln,w 50.8` / `Rw 66`, with `+/-7 dB` impact and `+/-6 dB` airborne
+   design budgets. Exact TUAS rows still win, raw bare open-box carriers
+   stay blocked, exact-only hybrid and mixed staged packets cannot seed
+   runtime yet, and field/building plus ASTM/IIC aliases remain outside
+   the corridor. Selection status:
+   `broad_accuracy_floor_open_box_timber_similarity_formula_corridor_landed_no_runtime_selected_runtime_corridor`.
+   Selected next action:
+   `broad_accuracy_floor_open_box_timber_similarity_runtime_corridor_plan`.
+   Selected next file:
+   `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-runtime-corridor-contract.test.ts`.
+   Selected next label: floor open-box timber similarity runtime
    corridor.
 
 ## Validation
