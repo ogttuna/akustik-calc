@@ -933,6 +933,25 @@ Checkpoint handoff:
   transfer-owner gate, records the remaining formula-corridor gaps, and
   marks the current tree as a good stopping point when generated/local
   artefacts are excluded from commit.
+- [CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md](./CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md)
+- This checkpoint re-runs the full current gate, confirms no
+  implementation fix is needed before the sprint, and selects the
+  open-box timber no-runtime formula corridor as the first implementation
+  step.
+
+Pre-sprint implementation order:
+
+1. Add
+   `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-formula-corridor-contract.test.ts`
+   and the matching formula-corridor module.
+2. Keep the formula corridor no-runtime: define package-family transfer
+   terms, metric-specific budgets, exact-precedence behavior, and
+   negative boundaries before moving values.
+3. Promote a narrow same-family runtime corridor only after the formula
+   contract is executable.
+4. Add workbench/card/API/report surface parity after runtime.
+5. Refresh the broad coverage matrix and company-internal operating
+   envelope notes after surface parity.
 
 Gate BV / Gate BW ASTM `IIC` / `AIIC` work is now parked as no-runtime
 boundary history. The active implementation path is back to ISO

@@ -652,6 +652,13 @@ Current validation status:
   `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-formula-corridor-contract.test.ts`.
   Selected next label: floor open-box timber similarity formula corridor.
 
+Pre-sprint revalidation checkpoint:
+[CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md](./CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md).
+It confirms the full current gate is green before the sprint and keeps
+the first implementation step on the no-runtime open-box timber formula
+corridor. Runtime, surface parity, and coverage-matrix refresh are later
+steps and must not be collapsed into the formula gate.
+
 Current low-confidence/screening gap scan:
 
 - `packages/shared/src/domain/airborne-basis.ts` still contains

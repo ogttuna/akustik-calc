@@ -416,6 +416,11 @@ Current calculator handoff:
   Use this first when resuming after commit `c248db8`; it maps the
   landed broad-accuracy slice to implementation/docs and lists the
   open-box timber formula/runtime/surface-parity items that did not land.
+- Pre-sprint revalidation:
+  [calculator/CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md](./calculator/CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md).
+  Use this before implementing the next sprint; it records the fresh
+  full current-gate pass and the ordered open-box timber formula,
+  runtime, surface-parity, and matrix-refresh sequence.
 - Active mainline has been realigned after the no-runtime ASTM scaffold:
   [calculator/CHECKPOINT_2026-05-14_COMPANY_INTERNAL_MAINLINE_REALIGNMENT_HANDOFF.md](./calculator/CHECKPOINT_2026-05-14_COMPANY_INTERNAL_MAINLINE_REALIGNMENT_HANDOFF.md).
 - Active tactical plan:

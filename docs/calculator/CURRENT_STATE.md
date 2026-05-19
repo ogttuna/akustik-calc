@@ -18,6 +18,11 @@ The latest end-of-day checkpoint is
 [CHECKPOINT_2026-05-18_END_OF_DAY_BROAD_ACCURACY.md](./CHECKPOINT_2026-05-18_END_OF_DAY_BROAD_ACCURACY.md);
 it maps commit `c248db8` back to docs and explicitly lists the
 open-box timber formula/runtime/surface-parity work that has not landed.
+The latest sprint-entry revalidation is
+[CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md](./CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md);
+`pnpm calculator:gate:current` passed with engine 459 files / 2635
+tests, web 87 files / 363 passed + 18 skipped, repo build 5 / 5, and
+no implementation fix required before the open-box timber formula sprint.
 That active slice treats historical `low_confidence`,
 `screening_fallback`, and screening-only lanes as calculation debt to
 rank and convert into exact/source, similarity, calibrated solver,

@@ -430,6 +430,11 @@ End-of-day checkpoint:
 Use it first when resuming after commit `c248db8`; it maps the landed
 broad-accuracy slice to implementation/docs and lists the open-box timber
 formula/runtime/surface-parity work that did not land.
+Pre-sprint revalidation:
+[CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md](./CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md).
+Use it before implementing the next sprint; it records the fresh full
+current-gate pass and the ordered open-box timber formula, runtime,
+surface-parity, and matrix-refresh sequence.
 The opening/leak A-weighted formula-corridor handoff is
 [CHECKPOINT_2026-05-15_COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FORMULA_CORRIDOR_HANDOFF.md](./CHECKPOINT_2026-05-15_COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FORMULA_CORRIDOR_HANDOFF.md).
 `company_internal_opening_leak_a_weighted_spectrum_adapter_formula_corridor_plan`

@@ -58,6 +58,11 @@ to docs and explicitly leaves the open-box timber formula corridor,
 runtime promotion, surface parity, residual movement, raw open-box
 reopening, field/building aliases, and ASTM/IIC aliases as not yet
 landed work.
+Latest sprint-entry checkpoint: read
+`docs/calculator/CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md`
+before implementing the next sprint. The full current gate is green; the
+first implementation step is the no-runtime open-box timber formula
+corridor, followed by narrow runtime, surface parity, and matrix refresh.
 
 Before implementing calculator behavior, re-read the current local engine
 shape in `packages/engine/src/airborne-calculator.ts` and
