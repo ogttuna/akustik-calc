@@ -31,6 +31,20 @@ Current calculator handoff:
   the current gate is green and details the open-box timber no-runtime
   formula-corridor terms, candidate package probes, source-absent budget
   targets, negative boundaries, and exact files to edit.
+  The sequence has now landed through
+  `broad_accuracy_floor_open_box_timber_similarity_surface_parity_plan`
+  with selection status
+  `broad_accuracy_floor_open_box_timber_similarity_surface_parity_landed_selected_coverage_refresh`.
+  Cards, method dossier, server snapshot replay, calculator API,
+  impact-only API, and Markdown report expose the same open-box timber
+  package-transfer basis while preserving `Ln,w 50.8`,
+  `CI,50-2500 3.3`, `Rw 66`, `+/-7 dB`, `+/-2.5 dB`, and `+/-6 dB`.
+  Exact TUAS rows still win; raw bare open-box, exact-only hybrid, mixed
+  staged, field/building, and ASTM/IIC aliases stay blocked. Selected
+  next action:
+  `broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_plan`;
+  selected next file:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-coverage-refresh-contract.test.ts`.
 - Broad-accuracy refocus:
   [calculator/BROAD_ACCURACY_CALCULATOR_PLAN.md](./calculator/BROAD_ACCURACY_CALCULATOR_PLAN.md).
   Use this as the current product-direction guardrail. The 71-row

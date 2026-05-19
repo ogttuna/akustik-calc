@@ -92,6 +92,22 @@ mixed staged, field/building, and ASTM/IIC aliases stay blocked. The
 selected next action is
 `broad_accuracy_floor_open_box_timber_similarity_surface_parity_plan` in
 `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-surface-parity-contract.test.ts`.
+The open-box timber similarity surface parity gate has now landed as
+`broad_accuracy_floor_open_box_timber_similarity_surface_parity_plan`
+with selection status
+`broad_accuracy_floor_open_box_timber_similarity_surface_parity_landed_selected_coverage_refresh`.
+Cards, route posture, impact lane labels, confidence provenance,
+metric-basis copy, method dossier, local saved replay, server snapshot
+replay, calculator API, impact-only API, and Markdown report now expose
+the same source-absent open-box timber package-transfer lab basis without
+moving runtime values. The visible dry gypsum-fiber pin remains
+`Ln,w 50.8`, `CI,50-2500 3.3`, and `Rw 66` with not-measured budgets
+`+/-7 dB`, `+/-2.5 dB`, and `+/-6 dB`. Exact TUAS rows still win, and
+raw bare open-box, exact-only hybrid, mixed staged, field/building, and
+ASTM/IIC aliases stay blocked. The selected next action is
+`broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_plan`
+in
+`packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-coverage-refresh-contract.test.ts`.
 
 Before implementing calculator behavior, re-read the current local engine
 shape in `packages/engine/src/airborne-calculator.ts` and

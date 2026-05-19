@@ -52,6 +52,10 @@ import {
   getOpenWebDirectFixedLiningOutputDetail,
   isOpenWebDirectFixedLiningResult
 } from "./open-web-direct-fixed-lining-surface";
+import {
+  getOpenBoxTimberSimilarityOutputDetail,
+  isOpenBoxTimberSimilarityResult
+} from "./open-box-timber-similarity-surface";
 import { getCompanyInternalOpeningLeakFieldBuildingOutputDetail } from "./opening-leak-field-building-surface";
 import {
   getRockwoolSplitTripleLeafWithheldOutputDetail,
@@ -378,6 +382,7 @@ export function buildOutputCard(input: {
   const isTimberCltDeltaLwFormulaCorridor = isTimberCltDeltaLwFormulaCorridorImpact(result);
   const isOpenWebSupportedBandSimilarity = isOpenWebSupportedBandSimilarityResult(result);
   const isOpenWebDirectFixedLining = isOpenWebDirectFixedLiningResult(result);
+  const isOpenBoxTimberSimilarity = isOpenBoxTimberSimilarityResult(result);
   const rockwoolTripleLeafScreeningPolicy = getRockwoolTripleLeafScreeningPolicyCopy(result);
 
   if (isExplicitlyUnsupportedOutput(result, output)) {
@@ -430,6 +435,9 @@ export function buildOutputCard(input: {
           detail: isOpenWebDirectFixedLining
             ? getOpenWebDirectFixedLiningOutputDetail("Rw", result) ??
               "Open-web steel direct-fixed lining companion Rw from the active floor lane."
+            : isOpenBoxTimberSimilarity
+            ? getOpenBoxTimberSimilarityOutputDetail("Rw", result) ??
+              "Open-box timber package-transfer companion Rw from the active floor lane."
             : isOpenWebSupportedBandSimilarity
             ? getOpenWebSupportedBandSimilarityOutputDetail("Rw", result) ??
               "Open-web steel supported-band similarity companion Rw from the active floor lane."
@@ -514,6 +522,7 @@ export function buildOutputCard(input: {
         if (typeof floorC === "number") {
           return {
             detail:
+              getOpenBoxTimberSimilarityOutputDetail("C", result) ??
               "Companion mid-frequency adaptation carried on the active floor lane. This can differ from the live airborne estimate shown elsewhere.",
             label: "C",
             output,
@@ -676,6 +685,9 @@ export function buildOutputCard(input: {
               : isOpenWebDirectFixedLining
                 ? getOpenWebDirectFixedLiningOutputDetail("Ln,w", result) ??
                   "Lab-side Ln,w from the open-web direct-fixed lining interpolation lane."
+              : isOpenBoxTimberSimilarity
+                ? getOpenBoxTimberSimilarityOutputDetail("Ln,w", result) ??
+                  "Lab-side Ln,w from the open-box timber package-transfer lane."
               : "Lab-side weighted normalized impact sound level.",
           label: "Ln,w",
           output,
@@ -724,6 +736,7 @@ export function buildOutputCard(input: {
       if (typeof result?.impact?.CI === "number") {
         return {
           detail:
+            getOpenBoxTimberSimilarityOutputDetail("CI", result) ??
             getOpenWebDirectFixedLiningOutputDetail("CI", result) ??
             getOpenWebSupportedBandSimilarityOutputDetail("CI", result) ??
             "Low-frequency impact companion term.",
@@ -737,7 +750,9 @@ export function buildOutputCard(input: {
     case "CI,50-2500":
       if (typeof result?.impact?.CI50_2500 === "number") {
         return {
-          detail: "Extended low-frequency impact companion term.",
+          detail:
+            getOpenBoxTimberSimilarityOutputDetail("CI,50-2500", result) ??
+            "Extended low-frequency impact companion term.",
           label: "CI,50-2500",
           output,
           status: "live",
@@ -749,6 +764,7 @@ export function buildOutputCard(input: {
       if (typeof result?.impact?.LnWPlusCI === "number") {
         return {
           detail:
+            getOpenBoxTimberSimilarityOutputDetail("Ln,w+CI", result) ??
             getOpenWebDirectFixedLiningOutputDetail("Ln,w+CI", result) ??
             getOpenWebSupportedBandSimilarityOutputDetail("Ln,w+CI", result) ??
             "Combined weighted impact result with CI carry-over.",

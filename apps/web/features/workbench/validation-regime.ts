@@ -25,6 +25,7 @@ import { HEAVY_CONCRETE_COMBINED_FORMULA_BASIS } from "./heavy-concrete-combined
 import { STEEL_FLOOR_FORMULA_BASIS } from "./steel-floor-formula-corridor-view";
 import { isOpenWebSupportedBandSimilarityResult } from "./open-web-supported-band-similarity-surface";
 import { isOpenWebDirectFixedLiningResult } from "./open-web-direct-fixed-lining-surface";
+import { isOpenBoxTimberSimilarityResult } from "./open-box-timber-similarity-surface";
 
 export type ValidationPosture = {
   detail: string;
@@ -204,6 +205,15 @@ export function describeImpactValidationPosture(result: AssemblyCalculation | nu
       return {
         detail:
           "The active floor lane is the open-web steel direct-fixed lining interpolation corridor, pinned to the UBIQ FL-23/FL-25/FL-27 direct-fixed source grid. Keep exact-source precedence, fit percentage, source-absent budgets, and non-lab boundaries visible.",
+        label: trace.selectedLabel,
+        posture: "estimate"
+      };
+    }
+
+    if (isOpenBoxTimberSimilarityResult(result)) {
+      return {
+        detail:
+          "The active floor lane is the open-box timber package-transfer corridor, pinned to same-family TUAS measured open-box timber packets. Keep exact-source precedence, fit percentage, source-absent budgets, and non-lab boundaries visible.",
         label: trace.selectedLabel,
         posture: "estimate"
       };
@@ -451,7 +461,8 @@ export function getActiveValidationMode(result: AssemblyCalculation | null) {
     impactBasis === "predictor_mass_timber_clt_dataholz_dry_estimate" ||
     impactBasis === "predictor_lightweight_steel_fl28_interpolation_estimate" ||
     impactBasis === "predictor_lightweight_steel_open_web_supported_band_similarity_estimate" ||
-    isOpenWebDirectFixedLiningResult(result)
+    isOpenWebDirectFixedLiningResult(result) ||
+    isOpenBoxTimberSimilarityResult(result)
   ) {
     return getImpactValidationModeRegimeById("family_specific_estimate");
   }

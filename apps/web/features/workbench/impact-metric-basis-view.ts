@@ -91,6 +91,8 @@ export function formatImpactMetricBasisLabel(basis: ImpactMetricBasisLabel): str
       return "Open-web steel supported-band similarity";
     case "broad_accuracy_floor_open_web_direct_fixed_lining_direct_source_interpolation_formula_corridor":
       return "Open-web steel direct-fixed lining interpolation";
+    case "broad_accuracy_floor_open_box_timber_similarity_package_transfer_formula_corridor":
+      return "Open-box timber package-transfer corridor";
     case "predictor_catalog_exact_match_official":
       return "Official product-system row";
     case "predictor_catalog_lower_bound_official":
@@ -154,6 +156,8 @@ export function describeImpactMetricBasis(metric: ImpactMetricKey, basis: Impact
       return `${formatImpactMetricLabel(metric)} came from the UBIQ FL-24/FL-26 open-web steel supported-band similarity lane.`;
     case "broad_accuracy_floor_open_web_direct_fixed_lining_direct_source_interpolation_formula_corridor":
       return `${formatImpactMetricLabel(metric)} came from the UBIQ FL-23/FL-25/FL-27 open-web steel direct-fixed lining interpolation lane.`;
+    case "broad_accuracy_floor_open_box_timber_similarity_package_transfer_formula_corridor":
+      return `${formatImpactMetricLabel(metric)} came from the TUAS measured open-box timber package-transfer lane.`;
     default:
       if (basis.startsWith("predictor_")) {
         return `${formatImpactMetricLabel(metric)} came from the active predictor or curated family-estimate lane.`;

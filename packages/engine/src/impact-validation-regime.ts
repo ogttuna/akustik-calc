@@ -267,7 +267,7 @@ export const IMPACT_VALIDATION_FAMILY_MATRIX: readonly ImpactValidationFamilyReg
     fieldCaseCount: 2,
     fieldCoverage: "live",
     floorCaseCount: 3,
-    floorCoverage: "exact",
+    floorCoverage: "estimate",
     id: "open_box_timber",
     label: "open box timber",
     maxToleranceDb: 0,
@@ -275,7 +275,7 @@ export const IMPACT_VALIDATION_FAMILY_MATRIX: readonly ImpactValidationFamilyReg
       { caseCount: 2, id: "family_archetype_estimate" },
       { caseCount: 2, id: "field_standardized_volume_estimate" }
     ],
-    note: "Open-measured TUAS rows now anchor both the weaker and stronger dry-floor open-box lanes on the floor side, plus both standardized field continuation chains."
+    note: "Open-measured TUAS rows still win on exact matches and now also anchor the source-absent package-transfer corridor for clean open-box timber packets. Raw bare carriers, exact-only hybrids, field/building aliases, and ASTM/IIC outputs stay outside the lab corridor."
   }),
   createImpactValidationFamilyRegime({
     fieldCaseCount: 3,

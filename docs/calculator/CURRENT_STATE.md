@@ -27,6 +27,22 @@ That checkpoint now also contains the second 2026-05-19 planning pass:
 the no-runtime formula terms, candidate package probes, initial
 source-absent design-budget targets, negative boundaries, and exact files
 for the open-box formula corridor are spelled out before implementation.
+The open-box timber formula, runtime, and surface parity gates have now
+landed through
+`broad_accuracy_floor_open_box_timber_similarity_surface_parity_plan`
+with selection status
+`broad_accuracy_floor_open_box_timber_similarity_surface_parity_landed_selected_coverage_refresh`.
+The source-absent package-transfer lane keeps the dry gypsum-fiber pin at
+`Ln,w 50.8`, `CI,50-2500 3.3`, and `Rw 66`, exposes not-measured
+budgets of `+/-7 dB`, `+/-2.5 dB`, and `+/-6 dB`, and shows the same
+open-box timber package-transfer basis across cards, method dossier,
+server snapshot replay, calculator API, impact-only API, and Markdown
+report. Exact TUAS rows still win; raw bare open-box, exact-only hybrid,
+mixed staged, field/building, and ASTM/IIC aliases remain blocked. The
+selected next action is
+`broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_plan`
+in
+`packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-coverage-refresh-contract.test.ts`.
 That active slice treats historical `low_confidence`,
 `screening_fallback`, and screening-only lanes as calculation debt to
 rank and convert into exact/source, similarity, calibrated solver,

@@ -31,6 +31,20 @@ It records the green current-gate validation plus the second planning
 pass for the open-box timber no-runtime formula corridor: formula terms,
 candidate package probes, source-absent design-budget targets, negative
 boundaries, and exact implementation files.
+That open-box timber sequence has now landed through surface parity:
+`broad_accuracy_floor_open_box_timber_similarity_surface_parity_plan`
+with selection status
+`broad_accuracy_floor_open_box_timber_similarity_surface_parity_landed_selected_coverage_refresh`.
+The visible source-absent package-transfer lane preserves `Ln,w 50.8`,
+`CI,50-2500 3.3`, and `Rw 66` with `+/-7 dB`, `+/-2.5 dB`, and
+`+/-6 dB` not-measured budgets, and cards, method dossier, server
+snapshot replay, calculator API, impact-only API, and Markdown report
+show the same open-box timber package-transfer basis. Exact TUAS rows
+still win; raw bare open-box, exact-only hybrid, mixed staged,
+field/building, and ASTM/IIC aliases stay blocked. Selected next action:
+`broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_plan`;
+selected next file:
+`packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-coverage-refresh-contract.test.ts`.
 The active checkpoint is
 [CHECKPOINT_2026-05-15_COMPANY_INTERNAL_CHECKPOINT_REVIEW_AND_VALIDATION.md](./CHECKPOINT_2026-05-15_COMPANY_INTERNAL_CHECKPOINT_REVIEW_AND_VALIDATION.md).
 The current remaining-gap analysis and execution plan is

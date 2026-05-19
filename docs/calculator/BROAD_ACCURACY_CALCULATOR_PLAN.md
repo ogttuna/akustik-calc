@@ -752,8 +752,25 @@ Current validation status:
   Selected next file:
   `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-surface-parity-contract.test.ts`.
   Selected next label: floor open-box timber similarity surface parity.
+- The open-box timber similarity surface parity gate has now landed as
+  `broad_accuracy_floor_open_box_timber_similarity_surface_parity_plan`
+  with selection status
+  `broad_accuracy_floor_open_box_timber_similarity_surface_parity_landed_selected_coverage_refresh`.
+  This is no-runtime surface work: cards, route posture, impact lane
+  labels, confidence provenance, metric-basis copy, method dossier, local
+  saved replay, server snapshot replay, calculator API, impact-only API,
+  and Markdown report now expose the same source-absent open-box timber
+  package-transfer lab basis. The dry gypsum-fiber pin remains
+  `Ln,w 50.8`, `CI,50-2500 3.3`, and `Rw 66` with not-measured budgets
+  `+/-7 dB`, `+/-2.5 dB`, and `+/-6 dB`. Exact TUAS rows, raw bare
+  open-box, exact-only hybrid, mixed staged, field/building, and
+  ASTM/IIC boundaries remain protected. Selected next action:
+  `broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_plan`.
+  Selected next file:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-coverage-refresh-contract.test.ts`.
+  Selected next label: floor open-box timber similarity coverage refresh.
 - Pre-sprint revalidation:
   [CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md](./CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md).
   The full current gate was green before the formula sprint; the
-  no-runtime formula corridor has now landed, leaving narrow runtime,
-  surface parity, and coverage-matrix refresh next.
+  no-runtime formula, runtime, and surface parity gates have now landed,
+  leaving coverage-matrix refresh next.

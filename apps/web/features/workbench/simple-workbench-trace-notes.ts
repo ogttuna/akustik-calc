@@ -15,7 +15,7 @@ const NOTE_PRIORITY_RULES: ReadonlyArray<{ pattern: RegExp; score: number }> = [
     score: 118
   },
   {
-    pattern: /\b(open-web|supported-band|UBIQ|source grid)\b/i,
+    pattern: /\b(open-web|open-box|supported-band|package-transfer|TUAS|UBIQ|source grid)\b/i,
     score: 115
   },
   {

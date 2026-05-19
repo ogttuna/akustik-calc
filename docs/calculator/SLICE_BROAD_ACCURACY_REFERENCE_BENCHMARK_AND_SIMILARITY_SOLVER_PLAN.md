@@ -683,14 +683,32 @@ Current validation status:
   Selected next file:
   `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-surface-parity-contract.test.ts`.
   Selected next label: floor open-box timber similarity surface parity.
+- The open-box timber similarity surface parity gate has now landed as
+  `broad_accuracy_floor_open_box_timber_similarity_surface_parity_plan`
+  with selection status
+  `broad_accuracy_floor_open_box_timber_similarity_surface_parity_landed_selected_coverage_refresh`.
+  This no-runtime surface closeout keeps the package-transfer runtime
+  frozen while cards, route posture, impact lane labels, confidence
+  provenance, metric-basis copy, method dossier, local saved replay,
+  server snapshot replay, calculator API, impact-only API, and Markdown
+  report all expose the same source-absent open-box timber lab basis. The
+  dry gypsum-fiber pin remains `Ln,w 50.8`, `CI,50-2500 3.3`, and
+  `Rw 66`; the not-measured budgets remain `+/-7 dB`, `+/-2.5 dB`, and
+  `+/-6 dB`. Exact TUAS rows, raw bare open-box, exact-only hybrid,
+  mixed staged, field/building, and ASTM/IIC boundaries remain
+  protected. Selected next action:
+  `broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_plan`.
+  Selected next file:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-coverage-refresh-contract.test.ts`.
+  Selected next label: floor open-box timber similarity coverage refresh.
 
 Pre-sprint revalidation checkpoint:
 [CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md](./CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md).
 It confirmed the full current gate was green before the sprint and
 provided the implementation detail for the no-runtime open-box timber
-formula corridor that has now landed. Runtime, surface parity, and
-coverage-matrix refresh remain later steps and must not be collapsed into
-the formula gate.
+formula corridor that has now landed. Runtime and surface parity have
+also landed; coverage-matrix refresh remains the next bounded step and
+must not be collapsed into the already-closed gates.
 
 Second planning pass:
 

@@ -988,6 +988,34 @@ API, impact-only API, and Markdown reports must show the same basis,
 values, exact-source precedence, unsupported alias boundaries, and
 source-absent budgets without moving runtime values.
 
+Broad-accuracy floor open-box timber similarity surface-parity status:
+
+- landed gate:
+  `broad_accuracy_floor_open_box_timber_similarity_surface_parity_plan`
+- selection status:
+  `broad_accuracy_floor_open_box_timber_similarity_surface_parity_landed_selected_coverage_refresh`
+- landed engine contract:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-surface-parity-contract.test.ts`
+- landed web surface:
+  `apps/web/features/workbench/open-box-timber-similarity-surface-parity.test.ts`
+- selected next action:
+  `broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_plan`
+- selected next file:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-coverage-refresh-contract.test.ts`
+- selected next label:
+  floor open-box timber similarity coverage refresh
+
+This surface parity gate is no-runtime work. Cards, route posture,
+impact lane labels, confidence provenance, metric-basis copy, method
+dossier, local saved replay, server snapshot replay, calculator API,
+impact-only API, and Markdown report now show the same source-absent
+open-box timber package-transfer lab basis. The dry gypsum-fiber runtime
+pin stays `Ln,w 50.8`, `CI,50-2500 3.3`, and `Rw 66`; the not-measured
+budgets stay `+/-7 dB` for `Ln,w`, `+/-2.5 dB` for `CI,50-2500`, and
+`+/-6 dB` for `Rw`. Exact TUAS rows still win; raw bare open-box,
+exact-only hybrid, mixed staged, field/building, and ASTM/IIC aliases
+remain blocked.
+
 Checkpoint handoff:
 
 - [CHECKPOINT_2026-05-18_OPEN_BOX_TIMBER_TRANSFER_OWNER.md](./CHECKPOINT_2026-05-18_OPEN_BOX_TIMBER_TRANSFER_OWNER.md)
@@ -1003,22 +1031,15 @@ Checkpoint handoff:
 
 Next implementation order:
 
-1. Land surface parity for the open-box timber runtime corridor.
-   - Add
-     `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-surface-parity-contract.test.ts`
-     and the smallest matching card/report/API surface helpers.
-   - Keep `Ln,w 50.8`, `CI,50-2500 3.3`, `Rw 66`, all runtime budgets,
-     and the package-transfer basis frozen.
-   - Prove output cards, dynamic trace, method dossier, local saved
-     replay, server snapshot replay, calculator API, impact-only API,
-     and Markdown report show the same basis and unsupported-boundary
-     posture.
-   - Exact TUAS rows must stay ahead of runtime formula rows.
-   - `eps_screed_or_hybrid_upper` and `mixed_staged_upper` must stay
-     blocked until fragmented-equivalence and staged-package residual
-     owners land.
-2. Refresh the broad coverage matrix and company-internal operating
+1. Refresh the broad coverage matrix and company-internal operating
    envelope notes after surface parity.
+   - Add
+     `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-coverage-refresh-contract.test.ts`.
+   - Move the open-box timber package-transfer lane into the broad
+     coverage matrix as supported source-absent element-lab coverage
+     while keeping exact TUAS rows first.
+   - Keep raw bare open-box, exact-only hybrid, mixed staged,
+     field/building, and ASTM/IIC rows as explicit boundaries.
 
 Gate BV / Gate BW ASTM `IIC` / `AIIC` work is now parked as no-runtime
 boundary history. The active implementation path is back to ISO
