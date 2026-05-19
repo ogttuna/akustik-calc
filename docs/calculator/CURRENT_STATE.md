@@ -1277,6 +1277,30 @@ selected next file:
 `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-runtime-corridor-contract.test.ts`.
 Selected next label: floor open-box timber similarity runtime corridor.
 
+The open-box timber similarity runtime corridor has now landed as
+`broad_accuracy_floor_open_box_timber_similarity_runtime_corridor_plan`
+with selection status
+`broad_accuracy_floor_open_box_timber_similarity_runtime_corridor_landed_selected_surface_parity`.
+Complete source-absent dry gypsum-fiber, thin laminate/EPS, and
+reinforced-ceiling open-box timber packages now promote through the
+`broad_accuracy_floor_open_box_timber_similarity_package_transfer_formula_corridor`
+runtime basis. The dry gypsum-fiber runtime pin is `Ln,w 50.8`,
+`CI,50-2500 3.3`, and `Rw 66`; the not-measured budgets stay visible as
+`+/-7 dB` for `Ln,w`, `+/-2.5 dB` for `CI,50-2500`, and `+/-6 dB` for
+`Rw`. Exact TUAS rows still win; raw bare open-box, exact-only hybrid,
+mixed staged, field/building, and ASTM/IIC aliases stay blocked.
+Selected next action:
+`broad_accuracy_floor_open_box_timber_similarity_surface_parity_plan`;
+selected next file:
+`packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-surface-parity-contract.test.ts`.
+Selected next label: floor open-box timber similarity surface parity.
+Latest validation after this runtime gate:
+`pnpm calculator:gate:current` passed with engine 461 files / 2646
+tests, web 87 files / 363 passed + 18 skipped, repo build 5/5, and
+whitespace guard clean. Known non-fatal warnings remain the optional
+`sharp/@img` warnings from `@turbodocx/html-to-docx` plus Zustand
+test-storage warnings.
+
 Known audit corrections before calling the company-internal matrix final:
 
 - complete after matrix v2: Gate AT complete building runtime is imported

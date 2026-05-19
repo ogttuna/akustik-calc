@@ -300,3 +300,43 @@ Validation after implementation:
   whitespace guard clean. Known non-fatal warnings remain the optional
   `sharp/@img` warnings from `@turbodocx/html-to-docx` plus Zustand
   test-storage warnings.
+
+## Implementation Closeout - Runtime Corridor Landed
+
+The second sprint step has now landed:
+
+- landed gate:
+  `broad_accuracy_floor_open_box_timber_similarity_runtime_corridor_plan`
+- selection status:
+  `broad_accuracy_floor_open_box_timber_similarity_runtime_corridor_landed_selected_surface_parity`
+- landed implementation:
+  `packages/engine/src/open-box-timber-similarity-estimate.ts`
+- landed contract:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-runtime-corridor-contract.test.ts`
+- selected next action:
+  `broad_accuracy_floor_open_box_timber_similarity_surface_parity_plan`
+- selected next file:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-surface-parity-contract.test.ts`
+
+Complete source-absent open-box timber packages now promote through the
+package-transfer runtime corridor instead of the broad floor fallback.
+The dry gypsum-fiber runtime pin is `Ln,w 50.8`, `CI,50-2500 3.3`, and
+`Rw 66`, with not-measured budgets `+/-7 dB` for `Ln,w`, `+/-2.5 dB`
+for `CI,50-2500`, and `+/-6 dB` for `Rw`. Exact rows still win; raw
+bare open-box, exact-only hybrid, mixed staged, field/building, and
+ASTM/IIC aliases stay blocked. Surface parity is next.
+
+Validation after runtime implementation:
+
+- targeted runtime contract:
+  `pnpm --filter @dynecho/engine exec vitest run src/broad-accuracy-floor-open-box-timber-similarity-runtime-corridor-contract.test.ts --maxWorkers=1`
+  passed 1 file / 5 tests.
+- targeted formula + runtime contracts:
+  `pnpm --filter @dynecho/engine exec vitest run src/broad-accuracy-floor-open-box-timber-similarity-formula-corridor-contract.test.ts src/broad-accuracy-floor-open-box-timber-similarity-runtime-corridor-contract.test.ts --maxWorkers=1`
+  passed 2 files / 11 tests.
+- full current gate:
+  `pnpm calculator:gate:current` passed with engine 461 files / 2646
+  tests, web 87 files / 363 passed + 18 skipped, repo build 5/5, and
+  whitespace guard clean. Known non-fatal warnings remain the optional
+  `sharp/@img` warnings from `@turbodocx/html-to-docx` plus Zustand
+  test-storage warnings.

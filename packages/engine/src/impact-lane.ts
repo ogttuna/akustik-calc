@@ -23,6 +23,7 @@ import { deriveBoundFloorSystemEstimate, matchBoundFloorSystem, resolveBoundFloo
 import { deriveFloorSystemEstimate } from "./floor-system-estimate";
 import { deriveLightweightSteelOpenWebDirectFixedLiningEstimate } from "./lightweight-steel-open-web-direct-fixed-lining-estimate";
 import { deriveLightweightSteelOpenWebSupportedBandSimilarityEstimate } from "./lightweight-steel-open-web-supported-band-estimate";
+import { deriveOpenBoxTimberSimilarityEstimate } from "./open-box-timber-similarity-estimate";
 import {
   matchExactFloorSystem,
   recommendFloorSystems,
@@ -188,13 +189,28 @@ export function resolveLayerBasedImpactLane(
   const floorSystemRecommendations = floorSystemMatch
     ? []
     : recommendFloorSystems(input.resolvedLayers, FLOOR_SYSTEM_VISIBLE_RECOMMENDATION_LIMIT);
+  const openBoxTimberSimilarityEstimate =
+    !input.exactImpact &&
+    !input.officialFloorSystemId &&
+    !floorSystemMatch &&
+    !boundFloorSystemMatch &&
+    !impactCatalogMatch &&
+    !explicitDeltaImpact &&
+    !blockSteelFormulaFallback &&
+    !blockHeavyConcreteCombinedFormulaFallback
+      ? deriveOpenBoxTimberSimilarityEstimate({
+          layers: input.resolvedLayers,
+          targetOutputs: input.targetOutputs
+        })
+      : null;
   const predictorFormulaImpact =
     input.predictorInput &&
     !input.officialFloorSystemId &&
     !floorSystemMatch &&
     !boundFloorSystemMatch &&
     !impactCatalogMatch &&
-    !explicitDeltaImpact
+    !explicitDeltaImpact &&
+    !openBoxTimberSimilarityEstimate
       ? estimateImpactFromPredictorInput(input.predictorInput)
       : null;
   const predictorDeltaLwCompanion =
@@ -212,6 +228,7 @@ export function resolveLayerBasedImpactLane(
     !boundFloorSystemMatch &&
     !impactCatalogMatch &&
     !predictorFormulaImpact &&
+    !openBoxTimberSimilarityEstimate &&
     !blockSteelFormulaFallback &&
     !blockHeavyConcreteCombinedFormulaFallback
       ? derivePredictorSpecificFloorSystemEstimate(input.predictorInput)
@@ -253,7 +270,7 @@ export function resolveLayerBasedImpactLane(
       ? deriveLightweightSteelOpenWebDirectFixedLiningEstimate({
           layers: input.resolvedLayers,
           targetOutputs: input.targetOutputs
-        })
+      })
       : null;
   const boundFloorSystemEstimate =
     !input.exactImpact &&
@@ -264,6 +281,7 @@ export function resolveLayerBasedImpactLane(
     !predictorSpecificFloorSystemEstimate &&
     !openWebSupportedBandSimilarityEstimate &&
     !openWebDirectFixedLiningEstimate &&
+    !openBoxTimberSimilarityEstimate &&
     !narrowImpact &&
     !blockSteelFormulaFallback &&
     !blockHeavyConcreteCombinedFormulaFallback
@@ -278,6 +296,7 @@ export function resolveLayerBasedImpactLane(
           !boundFloorSystemEstimate &&
           !openWebSupportedBandSimilarityEstimate &&
           !openWebDirectFixedLiningEstimate &&
+          !openBoxTimberSimilarityEstimate &&
           !impactCatalogMatch &&
           !narrowImpact &&
           !blockSteelFormulaFallback &&
@@ -288,6 +307,7 @@ export function resolveLayerBasedImpactLane(
     predictorSpecificFloorSystemEstimate ??
     openWebSupportedBandSimilarityEstimate ??
     openWebDirectFixedLiningEstimate ??
+    openBoxTimberSimilarityEstimate ??
     rawFloorSystemEstimate;
 
   return {

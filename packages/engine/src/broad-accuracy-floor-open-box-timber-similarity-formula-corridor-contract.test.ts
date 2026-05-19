@@ -128,6 +128,7 @@ describe("broad accuracy floor open-box timber similarity formula corridor contr
     expect(contract.toleranceBudgets.map((budget) => [budget.metricId, budget.totalBudgetDb])).toEqual([
       ["Ln,w", 7],
       ["CI", 2],
+      ["CI,50-2500", 2.5],
       ["Ln,w+CI", 7.5],
       ["Rw", 6],
       ["Rw+C", 6.5]

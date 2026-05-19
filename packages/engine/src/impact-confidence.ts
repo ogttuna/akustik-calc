@@ -293,6 +293,16 @@ export function getImpactConfidenceForBasis(basis: ImpactEstimateBasis): ImpactC
     };
   }
 
+  if (basis === "broad_accuracy_floor_open_box_timber_similarity_package_transfer_formula_corridor") {
+    return {
+      level: "medium",
+      provenance: "published_family_estimate",
+      score: 0.76,
+      summary:
+        "Open-box timber package-transfer estimate anchored to same-family TUAS measured packets with source-absent error budgets."
+    };
+  }
+
   if (basis === "predictor_lightweight_steel_mass_spring_holdout_corridor_estimate") {
     return {
       level: "medium",

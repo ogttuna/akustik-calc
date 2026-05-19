@@ -76,6 +76,7 @@ import { buildFloorSystemRatings } from "./floor-system-ratings";
 import { buildExactImpactFromSource } from "./impact-exact";
 import { OPEN_WEB_DIRECT_FIXED_LINING_BASIS } from "./lightweight-steel-open-web-direct-fixed-lining-estimate";
 import { OPEN_WEB_SUPPORTED_BAND_SIMILARITY_BASIS } from "./lightweight-steel-open-web-supported-band-estimate";
+import { OPEN_BOX_TIMBER_SIMILARITY_BASIS } from "./open-box-timber-similarity-estimate";
 import {
   adaptImpactPredictorInput,
   getRawFloorParityGuardWarning,
@@ -1473,6 +1474,7 @@ export function calculateAssembly(
       gateWFloorImpactContract &&
       floorSystemEstimate?.impact.basis !== OPEN_WEB_SUPPORTED_BAND_SIMILARITY_BASIS &&
       floorSystemEstimate?.impact.basis !== OPEN_WEB_DIRECT_FIXED_LINING_BASIS &&
+      floorSystemEstimate?.impact.basis !== OPEN_BOX_TIMBER_SIMILARITY_BASIS &&
       !gateWLabRuntimeReady &&
       !gateZFieldImpactRuntimeReady &&
       !exactImpact &&
@@ -1914,6 +1916,8 @@ export function calculateAssembly(
           ? `Published family estimate active: open-web steel supported-band similarity at ${floorSystemEstimate.fitPercent}% fit. DynEcho stayed inside the UBIQ FL-24/FL-26 elastic suspended-ceiling source grid instead of falling back to a broad steel blend or bound-only row.`
         : floorSystemEstimate.impact.basis === OPEN_WEB_DIRECT_FIXED_LINING_BASIS
           ? `Published family estimate active: open-web steel direct-fixed lining interpolation at ${floorSystemEstimate.fitPercent}% fit. DynEcho stayed inside the UBIQ FL-23/FL-25/FL-27 direct-fixed source grid instead of borrowing resilient suspended-ceiling rows or the broad steel blend.`
+        : floorSystemEstimate.impact.basis === OPEN_BOX_TIMBER_SIMILARITY_BASIS
+          ? `Published family estimate active: open-box timber package-transfer corridor at ${floorSystemEstimate.fitPercent}% fit. DynEcho stayed inside the TUAS open-box timber packet family instead of borrowing open-web steel rows, exact-only hybrids, or a broad low-confidence blend.`
         : floorSystemEstimate.kind === "low_confidence"
           ? `Published low-confidence fallback active: ${floorSystemEstimate.structuralFamily} at ${floorSystemEstimate.fitPercent}% fit.`
           : `Published family estimate active: ${floorSystemEstimate.structuralFamily} ${floorSystemEstimate.kind.replaceAll("_", " ")} at ${floorSystemEstimate.fitPercent}% fit.`

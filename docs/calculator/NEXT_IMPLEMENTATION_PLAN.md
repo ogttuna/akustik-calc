@@ -957,6 +957,37 @@ open-web steel borrowing, partial laminate/EPS finishes, disjoint
 duplicate roles, exact-only hybrid and mixed staged packets,
 field/building outputs, and ASTM/IIC/AIIC aliases stay blocked.
 
+Broad-accuracy floor open-box timber similarity runtime-corridor status:
+
+- landed gate:
+  `broad_accuracy_floor_open_box_timber_similarity_runtime_corridor_plan`
+- selection status:
+  `broad_accuracy_floor_open_box_timber_similarity_runtime_corridor_landed_selected_surface_parity`
+- landed implementation:
+  `packages/engine/src/open-box-timber-similarity-estimate.ts`
+- landed contract:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-runtime-corridor-contract.test.ts`
+- selected next action:
+  `broad_accuracy_floor_open_box_timber_similarity_surface_parity_plan`
+- selected next file:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-surface-parity-contract.test.ts`
+- selected next label:
+  floor open-box timber similarity surface parity
+
+This runtime gate promotes only complete source-absent same-family
+open-box timber packages through
+`broad_accuracy_floor_open_box_timber_similarity_package_transfer_formula_corridor`.
+The dry gypsum-fiber runtime pin is `Ln,w 50.8`, `CI,50-2500 3.3`, and
+`Rw 66`; thin laminate/EPS and reinforced-ceiling packages stay on their
+own TUAS anchors. The not-measured budgets stay visible as `+/-7 dB`
+for `Ln,w`, `+/-2.5 dB` for `CI,50-2500`, and `+/-6 dB` for `Rw`.
+Exact TUAS rows still win; raw bare open-box, exact-only hybrid, mixed
+staged, field/building, and ASTM/IIC aliases remain blocked. The next
+step is surface parity: cards, method dossier, saved replay, calculator
+API, impact-only API, and Markdown reports must show the same basis,
+values, exact-source precedence, unsupported alias boundaries, and
+source-absent budgets without moving runtime values.
+
 Checkpoint handoff:
 
 - [CHECKPOINT_2026-05-18_OPEN_BOX_TIMBER_TRANSFER_OWNER.md](./CHECKPOINT_2026-05-18_OPEN_BOX_TIMBER_TRANSFER_OWNER.md)
@@ -967,25 +998,26 @@ Checkpoint handoff:
 - [CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md](./CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md)
 - This checkpoint re-ran the full current gate before implementation,
   recorded the second 2026-05-19 implementation/research planning pass,
-  and has now been executed through the no-runtime formula-corridor gate.
+  and has now been executed through the formula and runtime-corridor
+  gates.
 
 Next implementation order:
 
-1. Promote a narrow same-family runtime corridor from the formula
-   contract.
+1. Land surface parity for the open-box timber runtime corridor.
    - Add
-     `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-runtime-corridor-contract.test.ts`
-     and the matching runtime module.
-   - Runtime can only promote complete source-absent open-box timber
-     inputs that match the clean predictor-owned packets and own the
-     laminate/EPS finish, 370 mm support family, upper package, lower
-     ceiling family, and lab metric basis.
+     `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-surface-parity-contract.test.ts`
+     and the smallest matching card/report/API surface helpers.
+   - Keep `Ln,w 50.8`, `CI,50-2500 3.3`, `Rw 66`, all runtime budgets,
+     and the package-transfer basis frozen.
+   - Prove output cards, dynamic trace, method dossier, local saved
+     replay, server snapshot replay, calculator API, impact-only API,
+     and Markdown report show the same basis and unsupported-boundary
+     posture.
    - Exact TUAS rows must stay ahead of runtime formula rows.
    - `eps_screed_or_hybrid_upper` and `mixed_staged_upper` must stay
      blocked until fragmented-equivalence and staged-package residual
      owners land.
-2. Add workbench/card/API/report surface parity after runtime.
-3. Refresh the broad coverage matrix and company-internal operating
+2. Refresh the broad coverage matrix and company-internal operating
    envelope notes after surface parity.
 
 Gate BV / Gate BW ASTM `IIC` / `AIIC` work is now parked as no-runtime

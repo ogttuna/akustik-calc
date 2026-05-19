@@ -247,6 +247,7 @@ const FORMULA_TERMS = [
 const TOLERANCE_BUDGETS = [
   buildBudget("Ln,w", 7),
   buildBudget("CI", 2),
+  buildBudget("CI,50-2500", 2.5),
   buildBudget("Ln,w+CI", 7.5),
   buildBudget("Rw", 6),
   buildBudget("Rw+C", 6.5)

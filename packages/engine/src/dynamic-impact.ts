@@ -38,6 +38,7 @@ import {
 } from "./timber-clt-floor-impact-delta-lw-runtime-corridor";
 import { OPEN_WEB_DIRECT_FIXED_LINING_BASIS } from "./lightweight-steel-open-web-direct-fixed-lining-estimate";
 import { OPEN_WEB_SUPPORTED_BAND_SIMILARITY_BASIS } from "./lightweight-steel-open-web-supported-band-estimate";
+import { OPEN_BOX_TIMBER_SIMILARITY_BASIS } from "./open-box-timber-similarity-estimate";
 
 type BuildDynamicImpactTraceInput = {
   boundFloorSystemEstimate?: FloorSystemBoundEstimateResult | null;
@@ -153,6 +154,10 @@ function getScopedFamilySelectionLabel(
 
   if (basisLabels.has(OPEN_WEB_DIRECT_FIXED_LINING_BASIS)) {
     return "Open-web steel direct-fixed lining interpolation";
+  }
+
+  if (basisLabels.has(OPEN_BOX_TIMBER_SIMILARITY_BASIS)) {
+    return "Open-box timber package-transfer corridor";
   }
 
   return null;
@@ -366,6 +371,8 @@ function formatImpactBasisLabel(value: ImpactCalculation["basis"] | ImpactBoundC
       return "Open-web steel supported-band similarity";
     case "broad_accuracy_floor_open_web_direct_fixed_lining_direct_source_interpolation_formula_corridor":
       return "Open-web steel direct-fixed lining interpolation";
+    case "broad_accuracy_floor_open_box_timber_similarity_package_transfer_formula_corridor":
+      return "Open-box timber package-transfer corridor";
     case "predictor_lightweight_steel_mass_spring_holdout_corridor_estimate":
       return "Lightweight-steel formula corridor";
     case "predictor_lightweight_steel_suspended_ceiling_corridor_estimate":
@@ -670,6 +677,12 @@ export function buildDynamicImpactTrace(
   if (input.impact?.basis === OPEN_WEB_DIRECT_FIXED_LINING_BASIS) {
     notes.push(
       "Open-web steel direct-fixed lining interpolation stayed inside the UBIQ FL-23/FL-25/FL-27 direct-fixed source grid."
+    );
+  }
+
+  if (input.impact?.basis === OPEN_BOX_TIMBER_SIMILARITY_BASIS) {
+    notes.push(
+      "Open-box timber package-transfer corridor stayed inside the TUAS measured open-box timber packet family."
     );
   }
 
