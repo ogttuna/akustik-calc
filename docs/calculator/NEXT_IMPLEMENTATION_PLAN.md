@@ -671,16 +671,16 @@ Current validation status: targeted wall triple-leaf local substitution
 mapping, formula-corridor, runtime-corridor, construction-image
 route-regression, runtime visible-surface refresh, coverage-refresh,
 lab-spectrum-adapter, adapter surface-parity, adapter coverage refresh,
-field-context, and direct-fixed open-web owner/formula/runtime/surface
-and coverage-refresh contracts are green.
-Full `pnpm calculator:gate:current` passed on 2026-05-18 after the
-open-box timber similarity transfer owner gate: engine 459 files / 2635
-tests, web 87 files / 363 passed + 18 skipped, repo build 5/5, and
-whitespace guard clean. Only the known non-fatal optional `sharp/@img`
-build warnings appeared. The direct-fixed open-web runtime corridor,
-surface parity gate, and coverage refresh have landed as source-absent
-element-lab work; the next implementation task is the open-box timber
-similarity transfer owner gate.
+field-context, direct-fixed open-web owner/formula/runtime/surface /
+coverage-refresh, and open-box timber transfer-owner contracts are
+green. Full `pnpm calculator:gate:current` passed on 2026-05-19 before
+the open-box formula sprint: engine 459 files / 2635 tests, web 87 files
+/ 363 passed + 18 skipped, repo build 5/5, and whitespace guard clean.
+Only the known non-fatal optional `sharp/@img` build warnings and
+Zustand test-storage warnings appeared. The direct-fixed open-web
+runtime corridor, surface parity gate, and coverage refresh have landed
+as source-absent element-lab work; the next implementation task is the
+open-box timber no-runtime formula corridor.
 
 The previous A-weighted implementation caveat is closed:
 `frequencyBandSet` is now carried through the shared schema, engine
@@ -695,10 +695,11 @@ Current implementation target:
   long-running contract tests through per-test timeout annotations; no
   runtime values, bases, support buckets, or budgets moved.
 - The broad benchmark expansion, floor-system similarity anchor,
-  open-web runtime/surface gates, wall triple-leaf calibrated route, and
+  open-web runtime/surface gates, wall triple-leaf calibrated route,
   local-substitution mapping/formula/runtime/surface/coverage/lab-spectrum
-  adapter/surface/coverage gates have landed as the current
-  broad-accuracy sequence.
+  adapter/surface/coverage gates, direct-fixed open-web formula/runtime
+  gates, and open-box timber transfer-owner gate have landed as the
+  current broad-accuracy sequence.
 - The selected next implementation target is
   `packages/engine/src/broad-accuracy-wall-multileaf-triple-leaf-local-substitution-field-context-harmonization-contract.test.ts`.
 - That next target must harmonize complete local-substitution wall field
@@ -935,7 +936,8 @@ Checkpoint handoff:
   artefacts are excluded from commit.
 - [CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md](./CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md)
 - This checkpoint re-runs the full current gate, confirms no
-  implementation fix is needed before the sprint, and selects the
+  implementation fix is needed before the sprint, records the second
+  2026-05-19 implementation/research planning pass, and selects the
   open-box timber no-runtime formula corridor as the first implementation
   step.
 
@@ -945,12 +947,34 @@ Pre-sprint implementation order:
    `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-formula-corridor-contract.test.ts`
    and the matching formula-corridor module.
 2. Keep the formula corridor no-runtime: define package-family transfer
-   terms, metric-specific budgets, exact-precedence behavior, and
-   negative boundaries before moving values.
-3. Promote a narrow same-family runtime corridor only after the formula
+   terms, candidate package probes, metric-specific budgets,
+   exact-precedence behavior, and negative boundaries before moving
+   values.
+   - Formula terms must cover same-family TUAS open-box anchor selection,
+     370 mm open-box support ownership, upper package family deltas,
+     lower ceiling family deltas, laminate/EPS finish-pair deltas,
+     fragmented exact-equivalent package guards, ISO lab `Ln,w` / `CI` /
+     `Ln,w+CI` semantics, `Rw` / `Rw+C` semantics, and source-absent
+     residual budget decomposition.
+   - Candidate probes should start with `dry_gypsum_fiber_upper`,
+     `thin_laminate_eps_no_upper`, and `reinforced_ceiling_laminate`;
+     keep `eps_screed_or_hybrid_upper` split because most hybrid rows are
+     exact-only, and keep `mixed_staged_upper` blocked because it has no
+     predictor-owned rows.
+   - The initial design-budget targets to justify or widen are
+     `+/-7 dB` for `Ln,w`, `+/-2 dB` for `CI`, `+/-7.5 dB` for
+     `Ln,w+CI`, `+/-6 dB` for `Rw`, and `+/-6.5 dB` for `Rw+C`.
+     These are formula-planning budgets, not runtime evidence.
+   - Negative boundaries must cover open-web steel borrowing, raw bare
+     open-box reopening, partial laminate/EPS finish, disjoint duplicate
+     roles, exact-only hybrid transfer, field/building outputs, and
+     ASTM/IIC/AIIC aliases.
+3. Add exports, current-gate inclusion, and docs alignment for the
+   formula-corridor gate before running validation.
+4. Promote a narrow same-family runtime corridor only after the formula
    contract is executable.
-4. Add workbench/card/API/report surface parity after runtime.
-5. Refresh the broad coverage matrix and company-internal operating
+5. Add workbench/card/API/report surface parity after runtime.
+6. Refresh the broad coverage matrix and company-internal operating
    envelope notes after surface parity.
 
 Gate BV / Gate BW ASTM `IIC` / `AIIC` work is now parked as no-runtime

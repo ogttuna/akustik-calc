@@ -63,6 +63,9 @@ Latest sprint-entry checkpoint: read
 before implementing the next sprint. The full current gate is green; the
 first implementation step is the no-runtime open-box timber formula
 corridor, followed by narrow runtime, surface parity, and matrix refresh.
+That checkpoint now includes the second 2026-05-19 planning pass:
+open-box formula terms, package probes, initial design-budget targets,
+negative boundaries, and the exact files to edit are spelled out there.
 
 Before implementing calculator behavior, re-read the current local engine
 shape in `packages/engine/src/airborne-calculator.ts` and
@@ -7170,12 +7173,12 @@ plan.
   selected slice
 - use `pnpm check` only when you need the broad full-repo gate
 - latest current-gate validation:
-  `pnpm calculator:gate:current` was green on 2026-05-18 after Broad
-  Accuracy Floor Open-Box Timber Similarity Transfer Owner; engine
+  `pnpm calculator:gate:current` was green on 2026-05-19 before the
+  open-box timber formula sprint; engine
   459 files / 2635 tests, web 87 files / 363
   passed + 18 skipped, repo build 5/5, and whitespace guard clean. Known
-  non-fatal build warnings remain the optional `sharp/@img` warnings from
-  `@turbodocx/html-to-docx`.
+  non-fatal warnings remain the optional `sharp/@img` warnings from
+  `@turbodocx/html-to-docx` plus Zustand test-storage warnings.
 - current runtime validation note: the old Rockwool frozen/screening
   expectations, explicit local-substitution surface parity, coverage
   matrix, lab spectrum adapter, adapter surface parity, and adapter
@@ -7186,6 +7189,10 @@ plan.
   open-box timber similarity formula corridor listed above, not a broad
   source crawl, raw bare support reopening, or field/building alias.
 - checkpoint:
+  `docs/calculator/CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md`
+  confirms the current-gate validation and the detailed no-runtime
+  formula-corridor implementation plan.
+- previous checkpoint:
   `docs/calculator/CHECKPOINT_2026-05-18_OPEN_BOX_TIMBER_TRANSFER_OWNER.md`
   confirms the current implementation/docs comparison, remaining gaps,
   validation status, and commit exclusions for generated/local artefacts.

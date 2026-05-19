@@ -25,6 +25,12 @@ use `pnpm check` when shared contracts move.
 
 Current calculator handoff:
 
+- Latest sprint-entry checkpoint:
+  [calculator/CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md](./calculator/CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md).
+  Read this before implementing the next calculator slice. It confirms
+  the current gate is green and details the open-box timber no-runtime
+  formula-corridor terms, candidate package probes, source-absent budget
+  targets, negative boundaries, and exact files to edit.
 - Broad-accuracy refocus:
   [calculator/BROAD_ACCURACY_CALCULATOR_PLAN.md](./calculator/BROAD_ACCURACY_CALCULATOR_PLAN.md).
   Use this as the current product-direction guardrail. The 71-row
@@ -208,11 +214,12 @@ Current calculator handoff:
   Selected next label: wall triple-leaf local substitution coverage
   refresh.
   Targeted mapping, formula-corridor, runtime-corridor, surface-parity,
-  and coverage-refresh contracts are green after this slice. Full
-  `pnpm calculator:gate:current` passed on 2026-05-18 after the
-  open-box timber similarity transfer owner gate: engine 459 files / 2635
-  tests, web 87 files / 363 passed + 18 skipped, repo build 5/5, with only the
-  known non-fatal optional `sharp/@img` build warnings.
+  coverage-refresh, direct-fixed open-web, and open-box transfer-owner
+  contracts are green. Full `pnpm calculator:gate:current` passed on
+  2026-05-19 before the open-box formula sprint: engine 459 files / 2635
+  tests, web 87 files / 363 passed + 18 skipped, repo build 5/5, with
+  only the known non-fatal optional `sharp/@img` and Zustand test-storage
+  warnings.
   That coverage refresh has now landed as
   `broad_accuracy_wall_multileaf_triple_leaf_local_substitution_coverage_refresh_plan`
   with selection status

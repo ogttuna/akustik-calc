@@ -502,10 +502,10 @@ unsupported until later adapter gates.
 
 Current validation status:
 
-- Full `pnpm calculator:gate:current` passed on 2026-05-18 after the
-  open-box timber similarity transfer owner gate: engine 459 files / 2635
-  tests, web 87 files / 363 passed + 18 skipped, repo build 5/5, with
-  only the known non-fatal optional `sharp/@img` build warnings.
+- Full `pnpm calculator:gate:current` passed on 2026-05-19 before the
+  open-box timber formula sprint: engine 459 files / 2635 tests, web 87
+  files / 363 passed + 18 skipped, repo build 5/5, with only the known
+  non-fatal optional `sharp/@img` and Zustand test-storage warnings.
 - The explicit local-substitution surface parity has now landed with
   selection status
   `broad_accuracy_wall_multileaf_triple_leaf_local_substitution_surface_parity_landed_selected_coverage_refresh`.

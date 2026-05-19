@@ -23,6 +23,10 @@ The latest sprint-entry revalidation is
 `pnpm calculator:gate:current` passed with engine 459 files / 2635
 tests, web 87 files / 363 passed + 18 skipped, repo build 5 / 5, and
 no implementation fix required before the open-box timber formula sprint.
+That checkpoint now also contains the second 2026-05-19 planning pass:
+the no-runtime formula terms, candidate package probes, initial
+source-absent design-budget targets, negative boundaries, and exact files
+for the open-box formula corridor are spelled out before implementation.
 That active slice treats historical `low_confidence`,
 `screening_fallback`, and screening-only lanes as calculation debt to
 rank and convert into exact/source, similarity, calibrated solver,
@@ -1024,13 +1028,14 @@ Current open-box timber checkpoint:
 The final rehearsal contract, operating envelope, broad-readiness
 refocus, broad benchmark expansion, wall triple-leaf calibrated solver
 coverage refresh, local substitution formula/runtime/surface/coverage
-gates, lab spectrum adapter gates, field-context gates, and direct-fixed
-open-web owner/formula/runtime/surface/coverage gates are green in the
-2026-05-18 current gate. Full `pnpm calculator:gate:current` passed
-after the open-box timber similarity transfer owner gate with engine 459
-files / 2635 tests, web 87 files / 363 passed + 18 skipped, repo build
-5/5, and whitespace guard clean. Only the known non-fatal optional
-`sharp/@img` build warnings appeared. The direct-fixed open-web coverage
+gates, lab spectrum adapter gates, field-context gates, direct-fixed
+open-web owner/formula/runtime/surface/coverage gates, and open-box
+timber transfer-owner gate are green in the 2026-05-19 current gate.
+Full `pnpm calculator:gate:current` passed before the open-box formula
+sprint with engine 459 files / 2635 tests, web 87 files / 363 passed +
+18 skipped, repo build 5/5, and whitespace guard clean. Only the known
+non-fatal optional `sharp/@img` and Zustand test-storage warnings
+appeared. The direct-fixed open-web coverage
 refresh has now landed as
 `broad_accuracy_floor_open_web_direct_fixed_lining_coverage_refresh_plan`
 with selection status

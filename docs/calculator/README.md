@@ -25,6 +25,12 @@ Use it before treating the controlled envelope as readiness: the 71-row
 matrix is a guardrail, while broad company-internal accuracy requires a
 reference benchmark, similarity-anchor resolver, and family-solver
 residual loop.
+The active sprint-entry handoff is
+[CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md](./CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md).
+It records the green current-gate validation plus the second planning
+pass for the open-box timber no-runtime formula corridor: formula terms,
+candidate package probes, source-absent design-budget targets, negative
+boundaries, and exact implementation files.
 The active checkpoint is
 [CHECKPOINT_2026-05-15_COMPANY_INTERNAL_CHECKPOINT_REVIEW_AND_VALIDATION.md](./CHECKPOINT_2026-05-15_COMPANY_INTERNAL_CHECKPOINT_REVIEW_AND_VALIDATION.md).
 The current remaining-gap analysis and execution plan is
@@ -225,11 +231,12 @@ Selected next label: wall triple-leaf local substitution coverage
 refresh.
 
 Targeted mapping, formula-corridor, runtime-corridor, surface-parity,
-and coverage-refresh contracts are green after this slice. Full
-`pnpm calculator:gate:current` passed on 2026-05-18 after the
-open-box timber similarity transfer owner gate: engine 459 files / 2635 tests,
-web 87 files / 363 passed + 18 skipped, repo build 5/5, with only the known
-non-fatal optional `sharp/@img` build warnings.
+coverage-refresh, direct-fixed open-web, and open-box transfer-owner
+contracts are green. Full `pnpm calculator:gate:current` passed on
+2026-05-19 before the open-box formula sprint: engine 459 files / 2635
+tests, web 87 files / 363 passed + 18 skipped, repo build 5/5, with only
+the known non-fatal optional `sharp/@img` and Zustand test-storage
+warnings.
 That coverage refresh has now landed as
 `broad_accuracy_wall_multileaf_triple_leaf_local_substitution_coverage_refresh_plan`
 with selection status

@@ -453,10 +453,10 @@ Current validation status:
   runtime-corridor, construction-image route-regression contracts, and
   the runtime visible-surface refresh are green after the runtime
   corridor.
-- Full `pnpm calculator:gate:current` passed on 2026-05-18 after the
-  open-box timber similarity transfer owner gate: engine 459 files / 2635
-  tests, web 87 files / 363 passed + 18 skipped, repo build 5/5, with
-  only the known non-fatal optional `sharp/@img` build warnings.
+- Full `pnpm calculator:gate:current` passed on 2026-05-19 before the
+  open-box timber formula sprint: engine 459 files / 2635 tests, web 87
+  files / 363 passed + 18 skipped, repo build 5/5, with only the known
+  non-fatal optional `sharp/@img` and Zustand test-storage warnings.
 - The explicit local-substitution coverage refresh has now landed. It
   keeps cards, reports, APIs, saved replay proof, unsupported metric
   boundaries, exact/calibrated precedence, field-context ownership, and
@@ -658,6 +658,39 @@ It confirms the full current gate is green before the sprint and keeps
 the first implementation step on the no-runtime open-box timber formula
 corridor. Runtime, surface parity, and coverage-matrix refresh are later
 steps and must not be collapsed into the formula gate.
+
+Second planning pass:
+
+- The 2026-05-19 follow-up analysis re-read the owner implementation,
+  the direct-fixed formula-corridor pattern, and the open-box exact-row
+  boundary tests. It also checked the TUAS Mendeley dataset provenance,
+  ISO 12354-2 impact-prediction scope, and adjacent CLT floating-floor
+  modelling research.
+- The selected action remains
+  `broad_accuracy_floor_open_box_timber_similarity_formula_corridor_plan`.
+  The first implementation file remains
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-formula-corridor-contract.test.ts`.
+- The formula gate must use the already-local TUAS open-box exact rows as
+  same-family anchors and holdouts. It must not ingest new web-measured
+  values, start a broad source crawl, borrow open-web steel terms, reopen
+  raw bare open-box impact support, or alias lab `Ln,w` / `Rw` to
+  field/building or ASTM outputs.
+- Required formula terms are now explicitly scoped to same-family TUAS
+  anchor selection, 370 mm open-box support ownership, upper package
+  family deltas, lower ceiling family deltas, laminate/EPS finish-pair
+  deltas, fragmented exact-equivalent package guards, ISO lab impact
+  semantics, `Rw` / `Rw+C` companion semantics, and source-absent
+  residual budget decomposition.
+- The first candidate probes should be clean predictor-owned packets:
+  `dry_gypsum_fiber_upper`, `thin_laminate_eps_no_upper`, and
+  `reinforced_ceiling_laminate`. `eps_screed_or_hybrid_upper` is a split
+  packet because most hybrid rows are exact-only; `mixed_staged_upper`
+  stays blocked because it has no predictor-owned rows.
+- Initial design-budget targets to justify or widen in the formula gate
+  are `+/-7 dB` for `Ln,w`, `+/-2 dB` for `CI`, `+/-7.5 dB` for
+  `Ln,w+CI`, `+/-6 dB` for `Rw`, and `+/-6.5 dB` for `Rw+C`. These are
+  not runtime evidence; runtime values remain null until the later
+  runtime-corridor gate.
 
 Current low-confidence/screening gap scan:
 
