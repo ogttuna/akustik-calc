@@ -735,6 +735,13 @@ in
 `packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy-contract.test.ts`.
 This is a no-runtime policy gate unless the policy proves a later narrow
 runtime candidate.
+The second 2026-05-20 planning iteration in that checkpoint now makes the
+policy implementation shape explicit: add a policy module plus contract,
+classify `R7b`, `R8b`, `R9b`, `R2c`, and `R10a` as exact-only
+residual/readiness evidence or blocked owner gaps, keep all five out of
+the package-transfer runtime anchor list, and close no-runtime unless a
+separate later residual-admission gate is selected. No new internet
+source crawl is needed for that policy gate.
 
 Second planning pass:
 

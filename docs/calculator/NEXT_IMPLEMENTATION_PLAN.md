@@ -1063,7 +1063,12 @@ Next implementation order:
 1. Land the exact-only hybrid fragmentation policy selected by the
    open-box timber coverage refresh.
    - Add
+     `packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy.ts`.
+   - Add
      `packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy-contract.test.ts`.
+   - Export the module from `packages/engine/src/index.ts`.
+   - Add the focused contract to `tools/dev/run-calculator-current-gate.ts`
+     after it is green.
    - Classify the exact-only hybrid / fragmented TUAS packets
      `tuas_r7b_open_box_timber_measured_2026`,
      `tuas_r8b_open_box_timber_measured_2026`,
@@ -1080,6 +1085,42 @@ Next implementation order:
      narrow runtime candidate.
    - Run the focused contract, then `pnpm calculator:gate:current` and
      `git diff --check`.
+
+2. Contract details from the 2026-05-20 planning iteration:
+   - No new internet/source crawl is needed for this slice. Use the
+     already-ingested TUAS exact rows; this is a local evidence-policy
+     gate, not source acquisition.
+   - `R7b` is EPS board + geotextile/screed + EPS/laminate with hybrid
+     lower treatment. Keep it exact; at most classify it as exact-only
+     hybrid residual evidence.
+   - `R8b` is the same wet package without the finish pair. Keep it
+     exact; classify it as partial-finish / no-finish residual evidence
+     and block complete-finish transfer.
+   - `R9b` is screed + EPS/laminate without upper fill. Keep it exact;
+     classify it as screed-only hybrid residual evidence.
+   - `R2c` has EPS/laminate plus hybrid lower treatment but no ceiling
+     fill and no upper/floating package. Keep it exact; classify it as a
+     lower-ceiling interaction / missing-mass boundary and do not average
+     it into thin-laminate runtime.
+   - `R10a` is a glasswool board + gypsum/screed/gypsum staged upper
+     package. Keep it exact; classify it as a mixed staged upper package
+     owner gap with zero predictor-owned runtime rows.
+   - Assert that none of these five rows enters the runtime anchor list
+     for
+     `broad_accuracy_floor_open_box_timber_similarity_package_transfer_formula_corridor`.
+   - Assert that same-package fragmentation still preserves exact lab and
+     field routing for those rows, while disjoint duplicate roles remain
+     blocked.
+   - Keep package-transfer pins unchanged: dry gypsum-fiber
+     `Ln,w 50.8` / `CI,50-2500 3.3` / `Rw 66`; thin laminate
+     `Ln,w 53.5` / `Rw 55.5`; reinforced ceiling `Ln,w 53.5` /
+     `Rw 63.5`.
+   - If no residual admission is proven, close no-runtime and select a
+     raw-bare open-box reopening guard next:
+     `packages/engine/src/broad-accuracy-floor-open-box-timber-raw-bare-reopening-guard-contract.test.ts`.
+   - If residual admission is proven, still close no-runtime and select a
+     separate residual-admission gate. Do not combine policy admission
+     and runtime movement in one slice.
 
 Historical note: this file keeps long closed-slice history below the
 active handoff. Trust the top active broad-accuracy section,

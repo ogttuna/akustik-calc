@@ -31,12 +31,28 @@ Current calculator handoff:
   `pnpm calculator:gate:current` run passed with engine 463 files / 2656
   tests, web 88 files / 366 passed + 18 skipped, repo build 5 / 5, and
   whitespace guard passed. The open-box timber formula/runtime/surface
-  parity/coverage-refresh sequence has landed, while broad "every common
-  wall/floor combination" confidence is still not done.
+  parity/coverage-refresh sequence has landed. The surface parity closeout
+  landed as `broad_accuracy_floor_open_box_timber_similarity_surface_parity_plan`
+  with selection status
+  `broad_accuracy_floor_open_box_timber_similarity_surface_parity_landed_selected_coverage_refresh`.
+  The coverage refresh then landed as
+  `broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_plan`
+  with selection status
+  `broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_landed_selected_exact_only_hybrid_fragmentation_policy`;
+  the landed contract is
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-coverage-refresh-contract.test.ts`.
+  It keeps the package-transfer pins at `Ln,w 50.8`, `CI,50-2500 3.3`,
+  and `Rw 66` with exact source precedence while raw bare, exact-only
+  hybrid, mixed staged, field/building, and ASTM/IIC cases stay outside
+  the lane. Broad "every common wall/floor combination" confidence is
+  still not done.
 - Selected next action:
   `broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_plan`;
   selected next file:
   `packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy-contract.test.ts`.
+  Human-readable lane: exact-only hybrid fragmentation policy for TUAS
+  open-box timber rows that are exact evidence but unsafe runtime
+  transfer anchors.
   Keep this as a no-runtime policy gate unless the evidence proves a
   later narrow runtime candidate. Do not turn it into broad source
   crawling, raw bare open-box reopening, field/building aliasing, or

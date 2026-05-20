@@ -21,7 +21,13 @@ tests, web 88 files / 366 passed + 18 skipped, repo build 5 / 5, and
 whitespace guard passed. No implementation fix was required.
 
 The open-box timber formula, runtime, surface-parity, and coverage-refresh
-gates have now landed through
+gates have now landed. The surface parity closeout landed as
+`broad_accuracy_floor_open_box_timber_similarity_surface_parity_plan`
+with selection status
+`broad_accuracy_floor_open_box_timber_similarity_surface_parity_landed_selected_coverage_refresh`.
+Its selected next file was
+`packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-coverage-refresh-contract.test.ts`.
+The coverage refresh then landed through
 `broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_plan`
 with selection status
 `broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_landed_selected_exact_only_hybrid_fragmentation_policy`.
@@ -40,6 +46,9 @@ selected next file:
 `packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy-contract.test.ts`.
 This checkpoint is a good commit/stopping point, but it is not broad
 "every common wall/floor combination" readiness yet.
+The 2026-05-20 second planning iteration in that checkpoint adds the
+implementation-ready row classification and confirms no new internet
+source crawl is needed for the next no-runtime policy gate.
 
 Historical broad-accuracy chain retained below for context:
 That active slice treats historical `low_confidence`,

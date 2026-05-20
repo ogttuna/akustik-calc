@@ -126,6 +126,85 @@ Why this is first:
 6. Run the focused new contract, then `pnpm calculator:gate:current` and
    `git diff --check`.
 
+## Planning Iteration 2 - Implementation-Ready Contract Shape
+
+This pass re-read the implementation after the checkpoint commit:
+
+- `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-transfer-owner.ts`
+- `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-formula-corridor.ts`
+- `packages/engine/src/open-box-timber-similarity-estimate.ts`
+- `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-coverage-refresh.ts`
+- `packages/catalogs/src/floor-systems/exact-floor-systems.ts`
+- existing TUAS truth / fragmentation tests
+
+No new internet research is needed for this iteration. The selected gate
+is not a formula-research or source-acquisition gate; it is a local
+same-family policy gate over already-ingested TUAS exact rows. Pulling new
+web values into this step would turn it into a broad source crawl and
+weaken the current boundary.
+
+Implementation files for the next slice:
+
+1. Add
+   `packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy.ts`.
+2. Add
+   `packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy-contract.test.ts`.
+3. Export the new module from `packages/engine/src/index.ts`.
+4. Add the focused contract to `tools/dev/run-calculator-current-gate.ts`.
+5. Update the living docs only after the contract lands.
+
+The policy contract should stay no-runtime. It should classify evidence
+and pick a later lane, not change public calculator values.
+
+Required constants / status shape:
+
+- landed gate:
+  `broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_plan`
+- recommended selection status if no safe runtime candidate is admitted:
+  `broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_landed_no_runtime_selected_raw_bare_reopening_guard`
+- likely next file after a no-runtime close:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-raw-bare-reopening-guard-contract.test.ts`
+
+Evidence-row policy decisions:
+
+| Row | Current structure | Required decision |
+| --- | --- | --- |
+| `tuas_r7b_open_box_timber_measured_2026` | EPS board + geotextile/screed + EPS/laminate with hybrid lower treatment | keep exact; admit as exact-only hybrid residual evidence only after lower-family and wet/dry package owners are explicit; do not seed source-absent runtime |
+| `tuas_r8b_open_box_timber_measured_2026` | EPS board + geotextile/screed, no finish pair, hybrid lower treatment | keep exact; mark as partial-finish / no-finish residual evidence; cannot calibrate complete laminate/EPS transfer |
+| `tuas_r9b_open_box_timber_measured_2026` | screed + EPS/laminate, no upper fill, hybrid lower treatment | keep exact; admit only as screed-only hybrid residual evidence; no package-transfer promotion |
+| `tuas_r2c_open_box_timber_measured_2026` | EPS/laminate with hybrid lower treatment, no ceiling fill and no upper/floating package | keep exact; classify as lower-ceiling interaction / missing-mass boundary; do not average into thin-laminate runtime |
+| `tuas_r10a_open_box_timber_measured_2026` | glasswool board + gypsum/screed/gypsum staged upper package, family-A lower | keep exact; classify as mixed staged upper package owner gap; no predictor-owned runtime row yet |
+
+Contract acceptance must prove:
+
+- all five rows remain exact-source rows on canonical stacks;
+- source-equivalent fragmentation of those exact rows preserves the exact
+  lab and field route, matching the existing same-package fragmentation
+  tests;
+- none of the five rows appears in the runtime anchor list for
+  `broad_accuracy_floor_open_box_timber_similarity_package_transfer_formula_corridor`;
+- exact-only hybrid and mixed staged rows expose policy decisions as
+  residual/readiness evidence, not as measured runtime calibration rows;
+- `R7b` / `R8b` / `R9b` / `R2c` do not tighten the current
+  `+/-7 dB`, `+/-2.5 dB`, `+/-6 dB` package-transfer budgets in this
+  gate;
+- `R10a` stays out of runtime because there are zero predictor-owned
+  mixed staged rows;
+- raw bare open-box, open-web steel wrong-family, partial finish,
+  field/building outputs, and ASTM/IIC aliases remain blocked;
+- runtime pins stay unchanged: dry gypsum-fiber remains `Ln,w 50.8`,
+  `CI,50-2500 3.3`, `Rw 66`; thin laminate remains `Ln,w 53.5`,
+  `Rw 55.5`; reinforced ceiling remains `Ln,w 53.5`, `Rw 63.5`.
+
+Policy close decision:
+
+- If the policy only classifies evidence, close no-runtime and select the
+  raw-bare open-box reopening guard next.
+- If the policy proves a narrow residual admission lane, still close
+  no-runtime and select a separate exact-only hybrid residual-admission
+  gate; do not combine admission and runtime movement.
+- Do not promote runtime inside this policy gate.
+
 ## Documentation Notes
 
 `NEXT_IMPLEMENTATION_PLAN.md` still contains long historical closed-slice

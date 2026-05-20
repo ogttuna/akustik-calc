@@ -31,6 +31,16 @@ It records the fresh green current-gate validation after the open-box
 timber formula/runtime/surface-parity/coverage-refresh sequence:
 engine 463 files / 2656 tests, web 88 files / 366 passed + 18 skipped,
 repo build 5 / 5, and whitespace guard passed.
+The surface parity closeout landed as
+`broad_accuracy_floor_open_box_timber_similarity_surface_parity_plan`
+with selection status
+`broad_accuracy_floor_open_box_timber_similarity_surface_parity_landed_selected_coverage_refresh`.
+The open-box timber similarity coverage refresh has landed as
+`broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_plan`
+with selection status
+`broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_landed_selected_exact_only_hybrid_fragmentation_policy`;
+the landed contract is
+`packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-coverage-refresh-contract.test.ts`.
 The visible source-absent package-transfer lane preserves `Ln,w 50.8`,
 `CI,50-2500 3.3`, and `Rw 66` with `+/-7 dB`, `+/-2.5 dB`, and
 `+/-6 dB` not-measured budgets, while exact TUAS rows still win and raw
