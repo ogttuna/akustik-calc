@@ -3,9 +3,28 @@
 Status: LANDED no-runtime broad-accuracy benchmark expansion after the
 controlled company-internal envelope proof.
 
-Latest status: LANDED no-runtime floor-system similarity-anchor
-admission after the benchmark expansion. The actual runtime broadening
-lane is now selected but not yet implemented.
+Latest status: LANDED no-runtime open-box timber exact-only hybrid
+fragmentation policy after the package-transfer coverage refresh. The
+current selected next lane is the raw-bare open-box reopening guard, not
+a source crawl or field/building / ASTM/IIC alias.
+
+Current selected next action:
+
+`broad_accuracy_floor_open_box_timber_raw_bare_reopening_guard_plan`
+
+Current selected next file:
+
+`packages/engine/src/broad-accuracy-floor-open-box-timber-raw-bare-reopening-guard-contract.test.ts`
+
+The just-landed no-runtime policy gate is
+`broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_plan`
+with selection status
+`broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_landed_no_runtime_selected_raw_bare_reopening_guard`.
+Landed contract:
+`packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy-contract.test.ts`.
+It keeps R7b/R8b/R9b/R2c/R10a exact-only, keeps the package-transfer
+runtime pins `Ln,w 50.8`, `CI,50-2500 3.3`, and `Rw 66` frozen, and
+keeps field/building plus ASTM/IIC aliases blocked.
 
 Selected action:
 
@@ -714,6 +733,19 @@ Current validation status:
   `broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_plan`.
   Selected next file:
   `packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy-contract.test.ts`.
+- The exact-only hybrid fragmentation policy has now landed as
+  `broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_plan`
+  with selection status
+  `broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_landed_no_runtime_selected_raw_bare_reopening_guard`.
+  It is no-runtime policy work over the five exact-only TUAS rows. R7b,
+  R8b, R9b, R2c, and R10a remain exact-source rows only, stay out of
+  package-transfer runtime anchors, and do not move tolerances. The
+  package-transfer pins stay `Ln,w 50.8`, `CI,50-2500 3.3`, and `Rw 66`;
+  field/building and ASTM/IIC aliases remain blocked. Selected next
+  action: raw-bare open-box guard,
+  `broad_accuracy_floor_open_box_timber_raw_bare_reopening_guard_plan`.
+  Selected next file:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-raw-bare-reopening-guard-contract.test.ts`.
 
 Pre-sprint revalidation checkpoint:
 [CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md](./CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md).
@@ -721,14 +753,14 @@ It confirmed the full current gate was green before the sprint and
 provided the implementation detail for the no-runtime open-box timber
 formula corridor that has now landed. Runtime, surface parity, and
 coverage-matrix refresh have also landed; the exact-only hybrid
-fragmentation policy is now the next bounded step and must not be
-collapsed into the already-closed gates.
+fragmentation policy has now landed and the raw-bare guard is the next
+bounded step.
 
 Current revalidation checkpoint:
 [CHECKPOINT_2026-05-20_BROAD_ACCURACY_REVALIDATION_AND_OPEN_BOX_FRAGMENTATION_PLAN.md](./CHECKPOINT_2026-05-20_BROAD_ACCURACY_REVALIDATION_AND_OPEN_BOX_FRAGMENTATION_PLAN.md).
 It confirms `pnpm calculator:gate:current` is green after the open-box
 timber formula/runtime/surface-parity/coverage-refresh sequence: engine
-463 files / 2656 tests, web 88 files / 366 passed + 18 skipped, repo
+464 files / 2662 tests, web 88 files / 366 passed + 18 skipped, repo
 build 5 / 5, and whitespace guard passed. The selected next action is
 `broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_plan`
 in

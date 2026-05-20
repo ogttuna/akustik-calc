@@ -28,7 +28,7 @@ Current calculator handoff:
 - Latest checkpoint:
   [calculator/CHECKPOINT_2026-05-20_BROAD_ACCURACY_REVALIDATION_AND_OPEN_BOX_FRAGMENTATION_PLAN.md](./calculator/CHECKPOINT_2026-05-20_BROAD_ACCURACY_REVALIDATION_AND_OPEN_BOX_FRAGMENTATION_PLAN.md).
   Read this before implementing the next calculator slice. The fresh
-  `pnpm calculator:gate:current` run passed with engine 463 files / 2656
+  `pnpm calculator:gate:current` run passed with engine 464 files / 2662
   tests, web 88 files / 366 passed + 18 skipped, repo build 5 / 5, and
   whitespace guard passed. The open-box timber formula/runtime/surface
   parity/coverage-refresh sequence has landed. The surface parity closeout
@@ -47,16 +47,21 @@ Current calculator handoff:
   the lane. Broad "every common wall/floor combination" confidence is
   still not done.
 - Selected next action:
-  `broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_plan`;
+  `broad_accuracy_floor_open_box_timber_raw_bare_reopening_guard_plan`;
   selected next file:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-raw-bare-reopening-guard-contract.test.ts`.
+  The exact-only hybrid fragmentation policy has now landed as
+  `broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_plan`
+  with selection status
+  `broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_landed_no_runtime_selected_raw_bare_reopening_guard`.
+  Its landed contract is
   `packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy-contract.test.ts`.
-  Human-readable lane: exact-only hybrid fragmentation policy for TUAS
-  open-box timber rows that are exact evidence but unsafe runtime
-  transfer anchors.
-  Keep this as a no-runtime policy gate unless the evidence proves a
-  later narrow runtime candidate. Do not turn it into broad source
-  crawling, raw bare open-box reopening, field/building aliasing, or
-  ASTM/IIC relabeling.
+  It is a no-runtime policy gate: R7b/R8b/R9b/R2c/R10a stay exact-only
+  evidence, do not enter package-transfer runtime anchors, and do not
+  move tolerances. The package-transfer pins remain `Ln,w 50.8`,
+  `CI,50-2500 3.3`, and `Rw 66`; field/building and ASTM/IIC aliases
+  remain blocked. The next lane is the raw-bare open-box guard, not
+  broad source crawling or alias relabeling.
 - Broad-accuracy refocus:
   [calculator/BROAD_ACCURACY_CALCULATOR_PLAN.md](./calculator/BROAD_ACCURACY_CALCULATOR_PLAN.md).
   Use this as the current product-direction guardrail. The 71-row

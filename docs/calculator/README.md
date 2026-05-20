@@ -29,7 +29,7 @@ The active checkpoint is
 [CHECKPOINT_2026-05-20_BROAD_ACCURACY_REVALIDATION_AND_OPEN_BOX_FRAGMENTATION_PLAN.md](./CHECKPOINT_2026-05-20_BROAD_ACCURACY_REVALIDATION_AND_OPEN_BOX_FRAGMENTATION_PLAN.md).
 It records the fresh green current-gate validation after the open-box
 timber formula/runtime/surface-parity/coverage-refresh sequence:
-engine 463 files / 2656 tests, web 88 files / 366 passed + 18 skipped,
+engine 464 files / 2662 tests, web 88 files / 366 passed + 18 skipped,
 repo build 5 / 5, and whitespace guard passed.
 The surface parity closeout landed as
 `broad_accuracy_floor_open_box_timber_similarity_surface_parity_plan`
@@ -46,12 +46,20 @@ The visible source-absent package-transfer lane preserves `Ln,w 50.8`,
 `+/-6 dB` not-measured budgets, while exact TUAS rows still win and raw
 bare open-box, exact-only hybrid, mixed staged, field/building, and
 ASTM/IIC aliases stay blocked.
-Selected next action: exact-only hybrid fragmentation policy,
-`broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_plan`;
-selected next file:
+The exact-only hybrid fragmentation policy has now landed as
+`broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_plan`
+with selection status
+`broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_landed_no_runtime_selected_raw_bare_reopening_guard`.
+Its landed contract is
 `packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy-contract.test.ts`.
-Keep it no-runtime unless the policy evidence proves a later narrow
-runtime candidate.
+It is a no-runtime policy gate: R7b/R8b/R9b/R2c/R10a stay exact-only
+evidence and out of package-transfer runtime anchors; `Ln,w 50.8`,
+`CI,50-2500 3.3`, and `Rw 66` remain frozen; field/building and
+ASTM/IIC aliases remain blocked. Selected next action: raw-bare
+open-box guard,
+`broad_accuracy_floor_open_box_timber_raw_bare_reopening_guard_plan`;
+selected next file:
+`packages/engine/src/broad-accuracy-floor-open-box-timber-raw-bare-reopening-guard-contract.test.ts`.
 Historical controlled-envelope checkpoint:
 [CHECKPOINT_2026-05-15_COMPANY_INTERNAL_CHECKPOINT_REVIEW_AND_VALIDATION.md](./CHECKPOINT_2026-05-15_COMPANY_INTERNAL_CHECKPOINT_REVIEW_AND_VALIDATION.md).
 The current remaining-gap analysis and execution plan is

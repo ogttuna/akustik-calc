@@ -65,8 +65,20 @@ Latest checkpoint:
 The current gate is green after the open-box timber package-transfer
 formula/runtime/surface-parity/coverage-refresh sequence, but broad
 "every common wall/floor combination" confidence is still not complete.
-The selected next action is the exact-only hybrid fragmentation policy
-for same-family TUAS open-box timber evidence.
+The exact-only hybrid fragmentation policy for same-family TUAS
+open-box timber evidence has now landed as
+`broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_plan`
+with selection status
+`broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_landed_no_runtime_selected_raw_bare_reopening_guard`.
+Landed contract:
+`packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy-contract.test.ts`.
+It is no-runtime: the five exact-only rows stay exact evidence, runtime
+package-transfer pins stay `Ln,w 50.8`, `CI,50-2500 3.3`, and `Rw 66`,
+and field/building plus ASTM/IIC aliases remain blocked. The selected
+next action is the raw-bare open-box guard:
+`broad_accuracy_floor_open_box_timber_raw_bare_reopening_guard_plan`;
+selected next file:
+`packages/engine/src/broad-accuracy-floor-open-box-timber-raw-bare-reopening-guard-contract.test.ts`.
 
 Current measured/source inventory exposed by that contract:
 
@@ -790,6 +802,18 @@ Current validation status:
   `broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_plan`.
   Selected next file:
   `packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy-contract.test.ts`.
+- The exact-only hybrid fragmentation policy has now landed as
+  `broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_plan`
+  with selection status
+  `broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_landed_no_runtime_selected_raw_bare_reopening_guard`.
+  It is no-runtime policy work: R7b/R8b/R9b/R2c/R10a remain exact-only
+  TUAS evidence, stay out of package-transfer runtime anchors, and do not
+  move tolerances. The package-transfer pins remain `Ln,w 50.8`,
+  `CI,50-2500 3.3`, and `Rw 66`; field/building and ASTM/IIC aliases
+  remain blocked. Selected next action: raw-bare open-box guard,
+  `broad_accuracy_floor_open_box_timber_raw_bare_reopening_guard_plan`.
+  Selected next file:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-raw-bare-reopening-guard-contract.test.ts`.
 - Pre-sprint revalidation:
   [CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md](./CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md).
   The full current gate was green before the formula sprint; the

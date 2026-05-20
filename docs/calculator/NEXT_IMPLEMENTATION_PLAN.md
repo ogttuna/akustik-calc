@@ -1038,13 +1038,41 @@ and records raw bare, exact-only hybrid, mixed staged, field/building,
 and ASTM/IIC as explicit boundaries rather than supported package-transfer
 coverage.
 
+Broad-accuracy floor open-box timber exact-only hybrid fragmentation
+policy status:
+
+- landed gate:
+  `broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_plan`
+- selection status:
+  `broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_landed_no_runtime_selected_raw_bare_reopening_guard`
+- landed implementation:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy.ts`
+- landed contract:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy-contract.test.ts`
+- selected next action:
+  `broad_accuracy_floor_open_box_timber_raw_bare_reopening_guard_plan`
+- selected next file:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-raw-bare-reopening-guard-contract.test.ts`
+- selected next label:
+  floor open-box timber raw-bare reopening guard
+
+This policy is no-runtime work. It classifies
+`tuas_r7b_open_box_timber_measured_2026`,
+`tuas_r8b_open_box_timber_measured_2026`,
+`tuas_r9b_open_box_timber_measured_2026`,
+`tuas_r2c_open_box_timber_measured_2026`, and
+`tuas_r10a_open_box_timber_measured_2026` as exact-only evidence, keeps
+them out of the package-transfer runtime anchor set, freezes the current
+runtime pins `Ln,w 50.8`, `CI,50-2500 3.3`, and `Rw 66`, and keeps
+field/building plus ASTM/IIC aliases blocked.
+
 Checkpoint handoff:
 
 - [CHECKPOINT_2026-05-20_BROAD_ACCURACY_REVALIDATION_AND_OPEN_BOX_FRAGMENTATION_PLAN.md](./CHECKPOINT_2026-05-20_BROAD_ACCURACY_REVALIDATION_AND_OPEN_BOX_FRAGMENTATION_PLAN.md)
 - This checkpoint is the current resume point. It records the fresh
   `pnpm calculator:gate:current` pass after the open-box timber
-  formula/runtime/surface-parity/coverage-refresh sequence: engine 463
-  files / 2656 tests, web 88 files / 366 passed + 18 skipped, repo build
+  formula/runtime/surface-parity/coverage-refresh sequence: engine 464
+  files / 2662 tests, web 88 files / 366 passed + 18 skipped, repo build
   5 / 5, and whitespace guard passed. It also confirms this is not broad
   "every common wall/floor combination" readiness yet.
 - [CHECKPOINT_2026-05-18_OPEN_BOX_TIMBER_TRANSFER_OWNER.md](./CHECKPOINT_2026-05-18_OPEN_BOX_TIMBER_TRANSFER_OWNER.md)
@@ -1060,33 +1088,30 @@ Checkpoint handoff:
 
 Next implementation order:
 
-1. Land the exact-only hybrid fragmentation policy selected by the
-   open-box timber coverage refresh.
+1. Land the raw-bare open-box reopening guard selected by the
+   exact-only hybrid fragmentation policy.
    - Add
-     `packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy.ts`.
+     `packages/engine/src/broad-accuracy-floor-open-box-timber-raw-bare-reopening-guard.ts`.
    - Add
-     `packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy-contract.test.ts`.
+     `packages/engine/src/broad-accuracy-floor-open-box-timber-raw-bare-reopening-guard-contract.test.ts`.
    - Export the module from `packages/engine/src/index.ts`.
    - Add the focused contract to `tools/dev/run-calculator-current-gate.ts`
      after it is green.
-   - Classify the exact-only hybrid / fragmented TUAS packets
-     `tuas_r7b_open_box_timber_measured_2026`,
-     `tuas_r8b_open_box_timber_measured_2026`,
-     `tuas_r9b_open_box_timber_measured_2026`,
-     `tuas_r2c_open_box_timber_measured_2026`, and
-     `tuas_r10a_open_box_timber_measured_2026`.
-   - Decide which rows can become source-equivalent fragmented package
-     candidates, exact-only hybrid residual owners, mixed staged upper
-     package owners, lower-ceiling interaction owners, or blocked
-     negatives.
-   - Keep raw bare, field/building, and ASTM/IIC boundaries blocked
-     unless this policy explicitly owns them.
-   - Keep the gate no-runtime unless the policy itself proves a later
-     narrow runtime candidate.
+   - Prove raw `open_box_timber_slab` / roleless or base-only packages
+     cannot borrow the package-transfer `Ln,w 50.8`, `CI,50-2500 3.3`,
+     or `Rw 66` runtime pins.
+   - Keep exact TUAS rows first and keep source-equivalent fragmentation
+     exact, but block raw-bare source-absent promotion until a bare
+     carrier owner owns lower treatment, finish/missing-finish, and
+     impact/airborne basis terms.
+   - Keep field/building and ASTM/IIC aliases blocked.
+   - Keep the gate no-runtime unless it proves a separate later bare
+     carrier owner/admission lane.
    - Run the focused contract, then `pnpm calculator:gate:current` and
      `git diff --check`.
 
-2. Contract details from the 2026-05-20 planning iteration:
+2. Consumed exact-only policy details from the 2026-05-20 planning
+   iteration:
    - No new internet/source crawl is needed for this slice. Use the
      already-ingested TUAS exact rows; this is a local evidence-policy
      gate, not source acquisition.

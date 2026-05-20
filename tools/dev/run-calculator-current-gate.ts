@@ -464,6 +464,7 @@ async function main() {
         "src/broad-accuracy-floor-open-box-timber-similarity-runtime-corridor-contract.test.ts",
         "src/broad-accuracy-floor-open-box-timber-similarity-surface-parity-contract.test.ts",
         "src/broad-accuracy-floor-open-box-timber-similarity-coverage-refresh-contract.test.ts",
+        "src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy-contract.test.ts",
         "src/company-internal-opening-leak-a-weighted-spectrum-adapter-owner-contract.test.ts",
         "src/company-internal-opening-leak-a-weighted-spectrum-adapter-formula-corridor-contract.test.ts",
         "src/company-internal-opening-leak-a-weighted-spectrum-adapter-runtime-corridor-contract.test.ts",

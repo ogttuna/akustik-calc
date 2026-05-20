@@ -16,7 +16,7 @@ The active broad-accuracy slice plan is
 [SLICE_BROAD_ACCURACY_REFERENCE_BENCHMARK_AND_SIMILARITY_SOLVER_PLAN.md](./SLICE_BROAD_ACCURACY_REFERENCE_BENCHMARK_AND_SIMILARITY_SOLVER_PLAN.md).
 The latest checkpoint is
 [CHECKPOINT_2026-05-20_BROAD_ACCURACY_REVALIDATION_AND_OPEN_BOX_FRAGMENTATION_PLAN.md](./CHECKPOINT_2026-05-20_BROAD_ACCURACY_REVALIDATION_AND_OPEN_BOX_FRAGMENTATION_PLAN.md);
-`pnpm calculator:gate:current` passed with engine 463 files / 2656
+`pnpm calculator:gate:current` passed with engine 464 files / 2662
 tests, web 88 files / 366 passed + 18 skipped, repo build 5 / 5, and
 whitespace guard passed. No implementation fix was required.
 
@@ -39,11 +39,20 @@ server snapshot replay, calculator API, impact-only API, and Markdown
 report. Exact TUAS rows still win; raw bare open-box, exact-only hybrid,
 mixed staged, field/building, and ASTM/IIC aliases remain blocked.
 
-The selected next action is the no-runtime exact-only hybrid
-fragmentation policy:
+The no-runtime exact-only hybrid fragmentation policy has now landed:
 `broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_plan`;
-selected next file:
+selection status:
+`broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_landed_no_runtime_selected_raw_bare_reopening_guard`.
+Landed contract:
 `packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy-contract.test.ts`.
+It keeps R7b/R8b/R9b/R2c/R10a exact-only, excludes them from
+package-transfer runtime anchors, keeps `Ln,w 50.8`, `CI,50-2500 3.3`,
+and `Rw 66` frozen, and keeps field/building plus ASTM/IIC aliases
+blocked. The selected next action is the raw-bare open-box reopening
+guard:
+`broad_accuracy_floor_open_box_timber_raw_bare_reopening_guard_plan`;
+selected next file:
+`packages/engine/src/broad-accuracy-floor-open-box-timber-raw-bare-reopening-guard-contract.test.ts`.
 This checkpoint is a good commit/stopping point, but it is not broad
 "every common wall/floor combination" readiness yet.
 The 2026-05-20 second planning iteration in that checkpoint adds the

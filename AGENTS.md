@@ -53,17 +53,23 @@ not ready just because a finite catalog of known assemblies passes.
 
 Latest checkpoint: read
 `docs/calculator/CHECKPOINT_2026-05-20_BROAD_ACCURACY_REVALIDATION_AND_OPEN_BOX_FRAGMENTATION_PLAN.md`
-before continuing. The fresh `pnpm calculator:gate:current` pass is
-green with engine 463 files / 2656 tests, web 88 files / 366 passed + 18
-skipped, repo build 5 / 5, and whitespace guard passed. The controlled
-internal envelope is green, but broad "every common wall/floor
-combination" confidence is not done. The selected next action remains
-the no-runtime exact-only hybrid fragmentation policy:
+before continuing. The fresh `pnpm calculator:gate:current` pass was
+green after this slice with engine 464 files / 2662 tests, web 88 files
+/ 366 passed + 18 skipped, repo build 5 / 5, and whitespace guard
+passed. The controlled internal envelope is green, but broad "every
+common wall/floor combination" confidence is not done. The no-runtime
+exact-only hybrid fragmentation policy has now landed as
 `broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_plan`
+with selection status
+`broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_landed_no_runtime_selected_raw_bare_reopening_guard`.
+It classifies the five TUAS exact-only hybrid / fragmented rows as exact
+evidence only, keeps `Ln,w 50.8`, `CI,50-2500 3.3`, and `Rw 66` frozen
+on the package-transfer lane, and keeps field/building plus ASTM/IIC
+aliases blocked. The selected next action is the raw-bare open-box guard
 in
-`packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy-contract.test.ts`.
-Do not collapse this into raw bare open-box reopening, broad source
-crawling, field/building aliases, or ASTM/IIC relabeling.
+`packages/engine/src/broad-accuracy-floor-open-box-timber-raw-bare-reopening-guard-contract.test.ts`.
+Do not collapse that into broad source crawling, field/building aliases,
+or ASTM/IIC relabeling.
 
 Latest end-of-day checkpoint: after commit `c248db8`, read
 `docs/calculator/CHECKPOINT_2026-05-18_END_OF_DAY_BROAD_ACCURACY.md`
@@ -137,6 +143,13 @@ the exact-only hybrid fragmentation policy:
 `broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_plan`
 in
 `packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy-contract.test.ts`.
+The exact-only hybrid fragmentation policy has now landed as no-runtime
+work with selection status
+`broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_landed_no_runtime_selected_raw_bare_reopening_guard`.
+It keeps R7b/R8b/R9b/R2c/R10a exact-only, budget-free runtime anchors
+out of the package-transfer formula, freezes `Ln,w 50.8`,
+`CI,50-2500 3.3`, and `Rw 66`, and selects the raw-bare next guard:
+`packages/engine/src/broad-accuracy-floor-open-box-timber-raw-bare-reopening-guard-contract.test.ts`.
 
 Before implementing calculator behavior, re-read the current local engine
 shape in `packages/engine/src/airborne-calculator.ts` and

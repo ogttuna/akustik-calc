@@ -22,7 +22,7 @@ Command:
 
 Result:
 
-- engine focused gate: 463 files passed, 2656 tests passed;
+- engine focused gate: 464 files passed, 2662 tests passed;
 - web focused gate: 88 files passed, 366 tests passed, 18 skipped;
 - repo build: 5 / 5 packages successful;
 - whitespace guard: passed;
@@ -46,7 +46,10 @@ The active implementation and docs agree:
   for complete same-family packages, visible across engine/web/API/report
   surfaces.
 - Exact TUAS rows still win over package-transfer prediction.
-- Raw bare open-box, exact-only hybrid, mixed staged, field/building, and
+- The exact-only hybrid fragmentation policy now keeps R7b/R8b/R9b/R2c
+  /R10a as exact-only evidence and blocks them from package-transfer
+  runtime anchors.
+- Raw bare open-box, mixed staged residual admission, field/building, and
   ASTM/IIC cases stay explicit boundaries instead of silent fallback
   support.
 
@@ -57,6 +60,7 @@ checkpoint:
 - `broad_accuracy_floor_open_box_timber_similarity_runtime_corridor_plan`
 - `broad_accuracy_floor_open_box_timber_similarity_surface_parity_plan`
 - `broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_plan`
+- `broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_plan`
 
 The dry gypsum-fiber source-absent package-transfer pin remains:
 
@@ -74,9 +78,9 @@ floor stack can be trusted comfortably.
 
 Remaining high-impact blockers:
 
-1. Open-box timber exact-only hybrid / fragmented TUAS packets need an
-   explicit policy before they can become source-equivalent transfer or
-   calibration evidence.
+1. Open-box timber exact-only hybrid / fragmented TUAS packets now have
+   a no-runtime policy; their residual admission and tolerance movement
+   still need later owners before they can influence calculation values.
 2. Raw bare open-box/open-web carriers remain blocked until a separate
    bare-carrier owner exists.
 3. Field/building adapters and ASTM/IIC routes remain basis-specific work
@@ -87,15 +91,27 @@ Remaining high-impact blockers:
 
 ## Selected Next Action
 
-Selected action:
+The action selected by the coverage refresh has now landed:
 
 `broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_plan`
 
-Selected file:
+Landed file:
 
 `packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy-contract.test.ts`
 
-Why this is first:
+Selection status:
+
+`broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_landed_no_runtime_selected_raw_bare_reopening_guard`
+
+Selected next action:
+
+`broad_accuracy_floor_open_box_timber_raw_bare_reopening_guard_plan`
+
+Selected next file:
+
+`packages/engine/src/broad-accuracy-floor-open-box-timber-raw-bare-reopening-guard-contract.test.ts`
+
+Why this was first:
 
 - It is the boundary selected by the landed coverage refresh.
 - It targets same-family TUAS evidence already in the repo.
@@ -104,6 +120,26 @@ Why this is first:
   package-transfer runtime corridor.
 
 ## Implementation Order
+
+Implementation result: the exact-only hybrid fragmentation policy is now
+closed as no-runtime work. It classified R7b/R8b/R9b/R2c/R10a as
+exact-only evidence, excluded those rows from package-transfer runtime
+anchors, kept `Ln,w 50.8`, `CI,50-2500 3.3`, and `Rw 66` frozen, and
+kept field/building plus ASTM/IIC aliases blocked.
+
+Next implementation order:
+
+1. Add the raw-bare open-box reopening guard contract.
+2. Prove raw `open_box_timber_slab`, roleless, and base-only packages do
+   not borrow package-transfer impact or airborne values.
+3. Keep exact TUAS rows first and source-equivalent fragmentation exact.
+4. Keep field/building and ASTM/IIC aliases blocked.
+5. Close no-runtime unless the guard selects a separate bare-carrier
+   owner/admission lane.
+6. Run the focused new contract, then `pnpm calculator:gate:current` and
+   `git diff --check`.
+
+Consumed policy implementation order:
 
 1. Add the exact-only hybrid fragmentation policy contract.
 2. Classify the five known exact-only hybrid / fragmented TUAS packets by
