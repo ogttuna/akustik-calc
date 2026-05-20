@@ -102,12 +102,9 @@ const SAFE_BARE_CASES: readonly BareCarrierCase[] = [
       { floorRole: "base_structure", materialId: "steel_deck_composite", thicknessMm: 75 },
       { floorRole: "base_structure", materialId: "steel_deck_composite", thicknessMm: 75 }
     ]
-  }
-];
-
-const NEGATIVE_CASES: readonly NegativeCarrierCase[] = [
+  },
   {
-    id: "raw open-box timber carrier stays closed",
+    id: "raw open-box timber raw-bare runtime carrier",
     rawSingle: [{ materialId: "open_box_timber_slab", thicknessMm: 370 }],
     rawSplit: [
       { materialId: "open_box_timber_slab", thicknessMm: 185 },
@@ -118,7 +115,10 @@ const NEGATIVE_CASES: readonly NegativeCarrierCase[] = [
       { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 185 },
       { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 185 }
     ]
-  },
+  }
+];
+
+const NEGATIVE_CASES: readonly NegativeCarrierCase[] = [
   {
     id: "wall-like heavy hybrid stays fail-closed",
     rawSingle: [

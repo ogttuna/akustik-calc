@@ -6,6 +6,7 @@ import type { LayerInput, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
+import { OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS } from "./open-box-timber-raw-bare-estimate";
 import {
   BROAD_ACCURACY_FLOOR_OPEN_BOX_TIMBER_SIMILARITY_TRANSFER_OWNER_LANDED_GATE,
   BROAD_ACCURACY_FLOOR_OPEN_BOX_TIMBER_SIMILARITY_TRANSFER_OWNER_SELECTED_NEXT_ACTION,
@@ -223,7 +224,7 @@ describe("broad accuracy floor open-box timber similarity transfer owner contrac
     ]);
   });
 
-  it("keeps exact open-box rows first and keeps raw/partial source-absent inputs out of promoted impact runtime", () => {
+  it("keeps exact open-box rows first, routes raw-bare through its own later corridor, and keeps partial packages out of promoted impact runtime", () => {
     const exactPredictorOwned = calculateAssembly(R5B_EXACT_LAYERS, {
       calculator: "dynamic",
       targetOutputs: TARGET_OUTPUTS
@@ -268,13 +269,28 @@ describe("broad accuracy floor open-box timber similarity transfer owner contrac
     });
     expect(exactOnlyHybrid.floorSystemEstimate).toBeNull();
 
-    for (const blocked of [rawBare, partialFinish]) {
-      expect(blocked.floorSystemMatch).toBeNull();
-      expect(blocked.impact).toBeNull();
-      expect(blocked.supportedTargetOutputs).toEqual(["Rw"]);
-      expect(blocked.unsupportedTargetOutputs).toEqual(["Ln,w", "CI", "CI,50-2500", "Ln,w+CI", "L'n,w", "IIC"]);
-      expect(blocked.floorSystemRatings?.basis).toBe("screening_mass_law_curve_seed_v3");
-    }
+    expect(rawBare.floorSystemMatch).toBeNull();
+    expect(rawBare.floorSystemEstimate?.kind).toBe("family_archetype");
+    expect(rawBare.impact).toMatchObject({
+      CI: -1.1,
+      CI50_2500: 3.1,
+      LnW: 88.2,
+      LnWPlusCI: 87.1,
+      basis: OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS,
+      labOrField: "lab"
+    });
+    expect(rawBare.floorSystemRatings).toMatchObject({
+      Rw: 42.3,
+      basis: OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS
+    });
+    expect(rawBare.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "CI", "CI,50-2500", "Ln,w+CI"]);
+    expect(rawBare.unsupportedTargetOutputs).toEqual(["L'n,w", "IIC"]);
+
+    expect(partialFinish.floorSystemMatch).toBeNull();
+    expect(partialFinish.impact).toBeNull();
+    expect(partialFinish.supportedTargetOutputs).toEqual(["Rw"]);
+    expect(partialFinish.unsupportedTargetOutputs).toEqual(["Ln,w", "CI", "CI,50-2500", "Ln,w+CI", "L'n,w", "IIC"]);
+    expect(partialFinish.floorSystemRatings?.basis).toBe("screening_mass_law_curve_seed_v3");
   });
 
   it("keeps docs, exports, and current-gate runners aligned with the open-box transfer-owner contract", () => {

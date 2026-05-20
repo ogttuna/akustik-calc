@@ -21,6 +21,10 @@ export function getFloorSystemCompanionLabel(ratings: FloorSystemAirborneRatings
 }
 
 export function getFloorSystemC(ratings: FloorSystemAirborneRatings): number | undefined {
+  if (typeof ratings.C === "number") {
+    return ratings.C;
+  }
+
   if (typeof ratings.RwCtr !== "number" || getFloorSystemCompanionSemantic(ratings) !== "rw_plus_c") {
     return undefined;
   }
@@ -29,6 +33,10 @@ export function getFloorSystemC(ratings: FloorSystemAirborneRatings): number | u
 }
 
 export function getFloorSystemCtr(ratings: FloorSystemAirborneRatings): number | undefined {
+  if (typeof ratings.Ctr === "number") {
+    return ratings.Ctr;
+  }
+
   if (typeof ratings.RwCtr !== "number") {
     return undefined;
   }

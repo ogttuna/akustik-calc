@@ -77,6 +77,8 @@ export const FloorSystemAirborneCompanionSemanticSchema = z.enum([
 ]);
 
 export const FloorSystemAirborneRatingsSchema = z.object({
+  C: z.number().optional(),
+  Ctr: z.number().optional(),
   Rw: z.number().positive(),
   RwCtr: z.number().optional(),
   RwCtrSemantic: FloorSystemAirborneCompanionSemanticSchema.optional()

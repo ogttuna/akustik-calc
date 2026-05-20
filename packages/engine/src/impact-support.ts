@@ -43,6 +43,8 @@ import {
   TIMBER_CLT_DELTA_LW_FORMULA_TOLERANCE_DB,
   TIMBER_JOIST_DELTA_LW_FORMULA_BASIS
 } from "./timber-clt-floor-impact-delta-lw-runtime-corridor";
+import { OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS } from "./open-box-timber-eps-screed-hybrid-package-estimate";
+import { OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS } from "./open-box-timber-raw-bare-estimate";
 
 type BuildImpactSupportInput = {
   boundFloorSystemEstimate?: FloorSystemBoundEstimateResult | null;
@@ -113,6 +115,30 @@ function buildHeavyConcreteCombinedFormulaErrorBudgetFormulaNote(impact: ImpactC
   }
 
   return `Heavy-concrete combined upper/lower error budgets are structured: ${budgets
+    .map((budget) => `${budget.metricId} ${formatErrorBudgetRange(budget)}`)
+    .join("; ")}; origin source_absent_formula_error_budget; not measured evidence.`;
+}
+
+function buildRawBareOpenBoxTimberFormulaErrorBudgetFormulaNote(impact: ImpactCalculation): string | null {
+  const budgets = impact.errorBudgets ?? [];
+
+  if (budgets.length === 0) {
+    return null;
+  }
+
+  return `Raw-bare open-box timber error budgets are structured: ${budgets
+    .map((budget) => `${budget.metricId} ${formatErrorBudgetRange(budget)}`)
+    .join("; ")}; origin source_absent_formula_error_budget; not measured evidence.`;
+}
+
+function buildEpsScreedHybridOpenBoxTimberFormulaErrorBudgetFormulaNote(impact: ImpactCalculation): string | null {
+  const budgets = impact.errorBudgets ?? [];
+
+  if (budgets.length === 0) {
+    return null;
+  }
+
+  return `EPS/screed hybrid package error budgets are structured: ${budgets
     .map((budget) => `${budget.metricId} ${formatErrorBudgetRange(budget)}`)
     .join("; ")}; origin source_absent_formula_error_budget; not measured evidence.`;
 }
@@ -311,6 +337,34 @@ export function buildImpactSupport(input: BuildImpactSupportInput): ImpactSuppor
       formulaNotes,
       `Corridor tolerance remains +/-${TIMBER_CLT_DELTA_LW_FORMULA_TOLERANCE_DB} dB for DeltaLw.`
     );
+  }
+
+  if (input.impact?.basis === OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS) {
+    notes.push("Raw-bare open-box timber formula corridor is active; exact measured package rows still outrank it when they truly match.");
+    pushUnique(
+      formulaNotes,
+      "Raw-bare open-box timber runtime is source-absent lab evidence for the bare carrier, not a TUAS finished package measurement."
+    );
+    const errorBudgetNote = buildRawBareOpenBoxTimberFormulaErrorBudgetFormulaNote(input.impact);
+    if (errorBudgetNote) {
+      pushUnique(formulaNotes, errorBudgetNote);
+    }
+  }
+
+  if (input.impact?.basis === OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS) {
+    notes.push("Open-box timber EPS/screed hybrid package formula corridor is active; exact measured package rows still outrank it when they truly match.");
+    pushUnique(
+      formulaNotes,
+      "EPS/screed hybrid package runtime is source-absent lab evidence anchored to R7b, not a measured row for this variant."
+    );
+    pushUnique(
+      formulaNotes,
+      "R8b, R9b, R2c, and R10a remain negative boundaries for partial, screed-only, missing-mass, and mixed-staged packets."
+    );
+    const errorBudgetNote = buildEpsScreedHybridOpenBoxTimberFormulaErrorBudgetFormulaNote(input.impact);
+    if (errorBudgetNote) {
+      pushUnique(formulaNotes, errorBudgetNote);
+    }
   }
 
   if (input.impact && (input.impact.basis === "exact_source_band_curve_iso7172" || hasMetricBasis(input.impact, "exact_source_band_curve_iso7172"))) {

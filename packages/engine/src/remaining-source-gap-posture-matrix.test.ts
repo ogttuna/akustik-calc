@@ -2,6 +2,7 @@ import type { LayerInput, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
+import { OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS } from "./open-box-timber-raw-bare-estimate";
 import { TUAS_C11C_COMBINED_WET_SOURCE_LAYERS } from "./tuas-c11c-exact-import-readiness";
 
 type SourceGapSnapshot = {
@@ -145,26 +146,26 @@ const CASES: readonly SourceGapCase[] = [
     }
   },
   {
-    id: "raw bare open-box keeps impact outputs deferred",
+    id: "raw bare open-box uses source-absent raw-bare runtime without field impact aliases",
     layers: [{ materialId: "open_box_timber_slab", thicknessMm: 220 }],
     expected: {
-      candidateIds: null,
-      ci50_2500: null,
-      estimateBasis: null,
-      estimateKind: null,
-      fitPercent: null,
-      impactBasis: null,
+      candidateIds: ["source_absent_raw_bare_open_box_formula"],
+      ci50_2500: 3.4,
+      estimateBasis: OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS,
+      estimateKind: "family_archetype",
+      fitPercent: 100,
+      impactBasis: OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS,
       lPrimeNT50: null,
       lPrimeNTw: null,
       lPrimeNW: null,
-      lnW: null,
-      lnWPlusCI: null,
+      lnW: 91.1,
+      lnWPlusCI: 90.2,
       matchId: null,
-      rw: 35,
+      rw: 38.1,
       rwPrime: 35,
       dnTw: 38,
-      supported: ["R'w", "DnT,w"],
-      unsupported: FAIL_CLOSED_IMPACT_UNSUPPORTED
+      supported: ["Rw", "R'w", "DnT,w", "Ln,w", "CI,50-2500", "Ln,w+CI"],
+      unsupported: ["L'n,w", "L'nT,w", "L'nT,50"]
     }
   },
   {

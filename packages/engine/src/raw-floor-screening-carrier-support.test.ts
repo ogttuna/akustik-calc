@@ -2,6 +2,7 @@ import type { LayerInput, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
+import { OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS } from "./open-box-timber-raw-bare-estimate";
 
 type RawScreeningCase = {
   expectedField: {
@@ -250,16 +251,16 @@ const CASES: readonly RawScreeningCase[] = [
     id: "raw open-box single layer",
     layers: [{ materialId: "open_box_timber_slab", thicknessMm: 370 }],
     expectedLab: {
-      basis: null,
-      estimateKind: null,
+      basis: OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS,
+      estimateKind: "family_archetype",
       floorSystemMatchId: null,
-      supported: ["Rw"]
+      supported: ["Rw", "Ln,w", "Ln,w+CI"]
     },
     expectedField: {
-      basis: null,
-      estimateKind: null,
+      basis: OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS,
+      estimateKind: "family_archetype",
       floorSystemMatchId: null,
-      supported: ["R'w", "DnT,w"]
+      supported: ["Rw", "R'w", "DnT,w", "Ln,w"]
     }
   },
   {

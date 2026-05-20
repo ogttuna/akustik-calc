@@ -38,7 +38,9 @@ import {
 } from "./timber-clt-floor-impact-delta-lw-runtime-corridor";
 import { OPEN_WEB_DIRECT_FIXED_LINING_BASIS } from "./lightweight-steel-open-web-direct-fixed-lining-estimate";
 import { OPEN_WEB_SUPPORTED_BAND_SIMILARITY_BASIS } from "./lightweight-steel-open-web-supported-band-estimate";
+import { OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS } from "./open-box-timber-eps-screed-hybrid-package-estimate";
 import { OPEN_BOX_TIMBER_SIMILARITY_BASIS } from "./open-box-timber-similarity-estimate";
+import { OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS } from "./open-box-timber-raw-bare-estimate";
 
 type BuildDynamicImpactTraceInput = {
   boundFloorSystemEstimate?: FloorSystemBoundEstimateResult | null;
@@ -158,6 +160,14 @@ function getScopedFamilySelectionLabel(
 
   if (basisLabels.has(OPEN_BOX_TIMBER_SIMILARITY_BASIS)) {
     return "Open-box timber package-transfer corridor";
+  }
+
+  if (basisLabels.has(OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS)) {
+    return "Open-box timber EPS/screed hybrid package formula corridor";
+  }
+
+  if (basisLabels.has(OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS)) {
+    return "Raw-bare open-box timber formula corridor";
   }
 
   return null;
@@ -373,6 +383,8 @@ function formatImpactBasisLabel(value: ImpactCalculation["basis"] | ImpactBoundC
       return "Open-web steel direct-fixed lining interpolation";
     case "broad_accuracy_floor_open_box_timber_similarity_package_transfer_formula_corridor":
       return "Open-box timber package-transfer corridor";
+    case "broad_accuracy_floor_open_box_timber_raw_bare_source_absent_formula_corridor":
+      return "Raw-bare open-box timber formula corridor";
     case "predictor_lightweight_steel_mass_spring_holdout_corridor_estimate":
       return "Lightweight-steel formula corridor";
     case "predictor_lightweight_steel_suspended_ceiling_corridor_estimate":
@@ -621,15 +633,22 @@ export function buildDynamicImpactTrace(
     selectedSourceLabels = ["Heavy-reference DeltaLw carry-over"];
     candidateRowCount = 1;
   } else if (input.floorSystemEstimate && input.impact) {
-    selectionKind = "family_estimate";
+    const isRawBareOpenBoxFormula = input.impact.basis === OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS;
+    selectionKind = isRawBareOpenBoxFormula ? "formula_estimate" : "family_estimate";
     evidenceTier = "estimate";
-    estimateTier = input.floorSystemEstimate.kind;
+    estimateTier = isRawBareOpenBoxFormula ? undefined : input.floorSystemEstimate.kind;
     selectedLabel =
       familySelectionLabel ??
       `${formatEstimateTier(estimateTier) ?? "Published family"} · ${input.floorSystemEstimate.structuralFamily}`;
-    selectedSourceIds = input.floorSystemEstimate.sourceSystems.map((system) => system.id);
-    selectedSourceLabels = input.floorSystemEstimate.sourceSystems.map((system) => system.label);
-    candidateRowCount = input.floorSystemEstimate.sourceSystems.length;
+    selectedSourceIds = isRawBareOpenBoxFormula
+      ? input.impact.estimateCandidateIds ?? ["source_absent_raw_bare_open_box_formula"]
+      : input.floorSystemEstimate.sourceSystems.map((system) => system.id);
+    selectedSourceLabels = isRawBareOpenBoxFormula
+      ? ["Source-absent raw-bare open-box formula"]
+      : input.floorSystemEstimate.sourceSystems.map((system) => system.label);
+    candidateRowCount = isRawBareOpenBoxFormula
+      ? (input.impact.estimateCandidateIds?.length ?? 1)
+      : input.floorSystemEstimate.sourceSystems.length;
     fitPercent = input.floorSystemEstimate.fitPercent;
   } else if (input.boundFloorSystemMatch && input.lowerBoundImpact) {
     selectionKind = "bound_floor_system";
@@ -683,6 +702,18 @@ export function buildDynamicImpactTrace(
   if (input.impact?.basis === OPEN_BOX_TIMBER_SIMILARITY_BASIS) {
     notes.push(
       "Open-box timber package-transfer corridor stayed inside the TUAS measured open-box timber packet family."
+    );
+  }
+
+  if (input.impact?.basis === OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS) {
+    notes.push(
+      "Open-box timber EPS/screed hybrid package formula corridor used R7b as a design anchor while keeping exact rows and dry package-transfer rows separate."
+    );
+  }
+
+  if (input.impact?.basis === OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS) {
+    notes.push(
+      "Raw-bare open-box timber formula corridor used the source-absent bare-carrier path without borrowing finished package-transfer rows."
     );
   }
 

@@ -265,6 +265,15 @@ export function getImpactConfidenceForBasis(basis: ImpactEstimateBasis): ImpactC
     };
   }
 
+  if (basis === "broad_accuracy_floor_open_box_timber_raw_bare_source_absent_formula_corridor") {
+    return {
+      level: "medium",
+      provenance: "formula_estimate_narrow_scope",
+      score: 0.63,
+      summary: "Raw-bare open-box timber source-absent formula corridor with explicit carrier geometry defaults and wide lab error budgets."
+    };
+  }
+
   if (basis === "predictor_lightweight_steel_fl28_interpolation_estimate") {
     return {
       level: "medium",
@@ -300,6 +309,16 @@ export function getImpactConfidenceForBasis(basis: ImpactEstimateBasis): ImpactC
       score: 0.76,
       summary:
         "Open-box timber package-transfer estimate anchored to same-family TUAS measured packets with source-absent error budgets."
+    };
+  }
+
+  if (basis === "broad_accuracy_floor_open_box_timber_eps_screed_hybrid_package_formula_corridor") {
+    return {
+      level: "medium",
+      provenance: "formula_estimate_narrow_scope",
+      score: 0.7,
+      summary:
+        "Open-box timber EPS/screed hybrid package formula corridor anchored to the R7b same-stack packet with source-absent error budgets."
     };
   }
 

@@ -20,6 +20,10 @@ import {
   OPEN_BOX_TIMBER_SIMILARITY_LABEL,
   isOpenBoxTimberSimilarityImpact
 } from "./open-box-timber-similarity-surface";
+import {
+  OPEN_BOX_TIMBER_RAW_BARE_LABEL,
+  isOpenBoxTimberRawBareImpact
+} from "./open-box-timber-raw-bare-surface";
 
 export type ImpactLaneKind =
   | "bound_only"
@@ -28,6 +32,7 @@ export type ImpactLaneKind =
   | "heavy_concrete_combined_formula_corridor"
   | "low_confidence_fallback"
   | "official_catalog"
+  | "open_box_timber_raw_bare"
   | "open_box_timber_similarity"
   | "open_web_direct_fixed_lining"
   | "open_web_supported_band_similarity"
@@ -81,6 +86,10 @@ export function getImpactLaneKind(input: {
     return "open_web_direct_fixed_lining";
   }
 
+  if (isOpenBoxTimberRawBareImpact(impact)) {
+    return "open_box_timber_raw_bare";
+  }
+
   if (isOpenBoxTimberSimilarityImpact(impact)) {
     return "open_box_timber_similarity";
   }
@@ -108,6 +117,8 @@ export function getImpactLanePillLabel(kind: ImpactLaneKind): string {
       return "Open-web similarity live";
     case "open_web_direct_fixed_lining":
       return "Direct-fixed open-web live";
+    case "open_box_timber_raw_bare":
+      return "Raw-bare open-box live";
     case "open_box_timber_similarity":
       return "Open-box timber live";
     case "bound_only":
@@ -139,6 +150,8 @@ export function getImpactLaneHeadline(kind: ImpactLaneKind): string {
       return OPEN_WEB_SUPPORTED_BAND_SIMILARITY_LABEL;
     case "open_web_direct_fixed_lining":
       return OPEN_WEB_DIRECT_FIXED_LINING_LABEL;
+    case "open_box_timber_raw_bare":
+      return OPEN_BOX_TIMBER_RAW_BARE_LABEL;
     case "open_box_timber_similarity":
       return OPEN_BOX_TIMBER_SIMILARITY_LABEL;
     case "bound_only":
@@ -166,6 +179,8 @@ export function getImpactLaneNarrative(kind: ImpactLaneKind, hasExactFamilyCompa
           ? "This floor lane stays inside the UBIQ FL-24/FL-26 open-web steel supported-band source grid. Exact rows still win on true matches; FL-28 interpolation, carpet/bound-only support, field, building, ASTM, and IIC outputs stay outside this lab estimate."
         : kind === "open_web_direct_fixed_lining"
           ? "This floor lane stays inside the UBIQ FL-23/FL-25/FL-27 open-web steel direct-fixed source grid. Exact rows still win on true matches; resilient suspended-ceiling rows, broad steel blends, field, building, ASTM, and IIC outputs stay outside this lab estimate."
+        : kind === "open_box_timber_raw_bare"
+          ? "This floor lane stays on the source-absent raw-bare open-box timber carrier formula. Exact TUAS rows and complete finished package-transfer routes still win; partial packages, field, building, ASTM, and IIC outputs stay outside this lab estimate."
         : kind === "open_box_timber_similarity"
           ? "This floor lane stays inside the TUAS measured open-box timber packet family. Exact TUAS rows still win on true matches; raw bare carriers, exact-only hybrids, mixed staged packages, field, building, ASTM, and IIC outputs stay outside this lab estimate."
         : kind === "published_family"

@@ -23,7 +23,12 @@ import { deriveBoundFloorSystemEstimate, matchBoundFloorSystem, resolveBoundFloo
 import { deriveFloorSystemEstimate } from "./floor-system-estimate";
 import { deriveLightweightSteelOpenWebDirectFixedLiningEstimate } from "./lightweight-steel-open-web-direct-fixed-lining-estimate";
 import { deriveLightweightSteelOpenWebSupportedBandSimilarityEstimate } from "./lightweight-steel-open-web-supported-band-estimate";
+import {
+  deriveOpenBoxTimberEpsScreedHybridPackageEstimate,
+  OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS
+} from "./open-box-timber-eps-screed-hybrid-package-estimate";
 import { deriveOpenBoxTimberSimilarityEstimate } from "./open-box-timber-similarity-estimate";
+import { deriveOpenBoxTimberRawBareEstimate, OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS } from "./open-box-timber-raw-bare-estimate";
 import {
   matchExactFloorSystem,
   recommendFloorSystems,
@@ -203,6 +208,37 @@ export function resolveLayerBasedImpactLane(
           targetOutputs: input.targetOutputs
         })
       : null;
+  const openBoxTimberEpsScreedHybridPackageEstimate =
+    !input.exactImpact &&
+    !input.officialFloorSystemId &&
+    !floorSystemMatch &&
+    !boundFloorSystemMatch &&
+    !impactCatalogMatch &&
+    !explicitDeltaImpact &&
+    !openBoxTimberSimilarityEstimate &&
+    !blockSteelFormulaFallback &&
+    !blockHeavyConcreteCombinedFormulaFallback
+      ? deriveOpenBoxTimberEpsScreedHybridPackageEstimate({
+          layers: input.resolvedLayers,
+          targetOutputs: input.targetOutputs
+        })
+      : null;
+  const openBoxTimberRawBareEstimate =
+    !input.exactImpact &&
+    !input.officialFloorSystemId &&
+    !floorSystemMatch &&
+    !boundFloorSystemMatch &&
+    !impactCatalogMatch &&
+    !explicitDeltaImpact &&
+    !openBoxTimberSimilarityEstimate &&
+    !openBoxTimberEpsScreedHybridPackageEstimate &&
+    !blockSteelFormulaFallback &&
+    !blockHeavyConcreteCombinedFormulaFallback
+      ? deriveOpenBoxTimberRawBareEstimate({
+          layers: input.resolvedLayers,
+          targetOutputs: input.targetOutputs
+        })
+      : null;
   const predictorFormulaImpact =
     input.predictorInput &&
     !input.officialFloorSystemId &&
@@ -210,7 +246,9 @@ export function resolveLayerBasedImpactLane(
     !boundFloorSystemMatch &&
     !impactCatalogMatch &&
     !explicitDeltaImpact &&
-    !openBoxTimberSimilarityEstimate
+    !openBoxTimberSimilarityEstimate &&
+    !openBoxTimberEpsScreedHybridPackageEstimate &&
+    !openBoxTimberRawBareEstimate
       ? estimateImpactFromPredictorInput(input.predictorInput)
       : null;
   const predictorDeltaLwCompanion =
@@ -229,6 +267,8 @@ export function resolveLayerBasedImpactLane(
     !impactCatalogMatch &&
     !predictorFormulaImpact &&
     !openBoxTimberSimilarityEstimate &&
+    !openBoxTimberEpsScreedHybridPackageEstimate &&
+    !openBoxTimberRawBareEstimate &&
     !blockSteelFormulaFallback &&
     !blockHeavyConcreteCombinedFormulaFallback
       ? derivePredictorSpecificFloorSystemEstimate(input.predictorInput)
@@ -282,6 +322,8 @@ export function resolveLayerBasedImpactLane(
     !openWebSupportedBandSimilarityEstimate &&
     !openWebDirectFixedLiningEstimate &&
     !openBoxTimberSimilarityEstimate &&
+    !openBoxTimberEpsScreedHybridPackageEstimate &&
+    !openBoxTimberRawBareEstimate &&
     !narrowImpact &&
     !blockSteelFormulaFallback &&
     !blockHeavyConcreteCombinedFormulaFallback
@@ -297,6 +339,8 @@ export function resolveLayerBasedImpactLane(
           !openWebSupportedBandSimilarityEstimate &&
           !openWebDirectFixedLiningEstimate &&
           !openBoxTimberSimilarityEstimate &&
+          !openBoxTimberEpsScreedHybridPackageEstimate &&
+          !openBoxTimberRawBareEstimate &&
           !impactCatalogMatch &&
           !narrowImpact &&
           !blockSteelFormulaFallback &&
@@ -308,6 +352,8 @@ export function resolveLayerBasedImpactLane(
     openWebSupportedBandSimilarityEstimate ??
     openWebDirectFixedLiningEstimate ??
     openBoxTimberSimilarityEstimate ??
+    openBoxTimberEpsScreedHybridPackageEstimate ??
+    openBoxTimberRawBareEstimate ??
     rawFloorSystemEstimate;
 
   return {
@@ -369,14 +415,20 @@ export function finalizeResolvedImpactLane(
     null;
   const exactImpactSourceForFieldContext =
     input.exactImpactSource ?? resolveExactFloorSystemImpactSource(input.floorSystemMatch?.system);
-  const impact = attachImpactTraceFromExactSource(
+  const impactBeforeFieldContext =
     baseImpact?.basis === "predictor_explicit_delta_heavy_reference_derived"
       ? baseImpact
+      : baseImpact?.basis === OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS
+        ? baseImpact
+      : baseImpact?.basis === OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS
+        ? baseImpact
       : applyImpactFieldContextToImpact(baseImpact, input.impactFieldContext, {
           defaultSupportingElementFamily,
           exactImpactSource: exactImpactSourceForFieldContext,
           resolvedLayers: input.resolvedLayers
-        }),
+        });
+  const impact = attachImpactTraceFromExactSource(
+    impactBeforeFieldContext,
     exactImpactSourceForFieldContext
   );
   const lowerBoundImpact = applyImpactFieldContextToBoundImpact(baseLowerBoundImpact, input.impactFieldContext);

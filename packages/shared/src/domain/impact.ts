@@ -34,6 +34,8 @@ export const ImpactEstimateBasisSchema = z.enum([
   "predictor_lightweight_steel_open_web_supported_band_similarity_estimate",
   "broad_accuracy_floor_open_web_direct_fixed_lining_direct_source_interpolation_formula_corridor",
   "broad_accuracy_floor_open_box_timber_similarity_package_transfer_formula_corridor",
+  "broad_accuracy_floor_open_box_timber_raw_bare_source_absent_formula_corridor",
+  "broad_accuracy_floor_open_box_timber_eps_screed_hybrid_package_formula_corridor",
   "predictor_lightweight_steel_mass_spring_holdout_corridor_estimate",
   "predictor_lightweight_steel_suspended_ceiling_corridor_estimate",
   "predictor_lightweight_steel_bound_interpolation_estimate",

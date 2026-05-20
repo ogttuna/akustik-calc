@@ -43,6 +43,11 @@ import {
   isOpenBoxTimberSimilarityResult
 } from "./open-box-timber-similarity-surface";
 import {
+  getOpenBoxTimberRawBareOutputDetail,
+  getOpenBoxTimberRawBarePosture,
+  isOpenBoxTimberRawBareResult
+} from "./open-box-timber-raw-bare-surface";
+import {
   getCompanyInternalOpeningLeakFieldBuildingOutputDetail,
   getCompanyInternalOpeningLeakFieldBuildingSurface
 } from "./opening-leak-field-building-surface";
@@ -322,6 +327,28 @@ export function buildSimpleWorkbenchOutputPosture(input: {
         "DAC is intentionally packaging this as a one-sided support value. It is useful for scoping, but it should not be read as a claimed exact readout, and other live cards can still stay visible beside it.",
       label: "Conservative bound",
       tone: "warning"
+    };
+  }
+
+  if (
+    studyMode === "floor" &&
+    status === "live" &&
+    isOpenBoxTimberRawBareResult(result) &&
+    (
+      output === "Rw" ||
+      output === "C" ||
+      output === "Ctr" ||
+      output === "Ln,w" ||
+      output === "CI" ||
+      output === "CI,50-2500" ||
+      output === "Ln,w+CI"
+    )
+  ) {
+    const posture = getOpenBoxTimberRawBarePosture();
+
+    return {
+      ...posture,
+      detail: getOpenBoxTimberRawBareOutputDetail(output, result) ?? posture.detail
     };
   }
 

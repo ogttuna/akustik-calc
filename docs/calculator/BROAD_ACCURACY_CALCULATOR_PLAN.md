@@ -74,11 +74,33 @@ Landed contract:
 `packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy-contract.test.ts`.
 It is no-runtime: the five exact-only rows stay exact evidence, runtime
 package-transfer pins stay `Ln,w 50.8`, `CI,50-2500 3.3`, and `Rw 66`,
-and field/building plus ASTM/IIC aliases remain blocked. The selected
-next action is the raw-bare open-box guard:
+and field/building plus ASTM/IIC aliases remain blocked. The raw-bare
+open-box reopening guard has now landed as
 `broad_accuracy_floor_open_box_timber_raw_bare_reopening_guard_plan`;
-selected next file:
+selection status:
+`broad_accuracy_floor_open_box_timber_raw_bare_reopening_guard_landed_no_runtime_selected_bare_carrier_owner`.
+Landed contract:
 `packages/engine/src/broad-accuracy-floor-open-box-timber-raw-bare-reopening-guard-contract.test.ts`.
+It is no-runtime: raw roleless/tagged/split/upper-only/lower-only
+`open_box_timber_slab` probes do not borrow package-transfer
+`Ln,w 50.8`, `CI,50-2500 3.3`, or `Rw 66`; impact stays unsupported
+and field/building plus ASTM/IIC aliases remain blocked. The selected
+next file is the bare-carrier owner contract:
+`packages/engine/src/broad-accuracy-floor-open-box-timber-raw-bare-carrier-owner-contract.test.ts`.
+The bare-carrier owner contract has now landed as
+`broad_accuracy_floor_open_box_timber_raw_bare_carrier_owner_contract_plan`;
+selection status:
+`broad_accuracy_floor_open_box_timber_raw_bare_carrier_owner_landed_no_runtime_selected_formula_corridor`.
+Landed contract:
+`packages/engine/src/broad-accuracy-floor-open-box-timber-raw-bare-carrier-owner-contract.test.ts`.
+It is no-runtime: raw-bare support geometry, airborne direct-curve, bare
+impact-curve, finish absence, lower-treatment state, package-transfer
+exclusion, source-or-physics basis, uncertainty-budget, exact-precedence,
+basis-boundary, and hostile-topology owners are explicit before any
+runtime promotion. `Ln,w 50.8`, `CI,50-2500 3.3`, and `Rw 66` stay on
+the finished package-transfer lane; field/building and ASTM/IIC aliases
+remain blocked. Selected next file:
+`packages/engine/src/broad-accuracy-floor-open-box-timber-raw-bare-formula-corridor-contract.test.ts`.
 
 Current measured/source inventory exposed by that contract:
 
@@ -226,6 +248,85 @@ Company-internal readiness is achieved only when:
 Detailed active slice plan:
 
 [SLICE_BROAD_ACCURACY_REFERENCE_BENCHMARK_AND_SIMILARITY_SOLVER_PLAN.md](./SLICE_BROAD_ACCURACY_REFERENCE_BENCHMARK_AND_SIMILARITY_SOLVER_PLAN.md)
+
+Current selected next action:
+
+`broad_accuracy_floor_open_box_timber_eps_screed_hybrid_package_surface_parity_plan`
+
+Current selected next file:
+
+`packages/engine/src/broad-accuracy-floor-open-box-timber-eps-screed-hybrid-package-surface-parity-contract.test.ts`
+
+Current selected next label:
+
+floor open-box timber EPS/screed hybrid package surface parity.
+
+The post raw-bare open-box timber coverage revalidation has landed as
+`broad_accuracy_post_raw_bare_open_box_timber_coverage_revalidation_plan`
+with selection status
+`broad_accuracy_post_raw_bare_open_box_timber_coverage_revalidation_landed_no_runtime_selected_package_transfer_residual_expansion`.
+This gate was no-runtime: raw-bare open-box timber remains `Rw 42.3` /
+`Ln,w 88.2`, finished package-transfer remains `Ln,w 50.8`, exact TUAS
+rows still win, tolerances/API/workbench behavior do not move, and
+field/building plus ASTM/IIC aliases remain blocked. This is not a
+broad source crawl. The next implementation should expand the
+package-transfer residual lane for exact-only hybrid / mixed-staged
+same-family evidence gaps.
+
+The package-transfer residual expansion has now landed as
+`broad_accuracy_floor_open_box_timber_package_transfer_residual_expansion_plan`
+with selection status
+`broad_accuracy_floor_open_box_timber_package_transfer_residual_expansion_landed_no_runtime_selected_eps_screed_hybrid_package_owner`.
+This gate was no-runtime: `R7b` is the only selected candidate owner gap,
+`R8b` and `R9b` are residual-readiness / negative-boundary evidence,
+`R2c` and `R10a` remain blocked negative boundaries, exact rows stay
+first, package-transfer pins stay `Ln,w 50.8` / `Rw 66`, and
+field/building plus ASTM/IIC aliases remain blocked. This is not a broad
+source crawl. The EPS/screed hybrid package owner has now landed as
+`broad_accuracy_floor_open_box_timber_eps_screed_hybrid_package_owner_plan`
+with selection status
+`broad_accuracy_floor_open_box_timber_eps_screed_hybrid_package_owner_landed_no_runtime_selected_formula_corridor`.
+The EPS/screed hybrid package formula corridor has now landed as
+`broad_accuracy_floor_open_box_timber_eps_screed_hybrid_package_formula_corridor_plan`
+with selection status
+`broad_accuracy_floor_open_box_timber_eps_screed_hybrid_package_formula_corridor_landed_no_runtime_selected_runtime_corridor`.
+Landed implementation:
+`packages/engine/src/broad-accuracy-floor-open-box-timber-eps-screed-hybrid-package-formula-corridor.ts`.
+Landed contract:
+`packages/engine/src/broad-accuracy-floor-open-box-timber-eps-screed-hybrid-package-formula-corridor-contract.test.ts`.
+It is no-runtime: R7b anchors element-lab design metrics `Rw 72`,
+`C -1.3`, `Rw+C 70.7`, `Ln,w 47`, `CI 0`, `CI,50-2500 1`, and
+`Ln,w+CI 47` with source-absent budgets only; exact measured R7b remains
+first, R8b/R9b/R2c/R10a stay negative boundaries, the generic dry
+package-transfer basis is forbidden, and field/building plus ASTM/IIC
+aliases remain blocked. The selected next action is the EPS/screed
+hybrid package runtime corridor.
+The EPS/screed hybrid package runtime corridor has now landed as
+`broad_accuracy_floor_open_box_timber_eps_screed_hybrid_package_runtime_corridor_plan`
+with selection status
+`broad_accuracy_floor_open_box_timber_eps_screed_hybrid_package_runtime_corridor_landed_selected_surface_parity`.
+Landed implementation:
+`packages/engine/src/open-box-timber-eps-screed-hybrid-package-estimate.ts`
+and
+`packages/engine/src/broad-accuracy-floor-open-box-timber-eps-screed-hybrid-package-runtime-corridor.ts`.
+Landed contract:
+`packages/engine/src/broad-accuracy-floor-open-box-timber-eps-screed-hybrid-package-runtime-corridor-contract.test.ts`.
+Runtime basis:
+`broad_accuracy_floor_open_box_timber_eps_screed_hybrid_package_formula_corridor`.
+Complete source-absent EPS/screed hybrid variants now return element-lab
+`Rw 72`, `C -1.3`, `Rw+C 70.7`, `Ln,w 47`, `CI 0`,
+`CI,50-2500 1`, and `Ln,w+CI 47` with not-measured budgets including
+`+/-7 dB` for `Rw` and `+/-8 dB` for `Ln,w`. Exact R7b remains first,
+dry package-transfer stays separate, R8b/R9b/R2c/R10a remain negative
+boundaries, and field/building plus ASTM/IIC aliases remain blocked. The
+selected next action is the EPS/screed hybrid package surface parity:
+`broad_accuracy_floor_open_box_timber_eps_screed_hybrid_package_surface_parity_plan`
+in
+`packages/engine/src/broad-accuracy-floor-open-box-timber-eps-screed-hybrid-package-surface-parity-contract.test.ts`.
+
+Historical broad-accuracy execution chain continues below for context;
+older "selected next" entries are already-consumed handoffs, not the
+current selected next action.
 
 The benchmark expansion slice has now landed as a no-runtime contract:
 
@@ -810,10 +911,126 @@ Current validation status:
   TUAS evidence, stay out of package-transfer runtime anchors, and do not
   move tolerances. The package-transfer pins remain `Ln,w 50.8`,
   `CI,50-2500 3.3`, and `Rw 66`; field/building and ASTM/IIC aliases
-  remain blocked. Selected next action: raw-bare open-box guard,
-  `broad_accuracy_floor_open_box_timber_raw_bare_reopening_guard_plan`.
+  remain blocked.
+- The raw-bare open-box reopening guard has now landed as
+  `broad_accuracy_floor_open_box_timber_raw_bare_reopening_guard_plan`
+  with selection status
+  `broad_accuracy_floor_open_box_timber_raw_bare_reopening_guard_landed_no_runtime_selected_bare_carrier_owner`.
+  It is a no-runtime guard: raw roleless, tagged, split, upper-only, and
+  lower-only open-box probes stay out of the package-transfer `Ln,w 50.8`,
+  `CI,50-2500 3.3`, and `Rw 66` lane; field/building and ASTM/IIC
+  aliases remain blocked. Selected next action: bare-carrier owner
+  contract,
+  `broad_accuracy_floor_open_box_timber_raw_bare_carrier_owner_contract_plan`.
   Selected next file:
-  `packages/engine/src/broad-accuracy-floor-open-box-timber-raw-bare-reopening-guard-contract.test.ts`.
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-raw-bare-carrier-owner-contract.test.ts`.
+- The raw-bare bare-carrier owner contract has now landed as
+  `broad_accuracy_floor_open_box_timber_raw_bare_carrier_owner_contract_plan`
+  with selection status
+  `broad_accuracy_floor_open_box_timber_raw_bare_carrier_owner_landed_no_runtime_selected_formula_corridor`.
+  It is no-runtime owner work: support geometry, airborne direct-curve,
+  bare impact-curve, finish absence, lower-treatment state,
+  package-transfer exclusion, source-or-physics basis,
+  uncertainty-budget, exact-precedence, basis-boundary, and
+  hostile-topology owners are explicit. The package-transfer pins
+  `Ln,w 50.8`, `CI,50-2500 3.3`, and `Rw 66` remain frozen;
+  field/building and ASTM/IIC aliases remain blocked. Selected next
+  action: raw-bare formula corridor,
+  `broad_accuracy_floor_open_box_timber_raw_bare_formula_corridor_plan`.
+  Selected next file:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-raw-bare-formula-corridor-contract.test.ts`.
+- The raw-bare formula corridor has now landed as
+  `broad_accuracy_floor_open_box_timber_raw_bare_formula_corridor_plan`
+  with selection status
+  `broad_accuracy_floor_open_box_timber_raw_bare_formula_corridor_landed_no_runtime_selected_runtime_corridor`.
+  It was no-runtime formula work: the source-absent basis
+  `broad_accuracy_floor_open_box_timber_raw_bare_source_absent_formula_corridor`
+  defined element-lab raw-bare design payloads. The canonical 370 mm
+  design fixture is `Rw 42.3`, `Ln,w 88.2`, and `CI,50-2500 3.1` with
+  not-measured `+/-8 dB` `Rw` and `+/-10 dB` `Ln,w` budgets. The
+  raw-bare runtime corridor has now landed as
+  `broad_accuracy_floor_open_box_timber_raw_bare_runtime_corridor_plan`.
+  Selection status:
+  `broad_accuracy_floor_open_box_timber_raw_bare_runtime_corridor_landed_selected_surface_parity`.
+  Complete base-only raw-bare `open_box_timber_slab` inputs now promote
+  through
+  `broad_accuracy_floor_open_box_timber_raw_bare_source_absent_formula_corridor`:
+  the canonical 370 mm case returns `Rw 42.3`, `C -1.4`, `Ctr -5.8`,
+  `Ln,w 88.2`, `CI,50-2500 3.1`, and `Ln,w+CI 87.1`; the 220 mm case
+  returns `Rw 38.1` / `Ln,w 91.1`. The finished package-transfer pins
+  `Ln,w 50.8`, `CI,50-2500 3.3`, and `Rw 66` stay separate, exact
+  source precedence still wins, partial package and wrong-family cases
+  stay out, and field/building plus ASTM/IIC aliases remain blocked.
+  Landed runtime contract:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-raw-bare-runtime-corridor-contract.test.ts`.
+  Surface parity has now landed as
+  `broad_accuracy_floor_open_box_timber_raw_bare_surface_parity_plan`.
+  Surface parity selection status:
+  `broad_accuracy_floor_open_box_timber_raw_bare_surface_parity_landed_selected_coverage_refresh`.
+  Cards, route posture, dynamic trace, impact support notes, confidence
+  provenance, metric-basis rows, method dossier, local saved replay,
+  server snapshot replay, calculator API, impact-only API, and Markdown
+  report now expose the raw-bare open-box timber basis, `Rw 42.3`,
+  `Ln,w 88.2`, `CI,50-2500 3.1`, `+/-8 dB` `Rw`, and `+/-10 dB`
+  `Ln,w` budgets without presenting them as measured evidence. Exact
+  TUAS rows still win, package-transfer pins stay on their own lane,
+  and field/building plus ASTM/IIC aliases remain blocked. Landed
+  surface parity contract:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-raw-bare-surface-parity-contract.test.ts`.
+  Surface-parity selected action, now consumed by the coverage refresh:
+  `broad_accuracy_floor_open_box_timber_raw_bare_coverage_refresh_plan`.
+  Surface-parity selected file:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-raw-bare-coverage-refresh-contract.test.ts`.
+  The raw-bare coverage refresh has now landed as
+  `broad_accuracy_floor_open_box_timber_raw_bare_coverage_refresh_plan`.
+  Coverage refresh selection status:
+  `broad_accuracy_floor_open_box_timber_raw_bare_coverage_refresh_landed_selected_post_raw_bare_revalidation`.
+  The executable matrix now carries raw-bare open-box timber 370 mm,
+  split 185/185 mm, and 220 mm rows while keeping `Rw 42.3`,
+  `Ln,w 88.2`, `CI,50-2500 3.1`, `+/-8 dB` `Rw`, and `+/-10 dB`
+  `Ln,w` unchanged. It proves exact TUAS package precedence,
+  package-transfer separation, partial-package and wrong-family
+  refusals, field/building blockers, and ASTM/IIC blockers. Landed
+  coverage-refresh contract:
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-raw-bare-coverage-refresh-contract.test.ts`.
+  Selected next action:
+  `broad_accuracy_post_raw_bare_open_box_timber_coverage_revalidation_plan`.
+  Selected next file:
+  `packages/engine/src/broad-accuracy-post-raw-bare-open-box-timber-coverage-revalidation-contract.test.ts`.
+  That post raw-bare revalidation has now landed as
+  `broad_accuracy_post_raw_bare_open_box_timber_coverage_revalidation_plan`
+  with selection status
+  `broad_accuracy_post_raw_bare_open_box_timber_coverage_revalidation_landed_no_runtime_selected_package_transfer_residual_expansion`.
+  It is no-runtime: raw-bare open-box timber stays `Rw 42.3` /
+  `Ln,w 88.2`, finished package-transfer stays `Ln,w 50.8`, exact TUAS
+  rows still win, tolerances/API/workbench behavior do not move, and
+  field/building plus ASTM/IIC aliases remain blocked. It is not a
+  broad source crawl. The selected next action is
+  `broad_accuracy_floor_open_box_timber_package_transfer_residual_expansion_plan`
+  in
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-package-transfer-residual-expansion-contract.test.ts`;
+  the next lane is package-transfer residual expansion for exact-only
+  hybrid / mixed-staged same-family evidence gaps.
+  That package-transfer residual expansion has now landed as
+  `broad_accuracy_floor_open_box_timber_package_transfer_residual_expansion_plan`
+  with selection status
+  `broad_accuracy_floor_open_box_timber_package_transfer_residual_expansion_landed_no_runtime_selected_eps_screed_hybrid_package_owner`.
+  It is no-runtime: `R7b` is the only selected candidate owner gap,
+  `R8b` and `R9b` are residual-readiness/negative-boundary evidence,
+  `R2c` and `R10a` remain blocked negative boundaries, and all five rows
+  stay exact-only instead of entering package-transfer runtime anchors.
+  The existing package-transfer pins stay `Ln,w 50.8` / `Rw 66`; field/building
+  and ASTM/IIC aliases remain blocked, and this is not a broad source
+  crawl. The selected next action is
+  `broad_accuracy_floor_open_box_timber_eps_screed_hybrid_package_owner_plan`
+  in
+  `packages/engine/src/broad-accuracy-floor-open-box-timber-eps-screed-hybrid-package-owner-contract.test.ts`.
+  Validation after the subsequent EPS/screed hybrid package runtime-corridor
+  closeout: `pnpm calculator:gate:current` passed on 2026-05-20 with engine 475
+  files / 2720 tests, web 89 files / 369 passed + 18 skipped, repo build
+  5 / 5,
+  and `git diff --check` clean. The known optional `sharp/@img`
+  warnings from the DOCX/PDF build path remain non-fatal.
 - Pre-sprint revalidation:
   [CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md](./CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md).
   The full current gate was green before the formula sprint; the

@@ -86,6 +86,10 @@ export function formatConfidenceProvenanceForImpact(input: {
     return "Open-box timber package-transfer corridor";
   }
 
+  if (input.basis === "broad_accuracy_floor_open_box_timber_raw_bare_source_absent_formula_corridor") {
+    return "Raw-bare open-box timber formula corridor";
+  }
+
   return formatConfidenceProvenance(input.provenance);
 }
 
