@@ -51,6 +51,20 @@ and hostile layer combinations across wall and floor routes with named
 algorithms, bounded uncertainty, and visible missing-input prompts. It is
 not ready just because a finite catalog of known assemblies passes.
 
+Latest checkpoint: read
+`docs/calculator/CHECKPOINT_2026-05-20_BROAD_ACCURACY_REVALIDATION_AND_OPEN_BOX_FRAGMENTATION_PLAN.md`
+before continuing. The fresh `pnpm calculator:gate:current` pass is
+green with engine 463 files / 2656 tests, web 88 files / 366 passed + 18
+skipped, repo build 5 / 5, and whitespace guard passed. The controlled
+internal envelope is green, but broad "every common wall/floor
+combination" confidence is not done. The selected next action remains
+the no-runtime exact-only hybrid fragmentation policy:
+`broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_plan`
+in
+`packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy-contract.test.ts`.
+Do not collapse this into raw bare open-box reopening, broad source
+crawling, field/building aliases, or ASTM/IIC relabeling.
+
 Latest end-of-day checkpoint: after commit `c248db8`, read
 `docs/calculator/CHECKPOINT_2026-05-18_END_OF_DAY_BROAD_ACCURACY.md`
 before continuing. It maps the landed broad-accuracy implementation back

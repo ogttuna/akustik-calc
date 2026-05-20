@@ -25,39 +25,22 @@ use `pnpm check` when shared contracts move.
 
 Current calculator handoff:
 
-- Latest sprint-entry checkpoint:
-  [calculator/CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md](./calculator/CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md).
-  Read this before implementing the next calculator slice. It confirms
-  the current gate is green and details the open-box timber no-runtime
-  formula-corridor terms, candidate package probes, source-absent budget
-  targets, negative boundaries, and exact files to edit.
-  The sequence has now landed through
-  `broad_accuracy_floor_open_box_timber_similarity_surface_parity_plan`
-  with selection status
-  `broad_accuracy_floor_open_box_timber_similarity_surface_parity_landed_selected_coverage_refresh`.
-  Cards, method dossier, server snapshot replay, calculator API,
-  impact-only API, and Markdown report expose the same open-box timber
-  package-transfer basis while preserving `Ln,w 50.8`,
-  `CI,50-2500 3.3`, `Rw 66`, `+/-7 dB`, `+/-2.5 dB`, and `+/-6 dB`.
-  Exact TUAS rows still win; raw bare open-box, exact-only hybrid, mixed
-  staged, field/building, and ASTM/IIC aliases stay blocked. Selected
-  next action:
-  `broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_plan`;
-  selected next file:
-  `packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-coverage-refresh-contract.test.ts`.
-  The coverage refresh has now landed as
-  `broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_plan`
-  with selection status
-  `broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_landed_selected_exact_only_hybrid_fragmentation_policy`.
-  It pulls open-box timber package-transfer into the broad coverage
-  matrix without runtime movement, preserves exact source precedence,
-  keeps `Ln,w 50.8`, `CI,50-2500 3.3`, and `Rw 66`, and leaves raw
-  bare, exact-only hybrid, mixed staged, field/building, and ASTM/IIC
-  as explicit boundaries. Selected next action: exact-only hybrid
-  fragmentation policy,
+- Latest checkpoint:
+  [calculator/CHECKPOINT_2026-05-20_BROAD_ACCURACY_REVALIDATION_AND_OPEN_BOX_FRAGMENTATION_PLAN.md](./calculator/CHECKPOINT_2026-05-20_BROAD_ACCURACY_REVALIDATION_AND_OPEN_BOX_FRAGMENTATION_PLAN.md).
+  Read this before implementing the next calculator slice. The fresh
+  `pnpm calculator:gate:current` run passed with engine 463 files / 2656
+  tests, web 88 files / 366 passed + 18 skipped, repo build 5 / 5, and
+  whitespace guard passed. The open-box timber formula/runtime/surface
+  parity/coverage-refresh sequence has landed, while broad "every common
+  wall/floor combination" confidence is still not done.
+- Selected next action:
   `broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_plan`;
   selected next file:
   `packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy-contract.test.ts`.
+  Keep this as a no-runtime policy gate unless the evidence proves a
+  later narrow runtime candidate. Do not turn it into broad source
+  crawling, raw bare open-box reopening, field/building aliasing, or
+  ASTM/IIC relabeling.
 - Broad-accuracy refocus:
   [calculator/BROAD_ACCURACY_CALCULATOR_PLAN.md](./calculator/BROAD_ACCURACY_CALCULATOR_PLAN.md).
   Use this as the current product-direction guardrail. The 71-row
@@ -65,8 +48,10 @@ Current calculator handoff:
   requires exact measured lookup, nearby measured similarity anchors,
   calibrated family solvers, source-absent solver budgets, and a global
   residual benchmark.
-- Active broad-accuracy slice:
+- Broad-accuracy landed chain:
   [calculator/SLICE_BROAD_ACCURACY_REFERENCE_BENCHMARK_AND_SIMILARITY_SOLVER_PLAN.md](./calculator/SLICE_BROAD_ACCURACY_REFERENCE_BENCHMARK_AND_SIMILARITY_SOLVER_PLAN.md).
+  Older selected-next lines below are retained as landed history; the
+  latest checkpoint above is authoritative for the current next action.
   It has now landed as
   `broad_accuracy_reference_benchmark_expansion_and_similarity_solver_plan`
   with selection status

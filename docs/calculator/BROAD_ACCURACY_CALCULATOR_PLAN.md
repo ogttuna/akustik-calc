@@ -60,6 +60,14 @@ Executable refocus contract:
 
 `packages/engine/src/broad-accuracy-calculator-readiness-contract.test.ts`
 
+Latest checkpoint:
+[CHECKPOINT_2026-05-20_BROAD_ACCURACY_REVALIDATION_AND_OPEN_BOX_FRAGMENTATION_PLAN.md](./CHECKPOINT_2026-05-20_BROAD_ACCURACY_REVALIDATION_AND_OPEN_BOX_FRAGMENTATION_PLAN.md).
+The current gate is green after the open-box timber package-transfer
+formula/runtime/surface-parity/coverage-refresh sequence, but broad
+"every common wall/floor combination" confidence is still not complete.
+The selected next action is the exact-only hybrid fragmentation policy
+for same-family TUAS open-box timber evidence.
+
 Current measured/source inventory exposed by that contract:
 
 - floor exact rows: 173;

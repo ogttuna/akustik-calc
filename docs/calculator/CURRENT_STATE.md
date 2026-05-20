@@ -14,50 +14,34 @@ it keeps the controlled 71-row envelope separate from the broader
 measured/reference residual bar.
 The active broad-accuracy slice plan is
 [SLICE_BROAD_ACCURACY_REFERENCE_BENCHMARK_AND_SIMILARITY_SOLVER_PLAN.md](./SLICE_BROAD_ACCURACY_REFERENCE_BENCHMARK_AND_SIMILARITY_SOLVER_PLAN.md).
-The latest end-of-day checkpoint is
-[CHECKPOINT_2026-05-18_END_OF_DAY_BROAD_ACCURACY.md](./CHECKPOINT_2026-05-18_END_OF_DAY_BROAD_ACCURACY.md);
-it maps commit `c248db8` back to docs and explicitly lists the
-open-box timber formula/runtime/surface-parity work that has not landed.
-The latest sprint-entry revalidation is
-[CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md](./CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md);
-`pnpm calculator:gate:current` passed with engine 459 files / 2635
-tests, web 87 files / 363 passed + 18 skipped, repo build 5 / 5, and
-no implementation fix required before the open-box timber formula sprint.
-That checkpoint now also contains the second 2026-05-19 planning pass:
-the no-runtime formula terms, candidate package probes, initial
-source-absent design-budget targets, negative boundaries, and exact files
-for the open-box formula corridor are spelled out before implementation.
-The open-box timber formula, runtime, and surface parity gates have now
-landed through
-`broad_accuracy_floor_open_box_timber_similarity_surface_parity_plan`
+The latest checkpoint is
+[CHECKPOINT_2026-05-20_BROAD_ACCURACY_REVALIDATION_AND_OPEN_BOX_FRAGMENTATION_PLAN.md](./CHECKPOINT_2026-05-20_BROAD_ACCURACY_REVALIDATION_AND_OPEN_BOX_FRAGMENTATION_PLAN.md);
+`pnpm calculator:gate:current` passed with engine 463 files / 2656
+tests, web 88 files / 366 passed + 18 skipped, repo build 5 / 5, and
+whitespace guard passed. No implementation fix was required.
+
+The open-box timber formula, runtime, surface-parity, and coverage-refresh
+gates have now landed through
+`broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_plan`
 with selection status
-`broad_accuracy_floor_open_box_timber_similarity_surface_parity_landed_selected_coverage_refresh`.
+`broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_landed_selected_exact_only_hybrid_fragmentation_policy`.
 The source-absent package-transfer lane keeps the dry gypsum-fiber pin at
 `Ln,w 50.8`, `CI,50-2500 3.3`, and `Rw 66`, exposes not-measured
 budgets of `+/-7 dB`, `+/-2.5 dB`, and `+/-6 dB`, and shows the same
 open-box timber package-transfer basis across cards, method dossier,
 server snapshot replay, calculator API, impact-only API, and Markdown
 report. Exact TUAS rows still win; raw bare open-box, exact-only hybrid,
-mixed staged, field/building, and ASTM/IIC aliases remain blocked. The
-selected next action is
-`broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_plan`
-in
-`packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-coverage-refresh-contract.test.ts`.
-The open-box timber similarity coverage refresh has now landed as
-`broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_plan`
-with selection status
-`broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_landed_selected_exact_only_hybrid_fragmentation_policy`.
-This no-runtime coverage refresh pulls the open-box timber
-package-transfer lane into the broad coverage matrix, preserves exact
-source precedence, and keeps the dry gypsum-fiber source-absent pin at
-`Ln,w 50.8`, `CI,50-2500 3.3`, and `Rw 66` with the same visible
-not-measured budgets. Raw bare, exact-only hybrid, mixed staged,
-field/building, and ASTM/IIC cases stay explicit boundaries instead of
-silently reusing the package-transfer basis. The selected next action is
-the exact-only hybrid fragmentation policy:
+mixed staged, field/building, and ASTM/IIC aliases remain blocked.
+
+The selected next action is the no-runtime exact-only hybrid
+fragmentation policy:
 `broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_plan`;
 selected next file:
 `packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy-contract.test.ts`.
+This checkpoint is a good commit/stopping point, but it is not broad
+"every common wall/floor combination" readiness yet.
+
+Historical broad-accuracy chain retained below for context:
 That active slice treats historical `low_confidence`,
 `screening_fallback`, and screening-only lanes as calculation debt to
 rank and convert into exact/source, similarity, calibrated solver,

@@ -724,6 +724,18 @@ coverage-matrix refresh have also landed; the exact-only hybrid
 fragmentation policy is now the next bounded step and must not be
 collapsed into the already-closed gates.
 
+Current revalidation checkpoint:
+[CHECKPOINT_2026-05-20_BROAD_ACCURACY_REVALIDATION_AND_OPEN_BOX_FRAGMENTATION_PLAN.md](./CHECKPOINT_2026-05-20_BROAD_ACCURACY_REVALIDATION_AND_OPEN_BOX_FRAGMENTATION_PLAN.md).
+It confirms `pnpm calculator:gate:current` is green after the open-box
+timber formula/runtime/surface-parity/coverage-refresh sequence: engine
+463 files / 2656 tests, web 88 files / 366 passed + 18 skipped, repo
+build 5 / 5, and whitespace guard passed. The selected next action is
+`broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_plan`
+in
+`packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy-contract.test.ts`.
+This is a no-runtime policy gate unless the policy proves a later narrow
+runtime candidate.
+
 Second planning pass:
 
 - The 2026-05-19 follow-up analysis re-read the owner implementation,

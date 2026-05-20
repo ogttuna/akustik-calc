@@ -1040,6 +1040,13 @@ coverage.
 
 Checkpoint handoff:
 
+- [CHECKPOINT_2026-05-20_BROAD_ACCURACY_REVALIDATION_AND_OPEN_BOX_FRAGMENTATION_PLAN.md](./CHECKPOINT_2026-05-20_BROAD_ACCURACY_REVALIDATION_AND_OPEN_BOX_FRAGMENTATION_PLAN.md)
+- This checkpoint is the current resume point. It records the fresh
+  `pnpm calculator:gate:current` pass after the open-box timber
+  formula/runtime/surface-parity/coverage-refresh sequence: engine 463
+  files / 2656 tests, web 88 files / 366 passed + 18 skipped, repo build
+  5 / 5, and whitespace guard passed. It also confirms this is not broad
+  "every common wall/floor combination" readiness yet.
 - [CHECKPOINT_2026-05-18_OPEN_BOX_TIMBER_TRANSFER_OWNER.md](./CHECKPOINT_2026-05-18_OPEN_BOX_TIMBER_TRANSFER_OWNER.md)
 - This checkpoint confirms docs and implementation are aligned after the
   transfer-owner gate, records the remaining formula-corridor gaps, and
@@ -1057,10 +1064,26 @@ Next implementation order:
    open-box timber coverage refresh.
    - Add
      `packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy-contract.test.ts`.
-   - Decide which exact-only hybrid and mixed staged TUAS packets can
-     become source-equivalent calibration/transfer evidence.
+   - Classify the exact-only hybrid / fragmented TUAS packets
+     `tuas_r7b_open_box_timber_measured_2026`,
+     `tuas_r8b_open_box_timber_measured_2026`,
+     `tuas_r9b_open_box_timber_measured_2026`,
+     `tuas_r2c_open_box_timber_measured_2026`, and
+     `tuas_r10a_open_box_timber_measured_2026`.
+   - Decide which rows can become source-equivalent fragmented package
+     candidates, exact-only hybrid residual owners, mixed staged upper
+     package owners, lower-ceiling interaction owners, or blocked
+     negatives.
    - Keep raw bare, field/building, and ASTM/IIC boundaries blocked
      unless this policy explicitly owns them.
+   - Keep the gate no-runtime unless the policy itself proves a later
+     narrow runtime candidate.
+   - Run the focused contract, then `pnpm calculator:gate:current` and
+     `git diff --check`.
+
+Historical note: this file keeps long closed-slice history below the
+active handoff. Trust the top active broad-accuracy section,
+`CURRENT_STATE.md`, and the latest checkpoint above for the next action.
 
 Gate BV / Gate BW ASTM `IIC` / `AIIC` work is now parked as no-runtime
 boundary history. The active implementation path is back to ISO

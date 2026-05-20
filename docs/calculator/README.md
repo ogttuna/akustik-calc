@@ -17,48 +17,32 @@ override or anchor known assemblies, but missing source packets must
 not block a labelled family-specific physics prediction when the
 required topology and material inputs are present.
 
-As of 2026-05-15, the current active slice is
-`company_internal_calculation_grade_mainline`.
+As of 2026-05-20, the current active line is the broad-accuracy
+continuation under `company_internal_calculation_grade_mainline`.
 The 2026-05-15 broad-accuracy refocus is
 [BROAD_ACCURACY_CALCULATOR_PLAN.md](./BROAD_ACCURACY_CALCULATOR_PLAN.md).
 Use it before treating the controlled envelope as readiness: the 71-row
 matrix is a guardrail, while broad company-internal accuracy requires a
 reference benchmark, similarity-anchor resolver, and family-solver
 residual loop.
-The active sprint-entry handoff is
-[CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md](./CHECKPOINT_2026-05-19_PRE_SPRINT_REVALIDATION_AND_OPEN_BOX_FORMULA_PLAN.md).
-It records the green current-gate validation plus the second planning
-pass for the open-box timber no-runtime formula corridor: formula terms,
-candidate package probes, source-absent design-budget targets, negative
-boundaries, and exact implementation files.
-That open-box timber sequence has now landed through surface parity:
-`broad_accuracy_floor_open_box_timber_similarity_surface_parity_plan`
-with selection status
-`broad_accuracy_floor_open_box_timber_similarity_surface_parity_landed_selected_coverage_refresh`.
+The active checkpoint is
+[CHECKPOINT_2026-05-20_BROAD_ACCURACY_REVALIDATION_AND_OPEN_BOX_FRAGMENTATION_PLAN.md](./CHECKPOINT_2026-05-20_BROAD_ACCURACY_REVALIDATION_AND_OPEN_BOX_FRAGMENTATION_PLAN.md).
+It records the fresh green current-gate validation after the open-box
+timber formula/runtime/surface-parity/coverage-refresh sequence:
+engine 463 files / 2656 tests, web 88 files / 366 passed + 18 skipped,
+repo build 5 / 5, and whitespace guard passed.
 The visible source-absent package-transfer lane preserves `Ln,w 50.8`,
 `CI,50-2500 3.3`, and `Rw 66` with `+/-7 dB`, `+/-2.5 dB`, and
-`+/-6 dB` not-measured budgets, and cards, method dossier, server
-snapshot replay, calculator API, impact-only API, and Markdown report
-show the same open-box timber package-transfer basis. Exact TUAS rows
-still win; raw bare open-box, exact-only hybrid, mixed staged,
-field/building, and ASTM/IIC aliases stay blocked. Selected next action:
-`broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_plan`;
-selected next file:
-`packages/engine/src/broad-accuracy-floor-open-box-timber-similarity-coverage-refresh-contract.test.ts`.
-The coverage refresh has now landed as
-`broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_plan`
-with selection status
-`broad_accuracy_floor_open_box_timber_similarity_coverage_refresh_landed_selected_exact_only_hybrid_fragmentation_policy`.
-It pulls open-box timber package-transfer into the broad coverage matrix
-without runtime movement, preserves exact source precedence, keeps
-`Ln,w 50.8`, `CI,50-2500 3.3`, and `Rw 66`, and leaves raw bare,
-exact-only hybrid, mixed staged, field/building, and ASTM/IIC as
-explicit boundaries. Selected next action: exact-only hybrid
-fragmentation policy,
+`+/-6 dB` not-measured budgets, while exact TUAS rows still win and raw
+bare open-box, exact-only hybrid, mixed staged, field/building, and
+ASTM/IIC aliases stay blocked.
+Selected next action: exact-only hybrid fragmentation policy,
 `broad_accuracy_floor_open_box_timber_exact_only_hybrid_fragmentation_policy_plan`;
 selected next file:
 `packages/engine/src/broad-accuracy-floor-open-box-timber-exact-only-hybrid-fragmentation-policy-contract.test.ts`.
-The active checkpoint is
+Keep it no-runtime unless the policy evidence proves a later narrow
+runtime candidate.
+Historical controlled-envelope checkpoint:
 [CHECKPOINT_2026-05-15_COMPANY_INTERNAL_CHECKPOINT_REVIEW_AND_VALIDATION.md](./CHECKPOINT_2026-05-15_COMPANY_INTERNAL_CHECKPOINT_REVIEW_AND_VALIDATION.md).
 The current remaining-gap analysis and execution plan is
 [CHECKPOINT_2026-05-15_COMPANY_INTERNAL_REMAINING_GAP_ANALYSIS_AND_PLAN.md](./CHECKPOINT_2026-05-15_COMPANY_INTERNAL_REMAINING_GAP_ANALYSIS_AND_PLAN.md).
@@ -77,8 +61,10 @@ The controlled company-internal operating envelope is
 Use `COMPANY_INTERNAL_OPERATING_ENVELOPE.md` after the final rehearsal
 test is green to communicate ready routes, input-prompt routes, and
 intentional unsupported boundaries.
-The detailed active broad-accuracy slice is
+The detailed broad-accuracy chain is
 [SLICE_BROAD_ACCURACY_REFERENCE_BENCHMARK_AND_SIMILARITY_SOLVER_PLAN.md](./SLICE_BROAD_ACCURACY_REFERENCE_BENCHMARK_AND_SIMILARITY_SOLVER_PLAN.md).
+Older selected-next lines below are landed history; the latest checkpoint
+above is authoritative for the current next action.
 It has now landed as
 `broad_accuracy_reference_benchmark_expansion_and_similarity_solver_plan`
 with selection status
