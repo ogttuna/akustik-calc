@@ -269,7 +269,7 @@ describe("wall double-leaf/framed bridge runtime route-card Gate S", () => {
       tone: "neutral",
       value: "Double Frame / Double Stud"
     });
-    expect(snapshot.branch.detail).toContain("Double-Leaf Bridge Solver anchor");
+    expect(snapshot.branch.detail).toContain("Double-Leaf Framed Formula Solver anchor");
     expect(snapshot.branch.detail).toContain("double leaf framed bridge mass air mass runtime");
 
     expect(rwCard).toMatchObject({ status: "live", value: "45 dB" });
@@ -291,7 +291,7 @@ describe("wall double-leaf/framed bridge runtime route-card Gate S", () => {
     const html = buildSimpleWorkbenchProposalHtml(proposal);
 
     expect(text).toContain("- Rw: Live now | Airborne screening lane | 45 dB");
-    expect(text).toContain("Double-Leaf Bridge Solver anchor");
+    expect(text).toContain("Double-Leaf Framed Formula Solver anchor");
     expect(text).toContain("Double Frame / Double Stud");
     expect(html).toContain("45 dB");
     expect(html).toContain("Gate S Dynamic Calculator");

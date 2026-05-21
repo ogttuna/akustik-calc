@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
 import { OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS } from "./open-box-timber-raw-bare-estimate";
+import { OPEN_WEB_RAW_BARE_FORMULA_BASIS } from "./open-web-raw-bare-estimate";
 
 const LAB_OUTPUTS: readonly RequestedOutputId[] = ["Rw", "Ln,w", "Ln,w+CI"];
 const FIELD_OUTPUTS: readonly RequestedOutputId[] = [
@@ -42,20 +43,20 @@ const BLOCKED_SOURCE_RANK_3_RAW_BARE_FEASIBILITY = {
   sliceId: "blocked_source_backed_widening_rerank_v1",
   auditedCandidateId: "raw_bare_open_box_open_web_impact_widening",
   auditedCandidateRank: 3,
-  feasibilityStatus: "open_box_resolved_by_raw_bare_runtime_open_web_still_blocked",
-  runtimeReady: false,
+  feasibilityStatus: "open_box_and_open_web_resolved_by_raw_bare_runtime_corridors",
+  runtimeReady: true,
   runtimeBehaviorChange: true,
-  blocker: "open_web_sources_remain_packaged_system_evidence_not_true_bare_carrier_impact_evidence",
-  rerankProgressStatus: "remove_open_box_from_blocked_rank_3_and_keep_open_web_blocked",
-  selectedNextComparisonCandidate: "raw_bare_open_box_surface_parity",
+  blocker: null,
+  rerankProgressStatus: "remove_open_box_and_open_web_from_blocked_rank_3_after_runtime_corridors",
+  selectedNextComparisonCandidate: "raw_bare_open_web_surface_parity",
   selectedNextComparisonReason:
-    "open_box_now_uses_a_source_absent_raw_bare_formula_corridor_while_open_web_still_lacks_true_bare_carrier_evidence"
+    "open_box_and_open_web_now_use separate source_absent raw_bare formula corridors without borrowing packaged source rows"
 } as const;
 
 const BLOCKED_SOURCE_RANK_3_RAW_BARE_EVIDENCE = {
   openBoxFact: "visible_bare_open_box_routes_now_use_source_absent_raw_bare_formula_runtime_without_borrowing_packaged_tuas_rows",
-  openWebFact: "ubiq_open_web_rows_are_inex_package_tables_and_visible_bare_open_web_routes_stay_impact_fail_closed",
-  blockerFact: "no_current_source_row_proves_true_bare_carrier_impact_behavior_for_open_web"
+  openWebFact: "visible_bare_open_web_routes_now_use_source_absent_raw_bare_formula_runtime_without_borrowing_ubiq_inex_firestop_package_rows",
+  blockerFact: "no_current_source_row_proves_true_bare_carrier_impact_behavior_for_open_web_so_the_runtime_keeps_wide_not_measured_budgets"
 } as const;
 
 describe("blocked-source rank-3 raw bare open-box/open-web feasibility contract", () => {
@@ -64,18 +65,18 @@ describe("blocked-source rank-3 raw bare open-box/open-web feasibility contract"
       sliceId: "blocked_source_backed_widening_rerank_v1",
       auditedCandidateId: "raw_bare_open_box_open_web_impact_widening",
       auditedCandidateRank: 3,
-      feasibilityStatus: "open_box_resolved_by_raw_bare_runtime_open_web_still_blocked",
-      runtimeReady: false,
+      feasibilityStatus: "open_box_and_open_web_resolved_by_raw_bare_runtime_corridors",
+      runtimeReady: true,
       runtimeBehaviorChange: true,
-      blocker: "open_web_sources_remain_packaged_system_evidence_not_true_bare_carrier_impact_evidence",
-      rerankProgressStatus: "remove_open_box_from_blocked_rank_3_and_keep_open_web_blocked",
-      selectedNextComparisonCandidate: "raw_bare_open_box_surface_parity",
+      blocker: null,
+      rerankProgressStatus: "remove_open_box_and_open_web_from_blocked_rank_3_after_runtime_corridors",
+      selectedNextComparisonCandidate: "raw_bare_open_web_surface_parity",
       selectedNextComparisonReason:
-        "open_box_now_uses_a_source_absent_raw_bare_formula_corridor_while_open_web_still_lacks_true_bare_carrier_evidence"
+        "open_box_and_open_web_now_use separate source_absent raw_bare formula corridors without borrowing packaged source rows"
     });
   });
 
-  it("keeps open-web fail-closed and proves open-box runtime does not borrow packaged source rows", () => {
+  it("keeps open-web on its own source-absent corridor and proves raw-bare runtimes do not borrow packaged source rows", () => {
     const openWebLab = calculateAssembly(RAW_BARE_OPEN_WEB_LAYERS, { targetOutputs: LAB_OUTPUTS });
     const openWebField = calculateAssembly(RAW_BARE_OPEN_WEB_LAYERS, {
       airborneContext: AIRBORNE_FIELD_CONTEXT,
@@ -90,20 +91,40 @@ describe("blocked-source rank-3 raw bare open-box/open-web feasibility contract"
     });
 
     expect(openWebLab.floorSystemMatch).toBeNull();
-    expect(openWebLab.floorSystemEstimate).toBeNull();
-    expect(openWebLab.impact).toBeNull();
-    expect(openWebLab.supportedTargetOutputs).toEqual(["Rw"]);
-    expect(openWebLab.unsupportedTargetOutputs).toEqual(["Ln,w", "Ln,w+CI"]);
+    expect(openWebLab.floorSystemEstimate?.kind).toBe("family_archetype");
+    expect(openWebLab.impact).toMatchObject({
+      LnW: 96,
+      LnWPlusCI: 97.8,
+      basis: OPEN_WEB_RAW_BARE_FORMULA_BASIS,
+      labOrField: "lab"
+    });
+    expect(openWebLab.floorSystemRatings).toMatchObject({
+      Rw: 32,
+      basis: OPEN_WEB_RAW_BARE_FORMULA_BASIS
+    });
+    expect(openWebLab.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "Ln,w+CI"]);
+    expect(openWebLab.unsupportedTargetOutputs).toEqual([]);
 
     expect(openWebField.floorSystemMatch).toBeNull();
-    expect(openWebField.floorSystemEstimate).toBeNull();
-    expect(openWebField.impact).toBeNull();
-    expect(openWebField.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
-    expect(openWebField.unsupportedTargetOutputs).toEqual([
+    expect(openWebField.floorSystemEstimate?.kind).toBe("family_archetype");
+    expect(openWebField.impact).toMatchObject({
+      CI50_2500: 5.2,
+      LnW: 96,
+      LnWPlusCI: 97.8,
+      basis: OPEN_WEB_RAW_BARE_FORMULA_BASIS,
+      labOrField: "lab"
+    });
+    expect(openWebField.impact?.LPrimeNW).toBeUndefined();
+    expect(openWebField.impact?.LPrimeNTw).toBeUndefined();
+    expect(openWebField.supportedTargetOutputs).toEqual([
       "Rw",
+      "R'w",
+      "DnT,w",
       "Ln,w",
       "CI,50-2500",
-      "Ln,w+CI",
+      "Ln,w+CI"
+    ]);
+    expect(openWebField.unsupportedTargetOutputs).toEqual([
       "L'n,w",
       "L'nT,w",
       "L'nT,50"
@@ -140,8 +161,8 @@ describe("blocked-source rank-3 raw bare open-box/open-web feasibility contract"
 
     expect(BLOCKED_SOURCE_RANK_3_RAW_BARE_EVIDENCE).toEqual({
       openBoxFact: "visible_bare_open_box_routes_now_use_source_absent_raw_bare_formula_runtime_without_borrowing_packaged_tuas_rows",
-      openWebFact: "ubiq_open_web_rows_are_inex_package_tables_and_visible_bare_open_web_routes_stay_impact_fail_closed",
-      blockerFact: "no_current_source_row_proves_true_bare_carrier_impact_behavior_for_open_web"
+      openWebFact: "visible_bare_open_web_routes_now_use_source_absent_raw_bare_formula_runtime_without_borrowing_ubiq_inex_firestop_package_rows",
+      blockerFact: "no_current_source_row_proves_true_bare_carrier_impact_behavior_for_open_web_so_the_runtime_keeps_wide_not_measured_budgets"
     });
   });
 });

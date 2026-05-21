@@ -36,6 +36,11 @@ import {
   buildWorkbenchOpeningLeakFieldBuildingInputSurface
 } from "./opening-leak-field-building-input-surface";
 import {
+  buildWorkbenchOpenWebFieldBuildingInputSurface,
+  formatWorkbenchOpenWebFieldBuildingMissingInputWarning,
+  type WorkbenchOpenWebFieldBuildingInputSurfaceDraft
+} from "./open-web-field-building-input-surface";
+import {
   buildWorkbenchHeavyConcreteCombinedImpactInputSurface,
   formatWorkbenchHeavyConcreteCombinedImpactMissingInputWarning,
   type WorkbenchHeavyConcreteCombinedImpactInputSurfaceDraft
@@ -120,6 +125,7 @@ export function evaluateScenario(input: {
   impactFieldContext?: ImpactFieldContext | null;
   name: string;
   heavyConcreteCombinedImpactInputSurface?: WorkbenchHeavyConcreteCombinedImpactInputSurfaceDraft | null;
+  openWebFieldBuildingInputSurface?: WorkbenchOpenWebFieldBuildingInputSurfaceDraft | null;
   openingLeakCompositeInputSurface?: WorkbenchOpeningLeakCompositeInputSurfaceDraft | null;
   rows: readonly LayerDraft[];
   savedAtIso?: string;
@@ -180,9 +186,26 @@ export function evaluateScenario(input: {
           ...openingLeakFieldBuildingInputSurface.airborneContextPatch
         }
       : advancedWallAirborneContext;
+  const openWebFieldBuildingInputSurface =
+    input.studyMode === "floor" && input.openWebFieldBuildingInputSurface
+      ? buildWorkbenchOpenWebFieldBuildingInputSurface({
+          layers: normalized.layers,
+          studyMode: input.studyMode,
+          surface: input.openWebFieldBuildingInputSurface,
+          targetOutputs
+        })
+      : null;
+  const effectiveFloorAirborneContext =
+    openWebFieldBuildingInputSurface && openWebFieldBuildingInputSurface.status !== "inactive"
+      ? openWebFieldBuildingInputSurface.airborneContext
+      : effectiveAirborneContext;
+  const effectiveImpactFieldContext =
+    openWebFieldBuildingInputSurface && openWebFieldBuildingInputSurface.status !== "inactive"
+      ? openWebFieldBuildingInputSurface.impactFieldContext
+      : input.impactFieldContext ?? null;
   const inputWarnings = collectScenarioInputWarnings({
-    airborneContext: effectiveAirborneContext,
-    impactFieldContext: input.impactFieldContext ?? null,
+    airborneContext: effectiveFloorAirborneContext,
+    impactFieldContext: effectiveImpactFieldContext,
     materials: runtimeCatalog,
     normalizedLayers: normalized.layers,
     rows: input.rows,
@@ -197,7 +220,7 @@ export function evaluateScenario(input: {
           layers: normalized.layers,
           surface: input.steelFloorFormulaInputSurface,
           targetOutputs
-      })
+        })
       : null;
   const timberCltDeltaLwInputSurface =
     input.studyMode === "floor" && input.timberCltDeltaLwInputSurface
@@ -249,6 +272,17 @@ export function evaluateScenario(input: {
   if (heavyConcreteMissingInputWarning) {
     scenarioWarnings.push(heavyConcreteMissingInputWarning);
   }
+  const openWebFieldBuildingMissingInputWarning = openWebFieldBuildingInputSurface
+    ? formatWorkbenchOpenWebFieldBuildingMissingInputWarning(openWebFieldBuildingInputSurface)
+    : null;
+  if (openWebFieldBuildingMissingInputWarning) {
+    scenarioWarnings.push(openWebFieldBuildingMissingInputWarning);
+  }
+  if (openWebFieldBuildingInputSurface?.status === "unsupported") {
+    scenarioWarnings.push(
+      `Floor open-web field/building input surface is parked because the visible floor context is outside the current runtime boundary: ${openWebFieldBuildingInputSurface.unsupportedBoundaries.join(", ")}.`
+    );
+  }
   const airborneFieldMissingInputWarning = airborneFieldContextInputSurface
     ? formatWorkbenchAirborneFieldContextMissingInputWarning(airborneFieldContextInputSurface)
     : null;
@@ -296,11 +330,11 @@ export function evaluateScenario(input: {
   if (normalized.layers.length > 0) {
     try {
       result = calculateAssembly(normalized.layers, {
-        airborneContext: effectiveAirborneContext,
+        airborneContext: effectiveFloorAirborneContext,
         calculator: input.calculator ?? null,
         catalog: runtimeCatalog,
         exactImpactSource: input.exactImpactSource ?? null,
-        impactFieldContext: input.impactFieldContext ?? null,
+        impactFieldContext: effectiveImpactFieldContext,
         impactPredictorInput,
         targetOutputs
       });
@@ -322,6 +356,7 @@ export function evaluateScenario(input: {
 
   return {
     ...input,
+    airborneContext: effectiveFloorAirborneContext,
     result,
     warnings: result
       ? buildWorkbenchWarningNotes(result, [...scenarioWarnings, ...result.warnings])

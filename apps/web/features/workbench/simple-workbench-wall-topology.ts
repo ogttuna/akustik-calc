@@ -95,11 +95,11 @@ export function buildWorkbenchWallTopology(
     topologyMode: draft.airborneWallTopologyMode
   };
 
-  if (draft.airborneWallTopologyMode !== "grouped_triple_leaf") {
+  if (draft.airborneWallTopologyMode !== "grouped_triple_leaf" && draft.airborneWallTopologyMode !== "double_leaf_framed") {
     return topology;
   }
 
-  return {
+  const groupedTopology = {
     ...topology,
     cavity1AbsorptionClass: draft.airborneWallCavity1AbsorptionClass,
     cavity1DepthMm: parsePositiveNumber(draft.airborneWallCavity1DepthMm),
@@ -115,4 +115,19 @@ export function buildWorkbenchWallTopology(
     sideBLeafLayerIndices: parseWorkbenchLayerIndexList(draft.airborneWallSideBLeafLayerIndices, rowCount),
     supportTopology: draft.airborneWallSupportTopology
   };
+
+  if (draft.airborneWallTopologyMode === "double_leaf_framed") {
+    return {
+      cavity1AbsorptionClass: groupedTopology.cavity1AbsorptionClass,
+      cavity1DepthMm: groupedTopology.cavity1DepthMm,
+      cavity1FillCoverage: groupedTopology.cavity1FillCoverage,
+      cavity1LayerIndices: groupedTopology.cavity1LayerIndices,
+      sideALeafLayerIndices: groupedTopology.sideALeafLayerIndices,
+      sideBLeafLayerIndices: groupedTopology.sideBLeafLayerIndices,
+      supportTopology: groupedTopology.supportTopology,
+      topologyMode: groupedTopology.topologyMode
+    };
+  }
+
+  return groupedTopology;
 }

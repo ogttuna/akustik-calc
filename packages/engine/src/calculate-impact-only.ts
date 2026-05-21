@@ -52,6 +52,9 @@ import {
   resolveLayerBasedImpactLane,
   shouldHideLowConfidenceProxyAirborne
 } from "./impact-lane";
+import {
+  buildLayerCombinationResolverTraceForImpactOnly
+} from "./layer-combination-resolver-runtime-candidate-surface-parity";
 import { computeLayerSurfaceMassKgM2 } from "./layer-surface-mass";
 import { getFloorFamilySourceGuard } from "./floor-family-source-guard";
 import { getDefaultMaterialCatalog, resolveMaterial } from "./material-catalog";
@@ -192,6 +195,7 @@ export function calculateImpactOnly(
       const predictorImpactLane = resolveLayerBasedImpactLane({
         catalog,
         exactImpact,
+        explicitFloorRoleStack: hasFullyTaggedSourceStack,
         explicitPredictorInput: predictorInput,
         predictorInput,
         resolvedLayers: resolvedSourceLayers,
@@ -220,6 +224,7 @@ export function calculateImpactOnly(
           const visibleAnchorLane = resolveLayerBasedImpactLane({
             catalog,
             exactImpact,
+            explicitFloorRoleStack: hasFullyTaggedSourceStack,
             resolvedLayers: resolvedVisibleLayers,
             targetOutputs: options.targetOutputs
           });
@@ -235,6 +240,7 @@ export function calculateImpactOnly(
     const directImpactLane = resolveLayerBasedImpactLane({
       catalog,
       exactImpact,
+      explicitFloorRoleStack: hasFullyTaggedSourceStack,
       resolvedLayers: resolvedSourceLayers,
       targetOutputs: options.targetOutputs
     });
@@ -327,6 +333,7 @@ export function calculateImpactOnly(
       const fallbackImpactLane = resolveLayerBasedImpactLane({
         catalog,
         exactImpact,
+        explicitFloorRoleStack: hasFullyTaggedSourceStack,
         resolvedLayers: resolvedSourceLayers,
         targetOutputs: options.targetOutputs
       });
@@ -512,7 +519,7 @@ export function calculateImpactOnly(
     }
   }
 
-  return ImpactOnlyCalculationSchema.parse({
+  const result: ImpactOnlyCalculation = {
     boundFloorSystemEstimate,
     boundFloorSystemMatch,
     floorCarrier,
@@ -536,5 +543,12 @@ export function calculateImpactOnly(
     unsupportedTargetOutputs: targetOutputSupport.unsupportedTargetOutputs,
     visibleLayers: resolvedVisibleLayers,
     warnings
-  });
+  };
+
+  const layerCombinationResolverTrace = buildLayerCombinationResolverTraceForImpactOnly(result);
+  if (layerCombinationResolverTrace) {
+    result.layerCombinationResolverTrace = layerCombinationResolverTrace;
+  }
+
+  return ImpactOnlyCalculationSchema.parse(result);
 }

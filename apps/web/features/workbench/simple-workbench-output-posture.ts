@@ -38,6 +38,11 @@ import {
   isOpenWebDirectFixedLiningResult
 } from "./open-web-direct-fixed-lining-surface";
 import {
+  getOpenWebRawBareOutputDetail,
+  getOpenWebRawBarePosture,
+  isOpenWebRawBareResult
+} from "./open-web-raw-bare-surface";
+import {
   getOpenBoxTimberSimilarityOutputDetail,
   getOpenBoxTimberSimilarityPosture,
   isOpenBoxTimberSimilarityResult
@@ -47,6 +52,16 @@ import {
   getOpenBoxTimberRawBarePosture,
   isOpenBoxTimberRawBareResult
 } from "./open-box-timber-raw-bare-surface";
+import {
+  getOpenBoxTimberEpsScreedHybridOutputDetail,
+  getOpenBoxTimberEpsScreedHybridPosture,
+  isOpenBoxTimberEpsScreedHybridResult
+} from "./open-box-timber-eps-screed-hybrid-surface";
+import {
+  getHelperOnlyTimberOpenWebImpactStackOutputDetail,
+  getHelperOnlyTimberOpenWebImpactStackPosture,
+  isHelperOnlyTimberOpenWebImpactStackResult
+} from "./helper-only-timber-open-web-impact-stack-surface";
 import {
   getCompanyInternalOpeningLeakFieldBuildingOutputDetail,
   getCompanyInternalOpeningLeakFieldBuildingSurface
@@ -355,6 +370,27 @@ export function buildSimpleWorkbenchOutputPosture(input: {
   if (
     studyMode === "floor" &&
     status === "live" &&
+    isOpenBoxTimberEpsScreedHybridResult(result) &&
+    (
+      output === "Rw" ||
+      output === "C" ||
+      output === "Ln,w" ||
+      output === "CI" ||
+      output === "CI,50-2500" ||
+      output === "Ln,w+CI"
+    )
+  ) {
+    const posture = getOpenBoxTimberEpsScreedHybridPosture();
+
+    return {
+      ...posture,
+      detail: getOpenBoxTimberEpsScreedHybridOutputDetail(output, result) ?? posture.detail
+    };
+  }
+
+  if (
+    studyMode === "floor" &&
+    status === "live" &&
     isOpenBoxTimberSimilarityResult(result) &&
     (output === "Rw" || output === "C" || output === "Ln,w" || output === "CI" || output === "CI,50-2500" || output === "Ln,w+CI")
   ) {
@@ -363,6 +399,50 @@ export function buildSimpleWorkbenchOutputPosture(input: {
     return {
       ...posture,
       detail: getOpenBoxTimberSimilarityOutputDetail(output, result) ?? posture.detail
+    };
+  }
+
+  if (
+    studyMode === "floor" &&
+    status === "live" &&
+    isOpenWebRawBareResult(result) &&
+    (
+      output === "Rw" ||
+      output === "C" ||
+      output === "Ctr" ||
+      output === "Ln,w" ||
+      output === "CI" ||
+      output === "CI,50-2500" ||
+      output === "Ln,w+CI"
+    )
+  ) {
+    const posture = getOpenWebRawBarePosture();
+
+    return {
+      ...posture,
+      detail: getOpenWebRawBareOutputDetail(output, result) ?? posture.detail
+    };
+  }
+
+  if (
+    studyMode === "floor" &&
+    status === "live" &&
+    isHelperOnlyTimberOpenWebImpactStackResult(result) &&
+    (
+      output === "Rw" ||
+      output === "C" ||
+      output === "Ctr" ||
+      output === "Ln,w" ||
+      output === "CI" ||
+      output === "CI,50-2500" ||
+      output === "Ln,w+CI"
+    )
+  ) {
+    const posture = getHelperOnlyTimberOpenWebImpactStackPosture();
+
+    return {
+      ...posture,
+      detail: getHelperOnlyTimberOpenWebImpactStackOutputDetail(output, result) ?? posture.detail
     };
   }
 

@@ -24,6 +24,16 @@ For the Gate-F-after strategic ROI revalidation and Gate G handoff read
 [CHECKPOINT_2026-05-10_STRATEGIC_ROI_REVALIDATION_AND_GATE_G_PLAN_HANDOFF.md](./CHECKPOINT_2026-05-10_STRATEGIC_ROI_REVALIDATION_AND_GATE_G_PLAN_HANDOFF.md).
 For the 2026-05-11 INSUL / ISO research refresh and Gate P replan read
 [CHECKPOINT_2026-05-11_INSUL_ISO_RESEARCH_AND_GATE_P_REPLAN_HANDOFF.md](./CHECKPOINT_2026-05-11_INSUL_ISO_RESEARCH_AND_GATE_P_REPLAN_HANDOFF.md).
+For the 2026-05-20 detailed INSUL competitor benchmark and DynEcho
+differentiation plan read
+[INSUL_COMPETITOR_RESEARCH_2026-05-20.md](./INSUL_COMPETITOR_RESEARCH_2026-05-20.md).
+For the concise active implementation plan that reconciles the current
+unfinished helper-only formula-corridor gate with the broader arbitrary
+layer-combination goal read
+[ACTIVE_LAYER_COMBINATION_GENERALIZATION_PLAN_2026-05-21.md](./ACTIVE_LAYER_COMBINATION_GENERALIZATION_PLAN_2026-05-21.md).
+For the clean checkpoint after the double-leaf/framed wall coverage
+refresh revalidation read
+[CHECKPOINT_2026-05-21_LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_COVERAGE_REFRESH_REVALIDATION.md](./CHECKPOINT_2026-05-21_LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_COVERAGE_REFRESH_REVALIDATION.md).
 For the Gate S opening/leak runtime corridor and Gate T handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_S_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_S_HANDOFF.md).
 For the Gate T opening/leak surface parity and Gate U handoff read
@@ -137,6 +147,795 @@ For the Gate Q no-runtime input contract and Gate R handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_Q_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_Q_HANDOFF.md).
 For the Gate P no-runtime closeout and Gate Q handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_P_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_P_HANDOFF.md).
+
+## Active Implementation Pointer - 2026-05-21 Double-Leaf Coverage Refresh Handoff
+
+This is the current execution order. If an older historical section
+below conflicts with this block, this block wins.
+
+Latest landed action:
+
+`layer_combination_resolver_double_leaf_framed_wall_banded_coverage_refresh_plan`
+
+Landed contract:
+
+`packages/engine/src/layer-combination-resolver-double-leaf-framed-wall-banded-coverage-refresh-contract.test.ts`
+
+Selection status:
+
+`layer_combination_resolver_double_leaf_framed_wall_banded_coverage_refresh_landed_no_runtime_selected_post_double_leaf_revalidation`
+
+Active selected next action:
+
+`layer_combination_resolver_post_double_leaf_framed_wall_banded_coverage_revalidation_plan`
+
+Active selected next file:
+
+`packages/engine/src/layer-combination-resolver-post-double-leaf-framed-wall-banded-coverage-revalidation-contract.test.ts`
+
+Active selected next label:
+
+layer combination resolver double-leaf framed wall banded coverage
+refresh consumed; next label is layer combination resolver post
+double-leaf framed wall banded coverage revalidation.
+
+Planned next basis:
+
+`layer_combination_resolver_double_leaf_framed_wall_banded_source_absent_formula_corridor`
+
+Latest validation:
+
+`pnpm calculator:gate:current` passed on 2026-05-21 after the
+double-leaf framed wall banded coverage refresh closeout with engine 508
+files / 2889 tests, web 94 files / 388 passed + 18 skipped, repo build
+5 / 5, and whitespace guard clean. Known non-fatal warnings remain the
+optional `sharp/@img` build warnings and Zustand storage warnings in
+test runtime.
+
+Latest double-leaf coverage refresh closeout:
+
+- This no-runtime coverage refresh lands
+  `layer_combination_resolver_double_leaf_framed_wall_banded_coverage_refresh_plan`
+  with selection status
+  `layer_combination_resolver_double_leaf_framed_wall_banded_coverage_refresh_landed_no_runtime_selected_post_double_leaf_revalidation`.
+  It selects
+  `layer_combination_resolver_post_double_leaf_framed_wall_banded_coverage_revalidation_plan`
+  in
+  `packages/engine/src/layer-combination-resolver-post-double-leaf-framed-wall-banded-coverage-revalidation-contract.test.ts`.
+- The executable ledger now carries independent absorbed, resilient
+  both-sides, and resilient one-side double-leaf/framed wall runtime rows
+  on
+  `layer_combination_resolver_double_leaf_framed_wall_banded_source_absent_formula_corridor`
+  and candidate
+  `candidate_layer_combination_resolver_double_leaf_framed_wall_banded_source_absent_family_solver`.
+  Pins stay `Rw 45`, `Rw 46`, and `Rw 45` respectively, with
+  scenario-specific STC/C/Ctr and not-measured budgets.
+- Exact precedence, missing `resilientBarSideCount`, overlapping leaf
+  groups, direct-fixed double-leaf, grouped triple-leaf/multicavity,
+  field/building separation, floor-impact, ASTM/IIC, tolerance retune,
+  and broad source crawl remain blocked or separate. This is not a broad
+  source crawl.
+
+Latest double-leaf surface parity closeout:
+
+- Landed gate:
+  `layer_combination_resolver_double_leaf_framed_wall_banded_surface_parity_plan`.
+  Selection status:
+  `layer_combination_resolver_double_leaf_framed_wall_banded_surface_parity_landed_no_runtime_selected_coverage_refresh`.
+  Selected next action, now landed:
+  `layer_combination_resolver_double_leaf_framed_wall_banded_coverage_refresh_plan`
+  in
+  `packages/engine/src/layer-combination-resolver-double-leaf-framed-wall-banded-coverage-refresh-contract.test.ts`.
+- This no-runtime closeout exposes the same source-absent element-lab
+  double-leaf/framed wall basis
+  `layer_combination_resolver_double_leaf_framed_wall_banded_source_absent_formula_corridor`
+  and candidate
+  `candidate_layer_combination_resolver_double_leaf_framed_wall_banded_source_absent_family_solver`
+  through output cards, route posture, confidence provenance,
+  metric-basis rows, method dossier, local saved replay, server snapshot
+  replay, calculator API payloads, impact-only API payloads, Markdown
+  report, and candidate trace.
+- Visible scenario-specific pins stay independent absorbed `Rw 45` /
+  STC 45 / `C -1` / `Ctr -6.1` with `+/-7 dB`; resilient both-sides
+  `Rw 46` / STC 46 / `C -1.1` / `Ctr -6.2` with `+/-8 dB`; and
+  resilient one-side `Rw 45` / STC 45 / `C -1.1` / `Ctr -6.2` with
+  `+/-8 dB`. These pins are not measured evidence.
+- Exact rows still win first. Missing `resilientBarSideCount` returns
+  `needs_input`; explicit `field_between_rooms` overlays remain separate
+  and do not rewrite element-lab trace pins; direct-fixed, grouped
+  triple-leaf/multicavity, field/building aliases, floor-impact,
+  ASTM/IIC, tolerance retune, and broad source crawling remain blocked.
+  This is not a broad source crawl.
+
+Latest double-leaf runtime corridor closeout:
+
+- Landed gate:
+  `layer_combination_resolver_double_leaf_framed_wall_banded_runtime_corridor_plan`.
+  Selection status:
+  `layer_combination_resolver_double_leaf_framed_wall_banded_runtime_corridor_landed_selected_surface_parity`.
+  Selected next action, now landed:
+  `layer_combination_resolver_double_leaf_framed_wall_banded_surface_parity_plan`
+  in
+  `packages/engine/src/layer-combination-resolver-double-leaf-framed-wall-banded-surface-parity-contract.test.ts`.
+- Complete source-absent element-lab double-leaf/framed walls now
+  promote through
+  `layer_combination_resolver_double_leaf_framed_wall_banded_source_absent_formula_corridor`
+  and candidate
+  `candidate_layer_combination_resolver_double_leaf_framed_wall_banded_source_absent_family_solver`
+  without numeric value movement.
+- Independent absorbed stays `Rw 45` / STC 45 / `C -1` / `Ctr -6.1`
+  with `+/-7 dB` `Rw` and STC budgets; resilient both-sides stays
+  `Rw 46` / STC 46 / `C -1.1` / `Ctr -6.2` with `+/-8 dB`; resilient
+  one-side stays `Rw 45` / STC 45 / `C -1.1` / `Ctr -6.2` with
+  `+/-8 dB`.
+- Exact rows still win first. Missing `resilientBarSideCount` returns
+  `needs_input`; direct-fixed, grouped triple-leaf/multicavity, unowned
+  field/building aliases, floor-impact, ASTM/IIC, tolerance retune, and
+  broad source crawling remain blocked. Explicit `field_between_rooms`
+  output remains on its separate field overlay and does not relabel lab
+  `Rw`. This is not a broad source crawl.
+
+Latest double-leaf formula corridor closeout:
+
+- It is no-runtime: the new formula corridor defines
+  `layer_combination_resolver_double_leaf_framed_wall_banded_formula_corridor_plan`
+  with selection status
+  `layer_combination_resolver_double_leaf_framed_wall_banded_formula_corridor_landed_no_runtime_selected_runtime_corridor`,
+  selected next action
+  `layer_combination_resolver_double_leaf_framed_wall_banded_runtime_corridor_plan`,
+  and selected next file
+  `packages/engine/src/layer-combination-resolver-double-leaf-framed-wall-banded-runtime-corridor-contract.test.ts`.
+  It defines
+  `layer_combination_resolver_double_leaf_framed_wall_banded_source_absent_formula_corridor`
+  but keeps public runtime on
+  `gate_s_double_leaf_framed_bridge_mass_air_mass_bridge_damping_runtime`
+  until the selected runtime corridor lands.
+- Formula terms now cover explicit wall double-leaf/framed topology,
+  side-leaf surface mass partition, mass-air-mass resonance, bridge
+  coupling, absorber flow resistivity, one-third-octave TL, ISO 717-1
+  Rw/C/Ctr, STC display boundary, exact-source precedence,
+  not-measured budgets, hostile topology, and field/building /
+  floor-impact / ASTM/IIC boundaries.
+- Source-absent design payloads are pinned for runtime parity:
+  independent absorbed stays `Rw 45` / STC 45 / `C -1` / `Ctr -6.1`
+  with `+/-7 dB` `Rw` and STC budgets; resilient both-sides stays
+  `Rw 46` / STC 46 / `C -1.1` / `Ctr -6.2` with `+/-8 dB` `Rw` and
+  STC budgets; resilient one-side is `Rw 45` / STC 45 with the same
+  resilient budget.
+- Missing `resilientBarSideCount`, direct-fixed bridge, grouped
+  triple-leaf/multicavity, unsafe reorder, field/building,
+  floor-impact, ASTM/IIC, exact-source, and missing-physics requests
+  stay fail-closed. This is not a broad source crawl.
+
+Previous double-leaf owner closeout:
+
+- Landed gate:
+  `layer_combination_resolver_double_leaf_framed_wall_banded_solver_owner_plan`.
+  Selection status:
+  `layer_combination_resolver_double_leaf_framed_wall_banded_solver_owner_landed_no_runtime_selected_formula_corridor`.
+  Selected action, now landed:
+  `layer_combination_resolver_double_leaf_framed_wall_banded_formula_corridor_plan`
+  in
+  `packages/engine/src/layer-combination-resolver-double-leaf-framed-wall-banded-formula-corridor-contract.test.ts`;
+  selected next label: layer combination resolver double-leaf framed wall
+  banded formula corridor.
+- It is no-runtime: existing Gate S double-leaf/framed values remain
+  independent absorbed `Rw 45` / STC 45 / `C -1` / `Ctr -6.1` and
+  resilient both-sides `Rw 46` / STC 46 on
+  `gate_s_double_leaf_framed_bridge_mass_air_mass_bridge_damping_runtime`
+  with candidate
+  `candidate_double_leaf_framed_bridge_family_physics_prediction`.
+- The owner does not yet register that runtime candidate in the shared
+  layer-combination resolver. The selected formula corridor must own the
+  shared candidate/basis registration, value pins, budgets, and
+  boundaries.
+- Required owner fields: side-leaf grouping, side-leaf surface masses,
+  cavity depth, mass-air-mass resonance, absorber flow resistivity,
+  support/bridge coupling, explicit `resilientBarSideCount`,
+  one-third-octave TL, ISO 717-1 Rw/C/Ctr adapter, STC boundary,
+  exact-source/holdout precedence, source-absent budget, hostile
+  topology, triple-leaf/multicavity separation, field/building boundary,
+  and floor-impact boundary.
+- Blocked: direct-fixed double-leaf runtime, missing side-count guesses,
+  grouped triple-leaf reassignment, field/building promotion, floor
+  impact transfer, ASTM/STC alias promotion, tolerance retune without
+  holdouts, and broad source crawling. This is not a broad source crawl.
+
+Previous post-single-leaf matrix refresh:
+
+`layer_combination_resolver_post_single_leaf_mass_law_banded_matrix_refresh_plan`
+
+Previous post-single-leaf matrix refresh contract:
+
+`packages/engine/src/layer-combination-resolver-post-single-leaf-mass-law-banded-matrix-refresh-contract.test.ts`
+
+Previous post-single-leaf matrix refresh selection status:
+
+`layer_combination_resolver_post_single_leaf_mass_law_banded_matrix_refresh_landed_no_runtime_selected_double_leaf_framed_wall_banded_solver_owner`
+
+Previous post-single-leaf matrix refresh selected next action, now
+landed:
+
+`layer_combination_resolver_double_leaf_framed_wall_banded_solver_owner_plan`
+
+Previous single-leaf surface parity:
+
+`layer_combination_resolver_single_leaf_mass_law_banded_surface_parity_plan`
+
+Previous single-leaf surface parity contract:
+
+`packages/engine/src/layer-combination-resolver-single-leaf-mass-law-banded-surface-parity-contract.test.ts`
+
+Previous single-leaf surface parity selection status:
+
+`layer_combination_resolver_single_leaf_mass_law_banded_surface_parity_landed_no_runtime_selected_post_single_leaf_matrix_refresh`
+
+Previous single-leaf surface parity selected next action:
+
+`layer_combination_resolver_post_single_leaf_mass_law_banded_matrix_refresh_plan`
+
+Previous single-leaf surface parity selected next file:
+
+`packages/engine/src/layer-combination-resolver-post-single-leaf-mass-law-banded-matrix-refresh-contract.test.ts`
+
+Previous single-leaf surface parity selected next label:
+
+layer combination resolver post single-leaf mass-law banded matrix refresh.
+
+Previous single-leaf runtime corridor:
+
+`layer_combination_resolver_single_leaf_mass_law_banded_runtime_corridor_plan`
+
+Previous single-leaf runtime corridor contract:
+
+`packages/engine/src/layer-combination-resolver-single-leaf-mass-law-banded-runtime-corridor-contract.test.ts`
+
+Previous single-leaf runtime corridor selection status:
+
+`layer_combination_resolver_single_leaf_mass_law_banded_runtime_corridor_landed_selected_surface_parity`
+
+Previous resolver runtime candidate surface parity:
+
+`layer_combination_resolver_runtime_candidate_surface_parity_plan`
+
+Previous resolver runtime candidate surface parity contract:
+
+`packages/engine/src/layer-combination-resolver-runtime-candidate-surface-parity-contract.test.ts`
+
+Previous resolver runtime candidate surface parity selection status:
+
+`layer_combination_resolver_runtime_candidate_surface_parity_landed_no_runtime_selected_candidate_coverage_matrix_refresh`
+
+Previous resolver runtime candidate surface parity selected next action:
+
+`layer_combination_resolver_candidate_coverage_matrix_refresh_plan`
+
+Previous resolver runtime candidate surface parity selected next file:
+
+`packages/engine/src/layer-combination-resolver-candidate-coverage-matrix-refresh-contract.test.ts`
+
+Previous resolver runtime candidate surface parity selected next label:
+
+layer combination resolver candidate coverage matrix refresh.
+
+Previous resolver runtime candidate adapter:
+
+`layer_combination_resolver_runtime_candidate_adapter_plan`
+
+Previous resolver runtime candidate adapter contract:
+
+`packages/engine/src/layer-combination-resolver-runtime-candidate-adapter-contract.test.ts`
+
+Previous resolver runtime candidate adapter selection status:
+
+`layer_combination_resolver_runtime_candidate_adapter_landed_no_runtime_selected_surface_parity`
+
+Previous resolver registry:
+
+`layer_combination_resolver_registry_plan`
+
+Previous resolver registry contract:
+
+`packages/engine/src/layer-combination-resolver-registry-contract.test.ts`
+
+Previous resolver registry selection status:
+
+`layer_combination_resolver_registry_landed_no_runtime_selected_runtime_candidate_adapter`
+
+Previous post-helper-only revalidation:
+
+`broad_accuracy_post_helper_only_timber_open_web_impact_stack_coverage_revalidation_plan`
+
+Previous post-helper-only revalidation contract:
+
+`packages/engine/src/broad-accuracy-post-helper-only-timber-open-web-impact-stack-coverage-revalidation-contract.test.ts`
+
+Previous post-helper-only selection status:
+
+`broad_accuracy_post_helper_only_timber_open_web_impact_stack_coverage_revalidation_landed_no_runtime_selected_layer_combination_resolver_registry`
+
+Previous helper-only formula basis:
+
+`broad_accuracy_floor_helper_only_timber_open_web_impact_stack_source_absent_formula_corridor`
+
+Previous runtime corridor:
+
+`broad_accuracy_floor_helper_only_timber_open_web_impact_stack_runtime_corridor_plan`
+
+Previous runtime selection status:
+
+`broad_accuracy_floor_helper_only_timber_open_web_impact_stack_runtime_corridor_landed_selected_surface_parity`
+
+Previous runtime contract:
+
+`packages/engine/src/broad-accuracy-floor-helper-only-timber-open-web-impact-stack-runtime-corridor-contract.test.ts`
+
+Previous runtime selected next file, now landed by surface parity:
+
+`packages/engine/src/broad-accuracy-floor-helper-only-timber-open-web-impact-stack-surface-parity-contract.test.ts`
+
+Previous coverage refresh:
+
+`broad_accuracy_floor_helper_only_timber_open_web_impact_stack_coverage_refresh_plan`
+
+Previous coverage refresh selection status:
+
+`broad_accuracy_floor_helper_only_timber_open_web_impact_stack_coverage_refresh_landed_no_runtime_selected_post_helper_only_revalidation`
+
+Previous coverage refresh selected next file, now landed by post-helper-only revalidation:
+
+`packages/engine/src/broad-accuracy-post-helper-only-timber-open-web-impact-stack-coverage-revalidation-contract.test.ts`
+
+Research-backed remaining-work order:
+
+1. Add the wall double-leaf / framed / bridged family chain: owner,
+   formula corridor, runtime corridor, surface parity, and coverage
+   refresh. Required owners include leaves, cavity, bridge/support class,
+   infill flow resistivity, banded TL curve, ISO 717-1 adapter, and
+   hostile topology rules.
+2. Add the floor floating-cover / underlay / resilient-package chain:
+   owner, formula corridor, runtime corridor, surface parity, and
+   coverage refresh. Required owners include support family, carrier,
+   resilient dynamic stiffness, finish and underlay mass, package roles,
+   measured-vs-predicted transfer, and ISO 717-2 adapter.
+3. Keep field/building adapters blocked until direct lab curves, room
+   normalization, flanking/junction data, RT60 or absorption, volumes,
+   and uncertainty budgets are owned.
+4. Add glazing/openings/leaks and rating/spectrum adapter parity after
+   the main opaque wall/floor families expose banded curves.
+5. Add calibration/holdout residuals and tolerance retune governance only
+   after family solvers identify concrete residual gaps.
+6. Add targeted source or holdout rows only for named exact precedence,
+   anchor, calibration, residual, or negative-boundary gaps.
+7. Run a company-internal personal-use readiness gate across hostile
+   layer edits, many layers, split/duplicate/reordered layers,
+   basis-boundary requests, card/API/report parity, and expected-value
+   tolerances.
+
+Broad source crawling, tolerance retuning without residual evidence,
+field/building runtime promotion, and ASTM/IIC aliases stay blocked
+until a bounded owner gate explicitly selects them.
+
+Research refresh note, 2026-05-21:
+
+- INSUL's public technical/user-guide material confirms the architecture
+  direction: family-specific physics, limited physical inputs,
+  one-third-octave curves, rating adapters, and comparison with
+  laboratory tests.
+- INSUL's floor-cover material separates measured improvement from
+  predicted improvement and warns against casual transfer between
+  lightweight and heavyweight floors. DynEcho must keep exact rows,
+  anchors, package transfer, and source-absent solvers separate.
+- ISO 12354-1/2 and professional building tools such as CadnaB /
+  SONarchitect reinforce that field/building output needs explicit room,
+  flanking, junction, and uncertainty owners. This remains a separate
+  future lane, not an alias from lab `Rw` or `Ln,w`.
+
+Single-leaf surface parity closeout note, 2026-05-21:
+
+- `packages/engine/src/layer-combination-resolver-single-leaf-mass-law-banded-runtime-corridor.ts`
+  and its contract have landed the runtime basis promotion and selected
+  the single-leaf surface parity file below.
+- `packages/engine/src/layer-combination-resolver-single-leaf-mass-law-banded-surface-parity-contract.test.ts`
+  now exists and is registered in
+  `tools/dev/run-calculator-current-gate.ts`.
+- `packages/engine/src/layer-combination-resolver-registry.ts` now
+  declares
+  `candidate_layer_combination_resolver_single_leaf_mass_law_banded_source_absent_family_solver`
+  as the single-leaf mass-law banded source-absent candidate for wall
+  and floor direct-airborne trace mapping.
+- `packages/engine/src/layer-combination-resolver-runtime-candidate-surface-parity.ts`
+  now emits scenario-specific value pins for the single-leaf runtime
+  basis instead of exposing only one generic registry row. The visible
+  candidate trace keeps gypsum `Rw 31`, laminated gypsum `Rw 34`, and
+  concrete wall/floor direct-airborne `Rw 55` with not-measured
+  `+/-6 dB` budgets and without opening floor impact, field/building, or
+  ASTM/IIC aliases.
+
+Closeout map for the landed single-leaf surface parity:
+
+| File | Landed change |
+| --- | --- |
+| `packages/engine/src/layer-combination-resolver-single-leaf-mass-law-banded-surface-parity.ts` | no-runtime contract builder consumes the landed runtime corridor and enumerates surface targets, supported scenarios, boundaries, and selected next matrix-refresh action |
+| `packages/engine/src/layer-combination-resolver-single-leaf-mass-law-banded-surface-parity-contract.test.ts` | proves gypsum `Rw 31`, laminated gypsum `Rw 34`, concrete wall/floor direct-airborne `Rw 55`, `+/-6 dB`, candidate id, basis, support bucket, and exact precedence on engine/API surfaces |
+| `packages/engine/src/layer-combination-resolver-registry.ts` | adds the single-leaf mass-law banded source-absent candidate declaration, with wall and floor direct-airborne route coverage but no floor-impact opening |
+| `packages/engine/src/layer-combination-resolver-runtime-candidate-adapter.ts` and `packages/engine/src/layer-combination-resolver-runtime-candidate-surface-parity.ts` | map the single-leaf basis into `layerCombinationResolverTrace`; keep field/building, impact, and ASTM/IIC boundaries blocked; surface scenario-specific value pins |
+| `apps/web/features/workbench/layer-combination-resolver-candidate-surface-parity.test.ts` | proves the existing helper-only surfaces plus the single-leaf workbench, calculator API, and Markdown report resolver trace |
+| `packages/engine/src/index.ts` and `tools/dev/run-calculator-current-gate.ts` | export/register the new landed gate |
+| authority docs | mark this gate landed and select the post-single-leaf matrix refresh next |
+
+Post-single-leaf matrix refresh closeout:
+
+- `layer_combination_resolver_post_single_leaf_mass_law_banded_matrix_refresh_plan`
+  has landed with selection status
+  `layer_combination_resolver_post_single_leaf_mass_law_banded_matrix_refresh_landed_no_runtime_selected_double_leaf_framed_wall_banded_solver_owner`.
+- It is no-runtime: the single-leaf candidate stays on
+  `layer_combination_resolver_single_leaf_mass_law_banded_source_absent_formula_corridor`
+  with gypsum `Rw 31`, laminated gypsum `Rw 34`, concrete wall/floor
+  direct-airborne `Rw 55`, and visible `+/-6 dB` Rw/STC
+  not-measured budgets.
+- The operating matrix remains 14 rows: 2 `ready`, 9
+  `ready_with_budget`, 1 `needs_input`, 2 `unsupported`, and 0
+  registered `research_only` rows. The former single-leaf owner gap is
+  now closed as `ready_with_budget` rather than selected research work.
+- The selected next action is
+  `layer_combination_resolver_double_leaf_framed_wall_banded_solver_owner_plan`
+  in
+  `packages/engine/src/layer-combination-resolver-double-leaf-framed-wall-banded-solver-owner-contract.test.ts`;
+  selected next label: layer combination resolver double-leaf framed
+  wall banded solver owner. This is not a broad source crawl.
+
+Acceptance for the selected gate:
+
+- no numeric runtime values move;
+- gypsum 12.5 mm stays `Rw 31`, laminated gypsum 25 mm stays `Rw 34`,
+  concrete wall and floor direct-airborne stay `Rw 55`;
+- visible basis is
+  `layer_combination_resolver_single_leaf_mass_law_banded_source_absent_formula_corridor`;
+- visible candidate id is
+  `candidate_layer_combination_resolver_single_leaf_mass_law_banded_source_absent_family_solver`
+  or a route-specific declaration that is explicitly mapped back to that
+  runtime candidate id;
+- visible support bucket is `source_absent_estimate`;
+- visible budget is not-measured `+/-6 dB`;
+- exact measured rows remain rank-zero before this source-absent
+  candidate;
+- cavity/framed, CLT/mass timber, lined massive, floor impact,
+  field/building, ASTM/IIC/AIIC, tolerance retune, and broad source crawl
+  remain blocked;
+- calculator API, impact-only boundary output, local saved replay, server
+  snapshot replay, and Markdown report agree with the cards.
+
+Candidate coverage matrix closeout:
+
+- `layer_combination_resolver_candidate_coverage_matrix_refresh_plan`
+  has landed with selection status
+  `layer_combination_resolver_candidate_coverage_matrix_refresh_landed_no_runtime_selected_company_internal_v0_rehearsal`.
+- It is no-runtime: the executable candidate coverage matrix covers all
+  14 resolver candidate declarations, 14 surface rows, 11 active runtime
+  candidates, and 3 boundary rows across exact measured overrides,
+  similarity anchors, calibrated family solvers, source-absent family
+  solvers, field/building adapters, `needs_input`, basis boundaries, and
+  unsupported ASTM/IIC blockers.
+- Runtime acoustic values, bases, budgets, exact precedence, and blocked
+  boundaries remain frozen. Source rows remain evidence, anchors,
+  holdouts, or exact overrides rather than the product.
+- Selected next action:
+  `layer_combination_resolver_company_internal_v0_rehearsal_plan`.
+  Selected next file:
+  `packages/engine/src/layer-combination-resolver-company-internal-v0-rehearsal-contract.test.ts`.
+  Selected next label: layer combination resolver company-internal V0
+  rehearsal. This is not a broad source crawl.
+
+Company-internal V0 rehearsal closeout:
+
+- `layer_combination_resolver_company_internal_v0_rehearsal_plan` has
+  landed with selection status
+  `layer_combination_resolver_company_internal_v0_rehearsal_landed_no_runtime_selected_single_leaf_mass_law_banded_solver_owner`.
+- It is no-runtime: the current resolver operating envelope classifies
+  14 rows as 2 `ready`, 9 `ready_with_budget`, 1 `needs_input`, 2
+  `unsupported`, and 0 registered `research_only` rows. It separately
+  ranks six research-only gaps.
+- Company-internal V0 use is limited to the 11 exact or budgeted rows
+  with visible candidate id, basis, support bucket, required fields,
+  value pins, and budgets.
+- Broad source crawling, field/building runtime promotion,
+  ASTM/IIC/AIIC aliases, and tolerance retunes without holdouts remain
+  blocked.
+- Selected next action:
+  `layer_combination_resolver_single_leaf_mass_law_banded_solver_owner_plan`.
+  Selected next file:
+  `packages/engine/src/layer-combination-resolver-single-leaf-mass-law-banded-solver-owner-contract.test.ts`.
+  Selected next label: layer combination resolver single-leaf mass-law
+  banded solver owner. This is not a broad source crawl.
+
+Single-leaf mass-law banded solver owner closeout:
+
+- `layer_combination_resolver_single_leaf_mass_law_banded_solver_owner_plan`
+  has landed with selection status
+  `layer_combination_resolver_single_leaf_mass_law_banded_solver_owner_landed_no_runtime_selected_formula_corridor`.
+- It is no-runtime: it owns wall/floor direct-airborne
+  single-visible-leaf scope, material density/surface mass/thickness,
+  stiffness/coincidence family, one-third-octave TL curve, ISO 717-1
+  `Rw`/`C`/`Ctr` adapter, exact-source precedence, holdout residual
+  budget, source-absent budgets, hostile topology boundaries, and floor
+  direct-airborne scope.
+- Floor impact, field/building, ASTM/IIC/AIIC, broad source crawling,
+  tolerance retune, and Rw-to-STC alias promotion remain blocked.
+- Current Gate O values remain frozen: gypsum 12.5 mm `Rw/STC 31`,
+  laminated gypsum 25 mm `Rw/STC 34`, and concrete 150 mm `Rw/STC 55`.
+- Selected next action:
+  `layer_combination_resolver_single_leaf_mass_law_banded_formula_corridor_plan`.
+  Selected next file:
+  `packages/engine/src/layer-combination-resolver-single-leaf-mass-law-banded-formula-corridor-contract.test.ts`.
+  Selected next label: layer combination resolver single-leaf mass-law
+  banded formula corridor. This is not a broad source crawl.
+
+Single-leaf mass-law banded formula corridor closeout:
+
+- `layer_combination_resolver_single_leaf_mass_law_banded_formula_corridor_plan`
+  has landed with selection status
+  `layer_combination_resolver_single_leaf_mass_law_banded_formula_corridor_landed_no_runtime_selected_runtime_corridor`.
+- It is no-runtime: it defines the source-absent element-lab basis
+  `layer_combination_resolver_single_leaf_mass_law_banded_source_absent_formula_corridor`
+  from surface mass, stiffness/coincidence, one-third-octave TL curve,
+  ISO 717-1 `Rw`/`C`/`Ctr`, exact-source precedence, and budget terms.
+- Representative design payloads include gypsum 12.5 mm `Rw 31`,
+  laminated gypsum 25 mm `Rw 34`, and concrete/floor direct-airborne
+  `Rw 55` with `+/-6 dB` `Rw` / STC-compatibility budgets.
+- Runtime values remain frozen, exact rows still win first, and floor
+  impact, field/building, ASTM/IIC/AIIC, broad source crawling,
+  tolerance retune, and Rw-to-STC alias promotion remain blocked.
+- Selected next action:
+  `layer_combination_resolver_single_leaf_mass_law_banded_runtime_corridor_plan`.
+  Selected next file:
+  `packages/engine/src/layer-combination-resolver-single-leaf-mass-law-banded-runtime-corridor-contract.test.ts`.
+  Selected next label: layer combination resolver single-leaf mass-law
+  banded runtime corridor. This is not a broad source crawl.
+
+Single-leaf mass-law banded runtime corridor closeout:
+
+- `layer_combination_resolver_single_leaf_mass_law_banded_runtime_corridor_plan`
+  has landed with selection status
+  `layer_combination_resolver_single_leaf_mass_law_banded_runtime_corridor_landed_selected_surface_parity`.
+- Complete source-absent wall/floor direct-airborne single-leaf
+  element-lab stacks now expose the runtime basis
+  `layer_combination_resolver_single_leaf_mass_law_banded_source_absent_formula_corridor`
+  and candidate
+  `candidate_layer_combination_resolver_single_leaf_mass_law_banded_source_absent_family_solver`.
+- Numeric values remain frozen: gypsum 12.5 mm `Rw 31`, laminated
+  gypsum 25 mm `Rw 34`, and concrete/floor direct-airborne `Rw 55`,
+  with `+/-6 dB` Rw/STC compatibility budget.
+- Exact rows still win first; field/building, floor impact,
+  ASTM/IIC/AIIC, broad source crawling, tolerance retune, and new
+  Rw-to-STC alias promotion remain outside this gate.
+- Selected next action:
+  `layer_combination_resolver_single_leaf_mass_law_banded_surface_parity_plan`.
+  Selected next file:
+  `packages/engine/src/layer-combination-resolver-single-leaf-mass-law-banded-surface-parity-contract.test.ts`.
+  Selected next label: layer combination resolver single-leaf mass-law
+  banded surface parity. This is not a broad source crawl.
+
+Implementation recheck for the selected gate:
+
+- `packages/engine/src/layer-combination-resolver-single-leaf-mass-law-banded-solver-owner.ts`
+  now defines the no-runtime owner terms and route admission boundaries.
+- `packages/engine/src/layer-combination-resolver-single-leaf-mass-law-banded-solver-owner-contract.test.ts`
+  is registered in `tools/dev/run-calculator-current-gate.ts`.
+- `packages/engine/src/layer-combination-resolver-single-leaf-mass-law-banded-formula-corridor.ts`
+  and its contract now define the no-runtime source-absent formula
+  basis and are registered in `tools/dev/run-calculator-current-gate.ts`.
+- `packages/engine/src/layer-combination-resolver-single-leaf-mass-law-banded-runtime-corridor.ts`
+  and its contract now promote the landed formula basis into the
+  runtime candidate surface and are registered in
+  `tools/dev/run-calculator-current-gate.ts`.
+- `packages/engine/src/layer-combination-resolver-single-leaf-mass-law-banded-surface-parity-contract.test.ts`
+  and
+  `packages/engine/src/layer-combination-resolver-post-single-leaf-mass-law-banded-matrix-refresh-contract.test.ts`
+  now exist and are registered in `tools/dev/run-calculator-current-gate.ts`.
+- The selected next file
+  `packages/engine/src/layer-combination-resolver-double-leaf-framed-wall-banded-solver-owner-contract.test.ts`
+  does not exist yet. It is the next owner contract for the double-leaf /
+  framed wall solver chain.
+- Existing solver evidence to reuse includes `dynamic-airborne-gate-o-single-leaf.ts`,
+  the prior wall single-leaf mass-law calibration gates, and the
+  current layer-combination resolver registry/coverage matrix.
+- No fresh source crawl is needed for this step. The next gap is a
+  bounded solver owner over a common wall/floor family, not a source
+  inventory pass.
+
+Patch map for the next implementation:
+
+| File | Required change |
+| --- | --- |
+| `packages/engine/src/layer-combination-resolver-single-leaf-mass-law-banded-surface-parity-contract.test.ts` | add the no-runtime surface-parity contract for the landed single-leaf runtime corridor |
+| workbench/API/report surfaces | expose the selected basis, candidate id, support bucket, values, and `+/-6 dB` budget consistently |
+| `tools/dev/run-calculator-current-gate.ts` | register the new surface-parity contract after it lands |
+| authority docs | record landed single-leaf runtime corridor and select the surface path |
+
+The next contract must consume the post-single-leaf matrix refresh in a
+no-runtime double-leaf/framed wall owner slice. It should keep current
+runtime values frozen while naming the physical owners for side leaf
+grouping, surface mass per side, cavity depth, absorber flow
+resistivity, support/bridge coupling class, one-third-octave airborne
+TL, ISO 717-1 `Rw`/`C`/`Ctr` adapters, exact precedence, residual
+budget, and hostile duplicate/split/reorder rules.
+
+The layer combination resolver registry has now landed as
+`layer_combination_resolver_registry_plan` with selection status
+`layer_combination_resolver_registry_landed_no_runtime_selected_runtime_candidate_adapter`.
+It is no-runtime: it defines the shared candidate declaration surface for
+exact measured overrides, similarity anchor candidates, calibrated
+family solver candidates, source-absent family solver candidates,
+`needs_input` boundaries, `unsupported` boundaries, field/building basis
+boundaries, and ASTM/IIC alias blockers without moving helper-only,
+raw-bare, direct-fixed, supported-band, package-transfer, or field
+values. The selected next action is
+`layer_combination_resolver_runtime_candidate_adapter_plan` in
+`packages/engine/src/layer-combination-resolver-runtime-candidate-adapter-contract.test.ts`;
+selected next label: layer combination resolver runtime candidate
+adapter. This is not a broad source crawl.
+
+The layer combination resolver runtime candidate adapter has now landed
+as `layer_combination_resolver_runtime_candidate_adapter_plan` with
+selection status
+`layer_combination_resolver_runtime_candidate_adapter_landed_no_runtime_selected_surface_parity`.
+It is no-runtime: current runtime basis ids now map into the shared
+resolver candidate id surface for exact measured overrides, similarity
+anchors, calibrated family solvers, source-absent family solvers,
+field/building adapters, `needs_input` boundaries, and `unsupported` /
+ASTM/IIC boundaries without moving helper-only, raw-bare, direct-fixed,
+supported-band, package-transfer, exact, or field values. The selected
+next action is
+`layer_combination_resolver_runtime_candidate_surface_parity_plan` in
+`packages/engine/src/layer-combination-resolver-runtime-candidate-surface-parity-contract.test.ts`;
+selected next label: layer combination resolver runtime candidate
+surface parity. This is not a broad source crawl.
+
+Consumed guard chain kept for contract alignment:
+
+- `broad_accuracy_floor_open_web_field_building_input_surface_plan`
+  landed with selection status
+  `broad_accuracy_floor_open_web_field_building_input_surface_landed_selected_post_input_surface_revalidation`
+  in
+  `apps/web/features/workbench/open-web-field-building-input-surface.test.ts`.
+- `broad_accuracy_floor_open_web_field_building_post_input_surface_revalidation_plan`
+  landed with selection status
+  `broad_accuracy_floor_open_web_field_building_post_input_surface_revalidation_landed_no_runtime_selected_matrix_refresh`
+  and selected
+  `broad_accuracy_post_open_web_field_building_input_surface_matrix_refresh_plan`
+  in
+  `packages/engine/src/broad-accuracy-post-open-web-field-building-input-surface-matrix-refresh-contract.test.ts`;
+  selected next label: post open-web field/building input-surface
+  matrix refresh.
+- `broad_accuracy_post_open_web_field_building_input_surface_matrix_refresh_plan`
+  landed with selection status
+  `broad_accuracy_post_open_web_field_building_input_surface_matrix_refresh_landed_no_runtime_selected_helper_only_timber_open_web_impact_stack_owner`
+  and selected
+  `broad_accuracy_floor_helper_only_timber_open_web_impact_stack_owner_plan`
+  in
+  `packages/engine/src/broad-accuracy-floor-helper-only-timber-open-web-impact-stack-owner-contract.test.ts`;
+  selected next label: floor helper-only timber/open-web impact stack
+  owner.
+- `broad_accuracy_floor_helper_only_timber_open_web_impact_stack_owner_plan`
+  landed with selection status
+  `broad_accuracy_floor_helper_only_timber_open_web_impact_stack_owner_landed_no_runtime_selected_formula_corridor`
+  and selected
+  `broad_accuracy_floor_helper_only_timber_open_web_impact_stack_formula_corridor_plan`
+  in
+  `packages/engine/src/broad-accuracy-floor-helper-only-timber-open-web-impact-stack-formula-corridor-contract.test.ts`;
+  selected next label: floor helper-only timber/open-web impact stack
+  formula corridor.
+- `broad_accuracy_floor_helper_only_timber_open_web_impact_stack_formula_corridor_plan`
+  landed with selection status
+  `broad_accuracy_floor_helper_only_timber_open_web_impact_stack_formula_corridor_landed_no_runtime_selected_runtime_corridor`
+  and selected
+  `broad_accuracy_floor_helper_only_timber_open_web_impact_stack_runtime_corridor_plan`
+  in
+  `packages/engine/src/broad-accuracy-floor-helper-only-timber-open-web-impact-stack-runtime-corridor-contract.test.ts`;
+  selected next label: floor helper-only timber/open-web impact stack
+  runtime corridor.
+
+Current implementation comparison:
+
+- `apps/web/features/workbench/open-web-field-building-input-surface.ts`
+  and `.test.ts` are landed and registered in
+  `tools/dev/run-calculator-current-gate.ts`.
+- Previous matrix gate
+  `broad_accuracy_post_open_web_field_building_input_surface_matrix_refresh_plan`
+  selected the helper-only timber/open-web owner boundary.
+- The owner contract
+  `packages/engine/src/broad-accuracy-floor-helper-only-timber-open-web-impact-stack-owner-contract.test.ts`
+  landed with selection status
+  `broad_accuracy_floor_helper_only_timber_open_web_impact_stack_owner_landed_no_runtime_selected_formula_corridor`.
+- The formula corridor now turns that owner checklist into no-runtime
+  design payloads, formula terms, metric budgets, missing-owner
+  statuses, and negative boundaries for open-box timber, timber joist,
+  and lightweight open-web helper-only lower-treatment stacks.
+- The helper-only timber/open-web runtime corridor has now landed as
+  `broad_accuracy_floor_helper_only_timber_open_web_impact_stack_runtime_corridor_plan`
+  with selection status
+  `broad_accuracy_floor_helper_only_timber_open_web_impact_stack_runtime_corridor_landed_selected_surface_parity`.
+  Complete source-absent element-lab helper-only stacks now promote
+  through
+  `broad_accuracy_floor_helper_only_timber_open_web_impact_stack_source_absent_formula_corridor`:
+  open-box timber returns `Rw 54.8` / `Ln,w 59.6`, timber joist returns
+  `Rw 47.3` / `Ln,w 65.4`, and open-web returns `Rw 46.7` /
+  `Ln,w 59.6`, with not-measured source-absent budgets.
+- The helper-only timber/open-web surface parity has now landed as
+  `broad_accuracy_floor_helper_only_timber_open_web_impact_stack_surface_parity_plan`
+  with selection status
+  `broad_accuracy_floor_helper_only_timber_open_web_impact_stack_surface_parity_landed_selected_coverage_refresh`.
+  Cards, route posture, confidence provenance, metric-basis rows,
+  method dossier, local saved replay, server snapshot replay,
+  calculator API, impact-only API, and Markdown report now expose the
+  same helper-only basis, values, and not-measured budgets. Fully tagged
+  impact-only entrypoints now preserve the helper-only lane instead of
+  falling into family-general estimates.
+- Surface-parity selected next file, now landed by coverage refresh:
+  `packages/engine/src/broad-accuracy-floor-helper-only-timber-open-web-impact-stack-coverage-refresh-contract.test.ts`.
+- The helper-only timber/open-web coverage refresh has now landed as
+  `broad_accuracy_floor_helper_only_timber_open_web_impact_stack_coverage_refresh_plan`
+  with selection status
+  `broad_accuracy_floor_helper_only_timber_open_web_impact_stack_coverage_refresh_landed_no_runtime_selected_post_helper_only_revalidation`.
+  This is no-runtime coverage work: open-box timber 370 mm, split
+  185/185, 4x92.5 safe fragments, timber-joist 250 mm, open-web 250 mm,
+  and open-web split 125/125 are now explicit matrix rows while runtime
+  values stay unchanged. Pins remain open-box timber `Rw 54.8` /
+  `Ln,w 59.6` with `+/-8.5 dB` `Rw` and `+/-10.5 dB` `Ln,w`,
+  timber-joist `Rw 47.3` / `Ln,w 65.4`, and open-web `Rw 46.7` /
+  `Ln,w 59.6` on
+  `broad_accuracy_floor_helper_only_timber_open_web_impact_stack_source_absent_formula_corridor`.
+- Exact, direct-fixed, supported-band, raw-bare, package-transfer, and
+  EPS/screed lanes remain separate. Raw-bare impact field transfer,
+  building prediction, and ASTM/IIC/AIIC aliases remain blocked.
+- This is not a broad source crawl.
+- Coverage-refresh selected next label, now consumed by post-helper-only
+  revalidation: post helper-only timber/open-web impact stack coverage
+  revalidation.
+- The post-helper-only timber/open-web coverage revalidation has now
+  landed as
+  `broad_accuracy_post_helper_only_timber_open_web_impact_stack_coverage_revalidation_plan`
+  with selection status
+  `broad_accuracy_post_helper_only_timber_open_web_impact_stack_coverage_revalidation_landed_no_runtime_selected_layer_combination_resolver_registry`.
+  This is no-runtime: helper-only timber/open-web pins remain open-box
+  timber `Rw 54.8` / `Ln,w 59.6`, timber-joist `Rw 47.3` /
+  `Ln,w 65.4`, and open-web `Rw 46.7` / `Ln,w 59.6` on
+  `broad_accuracy_floor_helper_only_timber_open_web_impact_stack_source_absent_formula_corridor`.
+  Exact/package precedence stays first, raw-bare / direct-fixed /
+  supported-band lanes stay separate, and field/building plus ASTM/IIC
+  requests stay blocked. This is not a broad source crawl.
+- The selected next action is `layer_combination_resolver_registry_plan`
+  in
+  `packages/engine/src/layer-combination-resolver-registry-contract.test.ts`;
+  selected next label: layer combination resolver registry.
+
+INSUL / ISO planning impact:
+
+- INSUL confirms the product shape: route-specific family models and
+  banded curves, not one generic layer formula and not source crawling.
+- ISO 12354-1/2 keep field/building prediction tied to direct,
+  flanking, junction/coupling, room-normalization, and uncertainty
+  owners. Building runtime stays blocked in the next helper-only gate.
+- ISO 717-1/2 keep `Rw`, `C`, `Ctr`, `Ln,w`, and impact adapters tied to
+  octave or third-octave basis. Runtime promotion must preserve basis and
+  budget surfaces.
+
+Next ordered steps:
+
+1. Add `layer_combination_resolver_runtime_candidate_adapter_plan`.
+2. Adapt the landed shared candidate declaration surface into the
+   runtime trace without changing values.
+3. Keep exact measured, similarity anchor, calibrated family solver,
+   source-absent family solver, `needs_input`, `unsupported`,
+   field/building, and ASTM/IIC candidate boundaries visible.
+4. Keep helper-only, raw-bare, direct-fixed, supported-band,
+   package-transfer, field/building, and ASTM/IIC runtime values frozen.
+5. Keep broad source crawling blocked until the registry identifies a
+   source-required holdout.
+6. Run the focused adapter contract, registry contract, post-helper-only revalidation,
+   coverage-refresh, surface-parity, runtime-corridor, formula, owner
+   contracts, `pnpm calculator:gate:current`, and `git diff --check`.
 
 ## Product Goal - Acoustic Calculator First
 
@@ -1187,9 +1986,10 @@ dossier, local saved replay, server snapshot replay, calculator API,
 impact-only API, and Markdown report now surface the raw-bare open-box
 timber basis, values, and not-measured budgets without turning them into
 measured evidence.
-Latest validation after the EPS/screed hybrid package runtime-corridor
-closeout: `pnpm calculator:gate:current` passed on 2026-05-20 with engine 475
-files / 2720 tests, web 89 files / 369 passed + 18 skipped, repo build
+Latest validation after the floor open-web raw-bare coverage-refresh/revalidation
+closeout:
+`pnpm calculator:gate:current` passed on 2026-05-20 with engine 484
+files / 2767 tests, web 92 files / 380 passed + 18 skipped, repo build
 5 / 5, and `git diff --check` clean. The known optional `sharp/@img`
 warnings from the DOCX/PDF build path remain non-fatal.
 
@@ -1198,10 +1998,17 @@ Checkpoint handoff:
 - [CHECKPOINT_2026-05-20_BROAD_ACCURACY_REVALIDATION_AND_OPEN_BOX_FRAGMENTATION_PLAN.md](./CHECKPOINT_2026-05-20_BROAD_ACCURACY_REVALIDATION_AND_OPEN_BOX_FRAGMENTATION_PLAN.md)
 - This checkpoint is the current resume point. It records the fresh
   `pnpm calculator:gate:current` pass after the open-box timber
-  package-transfer, raw-bare, and EPS/screed hybrid runtime sequence:
-  engine 475 files / 2720 tests, web 89 files / 369 passed + 18
-  skipped, repo build 5 / 5, and whitespace guard passed. The next
-  selected slice is EPS/screed hybrid package surface parity. It also
+  package-transfer, raw-bare, EPS/screed hybrid runtime/surface parity,
+  post EPS/screed matrix-refresh sequence, floor open-web raw-bare
+  owner/formula/runtime/surface/coverage-refresh/revalidation sequence,
+  field/building adapter/surface/input/revalidation sequence, and post
+  open-web field/building matrix refresh sequence: engine 487 files /
+  2781 tests, web 92 files / 380 passed + 18 skipped, repo build 5 / 5,
+  and whitespace guard passed. The current selected next slice is floor
+  helper-only timber/open-web impact stack owner; carrier-owner, formula,
+  runtime, surface-parity, coverage-refresh, post raw-bare open-web
+  revalidation, and open-web field/building matrix refresh gates are now
+  landed. It also
   confirms this is not broad "every common wall/floor combination"
   readiness yet.
 - [CHECKPOINT_2026-05-18_OPEN_BOX_TIMBER_TRANSFER_OWNER.md](./CHECKPOINT_2026-05-18_OPEN_BOX_TIMBER_TRANSFER_OWNER.md)
@@ -1217,17 +2024,430 @@ Checkpoint handoff:
 
 Next implementation order:
 
-Current selected next action:
+Latest landed floor open-web raw-bare carrier owner:
 
-`broad_accuracy_floor_open_box_timber_eps_screed_hybrid_package_surface_parity_plan`
+`broad_accuracy_floor_open_web_raw_bare_carrier_owner_plan`
+
+Selection status:
+
+`broad_accuracy_floor_open_web_raw_bare_carrier_owner_landed_no_runtime_selected_formula_corridor`
+
+Landed contract:
+
+`packages/engine/src/broad-accuracy-floor-open-web-raw-bare-carrier-owner-contract.test.ts`
+
+It is a no-runtime owner boundary: the current 111 UBIQ open-web rows
+are INEX deck / firestop package evidence with zero carrier-only
+raw-bare impact rows, so raw open-web impact remains fail-closed and the
+current raw carrier `Rw 79` screening posture is not promoted. The
+EPS/screed pin remains `Rw 72` / `Ln,w 47`. Direct-fixed and
+suspended-ceiling open-web package rows remain separate lanes,
+field/building plus ASTM/IIC aliases remain blocked, and raw/split/deck
+screening postures are explicit formula-owner blockers. Lower-only
+partial package inputs also remain fail-closed until full
+INEX/firestop/package ownership exists.
+The preceding post EPS/screed matrix refresh remains landed as
+`broad_accuracy_open_box_timber_post_eps_screed_hybrid_matrix_refresh_plan`
+with selection status
+`broad_accuracy_open_box_timber_post_eps_screed_hybrid_matrix_refresh_landed_no_runtime_selected_open_web_raw_bare_owner`
+in
+`packages/engine/src/broad-accuracy-open-box-timber-post-eps-screed-hybrid-matrix-refresh-contract.test.ts`.
+It remains the company-internal V0 operating-envelope handoff and keeps
+open-box package-transfer at `Ln,w 50.8`, raw-bare at
+`Rw 42.3` / `Ln,w 88.2`, and EPS/screed at `Rw 72` / `Ln,w 47`.
+
+Previous selected next action from the carrier-owner gate:
+
+`broad_accuracy_floor_open_web_raw_bare_formula_corridor_plan`
+
+Previous selected next file:
+
+`packages/engine/src/broad-accuracy-floor-open-web-raw-bare-formula-corridor-contract.test.ts`
+
+Previous selected next label:
+
+floor open-web raw-bare formula corridor.
+
+Latest landed floor open-web raw-bare formula corridor:
+
+`broad_accuracy_floor_open_web_raw_bare_formula_corridor_plan`
+
+Selection status:
+
+`broad_accuracy_floor_open_web_raw_bare_formula_corridor_landed_no_runtime_selected_runtime_corridor`
+
+Landed contract:
+
+`packages/engine/src/broad-accuracy-floor-open-web-raw-bare-formula-corridor-contract.test.ts`
+
+It is a no-runtime formula-corridor gate. It defines the source-absent
+element-lab basis
+`broad_accuracy_floor_open_web_raw_bare_source_absent_formula_corridor`
+from owned open-web support form, carrier geometry, bare steel reference
+surface, package exclusion, ISO 717 metric boundaries, and source-absent
+budget terms. The representative raw open-web design payload is `Rw 32`,
+`C -2.2`, `Ctr -7.8`, `Ln,w 96`, `CI 1.8`, `CI,50-2500 5.2`, and
+`Ln,w+CI 97.8`, with not-measured budgets including `+/-9 dB` for `Rw`
+and `+/-12 dB` for `Ln,w`. Runtime remained closed in this formula gate:
+public raw/split/deck-only open-web stayed `Rw 79` screening with `C` /
+`Ctr` screening only, raw impact stayed unsupported, UBIQ INEX/firestop
+rows remained package evidence, and field/building plus ASTM/IIC aliases
+remained blocked until the runtime corridor below.
+
+Latest landed floor open-web raw-bare runtime corridor:
+
+`broad_accuracy_floor_open_web_raw_bare_runtime_corridor_plan`
+
+Selection status:
+
+`broad_accuracy_floor_open_web_raw_bare_runtime_corridor_landed_selected_surface_parity`
+
+Landed contract:
+
+`packages/engine/src/broad-accuracy-floor-open-web-raw-bare-runtime-corridor-contract.test.ts`
+
+The runtime corridor promotes complete source-absent element-lab raw-bare
+open-web steel base-only stacks through
+`broad_accuracy_floor_open_web_raw_bare_source_absent_formula_corridor`:
+300 mm and safe split 150/150 return `Rw 32`, `C -2.2`, `Ctr -7.8`,
+`Ln,w 96`, `CI 1.8`, `CI,50-2500 5.2`, and `Ln,w+CI 97.8`; 400 mm
+returns `Rw 36.6` and `Ln,w 92.8`. Budgets remain not-measured
+source-absent values, including `+/-9 dB` for `Rw` and `+/-12 dB` for
+`Ln,w`. Exact UBIQ INEX/firestop package rows, direct-fixed and
+supported-band package lanes, deck-only or partial packages,
+field/building outputs, and ASTM/IIC aliases remain outside this
+raw-bare open-web lane.
+
+Runtime corridor selected next action, now landed by surface parity:
+
+`broad_accuracy_floor_open_web_raw_bare_surface_parity_plan`
+
+Runtime corridor selected next file, now landed by surface parity:
+
+`packages/engine/src/broad-accuracy-floor-open-web-raw-bare-surface-parity-contract.test.ts`
+
+Runtime corridor selected next label, now landed by surface parity:
+
+floor open-web raw-bare surface parity.
+
+Latest landed floor open-web raw-bare surface parity:
+
+`broad_accuracy_floor_open_web_raw_bare_surface_parity_plan`
+
+Selection status:
+
+`broad_accuracy_floor_open_web_raw_bare_surface_parity_landed_selected_coverage_refresh`
+
+Landed contract:
+
+`packages/engine/src/broad-accuracy-floor-open-web-raw-bare-surface-parity-contract.test.ts`
+
+Cards, route posture, confidence provenance, metric-basis rows, method
+dossier, local saved replay, server snapshot replay, calculator API,
+impact-only API, and Markdown report now expose the same
+`broad_accuracy_floor_open_web_raw_bare_source_absent_formula_corridor`
+values: `Rw 32`, `C -2.2`, `Ctr -7.8`, `Ln,w 96`, `CI 1.8`,
+`CI,50-2500 5.2`, and `Ln,w+CI 97.8` for the canonical 300 mm raw-bare
+open-web steel carrier. UBIQ INEX/firestop package rows stay exact or
+package evidence and are not borrowed into the raw-bare open-web formula
+surface.
+
+Previously selected next action, now landed:
+
+`broad_accuracy_floor_open_web_raw_bare_coverage_refresh_plan`
 
 Current selected next file:
 
-`packages/engine/src/broad-accuracy-floor-open-box-timber-eps-screed-hybrid-package-surface-parity-contract.test.ts`
+`packages/engine/src/broad-accuracy-floor-open-web-raw-bare-coverage-refresh-contract.test.ts`
 
 Current selected next label:
 
-floor open-box timber EPS/screed hybrid package surface parity.
+floor open-web raw-bare coverage refresh.
+
+Latest landed floor open-web raw-bare coverage refresh:
+
+`broad_accuracy_floor_open_web_raw_bare_coverage_refresh_plan`
+
+Selection status:
+
+`broad_accuracy_floor_open_web_raw_bare_coverage_refresh_landed_selected_post_raw_bare_open_web_revalidation`
+
+It is no-runtime: 300 mm, split 150/150, and safe 6x50 fragments keep
+`Rw 32`, `Ln,w 96`, and `CI,50-2500 5.2` with `+/-9 dB` `Rw` and
+`+/-12 dB` `Ln,w` budgets; 400 mm stays `Rw 36.6` / `Ln,w 92.8`.
+Exact UBIQ packages, direct-fixed, and supported-band lanes stay
+separate; partial-package, deck-only, out-of-range, field/building, and
+ASTM/IIC requests stay blocked.
+
+Previously selected next action, now landed:
+
+`broad_accuracy_post_raw_bare_open_web_coverage_revalidation_plan`
+
+Current selected next file:
+
+`packages/engine/src/broad-accuracy-post-raw-bare-open-web-coverage-revalidation-contract.test.ts`
+
+Current selected next label:
+
+post raw-bare open-web coverage revalidation.
+
+Latest landed post raw-bare open-web coverage revalidation:
+
+`broad_accuracy_post_raw_bare_open_web_coverage_revalidation_plan`
+
+Selection status:
+
+`broad_accuracy_post_raw_bare_open_web_coverage_revalidation_landed_no_runtime_selected_open_web_field_building_adapter_owner`
+
+It is no-runtime: raw-bare 300/400 mm values, exact UBIQ precedence,
+direct-fixed and supported-band separate lanes, wrong-family open-box
+guards, and field/building plus ASTM/IIC boundaries remain frozen. It
+ranks `broad_accuracy_floor_open_web_field_building_adapter_owner_plan`
+in
+`packages/engine/src/broad-accuracy-floor-open-web-field-building-adapter-owner-contract.test.ts`
+as the next bounded gate because common floor field/building outputs need
+an explicit basis owner; carrier-only holdout acquisition, ASTM/IIC
+rating ownership, broad source crawl, and tolerance retune stay blocked.
+Selected next label: floor open-web field/building adapter owner. This
+is not a broad source crawl.
+The floor open-web field/building adapter owner has now landed as
+`broad_accuracy_floor_open_web_field_building_adapter_owner_plan` with
+selection status
+`broad_accuracy_floor_open_web_field_building_adapter_owner_landed_no_runtime_selected_field_building_surface_parity`.
+It is no-runtime: existing exact UBIQ, direct-fixed, and supported-band
+open-web `field_between_rooms` continuations remain pinned, explicit
+`impactFieldContext` owns `L'n,w`, `L'nT,w`, and `L'nT,50` only for
+those lab anchors, raw-bare impact field transfer remains blocked even
+when the raw-bare lab `Ln,w 96` formula corridor is present, building
+prediction remains unsupported until separate flanking/building owners
+exist, and ASTM/IIC aliases remain blocked.
+
+Previously selected next action, now landed:
+
+`broad_accuracy_floor_open_web_field_building_surface_parity_plan`
+
+Previously selected next file, now landed:
+
+`packages/engine/src/broad-accuracy-floor-open-web-field-building-surface-parity-contract.test.ts`
+
+Previously selected next label, now landed:
+
+floor open-web field/building surface parity. This is not a broad source
+crawl.
+
+Latest landed floor open-web field/building surface parity:
+
+`broad_accuracy_floor_open_web_field_building_surface_parity_plan`
+
+Selection status:
+
+`broad_accuracy_floor_open_web_field_building_surface_parity_landed_no_runtime_selected_input_surface`
+
+Previously selected next file from this surface-parity closeout, now
+landed:
+
+`apps/web/features/workbench/open-web-field-building-input-surface.test.ts`
+
+It is no-runtime: route card, output cards, method dossier, local saved
+replay, server snapshot replay, calculator API, impact-only API, and
+Markdown report must expose the same exact, direct-fixed, and
+supported-band field values plus
+`source_absent_field_building_adapter_error_budget` terms. The visible
+pins remain `Rw 51/52/61.5`, `R'w 77/75/45`, `DnT,w 80/78/48`,
+`Ln,w 71/77/61.5`, `L'n,w 73/79/63.5`, `L'nT,w 70.6/76.6/61.1`, and
+`L'nT,50 70/76.5/60`; raw-bare impact field transfer remains blocked,
+building prediction remains unsupported, and ASTM/IIC aliases remain
+blocked.
+
+Current selected next action:
+
+`broad_accuracy_floor_open_web_field_building_post_input_surface_revalidation_plan`
+
+Current selected next file:
+
+`packages/engine/src/broad-accuracy-floor-open-web-field-building-post-input-surface-revalidation-contract.test.ts`
+
+Current selected next label:
+
+floor open-web field/building post-input-surface revalidation. This is
+not a broad source crawl.
+
+Latest landed floor open-web field/building input surface:
+
+`broad_accuracy_floor_open_web_field_building_input_surface_plan`
+
+Selection status:
+
+`broad_accuracy_floor_open_web_field_building_input_surface_landed_selected_post_input_surface_revalidation`
+
+Workbench controls, live evaluation, local saved replay, server snapshot
+replay, calculator API payloads, impact-only API payloads, and Markdown
+report payloads now feed the floor open-web field/building context
+through a first-class input surface. Runtime values remain frozen:
+`Rw 51/52/61.5`, `R'w 77/75/45`, `DnT,w 80/78/48`,
+`Ln,w 71/77/61.5`, `L'n,w 73/79/63.5`,
+`L'nT,w 70.6/76.6/61.1`, and `L'nT,50 70/76.5/60`. Partial contexts
+name the missing panel, room, RT60, K, or impact-volume fields. Raw-bare
+impact field transfer remains blocked, building prediction remains
+unsupported, ASTM/IIC aliases remain blocked, and this is not a broad
+source crawl.
+
+Latest landed EPS/screed surface parity:
+
+`broad_accuracy_floor_open_box_timber_eps_screed_hybrid_package_surface_parity_plan`
+
+Selection status:
+
+`broad_accuracy_floor_open_box_timber_eps_screed_hybrid_package_surface_parity_landed_selected_matrix_refresh`
+
+Cards, route posture, confidence provenance, metric-basis rows, method
+dossier, local saved replay, server snapshot replay, calculator API,
+impact-only API, and Markdown report now expose the same
+`broad_accuracy_floor_open_box_timber_eps_screed_hybrid_package_formula_corridor`
+basis. The visible source-absent element-lab case remains `Rw 72`,
+`C -1.3`, `Rw+C 70.7`, `Ln,w 47`, `CI 0`, `CI,50-2500 1`, and
+`Ln,w+CI 47` with not-measured budgets including `+/-7 dB` for `Rw`
+and `+/-8 dB` for `Ln,w`. Exact R7b still wins, dry package-transfer
+and raw-bare lanes stay separate, R8b/R9b/R2c/R10a remain negative
+boundaries, and field/building plus ASTM/IIC aliases remain blocked.
+
+Planning decision for this iteration:
+
+Keep the model-first calculator direction. Exact measured/source rows
+still win only on true assembly matches; nearby rows can anchor or
+calibrate only when topology, support family, metric, and basis are
+owned; otherwise the route must calculate through a named
+family-specific solver or fail closed with precise missing inputs. The
+new floor open-web field/building input surface is landed, so the next
+bounded step is no-runtime post-input-surface revalidation, not a broad
+source crawl, not a formula retune, and not a building/ASTM shortcut.
+
+Implementation inspection result:
+
+- `apps/web/features/workbench/open-web-field-building-input-surface.ts`
+  is active only for floor mode, an `open_web_steel_floor` carrier, and
+  requested field airborne or field impact outputs.
+- The first-class UI/input-surface owner fields are context mode, panel
+  width/height, receiving room volume, receiving room RT60, impact field
+  K correction, and impact receiving-room volume.
+- Complete `field_between_rooms` input now feeds `airborneContext` and
+  `impactFieldContext` into `evaluateScenario` and `calculateAssembly`;
+  exact, direct-fixed, and supported-band pins stay unchanged.
+- Partial input returns `needs_input` with named fields. Building
+  prediction returns the explicit
+  `floor_open_web_building_prediction_runtime_owner_missing` boundary.
+  ASTM/IIC aliases and raw-bare impact field transfer remain blocked.
+- The selected post-input-surface contract file does not exist yet and
+  is not registered in `tools/dev/run-calculator-current-gate.ts`; that
+  is the immediate implementation target.
+
+External reference sanity check:
+
+- ISO 12354-1:2017 and ISO 12354-2:2017 frame airborne and impact
+  building prediction as element-performance calculation plus direct or
+  indirect flanking, structural propagation, junction data, frequency
+  bands, and uncertainty. This confirms that lab `Rw` / `Ln,w` values
+  cannot be relabelled as building `R'w` / `DnT,w` / `L'n,w` without a
+  dedicated building adapter.
+- ISO 717-1:2020 and ISO 717-2:2020 keep single-number airborne and
+  impact ratings tied to one-third-octave or octave
+  measurement/calculation bands, so cards and reports must keep rating
+  basis explicit.
+- INSUL's public material confirms the market expectation: serious tools
+  predict walls/floors/ceilings across construction options, show
+  one-third-octave curves, support single/double/triple/quad and impact
+  routes, and remain prediction tools rather than substitutes for
+  measurement. The 10.0.7 release note and detailed theory pages also
+  reinforce model-family depth: glazing, composite TL, floor-cover
+  transfer, porous-facing, and low-frequency/narrow-cavity handling all
+  need route-owned physical inputs. That supports our exact-override
+  plus source-absent solver strategy.
+
+Reference URLs used for this check:
+
+- ISO 12354-1:2017:
+  https://www.iso.org/standard/70242.html
+- ISO 12354-2:2017:
+  https://www.iso.org/standard/70243.html
+- ISO 717-1:2020:
+  https://www.iso.org/standard/77435.html
+- ISO 717-2:2020:
+  https://www.iso.org/standard/69867.html
+- INSUL overview and Version 10 feature sheet:
+  https://www.insul.co.nz/ and
+  https://www.insul.co.nz/media/43149/INSUL-Version10-November-2023.pdf
+- INSUL 10.0.7 release note:
+  https://www.insul.co.nz/news/release-1007/
+- Detailed INSUL benchmark:
+  [INSUL_COMPETITOR_RESEARCH_2026-05-20.md](./INSUL_COMPETITOR_RESEARCH_2026-05-20.md)
+
+Implementation-ready next slice:
+
+1. Add
+   `packages/engine/src/broad-accuracy-post-open-web-field-building-input-surface-matrix-refresh-contract.test.ts`.
+2. Rank the remaining unsupported/needs-input matrix after all open-web
+   field/building work. This should rank common calculator gaps, not
+   source inventory.
+3. Keep the now-revalidated exact, direct-fixed, and supported-band field
+   values pinned: `Rw 51/52/61.5`, `R'w 77/75/45`, `DnT,w 80/78/48`,
+   `Ln,w 71/77/61.5`, `L'n,w 73/79/63.5`,
+   `L'nT,w 70.6/76.6/61.1`, and `L'nT,50 70/76.5/60`.
+4. Keep raw-bare impact field transfer, building prediction, ASTM/IIC,
+   and AIIC blocked unless the refreshed matrix explicitly selects a
+   later owner gate for one of them.
+5. Register the new matrix contract in
+   `tools/dev/run-calculator-current-gate.ts`. Then run the focused
+   matrix contract, the existing open-web field/building contracts,
+   `pnpm calculator:gate:current`, and `git diff --check`.
+
+Next gates after this one:
+
+1. `broad_accuracy_post_open_web_field_building_input_surface_matrix_refresh_plan`
+   - refresh the remaining unsupported/needs-input matrix after all
+   open-web field/building work. This should rank common calculator gaps,
+   not source inventory.
+2. Select exactly one runtime solver lane from the refreshed matrix.
+   Current high-value candidates to rank are helper-only timber/open-web
+   floor impact stacks, TUAS wet open-box/deferred impact stack, raw-bare
+   field-impact transfer owners, and broader floor covering/floating
+   package transfer. Building prediction and ASTM/IIC stay lower priority
+   unless the matrix proves they outrank source-absent family-solver
+   coverage.
+
+Matrix refresh patch map:
+
+| File | Required change |
+| --- | --- |
+| `packages/engine/src/broad-accuracy-post-open-web-field-building-input-surface-matrix-refresh-contract.test.ts` | add the no-runtime matrix refresh and next-lane selector |
+| `tools/dev/run-calculator-current-gate.ts` | register the new engine matrix contract after the post-input revalidation |
+| `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md` | keep this active plan focused on matrix refresh, then one runtime lane |
+| `docs/calculator/CURRENT_STATE.md` | keep the current selected next file and basis/source-crawl warning aligned |
+| `docs/calculator/BROAD_ACCURACY_CALCULATOR_PLAN.md` | keep the broad roadmap model-first and source-absent-solver oriented |
+| `docs/calculator/SLICE_BROAD_ACCURACY_REFERENCE_BENCHMARK_AND_SIMILARITY_SOLVER_PLAN.md` | keep the active slice summary and next lane aligned |
+
+Acceptance for this slice:
+
+- no runtime values, support buckets, origin/basis ids, or tolerances move;
+- exact, direct-fixed, and supported-band open-web field values stay
+  pinned across `Rw`, `R'w`, `DnT,w`, `Ln,w`, `L'n,w`, `L'nT,w`, and
+  `L'nT,50`;
+- raw-bare open-web lab formulas remain lab-only for impact and do not
+  produce `L'n,w`, `L'nT,w`, or `L'nT,50`;
+- building prediction remains `unsupported` until flanking/junction,
+  direct/indirect path, room-normalization, and uncertainty owners exist;
+- ASTM/IIC/AIIC remain outside this ISO field/building route;
+- adjacent wall/floor families keep their current pins and blocked
+  boundaries;
+- the new contract selects the matrix-refresh gate rather than another
+  measurement crawl.
+
+After this slice:
+
+Run a broad-accuracy matrix refresh that produces a company-internal V0
+operating-envelope snapshot. The snapshot must list supported families,
+required physical inputs, output bases, error budgets/tolerances, and
+blocked aliases. The next solver/formula lane should be selected from
+that matrix, not from new measurement harvesting.
 
 1. Landed raw-bare coverage refresh selected by surface parity.
    - Added
@@ -1264,10 +2484,10 @@ floor open-box timber EPS/screed hybrid package surface parity.
      TUAS rows still win, tolerances/API/workbench behavior do not move,
      and field/building plus ASTM/IIC aliases remain blocked. It is not
      a broad source crawl.
-   - Next step: package-transfer residual expansion for exact-only
-     hybrid / mixed-staged same-family evidence gaps, not broad source
-     crawl, field/building alias, ASTM/IIC bridge, or runtime tolerance
-     retune.
+   - Consumed next step: package-transfer residual expansion for
+     exact-only hybrid / mixed-staged same-family evidence gaps, not
+     broad source crawl, field/building alias, ASTM/IIC bridge, or
+     runtime tolerance retune.
    - Package-transfer residual expansion has now landed as
      `broad_accuracy_floor_open_box_timber_package_transfer_residual_expansion_plan`.
    - Selection status:
@@ -1347,9 +2567,22 @@ floor open-box timber EPS/screed hybrid package surface parity.
    - Exact R7b still wins, dry package-transfer stays separate,
      R8b/R9b/R2c/R10a remain negative boundaries, and field/building
      plus ASTM/IIC aliases remain blocked.
-   - Next step: close visible surface parity in
-     `packages/engine/src/broad-accuracy-floor-open-box-timber-eps-screed-hybrid-package-surface-parity-contract.test.ts`
-     without moving the runtime values.
+   - EPS/screed hybrid package surface parity has now landed as
+     `broad_accuracy_floor_open_box_timber_eps_screed_hybrid_package_surface_parity_plan`.
+   - Selection status:
+     `broad_accuracy_floor_open_box_timber_eps_screed_hybrid_package_surface_parity_landed_selected_matrix_refresh`.
+   - Added
+     `packages/engine/src/broad-accuracy-floor-open-box-timber-eps-screed-hybrid-package-surface-parity.ts`,
+     `packages/engine/src/broad-accuracy-floor-open-box-timber-eps-screed-hybrid-package-surface-parity-contract.test.ts`,
+     `apps/web/features/workbench/open-box-timber-eps-screed-hybrid-surface.ts`,
+     and
+     `apps/web/features/workbench/open-box-timber-eps-screed-hybrid-surface-parity.test.ts`.
+   - Cards, route posture, confidence provenance, metric-basis rows,
+     method dossier, local saved replay, server snapshot replay,
+     calculator API, impact-only API, and Markdown report now expose the
+     same EPS/screed basis and budgets without moving runtime values.
+   - Next step: refresh the post EPS/screed hybrid matrix in
+     `packages/engine/src/broad-accuracy-open-box-timber-post-eps-screed-hybrid-matrix-refresh-contract.test.ts`.
 
 2. Consumed raw-bare formula corridor details from the 2026-05-20
    implementation pass:

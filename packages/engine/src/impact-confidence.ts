@@ -274,6 +274,15 @@ export function getImpactConfidenceForBasis(basis: ImpactEstimateBasis): ImpactC
     };
   }
 
+  if (basis === "broad_accuracy_floor_open_web_raw_bare_source_absent_formula_corridor") {
+    return {
+      level: "medium",
+      provenance: "formula_estimate_narrow_scope",
+      score: 0.61,
+      summary: "Raw-bare open-web steel source-absent formula corridor with explicit carrier geometry defaults and wide lab error budgets."
+    };
+  }
+
   if (basis === "predictor_lightweight_steel_fl28_interpolation_estimate") {
     return {
       level: "medium",
@@ -319,6 +328,16 @@ export function getImpactConfidenceForBasis(basis: ImpactEstimateBasis): ImpactC
       score: 0.7,
       summary:
         "Open-box timber EPS/screed hybrid package formula corridor anchored to the R7b same-stack packet with source-absent error budgets."
+    };
+  }
+
+  if (basis === "broad_accuracy_floor_helper_only_timber_open_web_impact_stack_source_absent_formula_corridor") {
+    return {
+      level: "medium",
+      provenance: "formula_estimate_narrow_scope",
+      score: 0.62,
+      summary:
+        "Helper-only timber/open-web lower-treatment formula corridor with complete carrier, board, cavity, absorber, suspension, and source-absent error budgets."
     };
   }
 

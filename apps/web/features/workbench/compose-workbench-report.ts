@@ -35,6 +35,7 @@ import { getGateAYAdvancedWallReportLines } from "./advanced-wall-source-absent-
 import { getGateSOpeningLeakCompositeReportLines } from "./opening-leak-composite-surface";
 import { getWallTripleLeafCalibratedSolverReportLines } from "./wall-triple-leaf-calibrated-solver-surface";
 import { getWallTripleLeafLocalSubstitutionReportLines } from "./wall-triple-leaf-local-substitution-surface";
+import { getLayerCombinationResolverCandidateReportLines } from "./layer-combination-resolver-candidate-surface";
 import { FIELD_RISK_BY_ID, summarizeFieldRisk, type FieldRiskId } from "./field-risk-model";
 import {
   formatImpactMetricBasisLabel,
@@ -351,6 +352,7 @@ export function composeWorkbenchReport({
         `- Method: ${currentScenario.result.metrics.method}`,
         `- Airborne calculator: ${currentScenario.result.calculatorLabel ?? "Screening Seed"}`,
         `- Curve span: ${currentScenario.result.curve.frequenciesHz[0]}-${currentScenario.result.curve.frequenciesHz.at(-1)} Hz`,
+        ...getLayerCombinationResolverCandidateReportLines(currentScenario.result),
         ...(currentScenario.result.dynamicAirborneTrace
           ? [
               `- Dynamic family: ${currentScenario.result.dynamicAirborneTrace.detectedFamilyLabel}`,

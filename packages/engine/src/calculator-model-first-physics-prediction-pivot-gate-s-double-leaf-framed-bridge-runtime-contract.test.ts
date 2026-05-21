@@ -18,6 +18,10 @@ import {
   GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_SELECTED_CANDIDATE_ID,
   GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_WARNING
 } from "./dynamic-airborne-gate-s-double-leaf-framed";
+import {
+  LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_FORMULA_CORRIDOR_BASIS,
+  LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID
+} from "./layer-combination-resolver-single-leaf-mass-law-banded-runtime-constants";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
@@ -229,7 +233,7 @@ describe("calculator model-first physics prediction pivot Gate S", () => {
       confidenceClass: "medium",
       detectedFamily: "double_stud_system",
       detectedFamilyLabel: "Double Frame / Double Stud",
-      selectedLabel: "Double-Leaf Bridge Solver",
+      selectedLabel: "Double-Leaf Framed Formula Solver",
       strategy: "double_leaf_framed_bridge_mass_air_mass_runtime"
     });
     expect(result.airborneBasis).toMatchObject({
@@ -252,7 +256,7 @@ describe("calculator model-first physics prediction pivot Gate S", () => {
       })
     ]);
     expect(result.airborneCandidateResolution).toMatchObject({
-      runtimeValueMovement: true,
+      runtimeValueMovement: false,
       selectedCandidateId: GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_SELECTED_CANDIDATE_ID,
       selectedOrigin: "family_physics_prediction"
     });
@@ -298,7 +302,7 @@ describe("calculator model-first physics prediction pivot Gate S", () => {
     });
     expect(result.airborneBasis?.assumptions.join("\n")).toMatch(/STC is not an alias of Rw/i);
     expect(result.airborneCandidateResolution).toMatchObject({
-      runtimeValueMovement: true,
+      runtimeValueMovement: false,
       selectedCandidateId: GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_SELECTED_CANDIDATE_ID
     });
   });
@@ -402,10 +406,12 @@ describe("calculator model-first physics prediction pivot Gate S", () => {
     expect(singleGypsum.metrics).toMatchObject({ estimatedRwDb: 31, estimatedStc: 31 });
     expect(singleGypsum.airborneCandidateResolution).toMatchObject({
       runtimeValueMovement: false,
+      selectedCandidateId:
+        LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID,
       selectedOrigin: "family_physics_prediction"
     });
     expect(singleGypsum.airborneBasis).toMatchObject({
-      method: "gate_o_single_leaf_massive_panel_sharp_single_leaf_panel_coincidence_delegate",
+      method: LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_FORMULA_CORRIDOR_BASIS,
       origin: "family_physics_prediction"
     });
   });

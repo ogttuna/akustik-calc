@@ -70,6 +70,8 @@ const BUILDING_IMPACT_CONTEXT: ImpactFieldContext = {
   receivingRoomVolumeM3: 60
 };
 
+const OPEN_WEB_RAW_BARE_FORMULA_BASIS = "broad_accuracy_floor_open_web_raw_bare_source_absent_formula_corridor";
+
 const UBIQ_EXACT_OPEN_WEB_200_ROWS: readonly Omit<LayerDraft, "id">[] = [
   { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: "16" },
   { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: "16" },
@@ -601,77 +603,77 @@ const CASES: readonly RouteCase[] = [
       lab: {
         origin: expectedOrigin({
           boundFloorSystemMatchId: null,
-          candidateIds: null,
-          floorRatingsBasis: "screening_mass_law_curve_seed_v3",
+          candidateIds: ["source_absent_raw_bare_open_web_formula"],
+          floorRatingsBasis: OPEN_WEB_RAW_BARE_FORMULA_BASIS,
           floorSystemMatchId: null,
-          impactBasis: null,
+          impactBasis: OPEN_WEB_RAW_BARE_FORMULA_BASIS,
           lowerBoundBasis: null,
-          systemEstimateKind: null
+          systemEstimateKind: "family_archetype"
         }),
-        supported: ["Rw", "Ctr"],
-        unsupported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "Ln,w", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
+        supported: ["Rw", "Ln,w", "Ln,w+CI", "Ctr"],
+        unsupported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
         cards: {
           ...FIELD_OUTPUT_NEEDS_INPUT_CARDS,
           ...FIELD_IMPACT_NEEDS_INPUT_CARDS,
-          Rw: { status: "live", value: "72 dB" },
-          "Ln,w": { status: "unsupported", value: "Not ready" },
-          "Ln,w+CI": { status: "unsupported", value: "Not ready" },
+          Rw: { status: "live", value: "32 dB" },
+          "Ln,w": { status: "live", value: "96 dB" },
+          "Ln,w+CI": { status: "live", value: "97.8 dB" },
           DeltaLw: { status: "unsupported", value: "Not ready" },
-          Ctr: { status: "live", value: "-6.4 dB" }
+          Ctr: { status: "live", value: "-7.8 dB" }
         }
       },
       field: {
         origin: expectedOrigin({
           boundFloorSystemMatchId: null,
-          candidateIds: null,
-          floorRatingsBasis: "screening_mass_law_curve_seed_v3",
+          candidateIds: ["source_absent_raw_bare_open_web_formula"],
+          floorRatingsBasis: OPEN_WEB_RAW_BARE_FORMULA_BASIS,
           floorSystemMatchId: null,
-          impactBasis: null,
+          impactBasis: OPEN_WEB_RAW_BARE_FORMULA_BASIS,
           lowerBoundBasis: null,
-          systemEstimateKind: null
+          systemEstimateKind: "family_archetype"
         }),
-        supported: ["R'w", "Dn,w", "Dn,A", "Ctr"],
-        unsupported: ["Rw", "DnT,w", "DnT,A", "Ln,w", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
+        supported: ["Rw", "R'w", "Dn,w", "Dn,A", "Ln,w", "Ln,w+CI", "Ctr"],
+        unsupported: ["DnT,w", "DnT,A", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
         cards: {
           ...FIELD_IMPACT_NEEDS_INPUT_CARDS,
-          Rw: { status: "unsupported", value: "Not ready" },
+          Rw: { status: "live", value: "32 dB" },
           "R'w": { status: "live", value: "70 dB" },
           "Dn,w": { status: "live", value: "69 dB" },
           "Dn,A": { status: "live", value: "67.5 dB" },
           "DnT,w": { status: "needs_input", value: "Not ready" },
           "DnT,A": { status: "needs_input", value: "Not ready" },
-          "Ln,w": { status: "unsupported", value: "Not ready" },
-          "Ln,w+CI": { status: "unsupported", value: "Not ready" },
+          "Ln,w": { status: "live", value: "96 dB" },
+          "Ln,w+CI": { status: "live", value: "97.8 dB" },
           DeltaLw: { status: "unsupported", value: "Not ready" },
-          Ctr: { status: "live", value: "-6.2 dB" }
+          Ctr: { status: "live", value: "-7.8 dB" }
         }
       },
       building: {
         origin: expectedOrigin({
           boundFloorSystemMatchId: null,
-          candidateIds: null,
-          floorRatingsBasis: "screening_mass_law_curve_seed_v3",
+          candidateIds: ["source_absent_raw_bare_open_web_formula"],
+          floorRatingsBasis: OPEN_WEB_RAW_BARE_FORMULA_BASIS,
           floorSystemMatchId: null,
-          impactBasis: null,
+          impactBasis: OPEN_WEB_RAW_BARE_FORMULA_BASIS,
           lowerBoundBasis: null,
-          systemEstimateKind: null
+          systemEstimateKind: "family_archetype"
         }),
-        supported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "Ctr"],
-        unsupported: ["Rw", "Ln,w", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
+        supported: ["Rw", "R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "Ln,w", "Ln,w+CI", "Ctr"],
+        unsupported: ["DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
         cards: {
-          Rw: { status: "unsupported", value: "Not ready" },
+          Rw: { status: "live", value: "32 dB" },
           "R'w": { status: "live", value: "70 dB" },
           "Dn,w": { status: "live", value: "69 dB" },
           "Dn,A": { status: "live", value: "67.5 dB" },
           "DnT,w": { status: "live", value: "71 dB" },
           "DnT,A": { status: "live", value: "70 dB" },
-          "Ln,w": { status: "unsupported", value: "Not ready" },
-          "Ln,w+CI": { status: "unsupported", value: "Not ready" },
+          "Ln,w": { status: "live", value: "96 dB" },
+          "Ln,w+CI": { status: "live", value: "97.8 dB" },
           DeltaLw: { status: "unsupported", value: "Not ready" },
           "L'n,w": { status: "needs_input", value: "Not ready" },
           "L'nT,w": { status: "needs_input", value: "Not ready" },
           "L'nT,50": { status: "needs_input", value: "Not ready" },
-          Ctr: { status: "live", value: "-6.2 dB" }
+          Ctr: { status: "live", value: "-7.8 dB" }
         }
       }
     }

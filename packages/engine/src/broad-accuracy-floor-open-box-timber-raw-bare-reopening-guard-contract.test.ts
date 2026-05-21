@@ -31,6 +31,7 @@ import {
 import { calculateAssembly } from "./calculate-assembly";
 import { OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS } from "./open-box-timber-raw-bare-estimate";
 import { OPEN_BOX_TIMBER_SIMILARITY_BASIS } from "./open-box-timber-similarity-estimate";
+import { OPEN_WEB_RAW_BARE_FORMULA_BASIS } from "./open-web-raw-bare-estimate";
 
 type RawBareSnapshot = {
   readonly floorSystemEstimateKind: string | null;
@@ -356,6 +357,9 @@ describe("broad accuracy floor open-box timber raw-bare reopening guard contract
       "tagged_370mm_open_box_base_only",
       "split_185_185_open_box_base_only"
     ]);
+    const openWebRuntimeProbeIds = new Set<BroadAccuracyFloorOpenBoxTimberRawBareProbeId>([
+      "open_web_wrong_family_base_only"
+    ]);
 
     for (const probe of contract.rawBareProbes) {
       const snapshot = rawBareSnapshot(RAW_BARE_PROBE_LAYERS[probe.id]);
@@ -368,6 +372,17 @@ describe("broad accuracy floor open-box timber raw-bare reopening guard contract
           impactLnW: 88.2,
           ratingsBasis: OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS,
           ratingsRw: 42.3,
+          supported: ["Rw", "Ln,w", "CI", "CI,50-2500", "Ln,w+CI"],
+          unsupported: []
+        });
+      } else if (openWebRuntimeProbeIds.has(probe.id)) {
+        expect(snapshot, probe.id).toMatchObject({
+          floorSystemEstimateKind: "family_archetype",
+          floorSystemMatchId: null,
+          impactBasis: OPEN_WEB_RAW_BARE_FORMULA_BASIS,
+          impactLnW: 96,
+          ratingsBasis: OPEN_WEB_RAW_BARE_FORMULA_BASIS,
+          ratingsRw: 32,
           supported: ["Rw", "Ln,w", "CI", "CI,50-2500", "Ln,w+CI"],
           unsupported: []
         });

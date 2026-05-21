@@ -17,6 +17,11 @@ import {
   GATE_Y_CLT_MASS_TIMBER_CTR_SPECTRUM_ADAPTER_SELECTED_CANDIDATE_ID,
   GATE_Y_CLT_MASS_TIMBER_CTR_SPECTRUM_ADAPTER_WARNING
 } from "./dynamic-airborne-gate-y-clt-mass-timber-ctr-spectrum-adapter";
+import {
+  LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_FORMULA_CORRIDOR_BASIS,
+  LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_ERROR_BUDGET_DB,
+  LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID
+} from "./layer-combination-resolver-single-leaf-mass-law-banded-runtime-constants";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
@@ -173,16 +178,18 @@ describe("calculator model-first physics prediction pivot Gate O", () => {
     expect(gypsum.airborneBasis).toMatchObject({
       calculationStandard: "engine_mass_law",
       curveBasis: "calculated_frequency_curve",
-      errorBudgetDb: 5,
+      errorBudgetDb: LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_ERROR_BUDGET_DB,
       family: "single_leaf_panel",
       kind: "airborne_physics_prediction",
-      method: "gate_o_single_leaf_massive_panel_sharp_single_leaf_panel_coincidence_delegate",
+      method: LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_FORMULA_CORRIDOR_BASIS,
       origin: "family_physics_prediction",
       ratingStandard: "ISO 717-1",
       toleranceClass: "uncalibrated_prediction"
     });
     expect(gypsum.airborneCandidateResolution).toMatchObject({
       runtimeValueMovement: false,
+      selectedCandidateId:
+        LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID,
       selectedOrigin: "family_physics_prediction"
     });
     expect(gypsum.warnings).toContain(GATE_O_SINGLE_LEAF_MASSIVE_PANEL_PREDICTION_WARNING);
@@ -197,10 +204,13 @@ describe("calculator model-first physics prediction pivot Gate O", () => {
     });
     expect(laminated.airborneCandidateResolution).toMatchObject({
       runtimeValueMovement: false,
+      selectedCandidateId:
+        LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID,
       selectedOrigin: "family_physics_prediction"
     });
     expect(laminated.airborneBasis).toMatchObject({
       family: "laminated_single_leaf",
+      method: LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_FORMULA_CORRIDOR_BASIS,
       origin: "family_physics_prediction"
     });
 
@@ -214,11 +224,13 @@ describe("calculator model-first physics prediction pivot Gate O", () => {
     });
     expect(concrete.airborneCandidateResolution).toMatchObject({
       runtimeValueMovement: false,
+      selectedCandidateId:
+        LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID,
       selectedOrigin: "family_physics_prediction"
     });
     expect(concrete.airborneBasis).toMatchObject({
       family: "rigid_massive_wall",
-      method: "gate_o_single_leaf_massive_panel_ks_massive_wall_reference_curve_delegate",
+      method: LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_FORMULA_CORRIDOR_BASIS,
       origin: "family_physics_prediction"
     });
   });

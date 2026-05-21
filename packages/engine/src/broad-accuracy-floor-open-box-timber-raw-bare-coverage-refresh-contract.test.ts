@@ -22,6 +22,7 @@ import {
 import { calculateAssembly } from "./calculate-assembly";
 import { OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS } from "./open-box-timber-raw-bare-estimate";
 import { OPEN_BOX_TIMBER_SIMILARITY_BASIS } from "./open-box-timber-similarity-estimate";
+import { OPEN_WEB_RAW_BARE_FORMULA_BASIS } from "./open-web-raw-bare-estimate";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 const RAW_BARE_OUTPUTS = ["Rw", "C", "Ctr", "Ln,w", "CI", "CI,50-2500", "Ln,w+CI", "L'n,w", "L'nT,w", "IIC"] as const satisfies readonly RequestedOutputId[];
@@ -345,11 +346,28 @@ describe("broad accuracy floor open-box timber raw-bare coverage refresh contrac
       targetOutputs: ASTM_OUTPUTS
     });
 
-    for (const blocked of [partial, wrongFamily, fieldBuilding, astm]) {
+    for (const blocked of [partial, fieldBuilding, astm]) {
       expect(blocked.impact?.basis).not.toBe(OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS);
       expect(blocked.floorSystemEstimate?.impact.basis).not.toBe(OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS);
       expect(blocked.impact?.errorBudgets).toBeUndefined();
     }
+
+    expect(wrongFamily.impact).toMatchObject({
+      CI: 1.8,
+      CI50_2500: 5.2,
+      LnW: 96,
+      LnWPlusCI: 97.8,
+      basis: OPEN_WEB_RAW_BARE_FORMULA_BASIS
+    });
+    expect(wrongFamily.floorSystemRatings).toMatchObject({
+      C: -2.2,
+      Ctr: -7.8,
+      Rw: 32,
+      basis: OPEN_WEB_RAW_BARE_FORMULA_BASIS
+    });
+    expect(wrongFamily.impact?.basis).not.toBe(OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS);
+    expect(wrongFamily.floorSystemEstimate?.impact.basis).not.toBe(OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS);
+    expect(wrongFamily.impact?.errorBudgets?.every((budget) => budget.notMeasuredEvidence)).toBe(true);
 
     expect(partial.supportedTargetOutputs).toEqual(["Rw", "C", "Ctr"]);
     expect(partial.unsupportedTargetOutputs).toEqual([
@@ -361,16 +379,8 @@ describe("broad accuracy floor open-box timber raw-bare coverage refresh contrac
       "L'nT,w",
       "IIC"
     ]);
-    expect(wrongFamily.supportedTargetOutputs).toEqual(["Rw", "C", "Ctr"]);
-    expect(wrongFamily.unsupportedTargetOutputs).toEqual([
-      "Ln,w",
-      "CI",
-      "CI,50-2500",
-      "Ln,w+CI",
-      "L'n,w",
-      "L'nT,w",
-      "IIC"
-    ]);
+    expect(wrongFamily.supportedTargetOutputs).toEqual(["Rw", "C", "Ctr", "Ln,w", "CI", "CI,50-2500", "Ln,w+CI"]);
+    expect(wrongFamily.unsupportedTargetOutputs).toEqual(["L'n,w", "L'nT,w", "IIC"]);
     expect(fieldBuilding.supportedTargetOutputs).toEqual([]);
     expect(fieldBuilding.unsupportedTargetOutputs).toEqual(["L'n,w", "L'nT,w", "R'w", "DnT,w"]);
     expect(astm.supportedTargetOutputs).toEqual([]);

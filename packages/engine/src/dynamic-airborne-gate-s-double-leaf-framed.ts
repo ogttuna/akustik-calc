@@ -28,16 +28,21 @@ import {
   type GateRDoubleLeafFramedBridgeBenchmarkRange,
   type GateRDoubleLeafFramedBridgePhysicalInputs
 } from "./dynamic-calculator-double-leaf-framed-bridge-solver-contract";
+import {
+  LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_FORMULA_CORRIDOR_BASIS,
+  LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID,
+  LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_RUNTIME_CORRIDOR_WARNING
+} from "./layer-combination-resolver-double-leaf-framed-wall-banded-runtime-constants";
 import { ksRound1 } from "./math";
 
 export const GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_RUNTIME_METHOD =
-  "gate_s_double_leaf_framed_bridge_mass_air_mass_bridge_damping_runtime";
+  LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_FORMULA_CORRIDOR_BASIS;
 
 export const GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_SELECTED_CANDIDATE_ID =
-  "candidate_double_leaf_framed_bridge_family_physics_prediction";
+  LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID;
 
 export const GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_WARNING =
-  "Double-leaf / framed bridge family physics prediction is active from the mass-air-mass bridge/damping solver. It is source-absent and uncalibrated; use the visible error budget until exact source override or calibration lands.";
+  LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_RUNTIME_CORRIDOR_WARNING;
 
 function buildGateSCurve(input: {
   benchmark: GateRDoubleLeafFramedBridgeBenchmarkRange;
@@ -81,14 +86,14 @@ function buildGateSBasis(input: {
   return AirborneResultBasisSchema.parse({
     ...input.baseBasis,
     assumptions: [
-      "Gate S promotes the explicit double-leaf/framed bridge solver into Dynamic Calculator runtime for complete inputs only.",
+      "The layer-combination resolver double-leaf/framed runtime corridor owns this source-absent formula-backed runtime for complete inputs only.",
       "Side A and side B leaf masses, cavity depth, bridge class, support topology, support spacing, and porous damping are explicit physical inputs.",
       "Exact full-stack or calibrated source rows can still override this source-absent prediction through the Gate H source-promotion policy.",
       "Rw and STC remain separate rating-adapter outputs over the calculated curve; STC is not an alias of Rw."
     ],
     errorBudgetDb: input.benchmark.toleranceDb,
     frequencyBands: {
-      bandSet: "gate_s_double_leaf_framed_bridge_runtime_curve",
+      bandSet: "layer_combination_resolver_double_leaf_framed_wall_banded_runtime_curve",
       frequenciesHz: [...input.curve.frequenciesHz]
     },
     method: GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_RUNTIME_METHOD,
@@ -263,7 +268,7 @@ function buildGateSCandidateResolution(input: {
       "source_evidence_completeness",
       "stable_candidate_id"
     ],
-    id: "resolver_double_leaf_framed_bridge_gate_s_runtime",
+    id: "resolver_double_leaf_framed_wall_banded_runtime_corridor",
     inputCompletenessIds: ["gate_q_double_leaf_framed_bridge_route_inputs"],
     policyId: "model_first_airborne_candidate_precedence_v1",
     ratingAdapterBasisIds: [
@@ -271,7 +276,7 @@ function buildGateSCandidateResolution(input: {
       "astm_e413_stc_from_airborne_transmission_loss_curve"
     ],
     rejectedCandidateIds: candidates.filter((candidate) => !candidate.selected).map((candidate) => candidate.id),
-    runtimeValueMovement: true,
+    runtimeValueMovement: false,
     selectedBasis: input.basis,
     selectedCandidateId: GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_SELECTED_CANDIDATE_ID,
     selectedOrigin: "family_physics_prediction"
@@ -348,7 +353,7 @@ export function maybeCalculateGateSDoubleLeafFramedBridgeRuntime(input: {
     hasStudLikeSupport: input.topology.hasStudLikeSupport,
     notes: [
       ...input.family.notes,
-      "Gate S selected the explicit double-leaf/framed bridge family physics runtime lane.",
+      "Layer-combination resolver selected the explicit double-leaf/framed wall banded source-absent runtime lane.",
       `Leaf masses are ${contract.physicalInputs.sideALeafMassKgM2?.toFixed(1)} and ${contract.physicalInputs.sideBLeafMassKgM2?.toFixed(1)} kg/m2.`,
       `Mass-air-mass resonance is ${contract.benchmarkRange.massAirMassResonanceHz.toFixed(1)} Hz.`,
       `Bridge coupling delta is ${contract.benchmarkRange.bridgeCouplingDeltaDb.toFixed(1)} dB and porous damping credit is ${contract.benchmarkRange.dampingCreditDb.toFixed(1)} dB.`,
@@ -356,7 +361,7 @@ export function maybeCalculateGateSDoubleLeafFramedBridgeRuntime(input: {
     ],
     originalSolidLayerCount: input.topology.originalSolidLayerCount,
     porousLayerCount: input.topology.porousLayerCount,
-    selectedLabel: "Double-Leaf Bridge Solver",
+    selectedLabel: "Double-Leaf Framed Formula Solver",
     selectedFamilyScore: 0.64,
     selectedMethod: "mass_law",
     solverSpreadRwDb: ksRound1(Math.abs(solverRw - screeningRw)),

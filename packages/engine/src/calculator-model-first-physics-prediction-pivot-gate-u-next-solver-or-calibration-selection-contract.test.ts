@@ -6,6 +6,7 @@ import type { AirborneContext, LayerInput, RequestedOutputId } from "@dynecho/sh
 import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
+import { GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_RUNTIME_METHOD } from "./dynamic-airborne-gate-s-double-leaf-framed";
 import { buildGateUNextSolverOrCalibrationSelection } from "./dynamic-calculator-next-solver-or-calibration-selection";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
@@ -265,7 +266,7 @@ describe("calculator model-first physics prediction pivot Gate U", () => {
       estimatedStc: 45
     });
     expect(wall.airborneBasis).toMatchObject({
-      method: "gate_s_double_leaf_framed_bridge_mass_air_mass_bridge_damping_runtime",
+      method: GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_RUNTIME_METHOD,
       origin: "family_physics_prediction"
     });
     expect(floor.impact).toMatchObject({

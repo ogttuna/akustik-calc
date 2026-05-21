@@ -53,6 +53,10 @@ import {
   isOpenWebDirectFixedLiningResult
 } from "./open-web-direct-fixed-lining-surface";
 import {
+  getOpenWebRawBareOutputDetail,
+  isOpenWebRawBareResult
+} from "./open-web-raw-bare-surface";
+import {
   getOpenBoxTimberSimilarityOutputDetail,
   isOpenBoxTimberSimilarityResult
 } from "./open-box-timber-similarity-surface";
@@ -60,6 +64,14 @@ import {
   getOpenBoxTimberRawBareOutputDetail,
   isOpenBoxTimberRawBareResult
 } from "./open-box-timber-raw-bare-surface";
+import {
+  getOpenBoxTimberEpsScreedHybridOutputDetail,
+  isOpenBoxTimberEpsScreedHybridResult
+} from "./open-box-timber-eps-screed-hybrid-surface";
+import {
+  getHelperOnlyTimberOpenWebImpactStackOutputDetail,
+  isHelperOnlyTimberOpenWebImpactStackResult
+} from "./helper-only-timber-open-web-impact-stack-surface";
 import { getCompanyInternalOpeningLeakFieldBuildingOutputDetail } from "./opening-leak-field-building-surface";
 import {
   getRockwoolSplitTripleLeafWithheldOutputDetail,
@@ -386,8 +398,11 @@ export function buildOutputCard(input: {
   const isTimberCltDeltaLwFormulaCorridor = isTimberCltDeltaLwFormulaCorridorImpact(result);
   const isOpenWebSupportedBandSimilarity = isOpenWebSupportedBandSimilarityResult(result);
   const isOpenWebDirectFixedLining = isOpenWebDirectFixedLiningResult(result);
+  const isOpenWebRawBare = isOpenWebRawBareResult(result);
   const isOpenBoxTimberSimilarity = isOpenBoxTimberSimilarityResult(result);
   const isOpenBoxTimberRawBare = isOpenBoxTimberRawBareResult(result);
+  const isOpenBoxTimberEpsScreedHybrid = isOpenBoxTimberEpsScreedHybridResult(result);
+  const isHelperOnlyTimberOpenWebImpactStack = isHelperOnlyTimberOpenWebImpactStackResult(result);
   const rockwoolTripleLeafScreeningPolicy = getRockwoolTripleLeafScreeningPolicyCopy(result);
 
   if (isExplicitlyUnsupportedOutput(result, output)) {
@@ -440,9 +455,18 @@ export function buildOutputCard(input: {
           detail: isOpenWebDirectFixedLining
             ? getOpenWebDirectFixedLiningOutputDetail("Rw", result) ??
               "Open-web steel direct-fixed lining companion Rw from the active floor lane."
+            : isOpenWebRawBare
+            ? getOpenWebRawBareOutputDetail("Rw", result) ??
+              "Raw-bare open-web steel companion Rw from the active floor lane."
             : isOpenBoxTimberRawBare
             ? getOpenBoxTimberRawBareOutputDetail("Rw", result) ??
               "Raw-bare open-box timber companion Rw from the active floor lane."
+            : isOpenBoxTimberEpsScreedHybrid
+            ? getOpenBoxTimberEpsScreedHybridOutputDetail("Rw", result) ??
+              "Open-box timber EPS/screed hybrid companion Rw from the active floor lane."
+            : isHelperOnlyTimberOpenWebImpactStack
+            ? getHelperOnlyTimberOpenWebImpactStackOutputDetail("Rw", result) ??
+              "Helper-only timber/open-web companion Rw from the active lower-treatment floor lane."
             : isOpenBoxTimberSimilarity
             ? getOpenBoxTimberSimilarityOutputDetail("Rw", result) ??
               "Open-box timber package-transfer companion Rw from the active floor lane."
@@ -530,7 +554,10 @@ export function buildOutputCard(input: {
         if (typeof floorC === "number") {
           return {
             detail:
+              getOpenWebRawBareOutputDetail("C", result) ??
               getOpenBoxTimberRawBareOutputDetail("C", result) ??
+              getOpenBoxTimberEpsScreedHybridOutputDetail("C", result) ??
+              getHelperOnlyTimberOpenWebImpactStackOutputDetail("C", result) ??
               getOpenBoxTimberSimilarityOutputDetail("C", result) ??
               "Companion mid-frequency adaptation carried on the active floor lane. This can differ from the live airborne estimate shown elsewhere.",
             label: "C",
@@ -566,9 +593,15 @@ export function buildOutputCard(input: {
 
         if (typeof floorCtr === "number") {
           return {
-            detail: isOpenBoxTimberRawBare
+            detail: isOpenWebRawBare
+              ? getOpenWebRawBareOutputDetail("Ctr", result) ??
+                "Raw-bare open-web steel companion Ctr from the active floor lane."
+              : isOpenBoxTimberRawBare
               ? getOpenBoxTimberRawBareOutputDetail("Ctr", result) ??
                 "Raw-bare open-box timber companion Ctr from the active floor lane."
+              : isHelperOnlyTimberOpenWebImpactStack
+              ? getHelperOnlyTimberOpenWebImpactStackOutputDetail("Ctr", result) ??
+                "Helper-only timber/open-web companion Ctr from the active lower-treatment floor lane."
               : isReinforcedConcreteLowConfidenceLane
               ? REINFORCED_CONCRETE_LOW_CONFIDENCE_CTR_DETAIL
               : "Companion traffic-noise adaptation carried on the active floor lane. This can differ from the live airborne estimate shown elsewhere.",
@@ -697,9 +730,18 @@ export function buildOutputCard(input: {
               : isOpenWebDirectFixedLining
                 ? getOpenWebDirectFixedLiningOutputDetail("Ln,w", result) ??
                   "Lab-side Ln,w from the open-web direct-fixed lining interpolation lane."
+              : isOpenWebRawBare
+                ? getOpenWebRawBareOutputDetail("Ln,w", result) ??
+                  "Lab-side Ln,w from the raw-bare open-web steel formula lane."
               : isOpenBoxTimberRawBare
                 ? getOpenBoxTimberRawBareOutputDetail("Ln,w", result) ??
                   "Lab-side Ln,w from the raw-bare open-box timber formula lane."
+              : isOpenBoxTimberEpsScreedHybrid
+                ? getOpenBoxTimberEpsScreedHybridOutputDetail("Ln,w", result) ??
+                  "Lab-side Ln,w from the open-box timber EPS/screed hybrid package formula lane."
+              : isHelperOnlyTimberOpenWebImpactStack
+                ? getHelperOnlyTimberOpenWebImpactStackOutputDetail("Ln,w", result) ??
+                  "Lab-side Ln,w from the helper-only timber/open-web lower-treatment formula lane."
               : isOpenBoxTimberSimilarity
                 ? getOpenBoxTimberSimilarityOutputDetail("Ln,w", result) ??
                   "Lab-side Ln,w from the open-box timber package-transfer lane."
@@ -751,7 +793,10 @@ export function buildOutputCard(input: {
       if (typeof result?.impact?.CI === "number") {
         return {
           detail:
+            getOpenWebRawBareOutputDetail("CI", result) ??
             getOpenBoxTimberRawBareOutputDetail("CI", result) ??
+            getOpenBoxTimberEpsScreedHybridOutputDetail("CI", result) ??
+            getHelperOnlyTimberOpenWebImpactStackOutputDetail("CI", result) ??
             getOpenBoxTimberSimilarityOutputDetail("CI", result) ??
             getOpenWebDirectFixedLiningOutputDetail("CI", result) ??
             getOpenWebSupportedBandSimilarityOutputDetail("CI", result) ??
@@ -767,7 +812,10 @@ export function buildOutputCard(input: {
       if (typeof result?.impact?.CI50_2500 === "number") {
         return {
           detail:
+            getOpenWebRawBareOutputDetail("CI,50-2500", result) ??
             getOpenBoxTimberRawBareOutputDetail("CI,50-2500", result) ??
+            getOpenBoxTimberEpsScreedHybridOutputDetail("CI,50-2500", result) ??
+            getHelperOnlyTimberOpenWebImpactStackOutputDetail("CI,50-2500", result) ??
             getOpenBoxTimberSimilarityOutputDetail("CI,50-2500", result) ??
             "Extended low-frequency impact companion term.",
           label: "CI,50-2500",
@@ -781,7 +829,10 @@ export function buildOutputCard(input: {
       if (typeof result?.impact?.LnWPlusCI === "number") {
         return {
           detail:
+            getOpenWebRawBareOutputDetail("Ln,w+CI", result) ??
             getOpenBoxTimberRawBareOutputDetail("Ln,w+CI", result) ??
+            getOpenBoxTimberEpsScreedHybridOutputDetail("Ln,w+CI", result) ??
+            getHelperOnlyTimberOpenWebImpactStackOutputDetail("Ln,w+CI", result) ??
             getOpenBoxTimberSimilarityOutputDetail("Ln,w+CI", result) ??
             getOpenWebDirectFixedLiningOutputDetail("Ln,w+CI", result) ??
             getOpenWebSupportedBandSimilarityOutputDetail("Ln,w+CI", result) ??

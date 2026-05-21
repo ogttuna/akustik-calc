@@ -2,6 +2,7 @@ import type { AirborneContext, ImpactFieldContext, LayerInput, RequestedOutputId
 import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
+import { OPEN_WEB_RAW_BARE_FORMULA_BASIS } from "./open-web-raw-bare-estimate";
 
 type ContextKind = "building" | "field" | "lab";
 
@@ -651,15 +652,15 @@ const CASES: readonly GateACase[] = [
       lab: {
         origin: makeOrigin({
           boundFloorSystemMatchId: null,
-          candidateIds: null,
-          floorRatingsBasis: "screening_mass_law_curve_seed_v3",
+          candidateIds: ["source_absent_raw_bare_open_web_formula"],
+          floorRatingsBasis: OPEN_WEB_RAW_BARE_FORMULA_BASIS,
           floorSystemMatchId: null,
-          impactBasis: null,
+          impactBasis: OPEN_WEB_RAW_BARE_FORMULA_BASIS,
           lowerBoundBasis: null,
-          systemEstimateKind: null
+          systemEstimateKind: "family_archetype"
         }),
-        supported: ["Rw", "Ctr"],
-        unsupported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "Ln,w", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
+        supported: ["Rw", "Ln,w", "Ln,w+CI", "Ctr"],
+        unsupported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
         values: {
           deltaLw: null,
           dnA: null,
@@ -669,9 +670,9 @@ const CASES: readonly GateACase[] = [
           lPrimeNT50: null,
           lPrimeNTw: null,
           lPrimeNW: null,
-          lnW: null,
-          lnWPlusCI: null,
-          rw: 72,
+          lnW: 96,
+          lnWPlusCI: 97.8,
+          rw: 32,
           rwDb: 72.1,
           rwPrimeDb: null
         }
@@ -679,15 +680,15 @@ const CASES: readonly GateACase[] = [
       field: {
         origin: makeOrigin({
           boundFloorSystemMatchId: null,
-          candidateIds: null,
-          floorRatingsBasis: "screening_mass_law_curve_seed_v3",
+          candidateIds: ["source_absent_raw_bare_open_web_formula"],
+          floorRatingsBasis: OPEN_WEB_RAW_BARE_FORMULA_BASIS,
           floorSystemMatchId: null,
-          impactBasis: null,
+          impactBasis: OPEN_WEB_RAW_BARE_FORMULA_BASIS,
           lowerBoundBasis: null,
-          systemEstimateKind: null
+          systemEstimateKind: "family_archetype"
         }),
-        supported: ["R'w", "Dn,w", "Dn,A", "Ctr"],
-        unsupported: ["Rw", "DnT,w", "DnT,A", "Ln,w", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
+        supported: ["Rw", "R'w", "Dn,w", "Dn,A", "Ln,w", "Ln,w+CI", "Ctr"],
+        unsupported: ["DnT,w", "DnT,A", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
         values: {
           deltaLw: null,
           dnA: 67.5,
@@ -697,9 +698,9 @@ const CASES: readonly GateACase[] = [
           lPrimeNT50: null,
           lPrimeNTw: null,
           lPrimeNW: null,
-          lnW: null,
-          lnWPlusCI: null,
-          rw: 70,
+          lnW: 96,
+          lnWPlusCI: 97.8,
+          rw: 32,
           rwDb: 70.1,
           rwPrimeDb: 70
         }
@@ -707,15 +708,15 @@ const CASES: readonly GateACase[] = [
       building: {
         origin: makeOrigin({
           boundFloorSystemMatchId: null,
-          candidateIds: null,
-          floorRatingsBasis: "screening_mass_law_curve_seed_v3",
+          candidateIds: ["source_absent_raw_bare_open_web_formula"],
+          floorRatingsBasis: OPEN_WEB_RAW_BARE_FORMULA_BASIS,
           floorSystemMatchId: null,
-          impactBasis: null,
+          impactBasis: OPEN_WEB_RAW_BARE_FORMULA_BASIS,
           lowerBoundBasis: null,
-          systemEstimateKind: null
+          systemEstimateKind: "family_archetype"
         }),
-        supported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "Ctr"],
-        unsupported: ["Rw", "Ln,w", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
+        supported: ["Rw", "R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "Ln,w", "Ln,w+CI", "Ctr"],
+        unsupported: ["DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
         values: {
           deltaLw: null,
           dnA: 67.5,
@@ -725,9 +726,9 @@ const CASES: readonly GateACase[] = [
           lPrimeNT50: null,
           lPrimeNTw: null,
           lPrimeNW: null,
-          lnW: null,
-          lnWPlusCI: null,
-          rw: 70,
+          lnW: 96,
+          lnWPlusCI: 97.8,
+          rw: 32,
           rwDb: 70.1,
           rwPrimeDb: 70
         }
@@ -755,8 +756,10 @@ describe("floor field continuation Gate A matrix", () => {
       expect(field.supported).toEqual(expect.arrayContaining(["R'w", "Dn,w", "Dn,A"]));
       expect(field.unsupported).toEqual(expect.arrayContaining(["DnT,w", "DnT,A"]));
 
-      if (building.supported.includes("Ln,w")) {
+      if (building.supported.includes("Ln,w") && !building.unsupported.includes("L'n,w")) {
         expect(building.supported).toEqual(expect.arrayContaining(["L'n,w", "L'nT,w"]));
+      } else if (building.supported.includes("Ln,w")) {
+        expect(building.unsupported).toEqual(expect.arrayContaining(["L'n,w", "L'nT,w"]));
       } else {
         expect(building.unsupported).toEqual(expect.arrayContaining(["Ln,w", "L'n,w", "L'nT,w"]));
       }

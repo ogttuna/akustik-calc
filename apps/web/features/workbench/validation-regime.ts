@@ -25,8 +25,11 @@ import { HEAVY_CONCRETE_COMBINED_FORMULA_BASIS } from "./heavy-concrete-combined
 import { STEEL_FLOOR_FORMULA_BASIS } from "./steel-floor-formula-corridor-view";
 import { isOpenWebSupportedBandSimilarityResult } from "./open-web-supported-band-similarity-surface";
 import { isOpenWebDirectFixedLiningResult } from "./open-web-direct-fixed-lining-surface";
+import { isOpenWebRawBareResult } from "./open-web-raw-bare-surface";
 import { isOpenBoxTimberSimilarityResult } from "./open-box-timber-similarity-surface";
 import { isOpenBoxTimberRawBareResult } from "./open-box-timber-raw-bare-surface";
+import { isOpenBoxTimberEpsScreedHybridResult } from "./open-box-timber-eps-screed-hybrid-surface";
+import { isHelperOnlyTimberOpenWebImpactStackResult } from "./helper-only-timber-open-web-impact-stack-surface";
 
 export type ValidationPosture = {
   detail: string;
@@ -211,6 +214,15 @@ export function describeImpactValidationPosture(result: AssemblyCalculation | nu
       };
     }
 
+    if (isOpenWebRawBareResult(result)) {
+      return {
+        detail:
+          "The active floor lane is the source-absent raw-bare open-web steel formula corridor for explicit bare carriers. Keep exact UBIQ package/direct-fixed precedence, fit percentage, source-absent budgets, and non-lab boundaries visible.",
+        label: trace.selectedLabel,
+        posture: "estimate"
+      };
+    }
+
     if (isOpenBoxTimberSimilarityResult(result)) {
       return {
         detail:
@@ -224,6 +236,24 @@ export function describeImpactValidationPosture(result: AssemblyCalculation | nu
       return {
         detail:
           "The active floor lane is the source-absent raw-bare open-box timber formula corridor for explicit bare carriers. Keep exact-source/package-transfer precedence, fit percentage, source-absent budgets, and non-lab boundaries visible.",
+        label: trace.selectedLabel,
+        posture: "estimate"
+      };
+    }
+
+    if (isOpenBoxTimberEpsScreedHybridResult(result)) {
+      return {
+        detail:
+          "The active floor lane is the source-absent open-box timber EPS/screed hybrid package formula corridor for the owned EPS board, wet screed, EPS underlay, laminate, mineral-wool fill, and resilient ceiling package. Keep exact R7b precedence, dry/raw lane separation, source-absent budgets, and non-lab boundaries visible.",
+        label: trace.selectedLabel,
+        posture: "estimate"
+      };
+    }
+
+    if (isHelperOnlyTimberOpenWebImpactStackResult(result)) {
+      return {
+        detail:
+          "The active floor lane is the source-absent helper-only timber/open-web lower-treatment formula corridor for complete explicit base, board, cavity, absorber, and suspension stacks. Keep exact/package/raw-bare precedence, fit percentage, source-absent budgets, and field/building plus ASTM/IIC boundaries visible.",
         label: trace.selectedLabel,
         posture: "estimate"
       };
@@ -472,8 +502,10 @@ export function getActiveValidationMode(result: AssemblyCalculation | null) {
     impactBasis === "predictor_lightweight_steel_fl28_interpolation_estimate" ||
     impactBasis === "predictor_lightweight_steel_open_web_supported_band_similarity_estimate" ||
     isOpenWebDirectFixedLiningResult(result) ||
+    isOpenWebRawBareResult(result) ||
     isOpenBoxTimberSimilarityResult(result) ||
-    isOpenBoxTimberRawBareResult(result)
+    isOpenBoxTimberRawBareResult(result) ||
+    isOpenBoxTimberEpsScreedHybridResult(result)
   ) {
     return getImpactValidationModeRegimeById("family_specific_estimate");
   }

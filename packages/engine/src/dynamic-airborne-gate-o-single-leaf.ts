@@ -10,9 +10,14 @@ import type {
 
 import type { AirborneTopologySummary } from "./airborne-topology";
 import { materialText } from "./airborne-topology";
+import {
+  LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_FORMULA_CORRIDOR_BASIS,
+  LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_ERROR_BUDGET_DB,
+  LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_WARNING
+} from "./layer-combination-resolver-single-leaf-mass-law-banded-runtime-constants";
 
 export const GATE_O_SINGLE_LEAF_MASSIVE_PANEL_PREDICTION_WARNING =
-  "Single-leaf / massive-panel family physics prediction is active from the current dynamic delegate curve. It is source-absent and uncalibrated; exact rights-safe source rows can still override it when eligible.";
+  LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_WARNING;
 
 const GATE_O_ELIGIBLE_FAMILIES = new Set<DynamicAirborneFamily>([
   "single_leaf_panel",
@@ -28,17 +33,6 @@ const METHOD_LABEL_BY_DELEGATE: Record<DynamicAirborneDelegateMethod, string> = 
   sharp: "sharp_single_leaf_panel_coincidence_delegate",
   triple_leaf_two_cavity_frequency_solver: "triple_leaf_two_cavity_frequency_solver"
 };
-
-function confidenceErrorBudgetDb(confidenceClass: DynamicAirborneConfidenceClass): number {
-  switch (confidenceClass) {
-    case "high":
-      return 4;
-    case "medium":
-      return 5;
-    case "low":
-      return 7;
-  }
-}
 
 function hasMassTimberOrClt(layers: readonly ResolvedLayer[]): boolean {
   return layers.some((layer) => {
@@ -126,31 +120,37 @@ export function maybeBuildGateOSingleLeafMassivePanelBasis(input: {
   return {
     assumptions: [
       "single-leaf / massive-panel topology has one visible solid leaf and no cavity, porous fill, or frame bridge",
-      "source absence blocks exact/calibrated promotion only, not this formula-backed family prediction",
-      "Gate O promotes the existing dynamic delegate curve to family physics origin without retuning numeric values",
+      "source absence blocks exact/calibrated promotion only, not this formula-backed single-leaf runtime",
+      "the layer-combination resolver single-leaf mass-law banded runtime corridor owns the public element-lab basis",
+      `underlying delegate lineage remains ${METHOD_LABEL_BY_DELEGATE[input.selectedMethod]}`,
       `current dynamic strategy remains ${input.strategy}`
     ],
     calculationStandard: "engine_mass_law",
     curveBasis: "calculated_frequency_curve",
-    errorBudgetDb: confidenceErrorBudgetDb(input.confidenceClass),
+    errorBudgetDb: LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_ERROR_BUDGET_DB,
     family: input.family,
     frequencyBands: {
       bandSet: "dynamic_airborne_delegate_grid",
       frequenciesHz: [...input.curve.frequenciesHz]
     },
     kind: "airborne_physics_prediction",
-    method: `gate_o_single_leaf_massive_panel_${METHOD_LABEL_BY_DELEGATE[input.selectedMethod]}`,
+    method: LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_FORMULA_CORRIDOR_BASIS,
     missingPhysicalInputs: [],
     missingSourceEvidence: [],
     origin: "family_physics_prediction",
     propertyDefaults: buildPropertyDefaults(input.layers),
     ratingStandard: "ISO 717-1",
     requiredInputs: [
-      "materialClass",
+      "route=wall_or_floor",
+      "visibleLeafCount=1",
+      "cavityCount=0",
+      "supportLayerCount=0",
+      "porousLayerCount=0",
       "densityKgM3",
       "surfaceMassKgM2",
       "thicknessMm",
-      "selectedDelegateCurve",
+      "stiffness/coincidence family",
+      "one-third-octave TL curve",
       "ISO717-1 rating adapter"
     ],
     toleranceClass: "uncalibrated_prediction"

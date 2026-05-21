@@ -14,6 +14,7 @@ import { DynamicImpactTraceSchema } from "./dynamic-impact";
 import { ImpactPredictorStatusSchema } from "./impact-predictor-status";
 import { ImpactCatalogMatchResultSchema } from "./impact-product-catalog";
 import { ImpactSupportSchema } from "./impact-support";
+import { LayerCombinationResolverTraceSchema } from "./layer-combination-resolver";
 import { ResolvedLayerSchema } from "./layer";
 import { RequestedOutputSchema } from "./output";
 
@@ -39,6 +40,7 @@ const ImpactOnlyCalculationShape: z.ZodRawShape = {
   impactCatalogMatch: ImpactCatalogMatchResultSchema.nullable().optional(),
   impactPredictorStatus: ImpactPredictorStatusSchema.nullable().optional(),
   impactSupport: ImpactSupportSchema.nullable().optional(),
+  layerCombinationResolverTrace: LayerCombinationResolverTraceSchema.optional(),
   lowerBoundImpact: ImpactBoundCalculationSchema.nullable().optional(),
   ok: z.literal(true),
   partialType: z.literal("impact_only"),

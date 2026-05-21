@@ -214,8 +214,49 @@ export function AirborneContextPanel({
     studyMode
   });
 
-  if (studyMode !== "wall") {
-    return null;
+  if (studyMode === "floor") {
+    return (
+      <SurfacePanel className="px-5 py-5">
+        <div className="flex flex-wrap items-center gap-3">
+          <Pill tone="accent">Floor field context</Pill>
+          <Pill tone="neutral">Input surface</Pill>
+        </div>
+
+        <div className="mt-5">
+          <div className="eyebrow">Open-web field conversion inputs</div>
+          <h2 className="mt-1 font-display text-[1.95rem] leading-none tracking-[-0.04em]">
+            Apparent and standardized floor context
+          </h2>
+          <p className="mt-3 max-w-2xl text-sm leading-7 text-[color:var(--ink-soft)]">
+            These physical fields feed floor-side `R&apos;w`, `DnT,w`, `L&apos;n,w`, and `L&apos;nT,w` only when the
+            active floor route owns a field continuation. Building prediction stays parked until its flanking owners are explicit.
+          </p>
+        </div>
+
+        <div className="mt-5 grid gap-3 md:grid-cols-2">
+          <label className="space-y-2 text-sm text-[color:var(--ink-soft)]" htmlFor="airborne-context-mode">
+            <span className="block font-medium text-[color:var(--ink)]">Context mode</span>
+            <SelectField id="airborne-context-mode" onValueChange={onContextModeChange} options={contextModeOptions} value={contextMode} />
+          </label>
+          <label className="space-y-2 text-sm text-[color:var(--ink-soft)]" htmlFor="airborne-panel-width-mm">
+            <span className="block font-medium text-[color:var(--ink)]">Panel width (mm)</span>
+            <NumericField id="airborne-panel-width-mm" onValueChange={onPanelWidthMmChange} placeholder="e.g. 3200" value={panelWidthMm} />
+          </label>
+          <label className="space-y-2 text-sm text-[color:var(--ink-soft)]" htmlFor="airborne-panel-height-mm">
+            <span className="block font-medium text-[color:var(--ink)]">Panel height (mm)</span>
+            <NumericField id="airborne-panel-height-mm" onValueChange={onPanelHeightMmChange} placeholder="e.g. 2800" value={panelHeightMm} />
+          </label>
+          <label className="space-y-2 text-sm text-[color:var(--ink-soft)]" htmlFor="airborne-room-volume-m3">
+            <span className="block font-medium text-[color:var(--ink)]">Receiving room volume (m3)</span>
+            <NumericField id="airborne-room-volume-m3" onValueChange={onReceivingRoomVolumeM3Change} placeholder="e.g. 55" value={receivingRoomVolumeM3} />
+          </label>
+          <label className="space-y-2 text-sm text-[color:var(--ink-soft)]" htmlFor="airborne-room-rt60-s">
+            <span className="block font-medium text-[color:var(--ink)]">Receiving room RT60 (s)</span>
+            <NumericField id="airborne-room-rt60-s" onValueChange={onReceivingRoomRt60SChange} placeholder="e.g. 0.6" value={receivingRoomRt60S} />
+          </label>
+        </div>
+      </SurfacePanel>
+    );
   }
 
   const statusTone = overlay?.fieldFlankingPenaltyApplied || overlay?.leakagePenaltyApplied

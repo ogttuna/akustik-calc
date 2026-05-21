@@ -32,6 +32,11 @@ import {
   isOpenWebDirectFixedLiningResult
 } from "./open-web-direct-fixed-lining-surface";
 import {
+  formatOpenWebRawBareErrorBudgetSummary,
+  formatOpenWebRawBareErrorBudgetTerms,
+  isOpenWebRawBareResult
+} from "./open-web-raw-bare-surface";
+import {
   formatOpenBoxTimberSimilarityErrorBudgetSummary,
   formatOpenBoxTimberSimilarityErrorBudgetTerms,
   isOpenBoxTimberSimilarityResult
@@ -41,6 +46,16 @@ import {
   formatOpenBoxTimberRawBareErrorBudgetTerms,
   isOpenBoxTimberRawBareResult
 } from "./open-box-timber-raw-bare-surface";
+import {
+  formatOpenBoxTimberEpsScreedHybridErrorBudgetSummary,
+  formatOpenBoxTimberEpsScreedHybridErrorBudgetTerms,
+  isOpenBoxTimberEpsScreedHybridResult
+} from "./open-box-timber-eps-screed-hybrid-surface";
+import {
+  formatHelperOnlyTimberOpenWebImpactStackErrorBudgetSummary,
+  formatHelperOnlyTimberOpenWebImpactStackErrorBudgetTerms,
+  isHelperOnlyTimberOpenWebImpactStackResult
+} from "./helper-only-timber-open-web-impact-stack-surface";
 import {
   describeAirborneValidationPosture,
   describeImpactValidationPosture,
@@ -145,7 +160,10 @@ function buildImpactFormulaErrorBudgetCards(result: AssemblyCalculation): Simple
   const isHeavyConcreteCombinedFormula = isHeavyConcreteCombinedFormulaCorridorImpact(result);
   const isOpenBoxTimberSimilarity = isOpenBoxTimberSimilarityResult(result);
   const isOpenBoxTimberRawBare = isOpenBoxTimberRawBareResult(result);
+  const isOpenBoxTimberEpsScreedHybrid = isOpenBoxTimberEpsScreedHybridResult(result);
+  const isHelperOnlyTimberOpenWebImpactStack = isHelperOnlyTimberOpenWebImpactStackResult(result);
   const isOpenWebDirectFixedLining = isOpenWebDirectFixedLiningResult(result);
+  const isOpenWebRawBare = isOpenWebRawBareResult(result);
   const isOpenWebSupportedBandSimilarity = isOpenWebSupportedBandSimilarityResult(result);
   const isTimberCltFormula = isTimberCltDeltaLwFormulaCorridorImpact(result);
 
@@ -154,10 +172,16 @@ function buildImpactFormulaErrorBudgetCards(result: AssemblyCalculation): Simple
       ? `${formatHeavyConcreteCombinedFormulaErrorBudgetSummary(budget)}. Terms: ${formatHeavyConcreteCombinedFormulaErrorBudgetTerms(budget)}.`
       : isOpenWebDirectFixedLining
       ? `${formatOpenWebDirectFixedLiningErrorBudgetSummary(budget)}. Terms: ${formatOpenWebDirectFixedLiningErrorBudgetTerms(budget)}.`
+      : isOpenWebRawBare
+      ? `${formatOpenWebRawBareErrorBudgetSummary(budget)}. Terms: ${formatOpenWebRawBareErrorBudgetTerms(budget)}.`
       : isOpenBoxTimberSimilarity
       ? `${formatOpenBoxTimberSimilarityErrorBudgetSummary(budget)}. Terms: ${formatOpenBoxTimberSimilarityErrorBudgetTerms(budget)}.`
       : isOpenBoxTimberRawBare
       ? `${formatOpenBoxTimberRawBareErrorBudgetSummary(budget)}. Terms: ${formatOpenBoxTimberRawBareErrorBudgetTerms(budget)}.`
+      : isOpenBoxTimberEpsScreedHybrid
+      ? `${formatOpenBoxTimberEpsScreedHybridErrorBudgetSummary(budget)}. Terms: ${formatOpenBoxTimberEpsScreedHybridErrorBudgetTerms(budget)}.`
+      : isHelperOnlyTimberOpenWebImpactStack
+      ? `${formatHelperOnlyTimberOpenWebImpactStackErrorBudgetSummary(budget)}. Terms: ${formatHelperOnlyTimberOpenWebImpactStackErrorBudgetTerms(budget)}.`
       : isTimberCltFormula
       ? `${formatTimberCltDeltaLwFormulaErrorBudgetSummary(budget)}. Terms: ${formatTimberCltDeltaLwFormulaErrorBudgetTerms(budget)}.`
       : `${formatSteelFloorFormulaErrorBudgetSummary(budget)}. Terms: ${formatSteelFloorFormulaErrorBudgetTerms(budget)}.`,
@@ -243,7 +267,10 @@ function buildFloorCorridorDossier(result: AssemblyCalculation): SimpleWorkbench
   const isHeavyConcreteCombinedFormula = isHeavyConcreteCombinedFormulaCorridorImpact(result);
   const isOpenBoxTimberSimilarity = isOpenBoxTimberSimilarityResult(result);
   const isOpenBoxTimberRawBare = isOpenBoxTimberRawBareResult(result);
+  const isOpenBoxTimberEpsScreedHybrid = isOpenBoxTimberEpsScreedHybridResult(result);
+  const isHelperOnlyTimberOpenWebImpactStack = isHelperOnlyTimberOpenWebImpactStackResult(result);
   const isOpenWebDirectFixedLining = isOpenWebDirectFixedLiningResult(result);
+  const isOpenWebRawBare = isOpenWebRawBareResult(result);
   const isOpenWebSupportedBandSimilarity = isOpenWebSupportedBandSimilarityResult(result);
   const errorBudgetHeadline =
     errorBudgetCards.length === 0
@@ -252,17 +279,29 @@ function buildFloorCorridorDossier(result: AssemblyCalculation): SimpleWorkbench
         ? " Source-absent heavy-concrete combined upper/lower budgets are structured and marked not measured evidence."
       : isOpenWebDirectFixedLining
         ? " Source-absent direct-fixed budgets are structured and marked not measured evidence."
+      : isOpenWebRawBare
+        ? " Source-absent raw-bare open-web steel formula budgets are structured and marked not measured evidence."
       : isOpenBoxTimberSimilarity
         ? " Source-absent open-box timber package-transfer budgets are structured and marked not measured evidence."
       : isOpenBoxTimberRawBare
         ? " Source-absent raw-bare open-box timber formula budgets are structured and marked not measured evidence."
+      : isOpenBoxTimberEpsScreedHybrid
+        ? " Source-absent open-box timber EPS/screed hybrid package budgets are structured and marked not measured evidence."
+      : isHelperOnlyTimberOpenWebImpactStack
+        ? " Source-absent helper-only timber/open-web lower-treatment budgets are structured and marked not measured evidence."
       : isSteelFloorFormulaCorridorImpact(result)
         ? " Source-absent steel formula budgets are structured and marked not measured evidence."
         : isTimberCltDeltaLwFormulaCorridorImpact(result)
           ? " Source-absent timber/CLT DeltaLw formula budget is structured and marked not measured evidence."
           : " Source-absent formula budgets are structured and marked not measured evidence.";
   const primaryRouteLabel =
-    isOpenBoxTimberSimilarity || isOpenBoxTimberRawBare || isOpenWebDirectFixedLining || isOpenWebSupportedBandSimilarity
+    isOpenBoxTimberSimilarity ||
+    isOpenBoxTimberRawBare ||
+    isOpenBoxTimberEpsScreedHybrid ||
+    isHelperOnlyTimberOpenWebImpactStack ||
+    isOpenWebDirectFixedLining ||
+    isOpenWebRawBare ||
+    isOpenWebSupportedBandSimilarity
       ? impactPosture.label
       : activeMode?.label ??
         (impactPosture.posture !== "inactive" ? corridorSummary.impactLabel : corridorSummary.airborneLabel);

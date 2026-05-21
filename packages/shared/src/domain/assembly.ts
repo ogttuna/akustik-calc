@@ -24,6 +24,7 @@ import { ImpactCatalogMatchResultSchema } from "./impact-product-catalog";
 import { ImpactSupportSchema } from "./impact-support";
 import { AcousticInputCompletenessSchema } from "./input-completeness";
 import { ResolvedLayerSchema } from "./layer";
+import { LayerCombinationResolverTraceSchema } from "./layer-combination-resolver";
 import { RequestedOutputSchema } from "./output";
 import { AssemblyRatingsSchema, TransmissionLossCurveSchema } from "./rating";
 import { RatingAdapterBasisSchema } from "./rating-adapter";
@@ -76,6 +77,7 @@ const AssemblyCalculationShape: z.ZodRawShape = {
   impactCatalogMatch: ImpactCatalogMatchResultSchema.nullable().optional(),
   impactPredictorStatus: ImpactPredictorStatusSchema.nullable().optional(),
   impactSupport: ImpactSupportSchema.nullable().optional(),
+  layerCombinationResolverTrace: LayerCombinationResolverTraceSchema.optional(),
   floorSystemEstimate: FloorSystemEstimateResultSchema.nullable().optional(),
   floorSystemMatch: FloorSystemMatchResultSchema.nullable().optional(),
   floorSystemRatings: FloorSystemRatingsSchema.nullable().optional(),

@@ -21,6 +21,7 @@ export * from "./domain/impact-predictor-status";
 export * from "./domain/impact-product-catalog";
 export * from "./domain/impact-support";
 export * from "./domain/input-completeness";
+export * from "./domain/layer-combination-resolver";
 export * from "./domain/layer";
 export * from "./domain/material";
 export * from "./domain/output";

@@ -19,6 +19,7 @@ import {
   type PersonalUseMvpCoverageScenarioRow
 } from "./calculator-personal-use-mvp-coverage-sprint";
 import { PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_Z_SELECTION_STATUS } from "./calculator-personal-use-mvp-coverage-sprint-gate-z";
+import { GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_RUNTIME_METHOD } from "./dynamic-airborne-gate-s-double-leaf-framed";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
@@ -190,7 +191,7 @@ describe("Personal-Use MVP Coverage Sprint Gate AA scenario matrix v2 expansion"
     expect(splitDoubleLeaf).toMatchObject({
       currentPosture: "family_physics",
       runtime: {
-        basisId: "gate_s_double_leaf_framed_bridge_mass_air_mass_bridge_damping_runtime",
+        basisId: GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_RUNTIME_METHOD,
         errorBudgetDb: 7,
         origin: "family_physics_prediction",
         supportedTargetOutputs: ["Rw", "STC", "C", "Ctr"],

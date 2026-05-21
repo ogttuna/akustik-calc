@@ -79,7 +79,7 @@ const SURFACE_PROOF_OWNER_FILES = [
 ] as const;
 
 const REPRESENTATIVE_SUPPORTED_VALUE_PINS = [
-  { budget: 4, id: "wall.single_leaf_heavy_concrete_masonry.lab", pins: { Rw: 58, STC: 59 } },
+  { budget: 6, id: "wall.single_leaf_heavy_concrete_masonry.lab", pins: { Rw: 58, STC: 59 } },
   { budget: 6, id: "wall.aac_nonhomogeneous_masonry.lab", pins: { Rw: 44, STC: 44, Ctr: -5.2 } },
   { budget: 8, id: "wall.grouped_triple_leaf_50_50_mineral_wool.lab", pins: { Rw: 53 } },
   { budget: 6, id: "wall.lined_massive_masonry.lab", pins: { Rw: 60, STC: 60 } },

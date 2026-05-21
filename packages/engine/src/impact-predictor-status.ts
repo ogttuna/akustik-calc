@@ -38,7 +38,9 @@ const FAMILY_ESTIMATE_BASES = new Set<ImpactCalculation["basis"]>([
   "predictor_lightweight_steel_fl28_interpolation_estimate",
   "predictor_lightweight_steel_open_web_supported_band_similarity_estimate",
   "broad_accuracy_floor_open_web_direct_fixed_lining_direct_source_interpolation_formula_corridor",
-  "broad_accuracy_floor_open_box_timber_raw_bare_source_absent_formula_corridor"
+  "broad_accuracy_floor_open_web_raw_bare_source_absent_formula_corridor",
+  "broad_accuracy_floor_open_box_timber_raw_bare_source_absent_formula_corridor",
+  "broad_accuracy_floor_helper_only_timber_open_web_impact_stack_source_absent_formula_corridor"
 ]);
 
 const FORMULA_BASIS_LABELS = new Set<string>([
@@ -51,7 +53,9 @@ const FORMULA_BASIS_LABELS = new Set<string>([
   "predictor_lightweight_steel_suspended_ceiling_corridor_estimate",
   "predictor_mass_timber_clt_delta_lw_formula_corridor_estimate",
   "predictor_timber_joist_delta_lw_formula_corridor_estimate",
-  "broad_accuracy_floor_open_box_timber_raw_bare_source_absent_formula_corridor"
+  "broad_accuracy_floor_open_web_raw_bare_source_absent_formula_corridor",
+  "broad_accuracy_floor_open_box_timber_raw_bare_source_absent_formula_corridor",
+  "broad_accuracy_floor_helper_only_timber_open_web_impact_stack_source_absent_formula_corridor"
 ]);
 
 function hasFormulaMetricBasis(impact: ImpactCalculation | null): boolean {

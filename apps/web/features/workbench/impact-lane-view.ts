@@ -17,6 +17,10 @@ import {
   isOpenWebDirectFixedLiningImpact
 } from "./open-web-direct-fixed-lining-surface";
 import {
+  OPEN_WEB_RAW_BARE_LABEL,
+  isOpenWebRawBareImpact
+} from "./open-web-raw-bare-surface";
+import {
   OPEN_BOX_TIMBER_SIMILARITY_LABEL,
   isOpenBoxTimberSimilarityImpact
 } from "./open-box-timber-similarity-surface";
@@ -24,17 +28,28 @@ import {
   OPEN_BOX_TIMBER_RAW_BARE_LABEL,
   isOpenBoxTimberRawBareImpact
 } from "./open-box-timber-raw-bare-surface";
+import {
+  OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_LABEL,
+  isOpenBoxTimberEpsScreedHybridImpact
+} from "./open-box-timber-eps-screed-hybrid-surface";
+import {
+  HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_LABEL,
+  isHelperOnlyTimberOpenWebImpactStackImpact
+} from "./helper-only-timber-open-web-impact-stack-surface";
 
 export type ImpactLaneKind =
   | "bound_only"
   | "exact_family"
   | "exact_source"
   | "heavy_concrete_combined_formula_corridor"
+  | "helper_only_timber_open_web_impact_stack"
   | "low_confidence_fallback"
   | "official_catalog"
+  | "open_box_timber_eps_screed_hybrid"
   | "open_box_timber_raw_bare"
   | "open_box_timber_similarity"
   | "open_web_direct_fixed_lining"
+  | "open_web_raw_bare"
   | "open_web_supported_band_similarity"
   | "published_family"
   | "scoped_formula"
@@ -86,12 +101,24 @@ export function getImpactLaneKind(input: {
     return "open_web_direct_fixed_lining";
   }
 
+  if (isOpenWebRawBareImpact(impact)) {
+    return "open_web_raw_bare";
+  }
+
   if (isOpenBoxTimberRawBareImpact(impact)) {
     return "open_box_timber_raw_bare";
   }
 
+  if (isOpenBoxTimberEpsScreedHybridImpact(impact)) {
+    return "open_box_timber_eps_screed_hybrid";
+  }
+
   if (isOpenBoxTimberSimilarityImpact(impact)) {
     return "open_box_timber_similarity";
+  }
+
+  if (isHelperOnlyTimberOpenWebImpactStackImpact(impact)) {
+    return "helper_only_timber_open_web_impact_stack";
   }
 
   if (impact.confidence.provenance === "published_family_estimate" && impact.scope === "family_estimate") {
@@ -117,10 +144,16 @@ export function getImpactLanePillLabel(kind: ImpactLaneKind): string {
       return "Open-web similarity live";
     case "open_web_direct_fixed_lining":
       return "Direct-fixed open-web live";
+    case "open_web_raw_bare":
+      return "Raw-bare open-web live";
     case "open_box_timber_raw_bare":
       return "Raw-bare open-box live";
+    case "open_box_timber_eps_screed_hybrid":
+      return "EPS/screed open-box live";
     case "open_box_timber_similarity":
       return "Open-box timber live";
+    case "helper_only_timber_open_web_impact_stack":
+      return "Helper-only live";
     case "bound_only":
       return "Bound support live";
     case "scoped_formula":
@@ -150,10 +183,16 @@ export function getImpactLaneHeadline(kind: ImpactLaneKind): string {
       return OPEN_WEB_SUPPORTED_BAND_SIMILARITY_LABEL;
     case "open_web_direct_fixed_lining":
       return OPEN_WEB_DIRECT_FIXED_LINING_LABEL;
+    case "open_web_raw_bare":
+      return OPEN_WEB_RAW_BARE_LABEL;
     case "open_box_timber_raw_bare":
       return OPEN_BOX_TIMBER_RAW_BARE_LABEL;
+    case "open_box_timber_eps_screed_hybrid":
+      return OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_LABEL;
     case "open_box_timber_similarity":
       return OPEN_BOX_TIMBER_SIMILARITY_LABEL;
+    case "helper_only_timber_open_web_impact_stack":
+      return HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_LABEL;
     case "bound_only":
       return "Conservative upper-bound support";
     case "scoped_formula":
@@ -179,10 +218,16 @@ export function getImpactLaneNarrative(kind: ImpactLaneKind, hasExactFamilyCompa
           ? "This floor lane stays inside the UBIQ FL-24/FL-26 open-web steel supported-band source grid. Exact rows still win on true matches; FL-28 interpolation, carpet/bound-only support, field, building, ASTM, and IIC outputs stay outside this lab estimate."
         : kind === "open_web_direct_fixed_lining"
           ? "This floor lane stays inside the UBIQ FL-23/FL-25/FL-27 open-web steel direct-fixed source grid. Exact rows still win on true matches; resilient suspended-ceiling rows, broad steel blends, field, building, ASTM, and IIC outputs stay outside this lab estimate."
+        : kind === "open_web_raw_bare"
+          ? "This floor lane stays on the source-absent raw-bare open-web steel carrier formula. Exact UBIQ package rows and direct-fixed INEX/firestop routes still win; partial packages, field, building, ASTM, and IIC outputs stay outside this lab estimate."
         : kind === "open_box_timber_raw_bare"
           ? "This floor lane stays on the source-absent raw-bare open-box timber carrier formula. Exact TUAS rows and complete finished package-transfer routes still win; partial packages, field, building, ASTM, and IIC outputs stay outside this lab estimate."
+        : kind === "open_box_timber_eps_screed_hybrid"
+          ? "This floor lane stays on the source-absent open-box timber EPS/screed hybrid package formula. Exact R7b still wins; dry package-transfer, raw-bare carriers, R8b/R9b/R2c/R10a sibling negatives, field, building, ASTM, and IIC outputs stay outside this lab estimate."
         : kind === "open_box_timber_similarity"
           ? "This floor lane stays inside the TUAS measured open-box timber packet family. Exact TUAS rows still win on true matches; raw bare carriers, exact-only hybrids, mixed staged packages, field, building, ASTM, and IIC outputs stay outside this lab estimate."
+        : kind === "helper_only_timber_open_web_impact_stack"
+          ? "This floor lane stays on the source-absent helper-only timber/open-web lower-treatment formula. Exact/package rows, raw-bare carriers, direct-fixed and supported-band open-web lanes, field, building, ASTM, and IIC outputs stay outside this lab estimate."
         : kind === "published_family"
           ? "When no exact floor row lands, DAC can now keep the estimate inside the right physical family and label the result with the published branch it came from instead of returning an empty impact lane."
           : kind === "official_catalog"

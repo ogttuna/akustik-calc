@@ -196,7 +196,7 @@ describe("Personal-Use MVP Coverage Sprint Gate A scenario matrix", () => {
     expect(byId(rows, "wall.single_leaf_heavy_concrete_masonry.lab")).toMatchObject({
       currentPosture: "family_physics",
       runtime: {
-        errorBudgetDb: 4,
+        errorBudgetDb: 6,
         origin: "family_physics_prediction",
         selectedMethod: "ks_rw_calibrated"
       }

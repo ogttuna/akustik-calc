@@ -45,6 +45,8 @@ import {
 } from "./timber-clt-floor-impact-delta-lw-runtime-corridor";
 import { OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS } from "./open-box-timber-eps-screed-hybrid-package-estimate";
 import { OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS } from "./open-box-timber-raw-bare-estimate";
+import { OPEN_WEB_RAW_BARE_FORMULA_BASIS } from "./open-web-raw-bare-estimate";
+import { HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS } from "./helper-only-timber-open-web-impact-stack-estimate";
 
 type BuildImpactSupportInput = {
   boundFloorSystemEstimate?: FloorSystemBoundEstimateResult | null;
@@ -131,6 +133,18 @@ function buildRawBareOpenBoxTimberFormulaErrorBudgetFormulaNote(impact: ImpactCa
     .join("; ")}; origin source_absent_formula_error_budget; not measured evidence.`;
 }
 
+function buildRawBareOpenWebFormulaErrorBudgetFormulaNote(impact: ImpactCalculation): string | null {
+  const budgets = impact.errorBudgets ?? [];
+
+  if (budgets.length === 0) {
+    return null;
+  }
+
+  return `Raw-bare open-web steel error budgets are structured: ${budgets
+    .map((budget) => `${budget.metricId} ${formatErrorBudgetRange(budget)}`)
+    .join("; ")}; origin source_absent_formula_error_budget; not measured evidence.`;
+}
+
 function buildEpsScreedHybridOpenBoxTimberFormulaErrorBudgetFormulaNote(impact: ImpactCalculation): string | null {
   const budgets = impact.errorBudgets ?? [];
 
@@ -139,6 +153,18 @@ function buildEpsScreedHybridOpenBoxTimberFormulaErrorBudgetFormulaNote(impact: 
   }
 
   return `EPS/screed hybrid package error budgets are structured: ${budgets
+    .map((budget) => `${budget.metricId} ${formatErrorBudgetRange(budget)}`)
+    .join("; ")}; origin source_absent_formula_error_budget; not measured evidence.`;
+}
+
+function buildHelperOnlyTimberOpenWebFormulaErrorBudgetFormulaNote(impact: ImpactCalculation): string | null {
+  const budgets = impact.errorBudgets ?? [];
+
+  if (budgets.length === 0) {
+    return null;
+  }
+
+  return `Helper-only timber/open-web error budgets are structured: ${budgets
     .map((budget) => `${budget.metricId} ${formatErrorBudgetRange(budget)}`)
     .join("; ")}; origin source_absent_formula_error_budget; not measured evidence.`;
 }
@@ -351,6 +377,18 @@ export function buildImpactSupport(input: BuildImpactSupportInput): ImpactSuppor
     }
   }
 
+  if (input.impact?.basis === OPEN_WEB_RAW_BARE_FORMULA_BASIS) {
+    notes.push("Raw-bare open-web steel formula corridor is active; exact measured package rows still outrank it when they truly match.");
+    pushUnique(
+      formulaNotes,
+      "Raw-bare open-web runtime is source-absent lab evidence for the bare steel carrier, not a UBIQ INEX/firestop package measurement."
+    );
+    const errorBudgetNote = buildRawBareOpenWebFormulaErrorBudgetFormulaNote(input.impact);
+    if (errorBudgetNote) {
+      pushUnique(formulaNotes, errorBudgetNote);
+    }
+  }
+
   if (input.impact?.basis === OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS) {
     notes.push("Open-box timber EPS/screed hybrid package formula corridor is active; exact measured package rows still outrank it when they truly match.");
     pushUnique(
@@ -362,6 +400,22 @@ export function buildImpactSupport(input: BuildImpactSupportInput): ImpactSuppor
       "R8b, R9b, R2c, and R10a remain negative boundaries for partial, screed-only, missing-mass, and mixed-staged packets."
     );
     const errorBudgetNote = buildEpsScreedHybridOpenBoxTimberFormulaErrorBudgetFormulaNote(input.impact);
+    if (errorBudgetNote) {
+      pushUnique(formulaNotes, errorBudgetNote);
+    }
+  }
+
+  if (input.impact?.basis === HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS) {
+    notes.push("Helper-only timber/open-web formula corridor is active; exact measured and complete package rows still outrank it when they truly match.");
+    pushUnique(
+      formulaNotes,
+      "Helper-only timber/open-web runtime is source-absent lab evidence for complete lower-treatment stacks, not measured evidence."
+    );
+    pushUnique(
+      formulaNotes,
+      "Field/building impact adapters and ASTM/IIC aliases remain outside the helper-only runtime corridor."
+    );
+    const errorBudgetNote = buildHelperOnlyTimberOpenWebFormulaErrorBudgetFormulaNote(input.impact);
     if (errorBudgetNote) {
       pushUnique(formulaNotes, errorBudgetNote);
     }

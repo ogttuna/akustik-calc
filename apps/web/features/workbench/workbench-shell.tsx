@@ -147,9 +147,14 @@ export function WorkbenchShell() {
   const activePresetId = useWorkbenchStore((state) => state.activePresetId);
   const calculatorId = useWorkbenchStore((state) => state.calculatorId);
   const airborneAirtightness = useWorkbenchStore((state) => state.airborneAirtightness);
+  const airborneBuildingPredictionOutputBasis = useWorkbenchStore((state) => state.airborneBuildingPredictionOutputBasis);
   const airborneConnectionType = useWorkbenchStore((state) => state.airborneConnectionType);
+  const airborneConservativeFlankingAssumption = useWorkbenchStore((state) => state.airborneConservativeFlankingAssumption);
   const airborneContextMode = useWorkbenchStore((state) => state.airborneContextMode);
   const airborneElectricalBoxes = useWorkbenchStore((state) => state.airborneElectricalBoxes);
+  const airborneFrequencyBandSet = useWorkbenchStore((state) => state.airborneFrequencyBandSet);
+  const airborneFlankingJunctionClass = useWorkbenchStore((state) => state.airborneFlankingJunctionClass);
+  const airborneJunctionCouplingLengthM = useWorkbenchStore((state) => state.airborneJunctionCouplingLengthM);
   const airborneJunctionQuality = useWorkbenchStore((state) => state.airborneJunctionQuality);
   const airbornePanelHeightMm = useWorkbenchStore((state) => state.airbornePanelHeightMm);
   const airbornePanelWidthMm = useWorkbenchStore((state) => state.airbornePanelWidthMm);
@@ -159,6 +164,7 @@ export function WorkbenchShell() {
   const airborneReceivingRoomVolumeM3 = useWorkbenchStore((state) => state.airborneReceivingRoomVolumeM3);
   const airborneResilientBarSideCount = useWorkbenchStore((state) => state.airborneResilientBarSideCount);
   const airborneSharedTrack = useWorkbenchStore((state) => state.airborneSharedTrack);
+  const airborneSourceRoomVolumeM3 = useWorkbenchStore((state) => state.airborneSourceRoomVolumeM3);
   const airborneStudSpacingMm = useWorkbenchStore((state) => state.airborneStudSpacingMm);
   const airborneStudType = useWorkbenchStore((state) => state.airborneStudType);
   const briefNote = useWorkbenchStore((state) => state.briefNote);
@@ -286,6 +292,8 @@ export function WorkbenchShell() {
   const parsedAirbornePanelWidthMm = parseFiniteNumber(airbornePanelWidthMm);
   const parsedAirborneReceivingRoomRt60S = parseFiniteNumber(airborneReceivingRoomRt60S);
   const parsedAirborneReceivingRoomVolumeM3 = parseFiniteNumber(airborneReceivingRoomVolumeM3);
+  const parsedAirborneJunctionCouplingLengthM = parseFiniteNumber(airborneJunctionCouplingLengthM);
+  const parsedAirborneSourceRoomVolumeM3 = parseFiniteNumber(airborneSourceRoomVolumeM3);
   const parsedAirborneStudSpacingMm = parseFiniteNumber(airborneStudSpacingMm);
   const manualReferenceImpact =
     typeof parsedImpactReferenceDeltaLwDb === "number"
@@ -327,6 +335,36 @@ export function WorkbenchShell() {
           studType: airborneStudType
         }
       : null;
+  const liveOpenWebFieldBuildingInputSurface =
+    studyMode === "floor"
+      ? {
+          baseAirborneContext: {
+            airtightness: airborneAirtightness,
+            buildingPredictionOutputBasis: airborneBuildingPredictionOutputBasis,
+            conservativeFlankingAssumption: airborneConservativeFlankingAssumption,
+            frequencyBandSet: airborneFrequencyBandSet || undefined,
+            flankingJunctionClass: airborneFlankingJunctionClass,
+            junctionCouplingLengthM: parsedAirborneJunctionCouplingLengthM,
+            sourceRoomVolumeM3: parsedAirborneSourceRoomVolumeM3
+          },
+          baseImpactFieldContext: {
+            ci50_2500Db: impactGuideSource === "live_stack" ? parsedImpactGuideCi50_2500Db : undefined,
+            directPathOffsetDb: parsedImpactDirectPathOffsetDb,
+            enableSmallRoomEstimate: impactGuideSource === "live_stack" ? impactGuideSmallRoomMode : undefined,
+            flankingPaths: flankingPathImport.parsed?.paths ?? [],
+            guideHdDb: impactGuideSource === "live_stack" ? parsedImpactGuideHdDb : undefined,
+            guideMassRatio: impactGuideSource === "live_stack" ? parsedImpactGuideMassRatio : undefined,
+            lowerTreatmentReductionDb: parsedImpactLowerTreatmentReductionDb
+          },
+          contextMode: airborneContextMode,
+          fieldKDb: impactGuideSource === "live_stack" ? impactGuideKDb : "",
+          impactReceivingRoomVolumeM3: impactGuideReceivingRoomVolumeM3,
+          panelHeightMm: airbornePanelHeightMm,
+          panelWidthMm: airbornePanelWidthMm,
+          receivingRoomRt60S: airborneReceivingRoomRt60S,
+          receivingRoomVolumeM3: airborneReceivingRoomVolumeM3
+        }
+      : null;
   const currentScenario = evaluateScenario({
     airborneContext: liveAirborneContext,
     calculator: calculatorId,
@@ -335,6 +373,7 @@ export function WorkbenchShell() {
     id: "current",
     impactFieldContext: liveImpactFieldContext,
     name: projectName,
+    openWebFieldBuildingInputSurface: liveOpenWebFieldBuildingInputSurface,
     rows,
     source: "current",
     studyMode,
@@ -401,6 +440,7 @@ export function WorkbenchShell() {
         labOrField: scenario.impactExactLabOrField ?? "lab",
         text: scenario.impactExactBandInput ?? ""
       });
+      const parsedScenarioFlankingPath = parseImpactFieldPathInput(scenario.impactFlankingPathsInput ?? "");
 
       return evaluateScenario({
         airborneContext:
@@ -439,6 +479,46 @@ export function WorkbenchShell() {
               }
             : null,
         name: scenario.name,
+        openWebFieldBuildingInputSurface:
+          scenario.studyMode === "floor"
+            ? {
+                baseAirborneContext: {
+                  airtightness: scenario.airborneAirtightness ?? "good",
+                  buildingPredictionOutputBasis: scenario.airborneBuildingPredictionOutputBasis,
+                  conservativeFlankingAssumption: scenario.airborneConservativeFlankingAssumption,
+                  frequencyBandSet: scenario.airborneFrequencyBandSet || undefined,
+                  flankingJunctionClass: scenario.airborneFlankingJunctionClass,
+                  junctionCouplingLengthM: parseFiniteNumber(scenario.airborneJunctionCouplingLengthM),
+                  sourceRoomVolumeM3: parseFiniteNumber(scenario.airborneSourceRoomVolumeM3)
+                },
+                baseImpactFieldContext: {
+                  ci50_2500Db:
+                    scenario.impactGuideSource === "live_stack"
+                      ? parseFiniteNumber(scenario.impactGuideCi50_2500Db)
+                      : undefined,
+                  directPathOffsetDb: parseFiniteNumber(scenario.impactDirectPathOffsetDb),
+                  enableSmallRoomEstimate:
+                    scenario.impactGuideSource === "live_stack" ? scenario.impactGuideSmallRoomMode : undefined,
+                  flankingPaths: parsedScenarioFlankingPath.parsed?.paths ?? [],
+                  guideHdDb:
+                    scenario.impactGuideSource === "live_stack"
+                      ? parseFiniteNumber(scenario.impactGuideHdDb)
+                      : undefined,
+                  guideMassRatio:
+                    scenario.impactGuideSource === "live_stack"
+                      ? parseFiniteNumber(scenario.impactGuideMassRatio)
+                      : undefined,
+                  lowerTreatmentReductionDb: parseFiniteNumber(scenario.impactLowerTreatmentReductionDb)
+                },
+                contextMode: scenario.airborneContextMode ?? "element_lab",
+                fieldKDb: scenario.impactGuideSource === "live_stack" ? scenario.impactGuideKDb : "",
+                impactReceivingRoomVolumeM3: scenario.impactGuideReceivingRoomVolumeM3,
+                panelHeightMm: scenario.airbornePanelHeightMm,
+                panelWidthMm: scenario.airbornePanelWidthMm,
+                receivingRoomRt60S: scenario.airborneReceivingRoomRt60S,
+                receivingRoomVolumeM3: scenario.airborneReceivingRoomVolumeM3
+              }
+            : null,
         rows: scenario.rows,
         savedAtIso: scenario.savedAtIso,
         source: "saved",

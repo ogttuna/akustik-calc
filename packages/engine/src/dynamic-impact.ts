@@ -41,6 +41,8 @@ import { OPEN_WEB_SUPPORTED_BAND_SIMILARITY_BASIS } from "./lightweight-steel-op
 import { OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS } from "./open-box-timber-eps-screed-hybrid-package-estimate";
 import { OPEN_BOX_TIMBER_SIMILARITY_BASIS } from "./open-box-timber-similarity-estimate";
 import { OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS } from "./open-box-timber-raw-bare-estimate";
+import { OPEN_WEB_RAW_BARE_FORMULA_BASIS } from "./open-web-raw-bare-estimate";
+import { HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS } from "./helper-only-timber-open-web-impact-stack-estimate";
 
 type BuildDynamicImpactTraceInput = {
   boundFloorSystemEstimate?: FloorSystemBoundEstimateResult | null;
@@ -168,6 +170,14 @@ function getScopedFamilySelectionLabel(
 
   if (basisLabels.has(OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS)) {
     return "Raw-bare open-box timber formula corridor";
+  }
+
+  if (basisLabels.has(OPEN_WEB_RAW_BARE_FORMULA_BASIS)) {
+    return "Raw-bare open-web steel formula corridor";
+  }
+
+  if (basisLabels.has(HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS)) {
+    return "Helper-only timber/open-web formula corridor";
   }
 
   return null;
@@ -381,10 +391,14 @@ function formatImpactBasisLabel(value: ImpactCalculation["basis"] | ImpactBoundC
       return "Open-web steel supported-band similarity";
     case "broad_accuracy_floor_open_web_direct_fixed_lining_direct_source_interpolation_formula_corridor":
       return "Open-web steel direct-fixed lining interpolation";
+    case "broad_accuracy_floor_open_web_raw_bare_source_absent_formula_corridor":
+      return "Raw-bare open-web steel formula corridor";
     case "broad_accuracy_floor_open_box_timber_similarity_package_transfer_formula_corridor":
       return "Open-box timber package-transfer corridor";
     case "broad_accuracy_floor_open_box_timber_raw_bare_source_absent_formula_corridor":
       return "Raw-bare open-box timber formula corridor";
+    case "broad_accuracy_floor_helper_only_timber_open_web_impact_stack_source_absent_formula_corridor":
+      return "Helper-only timber/open-web formula corridor";
     case "predictor_lightweight_steel_mass_spring_holdout_corridor_estimate":
       return "Lightweight-steel formula corridor";
     case "predictor_lightweight_steel_suspended_ceiling_corridor_estimate":
@@ -575,6 +589,7 @@ export function buildDynamicImpactTrace(
     lowerBoundImpact: input.lowerBoundImpact
   });
   const impactBasis = input.impact?.basis ?? input.lowerBoundImpact?.basis;
+  const isRawBareOpenWebImpactBasis = impactBasis === OPEN_WEB_RAW_BARE_FORMULA_BASIS;
   const formulaSelectionLabel = getScopedFormulaSelectionLabel(input.impact, input.impact?.basis);
   const familySelectionLabel = getScopedFamilySelectionLabel(input.impact, input.impact?.basis);
   const availableMetricLabels = collectMetricLabels(input.impact, input.lowerBoundImpact);
@@ -634,19 +649,31 @@ export function buildDynamicImpactTrace(
     candidateRowCount = 1;
   } else if (input.floorSystemEstimate && input.impact) {
     const isRawBareOpenBoxFormula = input.impact.basis === OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS;
-    selectionKind = isRawBareOpenBoxFormula ? "formula_estimate" : "family_estimate";
+    const isRawBareOpenWebFormula = input.impact.basis === OPEN_WEB_RAW_BARE_FORMULA_BASIS;
+    const isHelperOnlyFormula = input.impact.basis === HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS;
+    const isSourceAbsentFormula = isRawBareOpenBoxFormula || isRawBareOpenWebFormula || isHelperOnlyFormula;
+    selectionKind = isSourceAbsentFormula ? "formula_estimate" : "family_estimate";
     evidenceTier = "estimate";
-    estimateTier = isRawBareOpenBoxFormula ? undefined : input.floorSystemEstimate.kind;
+    estimateTier = isSourceAbsentFormula ? undefined : input.floorSystemEstimate.kind;
     selectedLabel =
       familySelectionLabel ??
       `${formatEstimateTier(estimateTier) ?? "Published family"} · ${input.floorSystemEstimate.structuralFamily}`;
-    selectedSourceIds = isRawBareOpenBoxFormula
-      ? input.impact.estimateCandidateIds ?? ["source_absent_raw_bare_open_box_formula"]
+    selectedSourceIds = isSourceAbsentFormula
+      ? input.impact.estimateCandidateIds ??
+        [
+          isHelperOnlyFormula
+            ? "source_absent_helper_only_timber_open_web_formula"
+            : isRawBareOpenWebFormula ? "source_absent_raw_bare_open_web_formula" : "source_absent_raw_bare_open_box_formula"
+        ]
       : input.floorSystemEstimate.sourceSystems.map((system) => system.id);
-    selectedSourceLabels = isRawBareOpenBoxFormula
-      ? ["Source-absent raw-bare open-box formula"]
+    selectedSourceLabels = isSourceAbsentFormula
+      ? [
+          isHelperOnlyFormula
+            ? "Source-absent helper-only timber/open-web formula"
+            : isRawBareOpenWebFormula ? "Source-absent raw-bare open-web formula" : "Source-absent raw-bare open-box formula"
+        ]
       : input.floorSystemEstimate.sourceSystems.map((system) => system.label);
-    candidateRowCount = isRawBareOpenBoxFormula
+    candidateRowCount = isSourceAbsentFormula
       ? (input.impact.estimateCandidateIds?.length ?? 1)
       : input.floorSystemEstimate.sourceSystems.length;
     fitPercent = input.floorSystemEstimate.fitPercent;
@@ -717,6 +744,18 @@ export function buildDynamicImpactTrace(
     );
   }
 
+  if (input.impact?.basis === OPEN_WEB_RAW_BARE_FORMULA_BASIS) {
+    notes.push(
+      "Raw-bare open-web steel formula corridor used the source-absent bare-carrier path without borrowing UBIQ INEX/firestop package rows."
+    );
+  }
+
+  if (input.impact?.basis === HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS) {
+    notes.push(
+      "Helper-only timber/open-web formula corridor used the source-absent lower-treatment path without borrowing exact, package-transfer, raw-bare, field/building, or ASTM/IIC lanes."
+    );
+  }
+
   if (estimateTier && typeof fitPercent === "number") {
     notes.push(`${formatEstimateTier(estimateTier)} stayed active at ${fitPercent.toFixed(0)}% fit.`);
   }
@@ -741,7 +780,9 @@ export function buildDynamicImpactTrace(
     confidenceScore: confidenceCarrier.score,
     confidenceSummary: confidenceCarrier.summary,
     detectedSupportFamily: supportFamily ?? undefined,
-    detectedSupportFamilyLabel: supportFamily ? formatImpactSupportingElementFamily(supportFamily) : undefined,
+    detectedSupportFamilyLabel: isRawBareOpenWebImpactBasis
+      ? "open-web steel"
+      : supportFamily ? formatImpactSupportingElementFamily(supportFamily) : undefined,
     directFlankingActive: fieldContinuation.directFlankingActive,
     estimateTier,
     estimateTierLabel: formatEstimateTier(estimateTier),
@@ -765,7 +806,7 @@ export function buildDynamicImpactTrace(
     selectionKind,
     selectionKindLabel,
     standardizedFieldActive: fieldContinuation.standardizedFieldActive,
-    structuralSupportLabel: formatStructuralSupportType(structuralSupportType),
+    structuralSupportLabel: isRawBareOpenWebImpactBasis ? "Open-web steel" : formatStructuralSupportType(structuralSupportType),
     structuralSupportType,
     supportForm,
     supportFormLabel: formatSupportForm(supportForm),

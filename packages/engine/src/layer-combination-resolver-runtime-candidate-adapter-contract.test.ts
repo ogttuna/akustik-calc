@@ -1,0 +1,430 @@
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+import type { AirborneContext, ImpactFieldContext, LayerInput, RequestedOutputId } from "@dynecho/shared";
+import { describe, expect, it } from "vitest";
+
+import { calculateAssembly } from "./calculate-assembly";
+import { HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS } from "./helper-only-timber-open-web-impact-stack-estimate";
+import {
+  adaptLayerCombinationRuntimeCandidate,
+  buildLayerCombinationResolverRuntimeCandidateAdapterContract,
+  LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_ADAPTER_LANDED_GATE,
+  LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_ADAPTER_SELECTED_NEXT_ACTION,
+  LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_ADAPTER_SELECTED_NEXT_FILE,
+  LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_ADAPTER_SELECTED_NEXT_LABEL,
+  LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_ADAPTER_SELECTION_STATUS
+} from "./layer-combination-resolver-runtime-candidate-adapter";
+import {
+  LAYER_COMBINATION_RESOLVER_REGISTRY_LANDED_GATE,
+  LAYER_COMBINATION_RESOLVER_REGISTRY_SELECTED_NEXT_ACTION,
+  LAYER_COMBINATION_RESOLVER_REGISTRY_SELECTED_NEXT_FILE,
+  LAYER_COMBINATION_RESOLVER_REGISTRY_SELECTION_STATUS,
+  buildLayerCombinationResolverRegistryContract,
+  type LayerCombinationResolverMetricId
+} from "./layer-combination-resolver-registry";
+import {
+  LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_FORMULA_CORRIDOR_BASIS,
+  LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID
+} from "./layer-combination-resolver-double-leaf-framed-wall-banded-runtime-constants";
+import {
+  LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_FORMULA_CORRIDOR_BASIS,
+  LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID
+} from "./layer-combination-resolver-single-leaf-mass-law-banded-runtime-constants";
+import { OPEN_WEB_DIRECT_FIXED_LINING_BASIS } from "./lightweight-steel-open-web-direct-fixed-lining-estimate";
+import { OPEN_WEB_SUPPORTED_BAND_SIMILARITY_BASIS } from "./lightweight-steel-open-web-supported-band-estimate";
+import { OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS } from "./open-box-timber-raw-bare-estimate";
+import { OPEN_BOX_TIMBER_SIMILARITY_BASIS } from "./open-box-timber-similarity-estimate";
+import { OPEN_WEB_RAW_BARE_FORMULA_BASIS } from "./open-web-raw-bare-estimate";
+
+const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
+
+const LAB_OUTPUTS = ["Rw", "C", "Ctr", "Ln,w", "CI", "CI,50-2500", "Ln,w+CI"] as const satisfies readonly RequestedOutputId[];
+const TARGET_OUTPUTS = [
+  "Rw",
+  "C",
+  "Ctr",
+  "R'w",
+  "DnT,w",
+  "Ln,w",
+  "CI",
+  "CI,50-2500",
+  "Ln,w+CI",
+  "L'n,w",
+  "L'nT,w",
+  "IIC",
+  "AIIC"
+] as const satisfies readonly RequestedOutputId[];
+const FIELD_OUTPUTS = [
+  "Rw",
+  "R'w",
+  "DnT,w",
+  "Ln,w",
+  "L'n,w",
+  "L'nT,w",
+  "L'nT,50",
+  "IIC"
+] as const satisfies readonly RequestedOutputId[];
+
+const RESOLVER_METRIC_IDS = new Set<string>([
+  "AIIC",
+  "C",
+  "CI",
+  "CI,50-2500",
+  "Ctr",
+  "DeltaLw",
+  "DnT,w",
+  "IIC",
+  "L'n,w",
+  "L'nT,w",
+  "L'nT,50",
+  "Ln,w",
+  "Ln,w+CI",
+  "R'w",
+  "Rw",
+  "STC"
+]);
+
+const AIRBORNE_FIELD_CONTEXT = {
+  contextMode: "field_between_rooms",
+  panelHeightMm: 2800,
+  panelWidthMm: 3200,
+  receivingRoomRt60S: 0.6,
+  receivingRoomVolumeM3: 55
+} as const satisfies AirborneContext;
+
+const IMPACT_FIELD_CONTEXT = {
+  fieldKDb: 2,
+  receivingRoomVolumeM3: 55
+} as const satisfies ImpactFieldContext;
+
+const R5B_EXACT_PACKAGE = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+  { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+  { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: 50 },
+  { floorRole: "floating_screed", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 60 },
+  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+] as const satisfies readonly LayerInput[];
+
+const DRY_GYPSUM_FIBER_SOURCE_ABSENT = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+  { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+  { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: 32 },
+  { floorRole: "floating_screed", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 45 },
+  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+] as const satisfies readonly LayerInput[];
+
+const RAW_OPEN_BOX_TIMBER = [
+  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+] as const satisfies readonly LayerInput[];
+
+const RAW_OPEN_WEB_300 = [
+  { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 300 }
+] as const satisfies readonly LayerInput[];
+
+const HELPER_ONLY_OPEN_WEB = [
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 145 },
+  { floorRole: "ceiling_cavity", materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
+  { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 250 }
+] as const satisfies readonly LayerInput[];
+
+const DIRECT_FIXED_PACKAGE = [
+  { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: 19 },
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+  { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 250 }
+] as const satisfies readonly LayerInput[];
+
+const SUPPORTED_BAND_PACKAGE = [
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 145 },
+  { floorRole: "ceiling_cavity", materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
+  { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: 19 },
+  { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 250 }
+] as const satisfies readonly LayerInput[];
+
+const REQUIRED_SURFACES = [
+  "packages/engine/src/layer-combination-resolver-runtime-candidate-adapter.ts",
+  "packages/engine/src/layer-combination-resolver-runtime-candidate-adapter-contract.test.ts",
+  "packages/engine/src/layer-combination-resolver-registry.ts",
+  "packages/engine/src/layer-combination-resolver-registry-contract.test.ts",
+  "packages/engine/src/index.ts",
+  "tools/dev/run-calculator-current-gate.ts",
+  "AGENTS.md",
+  "docs/README.md",
+  "docs/calculator/README.md",
+  "docs/calculator/CURRENT_STATE.md",
+  "docs/calculator/NEXT_IMPLEMENTATION_PLAN.md",
+  "docs/calculator/BROAD_ACCURACY_CALCULATOR_PLAN.md",
+  "docs/calculator/SLICE_BROAD_ACCURACY_REFERENCE_BENCHMARK_AND_SIMILARITY_SOLVER_PLAN.md",
+  "docs/calculator/ACTIVE_LAYER_COMBINATION_GENERALIZATION_PLAN_2026-05-21.md"
+] as const;
+
+const DOC_ALIGNMENT_SURFACES = [
+  "AGENTS.md",
+  "docs/README.md",
+  "docs/calculator/README.md",
+  "docs/calculator/CURRENT_STATE.md",
+  "docs/calculator/NEXT_IMPLEMENTATION_PLAN.md",
+  "docs/calculator/BROAD_ACCURACY_CALCULATOR_PLAN.md",
+  "docs/calculator/SLICE_BROAD_ACCURACY_REFERENCE_BENCHMARK_AND_SIMILARITY_SOLVER_PLAN.md",
+  "docs/calculator/ACTIVE_LAYER_COMBINATION_GENERALIZATION_PLAN_2026-05-21.md"
+] as const;
+
+function readRepoFile(path: string): string {
+  return readFileSync(join(REPO_ROOT, path), "utf8");
+}
+
+function toResolverMetricIds(outputs: readonly RequestedOutputId[]): LayerCombinationResolverMetricId[] {
+  return outputs
+    .filter((output) => RESOLVER_METRIC_IDS.has(output))
+    .map((output) => output as LayerCombinationResolverMetricId);
+}
+
+function adaptFloorLabResult(result: ReturnType<typeof calculateAssembly>) {
+  return adaptLayerCombinationRuntimeCandidate({
+    requestedBasis: "element_lab",
+    route: "floor",
+    runtimeBasisId: result.impact?.basis ?? result.floorSystemRatings?.basis ?? null,
+    unsupportedOutputIds: toResolverMetricIds(result.unsupportedTargetOutputs)
+  });
+}
+
+describe("layer combination resolver runtime candidate adapter contract", () => {
+  it("lands the adapter and selects runtime candidate surface parity next", () => {
+    const contract = buildLayerCombinationResolverRuntimeCandidateAdapterContract();
+
+    expect(contract).toMatchObject({
+      adapterVersion: "2026-05-21.layer-combination-resolver-runtime-candidate-adapter.v1",
+      landedGate: LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_ADAPTER_LANDED_GATE,
+      noRuntimeValueMovement: true,
+      previousRegistry: {
+        landedGate: LAYER_COMBINATION_RESOLVER_REGISTRY_LANDED_GATE,
+        selectedNextAction: LAYER_COMBINATION_RESOLVER_REGISTRY_SELECTED_NEXT_ACTION,
+        selectedNextFile: LAYER_COMBINATION_RESOLVER_REGISTRY_SELECTED_NEXT_FILE,
+        selectionStatus: LAYER_COMBINATION_RESOLVER_REGISTRY_SELECTION_STATUS
+      },
+      selectedNextAction: LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_ADAPTER_SELECTED_NEXT_ACTION,
+      selectedNextFile: LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_ADAPTER_SELECTED_NEXT_FILE,
+      selectedNextLabel: LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_ADAPTER_SELECTED_NEXT_LABEL,
+      selectionStatus: LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_ADAPTER_SELECTION_STATUS
+    });
+    expect(contract.summary).toEqual({
+      adaptedRuntimeBasisCount: 12,
+      boundaryCandidateCount: 3,
+      selectedNextAction: LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_ADAPTER_SELECTED_NEXT_ACTION
+    });
+
+    for (const path of REQUIRED_SURFACES) {
+      expect(existsSync(join(REPO_ROOT, path)), path).toBe(true);
+    }
+  });
+
+  it("maps every active registry runtime basis into a selected adapter candidate", () => {
+    const registry = buildLayerCombinationResolverRegistryContract();
+    const contract = buildLayerCombinationResolverRuntimeCandidateAdapterContract();
+    const rowsByBasis = new Map(contract.adapterRows.map((row) => [row.runtimeBasisId, row]));
+
+    for (const candidate of registry.candidateDeclarations.filter(
+      (entry) => entry.runtimeSelectionState === "active_runtime_existing" && entry.ownedRuntimeBasisId
+    )) {
+      expect(rowsByBasis.get(candidate.ownedRuntimeBasisId), candidate.id).toMatchObject({
+        requestedBasis: candidate.basis,
+        route: candidate.route,
+        selectedCandidateId: candidate.id,
+        selectedCandidate: {
+          basis: candidate.basis,
+          kind: candidate.kind,
+          ownedRuntimeBasisId: candidate.ownedRuntimeBasisId,
+          priorityRank: candidate.priorityRank,
+          supportedMetrics: candidate.supportedMetrics,
+          valuePins: candidate.valuePins
+        }
+      });
+    }
+
+    expect(rowsByBasis.get("open_measured_floor_system_exact_match")?.selectedCandidateId).toBe(
+      "floor.exact_measured_floor_system.same_topology_metric_basis"
+    );
+    expect(rowsByBasis.get(OPEN_BOX_TIMBER_SIMILARITY_BASIS)?.selectedCandidateId).toBe(
+      "floor.open_box_timber.package_transfer_similarity"
+    );
+    expect(rowsByBasis.get(OPEN_WEB_SUPPORTED_BAND_SIMILARITY_BASIS)?.selectedCandidateId).toBe(
+      "floor.open_web.supported_band_similarity"
+    );
+    expect(rowsByBasis.get(HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS)?.selectedCandidateId).toBe(
+      "floor.helper_only_timber_open_web.source_absent"
+    );
+    expect(rowsByBasis.get(LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_FORMULA_CORRIDOR_BASIS)?.selectedCandidateId).toBe(
+      LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID
+    );
+    expect(rowsByBasis.get(LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_FORMULA_CORRIDOR_BASIS)?.selectedCandidateId).toBe(
+      LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID
+    );
+  });
+
+  it("adapts live floor lab runtime results without changing numeric values", () => {
+    const exact = calculateAssembly(R5B_EXACT_PACKAGE, { calculator: "dynamic", targetOutputs: LAB_OUTPUTS });
+    const packageTransfer = calculateAssembly(DRY_GYPSUM_FIBER_SOURCE_ABSENT, { calculator: "dynamic", targetOutputs: LAB_OUTPUTS });
+    const rawOpenBox = calculateAssembly(RAW_OPEN_BOX_TIMBER, { calculator: "dynamic", targetOutputs: LAB_OUTPUTS });
+    const rawOpenWeb = calculateAssembly(RAW_OPEN_WEB_300, { calculator: "dynamic", targetOutputs: TARGET_OUTPUTS });
+    const helperOnly = calculateAssembly(HELPER_ONLY_OPEN_WEB, { calculator: "dynamic", targetOutputs: TARGET_OUTPUTS });
+    const directFixed = calculateAssembly(DIRECT_FIXED_PACKAGE, { calculator: "dynamic", targetOutputs: TARGET_OUTPUTS });
+    const supportedBand = calculateAssembly(SUPPORTED_BAND_PACKAGE, { calculator: "dynamic", targetOutputs: TARGET_OUTPUTS });
+
+    expect(adaptFloorLabResult(exact).selectedCandidateId).toBe(
+      "floor.exact_measured_floor_system.same_topology_metric_basis"
+    );
+    expect(exact.impact).toMatchObject({ CI50_2500: 3, LnW: 44, basis: "open_measured_floor_system_exact_match" });
+    expect(exact.floorSystemRatings).toMatchObject({ Rw: 75, basis: "open_measured_floor_system_exact_match" });
+
+    expect(adaptFloorLabResult(packageTransfer).selectedCandidateId).toBe(
+      "floor.open_box_timber.package_transfer_similarity"
+    );
+    expect(packageTransfer.impact).toMatchObject({ CI50_2500: 3.3, LnW: 50.8, basis: OPEN_BOX_TIMBER_SIMILARITY_BASIS });
+    expect(packageTransfer.floorSystemRatings).toMatchObject({ Rw: 66, basis: OPEN_BOX_TIMBER_SIMILARITY_BASIS });
+
+    expect(adaptFloorLabResult(rawOpenBox).selectedCandidateId).toBe("floor.open_box_timber.raw_bare_source_absent");
+    expect(rawOpenBox.impact).toMatchObject({ CI50_2500: 3.1, LnW: 88.2, basis: OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS });
+
+    const rawOpenWebAdapter = adaptFloorLabResult(rawOpenWeb);
+    expect(rawOpenWebAdapter).toMatchObject({
+      boundaryCandidateIds: ["generic.astm_iic_aiic.unsupported_boundary"],
+      selectedCandidateId: "floor.open_web.raw_bare_source_absent"
+    });
+    expect(rawOpenWeb.impact).toMatchObject({ CI50_2500: 5.2, LnW: 96, basis: OPEN_WEB_RAW_BARE_FORMULA_BASIS });
+
+    expect(adaptFloorLabResult(helperOnly)).toMatchObject({
+      boundaryCandidateIds: ["generic.astm_iic_aiic.unsupported_boundary"],
+      selectedCandidateId: "floor.helper_only_timber_open_web.source_absent"
+    });
+    expect(helperOnly.impact).toMatchObject({ CI50_2500: 4, LnW: 59.6, basis: HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS });
+    expect(helperOnly.floorSystemRatings).toMatchObject({ Rw: 46.7, basis: HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS });
+
+    expect(adaptFloorLabResult(directFixed).selectedCandidateId).toBe(
+      "floor.open_web.direct_fixed_lining.source_absent"
+    );
+    expect(directFixed.impact).toMatchObject({ CI: -0.5, LnW: 77, basis: OPEN_WEB_DIRECT_FIXED_LINING_BASIS });
+    expect(directFixed.floorSystemRatings).toMatchObject({ Rw: 52, basis: OPEN_WEB_DIRECT_FIXED_LINING_BASIS });
+
+    expect(adaptFloorLabResult(supportedBand).selectedCandidateId).toBe("floor.open_web.supported_band_similarity");
+    expect(supportedBand.impact).toMatchObject({ CI: -1.5, LnW: 61.5, basis: OPEN_WEB_SUPPORTED_BAND_SIMILARITY_BASIS });
+    expect(supportedBand.floorSystemRatings).toMatchObject({ Rw: 61.5, basis: OPEN_WEB_SUPPORTED_BAND_SIMILARITY_BASIS });
+  });
+
+  it("adapts field adapter, missing-input, basis-boundary, and ASTM unsupported lanes explicitly", () => {
+    const field = calculateAssembly(SUPPORTED_BAND_PACKAGE, {
+      airborneContext: AIRBORNE_FIELD_CONTEXT,
+      calculator: "dynamic",
+      impactFieldContext: IMPACT_FIELD_CONTEXT,
+      targetOutputs: FIELD_OUTPUTS
+    });
+    const fieldAdapter = adaptLayerCombinationRuntimeCandidate({
+      requestedBasis: "field_apparent",
+      route: "floor",
+      runtimeBasisId: "source_absent_field_building_adapter_error_budget",
+      unsupportedOutputIds: toResolverMetricIds(field.unsupportedTargetOutputs)
+    });
+
+    expect(fieldAdapter).toMatchObject({
+      boundaryCandidateIds: ["generic.astm_iic_aiic.unsupported_boundary"],
+      selectedCandidateId: "floor.open_web.field_building_adapter.exact_anchor_continuation",
+      selectedCandidate: {
+        basis: "field_apparent",
+        kind: "field_building_adapter",
+        priorityRank: 4
+      }
+    });
+    expect(field.metrics).toMatchObject({
+      estimatedDnTwDb: 48,
+      estimatedRwPrimeDb: 45
+    });
+    expect(field.impact).toMatchObject({
+      LPrimeNT50: 60,
+      LPrimeNTw: 61.1,
+      LPrimeNW: 63.5
+    });
+
+    const needsInput = adaptLayerCombinationRuntimeCandidate({
+      missingPhysicalInputIds: ["ceiling_board", "absorberThicknessDensity"],
+      requestedBasis: "element_lab",
+      route: "floor",
+      runtimeBasisId: null
+    });
+    expect(needsInput).toMatchObject({
+      selectedCandidateId: "generic.required_input_owner.needs_input_boundary",
+      selectedCandidate: {
+        kind: "needs_input_boundary",
+        valuePins: []
+      }
+    });
+
+    const buildingBoundary = adaptLayerCombinationRuntimeCandidate({
+      requestedBasis: "building_prediction",
+      route: "floor",
+      runtimeBasisId: null,
+      unsupportedOutputIds: ["L'nT,w"]
+    });
+    expect(buildingBoundary).toMatchObject({
+      selectedCandidateId: "generic.lab_field_building_basis_boundary",
+      selectedCandidate: {
+        basis: "building_prediction",
+        kind: "basis_boundary",
+        valuePins: []
+      }
+    });
+
+    const astmBoundary = adaptLayerCombinationRuntimeCandidate({
+      requestedBasis: "astm_rating_boundary",
+      requestedMetricAliases: ["IIC", "AIIC"],
+      route: "floor",
+      runtimeBasisId: null
+    });
+    expect(astmBoundary).toMatchObject({
+      selectedCandidateId: "generic.astm_iic_aiic.unsupported_boundary",
+      selectedCandidate: {
+        basis: "astm_rating_boundary",
+        kind: "unsupported_boundary",
+        valuePins: []
+      }
+    });
+  });
+
+  it("keeps docs, exports, and current gate runner aligned with the adapter", () => {
+    for (const path of DOC_ALIGNMENT_SURFACES) {
+      const content = readRepoFile(path);
+      const normalized = content.toLowerCase().replace(/\s+/g, " ");
+
+      expect(content, path).toContain(LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_ADAPTER_LANDED_GATE);
+      expect(content, path).toContain(LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_ADAPTER_SELECTION_STATUS);
+      expect(content, path).toContain(LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_ADAPTER_SELECTED_NEXT_ACTION);
+      expect(content, path).toContain(LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_ADAPTER_SELECTED_NEXT_FILE);
+      expect(normalized, path).toContain(LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_ADAPTER_SELECTED_NEXT_LABEL);
+      expect(normalized, path).toContain("runtime basis");
+      expect(normalized, path).toContain("candidate id");
+      expect(normalized, path).toContain("needs_input");
+      expect(normalized, path).toContain("unsupported");
+      expect(normalized, path).toContain("field/building");
+      expect(normalized, path).toContain("astm/iic");
+      expect(normalized, path).toContain("not a broad source crawl");
+    }
+
+    const runner = readRepoFile("tools/dev/run-calculator-current-gate.ts");
+    const index = readRepoFile("packages/engine/src/index.ts");
+
+    expect(runner).toContain("layer-combination-resolver-runtime-candidate-adapter-contract.test.ts");
+    expect(index).toContain('export * from "./layer-combination-resolver-runtime-candidate-adapter";');
+  });
+});

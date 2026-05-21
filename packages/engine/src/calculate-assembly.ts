@@ -58,6 +58,9 @@ import {
   inferDynamicCalculatorRuntimeRoute
 } from "./dynamic-calculator-candidate-resolver-runtime";
 import {
+  buildLayerCombinationResolverTraceForAssembly
+} from "./layer-combination-resolver-runtime-candidate-surface-parity";
+import {
   type DynamicCalculatorFloorImpactContext
 } from "./dynamic-calculator-route-input-topology";
 import {
@@ -79,6 +82,8 @@ import { OPEN_WEB_SUPPORTED_BAND_SIMILARITY_BASIS } from "./lightweight-steel-op
 import { OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS } from "./open-box-timber-eps-screed-hybrid-package-estimate";
 import { OPEN_BOX_TIMBER_SIMILARITY_BASIS } from "./open-box-timber-similarity-estimate";
 import { OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS } from "./open-box-timber-raw-bare-estimate";
+import { OPEN_WEB_RAW_BARE_FORMULA_BASIS } from "./open-web-raw-bare-estimate";
+import { HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS } from "./helper-only-timber-open-web-impact-stack-estimate";
 import {
   adaptImpactPredictorInput,
   getRawFloorParityGuardWarning,
@@ -1350,6 +1355,7 @@ export function calculateAssembly(
   const directImpactLane = resolveLayerBasedImpactLane({
     catalog,
     exactImpact,
+    explicitFloorRoleStack: hasFullyTaggedFloorStack,
     explicitPredictorInput,
     predictorInput,
     officialFloorSystemId: predictorAdaptation?.officialFloorSystemId ?? null,
@@ -1424,6 +1430,7 @@ export function calculateAssembly(
       const derivedImpactLane = resolveLayerBasedImpactLane({
         catalog: derivedCatalog,
         exactImpact,
+        explicitFloorRoleStack: hasFullyTaggedFloorStack,
         predictorInput: derivedPredictorInput,
         officialFloorSystemId: derivedPredictorAdaptation.officialFloorSystemId,
         resolvedLayers: derivedImpactResolvedLayers,
@@ -1479,6 +1486,8 @@ export function calculateAssembly(
       floorSystemEstimate?.impact.basis !== OPEN_BOX_TIMBER_SIMILARITY_BASIS &&
       floorSystemEstimate?.impact.basis !== OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS &&
       floorSystemEstimate?.impact.basis !== OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS &&
+      floorSystemEstimate?.impact.basis !== OPEN_WEB_RAW_BARE_FORMULA_BASIS &&
+      floorSystemEstimate?.impact.basis !== HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS &&
       !gateWLabRuntimeReady &&
       !gateZFieldImpactRuntimeReady &&
       !exactImpact &&
@@ -1926,6 +1935,10 @@ export function calculateAssembly(
           ? `Scoped formula estimate active: open-box timber EPS/screed hybrid package formula corridor at ${floorSystemEstimate.fitPercent}% fit. DynEcho used the R7b same-stack design anchor with source-absent budgets while keeping exact rows, dry package-transfer, field/building, and ASTM/IIC aliases out.`
         : floorSystemEstimate.impact.basis === OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS
           ? `Scoped formula estimate active: raw-bare open-box timber formula corridor at ${floorSystemEstimate.fitPercent}% fit. DynEcho used the bare-carrier source-absent formula and kept finished package-transfer, field/building, and ASTM/IIC aliases out.`
+        : floorSystemEstimate.impact.basis === OPEN_WEB_RAW_BARE_FORMULA_BASIS
+          ? `Scoped formula estimate active: raw-bare open-web steel formula corridor at ${floorSystemEstimate.fitPercent}% fit. DynEcho used the bare-carrier source-absent formula and kept UBIQ INEX/firestop packages, field/building, and ASTM/IIC aliases out.`
+        : floorSystemEstimate.impact.basis === HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS
+          ? `Scoped formula estimate active: helper-only timber/open-web impact stack formula corridor at ${floorSystemEstimate.fitPercent}% fit. DynEcho used the lower-treatment source-absent formula and kept exact/package/raw-bare lanes, field/building, and ASTM/IIC aliases out.`
         : floorSystemEstimate.kind === "low_confidence"
           ? `Published low-confidence fallback active: ${floorSystemEstimate.structuralFamily} at ${floorSystemEstimate.fitPercent}% fit.`
           : `Published family estimate active: ${floorSystemEstimate.structuralFamily} ${floorSystemEstimate.kind.replaceAll("_", " ")} at ${floorSystemEstimate.fitPercent}% fit.`
@@ -2119,6 +2132,11 @@ export function calculateAssembly(
   }
   if (companyInternalOpeningLeakFieldBuildingRuntime?.basis) {
     result.airborneBasis = companyInternalOpeningLeakFieldBuildingRuntime.basis;
+  }
+
+  const layerCombinationResolverTrace = buildLayerCombinationResolverTraceForAssembly(result);
+  if (layerCombinationResolverTrace) {
+    result.layerCombinationResolverTrace = layerCombinationResolverTrace;
   }
 
   return AssemblyCalculationSchema.parse(result);

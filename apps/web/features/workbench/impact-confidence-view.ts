@@ -82,12 +82,24 @@ export function formatConfidenceProvenanceForImpact(input: {
     return "Open-web steel direct-fixed lining interpolation";
   }
 
+  if (input.basis === "broad_accuracy_floor_open_web_raw_bare_source_absent_formula_corridor") {
+    return "Raw-bare open-web steel formula corridor";
+  }
+
   if (input.basis === "broad_accuracy_floor_open_box_timber_similarity_package_transfer_formula_corridor") {
     return "Open-box timber package-transfer corridor";
   }
 
   if (input.basis === "broad_accuracy_floor_open_box_timber_raw_bare_source_absent_formula_corridor") {
     return "Raw-bare open-box timber formula corridor";
+  }
+
+  if (input.basis === "broad_accuracy_floor_open_box_timber_eps_screed_hybrid_package_formula_corridor") {
+    return "Open-box timber EPS/screed hybrid package formula corridor";
+  }
+
+  if (input.basis === "broad_accuracy_floor_helper_only_timber_open_web_impact_stack_source_absent_formula_corridor") {
+    return "Helper-only timber/open-web formula corridor";
   }
 
   return formatConfidenceProvenance(input.provenance);

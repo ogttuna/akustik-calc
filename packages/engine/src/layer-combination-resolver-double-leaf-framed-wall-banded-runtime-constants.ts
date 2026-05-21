@@ -1,0 +1,8 @@
+export const LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_FORMULA_CORRIDOR_BASIS =
+  "layer_combination_resolver_double_leaf_framed_wall_banded_source_absent_formula_corridor";
+
+export const LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID =
+  "candidate_layer_combination_resolver_double_leaf_framed_wall_banded_source_absent_family_solver";
+
+export const LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_RUNTIME_CORRIDOR_WARNING =
+  "Layer-combination resolver double-leaf framed wall banded runtime corridor is active for complete element-lab wall double-leaf/framed stacks. Values are source-absent formula predictions with not-measured budgets; exact rights-safe rows still win first.";
