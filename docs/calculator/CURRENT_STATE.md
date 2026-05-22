@@ -15,13 +15,55 @@ measured/reference residual bar.
 The active broad-accuracy slice plan is
 [SLICE_BROAD_ACCURACY_REFERENCE_BENCHMARK_AND_SIMILARITY_SOLVER_PLAN.md](./SLICE_BROAD_ACCURACY_REFERENCE_BENCHMARK_AND_SIMILARITY_SOLVER_PLAN.md).
 The latest checkpoint is
-[CHECKPOINT_2026-05-21_LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_COVERAGE_REFRESH_REVALIDATION.md](./CHECKPOINT_2026-05-21_LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_COVERAGE_REFRESH_REVALIDATION.md);
-`pnpm calculator:gate:current` passed on 2026-05-21 with engine 508
+[CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md](./CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md).
+It re-read the active docs, compared them with implementation, ran
+runtime probes, updated one stale model-first doc-alignment test, and
+confirmed `pnpm calculator:gate:current` on 2026-05-22: engine 508
 files / 2889 tests, web 94 files / 388 passed + 18 skipped, repo build
-5 / 5, and whitespace guard passed after the layer-combination resolver
-double-leaf framed wall banded coverage refresh closeout.
+5 / 5, and whitespace guard passed. The previous landed implementation
+checkpoint remains
+[CHECKPOINT_2026-05-21_LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_COVERAGE_REFRESH_REVALIDATION.md](./CHECKPOINT_2026-05-21_LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_COVERAGE_REFRESH_REVALIDATION.md).
 
-Current planning decision: the layer-combination resolver double-leaf
+Current planning correction: read
+[ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md](./ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md)
+before implementing the next slice. The previous immediate selection,
+`layer_combination_resolver_post_double_leaf_framed_wall_banded_coverage_revalidation_plan`,
+is superseded as the next slice by
+`acoustic_calculator_answer_engine_v1_plan` in
+`packages/engine/src/acoustic-calculator-answer-engine-v1-contract.test.ts`.
+Selected next label: acoustic calculator answer engine V1. This is not
+a broad source crawl, not a tolerance retune, and not another finite
+scenario pack.
+
+The current analysis found that existing infrastructure is useful but
+not yet operating as one calculator answer engine. The shared
+registry has 15 declared candidates and 12 active runtime-basis mappings
+across exact measured overrides, similarity anchors, calibrated family
+solvers, source-absent family solvers, field/building adapter, and
+boundary candidates. Existing single-leaf, double-leaf, grouped
+triple-leaf, raw-bare floor, helper-only floor, direct-fixed, supported
+band, package-transfer, exact, and field lanes should be preserved and
+fed into the answer engine.
+
+The 2026-05-22 probes confirm that diagnosis. Single gypsum and explicit
+double-leaf/framed wall inputs already return traced source-absent
+formula answers. Flat gypsum / rockwool / gypsum still returns an
+untraced screening answer, and missing `resilientBarSideCount` still
+selects `needs_input` while leaving numeric wall metrics in the result
+object. Answer Engine V1 must close those answer-selection and
+value-leakage gaps.
+
+The first V1 acceptance bar is answer correctness, not new formulas:
+when the selected origin is `needs_input` or `unsupported`, the product
+answer must be value-less and must expose exact missing fields or basis
+blockers. Diagnostic curves may remain internal, but selected answer
+surfaces must not publish `Rw`, STC, `C`, `Ctr`, `Ln,w`, `CI`, field, or
+building values as if a value candidate had won. Flat double-leaf-like
+walls must either promote to the owned double-leaf source-absent
+candidate when required ownership is complete or ask for missing fields;
+they must not remain untraced design-looking screening results.
+
+Previous planning decision: the layer-combination resolver double-leaf
 framed wall banded coverage refresh has landed as
 `layer_combination_resolver_double_leaf_framed_wall_banded_coverage_refresh_plan`
 with selection status
@@ -30,8 +72,8 @@ and selected
 `layer_combination_resolver_post_double_leaf_framed_wall_banded_coverage_revalidation_plan`
 in
 `packages/engine/src/layer-combination-resolver-post-double-leaf-framed-wall-banded-coverage-revalidation-contract.test.ts`.
-Selected next label: layer combination resolver post double-leaf framed
-wall banded coverage revalidation.
+That historical selected next label was layer combination resolver post
+double-leaf framed wall banded coverage revalidation.
 This is a no-runtime coverage refresh. The executable ledger now carries
 independent absorbed, resilient both-sides, and resilient one-side
 double-leaf/framed wall rows on

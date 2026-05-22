@@ -4,6 +4,26 @@ Document role: public-source competitor benchmark for DynEcho's
 calculator-first roadmap. This is not a source-row intake document and
 does not ingest measured assembly values.
 
+## 2026-05-21 Active Addendum
+
+INSUL remains useful as a category benchmark because its public material
+shows a calculation product: users define constructions and the software
+predicts acoustic ratings through family-specific models, ratings
+adapters, and known limitation boundaries. That benchmark supports the
+current DynEcho correction:
+
+- active next action:
+  `acoustic_calculator_answer_engine_v1_plan`;
+- active next file:
+  `packages/engine/src/acoustic-calculator-answer-engine-v1-contract.test.ts`;
+- active next label: acoustic calculator answer engine V1.
+
+The older post-double-leaf revalidation entries below are historical
+handoff state. They must not override the active answer-engine plan.
+DynEcho's immediate job is to make the existing exact rows, compatible
+measured anchors, and owned formula families produce one calculator
+answer for user-entered wall/floor layer combinations.
+
 ## Research Boundary
 
 Use INSUL as a category benchmark, not as an implementation source to
@@ -117,14 +137,15 @@ Key confirmations:
   there is still basis/adapter expansion only when requested metrics and
   source/band inputs are owned.
 
-Plan impact:
+Historical plan impact:
 
-- The latest selected implementation has now moved through double-leaf /
-  framed wall coverage refresh. The landed no-runtime gate is
+- At that historical point, the selected implementation had moved
+  through double-leaf / framed wall coverage refresh. The landed
+  no-runtime gate is
   `layer_combination_resolver_double_leaf_framed_wall_banded_coverage_refresh_plan`
   with selection status
   `layer_combination_resolver_double_leaf_framed_wall_banded_coverage_refresh_landed_no_runtime_selected_post_double_leaf_revalidation`.
-  It selected
+  It selected, at landing time,
   `layer_combination_resolver_post_double_leaf_framed_wall_banded_coverage_revalidation_plan`
   in
   `packages/engine/src/layer-combination-resolver-post-double-leaf-framed-wall-banded-coverage-revalidation-contract.test.ts`;
@@ -141,9 +162,9 @@ Plan impact:
 - Field/building, ASTM/IIC, floor-impact, direct-fixed, grouped
   triple-leaf/multicavity, tolerance retune, and broad source crawl stay
   blocked or separate. This is not a broad source crawl.
-- The latest selected implementation has moved through double-leaf /
+- An earlier selected implementation moved through double-leaf /
   framed wall runtime promotion and surface parity. The landed surface
-  parity gate is
+  parity gate was
   `layer_combination_resolver_double_leaf_framed_wall_banded_surface_parity_plan`
   with selection status
   `layer_combination_resolver_double_leaf_framed_wall_banded_surface_parity_landed_no_runtime_selected_coverage_refresh`.
@@ -180,7 +201,7 @@ Plan impact:
   `packages/engine/src/layer-combination-resolver-post-single-leaf-mass-law-banded-matrix-refresh-contract.test.ts`;
   selected next label: layer combination resolver post single-leaf
   mass-law banded matrix refresh.
-- The latest selected implementation has moved past single-leaf surface
+- An earlier selected implementation moved past single-leaf surface
   parity into the landed post-single-leaf matrix refresh:
   `layer_combination_resolver_post_single_leaf_mass_law_banded_matrix_refresh_plan`
   with selection status

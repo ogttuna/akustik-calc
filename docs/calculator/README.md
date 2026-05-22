@@ -6,49 +6,66 @@ checkpoints in this folder.
 
 ## Current Source Of Truth
 
-The calculator-first direction remains the model-first physics
-prediction pivot introduced on 2026-05-07:
+The current active product correction is:
 
-`calculator_model_first_physics_prediction_pivot_v1`
+[ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md](./ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md)
 
-This is a correction to the previous source-packet-first route.
-DynEcho is an acoustic calculator first. Exact lab/source rows can
-override or anchor known assemblies, but missing source packets must
-not block a labelled family-specific physics prediction when the
-required topology and material inputs are present.
+DynEcho is an acoustic calculator first. The user enters wall/floor
+layers, order, thicknesses, requested outputs, and the physical inputs
+that the route truly requires. Exact lab/source rows can override true
+whole-stack matches, and compatible measured rows can anchor or
+calibrate a prediction when the topology and basis match. Missing source
+packets must not block a labelled family-specific formula answer when
+the required physical inputs are present.
 
-As of 2026-05-20, the current active line is the broad-accuracy
-continuation under `company_internal_calculation_grade_mainline`.
-The 2026-05-15 broad-accuracy refocus is
-[BROAD_ACCURACY_CALCULATOR_PLAN.md](./BROAD_ACCURACY_CALCULATOR_PLAN.md).
-Use it before treating the controlled envelope as readiness: the 71-row
-matrix is a guardrail, while broad company-internal accuracy requires a
-reference benchmark, similarity-anchor resolver, and family-solver
-residual loop.
+The older model-first pivot and broad-accuracy continuation remain
+foundation/history. They do not override the active answer-engine plan.
+Use [BROAD_ACCURACY_CALCULATOR_PLAN.md](./BROAD_ACCURACY_CALCULATOR_PLAN.md)
+when reviewing accuracy scope, but treat the 71-row matrix as a
+guardrail rather than the product definition.
 
-Latest checkpoint, 2026-05-21:
+Latest checkpoint, 2026-05-22:
+[CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md](./CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md).
+The answer-engine reconciliation checkpoint confirms the active docs and
+implementation state: existing solver lanes and resolver traces are
+useful, but
+`packages/engine/src/acoustic-calculator-answer-engine-v1-contract.test.ts`
+does not exist yet. Single-leaf and explicit double-leaf formula answers
+are traced; flat double-leaf-like input can still fall to untraced
+screening; missing `resilientBarSideCount` still leaks numeric wall
+metrics while selecting `needs_input`. After one stale model-first
+doc-alignment test was updated, `pnpm calculator:gate:current` passed on
+2026-05-22 with engine 508 files / 2889 tests, web 94 files / 388
+passed + 18 skipped, repo build 5 / 5, and whitespace guard passed.
+
+Previous implementation checkpoint, 2026-05-21:
 [CHECKPOINT_2026-05-21_LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_COVERAGE_REFRESH_REVALIDATION.md](./CHECKPOINT_2026-05-21_LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_COVERAGE_REFRESH_REVALIDATION.md).
 The double-leaf/framed wall coverage refresh has landed as
 `layer_combination_resolver_double_leaf_framed_wall_banded_coverage_refresh_plan`
 with selection status
 `layer_combination_resolver_double_leaf_framed_wall_banded_coverage_refresh_landed_no_runtime_selected_post_double_leaf_revalidation`.
-The selected next action is
+Latest planning correction:
+[ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md](./ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md).
+The selected next action is now
+`acoustic_calculator_answer_engine_v1_plan` in
+`packages/engine/src/acoustic-calculator-answer-engine-v1-contract.test.ts`;
+selected next label: acoustic calculator answer engine V1. The prior
 `layer_combination_resolver_post_double_leaf_framed_wall_banded_coverage_revalidation_plan`
-in
-`packages/engine/src/layer-combination-resolver-post-double-leaf-framed-wall-banded-coverage-revalidation-contract.test.ts`.
+remains a possible later revalidation, but it is no longer the immediate
+next slice.
 This is not a broad source crawl.
 
-Latest helper-only closeout: the post-helper-only timber/open-web
+Historical helper-only closeout: the post-helper-only timber/open-web
 coverage revalidation landed as
 `broad_accuracy_post_helper_only_timber_open_web_impact_stack_coverage_revalidation_plan`
 with selection status
 `broad_accuracy_post_helper_only_timber_open_web_impact_stack_coverage_revalidation_landed_no_runtime_selected_layer_combination_resolver_registry`.
-The selected next action is `layer_combination_resolver_registry_plan`
+At that time it selected `layer_combination_resolver_registry_plan`
 in
 `packages/engine/src/layer-combination-resolver-registry-contract.test.ts`.
 This is not a broad source crawl.
 
-Latest resolver closeout: the layer combination resolver registry has
+Historical resolver closeout: the layer combination resolver registry has
 now landed as `layer_combination_resolver_registry_plan` with selection
 status
 `layer_combination_resolver_registry_landed_no_runtime_selected_runtime_candidate_adapter`.
@@ -56,8 +73,8 @@ It is no-runtime: it defines the shared candidate declaration surface for
 exact measured overrides, similarity anchor candidates, calibrated family
 solver candidates, source-absent family solver candidates, `needs_input`
 boundaries, `unsupported` boundaries, field/building basis boundaries,
-and ASTM/IIC alias blockers without moving runtime values. The selected
-next action is `layer_combination_resolver_runtime_candidate_adapter_plan`
+and ASTM/IIC alias blockers without moving runtime values. At that time
+it selected `layer_combination_resolver_runtime_candidate_adapter_plan`
 in
 `packages/engine/src/layer-combination-resolver-runtime-candidate-adapter-contract.test.ts`;
 selected next label: layer combination resolver runtime candidate
@@ -107,7 +124,10 @@ declarations, 13 surface rows, 10 active runtime candidates, and 3
 boundary rows across exact measured overrides, similarity anchors,
 calibrated family solvers, source-absent family solvers, field/building
 adapters, `needs_input`, basis boundaries, and unsupported ASTM/IIC
-blockers without moving runtime values. The selected next action is
+blockers without moving runtime values. Later single-leaf, double-leaf,
+and floor lane additions brought the live registry to 15 declarations
+and 12 active runtime-basis mappings; use the live registry summary for
+new answer-engine work. At that historical gate it selected
 `layer_combination_resolver_company_internal_v0_rehearsal_plan` in
 `packages/engine/src/layer-combination-resolver-company-internal-v0-rehearsal-contract.test.ts`;
 selected next label: layer combination resolver company-internal V0

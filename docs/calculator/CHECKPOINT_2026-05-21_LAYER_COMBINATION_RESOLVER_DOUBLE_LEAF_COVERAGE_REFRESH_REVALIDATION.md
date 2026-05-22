@@ -5,6 +5,15 @@ coverage refresh landed and before the next post-double-leaf
 revalidation gate starts. Read this after `CURRENT_STATE.md` and before
 editing the next selected slice.
 
+Post-analysis addendum, 2026-05-21: the landed facts in this checkpoint
+remain valid, but the immediate next slice has been redirected. Read
+`ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md` before
+implementing. The active selected next action is now
+`acoustic_calculator_answer_engine_v1_plan` in
+`packages/engine/src/acoustic-calculator-answer-engine-v1-contract.test.ts`;
+the post-double-leaf revalidation remains a possible later check, not
+the immediate next slice.
+
 ## Product Guardrail
 
 DynEcho remains an acoustic calculator, not a source catalog. The
@@ -49,7 +58,8 @@ keeps public values frozen.
 
 ## Implementation vs Docs Reconciliation
 
-Docs and implementation now agree on the active handoff:
+Docs and implementation agreed on the active handoff at the time of this
+checkpoint:
 
 - `AGENTS.md`, `CURRENT_STATE.md`, `NEXT_IMPLEMENTATION_PLAN.md`, this
   checkpoint, and
@@ -66,6 +76,12 @@ The only doc drift found during this checkpoint review was stale resume
 copy in top-level docs that still pointed at earlier layer-combination
 resolver gates. That copy has been updated to point at this checkpoint
 and the post-double-leaf revalidation next action.
+
+Later same-day analysis found a higher-priority answer-engine gap:
+existing solver lanes and measured-source evidence must feed one
+calculator answer path before another narrow coverage revalidation is
+useful. See
+`ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md`.
 
 ## Current Value Pins
 
@@ -110,9 +126,9 @@ The coverage refresh keeps these out of the runtime lane:
 - tolerance retune and broad source crawl: blocked until selected by a
   later revalidation gate.
 
-## Selected Next Action
+## Historical Selected Next Action
 
-Next gate:
+Historical next gate from this checkpoint:
 
 `layer_combination_resolver_post_double_leaf_framed_wall_banded_coverage_revalidation_plan`
 
@@ -128,7 +144,16 @@ Purpose:
 - rank the next bounded solver-family owner or matrix refresh;
 - avoid runtime value movement unless the contract explicitly selects it.
 
-Do not start a broad source crawl from this checkpoint.
+Current override:
+
+`acoustic_calculator_answer_engine_v1_plan`
+
+Current override file:
+
+`packages/engine/src/acoustic-calculator-answer-engine-v1-contract.test.ts`
+
+Do not start a broad source crawl from this checkpoint or from the
+answer-engine override.
 
 ## Validation At Checkpoint
 

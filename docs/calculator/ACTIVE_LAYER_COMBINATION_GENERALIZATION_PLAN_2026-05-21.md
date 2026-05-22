@@ -10,13 +10,20 @@ banded solver owner/formula/runtime corridor/surface parity,
 post-single-leaf matrix refresh, and double-leaf / framed wall banded
 solver owner/formula/runtime corridor/surface parity gates have landed;
 the double-leaf / framed wall banded coverage refresh has now landed and
-selected post-double-leaf coverage revalidation, and the next actions
-need to be short, explicit, and implementation-ready.
+selected post-double-leaf coverage revalidation. A later
+implementation/runtime analysis has superseded that narrow next slice
+with the acoustic calculator answer engine V1 slice, because the
+existing infrastructure must now calculate real user-entered layer
+combinations instead of adding another finite coverage/revalidation
+step.
 
 Checkpoint review, 2026-05-21:
 [CHECKPOINT_2026-05-21_LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_COVERAGE_REFRESH_REVALIDATION.md](./CHECKPOINT_2026-05-21_LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_COVERAGE_REFRESH_REVALIDATION.md)
 is the clean resume point before starting
-`layer_combination_resolver_post_double_leaf_framed_wall_banded_coverage_revalidation_plan`.
+the next implementation slice. The active planning correction is
+[ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md](./ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md),
+which selects
+`acoustic_calculator_answer_engine_v1_plan`.
 
 Second analysis iteration, 2026-05-21: implementation and official
 reference recheck is complete. It selected the helper-only
@@ -67,11 +74,26 @@ no-runtime as
 `layer_combination_resolver_double_leaf_framed_wall_banded_coverage_refresh_plan`
 with selection status
 `layer_combination_resolver_double_leaf_framed_wall_banded_coverage_refresh_landed_no_runtime_selected_post_double_leaf_revalidation`.
-The active selected next action is
-`layer_combination_resolver_post_double_leaf_framed_wall_banded_coverage_revalidation_plan`
-in
-`packages/engine/src/layer-combination-resolver-post-double-leaf-framed-wall-banded-coverage-revalidation-contract.test.ts`.
+The coverage refresh originally selected
+`layer_combination_resolver_post_double_leaf_framed_wall_banded_coverage_revalidation_plan`,
+but the active planning correction now selects
+`acoustic_calculator_answer_engine_v1_plan` in
+`packages/engine/src/acoustic-calculator-answer-engine-v1-contract.test.ts`.
 This is not a broad source crawl.
+
+Seventh implementation/planning iteration, 2026-05-21: live runtime
+inspection found that the candidate registry, runtime adapter, surface
+parity, single-leaf source-absent runtime, double-leaf source-absent
+runtime, grouped/triple-leaf wall lanes, and floor impact lanes are real
+assets, but they do not yet behave as one acoustic calculator answer
+engine. The next slice must make existing lanes feed the answer path and
+must enforce that `needs_input` and `unsupported` selected origins are
+value-less answers. Flat
+double-leaf-like walls must either promote to the owned double-leaf
+candidate when complete or ask for missing topology/input fields; tagged
+floor raw-bare/helper-only lanes remain valid producers; broad source
+crawl, tolerance retune, field/building aliases, and ASTM/IIC aliases
+remain blocked.
 
 Fifth research/planning iteration, 2026-05-21: a fresh INSUL / ISO /
 CadnaB check confirms that the path to "meaningful results for arbitrary
@@ -252,12 +274,15 @@ not-measured budgets. Exact precedence, missing `resilientBarSideCount`,
 overlapping leaf groups, direct-fixed double-leaf, grouped
 triple-leaf/multicavity, field/building separation, floor-impact,
 ASTM/IIC, tolerance retune, and broad source crawl remain blocked or
-separate. The selected next action is
+separate. At landing time this closeout selected
 `layer_combination_resolver_post_double_leaf_framed_wall_banded_coverage_revalidation_plan`
 in
 `packages/engine/src/layer-combination-resolver-post-double-leaf-framed-wall-banded-coverage-revalidation-contract.test.ts`;
 selected next label: layer combination resolver post double-leaf framed
-wall banded coverage revalidation. This is not a broad source crawl.
+wall banded coverage revalidation. The active planning correction later
+superseded that immediate next slice with
+`acoustic_calculator_answer_engine_v1_plan`. This is not a broad source
+crawl.
 
 ## Product Target
 
@@ -350,43 +375,49 @@ inventory. Broad source crawling remains blocked until a bounded owner
 names missing anchors explicitly.
 
 1. Immediate selected gate:
-   `layer_combination_resolver_post_double_leaf_framed_wall_banded_coverage_revalidation_plan`
+   `acoustic_calculator_answer_engine_v1_plan`
    in
-   `packages/engine/src/layer-combination-resolver-post-double-leaf-framed-wall-banded-coverage-revalidation-contract.test.ts`.
-   This is no-runtime. Rerank the remaining common wall/floor gaps after
-   double-leaf owner/formula/runtime/surface/coverage are closed, while
-   keeping exact precedence, field/building, ASTM/IIC, tolerance retune,
-   and broad source crawl blocked unless a bounded owner is selected.
-2. Wall double-leaf / framed / bridged family owner chain. Required
-   physical owners: side leaf groups, surface mass per side, cavity
-   depth, frame/support topology, bridge/coupling class, infill
-   thickness and flow resistivity, board stiffness/loss factor,
-   one-third-octave TL curve, ISO 717-1 `Rw`/`C`/`Ctr` adapter, exact
-   precedence, and hostile topology rules. Gate order: owner -> formula
-   corridor -> runtime corridor -> surface parity -> coverage refresh.
-3. Floor floating-cover / underlay / resilient-package family owner
+   `packages/engine/src/acoustic-calculator-answer-engine-v1-contract.test.ts`.
+   This gate makes existing runtime lanes feed the calculator answer
+   path, centralizes exact/anchor/calibrated/source-absent/boundary
+   precedence, and proves that `needs_input` and `unsupported` selected
+   answers do not publish acoustic values as product answers. It keeps
+   all landed solver lanes and coverage ledgers, but stops treating
+   another finite coverage refresh as the product definition.
+2. Post-answer-engine revalidation. Once Answer Engine V1 is in place,
+   rerank the remaining common wall/floor gaps and decide whether the
+   post-double-leaf coverage revalidation is still the highest-ROI
+   no-runtime check or whether another producer/boundary gap is more
+   important.
+3. Wall double-leaf / framed / bridged family widening beyond the
+   existing owned lane. Required physical owners remain side leaf groups,
+   surface mass per side, cavity depth, frame/support topology,
+   bridge/coupling class, infill thickness and flow resistivity, board
+   stiffness/loss factor, one-third-octave TL curve, ISO 717-1
+   `Rw`/`C`/`Ctr` adapter, exact precedence, and hostile topology rules.
+4. Floor floating-cover / underlay / resilient-package family owner
    chain. Required owners: support family, base carrier, measured floor
    cover transfer class, resilient-layer dynamic stiffness, underlay /
    screed / finish mass, load assumptions, upper/lower package roles,
    ISO 717-2 `Ln,w`/`CI` adapter, and measured-vs-predicted package
    separation. Gate order: owner -> formula corridor -> runtime corridor
    -> surface parity -> coverage refresh.
-4. Field/building adapter owners. These stay blocked until the relevant
+5. Field/building adapter owners. These stay blocked until the relevant
    lab curves and physical context are owned. Required inputs include
    separating area, source/receiving room volume, RT60 or absorption,
    flanking paths, junction/coupling terms, Kij-like data where used,
    direct/flanking uncertainty, and output basis. No lab `Rw`, `Ln,w`,
    or source-absent corridor can become `R'w`, `DnT,w`, `L'n,w`, or
    `L'nT,w` by alias.
-5. Glazing, openings, leaks, and spectrum/rating adapter parity. Add
+6. Glazing, openings, leaks, and spectrum/rating adapter parity. Add
    these after the main opaque wall/floor family chains expose internal
    banded curves. Keep composite TL, leak area, frame/opening topology,
    and spectrum adapters explicit.
-6. Calibration and holdout residual framework. Once family chains exist,
+7. Calibration and holdout residual framework. Once family chains exist,
    add rights-safe holdouts, residual buckets, tolerance retune policy,
    and per-family acceptance thresholds. Retunes must be driven by
    residual evidence, not by single scenario convenience.
-7. Targeted source and holdout acquisition. Add rows only for named exact
+8. Targeted source and holdout acquisition. Add rows only for named exact
    precedence, anchor, calibration, residual, or negative-boundary gaps.
    Source rows remain exact overrides, compatible anchors, calibration
    evidence, and test holdouts; they do not replace source-absent
@@ -426,6 +457,10 @@ Landed candidate coverage matrix closeout:
   similarity anchors, calibrated family solvers, source-absent family
   solvers, field/building adapters, `needs_input`, basis boundaries, and
   unsupported ASTM/IIC blockers.
+- Later single-leaf, double-leaf, and floor lane additions brought the
+  live registry to 15 declarations and 12 active runtime-basis mappings;
+  answer-engine work must use the live registry rather than freezing
+  this historical matrix count.
 - Runtime values remain frozen; source rows remain evidence, anchors,
   holdouts, or exact overrides rather than the product. Selected next
   file:
@@ -442,6 +477,9 @@ Landed company-internal V0 rehearsal closeout:
   13 rows as 2 `ready`, 8 `ready_with_budget`, 1 `needs_input`, 2
   `unsupported`, and 0 registered `research_only` rows. It separately
   ranks six research-only gaps.
+- That was the operating-envelope count at this gate. The live registry
+  now has 15 declarations and 12 active runtime-basis mappings; the
+  answer-engine gate should assert against the live registry summary.
 - Company-internal V0 use is limited to the 10 exact or budgeted rows
   with visible candidate id, basis, support bucket, required fields,
   value pins, and budgets.

@@ -18,6 +18,17 @@ final rehearsal is green. It is not a claim that every possible acoustic
 assembly is solved or that formula budgets are fully calibrated by a
 large source-owned holdout set.
 
+2026-05-21 active product correction:
+
+This envelope remains a controlled internal-use snapshot, not the
+product goal. The active product plan is
+[ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md](./ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md):
+the calculator must take wall/floor layer combinations and required
+physical inputs, then return the best acoustic answer from exact measured
+rows, compatible measured anchors, or the correct formula family. Rows
+listed here are useful coverage evidence, but they are not a finite
+definition of the product.
+
 For the broader company-internal accuracy path, use
 [BROAD_ACCURACY_CALCULATOR_PLAN.md](./BROAD_ACCURACY_CALCULATOR_PLAN.md).
 That plan owns the exact-source, nearby-source similarity, family-solver,

@@ -1,6 +1,6 @@
 # Calculation Model And Validation
 
-Last reviewed: 2026-05-08
+Last reviewed: 2026-05-22
 
 Document role:
 
@@ -15,21 +15,28 @@ answer it actually measures; it does not make the whole acoustic domain complete
 
 Latest checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-08_STRATEGIC_ROI_REPLAN_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md`
 
 Latest landed implementation checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_BH_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-21_LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_COVERAGE_REFRESH_REVALIDATION.md`
 
 Current validation posture:
 
-Gate BH landed a no-runtime steel-floor residual-policy closed-owner
-revalidation. It produced only a policy `tighten` candidate; runtime
-values, tolerances, exact-source precedence, formulas, and lab/field/
-building basis boundaries remain unchanged. Gate BI is selected as a
-minimal no-runtime governance guard, then the plan pivots to a
-Personal-Use MVP Coverage Sprint so the next algorithmic solver is
-chosen from an executable wall/floor scenario matrix.
+The immediate correction is acoustic calculator answer-engine V1. The
+engine must choose and publish the calculator answer for a user-entered
+wall/floor layer stack: exact measured answer when the construction
+matches, compatible measured anchor when physically valid, otherwise the
+right family formula. Missing physical inputs must be requested because
+the formula needs them, not because the project is a test harness.
+Diagnostic curves are allowed internally, but they must not surface as
+the user answer when the selected path is missing-input or unsupported.
+The 2026-05-22 reconciliation confirmed the current gate is green, but
+also found the active answer-engine contract file is still missing, flat
+double-leaf-like wall input can still fall to screening without a shared
+resolver trace, and missing `resilientBarSideCount` can still leave
+numeric wall metrics visible while the selected posture is
+`needs_input`.
 
 ## Core Rule
 

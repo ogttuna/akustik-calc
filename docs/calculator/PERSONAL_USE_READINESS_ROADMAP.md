@@ -4,6 +4,20 @@ Date: 2026-04-27
 
 Current review note: 2026-05-08
 
+2026-05-21 active product correction:
+[ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md](./ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md)
+now owns the immediate readiness direction. Personal-use readiness means
+the product behaves as an acoustic calculator: the user enters a
+wall/floor layer combination and any formula-required physical inputs,
+then receives a calculated acoustic answer from exact measured evidence,
+compatible measured anchoring, or the correct family formula. This
+roadmap's older controlled-use claims remain historical until that
+answer-engine path is live for realistic and hostile layer combinations.
+The 2026-05-22 reconciliation checkpoint
+[CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md](./CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md)
+keeps that readiness bar open: the current gate is green, but the
+answer-engine contract and final value-publishing boundary are not live.
+
 2026-05-12 update: the post-Gate-AP checkpoint confirms that the older
 controlled internal-use bar is still historical only. The current
 company-internal daily-use bar remains open until airborne

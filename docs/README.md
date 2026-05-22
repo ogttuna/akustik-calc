@@ -25,9 +25,33 @@ use `pnpm check` when shared contracts move.
 
 Current calculator handoff:
 
+- Active product correction:
+  [calculator/ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md](./calculator/ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md).
+  The immediate selected next action is now
+  `acoustic_calculator_answer_engine_v1_plan` in
+  `packages/engine/src/acoustic-calculator-answer-engine-v1-contract.test.ts`.
+  The selected next label is acoustic calculator answer engine V1.
+  DynEcho must behave as an acoustic calculator: the user enters wall or
+  floor layers, thicknesses, requested outputs, and any formula-required
+  physical inputs; the engine uses exact measured values when available,
+  compatible measured anchors when valid, and otherwise the correct
+  acoustic formula family to calculate the answer. Docs and tests are
+  guardrails, not the product.
 - Latest checkpoint:
+  [calculator/CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md](./calculator/CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md).
+  This re-read docs, compared implementation, ran runtime probes, fixed
+  one stale model-first doc-alignment test, and confirmed
+  `pnpm calculator:gate:current` on 2026-05-22: engine 508 files / 2889
+  tests, web 94 files / 388 passed + 18 skipped, repo build 5 / 5, and
+  whitespace guard passed. It also confirms Answer Engine V1 is still
+  the next implementation: the contract file does not exist yet, flat
+  double-leaf-like stacks can still fall to untraced screening, and
+  missing `resilientBarSideCount` still leaks numeric metrics while
+  selecting `needs_input`.
+- Previous implementation checkpoint:
   [calculator/CHECKPOINT_2026-05-21_LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_COVERAGE_REFRESH_REVALIDATION.md](./calculator/CHECKPOINT_2026-05-21_LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_COVERAGE_REFRESH_REVALIDATION.md).
-  Read this before implementing the next calculator slice. The fresh
+  Read this for landed double-leaf coverage-refresh facts before
+  implementing the next calculator slice. The fresh
   `pnpm calculator:gate:current` run passed on 2026-05-21 with engine
   508 files / 2889 tests, web 94 files / 388 passed + 18 skipped, repo
   build 5 / 5, and whitespace guard passed. The latest landed
@@ -35,11 +59,12 @@ Current calculator handoff:
   `layer_combination_resolver_double_leaf_framed_wall_banded_coverage_refresh_plan`
   with selection status
   `layer_combination_resolver_double_leaf_framed_wall_banded_coverage_refresh_landed_no_runtime_selected_post_double_leaf_revalidation`;
-  the selected next action is
+  at landing time the selected next action was
   `layer_combination_resolver_post_double_leaf_framed_wall_banded_coverage_revalidation_plan`
   in
   `packages/engine/src/layer-combination-resolver-post-double-leaf-framed-wall-banded-coverage-revalidation-contract.test.ts`.
-  This is not a broad source crawl.
+  That historical next action is superseded by the active answer-engine
+  plan above. This is not a broad source crawl.
   The candidate coverage matrix refresh has now landed as
   `layer_combination_resolver_candidate_coverage_matrix_refresh_plan`
   with selection status

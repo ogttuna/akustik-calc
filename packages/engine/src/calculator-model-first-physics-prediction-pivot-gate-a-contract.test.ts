@@ -115,12 +115,22 @@ const REQUIRED_DOCS = [
   "docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_A_HANDOFF.md"
 ] as const;
 
-const CURRENT_SELECTION_DOCS = [
+const ACTIVE_ANSWER_ENGINE_DOCS = [
   "AGENTS.md",
+  "docs/README.md",
   "docs/calculator/README.md",
   "docs/calculator/CURRENT_STATE.md",
+  "docs/calculator/NEXT_IMPLEMENTATION_PLAN.md"
+] as const;
+
+const GATE_A_HISTORICAL_SELECTION_DOCS = [
   "docs/calculator/NEXT_IMPLEMENTATION_PLAN.md",
   "docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_A_HANDOFF.md"
+] as const;
+
+const GATE_A_HISTORICAL_SLICE_DOCS = [
+  "docs/calculator/SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md",
+  ...GATE_A_HISTORICAL_SELECTION_DOCS
 ] as const;
 
 const MODEL_RULE_DOCS = [
@@ -342,15 +352,27 @@ describe("calculator model-first physics prediction pivot Gate A", () => {
     expect(splitField.warnings).toContain(ROCKWOOL_SPLIT_TRIPLE_LEAF_EXACT_OUTPUT_WITHHOLD_WARNING);
   });
 
-  it("keeps active docs and current-gate runner aligned with Gate A closeout", () => {
+  it("keeps active docs on the answer-engine correction while preserving Gate A as historical foundation", () => {
     const runner = readRepoFile("tools/dev/run-calculator-current-gate.ts");
 
     expect(runner).toContain("src/calculator-model-first-physics-prediction-pivot-gate-a-contract.test.ts");
 
-    for (const path of CURRENT_SELECTION_DOCS) {
+    for (const path of ACTIVE_ANSWER_ENGINE_DOCS) {
+      const doc = readRepoFile(path);
+
+      expect(doc, path).toContain("acoustic_calculator_answer_engine_v1_plan");
+      expect(doc, path).toContain("packages/engine/src/acoustic-calculator-answer-engine-v1-contract.test.ts");
+    }
+
+    for (const path of GATE_A_HISTORICAL_SLICE_DOCS) {
       const doc = readRepoFile(path);
 
       expect(doc, path).toContain(MODEL_FIRST_GATE_A.selectedImplementationSlice);
+    }
+
+    for (const path of GATE_A_HISTORICAL_SELECTION_DOCS) {
+      const doc = readRepoFile(path);
+
       expect(doc, path).toContain(MODEL_FIRST_GATE_A.selectedNextFile);
       expect(doc, path).toContain(MODEL_FIRST_GATE_A.selectedNextAction);
     }

@@ -7,9 +7,22 @@ Document role:
 - for active calculator/workbench work, start with `docs/calculator/CURRENT_STATE.md`
 - use `docs/README.md` as the top-level docs map
 
+2026-05-21 calculator correction:
+
+For acoustic-domain behavior, also start with
+`docs/calculator/ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md`.
+The product is a web-delivered acoustic calculator: a user enters wall
+or floor layers, thicknesses, and the physical inputs required by that
+route, then receives calculated acoustic outputs. Exact measured rows
+and nearby measured rows are evidence and anchors; they are not the
+product. If no matching measured row exists, the engine must use the
+right formula family and publish the answer with its basis and error
+budget.
+
 ## 1. Product Direction
 
-DynEcho will be built as a web product first.
+DynEcho will be built as a web product first, with the acoustic
+calculator as the core product behavior.
 
 Reasoning:
 

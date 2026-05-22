@@ -34,6 +34,12 @@ layer-combination goal read
 For the clean checkpoint after the double-leaf/framed wall coverage
 refresh revalidation read
 [CHECKPOINT_2026-05-21_LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_COVERAGE_REFRESH_REVALIDATION.md](./CHECKPOINT_2026-05-21_LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_COVERAGE_REFRESH_REVALIDATION.md).
+For the current answer-engine reconciliation checkpoint read
+[CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md](./CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md).
+For the current planning correction that turns the existing solver and
+measurement infrastructure into the acoustic calculator answer engine
+read
+[ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md](./ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md).
 For the Gate S opening/leak runtime corridor and Gate T handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_S_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_S_HANDOFF.md).
 For the Gate T opening/leak surface parity and Gate U handoff read
@@ -148,10 +154,119 @@ For the Gate Q no-runtime input contract and Gate R handoff read
 For the Gate P no-runtime closeout and Gate Q handoff read
 [CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_P_HANDOFF.md](./CHECKPOINT_2026-05-11_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_P_HANDOFF.md).
 
-## Active Implementation Pointer - 2026-05-21 Double-Leaf Coverage Refresh Handoff
+## Active Implementation Pointer - 2026-05-21 Acoustic Calculator Answer Engine V1
 
 This is the current execution order. If an older historical section
 below conflicts with this block, this block wins.
+
+Latest analysis correction:
+
+`acoustic_calculator_answer_engine_v1_plan`
+
+Active answer-engine contract file:
+
+`packages/engine/src/acoustic-calculator-answer-engine-v1-contract.test.ts`
+
+Active answer-engine label:
+
+acoustic calculator answer engine V1
+
+Read first:
+
+`docs/calculator/ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md`
+
+Latest checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md`
+
+Latest landed action remains:
+
+`layer_combination_resolver_double_leaf_framed_wall_banded_coverage_refresh_plan`
+
+Why the active next action changed:
+
+- The double-leaf coverage refresh is useful and stays landed, but a
+  narrow post-double-leaf revalidation would keep the project in the
+  pattern of closing one more finite lane without proving the central
+  calculator contract.
+- Implementation analysis found strong reusable infrastructure:
+  resolver registry, runtime basis adapter, surface parity, exact rows,
+  single-leaf and double-leaf source-absent runtimes, grouped multileaf
+  wall runtimes, and floor impact lanes.
+- The missing layer is the answer engine: for the same stack/request it
+  must choose exact measured answer, compatible measured anchor,
+  calibrated formula, source-absent formula, required physical input
+  prompt, or unsupported basis before answer values are published.
+
+2026-05-22 implementation check:
+
+- `packages/engine/src/acoustic-calculator-answer-engine-v1-contract.test.ts`
+  is still not implemented.
+- Single-leaf gypsum and explicit double-leaf/framed wall stacks already
+  produce traced source-absent formula answers.
+- Flat gypsum / rockwool / gypsum still returns untraced screening
+  instead of either the owned double-leaf formula or a missing-input
+  prompt.
+- Missing `resilientBarSideCount` selects a `needs_input` candidate but
+  still exposes numeric `Rw` / STC / `C` / `Ctr` metrics. That is the
+  first value-leakage boundary Answer Engine V1 must close.
+
+Immediate implementation requirements:
+
+1. Create
+   `packages/engine/src/acoustic-calculator-answer-engine-v1-contract.test.ts`.
+2. Prove that `needs_input` and `unsupported` selected origins do not
+   publish acoustic values as selected product answers. Diagnostic curves
+   may remain internal only if they are clearly not the selected answer.
+3. Feed existing lanes into the answer engine rather than rewriting
+   formulas: single-leaf, double-leaf/framed, grouped triple-leaf, floor
+   exact/package/raw-bare/helper-only/direct-fixed/supported-band,
+   field/building boundaries, and ASTM/IIC blockers.
+4. Prove flat double-leaf-like wall behavior: it must either promote to
+   the owned double-leaf source-absent candidate when required fields are
+   complete, or return named missing topology/input fields. It must not
+   remain an untraced design-looking screening result.
+5. Prove tagged and roleless floor helper-like behavior: tagged lanes
+   keep their current source-absent solver; roleless helper-like stacks
+   either infer safely or return a named missing-role/input boundary.
+6. Preserve all existing surface trace parity: selected candidate id,
+   candidate kind, runtime basis, support bucket, value pins, error
+   budget, boundary candidates, rejected count, and required inputs
+   remain visible in engine/API/workbench/report paths.
+
+Non-goals for this slice:
+
+- broad source crawl;
+- tolerance retune;
+- new formula-family invention before existing producers are connected;
+- lab/field/building alias promotion;
+- ASTM/IIC/AIIC alias promotion;
+- deletion of existing landed gates or coverage ledgers.
+
+Validation expectation:
+
+- targeted Vitest for the new answer-engine contract while iterating;
+- `pnpm calculator:gate:current` after behavior moves;
+- `git diff --check` before closeout.
+
+Latest validation:
+
+- Initial `pnpm calculator:gate:current` failed only because the old
+  model-first Gate A doc-alignment test still expected the active
+  calculator README to point at
+  `calculator_model_first_physics_prediction_pivot_v1`.
+- That test now treats model-first Gate A as historical foundation and
+  active docs as answer-engine driven.
+- Targeted Gate A test passed: 1 file / 5 tests.
+- `pnpm calculator:gate:current` passed on 2026-05-22: engine 508 files
+  / 2889 tests, web 94 files / 388 passed + 18 skipped, repo build 5 /
+  5, and whitespace guard passed.
+
+## Previous Implementation Pointer - 2026-05-21 Double-Leaf Coverage Refresh Handoff
+
+This was the prior execution order before the answer-engine planning
+correction above. Keep the landed facts, but do not treat this block as
+the immediate next slice when it conflicts with the active pointer above.
 
 Latest landed action:
 
@@ -165,15 +280,15 @@ Selection status:
 
 `layer_combination_resolver_double_leaf_framed_wall_banded_coverage_refresh_landed_no_runtime_selected_post_double_leaf_revalidation`
 
-Active selected next action:
+Historical selected next action at landing time:
 
 `layer_combination_resolver_post_double_leaf_framed_wall_banded_coverage_revalidation_plan`
 
-Active selected next file:
+Historical selected next file at landing time:
 
 `packages/engine/src/layer-combination-resolver-post-double-leaf-framed-wall-banded-coverage-revalidation-contract.test.ts`
 
-Active selected next label:
+Historical selected next label at landing time:
 
 layer combination resolver double-leaf framed wall banded coverage
 refresh consumed; next label is layer combination resolver post
@@ -905,7 +1020,7 @@ Current implementation comparison:
   Exact/package precedence stays first, raw-bare / direct-fixed /
   supported-band lanes stay separate, and field/building plus ASTM/IIC
   requests stay blocked. This is not a broad source crawl.
-- The selected next action is `layer_combination_resolver_registry_plan`
+- At that historical point it selected `layer_combination_resolver_registry_plan`
   in
   `packages/engine/src/layer-combination-resolver-registry-contract.test.ts`;
   selected next label: layer combination resolver registry.
@@ -4817,8 +4932,8 @@ clean, and build 5/5. `git diff --check` passed after validation-note
 sync. See
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AO_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AO_HANDOFF.md).
 
-Gate AP has consumed this handoff. The current selected next action is
-now Gate AQ uncertainty-budget owner contract.
+Gate AP consumed this handoff. At that historical point it selected Gate
+AQ uncertainty-budget owner contract.
 
 ## Gate AN Building Prediction Flanking Path Energy Owner Landed - 2026-05-12
 
@@ -4866,8 +4981,8 @@ whitespace guard clean, and full `pnpm check` with engine 506 files /
 clean, and build 5/5. See
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AN_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AN_HANDOFF.md).
 
-Gate AO has consumed this handoff. The current selected next action is
-now Gate AP room standardization owner contract.
+Gate AO consumed this handoff. At that historical point it selected Gate
+AP room standardization owner contract.
 
 ## Gate AM Building Prediction Direct Curve Owner Landed - 2026-05-12
 
@@ -4913,8 +5028,8 @@ whitespace guard clean, and full `pnpm check` with engine 505 files /
 clean, and build 5/5. See
 [CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AM_HANDOFF.md](./CHECKPOINT_2026-05-12_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AM_HANDOFF.md).
 
-Gate AN has consumed this handoff. The current selected next action is
-now Gate AO junction vibration reduction owner contract.
+Gate AN consumed this handoff. At that historical point it selected Gate
+AO junction vibration reduction owner contract.
 
 ## Gate AL Building Prediction Owner Gap Refresh Landed - 2026-05-12
 
@@ -4963,15 +5078,15 @@ field/building continuation snapshots frozen until a later gate
 deliberately migrates them behind the building-prediction owner
 contract.
 
-Gate AM and Gate AN have consumed this handoff. The current selected
-next action is now Gate AO junction vibration reduction owner contract.
+Gate AM and Gate AN consumed this handoff. At that historical point they
+selected Gate AO junction vibration reduction owner contract.
 
 ## Gate AK STC-Aware Matrix Refresh Landed - 2026-05-12
 
-Gate AL has consumed the building prediction owner gap refresh selected
-by Gate AK and closed it as a no-runtime owner-gap map. The current
-selected next action is now Gate AM direct separating-element frequency
-curve owner contract.
+Gate AL consumed the building prediction owner gap refresh selected by
+Gate AK and closed it as a no-runtime owner-gap map. At that historical
+point it selected Gate AM direct separating-element frequency curve
+owner contract.
 
 Gate AK has now landed the no-runtime matrix refresh selected by
 Gate AJ:
@@ -5008,8 +5123,8 @@ terms. Gate AL should make that owner gap explicit and keep lab `Rw` /
 `STC`, field `R'w` / `DnT,w`, and opening/leak lab adapters from leaking
 into building outputs.
 
-Gate AJ has consumed this handoff. The current selected next action is
-now the Gate AL building prediction owner gap refresh.
+Gate AJ consumed this handoff. At that historical point it selected the
+Gate AL building prediction owner gap refresh.
 
 Gate AK validation passed with focused Gate AK, Gate AJ/Gate AK
 continuity, engine typecheck, `pnpm calculator:gate:current`, full
@@ -5103,8 +5218,8 @@ Parity locked by Gate AI:
   `R'w`, `DnT,w`, field, and building requests stay blocked without a
   Gate AH budget or adapter.
 
-Gate AJ has consumed this handoff and closed it as a no-runtime
-revalidation gate. The current selected next action is now the Gate AK
+Gate AJ consumed this handoff and closed it as a no-runtime
+revalidation gate. At that historical point it selected the Gate AK
 STC-aware matrix refresh.
 
 ## Gate AH Opening/Leak STC Spectrum Adapter Landed - 2026-05-12
@@ -5145,9 +5260,9 @@ Pinned runtime behavior:
 - `R'w`, `DnT,w`, field, and building outputs still do not alias from
   lab `Rw` or lab `STC`.
 
-Gate AI has now consumed this handoff as a no-runtime surface-parity
-gate. The current selected next action is Gate AJ post-STC-surface
-revalidation, not another runtime promotion.
+Gate AI consumed this handoff as a no-runtime surface-parity gate. At
+that historical point it selected Gate AJ post-STC-surface revalidation,
+not another runtime promotion.
 
 ## Gate AG Floor Formula Surface Polish Landed - 2026-05-12
 

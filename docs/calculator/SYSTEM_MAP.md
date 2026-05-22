@@ -1,6 +1,6 @@
 # System Map
 
-Last reviewed: 2026-05-05
+Last reviewed: 2026-05-21
 
 Document role:
 
@@ -14,8 +14,15 @@ Use this together with the agent resume triangle:
 
 - [../../AGENTS.md](../../AGENTS.md) — repository-level calculator
   authority order
+- [ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md](./ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md)
+  — active product correction: DynEcho is an acoustic calculator answer
+  engine, not a finite source-row library or test harness
+- [CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md](./CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md)
+  — latest docs/implementation/test reconciliation for the answer-engine
+  correction
 - [SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md](./SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md)
-  — active model-first physics prediction pivot
+  — historical model-first physics prediction pivot; still useful as
+  foundation, but no longer the active next-action document
 - [CHECKPOINT_2026-05-05_DOC_IMPLEMENTATION_RECONCILIATION_HANDOFF.md](./CHECKPOINT_2026-05-05_DOC_IMPLEMENTATION_RECONCILIATION_HANDOFF.md)
   — latest doc/implementation reconciliation
 - [CHECKPOINT_2026-05-05_STANDARDS_RESEARCH_PLAN_DETAIL_HANDOFF.md](./CHECKPOINT_2026-05-05_STANDARDS_RESEARCH_PLAN_DETAIL_HANDOFF.md)
@@ -36,9 +43,10 @@ And:
 
 This repo is an acoustic calculator for floor and wall assemblies.
 
-The user picks a study mode, builds a layer stack, fills any required context,
-and requests outputs such as `Rw`, `R'w`, `DnT,w`, `Ln,w`, `L'n,w`, or
-`L'nT,w`. The system must do three things correctly:
+The user picks wall or floor, enters the layer stack, layer order,
+thicknesses, and any extra physical inputs genuinely required by that
+route, then receives acoustic outputs such as `Rw`, `R'w`, `DnT,w`,
+`Ln,w`, `L'n,w`, or `L'nT,w`. The system must do three things correctly:
 
 - calculate the right value when a route legitimately supports that
   output, using exact data when available and family-specific physics
@@ -52,33 +60,36 @@ and requests outputs such as `Rw`, `R'w`, `DnT,w`, `Ln,w`, `L'n,w`, or
 A green result is only valid if both the number and its support/origin posture
 are correct.
 
-## Active Model-First Correction
+## Active Answer-Engine Correction
 
-The current active correction is that this project is not a lookup
-database. Lab/source rows are allowed to win exact whole-stack matches,
-anchor known subassemblies, calibrate solver families, benchmark
-tolerances, and provide regression tests. They must not replace the
-calculator engine.
+The current active correction is
+[ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md](./ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md).
+The latest checkpoint is
+[CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md](./CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md).
+This project is not a lookup database, a catalog project, or a test
+environment. Lab/source rows are allowed to win exact whole-stack
+matches, anchor known compatible constructions, calibrate formula
+families, benchmark tolerances, and provide regression tests. They must
+not replace the calculator engine.
 
-When no exact whole-stack row exists, the engine should still build the
-best calculation candidate it can:
+When no exact whole-stack row exists, the engine must still calculate
+through the best physically appropriate route it owns:
 
-- exact full-stack source row;
-- exact subassembly plus calculated delta;
-- calibrated family physics;
-- family physics prediction;
-- bounded prediction;
-- screening fallback;
-- `needs_input`;
-- `unsupported`.
+- exact full-stack measured row when it truly matches;
+- compatible measured anchor plus calculated delta when the algorithm
+  owns the topology, metric, and basis;
+- calibrated family formula;
+- source-absent family formula with a visible error budget;
+- `needs_input` only when a required physical field is missing;
+- `unsupported` only when DynEcho has no bounded calculation path.
 
 Implementation is not fully there yet. Impact already has the closest
-candidate precedence pattern in `packages/engine/src/impact-lane.ts`.
-Airborne/wall still needs the equivalent candidate/basis resolver.
+answer precedence pattern in `packages/engine/src/impact-lane.ts`.
+Airborne/wall still needs the equivalent final answer-selection path.
 `packages/engine/src/wall-triple-leaf-frequency-solver.ts` can produce
 triple-leaf/two-cavity ratings, but current runtime still uses
 `multileaf_screening_blend` for grouped Rockwool until the model-first
-runtime gate deliberately promotes a labelled prediction.
+runtime gate deliberately promotes a labelled formula answer.
 
 ## End-To-End User Flow
 

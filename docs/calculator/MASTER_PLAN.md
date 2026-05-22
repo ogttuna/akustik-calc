@@ -49,6 +49,24 @@ no-runtime and selected `internal_use_acceptance_rehearsal_v1`)
 Iteration: 2 (rewritten with implementation state grid, accuracy
 preservation contract, ROI table, quantitative completion targets)
 
+2026-05-21 active product correction:
+[ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md](./ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md)
+is the immediate calculator direction. The next selected action is
+`acoustic_calculator_answer_engine_v1_plan` in
+`packages/engine/src/acoustic-calculator-answer-engine-v1-contract.test.ts`.
+The 2026-05-22 checkpoint
+[CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md](./CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md)
+validated the current gate and confirmed the remaining product gap:
+existing solver lanes are useful, but the final answer-selection layer
+is not implemented yet.
+This master plan remains the strategic frame, but older selected-slice
+wording below must not override the answer-engine goal: DynEcho is an
+acoustic calculator. A user enters wall/floor layers, thicknesses,
+requested outputs, and any genuinely required physical inputs; the
+engine uses exact measured answers when available, compatible measured
+anchors when valid, and otherwise the correct acoustic formula family to
+calculate the result.
+
 Current tactical state is governed by
 [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md). As of
 2026-05-05 the active correction is the model-first physics prediction

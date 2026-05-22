@@ -2,6 +2,14 @@
 
 Status: active refocus plan, created 2026-05-15.
 
+2026-05-21 active product correction:
+[ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md](./ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md)
+is the immediate implementation direction. The broad-accuracy goal is
+not more labels or another finite row set; it is an acoustic calculator
+answer engine that takes user-entered wall/floor layers and calculates
+with exact measured answers, compatible measured anchors, or the correct
+source-absent/calibrated formula family.
+
 This plan supersedes the idea that the 71-row company-internal
 controlled envelope is the finish line. That envelope remains a
 regression guard. The product target is broader: for arbitrary realistic
@@ -927,8 +935,9 @@ Complete source-absent EPS/screed hybrid variants now return element-lab
 `CI,50-2500 1`, and `Ln,w+CI 47` with not-measured budgets including
 `+/-7 dB` for `Rw` and `+/-8 dB` for `Ln,w`. Exact R7b remains first,
 dry package-transfer stays separate, R8b/R9b/R2c/R10a remain negative
-boundaries, and field/building plus ASTM/IIC aliases remain blocked. The
-selected next action is the EPS/screed hybrid package surface parity:
+boundaries, and field/building plus ASTM/IIC aliases remain blocked. At
+that historical point the selected next action was the EPS/screed hybrid
+package surface parity:
 `broad_accuracy_floor_open_box_timber_eps_screed_hybrid_package_surface_parity_plan`
 in
 `packages/engine/src/broad-accuracy-floor-open-box-timber-eps-screed-hybrid-package-surface-parity-contract.test.ts`.

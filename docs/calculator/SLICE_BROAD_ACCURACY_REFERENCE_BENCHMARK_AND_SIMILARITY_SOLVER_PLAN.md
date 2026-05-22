@@ -3,6 +3,18 @@
 Status: LANDED no-runtime broad-accuracy benchmark expansion after the
 controlled company-internal envelope proof.
 
+2026-05-21 active override:
+
+This slice is historical evidence for the broad-accuracy path. The
+current selected next action is now
+`acoustic_calculator_answer_engine_v1_plan` in
+`packages/engine/src/acoustic-calculator-answer-engine-v1-contract.test.ts`.
+Older "current selected next lane" statements in this landed slice must
+not override the active product correction: DynEcho must behave as an
+acoustic calculator answer engine for user-entered wall/floor layer
+combinations, using exact rows, compatible measured anchors, or the
+correct owned formula family.
+
 Latest status: LANDED post-helper-only timber/open-web coverage
 revalidation after the helper-only owner/formula/runtime/surface/
 coverage sequence.
@@ -10,7 +22,7 @@ The previous matrix gate
 `broad_accuracy_post_open_web_field_building_input_surface_matrix_refresh_plan`
 closed with selection status
 `broad_accuracy_post_open_web_field_building_input_surface_matrix_refresh_landed_no_runtime_selected_helper_only_timber_open_web_impact_stack_owner`.
-The current selected next lane is
+The selected next lane at that historical point was
 `layer_combination_resolver_single_leaf_mass_law_banded_formula_corridor_plan`,
 not a broad source crawl, formula retune, building-prediction shortcut,
 or ASTM/IIC alias.
@@ -1962,8 +1974,8 @@ expansion, EPS/screed hybrid owner/formula/runtime/surface-parity gates,
 matrix refresh, open-web raw-bare coverage refresh, post raw-bare
 open-web coverage revalidation, open-web field/building matrix refresh,
 helper-only timber/open-web closeout, and layer combination resolver
-registry are now landed. The current selected next action is layer
-combination resolver runtime candidate adapter.
+registry are now landed. At that historical point the selected next
+action was layer combination resolver runtime candidate adapter.
 Previous helper-only owner:
 `broad_accuracy_floor_helper_only_timber_open_web_impact_stack_owner_plan`
 in

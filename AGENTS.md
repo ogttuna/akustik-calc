@@ -51,10 +51,58 @@ and hostile layer combinations across wall and floor routes with named
 algorithms, bounded uncertainty, and visible missing-input prompts. It is
 not ready just because a finite catalog of known assemblies passes.
 
-Checkpoint to read before the next implementation slice:
-`docs/calculator/CHECKPOINT_2026-05-21_LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_COVERAGE_REFRESH_REVALIDATION.md`.
+Checkpoint and active correction to read before the next implementation
+slice:
+`docs/calculator/CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md`,
+`docs/calculator/CHECKPOINT_2026-05-21_LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_COVERAGE_REFRESH_REVALIDATION.md`
+and
+`docs/calculator/ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md`.
 
-Latest active handoff, 2026-05-21: the layer-combination resolver
+Latest active handoff, 2026-05-22: answer-engine checkpoint
+reconciliation is complete in
+`docs/calculator/CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md`.
+Docs, runtime probes, and tests agree on the current state: existing
+exact rows, resolver registry, runtime adapter, candidate trace,
+single-leaf runtime, explicit double-leaf runtime, grouped/triple-leaf
+lanes, and floor lanes are useful infrastructure, but the selected next
+implementation is still
+`acoustic_calculator_answer_engine_v1_plan` in
+`packages/engine/src/acoustic-calculator-answer-engine-v1-contract.test.ts`.
+That file does not exist yet. The checkpoint probes confirmed single
+gypsum and explicit double-leaf stacks produce traced formula answers,
+while flat gypsum / rockwool / gypsum still falls to untraced screening
+and missing `resilientBarSideCount` still leaks numeric wall metrics
+despite selecting a `needs_input` candidate. After updating one stale
+model-first doc-alignment test, `pnpm calculator:gate:current` passed:
+engine 508 files / 2889 tests, web 94 files / 388 passed + 18 skipped,
+repo build 5 / 5, and whitespace guard passed.
+
+Previous active handoff, 2026-05-21: implementation/runtime analysis
+found that the existing source rows, candidate registry, runtime basis
+adapter, surface parity, single-leaf solver, double-leaf solver,
+triple-leaf/grouped wall lanes, and floor impact lanes are useful
+infrastructure, but they are not yet operating as one acoustic
+calculator answer engine. The immediate selected next action is now
+`acoustic_calculator_answer_engine_v1_plan` in
+`packages/engine/src/acoustic-calculator-answer-engine-v1-contract.test.ts`;
+selected next label: acoustic calculator answer engine V1. This
+supersedes the narrow post-double-leaf coverage revalidation as the
+immediate next slice. Do not delete or bypass existing landed solver
+lanes. Make the calculator choose, in order, exact measured answer,
+compatible measured anchor, calibrated formula, source-absent formula,
+required physical input prompt, or unsupported basis. The first product
+bar is answer correctness: diagnostic curves may remain internal, but
+the user-facing answer must not publish `Rw`, STC, `C`, `Ctr`, `Ln,w`,
+`CI`, field, or building values as the answer when the selected path is
+missing-input or unsupported. Flat double-leaf-like stacks must either
+use the owned double-leaf formula when enough physical data is present
+or ask for the missing fields; they must not land as an untraced
+design-looking screening result. Tagged floor raw-bare and helper-only
+source-absent lanes stay valuable and should feed the answer engine.
+Broad source crawl, tolerance retune, field/building aliases, and
+ASTM/IIC aliases remain blocked.
+
+Previous active handoff, 2026-05-21: the layer-combination resolver
 double-leaf framed wall banded coverage refresh has landed as
 `layer_combination_resolver_double_leaf_framed_wall_banded_coverage_refresh_plan`
 with selection status
@@ -72,7 +120,7 @@ not-measured budgets. Exact precedence, missing
 `resilientBarSideCount`, overlapping leaf groups, direct-fixed
 double-leaf, grouped triple-leaf/multicavity, field/building separation,
 floor-impact, ASTM/IIC, tolerance retune, and broad source crawl remain
-blocked or separate. The selected next action is
+blocked or separate. At landing time it selected
 `layer_combination_resolver_post_double_leaf_framed_wall_banded_coverage_revalidation_plan`
 in
 `packages/engine/src/layer-combination-resolver-post-double-leaf-framed-wall-banded-coverage-revalidation-contract.test.ts`;
@@ -413,7 +461,10 @@ similarity anchors, calibrated family solvers, source-absent family
 solvers, field/building adapters, `needs_input`, basis boundaries, and
 unsupported ASTM/IIC blockers. Runtime acoustic values remain frozen;
 source rows remain evidence, anchors, holdouts, or exact overrides rather
-than the product. The selected next action is
+than the product. Later landed single-leaf, double-leaf, and floor lanes
+bring the live registry to 15 declarations and 12 active runtime-basis
+mappings; use the live registry summary for new answer-engine work.
+The selected next action at this historical gate was
 `layer_combination_resolver_company_internal_v0_rehearsal_plan` in
 `packages/engine/src/layer-combination-resolver-company-internal-v0-rehearsal-contract.test.ts`;
 selected next label: layer combination resolver company-internal V0
