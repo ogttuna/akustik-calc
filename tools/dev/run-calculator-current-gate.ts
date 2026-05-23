@@ -490,6 +490,8 @@ async function main() {
         "src/layer-combination-resolver-double-leaf-framed-wall-banded-runtime-corridor-contract.test.ts",
         "src/layer-combination-resolver-double-leaf-framed-wall-banded-surface-parity-contract.test.ts",
         "src/layer-combination-resolver-double-leaf-framed-wall-banded-coverage-refresh-contract.test.ts",
+        "src/acoustic-calculator-answer-engine-v1-contract.test.ts",
+        "src/acoustic-calculator-company-internal-usable-v1-acceptance-gate-contract.test.ts",
         "src/broad-accuracy-floor-open-box-timber-similarity-transfer-owner-contract.test.ts",
         "src/broad-accuracy-floor-open-box-timber-similarity-formula-corridor-contract.test.ts",
         "src/broad-accuracy-floor-open-box-timber-similarity-runtime-corridor-contract.test.ts",

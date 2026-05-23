@@ -5,6 +5,7 @@ import {
   AirborneCandidateSchema,
   AirborneResultBasisSchema
 } from "./airborne-basis";
+import { AcousticAnswerBoundarySchema } from "./acoustic-answer-boundary";
 import { AirborneOverlaySchema } from "./airborne-overlay";
 import { AirborneCalculatorIdSchema, AirborneCalculatorSchema } from "./calculator";
 import { DynamicAirborneTraceSchema } from "./dynamic-airborne";
@@ -62,6 +63,7 @@ const AssemblyMetricsShape = {
 const AssemblyMetricsSchemaInternal = z.object(AssemblyMetricsShape);
 
 const AssemblyCalculationShape: z.ZodRawShape = {
+  acousticAnswerBoundary: AcousticAnswerBoundarySchema.optional(),
   availableCalculators: z.array(AirborneCalculatorSchema).default([]),
   airborneBasis: AirborneResultBasisSchema.optional(),
   airborneCandidateResolution: AirborneCandidateResolutionSchema.optional(),

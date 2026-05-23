@@ -1,4 +1,4 @@
-import type { AssemblyCalculation } from "@dynecho/shared";
+import type { AssemblyCalculation, RequestedOutputId } from "@dynecho/shared";
 
 import { parseWorkbenchNumber } from "./parse-number";
 
@@ -21,6 +21,88 @@ export type ResultAnswerChartLane = {
   valueLabel: string;
 };
 
+export const AIRBORNE_ANSWER_OUTPUTS = new Set<RequestedOutputId>([
+  "C",
+  "Ctr",
+  "Dn,A",
+  "Dn,w",
+  "DnT,A",
+  "DnT,A,k",
+  "DnT,w",
+  "R'w",
+  "Rw",
+  "STC"
+]);
+
+export const IMPACT_ANSWER_OUTPUTS = new Set<RequestedOutputId>([
+  "AIIC",
+  "CI",
+  "CI,50-2500",
+  "DeltaLw",
+  "IIC",
+  "L'n,w",
+  "L'nT,50",
+  "L'nT,w",
+  "LnT,A",
+  "Ln,w",
+  "Ln,w+CI"
+]);
+
+function isResultTargetScoped(result: AssemblyCalculation): boolean {
+  return (result.targetOutputs?.length ?? 0) > 0;
+}
+
+export function isSupportedAnswerOutput(
+  result: AssemblyCalculation | null | undefined,
+  output: RequestedOutputId
+): boolean {
+  if (!result) {
+    return false;
+  }
+
+  if (!isResultTargetScoped(result)) {
+    return true;
+  }
+
+  if (result.supportedTargetOutputs.includes(output)) {
+    return true;
+  }
+
+  if (output === "CI,50-2500" && result.supportedTargetOutputs.includes("L'nT,50")) {
+    return true;
+  }
+
+  if (output === "CI" && result.supportedTargetOutputs.includes("Ln,w+CI")) {
+    return true;
+  }
+
+  return false;
+}
+
+export function hasSupportedAirborneAnswer(result: AssemblyCalculation | null | undefined): boolean {
+  if (!result) {
+    return false;
+  }
+
+  if (!isResultTargetScoped(result)) {
+    return true;
+  }
+
+  return (result.supportedTargetOutputs ?? []).some((output: RequestedOutputId) => AIRBORNE_ANSWER_OUTPUTS.has(output));
+}
+
+export function hasSupportedImpactAnswer(result: AssemblyCalculation | null | undefined): boolean {
+  if (!result) {
+    return false;
+  }
+
+  if (!isResultTargetScoped(result)) {
+    return Boolean(result.impact || result.lowerBoundImpact);
+  }
+
+  return (result.supportedTargetOutputs ?? []).some((output: RequestedOutputId) => IMPACT_ANSWER_OUTPUTS.has(output));
+}
+
 function formatDecimal(value: number): string {
   return Number.isInteger(value) ? value.toLocaleString("en-US") : value.toFixed(1).replace(/\.0$/u, "");
 }
@@ -34,10 +116,38 @@ function parseTarget(value: string | null | undefined): number | null {
   return typeof parsed === "number" ? parsed : null;
 }
 
+export function isAirborneAnswerParked(result: AssemblyCalculation | null | undefined): boolean {
+  if (!result) {
+    return false;
+  }
+
+  const boundaryOrigin =
+    result.acousticAnswerBoundary?.origin ?? result.airborneBasis?.origin;
+
+  if (boundaryOrigin !== "needs_input" && boundaryOrigin !== "unsupported") {
+    return false;
+  }
+
+  if (
+    result.acousticAnswerBoundary &&
+    !result.acousticAnswerBoundary.unsupportedOutputs.some((output: RequestedOutputId) =>
+      AIRBORNE_ANSWER_OUTPUTS.has(output)
+    )
+  ) {
+    return false;
+  }
+
+  return !(result.supportedTargetOutputs ?? []).some((output: RequestedOutputId) => AIRBORNE_ANSWER_OUTPUTS.has(output));
+}
+
 function buildAirborneLane(
   result: AssemblyCalculation,
   targetRwDb: string | null | undefined
 ): ResultAnswerChartLane | null {
+  if (isAirborneAnswerParked(result) || !hasSupportedAirborneAnswer(result)) {
+    return null;
+  }
+
   const value =
     result.airborneOverlay?.contextMode === "building_prediction" && typeof result.metrics.estimatedDnTwDb === "number"
       ? result.metrics.estimatedDnTwDb
@@ -55,12 +165,27 @@ function buildAirborneLane(
       : result.ratings.iso717.descriptor === "R'w"
         ? "R'w estimate"
         : "Rw estimate";
-  const companions: ResultAnswerChartCompanion[] = [
-    { label: "STC", valueLabel: `${formatDecimal(result.metrics.estimatedStc)} dB` },
-    { label: "C / Ctr", valueLabel: `${formatSignedDb(result.metrics.estimatedCDb)} / ${formatSignedDb(result.metrics.estimatedCtrDb)}` }
-  ];
+  const companions: ResultAnswerChartCompanion[] = [];
 
-  if (typeof result.metrics.estimatedDnTADb === "number") {
+  if (isSupportedAnswerOutput(result, "STC")) {
+    companions.push({ label: "STC", valueLabel: `${formatDecimal(result.metrics.estimatedStc)} dB` });
+  }
+
+  const adaptationValues: string[] = [];
+  if (isSupportedAnswerOutput(result, "C")) {
+    adaptationValues.push(formatSignedDb(result.metrics.estimatedCDb));
+  }
+  if (isSupportedAnswerOutput(result, "Ctr")) {
+    adaptationValues.push(formatSignedDb(result.metrics.estimatedCtrDb));
+  }
+  if (adaptationValues.length > 0) {
+    companions.push({
+      label: adaptationValues.length === 2 ? "C / Ctr" : isSupportedAnswerOutput(result, "C") ? "C" : "Ctr",
+      valueLabel: adaptationValues.join(" / ")
+    });
+  }
+
+  if (typeof result.metrics.estimatedDnTADb === "number" && isSupportedAnswerOutput(result, "DnT,A")) {
     companions.push({ label: "DnT,A", valueLabel: `${formatDecimal(result.metrics.estimatedDnTADb)} dB` });
   }
 
@@ -86,15 +211,21 @@ function buildImpactLane(
   const impact = result.impact;
   const lowerBoundImpact = result.lowerBoundImpact;
 
+  if (!hasSupportedImpactAnswer(result)) {
+    return null;
+  }
+
   if (impact) {
     const primary =
-      impact.labOrField === "field" && typeof impact.LPrimeNTw === "number"
+      impact.labOrField === "field" &&
+      typeof impact.LPrimeNTw === "number" &&
+      isSupportedAnswerOutput(result, "L'nT,w")
         ? { detail: "Primary standardized field-side impact answer.", label: "L'nT,w", value: impact.LPrimeNTw }
-        : typeof impact.LnW === "number"
+        : typeof impact.LnW === "number" && isSupportedAnswerOutput(result, "Ln,w")
           ? { detail: "Primary lab-side weighted impact answer.", label: "Ln,w", value: impact.LnW }
-          : typeof impact.LPrimeNW === "number"
+          : typeof impact.LPrimeNW === "number" && isSupportedAnswerOutput(result, "L'n,w")
             ? { detail: "Primary direct field carry-over impact answer.", label: "L'n,w", value: impact.LPrimeNW }
-            : typeof impact.LnTA === "number"
+            : typeof impact.LnTA === "number" && isSupportedAnswerOutput(result, "LnT,A")
               ? { detail: "Primary Dutch exact impact answer from field octave bands.", label: "LnT,A", value: impact.LnTA }
               : null;
 
@@ -104,19 +235,19 @@ function buildImpactLane(
 
     const companions: ResultAnswerChartCompanion[] = [];
 
-    if (typeof impact.LnWPlusCI === "number") {
+    if (typeof impact.LnWPlusCI === "number" && isSupportedAnswerOutput(result, "Ln,w+CI")) {
       companions.push({ label: "Ln,w+CI", valueLabel: `${formatDecimal(impact.LnWPlusCI)} dB` });
     }
-    if (typeof impact.LPrimeNT50 === "number") {
+    if (typeof impact.LPrimeNT50 === "number" && isSupportedAnswerOutput(result, "L'nT,50")) {
       companions.push({ label: "L'nT,50", valueLabel: `${formatDecimal(impact.LPrimeNT50)} dB` });
     }
-    if (typeof impact.DeltaLw === "number") {
+    if (typeof impact.DeltaLw === "number" && isSupportedAnswerOutput(result, "DeltaLw")) {
       companions.push({ label: "DeltaLw", valueLabel: `${formatDecimal(impact.DeltaLw)} dB` });
     }
-    if (typeof impact.CI === "number") {
+    if (typeof impact.CI === "number" && isSupportedAnswerOutput(result, "CI")) {
       companions.push({ label: "CI", valueLabel: formatSignedDb(impact.CI) });
     }
-    if (typeof impact.CI50_2500 === "number") {
+    if (typeof impact.CI50_2500 === "number" && isSupportedAnswerOutput(result, "CI,50-2500")) {
       companions.push({ label: "CI,50-2500", valueLabel: formatSignedDb(impact.CI50_2500) });
     }
 

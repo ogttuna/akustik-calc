@@ -1,5 +1,6 @@
 export * from "./api/estimate";
 export * from "./api/impact-only";
+export * from "./domain/acoustic-answer-boundary";
 export * from "./domain/airborne-basis";
 export * from "./domain/assembly";
 export * from "./domain/airborne-context";

@@ -468,7 +468,7 @@ describe("post company-internal controlled-use handoff Gate C next-slice selecti
       family: "stud_wall_system",
       rw: 55,
       stc: 55,
-      supported: ["Rw", "STC", "C", "Ctr"]
+      supported: ["Rw"]
     });
     expect(readyBuilding).toMatchObject({
       dnTw: 50,

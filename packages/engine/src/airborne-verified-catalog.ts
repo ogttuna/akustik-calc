@@ -936,8 +936,15 @@ function layersApproximatelyMatch(inputLayers: readonly ResolvedLayer[], referen
   const left = canonicalInput.map(canonicalMatchLayer);
   const right = canonicalReference.map(canonicalMatchLayer);
 
-  return left.every((layer, index) => {
-    const reference = right[index];
+  return matchCanonicalLayerOrder(left, right) || matchCanonicalLayerOrder([...left].reverse(), right);
+}
+
+function matchCanonicalLayerOrder(
+  inputLayers: readonly CanonicalMatchLayer[],
+  referenceLayers: readonly CanonicalMatchLayer[]
+): boolean {
+  return inputLayers.every((layer, index) => {
+    const reference = referenceLayers[index];
 
     return (
       Boolean(reference) &&

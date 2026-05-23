@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import type { AirborneContext, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
+import { getDoubleLeafFramedBridgeAirbornePromptDetail } from "./airborne-physical-input-prompt";
 import { getDynamicCalcBranchSummary } from "./dynamic-calc-branch";
 import { getGuidedTopologyGap } from "./guided-topology-gap";
 import { getGuidedValidationSummary } from "./guided-validation-summary";
@@ -23,7 +24,6 @@ import {
   type SimpleWorkbenchProposalMetric
 } from "./simple-workbench-proposal";
 import { buildSimpleWorkbenchProposalBrief } from "./simple-workbench-proposal-brief";
-import { ROCKWOOL_SPLIT_TRIPLE_LEAF_OUTPUT_WITHHELD_GUARD } from "./rockwool-triple-leaf-screening-policy-copy";
 import {
   buildWorkbenchWallTopology,
   type WorkbenchWallTopologyDraft
@@ -572,8 +572,8 @@ describe("wall triple-leaf company-internal acceptance rehearsal Gate J", () => 
     expect(splitFlat.result.supportedTargetOutputs).toEqual([]);
     expect(splitFlat.result.unsupportedTargetOutputs).toEqual([...WALL_LAB_OUTPUTS]);
     expect(getCard(splitFlat.cards, "Rw")).toMatchObject({
-      detail: ROCKWOOL_SPLIT_TRIPLE_LEAF_OUTPUT_WITHHELD_GUARD,
-      status: "unsupported",
+      detail: getDoubleLeafFramedBridgeAirbornePromptDetail(splitFlat.result),
+      status: "needs_input",
       value: "Not ready"
     });
     expect(splitFlat.topologyGap).toMatchObject({ value: "Grouped topology missing" });

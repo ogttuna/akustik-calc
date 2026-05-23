@@ -1,12 +1,17 @@
 import {
   AssemblyCalculationSchema,
+  AIRBORNE_CANDIDATE_RESOLVER_PRECEDENCE,
   AirborneContextSchema,
+  type AirborneCandidate,
   type AirborneCalculator,
   type AirborneCalculatorId,
+  type AirborneCandidateResolution,
   ExactImpactSourceSchema,
   ImpactFieldContextSchema,
   ImpactPredictorInputSchema,
   LayerInputSchema,
+  type AcousticAnswerBoundary,
+  type AirborneResultBasis,
   type AssemblyCalculation,
   type AirborneContext,
   type FloorSystemAirborneRatings,
@@ -16,6 +21,7 @@ import {
   type FloorSystemMatchResult,
   type ExactFloorSystem,
   type ExactImpactSource,
+  type ImpactCalculation,
   type ImpactFieldContext,
   type ImpactPredictorInput,
   type LayerInput,
@@ -23,7 +29,9 @@ import {
   type RequestedOutputId,
   type ResolvedLayer,
   type AssemblyRatings,
-  type TransmissionLossCurve
+  type TransmissionLossCurve,
+  getFloorSystemC,
+  getFloorSystemCtr
 } from "@dynecho/shared";
 
 import { buildCalibratedMassLawCurve, buildRatingsFromCurve } from "./curve-rating";
@@ -33,6 +41,19 @@ import {
   buildFailClosedAssemblyResult,
   evaluateAssemblyInputGuard
 } from "./assembly-input-guardrail";
+import {
+  buildAnswerEngineV1FloorAstmIicAiicUnsupportedBoundary,
+  buildAnswerEngineV1FloorFieldImpactNeedsInputBoundary,
+  buildAnswerEngineV1FloorImpactNeedsInputBoundary,
+  buildAnswerEngineV1FloorRolelessHelperOnlyBoundary,
+  isAnswerEngineV1PureFloorAstmIicAiicRequest,
+  isAnswerEngineV1PureFloorFieldImpactRequest,
+  isAnswerEngineV1RolelessHelperOnlyFloorStack
+} from "./acoustic-answer-engine-v1-floor-boundary";
+import {
+  auditAcousticCalculatorAnswerEngineV1OutputOwnership,
+  getAcousticCalculatorAnswerEngineV1FloorLabCompanionOutputs
+} from "./acoustic-answer-engine-v1-owner-audit";
 import { applyApproximateAirborneFieldCompanion, applyVerifiedAirborneCatalogAnchor } from "./airborne-verified-catalog";
 import { classifyLayerRole, materialText } from "./airborne-topology";
 import { calculateDynamicAirborneResult } from "./dynamic-airborne";
@@ -184,6 +205,49 @@ const GATE_AR_AIRBORNE_BUILDING_PREDICTION_LAB_ALIAS_OUTPUTS = new Set<Requested
   "Rw",
   "STC"
 ]);
+const ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLAT_DOUBLE_LEAF_MISSING_INPUTS = [
+  "sideALeafGroup",
+  "cavity1DepthMm",
+  "sideBLeafGroup",
+  "frameBridgeClass",
+  "supportTopology",
+  "supportSpacingMm"
+] as const;
+const ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_WALL_AIRBORNE_OUTPUTS = new Set<RequestedOutputId>([
+  "C",
+  "Ctr",
+  "Dn,A",
+  "Dn,w",
+  "DnT,A",
+  "DnT,A,k",
+  "DnT,w",
+  "R'w",
+  "Rw",
+  "STC"
+]);
+const ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_NUMERIC_ORIGINS = new Set([
+  "bounded_prediction",
+  "calibrated_family_physics",
+  "family_physics_prediction",
+  "measured_exact_full_stack",
+  "measured_exact_subassembly_plus_calculated_delta",
+  "screening_fallback"
+]);
+const ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_EXACT_FLOOR_BASES = new Set([
+  "official_floor_system_exact_match",
+  "open_measured_floor_system_exact_match"
+]);
+const ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLOOR_FIELD_CONTINUATION_OUTPUTS = new Set<RequestedOutputId>([
+  "Dn,A",
+  "Dn,w",
+  "DnT,A",
+  "DnT,A,k",
+  "DnT,w",
+  "L'n,w",
+  "L'nT,50",
+  "L'nT,w",
+  "R'w"
+]);
 
 type TargetOutputSupportLike = ReturnType<typeof analyzeTargetOutputSupport>;
 
@@ -319,6 +383,874 @@ function moveUnsupportedOutputsToSupported(
     unsupportedImpactOutputs: support.unsupportedImpactOutputs.filter((output) => !outputSet.has(output)),
     unsupportedTargetOutputs: support.unsupportedTargetOutputs.filter((output) => !outputSet.has(output))
   };
+}
+
+function outputsForExactMeasuredAirborneMetric(metricLabel: string | null | undefined): RequestedOutputId[] {
+  switch (metricLabel) {
+    case "C":
+      return ["C"];
+    case "Ctr":
+      return ["Ctr"];
+    case "Dn,A":
+      return ["Dn,A"];
+    case "Dn,w":
+      return ["Dn,w"];
+    case "DnT,A":
+      return ["DnT,A"];
+    case "Rw":
+      return ["Rw"];
+    case "DnT,A,k":
+      return ["DnT,A,k", "DnT,A"];
+    case "DnT,w":
+      return ["DnT,w"];
+    case "R'w":
+      return ["R'w"];
+    case "STC":
+      return ["STC"];
+    default:
+      return [];
+  }
+}
+
+function getAnswerEngineV1ExactMeasuredMetricUnsupportedOutputs(input: {
+  resolution: AirborneCandidateResolution | undefined;
+  sourceMetricLabel: string | null | undefined;
+  supportedTargetOutputs: readonly RequestedOutputId[];
+}): RequestedOutputId[] {
+  if (input.resolution?.selectedOrigin !== "measured_exact_full_stack") {
+    return [];
+  }
+
+  const exactOutputs = outputsForExactMeasuredAirborneMetric(input.sourceMetricLabel);
+  if (exactOutputs.length === 0) {
+    return [...input.supportedTargetOutputs];
+  }
+
+  const exactOutputSet = new Set(exactOutputs);
+  return input.supportedTargetOutputs.filter((output) => !exactOutputSet.has(output));
+}
+
+function outputsForExactMeasuredFloorSystem(input: {
+  floorSystemMatch: FloorSystemMatchResult | null | undefined;
+  impact: ImpactCalculation | null | undefined;
+}): RequestedOutputId[] {
+  if (
+    !input.floorSystemMatch ||
+    !input.impact ||
+    !ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_EXACT_FLOOR_BASES.has(input.impact.basis)
+  ) {
+    return [];
+  }
+
+  const outputs: RequestedOutputId[] = [];
+  const airborneRatings = input.floorSystemMatch.system.airborneRatings;
+
+  if (typeof airborneRatings.Rw === "number") {
+    outputs.push("Rw");
+  }
+  if (typeof getFloorSystemC(airborneRatings) === "number") {
+    outputs.push("C");
+  }
+  if (typeof getFloorSystemCtr(airborneRatings) === "number") {
+    outputs.push("Ctr");
+  }
+
+  for (const output of input.impact.availableOutputs) {
+    if (
+      output === "Ln,w" ||
+      output === "CI" ||
+      output === "CI,50-2500" ||
+      output === "Ln,w+CI" ||
+      output === "DeltaLw"
+    ) {
+      outputs.push(output);
+    }
+  }
+
+  return Array.from(new Set(outputs));
+}
+
+function getAnswerEngineV1ExactFloorMetricUnsupportedOutputs(input: {
+  floorSystemMatch: FloorSystemMatchResult | null | undefined;
+  impact: ImpactCalculation | null | undefined;
+  supportedTargetOutputs: readonly RequestedOutputId[];
+}): RequestedOutputId[] {
+  const exactOutputs = outputsForExactMeasuredFloorSystem({
+    floorSystemMatch: input.floorSystemMatch,
+    impact: input.impact
+  });
+  if (exactOutputs.length === 0) {
+    return [];
+  }
+
+  const exactOutputSet = new Set(exactOutputs);
+  return input.supportedTargetOutputs.filter(
+    (output) =>
+      !exactOutputSet.has(output) &&
+      !ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLOOR_FIELD_CONTINUATION_OUTPUTS.has(output)
+  );
+}
+
+function isAnswerEngineV1FlatGypsumAbsorberGypsum(input: {
+  airborneContext?: AirborneContext | null;
+  layers: readonly ResolvedLayer[];
+}): boolean {
+  if (input.airborneContext?.wallTopology || input.layers.length !== 3) {
+    return false;
+  }
+
+  const [left, middle, right] = input.layers;
+  if (!left || !middle || !right || input.layers.some((layer) => Boolean(layer.floorRole))) {
+    return false;
+  }
+
+  return (
+    left.material.id === "gypsum_board" &&
+    right.material.id === "gypsum_board" &&
+    (
+      middle.material.id === "rockwool" ||
+      middle.material.category === "insulation" ||
+      middle.material.acoustic?.behavior === "porous_absorber"
+    )
+  );
+}
+
+function buildAnswerEngineV1FlatDoubleLeafNeedsInputBasis(): AirborneResultBasis {
+  return {
+    assumptions: [
+      "Flat gypsum / porous absorber / gypsum input is physically double-leaf-like but lacks explicit leaf, cavity, and support ownership.",
+      "Answer Engine V1 blocks the screening number from becoming the published answer until the double-leaf formula inputs are supplied."
+    ],
+    calculationStandard: "none",
+    curveBasis: "no_curve",
+    family: "double_leaf",
+    kind: "airborne_needs_input",
+    method: "acoustic_calculator_answer_engine_v1_flat_double_leaf_missing_topology",
+    missingPhysicalInputs: [...ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLAT_DOUBLE_LEAF_MISSING_INPUTS],
+    missingSourceEvidence: [],
+    origin: "needs_input",
+    propertyDefaults: [],
+    ratingStandard: "none",
+    requiredInputs: [...ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLAT_DOUBLE_LEAF_MISSING_INPUTS]
+  };
+}
+
+function buildAnswerEngineV1RejectedCandidate(candidate: AirborneCandidate): AirborneCandidate["rejectionReasons"] {
+  if (ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_NUMERIC_ORIGINS.has(candidate.origin)) {
+    return [
+      {
+        code: "missing_physical_input",
+        detail:
+          "Answer Engine V1 cannot publish this numeric candidate until the flat double-leaf leaf groups, cavity depth, bridge class, support topology, and support spacing are supplied."
+      }
+    ];
+  }
+
+  return [
+    {
+      code: "lower_precedence_than_selected",
+      detail: "Answer Engine V1 selected the missing-input boundary for the published answer."
+    }
+  ];
+}
+
+function selectAnswerEngineV1NeedsInputCandidate(input: {
+  basis: AirborneResultBasis;
+  resolution: AirborneCandidateResolution;
+}): AirborneCandidateResolution {
+  const selectedCandidateId = "candidate_dynamic_needs_input";
+  const candidates = input.resolution.candidates.map((candidate) => {
+    const selected = candidate.id === selectedCandidateId;
+
+    return {
+      ...candidate,
+      basis: selected ? input.basis : candidate.basis,
+      rejectionReasons: selected ? [] : buildAnswerEngineV1RejectedCandidate(candidate),
+      selected
+    };
+  });
+
+  return {
+    ...input.resolution,
+    candidatePrecedence: [...AIRBORNE_CANDIDATE_RESOLVER_PRECEDENCE],
+    candidates,
+    id: "resolver_acoustic_calculator_answer_engine_v1_flat_double_leaf_needs_input",
+    rejectedCandidateIds: candidates.filter((candidate) => !candidate.selected).map((candidate) => candidate.id),
+    runtimeValueMovement: false,
+    selectedBasis: input.basis,
+    selectedCandidateId,
+    selectedOrigin: "needs_input"
+  };
+}
+
+function buildAnswerEngineV1WallNeedsInputBoundary(input: {
+  basis: AirborneResultBasis | undefined;
+  contextMode?: AirborneContext["contextMode"];
+  outputs: readonly RequestedOutputId[];
+}): AcousticAnswerBoundary | null {
+  if (
+    input.basis?.origin !== "needs_input" ||
+    input.basis.missingPhysicalInputs.length === 0
+  ) {
+    return null;
+  }
+
+  const unsupportedOutputs = getAnswerEngineV1WallNeedsInputUnsupportedOutputs({
+    basis: input.basis,
+    contextMode: input.contextMode,
+    outputs: input.outputs
+  });
+  if (unsupportedOutputs.length === 0) {
+    return null;
+  }
+
+  return {
+    method: input.basis.method,
+    missingPhysicalInputs: [...input.basis.missingPhysicalInputs],
+    origin: "needs_input",
+    requiredInputs:
+      input.basis.requiredInputs.length > 0
+        ? [...input.basis.requiredInputs]
+        : [...input.basis.missingPhysicalInputs],
+    route: "wall",
+    unsupportedOutputs
+  };
+}
+
+function buildAnswerEngineV1WallUnsupportedBoundary(input: {
+  basis: AirborneResultBasis | undefined;
+  outputs: readonly RequestedOutputId[];
+}): AcousticAnswerBoundary | null {
+  if (input.basis?.origin !== "unsupported") {
+    return null;
+  }
+
+  return {
+    method: input.basis.method,
+    missingPhysicalInputs: [],
+    origin: "unsupported",
+    requiredInputs: [...input.basis.requiredInputs],
+    route: "wall",
+    unsupportedOutputs: input.outputs.filter((output) =>
+      ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_WALL_AIRBORNE_OUTPUTS.has(output)
+    )
+  };
+}
+
+function hasAnswerEngineV1WallAirborneOutput(outputs: readonly RequestedOutputId[]): boolean {
+  return outputs.some((output) => ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_WALL_AIRBORNE_OUTPUTS.has(output));
+}
+
+function hasAnswerEngineV1SupportedWallAirborneOutput(outputs: readonly RequestedOutputId[]): boolean {
+  return outputs.some((output) => ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_WALL_AIRBORNE_OUTPUTS.has(output));
+}
+
+function hasAnswerEngineV1FieldOrBuildingAirborneOutput(outputs: readonly RequestedOutputId[]): boolean {
+  return outputs.some((output) =>
+    output === "R'w" ||
+    output === "Dn,w" ||
+    output === "Dn,A" ||
+    output === "DnT,w" ||
+    output === "DnT,A" ||
+    output === "DnT,A,k"
+  );
+}
+
+const ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FIELD_CONTEXT_MISSING_INPUTS = new Set([
+  "contextMode",
+  "partitionAreaM2",
+  "panelHeightMm",
+  "panelWidthMm",
+  "receivingRoomRt60S",
+  "receivingRoomVolumeM3"
+]);
+
+const ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_GROUPED_TOPOLOGY_MISSING_INPUTS = new Set([
+  "sideALeafGroup",
+  "cavity1DepthMm",
+  "internalLeafGroup",
+  "internalLeafCoupling",
+  "cavity2DepthMm",
+  "sideBLeafGroup",
+  "supportTopology"
+]);
+
+function hasAnswerEngineV1FieldOrBuildingMissingPhysicalInput(
+  basis: AirborneResultBasis | undefined
+): boolean {
+  return Boolean(
+    basis?.origin === "needs_input" &&
+      basis.missingPhysicalInputs.some((input) =>
+        ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FIELD_CONTEXT_MISSING_INPUTS.has(input)
+      )
+  );
+}
+
+function hasAnswerEngineV1GroupedTopologyMissingPhysicalInput(
+  basis: AirborneResultBasis | undefined
+): boolean {
+  return Boolean(
+    basis?.origin === "needs_input" &&
+      basis.missingPhysicalInputs.some((input) =>
+        ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_GROUPED_TOPOLOGY_MISSING_INPUTS.has(input)
+      )
+  );
+}
+
+function getAnswerEngineV1WallNeedsInputUnsupportedOutputs(input: {
+  basis: AirborneResultBasis;
+  contextMode?: AirborneContext["contextMode"];
+  outputs: readonly RequestedOutputId[];
+}): RequestedOutputId[] {
+  if (!hasAnswerEngineV1FieldOrBuildingMissingPhysicalInput(input.basis)) {
+    return input.outputs.filter((output) =>
+      ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_WALL_AIRBORNE_OUTPUTS.has(output)
+    );
+  }
+
+  if (input.contextMode === "building_prediction") {
+    return input.outputs.filter((output) => hasAnswerEngineV1FieldOrBuildingAirborneOutput([output]));
+  }
+
+  if (
+    input.contextMode === "field_between_rooms" &&
+    input.outputs.length > 0 &&
+    input.outputs.every((output) => hasAnswerEngineV1FieldOrBuildingAirborneOutput([output]))
+  ) {
+    return input.outputs.filter((output) => hasAnswerEngineV1FieldOrBuildingAirborneOutput([output]));
+  }
+
+  const missingInputs = new Set(input.basis.missingPhysicalInputs);
+  const missingFieldGeometry =
+    missingInputs.has("contextMode") ||
+    missingInputs.has("partitionAreaM2") ||
+    missingInputs.has("panelHeightMm") ||
+    missingInputs.has("panelWidthMm");
+  const missingRoomStandardization =
+    missingFieldGeometry ||
+    missingInputs.has("receivingRoomRt60S") ||
+    missingInputs.has("receivingRoomVolumeM3");
+
+  return input.outputs.filter((output) => {
+    if (!hasAnswerEngineV1FieldOrBuildingAirborneOutput([output])) {
+      return false;
+    }
+
+    if (output === "DnT,w" || output === "DnT,A" || output === "DnT,A,k") {
+      return missingRoomStandardization;
+    }
+
+    if (output === "R'w" || output === "Dn,w" || output === "Dn,A") {
+      return missingFieldGeometry;
+    }
+
+    return false;
+  });
+}
+
+function isAnswerEngineV1WallFieldOrBuildingBoundary(input: {
+  basis: AirborneResultBasis | undefined;
+  contextMode: AirborneContext["contextMode"] | undefined;
+  outputs: readonly RequestedOutputId[];
+}): boolean {
+  if (!hasAnswerEngineV1WallAirborneOutput(input.outputs)) {
+    return false;
+  }
+
+  return (
+    input.contextMode === "building_prediction" ||
+    input.contextMode === "field_between_rooms" ||
+    input.basis?.method.includes("building_prediction") === true ||
+    (
+      input.basis?.origin === "needs_input" &&
+      input.basis.missingPhysicalInputs.includes("contextMode") &&
+      hasAnswerEngineV1FieldOrBuildingAirborneOutput(input.outputs)
+    )
+  );
+}
+
+function isAnswerEngineV1WallFieldOrBuildingNeedsInputBoundary(input: {
+  basis: AirborneResultBasis | undefined;
+  contextMode: AirborneContext["contextMode"] | undefined;
+  outputs: readonly RequestedOutputId[];
+}): boolean {
+  if (
+    !hasAnswerEngineV1WallAirborneOutput(input.outputs) ||
+    !hasAnswerEngineV1FieldOrBuildingMissingPhysicalInput(input.basis)
+  ) {
+    return false;
+  }
+
+  return (
+    input.contextMode === "building_prediction" ||
+    input.contextMode === "field_between_rooms" ||
+    input.basis?.method.includes("building_prediction") === true ||
+    hasAnswerEngineV1FieldOrBuildingAirborneOutput(input.outputs)
+  );
+}
+
+function isAnswerEngineV1WallOwnedPhysicalInputStop(input: {
+  basis: AirborneResultBasis | undefined;
+  detectedFamily: string | undefined;
+  resolution: AirborneCandidateResolution | undefined;
+  strategy: string | undefined;
+}): boolean {
+  return Boolean(
+    input.basis?.missingPhysicalInputs.includes("resilientBarSideCount") ||
+      (
+        input.detectedFamily === "multileaf_multicavity" &&
+        input.strategy === "multileaf_screening_blend" &&
+        input.resolution?.inputCompletenessIds.includes("gate_k_triple_leaf_multicavity_route_inputs")
+      )
+  );
+}
+
+function isAnswerEngineV1GroupedTopologyNeedsInputBoundary(input: {
+  basis: AirborneResultBasis | undefined;
+  contextMode: AirborneContext["contextMode"] | undefined;
+  outputs: readonly RequestedOutputId[];
+}): boolean {
+  if (!hasAnswerEngineV1GroupedTopologyMissingPhysicalInput(input.basis)) {
+    return false;
+  }
+
+  return (
+    input.contextMode === "building_prediction" ||
+    input.contextMode === "field_between_rooms" ||
+    hasAnswerEngineV1FieldOrBuildingAirborneOutput(input.outputs)
+  );
+}
+
+function shouldApplyAnswerEngineV1WallNeedsInputBoundary(input: {
+  basis: AirborneResultBasis | undefined;
+  contextMode: AirborneContext["contextMode"] | undefined;
+  detectedFamily: string | undefined;
+  outputs: readonly RequestedOutputId[];
+  resolution: AirborneCandidateResolution | undefined;
+  strategy: string | undefined;
+}): boolean {
+  if (
+    input.resolution?.selectedCandidateId !== "candidate_dynamic_needs_input" ||
+    input.basis?.origin !== "needs_input" ||
+    input.basis.missingPhysicalInputs.length === 0
+  ) {
+    return false;
+  }
+
+  return (
+    isAnswerEngineV1WallOwnedPhysicalInputStop(input) ||
+    isAnswerEngineV1GroupedTopologyNeedsInputBoundary(input) ||
+    isAnswerEngineV1WallFieldOrBuildingNeedsInputBoundary(input)
+  );
+}
+
+function shouldApplyAnswerEngineV1WallUnsupportedBoundary(input: {
+  basis: AirborneResultBasis | undefined;
+  contextMode: AirborneContext["contextMode"] | undefined;
+  outputs: readonly RequestedOutputId[];
+  resolution: AirborneCandidateResolution | undefined;
+}): boolean {
+  return Boolean(
+    input.resolution?.selectedCandidateId === "candidate_dynamic_unsupported" &&
+      input.basis?.origin === "unsupported" &&
+      isAnswerEngineV1WallFieldOrBuildingBoundary(input)
+  );
+}
+
+function parkResultTargetOutputs(
+  result: AssemblyCalculation,
+  outputs: readonly RequestedOutputId[]
+): void {
+  const updatedSupport = moveSupportedOutputsToUnsupported({
+    supportedImpactOutputs: result.supportedImpactOutputs,
+    supportedTargetOutputs: result.supportedTargetOutputs,
+    targetOutputs: result.targetOutputs,
+    unsupportedImpactOutputs: result.unsupportedImpactOutputs,
+    unsupportedTargetOutputs: result.unsupportedTargetOutputs
+  }, outputs);
+
+  result.supportedImpactOutputs = updatedSupport.supportedImpactOutputs;
+  result.supportedTargetOutputs = updatedSupport.supportedTargetOutputs;
+  result.unsupportedImpactOutputs = updatedSupport.unsupportedImpactOutputs;
+  result.unsupportedTargetOutputs = updatedSupport.unsupportedTargetOutputs;
+}
+
+function hasAnswerEngineV1SelectedFloorImpactPath(result: AssemblyCalculation): boolean {
+  return Boolean(
+    hasGateWFloorImpactRequest(result.targetOutputs) &&
+      (
+        result.impact ||
+        result.lowerBoundImpact ||
+        result.floorSystemRatings ||
+        result.impactSupport ||
+        result.dynamicImpactTrace ||
+        result.supportedImpactOutputs.length > 0
+      )
+  );
+}
+
+function uniqueAnswerEngineV1Strings(values: readonly string[]): string[] {
+  return [...new Set(values)];
+}
+
+function uniqueAnswerEngineV1Outputs(values: readonly RequestedOutputId[]): RequestedOutputId[] {
+  return [...new Set(values)];
+}
+
+function getAnswerEngineV1GateWFloorImpactNeedsInputBoundary(input: {
+  contract: GateVFloorImpactDynamicStiffnessContract | null;
+  result: AssemblyCalculation;
+}): {
+  missingPhysicalInputs: readonly string[];
+  unsupportedOutputs: readonly RequestedOutputId[];
+} | null {
+  const boundary = input.contract?.adapterBoundaries.find(
+    (entry) => entry.adapterId === "ISO_717_2_Lnw_DeltaLw"
+  );
+
+  if (!boundary || boundary.status !== "needs_input" || boundary.missingPhysicalInputs.length === 0) {
+    return null;
+  }
+
+  const unsupportedOutputSet = new Set(input.result.unsupportedTargetOutputs);
+  const unsupportedOutputs = boundary.requestedOutputs.filter((output) => unsupportedOutputSet.has(output));
+  if (unsupportedOutputs.length === 0) {
+    return null;
+  }
+
+  return {
+    missingPhysicalInputs: boundary.missingPhysicalInputs,
+    unsupportedOutputs
+  };
+}
+
+function getAnswerEngineV1GateZFloorImpactNeedsInputBoundary(input: {
+  assessment: GateYFloorImpactFieldContextAssessment | null;
+  result: AssemblyCalculation;
+}): {
+  missingPhysicalInputs: readonly string[];
+  unsupportedOutputs: readonly RequestedOutputId[];
+} | null {
+  const assessment = input.assessment;
+  if (
+    !assessment ||
+    assessment.status !== "needs_input" ||
+    assessment.missingPhysicalInputs.length === 0 ||
+    assessment.requestedOutputs.length === 0
+  ) {
+    return null;
+  }
+
+  const unsupportedOutputSet = new Set(input.result.unsupportedTargetOutputs);
+  const unsupportedOutputs = assessment.requestedOutputs.filter((output) => unsupportedOutputSet.has(output));
+  if (unsupportedOutputs.length === 0) {
+    return null;
+  }
+
+  return {
+    missingPhysicalInputs: assessment.missingPhysicalInputs,
+    unsupportedOutputs
+  };
+}
+
+function applyAcousticCalculatorAnswerEngineV1FlatDoubleLeafBoundary(input: {
+  airborneContext?: AirborneContext | null;
+  dynamicFamilyRuntimeBasisActive: boolean;
+  result: AssemblyCalculation;
+}): void {
+  if (
+    input.dynamicFamilyRuntimeBasisActive ||
+    input.result.airborneCandidateResolution?.selectedOrigin !== "screening_fallback" ||
+    input.result.dynamicAirborneTrace?.detectedFamily !== "double_leaf" ||
+    !isAnswerEngineV1FlatGypsumAbsorberGypsum({
+      airborneContext: input.airborneContext,
+      layers: input.result.layers
+    })
+  ) {
+    return;
+  }
+
+  const basis = buildAnswerEngineV1FlatDoubleLeafNeedsInputBasis();
+  input.result.airborneBasis = basis;
+  input.result.acousticAnswerBoundary = buildAnswerEngineV1WallNeedsInputBoundary({
+    basis,
+    contextMode: input.airborneContext?.contextMode,
+    outputs: input.result.targetOutputs
+  }) ?? undefined;
+
+  if (input.result.airborneCandidateResolution) {
+    input.result.airborneCandidateResolution = selectAnswerEngineV1NeedsInputCandidate({
+      basis,
+      resolution: input.result.airborneCandidateResolution
+    });
+    input.result.airborneCandidateSet = input.result.airborneCandidateResolution.candidates;
+  }
+
+  parkResultTargetOutputs(input.result, input.result.targetOutputs);
+  input.result.warnings.push(
+    `Acoustic Calculator Answer Engine V1 selected needs_input for ${input.result.targetOutputs.join(", ")}; provide ${basis.missingPhysicalInputs.join(", ")} before DynEcho publishes a double-leaf wall answer.`
+  );
+}
+
+function applyAcousticCalculatorAnswerEngineV1WallNeedsInputBoundary(
+  result: AssemblyCalculation
+): void {
+  const ownedPhysicalInputStop = isAnswerEngineV1WallOwnedPhysicalInputStop({
+    basis: result.airborneBasis,
+    detectedFamily: result.dynamicAirborneTrace?.detectedFamily,
+    resolution: result.airborneCandidateResolution,
+    strategy: result.dynamicAirborneTrace?.strategy
+  });
+  const fieldOrBuildingInputStop = isAnswerEngineV1WallFieldOrBuildingNeedsInputBoundary({
+    basis: result.airborneBasis,
+    contextMode: result.airborneOverlay?.contextMode,
+    outputs: result.targetOutputs
+  });
+
+  if (
+    result.acousticAnswerBoundary ||
+    hasAnswerEngineV1SelectedFloorImpactPath(result) ||
+    (
+      hasAnswerEngineV1SupportedWallAirborneOutput(result.supportedTargetOutputs) &&
+      !ownedPhysicalInputStop &&
+      !fieldOrBuildingInputStop
+    ) ||
+    !shouldApplyAnswerEngineV1WallNeedsInputBoundary({
+      basis: result.airborneBasis,
+      contextMode: result.airborneOverlay?.contextMode,
+      detectedFamily: result.dynamicAirborneTrace?.detectedFamily,
+      outputs: result.targetOutputs,
+      resolution: result.airborneCandidateResolution,
+      strategy: result.dynamicAirborneTrace?.strategy
+    })
+  ) {
+    return;
+  }
+
+  const boundary = buildAnswerEngineV1WallNeedsInputBoundary({
+    basis: result.airborneBasis,
+    contextMode: result.airborneOverlay?.contextMode,
+    outputs: result.targetOutputs
+  });
+
+  if (boundary) {
+    result.acousticAnswerBoundary = boundary;
+    parkResultTargetOutputs(result, boundary.unsupportedOutputs);
+  }
+}
+
+function applyAcousticCalculatorAnswerEngineV1WallUnsupportedBoundary(
+  result: AssemblyCalculation
+): void {
+  const fieldOrBuildingBoundary = isAnswerEngineV1WallFieldOrBuildingBoundary({
+    basis: result.airborneBasis,
+    contextMode: result.airborneOverlay?.contextMode,
+    outputs: result.targetOutputs
+  });
+
+  if (
+    result.acousticAnswerBoundary ||
+    hasAnswerEngineV1SelectedFloorImpactPath(result) ||
+    (
+      hasAnswerEngineV1SupportedWallAirborneOutput(result.supportedTargetOutputs) &&
+      !fieldOrBuildingBoundary
+    ) ||
+    !shouldApplyAnswerEngineV1WallUnsupportedBoundary({
+      basis: result.airborneBasis,
+      contextMode: result.airborneOverlay?.contextMode,
+      outputs: result.targetOutputs,
+      resolution: result.airborneCandidateResolution
+    })
+  ) {
+    return;
+  }
+
+  const boundary = buildAnswerEngineV1WallUnsupportedBoundary({
+    basis: result.airborneBasis,
+    outputs: result.targetOutputs
+  });
+
+  if (boundary) {
+    result.acousticAnswerBoundary = boundary;
+    parkResultTargetOutputs(result, boundary.unsupportedOutputs);
+  }
+}
+
+function applyAcousticCalculatorAnswerEngineV1FloorRolelessHelperOnlyBoundary(
+  result: AssemblyCalculation
+): void {
+  const hasPublishedImpactCandidate = Boolean(result.impact || result.floorSystemEstimate);
+
+  if (
+    !hasPublishedImpactCandidate ||
+    !isAnswerEngineV1RolelessHelperOnlyFloorStack({
+      layers: result.layers,
+      targetOutputs: result.targetOutputs
+    })
+  ) {
+    return;
+  }
+
+  const boundary = buildAnswerEngineV1FloorRolelessHelperOnlyBoundary(result.targetOutputs);
+  result.acousticAnswerBoundary = boundary;
+  parkResultTargetOutputs(result, result.targetOutputs);
+  result.boundFloorSystemEstimate = null;
+  result.boundFloorSystemMatch = null;
+  result.dynamicImpactTrace = undefined;
+  result.floorSystemEstimate = null;
+  result.floorSystemMatch = null;
+  result.floorSystemRatings = null;
+  result.floorSystemRecommendations = [];
+  result.impact = null;
+  result.impactCatalogMatch = null;
+  result.impactPredictorStatus = null;
+  result.impactSupport = null;
+  result.lowerBoundImpact = null;
+  result.warnings.push(
+    `Acoustic Calculator Answer Engine V1 selected needs_input for ${result.targetOutputs.join(", ")}; assign ${boundary.missingPhysicalInputs.join(", ")} before DynEcho publishes helper-only timber/open-web floor answers.`
+  );
+  result.warnings.push(
+    `Floor roles needed before impact output promotion: ${boundary.missingPhysicalInputs.join(", ")}.`
+  );
+}
+
+function applyAcousticCalculatorAnswerEngineV1FloorAstmIicAiicUnsupportedBoundary(
+  result: AssemblyCalculation
+): void {
+  if (
+    result.acousticAnswerBoundary ||
+    !isAnswerEngineV1PureFloorAstmIicAiicRequest({
+      supportedTargetOutputs: result.supportedTargetOutputs,
+      targetOutputs: result.targetOutputs,
+      unsupportedTargetOutputs: result.unsupportedTargetOutputs
+    })
+  ) {
+    return;
+  }
+
+  const boundary = buildAnswerEngineV1FloorAstmIicAiicUnsupportedBoundary(result.targetOutputs);
+  if (!boundary) {
+    return;
+  }
+
+  result.acousticAnswerBoundary = boundary;
+  result.warnings.push(
+    `Acoustic Calculator Answer Engine V1 selected unsupported for ${boundary.unsupportedOutputs.join(", ")}; ASTM IIC/AIIC need ${boundary.requiredInputs.join(", ")} before DynEcho publishes those ratings.`
+  );
+}
+
+const ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLOOR_FIELD_CONTEXT_INPUTS = new Set([
+  "contextMode",
+  "partitionAreaM2",
+  "receivingRoomVolumeM3",
+  "receivingRoomRt60S",
+  "impactFieldContext"
+]);
+
+function getAnswerEngineV1FloorFieldImpactMissingInputs(input: {
+  assessment: GateYFloorImpactFieldContextAssessment | null;
+  result: AssemblyCalculation;
+}): string[] {
+  const missing = input.assessment?.missingPhysicalInputs ?? [];
+  const hasLabImpactAnchor = Boolean(
+    input.result.impact?.labOrField !== "field" &&
+      (
+        typeof input.result.impact?.LnW === "number" ||
+        Boolean(input.result.lowerBoundImpact)
+      )
+  );
+
+  if (!hasLabImpactAnchor) {
+    return [...missing];
+  }
+
+  return missing.filter((field) =>
+    ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLOOR_FIELD_CONTEXT_INPUTS.has(field)
+  );
+}
+
+function applyAcousticCalculatorAnswerEngineV1FloorFieldImpactNeedsInputBoundary(input: {
+  gateZFloorImpactFieldAssessment: GateYFloorImpactFieldContextAssessment | null;
+  result: AssemblyCalculation;
+}): void {
+  if (
+    input.result.acousticAnswerBoundary ||
+    !isAnswerEngineV1PureFloorFieldImpactRequest({
+      supportedTargetOutputs: input.result.supportedTargetOutputs,
+      targetOutputs: input.result.targetOutputs,
+      unsupportedTargetOutputs: input.result.unsupportedTargetOutputs
+    })
+  ) {
+    return;
+  }
+
+  const missingPhysicalInputs = getAnswerEngineV1FloorFieldImpactMissingInputs({
+    assessment: input.gateZFloorImpactFieldAssessment,
+    result: input.result
+  });
+  const boundary = buildAnswerEngineV1FloorFieldImpactNeedsInputBoundary({
+    missingPhysicalInputs,
+    targetOutputs: input.result.targetOutputs
+  });
+  if (!boundary) {
+    return;
+  }
+
+  input.result.acousticAnswerBoundary = boundary;
+  input.result.warnings.push(
+    `Acoustic Calculator Answer Engine V1 selected needs_input for ${boundary.unsupportedOutputs.join(", ")}; provide ${boundary.missingPhysicalInputs.join(", ")} before DynEcho publishes floor field-impact answers.`
+  );
+}
+
+function applyAcousticCalculatorAnswerEngineV1FloorImpactNeedsInputBoundary(input: {
+  gateWFloorImpactContract: GateVFloorImpactDynamicStiffnessContract | null;
+  gateZFloorImpactFieldAssessment: GateYFloorImpactFieldContextAssessment | null;
+  result: AssemblyCalculation;
+}): void {
+  const hasPublishedFloorImpactCandidate = Boolean(
+    input.result.impact ||
+      input.result.lowerBoundImpact ||
+      input.result.floorSystemMatch ||
+      input.result.boundFloorSystemMatch ||
+      input.result.floorSystemEstimate ||
+      input.result.boundFloorSystemEstimate ||
+      input.result.impactCatalogMatch
+  );
+
+  if (input.result.acousticAnswerBoundary || hasPublishedFloorImpactCandidate) {
+    return;
+  }
+
+  const labBoundary = getAnswerEngineV1GateWFloorImpactNeedsInputBoundary({
+    contract: input.gateWFloorImpactContract,
+    result: input.result
+  });
+  const fieldBoundary = getAnswerEngineV1GateZFloorImpactNeedsInputBoundary({
+    assessment: input.gateZFloorImpactFieldAssessment,
+    result: input.result
+  });
+  const missingPhysicalInputs = uniqueAnswerEngineV1Strings([
+    ...(labBoundary?.missingPhysicalInputs ?? []),
+    ...(fieldBoundary?.missingPhysicalInputs ?? [])
+  ]);
+  const unsupportedOutputs = uniqueAnswerEngineV1Outputs([
+    ...(labBoundary?.unsupportedOutputs ?? []),
+    ...(fieldBoundary?.unsupportedOutputs ?? [])
+  ]);
+  const boundary = buildAnswerEngineV1FloorImpactNeedsInputBoundary({
+    missingPhysicalInputs,
+    targetOutputs: unsupportedOutputs
+  });
+
+  if (!boundary) {
+    return;
+  }
+
+  input.result.acousticAnswerBoundary = boundary;
+  parkResultTargetOutputs(input.result, boundary.unsupportedOutputs);
+  input.result.warnings.push(
+    `Acoustic Calculator Answer Engine V1 selected needs_input for ${boundary.unsupportedOutputs.join(", ")}; provide ${boundary.missingPhysicalInputs.join(", ")} before DynEcho publishes floor impact answers.`
+  );
 }
 
 function resolveOpeningLeakHostWallBasis(input: {
@@ -1789,15 +2721,79 @@ export function calculateAssembly(
     dynamicAirborneResult.airborneBasis.origin !== "family_physics_prediction"
       ? targetOutputSupport.targetOutputs
       : [];
+  const exactMeasuredSourceMetricUnsupportedOutputs =
+    getAnswerEngineV1ExactMeasuredMetricUnsupportedOutputs({
+      resolution: dynamicCandidateResolverRuntime?.resolution,
+      sourceMetricLabel: verifiedAirborneAnchorResult.match?.metricLabel,
+      supportedTargetOutputs: targetOutputSupport.supportedTargetOutputs
+    });
+  const exactMeasuredFloorMetricUnsupportedOutputs =
+    getAnswerEngineV1ExactFloorMetricUnsupportedOutputs({
+      floorSystemMatch,
+      impact,
+      supportedTargetOutputs: targetOutputSupport.supportedTargetOutputs
+    });
+  const answerEngineV1SelectedCandidate = dynamicCandidateResolverRuntime?.resolution.candidates.find(
+    (candidate) => candidate.id === dynamicCandidateResolverRuntime.resolution.selectedCandidateId
+  );
+  const answerEngineV1OwnedPhysicalInputStop =
+    dynamicCandidateResolverRuntime
+      ? isAnswerEngineV1WallOwnedPhysicalInputStop({
+          basis: dynamicCandidateResolverRuntime.resolution.selectedBasis,
+          detectedFamily: dynamicAirborneResult?.trace.detectedFamily,
+          resolution: dynamicCandidateResolverRuntime.resolution,
+          strategy: dynamicAirborneResult?.trace.strategy
+        })
+      : false;
+  const shouldParkAnswerEngineV1Outputs =
+    dynamicCandidateResolverRuntime &&
+    dynamicCandidateResolverRuntime.resolution.selectedOrigin === "needs_input" &&
+    dynamicCandidateResolverRuntime.routeInputAssessment.route === "wall" &&
+    (
+      !hasAnswerEngineV1SupportedWallAirborneOutput(targetOutputSupport.supportedTargetOutputs) ||
+      answerEngineV1OwnedPhysicalInputStop
+    ) &&
+    shouldApplyAnswerEngineV1WallNeedsInputBoundary({
+      basis: dynamicCandidateResolverRuntime.resolution.selectedBasis,
+      contextMode: airborneOverlayResult.overlay?.contextMode,
+      detectedFamily: dynamicAirborneResult?.trace.detectedFamily,
+      outputs: targetOutputSupport.targetOutputs,
+      resolution: dynamicCandidateResolverRuntime.resolution,
+      strategy: dynamicAirborneResult?.trace.strategy
+    });
+  const answerEngineV1ParkedOutputs =
+    shouldParkAnswerEngineV1Outputs
+      ? [
+          ...new Set(
+            (answerEngineV1SelectedCandidate?.outputIds.length
+              ? answerEngineV1SelectedCandidate.outputIds
+              : targetOutputSupport.targetOutputs
+            ).filter((output) => targetOutputSupport.targetOutputs.includes(output))
+          )
+        ]
+      : [];
   const visibleTargetOutputSupport = moveSupportedOutputsToUnsupported(
     moveSupportedOutputsToUnsupported(
       moveSupportedOutputsToUnsupported(
-        moveSupportedOutputsToUnsupported(targetOutputSupport, parkedAirborneBuildingPredictionOutputs),
+        moveSupportedOutputsToUnsupported(
+          moveSupportedOutputsToUnsupported(
+            targetOutputSupport,
+            parkedAirborneBuildingPredictionOutputs
+          ),
+          answerEngineV1ParkedOutputs
+        ),
         gateSOpeningLeakBlockedOutputs
       ),
       gateAYAdvancedWallBlockedOutputs
     ),
     gateARAirborneBuildingPredictionLabAliasBlockedOutputs
+  );
+  const visibleTargetOutputSupportWithExactMetricScope = moveSupportedOutputsToUnsupported(
+    moveSupportedOutputsToUnsupported(
+      visibleTargetOutputSupport,
+      exactMeasuredSourceMetricUnsupportedOutputs
+    ),
+    exactMeasuredFloorMetricUnsupportedOutputs
   );
   const parkedAirborneBuildingPredictionOutputSet = new Set(parkedAirborneBuildingPredictionOutputs);
   const hideParkedAirborneBuildingPredictionMetrics =
@@ -1843,7 +2839,21 @@ export function calculateAssembly(
   if (localSubstitutionLabSpectrumAdapter) {
     warnings.push(BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_WARNING);
   }
-  warnings.push(...buildTargetOutputWarnings(visibleTargetOutputSupport));
+  warnings.push(...buildTargetOutputWarnings(visibleTargetOutputSupportWithExactMetricScope));
+  if (exactMeasuredSourceMetricUnsupportedOutputs.length > 0 && verifiedAirborneAnchorResult.match) {
+    warnings.push(
+      `Exact measured airborne source ${verifiedAirborneAnchorResult.match.label} reports ${verifiedAirborneAnchorResult.match.metricLabel}; DynEcho kept ${exactMeasuredSourceMetricUnsupportedOutputs.join(", ")} out of the exact answer instead of aliasing measured and calculated metrics.`
+    );
+  }
+  if (exactMeasuredFloorMetricUnsupportedOutputs.length > 0 && floorSystemMatch) {
+    const exactOutputs = outputsForExactMeasuredFloorSystem({
+      floorSystemMatch,
+      impact
+    });
+    warnings.push(
+      `Exact measured floor source ${floorSystemMatch.system.label} reports ${exactOutputs.join(", ")}; DynEcho kept ${exactMeasuredFloorMetricUnsupportedOutputs.join(", ")} out of the exact answer instead of aliasing measured and calculated metrics.`
+    );
+  }
   warnings.push(...floorFamilySourceGuardWarnings);
   if (heavyConcreteCombinedFormulaFallbackBlockerWarning) {
     warnings.push(heavyConcreteCombinedFormulaFallbackBlockerWarning);
@@ -1862,6 +2872,11 @@ export function calculateAssembly(
     dynamicCandidateResolverRuntime.resolution.selectedOrigin === "unsupported"
   ) {
     warnings.push(GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING);
+  }
+  if (answerEngineV1ParkedOutputs.length > 0) {
+    warnings.push(
+      `Acoustic Calculator Answer Engine V1 selected ${dynamicCandidateResolverRuntime?.resolution.selectedOrigin ?? "a boundary"} for ${answerEngineV1ParkedOutputs.join(", ")}; DynEcho kept those outputs out of the published answer until the required physical inputs or basis owner are available.`
+    );
   }
 
   if (shouldWithholdUnreadyDynamicFloorImpactRuntime && gateWFloorImpactContract) {
@@ -2081,11 +3096,11 @@ export function calculateAssembly(
     },
     ratings: visibleRatings,
     ratingAdapterBasisSet: ratingAdapterBasisSet.length > 0 ? ratingAdapterBasisSet : undefined,
-    supportedImpactOutputs: visibleTargetOutputSupport.supportedImpactOutputs,
-    supportedTargetOutputs: visibleTargetOutputSupport.supportedTargetOutputs,
-    targetOutputs: visibleTargetOutputSupport.targetOutputs,
-    unsupportedImpactOutputs: visibleTargetOutputSupport.unsupportedImpactOutputs,
-    unsupportedTargetOutputs: visibleTargetOutputSupport.unsupportedTargetOutputs,
+    supportedImpactOutputs: visibleTargetOutputSupportWithExactMetricScope.supportedImpactOutputs,
+    supportedTargetOutputs: visibleTargetOutputSupportWithExactMetricScope.supportedTargetOutputs,
+    targetOutputs: visibleTargetOutputSupportWithExactMetricScope.targetOutputs,
+    unsupportedImpactOutputs: visibleTargetOutputSupportWithExactMetricScope.unsupportedImpactOutputs,
+    unsupportedTargetOutputs: visibleTargetOutputSupportWithExactMetricScope.unsupportedTargetOutputs,
     warnings
   };
 
@@ -2134,7 +3149,53 @@ export function calculateAssembly(
     result.airborneBasis = companyInternalOpeningLeakFieldBuildingRuntime.basis;
   }
 
-  const layerCombinationResolverTrace = buildLayerCombinationResolverTraceForAssembly(result);
+  applyAcousticCalculatorAnswerEngineV1FlatDoubleLeafBoundary({
+    airborneContext,
+    dynamicFamilyRuntimeBasisActive: Boolean(
+      dynamicAirborneResult?.airborneBasis ||
+      gateSOpeningLeakCompositeRuntime?.basis ||
+      companyInternalOpeningLeakFieldBuildingRuntime?.basis ||
+      localSubstitutionLabSpectrumAdapter?.basis ||
+      gateYCltMassTimberCtrSpectrumAdapterBasis
+    ),
+    result
+  });
+  applyAcousticCalculatorAnswerEngineV1WallNeedsInputBoundary(result);
+  applyAcousticCalculatorAnswerEngineV1WallUnsupportedBoundary(result);
+  applyAcousticCalculatorAnswerEngineV1FloorImpactNeedsInputBoundary({
+    gateWFloorImpactContract,
+    gateZFloorImpactFieldAssessment,
+    result
+  });
+  applyAcousticCalculatorAnswerEngineV1FloorRolelessHelperOnlyBoundary(result);
+  applyAcousticCalculatorAnswerEngineV1FloorFieldImpactNeedsInputBoundary({
+    gateZFloorImpactFieldAssessment,
+    result
+  });
+  applyAcousticCalculatorAnswerEngineV1FloorAstmIicAiicUnsupportedBoundary(result);
+
+  let layerCombinationResolverTrace = buildLayerCombinationResolverTraceForAssembly(result);
+  const ownerAudit = auditAcousticCalculatorAnswerEngineV1OutputOwnership({
+    allowedCompanionOutputs: getAcousticCalculatorAnswerEngineV1FloorLabCompanionOutputs({
+      floorSystemRatings: result.floorSystemRatings,
+      impact: result.impact,
+      layerCombinationResolverTrace,
+      metrics: result.metrics,
+      supportedTargetOutputs: result.supportedTargetOutputs
+    }),
+    answerStopActive: Boolean(result.acousticAnswerBoundary),
+    answerStopOutputs: result.acousticAnswerBoundary?.unsupportedOutputs,
+    layerCombinationResolverTrace,
+    resultKind: "assembly",
+    supportedTargetOutputs: result.supportedTargetOutputs
+  });
+  if (ownerAudit.ownerlessSupportedOutputs.length > 0) {
+    parkResultTargetOutputs(result, ownerAudit.ownerlessSupportedOutputs);
+    if (ownerAudit.warning) {
+      result.warnings.push(ownerAudit.warning);
+    }
+    layerCombinationResolverTrace = buildLayerCombinationResolverTraceForAssembly(result);
+  }
   if (layerCombinationResolverTrace) {
     result.layerCombinationResolverTrace = layerCombinationResolverTrace;
   }

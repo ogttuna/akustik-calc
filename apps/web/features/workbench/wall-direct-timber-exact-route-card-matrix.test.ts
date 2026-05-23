@@ -200,15 +200,15 @@ const CASES: readonly ExactWallCase[] = [
     expected: {
       c: -0.1,
       cards: {
-        Rw: { status: "unsupported", value: "Not ready" },
+        Rw: { status: "needs_input", value: "Not ready" },
         "R'w": { status: "needs_input", value: "Not ready" },
         "Dn,w": { status: "needs_input", value: "Not ready" },
         "Dn,A": { status: "needs_input", value: "Not ready" },
         "DnT,w": { status: "needs_input", value: "Not ready" },
         "DnT,A": { status: "needs_input", value: "Not ready" },
-        STC: { status: "unsupported", value: "Not ready" },
-        C: { status: "unsupported", value: "Not ready" },
-        Ctr: { status: "unsupported", value: "Not ready" }
+        STC: { status: "needs_input", value: "Not ready" },
+        C: { status: "needs_input", value: "Not ready" },
+        Ctr: { status: "needs_input", value: "Not ready" }
       },
       ctr: -3.9,
       dnA: null,
@@ -334,15 +334,15 @@ const CASES: readonly ExactWallCase[] = [
     expected: {
       c: -1.1,
       cards: {
-        Rw: { status: "unsupported", value: "Not ready" },
+        Rw: { status: "needs_input", value: "Not ready" },
         "R'w": { status: "needs_input", value: "Not ready" },
         "Dn,w": { status: "needs_input", value: "Not ready" },
         "Dn,A": { status: "needs_input", value: "Not ready" },
         "DnT,w": { status: "needs_input", value: "Not ready" },
         "DnT,A": { status: "needs_input", value: "Not ready" },
-        STC: { status: "unsupported", value: "Not ready" },
-        C: { status: "unsupported", value: "Not ready" },
-        Ctr: { status: "unsupported", value: "Not ready" }
+        STC: { status: "needs_input", value: "Not ready" },
+        C: { status: "needs_input", value: "Not ready" },
+        Ctr: { status: "needs_input", value: "Not ready" }
       },
       ctr: -5.9,
       dnA: null,
@@ -380,11 +380,24 @@ describe("wall direct timber exact route card matrix", () => {
     expect(evaluated.result.supportedTargetOutputs, `${testCase.id} supported`).toEqual(testCase.expected.supported);
     expect(evaluated.result.unsupportedTargetOutputs, `${testCase.id} unsupported`).toEqual(testCase.expected.unsupported);
 
-    expect(evaluated.branch.value, `${testCase.id} branch value`).toBe("Stud Wall Surrogate");
-    expect(evaluated.branch.tone, `${testCase.id} branch tone`).toBe("warning");
-    expect(evaluated.branch.detail, `${testCase.id} branch detail`).toMatch(
-      /Mass Law anchor is active with stud surrogate blend\+framed wall calibration/i
+    expect(evaluated.branch.value, `${testCase.id} branch value`).toBe(
+      testCase.context.contextMode === "building_prediction"
+        ? "Awaiting physical input"
+        : "Stud Wall Surrogate"
     );
+    expect(evaluated.branch.tone, `${testCase.id} branch tone`).toBe("warning");
+    if (testCase.context.contextMode === "building_prediction") {
+      expect(evaluated.branch.detail, `${testCase.id} branch missing building inputs`).toContain(
+        "flanking/junction class"
+      );
+      expect(evaluated.branch.detail, `${testCase.id} branch output basis`).toContain(
+        "building output basis"
+      );
+    } else {
+      expect(evaluated.branch.detail, `${testCase.id} branch detail`).toMatch(
+        /Mass Law anchor is active with stud surrogate blend\+framed wall calibration/i
+      );
+    }
 
     expect(
       evaluated.warnings.some((warning) => testCase.warningPattern.test(warning)),

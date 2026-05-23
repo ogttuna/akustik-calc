@@ -273,6 +273,157 @@ describe("simple workbench output model", () => {
     );
   });
 
+  it("marks answer-engine floor missing-role boundaries as needs-input cards", () => {
+    const result = buildFixture({
+      acousticAnswerBoundary: {
+        method: "acoustic_calculator_answer_engine_v1_floor_roleless_helper_only_missing_floor_roles",
+        missingPhysicalInputs: [
+          "floorRole:base_structure",
+          "floorRole:ceiling_board",
+          "floorRole:ceiling_cavity",
+          "floorRole:ceiling_fill"
+        ],
+        origin: "needs_input",
+        requiredInputs: [
+          "floorRole:base_structure",
+          "floorRole:ceiling_board",
+          "floorRole:ceiling_cavity",
+          "floorRole:ceiling_fill"
+        ],
+        route: "floor",
+        unsupportedOutputs: ["Rw", "Ln,w"]
+      },
+      floorSystemRatings: null,
+      impact: null,
+      supportedTargetOutputs: [],
+      unsupportedTargetOutputs: ["Rw", "Ln,w"]
+    });
+    const rwCard = buildOutputCard({
+      output: "Rw",
+      result,
+      studyMode: "floor"
+    });
+    const lnwCard = buildOutputCard({
+      output: "Ln,w",
+      result,
+      studyMode: "floor"
+    });
+
+    expect(rwCard).toEqual(
+      expect.objectContaining({
+        detail: expect.stringContaining("floorRole:base_structure"),
+        status: "needs_input",
+        value: "Not ready"
+      })
+    );
+    expect(lnwCard).toEqual(
+      expect.objectContaining({
+        detail: expect.stringContaining("Assign floor roles"),
+        status: "needs_input",
+        value: "Not ready"
+      })
+    );
+  });
+
+  it("marks answer-engine wall missing-input boundaries as needs-input cards", () => {
+    const result = buildFixture({
+      acousticAnswerBoundary: {
+        method: "dynamic_calculator_route_input_contract_missing_physical_fields",
+        missingPhysicalInputs: [
+          "sideALeafGroup",
+          "cavity1DepthMm",
+          "internalLeafGroup",
+          "internalLeafCoupling",
+          "cavity2DepthMm",
+          "sideBLeafGroup",
+          "supportTopology"
+        ],
+        origin: "needs_input",
+        requiredInputs: [
+          "sideALeafGroup",
+          "cavity1DepthMm",
+          "internalLeafGroup",
+          "internalLeafCoupling",
+          "cavity2DepthMm",
+          "sideBLeafGroup",
+          "supportTopology"
+        ],
+        route: "wall",
+        unsupportedOutputs: ["Rw", "STC", "C", "Ctr"]
+      },
+      airborneBasis: {
+        assumptions: ["missing physical fields are user prompts"],
+        calculationStandard: "none",
+        curveBasis: "no_curve",
+        kind: "airborne_needs_input",
+        method: "dynamic_calculator_route_input_contract_missing_physical_fields",
+        missingPhysicalInputs: [
+          "sideALeafGroup",
+          "cavity1DepthMm",
+          "internalLeafGroup",
+          "internalLeafCoupling",
+          "cavity2DepthMm",
+          "sideBLeafGroup",
+          "supportTopology"
+        ],
+        missingSourceEvidence: [],
+        origin: "needs_input",
+        propertyDefaults: [],
+        ratingStandard: "none",
+        requiredInputs: [
+          "sideALeafGroup",
+          "cavity1DepthMm",
+          "internalLeafGroup",
+          "internalLeafCoupling",
+          "cavity2DepthMm",
+          "sideBLeafGroup",
+          "supportTopology"
+        ]
+      },
+      airborneCandidateResolution: {
+        candidatePrecedence: [],
+        candidates: [],
+        deterministicTieBreakers: [],
+        id: "resolver_dynamic_calculator_gate_m_wall_needs_input",
+        inputCompletenessIds: ["gate_k_triple_leaf_multicavity_route_inputs"],
+        policyId: "model_first_airborne_candidate_precedence_v1",
+        ratingAdapterBasisIds: [],
+        rejectedCandidateIds: [],
+        runtimeValueMovement: false,
+        selectedBasis: {
+          assumptions: ["missing physical fields are user prompts"],
+          calculationStandard: "none",
+          curveBasis: "no_curve",
+          kind: "airborne_needs_input",
+          method: "dynamic_calculator_route_input_contract_missing_physical_fields",
+          missingPhysicalInputs: ["sideALeafGroup"],
+          missingSourceEvidence: [],
+          origin: "needs_input",
+          propertyDefaults: [],
+          ratingStandard: "none",
+          requiredInputs: ["sideALeafGroup"]
+        },
+        selectedCandidateId: "candidate_dynamic_needs_input",
+        selectedOrigin: "needs_input"
+      },
+      supportedTargetOutputs: [],
+      unsupportedTargetOutputs: ["Rw", "STC", "C", "Ctr"]
+    });
+    const rwCard = buildOutputCard({
+      output: "Rw",
+      result,
+      studyMode: "wall"
+    });
+
+    expect(rwCard).toEqual(
+      expect.objectContaining({
+        detail: expect.stringContaining("sideALeafGroup"),
+        status: "needs_input",
+        value: "Not ready"
+      })
+    );
+  });
+
   it("does not surface wall-side Rw once the apparent field route marks it unsupported", () => {
     const card = buildOutputCard({
       output: "Rw",

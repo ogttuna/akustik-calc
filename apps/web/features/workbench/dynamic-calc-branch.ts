@@ -1,4 +1,4 @@
-import type { AssemblyCalculation, DynamicAirborneTrace } from "@dynecho/shared";
+import type { AssemblyCalculation, DynamicAirborneTrace, RequestedOutputId } from "@dynecho/shared";
 
 import { IMPACT_ONLY_LOW_CONFIDENCE_FLOOR_FAMILY_NOTE, isImpactOnlyLowConfidenceFloorLane } from "./impact-only-low-confidence-floor-lane";
 import type { StudyMode } from "./preset-definitions";
@@ -6,7 +6,10 @@ import {
   isReinforcedConcreteLowConfidenceFloorLane,
   REINFORCED_CONCRETE_LOW_CONFIDENCE_FLOOR_FAMILY_NOTE
 } from "./reinforced-concrete-low-confidence-floor-lane";
-import { getDoubleLeafFramedBridgeAirbornePromptInputs } from "./airborne-physical-input-prompt";
+import {
+  formatAirbornePhysicalPromptInputs,
+  getDoubleLeafFramedBridgeAirbornePromptInputs
+} from "./airborne-physical-input-prompt";
 import { getGateARAirborneBuildingPredictionSurface } from "./airborne-building-prediction-surface";
 import { getGateSOpeningLeakCompositeSurface } from "./opening-leak-composite-surface";
 import { getWallTripleLeafCalibratedSolverSurface } from "./wall-triple-leaf-calibrated-solver-surface";
@@ -19,6 +22,19 @@ export type DynamicCalcBranchSummary = {
   tone: "neutral" | "ready" | "warning";
   value: string;
 };
+
+const WALL_AIRBORNE_OUTPUTS = new Set<RequestedOutputId>([
+  "Rw",
+  "STC",
+  "C",
+  "Ctr",
+  "R'w",
+  "Dn,w",
+  "Dn,A",
+  "DnT,w",
+  "DnT,A",
+  "DnT,A,k"
+]);
 
 function formatStrategyLabel(strategy: string | undefined): string {
   return strategy ? strategy.replaceAll("_", " ") : "seed screening path";
@@ -136,17 +152,6 @@ export function getDynamicCalcBranchSummary(input: {
     };
   }
 
-  const doubleLeafFramedBridgePromptInputs = getDoubleLeafFramedBridgeAirbornePromptInputs(result);
-  if (doubleLeafFramedBridgePromptInputs.length > 0) {
-    return {
-      detail:
-        `Complete ${doubleLeafFramedBridgePromptInputs.join(", ")} before DAC can promote the double-leaf/framed bridge runtime. ` +
-        "The previous numeric screening trace is held back from the route card until the required physical inputs are explicit.",
-      tone: "warning",
-      value: "Awaiting physical input"
-    };
-  }
-
   const airborneTrace = result.dynamicAirborneTrace ?? null;
   const companyInternalOpeningLeakFieldBuildingSurface =
     getCompanyInternalOpeningLeakFieldBuildingSurface(result);
@@ -196,6 +201,34 @@ export function getDynamicCalcBranchSummary(input: {
       detail: gateARBuildingSurface.detail,
       tone: "ready",
       value: gateARBuildingSurface.label
+    };
+  }
+
+  const supportedWallOutputCount = result.supportedTargetOutputs.filter((output: RequestedOutputId) =>
+    WALL_AIRBORNE_OUTPUTS.has(output)
+  ).length;
+  const shouldShowRouteInputPrompt =
+    supportedWallOutputCount === 0 ||
+    result.airborneOverlay?.contextMode === "building_prediction";
+  const doubleLeafFramedBridgePromptInputs = shouldShowRouteInputPrompt
+    ? getDoubleLeafFramedBridgeAirbornePromptInputs(result)
+    : [];
+  if (doubleLeafFramedBridgePromptInputs.length > 0) {
+    return {
+      detail:
+        `Complete ${formatAirbornePhysicalPromptInputs(doubleLeafFramedBridgePromptInputs)} before DAC can promote the airborne answer. ` +
+        "The previous numeric trace is held back from the route card until the required physical inputs are explicit.",
+      tone: "warning",
+      value: "Awaiting physical input"
+    };
+  }
+
+  if (result.airborneOverlay?.contextMode === "building_prediction") {
+    return {
+      detail:
+        "Building prediction is selected, but this wall route still needs an owned building-prediction adapter before DAC can promote the airborne answer. Required owner terms include source-room volume, receiving-room volume, flanking/junction class, conservative flanking assumption, junction coupling length, and building output basis.",
+      tone: "warning",
+      value: "Awaiting physical input"
     };
   }
 

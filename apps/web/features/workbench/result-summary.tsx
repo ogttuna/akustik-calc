@@ -1,6 +1,6 @@
 "use client";
 
-import { formatImpactSupportingElementFamily, type AssemblyCalculation } from "@dynecho/shared";
+import { formatImpactSupportingElementFamily, type AssemblyCalculation, type RequestedOutputId } from "@dynecho/shared";
 import { AudioLines, Gauge, Layers3, Scale, Waves } from "lucide-react";
 import { MetricCard, Pill, SurfacePanel } from "@dynecho/ui";
 
@@ -11,6 +11,14 @@ import { buildWorkbenchWarningNotes } from "./workbench-warning-notes";
 import { getFieldAirborneLiveDetail } from "./field-airborne-output";
 import { getImpactLaneKind, getImpactLanePillLabel } from "./impact-lane-view";
 import { ResultAnswerChart } from "./result-answer-chart";
+import {
+  AIRBORNE_ANSWER_OUTPUTS,
+  IMPACT_ANSWER_OUTPUTS,
+  buildResultAnswerChartLanes,
+  hasSupportedAirborneAnswer,
+  hasSupportedImpactAnswer,
+  isAirborneAnswerParked
+} from "./result-answer-chart-model";
 import { getAirborneBoundaryPosture } from "./validation-regime";
 
 type ResultSummaryProps = {
@@ -33,9 +41,35 @@ export function ResultSummary({ result, targetLnwDb, targetRwDb, warnings }: Res
   const dynamicImpactTrace = result?.dynamicImpactTrace ?? null;
   const fieldAirborneProvenance = getFieldAirborneProvenanceSummary(result);
   const activeCalculatorLabel = result?.calculatorLabel ?? "Screening Seed";
+  const airborneAnswerParked = isAirborneAnswerParked(result);
+  const airborneAnswerVisible = Boolean(!airborneAnswerParked && hasSupportedAirborneAnswer(result));
+  const impactAnswerVisible = Boolean(hasSupportedImpactAnswer(result));
+  const visibleFieldAirborneProvenance = airborneAnswerVisible ? fieldAirborneProvenance : null;
+  const airborneAnswerMissingInputs =
+    result?.acousticAnswerBoundary?.origin === "needs_input" &&
+    result.acousticAnswerBoundary.unsupportedOutputs.some((output: RequestedOutputId) =>
+      AIRBORNE_ANSWER_OUTPUTS.has(output)
+    )
+      ? result.acousticAnswerBoundary.missingPhysicalInputs
+      : result?.airborneBasis?.origin === "needs_input"
+        ? result.airborneBasis.missingPhysicalInputs
+        : [];
+  const floorAnswerBoundary = result?.acousticAnswerBoundary?.route === "floor" ? result.acousticAnswerBoundary : null;
+  const floorAnswerStopped = Boolean(
+    floorAnswerBoundary &&
+      floorAnswerBoundary.unsupportedOutputs.some((output: RequestedOutputId) => IMPACT_ANSWER_OUTPUTS.has(output)) &&
+      !impactAnswerVisible
+  );
+  const floorAnswerStopDetail =
+    floorAnswerBoundary?.origin === "needs_input"
+      ? `Needs input: ${floorAnswerBoundary.missingPhysicalInputs.join(", ")}`
+      : floorAnswerBoundary?.origin === "unsupported"
+        ? `Unsupported outputs: ${floorAnswerBoundary.unsupportedOutputs.join(", ")}`
+        : "Stopped by the selected answer boundary";
   const floorEstimatePillLabel =
     result?.floorSystemEstimate?.kind === "low_confidence" ? "Low-confidence floor fallback" : "Estimated floor family";
   const floorEstimatePillTone = result?.floorSystemEstimate?.kind === "low_confidence" ? "warning" : "accent";
+  const resultChartHasVisibleLane = buildResultAnswerChartLanes({ result, targetLnwDb, targetRwDb }).length > 0;
   const primaryAirborneValue =
     result?.airborneOverlay?.contextMode === "building_prediction" && typeof result?.metrics.estimatedDnTwDb === "number"
       ? result.metrics.estimatedDnTwDb
@@ -54,15 +88,15 @@ export function ResultSummary({ result, targetLnwDb, targetRwDb, warnings }: Res
       <div className="flex flex-wrap items-center gap-3">
         <Pill tone={result?.calculatorId === "dynamic" ? "accent" : "neutral"}>{activeCalculatorLabel}</Pill>
         <Pill tone="neutral">Pure package boundary</Pill>
-        <Pill tone="success">Curve-backed ratings</Pill>
-        {dynamicTrace ? (
+        {airborneAnswerVisible ? <Pill tone="success">Curve-backed ratings</Pill> : null}
+        {dynamicTrace && airborneAnswerVisible ? (
           <Pill tone={dynamicTrace.confidenceClass === "high" ? "success" : dynamicTrace.confidenceClass === "medium" ? "accent" : "warning"}>
             {dynamicTrace.detectedFamilyLabel}
           </Pill>
         ) : null}
         {result?.airborneOverlay?.leakagePenaltyApplied ? <Pill tone="warning">Leakage overlay</Pill> : null}
         {result?.airborneOverlay?.fieldFlankingPenaltyApplied ? <Pill tone="warning">Field flanking</Pill> : null}
-        {fieldAirborneProvenance ? <Pill tone="accent">{fieldAirborneProvenance.label}</Pill> : null}
+        {visibleFieldAirborneProvenance ? <Pill tone="accent">{visibleFieldAirborneProvenance.label}</Pill> : null}
         {result?.impact ? <Pill tone="accent">{getImpactLanePillLabel(impactLaneKind)}</Pill> : null}
         {!result?.impact && lowerBoundImpact ? <Pill tone="neutral">Bound impact live</Pill> : null}
         {dynamicImpactTrace ? (
@@ -88,7 +122,7 @@ export function ResultSummary({ result, targetLnwDb, targetRwDb, warnings }: Res
         {result?.floorSystemEstimate ? <Pill tone={floorEstimatePillTone}>{floorEstimatePillLabel}</Pill> : null}
         {result?.boundFloorSystemMatch ? <Pill tone="neutral">Bound floor family</Pill> : null}
         {result?.boundFloorSystemEstimate ? <Pill tone="neutral">Bound family estimate</Pill> : null}
-        {!result?.floorSystemMatch && result?.floorSystemRecommendations.length ? <Pill tone="neutral">Near floor family</Pill> : null}
+        {!result?.floorSystemMatch && result?.floorSystemRecommendations?.length ? <Pill tone="neutral">Near floor family</Pill> : null}
       </div>
       <div className="mt-5">
         <div className="eyebrow">Result panel</div>
@@ -96,89 +130,106 @@ export function ResultSummary({ result, targetLnwDb, targetRwDb, warnings }: Res
       </div>
       {result ? (
         <>
-          <div className="mt-6 rounded-lg border hairline bg-[color:var(--panel-strong)] px-4 py-5">
-            <ResultAnswerChart result={result} targetLnwDb={targetLnwDb} targetRwDb={targetRwDb} />
-          </div>
+          {resultChartHasVisibleLane ? (
+            <div className="mt-6 rounded-lg border hairline bg-[color:var(--panel-strong)] px-4 py-5">
+              <ResultAnswerChart result={result} targetLnwDb={targetLnwDb} targetRwDb={targetRwDb} />
+            </div>
+          ) : null}
           <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-            <MetricCard
-              label={primaryAirborneLabel}
-              value={`${formatDecimal(primaryAirborneValue)} dB`}
-              detail={
-                <span className="inline-flex items-center gap-2">
-                  <Gauge className="h-4 w-4" />
-                  {activeCalculatorLabel}
-                </span>
-              }
-            />
-            <MetricCard
-              label="Airborne lane"
-              value={activeCalculatorLabel}
-              detail={
-                dynamicTrace
-                  ? `${dynamicTrace.selectedLabel} anchor · ${dynamicTrace.strategy.replaceAll("_", " ")}${boundaryPosture ? ` · ${boundaryPosture.label}` : ""}`
-                  : result.metrics.method
-              }
-            />
-            {dynamicTrace ? (
+            {airborneAnswerVisible || airborneAnswerParked ? (
+              <MetricCard
+                label={airborneAnswerParked ? "Airborne answer" : primaryAirborneLabel}
+                value={airborneAnswerParked ? "Not ready" : `${formatDecimal(primaryAirborneValue)} dB`}
+                detail={
+                  <span className="inline-flex items-center gap-2">
+                    <Gauge className="h-4 w-4" />
+                    {airborneAnswerParked
+                      ? `Needs input${airborneAnswerMissingInputs.length > 0 ? `: ${airborneAnswerMissingInputs.join(", ")}` : ""}`
+                      : activeCalculatorLabel}
+                  </span>
+                }
+              />
+            ) : null}
+            {airborneAnswerVisible || airborneAnswerParked ? (
+              <MetricCard
+                label="Airborne lane"
+                value={activeCalculatorLabel}
+                detail={
+                  dynamicTrace
+                    ? `${dynamicTrace.selectedLabel} anchor · ${dynamicTrace.strategy.replaceAll("_", " ")}${boundaryPosture ? ` · ${boundaryPosture.label}` : ""}`
+                    : result.metrics.method
+                }
+              />
+            ) : null}
+            {floorAnswerStopped ? (
+              <MetricCard
+                label="Impact answer"
+                value="Not ready"
+                detail={floorAnswerStopDetail}
+              />
+            ) : null}
+            {dynamicTrace && airborneAnswerVisible ? (
               <MetricCard
                 label="Dynamic confidence"
                 value={`${Math.round(dynamicTrace.confidenceScore * 100)}%`}
                 detail={`${dynamicTrace.confidenceClass} confidence · ${dynamicTrace.solverSpreadRwDb} dB solver spread${boundaryPosture ? ` · ${boundaryPosture.label}` : ""}`}
               />
             ) : null}
-            {fieldAirborneProvenance ? (
+            {visibleFieldAirborneProvenance ? (
               <MetricCard
                 label="Field airborne provenance"
-                value={fieldAirborneProvenance.label}
-                detail={fieldAirborneProvenance.detail}
+                value={visibleFieldAirborneProvenance.label}
+                detail={visibleFieldAirborneProvenance.detail}
               />
             ) : null}
-            <MetricCard
-              label="ISO 717 composite"
-              value={result.ratings.iso717.composite}
-              detail={
-                <span className="inline-flex items-center gap-2">
-                  <AudioLines className="h-4 w-4" />
-                  {result.ratings.iso717.descriptor} family from calibrated TL curve
-                </span>
-              }
-            />
-            {typeof result.metrics.estimatedRwPrimeDb === "number" && result.ratings.iso717.descriptor === "R'w" ? (
+            {airborneAnswerVisible ? (
+              <MetricCard
+                label="ISO 717 composite"
+                value={result.ratings.iso717.composite}
+                detail={
+                  <span className="inline-flex items-center gap-2">
+                    <AudioLines className="h-4 w-4" />
+                    {result.ratings.iso717.descriptor} family from calibrated TL curve
+                  </span>
+                }
+              />
+            ) : null}
+            {airborneAnswerVisible && typeof result.metrics.estimatedRwPrimeDb === "number" && result.ratings.iso717.descriptor === "R'w" ? (
               <MetricCard
                 label="R'w"
                 value={`${formatDecimal(result.metrics.estimatedRwPrimeDb)} dB`}
                 detail={getFieldAirborneLiveDetail("R'w", result)}
               />
             ) : null}
-            {typeof result.metrics.estimatedDnTwDb === "number" ? (
+            {airborneAnswerVisible && typeof result.metrics.estimatedDnTwDb === "number" ? (
               <MetricCard
                 label="DnT,w"
                 value={`${formatDecimal(result.metrics.estimatedDnTwDb)} dB`}
                 detail={getFieldAirborneLiveDetail("DnT,w", result)}
               />
             ) : null}
-            {typeof result.metrics.estimatedDnTADb === "number" ? (
+            {airborneAnswerVisible && typeof result.metrics.estimatedDnTADb === "number" ? (
               <MetricCard
                 label="DnT,A"
                 value={`${formatDecimal(result.metrics.estimatedDnTADb)} dB`}
                 detail={getFieldAirborneLiveDetail("DnT,A", result)}
               />
             ) : null}
-            {typeof result.ratings.field?.DnTAk === "number" ? (
+            {airborneAnswerVisible && typeof result.ratings.field?.DnTAk === "number" ? (
               <MetricCard
                 label="DnT,A,k"
                 value={`${formatDecimal(result.ratings.field.DnTAk)} dB`}
                 detail={getFieldAirborneLiveDetail("DnT,A,k", result)}
               />
             ) : null}
-            {typeof result.metrics.estimatedDnWDb === "number" ? (
+            {airborneAnswerVisible && typeof result.metrics.estimatedDnWDb === "number" ? (
               <MetricCard
                 label="Dn,w"
                 value={`${formatDecimal(result.metrics.estimatedDnWDb)} dB`}
                 detail={getFieldAirborneLiveDetail("Dn,w", result)}
               />
             ) : null}
-            {typeof result.metrics.estimatedDnADb === "number" ? (
+            {airborneAnswerVisible && typeof result.metrics.estimatedDnADb === "number" ? (
               <MetricCard
                 label="Dn,A"
                 value={`${formatDecimal(result.metrics.estimatedDnADb)} dB`}
@@ -192,16 +243,20 @@ export function ResultSummary({ result, targetLnwDb, targetRwDb, warnings }: Res
                 detail="Dutch NEN 5077 impact companion from exact 125..2000 Hz field octave bands"
               />
             ) : null}
-            <MetricCard
-              label="STC"
-              value={`${formatDecimal(result.metrics.estimatedStc)} dB`}
-              detail="ASTM E413 contour derived from the same screening curve"
-            />
-            <MetricCard
-              label="Spectrum adaptation"
-              value={`${formatSignedDb(result.metrics.estimatedCDb)} / ${formatSignedDb(result.metrics.estimatedCtrDb)}`}
-              detail="C / Ctr for pink-noise and traffic-noise use cases"
-            />
+            {airborneAnswerVisible ? (
+              <MetricCard
+                label="STC"
+                value={`${formatDecimal(result.metrics.estimatedStc)} dB`}
+                detail="ASTM E413 contour derived from the same screening curve"
+              />
+            ) : null}
+            {airborneAnswerVisible ? (
+              <MetricCard
+                label="Spectrum adaptation"
+                value={`${formatSignedDb(result.metrics.estimatedCDb)} / ${formatSignedDb(result.metrics.estimatedCtrDb)}`}
+                detail="C / Ctr for pink-noise and traffic-noise use cases"
+              />
+            ) : null}
             <MetricCard
               label="Surface mass"
               value={`${formatDecimal(result.metrics.surfaceMassKgM2)} kg/m²`}
@@ -232,7 +287,7 @@ export function ResultSummary({ result, targetLnwDb, targetRwDb, warnings }: Res
                 </span>
               }
             />
-            {dynamicTrace ? (
+            {dynamicTrace && airborneAnswerVisible ? (
               <MetricCard
                 label="Detected family"
                 value={dynamicTrace.detectedFamilyLabel}

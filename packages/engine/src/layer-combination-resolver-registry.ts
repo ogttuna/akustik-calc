@@ -1,5 +1,22 @@
 import { BROAD_ACCURACY_WALL_TRIPLE_LEAF_CALIBRATED_RUNTIME_METHOD } from "./dynamic-airborne-broad-accuracy-wall-triple-leaf-calibrated";
+import {
+  COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_RUNTIME_METHOD,
+  COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-company-internal-heavy-composite-wall";
+import { GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD } from "./dynamic-airborne-gate-i-airborne-field-context";
+import {
+  GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD,
+  GATE_H_LINED_MASSIVE_WALL_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-gate-h-lined-masonry-clt";
 import { HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS } from "./helper-only-timber-open-web-impact-stack-estimate";
+import { HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS } from "./impact-estimate";
+import { EXACT_IMPACT_SOURCE_BAND_CURVE_BASIS } from "./impact-exact";
+import {
+  FLAT_LIST_MULTILEAF_GUARD_FIELD_RUNTIME_METHOD,
+  FLAT_LIST_MULTILEAF_GUARD_FIELD_SELECTED_CANDIDATE_ID,
+  FLAT_LIST_MULTILEAF_GUARD_LAB_RUNTIME_METHOD,
+  FLAT_LIST_MULTILEAF_GUARD_LAB_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-flat-list-multileaf-guard";
 import {
   LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_FORMULA_CORRIDOR_BASIS,
   LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID
@@ -14,6 +31,19 @@ import { OPEN_WEB_SUPPORTED_BAND_SIMILARITY_BASIS } from "./lightweight-steel-op
 import { OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS } from "./open-box-timber-raw-bare-estimate";
 import { OPEN_BOX_TIMBER_SIMILARITY_BASIS } from "./open-box-timber-similarity-estimate";
 import { OPEN_WEB_RAW_BARE_FORMULA_BASIS } from "./open-web-raw-bare-estimate";
+
+const BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_RUNTIME_METHOD =
+  "broad_accuracy_wall_triple_leaf_local_substitution_source_absent_rw_runtime_corridor";
+const BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_SELECTED_CANDIDATE_ID =
+  "candidate_broad_accuracy_wall_triple_leaf_local_substitution_rw_family_physics_prediction";
+const BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_RUNTIME_METHOD =
+  "broad_accuracy_wall_triple_leaf_local_substitution_lab_spectrum_adapter_runtime";
+const BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_SELECTED_CANDIDATE_ID =
+  "candidate_broad_accuracy_wall_triple_leaf_local_substitution_lab_spectrum_adapter_family_physics_prediction";
+const BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD =
+  "broad_accuracy_wall_triple_leaf_local_substitution_field_context_harmonization_runtime";
+const BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID =
+  "candidate_broad_accuracy_wall_triple_leaf_local_substitution_field_context_family_physics_prediction";
 
 export const LAYER_COMBINATION_RESOLVER_REGISTRY_LANDED_GATE =
   "layer_combination_resolver_registry_plan";
@@ -45,11 +75,16 @@ export type LayerCombinationResolverMetricId =
   | "CI,50-2500"
   | "Ctr"
   | "DeltaLw"
+  | "Dn,A"
+  | "Dn,w"
+  | "DnT,A"
+  | "DnT,A,k"
   | "DnT,w"
   | "IIC"
   | "L'n,w"
   | "L'nT,w"
   | "L'nT,50"
+  | "LnT,A"
   | "Ln,w"
   | "Ln,w+CI"
   | "R'w"
@@ -278,6 +313,41 @@ const CANDIDATE_DECLARATIONS = [
   },
   {
     basis: "element_lab",
+    errorBudgetTerms: [],
+    exactPrecedenceRules: [
+      "source_owned_impact_band_curve_rank_zero",
+      "measured_impact_metric_scope_preserved",
+      "iso_717_2_lnw_values_do_not_create_astm_iic_aliases"
+    ],
+    formulaTerms: [],
+    hardCompatibilityGates: [
+      "floor_route",
+      "exact_impact_band_source_present",
+      "lab_or_field_basis_declared",
+      "supported_nominal_iso_717_2_band_grid",
+      "same_metric_basis"
+    ],
+    hostileInputCases: [
+      "iic_or_aiic_request_with_only_iso_lnw_stays_unsupported",
+      "field_exact_bands_do_not_publish_lab_lnw",
+      "non_nominal_band_grid_rejected"
+    ],
+    id: "floor.exact_impact_band_source.metric_basis",
+    kind: "exact_measured_override",
+    label: "Floor exact impact-band source override",
+    ownedRuntimeBasisId: EXACT_IMPACT_SOURCE_BAND_CURVE_BASIS,
+    priorityRank: 0,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: ["route", "exactImpactBandSource", "labOrField", "frequencyBandSet", "metricBasis"],
+    route: "floor",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: ["not_applicable_exact_rank_zero"],
+    supportedMetrics: ["Ln,w", "CI", "CI,50-2500", "Ln,w+CI", "DeltaLw", "L'nT,w", "L'nT,50", "LnT,A"],
+    surfaceRequirements: ELEMENT_LAB_SURFACES,
+    valuePins: []
+  },
+  {
+    basis: "element_lab",
     errorBudgetTerms: [
       { metric: "Rw", notMeasuredEvidence: true, toleranceDb: 6 },
       { metric: "Ln,w", notMeasuredEvidence: true, toleranceDb: 7 },
@@ -406,6 +476,181 @@ const CANDIDATE_DECLARATIONS = [
     similarityAnchorRules: ["calibration_rows_define_residual_budget_not_exact_override"],
     supportedMetrics: ["Rw", "C", "Ctr"],
     surfaceRequirements: ELEMENT_LAB_SURFACES,
+    valuePins: []
+  },
+  {
+    basis: "element_lab",
+    errorBudgetTerms: [{ metric: "Rw", notMeasuredEvidence: true, toleranceDb: 8 }],
+    exactPrecedenceRules: [
+      "rights_safe_same_stack_local_substitution_rows_win_before_source_absent_formula",
+      "generic_source_family_curve_shape_is_not_exact_same_stack_evidence"
+    ],
+    formulaTerms: [
+      "complete_grouped_triple_leaf_topology",
+      "two_cavity_frequency_curve",
+      "local_material_substitution_terms",
+      "source_family_curve_shape_anchor",
+      "iso_717_1_rw_rating_adapter"
+    ],
+    hardCompatibilityGates: [
+      "wall_route",
+      "grouped_triple_leaf_topology",
+      "explicit_side_and_internal_leaf_groups",
+      "two_explicit_cavity_depths",
+      "porous_absorber_coverage_owned",
+      "element_lab_metric_basis",
+      "rw_only_until_lab_spectrum_or_field_adapter"
+    ],
+    hostileInputCases: [
+      "flat_or_partial_topology_needs_input",
+      "duplicate_grouping_needs_input",
+      "field_and_building_outputs_require_separate_context_adapter",
+      "stc_c_ctr_require_lab_spectrum_adapter"
+    ],
+    id: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_SELECTED_CANDIDATE_ID,
+    kind: "source_absent_family_solver",
+    label: "Wall triple-leaf local-substitution Rw source-absent solver",
+    ownedRuntimeBasisId: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_RUNTIME_METHOD,
+    priorityRank: 3,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      "route=wall",
+      "wallTopology.topologyMode=grouped_triple_leaf",
+      "sideALeafLayerIndices",
+      "internalLeafLayerIndices",
+      "sideBLeafLayerIndices",
+      "cavity1LayerIndices",
+      "cavity2LayerIndices",
+      "cavity1DepthMm",
+      "cavity2DepthMm",
+      "internalLeafCoupling",
+      "supportTopology",
+      "localSubstitutionCalculatedTransmissionLossCurve"
+    ],
+    route: "wall",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "nearby_source_family_curve_is_shape_anchor_only_not_exact_override",
+      "compatible_measured_rows_can_calibrate_later_only with owned residual budget"
+    ],
+    supportedMetrics: ["Rw"],
+    surfaceRequirements: ELEMENT_LAB_SURFACES,
+    valuePins: [{ metric: "Rw", value: 50 }]
+  },
+  {
+    basis: "element_lab",
+    errorBudgetTerms: [
+      { metric: "Rw", notMeasuredEvidence: true, toleranceDb: 8 },
+      { metric: "STC", notMeasuredEvidence: true, toleranceDb: 8 },
+      { metric: "C", notMeasuredEvidence: true, toleranceDb: 2.5 },
+      { metric: "Ctr", notMeasuredEvidence: true, toleranceDb: 4.5 }
+    ],
+    exactPrecedenceRules: [
+      "same_stack_stc_c_ctr_source_rows_win_before_lab_spectrum_adapter",
+      "adapter_uses_calculated_tl_curve_not_rw_copy"
+    ],
+    formulaTerms: [
+      "local_substitution_calculated_transmission_loss_curve",
+      "astm_e413_stc_from_curve",
+      "iso_717_1_c_from_curve",
+      "iso_717_1_ctr_from_curve",
+      "parent_source_absent_budget"
+    ],
+    hardCompatibilityGates: [
+      "wall_route",
+      "grouped_triple_leaf_topology",
+      "complete_parent_local_substitution_curve",
+      "element_lab_metric_basis",
+      "no_field_or_building_metric_promotion"
+    ],
+    hostileInputCases: [
+      "stc_is_not_rw_alias",
+      "field_request_rejected_without_field_context_adapter",
+      "building_prediction_rejected_without_flanking_owner",
+      "partial_curve_owner_needs_input"
+    ],
+    id: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_SELECTED_CANDIDATE_ID,
+    kind: "source_absent_family_solver",
+    label: "Wall triple-leaf local-substitution lab spectrum adapter",
+    ownedRuntimeBasisId: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_RUNTIME_METHOD,
+    priorityRank: 3,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      "route=wall",
+      "wallTopology.topologyMode=grouped_triple_leaf",
+      "completeParentLocalSubstitutionRwCurve",
+      "ASTM_E413_STC_curve_rating",
+      "ISO_717_1_C_Ctr_curve_rating",
+      "elementLabMetricBasis"
+    ],
+    route: "wall",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "same_family_measured_spectrum_terms_may_calibrate_only_after_topology_and_basis_match",
+      "field_or_building_rows_cannot_anchor_element_lab_spectrum_terms"
+    ],
+    supportedMetrics: ["Rw", "STC", "C", "Ctr"],
+    surfaceRequirements: ELEMENT_LAB_SURFACES,
+    valuePins: [
+      { metric: "Rw", value: 50 },
+      { metric: "STC", value: 61 },
+      { metric: "C", value: 1.6 },
+      { metric: "Ctr", value: -7.2 }
+    ]
+  },
+  {
+    basis: "field_apparent",
+    errorBudgetTerms: [
+      { metric: "R'w", notMeasuredEvidence: true, toleranceDb: 10 },
+      { metric: "DnT,w", notMeasuredEvidence: true, toleranceDb: 10 }
+    ],
+    exactPrecedenceRules: [
+      "same_stack_field_rows_win_before_local_substitution_field_adapter",
+      "element_lab_rows_do_not_become_field_values"
+    ],
+    formulaTerms: [
+      "local_substitution_lab_curve_anchor",
+      "partition_area_from_panel_dimensions",
+      "receiving_room_volume_normalization",
+      "receiving_room_rt60_standardization",
+      "field_rwprime_dntw_adapter_owner"
+    ],
+    hardCompatibilityGates: [
+      "wall_route",
+      "field_between_rooms_context",
+      "complete_grouped_triple_leaf_parent_curve",
+      "panel_area_or_width_height_present",
+      "receiving_room_volume_present",
+      "receiving_room_rt60_present",
+      "no_building_prediction_transfer"
+    ],
+    hostileInputCases: [
+      "missing_rt60_needs_input",
+      "missing_receiving_room_volume_needs_input",
+      "lab_outputs_requested_with_field_context_do_not_alias",
+      "building_prediction_requires_flanking_owner"
+    ],
+    id: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
+    kind: "field_building_adapter",
+    label: "Wall triple-leaf local-substitution field context adapter",
+    ownedRuntimeBasisId: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD,
+    priorityRank: 4,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      "fieldContext.contextMode=field_between_rooms",
+      "fieldContext.panelWidthHeight_or_partitionArea",
+      "fieldContext.receivingRoomVolumeM3",
+      "fieldContext.receivingRoomRt60S",
+      "localSubstitutionLabCurveAnchor"
+    ],
+    route: "wall",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "field_values_stay_tied_to_owned_local_substitution_lab_curve",
+      "nearby_lab_rows_may_not_anchor_field_without context inputs"
+    ],
+    supportedMetrics: ["R'w", "DnT,w"],
+    surfaceRequirements: FIELD_SURFACES,
     valuePins: []
   },
   {
@@ -549,6 +794,261 @@ const CANDIDATE_DECLARATIONS = [
       { metric: "C", value: -1 },
       { metric: "Ctr", value: -6.1 }
     ]
+  },
+  {
+    basis: "element_lab",
+    errorBudgetTerms: [
+      { metric: "Rw", notMeasuredEvidence: true, toleranceDb: 6 },
+      { metric: "STC", notMeasuredEvidence: true, toleranceDb: 6 },
+      { metric: "C", notMeasuredEvidence: true, toleranceDb: 2.5 },
+      { metric: "Ctr", notMeasuredEvidence: true, toleranceDb: 4.5 }
+    ],
+    exactPrecedenceRules: [
+      "verified_exact_lined_massive_wall_rows_win_before_source_absent_formula",
+      "same_stack_source_rows_stay_rank_zero_when_topology_metric_and_lab_basis_match"
+    ],
+    formulaTerms: [
+      "light_lining_leaf_surface_mass",
+      "heavy_masonry_leaf_surface_mass",
+      "explicit_cavity_depth_and_fill_coverage",
+      "absorber_class_damping",
+      "cavity_aware_dynamic_delegate_curve",
+      "iso_717_1_airborne_rating_adapter",
+      "astm_e413_stc_display_boundary"
+    ],
+    hardCompatibilityGates: [
+      "wall_route",
+      "lined_massive_wall_topology",
+      "one_light_lining_leaf",
+      "one_heavy_masonry_or_concrete_leaf",
+      "single_explicit_compliant_cavity_zone",
+      "element_lab_metric_basis",
+      "not_field_not_building_not_astm_rating"
+    ],
+    hostileInputCases: [
+      "field_outputs_require_separate_field_context_adapter",
+      "missing_cavity_or_leaf_mass_inputs_needs_input",
+      "heavy_unframed_composite_cavity_uses_separate_owner",
+      "exact_rows_win_before_family_formula_when_same_stack_and_basis_match"
+    ],
+    id: GATE_H_LINED_MASSIVE_WALL_SELECTED_CANDIDATE_ID,
+    kind: "source_absent_family_solver",
+    label: "Lined massive-wall cavity-aware source-absent solver",
+    ownedRuntimeBasisId: GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD,
+    priorityRank: 3,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      "route=wall",
+      "lightLiningLeafMassKgM2",
+      "heavyMasonryLeafMassKgM2",
+      "cavityDepthMm",
+      "cavityFillCoverage",
+      "absorberClass",
+      "selectedDelegateCurve",
+      "ISO717-1 rating adapter",
+      "ASTM E413 STC adapter boundary"
+    ],
+    route: "wall",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "nearby measured lined massive rows may anchor only after topology metric basis and cavity deltas match",
+      "field_building_and_astm_requests_require_separate_basis_adapters_before_reuse"
+    ],
+    supportedMetrics: ["Rw", "STC", "C", "Ctr"],
+    surfaceRequirements: ELEMENT_LAB_SURFACES,
+    valuePins: [
+      { metric: "Rw", value: 57 },
+      { metric: "STC", value: 57 },
+      { metric: "C", value: -1.6 },
+      { metric: "Ctr", value: -6.5 }
+    ]
+  },
+  {
+    basis: "element_lab",
+    errorBudgetTerms: [
+      { metric: "Rw", notMeasuredEvidence: true, toleranceDb: 8 },
+      { metric: "STC", notMeasuredEvidence: true, toleranceDb: 8 },
+      { metric: "C", notMeasuredEvidence: true, toleranceDb: 2.5 },
+      { metric: "Ctr", notMeasuredEvidence: true, toleranceDb: 4.5 }
+    ],
+    exactPrecedenceRules: [
+      "verified_exact_heavy_composite_wall_rows_win_before_source_absent_formula",
+      "same_stack_source_rows_stay_rank_zero_when_heavy_composite_topology_metric_and_lab_basis_match"
+    ],
+    formulaTerms: [
+      "side_a_heavy_leaf_surface_mass",
+      "side_b_heavy_leaf_surface_mass",
+      "explicit_unframed_cavity_depth",
+      "mass_air_mass_double_leaf_delegate",
+      "heavy_unframed_cavity_cap",
+      "iso_717_1_airborne_rating_adapter",
+      "astm_e413_stc_display_boundary"
+    ],
+    hardCompatibilityGates: [
+      "wall_route",
+      "heavy_composite_double_leaf_topology",
+      "two_heavy_mineral_or_composite_leaves",
+      "single_explicit_unframed_compliant_air_cavity",
+      "supportTopology_unframed_or_none",
+      "element_lab_metric_basis",
+      "not_field_not_building_not_astm_rating"
+    ],
+    hostileInputCases: [
+      "field_outputs_require_separate_field_context_adapter",
+      "missing_heavy_leaf_or_cavity_inputs_needs_input",
+      "lined_massive_light_lining_topology_uses_separate_owner",
+      "exact_rows_win_before_family_formula_when_same_stack_and_basis_match"
+    ],
+    id: COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_SELECTED_CANDIDATE_ID,
+    kind: "source_absent_family_solver",
+    label: "Heavy-composite wall capped mass-air-mass source-absent solver",
+    ownedRuntimeBasisId: COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_RUNTIME_METHOD,
+    priorityRank: 3,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      "route=wall",
+      "sideALeafMassKgM2",
+      "sideBLeafMassKgM2",
+      "cavityDepthMm",
+      "supportTopology:unframed_or_none",
+      "heavyUnframedCavityCap:massBasedCorridor",
+      "selectedDelegateCurve",
+      "ISO717-1 rating adapter",
+      "ASTM E413 STC adapter boundary"
+    ],
+    route: "wall",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "nearby measured heavy composite rows may anchor only after topology metric basis cavity and mass deltas match",
+      "field_building_and_astm_requests_require_separate_basis_adapters_before_reuse"
+    ],
+    supportedMetrics: ["Rw", "STC", "C", "Ctr"],
+    surfaceRequirements: ELEMENT_LAB_SURFACES,
+    valuePins: [
+      { metric: "Rw", value: 63 },
+      { metric: "STC", value: 63 },
+      { metric: "C", value: -1.4 },
+      { metric: "Ctr", value: -6.3 }
+    ]
+  },
+  {
+    basis: "element_lab",
+    errorBudgetTerms: [
+      { metric: "Rw", notMeasuredEvidence: true, toleranceDb: 8 },
+      { metric: "STC", notMeasuredEvidence: true, toleranceDb: 8 },
+      { metric: "C", notMeasuredEvidence: true, toleranceDb: 2.5 },
+      { metric: "Ctr", notMeasuredEvidence: true, toleranceDb: 4.5 }
+    ],
+    exactPrecedenceRules: [
+      "verified_exact_wall_rows_win_before_flat_list_numeric_guard",
+      "grouped_triple_leaf_formula_wins_when explicit topology proves the physical split"
+    ],
+    formulaTerms: [
+      "flat_list_adjacent_swap_sensitivity_probe",
+      "current_double_leaf_numeric_lane",
+      "multileaf_penalty_negative_boundary_until_grouped_topology",
+      "iso_717_1_airborne_rating_adapter",
+      "astm_e413_stc_adapter"
+    ],
+    hardCompatibilityGates: [
+      "wall_route",
+      "flat_layer_list_without_grouped_triple_leaf_topology",
+      "adjacent_board_fill_swap_probe_flips_to_multileaf_with_large_delta",
+      "current_detected_family_double_leaf",
+      "element_lab_metric_basis",
+      "not_measured_exact_evidence"
+    ],
+    hostileInputCases: [
+      "physical_split_internal_leaf_without_grouping_stays_needs_input",
+      "explicit_grouped_triple_leaf_uses_owned_triple_leaf_solver",
+      "simple_framing_or_masonry_context_excluded",
+      "field_outputs_require_separate_field_guard_adapter"
+    ],
+    id: FLAT_LIST_MULTILEAF_GUARD_LAB_SELECTED_CANDIDATE_ID,
+    kind: "source_absent_family_solver",
+    label: "Wall flat-list adjacent-swap guarded double-leaf solver",
+    ownedRuntimeBasisId: FLAT_LIST_MULTILEAF_GUARD_LAB_RUNTIME_METHOD,
+    priorityRank: 3,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      "route=wall",
+      "flatListAdjacentSwapSensitivityProbe",
+      "guardedDoubleLeafNumericLane",
+      "groupedTripleLeafNegativeBoundary",
+      "ISO717AirborneRatingAdapter"
+    ],
+    route: "wall",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "nearby measured rows may calibrate only after topology and metric basis match",
+      "flat-list reorder probes are guard evidence, not exact measured anchors"
+    ],
+    supportedMetrics: ["Rw", "STC", "C", "Ctr"],
+    surfaceRequirements: ELEMENT_LAB_SURFACES,
+    valuePins: [
+      { metric: "Rw", value: 51 },
+      { metric: "STC", value: 51 },
+      { metric: "C", value: -1.8 },
+      { metric: "Ctr", value: -7.3 }
+    ]
+  },
+  {
+    basis: "field_apparent",
+    errorBudgetTerms: [
+      { metric: "R'w", notMeasuredEvidence: true, toleranceDb: 10 },
+      { metric: "DnT,w", notMeasuredEvidence: true, toleranceDb: 10 },
+      { metric: "DnT,A", notMeasuredEvidence: true, toleranceDb: 10 },
+      { metric: "Dn,w", notMeasuredEvidence: true, toleranceDb: 10 },
+      { metric: "Dn,A", notMeasuredEvidence: true, toleranceDb: 10 }
+    ],
+    exactPrecedenceRules: [
+      "same_stack_field_rows_win_before_flat_list_field_adapter",
+      "lab_guarded_values_do_not_become_field_metrics_without explicit room context"
+    ],
+    formulaTerms: [
+      "guarded_double_leaf_lab_curve_anchor",
+      "partition_area_from_panel_dimensions",
+      "receiving_room_volume_normalization",
+      "receiving_room_rt60_standardization",
+      "field_rwprime_dntw_adapter_owner"
+    ],
+    hardCompatibilityGates: [
+      "wall_route",
+      "field_between_rooms_context",
+      "flat_list_adjacent_swap_guard_runtime_active",
+      "panel_area_or_width_height_present",
+      "receiving_room_volume_present",
+      "receiving_room_rt60_present",
+      "no_building_prediction_transfer"
+    ],
+    hostileInputCases: [
+      "missing_rt60_needs_input",
+      "missing_receiving_room_volume_needs_input",
+      "lab_outputs_requested_with_field_context_do_not_alias",
+      "building_prediction_requires_flanking_owner"
+    ],
+    id: FLAT_LIST_MULTILEAF_GUARD_FIELD_SELECTED_CANDIDATE_ID,
+    kind: "field_building_adapter",
+    label: "Wall flat-list adjacent-swap field context adapter",
+    ownedRuntimeBasisId: FLAT_LIST_MULTILEAF_GUARD_FIELD_RUNTIME_METHOD,
+    priorityRank: 4,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      "fieldContext.contextMode=field_between_rooms",
+      "fieldContext.panelWidthHeight_or_partitionArea",
+      "fieldContext.receivingRoomVolumeM3",
+      "fieldContext.receivingRoomRt60S",
+      "guardedDoubleLeafLabCurveAnchor"
+    ],
+    route: "wall",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "field_values_stay_tied_to_guarded_double_leaf_lab_curve",
+      "nearby_lab_rows_may_not_anchor field metrics without context inputs"
+    ],
+    supportedMetrics: ["R'w", "DnT,w", "DnT,A", "Dn,w", "Dn,A"],
+    surfaceRequirements: FIELD_SURFACES,
+    valuePins: []
   },
   {
     basis: "element_lab",
@@ -700,6 +1200,57 @@ const CANDIDATE_DECLARATIONS = [
     ]
   },
   {
+    basis: "element_lab",
+    errorBudgetTerms: [
+      { metric: "Ln,w", notMeasuredEvidence: true, toleranceDb: 7 },
+      { metric: "DeltaLw", notMeasuredEvidence: true, toleranceDb: 6 }
+    ],
+    exactPrecedenceRules: ["exact_floor_system_and_exact_impact_band_sources_win_before_heavy_floating_formula"],
+    formulaTerms: [
+      "base_slab_surface_mass",
+      "loaded_upper_treatment_mass",
+      "resilient_layer_dynamic_stiffness",
+      "mass_spring_resonance_check",
+      "ISO_12354_2_Annex_C_style_delta_lw_adapter"
+    ],
+    hardCompatibilityGates: [
+      "floor_route",
+      "reinforced_concrete_base",
+      "floating_or_topping_layer_present",
+      "resilient_layer_dynamic_stiffness_present",
+      "load_basis_present",
+      "element_lab_metric_basis"
+    ],
+    hostileInputCases: [
+      "missing_load_basis_needs_input",
+      "missing_dynamic_stiffness_needs_input",
+      "field_impact_context_required_for_field_outputs",
+      "astm_iic_stays_unsupported"
+    ],
+    id: "floor.heavy_concrete_floating_floor.lab_impact_formula",
+    kind: "source_absent_family_solver",
+    label: "Heavy concrete floating-floor lab impact formula",
+    ownedRuntimeBasisId: HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS,
+    priorityRank: 3,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      "baseSlabOrFloor",
+      "floatingOrToppingLayer",
+      "resilientLayerDynamicStiffnessMNm3",
+      "loadBasisKgM2",
+      "ISO_12354_2_Annex_C_lab_impact_adapter"
+    ],
+    route: "floor",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "exact_floor_rows_and_exact_impact_bands_stay_rank_zero",
+      "field_or_astm_requests_need_separate_field_or_astm_owner"
+    ],
+    supportedMetrics: ["Ln,w", "DeltaLw"],
+    surfaceRequirements: ELEMENT_LAB_SURFACES,
+    valuePins: []
+  },
+  {
     basis: "field_apparent",
     errorBudgetTerms: [{ metric: "L'nT,w", notMeasuredEvidence: true, toleranceDb: 3 }],
     exactPrecedenceRules: ["exact_field_continuation_rows_win_before_any_field_adapter"],
@@ -734,6 +1285,58 @@ const CANDIDATE_DECLARATIONS = [
       { metric: "DnT,w", value: 80 },
       { metric: "L'nT,w", value: 70.6 }
     ]
+  },
+  {
+    basis: "field_apparent",
+    errorBudgetTerms: [
+      { metric: "R'w", notMeasuredEvidence: true, toleranceDb: 4 },
+      { metric: "DnT,w", notMeasuredEvidence: true, toleranceDb: 4 }
+    ],
+    exactPrecedenceRules: [
+      "exact_field_rows_win_before_context_adapter",
+      "element_lab_exact_rows_do_not_become_field_values"
+    ],
+    formulaTerms: [
+      "field_context_partition_area",
+      "receiving_room_volume_normalization",
+      "receiving_room_rt60_standardization",
+      "owned_lab_family_curve_adapter"
+    ],
+    hardCompatibilityGates: [
+      "wall_route",
+      "field_between_rooms_context",
+      "partition_area_or_panel_dimensions_present",
+      "receiving_room_volume_present",
+      "receiving_room_rt60_present",
+      "no_building_prediction_transfer"
+    ],
+    hostileInputCases: [
+      "partial_field_context_needs_input",
+      "building_prediction_requires_separate_owner",
+      "lab_outputs_requested_with_field_only_context_do_not_alias"
+    ],
+    id: "wall.airborne_field_context.field_apparent_adapter",
+    kind: "field_building_adapter",
+    label: "Wall airborne field-apparent context adapter",
+    ownedRuntimeBasisId: GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD,
+    priorityRank: 4,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      "fieldContext.contextMode",
+      "fieldContext.partitionAreaM2_or_panelWidthHeight",
+      "fieldContext.receivingRoomVolumeM3",
+      "fieldContext.receivingRoomRt60S",
+      "ownedLabFamilyCurve"
+    ],
+    route: "wall",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "field_values_stay_tied_to_owned_wall_lab_family_curve",
+      "nearby_lab_rows_may_not_anchor_field_without_context_adapter"
+    ],
+    supportedMetrics: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "DnT,A,k"],
+    surfaceRequirements: FIELD_SURFACES,
+    valuePins: []
   },
   {
     basis: "element_lab",

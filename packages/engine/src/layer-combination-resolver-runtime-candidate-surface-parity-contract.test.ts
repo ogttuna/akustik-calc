@@ -5,9 +5,38 @@ import { fileURLToPath } from "node:url";
 import type { AirborneContext, ImpactFieldContext, LayerInput, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
+import {
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD,
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID
+} from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-field-context-harmonization";
+import {
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_RUNTIME_METHOD,
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_SELECTED_CANDIDATE_ID
+} from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-lab-spectrum-adapter";
+import {
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_RUNTIME_METHOD,
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_SELECTED_CANDIDATE_ID
+} from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-runtime-corridor";
 import { calculateAssembly } from "./calculate-assembly";
 import { calculateImpactOnly } from "./calculate-impact-only";
+import {
+  FLAT_LIST_MULTILEAF_GUARD_FIELD_RUNTIME_METHOD,
+  FLAT_LIST_MULTILEAF_GUARD_FIELD_SELECTED_CANDIDATE_ID,
+  FLAT_LIST_MULTILEAF_GUARD_LAB_RUNTIME_METHOD,
+  FLAT_LIST_MULTILEAF_GUARD_LAB_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-flat-list-multileaf-guard";
+import {
+  COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_RUNTIME_METHOD,
+  COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-company-internal-heavy-composite-wall";
+import {
+  GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD,
+  GATE_H_LINED_MASSIVE_WALL_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-gate-h-lined-masonry-clt";
+import { GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD } from "./dynamic-airborne-gate-i-airborne-field-context";
 import { HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS } from "./helper-only-timber-open-web-impact-stack-estimate";
+import { HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS } from "./impact-estimate";
+import { EXACT_IMPACT_SOURCE_BAND_CURVE_BASIS } from "./impact-exact";
 import {
   LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_ADAPTER_LANDED_GATE,
   LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_ADAPTER_SELECTED_NEXT_ACTION,
@@ -133,6 +162,52 @@ const SUPPORTED_BAND_PACKAGE = [
   { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 250 }
 ] as const satisfies readonly LayerInput[];
 
+const LOCAL_SUBSTITUTION_WALL = [
+  { materialId: "gypsum_board", thicknessMm: 12.5 },
+  { materialId: "mlv", thicknessMm: 4 },
+  { materialId: "gypsum_board", thicknessMm: 12.5 },
+  { materialId: "rockwool", thicknessMm: 50 },
+  { materialId: "gypsum_board", thicknessMm: 12.5 },
+  { materialId: "rockwool", thicknessMm: 50 },
+  { materialId: "gypsum_board", thicknessMm: 12.5 },
+  { materialId: "gypsum_plaster", thicknessMm: 10 },
+  { materialId: "gypsum_board", thicknessMm: 12.5 }
+] as const satisfies readonly LayerInput[];
+
+const LOCAL_SUBSTITUTION_LAB_CONTEXT = {
+  contextMode: "element_lab",
+  wallTopology: {
+    cavity1AbsorptionClass: "porous_absorptive",
+    cavity1DepthMm: 50,
+    cavity1FillCoverage: "full",
+    cavity1LayerIndices: [3],
+    cavity2AbsorptionClass: "porous_absorptive",
+    cavity2DepthMm: 50,
+    cavity2FillCoverage: "full",
+    cavity2LayerIndices: [5],
+    internalLeafCoupling: "independent",
+    internalLeafLayerIndices: [4],
+    sideALeafLayerIndices: [0, 1, 2],
+    sideBLeafLayerIndices: [6, 7, 8],
+    supportTopology: "independent_frames",
+    topologyMode: "grouped_triple_leaf"
+  }
+} as const satisfies AirborneContext;
+
+const LOCAL_SUBSTITUTION_FIELD_CONTEXT = {
+  ...LOCAL_SUBSTITUTION_LAB_CONTEXT,
+  airtightness: "good",
+  connectionType: "line_connection",
+  contextMode: "field_between_rooms",
+  panelHeightMm: 2800,
+  panelWidthMm: 3600,
+  receivingRoomRt60S: 0.6,
+  receivingRoomVolumeM3: 45,
+  sharedTrack: "independent",
+  studSpacingMm: 600,
+  studType: "light_steel_stud"
+} as const satisfies AirborneContext;
+
 const REQUIRED_SURFACES = [
   "packages/shared/src/domain/layer-combination-resolver.ts",
   "packages/shared/src/domain/assembly.ts",
@@ -204,7 +279,7 @@ describe("layer combination resolver runtime candidate surface parity contract",
     expect(contract.summary).toEqual({
       boundarySurfaceRowCount: 3,
       selectedNextAction: LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_SURFACE_PARITY_SELECTED_NEXT_ACTION,
-      surfaceRowCount: 15
+      surfaceRowCount: 25
     });
 
     for (const path of REQUIRED_SURFACES) {
@@ -220,6 +295,12 @@ describe("layer combination resolver runtime candidate surface parity contract",
       candidateKind: "exact_measured_override",
       supportBucket: "exact",
       surfaceLabel: "Exact measured resolver candidate"
+    });
+    expect(rowsById.get("floor.exact_impact_band_source.metric_basis")).toMatchObject({
+      candidateKind: "exact_measured_override",
+      runtimeBasisId: EXACT_IMPACT_SOURCE_BAND_CURVE_BASIS,
+      supportBucket: "exact",
+      supportedMetrics: ["Ln,w", "CI", "CI,50-2500", "Ln,w+CI", "DeltaLw", "L'nT,w", "L'nT,50", "LnT,A"]
     });
     expect(rowsById.get("floor.open_box_timber.package_transfer_similarity")).toMatchObject({
       candidateKind: "similarity_anchor",
@@ -245,6 +326,33 @@ describe("layer combination resolver runtime candidate surface parity contract",
       candidateKind: "source_absent_family_solver",
       supportBucket: "source_absent_estimate"
     });
+    expect(rowsById.get("floor.heavy_concrete_floating_floor.lab_impact_formula")).toMatchObject({
+      candidateKind: "source_absent_family_solver",
+      runtimeBasisId: HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS,
+      supportBucket: "source_absent_estimate",
+      supportedMetrics: ["Ln,w", "DeltaLw"]
+    });
+    expect(rowsById.get(BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_SELECTED_CANDIDATE_ID)).toMatchObject({
+      candidateKind: "source_absent_family_solver",
+      runtimeBasisId: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_RUNTIME_METHOD,
+      route: "wall",
+      supportBucket: "source_absent_estimate",
+      supportedMetrics: ["Rw"],
+      valuePins: [{ metric: "Rw", value: 50 }]
+    });
+    expect(rowsById.get(BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_SELECTED_CANDIDATE_ID)).toMatchObject({
+      candidateKind: "source_absent_family_solver",
+      runtimeBasisId: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_RUNTIME_METHOD,
+      route: "wall",
+      supportBucket: "source_absent_estimate",
+      supportedMetrics: ["Rw", "STC", "C", "Ctr"],
+      valuePins: expect.arrayContaining([
+        { metric: "Rw", value: 50 },
+        { metric: "STC", value: 61 },
+        { metric: "C", value: 1.6 },
+        { metric: "Ctr", value: -7.2 }
+      ])
+    });
     expect(rowsById.get(LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID)).toMatchObject({
       candidateKind: "source_absent_family_solver",
       runtimeBasisId: LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_FORMULA_CORRIDOR_BASIS,
@@ -263,6 +371,39 @@ describe("layer combination resolver runtime candidate surface parity contract",
         { metric: "STC", value: 45 }
       ])
     });
+    expect(rowsById.get(GATE_H_LINED_MASSIVE_WALL_SELECTED_CANDIDATE_ID)).toMatchObject({
+      candidateKind: "source_absent_family_solver",
+      runtimeBasisId: GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD,
+      route: "wall",
+      supportBucket: "source_absent_estimate",
+      supportedMetrics: ["Rw", "STC", "C", "Ctr"],
+      valuePins: expect.arrayContaining([
+        { metric: "Rw", value: 57 },
+        { metric: "STC", value: 57 }
+      ])
+    });
+    expect(rowsById.get(COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_SELECTED_CANDIDATE_ID)).toMatchObject({
+      candidateKind: "source_absent_family_solver",
+      runtimeBasisId: COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_RUNTIME_METHOD,
+      route: "wall",
+      supportBucket: "source_absent_estimate",
+      supportedMetrics: ["Rw", "STC", "C", "Ctr"],
+      valuePins: expect.arrayContaining([
+        { metric: "Rw", value: 63 },
+        { metric: "STC", value: 63 }
+      ])
+    });
+    expect(rowsById.get(FLAT_LIST_MULTILEAF_GUARD_LAB_SELECTED_CANDIDATE_ID)).toMatchObject({
+      candidateKind: "source_absent_family_solver",
+      runtimeBasisId: FLAT_LIST_MULTILEAF_GUARD_LAB_RUNTIME_METHOD,
+      route: "wall",
+      supportBucket: "source_absent_estimate",
+      supportedMetrics: ["Rw", "STC", "C", "Ctr"],
+      valuePins: expect.arrayContaining([
+        { metric: "Rw", value: 51 },
+        { metric: "STC", value: 51 }
+      ])
+    });
     expect(rowsById.get("floor.open_web.supported_band_similarity")).toMatchObject({
       candidateKind: "similarity_anchor",
       supportBucket: "anchored_estimate"
@@ -270,6 +411,32 @@ describe("layer combination resolver runtime candidate surface parity contract",
     expect(rowsById.get("floor.open_web.field_building_adapter.exact_anchor_continuation")).toMatchObject({
       candidateKind: "field_building_adapter",
       supportBucket: "field_adapter"
+    });
+    expect(rowsById.get("wall.airborne_field_context.field_apparent_adapter")).toMatchObject({
+      candidateKind: "field_building_adapter",
+      requestedBasis: "field_apparent",
+      route: "wall",
+      runtimeBasisId: GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD,
+      supportBucket: "field_adapter",
+      supportedMetrics: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "DnT,A,k"]
+    });
+    expect(rowsById.get(BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID)).toMatchObject({
+      candidateKind: "field_building_adapter",
+      requestedBasis: "field_apparent",
+      route: "wall",
+      runtimeBasisId: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD,
+      supportBucket: "field_adapter",
+      supportedMetrics: ["R'w", "DnT,w"],
+      valuePins: []
+    });
+    expect(rowsById.get(FLAT_LIST_MULTILEAF_GUARD_FIELD_SELECTED_CANDIDATE_ID)).toMatchObject({
+      candidateKind: "field_building_adapter",
+      requestedBasis: "field_apparent",
+      route: "wall",
+      runtimeBasisId: FLAT_LIST_MULTILEAF_GUARD_FIELD_RUNTIME_METHOD,
+      supportBucket: "field_adapter",
+      supportedMetrics: ["R'w", "DnT,w", "DnT,A", "Dn,w", "Dn,A"],
+      valuePins: []
     });
     expect(rowsById.get("generic.required_input_owner.needs_input_boundary")).toMatchObject({
       candidateKind: "needs_input_boundary",
@@ -393,6 +560,75 @@ describe("layer combination resolver runtime candidate surface parity contract",
     expect(impactOnly.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w", "L'n,w", "L'nT,w", "IIC"]);
     expect(impactOnly.impact?.LPrimeNW).toBeUndefined();
     expect(impactOnly.impact?.LPrimeNTw).toBeUndefined();
+  });
+
+  it("exposes local-substitution wall formula traces without hiding calculated answers", () => {
+    const rwOnly = calculateAssembly(LOCAL_SUBSTITUTION_WALL, {
+      airborneContext: LOCAL_SUBSTITUTION_LAB_CONTEXT,
+      calculator: "dynamic",
+      targetOutputs: ["Rw"]
+    });
+    const labSpectrum = calculateAssembly(LOCAL_SUBSTITUTION_WALL, {
+      airborneContext: LOCAL_SUBSTITUTION_LAB_CONTEXT,
+      calculator: "dynamic",
+      targetOutputs: ["Rw", "STC", "C", "Ctr"]
+    });
+    const field = calculateAssembly(LOCAL_SUBSTITUTION_WALL, {
+      airborneContext: LOCAL_SUBSTITUTION_FIELD_CONTEXT,
+      calculator: "dynamic",
+      targetOutputs: ["R'w", "DnT,w"]
+    });
+
+    expect(rwOnly.layerCombinationResolverTrace).toMatchObject({
+      candidateKind: "source_absent_family_solver",
+      requestedBasis: "element_lab",
+      runtimeBasisId: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_RUNTIME_METHOD,
+      selectedCandidateId: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_SELECTED_CANDIDATE_ID,
+      supportBucket: "source_absent_estimate",
+      supportedMetrics: ["Rw"],
+      valuePins: [{ metric: "Rw", value: 53 }]
+    });
+    expect(rwOnly.metrics.estimatedRwDb).toBe(53);
+
+    expect(labSpectrum.layerCombinationResolverTrace).toMatchObject({
+      candidateKind: "source_absent_family_solver",
+      requestedBasis: "element_lab",
+      runtimeBasisId: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_RUNTIME_METHOD,
+      selectedCandidateId: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_SELECTED_CANDIDATE_ID,
+      supportBucket: "source_absent_estimate",
+      supportedMetrics: ["Rw", "STC", "C", "Ctr"],
+      valuePins: expect.arrayContaining([
+        { metric: "Rw", value: 53 },
+        { metric: "STC", value: 64 },
+        { metric: "C", value: 1.6 },
+        { metric: "Ctr", value: -7.2 }
+      ])
+    });
+    expect(labSpectrum.metrics).toMatchObject({
+      estimatedCDb: 1.6,
+      estimatedCtrDb: -7.2,
+      estimatedRwDb: 53,
+      estimatedStc: 64
+    });
+
+    expect(field.layerCombinationResolverTrace).toMatchObject({
+      candidateKind: "field_building_adapter",
+      requestedBasis: "field_apparent",
+      runtimeBasisId: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD,
+      selectedCandidateId: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
+      supportBucket: "field_adapter",
+      supportedMetrics: ["R'w", "DnT,w"],
+      valuePins: expect.arrayContaining([
+        { metric: "R'w", value: 51 },
+        { metric: "DnT,w", value: 53 }
+      ])
+    });
+    expect(field.layerCombinationResolverTrace?.supportedMetrics).not.toContain("Rw");
+    expect(field.layerCombinationResolverTrace?.supportedMetrics).not.toContain("STC");
+    expect(field.metrics).toMatchObject({
+      estimatedDnTwDb: 53,
+      estimatedRwPrimeDb: 51
+    });
   });
 
   it("keeps docs, exports, and current gate runner aligned with surface parity", () => {

@@ -10,6 +10,8 @@ import {
 } from "./impact-iso717";
 import { ksRound1 } from "./math";
 
+export const EXACT_IMPACT_SOURCE_BAND_CURVE_BASIS = "exact_source_band_curve_iso7172";
+
 function buildAvailableOutputs(input: {
   ci: number;
   ci50_2500: number;
@@ -58,7 +60,7 @@ export function buildExactImpactFromSource(source: ExactImpactSource): ImpactCal
 
   const adaptation = computeImpactSpectrumAdaptationTerms(source.frequenciesHz, source.levelsDb, weighted.value);
   const weightedValue = ksRound1(weighted.value);
-  const confidence = getImpactConfidenceForBasis("exact_source_band_curve_iso7172");
+  const confidence = getImpactConfidenceForBasis(EXACT_IMPACT_SOURCE_BAND_CURVE_BASIS);
   const lnTA = source.labOrField === "field" ? computeDutchLnTAFromBands(source.frequenciesHz, source.levelsDb) : Number.NaN;
   const deltaLw =
     source.labOrField === "lab" && typeof source.companionRatings?.DeltaLw === "number"
@@ -88,7 +90,7 @@ export function buildExactImpactFromSource(source: ExactImpactSource): ImpactCal
         LnW: isField ? undefined : weightedValue,
         LnWPlusCI: lnWPlusCI
       },
-      "exact_source_band_curve_iso7172"
+      EXACT_IMPACT_SOURCE_BAND_CURVE_BASIS
     ),
     createImpactMetricBasis({
       DeltaLw: typeof deltaLw === "number" ? "exact_source_rating_override" : undefined,
@@ -107,7 +109,7 @@ export function buildExactImpactFromSource(source: ExactImpactSource): ImpactCal
     LnWPlusCI: lnWPlusCI,
     availableOutputs,
     bandSet: weighted.bandSet,
-    basis: "exact_source_band_curve_iso7172",
+    basis: EXACT_IMPACT_SOURCE_BAND_CURVE_BASIS,
     ci50_2500BandSet: typeof ci50_2500 === "number" ? adaptation.ci50_2500BandSet : undefined,
     ciBandSet: typeof ci === "number" ? adaptation.ciBandSet : undefined,
     confidence,

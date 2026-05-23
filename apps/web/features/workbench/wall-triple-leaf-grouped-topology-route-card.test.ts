@@ -5,9 +5,9 @@ import {
 } from "@dynecho/shared";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { getDoubleLeafFramedBridgeAirbornePromptDetail } from "./airborne-physical-input-prompt";
 import { getDynamicCalcBranchSummary } from "./dynamic-calc-branch";
 import { getGuidedTopologyGap } from "./guided-topology-gap";
-import { ROCKWOOL_SPLIT_TRIPLE_LEAF_OUTPUT_WITHHELD_GUARD } from "./rockwool-triple-leaf-screening-policy-copy";
 import { evaluateScenario } from "./scenario-analysis";
 import { buildOutputCard } from "./simple-workbench-output-model";
 import {
@@ -208,8 +208,8 @@ describe("wall triple-leaf grouped topology route-card Gate I", () => {
     expect(snapshot.result.supportedTargetOutputs).toEqual([]);
     expect(snapshot.result.unsupportedTargetOutputs).toEqual([...WALL_OUTPUTS]);
     expect(snapshot.rwCard).toMatchObject({
-      detail: ROCKWOOL_SPLIT_TRIPLE_LEAF_OUTPUT_WITHHELD_GUARD,
-      status: "unsupported",
+      detail: getDoubleLeafFramedBridgeAirbornePromptDetail(snapshot.result),
+      status: "needs_input",
       value: "Not ready"
     });
     expect(snapshot.topologyGap).toMatchObject({

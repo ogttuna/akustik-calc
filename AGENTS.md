@@ -2,6 +2,17 @@
 
 Start here before changing calculator behavior.
 
+## Usable V1 Authority
+
+Before following any historical selected-next handoff, read:
+`docs/calculator/USABLE_V1_EXECUTION_PLAN.md`.
+
+That file is the binding finish plan for company-internal usable V1. If
+it conflicts with older roadmap, checkpoint, or slice documents, the
+usable V1 execution plan wins. Do not answer "how much is left" with an
+iteration count; answer with the open usable V1 acceptance steps and
+their test status.
+
 ## Product Goal
 
 DynEcho is an acoustic calculator, not a source-library/catalog app.
@@ -53,29 +64,214 @@ not ready just because a finite catalog of known assemblies passes.
 
 Checkpoint and active correction to read before the next implementation
 slice:
+`docs/calculator/CHECKPOINT_2026-05-23_POST_V1_ACOUSTIC_CALCULATOR_STATE_RECONCILIATION.md`,
 `docs/calculator/CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md`,
 `docs/calculator/CHECKPOINT_2026-05-21_LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_COVERAGE_REFRESH_REVALIDATION.md`
 and
 `docs/calculator/ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md`.
 
-Latest active handoff, 2026-05-22: answer-engine checkpoint
-reconciliation is complete in
-`docs/calculator/CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md`.
-Docs, runtime probes, and tests agree on the current state: existing
-exact rows, resolver registry, runtime adapter, candidate trace,
-single-leaf runtime, explicit double-leaf runtime, grouped/triple-leaf
-lanes, and floor lanes are useful infrastructure, but the selected next
-implementation is still
+Latest checkpoint, 2026-05-23: post-V1 acoustic calculator state
+reconciliation is recorded in
+`docs/calculator/CHECKPOINT_2026-05-23_POST_V1_ACOUSTIC_CALCULATOR_STATE_RECONCILIATION.md`.
+Docs and implementation now agree that usable V1 Steps 0-5 are closed
+for the current company-internal envelope, the answer-engine contract
+exists and is part of the current gate, and the shared resolver surface
+has 25 declared candidates with 22 active runtime-basis mappings. This
+does not select a broad source crawl or finite scenario pack. The next
+slice must be explicitly chosen as post-V1 accuracy/adapters or expanded
+formula coverage while preserving exact/anchor/formula/`needs_input`/
+`unsupported` answer order and basis boundaries.
+
+Latest active handoff, 2026-05-23: post-V1 wall lab formula trace
+reconciliation has landed. This is calculator answer-engine work, not a
+catalog/source-library expansion. The existing Gate H lined massive-wall
+runtime and company-internal heavy-composite wall runtime now map into
+the shared layer-combination resolver registry, runtime adapter, visible
+surface trace, and Answer Engine V1 wall matrix. A lined massive wall
+lab formula answer now publishes through
+`candidate_lined_massive_wall_family_physics_prediction` on
+`gate_h_lined_massive_wall_cavity_aware_family_physics_runtime`; the
+current tested stack pins `Rw 60` / STC 60 / `C -0.8` / `Ctr -5.7`.
+The heavy-composite lab formula answer now publishes through
+`candidate_company_internal_heavy_composite_wall_family_physics_prediction`
+on
+`company_internal_heavy_composite_wall_mass_air_mass_capped_family_physics_runtime`
+with `Rw 63` / STC 63 / `C -1.4` / `Ctr -6.3`. The route resolver now
+keeps known wall airborne formula runtimes on the wall route even when
+incidental floor-system artifacts exist on the calculation object.
+Registry and matrix counts are now 25 declared candidates and 22 active
+runtime-basis mappings. Targeted validation passed 7 engine files / 52
+tests. Full `pnpm calculator:gate:current` then passed: engine 510 files
+/ 2912 tests, web 94 files / 397 passed + 18 skipped, repo build 5 / 5,
+and whitespace guard passed. This is not a broad source crawl, tolerance
+retune, confidence wording pass, or finite scenario-pack expansion.
+
+Previous active handoff, 2026-05-23: post-V1 flat-list adjacent-swap
+guard answer trace reconciliation has landed. This is calculator
+answer-engine work, not a catalog/source-library expansion. The
+adjacent flat-list Rockwool/MLV/plaster wall case that keeps the
+guarded double-leaf numeric lane now selects visible resolver
+candidates instead of leaking numeric answers behind a `needs_input`
+trace: lab `Rw 51` / STC 51 / `C -1.8` / `Ctr -7.3` publish through
+`wall.flat_list_adjacent_swap.double_leaf_numeric_guard`, and complete
+field context publishes `R'w 49` / `DnT,w 50` through
+`wall.flat_list_adjacent_swap.field_context_adapter`. Flat split or
+grouping-ambiguous multileaf cases without the guarded adjacent-swap
+numeric path still stop as `needs_input`; lab and field bases remain
+separate. Registry and matrix counts are now 23 declared candidates and
+20 active runtime-basis mappings. Validation passed first with targeted
+engine/web sets, then full `pnpm calculator:gate:current`: engine 510
+files / 2912 tests, web 94 files / 397 passed + 18 skipped, repo build
+5 / 5, and whitespace guard passed. This is not a broad source crawl,
+tolerance retune, confidence wording pass, or finite scenario-pack
+expansion.
+
+Previous active handoff, 2026-05-23: post-V1 local-substitution wall
+formula trace integration has landed. This is answer-engine integration,
+not catalog/source-library work: the existing wall triple-leaf
+local-substitution `Rw` runtime, lab-spectrum `STC`/`C`/`Ctr` adapter,
+and field-context `R'w`/`DnT,w` adapter now map into the shared
+layer-combination resolver registry, runtime adapter, and visible
+candidate trace. The live local Rockwool/MLV/plaster grouped triple-leaf
+case now traces the source-absent `Rw 53`, lab-spectrum `STC 64` /
+`C 1.6` / `Ctr -7.2`, and field `R'w 51` / `DnT,w 53` answers with
+the correct candidate ids, basis, support bucket, and scenario-specific
+value pins. Registry and matrix counts are now 21 declared candidates
+and 18 active runtime-basis mappings. Keep the registry free of heavy
+runtime imports; local-substitution ids are string-mapped there to avoid
+runtime import cycles. Targeted validation passed for registry, runtime
+candidate adapter, surface parity, candidate coverage matrix,
+company-internal V0, post-single-leaf matrix, and Answer Engine V1. This
+was followed by full `pnpm calculator:gate:current`: engine 510 files /
+2912 tests, web 94 files / 397 passed + 18 skipped, repo build 5 / 5,
+and whitespace guard passed. This is not a broad source crawl,
+tolerance retune, confidence wording pass, or finite scenario-pack
+expansion.
+
+Latest active handoff, 2026-05-22: Answer Engine V1 implementation is
+continuing under
 `acoustic_calculator_answer_engine_v1_plan` in
 `packages/engine/src/acoustic-calculator-answer-engine-v1-contract.test.ts`.
-That file does not exist yet. The checkpoint probes confirmed single
-gypsum and explicit double-leaf stacks produce traced formula answers,
-while flat gypsum / rockwool / gypsum still falls to untraced screening
-and missing `resilientBarSideCount` still leaks numeric wall metrics
-despite selecting a `needs_input` candidate. After updating one stale
-model-first doc-alignment test, `pnpm calculator:gate:current` passed:
-engine 508 files / 2889 tests, web 94 files / 388 passed + 18 skipped,
-repo build 5 / 5, and whitespace guard passed.
+Docs, runtime probes, and tests agree that existing exact rows,
+resolver registry, runtime adapter, candidate trace, single-leaf
+runtime, explicit double-leaf runtime, grouped/triple-leaf lanes, and
+floor lanes are useful infrastructure and must keep feeding the answer
+engine. The first slice added shared `acousticAnswerBoundary` payloads,
+parked missing `resilientBarSideCount` wall outputs, turned flat gypsum /
+rockwool / gypsum without topology into a traced double-leaf
+`needs_input` boundary, and turned roleless helper-only timber/open-web
+impact publication into a floor-role `needs_input` boundary while
+preserving raw floor screening and field-airborne carrier lanes.
+Workbench cards now show the floor missing-role boundary as
+`needs_input`. The follow-up slice now parks detected flat
+multileaf/multicavity wall answers until grouped topology fields are
+supplied, adds wall `acousticAnswerBoundary` payloads for those answer
+stops, and keeps adjacent-swap double-leaf guard/source-like resilient
+bar lanes available when they remain the selected answer path. Result
+answer charts, summary cards, and wall lab/field output cards no longer
+show parked diagnostic airborne metrics as the active answer. The next
+follow-up now keeps partial building-prediction `needs_input` and
+opening/leak building `unsupported` wall requests on explicit wall
+`acousticAnswerBoundary` payloads and wall resolver traces, with no
+runtime value pins, even when incidental floor artifacts exist on the
+calculation object. Floor impact field-adapter/source-absent lanes stay
+on their floor traces when they are the selected answer path. The latest
+follow-up now applies the same answer stop to partial
+`field_between_rooms` wall requests: missing partition area parks the
+field-apparent answer, and field-only requests with missing receiving
+room volume or RT60 stay behind wall `needs_input` with exact missing
+fields instead of publishing a partial field answer. Mixed lab-plus-field
+requests keep owned lab outputs separate and park only the unavailable
+field outputs. Complete Gate I field requests remain live. The latest
+exact-source follow-up now lets truly exact measured wall rows win
+before formula missing-input prompts: the Knauf LSF exact row selects the
+measured full-stack answer, maps the resolver trace to the exact
+measured override candidate on `verified_airborne_exact_source`, pins
+only the requested supported `Rw 55`, and carries no `needs_input`
+boundary. This exact-source precedence is route-scoped to wall so floor
+exact, package-transfer, raw-bare, helper-only, and field-impact lanes
+remain separate. The latest metric-scope follow-up keeps that exact
+override honest for mixed target-output requests: an Rw-only exact
+source can publish exact `Rw`, but `STC`, `C`, and `Ctr` stay
+unsupported on the exact answer instead of being aliased from the
+anchored curve. Field exact labels follow the same rule: `R'w` can
+restore exact field precedence only for `R'w`, while official
+`DnT,A,k` field rows stay on the owned `DnT,A` proxy lane instead of
+becoming `R'w` / `DnT,w` aliases. Exact wall catalog matching now also
+accepts a fully reversed layer order for the same wall stack, so the
+same measured wall viewed from the opposite side does not fall back to a
+formula lane. The newest trace follow-up aligns resolver surfaces with
+that metric scope: official `DnT,A,k` field exact answers now trace as
+`field_apparent`, support only `DnT,A` / `DnT,A,k`, and pin only those
+field metrics instead of showing the old lab `Rw` / STC / `C` / `Ctr`
+exact row capabilities. Exact measured floor rows and impact-only exact
+floor traces now follow the same metric-scope rule: measured
+floor-family answers pin only owned floor metrics such as `Rw`, `C`,
+`Ln,w`, `CI`, `CI,50-2500`, and `Ln,w+CI`; `STC`, `Ctr`, and ASTM/IIC
+aliases stay out unless a separate owner exists. Exact ISO 717-2
+impact-band sources now have their own resolver exact candidate on
+`exact_source_band_curve_iso7172`; lab sources pin only ISO impact
+metrics such as `Ln,w`, `CI`, `CI,50-2500`, and `Ln,w+CI`, field sources
+trace as `field_apparent` for owned metrics such as `L'nT,w` and
+`LnT,A`, and ASTM `IIC`/`AIIC` remains a visible unsupported boundary
+instead of an alias. Mixed exact impact-band plus floor airborne
+requests now keep the source-absent airborne values on their own
+calculation basis: the exact impact resolver trace supports and pins
+only impact-owned outputs such as `Ln,w` and `CI`, so `Rw`, STC, `C`,
+and `Ctr` cannot appear as if they were owned by the ISO 717-2 impact
+source. The latest Step 2 wall acceptance slice now lands the engine
+wall V1 matrix and registers the complete Gate I wall field-apparent
+adapter as `wall.airborne_field_context.field_apparent_adapter` instead
+of losing that route to incidental floor artifacts. Complete
+`field_between_rooms` wall requests trace as `field_apparent`, support
+owned field metrics such as `R'w` and `DnT,w`, and pin the live field
+values; partial wall field context still stops as `needs_input`, and
+unsupported building/opening owners stay value-less. The latest Step 2 parity follow-up closes the wall UI/API/report
+side: exact wall metric scope, complete wall field-apparent values,
+partial field `needs_input`, and unsupported building/opening boundaries
+now match across output cards, Markdown report lines, and `/api/estimate`
+payloads. A card precedence bug was fixed so unsupported wall
+building/opening field outputs remain `unsupported` instead of being
+relabeled as missing field input. The latest Step 3 engine follow-up
+lands the floor V1 acceptance matrix across exact floor rows, exact ISO
+717-2 impact-band rows, package-transfer anchors, supported-band
+anchors, raw-bare, helper-only, direct-fixed, lab-impact formula,
+field-impact missing context, and ASTM blockers. It also registers the
+heavy concrete floating-floor lab-impact formula as
+`floor.heavy_concrete_floating_floor.lab_impact_formula` on
+`predictor_heavy_floating_floor_iso12354_annexc_estimate`, so mixed
+`Ln,w` / `DeltaLw` / `IIC` requests keep calculated ISO lab values live
+while `IIC` remains a boundary candidate instead of stealing the
+selected trace. The shared resolver registry now has 18 declared
+candidates and 15 active runtime-basis mappings. Targeted Step 3 engine
+validation passed 7 files / 51 tests, targeted Step 3 web parity
+validation passed 1 file / 11 tests, and Step 3 is now closed. The
+latest Step 4 surface parity follow-up now scopes answer charts, result
+summary cards, report live-stack summaries, saved replay, server
+snapshot replay, and resolver candidate surfaces to the same selected
+answer outputs. Impact-only floor answers no longer show incidental
+`Rw` / STC / `C` / `Ctr` as answers; exact `Rw`-only wall answers no
+longer display unowned STC or spectrum companions; and wall/floor
+`needs_input` stops remain visible with exact missing fields across
+replay, cards, traces, and Markdown reports. Targeted Step 4 web
+validation passed 5 files / 28 tests, and Step 4 is now closed. The
+latest Step 5 company-internal usable V1 acceptance gate is now landed
+in
+`packages/engine/src/acoustic-calculator-company-internal-usable-v1-acceptance-gate-contract.test.ts`
+and included in `pnpm calculator:gate:current`. It covers realistic
+wall/floor exact, anchor, source-absent formula, `needs_input`,
+unsupported, hostile layer-order, duplicate/split-layer,
+missing-context, and metric-alias-negative cases. The Step 5 work also
+parked ownerless floor package-transfer STC, kept exact impact-band
+airborne companions parked, and preserved real floor field/building
+continuation values only when the selected runtime publishes them. The
+full `pnpm calculator:gate:current` passed with engine 510 files / 2912
+tests, web 94 files / 397 passed + 18 skipped, repo build 5 / 5, and
+whitespace guard passed. Steps 0-5 of the usable V1 plan are closed, so
+the current tested envelope is ready for company-internal usable V1;
+future work must be selected as post-V1 accuracy/adapters or expanded
+formula coverage, not as a broad source crawl, confidence exercise, or
+finite scenario pack.
 
 Previous active handoff, 2026-05-21: implementation/runtime analysis
 found that the existing source rows, candidate registry, runtime basis
@@ -461,9 +657,12 @@ similarity anchors, calibrated family solvers, source-absent family
 solvers, field/building adapters, `needs_input`, basis boundaries, and
 unsupported ASTM/IIC blockers. Runtime acoustic values remain frozen;
 source rows remain evidence, anchors, holdouts, or exact overrides rather
-than the product. Later landed single-leaf, double-leaf, and floor lanes
-bring the live registry to 15 declarations and 12 active runtime-basis
-mappings; use the live registry summary for new answer-engine work.
+than the product. Later landed single-leaf, double-leaf, floor lanes,
+the Answer Engine V1 exact impact-band trace, the Step 2 wall
+field-apparent adapter, and the Step 3 heavy floating-floor lab-impact
+formula trace bring the live registry to 18 declarations and 15 active
+runtime-basis mappings; use the live registry summary for new
+answer-engine work.
 The selected next action at this historical gate was
 `layer_combination_resolver_company_internal_v0_rehearsal_plan` in
 `packages/engine/src/layer-combination-resolver-company-internal-v0-rehearsal-contract.test.ts`;

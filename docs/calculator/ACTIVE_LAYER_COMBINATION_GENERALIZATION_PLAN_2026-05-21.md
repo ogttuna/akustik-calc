@@ -457,10 +457,11 @@ Landed candidate coverage matrix closeout:
   similarity anchors, calibrated family solvers, source-absent family
   solvers, field/building adapters, `needs_input`, basis boundaries, and
   unsupported ASTM/IIC blockers.
-- Later single-leaf, double-leaf, and floor lane additions brought the
-  live registry to 15 declarations and 12 active runtime-basis mappings;
-  answer-engine work must use the live registry rather than freezing
-  this historical matrix count.
+- Later single-leaf, double-leaf, floor, exact impact-band, wall
+  field-adapter, and heavy floating lab-impact lane additions brought
+  the live registry to 18 declarations and 15 active runtime-basis
+  mappings; answer-engine work must use the live registry rather than
+  freezing this historical matrix count.
 - Runtime values remain frozen; source rows remain evidence, anchors,
   holdouts, or exact overrides rather than the product. Selected next
   file:
@@ -478,7 +479,7 @@ Landed company-internal V0 rehearsal closeout:
   `unsupported`, and 0 registered `research_only` rows. It separately
   ranks six research-only gaps.
 - That was the operating-envelope count at this gate. The live registry
-  now has 15 declarations and 12 active runtime-basis mappings; the
+  now has 18 declarations and 15 active runtime-basis mappings; the
   answer-engine gate should assert against the live registry summary.
 - Company-internal V0 use is limited to the 10 exact or budgeted rows
   with visible candidate id, basis, support bucket, required fields,

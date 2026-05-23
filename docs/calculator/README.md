@@ -6,7 +6,20 @@ checkpoints in this folder.
 
 ## Current Source Of Truth
 
-The current active product correction is:
+The current checkpoint is:
+
+[CHECKPOINT_2026-05-23_POST_V1_ACOUSTIC_CALCULATOR_STATE_RECONCILIATION.md](./CHECKPOINT_2026-05-23_POST_V1_ACOUSTIC_CALCULATOR_STATE_RECONCILIATION.md)
+
+Usable V1 Steps 0-5 are closed for the current company-internal
+envelope. The answer-engine contract exists at
+`packages/engine/src/acoustic-calculator-answer-engine-v1-contract.test.ts`
+and is included in `pnpm calculator:gate:current`. The current resolver
+surface has 25 declared candidates and 22 active runtime-basis mappings.
+The next implementation must be selected explicitly as post-V1
+accuracy/adapters or expanded formula coverage, not as a broad source
+crawl, confidence wording pass, or finite scenario library.
+
+The product direction lock remains:
 
 [ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md](./ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md)
 
@@ -24,19 +37,18 @@ Use [BROAD_ACCURACY_CALCULATOR_PLAN.md](./BROAD_ACCURACY_CALCULATOR_PLAN.md)
 when reviewing accuracy scope, but treat the 71-row matrix as a
 guardrail rather than the product definition.
 
-Latest checkpoint, 2026-05-22:
-[CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md](./CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md).
-The answer-engine reconciliation checkpoint confirms the active docs and
-implementation state: existing solver lanes and resolver traces are
-useful, but
-`packages/engine/src/acoustic-calculator-answer-engine-v1-contract.test.ts`
-does not exist yet. Single-leaf and explicit double-leaf formula answers
-are traced; flat double-leaf-like input can still fall to untraced
-screening; missing `resilientBarSideCount` still leaks numeric wall
-metrics while selecting `needs_input`. After one stale model-first
-doc-alignment test was updated, `pnpm calculator:gate:current` passed on
-2026-05-22 with engine 508 files / 2889 tests, web 94 files / 388
-passed + 18 skipped, repo build 5 / 5, and whitespace guard passed.
+Latest checkpoint, 2026-05-23:
+[CHECKPOINT_2026-05-23_POST_V1_ACOUSTIC_CALCULATOR_STATE_RECONCILIATION.md](./CHECKPOINT_2026-05-23_POST_V1_ACOUSTIC_CALCULATOR_STATE_RECONCILIATION.md).
+The post-V1 reconciliation checkpoint confirms that the V1 answer engine
+is implemented for the current tested envelope: flat double-leaf-like
+missing-input cases, missing resilient side count, roleless floor impact,
+partial field context, pure ASTM `IIC` / `AIIC`, unsupported
+building/opening owners, and metric-scope exact rows now surface through
+explicit resolver candidates or answer boundaries instead of untraced
+publication or metric aliasing. Latest full gate evidence before this
+checkpoint is `pnpm calculator:gate:current` on 2026-05-23 with engine
+510 files / 2912 tests, web 94 files / 397 passed + 18 skipped, repo
+build 5 / 5, and whitespace guard passed.
 
 Previous implementation checkpoint, 2026-05-21:
 [CHECKPOINT_2026-05-21_LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_COVERAGE_REFRESH_REVALIDATION.md](./CHECKPOINT_2026-05-21_LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_COVERAGE_REFRESH_REVALIDATION.md).
@@ -44,15 +56,15 @@ The double-leaf/framed wall coverage refresh has landed as
 `layer_combination_resolver_double_leaf_framed_wall_banded_coverage_refresh_plan`
 with selection status
 `layer_combination_resolver_double_leaf_framed_wall_banded_coverage_refresh_landed_no_runtime_selected_post_double_leaf_revalidation`.
-Latest planning correction:
+Historical planning correction:
 [ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md](./ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md).
-The selected next action is now
-`acoustic_calculator_answer_engine_v1_plan` in
-`packages/engine/src/acoustic-calculator-answer-engine-v1-contract.test.ts`;
-selected next label: acoustic calculator answer engine V1. The prior
+That correction selected
+`acoustic_calculator_answer_engine_v1_plan`; it is now closed for the
+current tested envelope. The prior
 `layer_combination_resolver_post_double_leaf_framed_wall_banded_coverage_revalidation_plan`
-remains a possible later revalidation, but it is no longer the immediate
-next slice.
+remains a possible later revalidation, but neither it nor the closed V1
+plan is the automatic next slice. Select post-V1 accuracy/adapters or
+expanded formula coverage explicitly.
 This is not a broad source crawl.
 
 Historical helper-only closeout: the post-helper-only timber/open-web
@@ -125,8 +137,9 @@ boundary rows across exact measured overrides, similarity anchors,
 calibrated family solvers, source-absent family solvers, field/building
 adapters, `needs_input`, basis boundaries, and unsupported ASTM/IIC
 blockers without moving runtime values. Later single-leaf, double-leaf,
-and floor lane additions brought the live registry to 15 declarations
-and 12 active runtime-basis mappings; use the live registry summary for
+floor, exact impact-band, wall field-adapter, and heavy floating
+lab-impact lane additions brought the live registry to 18 declarations
+and 15 active runtime-basis mappings; use the live registry summary for
 new answer-engine work. At that historical gate it selected
 `layer_combination_resolver_company_internal_v0_rehearsal_plan` in
 `packages/engine/src/layer-combination-resolver-company-internal-v0-rehearsal-contract.test.ts`;

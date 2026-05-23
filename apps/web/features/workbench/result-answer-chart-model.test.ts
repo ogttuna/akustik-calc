@@ -68,7 +68,9 @@ describe("result answer chart model", () => {
           },
           notes: ["Fixture note."],
           scope: "narrow_heavy_concrete_only"
-        }
+        },
+        supportedTargetOutputs: ["Rw", "Ln,w", "DeltaLw"],
+        targetOutputs: ["Rw", "Ln,w", "DeltaLw"]
       }),
       targetLnwDb: "53",
       targetRwDb: "52"
@@ -111,7 +113,9 @@ describe("result answer chart model", () => {
           labOrField: "field",
           notes: ["Fixture note."],
           scope: "family_estimate"
-        }
+        },
+        supportedTargetOutputs: ["Rw", "L'nT,w", "L'nT,50"],
+        targetOutputs: ["Rw", "L'nT,w", "L'nT,50"]
       }),
       targetLnwDb: "50",
       targetRwDb: ""
@@ -138,5 +142,97 @@ describe("result answer chart model", () => {
     });
 
     expect(lanes.map((lane) => lane.id)).toEqual(["airborne"]);
+  });
+
+  it("does not chart diagnostic airborne metrics when the answer is parked for missing input", () => {
+    const lanes = buildResultAnswerChartLanes({
+      result: buildFixture({
+        acousticAnswerBoundary: {
+          method: "dynamic_calculator_route_input_contract_missing_physical_fields",
+          missingPhysicalInputs: ["sideALeafGroup", "cavity1DepthMm"],
+          origin: "needs_input",
+          requiredInputs: ["sideALeafGroup", "cavity1DepthMm"],
+          route: "wall",
+          unsupportedOutputs: ["Rw", "STC"]
+        },
+        airborneBasis: {
+          assumptions: ["missing physical fields are user prompts"],
+          calculationStandard: "none",
+          curveBasis: "no_curve",
+          kind: "airborne_needs_input",
+          method: "dynamic_calculator_route_input_contract_missing_physical_fields",
+          missingPhysicalInputs: ["sideALeafGroup", "cavity1DepthMm"],
+          missingSourceEvidence: [],
+          origin: "needs_input",
+          propertyDefaults: [],
+          ratingStandard: "none",
+          requiredInputs: ["sideALeafGroup", "cavity1DepthMm"]
+        },
+        impact: null,
+        lowerBoundImpact: null,
+        supportedTargetOutputs: [],
+        targetOutputs: ["Rw", "STC"],
+        unsupportedTargetOutputs: ["Rw", "STC"]
+      }),
+      targetRwDb: "52"
+    });
+
+    expect(lanes).toEqual([]);
+  });
+
+  it("does not chart diagnostic airborne metrics or unsupported companions outside the selected answer scope", () => {
+    const lanes = buildResultAnswerChartLanes({
+      result: buildFixture({
+        impact: {
+          CI: 1,
+          DeltaLw: 24.3,
+          LnW: 50.3,
+          availableOutputs: ["Ln,w", "DeltaLw"],
+          basis: "predictor_heavy_floating_floor_iso12354_annexc_estimate",
+          confidence: {
+            level: "medium",
+            provenance: "formula_estimate_narrow_scope",
+            score: 0.73,
+            summary: "Fixture confidence."
+          },
+          notes: ["Fixture note."],
+          scope: "narrow_heavy_concrete_only"
+        },
+        supportedTargetOutputs: ["Ln,w", "DeltaLw"],
+        targetOutputs: ["Ln,w", "DeltaLw", "IIC"],
+        unsupportedTargetOutputs: ["IIC"]
+      }),
+      targetLnwDb: "55",
+      targetRwDb: "52"
+    });
+
+    expect(lanes.map((lane) => lane.id)).toEqual(["impact"]);
+    expect(lanes[0]).toEqual(
+      expect.objectContaining({
+        label: "Ln,w",
+        value: 50.3
+      })
+    );
+    expect(lanes[0]?.companions).toEqual([{ label: "DeltaLw", valueLabel: "24.3 dB" }]);
+  });
+
+  it("does not chart STC, C, or Ctr companions for an Rw-only exact answer", () => {
+    const lanes = buildResultAnswerChartLanes({
+      result: buildFixture({
+        supportedTargetOutputs: ["Rw"],
+        targetOutputs: ["Rw", "STC", "C", "Ctr"],
+        unsupportedTargetOutputs: ["STC", "C", "Ctr"]
+      }),
+      targetRwDb: "52"
+    });
+
+    expect(lanes.map((lane) => lane.id)).toEqual(["airborne"]);
+    expect(lanes[0]).toEqual(
+      expect.objectContaining({
+        label: "Rw estimate",
+        value: 58
+      })
+    );
+    expect(lanes[0]?.companions).toEqual([]);
   });
 });

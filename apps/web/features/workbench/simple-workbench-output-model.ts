@@ -95,13 +95,77 @@ export type OutputCardModel = BaseOutputCardModel & {
 
 const FLOOR_ROLE_PROMPT_OUTPUTS = new Set<RequestedOutputId>(["Ln,w", "Ln,w+CI", "CI", "CI,50-2500", "DeltaLw"]);
 const AIRBORNE_PHYSICAL_PROMPT_OUTPUTS = new Set<RequestedOutputId>(["Rw", "STC", "C", "Ctr"]);
+const FIELD_CONTEXT_PHYSICAL_PROMPT_INPUTS = new Set([
+  "contextMode",
+  "partitionAreaM2",
+  "panelHeightMm",
+  "panelWidthMm",
+  "receivingRoomRt60S",
+  "receivingRoomVolumeM3"
+]);
+
+function isWallAirbornePhysicalPromptOutput(output: RequestedOutputId): boolean {
+  return AIRBORNE_PHYSICAL_PROMPT_OUTPUTS.has(output) || FIELD_AIRBORNE_OUTPUTS.has(output);
+}
+
+function hasOnlyFieldContextPhysicalPromptInputs(result: AssemblyCalculation | null | undefined): boolean {
+  const missingInputs = result?.airborneBasis?.missingPhysicalInputs ?? [];
+
+  return (
+    missingInputs.length > 0 &&
+    missingInputs.every((input: string) => FIELD_CONTEXT_PHYSICAL_PROMPT_INPUTS.has(input))
+  );
+}
+
+function hasSelectedWallNeedsInputBasis(result: AssemblyCalculation | null | undefined): boolean {
+  return (
+    result?.airborneBasis?.origin === "needs_input" ||
+    result?.airborneCandidateResolution?.selectedOrigin === "needs_input"
+  );
+}
 
 function hasFloorRolePromptGuard(result: AssemblyCalculation | null | undefined): boolean {
   return Boolean(
+    (
+      result?.acousticAnswerBoundary?.route === "floor" &&
+      result.acousticAnswerBoundary.origin === "needs_input"
+    ) ||
     result?.warnings?.some((warning: string) =>
       /Floor roles needed before (?:impact output|exact floor-family) promotion/i.test(warning)
     )
   );
+}
+
+function hasFloorAnswerBoundaryMissingInput(
+  result: AssemblyCalculation | null | undefined,
+  output: RequestedOutputId
+): boolean {
+  return Boolean(
+    result?.acousticAnswerBoundary?.route === "floor" &&
+      result.acousticAnswerBoundary.origin === "needs_input" &&
+      (
+        result.acousticAnswerBoundary.unsupportedOutputs.includes(output) ||
+        result.unsupportedTargetOutputs?.includes(output)
+      )
+  );
+}
+
+function hasWallUnsupportedAnswerBoundary(
+  result: AssemblyCalculation | null | undefined,
+  output: RequestedOutputId
+): boolean {
+  return Boolean(
+    result?.acousticAnswerBoundary?.route === "wall" &&
+      result.acousticAnswerBoundary.origin === "unsupported" &&
+      result.acousticAnswerBoundary.unsupportedOutputs.includes(output)
+  );
+}
+
+function buildFloorAnswerBoundaryMissingInputDetail(result: AssemblyCalculation): string {
+  const missingInputs = result.acousticAnswerBoundary?.missingPhysicalInputs ?? [];
+  const suffix = missingInputs.length > 0 ? ` Missing: ${missingInputs.join(", ")}.` : "";
+
+  return `Assign floor roles before treating this floor output as supported.${suffix}`;
 }
 
 function hasSteelFormulaPhysicalInputPrompt(result: AssemblyCalculation | null | undefined): boolean {
@@ -133,6 +197,31 @@ function isExplicitUnsupportedMissingInput(input: {
   studyMode: StudyMode;
 }): boolean {
   const { output, result, studyMode } = input;
+
+  if (studyMode === "floor" && hasFloorAnswerBoundaryMissingInput(result, output)) {
+    return true;
+  }
+
+  if (
+    studyMode === "wall" &&
+    result?.airborneOverlay?.contextMode === "building_prediction" &&
+    hasSelectedWallNeedsInputBasis(result) &&
+    isWallAirbornePhysicalPromptOutput(output)
+  ) {
+    return true;
+  }
+
+  if (studyMode === "wall" && hasWallUnsupportedAnswerBoundary(result, output)) {
+    return false;
+  }
+
+  if (
+    studyMode === "wall" &&
+    isWallAirbornePhysicalPromptOutput(output) &&
+    getDoubleLeafFramedBridgeAirbornePromptDetail(result, output) !== null
+  ) {
+    return true;
+  }
 
   if (
     studyMode === "wall" &&
@@ -248,8 +337,23 @@ export function buildUnavailableOutputDetail(input: {
     return "Add a valid layer stack first.";
   }
 
+  if (studyMode === "floor" && hasFloorAnswerBoundaryMissingInput(result, output)) {
+    return buildFloorAnswerBoundaryMissingInputDetail(result);
+  }
+
   if (studyMode === "floor" && FLOOR_ROLE_PROMPT_OUTPUTS.has(output) && hasFloorRolePromptGuard(result)) {
     return "Assign floor roles before treating this impact output as supported.";
+  }
+
+  const airbornePromptDetail =
+    studyMode === "wall" && isWallAirbornePhysicalPromptOutput(output)
+      ? getDoubleLeafFramedBridgeAirbornePromptDetail(result, output)
+      : null;
+  if (
+    airbornePromptDetail &&
+    (!FIELD_AIRBORNE_OUTPUTS.has(output) || !hasOnlyFieldContextPhysicalPromptInputs(result))
+  ) {
+    return airbornePromptDetail;
   }
 
   if (FIELD_AIRBORNE_OUTPUTS.has(output)) {
@@ -257,6 +361,12 @@ export function buildUnavailableOutputDetail(input: {
 
     if (pendingDetail) {
       return pendingDetail;
+    }
+  }
+
+  if (studyMode === "wall" && isWallAirbornePhysicalPromptOutput(output)) {
+    if (airbornePromptDetail) {
+      return airbornePromptDetail;
     }
   }
 
@@ -337,6 +447,15 @@ export function isRouteBlockedOutput(input: {
   const { output, result, studyMode } = input;
 
   if (!result) {
+    return true;
+  }
+
+  if (
+    studyMode === "wall" &&
+    result.airborneOverlay?.contextMode === "building_prediction" &&
+    hasSelectedWallNeedsInputBasis(result) &&
+    isWallAirbornePhysicalPromptOutput(output)
+  ) {
     return true;
   }
 
@@ -424,8 +543,8 @@ export function buildOutputCard(input: {
   }
 
   const airbornePhysicalPromptDetail =
-    AIRBORNE_PHYSICAL_PROMPT_OUTPUTS.has(output)
-      ? getDoubleLeafFramedBridgeAirbornePromptDetail(result)
+    isWallAirbornePhysicalPromptOutput(output)
+      ? getDoubleLeafFramedBridgeAirbornePromptDetail(result, output)
       : null;
 
   if (airbornePhysicalPromptDetail) {

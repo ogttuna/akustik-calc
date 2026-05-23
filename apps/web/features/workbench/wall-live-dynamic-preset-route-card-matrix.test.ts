@@ -227,15 +227,15 @@ const LIVE_CASES: readonly LiveWallCase[] = [
     expected: {
       c: 0.8,
       cards: {
-        Rw: { status: "unsupported", value: "Not ready" },
+        Rw: { status: "needs_input", value: "Not ready" },
         "R'w": { status: "needs_input", value: "Not ready" },
         "Dn,w": { status: "needs_input", value: "Not ready" },
         "Dn,A": { status: "needs_input", value: "Not ready" },
         "DnT,w": { status: "needs_input", value: "Not ready" },
         "DnT,A": { status: "needs_input", value: "Not ready" },
-        STC: { status: "unsupported", value: "Not ready" },
-        C: { status: "unsupported", value: "Not ready" },
-        Ctr: { status: "unsupported", value: "Not ready" }
+        STC: { status: "needs_input", value: "Not ready" },
+        C: { status: "needs_input", value: "Not ready" },
+        Ctr: { status: "needs_input", value: "Not ready" }
       },
       ctr: -4,
       dnA: null,
@@ -308,15 +308,15 @@ const LIVE_CASES: readonly LiveWallCase[] = [
     expected: {
       c: -1.5,
       cards: {
-        Rw: { status: "unsupported", value: "Not ready" },
+        Rw: { status: "needs_input", value: "Not ready" },
         "R'w": { status: "needs_input", value: "Not ready" },
         "Dn,w": { status: "needs_input", value: "Not ready" },
         "Dn,A": { status: "needs_input", value: "Not ready" },
         "DnT,w": { status: "needs_input", value: "Not ready" },
         "DnT,A": { status: "needs_input", value: "Not ready" },
-        STC: { status: "unsupported", value: "Not ready" },
-        C: { status: "unsupported", value: "Not ready" },
-        Ctr: { status: "unsupported", value: "Not ready" }
+        STC: { status: "needs_input", value: "Not ready" },
+        C: { status: "needs_input", value: "Not ready" },
+        Ctr: { status: "needs_input", value: "Not ready" }
       },
       ctr: -6.4,
       dnA: null,
@@ -423,17 +423,30 @@ describe("wall live dynamic preset route card matrix", () => {
       ).toEqual(testCase.expected.unsupported);
 
       expect(evaluated.branch.value, `${testCase.presetId} ${testCase.contextMode} branch value`).toBe(
-        "Stud Wall Surrogate"
+        testCase.contextMode === "building_prediction"
+          ? "Awaiting physical input"
+          : "Stud Wall Surrogate"
       );
       expect(evaluated.branch.tone, `${testCase.presetId} ${testCase.contextMode} branch tone`).toBe("warning");
-      expect(
-        evaluated.branch.detail,
-        `${testCase.presetId} ${testCase.contextMode} branch strategy`
-      ).toMatch(/stud surrogate blend\+framed wall calibration/i);
-      expect(
-        evaluated.branch.detail,
-        `${testCase.presetId} ${testCase.contextMode} branch boundary`
-      ).toMatch(/ambiguous boundary with Double Leaf/i);
+      if (testCase.contextMode === "building_prediction") {
+        expect(
+          evaluated.branch.detail,
+          `${testCase.presetId} ${testCase.contextMode} branch missing building inputs`
+        ).toContain("flanking/junction class");
+        expect(
+          evaluated.branch.detail,
+          `${testCase.presetId} ${testCase.contextMode} branch output basis`
+        ).toContain("building output basis");
+      } else {
+        expect(
+          evaluated.branch.detail,
+          `${testCase.presetId} ${testCase.contextMode} branch strategy`
+        ).toMatch(/stud surrogate blend\+framed wall calibration/i);
+        expect(
+          evaluated.branch.detail,
+          `${testCase.presetId} ${testCase.contextMode} branch boundary`
+        ).toMatch(/ambiguous boundary with Double Leaf/i);
+      }
 
       for (const output of WALL_OUTPUTS) {
         const card = evaluated.cards.get(output);

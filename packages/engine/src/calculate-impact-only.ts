@@ -24,6 +24,18 @@ import {
 
 import { resolveBoundFloorSystemById } from "./bound-floor-system-match";
 import { hasBoundOnlyUbiqOpenWebCarpetCombinedProfile } from "./bound-only-floor-near-miss";
+import {
+  buildAnswerEngineV1FloorAstmIicAiicUnsupportedBoundary,
+  buildAnswerEngineV1FloorFieldImpactNeedsInputBoundary,
+  buildAnswerEngineV1FloorRolelessHelperOnlyBoundary,
+  isAnswerEngineV1PureFloorAstmIicAiicRequest,
+  isAnswerEngineV1PureFloorFieldImpactRequest,
+  isAnswerEngineV1RolelessHelperOnlyFloorStack
+} from "./acoustic-answer-engine-v1-floor-boundary";
+import {
+  auditAcousticCalculatorAnswerEngineV1OutputOwnership,
+  getAcousticCalculatorAnswerEngineV1FloorLabCompanionOutputs
+} from "./acoustic-answer-engine-v1-owner-audit";
 import { buildFloorSystemRatings } from "./floor-system-ratings";
 import {
   resolveExactFloorSystemById
@@ -113,6 +125,158 @@ function pickReferenceFloorRatingLayers(layers: readonly ResolvedLayer[]): reado
   const baseStructureLayers = layers.filter((layer) => layer.floorRole === "base_structure");
 
   return baseStructureLayers.length > 0 ? baseStructureLayers : layers;
+}
+
+function parkImpactOnlyTargetOutputs(
+  result: ImpactOnlyCalculation,
+  outputs: readonly RequestedOutputId[]
+): void {
+  if (outputs.length === 0) {
+    return;
+  }
+
+  const outputSet = new Set<RequestedOutputId>(outputs);
+  const supportedTargetOutputs = result.supportedTargetOutputs.filter(
+    (output: RequestedOutputId) => !outputSet.has(output)
+  );
+  const unsupportedTargetOutputSet = new Set<RequestedOutputId>([
+    ...result.unsupportedTargetOutputs,
+    ...result.targetOutputs.filter((output: RequestedOutputId) => outputSet.has(output))
+  ]);
+  const unsupportedTargetOutputs = result.targetOutputs.filter(
+    (output: RequestedOutputId) => unsupportedTargetOutputSet.has(output) && !supportedTargetOutputs.includes(output)
+  );
+  const unsupportedImpactOutputSet = new Set<RequestedOutputId>([
+    ...result.unsupportedImpactOutputs,
+    ...unsupportedTargetOutputs.filter((output: RequestedOutputId) => result.supportedImpactOutputs.includes(output))
+  ]);
+
+  result.supportedImpactOutputs = result.supportedImpactOutputs.filter((output: RequestedOutputId) => !outputSet.has(output));
+  result.supportedTargetOutputs = supportedTargetOutputs;
+  result.unsupportedImpactOutputs = result.targetOutputs.filter((output: RequestedOutputId) =>
+    unsupportedImpactOutputSet.has(output)
+  );
+  result.unsupportedTargetOutputs = unsupportedTargetOutputs;
+}
+
+function applyAcousticCalculatorAnswerEngineV1FloorRolelessHelperOnlyBoundary(
+  result: ImpactOnlyCalculation
+): void {
+  const hasPublishedImpactCandidate = Boolean(result.impact || result.floorSystemEstimate);
+
+  if (
+    !hasPublishedImpactCandidate ||
+    !isAnswerEngineV1RolelessHelperOnlyFloorStack({
+      layers: result.visibleLayers,
+      targetOutputs: result.targetOutputs
+    })
+  ) {
+    return;
+  }
+
+  const boundary = buildAnswerEngineV1FloorRolelessHelperOnlyBoundary(result.targetOutputs);
+  result.acousticAnswerBoundary = boundary;
+  parkImpactOnlyTargetOutputs(result, result.targetOutputs);
+  result.boundFloorSystemEstimate = null;
+  result.boundFloorSystemMatch = null;
+  result.dynamicImpactTrace = undefined;
+  result.floorCarrier = null;
+  result.floorSystemEstimate = null;
+  result.floorSystemMatch = null;
+  result.floorSystemRatings = null;
+  result.impact = null;
+  result.impactCatalogMatch = null;
+  result.impactPredictorStatus = null;
+  result.impactSupport = null;
+  result.lowerBoundImpact = null;
+  result.warnings.push(
+    `Acoustic Calculator Answer Engine V1 selected needs_input for ${result.targetOutputs.join(", ")}; assign ${boundary.missingPhysicalInputs.join(", ")} before DynEcho publishes helper-only timber/open-web floor answers.`
+  );
+  result.warnings.push(
+    `Floor roles needed before impact output promotion: ${boundary.missingPhysicalInputs.join(", ")}.`
+  );
+}
+
+function applyAcousticCalculatorAnswerEngineV1FloorAstmIicAiicUnsupportedBoundary(
+  result: ImpactOnlyCalculation
+): void {
+  if (
+    result.acousticAnswerBoundary ||
+    !isAnswerEngineV1PureFloorAstmIicAiicRequest({
+      supportedTargetOutputs: result.supportedTargetOutputs,
+      targetOutputs: result.targetOutputs,
+      unsupportedTargetOutputs: result.unsupportedTargetOutputs
+    })
+  ) {
+    return;
+  }
+
+  const boundary = buildAnswerEngineV1FloorAstmIicAiicUnsupportedBoundary(result.targetOutputs);
+  if (!boundary) {
+    return;
+  }
+
+  result.acousticAnswerBoundary = boundary;
+  result.warnings.push(
+    `Acoustic Calculator Answer Engine V1 selected unsupported for ${boundary.unsupportedOutputs.join(", ")}; ASTM IIC/AIIC need ${boundary.requiredInputs.join(", ")} before DynEcho publishes those ratings.`
+  );
+}
+
+function hasAnswerEngineV1ImpactOnlyFieldContext(input: {
+  context: ImpactFieldContext | null;
+  targetOutputs: readonly RequestedOutputId[];
+}): boolean {
+  const context = input.context;
+  const hasFieldPath = Boolean(
+    typeof context?.fieldKDb === "number" ||
+      typeof context?.guideMassRatio === "number" ||
+      typeof context?.directPathOffsetDb === "number" ||
+      (Array.isArray(context?.flankingPaths) && context.flankingPaths.length > 0)
+  );
+  const needsStandardizedField = input.targetOutputs.includes("L'nT,w");
+  const hasReceivingVolume =
+    typeof context?.receivingRoomVolumeM3 === "number" && context.receivingRoomVolumeM3 > 0;
+
+  return hasFieldPath && (!needsStandardizedField || hasReceivingVolume);
+}
+
+function applyAcousticCalculatorAnswerEngineV1FloorFieldImpactNeedsInputBoundary(input: {
+  impactFieldContext: ImpactFieldContext | null;
+  result: ImpactOnlyCalculation;
+}): void {
+  const hasLabImpactAnchor = Boolean(
+    input.result.impact?.labOrField !== "field" &&
+      (typeof input.result.impact?.LnW === "number" || Boolean(input.result.lowerBoundImpact))
+  );
+
+  if (
+    input.result.acousticAnswerBoundary ||
+    !hasLabImpactAnchor ||
+    !isAnswerEngineV1PureFloorFieldImpactRequest({
+      supportedTargetOutputs: input.result.supportedTargetOutputs,
+      targetOutputs: input.result.targetOutputs,
+      unsupportedTargetOutputs: input.result.unsupportedTargetOutputs
+    }) ||
+    hasAnswerEngineV1ImpactOnlyFieldContext({
+      context: input.impactFieldContext,
+      targetOutputs: input.result.targetOutputs
+    })
+  ) {
+    return;
+  }
+
+  const boundary = buildAnswerEngineV1FloorFieldImpactNeedsInputBoundary({
+    missingPhysicalInputs: ["impactFieldContext"],
+    targetOutputs: input.result.targetOutputs
+  });
+  if (!boundary) {
+    return;
+  }
+
+  input.result.acousticAnswerBoundary = boundary;
+  input.result.warnings.push(
+    `Acoustic Calculator Answer Engine V1 selected needs_input for ${boundary.unsupportedOutputs.join(", ")}; provide ${boundary.missingPhysicalInputs.join(", ")} before DynEcho publishes floor field-impact answers.`
+  );
 }
 
 export function calculateImpactOnly(
@@ -545,7 +709,34 @@ export function calculateImpactOnly(
     warnings
   };
 
-  const layerCombinationResolverTrace = buildLayerCombinationResolverTraceForImpactOnly(result);
+  applyAcousticCalculatorAnswerEngineV1FloorRolelessHelperOnlyBoundary(result);
+  applyAcousticCalculatorAnswerEngineV1FloorFieldImpactNeedsInputBoundary({
+    impactFieldContext,
+    result
+  });
+  applyAcousticCalculatorAnswerEngineV1FloorAstmIicAiicUnsupportedBoundary(result);
+
+  let layerCombinationResolverTrace = buildLayerCombinationResolverTraceForImpactOnly(result);
+  const ownerAudit = auditAcousticCalculatorAnswerEngineV1OutputOwnership({
+    allowedCompanionOutputs: getAcousticCalculatorAnswerEngineV1FloorLabCompanionOutputs({
+      floorSystemRatings: result.floorSystemRatings,
+      impact: result.impact,
+      layerCombinationResolverTrace,
+      supportedTargetOutputs: result.supportedTargetOutputs
+    }),
+    answerStopActive: Boolean(result.acousticAnswerBoundary),
+    answerStopOutputs: result.acousticAnswerBoundary?.unsupportedOutputs,
+    layerCombinationResolverTrace,
+    resultKind: "impact_only",
+    supportedTargetOutputs: result.supportedTargetOutputs
+  });
+  if (ownerAudit.ownerlessSupportedOutputs.length > 0) {
+    parkImpactOnlyTargetOutputs(result, ownerAudit.ownerlessSupportedOutputs);
+    if (ownerAudit.warning) {
+      result.warnings.push(ownerAudit.warning);
+    }
+    layerCombinationResolverTrace = buildLayerCombinationResolverTraceForImpactOnly(result);
+  }
   if (layerCombinationResolverTrace) {
     result.layerCombinationResolverTrace = layerCombinationResolverTrace;
   }

@@ -11,6 +11,9 @@ import {
 } from "./steel-floor-impact-formula-corridor";
 import { inferStructuralSupportTypeFromMaterial } from "./structural-material-classification";
 
+export const HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS =
+  "predictor_heavy_floating_floor_iso12354_annexc_estimate" as const;
+
 const IMPACT_LOAD_ROLES = new Set(["floating_screed", "upper_fill", "floor_covering"]);
 const MIN_HEAVY_CONCRETE_BASE_SURFACE_MASS_KG_M2 = 120;
 
@@ -185,14 +188,14 @@ export function estimateImpactFromLayers(layers: readonly ResolvedLayer[]): Impa
     availableOutputs: ["Ln,w", "DeltaLw"],
     bareReferenceLnW: roundedBareReferenceLnW,
     baseSurfaceMassKgM2,
-    basis: "predictor_heavy_floating_floor_iso12354_annexc_estimate",
-    confidence: getImpactConfidenceForBasis("predictor_heavy_floating_floor_iso12354_annexc_estimate"),
+    basis: HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS,
+    confidence: getImpactConfidenceForBasis(HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS),
     metricBasis: buildUniformImpactMetricBasis(
       {
         DeltaLw: roundedDeltaLw,
         LnW: ksRound1(bareReferenceLnW - deltaLw)
       },
-      "predictor_heavy_floating_floor_iso12354_annexc_estimate"
+      HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS
     ),
     floatingLoadSurfaceMassKgM2,
     floatingScreedSurfaceMassKgM2: floatingScreedSurfaceMassKgM2 > 0 ? floatingScreedSurfaceMassKgM2 : undefined,
@@ -276,14 +279,14 @@ export function estimateImpactFromPredictorInput(
     availableOutputs: ["Ln,w", "DeltaLw"],
     bareReferenceLnW: ksRound1(bareReferenceLnW),
     baseSurfaceMassKgM2,
-    basis: "predictor_heavy_floating_floor_iso12354_annexc_estimate",
-    confidence: getImpactConfidenceForBasis("predictor_heavy_floating_floor_iso12354_annexc_estimate"),
+    basis: HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS,
+    confidence: getImpactConfidenceForBasis(HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS),
     metricBasis: buildUniformImpactMetricBasis(
       {
         DeltaLw: roundedDeltaLw,
         LnW: lnW
       },
-      "predictor_heavy_floating_floor_iso12354_annexc_estimate"
+      HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS
     ),
     floatingLoadSurfaceMassKgM2: ksRound1(loadBasisKgM2),
     notes: [

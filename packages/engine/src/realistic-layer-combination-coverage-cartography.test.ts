@@ -22,9 +22,22 @@ import {
   type WallTimberLightweightOfficialSourceRow
 } from "./wall-timber-lightweight-source-corpus";
 
-type EvidenceTier = "exact" | "benchmark" | "formula" | "family" | "screening" | "bound" | "fail_closed";
-type CandidateType = "runtime_widening" | "value_pin_only" | "source_blocked" | "coverage_confirmed";
-type SupportBucket = "supported" | "partial" | "fail_closed";
+type EvidenceTier =
+  | "exact"
+  | "benchmark"
+  | "formula"
+  | "family"
+  | "screening"
+  | "bound"
+  | "fail_closed"
+  | "needs_input";
+type CandidateType =
+  | "runtime_widening"
+  | "value_pin_only"
+  | "source_blocked"
+  | "coverage_confirmed"
+  | "input_boundary";
+type SupportBucket = "supported" | "partial" | "fail_closed" | "needs_input";
 type WebCardStatus = "covered" | "not_required_for_engine_stress";
 type CellMode = "lab" | "field";
 type StudyMode = "floor" | "wall";
@@ -498,16 +511,16 @@ const CARTOGRAPHY_CELLS: readonly CartographyCell[] = [
     mode: "field",
     studyMode: "wall",
     family: "wall_single_leaf_or_multileaf_aac",
-    evidenceTier: "family",
-    originBasisId: "dynamic_multileaf_multicavity_lane",
-    confidencePosture: "family lane with explicit local dynamic warning",
-    engineSupportBucket: "supported",
+    evidenceTier: "needs_input",
+    originBasisId: "dynamic_calculator_route_input_contract_missing_physical_fields",
+    confidencePosture: "family detected, but grouped topology inputs are required before field metrics",
+    engineSupportBucket: "needs_input",
     webCardStatus: "covered",
-    candidateType: "value_pin_only",
+    candidateType: "input_boundary",
     expectedDynamicFamily: "multileaf_multicavity",
-    expectedSupported: ["R'w", "Dn,w", "DnT,w", "DnT,A"],
-    expectedUnsupported: [],
-    invariants: ["AAC held wall stays supported", "does not claim exact source row"],
+    expectedSupported: [],
+    expectedUnsupported: ["R'w", "Dn,w", "DnT,w", "DnT,A"],
+    invariants: ["AAC held wall asks for grouped multileaf topology", "does not publish field metrics from screening"],
     evidencePaths: [
       "packages/engine/src/mixed-floor-wall-generated-matrix.test.ts",
       "apps/web/features/workbench/dynamic-route-deep-hybrid-swap-aac-d700-100.test.ts"
@@ -817,8 +830,8 @@ function repoPathExists(path: string): boolean {
   return existsSync(join(REPO_ROOT, path));
 }
 
-function sameMembers(left: readonly RequestedOutputId[], right: readonly RequestedOutputId[]) {
-  expect([...left].sort()).toEqual([...right].sort());
+function sameMembers(left: readonly RequestedOutputId[], right: readonly RequestedOutputId[], label?: string) {
+  expect([...left].sort(), label).toEqual([...right].sort());
 }
 
 function findGeneratedCase(cell: GeneratedCell) {
@@ -971,9 +984,9 @@ describe("realistic layer-combination coverage cartography Gate A", () => {
       const snapshot = resultSnapshot(result);
       const accountedOutputs = [...result.supportedTargetOutputs, ...result.unsupportedTargetOutputs];
 
-      sameMembers(accountedOutputs, requestedOutputs);
-      sameMembers(result.supportedTargetOutputs, cell.expectedSupported);
-      sameMembers(result.unsupportedTargetOutputs, cell.expectedUnsupported);
+      sameMembers(accountedOutputs, requestedOutputs, `${cell.id} accounted outputs`);
+      sameMembers(result.supportedTargetOutputs, cell.expectedSupported, `${cell.id} supported outputs`);
+      sameMembers(result.unsupportedTargetOutputs, cell.expectedUnsupported, `${cell.id} unsupported outputs`);
 
       if (cell.expectedFloorSystemMatchId !== undefined) {
         expect(snapshot.floorSystemMatchId, `${cell.id} floor match`).toBe(cell.expectedFloorSystemMatchId);
@@ -1003,6 +1016,11 @@ describe("realistic layer-combination coverage cartography Gate A", () => {
         expect(result.unsupportedTargetOutputs, `${cell.id} unsupported outputs`).toEqual([]);
       }
       if (cell.engineSupportBucket === "fail_closed") {
+        expect(result.unsupportedTargetOutputs.length, `${cell.id} unsupported outputs`).toBeGreaterThan(0);
+      }
+      if (cell.engineSupportBucket === "needs_input") {
+        expect(result.acousticAnswerBoundary?.origin, `${cell.id} answer boundary`).toBe("needs_input");
+        expect(result.supportedTargetOutputs, `${cell.id} supported outputs`).toEqual([]);
         expect(result.unsupportedTargetOutputs.length, `${cell.id} unsupported outputs`).toBeGreaterThan(0);
       }
     }

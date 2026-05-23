@@ -1,4 +1,10 @@
-import type { AirborneContext, DynamicAirborneFamily, ResolvedLayer } from "@dynecho/shared";
+import type {
+  AirborneContext,
+  AirborneResultBasis,
+  DynamicAirborneFamily,
+  ResolvedLayer,
+  RequestedOutputId
+} from "@dynecho/shared";
 
 import { classifyLayerRole, materialText } from "./airborne-topology";
 import {
@@ -11,6 +17,18 @@ import type { DynamicAirborneOptions, DynamicAirborneResult } from "./dynamic-ai
 
 export const FLAT_LIST_MULTILEAF_GUARD_STRATEGY =
   "double_leaf_porous_fill_delegate+flat_list_adjacent_swap_numeric_hold_until_grouped_topology";
+
+export const FLAT_LIST_MULTILEAF_GUARD_LAB_RUNTIME_METHOD =
+  "wall_flat_list_adjacent_swap_double_leaf_numeric_guard_lab_runtime";
+
+export const FLAT_LIST_MULTILEAF_GUARD_LAB_SELECTED_CANDIDATE_ID =
+  "wall.flat_list_adjacent_swap.double_leaf_numeric_guard";
+
+export const FLAT_LIST_MULTILEAF_GUARD_FIELD_RUNTIME_METHOD =
+  "wall_flat_list_adjacent_swap_double_leaf_numeric_guard_field_adapter_runtime";
+
+export const FLAT_LIST_MULTILEAF_GUARD_FIELD_SELECTED_CANDIDATE_ID =
+  "wall.flat_list_adjacent_swap.field_context_adapter";
 
 export type FlatListMultileafGuardProbe = {
   candidateStacks: readonly (readonly ResolvedLayer[])[];
@@ -28,6 +46,8 @@ export type FlatListMultileafGuardAssessment = {
   probeCount: number;
 };
 
+export type FlatListMultileafGuardOutputBasis = "building_prediction" | "element_lab" | "field_apparent";
+
 const MAX_FLAT_LIST_GUARD_LAYER_COUNT = 9;
 const MIN_GUARD_DELTA_DB = 8;
 
@@ -42,6 +62,76 @@ function isCompliantLayer(layer: ResolvedLayer): boolean {
 
 function hasGroupedTripleLeafTopology(airborneContext?: AirborneContext | null): boolean {
   return airborneContext?.wallTopology?.topologyMode === "grouped_triple_leaf";
+}
+
+export function isFlatListMultileafGuardStrategy(strategy?: string | null): boolean {
+  return strategy === FLAT_LIST_MULTILEAF_GUARD_STRATEGY;
+}
+
+export function buildFlatListMultileafGuardAirborneBasis(input: {
+  family?: DynamicAirborneFamily;
+  outputBasis: FlatListMultileafGuardOutputBasis;
+  targetOutputs: readonly RequestedOutputId[];
+}): AirborneResultBasis | null {
+  if (input.outputBasis === "building_prediction") {
+    return null;
+  }
+
+  const fieldApparent = input.outputBasis === "field_apparent";
+  const method = fieldApparent
+    ? FLAT_LIST_MULTILEAF_GUARD_FIELD_RUNTIME_METHOD
+    : FLAT_LIST_MULTILEAF_GUARD_LAB_RUNTIME_METHOD;
+  const requestedOutputs = input.targetOutputs.length > 0 ? input.targetOutputs.join(", ") : "default wall outputs";
+
+  return {
+    assumptions: fieldApparent
+      ? [
+          "flat-list adjacent-swap guard kept the current double-leaf numeric lane because adjacent reorder probes would otherwise apply an unowned multileaf penalty",
+          "field/apparent values are calculated from explicit field_between_rooms context and the guarded lab-family curve",
+          "lab Rw/STC is not relabelled as R'w/DnT,w; the field adapter owns only the requested apparent outputs",
+          "grouped triple-leaf topology is still required before the multileaf penalty can be treated as physical"
+        ]
+      : [
+          "flat-list adjacent-swap guard kept the current double-leaf numeric lane because adjacent reorder probes would otherwise apply an unowned multileaf penalty",
+          "this is a source-absent guarded calculation, not a measured exact row",
+          "grouped triple-leaf topology is still required before the multileaf penalty can be treated as physical"
+        ],
+    calculationStandard: fieldApparent ? "ISO 12354-1" : "engine_double_leaf_cavity",
+    curveBasis: "calculated_frequency_curve",
+    errorBudgetDb: fieldApparent ? 10 : 8,
+    family: input.family ?? "double_leaf",
+    kind: "airborne_physics_prediction",
+    method,
+    missingPhysicalInputs: [],
+    missingSourceEvidence: [
+      "same_stack_flat_list_guard_holdout_absent",
+      "grouped_topology_required_before_multileaf_penalty"
+    ],
+    origin: "family_physics_prediction",
+    propertyDefaults: [],
+    ratingStandard: "ISO 717-1",
+    requiredInputs: fieldApparent
+      ? [
+          "route=wall",
+          "flatListAdjacentSwapSensitivityProbe",
+          "guardedDoubleLeafNumericLane",
+          "fieldContext.contextMode=field_between_rooms",
+          "fieldContext.partitionAreaM2_or_panelWidthHeight",
+          "fieldContext.receivingRoomVolumeM3",
+          "fieldContext.receivingRoomRt60S",
+          `requestedOutputs=${requestedOutputs}`
+        ]
+      : [
+          "route=wall",
+          "flatListAdjacentSwapSensitivityProbe",
+          "guardedDoubleLeafNumericLane",
+          "groupedTripleLeafNegativeBoundary",
+          "ISO717_1_Rw_C_Ctr_adapter",
+          "ASTM_E413_STC_adapter",
+          `requestedOutputs=${requestedOutputs}`
+        ],
+    toleranceClass: "uncalibrated_prediction"
+  };
 }
 
 function hasExplicitFramingOrTrack(framingHint: DynamicFramingHint): boolean {

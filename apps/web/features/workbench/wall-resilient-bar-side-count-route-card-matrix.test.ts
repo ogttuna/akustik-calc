@@ -36,6 +36,13 @@ const BUILDING_PREDICTION_FIELD_CARDS = {
   "DnT,w": { status: "needs_input", value: "Not ready" },
   "DnT,A": { status: "needs_input", value: "Not ready" }
 } as const satisfies Pick<Record<WallOutputId, CardSnapshot>, "R'w" | "Dn,w" | "Dn,A" | "DnT,w" | "DnT,A">;
+const BUILDING_PREDICTION_MISSING_INPUT_CARDS: Record<WallOutputId, CardSnapshot> = {
+  Rw: { status: "needs_input", value: "Not ready" },
+  ...BUILDING_PREDICTION_FIELD_CARDS,
+  STC: { status: "needs_input", value: "Not ready" },
+  C: { status: "needs_input", value: "Not ready" },
+  Ctr: { status: "needs_input", value: "Not ready" }
+};
 
 type PairContextCase = {
   branchDetail: string;
@@ -139,13 +146,7 @@ const LEGACY_AUTO_CASES: readonly PairContextCase[] = [
     branchDetail:
       "Mass Law anchor is active with stud surrogate blend+framed wall calibration+reinforcement monotonic floor. Stud Wall Surrogate is on an ambiguous boundary with Double Leaf, and a conservative family-boundary hold is active.",
     warningPattern: /No curated exact floor-system landed/i,
-    cards: {
-      Rw: { status: "unsupported", value: "Not ready" },
-      ...BUILDING_PREDICTION_FIELD_CARDS,
-      STC: { status: "unsupported", value: "Not ready" },
-      C: { status: "unsupported", value: "Not ready" },
-      Ctr: { status: "unsupported", value: "Not ready" }
-    }
+    cards: BUILDING_PREDICTION_MISSING_INPUT_CARDS
   },
   {
     pairId: "british_gypsum_rb1_vs_rb2_lab",
@@ -230,13 +231,7 @@ const LEGACY_AUTO_CASES: readonly PairContextCase[] = [
     branchDetail:
       "Mass Law anchor is active with stud surrogate blend+framed wall calibration. Stud Wall Surrogate is on an ambiguous boundary with Double Leaf, and a conservative family-boundary hold is active.",
     warningPattern: /No curated exact floor-system landed/i,
-    cards: {
-      Rw: { status: "unsupported", value: "Not ready" },
-      ...BUILDING_PREDICTION_FIELD_CARDS,
-      STC: { status: "unsupported", value: "Not ready" },
-      C: { status: "unsupported", value: "Not ready" },
-      Ctr: { status: "unsupported", value: "Not ready" }
-    }
+    cards: BUILDING_PREDICTION_MISSING_INPUT_CARDS
   }
 ] as const;
 
@@ -386,13 +381,7 @@ const EXPLICIT_SIDE_COUNT_CASES: readonly PairContextCase[] = [
     branchDetail:
       "Mass Law anchor is active with stud surrogate blend+framed wall calibration+reinforcement monotonic floor. Stud Wall Surrogate is on an ambiguous boundary with Double Leaf, and a conservative family-boundary hold is active.",
     warningPattern: /No curated exact floor-system landed/i,
-    cards: {
-      Rw: { status: "unsupported", value: "Not ready" },
-      ...BUILDING_PREDICTION_FIELD_CARDS,
-      STC: { status: "unsupported", value: "Not ready" },
-      C: { status: "unsupported", value: "Not ready" },
-      Ctr: { status: "unsupported", value: "Not ready" }
-    }
+    cards: BUILDING_PREDICTION_MISSING_INPUT_CARDS
   },
   {
     pairId: "knauf_rb2_explicit_both_sides_building",
@@ -415,13 +404,7 @@ const EXPLICIT_SIDE_COUNT_CASES: readonly PairContextCase[] = [
     branchDetail:
       "Mass Law anchor is active with stud surrogate blend+framed wall calibration+reinforcement monotonic floor. Stud Wall Surrogate is on an ambiguous boundary with Double Leaf, and a conservative family-boundary hold is active.",
     warningPattern: /No curated exact floor-system landed/i,
-    cards: {
-      Rw: { status: "unsupported", value: "Not ready" },
-      ...BUILDING_PREDICTION_FIELD_CARDS,
-      STC: { status: "unsupported", value: "Not ready" },
-      C: { status: "unsupported", value: "Not ready" },
-      Ctr: { status: "unsupported", value: "Not ready" }
-    }
+    cards: BUILDING_PREDICTION_MISSING_INPUT_CARDS
   },
   {
     pairId: "british_gypsum_rb1_explicit_one_side_lab",
@@ -568,13 +551,7 @@ const EXPLICIT_SIDE_COUNT_CASES: readonly PairContextCase[] = [
     branchDetail:
       "Mass Law anchor is active with stud surrogate blend+framed wall calibration. Stud Wall Surrogate is on an ambiguous boundary with Double Leaf, and a conservative family-boundary hold is active.",
     warningPattern: /No curated exact floor-system landed/i,
-    cards: {
-      Rw: { status: "unsupported", value: "Not ready" },
-      ...BUILDING_PREDICTION_FIELD_CARDS,
-      STC: { status: "unsupported", value: "Not ready" },
-      C: { status: "unsupported", value: "Not ready" },
-      Ctr: { status: "unsupported", value: "Not ready" }
-    }
+    cards: BUILDING_PREDICTION_MISSING_INPUT_CARDS
   },
   {
     pairId: "british_gypsum_rb2_explicit_both_sides_building",
@@ -597,13 +574,7 @@ const EXPLICIT_SIDE_COUNT_CASES: readonly PairContextCase[] = [
     branchDetail:
       "Mass Law anchor is active with stud surrogate blend+framed wall calibration. Stud Wall Surrogate is on an ambiguous boundary with Double Leaf, and a conservative family-boundary hold is active.",
     warningPattern: /No curated exact floor-system landed/i,
-    cards: {
-      Rw: { status: "unsupported", value: "Not ready" },
-      ...BUILDING_PREDICTION_FIELD_CARDS,
-      STC: { status: "unsupported", value: "Not ready" },
-      C: { status: "unsupported", value: "Not ready" },
-      Ctr: { status: "unsupported", value: "Not ready" }
-    }
+    cards: BUILDING_PREDICTION_MISSING_INPUT_CARDS
   }
 ] as const;
 
@@ -677,9 +648,22 @@ describe("wall resilient-bar side-count route/card matrix", () => {
       const left = evaluateRow(testCase.ids[0], testCase.context);
       const right = evaluateRow(testCase.ids[1], testCase.context);
 
-      expect(left.branch.value, `${testCase.pairId} branch value`).toBe("Stud Wall Surrogate");
+      expect(left.branch.value, `${testCase.pairId} branch value`).toBe(
+        testCase.context.contextMode === "building_prediction"
+          ? "Awaiting physical input"
+          : "Stud Wall Surrogate"
+      );
       expect(left.branch.tone, `${testCase.pairId} branch tone`).toBe("warning");
-      expect(left.branch.detail, `${testCase.pairId} branch detail`).toBe(testCase.branchDetail);
+      if (testCase.context.contextMode === "building_prediction") {
+        expect(left.branch.detail, `${testCase.pairId} branch missing building inputs`).toContain(
+          "flanking/junction class"
+        );
+        expect(left.branch.detail, `${testCase.pairId} branch output basis`).toContain(
+          "building output basis"
+        );
+      } else {
+        expect(left.branch.detail, `${testCase.pairId} branch detail`).toBe(testCase.branchDetail);
+      }
       expect(right.branch, `${testCase.pairId} pair branch equality`).toEqual(left.branch);
 
       for (const [output, expected] of Object.entries(testCase.cards) as Array<[WallOutputId, CardSnapshot]>) {
@@ -697,9 +681,22 @@ describe("wall resilient-bar side-count route/card matrix", () => {
     (testCase) => {
       const result = evaluateRow(testCase.ids[0], testCase.context);
 
-      expect(result.branch.value, `${testCase.pairId} branch value`).toBe("Stud Wall Surrogate");
+      expect(result.branch.value, `${testCase.pairId} branch value`).toBe(
+        testCase.context.contextMode === "building_prediction"
+          ? "Awaiting physical input"
+          : "Stud Wall Surrogate"
+      );
       expect(result.branch.tone, `${testCase.pairId} branch tone`).toBe("warning");
-      expect(result.branch.detail, `${testCase.pairId} branch detail`).toBe(testCase.branchDetail);
+      if (testCase.context.contextMode === "building_prediction") {
+        expect(result.branch.detail, `${testCase.pairId} branch missing building inputs`).toContain(
+          "flanking/junction class"
+        );
+        expect(result.branch.detail, `${testCase.pairId} branch output basis`).toContain(
+          "building output basis"
+        );
+      } else {
+        expect(result.branch.detail, `${testCase.pairId} branch detail`).toBe(testCase.branchDetail);
+      }
 
       for (const [output, expected] of Object.entries(testCase.cards) as Array<[WallOutputId, CardSnapshot]>) {
         expect(result.cards[output], `${testCase.pairId} ${output}`).toEqual(expected);

@@ -5,6 +5,30 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 import {
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD,
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID
+} from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-field-context-harmonization";
+import {
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_SELECTED_CANDIDATE_ID
+} from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-lab-spectrum-adapter";
+import {
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_RUNTIME_METHOD,
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_SELECTED_CANDIDATE_ID
+} from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-runtime-corridor";
+import {
+  FLAT_LIST_MULTILEAF_GUARD_FIELD_SELECTED_CANDIDATE_ID,
+  FLAT_LIST_MULTILEAF_GUARD_LAB_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-flat-list-multileaf-guard";
+import {
+  COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_RUNTIME_METHOD,
+  COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-company-internal-heavy-composite-wall";
+import {
+  GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD,
+  GATE_H_LINED_MASSIVE_WALL_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-gate-h-lined-masonry-clt";
+import { GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD } from "./dynamic-airborne-gate-i-airborne-field-context";
+import {
   LAYER_COMBINATION_RESOLVER_CANDIDATE_COVERAGE_MATRIX_REFRESH_LANDED_GATE,
   LAYER_COMBINATION_RESOLVER_CANDIDATE_COVERAGE_MATRIX_REFRESH_SELECTED_NEXT_ACTION,
   LAYER_COMBINATION_RESOLVER_CANDIDATE_COVERAGE_MATRIX_REFRESH_SELECTED_NEXT_FILE,
@@ -89,17 +113,17 @@ describe("layer combination resolver company-internal V0 rehearsal contract", ()
       sourceRowsAreEvidenceNotProduct: true
     });
     expect(contract.summary).toEqual({
-      allowedExactRowCount: 2,
-      allowedWithBudgetRowCount: 10,
+      allowedExactRowCount: 3,
+      allowedWithBudgetRowCount: 19,
       blockedActionCount: 4,
       blockedRowCount: 2,
-      coverageMatrixRowCount: 15,
-      companyInternalV0AllowedRowCount: 12,
+      coverageMatrixRowCount: 25,
+      companyInternalV0AllowedRowCount: 22,
       needsUserInputRowCount: 1,
       readinessBucketCount: {
         needs_input: 1,
-        ready: 2,
-        ready_with_budget: 10,
+        ready: 3,
+        ready_with_budget: 19,
         research_only: 0,
         unsupported: 2
       },
@@ -119,16 +143,26 @@ describe("layer combination resolver company-internal V0 rehearsal contract", ()
     expect(rows.map((row) => [row.candidateId, row.companyInternalUse])).toEqual([
       ["floor.exact_measured_floor_system.same_topology_metric_basis", "allowed_exact"],
       ["wall.exact_verified_airborne.same_leaf_schedule", "allowed_exact"],
+      ["floor.exact_impact_band_source.metric_basis", "allowed_exact"],
       ["floor.open_box_timber.package_transfer_similarity", "allowed_with_budget"],
       ["floor.open_web.supported_band_similarity", "allowed_with_budget"],
       ["wall.multileaf_triple_leaf.calibrated_family_solver", "allowed_with_budget"],
+      [BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
+      [BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
+      [BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
       [LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
       [LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
+      [GATE_H_LINED_MASSIVE_WALL_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
+      [COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
+      [FLAT_LIST_MULTILEAF_GUARD_LAB_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
+      [FLAT_LIST_MULTILEAF_GUARD_FIELD_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
       ["floor.open_box_timber.raw_bare_source_absent", "allowed_with_budget"],
       ["floor.open_web.raw_bare_source_absent", "allowed_with_budget"],
       ["floor.helper_only_timber_open_web.source_absent", "allowed_with_budget"],
       ["floor.open_web.direct_fixed_lining.source_absent", "allowed_with_budget"],
+      ["floor.heavy_concrete_floating_floor.lab_impact_formula", "allowed_with_budget"],
       ["floor.open_web.field_building_adapter.exact_anchor_continuation", "allowed_with_budget"],
+      ["wall.airborne_field_context.field_apparent_adapter", "allowed_with_budget"],
       ["generic.required_input_owner.needs_input_boundary", "needs_user_input"],
       ["generic.lab_field_building_basis_boundary", "blocked"],
       ["generic.astm_iic_aiic.unsupported_boundary", "blocked"]
@@ -147,6 +181,16 @@ describe("layer combination resolver company-internal V0 rehearsal contract", ()
       budgetMetrics: [],
       companyInternalUse: "allowed_exact",
       readinessBucket: "ready",
+      supportBucket: "exact",
+      valuePins: []
+    });
+    expect(rowById("floor.exact_impact_band_source.metric_basis")).toMatchObject({
+      basis: "element_lab",
+      budgetMetrics: [],
+      companyInternalUse: "allowed_exact",
+      readinessBucket: "ready",
+      route: "floor",
+      supportedMetrics: expect.arrayContaining(["Ln,w", "CI", "CI,50-2500", "Ln,w+CI", "L'nT,w", "LnT,A"]),
       supportBucket: "exact",
       valuePins: []
     });
@@ -170,6 +214,43 @@ describe("layer combination resolver company-internal V0 rehearsal contract", ()
       ]),
       supportedMetrics: expect.arrayContaining(["R'w", "DnT,w", "L'nT,w"])
     });
+    expect(rowById("wall.airborne_field_context.field_apparent_adapter")).toMatchObject({
+      basis: "field_apparent",
+      companyInternalUse: "allowed_with_budget",
+      requiredUserFields: expect.arrayContaining([
+        "fieldContext.contextMode",
+        "fieldContext.partitionAreaM2_or_panelWidthHeight",
+        "fieldContext.receivingRoomVolumeM3",
+        "fieldContext.receivingRoomRt60S",
+        "ownedLabFamilyCurve"
+      ]),
+      route: "wall",
+      runtimeBasisId: GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD,
+      supportedMetrics: expect.arrayContaining(["R'w", "DnT,w"])
+    });
+    expect(rowById(BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_SELECTED_CANDIDATE_ID)).toMatchObject({
+      basis: "element_lab",
+      budgetMetrics: ["Rw"],
+      companyInternalUse: "allowed_with_budget",
+      route: "wall",
+      runtimeBasisId: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_RUNTIME_METHOD,
+      supportedMetrics: ["Rw"],
+      valuePins: [{ metric: "Rw", value: 50 }]
+    });
+    expect(rowById(BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID)).toMatchObject({
+      basis: "field_apparent",
+      budgetMetrics: expect.arrayContaining(["R'w", "DnT,w"]),
+      companyInternalUse: "allowed_with_budget",
+      requiredUserFields: expect.arrayContaining([
+        "fieldContext.contextMode=field_between_rooms",
+        "fieldContext.receivingRoomVolumeM3",
+        "fieldContext.receivingRoomRt60S",
+        "localSubstitutionLabCurveAnchor"
+      ]),
+      route: "wall",
+      runtimeBasisId: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD,
+      supportedMetrics: ["R'w", "DnT,w"]
+    });
     expect(rowById(LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID)).toMatchObject({
       basis: "element_lab",
       budgetMetrics: expect.arrayContaining(["Rw", "STC"]),
@@ -192,6 +273,30 @@ describe("layer combination resolver company-internal V0 rehearsal contract", ()
         { metric: "STC", value: 45 },
         { metric: "C", value: -1 },
         { metric: "Ctr", value: -6.1 }
+      ])
+    });
+    expect(rowById(GATE_H_LINED_MASSIVE_WALL_SELECTED_CANDIDATE_ID)).toMatchObject({
+      basis: "element_lab",
+      budgetMetrics: ["Rw", "STC", "C", "Ctr"],
+      companyInternalUse: "allowed_with_budget",
+      route: "wall",
+      runtimeBasisId: GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD,
+      supportedMetrics: ["Rw", "STC", "C", "Ctr"],
+      valuePins: expect.arrayContaining([
+        { metric: "Rw", value: 57 },
+        { metric: "STC", value: 57 }
+      ])
+    });
+    expect(rowById(COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_SELECTED_CANDIDATE_ID)).toMatchObject({
+      basis: "element_lab",
+      budgetMetrics: ["Rw", "STC", "C", "Ctr"],
+      companyInternalUse: "allowed_with_budget",
+      route: "wall",
+      runtimeBasisId: COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_RUNTIME_METHOD,
+      supportedMetrics: ["Rw", "STC", "C", "Ctr"],
+      valuePins: expect.arrayContaining([
+        { metric: "Rw", value: 63 },
+        { metric: "STC", value: 63 }
       ])
     });
     expect(rowById("generic.required_input_owner.needs_input_boundary")).toMatchObject({

@@ -1,8 +1,8 @@
 import type { AirborneContext, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
+import { getDoubleLeafFramedBridgeAirbornePromptDetail } from "./airborne-physical-input-prompt";
 import { getGuidedTopologyGap } from "./guided-topology-gap";
-import { ROCKWOOL_SPLIT_TRIPLE_LEAF_OUTPUT_WITHHELD_GUARD } from "./rockwool-triple-leaf-screening-policy-copy";
 import { evaluateScenario } from "./scenario-analysis";
 import { buildOutputCard, type BaseOutputCardModel } from "./simple-workbench-output-model";
 import type { LayerDraft } from "./workbench-store";
@@ -149,13 +149,13 @@ describe("Rockwool split triple-leaf numeric source closure Gate B visible guard
     expect(snapshot.result.supportedTargetOutputs).toEqual([]);
     expect(snapshot.result.unsupportedTargetOutputs).toEqual([...WALL_LAB_OUTPUTS]);
     expect(card(snapshot.cards, "Rw")).toMatchObject({
-      detail: ROCKWOOL_SPLIT_TRIPLE_LEAF_OUTPUT_WITHHELD_GUARD,
-      status: "unsupported",
+      detail: getDoubleLeafFramedBridgeAirbornePromptDetail(snapshot.result),
+      status: "needs_input",
       value: "Not ready"
     });
     expect(card(snapshot.cards, "STC")).toMatchObject({
-      detail: ROCKWOOL_SPLIT_TRIPLE_LEAF_OUTPUT_WITHHELD_GUARD,
-      status: "unsupported",
+      detail: getDoubleLeafFramedBridgeAirbornePromptDetail(snapshot.result),
+      status: "needs_input",
       value: "Not ready"
     });
     expect(snapshot.topologyGap).toMatchObject({ value: "Grouped topology missing" });
@@ -177,13 +177,13 @@ describe("Rockwool split triple-leaf numeric source closure Gate B visible guard
     expect(snapshot.result.supportedTargetOutputs).toEqual([]);
     expect(snapshot.result.unsupportedTargetOutputs).toEqual([...WALL_FIELD_OUTPUTS]);
     expect(card(snapshot.cards, "R'w")).toMatchObject({
-      detail: ROCKWOOL_SPLIT_TRIPLE_LEAF_OUTPUT_WITHHELD_GUARD,
-      status: "unsupported",
+      detail: getDoubleLeafFramedBridgeAirbornePromptDetail(snapshot.result),
+      status: "needs_input",
       value: "Not ready"
     });
     expect(card(snapshot.cards, "DnT,w")).toMatchObject({
-      detail: ROCKWOOL_SPLIT_TRIPLE_LEAF_OUTPUT_WITHHELD_GUARD,
-      status: "unsupported",
+      detail: getDoubleLeafFramedBridgeAirbornePromptDetail(snapshot.result),
+      status: "needs_input",
       value: "Not ready"
     });
   });

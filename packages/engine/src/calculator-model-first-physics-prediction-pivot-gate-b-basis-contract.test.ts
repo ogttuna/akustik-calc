@@ -14,7 +14,11 @@ import {
 import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
-import { FLAT_LIST_MULTILEAF_GUARD_STRATEGY } from "./dynamic-airborne-flat-list-multileaf-guard";
+import {
+  FLAT_LIST_MULTILEAF_GUARD_LAB_RUNTIME_METHOD,
+  FLAT_LIST_MULTILEAF_GUARD_LAB_SELECTED_CANDIDATE_ID,
+  FLAT_LIST_MULTILEAF_GUARD_STRATEGY
+} from "./dynamic-airborne-flat-list-multileaf-guard";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
@@ -322,7 +326,12 @@ describe("calculator model-first physics prediction pivot Gate B", () => {
     const legacyParsed = AssemblyCalculationSchema.parse(legacyResult);
 
     expect(legacyParsed.airborneBasis).toMatchObject({
-      origin: "needs_input"
+      method: FLAT_LIST_MULTILEAF_GUARD_LAB_RUNTIME_METHOD,
+      origin: "family_physics_prediction"
+    });
+    expect(legacyParsed.airborneCandidateResolution).toMatchObject({
+      selectedCandidateId: FLAT_LIST_MULTILEAF_GUARD_LAB_SELECTED_CANDIDATE_ID,
+      selectedOrigin: "family_physics_prediction"
     });
     expect(legacyParsed.airborneCandidateSet).toHaveLength(8);
 

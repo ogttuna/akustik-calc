@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { AcousticAnswerBoundarySchema } from "./acoustic-answer-boundary";
 import {
   FloorSystemAirborneRatingsSchema,
   FloorSystemBoundEstimateResultSchema,
@@ -29,6 +30,7 @@ export const ImpactOnlySourceModeSchema = z.enum([
 export type ImpactOnlySourceMode = z.infer<typeof ImpactOnlySourceModeSchema>;
 
 const ImpactOnlyCalculationShape: z.ZodRawShape = {
+  acousticAnswerBoundary: AcousticAnswerBoundarySchema.optional(),
   boundFloorSystemEstimate: FloorSystemBoundEstimateResultSchema.nullable().optional(),
   boundFloorSystemMatch: FloorSystemBoundMatchResultSchema.nullable().optional(),
   floorCarrier: FloorSystemAirborneRatingsSchema.nullable().optional(),

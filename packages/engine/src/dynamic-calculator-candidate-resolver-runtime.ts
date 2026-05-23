@@ -96,6 +96,14 @@ import {
   LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_FORMULA_CORRIDOR_BASIS,
   LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID
 } from "./layer-combination-resolver-single-leaf-mass-law-banded-runtime-constants";
+import {
+  buildFlatListMultileafGuardAirborneBasis,
+  FLAT_LIST_MULTILEAF_GUARD_FIELD_RUNTIME_METHOD,
+  FLAT_LIST_MULTILEAF_GUARD_FIELD_SELECTED_CANDIDATE_ID,
+  FLAT_LIST_MULTILEAF_GUARD_LAB_RUNTIME_METHOD,
+  FLAT_LIST_MULTILEAF_GUARD_LAB_SELECTED_CANDIDATE_ID,
+  isFlatListMultileafGuardStrategy
+} from "./dynamic-airborne-flat-list-multileaf-guard";
 
 export type DynamicCalculatorCandidateResolverSourceAnchor = {
   applied: boolean;
@@ -476,13 +484,55 @@ function unsupportedBasis(input: {
 function exactSourceEligible(input: {
   assessment: DynamicCalculatorRouteInputTopologyAssessment;
   sourceAnchor?: DynamicCalculatorCandidateResolverSourceAnchor | null;
+  targetOutputs: readonly RequestedOutputId[];
 }): boolean {
   const match = input.sourceAnchor?.match;
   if (!input.sourceAnchor?.applied || !match) {
     return false;
   }
 
-  return input.assessment.outputBasis === "element_lab" || match.sourceMode === "field";
+  return (
+    input.assessment.route === "wall" &&
+    (input.assessment.outputBasis === "element_lab" || match.sourceMode === "field") &&
+    sourceMetricMatchesRequestedOutput(match.metricLabel, input.targetOutputs)
+  );
+}
+
+function sourceMetricMatchesRequestedOutput(
+  metricLabel: string,
+  targetOutputs: readonly RequestedOutputId[]
+): boolean {
+  const requestedOutputs = new Set(outputIds(targetOutputs, "wall"));
+  return outputsCoveredByExactSourceMetric(metricLabel).some((output) =>
+    requestedOutputs.has(output)
+  );
+}
+
+function outputsCoveredByExactSourceMetric(metricLabel: string): RequestedOutputId[] {
+  switch (metricLabel) {
+    case "C":
+      return ["C"];
+    case "Ctr":
+      return ["Ctr"];
+    case "Dn,A":
+      return ["Dn,A"];
+    case "Dn,w":
+      return ["Dn,w"];
+    case "DnT,A":
+      return ["DnT,A"];
+    case "DnT,A,k":
+      return ["DnT,A,k", "DnT,A"];
+    case "DnT,w":
+      return ["DnT,w"];
+    case "R'w":
+      return ["R'w"];
+    case "Rw":
+      return ["Rw"];
+    case "STC":
+      return ["STC"];
+    default:
+      return [];
+  }
 }
 
 function anchoredDeltaEligible(input: {
@@ -491,7 +541,8 @@ function anchoredDeltaEligible(input: {
 }): boolean {
   const match = input.sourceAnchor?.match;
   return Boolean(
-    input.sourceAnchor?.applied &&
+    input.assessment.route === "wall" &&
+      input.sourceAnchor?.applied &&
       match &&
       input.assessment.outputBasis !== "element_lab" &&
       match.sourceMode === "lab"
@@ -502,8 +553,13 @@ function selectLane(input: {
   assessment: DynamicCalculatorRouteInputTopologyAssessment;
   runtimeSignal?: DynamicCalculatorCandidateResolverRuntimeSignal | null;
   sourceAnchor?: DynamicCalculatorCandidateResolverSourceAnchor | null;
+  targetOutputs: readonly RequestedOutputId[];
   topologyNormalization: DynamicCalculatorTopologyNormalizationResult;
 }): GateMSelectedLane {
+  const flatListGuardNumericRuntime =
+    input.runtimeSignal?.airborneBasis?.method === FLAT_LIST_MULTILEAF_GUARD_LAB_RUNTIME_METHOD ||
+    input.runtimeSignal?.airborneBasis?.method === FLAT_LIST_MULTILEAF_GUARD_FIELD_RUNTIME_METHOD;
+
   if (
     input.topologyNormalization.status === "unsupported_hostile_input" ||
     input.assessment.status === "unsupported" ||
@@ -513,21 +569,22 @@ function selectLane(input: {
   }
 
   if (
-    input.topologyNormalization.blockers.length > 0 ||
-    input.assessment.missingPhysicalInputs.length > 0 ||
-    input.assessment.status === "needs_input" ||
-    input.runtimeSignal?.airborneBasis?.origin === "needs_input"
-  ) {
-    return "needs_input";
-  }
-
-  if (
     exactSourceEligible({
       assessment: input.assessment,
-      sourceAnchor: input.sourceAnchor
+      sourceAnchor: input.sourceAnchor,
+      targetOutputs: input.targetOutputs
     })
   ) {
     return "exact_full_stack";
+  }
+
+  if (
+    (!flatListGuardNumericRuntime && input.topologyNormalization.blockers.length > 0) ||
+    (!flatListGuardNumericRuntime && input.assessment.missingPhysicalInputs.length > 0) ||
+    (!flatListGuardNumericRuntime && input.assessment.status === "needs_input") ||
+    input.runtimeSignal?.airborneBasis?.origin === "needs_input"
+  ) {
+    return "needs_input";
   }
 
   if (input.assessment.outputBasis === "building_prediction") {
@@ -608,6 +665,14 @@ function familyPhysicsCandidateId(runtimeBasis?: AirborneResultBasis): string {
 
   if (runtimeBasis?.method === GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD) {
     return GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID;
+  }
+
+  if (runtimeBasis?.method === FLAT_LIST_MULTILEAF_GUARD_FIELD_RUNTIME_METHOD) {
+    return FLAT_LIST_MULTILEAF_GUARD_FIELD_SELECTED_CANDIDATE_ID;
+  }
+
+  if (runtimeBasis?.method === FLAT_LIST_MULTILEAF_GUARD_LAB_RUNTIME_METHOD) {
+    return FLAT_LIST_MULTILEAF_GUARD_LAB_SELECTED_CANDIDATE_ID;
   }
 
   if (runtimeBasis?.method === BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD) {
@@ -789,7 +854,8 @@ function buildSeeds(input: {
   const outputs = outputIds(input.targetOutputs, input.route);
   const exactEligible = exactSourceEligible({
     assessment: input.assessment,
-    sourceAnchor: input.sourceAnchor
+    sourceAnchor: input.sourceAnchor,
+    targetOutputs: input.targetOutputs
   });
   const anchoredEligible = anchoredDeltaEligible({
     assessment: input.assessment,
@@ -942,16 +1008,33 @@ export function buildDynamicCalculatorCandidateResolverRuntime(
   });
   const outputBasis = inferOutputBasis(targetOutputs, input.airborneContext);
   const family = familyFrom(input);
+  const flatListGuardBasis =
+    input.route === "wall" && isFlatListMultileafGuardStrategy(input.runtimeSignal?.strategy)
+      ? buildFlatListMultileafGuardAirborneBasis({
+          family,
+          outputBasis,
+          targetOutputs
+        })
+      : null;
+  const runtimeSignal: DynamicCalculatorCandidateResolverRuntimeSignal | null | undefined = flatListGuardBasis
+    ? {
+        ...(input.runtimeSignal ?? {}),
+        airborneBasis: flatListGuardBasis,
+        runtimeValueMovement: true
+      }
+    : input.runtimeSignal;
   const lane = selectLane({
     assessment: routeInputAssessment,
-    runtimeSignal: input.runtimeSignal,
+    runtimeSignal,
     sourceAnchor: input.sourceAnchor,
+    targetOutputs,
     topologyNormalization
   });
-  const selectedCandidateId = candidateIdForLane(lane, input.runtimeSignal?.airborneBasis);
+  const selectedCandidateId = candidateIdForLane(lane, runtimeSignal?.airborneBasis);
   const exactEligible = exactSourceEligible({
     assessment: routeInputAssessment,
-    sourceAnchor: input.sourceAnchor
+    sourceAnchor: input.sourceAnchor,
+    targetOutputs
   });
   const anchoredEligible = anchoredDeltaEligible({
     assessment: routeInputAssessment,
@@ -962,7 +1045,7 @@ export function buildDynamicCalculatorCandidateResolverRuntime(
     family,
     outputBasis,
     route: input.route,
-    runtimeBasis: input.runtimeSignal?.airborneBasis,
+    runtimeBasis: runtimeSignal?.airborneBasis,
     sourceAnchor: input.sourceAnchor,
     targetOutputs
   });
@@ -993,7 +1076,7 @@ export function buildDynamicCalculatorCandidateResolverRuntime(
   }
   const runtimeValueMovement = runtimeMovementFor({
     lane,
-    runtimeSignal: input.runtimeSignal,
+    runtimeSignal,
     sourceAnchor: input.sourceAnchor
   });
   const resolution = AirborneCandidateResolutionSchema.parse({

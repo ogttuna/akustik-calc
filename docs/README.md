@@ -25,12 +25,22 @@ use `pnpm check` when shared contracts move.
 
 Current calculator handoff:
 
-- Active product correction:
+- Current product state:
+  [calculator/CHECKPOINT_2026-05-23_POST_V1_ACOUSTIC_CALCULATOR_STATE_RECONCILIATION.md](./calculator/CHECKPOINT_2026-05-23_POST_V1_ACOUSTIC_CALCULATOR_STATE_RECONCILIATION.md).
+  Usable V1 Steps 0-5 are closed for the current company-internal
+  envelope. DynEcho now has the answer-engine contract in
+  `packages/engine/src/acoustic-calculator-answer-engine-v1-contract.test.ts`,
+  and it is part of `pnpm calculator:gate:current`. The current shared
+  resolver surface has 25 declared candidates and 22 active
+  runtime-basis mappings across exact measured overrides, compatible
+  anchors, calibrated and source-absent family solvers, field/building
+  adapters, `needs_input`, basis-boundary, and unsupported candidates.
+  The next implementation must be selected as post-V1 accuracy/adapters
+  or expanded formula coverage, not as broad source crawling, confidence
+  wording, or a finite scenario pack.
+- Product direction lock:
   [calculator/ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md](./calculator/ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md).
-  The immediate selected next action is now
-  `acoustic_calculator_answer_engine_v1_plan` in
-  `packages/engine/src/acoustic-calculator-answer-engine-v1-contract.test.ts`.
-  The selected next label is acoustic calculator answer engine V1.
+  Historical correction id: `acoustic_calculator_answer_engine_v1_plan`.
   DynEcho must behave as an acoustic calculator: the user enters wall or
   floor layers, thicknesses, requested outputs, and any formula-required
   physical inputs; the engine uses exact measured values when available,
@@ -38,16 +48,13 @@ Current calculator handoff:
   acoustic formula family to calculate the answer. Docs and tests are
   guardrails, not the product.
 - Latest checkpoint:
-  [calculator/CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md](./calculator/CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md).
-  This re-read docs, compared implementation, ran runtime probes, fixed
-  one stale model-first doc-alignment test, and confirmed
-  `pnpm calculator:gate:current` on 2026-05-22: engine 508 files / 2889
-  tests, web 94 files / 388 passed + 18 skipped, repo build 5 / 5, and
-  whitespace guard passed. It also confirms Answer Engine V1 is still
-  the next implementation: the contract file does not exist yet, flat
-  double-leaf-like stacks can still fall to untraced screening, and
-  missing `resilientBarSideCount` still leaks numeric metrics while
-  selecting `needs_input`.
+  [calculator/CHECKPOINT_2026-05-23_POST_V1_ACOUSTIC_CALCULATOR_STATE_RECONCILIATION.md](./calculator/CHECKPOINT_2026-05-23_POST_V1_ACOUSTIC_CALCULATOR_STATE_RECONCILIATION.md).
+  This re-read docs, compared implementation, and corrected stale
+  README-level handoff text. It records that the V1 contract exists,
+  flat double-leaf-like and missing-input cases now stop through traced
+  answer boundaries, and the current tested envelope is ready for
+  company-internal usable V1 once the current targeted suite, full
+  `pnpm calculator:gate:current`, and `git diff --check` are clean.
 - Previous implementation checkpoint:
   [calculator/CHECKPOINT_2026-05-21_LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_COVERAGE_REFRESH_REVALIDATION.md](./calculator/CHECKPOINT_2026-05-21_LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_COVERAGE_REFRESH_REVALIDATION.md).
   Read this for landed double-leaf coverage-refresh facts before

@@ -52,6 +52,14 @@ import {
   STUDY_MODE_LABELS
 } from "./workbench-data";
 import { parseWorkbenchNumber } from "./parse-number";
+import {
+  AIRBORNE_ANSWER_OUTPUTS,
+  IMPACT_ANSWER_OUTPUTS,
+  buildResultAnswerChartLanes,
+  hasSupportedAirborneAnswer,
+  hasSupportedImpactAnswer,
+  isSupportedAnswerOutput
+} from "./result-answer-chart-model";
 import { summarizeTargetOutputs } from "./target-output-status";
 import { getScenarioDecisionSummary } from "./scenario-corridor-summary";
 import {
@@ -108,6 +116,96 @@ function formatSignedMetric(value: number): string {
   return `${value >= 0 ? "+" : ""}${formatMetric(value)}`;
 }
 
+type AssemblyResult = NonNullable<EvaluatedScenario["result"]>;
+
+function getStoppedAnswerFamily(result: AssemblyResult): "airborne" | "impact" | "requested" {
+  const stoppedOutputs: readonly RequestedOutputId[] =
+    result.acousticAnswerBoundary?.unsupportedOutputs ?? result.targetOutputs ?? [];
+
+  if (stoppedOutputs.some((output) => AIRBORNE_ANSWER_OUTPUTS.has(output))) {
+    return "airborne";
+  }
+
+  if (stoppedOutputs.some((output) => IMPACT_ANSWER_OUTPUTS.has(output))) {
+    return "impact";
+  }
+
+  return "requested";
+}
+
+function buildScopedAnswerSummaryParts(input: {
+  result: AssemblyResult;
+  targetLnwDb: string;
+  targetRwDb: string;
+}): string[] {
+  const chartParts = buildResultAnswerChartLanes({
+    result: input.result,
+    targetLnwDb: input.targetLnwDb,
+    targetRwDb: input.targetRwDb
+  }).flatMap((lane) => [
+    `${lane.label} ${lane.valueLabel}`,
+    ...lane.companions.map((companion) => `${companion.label} ${companion.valueLabel}`)
+  ]);
+
+  if (chartParts.length > 0) {
+    return chartParts;
+  }
+
+  if (input.result.acousticAnswerBoundary) {
+    const missingInputs = input.result.acousticAnswerBoundary.requiredInputs;
+    const missingSuffix = missingInputs.length > 0 ? `; needs ${missingInputs.join(", ")}` : "";
+
+    return [`${getStoppedAnswerFamily(input.result)} answer ${input.result.acousticAnswerBoundary.origin}${missingSuffix}`];
+  }
+
+  return ["answer unavailable"];
+}
+
+function buildScopedAirborneReportLines(result: AssemblyResult): string[] {
+  if (!hasSupportedAirborneAnswer(result)) {
+    return [];
+  }
+
+  const lines: string[] = [];
+
+  if (isSupportedAnswerOutput(result, "Rw")) {
+    lines.push(`- Rw estimate: ${formatMetric(result.metrics.estimatedRwDb)} dB`);
+  }
+
+  if (isSupportedAnswerOutput(result, "R'w") && typeof result.metrics.estimatedRwPrimeDb === "number") {
+    lines.push(`- R'w estimate: ${formatMetric(result.metrics.estimatedRwPrimeDb)} dB`);
+  }
+
+  if (isSupportedAnswerOutput(result, "DnT,w") && typeof result.metrics.estimatedDnTwDb === "number") {
+    lines.push(`- DnT,w estimate: ${formatMetric(result.metrics.estimatedDnTwDb)} dB`);
+  }
+
+  if (isSupportedAnswerOutput(result, "DnT,A") && typeof result.metrics.estimatedDnTADb === "number") {
+    lines.push(`- DnT,A estimate: ${formatMetric(result.metrics.estimatedDnTADb)} dB`);
+  }
+
+  if (isSupportedAnswerOutput(result, "Rw") || isSupportedAnswerOutput(result, "R'w")) {
+    lines.push(`- ISO 717 composite: ${result.ratings.iso717.composite}`);
+  }
+
+  const adaptationTerms: string[] = [];
+  if (isSupportedAnswerOutput(result, "C")) {
+    adaptationTerms.push(`C ${formatSignedMetric(result.metrics.estimatedCDb)} dB`);
+  }
+  if (isSupportedAnswerOutput(result, "Ctr")) {
+    adaptationTerms.push(`Ctr ${formatSignedMetric(result.metrics.estimatedCtrDb)} dB`);
+  }
+  if (adaptationTerms.length > 0) {
+    lines.push(`- Spectrum adaptation terms: ${adaptationTerms.join(", ")}`);
+  }
+
+  if (isSupportedAnswerOutput(result, "STC")) {
+    lines.push(`- STC: ${formatMetric(result.metrics.estimatedStc)} dB`);
+  }
+
+  return lines;
+}
+
 function buildFloorSystemCompanionLines(
   prefix: "Exact" | "Estimated",
   ratings: { Rw: number; RwCtr?: number; RwCtrSemantic?: "ctr_term" | "rw_plus_c" | "rw_plus_ctr" }
@@ -134,6 +232,7 @@ type ReportImpactBounds = {
   LnWUpperBound?: number;
   LPrimeNTwUpperBound?: number;
   LPrimeNWUpperBound?: number;
+  basis?: string;
 };
 
 function buildImpactBoundReportLines(prefix: string, lowerBound: ReportImpactBounds | null | undefined): string[] {
@@ -190,6 +289,113 @@ function buildImpactErrorBudgetReportLines(impact: ImpactCalculation | null | un
   ]);
 }
 
+function buildScopedImpactReportLines(
+  result: AssemblyResult,
+  lowerBoundImpact: ReportImpactBounds | null | undefined
+): string[] {
+  if (!hasSupportedImpactAnswer(result)) {
+    return getStoppedAnswerFamily(result) === "impact"
+      ? []
+      : ["- Impact Ln,w / DeltaLw: unavailable for the current stack topology"];
+  }
+
+  if (result.impact) {
+    const metricLines = [
+      ...(typeof result.impact.LnTA === "number" && isSupportedAnswerOutput(result, "LnT,A")
+        ? [`- Impact LnT,A: ${formatMetric(result.impact.LnTA)} dB`]
+        : []),
+      ...(typeof result.impact.LnW === "number" && isSupportedAnswerOutput(result, "Ln,w")
+        ? [`- Impact Ln,w: ${formatMetric(result.impact.LnW)} dB`]
+        : []),
+      ...(typeof result.impact.LPrimeNW === "number" && isSupportedAnswerOutput(result, "L'n,w")
+        ? [`- Impact L'n,w: ${formatMetric(result.impact.LPrimeNW)} dB`]
+        : []),
+      ...(typeof result.impact.LPrimeNTw === "number" && isSupportedAnswerOutput(result, "L'nT,w")
+        ? [`- Impact L'nT,w: ${formatMetric(result.impact.LPrimeNTw)} dB`]
+        : []),
+      ...(typeof result.impact.CI === "number" && isSupportedAnswerOutput(result, "CI")
+        ? [`- Impact CI: ${formatSignedMetric(result.impact.CI)} dB`]
+        : []),
+      ...(typeof result.impact.CI50_2500 === "number" && isSupportedAnswerOutput(result, "CI,50-2500")
+        ? [`- Impact CI,50-2500: ${formatSignedMetric(result.impact.CI50_2500)} dB`]
+        : []),
+      ...(typeof result.impact.LnWPlusCI === "number" && isSupportedAnswerOutput(result, "Ln,w+CI")
+        ? [`- Impact Ln,w+CI: ${formatMetric(result.impact.LnWPlusCI)} dB`]
+        : []),
+      ...(typeof result.impact.LPrimeNT50 === "number" && isSupportedAnswerOutput(result, "L'nT,50")
+        ? [`- Impact L'nT,50: ${formatMetric(result.impact.LPrimeNT50)} dB`]
+        : []),
+      ...(typeof result.impact.DeltaLw === "number" && isSupportedAnswerOutput(result, "DeltaLw")
+        ? [`- DeltaLw: ${formatMetric(result.impact.DeltaLw)} dB`]
+        : [])
+    ];
+
+    if (metricLines.length === 0) {
+      return [];
+    }
+
+    return [
+      ...metricLines,
+      ...(result.impact.guideEstimateProfile
+        ? [
+            "- Impact local-guide profile: tr_simple_method_lnt50_from_lnwci_plus_k_plus_hd",
+            ...(typeof result.impact.guideEstimateKCorrectionDb === "number"
+              ? [
+                  `- Impact K correction: ${formatSignedMetric(result.impact.guideEstimateKCorrectionDb)} dB (${result.impact.guideEstimateKSource ?? "manual"})`
+                ]
+              : []),
+            ...(typeof result.impact.guideEstimateHdCorrectionDb === "number"
+              ? [
+                  `- Impact Hd correction: ${formatSignedMetric(result.impact.guideEstimateHdCorrectionDb)} dB (${result.impact.guideEstimateHdSource ?? "manual"})`
+                ]
+              : []),
+            ...(typeof result.impact.guideEstimateMassRatio === "number"
+              ? [
+                  `- Impact mass ratio: ${formatMetric(result.impact.guideEstimateMassRatio)} (${result.impact.guideEstimateMassRatioBracket ?? "lookup"})`
+                ]
+              : []),
+            ...(typeof result.impact.guideEstimateReceivingRoomVolumeM3 === "number"
+              ? [
+                  `- Impact receiving-room volume: ${formatMetric(result.impact.guideEstimateReceivingRoomVolumeM3)} m3 (${result.impact.guideEstimateReceivingRoomVolumeBracket ?? "lookup"})`
+                ]
+              : [])
+          ]
+        : []),
+      ...buildImpactMetricBasisLines(result.impact),
+      ...buildImpactErrorBudgetReportLines(result.impact),
+      `- Impact confidence: ${result.impact.confidence.level} (${Math.round(result.impact.confidence.score * 100)}%)`,
+      `- Impact provenance: ${result.impact.confidence.provenance}`,
+      `- Impact basis: ${result.impact.basis}`,
+      ...(result.impact.estimateCandidateIds?.length
+        ? [
+            result.impact.basis === "predictor_floor_system_low_confidence_estimate"
+              ? `- Impact nearby published row ids: ${result.impact.estimateCandidateIds.join(", ")}`
+              : `- Impact estimate candidate ids: ${result.impact.estimateCandidateIds.join(", ")}`
+          ]
+        : []),
+      ...(result.impact.basis === "predictor_floor_system_low_confidence_estimate"
+        ? [
+            "- Impact nearby-row ranking: elastic-ceiling row first, rigid-ceiling row second, timber-underlay row held as a farther fallback when cavity and board geometry drift."
+          ]
+        : []),
+      ...(result.impact.bandSet ? [`- Impact band set: ${result.impact.bandSet}`] : []),
+      `- Impact trust note: ${result.impact.confidence.summary}`,
+      ...(typeof result.impact.predictorResonanceHz === "number"
+        ? [`- Resonance check: ${formatMetric(result.impact.predictorResonanceHz)} Hz`]
+        : [])
+    ];
+  }
+
+  if (lowerBoundImpact) {
+    return [
+      ...buildImpactBoundReportLines("Impact", lowerBoundImpact),
+      `- Impact bound basis: ${lowerBoundImpact.basis ?? "unavailable"}`
+    ];
+  }
+
+  return ["- Impact Ln,w / DeltaLw: unavailable for the current stack topology"];
+}
+
 function buildScenarioReportLines(input: {
   liveScenario: EvaluatedScenario;
   scenario: EvaluatedScenario;
@@ -208,10 +414,20 @@ function buildScenarioReportLines(input: {
     targetLnwDb,
     targetRwDb
   });
+  const summaryParts = buildScopedAnswerSummaryParts({
+    result: scenario.result,
+    targetLnwDb,
+    targetRwDb
+  });
+
+  summaryParts.push(
+    `${formatMetric(scenario.result.metrics.surfaceMassKgM2)} kg/m²`,
+    `${formatMetric(scenario.result.metrics.totalThicknessMm)} mm`
+  );
 
   return [
     `### ${scenario.name}`,
-    `- Summary: ${scenario.result.ratings.iso717.composite}, STC ${formatMetric(scenario.result.metrics.estimatedStc)} dB, ${summary.impactHeadline}, ${formatMetric(scenario.result.metrics.surfaceMassKgM2)} kg/m², ${formatMetric(scenario.result.metrics.totalThicknessMm)} mm`,
+    `- Summary: ${summaryParts.join(", ")}`,
     `- Impact posture: ${summary.impactLabel}`,
     `- Airborne posture: ${summary.airborneLabel}`,
     ...(summary.activeFamilyLabel ? [`- Active family corridor: ${summary.activeFamilyLabel}`] : []),
@@ -262,11 +478,13 @@ export function composeWorkbenchReport({
     outputs: requestedOutputs,
     result: currentScenario.result
   });
+  const currentHasAirborneAnswer = hasSupportedAirborneAnswer(currentScenario.result);
+  const currentHasImpactAnswer = hasSupportedImpactAnswer(currentScenario.result);
   const predictorLowerBound =
     currentScenario.result?.impactPredictorStatus?.lowerBoundImpact ?? currentScenario.result?.lowerBoundImpact ?? null;
   const targetRw = parseTarget(targetRwDb);
   const targetLnw = parseTarget(targetLnwDb);
-  const currentRw = currentScenario.result?.metrics.estimatedRwDb ?? null;
+  const currentRw = currentHasAirborneAnswer ? currentScenario.result?.metrics.estimatedRwDb ?? null : null;
   const currentBoundFloorSystem = currentScenario.result?.boundFloorSystemMatch ?? null;
   const currentBoundFloorEstimate = currentScenario.result?.boundFloorSystemEstimate ?? null;
   const currentExactFloorSystem = currentScenario.result?.floorSystemMatch ?? null;
@@ -282,7 +500,9 @@ export function composeWorkbenchReport({
   const activeValidationMode = getActiveValidationMode(currentScenario.result);
   const impactValidationPosture = describeImpactValidationPosture(currentScenario.result);
   const airborneValidationPosture = describeAirborneValidationPosture(currentScenario.result);
-  const currentLnw = currentScenario.result?.impact?.LnW ?? currentExactFloorSystem?.impact.LnW ?? currentEstimatedFloorSystem?.impact.LnW ?? null;
+  const currentLnw = currentHasImpactAnswer
+    ? currentScenario.result?.impact?.LnW ?? currentExactFloorSystem?.impact.LnW ?? currentEstimatedFloorSystem?.impact.LnW ?? null
+    : null;
   const rwDelta = currentRw !== null && targetRw !== null ? currentRw - targetRw : null;
   const lnwDelta =
     currentLnw !== null && targetLnw !== null
@@ -335,17 +555,19 @@ export function composeWorkbenchReport({
 
   const currentResultBlock = currentScenario.result
     ? [
-        `- Rw estimate: ${formatMetric(currentScenario.result.metrics.estimatedRwDb)} dB`,
-        `- ISO 717 composite: ${currentScenario.result.ratings.iso717.composite}`,
-        `- Spectrum adaptation terms: C ${formatSignedMetric(currentScenario.result.metrics.estimatedCDb)} dB, Ctr ${formatSignedMetric(currentScenario.result.metrics.estimatedCtrDb)} dB`,
-        `- STC: ${formatMetric(currentScenario.result.metrics.estimatedStc)} dB`,
-        ...(dnTAkReportLine ? [dnTAkReportLine] : []),
-        ...getFieldAirborneReportLines(currentScenario.result),
+        `- Answer summary: ${buildScopedAnswerSummaryParts({
+          result: currentScenario.result,
+          targetLnwDb,
+          targetRwDb
+        }).join(", ")}`,
+        ...buildScopedAirborneReportLines(currentScenario.result),
+        ...(dnTAkReportLine && isSupportedAnswerOutput(currentScenario.result, "DnT,A,k") ? [dnTAkReportLine] : []),
+        ...(currentHasAirborneAnswer ? getFieldAirborneReportLines(currentScenario.result) : []),
         ...getGateACFlatMulticavityTopologyReportLines(currentScenario),
-        ...getWallTripleLeafCalibratedSolverReportLines(currentScenario.result),
-        ...getWallTripleLeafLocalSubstitutionReportLines(currentScenario.result),
-        ...getGateAYAdvancedWallReportLines(currentScenario.result),
-        ...getGateSOpeningLeakCompositeReportLines(currentScenario.result),
+        ...(currentHasAirborneAnswer ? getWallTripleLeafCalibratedSolverReportLines(currentScenario.result) : []),
+        ...(currentHasAirborneAnswer ? getWallTripleLeafLocalSubstitutionReportLines(currentScenario.result) : []),
+        ...(currentHasAirborneAnswer ? getGateAYAdvancedWallReportLines(currentScenario.result) : []),
+        ...(currentHasAirborneAnswer ? getGateSOpeningLeakCompositeReportLines(currentScenario.result) : []),
         `- Surface mass: ${formatMetric(currentScenario.result.metrics.surfaceMassKgM2)} kg/m²`,
         `- Total thickness: ${formatMetric(currentScenario.result.metrics.totalThicknessMm)} mm`,
         `- Cavity / insulation count: ${currentScenario.result.metrics.airGapCount} / ${currentScenario.result.metrics.insulationCount}`,
@@ -353,7 +575,7 @@ export function composeWorkbenchReport({
         `- Airborne calculator: ${currentScenario.result.calculatorLabel ?? "Screening Seed"}`,
         `- Curve span: ${currentScenario.result.curve.frequenciesHz[0]}-${currentScenario.result.curve.frequenciesHz.at(-1)} Hz`,
         ...getLayerCombinationResolverCandidateReportLines(currentScenario.result),
-        ...(currentScenario.result.dynamicAirborneTrace
+        ...(currentHasAirborneAnswer && currentScenario.result.dynamicAirborneTrace
           ? [
               `- Dynamic family: ${currentScenario.result.dynamicAirborneTrace.detectedFamilyLabel}`,
               `- Dynamic confidence: ${Math.round(currentScenario.result.dynamicAirborneTrace.confidenceScore * 100)}% (${currentScenario.result.dynamicAirborneTrace.confidenceClass})`,
@@ -361,7 +583,7 @@ export function composeWorkbenchReport({
               `- Dynamic solver spread: ${formatMetric(currentScenario.result.dynamicAirborneTrace.solverSpreadRwDb)} dB`
             ]
           : []),
-        ...(currentScenario.result.dynamicImpactTrace
+        ...(currentHasImpactAnswer && currentScenario.result.dynamicImpactTrace
           ? [
               `- Impact lane: ${currentScenario.result.dynamicImpactTrace.selectedLabel}`,
               `- Impact evidence tier: ${currentScenario.result.dynamicImpactTrace.evidenceTierLabel}`,
@@ -378,7 +600,7 @@ export function composeWorkbenchReport({
                 : [])
             ]
           : []),
-        ...(currentScenario.result.airborneOverlay
+        ...(currentHasAirborneAnswer && currentScenario.result.airborneOverlay
           ? [
               `- Airborne context mode: ${currentScenario.result.airborneOverlay.contextMode.replaceAll("_", " ")}`,
               `- Airborne detected family: ${currentScenario.result.airborneOverlay.detectedFamily.replaceAll("_", " ")}`,
@@ -391,92 +613,7 @@ export function composeWorkbenchReport({
                 : [])
             ]
           : []),
-        ...(currentScenario.result.impact
-          ? [
-              ...(typeof currentScenario.result.impact.LnTA === "number"
-                ? [`- Impact LnT,A: ${formatMetric(currentScenario.result.impact.LnTA)} dB`] 
-                : []),
-              ...(typeof currentScenario.result.impact.LnW === "number"
-                ? [`- Impact Ln,w: ${formatMetric(currentScenario.result.impact.LnW)} dB`]
-                : []),
-              ...(typeof currentScenario.result.impact.LPrimeNW === "number"
-                ? [`- Impact L'n,w: ${formatMetric(currentScenario.result.impact.LPrimeNW)} dB`]
-                : []),
-              ...(typeof currentScenario.result.impact.LPrimeNTw === "number"
-                ? [`- Impact L'nT,w: ${formatMetric(currentScenario.result.impact.LPrimeNTw)} dB`]
-                : []),
-              ...(typeof currentScenario.result.impact.CI === "number"
-                ? [`- Impact CI: ${formatSignedMetric(currentScenario.result.impact.CI)} dB`]
-                : []),
-              ...(typeof currentScenario.result.impact.CI50_2500 === "number"
-                ? [`- Impact CI,50-2500: ${formatSignedMetric(currentScenario.result.impact.CI50_2500)} dB`]
-                : []),
-              ...(typeof currentScenario.result.impact.LnWPlusCI === "number"
-                ? [`- Impact Ln,w+CI: ${formatMetric(currentScenario.result.impact.LnWPlusCI)} dB`]
-                : []),
-              ...(typeof currentScenario.result.impact.LPrimeNT50 === "number"
-                ? [`- Impact L'nT,50: ${formatMetric(currentScenario.result.impact.LPrimeNT50)} dB`]
-                : []),
-              ...(currentScenario.result.impact.guideEstimateProfile
-                ? [
-                    "- Impact local-guide profile: tr_simple_method_lnt50_from_lnwci_plus_k_plus_hd",
-                    ...(typeof currentScenario.result.impact.guideEstimateKCorrectionDb === "number"
-                      ? [
-                          `- Impact K correction: ${formatSignedMetric(currentScenario.result.impact.guideEstimateKCorrectionDb)} dB (${currentScenario.result.impact.guideEstimateKSource ?? "manual"})`
-                        ]
-                      : []),
-                    ...(typeof currentScenario.result.impact.guideEstimateHdCorrectionDb === "number"
-                      ? [
-                          `- Impact Hd correction: ${formatSignedMetric(currentScenario.result.impact.guideEstimateHdCorrectionDb)} dB (${currentScenario.result.impact.guideEstimateHdSource ?? "manual"})`
-                        ]
-                      : []),
-                    ...(typeof currentScenario.result.impact.guideEstimateMassRatio === "number"
-                      ? [
-                          `- Impact mass ratio: ${formatMetric(currentScenario.result.impact.guideEstimateMassRatio)} (${currentScenario.result.impact.guideEstimateMassRatioBracket ?? "lookup"})`
-                        ]
-                      : []),
-                    ...(typeof currentScenario.result.impact.guideEstimateReceivingRoomVolumeM3 === "number"
-                      ? [
-                          `- Impact receiving-room volume: ${formatMetric(currentScenario.result.impact.guideEstimateReceivingRoomVolumeM3)} m3 (${currentScenario.result.impact.guideEstimateReceivingRoomVolumeBracket ?? "lookup"})`
-                        ]
-                      : [])
-                  ]
-                : []),
-              ...(typeof currentScenario.result.impact.DeltaLw === "number"
-                ? [`- DeltaLw: ${formatMetric(currentScenario.result.impact.DeltaLw)} dB`]
-                : []),
-              ...buildImpactMetricBasisLines(currentScenario.result.impact),
-              ...buildImpactErrorBudgetReportLines(currentScenario.result.impact),
-              `- Impact confidence: ${currentScenario.result.impact.confidence.level} (${Math.round(currentScenario.result.impact.confidence.score * 100)}%)`,
-              `- Impact provenance: ${currentScenario.result.impact.confidence.provenance}`,
-              `- Impact basis: ${currentScenario.result.impact.basis}`,
-              ...(currentScenario.result.impact.estimateCandidateIds?.length
-                ? [
-                    currentScenario.result.impact.basis === "predictor_floor_system_low_confidence_estimate"
-                      ? `- Impact nearby published row ids: ${currentScenario.result.impact.estimateCandidateIds.join(", ")}`
-                      : `- Impact estimate candidate ids: ${currentScenario.result.impact.estimateCandidateIds.join(", ")}`
-                  ]
-                : []),
-              ...(currentScenario.result.impact.basis === "predictor_floor_system_low_confidence_estimate"
-                ? [
-                    "- Impact nearby-row ranking: elastic-ceiling row first, rigid-ceiling row second, timber-underlay row held as a farther fallback when cavity and board geometry drift."
-                  ]
-                : []),
-              ...(currentScenario.result.impact.bandSet ? [`- Impact band set: ${currentScenario.result.impact.bandSet}`] : []),
-              `- Impact trust note: ${currentScenario.result.impact.confidence.summary}`,
-              ...(typeof currentScenario.result.impact.predictorResonanceHz === "number"
-                ? [`- Resonance check: ${formatMetric(currentScenario.result.impact.predictorResonanceHz)} Hz`]
-                : [])
-            ]
-          : ["- Impact Ln,w / DeltaLw: unavailable for the current stack topology"])
-          .concat(
-            !currentScenario.result.impact && currentLowerBoundImpact
-              ? [
-                  ...buildImpactBoundReportLines("Impact", currentLowerBoundImpact),
-                  `- Impact bound basis: ${currentLowerBoundImpact.basis}`
-                ]
-              : []
-          )
+        ...buildScopedImpactReportLines(currentScenario.result, currentLowerBoundImpact)
       ]
     : ["- No valid live result yet. Add at least one valid layer."];
 
