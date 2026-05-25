@@ -7,6 +7,12 @@ import {
   type RequestedOutputId
 } from "@dynecho/shared";
 
+import {
+  ASTM_E989_AIIC_METRIC_BASIS,
+  ASTM_E989_IIC_METRIC_BASIS,
+  ASTM_E989_IMPACT_RATING_BASIS
+} from "./impact-astm-e989";
+
 export type TargetOutputSupportInput = {
   countBoundSupportAsSupported?: boolean;
   floorCarrier?: FloorSystemAirborneRatings | null;
@@ -55,10 +61,6 @@ const IMPACT_OUTPUTS = new Set<RequestedOutputId>([
   "HIIC"
 ]);
 
-const ASTM_E989_BRIDGE_BASIS = "astm_e989_impact_rating_metric_schema_adapter_bridge";
-const ASTM_E989_AIIC_METRIC_BASIS = "astm_e989_aiic_metric_schema_adapter_bridge";
-const ASTM_E989_IIC_METRIC_BASIS = "astm_e989_iic_metric_schema_adapter_bridge";
-
 function isFiniteNumber(value: number | null | undefined): boolean {
   return typeof value === "number" && Number.isFinite(value);
 }
@@ -74,7 +76,7 @@ function hasAstmE989ImpactOutput(
   impact: ImpactCalculation | null,
   output: Extract<RequestedOutputId, "AIIC" | "IIC">
 ): boolean {
-  if (!impact || impact.basis !== ASTM_E989_BRIDGE_BASIS || !hasAvailableImpactOutput(impact, output)) {
+  if (!impact || impact.basis !== ASTM_E989_IMPACT_RATING_BASIS || !hasAvailableImpactOutput(impact, output)) {
     return false;
   }
 

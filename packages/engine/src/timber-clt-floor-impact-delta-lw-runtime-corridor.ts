@@ -1,5 +1,6 @@
 import {
   ImpactCalculationSchema,
+  type AcousticInputFieldId,
   type ImpactCalculation,
   type ImpactErrorBudget,
   type ImpactErrorBudgetTerm,
@@ -21,6 +22,13 @@ export const TIMBER_CLT_DELTA_LW_FORMULA_BASES = [
   TIMBER_JOIST_DELTA_LW_FORMULA_BASIS,
   MASS_TIMBER_CLT_DELTA_LW_FORMULA_BASIS
 ] as const;
+export const TIMBER_CLT_DELTA_LW_FORMULA_REQUIRED_FIELDS = [
+  "baseSlabOrFloor",
+  "toppingOrFloatingLayer",
+  "resilientLayerDynamicStiffnessMNm3",
+  "loadBasisKgM2",
+  "ceilingOrLowerAssembly"
+] as const satisfies readonly AcousticInputFieldId[];
 
 type TimberCltDeltaLwFormulaFamily = "mass_timber_clt" | "timber_joists";
 
@@ -122,6 +130,39 @@ export function canEstimateTimberCltDeltaLwFromPredictorInput(input: ImpactPredi
       hasPositiveNumber(input.loadBasisKgM2) &&
       hasExplicitLowerAssembly(input)
   );
+}
+
+export function collectTimberCltDeltaLwFormulaMissingPhysicalInputs(
+  input: ImpactPredictorInput | null | undefined
+): AcousticInputFieldId[] {
+  if (!input) {
+    return [];
+  }
+
+  const family = resolveFormulaFamily(input);
+  if (!family || !isFormulaSystemType(input, family)) {
+    return [];
+  }
+
+  const missing: AcousticInputFieldId[] = [];
+
+  if (!hasPositiveNumber(input.baseSlab?.thicknessMm)) {
+    missing.push("baseSlabOrFloor");
+  }
+  if (!hasToppingOrFloatingMass(input)) {
+    missing.push("toppingOrFloatingLayer");
+  }
+  if (!hasPositiveNumber(input.resilientLayer?.dynamicStiffnessMNm3)) {
+    missing.push("resilientLayerDynamicStiffnessMNm3");
+  }
+  if (!hasPositiveNumber(input.loadBasisKgM2)) {
+    missing.push("loadBasisKgM2");
+  }
+  if (!hasExplicitLowerAssembly(input)) {
+    missing.push("ceilingOrLowerAssembly");
+  }
+
+  return missing;
 }
 
 function familyCorrectionDb(family: TimberCltDeltaLwFormulaFamily): number {

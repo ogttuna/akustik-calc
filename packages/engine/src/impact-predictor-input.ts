@@ -118,6 +118,7 @@ const BASE_STRUCTURE_HINT_MATERIAL_IDS = new Set([
   "concrete",
   "engineered_timber_structural",
   "hollow_core_plank",
+  "lightweight_concrete",
   "lightweight_steel_floor",
   "open_box_timber_slab",
   "open_web_steel_floor",
@@ -133,6 +134,7 @@ const SAFE_BARE_BASE_ROLE_INFERENCE_MATERIAL_IDS = new Set([
   "composite_steel_deck",
   "concrete",
   "hollow_core_plank",
+  "lightweight_concrete",
   "steel_deck_composite"
 ]);
 const FLOOR_ROLE_INFERENCE_EVIDENCE_ROLES = new Set<NonNullable<LayerInput["floorRole"]>>([

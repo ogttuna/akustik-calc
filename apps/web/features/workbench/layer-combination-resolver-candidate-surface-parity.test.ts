@@ -15,13 +15,15 @@ import {
   getLayerCombinationResolverCandidateReportLines,
   getLayerCombinationResolverCandidateSurface
 } from "./layer-combination-resolver-candidate-surface";
+import { getActiveImpactMetricBasisRows } from "./impact-metric-basis-view";
 import { getPresetById } from "./preset-definitions";
+import { buildResultAnswerChartLanes } from "./result-answer-chart-model";
 import { evaluateScenario, type EvaluatedScenario } from "./scenario-analysis";
 import {
   buildServerProjectWorkbenchSnapshot,
   parseServerProjectWorkbenchSnapshot
 } from "./server-project-workbench-snapshot";
-import { buildOutputCard } from "./simple-workbench-output-model";
+import { addOutputCardPosture, buildOutputCard } from "./simple-workbench-output-model";
 import { buildWorkbenchWallTopology } from "./simple-workbench-wall-topology";
 import type { LayerDraft, ScenarioSnapshot } from "./workbench-store";
 
@@ -38,6 +40,9 @@ const DOUBLE_LEAF_SELECTED_CANDIDATE_ID =
   "candidate_layer_combination_resolver_double_leaf_framed_wall_banded_source_absent_family_solver";
 const WALL_EXACT_SELECTED_CANDIDATE_ID = "wall.exact_verified_airborne.same_leaf_schedule";
 const WALL_EXACT_RUNTIME_BASIS = "verified_airborne_exact_source";
+const WALL_ANCHOR_DELTA_SELECTED_CANDIDATE_ID =
+  "wall.compatible_anchor_delta.extra_board_on_verified_lsf";
+const WALL_ANCHOR_DELTA_RUNTIME_BASIS = "exact_subassembly_source_plus_calculated_delta";
 const WALL_FIELD_SELECTED_CANDIDATE_ID = "wall.airborne_field_context.field_apparent_adapter";
 const WALL_FIELD_RUNTIME_BASIS = "gate_i_airborne_field_apparent_context_adapter_runtime";
 const FLOOR_EXACT_SELECTED_CANDIDATE_ID = "floor.exact_measured_floor_system.same_topology_metric_basis";
@@ -61,6 +66,10 @@ const HEAVY_FLOATING_RUNTIME_BASIS = "predictor_heavy_floating_floor_iso12354_an
 const NEEDS_INPUT_SELECTED_CANDIDATE_ID = "generic.required_input_owner.needs_input_boundary";
 const UNSUPPORTED_BASIS_SELECTED_CANDIDATE_ID = "generic.lab_field_building_basis_boundary";
 const ASTM_UNSUPPORTED_SELECTED_CANDIDATE_ID = "generic.astm_iic_aiic.unsupported_boundary";
+const ASTM_E989_SELECTED_CANDIDATE_ID = "floor.astm_e989_impact_rating.contour_runtime";
+const ASTM_E989_RUNTIME_BASIS = "astm_e989_impact_rating_metric_schema_adapter_bridge";
+const ASTM_E989_AIIC_METRIC_BASIS = "astm_e989_aiic_metric_schema_adapter_bridge";
+const ASTM_E989_IIC_METRIC_BASIS = "astm_e989_iic_metric_schema_adapter_bridge";
 const TARGET_OUTPUTS = [
   "Rw",
   "C",
@@ -189,6 +198,28 @@ const EXACT_IMPACT_SOURCE_19 = {
   levelsDb: [60, 59, 58, 58, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 47, 46, 45, 44, 43]
 } as const satisfies ExactImpactSource;
 
+const ASTM_E989_THIRD_OCTAVE_FREQS = [100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150] as const;
+const ASTM_E989_THIRD_OCTAVE_OFFSETS = [2, 2, 2, 2, 2, 2, 1, 0, -1, -2, -3, -6, -9, -12, -15, -18] as const;
+
+function buildAstmE989Levels(baseContourPlusDeficiencyDb: number): number[] {
+  return ASTM_E989_THIRD_OCTAVE_OFFSETS.map((offset) => baseContourPlusDeficiencyDb + offset);
+}
+
+const EXACT_ASTM_LAB_IIC_SOURCE = {
+  frequenciesHz: [...ASTM_E989_THIRD_OCTAVE_FREQS],
+  labOrField: "lab",
+  label: "Gate G ASTM E492 lab impact source",
+  levelsDb: buildAstmE989Levels(62),
+  standardMethod: "ASTM E492 / ASTM E989"
+} as const satisfies ExactImpactSource;
+
+const EXACT_ASTM_FIELD_AIIC_SOURCE = {
+  ...EXACT_ASTM_LAB_IIC_SOURCE,
+  labOrField: "field",
+  label: "Gate G ASTM E1007 field impact source",
+  standardMethod: "ASTM E1007 / ASTM E989"
+} as const satisfies ExactImpactSource;
+
 const HEAVY_FLOATING_FLOOR_ROWS: readonly LayerDraft[] = [
   { floorRole: "base_structure", id: "heavy-base", materialId: "concrete", thicknessMm: "150" },
   {
@@ -240,6 +271,11 @@ const EXACT_LSF_ROWS: readonly LayerDraft[] = [
   { id: "exact-fill", materialId: "glasswool", thicknessMm: "70" },
   { id: "exact-side-b-1", materialId: "acoustic_gypsum_board", thicknessMm: "12.5" },
   { id: "exact-side-b-2", materialId: "acoustic_gypsum_board", thicknessMm: "12.5" }
+];
+
+const EXACT_LSF_PLUS_OUTER_BOARD_ROWS: readonly LayerDraft[] = [
+  ...EXACT_LSF_ROWS,
+  { id: "exact-side-b-extra", materialId: "acoustic_gypsum_board", thicknessMm: "12.5" }
 ];
 
 const EXACT_LSF_CONTEXT: AirborneContext = {
@@ -1094,6 +1130,74 @@ describe("layer combination resolver candidate surface parity", () => {
     expect(estimateBody.result?.unsupportedTargetOutputs).toEqual(["STC", "C", "Ctr"]);
   });
 
+  it("surfaces compatible wall anchor-delta answers across cards, report, and calculator API", async () => {
+    const scenario = buildWallScenario({
+      airborneContext: EXACT_LSF_CONTEXT,
+      id: "wall-v1-compatible-anchor-delta-surface",
+      rows: EXACT_LSF_PLUS_OUTER_BOARD_ROWS,
+      targetOutputs: EXACT_WALL_TARGET_OUTPUTS
+    });
+    const trace = getLayerCombinationResolverCandidateSurface(scenario.result);
+
+    expect(trace).toMatchObject({
+      candidateKind: "similarity_anchor",
+      requestedBasis: "element_lab",
+      route: "wall",
+      runtimeBasisId: WALL_ANCHOR_DELTA_RUNTIME_BASIS,
+      selectedCandidateId: WALL_ANCHOR_DELTA_SELECTED_CANDIDATE_ID,
+      supportBucket: "anchored_estimate",
+      supportedMetrics: ["Rw"],
+      valuePins: [{ metric: "Rw", value: 57 }]
+    });
+    expect(scenario.result.supportedTargetOutputs).toEqual(["Rw"]);
+    expect(scenario.result.unsupportedTargetOutputs).toEqual(["STC", "C", "Ctr"]);
+    expect(buildOutputCard({ output: "Rw", result: scenario.result, studyMode: "wall" })).toMatchObject({
+      label: "Rw",
+      status: "live",
+      value: "57 dB"
+    });
+    expect(buildOutputCard({ output: "STC", result: scenario.result, studyMode: "wall" })).toMatchObject({
+      label: "STC",
+      status: "unsupported",
+      value: "Not ready"
+    });
+
+    const report = buildWallReport({
+      requestedOutputs: EXACT_WALL_TARGET_OUTPUTS,
+      scenario,
+      title: "Wall V1 Compatible Anchor Delta Surface"
+    });
+    expect(report).toContain(`- Resolver candidate id: ${WALL_ANCHOR_DELTA_SELECTED_CANDIDATE_ID}`);
+    expect(report).toContain(`- Resolver runtime basis: ${WALL_ANCHOR_DELTA_RUNTIME_BASIS}`);
+    expect(report).toContain("- Resolver support bucket: anchored_estimate");
+    expect(report).toContain("- Resolver supported metrics: Rw");
+    expect(report).toContain("- Resolver value pins: Rw 57");
+
+    const { POST: estimate } = await import("../../app/api/estimate/route");
+    const estimateResponse = await estimate(
+      jsonRequest("http://localhost/api/estimate", {
+        airborneContext: EXACT_LSF_CONTEXT,
+        calculator: "dynamic",
+        layers: toLayerInputs(EXACT_LSF_PLUS_OUTER_BOARD_ROWS),
+        targetOutputs: EXACT_WALL_TARGET_OUTPUTS
+      })
+    );
+    const estimateBody = (await estimateResponse.json()) as {
+      ok?: boolean;
+      result?: AssemblyCalculation;
+    };
+
+    expect(estimateResponse.status).toBe(200);
+    expect(estimateBody.ok).toBe(true);
+    expect(getLayerCombinationResolverCandidateSurface(estimateBody.result)).toMatchObject({
+      selectedCandidateId: WALL_ANCHOR_DELTA_SELECTED_CANDIDATE_ID,
+      supportedMetrics: ["Rw"],
+      valuePins: [{ metric: "Rw", value: 57 }]
+    });
+    expect(estimateBody.result?.supportedTargetOutputs).toEqual(["Rw"]);
+    expect(estimateBody.result?.unsupportedTargetOutputs).toEqual(["STC", "C", "Ctr"]);
+  });
+
   it("keeps complete wall field-apparent answers on the wall adapter across cards, report, and calculator API", async () => {
     const scenario = buildWallScenario({
       airborneContext: COMPLETE_FIELD_CONTEXT,
@@ -1720,13 +1824,7 @@ describe("layer combination resolver candidate surface parity", () => {
     });
     expect(getLayerCombinationResolverCandidateSurface(missingFieldResult)).toMatchObject({
       candidateKind: "needs_input_boundary",
-      requiredInputs: [
-        "contextMode",
-        "partitionAreaM2",
-        "receivingRoomVolumeM3",
-        "receivingRoomRt60S",
-        "impactFieldContext"
-      ],
+      requiredInputs: ["impactFieldContext", "receivingRoomVolumeM3"],
       route: "floor",
       selectedCandidateId: NEEDS_INPUT_SELECTED_CANDIDATE_ID,
       supportBucket: "needs_input",
@@ -1780,5 +1878,137 @@ describe("layer combination resolver candidate surface parity", () => {
     expect(astmReport).toContain("- Resolver support bucket: unsupported");
     expect(astmReport).toContain("- Resolver runtime basis: none");
     expect(astmReport).toContain("- Resolver value pins: none");
+  });
+
+  it("keeps Gate G exact ASTM IIC and AIIC values aligned across cards, chart, report, and APIs", async () => {
+    const labScenario = buildScenario({
+      exactImpactSource: EXACT_ASTM_LAB_IIC_SOURCE,
+      id: "floor-gate-g-astm-iic-surface",
+      rows: EXACT_IMPACT_ASSEMBLY_FLOOR_ROWS,
+      targetOutputs: ["IIC"]
+    });
+    const labTrace = getLayerCombinationResolverCandidateSurface(labScenario.result);
+
+    expect(labScenario.result.impact).toMatchObject({
+      IIC: 50,
+      availableOutputs: ["IIC"],
+      basis: ASTM_E989_RUNTIME_BASIS,
+      labOrField: "lab",
+      metricBasis: { IIC: ASTM_E989_IIC_METRIC_BASIS }
+    });
+    expect(labScenario.result.supportedTargetOutputs).toEqual(["IIC"]);
+    expect(labScenario.result.unsupportedTargetOutputs).toEqual([]);
+    expect(labTrace).toMatchObject({
+      candidateKind: "exact_measured_override",
+      requestedBasis: "astm_rating_boundary",
+      route: "floor",
+      runtimeBasisId: ASTM_E989_RUNTIME_BASIS,
+      selectedCandidateId: ASTM_E989_SELECTED_CANDIDATE_ID,
+      supportBucket: "exact",
+      supportedMetrics: ["IIC"],
+      valuePins: [{ metric: "IIC", value: 50 }]
+    });
+    expect(labTrace?.surfaceDetail).toContain("exact ASTM impact-band contour rating");
+
+    const labCard = addOutputCardPosture(
+      buildOutputCard({ output: "IIC", result: labScenario.result, studyMode: "floor" }),
+      { result: labScenario.result, studyMode: "floor" }
+    );
+    expect(labCard).toMatchObject({
+      label: "IIC",
+      postureLabel: "ASTM E989 exact rating",
+      postureTone: "success",
+      status: "live",
+      value: "50 dB"
+    });
+    expect(labCard.detail).toContain("ASTM E989 contour bridge");
+
+    expect(buildResultAnswerChartLanes({ result: labScenario.result })).toEqual([
+      expect.objectContaining({
+        direction: "higher_better",
+        label: "IIC",
+        value: 50,
+        valueLabel: "50 dB"
+      })
+    ]);
+
+    expect(getActiveImpactMetricBasisRows(labScenario.result.impact)).toEqual([
+      expect.objectContaining({
+        basis: ASTM_E989_IIC_METRIC_BASIS,
+        label: "IIC"
+      })
+    ]);
+
+    const labReport = buildFloorReport({
+      requestedOutputs: ["IIC"],
+      scenario: labScenario,
+      title: "floor-gate-g-astm-iic-surface"
+    });
+    expect(labReport).toContain("- Answer summary: IIC 50 dB");
+    expect(labReport).toContain("- Impact IIC: 50.0 dB");
+    expect(labReport).toContain("- Impact IIC provenance: ASTM E989 lab IIC metric owner");
+    expect(labReport).toContain(`- Resolver candidate id: ${ASTM_E989_SELECTED_CANDIDATE_ID}`);
+    expect(labReport).toContain(`- Resolver runtime basis: ${ASTM_E989_RUNTIME_BASIS}`);
+    expect(labReport).toContain("- Resolver value pins: IIC 50");
+
+    const estimateResult = await estimateAssemblyViaApi({
+      exactImpactSource: EXACT_ASTM_LAB_IIC_SOURCE,
+      rows: EXACT_IMPACT_ASSEMBLY_FLOOR_ROWS,
+      targetOutputs: ["IIC"]
+    });
+    expect(getLayerCombinationResolverCandidateSurface(estimateResult)).toMatchObject({
+      selectedCandidateId: ASTM_E989_SELECTED_CANDIDATE_ID,
+      valuePins: [{ metric: "IIC", value: 50 }]
+    });
+
+    const { POST: impactOnly } = await import("../../app/api/impact-only/route");
+    const impactResponse = await impactOnly(
+      jsonRequest("http://localhost/api/impact-only", {
+        exactImpactSource: EXACT_ASTM_LAB_IIC_SOURCE,
+        layers: toLayerInputs(EXACT_IMPACT_ASSEMBLY_FLOOR_ROWS),
+        sourceLayers: toLayerInputs(EXACT_IMPACT_ASSEMBLY_FLOOR_ROWS),
+        targetOutputs: ["IIC"]
+      })
+    );
+    const impactBody = (await impactResponse.json()) as {
+      ok?: boolean;
+      result?: ImpactOnlyCalculation;
+    };
+    expect(impactResponse.status).toBe(200);
+    expect(impactBody.ok).toBe(true);
+    expect(getLayerCombinationResolverCandidateSurface(impactBody.result)).toMatchObject({
+      selectedCandidateId: ASTM_E989_SELECTED_CANDIDATE_ID,
+      supportedMetrics: ["IIC"],
+      valuePins: [{ metric: "IIC", value: 50 }]
+    });
+
+    const fieldScenario = buildScenario({
+      exactImpactSource: EXACT_ASTM_FIELD_AIIC_SOURCE,
+      id: "floor-gate-g-astm-aiic-surface",
+      rows: EXACT_IMPACT_ASSEMBLY_FLOOR_ROWS,
+      targetOutputs: ["AIIC"]
+    });
+    expect(fieldScenario.result.impact).toMatchObject({
+      AIIC: 50,
+      availableOutputs: ["AIIC"],
+      basis: ASTM_E989_RUNTIME_BASIS,
+      labOrField: "field",
+      metricBasis: { AIIC: ASTM_E989_AIIC_METRIC_BASIS }
+    });
+    expect(getLayerCombinationResolverCandidateSurface(fieldScenario.result)).toMatchObject({
+      requestedBasis: "astm_rating_boundary",
+      selectedCandidateId: ASTM_E989_SELECTED_CANDIDATE_ID,
+      supportedMetrics: ["AIIC"],
+      valuePins: [{ metric: "AIIC", value: 50 }]
+    });
+    expect(addOutputCardPosture(
+      buildOutputCard({ output: "AIIC", result: fieldScenario.result, studyMode: "floor" }),
+      { result: fieldScenario.result, studyMode: "floor" }
+    )).toMatchObject({
+      label: "AIIC",
+      postureLabel: "ASTM E989 exact rating",
+      status: "live",
+      value: "50 dB"
+    });
   });
 });

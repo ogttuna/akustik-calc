@@ -9,9 +9,13 @@ const GROUPED_ROCKWOOL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_STRATEGY =
 // grouped lane is now a labelled physics prediction, while flat-list split
 // outputs remain withheld.
 export const ROCKWOOL_TRIPLE_LEAF_SCREENING_ONLY_LABEL = "Rockwool source-gated prediction";
+export const ROCKWOOL_TRIPLE_LEAF_GENERALIZED_FORMULA_LABEL = "Generalized multileaf formula";
 
 export const ROCKWOOL_GROUPED_TRIPLE_LEAF_SCREENING_ONLY_GUARD =
   "Rockwool grouped triple-leaf lab Rw/STC/C/Ctr is now a source-absent local-substitution lab spectrum adapter: not measured exact, not source-validated, and not design-grade; keep the +/-8 dB not-measured budget visible while field and building adapters remain separately owned.";
+
+export const ROCKWOOL_GROUPED_TRIPLE_LEAF_GENERALIZED_FORMULA_GUARD =
+  "Rockwool grouped triple-leaf lab Rw/STC/C/Ctr is calculated by the generalized multileaf formula: not measured exact and not source-validated; keep the +/-5 dB source-absent error budget visible while field and building adapters remain separately owned.";
 
 export const ROCKWOOL_FLAT_LIST_SCREENING_ONLY_GUARD =
   "Rockwool flat-list adjacent swaps keep the current double-leaf numeric lane until grouped topology proves a physical triple-leaf penalty.";
@@ -19,12 +23,15 @@ export const ROCKWOOL_FLAT_LIST_SCREENING_ONLY_GUARD =
 export const ROCKWOOL_TRIPLE_LEAF_FIELD_CONTINUATION_GUARD =
   "This field value continues from the Rockwool grouped triple-leaf source-gated prediction lane; it is not an independent measured field result, not exact, not source-validated, and not design-grade.";
 
+export const ROCKWOOL_TRIPLE_LEAF_GENERALIZED_FORMULA_FIELD_GUARD =
+  "This field value would continue from the Rockwool grouped triple-leaf generalized formula lane only after the required field geometry and receiving-room inputs are supplied; it is not an independent measured field result.";
+
 export const ROCKWOOL_SPLIT_TRIPLE_LEAF_OUTPUT_WITHHELD_GUARD =
   "Rockwool split/internal-leaf flat-list output is not ready: grouped triple-leaf topology and a source-owned calibrated model are required before the current Rw 41 / R'w 39 / DnT,w 40 diagnostic can be consumed as a defended result.";
 
 export type RockwoolTripleLeafScreeningPolicyCopy = {
   fieldDetail: string;
-  label: typeof ROCKWOOL_TRIPLE_LEAF_SCREENING_ONLY_LABEL;
+  label: typeof ROCKWOOL_TRIPLE_LEAF_GENERALIZED_FORMULA_LABEL | typeof ROCKWOOL_TRIPLE_LEAF_SCREENING_ONLY_LABEL;
   outputDetail: string;
   variant: "flat_list_fail_closed" | "grouped_source_blocked" | "grouped_source_gated_prediction";
 };
@@ -95,11 +102,16 @@ export function getRockwoolTripleLeafScreeningPolicyCopy(
     /Flat-list adjacent-swap sensitivity guard/i.test(warning)
   );
 
-  if (
-    (trace.strategy === GROUPED_ROCKWOOL_TRIPLE_LEAF_PREDICTION_STRATEGY ||
-      trace.strategy === GROUPED_ROCKWOOL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_STRATEGY) &&
-    groupedSourceGatedPrediction
-  ) {
+  if (trace.strategy === GROUPED_ROCKWOOL_TRIPLE_LEAF_PREDICTION_STRATEGY && groupedSourceGatedPrediction) {
+    return {
+      fieldDetail: ROCKWOOL_TRIPLE_LEAF_GENERALIZED_FORMULA_FIELD_GUARD,
+      label: ROCKWOOL_TRIPLE_LEAF_GENERALIZED_FORMULA_LABEL,
+      outputDetail: ROCKWOOL_GROUPED_TRIPLE_LEAF_GENERALIZED_FORMULA_GUARD,
+      variant: "grouped_source_gated_prediction"
+    };
+  }
+
+  if (trace.strategy === GROUPED_ROCKWOOL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_STRATEGY && groupedSourceGatedPrediction) {
     return {
       fieldDetail: ROCKWOOL_TRIPLE_LEAF_FIELD_CONTINUATION_GUARD,
       label: ROCKWOOL_TRIPLE_LEAF_SCREENING_ONLY_LABEL,

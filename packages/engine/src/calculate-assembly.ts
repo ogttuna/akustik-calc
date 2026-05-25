@@ -97,7 +97,10 @@ import { buildEstimateWarnings, estimateRwDb } from "./estimate-rw";
 import { hasBoundOnlyUbiqOpenWebCarpetCombinedProfile } from "./bound-only-floor-near-miss";
 import { getFloorFamilySourceGuard } from "./floor-family-source-guard";
 import { buildFloorSystemRatings } from "./floor-system-ratings";
-import { buildExactImpactFromSource } from "./impact-exact";
+import {
+  ASTM_E989_IMPACT_RATING_BASIS,
+  buildOwnedImpactFromExactSource
+} from "./impact-astm-e989";
 import { OPEN_WEB_DIRECT_FIXED_LINING_BASIS } from "./lightweight-steel-open-web-direct-fixed-lining-estimate";
 import { OPEN_WEB_SUPPORTED_BAND_SIMILARITY_BASIS } from "./lightweight-steel-open-web-supported-band-estimate";
 import { OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS } from "./open-box-timber-eps-screed-hybrid-package-estimate";
@@ -130,6 +133,9 @@ import { getDefaultMaterialCatalog, resolveMaterial } from "./material-catalog";
 import {
   buildHeavyConcreteCombinedImpactFormulaFallbackBlockerWarning
 } from "./heavy-concrete-combined-impact-formula-corridor";
+import {
+  collectTimberCltDeltaLwFormulaMissingPhysicalInputs
+} from "./timber-clt-floor-impact-delta-lw-runtime-corridor";
 import {
   hasReinforcedConcreteLowConfidenceProxyAirborne,
   REINFORCED_CONCRETE_LOW_CONFIDENCE_PROXY_AIRBORNE_WARNING
@@ -171,6 +177,9 @@ import {
   BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_WARNING,
   maybeBuildBroadAccuracyWallTripleLeafLocalSubstitutionLabSpectrumAdapter
 } from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-lab-spectrum-adapter";
+import {
+  maybeBuildPostV1WallCompatibleAnchorDelta
+} from "./post-v1-wall-compatible-anchor-delta";
 
 export type CalculateAssemblyOptions = {
   airborneContext?: AirborneContext | null;
@@ -283,6 +292,23 @@ function gateZFloorImpactFieldRuntimeReady(
       assessment.missingOwnerInputs.every((owner) => owner === GATE_Z_LOW_FREQUENCY_OWNER) &&
       assessment.readyOutputs.some((output) => GATE_Z_RUNTIME_READY_FIELD_IMPACT_OUTPUTS.has(output))
   );
+}
+
+function isPostV1GateNPureFieldImpactRequest(targetOutputs: readonly RequestedOutputId[]): boolean {
+  return targetOutputs.length > 0 && targetOutputs.every((output) => GATE_Z_FIELD_IMPACT_OUTPUTS.has(output));
+}
+
+function hasPostV1GateNFieldKPolicy(context: ImpactFieldContext | null): boolean {
+  return Boolean(
+    typeof context?.fieldKDb === "number" ||
+      typeof context?.guideMassRatio === "number" ||
+      typeof context?.directPathOffsetDb === "number" ||
+      (Array.isArray(context?.flankingPaths) && context.flankingPaths.length > 0)
+  );
+}
+
+function hasPostV1GateNReceivingRoomVolume(context: ImpactFieldContext | null): boolean {
+  return Boolean(typeof context?.receivingRoomVolumeM3 === "number" && context.receivingRoomVolumeM3 > 0);
 }
 
 function hasLowFrequencyImpactOwner(input: ImpactFieldContext | null): boolean {
@@ -428,6 +454,28 @@ function getAnswerEngineV1ExactMeasuredMetricUnsupportedOutputs(input: {
 
   const exactOutputSet = new Set(exactOutputs);
   return input.supportedTargetOutputs.filter((output) => !exactOutputSet.has(output));
+}
+
+function getAnswerEngineV1AnchoredDeltaMetricUnsupportedOutputs(input: {
+  anchorMetricLabel: string | null | undefined;
+  compatibleAnchorDeltaApplied: boolean;
+  resolution: AirborneCandidateResolution | undefined;
+  supportedTargetOutputs: readonly RequestedOutputId[];
+}): RequestedOutputId[] {
+  if (
+    !input.compatibleAnchorDeltaApplied ||
+    input.resolution?.selectedOrigin !== "measured_exact_subassembly_plus_calculated_delta"
+  ) {
+    return [];
+  }
+
+  const anchorOutputs = outputsForExactMeasuredAirborneMetric(input.anchorMetricLabel);
+  if (anchorOutputs.length === 0) {
+    return [...input.supportedTargetOutputs];
+  }
+
+  const anchorOutputSet = new Set(anchorOutputs);
+  return input.supportedTargetOutputs.filter((output) => !anchorOutputSet.has(output));
 }
 
 function outputsForExactMeasuredFloorSystem(input: {
@@ -1149,6 +1197,7 @@ const ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLOOR_FIELD_CONTEXT_INPUTS = new Set(
 
 function getAnswerEngineV1FloorFieldImpactMissingInputs(input: {
   assessment: GateYFloorImpactFieldContextAssessment | null;
+  impactFieldContext: ImpactFieldContext | null;
   result: AssemblyCalculation;
 }): string[] {
   const missing = input.assessment?.missingPhysicalInputs ?? [];
@@ -1164,13 +1213,44 @@ function getAnswerEngineV1FloorFieldImpactMissingInputs(input: {
     return [...missing];
   }
 
-  return missing.filter((field) =>
-    ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLOOR_FIELD_CONTEXT_INPUTS.has(field)
+  const requestedFieldOutputs: RequestedOutputId[] = input.result.targetOutputs.filter((output: RequestedOutputId) =>
+    GATE_Z_FIELD_IMPACT_OUTPUTS.has(output)
+  );
+  const postV1GateNMissing: string[] = [];
+  const needsK = requestedFieldOutputs.some((output) =>
+    output === "L'n,w" || output === "L'nT,w" || output === "L'nT,50"
+  );
+  const needsVolume = requestedFieldOutputs.some((output) => output === "L'nT,w" || output === "L'nT,50");
+  const needsLowFrequency = requestedFieldOutputs.includes("L'nT,50");
+
+  if (needsK && !hasPostV1GateNFieldKPolicy(input.impactFieldContext)) {
+    postV1GateNMissing.push("impactFieldContext");
+  }
+
+  if (needsVolume && !hasPostV1GateNReceivingRoomVolume(input.impactFieldContext)) {
+    postV1GateNMissing.push("receivingRoomVolumeM3");
+  }
+
+  if (
+    needsLowFrequency &&
+    typeof input.impactFieldContext?.ci50_2500Db !== "number" &&
+    typeof input.result.impact?.CI50_2500 !== "number"
+  ) {
+    postV1GateNMissing.push("impactFieldContext.ci50_2500Db");
+  }
+
+  return uniqueAnswerEngineV1Strings(
+    postV1GateNMissing.length > 0
+      ? postV1GateNMissing
+      : missing.filter((field) =>
+          ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLOOR_FIELD_CONTEXT_INPUTS.has(field)
+        )
   );
 }
 
 function applyAcousticCalculatorAnswerEngineV1FloorFieldImpactNeedsInputBoundary(input: {
   gateZFloorImpactFieldAssessment: GateYFloorImpactFieldContextAssessment | null;
+  impactFieldContext: ImpactFieldContext | null;
   result: AssemblyCalculation;
 }): void {
   if (
@@ -1186,6 +1266,7 @@ function applyAcousticCalculatorAnswerEngineV1FloorFieldImpactNeedsInputBoundary
 
   const missingPhysicalInputs = getAnswerEngineV1FloorFieldImpactMissingInputs({
     assessment: input.gateZFloorImpactFieldAssessment,
+    impactFieldContext: input.impactFieldContext,
     result: input.result
   });
   const boundary = buildAnswerEngineV1FloorFieldImpactNeedsInputBoundary({
@@ -1250,6 +1331,42 @@ function applyAcousticCalculatorAnswerEngineV1FloorImpactNeedsInputBoundary(inpu
   parkResultTargetOutputs(input.result, boundary.unsupportedOutputs);
   input.result.warnings.push(
     `Acoustic Calculator Answer Engine V1 selected needs_input for ${boundary.unsupportedOutputs.join(", ")}; provide ${boundary.missingPhysicalInputs.join(", ")} before DynEcho publishes floor impact answers.`
+  );
+}
+
+function applyAcousticCalculatorAnswerEngineV1TimberCltDeltaLwNeedsInputBoundary(input: {
+  predictorInput: ImpactPredictorInput | null;
+  result: AssemblyCalculation;
+}): void {
+  if (input.result.acousticAnswerBoundary) {
+    return;
+  }
+
+  const missingPhysicalInputs = collectTimberCltDeltaLwFormulaMissingPhysicalInputs(input.predictorInput);
+  const stoppedOutputs: RequestedOutputId[] = input.result.targetOutputs.filter((output: RequestedOutputId) =>
+    output === "DeltaLw"
+  );
+  const unsupportedOutputSet = new Set<RequestedOutputId>(input.result.unsupportedTargetOutputs);
+
+  if (
+    missingPhysicalInputs.length === 0 ||
+    stoppedOutputs.length === 0 ||
+    !stoppedOutputs.every((output: RequestedOutputId) => unsupportedOutputSet.has(output))
+  ) {
+    return;
+  }
+
+  const boundary = buildAnswerEngineV1FloorImpactNeedsInputBoundary({
+    missingPhysicalInputs,
+    targetOutputs: stoppedOutputs
+  });
+  if (!boundary) {
+    return;
+  }
+
+  input.result.acousticAnswerBoundary = boundary;
+  input.result.warnings.push(
+    `Acoustic Calculator Answer Engine V1 selected needs_input for ${boundary.unsupportedOutputs.join(", ")}; provide ${boundary.missingPhysicalInputs.join(", ")} before DynEcho publishes timber/CLT floor DeltaLw answers.`
   );
 }
 
@@ -2196,17 +2313,31 @@ export function calculateAssembly(
     airborneContext,
     airborneOverlayResult.overlay?.fieldFlankingPenaltyDb ?? 0
   );
+  const compatibleWallAnchorDeltaResult = maybeBuildPostV1WallCompatibleAnchorDelta({
+    context: airborneContext,
+    curve: verifiedAirborneAnchorResult.curve,
+    exactFullStackApplied: verifiedAirborneAnchorResult.applied,
+    layers: resolvedLayers,
+    ratings: verifiedAirborneAnchorResult.ratings,
+    targetOutputs
+  });
   const approximateAirborneFieldCompanionResult = applyApproximateAirborneFieldCompanion(
     verifiedAirborneAnchorResult.ratings,
     airborneResolvedLayers,
     airborneContext
   );
-  const curve = verifiedAirborneAnchorResult.curve;
-  const ratings = approximateAirborneFieldCompanionResult.ratings;
+  const curve = compatibleWallAnchorDeltaResult.applied
+    ? compatibleWallAnchorDeltaResult.curve
+    : verifiedAirborneAnchorResult.curve;
+  const ratings = compatibleWallAnchorDeltaResult.applied
+    ? compatibleWallAnchorDeltaResult.ratings
+    : approximateAirborneFieldCompanionResult.ratings;
   const adjustedEstimatedRwDb = Math.max(
     0,
     round1(
-      verifiedAirborneAnchorResult.applied && verifiedAirborneAnchorResult.match?.sourceMode === "lab"
+      compatibleWallAnchorDeltaResult.applied && typeof compatibleWallAnchorDeltaResult.predictedRwDb === "number"
+        ? compatibleWallAnchorDeltaResult.predictedRwDb
+        : verifiedAirborneAnchorResult.applied && verifiedAirborneAnchorResult.match?.sourceMode === "lab"
         ? ratings.iso717.Rw
         : (dynamicAirborneResult?.rw ?? importedCalculatorResult?.rw ?? screeningEstimatedRwDb) -
           (
@@ -2283,7 +2414,7 @@ export function calculateAssembly(
       : gateSOpeningLeakCompositeRuntime?.blockedOutputs.filter(
           (output) => !(companyInternalOpeningLeakFieldBuildingRuntime?.supportedOutputs.includes(output) ?? false)
         ) ?? [];
-  const exactImpact = exactImpactSource ? buildExactImpactFromSource(exactImpactSource) : null;
+  const exactImpact = exactImpactSource ? buildOwnedImpactFromExactSource(exactImpactSource) : null;
   const directImpactLane = resolveLayerBasedImpactLane({
     catalog,
     exactImpact,
@@ -2410,6 +2541,19 @@ export function calculateAssembly(
     }
   }
 
+  const postV1GateNFloorFieldImpactLabAnchorAvailable = Boolean(
+    options.calculator === "dynamic" &&
+      isPostV1GateNPureFieldImpactRequest(targetOutputs) &&
+      airborneContext?.contextMode !== "building_prediction" &&
+      (
+        typeof exactImpact?.LnW === "number" ||
+        typeof floorSystemMatch?.impact.LnW === "number" ||
+        typeof impactCatalogMatch?.impact?.LnW === "number" ||
+        typeof floorSystemEstimate?.impact.LnW === "number" ||
+        typeof narrowImpact?.LnW === "number"
+      )
+  );
+
   const shouldWithholdUnreadyDynamicFloorImpactRuntime = Boolean(
     options.calculator === "dynamic" &&
       gateWFloorImpactContract &&
@@ -2420,6 +2564,7 @@ export function calculateAssembly(
       floorSystemEstimate?.impact.basis !== OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS &&
       floorSystemEstimate?.impact.basis !== OPEN_WEB_RAW_BARE_FORMULA_BASIS &&
       floorSystemEstimate?.impact.basis !== HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS &&
+      !postV1GateNFloorFieldImpactLabAnchorAvailable &&
       !gateWLabRuntimeReady &&
       !gateZFieldImpactRuntimeReady &&
       !exactImpact &&
@@ -2678,14 +2823,15 @@ export function calculateAssembly(
             }
           : null,
         sourceAnchor: {
-          applied: verifiedAirborneAnchorResult.applied,
-          match: verifiedAirborneAnchorResult.match
+          anchorKind: compatibleWallAnchorDeltaResult.applied ? "compatible_delta" : "exact_full_stack",
+          applied: compatibleWallAnchorDeltaResult.applied || verifiedAirborneAnchorResult.applied,
+          match: (compatibleWallAnchorDeltaResult.match ?? verifiedAirborneAnchorResult.match)
             ? {
-                id: verifiedAirborneAnchorResult.match.id,
-                label: verifiedAirborneAnchorResult.match.label,
-                metricLabel: verifiedAirborneAnchorResult.match.metricLabel,
-                metricValue: verifiedAirborneAnchorResult.match.metricValue,
-                sourceMode: verifiedAirborneAnchorResult.match.sourceMode
+                id: (compatibleWallAnchorDeltaResult.match ?? verifiedAirborneAnchorResult.match)?.id ?? "",
+                label: (compatibleWallAnchorDeltaResult.match ?? verifiedAirborneAnchorResult.match)?.label ?? "",
+                metricLabel: (compatibleWallAnchorDeltaResult.match ?? verifiedAirborneAnchorResult.match)?.metricLabel ?? "Rw",
+                metricValue: (compatibleWallAnchorDeltaResult.match ?? verifiedAirborneAnchorResult.match)?.metricValue,
+                sourceMode: (compatibleWallAnchorDeltaResult.match ?? verifiedAirborneAnchorResult.match)?.sourceMode ?? "lab"
               }
             : null
         },
@@ -2725,6 +2871,13 @@ export function calculateAssembly(
     getAnswerEngineV1ExactMeasuredMetricUnsupportedOutputs({
       resolution: dynamicCandidateResolverRuntime?.resolution,
       sourceMetricLabel: verifiedAirborneAnchorResult.match?.metricLabel,
+      supportedTargetOutputs: targetOutputSupport.supportedTargetOutputs
+    });
+  const anchoredDeltaMetricUnsupportedOutputs =
+    getAnswerEngineV1AnchoredDeltaMetricUnsupportedOutputs({
+      anchorMetricLabel: compatibleWallAnchorDeltaResult.match?.metricLabel,
+      compatibleAnchorDeltaApplied: compatibleWallAnchorDeltaResult.applied,
+      resolution: dynamicCandidateResolverRuntime?.resolution,
       supportedTargetOutputs: targetOutputSupport.supportedTargetOutputs
     });
   const exactMeasuredFloorMetricUnsupportedOutputs =
@@ -2790,8 +2943,11 @@ export function calculateAssembly(
   );
   const visibleTargetOutputSupportWithExactMetricScope = moveSupportedOutputsToUnsupported(
     moveSupportedOutputsToUnsupported(
-      visibleTargetOutputSupport,
-      exactMeasuredSourceMetricUnsupportedOutputs
+      moveSupportedOutputsToUnsupported(
+        visibleTargetOutputSupport,
+        exactMeasuredSourceMetricUnsupportedOutputs
+      ),
+      anchoredDeltaMetricUnsupportedOutputs
     ),
     exactMeasuredFloorMetricUnsupportedOutputs
   );
@@ -2822,6 +2978,7 @@ export function calculateAssembly(
     warnings.push(...airborneOverlayResult.warnings);
   }
   warnings.push(...verifiedAirborneAnchorResult.warnings);
+  warnings.push(...compatibleWallAnchorDeltaResult.warnings);
   warnings.push(...approximateAirborneFieldCompanionResult.warnings);
   if (rockwoolSplitTripleLeafExactOutputWithhold.warning) {
     warnings.push(rockwoolSplitTripleLeafExactOutputWithhold.warning);
@@ -2843,6 +3000,11 @@ export function calculateAssembly(
   if (exactMeasuredSourceMetricUnsupportedOutputs.length > 0 && verifiedAirborneAnchorResult.match) {
     warnings.push(
       `Exact measured airborne source ${verifiedAirborneAnchorResult.match.label} reports ${verifiedAirborneAnchorResult.match.metricLabel}; DynEcho kept ${exactMeasuredSourceMetricUnsupportedOutputs.join(", ")} out of the exact answer instead of aliasing measured and calculated metrics.`
+    );
+  }
+  if (anchoredDeltaMetricUnsupportedOutputs.length > 0 && compatibleWallAnchorDeltaResult.match) {
+    warnings.push(
+      `Compatible measured-anchor delta from ${compatibleWallAnchorDeltaResult.match.label} owns ${compatibleWallAnchorDeltaResult.match.metricLabel}; DynEcho kept ${anchoredDeltaMetricUnsupportedOutputs.join(", ")} out of the anchored answer instead of aliasing unowned companion metrics.`
     );
   }
   if (exactMeasuredFloorMetricUnsupportedOutputs.length > 0 && floorSystemMatch) {
@@ -2915,12 +3077,16 @@ export function calculateAssembly(
   }
 
   if (exactImpact) {
+    const ratingBasis =
+      exactImpact.basis === ASTM_E989_IMPACT_RATING_BASIS
+        ? "ASTM E989 IIC/AIIC contour rating"
+        : "ISO 717-2 nominal grid";
     warnings.push(
-      `Impact ratings were derived from an exact ${exactImpactSource?.labOrField ?? "lab"} impact-band source on the ISO 717-2 nominal grid; the airborne TL curve stayed on the ${selectedCalculatorLabel ?? "screening"} path.`
+      `Impact ratings were derived from an exact ${exactImpactSource?.labOrField ?? "lab"} impact-band source on the ${ratingBasis}; the airborne TL curve stayed on the ${selectedCalculatorLabel ?? "screening"} path.`
     );
   } else if (exactImpactSource) {
     warnings.push(
-      "Exact impact-band input was ignored because it did not match a supported ISO 717-2 nominal octave or one-third-octave band set."
+      "Exact impact-band input was ignored because it did not match a supported ISO 717-2 or ASTM E989 nominal band set."
     );
   }
 
@@ -3167,9 +3333,14 @@ export function calculateAssembly(
     gateZFloorImpactFieldAssessment,
     result
   });
+  applyAcousticCalculatorAnswerEngineV1TimberCltDeltaLwNeedsInputBoundary({
+    predictorInput,
+    result
+  });
   applyAcousticCalculatorAnswerEngineV1FloorRolelessHelperOnlyBoundary(result);
   applyAcousticCalculatorAnswerEngineV1FloorFieldImpactNeedsInputBoundary({
     gateZFloorImpactFieldAssessment,
+    impactFieldContext,
     result
   });
   applyAcousticCalculatorAnswerEngineV1FloorAstmIicAiicUnsupportedBoundary(result);

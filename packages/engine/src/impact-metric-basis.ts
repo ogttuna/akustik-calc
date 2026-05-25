@@ -1,9 +1,11 @@
 import type { ImpactMetricBasis, ImpactMetricBasisLabel } from "@dynecho/shared";
 
 const IMPACT_METRIC_KEYS = [
+  "AIIC",
   "CI",
   "CI50_2500",
   "DeltaLw",
+  "IIC",
   "LPrimeNW",
   "LPrimeNT50",
   "LPrimeNTw",

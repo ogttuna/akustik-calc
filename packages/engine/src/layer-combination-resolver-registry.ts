@@ -9,8 +9,35 @@ import {
   GATE_H_LINED_MASSIVE_WALL_SELECTED_CANDIDATE_ID
 } from "./dynamic-airborne-gate-h-lined-masonry-clt";
 import { HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS } from "./helper-only-timber-open-web-impact-stack-estimate";
+import {
+  HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS,
+  HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_DELTA_LW_TOLERANCE_DB,
+  HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_LN_W_TOLERANCE_DB
+} from "./heavy-concrete-combined-impact-formula-corridor";
 import { HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS } from "./impact-estimate";
 import { EXACT_IMPACT_SOURCE_BAND_CURVE_BASIS } from "./impact-exact";
+import {
+  ASTM_E989_IMPACT_RATING_BASIS,
+  ASTM_E989_IMPACT_RATING_SELECTED_CANDIDATE_ID
+} from "./impact-astm-e989";
+import {
+  FLOOR_IMPACT_FIELD_BUILDING_ADAPTER_ERROR_BUDGET_ORIGIN,
+  FLOOR_IMPACT_FIELD_BUILDING_ADAPTER_SELECTED_CANDIDATE_ID
+} from "./impact-field-adapter-error-budget";
+import {
+  COMPOSITE_PANEL_PUBLISHED_INTERACTION_ESTIMATE_BASIS,
+  COMPOSITE_PANEL_PUBLISHED_INTERACTION_LN_W_TOLERANCE_DB,
+  COMPOSITE_PANEL_PUBLISHED_INTERACTION_REQUIRED_FIELDS,
+  COMPOSITE_PANEL_PUBLISHED_INTERACTION_RW_TOLERANCE_DB,
+  COMPOSITE_PANEL_PUBLISHED_INTERACTION_SELECTED_CANDIDATE_ID
+} from "./composite-panel-published-interaction-runtime-constants";
+import {
+  LIGHTWEIGHT_CONCRETE_FAMILY_ESTIMATE_BASIS,
+  LIGHTWEIGHT_CONCRETE_FAMILY_LN_W_TOLERANCE_DB,
+  LIGHTWEIGHT_CONCRETE_FAMILY_REQUIRED_FIELDS,
+  LIGHTWEIGHT_CONCRETE_FAMILY_RW_TOLERANCE_DB,
+  LIGHTWEIGHT_CONCRETE_FAMILY_SELECTED_CANDIDATE_ID
+} from "./lightweight-concrete-family-runtime-constants";
 import {
   FLAT_LIST_MULTILEAF_GUARD_FIELD_RUNTIME_METHOD,
   FLAT_LIST_MULTILEAF_GUARD_FIELD_SELECTED_CANDIDATE_ID,
@@ -31,6 +58,23 @@ import { OPEN_WEB_SUPPORTED_BAND_SIMILARITY_BASIS } from "./lightweight-steel-op
 import { OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS } from "./open-box-timber-raw-bare-estimate";
 import { OPEN_BOX_TIMBER_SIMILARITY_BASIS } from "./open-box-timber-similarity-estimate";
 import { OPEN_WEB_RAW_BARE_FORMULA_BASIS } from "./open-web-raw-bare-estimate";
+import {
+  STEEL_FLOOR_FORMULA_BASIS,
+  STEEL_FLOOR_FORMULA_DELTA_LW_TOLERANCE_DB,
+  STEEL_FLOOR_FORMULA_LN_W_TOLERANCE_DB,
+  STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_BASIS,
+  STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_LN_W_TOLERANCE_DB
+} from "./steel-floor-impact-formula-corridor";
+import {
+  MASS_TIMBER_CLT_DELTA_LW_FORMULA_BASIS,
+  TIMBER_CLT_DELTA_LW_FORMULA_REQUIRED_FIELDS,
+  TIMBER_CLT_DELTA_LW_FORMULA_TOLERANCE_DB,
+  TIMBER_JOIST_DELTA_LW_FORMULA_BASIS
+} from "./timber-clt-floor-impact-delta-lw-runtime-corridor";
+import {
+  POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_RUNTIME_METHOD,
+  POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_SELECTED_CANDIDATE_ID
+} from "./post-v1-wall-compatible-anchor-delta";
 
 const BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_RUNTIME_METHOD =
   "broad_accuracy_wall_triple_leaf_local_substitution_source_absent_rw_runtime_corridor";
@@ -44,6 +88,10 @@ const BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_M
   "broad_accuracy_wall_triple_leaf_local_substitution_field_context_harmonization_runtime";
 const BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID =
   "candidate_broad_accuracy_wall_triple_leaf_local_substitution_field_context_family_physics_prediction";
+const POST_V1_WALL_MULTILEAF_GENERALIZED_RUNTIME_METHOD =
+  "triple_leaf_two_cavity_frequency_solver";
+const POST_V1_WALL_MULTILEAF_GENERALIZED_SELECTED_CANDIDATE_ID =
+  "candidate_post_v1_wall_multileaf_generalized_source_absent_family_solver";
 
 export const LAYER_COMBINATION_RESOLVER_REGISTRY_LANDED_GATE =
   "layer_combination_resolver_registry_plan";
@@ -198,6 +246,17 @@ const FIELD_SURFACES = [
   "markdown_report"
 ] as const;
 
+const ASTM_RATING_SURFACES = [
+  "route_card",
+  "output_cards",
+  "dynamic_trace",
+  "confidence_provenance",
+  "metric_basis_rows",
+  "calculator_api",
+  "impact_only_api",
+  "markdown_report"
+] as const;
+
 const REQUIRED_ALIAS_REJECTIONS = [
   "lab_to_field_alias",
   "field_to_building_alias",
@@ -278,6 +337,58 @@ const CANDIDATE_DECLARATIONS = [
     runtimeSelectionState: "active_runtime_existing",
     similarityAnchorRules: ["not_applicable_exact_rank_zero"],
     supportedMetrics: ["Rw", "R'w", "Ln,w", "DeltaLw", "L'n,w", "L'nT,w", "CI", "CI,50-2500"],
+    surfaceRequirements: ELEMENT_LAB_SURFACES,
+    valuePins: []
+  },
+  {
+    basis: "element_lab",
+    errorBudgetTerms: [
+      { metric: "Rw", notMeasuredEvidence: true, toleranceDb: 5 }
+    ],
+    exactPrecedenceRules: [
+      "exact_full_stack_rank_zero_wins_before_anchored_delta",
+      "anchor_delta_preserves_measured_anchor_metric_scope",
+      "unowned_stc_c_ctr_do_not_alias_from_anchor_rw"
+    ],
+    formulaTerms: [
+      "exact_verified_subassembly_anchor",
+      "same_side_added_board_surface_mass_delta",
+      "mass_law_delta_limited_by_double_leaf_coupling",
+      "rw_only_metric_scope"
+    ],
+    hardCompatibilityGates: [
+      "wall_route",
+      "element_lab_basis",
+      "verified_lab_rw_subassembly_match_after_single_outer_board_removal",
+      "added_layer_is_outer_panel_leaf_board",
+      "same_framing_context_and_metric_basis"
+    ],
+    hostileInputCases: [
+      "middle_inserted_layers_rejected",
+      "non_board_added_layers_rejected",
+      "stc_c_ctr_requests_remain_unsupported_without_metric_owner"
+    ],
+    id: POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_SELECTED_CANDIDATE_ID,
+    kind: "similarity_anchor",
+    label: "Wall compatible exact-source plus added-board delta",
+    ownedRuntimeBasisId: POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_RUNTIME_METHOD,
+    priorityRank: 1,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      "route",
+      "elementLabBasis",
+      "anchorSourceId",
+      "outerAddedBoardLayer",
+      "anchorMetricOwner"
+    ],
+    route: "wall",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "remove_one_outer_added_board_then_exact_match_verified_wall_row",
+      "calculate_delta_from_added_board_mass_not_from_catalog_borrowing",
+      "publish_only_anchor_owned_rw"
+    ],
+    supportedMetrics: ["Rw"],
     surfaceRequirements: ELEMENT_LAB_SURFACES,
     valuePins: []
   },
@@ -651,6 +762,78 @@ const CANDIDATE_DECLARATIONS = [
     ],
     supportedMetrics: ["R'w", "DnT,w"],
     surfaceRequirements: FIELD_SURFACES,
+    valuePins: []
+  },
+  {
+    basis: "element_lab",
+    errorBudgetTerms: [
+      { metric: "Rw", notMeasuredEvidence: true, toleranceDb: 5 },
+      { metric: "STC", notMeasuredEvidence: true, toleranceDb: 5 },
+      { metric: "C", notMeasuredEvidence: true, toleranceDb: 2.5 },
+      { metric: "Ctr", notMeasuredEvidence: true, toleranceDb: 4.5 }
+    ],
+    exactPrecedenceRules: [
+      "verified_exact_grouped_multileaf_rows_win_before_source_absent_formula",
+      "calibrated_family_solver_wins_when_same_family_holdouts_exist",
+      "source_absent_solver_never_overrides same_metric_exact_rows"
+    ],
+    formulaTerms: [
+      "explicit_grouped_triple_leaf_two_cavity_topology",
+      "leaf_surface_mass_distribution",
+      "two_cavity_mass_air_mass_resonance",
+      "porous_absorber_damping_from_fill_coverage",
+      "internal_leaf_coupling_and_bridge_loss",
+      "one_third_octave_transmission_loss_curve",
+      "iso_717_1_rw_c_ctr_rating_adapter",
+      "astm_e413_stc_curve_rating_boundary"
+    ],
+    hardCompatibilityGates: [
+      "wall_route",
+      "wallTopology.topologyMode=grouped_triple_leaf",
+      "complete_side_and_internal_leaf_groups",
+      "complete_two_cavity_groups_and_depths",
+      "known_internal_leaf_coupling",
+      "known_support_topology",
+      "element_lab_metric_basis",
+      "not_field_not_building_not_floor_impact_not_astm_iic"
+    ],
+    hostileInputCases: [
+      "flat_or_grouping_ambiguous_multileaf_needs_input",
+      "quad_or_three_cavity_requires_future_owner",
+      "direct_fixed_double_leaf_remains_separate_owner",
+      "field_and_building_outputs_require_context_adapters",
+      "iic_aiic_requests_remain_unsupported"
+    ],
+    id: POST_V1_WALL_MULTILEAF_GENERALIZED_SELECTED_CANDIDATE_ID,
+    kind: "source_absent_family_solver",
+    label: "Post-V1 wall multileaf generalized source-absent solver",
+    ownedRuntimeBasisId: POST_V1_WALL_MULTILEAF_GENERALIZED_RUNTIME_METHOD,
+    priorityRank: 3,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      "route=wall",
+      "wallTopology.topologyMode=grouped_triple_leaf",
+      "wallTopology.sideALeafLayerIndices",
+      "wallTopology.cavity1LayerIndices",
+      "wallTopology.cavity1DepthMm",
+      "wallTopology.internalLeafLayerIndices",
+      "wallTopology.internalLeafCoupling",
+      "wallTopology.cavity2LayerIndices",
+      "wallTopology.cavity2DepthMm",
+      "wallTopology.sideBLeafLayerIndices",
+      "wallTopology.supportTopology",
+      "oneThirdOctaveTransmissionLossCurve",
+      "ISO717-1 Rw/C/Ctr adapter",
+      "ASTM E413 STC boundary"
+    ],
+    route: "wall",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "nearby measured grouped multileaf rows can calibrate only after topology metric and basis match",
+      "source rows are exact overrides anchors holdouts or bounds, not the product"
+    ],
+    supportedMetrics: ["Rw", "STC", "C", "Ctr"],
+    surfaceRequirements: ELEMENT_LAB_SURFACES,
     valuePins: []
   },
   {
@@ -1202,6 +1385,398 @@ const CANDIDATE_DECLARATIONS = [
   {
     basis: "element_lab",
     errorBudgetTerms: [
+      {
+        metric: "Rw",
+        notMeasuredEvidence: true,
+        toleranceDb: COMPOSITE_PANEL_PUBLISHED_INTERACTION_RW_TOLERANCE_DB
+      },
+      {
+        metric: "Ln,w",
+        notMeasuredEvidence: true,
+        toleranceDb: COMPOSITE_PANEL_PUBLISHED_INTERACTION_LN_W_TOLERANCE_DB
+      }
+    ],
+    exactPrecedenceRules: [
+      "exact_composite_panel_floor_rows_win_before_published_interaction_formula",
+      "same_pmc_family_rows_are_anchors_not_exact_overrides_for_changed_layer_thicknesses"
+    ],
+    formulaTerms: [
+      "composite_panel_carrier_thickness_bucket",
+      "dry_floating_upper_surface_mass",
+      "resilient_layer_thickness_scaling",
+      "suspended_ceiling_board_count_and_cavity_depth_when_present",
+      "published_pmc_m1_family_interaction_blend"
+    ],
+    hardCompatibilityGates: [
+      "floor_route",
+      "composite_panel_support",
+      "dry_floating_or_suspended_ceiling_family",
+      "complete_upper_or_lower_treatment_for_requested_profile",
+      "element_lab_metric_basis"
+    ],
+    hostileInputCases: [
+      "composite_panel_not_reinforced_concrete",
+      "delta_lw_requested_without_owned_delta_lw_basis_remains_unsupported",
+      "astm_iic_aiic_stays_unsupported",
+      "field_outputs_need_field_adapter"
+    ],
+    id: COMPOSITE_PANEL_PUBLISHED_INTERACTION_SELECTED_CANDIDATE_ID,
+    kind: "source_absent_family_solver",
+    label: "Composite-panel published interaction lab solver",
+    ownedRuntimeBasisId: COMPOSITE_PANEL_PUBLISHED_INTERACTION_ESTIMATE_BASIS,
+    priorityRank: 3,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [...COMPOSITE_PANEL_PUBLISHED_INTERACTION_REQUIRED_FIELDS],
+    route: "floor",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "same_pmc_composite_panel_rows_can_anchor_family_interaction_estimates",
+      "dry_floating_and_suspended_ceiling_interactions_stay_in_the_composite_panel_family",
+      "field_or_astm_requests_need_separate_field_or_astm_owner"
+    ],
+    supportedMetrics: ["Rw", "Ln,w"],
+    surfaceRequirements: ELEMENT_LAB_SURFACES,
+    valuePins: []
+  },
+  {
+    basis: "element_lab",
+    errorBudgetTerms: [
+      {
+        metric: "Rw",
+        notMeasuredEvidence: true,
+        toleranceDb: LIGHTWEIGHT_CONCRETE_FAMILY_RW_TOLERANCE_DB
+      },
+      {
+        metric: "Ln,w",
+        notMeasuredEvidence: true,
+        toleranceDb: LIGHTWEIGHT_CONCRETE_FAMILY_LN_W_TOLERANCE_DB
+      }
+    ],
+    exactPrecedenceRules: [
+      "exact_lightweight_concrete_floor_rows_win_before_family_estimate",
+      "heavy_concrete_rows_can_anchor_only_after_lightweight_density_guard",
+      "same_layer_stack_with_low_density_base_must_not_promote_to_heavy_concrete_formula"
+    ],
+    formulaTerms: [
+      "lightweight_concrete_base_density_bucket",
+      "base_slab_thickness_and_surface_mass",
+      "upper_floating_or_topping_profile",
+      "resilient_layer_or_walking_surface_state",
+      "nearby_published_concrete_family_anchor_blend"
+    ],
+    hardCompatibilityGates: [
+      "floor_route",
+      "lightweight_concrete_support",
+      "low_density_or_lightweight_material_class",
+      "complete_upper_or_floating_treatment_for_requested_profile",
+      "element_lab_metric_basis"
+    ],
+    hostileInputCases: [
+      "lightweight_concrete_not_heavy_concrete_formula",
+      "delta_lw_requested_without_owned_lightweight_delta_lw_basis_remains_unsupported",
+      "astm_iic_aiic_stays_unsupported",
+      "field_outputs_need_field_adapter"
+    ],
+    id: LIGHTWEIGHT_CONCRETE_FAMILY_SELECTED_CANDIDATE_ID,
+    kind: "source_absent_family_solver",
+    label: "Lightweight-concrete family lab solver",
+    ownedRuntimeBasisId: LIGHTWEIGHT_CONCRETE_FAMILY_ESTIMATE_BASIS,
+    priorityRank: 3,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [...LIGHTWEIGHT_CONCRETE_FAMILY_REQUIRED_FIELDS],
+    route: "floor",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "nearby_reinforced_concrete_rows_can_bound_lightweight_family_estimates_after_density_guard",
+      "heavy_concrete_annex_c_coefficients_are_not_borrowed_for_lightweight_support",
+      "field_or_astm_requests_need_separate_field_or_astm_owner"
+    ],
+    supportedMetrics: ["Rw", "Ln,w"],
+    surfaceRequirements: ELEMENT_LAB_SURFACES,
+    valuePins: []
+  },
+  {
+    basis: "element_lab",
+    errorBudgetTerms: [
+      { metric: "Ln,w", notMeasuredEvidence: true, toleranceDb: STEEL_FLOOR_FORMULA_LN_W_TOLERANCE_DB },
+      { metric: "DeltaLw", notMeasuredEvidence: true, toleranceDb: STEEL_FLOOR_FORMULA_DELTA_LW_TOLERANCE_DB }
+    ],
+    exactPrecedenceRules: [
+      "exact_lightweight_steel_floor_rows_win_before_source_absent_mass_spring_formula",
+      "suspended_ceiling_lower_reference_must_not_be_reused_without_complete_upper_package_for_delta_lw"
+    ],
+    formulaTerms: [
+      "steel_support_form",
+      "carrier_depth_and_spacing",
+      "lower_suspended_ceiling_reference_lnw",
+      "upper_package_load_mass",
+      "resilient_layer_dynamic_stiffness",
+      "mass_spring_delta_lw",
+      "steel_carrier_transfer_efficiency"
+    ],
+    hardCompatibilityGates: [
+      "floor_route",
+      "lightweight_steel_support",
+      "complete_upper_package",
+      "complete_lower_suspended_ceiling",
+      "element_lab_metric_basis"
+    ],
+    hostileInputCases: [
+      "missing_upper_package_needs_input_for_delta_lw",
+      "missing_dynamic_stiffness_needs_input",
+      "astm_iic_stays_unsupported",
+      "field_outputs_need_field_adapter"
+    ],
+    id: "floor.lightweight_steel.upper_lower_mass_spring.source_absent",
+    kind: "source_absent_family_solver",
+    label: "Lightweight-steel upper/lower mass-spring solver",
+    ownedRuntimeBasisId: STEEL_FLOOR_FORMULA_BASIS,
+    priorityRank: 3,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      "steelSupportForm",
+      "steelCarrierDepthMm",
+      "steelCarrierSpacingMm",
+      "lowerCeilingIsolationSupportForm",
+      "toppingOrFloatingLayer",
+      "resilientLayerDynamicStiffnessMNm3",
+      "loadBasisKgM2"
+    ],
+    route: "floor",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "same_stack_steel_holdouts_may_tighten_error_budget_later",
+      "open_web_supported_band_rows_do_not_anchor_combined_upper_lower_delta_lw"
+    ],
+    supportedMetrics: ["Ln,w", "DeltaLw"],
+    surfaceRequirements: ELEMENT_LAB_SURFACES,
+    valuePins: []
+  },
+  {
+    basis: "element_lab",
+    errorBudgetTerms: [
+      {
+        metric: "Ln,w",
+        notMeasuredEvidence: true,
+        toleranceDb: STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_LN_W_TOLERANCE_DB
+      }
+    ],
+    exactPrecedenceRules: [
+      "exact_lightweight_steel_suspended_ceiling_rows_win_before_source_absent_lower_treatment_formula"
+    ],
+    formulaTerms: [
+      "steel_support_form",
+      "carrier_depth_and_spacing",
+      "lower_ceiling_board_mass",
+      "ceiling_cavity_depth",
+      "cavity_fill_thickness",
+      "suspension_support_class",
+      "bare_steel_reference_lnw"
+    ],
+    hardCompatibilityGates: [
+      "floor_route",
+      "lightweight_steel_support",
+      "suspended_ceiling_only",
+      "complete_lower_treatment",
+      "no_upper_delta_lw_package",
+      "element_lab_metric_basis"
+    ],
+    hostileInputCases: [
+      "delta_lw_requested_without_upper_package_remains_unsupported",
+      "missing_carrier_spacing_needs_input",
+      "astm_iic_stays_unsupported",
+      "field_outputs_need_field_adapter"
+    ],
+    id: "floor.lightweight_steel.suspended_ceiling_only.source_absent",
+    kind: "source_absent_family_solver",
+    label: "Lightweight-steel suspended-ceiling-only solver",
+    ownedRuntimeBasisId: STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_BASIS,
+    priorityRank: 3,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      "steelSupportForm",
+      "steelCarrierDepthMm",
+      "steelCarrierSpacingMm",
+      "lowerCeilingIsolationSupportForm"
+    ],
+    route: "floor",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "same_family_suspended_ceiling_holdouts_may_calibrate_later",
+      "delta_lw_requires_complete_upper_package_or_separate_owner"
+    ],
+    supportedMetrics: ["Ln,w"],
+    surfaceRequirements: ELEMENT_LAB_SURFACES,
+    valuePins: []
+  },
+  {
+    basis: "element_lab",
+    errorBudgetTerms: [
+      { metric: "DeltaLw", notMeasuredEvidence: true, toleranceDb: TIMBER_CLT_DELTA_LW_FORMULA_TOLERANCE_DB }
+    ],
+    exactPrecedenceRules: [
+      "exact_timber_floor_rows_win_for_owned_exact_metrics_before_formula_delta_lw",
+      "exact_lnw_rows_do_not_own_delta_lw_without separate metric basis"
+    ],
+    formulaTerms: [
+      "timber_joist_reference_floor_family",
+      "upper_package_load_mass",
+      "resilient_layer_dynamic_stiffness",
+      "lower_ceiling_coupling_class",
+      "timber_family_delta_lw_correction"
+    ],
+    hardCompatibilityGates: [
+      "floor_route",
+      "timber_joist_support",
+      "complete_upper_package",
+      "complete_lower_ceiling_assembly",
+      "resilient_layer_dynamic_stiffness_present",
+      "element_lab_metric_basis"
+    ],
+    hostileInputCases: [
+      "exact_lnw_companion_does_not_become_delta_lw_owner",
+      "missing_dynamic_stiffness_needs_input",
+      "missing_lower_assembly_needs_input",
+      "field_outputs_need_field_adapter",
+      "astm_iic_aiic_stays_unsupported"
+    ],
+    id: "floor.timber_joist.delta_lw_formula",
+    kind: "source_absent_family_solver",
+    label: "Timber-joist DeltaLw lab impact formula",
+    ownedRuntimeBasisId: TIMBER_JOIST_DELTA_LW_FORMULA_BASIS,
+    priorityRank: 3,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [...TIMBER_CLT_DELTA_LW_FORMULA_REQUIRED_FIELDS],
+    route: "floor",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "exact_timber_joist_lnw_rows_can_remain_lab_lnw_companions",
+      "same_stack_iso_delta_lw_holdouts_may_tighten_budget_later",
+      "field_or_astm_requests_need_separate_field_or_astm_owner"
+    ],
+    supportedMetrics: ["DeltaLw"],
+    surfaceRequirements: ELEMENT_LAB_SURFACES,
+    valuePins: []
+  },
+  {
+    basis: "element_lab",
+    errorBudgetTerms: [
+      { metric: "DeltaLw", notMeasuredEvidence: true, toleranceDb: TIMBER_CLT_DELTA_LW_FORMULA_TOLERANCE_DB }
+    ],
+    exactPrecedenceRules: [
+      "exact_clt_floor_rows_win_for_owned_exact_metrics_before_formula_delta_lw",
+      "published_family_lnw_rows_do_not_own_delta_lw_without separate metric basis"
+    ],
+    formulaTerms: [
+      "mass_timber_clt_reference_floor_family",
+      "upper_package_load_mass",
+      "resilient_layer_dynamic_stiffness",
+      "lower_assembly_presence",
+      "clt_family_delta_lw_correction"
+    ],
+    hardCompatibilityGates: [
+      "floor_route",
+      "mass_timber_clt_support",
+      "complete_upper_package",
+      "explicit_none_or_complete_lower_assembly",
+      "resilient_layer_dynamic_stiffness_present",
+      "element_lab_metric_basis"
+    ],
+    hostileInputCases: [
+      "published_lnw_companion_does_not_become_delta_lw_owner",
+      "missing_dynamic_stiffness_needs_input",
+      "missing_load_basis_needs_input",
+      "field_outputs_need_field_adapter",
+      "astm_iic_aiic_stays_unsupported"
+    ],
+    id: "floor.mass_timber_clt.delta_lw_formula",
+    kind: "source_absent_family_solver",
+    label: "Mass-timber CLT DeltaLw lab impact formula",
+    ownedRuntimeBasisId: MASS_TIMBER_CLT_DELTA_LW_FORMULA_BASIS,
+    priorityRank: 3,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [...TIMBER_CLT_DELTA_LW_FORMULA_REQUIRED_FIELDS],
+    route: "floor",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "published_family_clt_lnw_rows_can_remain_lab_lnw_companions",
+      "same_stack_mass_timber_iso_delta_lw_holdouts_may_tighten_budget_later",
+      "field_or_astm_requests_need_separate_field_or_astm_owner"
+    ],
+    supportedMetrics: ["DeltaLw"],
+    surfaceRequirements: ELEMENT_LAB_SURFACES,
+    valuePins: []
+  },
+  {
+    basis: "element_lab",
+    errorBudgetTerms: [
+      {
+        metric: "Ln,w",
+        notMeasuredEvidence: true,
+        toleranceDb: HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_LN_W_TOLERANCE_DB
+      },
+      {
+        metric: "DeltaLw",
+        notMeasuredEvidence: true,
+        toleranceDb: HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_DELTA_LW_TOLERANCE_DB
+      }
+    ],
+    exactPrecedenceRules: [
+      "exact_floor_system_and_exact_impact_band_sources_win_before_reinforced_concrete_combined_formula"
+    ],
+    formulaTerms: [
+      "base_slab_surface_mass",
+      "upper_floating_or_topping_load_mass",
+      "resilient_layer_dynamic_stiffness",
+      "lower_ceiling_board_mass",
+      "lower_cavity_depth_and_fill_ratio",
+      "upper_lower_coupling_penalty",
+      "ISO_12354_2_Annex_C_lab_impact_adapter"
+    ],
+    hardCompatibilityGates: [
+      "floor_route",
+      "reinforced_concrete_or_heavy_concrete_base",
+      "combined_upper_lower_system",
+      "complete_upper_package_load_basis",
+      "complete_lower_ceiling_assembly",
+      "resilient_layer_dynamic_stiffness_present",
+      "element_lab_metric_basis"
+    ],
+    hostileInputCases: [
+      "missing_load_basis_needs_input",
+      "missing_lower_ceiling_assembly_needs_input",
+      "duplicate_or_ambiguous_base_structure_blocked",
+      "field_impact_context_required_for_field_outputs",
+      "astm_iic_aiic_stays_unsupported"
+    ],
+    id: "floor.heavy_concrete_combined_upper_lower.lab_impact_formula",
+    kind: "source_absent_family_solver",
+    label: "Reinforced-concrete combined upper/lower lab impact formula",
+    ownedRuntimeBasisId: HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS,
+    priorityRank: 3,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      "baseSlabOrFloor",
+      "floatingOrToppingLayer",
+      "resilientLayerDynamicStiffnessMNm3",
+      "loadBasisKgM2",
+      "ceilingOrLowerAssembly",
+      "ISO_12354_2_Annex_C_lab_impact_adapter"
+    ],
+    route: "floor",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "exact_floor_rows_and_exact_impact_bands_stay_rank_zero",
+      "same_stack_combined_upper_lower_holdouts_may_tighten_budget_later",
+      "field_or_astm_requests_need_separate_field_or_astm_owner"
+    ],
+    supportedMetrics: ["Ln,w", "DeltaLw"],
+    surfaceRequirements: ELEMENT_LAB_SURFACES,
+    valuePins: []
+  },
+  {
+    basis: "element_lab",
+    errorBudgetTerms: [
       { metric: "Ln,w", notMeasuredEvidence: true, toleranceDb: 7 },
       { metric: "DeltaLw", notMeasuredEvidence: true, toleranceDb: 6 }
     ],
@@ -1261,23 +1836,35 @@ const CANDIDATE_DECLARATIONS = [
       "lab_anchor_basis_guard"
     ],
     hardCompatibilityGates: [
-      "field_context_present",
-      "owned_lab_anchor",
+      "impact_field_context_present",
+      "owned_lab_impact_anchor",
       "same_support_family",
       "no_raw_bare_field_transfer",
       "no_building_prediction_transfer"
     ],
-    hostileInputCases: ["partial_field_context_needs_input", "raw_bare_lab_impact_field_transfer_blocked"],
-    id: "floor.open_web.field_building_adapter.exact_anchor_continuation",
+    hostileInputCases: [
+      "partial_field_context_needs_input",
+      "raw_bare_lab_impact_field_transfer_blocked",
+      "building_prediction_context_stays_separate"
+    ],
+    id: FLOOR_IMPACT_FIELD_BUILDING_ADAPTER_SELECTED_CANDIDATE_ID,
     kind: "field_building_adapter",
-    label: "Open-web field/building adapter with exact anchors",
-    ownedRuntimeBasisId: "source_absent_field_building_adapter_error_budget",
+    label: "Floor impact field-context adapter",
+    ownedRuntimeBasisId: FLOOR_IMPACT_FIELD_BUILDING_ADAPTER_ERROR_BUDGET_ORIGIN,
     priorityRank: 4,
     rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
-    requiredInputs: ["impactFieldContext", "receivingRoomVolumeM3", "fieldKDb", "ownedLabAnchor"],
+    requiredInputs: [
+      "impactFieldContext.fieldKDb_or_guideMassRatio_or_directFlankingPaths",
+      "impactFieldContext.receivingRoomVolumeM3_for_LprimeNTw",
+      "ownedLabImpactAnchorLnW",
+      "fieldImpactBasisNotBuildingPrediction"
+    ],
     route: "floor",
     runtimeSelectionState: "active_runtime_existing",
-    similarityAnchorRules: ["field_values_stay_tied_to_exact_or_direct_fixed_supported_band_lab_anchor"],
+    similarityAnchorRules: [
+      "field_values_stay_tied_to_exact_formula_or_family_lab_impact_anchor",
+      "nearby_lab_rows_do_not_become_field_measurements_without_context_adapter"
+    ],
     supportedMetrics: ["R'w", "DnT,w", "L'n,w", "L'nT,w", "L'nT,50"],
     surfaceRequirements: FIELD_SURFACES,
     valuePins: [
@@ -1382,6 +1969,46 @@ const CANDIDATE_DECLARATIONS = [
     similarityAnchorRules: ["field_or_building_similarity_requires_same_basis_and_owned_context"],
     supportedMetrics: [],
     surfaceRequirements: ["route_card", "method_dossier", "calculator_api", "markdown_report"],
+    valuePins: []
+  },
+  {
+    basis: "astm_rating_boundary",
+    errorBudgetTerms: [],
+    exactPrecedenceRules: [
+      "exact_astm_e492_lab_band_source_wins_for_iic_only",
+      "exact_astm_e1007_field_band_source_wins_for_aiic_only",
+      "iso_717_2_impact_rows_do_not_create_astm_iic_or_aiic_aliases"
+    ],
+    formulaTerms: [
+      "astm_e989_one_third_octave_100_3150_reference_contour_fit",
+      "sum_deficiency_limit_32_db",
+      "single_band_deficiency_limit_8_db",
+      "iic_aiic_rating_equals_110_minus_contour_level_at_500_hz"
+    ],
+    hardCompatibilityGates: [
+      "floor_route",
+      "explicit_astm_e492_or_e1007_band_source",
+      "complete_one_third_octave_100_3150_hz_band_set",
+      "lab_sources_own_iic_field_sources_own_aiic"
+    ],
+    hostileInputCases: [
+      "iso_717_2_exact_impact_source_remains_non_astm",
+      "partial_astm_band_curve_remains_unsupported",
+      "duplicate_astm_band_centers_remain_unsupported",
+      "lab_iic_and_field_aiic_metric_scope_stays_separate"
+    ],
+    id: ASTM_E989_IMPACT_RATING_SELECTED_CANDIDATE_ID,
+    kind: "exact_measured_override",
+    label: "ASTM E989 exact impact-band contour rating",
+    ownedRuntimeBasisId: ASTM_E989_IMPACT_RATING_BASIS,
+    priorityRank: 0,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: ["route", "astmImpactBandCurve", "astmReferenceContour", "testStandardBasis"],
+    route: "floor",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: ["iso_ln_w_ci_rows_are_not_astm_similarity_anchors"],
+    supportedMetrics: ["IIC", "AIIC"],
+    surfaceRequirements: ASTM_RATING_SURFACES,
     valuePins: []
   },
   {

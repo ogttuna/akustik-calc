@@ -217,16 +217,35 @@ function buildImpactLane(
 
   if (impact) {
     const primary =
-      impact.labOrField === "field" &&
-      typeof impact.LPrimeNTw === "number" &&
-      isSupportedAnswerOutput(result, "L'nT,w")
-        ? { detail: "Primary standardized field-side impact answer.", label: "L'nT,w", value: impact.LPrimeNTw }
+      typeof impact.IIC === "number" && isSupportedAnswerOutput(result, "IIC")
+        ? {
+            detail: "Primary ASTM E989 lab impact rating from exact ASTM E492 bands.",
+            direction: "higher_better" as const,
+            label: "IIC",
+            value: impact.IIC
+          }
+        : typeof impact.AIIC === "number" && isSupportedAnswerOutput(result, "AIIC")
+          ? {
+              detail: "Primary ASTM E989 field impact rating from exact ASTM E1007 bands.",
+              direction: "higher_better" as const,
+              label: "AIIC",
+              value: impact.AIIC
+            }
+          : impact.labOrField === "field" &&
+              typeof impact.LPrimeNTw === "number" &&
+              isSupportedAnswerOutput(result, "L'nT,w")
+            ? {
+                detail: "Primary standardized field-side impact answer.",
+                direction: "lower_better" as const,
+                label: "L'nT,w",
+                value: impact.LPrimeNTw
+              }
         : typeof impact.LnW === "number" && isSupportedAnswerOutput(result, "Ln,w")
-          ? { detail: "Primary lab-side weighted impact answer.", label: "Ln,w", value: impact.LnW }
+          ? { detail: "Primary lab-side weighted impact answer.", direction: "lower_better" as const, label: "Ln,w", value: impact.LnW }
           : typeof impact.LPrimeNW === "number" && isSupportedAnswerOutput(result, "L'n,w")
-            ? { detail: "Primary direct field carry-over impact answer.", label: "L'n,w", value: impact.LPrimeNW }
+            ? { detail: "Primary direct field carry-over impact answer.", direction: "lower_better" as const, label: "L'n,w", value: impact.LPrimeNW }
             : typeof impact.LnTA === "number" && isSupportedAnswerOutput(result, "LnT,A")
-              ? { detail: "Primary Dutch exact impact answer from field octave bands.", label: "LnT,A", value: impact.LnTA }
+              ? { detail: "Primary Dutch exact impact answer from field octave bands.", direction: "lower_better" as const, label: "LnT,A", value: impact.LnTA }
               : null;
 
     if (!primary) {
@@ -256,13 +275,18 @@ function buildImpactLane(
     return {
       companions,
       detail: primary.detail,
-      direction: "lower_better",
+      direction: primary.direction,
       id: "impact",
       label: primary.label,
-      max: 90,
+      max: primary.direction === "higher_better" ? 80 : 90,
       min: 20,
-      target: parsedTarget,
-      targetLabel: parsedTarget !== null ? `Brief maximum ${formatDecimal(parsedTarget)} dB` : null,
+      target: primary.direction === "higher_better" ? null : parsedTarget,
+      targetLabel:
+        primary.direction === "higher_better"
+          ? null
+          : parsedTarget !== null
+            ? `Brief maximum ${formatDecimal(parsedTarget)} dB`
+            : null,
       value: primary.value,
       valueLabel: `${formatDecimal(primary.value)} dB`
     };

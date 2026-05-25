@@ -35,6 +35,11 @@ import {
 } from "./dynamic-airborne-gate-h-lined-masonry-clt";
 import { GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD } from "./dynamic-airborne-gate-i-airborne-field-context";
 import { HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS } from "./helper-only-timber-open-web-impact-stack-estimate";
+import { HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS } from "./heavy-concrete-combined-impact-formula-corridor";
+import {
+  ASTM_E989_IMPACT_RATING_BASIS,
+  ASTM_E989_IMPACT_RATING_SELECTED_CANDIDATE_ID
+} from "./impact-astm-e989";
 import { HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS } from "./impact-estimate";
 import { EXACT_IMPACT_SOURCE_BAND_CURVE_BASIS } from "./impact-exact";
 import {
@@ -64,6 +69,10 @@ import { OPEN_WEB_SUPPORTED_BAND_SIMILARITY_BASIS } from "./lightweight-steel-op
 import { OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS } from "./open-box-timber-raw-bare-estimate";
 import { OPEN_BOX_TIMBER_SIMILARITY_BASIS } from "./open-box-timber-similarity-estimate";
 import { OPEN_WEB_RAW_BARE_FORMULA_BASIS } from "./open-web-raw-bare-estimate";
+import {
+  STEEL_FLOOR_FORMULA_BASIS,
+  STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_BASIS
+} from "./steel-floor-impact-formula-corridor";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
@@ -279,7 +288,7 @@ describe("layer combination resolver runtime candidate surface parity contract",
     expect(contract.summary).toEqual({
       boundarySurfaceRowCount: 3,
       selectedNextAction: LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_SURFACE_PARITY_SELECTED_NEXT_ACTION,
-      surfaceRowCount: 25
+      surfaceRowCount: 35
     });
 
     for (const path of REQUIRED_SURFACES) {
@@ -301,6 +310,13 @@ describe("layer combination resolver runtime candidate surface parity contract",
       runtimeBasisId: EXACT_IMPACT_SOURCE_BAND_CURVE_BASIS,
       supportBucket: "exact",
       supportedMetrics: ["Ln,w", "CI", "CI,50-2500", "Ln,w+CI", "DeltaLw", "L'nT,w", "L'nT,50", "LnT,A"]
+    });
+    expect(rowsById.get(ASTM_E989_IMPACT_RATING_SELECTED_CANDIDATE_ID)).toMatchObject({
+      basis: "astm_rating_boundary",
+      candidateKind: "exact_measured_override",
+      runtimeBasisId: ASTM_E989_IMPACT_RATING_BASIS,
+      supportBucket: "exact",
+      supportedMetrics: ["IIC", "AIIC"]
     });
     expect(rowsById.get("floor.open_box_timber.package_transfer_similarity")).toMatchObject({
       candidateKind: "similarity_anchor",
@@ -325,6 +341,24 @@ describe("layer combination resolver runtime candidate surface parity contract",
     expect(rowsById.get("floor.open_web.direct_fixed_lining.source_absent")).toMatchObject({
       candidateKind: "source_absent_family_solver",
       supportBucket: "source_absent_estimate"
+    });
+    expect(rowsById.get("floor.lightweight_steel.upper_lower_mass_spring.source_absent")).toMatchObject({
+      candidateKind: "source_absent_family_solver",
+      runtimeBasisId: STEEL_FLOOR_FORMULA_BASIS,
+      supportBucket: "source_absent_estimate",
+      supportedMetrics: ["Ln,w", "DeltaLw"]
+    });
+    expect(rowsById.get("floor.lightweight_steel.suspended_ceiling_only.source_absent")).toMatchObject({
+      candidateKind: "source_absent_family_solver",
+      runtimeBasisId: STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_BASIS,
+      supportBucket: "source_absent_estimate",
+      supportedMetrics: ["Ln,w"]
+    });
+    expect(rowsById.get("floor.heavy_concrete_combined_upper_lower.lab_impact_formula")).toMatchObject({
+      candidateKind: "source_absent_family_solver",
+      runtimeBasisId: HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS,
+      supportBucket: "source_absent_estimate",
+      supportedMetrics: ["Ln,w", "DeltaLw"]
     });
     expect(rowsById.get("floor.heavy_concrete_floating_floor.lab_impact_formula")).toMatchObject({
       candidateKind: "source_absent_family_solver",
@@ -408,7 +442,7 @@ describe("layer combination resolver runtime candidate surface parity contract",
       candidateKind: "similarity_anchor",
       supportBucket: "anchored_estimate"
     });
-    expect(rowsById.get("floor.open_web.field_building_adapter.exact_anchor_continuation")).toMatchObject({
+    expect(rowsById.get("floor.impact_field_context.field_building_adapter")).toMatchObject({
       candidateKind: "field_building_adapter",
       supportBucket: "field_adapter"
     });
@@ -529,7 +563,7 @@ describe("layer combination resolver runtime candidate surface parity contract",
     expect(field.layerCombinationResolverTrace).toMatchObject({
       boundaryCandidateIds: ["generic.astm_iic_aiic.unsupported_boundary"],
       requestedBasis: "field_apparent",
-      selectedCandidateId: "floor.open_web.field_building_adapter.exact_anchor_continuation",
+      selectedCandidateId: "floor.impact_field_context.field_building_adapter",
       supportBucket: "field_adapter"
     });
     expect(field.metrics).toMatchObject({

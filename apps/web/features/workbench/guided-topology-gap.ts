@@ -64,6 +64,13 @@ export function getGuidedTopologyGap(input: {
       };
     }
 
+    if (tripleLeafWarning && /^Grouped Rockwool triple-leaf family physics prediction/u.test(tripleLeafWarning)) {
+      return {
+        detail: tripleLeafWarning,
+        value: "Generalized multileaf formula"
+      };
+    }
+
     if (tripleLeafWarning) {
       return {
         detail: tripleLeafWarning,

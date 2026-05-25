@@ -72,6 +72,7 @@ import {
   getHelperOnlyTimberOpenWebImpactStackOutputDetail,
   isHelperOnlyTimberOpenWebImpactStackResult
 } from "./helper-only-timber-open-web-impact-stack-surface";
+import { getAstmE989ImpactRatingOutputDetail } from "./astm-e989-impact-rating-surface";
 import { getCompanyInternalOpeningLeakFieldBuildingOutputDetail } from "./opening-leak-field-building-surface";
 import {
   getRockwoolSplitTripleLeafWithheldOutputDetail,
@@ -1000,6 +1001,32 @@ export function buildOutputCard(input: {
           output,
           status: "bound",
           value: `>= ${formatDecimal(result.lowerBoundImpact.DeltaLwLowerBound)} dB`
+        };
+      }
+      break;
+    case "IIC":
+      if (typeof result?.impact?.IIC === "number") {
+        return {
+          detail:
+            getAstmE989ImpactRatingOutputDetail("IIC", result) ??
+            "ASTM E989 lab impact rating from the active exact impact-band lane.",
+          label: "IIC",
+          output,
+          status: "live",
+          value: `${formatDecimal(result.impact.IIC)} dB`
+        };
+      }
+      break;
+    case "AIIC":
+      if (typeof result?.impact?.AIIC === "number") {
+        return {
+          detail:
+            getAstmE989ImpactRatingOutputDetail("AIIC", result) ??
+            "ASTM E989 field impact rating from the active exact impact-band lane.",
+          label: "AIIC",
+          output,
+          status: "live",
+          value: `${formatDecimal(result.impact.AIIC)} dB`
         };
       }
       break;

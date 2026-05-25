@@ -4786,8 +4786,11 @@ describe("calculateAssembly", () => {
 
     expect(result.floorSystemMatch).toBeNull();
     expect(result.floorSystemEstimate?.kind).toBe("family_archetype");
-    expect(result.floorSystemEstimate?.fitPercent).toBe(90);
-    expect(result.impact?.basis).toBe("predictor_floor_system_family_archetype_estimate");
+    expect(result.floorSystemEstimate?.fitPercent).toBe(88);
+    expect(result.impact?.basis).toBe("broad_accuracy_floor_open_box_timber_similarity_package_transfer_formula_corridor");
+    expect(result.impact?.LnW).toBe(50.8);
+    expect(result.floorSystemRatings?.basis).toBe("broad_accuracy_floor_open_box_timber_similarity_package_transfer_formula_corridor");
+    expect(result.floorSystemRatings?.Rw).toBe(66);
   });
 
   it("matches the measured TUAS concrete dry-floor family", () => {
@@ -5801,13 +5804,20 @@ describe("calculateAssembly", () => {
 
     expect(result.floorSystemMatch).toBeNull();
     expect(result.floorSystemEstimate?.kind).toBe("family_archetype");
-    expect(result.floorSystemEstimate?.impact.basis).toBe("predictor_floor_system_family_archetype_estimate");
-    expect(result.floorSystemEstimate?.impact.LnW).toBe(44);
-    expect(result.floorSystemEstimate?.impact.CI).toBe(0);
-    expect(result.floorSystemEstimate?.impact.LnWPlusCI).toBe(44);
-    expect(result.floorSystemEstimate?.airborneRatings.Rw).toBe(75);
-    expect(result.floorSystemEstimate?.airborneRatings.RwCtr).toBe(71.87531170772152);
-    expect(result.floorSystemEstimate?.impact.estimateCandidateIds).toEqual(["tuas_r5b_open_box_timber_measured_2026"]);
+    expect(result.floorSystemEstimate?.impact.basis).toBe(
+      "broad_accuracy_floor_open_box_timber_similarity_package_transfer_formula_corridor"
+    );
+    expect(result.floorSystemEstimate?.impact.LnW).toBe(50.8);
+    expect(result.floorSystemEstimate?.impact.CI).toBe(1.3);
+    expect(result.floorSystemEstimate?.impact.LnWPlusCI).toBe(52);
+    expect(result.floorSystemEstimate?.airborneRatings.Rw).toBe(66);
+    expect(result.floorSystemEstimate?.airborneRatings.RwCtr).toBe(62.1);
+    expect(result.floorSystemEstimate?.impact.estimateCandidateIds).toEqual([
+      "tuas_r3a_open_box_timber_measured_2026",
+      "tuas_r3b_open_box_timber_measured_2026",
+      "tuas_r5a_open_box_timber_measured_2026",
+      "tuas_r5b_open_box_timber_measured_2026"
+    ]);
   });
 
   it("caps displayed family fit when mixed single-entry roles keep the open-box dry-floor topology ambiguous", () => {
@@ -6294,7 +6304,7 @@ describe("calculateAssembly", () => {
     expect(result.unsupportedImpactOutputs).toEqual([]);
   });
 
-  it("carries predictor-backed composite ceiling-only low-confidence estimates into live standardized field continuation", () => {
+  it("carries predictor-backed composite ceiling-only published interaction estimates into live standardized field continuation", () => {
     const result = calculateAssembly(
       [
         { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 15 },
@@ -6312,19 +6322,18 @@ describe("calculateAssembly", () => {
       }
     );
 
-    expect(result.floorSystemEstimate?.kind).toBe("low_confidence");
+    expect(result.floorSystemEstimate?.kind).toBe("family_general");
     expect(result.impact?.basis).toBe("mixed_predicted_plus_estimated_standardized_field_volume_normalization");
-    expect(result.impact?.LnW).toBe(63.3);
-    expect(result.impact?.LPrimeNW).toBe(65.3);
-    expect(result.impact?.LPrimeNTw).toBe(63.3);
+    expect(result.impact?.LnW).toBe(64.1);
+    expect(result.impact?.LPrimeNW).toBe(66.1);
+    expect(result.impact?.LPrimeNTw).toBe(64.1);
     expect(result.impact?.LPrimeNT50).toBeUndefined();
     expect(result.impact?.estimateCandidateIds).toEqual([
-      "pmc_m1_bare_composite_lab_2026",
       "pmc_m1_dry_floating_plus_c2x_lab_2026",
       "pmc_m1_dry_floating_plus_c1x_lab_2026",
-      "pmc_m1_dry_floating_floor_lab_2026"
+      "pmc_m1_bare_composite_lab_2026"
     ]);
-    expect(result.impact?.metricBasis?.LnW).toBe("predictor_floor_system_low_confidence_estimate");
+    expect(result.impact?.metricBasis?.LnW).toBe("predictor_composite_panel_published_interaction_estimate");
     expect(result.impact?.metricBasis?.LPrimeNW).toBe("estimated_field_lprimenw_from_lnw_plus_k");
     expect(result.impact?.metricBasis?.LPrimeNTw).toBe("estimated_standardized_field_lprimentw_from_lprimenw_plus_room_volume");
     expect(result.supportedImpactOutputs).toEqual(["L'n,w", "L'nT,w"]);
@@ -6893,7 +6902,7 @@ describe("calculateAssembly", () => {
       }
     );
 
-    expect(result.impact?.basis).toBe("predictor_floor_system_family_general_estimate");
+    expect(result.impact?.basis).toBe("predictor_lightweight_concrete_family_estimate");
     expect(result.impact?.LnW).toBe(64.3);
     expect(result.floorSystemRatings?.Rw).toBe(53);
     expect(result.floorSystemEstimate?.kind).toBe("family_general");
@@ -7399,10 +7408,12 @@ describe("calculateAssembly", () => {
     expect(rawConcreteCeilingHelper.supportedTargetOutputs).toEqual(["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]);
     expect(rawConcreteCeilingHelper.unsupportedTargetOutputs).toEqual([]);
 
-    expect(openBoxBare.impact).toBeNull();
-    expect(openBoxBare.floorSystemRatings?.basis).toBe("screening_mass_law_curve_seed_v3");
-    expect(openBoxBare.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
-    expect(openBoxBare.unsupportedTargetOutputs).toEqual(["Rw", "Ln,w", "L'n,w", "L'nT,w"]);
+    expect(openBoxBare.impact?.basis).toBe("broad_accuracy_floor_open_box_timber_raw_bare_source_absent_formula_corridor");
+    expect(openBoxBare.impact?.LnW).toBe(88.2);
+    expect(openBoxBare.floorSystemRatings?.basis).toBe("broad_accuracy_floor_open_box_timber_raw_bare_source_absent_formula_corridor");
+    expect(openBoxBare.floorSystemRatings?.Rw).toBe(42.3);
+    expect(openBoxBare.supportedTargetOutputs).toEqual(["Rw", "R'w", "DnT,w", "Ln,w"]);
+    expect(openBoxBare.unsupportedTargetOutputs).toEqual(["L'n,w", "L'nT,w"]);
 
     expect(wallLikeConcreteHybrid.impact).not.toBeNull();
     expect(wallLikeConcreteHybrid.floorSystemRatings?.basis).toBe("screening_mass_law_curve_seed_v3");

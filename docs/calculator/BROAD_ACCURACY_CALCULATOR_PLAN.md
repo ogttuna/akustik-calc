@@ -1,14 +1,23 @@
 # Broad Accuracy Calculator Plan
 
-Status: active refocus plan, created 2026-05-15.
+Historical status, 2026-05-25: this remains a broad-accuracy reference,
+not the source of truth for the next implementation slice. Read
+[CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md) first.
+Usable V1 Steps 0-5 are closed; the next slice must be explicitly
+selected as post-V1 formula coverage, adapters, calibration/holdouts, or
+input ergonomics. Older "selected next" entries below are historical
+handoffs.
 
-2026-05-21 active product correction:
+Status: historical refocus plan, created 2026-05-15.
+
+2026-05-21 historical product correction:
 [ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md](./ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md)
-is the immediate implementation direction. The broad-accuracy goal is
-not more labels or another finite row set; it is an acoustic calculator
-answer engine that takes user-entered wall/floor layers and calculates
-with exact measured answers, compatible measured anchors, or the correct
-source-absent/calibrated formula family.
+became the immediate implementation direction at that point and is now
+closed for the current usable V1 envelope. The broad-accuracy goal
+remains: not more labels or another finite row set, but an acoustic
+calculator answer engine that takes user-entered wall/floor layers and
+calculates with exact measured answers, compatible measured anchors, or
+the correct source-absent/calibrated formula family.
 
 This plan supersedes the idea that the 71-row company-internal
 controlled envelope is the finish line. That envelope remains a

@@ -157,6 +157,15 @@ export function getImpactConfidenceForBasis(basis: ImpactEstimateBasis): ImpactC
     };
   }
 
+  if (basis === "astm_e989_impact_rating_metric_schema_adapter_bridge") {
+    return {
+      level: "high",
+      provenance: "exact_band_curve",
+      score: 0.93,
+      summary: "Exact ASTM impact-band source rated directly through the ASTM E989 IIC/AIIC contour bridge."
+    };
+  }
+
   if (basis === "exact_source_improvement_curve_iso7172") {
     return {
       level: "high",
@@ -217,6 +226,16 @@ export function getImpactConfidenceForBasis(basis: ImpactEstimateBasis): ImpactC
       provenance: "published_family_estimate",
       score: 0.79,
       summary: "Published heavy-concrete upper-treatment estimate anchored to nearby curated concrete floor rows."
+    };
+  }
+
+  if (basis === "predictor_lightweight_concrete_family_estimate") {
+    return {
+      level: "medium",
+      provenance: "published_family_estimate",
+      score: 0.67,
+      summary:
+        "Published lightweight-concrete family estimate anchored to nearby curated concrete rows while staying out of heavy-concrete-specific formula lanes."
     };
   }
 

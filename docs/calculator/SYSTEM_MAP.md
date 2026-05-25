@@ -1,6 +1,6 @@
 # System Map
 
-Last reviewed: 2026-05-21
+Last reviewed: 2026-05-25
 
 Document role:
 
@@ -10,16 +10,21 @@ Document role:
 - give future agents one place to answer “how does the system work?” before
   changing solver, workbench, or docs
 
-Use this together with the agent resume triangle:
+Use this together with the calculator source-of-truth chain:
 
+- [CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md)
+  — first authority for product goal, current status, and next-slice
+  selection
 - [../../AGENTS.md](../../AGENTS.md) — repository-level calculator
   authority order
+- [USABLE_V1_EXECUTION_PLAN.md](./USABLE_V1_EXECUTION_PLAN.md)
+  — closed company-internal usable V1 acceptance contract
+- [CHECKPOINT_2026-05-23_POST_V1_ACOUSTIC_CALCULATOR_STATE_RECONCILIATION.md](./CHECKPOINT_2026-05-23_POST_V1_ACOUSTIC_CALCULATOR_STATE_RECONCILIATION.md)
+  — latest docs/implementation/test reconciliation
+- [POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md)
+  — selected post-V1 capability plan and next Gate A
 - [ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md](./ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md)
-  — active product correction: DynEcho is an acoustic calculator answer
-  engine, not a finite source-row library or test harness
-- [CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md](./CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md)
-  — latest docs/implementation/test reconciliation for the answer-engine
-  correction
+  — historical product correction that is now landed for usable V1
 - [SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md](./SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md)
   — historical model-first physics prediction pivot; still useful as
   foundation, but no longer the active next-action document
@@ -60,12 +65,8 @@ route, then receives acoustic outputs such as `Rw`, `R'w`, `DnT,w`,
 A green result is only valid if both the number and its support/origin posture
 are correct.
 
-## Active Answer-Engine Correction
+## Answer-Engine Baseline
 
-The current active correction is
-[ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md](./ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md).
-The latest checkpoint is
-[CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md](./CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md).
 This project is not a lookup database, a catalog project, or a test
 environment. Lab/source rows are allowed to win exact whole-stack
 matches, anchor known compatible constructions, calibrate formula
@@ -83,13 +84,13 @@ through the best physically appropriate route it owns:
 - `needs_input` only when a required physical field is missing;
 - `unsupported` only when DynEcho has no bounded calculation path.
 
-Implementation is not fully there yet. Impact already has the closest
-answer precedence pattern in `packages/engine/src/impact-lane.ts`.
-Airborne/wall still needs the equivalent final answer-selection path.
-`packages/engine/src/wall-triple-leaf-frequency-solver.ts` can produce
-triple-leaf/two-cavity ratings, but current runtime still uses
-`multileaf_screening_blend` for grouped Rockwool until the model-first
-runtime gate deliberately promotes a labelled formula answer.
+The answer-engine V1 correction is now landed for the current
+company-internal usable V1 envelope. The selected answer surface is
+implemented through resolver candidate declarations, runtime candidate
+mapping, answer-boundary payloads, owner audit, value parking, trace
+building, and UI/API/report parity tests. Wall and floor paths both
+publish answers through selected candidates or explicit `needs_input` /
+`unsupported` stops.
 
 ## End-To-End User Flow
 
@@ -312,25 +313,34 @@ validation path before and after a refactor.
 
 ## Current Architectural Hotspots
 
-As of 2026-05-05, the current calculator hotspots are:
+As of 2026-05-25, the current calculator hotspots are post-V1 product
+gaps, not missing answer-engine architecture:
 
-- `packages/engine/src/calculate-assembly.ts` composes dynamic airborne,
-  exact/catalog, impact, support, and Rockwool withholding decisions, but
-  does not yet expose a unified airborne candidate/basis selection model.
-- `packages/engine/src/impact-lane.ts` already shows the desired
-  precedence pattern for exact rows, source/bounds, product catalog,
-  explicit deltas, and predictor lanes.
-- `packages/engine/src/airborne-verified-catalog.ts` has whole-stack
-  exact anchoring, but no exact subassembly plus calculated-delta
-  candidate.
-- `packages/engine/src/dynamic-airborne.ts` still routes grouped
-  multi-leaf/multi-cavity walls through `multileaf_screening_blend`.
-- `packages/engine/src/wall-triple-leaf-frequency-solver.ts` can
-  calculate grouped triple-leaf/two-cavity curves and ratings, but it is
-  marked research-only/runtime-ineligible.
-- shared result schemas do not yet carry first-class airborne candidate
-  origins such as exact, anchored delta, calibrated physics, physics
-  prediction, bounded, screening, needs-input, or unsupported.
+- `packages/engine/src/layer-combination-resolver-registry.ts` is the
+  declared candidate surface. Keep it lightweight and free of heavy
+  runtime imports.
+- `packages/engine/src/layer-combination-resolver-runtime-candidate-adapter.ts`
+  maps runtime basis ids and answer-boundary states onto selected
+  candidates. New formula families should enter here instead of leaking
+  untraced outputs.
+- `packages/engine/src/acoustic-answer-engine-v1-owner-audit.ts` parks
+  outputs that the selected candidate does not own. New mixed-output
+  behavior must prove ownership instead of weakening this guard.
+- `packages/engine/src/calculate-assembly.ts` and
+  `packages/engine/src/calculate-impact-only.ts` can compute diagnostic
+  lanes, but publication must still go through selected answer
+  candidates, value parking, and resolver traces.
+- `apps/web/features/workbench/layer-combination-resolver-candidate-surface.ts`
+  is the visible projection path. Cards, reports, API payloads, and
+  replay must not infer acoustic basis from display labels.
+- Post-V1 work should broaden formula coverage, adapters, calibration,
+  holdouts, and required-input ergonomics while preserving exact /
+  anchor / formula / `needs_input` / `unsupported` answer order.
+
+Current selected hotspot: generalized wall multileaf/triple-leaf formula
+coverage. Gate A in
+[POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md)
+must define the input owner and gap matrix before any runtime movement.
 
 ### Historical 2026-04-27 Snapshot
 

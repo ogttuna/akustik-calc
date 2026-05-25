@@ -34,6 +34,15 @@ import {
 } from "./dynamic-airborne-gate-h-lined-masonry-clt";
 import { GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD } from "./dynamic-airborne-gate-i-airborne-field-context";
 import { HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS } from "./helper-only-timber-open-web-impact-stack-estimate";
+import {
+  HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS,
+  HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_DELTA_LW_TOLERANCE_DB,
+  HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_LN_W_TOLERANCE_DB
+} from "./heavy-concrete-combined-impact-formula-corridor";
+import {
+  ASTM_E989_IMPACT_RATING_BASIS,
+  ASTM_E989_IMPACT_RATING_SELECTED_CANDIDATE_ID
+} from "./impact-astm-e989";
 import { HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS } from "./impact-estimate";
 import { EXACT_IMPACT_SOURCE_BAND_CURVE_BASIS } from "./impact-exact";
 import {
@@ -44,6 +53,10 @@ import {
   LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_FORMULA_CORRIDOR_BASIS,
   LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID
 } from "./layer-combination-resolver-single-leaf-mass-law-banded-runtime-constants";
+import {
+  LIGHTWEIGHT_CONCRETE_FAMILY_ESTIMATE_BASIS,
+  LIGHTWEIGHT_CONCRETE_FAMILY_SELECTED_CANDIDATE_ID
+} from "./lightweight-concrete-family-runtime-constants";
 import {
   buildLayerCombinationResolverRegistryContract,
   LAYER_COMBINATION_RESOLVER_REGISTRY_LANDED_GATE,
@@ -56,6 +69,10 @@ import { OPEN_WEB_SUPPORTED_BAND_SIMILARITY_BASIS } from "./lightweight-steel-op
 import { OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS } from "./open-box-timber-raw-bare-estimate";
 import { OPEN_BOX_TIMBER_SIMILARITY_BASIS } from "./open-box-timber-similarity-estimate";
 import { OPEN_WEB_RAW_BARE_FORMULA_BASIS } from "./open-web-raw-bare-estimate";
+import {
+  STEEL_FLOOR_FORMULA_BASIS,
+  STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_BASIS
+} from "./steel-floor-impact-formula-corridor";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
@@ -183,27 +200,27 @@ describe("layer combination resolver registry contract", () => {
       sourceRowsAreEvidenceNotProduct: true
     });
     expect(contract.summary).toEqual({
-      activeRuntimeCandidateCount: 22,
+      activeRuntimeCandidateCount: 32,
       basisCount: {
-        astm_rating_boundary: 1,
+        astm_rating_boundary: 2,
         building_prediction: 1,
-        element_lab: 19,
+        element_lab: 28,
         field_apparent: 4
       },
-      candidateCount: 25,
+      candidateCount: 35,
       kindCount: {
         basis_boundary: 1,
         calibrated_family_solver: 1,
-        exact_measured_override: 3,
+        exact_measured_override: 4,
         field_building_adapter: 4,
         needs_input_boundary: 1,
-        similarity_anchor: 2,
-        source_absent_family_solver: 12,
+        similarity_anchor: 3,
+        source_absent_family_solver: 20,
         unsupported_boundary: 1
       },
       routeCount: {
-        floor: 13,
-        wall: 12
+        floor: 21,
+        wall: 14
       },
       selectedNextAction: LAYER_COMBINATION_RESOLVER_REGISTRY_SELECTED_NEXT_ACTION
     });
@@ -295,11 +312,56 @@ describe("layer combination resolver registry contract", () => {
       ownedRuntimeBasisId: HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS,
       priorityRank: 3
     });
+    expect(byId.get("floor.lightweight_steel.upper_lower_mass_spring.source_absent")).toMatchObject({
+      basis: "element_lab",
+      kind: "source_absent_family_solver",
+      ownedRuntimeBasisId: STEEL_FLOOR_FORMULA_BASIS,
+      priorityRank: 3,
+      route: "floor",
+      supportedMetrics: ["Ln,w", "DeltaLw"]
+    });
+    expect(byId.get("floor.lightweight_steel.suspended_ceiling_only.source_absent")).toMatchObject({
+      basis: "element_lab",
+      kind: "source_absent_family_solver",
+      ownedRuntimeBasisId: STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_BASIS,
+      priorityRank: 3,
+      route: "floor",
+      supportedMetrics: ["Ln,w"]
+    });
+    expect(byId.get("floor.heavy_concrete_combined_upper_lower.lab_impact_formula")).toMatchObject({
+      basis: "element_lab",
+      errorBudgetTerms: [
+        {
+          metric: "Ln,w",
+          notMeasuredEvidence: true,
+          toleranceDb: HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_LN_W_TOLERANCE_DB
+        },
+        {
+          metric: "DeltaLw",
+          notMeasuredEvidence: true,
+          toleranceDb: HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_DELTA_LW_TOLERANCE_DB
+        }
+      ],
+      kind: "source_absent_family_solver",
+      ownedRuntimeBasisId: HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS,
+      priorityRank: 3,
+      route: "floor",
+      runtimeSelectionState: "active_runtime_existing",
+      supportedMetrics: ["Ln,w", "DeltaLw"]
+    });
     expect(byId.get("floor.heavy_concrete_floating_floor.lab_impact_formula")).toMatchObject({
       kind: "source_absent_family_solver",
       ownedRuntimeBasisId: HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS,
       priorityRank: 3,
       supportedMetrics: ["Ln,w", "DeltaLw"]
+    });
+    expect(byId.get(LIGHTWEIGHT_CONCRETE_FAMILY_SELECTED_CANDIDATE_ID)).toMatchObject({
+      basis: "element_lab",
+      kind: "source_absent_family_solver",
+      ownedRuntimeBasisId: LIGHTWEIGHT_CONCRETE_FAMILY_ESTIMATE_BASIS,
+      priorityRank: 3,
+      route: "floor",
+      supportedMetrics: ["Rw", "Ln,w"]
     });
     expect(byId.get(BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_SELECTED_CANDIDATE_ID)).toMatchObject({
       basis: "element_lab",
@@ -313,6 +375,14 @@ describe("layer combination resolver registry contract", () => {
       basis: "element_lab",
       kind: "source_absent_family_solver",
       ownedRuntimeBasisId: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_RUNTIME_METHOD,
+      priorityRank: 3,
+      route: "wall",
+      supportedMetrics: ["Rw", "STC", "C", "Ctr"]
+    });
+    expect(byId.get("candidate_post_v1_wall_multileaf_generalized_source_absent_family_solver")).toMatchObject({
+      basis: "element_lab",
+      kind: "source_absent_family_solver",
+      ownedRuntimeBasisId: "triple_leaf_two_cavity_frequency_solver",
       priorityRank: 3,
       route: "wall",
       supportedMetrics: ["Rw", "STC", "C", "Ctr"]
@@ -363,7 +433,7 @@ describe("layer combination resolver registry contract", () => {
       route: "wall",
       supportedMetrics: ["Rw", "STC", "C", "Ctr"]
     });
-    expect(byId.get("floor.open_web.field_building_adapter.exact_anchor_continuation")).toMatchObject({
+    expect(byId.get("floor.impact_field_context.field_building_adapter")).toMatchObject({
       basis: "field_apparent",
       kind: "field_building_adapter",
       priorityRank: 4
@@ -396,6 +466,14 @@ describe("layer combination resolver registry contract", () => {
       basis: "building_prediction",
       kind: "basis_boundary",
       runtimeSelectionState: "blocked_boundary_existing"
+    });
+    expect(byId.get(ASTM_E989_IMPACT_RATING_SELECTED_CANDIDATE_ID)).toMatchObject({
+      basis: "astm_rating_boundary",
+      kind: "exact_measured_override",
+      ownedRuntimeBasisId: ASTM_E989_IMPACT_RATING_BASIS,
+      route: "floor",
+      runtimeSelectionState: "active_runtime_existing",
+      supportedMetrics: ["IIC", "AIIC"]
     });
     expect(byId.get("generic.astm_iic_aiic.unsupported_boundary")).toMatchObject({
       basis: "astm_rating_boundary",

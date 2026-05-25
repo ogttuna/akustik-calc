@@ -5,7 +5,189 @@ Historical checkpoints, analysis notes, and closed-slice plans
 live under `docs/archive/`; they inform history but never
 override the living triangle under `docs/calculator/`.
 
-## Start Here — Agent Resume Triangle
+## Start Here - Calculator Source Of Truth
+
+Read
+[calculator/CALCULATOR_SOURCE_OF_TRUTH.md](./calculator/CALCULATOR_SOURCE_OF_TRUTH.md)
+before any calculator implementation or planning work. It defines the
+product goal and next-slice selection rules: DynEcho is a usable acoustic
+calculator, not a source catalog, finite scenario library, or research
+notebook.
+
+Then read
+[calculator/USABLE_V1_EXECUTION_PLAN.md](./calculator/USABLE_V1_EXECUTION_PLAN.md)
+for the closed company-internal V1 acceptance contract and answer-order
+rules.
+
+The selected post-V1 implementation plan is
+[calculator/POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./calculator/POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md).
+Gate 0 has landed:
+`post_v1_calculator_capability_roi_confirmation_gate_0_plan` in
+`packages/engine/src/post-v1-calculator-capability-roi-confirmation-gate-0-contract.test.ts`
+with selection status
+`post_v1_calculator_capability_roi_confirmation_gate_0_landed_selected_wall_multileaf_gate_a`.
+The landed Gate A action is
+`post_v1_wall_multileaf_generalized_formula_gate_a_input_owner_and_gap_matrix_plan`
+in
+`packages/engine/src/post-v1-wall-multileaf-generalized-formula-gate-a-contract.test.ts`.
+Gate A has landed with selection status
+`post_v1_wall_multileaf_generalized_formula_gate_a_landed_no_runtime_selected_gate_b_runtime_corridor`.
+The landed Gate B action is
+`post_v1_wall_multileaf_generalized_formula_gate_b_runtime_corridor_plan`
+in
+`packages/engine/src/post-v1-wall-multileaf-generalized-formula-gate-b-runtime-corridor-contract.test.ts`.
+Gate B has landed with selection status
+`post_v1_wall_multileaf_generalized_formula_gate_b_landed_selected_gate_c_surface_parity_and_guided_inputs`.
+The landed Gate C action is
+`post_v1_wall_multileaf_generalized_formula_gate_c_surface_parity_and_guided_inputs_plan`
+in
+`packages/engine/src/post-v1-wall-multileaf-generalized-formula-gate-c-surface-parity-contract.test.ts`.
+Gate C has landed with selection status
+`post_v1_wall_multileaf_generalized_formula_gate_c_landed_selected_gate_d_compatible_anchor_delta`.
+The landed Gate D action is
+`post_v1_wall_compatible_anchor_delta_gate_d_plan`
+in
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-gate-d-contract.test.ts`.
+Gate D has landed with selection status
+`post_v1_wall_compatible_anchor_delta_gate_d_landed_selected_gate_e_floor_or_wall_next_formula_gap`.
+Gate E landed as
+`post_v1_floor_or_wall_next_formula_gap_gate_e_plan`
+in
+`packages/engine/src/post-v1-floor-or-wall-next-formula-gap-gate-e-contract.test.ts`.
+Gate E has landed with selection status
+`post_v1_floor_or_wall_next_formula_gap_gate_e_landed_selected_gate_f_floor_astm_iic_aiic_contour_runtime`.
+Gate F has landed as
+`post_v1_floor_astm_iic_aiic_contour_rating_gate_f_plan`
+in
+`packages/engine/src/post-v1-floor-astm-iic-aiic-contour-rating-gate-f-contract.test.ts`
+with selection status
+`post_v1_floor_astm_iic_aiic_contour_rating_gate_f_landed_selected_surface_parity_or_next_floor_formula_gap`.
+Gate G has landed as
+`post_v1_floor_astm_iic_aiic_surface_parity_gate_g_plan`
+in
+`packages/engine/src/post-v1-floor-astm-iic-aiic-surface-parity-gate-g-contract.test.ts`.
+Gate G selection status:
+`post_v1_floor_astm_iic_aiic_surface_parity_gate_g_landed_selected_gate_h_floor_formula_expansion`.
+Gate H has landed as
+`post_v1_floor_formula_expansion_gate_h_plan`
+in
+`packages/engine/src/post-v1-floor-formula-expansion-gate-h-contract.test.ts`.
+Previously selected label: post-V1 floor formula expansion Gate H.
+Gate H selection status:
+`post_v1_floor_formula_expansion_gate_h_landed_selected_gate_i_floor_formula_gap_refresh`.
+Gate I has landed as
+`post_v1_floor_formula_gap_refresh_gate_i_plan`
+in
+`packages/engine/src/post-v1-floor-formula-gap-refresh-gate-i-contract.test.ts`.
+Previously selected label: post-V1 floor formula gap refresh Gate I.
+Gate I selection status:
+`post_v1_floor_formula_gap_refresh_gate_i_landed_no_runtime_selected_gate_j_reinforced_concrete_combined_resolver`.
+Gate I selected next action:
+`post_v1_floor_reinforced_concrete_combined_resolver_gate_j_plan`
+in
+`packages/engine/src/post-v1-floor-reinforced-concrete-combined-resolver-gate-j-contract.test.ts`.
+Gate I selected next label: post-V1 floor reinforced-concrete combined resolver Gate J.
+Gate J has landed as
+`post_v1_floor_reinforced_concrete_combined_resolver_gate_j_plan`
+in
+`packages/engine/src/post-v1-floor-reinforced-concrete-combined-resolver-gate-j-contract.test.ts`.
+Gate J selection status:
+`post_v1_floor_reinforced_concrete_combined_resolver_gate_j_landed_selected_gate_k_timber_clt_delta_lw_resolver`.
+Gate J selected Gate K label: post-V1 floor timber/CLT DeltaLw resolver Gate K.
+Gate K has landed as
+`post_v1_floor_timber_clt_delta_lw_resolver_gate_k_plan`
+in
+`packages/engine/src/post-v1-floor-timber-clt-delta-lw-resolver-gate-k-contract.test.ts`.
+Gate K selection status:
+`post_v1_floor_timber_clt_delta_lw_resolver_gate_k_landed_selected_gate_l_composite_panel_family_solver_owner`.
+Gate K selected Gate L action:
+`post_v1_floor_composite_panel_family_solver_owner_gate_l_plan`
+in
+`packages/engine/src/post-v1-floor-composite-panel-family-solver-owner-gate-l-contract.test.ts`.
+Gate K selected Gate L label: post-V1 floor composite-panel family solver owner Gate L.
+Gate L has landed as
+`post_v1_floor_composite_panel_family_solver_owner_gate_l_plan`
+in
+`packages/engine/src/post-v1-floor-composite-panel-family-solver-owner-gate-l-contract.test.ts`.
+Gate L selection status:
+`post_v1_floor_composite_panel_family_solver_owner_gate_l_landed_selected_gate_m_lightweight_concrete_family_solver_owner`.
+The selected next action is
+`post_v1_floor_lightweight_concrete_family_solver_owner_gate_m_plan`
+in
+`packages/engine/src/post-v1-floor-lightweight-concrete-family-solver-owner-gate-m-contract.test.ts`.
+Selected next label: post-V1 floor lightweight-concrete family solver owner Gate M.
+Gate D is the compatible measured-anchor delta slice chosen after
+runtime and surface movement: Knauf LSF exact `Rw 55` plus one
+compatible outer acoustic board now publishes `Rw 57`, while unowned
+STC/`C`/`Ctr` companions stay unsupported. Gate E selected ASTM
+`IIC`/`AIIC` as the next high-ROI exact-band runtime gap. Gate F now
+calculates complete ASTM E492 lab bands to `IIC` and complete ASTM E1007
+field bands to `AIIC`; ISO `Ln,w` rows and incomplete ASTM curves remain
+unsupported for ASTM ratings. Gate G made those ratings visible across
+cards, answer chart, report, calculator API, impact-only API, resolver
+trace, and metric-basis provenance. Gate H increased floor formula
+coverage by mapping existing lightweight-steel upper/lower mass-spring
+and suspended-ceiling-only source-absent floor formulas into the shared
+resolver and answer-engine surface. Complete upper/lower steel now
+publishes `Ln,w 51.6` / `DeltaLw 22.4`; suspended-only steel publishes
+`Ln,w 62.2`, while `DeltaLw` without a complete upper package remains
+unsupported/needs owner inputs and ASTM/field aliases remain blocked.
+Gate I selected the next floor formula move: route the existing
+reinforced-concrete combined upper/lower formula, currently lab
+`Ln,w 58.1` / `DeltaLw 13.7` on
+`predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate`,
+through the shared resolver/answer-engine surface. Gate J now owns that
+path as `floor.heavy_concrete_combined_upper_lower.lab_impact_formula`:
+complete requests publish `Ln,w 58.1` / `DeltaLw 13.7`, `IIC` / `AIIC`
+remain unsupported ASTM boundaries, and missing `loadBasisKgM2` or
+`ceilingOrLowerAssembly` stops as `needs_input`. Gate K now maps the
+existing timber-joist and mass-timber CLT `DeltaLw` formula corridors
+through `floor.timber_joist.delta_lw_formula` and
+`floor.mass_timber_clt.delta_lw_formula`; timber joist publishes
+`DeltaLw 25.2`, CLT publishes `DeltaLw 22.6`, exact or published
+`Ln,w` companions remain separate, and missing timber/CLT physical
+inputs stop as `needs_input`. Gate L now owns the composite-panel
+published interaction path as
+`floor.composite_panel.published_interaction_family_solver`: dry floating
+publishes `Ln,w 69.4 / Rw 45.1`, suspended ceiling publishes
+`Ln,w 63.3 / Rw 48.6`, and combined upper/lower publishes
+`Ln,w 48.5 / Rw 60.6`, while `DeltaLw`, ASTM, and field aliases remain
+blocked. Gate L action
+`post_v1_floor_composite_panel_family_solver_owner_gate_l_plan` landed
+with status
+`post_v1_floor_composite_panel_family_solver_owner_gate_l_landed_selected_gate_m_lightweight_concrete_family_solver_owner`.
+Gate M action
+`post_v1_floor_lightweight_concrete_family_solver_owner_gate_m_plan`
+landed with status
+`post_v1_floor_lightweight_concrete_family_solver_owner_gate_m_landed_selected_gate_n_floor_field_building_expansion`.
+It maps `floor.lightweight_concrete.family_solver_owner` on
+`predictor_lightweight_concrete_family_estimate`: visible lightweight
+floating floor publishes `Ln,w 64.3 / Rw 53`, and low-density predictor
+input publishes `Ln,w 47 / Rw 49`. Lightweight-concrete `DeltaLw`, ASTM,
+and field aliases remain blocked. Gate N action
+`post_v1_floor_field_building_expansion_gate_n_plan` in
+`packages/engine/src/post-v1-floor-field-building-expansion-gate-n-contract.test.ts`
+landed with status
+`post_v1_floor_field_building_expansion_gate_n_landed_selected_gate_o_input_surface_guided_physical_fields`.
+Previous selected label: post-V1 floor field/building expansion Gate N.
+It maps the generalized floor impact field-context adapter through
+`floor.impact_field_context.field_building_adapter` on
+`source_absent_field_building_adapter_error_budget`: dynamic
+lightweight-concrete field requests with a live lab `Ln,w` anchor plus
+`impactFieldContext.fieldKDb` and
+`impactFieldContext.receivingRoomVolumeM3` publish
+`L'n,w 66.3 / L'nT,w 63.9`. Missing field-impact context stops as
+`needs_input` with `impactFieldContext` and `receivingRoomVolumeM3`;
+building prediction and ASTM `IIC` / `AIIC` aliases remain blocked. The
+selected next action is
+`post_v1_input_surface_guided_physical_fields_gate_o_plan` in
+`packages/engine/src/post-v1-input-surface-guided-physical-fields-gate-o-contract.test.ts`;
+selected next label: post-V1 input-surface guided physical fields Gate O. The current shared resolver surface has 35 declared candidates and 32 active runtime-basis mappings.
+Latest Gate N validation is green. Full `pnpm calculator:gate:current`
+passed on 2026-05-25 with engine 525 files / 2969 tests, web 95 files /
+402 passed + 18 skipped, repo build 5 / 5, and whitespace guard passed.
+
+## Agent Resume Triangle
 
 Three docs are authoritative for "where are we and what comes
 next". If they disagree, fix the drift before starting work.
@@ -31,7 +213,7 @@ Current calculator handoff:
   envelope. DynEcho now has the answer-engine contract in
   `packages/engine/src/acoustic-calculator-answer-engine-v1-contract.test.ts`,
   and it is part of `pnpm calculator:gate:current`. The current shared
-  resolver surface has 25 declared candidates and 22 active
+  resolver surface has 35 declared candidates and 32 active
   runtime-basis mappings across exact measured overrides, compatible
   anchors, calibrated and source-absent family solvers, field/building
   adapters, `needs_input`, basis-boundary, and unsupported candidates.

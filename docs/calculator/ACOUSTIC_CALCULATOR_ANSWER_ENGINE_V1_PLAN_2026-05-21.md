@@ -4,6 +4,12 @@ Status: company-internal usable V1 answer-engine correction closed for
 the current tested envelope; keep this as the product-direction lock for
 post-V1 accuracy and adapter work.
 
+Read [CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md)
+first for current authority and next-slice selection. This file explains
+the landed V1 correction; it is not an automatic selected-next handoff.
+The selected post-V1 capability plan is
+[POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md).
+
 DynEcho is an acoustic calculator. A user brings an acoustic project,
 chooses wall or floor, enters the layer stack and the extra physical
 inputs required for that construction, and gets an acoustic answer.
@@ -279,8 +285,9 @@ runtime: local-substitution grouped triple-leaf `Rw`, lab-spectrum
 `STC`/`C`/`Ctr`, complete field `R'w`/`DnT,w`, guarded adjacent
 flat-list lab/field paths, Gate H lined massive-wall lab formula, and
 company-internal heavy-composite wall lab formula. The shared resolver
-surface now has 25 declared candidates and 22 active runtime-basis
-mappings. This does not reopen V1; it is post-V1 answer correctness and
+surface now has 27 declared candidates and 24 active runtime-basis
+mappings after the post-V1 generalized wall multileaf Gate B runtime
+corridor. This does not reopen V1; it is post-V1 answer correctness and
 trace honesty.
 
 ## INSUL Benchmark Shape

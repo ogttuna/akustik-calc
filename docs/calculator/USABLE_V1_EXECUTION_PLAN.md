@@ -4,6 +4,17 @@ Document role: this is the binding finish plan for company-internal
 calculator readiness. It supersedes historical "selected next" handoff
 chains whenever they conflict with usable V1 readiness.
 
+For the current product source of truth and post-V1 next-slice
+selection rules, read
+[CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md) first.
+This file remains the closed V1 acceptance contract and answer-order
+gate.
+
+The selected post-V1 plan is
+[POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md).
+It does not reopen usable V1; it starts post-V1 formula coverage with a
+no-runtime wall multileaf input-owner gate.
+
 DynEcho is usable V1 only when a company-internal user can choose wall or
 floor, enter layers plus the required physical inputs, and receive a
 basis-correct answer or a precise `needs_input` / `unsupported` stop. It
@@ -493,10 +504,11 @@ answer-engine trace so existing wall triple-leaf local-substitution
 adjacent flat-list lab/field, Gate H lined massive-wall lab formula, and
 company-internal heavy-composite wall lab formula calculations expose
 the correct candidate ids, basis, support bucket, budgets, and
-scenario-specific value pins. The current shared resolver surface has 25
-declared candidates and 22 active runtime-basis mappings. Treat this as
-post-V1 answer correctness/surface integration, not as source crawling
-or a finite scenario pack.
+scenario-specific value pins. The current shared resolver surface has 27
+declared candidates and 24 active runtime-basis mappings after the
+post-V1 generalized wall multileaf Gate B runtime corridor. Treat this
+as post-V1 answer correctness/surface integration, not as source
+crawling or a finite scenario pack.
 
 ## Required Status Answer Format
 

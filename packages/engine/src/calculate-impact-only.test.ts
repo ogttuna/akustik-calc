@@ -1677,7 +1677,7 @@ describe("calculateImpactOnly", () => {
 
     expect(result.sourceMode).toBe("predictor_input");
     expect(result.sourceLayers.at(-1)?.material.id).toBe("lightweight_concrete");
-    expect(result.impact?.basis).toBe("predictor_floor_system_family_general_estimate");
+    expect(result.impact?.basis).toBe("predictor_lightweight_concrete_family_estimate");
     expect(result.floorSystemEstimate?.fitPercent).toBe(45);
     expect(result.impact?.LnW).toBe(47);
     expect(result.floorSystemRatings?.Rw).toBe(49);
@@ -3557,7 +3557,7 @@ describe("calculateImpactOnly", () => {
     ).toBe(false);
   });
 
-  it("keeps composite suspended-ceiling predictor input on the upstream low-confidence lane", () => {
+  it("keeps composite suspended-ceiling predictor input on the owned published interaction lane", () => {
     const result = calculateImpactOnly([], {
       impactPredictorInput: {
         structuralSupportType: "composite_panel",
@@ -3575,18 +3575,17 @@ describe("calculateImpactOnly", () => {
     });
 
     expect(result.sourceMode).toBe("predictor_input");
-    expect(result.floorSystemEstimate?.kind).toBe("low_confidence");
-    expect(result.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
+    expect(result.floorSystemEstimate?.kind).toBe("family_general");
+    expect(result.impact?.basis).toBe("predictor_composite_panel_published_interaction_estimate");
     expect(result.impact?.LnW).toBe(63.3);
     expect(result.floorSystemRatings?.Rw).toBe(48.6);
     expect(result.impact?.estimateCandidateIds).toEqual([
-      "pmc_m1_bare_composite_lab_2026",
       "pmc_m1_dry_floating_plus_c2x_lab_2026",
       "pmc_m1_dry_floating_plus_c1x_lab_2026",
-      "pmc_m1_dry_floating_floor_lab_2026"
+      "pmc_m1_bare_composite_lab_2026"
     ]);
     expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
-    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(true);
+    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
   });
 
   it("promotes near-match hollow-core resilient-cover ceiling stacks onto the combined published-family lane", () => {

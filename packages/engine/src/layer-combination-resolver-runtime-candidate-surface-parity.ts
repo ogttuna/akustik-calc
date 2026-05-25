@@ -11,7 +11,11 @@ import type {
 import { getFloorSystemC, getFloorSystemCtr } from "@dynecho/shared";
 
 import { EXACT_IMPACT_SOURCE_BAND_CURVE_BASIS } from "./impact-exact";
-import { FLOOR_IMPACT_FIELD_BUILDING_ADAPTER_ERROR_BUDGET_ORIGIN } from "./impact-field-adapter-error-budget";
+import { ASTM_E989_IMPACT_RATING_BASIS } from "./impact-astm-e989";
+import {
+  FLOOR_IMPACT_FIELD_BUILDING_ADAPTER_ERROR_BUDGET_ORIGIN,
+  FLOOR_IMPACT_FIELD_BUILDING_ADAPTER_SELECTED_CANDIDATE_ID
+} from "./impact-field-adapter-error-budget";
 import { GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD } from "./dynamic-airborne-gate-i-airborne-field-context";
 import { COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_RUNTIME_METHOD } from "./dynamic-airborne-company-internal-heavy-composite-wall";
 import { GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD } from "./dynamic-airborne-gate-h-lined-masonry-clt";
@@ -35,6 +39,13 @@ import {
 import {
   LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_FORMULA_CORRIDOR_BASIS
 } from "./layer-combination-resolver-single-leaf-mass-law-banded-runtime-constants";
+import {
+  POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_RUNTIME_METHOD
+} from "./post-v1-wall-compatible-anchor-delta";
+import {
+  MASS_TIMBER_CLT_DELTA_LW_FORMULA_BASIS,
+  TIMBER_JOIST_DELTA_LW_FORMULA_BASIS
+} from "./timber-clt-floor-impact-delta-lw-runtime-corridor";
 import { round1 } from "./math";
 import type {
   LayerCombinationResolverBasis,
@@ -104,9 +115,21 @@ const BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_RU
   "broad_accuracy_wall_triple_leaf_local_substitution_lab_spectrum_adapter_runtime";
 const BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD =
   "broad_accuracy_wall_triple_leaf_local_substitution_field_context_harmonization_runtime";
+const POST_V1_WALL_MULTILEAF_GENERALIZED_RUNTIME_METHOD =
+  "triple_leaf_two_cavity_frequency_solver";
 const FLOOR_VERIFIED_EXACT_SOURCE_BASES = new Set<string>([
   "official_floor_system_exact_match",
   "open_measured_floor_system_exact_match"
+]);
+const TIMBER_CLT_DELTA_LW_FORMULA_BASES = new Set<string>([
+  TIMBER_JOIST_DELTA_LW_FORMULA_BASIS,
+  MASS_TIMBER_CLT_DELTA_LW_FORMULA_BASIS
+]);
+const POST_V1_WALL_MULTILEAF_GENERALIZED_LAB_METRICS = new Set<RequestedOutputId>([
+  "Rw",
+  "STC",
+  "C",
+  "Ctr"
 ]);
 
 export type LayerCombinationResolverRuntimeCandidateSurfaceParityTarget =
@@ -162,9 +185,11 @@ type FloorRuntimeValuePinCarrier = {
   readonly floorSystemRatings?: FloorSystemAirborneRatings | null;
   readonly impact?: Pick<
     ImpactCalculation,
+    | "AIIC"
     | "CI"
     | "CI50_2500"
     | "DeltaLw"
+    | "IIC"
     | "availableOutputs"
     | "LnW"
     | "LnWPlusCI"
@@ -172,6 +197,7 @@ type FloorRuntimeValuePinCarrier = {
     | "LPrimeNTw"
     | "LPrimeNW"
     | "LnTA"
+    | "metricBasis"
   > | null;
   readonly metrics?: Partial<
     Pick<
@@ -345,10 +371,15 @@ function requestedBasisForFloorResult(input: {
   }
 
   if (
-    input.runtimeBasisId === EXACT_IMPACT_SOURCE_BAND_CURVE_BASIS &&
-    input.impactLabOrField === "field"
+    input.runtimeBasisId === ASTM_E989_IMPACT_RATING_BASIS ||
+    (
+      input.runtimeBasisId === EXACT_IMPACT_SOURCE_BAND_CURVE_BASIS &&
+      input.impactLabOrField === "field"
+    )
   ) {
-    return "field_apparent";
+    return input.runtimeBasisId === ASTM_E989_IMPACT_RATING_BASIS
+      ? "astm_rating_boundary"
+      : "field_apparent";
   }
 
   if (
@@ -453,6 +484,12 @@ function buildFloorRuntimeValuePins(
   if (outputSet.has("DeltaLw")) {
     pushFinitePin(pins, "DeltaLw", result.impact?.DeltaLw);
   }
+  if (outputSet.has("IIC")) {
+    pushFinitePin(pins, "IIC", result.impact?.IIC);
+  }
+  if (outputSet.has("AIIC")) {
+    pushFinitePin(pins, "AIIC", result.impact?.AIIC);
+  }
   if (outputSet.has("R'w")) {
     pushFinitePin(pins, "R'w", result.metrics?.estimatedRwPrimeDb);
   }
@@ -487,6 +524,22 @@ function buildFloorRuntimeValuePins(
   return pins;
 }
 
+function getExactImpactSourceSupportedMetrics(
+  result: FloorRuntimeValuePinCarrier,
+  outputs: readonly RequestedOutputId[]
+): RequestedOutputId[] {
+  if (!result.impact?.availableOutputs) {
+    return [];
+  }
+
+  const exactImpactOutputSet = new Set(result.impact.availableOutputs);
+  return outputs.filter((output) => exactImpactOutputSet.has(output));
+}
+
+function getRequestedOutputIds(outputs: readonly RequestedOutputId[]): RequestedOutputId[] {
+  return outputs.filter((output) => RESOLVER_METRIC_IDS.has(output));
+}
+
 function hasFloorRuntimeValue(
   result: FloorRuntimeValuePinCarrier,
   output: RequestedOutputId
@@ -509,6 +562,10 @@ function hasFloorRuntimeValue(
       return typeof result.impact?.LnWPlusCI === "number" && Number.isFinite(result.impact.LnWPlusCI);
     case "DeltaLw":
       return typeof result.impact?.DeltaLw === "number" && Number.isFinite(result.impact.DeltaLw);
+    case "IIC":
+      return typeof result.impact?.IIC === "number" && Number.isFinite(result.impact.IIC);
+    case "AIIC":
+      return typeof result.impact?.AIIC === "number" && Number.isFinite(result.impact.AIIC);
     case "R'w":
       return typeof result.metrics?.estimatedRwPrimeDb === "number" && Number.isFinite(result.metrics.estimatedRwPrimeDb);
     case "Dn,w":
@@ -541,22 +598,6 @@ function getFloorRuntimeSupportedMetrics(
   return getRequestedOutputIds(outputs).filter((output) => hasFloorRuntimeValue(result, output));
 }
 
-function getExactImpactSourceSupportedMetrics(
-  result: FloorRuntimeValuePinCarrier,
-  outputs: readonly RequestedOutputId[]
-): RequestedOutputId[] {
-  if (!result.impact?.availableOutputs) {
-    return [];
-  }
-
-  const exactImpactOutputSet = new Set(result.impact.availableOutputs);
-  return outputs.filter((output) => exactImpactOutputSet.has(output));
-}
-
-function getRequestedOutputIds(outputs: readonly RequestedOutputId[]): RequestedOutputId[] {
-  return outputs.filter((output) => RESOLVER_METRIC_IDS.has(output));
-}
-
 function getFieldAdapterSupportedMetrics(
   trace: LayerCombinationResolverTrace,
   result: FloorRuntimeTraceCarrier
@@ -565,6 +606,20 @@ function getFieldAdapterSupportedMetrics(
   return trace.supportedMetrics.filter((metric): metric is RequestedOutputId =>
     supportedOutputSet.has(metric as RequestedOutputId)
   );
+}
+
+function getFloorRuntimeCandidateSupportedMetrics(
+  trace: LayerCombinationResolverTrace,
+  result: FloorRuntimeTraceCarrier
+): RequestedOutputId[] {
+  const supportedOutputSet = new Set(result.supportedTargetOutputs ?? []);
+  if (trace.runtimeBasisId && TIMBER_CLT_DELTA_LW_FORMULA_BASES.has(trace.runtimeBasisId)) {
+    return trace.supportedMetrics.filter((metric): metric is RequestedOutputId =>
+      supportedOutputSet.has(metric as RequestedOutputId)
+    );
+  }
+
+  return getFloorRuntimeSupportedMetrics(result, result.supportedTargetOutputs ?? []);
 }
 
 function withScenarioSpecificFloorRuntimePins<T extends FloorRuntimeTraceCarrier>(
@@ -581,14 +636,17 @@ function withScenarioSpecificFloorRuntimePins<T extends FloorRuntimeTraceCarrier
 
   const isExactFloor = FLOOR_VERIFIED_EXACT_SOURCE_BASES.has(trace.runtimeBasisId);
   const isExactImpactSource = trace.runtimeBasisId === EXACT_IMPACT_SOURCE_BAND_CURVE_BASIS;
+  const isAstmImpactRating = trace.runtimeBasisId === ASTM_E989_IMPACT_RATING_BASIS;
   const supportedMetrics = isExactImpactSource
     ? getExactImpactSourceSupportedMetrics(result, result.supportedTargetOutputs ?? [])
     : trace.candidateKind === "field_building_adapter"
       ? getFieldAdapterSupportedMetrics(trace, result)
-      : getFloorRuntimeSupportedMetrics(result, result.supportedTargetOutputs ?? []);
+      : getFloorRuntimeCandidateSupportedMetrics(trace, result);
 
   const surfaceDetail = isExactImpactSource
     ? `${trace.surfaceDetail} Current assembly value pins come from the selected exact impact-band source; airborne companion outputs stay on their own calculation basis and are not owned by this exact impact candidate.`
+    : isAstmImpactRating
+      ? `${trace.surfaceDetail} Current value pins come from the selected exact ASTM impact-band contour rating; ISO impact and airborne companion outputs stay on their own calculation basis.`
     : isExactFloor
       ? `${trace.surfaceDetail} Current floor value pins come from the selected exact measured floor row; separately calculated field or companion outputs stay on their own basis.`
       : trace.candidateKind === "field_building_adapter"
@@ -597,7 +655,7 @@ function withScenarioSpecificFloorRuntimePins<T extends FloorRuntimeTraceCarrier
 
   return {
     ...trace,
-    basis: isExactImpactSource ? trace.requestedBasis : trace.basis,
+    basis: isExactImpactSource || isAstmImpactRating ? trace.requestedBasis : trace.basis,
     supportedMetrics,
     surfaceDetail,
     valuePins: buildFloorRuntimeValuePins(result, supportedMetrics)
@@ -642,7 +700,10 @@ function withScenarioSpecificAirborneRuntimePins(
     trace.runtimeBasisId === FLAT_LIST_MULTILEAF_GUARD_LAB_RUNTIME_METHOD || isWallFlatListGuardFieldAdapter;
   const isWallFormulaRuntime =
     trace.runtimeBasisId === GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD ||
-    trace.runtimeBasisId === COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_RUNTIME_METHOD;
+    trace.runtimeBasisId === COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_RUNTIME_METHOD ||
+    trace.runtimeBasisId === POST_V1_WALL_MULTILEAF_GENERALIZED_RUNTIME_METHOD;
+  const isWallCompatibleAnchorDelta =
+    trace.runtimeBasisId === POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_RUNTIME_METHOD;
   const isWallFieldAdapter =
     trace.runtimeBasisId === GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD ||
     isWallLocalSubstitutionFieldAdapter ||
@@ -659,6 +720,7 @@ function withScenarioSpecificAirborneRuntimePins(
     !isWallLocalSubstitutionRuntime &&
     !isWallFlatListGuardRuntime &&
     !isWallFormulaRuntime &&
+    !isWallCompatibleAnchorDelta &&
     !isWallFieldAdapter &&
     !isFloorRuntime &&
     !isExactFloor &&
@@ -687,6 +749,10 @@ function withScenarioSpecificAirborneRuntimePins(
     ? getExactImpactSourceSupportedMetrics(result, result.supportedTargetOutputs)
     : isWallFieldAdapter
       ? getRuntimeSupportedMetricsForAssembly(trace, result)
+    : isWallCompatibleAnchorDelta
+      ? trace.supportedMetrics.filter((metric) =>
+          result.supportedTargetOutputs.includes(metric as RequestedOutputId)
+        )
     : isExactMeasured || isExactFloor
       ? result.supportedTargetOutputs
       : getRuntimeSupportedMetricsForAssembly(trace, result);
@@ -705,11 +771,13 @@ function withScenarioSpecificAirborneRuntimePins(
 
   return {
     ...trace,
-    basis: isExactMeasured || isWallFieldAdapter ? trace.requestedBasis : trace.basis,
+    basis: isExactMeasured || isWallFieldAdapter || isWallCompatibleAnchorDelta ? trace.requestedBasis : trace.basis,
     errorBudgetMetrics: isSingleLeaf ? ["Rw", "STC"] : trace.errorBudgetMetrics,
     supportedMetrics,
     surfaceDetail: isExactMeasured
       ? `${trace.surfaceDetail} Current assembly value pins come from the selected exact measured row.`
+      : isWallCompatibleAnchorDelta
+        ? `${trace.surfaceDetail} Current assembly value pins come from the measured subassembly anchor plus the owned calculated added-layer delta; companion metrics stay unsupported unless separately owned.`
       : isWallFieldAdapter
         ? `${trace.surfaceDetail} Current wall field-adapter value pins are scenario-specific and come from the active field-apparent calculation path.`
         : `${trace.surfaceDetail} Current assembly value pins are scenario-specific and are not measured evidence.`,
@@ -721,17 +789,21 @@ function withAnswerEngineBoundaryInputs(
   trace: LayerCombinationResolverTrace | undefined,
   result: ResolverImpactCarrier
 ): LayerCombinationResolverTrace | undefined {
-  const boundary = result.acousticAnswerBoundary;
-  const missingPhysicalInputs =
-    boundary?.origin === "needs_input"
-      ? boundary.missingPhysicalInputs
-      : result.airborneBasis?.origin === "needs_input"
-        ? result.airborneBasis.missingPhysicalInputs
-        : [];
-
   if (!trace) {
     return trace;
   }
+
+  const boundary = result.acousticAnswerBoundary;
+  const shouldIgnoreAirborneNeedsInput =
+    !boundary &&
+    trace.route === "floor" &&
+    trace.candidateKind === "field_building_adapter";
+  const missingPhysicalInputs =
+    boundary?.origin === "needs_input"
+      ? boundary.missingPhysicalInputs
+      : !shouldIgnoreAirborneNeedsInput && result.airborneBasis?.origin === "needs_input"
+        ? result.airborneBasis.missingPhysicalInputs
+        : [];
 
   if (
     boundary?.origin === "unsupported" &&
@@ -750,8 +822,21 @@ function withAnswerEngineBoundaryInputs(
     };
   }
 
-  if (trace.supportBucket !== "needs_input" || missingPhysicalInputs.length === 0) {
+  if (missingPhysicalInputs.length === 0) {
     return trace;
+  }
+
+  if (trace.supportBucket !== "needs_input") {
+    const stoppedOutputs =
+      boundary?.origin === "needs_input" && boundary.unsupportedOutputs.length > 0
+        ? ` Stopped outputs: ${boundary.unsupportedOutputs.join(", ")}.`
+        : "";
+
+    return {
+      ...trace,
+      requiredInputs: [...new Set([...trace.requiredInputs, ...missingPhysicalInputs])],
+      surfaceDetail: `${trace.surfaceDetail}${stoppedOutputs} Missing physical inputs: ${missingPhysicalInputs.join(", ")}.`
+    };
   }
 
   return {
@@ -762,6 +847,25 @@ function withAnswerEngineBoundaryInputs(
     surfaceDetail: `${trace.surfaceDetail} Missing physical inputs: ${missingPhysicalInputs.join(", ")}.`,
     valuePins: []
   };
+}
+
+function getPartialWallFormulaRuntimeBasisId(result: AssemblyCalculation): string | null {
+  const boundary = result.acousticAnswerBoundary;
+  if (
+    boundary?.origin !== "needs_input" ||
+    boundary.route !== "wall" ||
+    result.dynamicAirborneTrace?.selectedMethod !== POST_V1_WALL_MULTILEAF_GENERALIZED_RUNTIME_METHOD
+  ) {
+    return null;
+  }
+
+  const hasOwnedLabOutput = result.supportedTargetOutputs.some((output: RequestedOutputId) =>
+    POST_V1_WALL_MULTILEAF_GENERALIZED_LAB_METRICS.has(output)
+  );
+
+  return hasOwnedLabOutput && boundary.unsupportedOutputs.length > 0
+    ? POST_V1_WALL_MULTILEAF_GENERALIZED_RUNTIME_METHOD
+    : null;
 }
 
 function requestedBasisForWallResult(result: AssemblyCalculation): LayerCombinationResolverBasis {
@@ -777,6 +881,26 @@ function requestedBasisForWallResult(result: AssemblyCalculation): LayerCombinat
   }
 
   return "element_lab";
+}
+
+function getTimberCltDeltaLwRuntimeBasisId(input: {
+  impact?: Pick<ImpactCalculation, "DeltaLw" | "metricBasis"> | null;
+  supportedTargetOutputs?: readonly RequestedOutputId[];
+  targetOutputs: readonly RequestedOutputId[];
+}): string | null {
+  if (
+    !input.targetOutputs.includes("DeltaLw") ||
+    !(input.supportedTargetOutputs ?? []).includes("DeltaLw") ||
+    typeof input.impact?.DeltaLw !== "number"
+  ) {
+    return null;
+  }
+
+  const metricBasis = input.impact.metricBasis?.DeltaLw;
+
+  return metricBasis && TIMBER_CLT_DELTA_LW_FORMULA_BASES.has(metricBasis)
+    ? metricBasis
+    : null;
 }
 
 function runtimeBasisIdForWallResult(result: AssemblyCalculation): string | null {
@@ -811,7 +935,10 @@ export function buildLayerCombinationResolverTraceForAssembly(
     result.airborneBasis?.method === BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD;
   const hasWallFormulaAirborneBasis =
     result.airborneBasis?.method === GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD ||
-    result.airborneBasis?.method === COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_RUNTIME_METHOD;
+    result.airborneBasis?.method === COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_RUNTIME_METHOD ||
+    result.airborneBasis?.method === POST_V1_WALL_MULTILEAF_GENERALIZED_RUNTIME_METHOD;
+  const hasWallCompatibleAnchorDeltaBasis =
+    result.airborneBasis?.method === POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_RUNTIME_METHOD;
   const hasWallFieldAirborneBasis =
     result.airborneBasis?.method === GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD;
   const shouldPreferWallAirborneRoute =
@@ -822,6 +949,7 @@ export function buildLayerCombinationResolverTraceForAssembly(
       hasWallFlatListGuardBasis ||
       hasWallLocalSubstitutionBasis ||
       hasWallFormulaAirborneBasis ||
+      hasWallCompatibleAnchorDeltaBasis ||
       hasWallFieldAirborneBasis
     ) &&
     !hasRequestedImpactMetric(requestedOrUnsupportedOutputs);
@@ -844,23 +972,34 @@ export function buildLayerCombinationResolverTraceForAssembly(
   const airborneAnswerStop =
     result.airborneBasis &&
     ANSWER_ENGINE_STOP_ORIGINS.has(result.airborneBasis.origin);
+  const partialWallFormulaRuntimeBasisId =
+    route === "wall" ? getPartialWallFormulaRuntimeBasisId(result) : null;
   const shouldUseSingleLeafFloorAirborneBasis =
     route === "floor" &&
     hasSingleLeafAirborneBasis &&
     !hasRequestedImpactMetric(requestedOrUnsupportedOutputs);
-  const runtimeBasisId = answerBoundary
+  const timberCltDeltaLwRuntimeBasisId =
+    route === "floor"
+      ? getTimberCltDeltaLwRuntimeBasisId({
+          impact: result.impact,
+          supportedTargetOutputs: result.supportedTargetOutputs,
+          targetOutputs: result.targetOutputs
+        })
+      : null;
+  const runtimeBasisId = answerBoundary && !partialWallFormulaRuntimeBasisId
     ? null
     : hasFieldAdapter
     ? FLOOR_IMPACT_FIELD_BUILDING_ADAPTER_ERROR_BUDGET_ORIGIN
-    : route === "floor"
-      ? shouldUseSingleLeafFloorAirborneBasis
-        ? airborneAnswerStop
-          ? null
-          : result.airborneBasis?.method ?? null
-        : result.impact?.basis ?? result.floorSystemRatings?.basis ?? null
-      : airborneAnswerStop
+      : route === "floor"
+        ? shouldUseSingleLeafFloorAirborneBasis
+          ? airborneAnswerStop
+            ? null
+            : result.airborneBasis?.method ?? null
+        : timberCltDeltaLwRuntimeBasisId ?? result.impact?.basis ?? result.floorSystemRatings?.basis ?? null
+      : partialWallFormulaRuntimeBasisId ??
+        (airborneAnswerStop
         ? null
-        : runtimeBasisIdForWallResult(result);
+        : runtimeBasisIdForWallResult(result));
   const requestedBasis =
     route === "floor"
       ? requestedBasisForFloorResult({
@@ -897,11 +1036,16 @@ export function buildLayerCombinationResolverTraceForImpactOnly(
   result: ImpactOnlyCalculation
 ): LayerCombinationResolverTrace | undefined {
   const hasFieldAdapter = hasFieldAdapterBudget(result) && hasFieldImpactValues(result);
+  const timberCltDeltaLwRuntimeBasisId = getTimberCltDeltaLwRuntimeBasisId({
+    impact: result.impact,
+    supportedTargetOutputs: result.supportedTargetOutputs,
+    targetOutputs: result.targetOutputs
+  });
   const runtimeBasisId = result.acousticAnswerBoundary
     ? null
     : hasFieldAdapter
     ? FLOOR_IMPACT_FIELD_BUILDING_ADAPTER_ERROR_BUDGET_ORIGIN
-    : result.impact?.basis ?? result.floorSystemRatings?.basis ?? null;
+    : timberCltDeltaLwRuntimeBasisId ?? result.impact?.basis ?? result.floorSystemRatings?.basis ?? null;
 
   const trace = adaptSafely({
     missingPhysicalInputIds:

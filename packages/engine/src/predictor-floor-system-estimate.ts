@@ -13,6 +13,11 @@ type PredictorEstimateStrategy = {
 
 const PREDICTOR_ESTIMATE_STRATEGIES: readonly PredictorEstimateStrategy[] = [
   {
+    id: "composite_panel_published_interaction",
+    priority: 5,
+    derive: deriveCompositePanelPublishedInteractionEstimate
+  },
+  {
     id: "low_confidence_family",
     priority: 10,
     derive: derivePredictorLowConfidenceFamilyEstimate
@@ -21,11 +26,6 @@ const PREDICTOR_ESTIMATE_STRATEGIES: readonly PredictorEstimateStrategy[] = [
     id: "heavy_concrete_published_upper_treatment",
     priority: 20,
     derive: deriveHeavyConcretePublishedUpperTreatmentEstimate
-  },
-  {
-    id: "composite_panel_published_interaction",
-    priority: 30,
-    derive: deriveCompositePanelPublishedInteractionEstimate
   },
   {
     id: "published_family",

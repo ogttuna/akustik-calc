@@ -1,19 +1,25 @@
 # Slice Plan - Broad Accuracy Reference Benchmark And Similarity Solver
 
+Historical status, 2026-05-25: this landed slice is reference material
+only. It does not select current work. Read
+[CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md) first
+and select any new post-V1 slice explicitly. Older "current selected
+next lane" statements below are consumed handoffs.
+
 Status: LANDED no-runtime broad-accuracy benchmark expansion after the
 controlled company-internal envelope proof.
 
-2026-05-21 active override:
+2026-05-21 historical override:
 
 This slice is historical evidence for the broad-accuracy path. The
-current selected next action is now
+then-selected next action became
 `acoustic_calculator_answer_engine_v1_plan` in
 `packages/engine/src/acoustic-calculator-answer-engine-v1-contract.test.ts`.
 Older "current selected next lane" statements in this landed slice must
-not override the active product correction: DynEcho must behave as an
-acoustic calculator answer engine for user-entered wall/floor layer
-combinations, using exact rows, compatible measured anchors, or the
-correct owned formula family.
+not override [CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md):
+DynEcho must behave as an acoustic calculator answer engine for
+user-entered wall/floor layer combinations, using exact rows, compatible
+measured anchors, or the correct owned formula family.
 
 Latest status: LANDED post-helper-only timber/open-web coverage
 revalidation after the helper-only owner/formula/runtime/surface/

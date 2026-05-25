@@ -28,6 +28,7 @@ import { buildUniformImpactMetricBasis } from "./impact-metric-basis";
 import { hasBoundOnlyUbiqOpenWebCarpetCombinedProfile } from "./bound-only-floor-near-miss";
 import { isResolvedHeavyConcreteCarrierEligible } from "./heavy-concrete-carrier-eligibility";
 import { deriveLightweightSteelFl28Estimate } from "./lightweight-steel-fl28-estimate";
+import { LIGHTWEIGHT_CONCRETE_FAMILY_ESTIMATE_BASIS } from "./lightweight-concrete-family-runtime-constants";
 import { round1 } from "./math";
 import { derivePredictorSpecificFloorSystemEstimate } from "./predictor-floor-system-estimate";
 import { inferStructuralSupportTypeFromMaterial } from "./structural-material-classification";
@@ -35,6 +36,7 @@ import { inferStructuralSupportTypeFromMaterial } from "./structural-material-cl
 type StructuralFamily =
   | "composite_panel"
   | "hollow_core_precast"
+  | "lightweight_concrete"
   | "lightweight_steel"
   | "mass_timber_clt"
   | "open_box_timber"
@@ -64,6 +66,10 @@ function structuralFamilyFromMaterialIds(materialIds: readonly string[]): Struct
     return "hollow_core_precast";
   }
 
+  if (materialIds.includes("lightweight_concrete")) {
+    return "lightweight_concrete";
+  }
+
   if (materialIds.includes("clt_panel")) {
     return "mass_timber_clt";
   }
@@ -91,6 +97,10 @@ function getLayerStructuralFamily(layers: readonly ResolvedLayer[]): StructuralF
   for (const layer of layers) {
     if (layer.floorRole !== "base_structure") {
       continue;
+    }
+
+    if (layer.material.id === "lightweight_concrete") {
+      return "lightweight_concrete";
     }
 
     switch (inferStructuralSupportTypeFromMaterial(layer.material)) {
@@ -387,6 +397,8 @@ function formatStructuralFamily(family: StructuralFamily): string {
       return "hollow-core / precast concrete";
     case "lightweight_steel":
       return "lightweight steel";
+    case "lightweight_concrete":
+      return "lightweight concrete";
     case "mass_timber_clt":
       return "mass-timber CLT";
     case "open_box_timber":
@@ -456,6 +468,16 @@ function resolveSpecificFamilyEstimateBasis(input: {
     return {
       basis: "predictor_heavy_concrete_published_upper_treatment_estimate",
       label: "Published heavy-concrete upper-treatment estimate"
+    };
+  }
+
+  if (
+    input.family === "lightweight_concrete" &&
+    (input.currentProfile === "upper_only" || input.currentProfile === "heavy_floating" || input.currentProfile === "combined")
+  ) {
+    return {
+      basis: LIGHTWEIGHT_CONCRETE_FAMILY_ESTIMATE_BASIS,
+      label: "Published lightweight-concrete family estimate"
     };
   }
 
@@ -575,6 +597,13 @@ function getFamilyEstimatePool(
         candidateFamily === "lightweight_steel" ||
         candidateFamily === "reinforced_concrete"
       );
+    });
+  }
+
+  if (family === "lightweight_concrete") {
+    return recommendations.filter((entry) => {
+      const candidateFamily = getSystemStructuralFamily(entry.system);
+      return candidateFamily === "lightweight_concrete" || candidateFamily === "reinforced_concrete";
     });
   }
 

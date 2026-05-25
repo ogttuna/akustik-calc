@@ -301,6 +301,12 @@ function buildScopedImpactReportLines(
 
   if (result.impact) {
     const metricLines = [
+      ...(typeof result.impact.IIC === "number" && isSupportedAnswerOutput(result, "IIC")
+        ? [`- Impact IIC: ${formatMetric(result.impact.IIC)} dB`]
+        : []),
+      ...(typeof result.impact.AIIC === "number" && isSupportedAnswerOutput(result, "AIIC")
+        ? [`- Impact AIIC: ${formatMetric(result.impact.AIIC)} dB`]
+        : []),
       ...(typeof result.impact.LnTA === "number" && isSupportedAnswerOutput(result, "LnT,A")
         ? [`- Impact LnT,A: ${formatMetric(result.impact.LnTA)} dB`]
         : []),

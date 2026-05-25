@@ -1,6 +1,7 @@
 import {
   LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_FORMULA_CORRIDOR_BASIS
 } from "./layer-combination-resolver-single-leaf-mass-law-banded-runtime-constants";
+import { ASTM_E989_IMPACT_RATING_BASIS } from "./impact-astm-e989";
 import {
   buildLayerCombinationResolverRegistryContract,
   LAYER_COMBINATION_RESOLVER_REGISTRY_LANDED_GATE,
@@ -150,7 +151,10 @@ function buildBoundaryCandidateIds(input: LayerCombinationResolverRuntimeCandida
   if (input.requestedBasis === "building_prediction") {
     ids.push(BASIS_BOUNDARY_CANDIDATE_ID);
   }
-  if (input.requestedBasis === "astm_rating_boundary" || hasAstmAlias(input)) {
+  if (
+    input.runtimeBasisId !== ASTM_E989_IMPACT_RATING_BASIS &&
+    (input.requestedBasis === "astm_rating_boundary" || hasAstmAlias(input))
+  ) {
     ids.push(ASTM_UNSUPPORTED_CANDIDATE_ID);
   }
   return [...new Set(ids)];

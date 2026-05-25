@@ -130,6 +130,7 @@ export * from "./heavy-concrete-combined-impact-formula-corridor";
 export * from "./heavy-concrete-combined-impact-input-surface";
 export * from "./impact-confidence";
 export * from "./impact-direct-flanking";
+export * from "./impact-astm-e989";
 export * from "./impact-exact";
 export * from "./impact-field-context";
 export * from "./impact-guide";

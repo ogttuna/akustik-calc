@@ -1,6 +1,6 @@
 # Calculation Model And Validation
 
-Last reviewed: 2026-05-22
+Last reviewed: 2026-05-25
 
 Document role:
 
@@ -12,31 +12,48 @@ Document role:
 
 Read this before selecting a new widening slice. A green test can only prove the
 answer it actually measures; it does not make the whole acoustic domain complete.
+Read [CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md)
+first for product goal and next-slice selection. This file explains how
+to validate a selected calculator answer once the slice is chosen.
 
 Latest checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md`
+`docs/calculator/CHECKPOINT_2026-05-23_POST_V1_ACOUSTIC_CALCULATOR_STATE_RECONCILIATION.md`
 
 Latest landed implementation checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-21_LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_COVERAGE_REFRESH_REVALIDATION.md`
+`docs/calculator/CHECKPOINT_2026-05-23_POST_V1_ACOUSTIC_CALCULATOR_STATE_RECONCILIATION.md`
 
 Current validation posture:
 
-The immediate correction is acoustic calculator answer-engine V1. The
-engine must choose and publish the calculator answer for a user-entered
-wall/floor layer stack: exact measured answer when the construction
-matches, compatible measured anchor when physically valid, otherwise the
-right family formula. Missing physical inputs must be requested because
-the formula needs them, not because the project is a test harness.
+The acoustic calculator answer-engine V1 correction is landed for the
+current company-internal usable V1 envelope. The engine must choose and
+publish the calculator answer for a user-entered wall/floor layer stack:
+exact measured answer when the construction truly matches, compatible
+measured anchor when physically valid, otherwise the right family
+formula. Missing physical inputs must be requested because the selected
+formula or basis needs them, not because the project is a test harness.
 Diagnostic curves are allowed internally, but they must not surface as
-the user answer when the selected path is missing-input or unsupported.
-The 2026-05-22 reconciliation confirmed the current gate is green, but
-also found the active answer-engine contract file is still missing, flat
-double-leaf-like wall input can still fall to screening without a shared
-resolver trace, and missing `resilientBarSideCount` can still leave
-numeric wall metrics visible while the selected posture is
-`needs_input`.
+the user answer when the selected path is `needs_input` or
+`unsupported`.
+
+The current gate keeps the answer-engine contract included in
+`pnpm calculator:gate:current`, 28 declared resolver candidates, and 25
+active runtime-basis mappings after the post-V1 generalized wall
+multileaf Gate B/C corridor and the Gate D compatible anchor-delta
+runtime.
+
+The selected post-V1 plan is
+[POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md).
+Its next Gate E must select the next wall or floor formula/runtime gap
+by calculator ROI. Gate D has already proved the first compatible
+measured-anchor wall delta: Knauf LSF exact `Rw 55` plus one compatible
+outer acoustic board publishes `Rw 57` while STC / `C` / `Ctr` remain
+unsupported. Validation for the next gate must prove any new answer
+appears consistently across workbench cards, traces, API payloads,
+reports, and
+missing-input prompts without aliasing field, building, or floor-impact
+metrics.
 
 ## Core Rule
 
@@ -461,13 +478,15 @@ Use this distinction when deciding whether an answer is "right":
   - intentionally unavailable outputs
   - tests should assert unsupported buckets and workbench `Not ready` cards
 
-## Airborne Model-First Pivot
+## Answer-Engine Origin Model
 
-The 2026-05-05 replan identified a gap in the airborne/wall side:
-impact/floor has a precedence-based lane resolver, but airborne/wall
-does not yet have an equivalent first-class candidate/basis model.
+The 2026-05-05 model-first pivot identified the need for explicit
+airborne/wall candidate ownership. That architecture target is now
+implemented for the current usable V1 envelope through the shared
+resolver registry, runtime candidate adapter, boundary payloads, owner
+audit, and parity surfaces.
 
-The next architecture target is to make airborne output origin explicit:
+The origin ladder remains the validation model for new post-V1 slices:
 
 1. `measured_exact_full_stack`
 2. `measured_exact_subassembly_plus_calculated_delta`
@@ -478,11 +497,12 @@ The next architecture target is to make airborne output origin explicit:
 7. `needs_input`
 8. `unsupported`
 
-Rockwool/triple-leaf is the first benchmark for this pivot. Complete
-grouped topology should be enough to run a triple-leaf physics
-prediction. It is not enough to claim measured exact or source
-validation. Flat-list triple-leaf remains guarded when layer roles are
-ambiguous.
+For every new formula, adapter, or anchor, tests must prove which origin
+owns the selected route, basis, metric set, required inputs, support
+bucket, value pins, and visible stopped-output behavior. Grouped
+triple-leaf, multicavity, direct-fixed, field, building, and ASTM/IIC
+expansions remain valid future work only when they preserve this origin
+model.
 
 ### Standards Alignment
 

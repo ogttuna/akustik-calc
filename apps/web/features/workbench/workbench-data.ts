@@ -61,7 +61,7 @@ export const REQUESTED_OUTPUT_DESCRIPTIONS: Record<RequestedOutputId, string> = 
 };
 
 export const REQUESTED_OUTPUT_SUPPORT_NOTES: Record<RequestedOutputId, string> = {
-  "AIIC": "Tracked as an ASTM field-impact lane. DAC keeps it visible as research scope until a standards-backed adapter ships.",
+  "AIIC": "Live when an exact ASTM E1007 field one-third-octave impact source can be rated through ASTM E989; ISO Ln,w rows do not alias into AIIC.",
   "C": "Live from the calibrated airborne curve.",
   "CI": "Live when an exact impact curve, exact family, or supported guide lane provides it.",
   "CI,50-2500": "Live when exact impact data or curated family data carries the extended low-frequency companion.",
@@ -73,7 +73,7 @@ export const REQUESTED_OUTPUT_SUPPORT_NOTES: Record<RequestedOutputId, string> =
   "DnT,A": "Live when DnT,w geometry is complete on the airborne field/building lane.",
   "DnT,A,k": "Live only when a curated official source publishes DnT,A,k for the current airborne assembly. Exact field tables stay source-anchored through the local DnT,A proxy lane; project-dependent values stay separate as approximate companions.",
   "HIIC": "Tracked as a future ASTM E3222 high-frequency lane; not fabricated today.",
-  "IIC": "Requested and tracked, but intentionally unsupported until an ASTM E989 lab adapter is implemented.",
+  "IIC": "Live when an exact ASTM E492 lab one-third-octave impact source can be rated through ASTM E989; ISO Ln,w rows do not alias into IIC.",
   "ISR": "Requested and tracked, but intentionally unsupported until an ASTM field-impact adapter is implemented.",
   "LIIC": "Tracked as a future low-frequency lane; current workbench surfaces ISO companions instead of inventing ASTM E3207 values.",
   "LIR": "Tracked as a future low-frequency companion lane; not fabricated today.",
@@ -90,10 +90,10 @@ export const REQUESTED_OUTPUT_SUPPORT_NOTES: Record<RequestedOutputId, string> =
 };
 
 export const LIVE_OUTPUTS = new Set<RequestedOutputId>(["Rw", "R'w", "STC", "C", "Ctr", "DnT,w", "DnT,A", "DnT,A,k", "Dn,w", "Dn,A"]);
-export const SCOPED_OUTPUTS = new Set<RequestedOutputId>(["Ln,w", "DeltaLw", "LnT,A"]);
+export const SCOPED_OUTPUTS = new Set<RequestedOutputId>(["Ln,w", "DeltaLw", "LnT,A", "IIC", "AIIC"]);
 export const GUIDE_OUTPUTS = new Set<RequestedOutputId>(["CI", "CI,50-2500", "Ln,w+CI", "L'n,w", "L'nT,w", "L'nT,50"]);
 export const UPSTREAM_ONLY_OUTPUTS = new Set<RequestedOutputId>([]);
-export const RESEARCH_OUTPUTS = new Set<RequestedOutputId>(["IIC", "AIIC", "NISR", "ISR", "LIIC", "LIR", "HIIC"]);
+export const RESEARCH_OUTPUTS = new Set<RequestedOutputId>(["NISR", "ISR", "LIIC", "LIR", "HIIC"]);
 
 export const STUDY_CONTEXT_LABELS: Record<StudyContext, string> = {
   concept: "Concept",
@@ -131,9 +131,9 @@ export const CAPABILITY_ROWS = [
     status: "live" as const
   },
   {
-    detail: "Exact lab or field impact bands can now be imported on nominal ISO 717-2 grids, keeping measured impact ratings separate from the airborne screening curve.",
+    detail: "Exact lab or field impact bands can now be imported on nominal ISO 717-2 grids, and complete ASTM E492/E1007 impact bands can be rated through ASTM E989 for IIC/AIIC without reusing ISO Ln,w.",
     family: "Exact impact source",
-    label: "Ln,w, L'nT,w, CI, CI,50-2500, Ln,w+CI",
+    label: "Ln,w, L'nT,w, CI, CI,50-2500, Ln,w+CI, IIC, AIIC",
     status: "live" as const
   },
   {

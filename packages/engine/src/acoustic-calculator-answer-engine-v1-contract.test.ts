@@ -402,6 +402,8 @@ const OPENING_BUILDING_CONTEXT: AirborneContext = {
 };
 
 const REQUIRED_SURFACES = [
+  "docs/calculator/CALCULATOR_SOURCE_OF_TRUTH.md",
+  "docs/calculator/POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md",
   "packages/engine/src/acoustic-calculator-answer-engine-v1-contract.test.ts",
   "packages/engine/src/calculate-assembly.ts",
   "packages/engine/src/dynamic-calculator-route-input-topology.ts",
@@ -581,6 +583,8 @@ function expectFloorV1AcceptanceCase(testCase: FloorV1AcceptanceCase): void {
 
 describe("acoustic calculator answer engine V1 contract", () => {
   it("locks the active work to calculator answers instead of source catalog drift", () => {
+    const sourceOfTruth = readRepoFile("docs/calculator/CALCULATOR_SOURCE_OF_TRUTH.md");
+    const postV1Plan = readRepoFile("docs/calculator/POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md");
     const plan = readRepoFile("docs/calculator/ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md");
     const usableV1Plan = readRepoFile("docs/calculator/USABLE_V1_EXECUTION_PLAN.md");
     const agents = readRepoFile("AGENTS.md");
@@ -588,6 +592,24 @@ describe("acoustic calculator answer engine V1 contract", () => {
     const nextImplementationPlan = readRepoFile("docs/calculator/NEXT_IMPLEMENTATION_PLAN.md");
     const gate = readRepoFile("tools/dev/run-calculator-current-gate.ts");
 
+    expect(sourceOfTruth).toContain("DynEcho must be a usable acoustic calculator");
+    expect(sourceOfTruth).toContain("Every published answer must follow this order");
+    expect(sourceOfTruth).toContain("There is no open usable V1 acceptance step");
+    expect(sourceOfTruth).toContain("Allowed Next-Slice Families");
+    expect(sourceOfTruth).toContain("Blocked default moves");
+    expect(sourceOfTruth).toContain("INSUL Benchmark");
+    expect(sourceOfTruth).toContain("POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md");
+    expect(sourceOfTruth).toContain("post_v1_calculator_capability_roi_confirmation_gate_0_plan");
+    expect(postV1Plan).toContain("Status: active post-V1 plan");
+    expect(postV1Plan).toContain("post_v1_calculator_capability_roi_confirmation_gate_0_plan");
+    expect(postV1Plan).toContain("packages/engine/src/post-v1-calculator-capability-roi-confirmation-gate-0-contract.test.ts");
+    expect(postV1Plan).toContain("Gate 0 Acceptance");
+    expect(postV1Plan).toContain("newly calculable outputs");
+    expect(postV1Plan).toContain("low-confidence wording");
+    expect(postV1Plan).toContain("concrete before/after capability delta");
+    expect(postV1Plan).toContain("Gate A must not");
+    expect(postV1Plan).toContain("not a broad source crawl");
+    expect(postV1Plan).toContain("INSUL");
     expect(plan).toContain("Product Direction Lock - 2026-05-22");
     expect(plan).toMatch(/DynEcho must keep moving toward a usable\s+acoustic calculator/);
     expect(plan).toContain("not a source catalog");
@@ -606,9 +628,15 @@ describe("acoustic calculator answer engine V1 contract", () => {
     expect(usableV1Plan).toContain("Start every implementation by naming the usable V1 step being closed");
     expect(usableV1Plan).toContain("Step 5 - Company-Internal Acceptance Gate");
     expect(usableV1Plan).toContain("If a step is not backed by tests, it is not done.");
+    expect(agents).toContain("docs/calculator/CALCULATOR_SOURCE_OF_TRUTH.md");
+    expect(agents).toContain("POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md");
     expect(agents).toContain("docs/calculator/USABLE_V1_EXECUTION_PLAN.md");
     expect(agents).toContain("Do not answer \"how much is left\" with an");
+    expect(currentState).toContain("CALCULATOR_SOURCE_OF_TRUTH.md");
+    expect(currentState).toContain("POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md");
     expect(currentState).toContain("USABLE_V1_EXECUTION_PLAN.md");
+    expect(nextImplementationPlan).toContain("CALCULATOR_SOURCE_OF_TRUTH.md");
+    expect(nextImplementationPlan).toContain("POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md");
     expect(nextImplementationPlan).toContain("USABLE_V1_EXECUTION_PLAN.md");
     expect(gate).toContain("src/acoustic-calculator-answer-engine-v1-contract.test.ts");
 
@@ -1253,13 +1281,7 @@ describe("acoustic calculator answer engine V1 contract", () => {
       },
       {
         expectedBoundary: {
-          missingPhysicalInputs: [
-            "contextMode",
-            "partitionAreaM2",
-            "receivingRoomVolumeM3",
-            "receivingRoomRt60S",
-            "impactFieldContext"
-          ],
+          missingPhysicalInputs: ["impactFieldContext", "receivingRoomVolumeM3"],
           origin: "needs_input",
           unsupportedOutputs: FLOOR_FIELD_IMPACT_OUTPUTS
         },
@@ -1267,13 +1289,7 @@ describe("acoustic calculator answer engine V1 contract", () => {
         expectedTrace: {
           candidateKind: "needs_input_boundary",
           requestedBasis: "field_apparent",
-          requiredInputs: [
-            "contextMode",
-            "partitionAreaM2",
-            "receivingRoomVolumeM3",
-            "receivingRoomRt60S",
-            "impactFieldContext"
-          ],
+          requiredInputs: ["impactFieldContext", "receivingRoomVolumeM3"],
           route: "floor",
           selectedCandidateId: "generic.required_input_owner.needs_input_boundary",
           supportBucket: "needs_input",
@@ -1469,7 +1485,7 @@ describe("acoustic calculator answer engine V1 contract", () => {
       candidateKind: "field_building_adapter",
       requestedBasis: "field_apparent",
       runtimeBasisId: "source_absent_field_building_adapter_error_budget",
-      selectedCandidateId: "floor.open_web.field_building_adapter.exact_anchor_continuation",
+      selectedCandidateId: "floor.impact_field_context.field_building_adapter",
       supportBucket: "field_adapter",
       supportedMetrics: ["R'w", "DnT,w", "L'n,w", "L'nT,w", "L'nT,50"]
     });
@@ -1866,13 +1882,7 @@ describe("acoustic calculator answer engine V1 contract", () => {
 
     expect(assemblyExactFloor.acousticAnswerBoundary).toMatchObject({
       method: ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLOOR_FIELD_IMPACT_NEEDS_INPUT_METHOD,
-      missingPhysicalInputs: [
-        "contextMode",
-        "partitionAreaM2",
-        "receivingRoomVolumeM3",
-        "receivingRoomRt60S",
-        "impactFieldContext"
-      ],
+      missingPhysicalInputs: ["impactFieldContext", "receivingRoomVolumeM3"],
       origin: "needs_input",
       route: "floor",
       unsupportedOutputs: [...FLOOR_FIELD_IMPACT_OUTPUTS]
@@ -1881,13 +1891,7 @@ describe("acoustic calculator answer engine V1 contract", () => {
     expect(assemblyExactFloor.unsupportedTargetOutputs).toEqual([...FLOOR_FIELD_IMPACT_OUTPUTS]);
     expect(assemblyExactFloor.layerCombinationResolverTrace).toMatchObject({
       requestedBasis: "field_apparent",
-      requiredInputs: [
-        "contextMode",
-        "partitionAreaM2",
-        "receivingRoomVolumeM3",
-        "receivingRoomRt60S",
-        "impactFieldContext"
-      ],
+      requiredInputs: ["impactFieldContext", "receivingRoomVolumeM3"],
       runtimeBasisId: null,
       selectedCandidateId: "generic.required_input_owner.needs_input_boundary",
       supportBucket: "needs_input",
@@ -1962,30 +1966,23 @@ describe("acoustic calculator answer engine V1 contract", () => {
     expect(missingLoad.layerCombinationResolverTrace?.surfaceDetail).toContain("Missing physical inputs");
 
     expect(missingFieldContext.acousticAnswerBoundary).toMatchObject({
-      method: ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLOOR_IMPACT_NEEDS_INPUT_METHOD,
-      missingPhysicalInputs: [
-        "contextMode",
-        "partitionAreaM2",
-        "receivingRoomVolumeM3",
-        "receivingRoomRt60S",
-        "impactFieldContext"
-      ],
+      method: ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLOOR_FIELD_IMPACT_NEEDS_INPUT_METHOD,
+      missingPhysicalInputs: ["impactFieldContext", "receivingRoomVolumeM3"],
       origin: "needs_input",
       route: "floor",
       unsupportedOutputs: ["L'n,w", "L'nT,w"]
     });
-    expect(missingFieldContext.impact).toBeNull();
+    expect(missingFieldContext.impact).toMatchObject({
+      DeltaLw: 31.1,
+      LnW: 50
+    });
+    expect(missingFieldContext.impact?.LPrimeNW).toBeUndefined();
+    expect(missingFieldContext.impact?.LPrimeNTw).toBeUndefined();
     expect(missingFieldContext.supportedTargetOutputs).toEqual([]);
     expect(missingFieldContext.unsupportedTargetOutputs).toEqual(["L'n,w", "L'nT,w"]);
     expect(missingFieldContext.layerCombinationResolverTrace).toMatchObject({
       requestedBasis: "field_apparent",
-      requiredInputs: [
-        "contextMode",
-        "partitionAreaM2",
-        "receivingRoomVolumeM3",
-        "receivingRoomRt60S",
-        "impactFieldContext"
-      ],
+      requiredInputs: ["impactFieldContext", "receivingRoomVolumeM3"],
       route: "floor",
       runtimeBasisId: null,
       selectedCandidateId: "generic.required_input_owner.needs_input_boundary",

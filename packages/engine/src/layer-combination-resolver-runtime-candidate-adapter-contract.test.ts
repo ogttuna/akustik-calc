@@ -18,6 +18,10 @@ import {
   BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_SELECTED_CANDIDATE_ID
 } from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-runtime-corridor";
 import { calculateAssembly } from "./calculate-assembly";
+import { calculateImpactOnly } from "./calculate-impact-only";
+import {
+  GATE_BO_REINFORCED_CONCRETE_COMPLETE_INPUT
+} from "./calculator-personal-use-mvp-coverage-sprint-gate-bo";
 import {
   FLAT_LIST_MULTILEAF_GUARD_FIELD_RUNTIME_METHOD,
   FLAT_LIST_MULTILEAF_GUARD_FIELD_SELECTED_CANDIDATE_ID,
@@ -34,6 +38,11 @@ import {
 } from "./dynamic-airborne-gate-h-lined-masonry-clt";
 import { GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD } from "./dynamic-airborne-gate-i-airborne-field-context";
 import { HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS } from "./helper-only-timber-open-web-impact-stack-estimate";
+import { HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS } from "./heavy-concrete-combined-impact-formula-corridor";
+import {
+  ASTM_E989_IMPACT_RATING_BASIS,
+  ASTM_E989_IMPACT_RATING_SELECTED_CANDIDATE_ID
+} from "./impact-astm-e989";
 import { HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS } from "./impact-estimate";
 import { EXACT_IMPACT_SOURCE_BAND_CURVE_BASIS } from "./impact-exact";
 import {
@@ -66,6 +75,10 @@ import { OPEN_WEB_SUPPORTED_BAND_SIMILARITY_BASIS } from "./lightweight-steel-op
 import { OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS } from "./open-box-timber-raw-bare-estimate";
 import { OPEN_BOX_TIMBER_SIMILARITY_BASIS } from "./open-box-timber-similarity-estimate";
 import { OPEN_WEB_RAW_BARE_FORMULA_BASIS } from "./open-web-raw-bare-estimate";
+import {
+  STEEL_FLOOR_FORMULA_BASIS,
+  STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_BASIS
+} from "./steel-floor-impact-formula-corridor";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
@@ -265,7 +278,7 @@ describe("layer combination resolver runtime candidate adapter contract", () => 
       selectionStatus: LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_ADAPTER_SELECTION_STATUS
     });
     expect(contract.summary).toEqual({
-      adaptedRuntimeBasisCount: 22,
+      adaptedRuntimeBasisCount: 32,
       boundaryCandidateCount: 3,
       selectedNextAction: LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_ADAPTER_SELECTED_NEXT_ACTION
     });
@@ -304,6 +317,9 @@ describe("layer combination resolver runtime candidate adapter contract", () => 
     expect(rowsByBasis.get(EXACT_IMPACT_SOURCE_BAND_CURVE_BASIS)?.selectedCandidateId).toBe(
       "floor.exact_impact_band_source.metric_basis"
     );
+    expect(rowsByBasis.get(ASTM_E989_IMPACT_RATING_BASIS)?.selectedCandidateId).toBe(
+      ASTM_E989_IMPACT_RATING_SELECTED_CANDIDATE_ID
+    );
     expect(rowsByBasis.get(OPEN_BOX_TIMBER_SIMILARITY_BASIS)?.selectedCandidateId).toBe(
       "floor.open_box_timber.package_transfer_similarity"
     );
@@ -313,8 +329,17 @@ describe("layer combination resolver runtime candidate adapter contract", () => 
     expect(rowsByBasis.get(HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS)?.selectedCandidateId).toBe(
       "floor.heavy_concrete_floating_floor.lab_impact_formula"
     );
+    expect(rowsByBasis.get(HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS)?.selectedCandidateId).toBe(
+      "floor.heavy_concrete_combined_upper_lower.lab_impact_formula"
+    );
     expect(rowsByBasis.get(HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS)?.selectedCandidateId).toBe(
       "floor.helper_only_timber_open_web.source_absent"
+    );
+    expect(rowsByBasis.get(STEEL_FLOOR_FORMULA_BASIS)?.selectedCandidateId).toBe(
+      "floor.lightweight_steel.upper_lower_mass_spring.source_absent"
+    );
+    expect(rowsByBasis.get(STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_BASIS)?.selectedCandidateId).toBe(
+      "floor.lightweight_steel.suspended_ceiling_only.source_absent"
     );
     expect(rowsByBasis.get(BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_RUNTIME_METHOD)).toMatchObject({
       requestedBasis: "element_lab",
@@ -433,6 +458,10 @@ describe("layer combination resolver runtime candidate adapter contract", () => 
       floorImpactContext: HEAVY_FLOATING_FLOOR_IMPACT_CONTEXT,
       targetOutputs: HEAVY_LAB_IMPACT_OUTPUTS
     });
+    const heavyCombined = calculateImpactOnly([], {
+      impactPredictorInput: GATE_BO_REINFORCED_CONCRETE_COMPLETE_INPUT,
+      targetOutputs: ["Ln,w", "DeltaLw", "IIC", "AIIC"]
+    });
 
     expect(adaptFloorLabResult(exact).selectedCandidateId).toBe(
       "floor.exact_measured_floor_system.same_topology_metric_basis"
@@ -482,6 +511,27 @@ describe("layer combination resolver runtime candidate adapter contract", () => 
       LnW: 50.3,
       basis: HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS
     });
+
+    expect(adaptLayerCombinationRuntimeCandidate({
+      requestedBasis: "element_lab",
+      requestedMetricAliases: toResolverMetricIds(heavyCombined.targetOutputs),
+      route: "floor",
+      runtimeBasisId: heavyCombined.impact?.basis ?? null,
+      unsupportedOutputIds: toResolverMetricIds(heavyCombined.unsupportedTargetOutputs)
+    })).toMatchObject({
+      boundaryCandidateIds: ["generic.astm_iic_aiic.unsupported_boundary"],
+      selectedCandidate: {
+        kind: "source_absent_family_solver",
+        ownedRuntimeBasisId: HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS,
+        supportedMetrics: ["Ln,w", "DeltaLw"]
+      },
+      selectedCandidateId: "floor.heavy_concrete_combined_upper_lower.lab_impact_formula"
+    });
+    expect(heavyCombined.impact).toMatchObject({
+      DeltaLw: 13.7,
+      LnW: 58.1,
+      basis: HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS
+    });
   });
 
   it("adapts field adapter, missing-input, basis-boundary, and ASTM unsupported lanes explicitly", () => {
@@ -500,7 +550,7 @@ describe("layer combination resolver runtime candidate adapter contract", () => 
 
     expect(fieldAdapter).toMatchObject({
       boundaryCandidateIds: ["generic.astm_iic_aiic.unsupported_boundary"],
-      selectedCandidateId: "floor.open_web.field_building_adapter.exact_anchor_continuation",
+      selectedCandidateId: "floor.impact_field_context.field_building_adapter",
       selectedCandidate: {
         basis: "field_apparent",
         kind: "field_building_adapter",

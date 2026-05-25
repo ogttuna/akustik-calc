@@ -8,6 +8,8 @@ import { ksRound1 } from "./math";
 
 export const FLOOR_IMPACT_FIELD_BUILDING_ADAPTER_ERROR_BUDGET_ORIGIN =
   "source_absent_field_building_adapter_error_budget" as const;
+export const FLOOR_IMPACT_FIELD_BUILDING_ADAPTER_SELECTED_CANDIDATE_ID =
+  "floor.impact_field_context.field_building_adapter" as const;
 
 export const FLOOR_IMPACT_FIELD_ADAPTER_LPRIME_NW_TOLERANCE_DB = 5;
 export const FLOOR_IMPACT_FIELD_ADAPTER_LPRIME_NT_W_TOLERANCE_DB = 5.5;

@@ -1,9 +1,11 @@
 import type { ImpactCalculation, ImpactMetricBasisLabel } from "@dynecho/shared";
 
 type ImpactMetricKey =
+  | "AIIC"
   | "CI"
   | "CI50_2500"
   | "DeltaLw"
+  | "IIC"
   | "LPrimeNW"
   | "LPrimeNT50"
   | "LPrimeNTw"
@@ -19,6 +21,8 @@ type ImpactMetricBasisRow = {
 };
 
 const IMPACT_METRIC_ORDER: readonly ImpactMetricKey[] = [
+  "IIC",
+  "AIIC",
   "LnW",
   "DeltaLw",
   "CI",
@@ -32,12 +36,16 @@ const IMPACT_METRIC_ORDER: readonly ImpactMetricKey[] = [
 
 export function formatImpactMetricLabel(metric: ImpactMetricKey): string {
   switch (metric) {
+    case "AIIC":
+      return "AIIC";
     case "CI":
       return "CI";
     case "CI50_2500":
       return "CI,50-2500";
     case "DeltaLw":
       return "DeltaLw";
+    case "IIC":
+      return "IIC";
     case "LPrimeNW":
       return "L'n,w";
     case "LPrimeNT50":
@@ -55,6 +63,12 @@ export function formatImpactMetricLabel(metric: ImpactMetricKey): string {
 
 export function formatImpactMetricBasisLabel(basis: ImpactMetricBasisLabel): string {
   switch (basis) {
+    case "astm_e989_aiic_metric_schema_adapter_bridge":
+      return "ASTM E989 field AIIC metric owner";
+    case "astm_e989_iic_metric_schema_adapter_bridge":
+      return "ASTM E989 lab IIC metric owner";
+    case "astm_e989_impact_rating_metric_schema_adapter_bridge":
+      return "ASTM E989 impact rating bridge";
     case "exact_source_band_curve_iso7172":
       return "Exact ISO 717-2 band rating";
     case "exact_source_dutch_lnta_from_octave_bands":
@@ -120,6 +134,12 @@ export function formatImpactMetricBasisLabel(basis: ImpactMetricBasisLabel): str
 
 export function describeImpactMetricBasis(metric: ImpactMetricKey, basis: ImpactMetricBasisLabel): string {
   switch (basis) {
+    case "astm_e989_aiic_metric_schema_adapter_bridge":
+      return `${formatImpactMetricLabel(metric)} was rated directly from exact ASTM E1007 field impact bands through ASTM E989.`;
+    case "astm_e989_iic_metric_schema_adapter_bridge":
+      return `${formatImpactMetricLabel(metric)} was rated directly from exact ASTM E492 lab impact bands through ASTM E989.`;
+    case "astm_e989_impact_rating_metric_schema_adapter_bridge":
+      return `${formatImpactMetricLabel(metric)} came from the ASTM E989 contour-rating bridge.`;
     case "exact_source_band_curve_iso7172":
       return `${formatImpactMetricLabel(metric)} was rated directly from imported ISO 717-2 impact bands.`;
     case "exact_source_dutch_lnta_from_octave_bands":

@@ -29,6 +29,8 @@ import {
   GATE_H_LINED_MASSIVE_WALL_SELECTED_CANDIDATE_ID
 } from "./dynamic-airborne-gate-h-lined-masonry-clt";
 import { GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD } from "./dynamic-airborne-gate-i-airborne-field-context";
+import { HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS } from "./heavy-concrete-combined-impact-formula-corridor";
+import { ASTM_E989_IMPACT_RATING_SELECTED_CANDIDATE_ID } from "./impact-astm-e989";
 import { HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS } from "./impact-estimate";
 import { EXACT_IMPACT_SOURCE_BAND_CURVE_BASIS } from "./impact-exact";
 import {
@@ -51,6 +53,7 @@ import {
 import {
   LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID
 } from "./layer-combination-resolver-single-leaf-mass-law-banded-runtime-constants";
+import { LIGHTWEIGHT_CONCRETE_FAMILY_SELECTED_CANDIDATE_ID } from "./lightweight-concrete-family-runtime-constants";
 import { OPEN_BOX_TIMBER_SIMILARITY_BASIS } from "./open-box-timber-similarity-estimate";
 import { OPEN_WEB_RAW_BARE_FORMULA_BASIS } from "./open-web-raw-bare-estimate";
 
@@ -209,20 +212,20 @@ describe("layer combination resolver candidate coverage matrix refresh contract"
       sourceRowsAreEvidenceNotProduct: true
     });
     expect(contract.summary).toEqual({
-      activeRuntimeCandidateCount: 22,
+      activeRuntimeCandidateCount: 32,
       allCandidateDeclarationsCovered: true,
       boundaryCandidateCount: 3,
-      candidateDeclarationCount: 25,
-      coverageMatrixRowCount: 25,
+      candidateDeclarationCount: 35,
+      coverageMatrixRowCount: 35,
       readinessBucketCount: {
         needs_input: 1,
-        ready: 3,
-        ready_with_budget: 19,
+        ready: 4,
+        ready_with_budget: 28,
         research_only: 0,
         unsupported: 2
       },
       selectedNextAction: LAYER_COMBINATION_RESOLVER_CANDIDATE_COVERAGE_MATRIX_REFRESH_SELECTED_NEXT_ACTION,
-      surfaceRowCount: 25
+      surfaceRowCount: 35
     });
 
     for (const path of REQUIRED_SURFACES) {
@@ -238,13 +241,18 @@ describe("layer combination resolver candidate coverage matrix refresh contract"
         candidateIds: [
           "floor.exact_measured_floor_system.same_topology_metric_basis",
           "wall.exact_verified_airborne.same_leaf_schedule",
-          "floor.exact_impact_band_source.metric_basis"
+          "floor.exact_impact_band_source.metric_basis",
+          ASTM_E989_IMPACT_RATING_SELECTED_CANDIDATE_ID
         ],
         kind: "exact_measured_override",
         resolverOrderRank: 0
       },
       {
-        candidateIds: ["floor.open_box_timber.package_transfer_similarity", "floor.open_web.supported_band_similarity"],
+        candidateIds: [
+          "wall.compatible_anchor_delta.extra_board_on_verified_lsf",
+          "floor.open_box_timber.package_transfer_similarity",
+          "floor.open_web.supported_band_similarity"
+        ],
         kind: "similarity_anchor",
         resolverOrderRank: 1
       },
@@ -257,6 +265,7 @@ describe("layer combination resolver candidate coverage matrix refresh contract"
         candidateIds: [
           BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_SELECTED_CANDIDATE_ID,
           BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_SELECTED_CANDIDATE_ID,
+          "candidate_post_v1_wall_multileaf_generalized_source_absent_family_solver",
           LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID,
           LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID,
           GATE_H_LINED_MASSIVE_WALL_SELECTED_CANDIDATE_ID,
@@ -266,6 +275,13 @@ describe("layer combination resolver candidate coverage matrix refresh contract"
           "floor.open_web.raw_bare_source_absent",
           "floor.helper_only_timber_open_web.source_absent",
           "floor.open_web.direct_fixed_lining.source_absent",
+          "floor.composite_panel.published_interaction_family_solver",
+          LIGHTWEIGHT_CONCRETE_FAMILY_SELECTED_CANDIDATE_ID,
+          "floor.lightweight_steel.upper_lower_mass_spring.source_absent",
+          "floor.lightweight_steel.suspended_ceiling_only.source_absent",
+          "floor.timber_joist.delta_lw_formula",
+          "floor.mass_timber_clt.delta_lw_formula",
+          "floor.heavy_concrete_combined_upper_lower.lab_impact_formula",
           "floor.heavy_concrete_floating_floor.lab_impact_formula"
         ],
         kind: "source_absent_family_solver",
@@ -275,7 +291,7 @@ describe("layer combination resolver candidate coverage matrix refresh contract"
         candidateIds: [
           BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
           FLAT_LIST_MULTILEAF_GUARD_FIELD_SELECTED_CANDIDATE_ID,
-          "floor.open_web.field_building_adapter.exact_anchor_continuation",
+          "floor.impact_field_context.field_building_adapter",
           "wall.airborne_field_context.field_apparent_adapter"
         ],
         kind: "field_building_adapter",
@@ -427,6 +443,13 @@ describe("layer combination resolver candidate coverage matrix refresh contract"
       supportBucket: "source_absent_estimate",
       supportedMetrics: ["Ln,w", "DeltaLw"]
     });
+    expect(rowById("floor.heavy_concrete_combined_upper_lower.lab_impact_formula")).toMatchObject({
+      candidateKind: "source_absent_family_solver",
+      readinessBucket: "ready_with_budget",
+      runtimeBasisId: HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS,
+      supportBucket: "source_absent_estimate",
+      supportedMetrics: ["Ln,w", "DeltaLw"]
+    });
     expect(rowById(BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID)).toMatchObject({
       basis: "field_apparent",
       candidateKind: "field_building_adapter",
@@ -435,7 +458,7 @@ describe("layer combination resolver candidate coverage matrix refresh contract"
       supportBucket: "field_adapter",
       supportedMetrics: ["R'w", "DnT,w"]
     });
-    expect(rowById("floor.open_web.field_building_adapter.exact_anchor_continuation")).toMatchObject({
+    expect(rowById("floor.impact_field_context.field_building_adapter")).toMatchObject({
       basis: "field_apparent",
       candidateKind: "field_building_adapter",
       readinessBucket: "ready_with_budget",
@@ -511,7 +534,7 @@ describe("layer combination resolver candidate coverage matrix refresh contract"
     expect(field.layerCombinationResolverTrace).toMatchObject({
       boundaryCandidateIds: ["generic.astm_iic_aiic.unsupported_boundary"],
       requestedBasis: "field_apparent",
-      selectedCandidateId: "floor.open_web.field_building_adapter.exact_anchor_continuation",
+      selectedCandidateId: "floor.impact_field_context.field_building_adapter",
       supportBucket: "field_adapter"
     });
     expect(field.metrics).toMatchObject({ estimatedDnTwDb: 48, estimatedRwPrimeDb: 45 });

@@ -72,7 +72,16 @@ export type TargetOutputCorridor = {
 };
 
 const FIELD_OUTPUTS = new Set<RequestedOutputId>(["L'n,w", "L'nT,w", "L'nT,50"]);
-const IMPACT_CORRIDOR_OUTPUTS = new Set<RequestedOutputId>(["Ln,w", "DeltaLw", "CI", "CI,50-2500", "Ln,w+CI", "LnT,A"]);
+const IMPACT_CORRIDOR_OUTPUTS = new Set<RequestedOutputId>([
+  "AIIC",
+  "Ln,w",
+  "DeltaLw",
+  "CI",
+  "CI,50-2500",
+  "Ln,w+CI",
+  "LnT,A",
+  "IIC"
+]);
 
 function hasGuideValue(
   output: RequestedOutputId,

@@ -272,12 +272,16 @@ describe("calculator model-first physics prediction pivot Gate Z", () => {
       targetOutputs: FIELD_IMPACT_OUTPUTS
     });
 
-    expect(result.impact).toBeNull();
+    expect(result.impact).toMatchObject({
+      DeltaLw: 31.1,
+      LnW: 50
+    });
+    expect(result.impact?.LPrimeNW).toBeUndefined();
+    expect(result.impact?.LPrimeNTw).toBeUndefined();
     expect(result.supportedTargetOutputs).toEqual([]);
     expect(result.unsupportedTargetOutputs).toEqual(FIELD_IMPACT_OUTPUTS);
-    expect(result.warnings).toContain(
-      "Dynamic Calculator floor-impact field runtime is waiting for impactFieldContext before promoting L'n,w / L'nT,w from the lab impact anchor."
-    );
+    expect(result.warnings.join("\n")).toContain("impactFieldContext");
+    expect(result.warnings.join("\n")).toContain("L'n,w");
   });
 
   it("keeps docs and current-gate runner aligned with the landed Gate Z and next Gate AA plan", () => {

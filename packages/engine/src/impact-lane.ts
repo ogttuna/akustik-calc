@@ -40,7 +40,7 @@ import {
   resolveExactFloorSystemById,
   resolveExactFloorSystemImpactSource
 } from "./floor-system-match";
-import { buildExactImpactFromSource } from "./impact-exact";
+import { buildOwnedImpactFromExactSource } from "./impact-astm-e989";
 import { applyImpactFieldContextToBoundImpact, applyImpactFieldContextToImpact } from "./impact-field-context";
 import { estimateImpactFromLayers, estimateImpactFromPredictorInput } from "./impact-estimate";
 import { buildImpactPredictorStatus } from "./impact-predictor-status";
@@ -423,7 +423,7 @@ export function resolveLayerBasedImpactLane(
 export function finalizeResolvedImpactLane(
   input: FinalizeResolvedImpactLaneInput
 ): FinalizedImpactLane {
-  const exactImpact = input.exactImpactSource ? buildExactImpactFromSource(input.exactImpactSource) : null;
+  const exactImpact = input.exactImpactSource ? buildOwnedImpactFromExactSource(input.exactImpactSource) : null;
   const exactSupplementaryImpact =
     exactImpact && input.impactCatalogMatch?.catalog.matchMode === "product_property_delta"
       ? input.impactCatalogMatch.impact ?? null

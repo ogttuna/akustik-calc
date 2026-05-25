@@ -251,12 +251,12 @@ describe("broad accuracy floor open-web direct-fixed lining transfer owner contr
       origin: "source_absent_formula_error_budget",
       toleranceDb: 4
     });
-    expect(sourceAbsentFieldAlias.impact).toBeNull();
+    expect(sourceAbsentFieldAlias.impact?.basis).not.toBe(OPEN_WEB_DIRECT_FIXED_LINING_BASIS);
     expect(sourceAbsentFieldAlias.supportedTargetOutputs).toEqual([]);
     expect(sourceAbsentFieldAlias.unsupportedTargetOutputs).toEqual(["L'n,w"]);
     expect(sourceAbsentFieldAlias.warnings).toEqual(
       expect.arrayContaining([
-        expect.stringContaining("field runtime is waiting for"),
+        expect.stringContaining("provide impactFieldContext"),
         expect.stringContaining("L'n,w")
       ])
     );

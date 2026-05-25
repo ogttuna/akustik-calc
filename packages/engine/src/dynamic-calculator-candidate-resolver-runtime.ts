@@ -104,8 +104,12 @@ import {
   FLAT_LIST_MULTILEAF_GUARD_LAB_SELECTED_CANDIDATE_ID,
   isFlatListMultileafGuardStrategy
 } from "./dynamic-airborne-flat-list-multileaf-guard";
+import {
+  POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_RUNTIME_METHOD
+} from "./post-v1-wall-compatible-anchor-delta";
 
 export type DynamicCalculatorCandidateResolverSourceAnchor = {
+  anchorKind?: "compatible_delta" | "exact_full_stack";
   applied: boolean;
   match: {
     id: string;
@@ -305,7 +309,7 @@ function anchoredDeltaBasis(input: {
     family: input.family,
     kind: "airborne_anchored_delta",
     measurementStandard: "source_report",
-    method: "exact_subassembly_source_plus_calculated_delta",
+    method: POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_RUNTIME_METHOD,
     missingPhysicalInputs: [],
     missingSourceEvidence: [...(input.missingSourceEvidence ?? [])],
     origin: "measured_exact_subassembly_plus_calculated_delta",
@@ -490,6 +494,9 @@ function exactSourceEligible(input: {
   if (!input.sourceAnchor?.applied || !match) {
     return false;
   }
+  if (input.sourceAnchor.anchorKind === "compatible_delta") {
+    return false;
+  }
 
   return (
     input.assessment.route === "wall" &&
@@ -535,11 +542,32 @@ function outputsCoveredByExactSourceMetric(metricLabel: string): RequestedOutput
   }
 }
 
+function hasWallElementLabOutputRequest(targetOutputs: readonly RequestedOutputId[]): boolean {
+  const requestedOutputs = new Set(outputIds(targetOutputs, "wall"));
+  return ["Rw", "STC", "C", "Ctr"].some((output) =>
+    requestedOutputs.has(output as RequestedOutputId)
+  );
+}
+
 function anchoredDeltaEligible(input: {
   assessment: DynamicCalculatorRouteInputTopologyAssessment;
   sourceAnchor?: DynamicCalculatorCandidateResolverSourceAnchor | null;
+  targetOutputs: readonly RequestedOutputId[];
 }): boolean {
   const match = input.sourceAnchor?.match;
+  if (
+    input.sourceAnchor?.anchorKind === "compatible_delta"
+  ) {
+    return Boolean(
+      input.assessment.route === "wall" &&
+        input.sourceAnchor.applied &&
+        match &&
+        input.assessment.outputBasis === "element_lab" &&
+        match.sourceMode === "lab" &&
+        hasWallElementLabOutputRequest(input.targetOutputs)
+    );
+  }
+
   return Boolean(
     input.assessment.route === "wall" &&
       input.sourceAnchor?.applied &&
@@ -579,6 +607,17 @@ function selectLane(input: {
   }
 
   if (
+    input.sourceAnchor?.anchorKind === "compatible_delta" &&
+    anchoredDeltaEligible({
+      assessment: input.assessment,
+      sourceAnchor: input.sourceAnchor,
+      targetOutputs: input.targetOutputs
+    })
+  ) {
+    return "anchored_delta";
+  }
+
+  if (
     (!flatListGuardNumericRuntime && input.topologyNormalization.blockers.length > 0) ||
     (!flatListGuardNumericRuntime && input.assessment.missingPhysicalInputs.length > 0) ||
     (!flatListGuardNumericRuntime && input.assessment.status === "needs_input") ||
@@ -598,7 +637,8 @@ function selectLane(input: {
   if (
     anchoredDeltaEligible({
       assessment: input.assessment,
-      sourceAnchor: input.sourceAnchor
+      sourceAnchor: input.sourceAnchor,
+      targetOutputs: input.targetOutputs
     })
   ) {
     return "anchored_delta";
@@ -859,7 +899,8 @@ function buildSeeds(input: {
   });
   const anchoredEligible = anchoredDeltaEligible({
     assessment: input.assessment,
-    sourceAnchor: input.sourceAnchor
+    sourceAnchor: input.sourceAnchor,
+    targetOutputs: input.targetOutputs
   });
   const exactSourceId = exactEligible ? input.sourceAnchor?.match?.id : undefined;
   const anchorSourceId = anchoredEligible ? input.sourceAnchor?.match?.id : undefined;
@@ -1038,7 +1079,8 @@ export function buildDynamicCalculatorCandidateResolverRuntime(
   });
   const anchoredEligible = anchoredDeltaEligible({
     assessment: routeInputAssessment,
-    sourceAnchor: input.sourceAnchor
+    sourceAnchor: input.sourceAnchor,
+    targetOutputs
   });
   const seeds = buildSeeds({
     assessment: routeInputAssessment,

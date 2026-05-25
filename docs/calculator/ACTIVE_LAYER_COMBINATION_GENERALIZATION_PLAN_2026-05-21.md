@@ -1,21 +1,24 @@
 # Active Layer Combination Generalization Plan - 2026-05-21
 
-Status: active execution plan after repo/doc/implementation
-reconciliation. This document exists because the living docs are correct
-but long: the helper-only formula, runtime, surface-parity, coverage
-refresh, post-helper-only revalidation, and layer-combination resolver
-registry/runtime candidate adapter/surface-parity/candidate coverage
-matrix refresh, company-internal V0 rehearsal, single-leaf mass-law
-banded solver owner/formula/runtime corridor/surface parity,
-post-single-leaf matrix refresh, and double-leaf / framed wall banded
-solver owner/formula/runtime corridor/surface parity gates have landed;
-the double-leaf / framed wall banded coverage refresh has now landed and
-selected post-double-leaf coverage revalidation. A later
-implementation/runtime analysis has superseded that narrow next slice
-with the acoustic calculator answer engine V1 slice, because the
-existing infrastructure must now calculate real user-entered layer
-combinations instead of adding another finite coverage/revalidation
-step.
+Historical status, 2026-05-25: this file is retained as implementation
+history only. It does not select the next slice. Read
+[CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md) first;
+usable V1 Steps 0-5 are closed, and new work must be explicitly selected
+as post-V1 formula coverage, adapters, calibration/holdouts, or input
+ergonomics. Older "selected next" entries below are consumed handoffs,
+not current authority.
+
+Status: historical execution-plan record after repo/doc/implementation
+reconciliation. This document exists because the earlier living docs
+were correct but long. The helper-only formula, runtime, surface-parity,
+coverage refresh, post-helper-only revalidation, resolver registry /
+runtime candidate adapter / surface parity / candidate coverage matrix
+refresh, company-internal V0 rehearsal, single-leaf mass-law banded
+owner/formula/runtime/surface parity, post-single-leaf matrix refresh,
+and double-leaf / framed wall banded owner/formula/runtime/surface
+parity gates have landed. Later implementation/runtime analysis
+superseded the narrow post-double-leaf next slice with answer-engine V1,
+and usable V1 is now closed for the current tested envelope.
 
 Checkpoint review, 2026-05-21:
 [CHECKPOINT_2026-05-21_LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_COVERAGE_REFRESH_REVALIDATION.md](./CHECKPOINT_2026-05-21_LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_COVERAGE_REFRESH_REVALIDATION.md)
@@ -647,7 +650,7 @@ Required positive rows:
 - open-web supported-band similarity:
   `floor.open_web.supported_band_similarity`;
 - open-web field/building adapter:
-  `floor.open_web.field_building_adapter.exact_anchor_continuation`;
+  `floor.impact_field_context.field_building_adapter`;
 - missing owner boundary:
   `generic.required_input_owner.needs_input_boundary`;
 - building basis boundary:

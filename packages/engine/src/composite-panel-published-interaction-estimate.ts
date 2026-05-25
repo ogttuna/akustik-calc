@@ -4,6 +4,7 @@ import type { ExactFloorSystem, FloorSystemEstimateResult, ImpactPredictorInput 
 import { getImpactConfidenceForBasis } from "./impact-confidence";
 import { buildUniformImpactMetricBasis } from "./impact-metric-basis";
 import { clamp, ksRound1, round1 } from "./math";
+import { COMPOSITE_PANEL_PUBLISHED_INTERACTION_ESTIMATE_BASIS } from "./composite-panel-published-interaction-runtime-constants";
 
 const PMC_BARE_ID = "pmc_m1_bare_composite_lab_2026";
 const PMC_DRY_ID = "pmc_m1_dry_floating_floor_lab_2026";
@@ -127,15 +128,15 @@ export function deriveCompositePanelPublishedInteractionEstimate(
       impact: {
         LnW: ksRound1(lnW),
         availableOutputs: ["Ln,w"],
-        basis: "predictor_composite_panel_published_interaction_estimate",
-        confidence: getImpactConfidenceForBasis("predictor_composite_panel_published_interaction_estimate"),
+        basis: COMPOSITE_PANEL_PUBLISHED_INTERACTION_ESTIMATE_BASIS,
+        confidence: getImpactConfidenceForBasis(COMPOSITE_PANEL_PUBLISHED_INTERACTION_ESTIMATE_BASIS),
         estimateCandidateIds: [c2Row.id, c1Row.id, bareRow.id],
         labOrField: "lab",
         metricBasis: buildUniformImpactMetricBasis(
           {
             LnW: ksRound1(lnW)
           },
-          "predictor_composite_panel_published_interaction_estimate"
+          COMPOSITE_PANEL_PUBLISHED_INTERACTION_ESTIMATE_BASIS
         ),
         notes,
         scope: "family_estimate"
@@ -263,15 +264,15 @@ export function deriveCompositePanelPublishedInteractionEstimate(
     impact: {
       LnW: ksRound1(lnW),
       availableOutputs: ["Ln,w"],
-      basis: "predictor_composite_panel_published_interaction_estimate",
-      confidence: getImpactConfidenceForBasis("predictor_composite_panel_published_interaction_estimate"),
+      basis: COMPOSITE_PANEL_PUBLISHED_INTERACTION_ESTIMATE_BASIS,
+      confidence: getImpactConfidenceForBasis(COMPOSITE_PANEL_PUBLISHED_INTERACTION_ESTIMATE_BASIS),
       estimateCandidateIds,
       labOrField: "lab",
       metricBasis: buildUniformImpactMetricBasis(
         {
           LnW: ksRound1(lnW)
         },
-        "predictor_composite_panel_published_interaction_estimate"
+        COMPOSITE_PANEL_PUBLISHED_INTERACTION_ESTIMATE_BASIS
       ),
       notes,
       scope: "family_estimate"

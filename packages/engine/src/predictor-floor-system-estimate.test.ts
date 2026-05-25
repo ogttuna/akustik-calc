@@ -36,7 +36,7 @@ describe("derivePredictorSpecificFloorSystemEstimate", () => {
     expect(result?.impact.basis).toBe("predictor_floor_system_low_confidence_estimate");
   });
 
-  it("keeps overlapping composite suspended-ceiling inputs on the low-confidence strategy before the composite interaction strategy", () => {
+  it("keeps overlapping composite suspended-ceiling inputs on the composite interaction strategy before low-confidence fallback", () => {
     const result = derivePredictorSpecificFloorSystemEstimate({
       structuralSupportType: "composite_panel",
       impactSystemType: "suspended_ceiling_only",
@@ -54,8 +54,10 @@ describe("derivePredictorSpecificFloorSystemEstimate", () => {
       }
     });
 
-    expect(result?.kind).toBe("low_confidence");
-    expect(result?.impact.basis).toBe("predictor_floor_system_low_confidence_estimate");
+    expect(result?.kind).toBe("family_general");
+    expect(result?.impact.basis).toBe("predictor_composite_panel_published_interaction_estimate");
+    expect(result?.impact.LnW).toBe(63.3);
+    expect(result?.airborneRatings.Rw).toBe(48.6);
   });
 
   it("falls through to the heavy-concrete special strategy when no low-confidence strategy matches", () => {

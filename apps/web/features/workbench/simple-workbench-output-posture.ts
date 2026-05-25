@@ -63,6 +63,10 @@ import {
   isHelperOnlyTimberOpenWebImpactStackResult
 } from "./helper-only-timber-open-web-impact-stack-surface";
 import {
+  getAstmE989ImpactRatingPostureDetail,
+  isAstmE989ImpactRatingResult
+} from "./astm-e989-impact-rating-surface";
+import {
   getCompanyInternalOpeningLeakFieldBuildingOutputDetail,
   getCompanyInternalOpeningLeakFieldBuildingSurface
 } from "./opening-leak-field-building-surface";
@@ -348,6 +352,21 @@ export function buildSimpleWorkbenchOutputPosture(input: {
   if (
     studyMode === "floor" &&
     status === "live" &&
+    (output === "IIC" || output === "AIIC") &&
+    isAstmE989ImpactRatingResult(result)
+  ) {
+    return {
+      detail:
+        getAstmE989ImpactRatingPostureDetail(output, result) ??
+        "Exact ASTM impact bands were rated through the ASTM E989 contour bridge.",
+      label: "ASTM E989 exact rating",
+      tone: "success"
+    };
+  }
+
+  if (
+    studyMode === "floor" &&
+    status === "live" &&
     isOpenBoxTimberRawBareResult(result) &&
     (
       output === "Rw" ||
@@ -483,6 +502,15 @@ export function buildSimpleWorkbenchOutputPosture(input: {
     };
   }
 
+  const rockwoolTripleLeafScreeningPolicy = getRockwoolTripleLeafScreeningPolicyCopy(result);
+  if (rockwoolTripleLeafScreeningPolicy) {
+    return {
+      detail: `${rockwoolTripleLeafScreeningPolicy.outputDetail} ${describeAirborneValidationPosture(result).detail}`,
+      label: rockwoolTripleLeafScreeningPolicy.label,
+      tone: "warning"
+    };
+  }
+
   if (isFieldAirborneOutput(output) || FIELD_IMPACT_OUTPUTS.has(output) || output === "DnT,A,k") {
     const gateISurface = getGateIAirborneFieldContextSurface(result);
 
@@ -557,15 +585,6 @@ export function buildSimpleWorkbenchOutputPosture(input: {
   }
 
   const posture = describeAirborneValidationPosture(result);
-  const rockwoolTripleLeafScreeningPolicy = getRockwoolTripleLeafScreeningPolicyCopy(result);
-
-  if (rockwoolTripleLeafScreeningPolicy) {
-    return {
-      detail: `${rockwoolTripleLeafScreeningPolicy.outputDetail} ${posture.detail}`,
-      label: rockwoolTripleLeafScreeningPolicy.label,
-      tone: "warning"
-    };
-  }
 
   return {
     detail: posture.detail,

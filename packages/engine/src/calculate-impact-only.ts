@@ -27,6 +27,7 @@ import { hasBoundOnlyUbiqOpenWebCarpetCombinedProfile } from "./bound-only-floor
 import {
   buildAnswerEngineV1FloorAstmIicAiicUnsupportedBoundary,
   buildAnswerEngineV1FloorFieldImpactNeedsInputBoundary,
+  buildAnswerEngineV1FloorImpactNeedsInputBoundary,
   buildAnswerEngineV1FloorRolelessHelperOnlyBoundary,
   isAnswerEngineV1PureFloorAstmIicAiicRequest,
   isAnswerEngineV1PureFloorFieldImpactRequest,
@@ -40,7 +41,10 @@ import { buildFloorSystemRatings } from "./floor-system-ratings";
 import {
   resolveExactFloorSystemById
 } from "./floor-system-match";
-import { buildExactImpactFromSource } from "./impact-exact";
+import {
+  ASTM_E989_IMPACT_RATING_BASIS,
+  buildOwnedImpactFromExactSource
+} from "./impact-astm-e989";
 import {
   adaptImpactPredictorInput,
   getVisibleLayerPredictorBlockerWarning,
@@ -71,8 +75,12 @@ import { computeLayerSurfaceMassKgM2 } from "./layer-surface-mass";
 import { getFloorFamilySourceGuard } from "./floor-family-source-guard";
 import { getDefaultMaterialCatalog, resolveMaterial } from "./material-catalog";
 import {
-  buildHeavyConcreteCombinedImpactFormulaFallbackBlockerWarning
+  buildHeavyConcreteCombinedImpactFormulaFallbackBlockerWarning,
+  collectHeavyConcreteCombinedImpactFormulaMissingPhysicalInputs
 } from "./heavy-concrete-combined-impact-formula-corridor";
+import {
+  collectTimberCltDeltaLwFormulaMissingPhysicalInputs
+} from "./timber-clt-floor-impact-delta-lw-runtime-corridor";
 import {
   hasReinforcedConcreteLowConfidenceProxyAirborne,
   REINFORCED_CONCRETE_LOW_CONFIDENCE_PROXY_AIRBORNE_WARNING
@@ -279,6 +287,78 @@ function applyAcousticCalculatorAnswerEngineV1FloorFieldImpactNeedsInputBoundary
   );
 }
 
+function applyAcousticCalculatorAnswerEngineV1HeavyConcreteCombinedNeedsInputBoundary(input: {
+  predictorInput: ImpactPredictorInput | null;
+  result: ImpactOnlyCalculation;
+}): void {
+  if (input.result.acousticAnswerBoundary || input.result.impact) {
+    return;
+  }
+
+  const missingPhysicalInputs = collectHeavyConcreteCombinedImpactFormulaMissingPhysicalInputs(input.predictorInput);
+  const stoppedOutputs: RequestedOutputId[] = input.result.targetOutputs.filter((output: RequestedOutputId) =>
+    output === "Ln,w" || output === "DeltaLw"
+  );
+  const unsupportedOutputSet = new Set<RequestedOutputId>(input.result.unsupportedTargetOutputs);
+
+  if (
+    missingPhysicalInputs.length === 0 ||
+    stoppedOutputs.length === 0 ||
+    !stoppedOutputs.every((output: RequestedOutputId) => unsupportedOutputSet.has(output))
+  ) {
+    return;
+  }
+
+  const boundary = buildAnswerEngineV1FloorImpactNeedsInputBoundary({
+    missingPhysicalInputs,
+    targetOutputs: stoppedOutputs
+  });
+  if (!boundary) {
+    return;
+  }
+
+  input.result.acousticAnswerBoundary = boundary;
+  input.result.warnings.push(
+    `Acoustic Calculator Answer Engine V1 selected needs_input for ${boundary.unsupportedOutputs.join(", ")}; provide ${boundary.missingPhysicalInputs.join(", ")} before DynEcho publishes reinforced-concrete combined floor impact answers.`
+  );
+}
+
+function applyAcousticCalculatorAnswerEngineV1TimberCltDeltaLwNeedsInputBoundary(input: {
+  predictorInput: ImpactPredictorInput | null;
+  result: ImpactOnlyCalculation;
+}): void {
+  if (input.result.acousticAnswerBoundary) {
+    return;
+  }
+
+  const missingPhysicalInputs = collectTimberCltDeltaLwFormulaMissingPhysicalInputs(input.predictorInput);
+  const stoppedOutputs: RequestedOutputId[] = input.result.targetOutputs.filter((output: RequestedOutputId) =>
+    output === "DeltaLw"
+  );
+  const unsupportedOutputSet = new Set<RequestedOutputId>(input.result.unsupportedTargetOutputs);
+
+  if (
+    missingPhysicalInputs.length === 0 ||
+    stoppedOutputs.length === 0 ||
+    !stoppedOutputs.every((output: RequestedOutputId) => unsupportedOutputSet.has(output))
+  ) {
+    return;
+  }
+
+  const boundary = buildAnswerEngineV1FloorImpactNeedsInputBoundary({
+    missingPhysicalInputs,
+    targetOutputs: stoppedOutputs
+  });
+  if (!boundary) {
+    return;
+  }
+
+  input.result.acousticAnswerBoundary = boundary;
+  input.result.warnings.push(
+    `Acoustic Calculator Answer Engine V1 selected needs_input for ${boundary.unsupportedOutputs.join(", ")}; provide ${boundary.missingPhysicalInputs.join(", ")} before DynEcho publishes timber/CLT floor DeltaLw answers.`
+  );
+}
+
 export function calculateImpactOnly(
   inputVisibleLayers: readonly LayerInput[],
   options: CalculateImpactOnlyOptions = {}
@@ -335,7 +415,7 @@ export function calculateImpactOnly(
   let directVisibleNarrowImpact: ImpactCalculation | null = null;
   let explicitDeltaImpact: ImpactCalculation | null = null;
   let visibleLayerPredictorBlockerWarning: string | null = null;
-  const exactImpact = exactImpactSource ? buildExactImpactFromSource(exactImpactSource) : null;
+  const exactImpact = exactImpactSource ? buildOwnedImpactFromExactSource(exactImpactSource) : null;
 
   if (exactImpactSource) {
     sourceMode = "exact_band_source";
@@ -637,9 +717,17 @@ export function calculateImpactOnly(
     );
   }
 
-  if (sourceMode === "exact_band_source") {
+  if (sourceMode === "exact_band_source" && exactImpact) {
+    const ratingBasis =
+      exactImpact?.basis === ASTM_E989_IMPACT_RATING_BASIS
+        ? "ASTM E989 IIC/AIIC contour rating"
+        : "ISO 717-2 band set";
     warnings.push(
-      `Impact-only exact ${exactImpactSource?.labOrField ?? "lab"} band source is active. DynEcho resolved the impact lane directly from the supplied ISO 717-2 band set.`
+      `Impact-only exact ${exactImpactSource?.labOrField ?? "lab"} band source is active. DynEcho resolved the impact lane directly from the supplied ${ratingBasis}.`
+    );
+  } else if (sourceMode === "exact_band_source") {
+    warnings.push(
+      "Impact-only exact band source was ignored because it did not match a supported ISO 717-2 or ASTM E989 nominal band set."
     );
   }
 
@@ -710,6 +798,14 @@ export function calculateImpactOnly(
   };
 
   applyAcousticCalculatorAnswerEngineV1FloorRolelessHelperOnlyBoundary(result);
+  applyAcousticCalculatorAnswerEngineV1HeavyConcreteCombinedNeedsInputBoundary({
+    predictorInput,
+    result
+  });
+  applyAcousticCalculatorAnswerEngineV1TimberCltDeltaLwNeedsInputBoundary({
+    predictorInput,
+    result
+  });
   applyAcousticCalculatorAnswerEngineV1FloorFieldImpactNeedsInputBoundary({
     impactFieldContext,
     result

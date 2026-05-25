@@ -211,9 +211,9 @@ describe("Personal-Use MVP Coverage Sprint Gate BJ floor-impact field/building r
   it("keeps missing context, low-frequency, and ASTM/IIC boundaries fail-closed", () => {
     expect(scenario("gate_bj_missing_impact_field_context_needs_input")).toMatchObject({
       adapterBasis: "field_apparent",
-      basisId: null,
+      basisId: "predictor_heavy_concrete_published_upper_treatment_estimate",
       budgetPins: [],
-      confidenceLevel: null,
+      confidenceLevel: "medium",
       missingPhysicalInputs: ["impactFieldContext"],
       status: "needs_input",
       supportedTargetOutputs: [],
@@ -223,9 +223,12 @@ describe("Personal-Use MVP Coverage Sprint Gate BJ floor-impact field/building r
     });
     expect(scenario("gate_bj_low_frequency_lnt50_stays_blocked_without_owner")).toMatchObject({
       adapterBasis: "field_apparent",
-      basisId: null,
-      budgetPins: [],
-      confidenceLevel: null,
+      basisId: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+      budgetPins: expect.arrayContaining([
+        expect.objectContaining({ estimate: 52, metricId: "L'n,w" }),
+        expect.objectContaining({ estimate: 49.6, metricId: "L'nT,w" })
+      ]),
+      confidenceLevel: "medium",
       missingPhysicalInputs: ["lowFrequencyImpactSpectrumOrCI50_2500Owner"],
       status: "blocked_low_frequency_owner",
       supportedTargetOutputs: [],

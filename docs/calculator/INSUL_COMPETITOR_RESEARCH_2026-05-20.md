@@ -4,25 +4,51 @@ Document role: public-source competitor benchmark for DynEcho's
 calculator-first roadmap. This is not a source-row intake document and
 does not ingest measured assembly values.
 
-## 2026-05-21 Active Addendum
+## 2026-05-25 Source-Of-Truth Addendum
+
+Read [CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md)
+before using this benchmark. INSUL remains a useful product-category
+comparison because its public material frames the product as quick,
+usable prediction software for walls, floors, and ceilings, with
+construction inputs, one-third-octave transmission-loss graphs,
+airborne `STC` / `Rw`, impact `IIC` / `Ln,w`, and single/double/triple/
+quad system modelling.
+
+The DynEcho lesson is product direction, not data ingestion: build the
+best usable calculator, choose the right formula family for incoming
+layer combinations, use exact measured rows first when they truly match,
+use similar measured rows only as owned anchors/calibration evidence,
+and return `needs_input` or `unsupported` instead of guessing. INSUL does
+not justify a broad source crawl or finite scenario library as the next
+default move.
+
+Implementation consequence after the 2026-05-25 recheck:
+[POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md)
+selects wall multileaf generalized formula Gate A. That choice follows
+the INSUL lesson that broad calculator usefulness comes from family
+models and required-input ownership. It also avoids copying proprietary
+equations, UI assets, or measured data.
+
+## 2026-05-21 Historical Addendum
 
 INSUL remains useful as a category benchmark because its public material
 shows a calculation product: users define constructions and the software
 predicts acoustic ratings through family-specific models, ratings
-adapters, and known limitation boundaries. That benchmark supports the
-current DynEcho correction:
+adapters, and known limitation boundaries. That benchmark supported the
+then-active DynEcho correction:
 
-- active next action:
+- historical next action:
   `acoustic_calculator_answer_engine_v1_plan`;
-- active next file:
+- historical next file:
   `packages/engine/src/acoustic-calculator-answer-engine-v1-contract.test.ts`;
-- active next label: acoustic calculator answer engine V1.
+- historical next label: acoustic calculator answer engine V1.
 
 The older post-double-leaf revalidation entries below are historical
-handoff state. They must not override the active answer-engine plan.
-DynEcho's immediate job is to make the existing exact rows, compatible
-measured anchors, and owned formula families produce one calculator
-answer for user-entered wall/floor layer combinations.
+handoff state. They must not override
+[CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md).
+DynEcho's product job is to make exact rows, compatible measured
+anchors, and owned formula families produce one calculator answer for
+user-entered wall/floor layer combinations.
 
 ## Research Boundary
 
