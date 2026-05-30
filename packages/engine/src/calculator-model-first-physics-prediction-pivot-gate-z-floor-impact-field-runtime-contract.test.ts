@@ -273,9 +273,9 @@ describe("calculator model-first physics prediction pivot Gate Z", () => {
     });
 
     expect(result.impact).toMatchObject({
-      DeltaLw: 31.1,
       LnW: 50
     });
+    expect(result.impact?.DeltaLw).toBeUndefined();
     expect(result.impact?.LPrimeNW).toBeUndefined();
     expect(result.impact?.LPrimeNTw).toBeUndefined();
     expect(result.supportedTargetOutputs).toEqual([]);

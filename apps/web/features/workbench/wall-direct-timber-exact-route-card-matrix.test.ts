@@ -155,7 +155,7 @@ const CASES: readonly ExactWallCase[] = [
     expected: {
       c: -0.1,
       cards: {
-        Rw: { status: "unsupported", value: "Not ready" },
+        Rw: { status: "live", value: "28 dB" },
         "R'w": { status: "live", value: "28 dB" },
         "Dn,w": { status: "live", value: "27 dB" },
         "Dn,A": { status: "live", value: "26.9 dB" },
@@ -172,8 +172,8 @@ const CASES: readonly ExactWallCase[] = [
       dnW: 27,
       rw: 28,
       rwPrime: 28,
-      supported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"],
-      unsupported: ["Rw"]
+      supported: ["Rw", "R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"],
+      unsupported: []
     },
     warningPattern:
       /Curated airborne lab fallback active in field context: Knauf GB EN timber partition 63x38, 1x12\.5 Wallboard each side, no insulation/i
@@ -200,15 +200,15 @@ const CASES: readonly ExactWallCase[] = [
     expected: {
       c: -0.1,
       cards: {
-        Rw: { status: "needs_input", value: "Not ready" },
+        Rw: { status: "live", value: "28 dB" },
         "R'w": { status: "needs_input", value: "Not ready" },
         "Dn,w": { status: "needs_input", value: "Not ready" },
         "Dn,A": { status: "needs_input", value: "Not ready" },
         "DnT,w": { status: "needs_input", value: "Not ready" },
         "DnT,A": { status: "needs_input", value: "Not ready" },
-        STC: { status: "needs_input", value: "Not ready" },
-        C: { status: "needs_input", value: "Not ready" },
-        Ctr: { status: "needs_input", value: "Not ready" }
+        STC: { status: "live", value: "28 dB" },
+        C: { status: "live", value: "-0.1 dB" },
+        Ctr: { status: "live", value: "-3.9 dB" }
       },
       ctr: -3.9,
       dnA: null,
@@ -217,8 +217,8 @@ const CASES: readonly ExactWallCase[] = [
       dnW: null,
       rw: 28,
       rwPrime: null,
-      supported: [],
-      unsupported: WALL_OUTPUTS
+      supported: ["Rw", "STC", "C", "Ctr"],
+      unsupported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A"]
     },
     warningPattern:
       /Curated airborne lab fallback active in field context: Knauf GB EN timber partition 63x38, 1x12\.5 Wallboard each side, no insulation/i
@@ -288,7 +288,7 @@ const CASES: readonly ExactWallCase[] = [
     expected: {
       c: -1.1,
       cards: {
-        Rw: { status: "unsupported", value: "Not ready" },
+        Rw: { status: "live", value: "36 dB" },
         "R'w": { status: "live", value: "36 dB" },
         "Dn,w": { status: "live", value: "35 dB" },
         "Dn,A": { status: "live", value: "33.9 dB" },
@@ -305,8 +305,8 @@ const CASES: readonly ExactWallCase[] = [
       dnW: 35,
       rw: 36,
       rwPrime: 36,
-      supported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"],
-      unsupported: ["Rw"]
+      supported: ["Rw", "R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"],
+      unsupported: []
     },
     warningPattern:
       /Curated airborne lab fallback active in field context: Knauf GB EN timber partition 63x38, 1x12\.5 Wallboard each side, 50 mm cavity insulation/i
@@ -334,15 +334,15 @@ const CASES: readonly ExactWallCase[] = [
     expected: {
       c: -1.1,
       cards: {
-        Rw: { status: "needs_input", value: "Not ready" },
+        Rw: { status: "live", value: "36 dB" },
         "R'w": { status: "needs_input", value: "Not ready" },
         "Dn,w": { status: "needs_input", value: "Not ready" },
         "Dn,A": { status: "needs_input", value: "Not ready" },
         "DnT,w": { status: "needs_input", value: "Not ready" },
         "DnT,A": { status: "needs_input", value: "Not ready" },
-        STC: { status: "needs_input", value: "Not ready" },
-        C: { status: "needs_input", value: "Not ready" },
-        Ctr: { status: "needs_input", value: "Not ready" }
+        STC: { status: "live", value: "36 dB" },
+        C: { status: "live", value: "-1.1 dB" },
+        Ctr: { status: "live", value: "-5.9 dB" }
       },
       ctr: -5.9,
       dnA: null,
@@ -351,8 +351,8 @@ const CASES: readonly ExactWallCase[] = [
       dnW: null,
       rw: 36,
       rwPrime: null,
-      supported: [],
-      unsupported: WALL_OUTPUTS
+      supported: ["Rw", "STC", "C", "Ctr"],
+      unsupported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A"]
     },
     warningPattern:
       /Curated airborne lab fallback active in field context: Knauf GB EN timber partition 63x38, 1x12\.5 Wallboard each side, 50 mm cavity insulation/i

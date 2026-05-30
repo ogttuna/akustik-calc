@@ -85,6 +85,16 @@ function lowerBoardMassKgM2(input: ImpactPredictorInput): number {
   return count * averageThicknessMm * densityKgM3 / 1000;
 }
 
+function hasOwnedLowerSupportProduct(input: ImpactPredictorInput): boolean {
+  switch (input.lowerTreatment?.supportProductId?.trim().toLowerCase()) {
+    case "acoustic_hanger_ceiling":
+    case "resilient_stud_ceiling":
+      return true;
+    default:
+      return false;
+  }
+}
+
 function hasCompleteLowerTreatment(input: ImpactPredictorInput): boolean {
   const lower = input.lowerTreatment;
 
@@ -92,7 +102,7 @@ function hasCompleteLowerTreatment(input: ImpactPredictorInput): boolean {
     lower &&
       lower.type &&
       lower.type !== "none" &&
-      lower.supportClass &&
+      (lower.supportClass || hasOwnedLowerSupportProduct(input)) &&
       hasPositiveNumber(lower.cavityDepthMm) &&
       lowerBoardMassKgM2(input) > 0
   );

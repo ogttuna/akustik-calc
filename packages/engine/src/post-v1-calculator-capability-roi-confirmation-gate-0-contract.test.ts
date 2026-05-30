@@ -339,8 +339,8 @@ describe("post-V1 calculator capability ROI confirmation Gate 0", () => {
     );
 
     expect(registry.summary).toMatchObject({
-      activeRuntimeCandidateCount: 32,
-      candidateCount: 35
+      activeRuntimeCandidateCount: 36,
+      candidateCount: 39
     });
     expect(wallSourceAbsentCandidates.length).toBeGreaterThanOrEqual(6);
     expect(wallMultileafCandidates.map((candidate) => candidate.id)).toEqual(

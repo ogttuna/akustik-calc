@@ -45,7 +45,7 @@ const LSF_DOUBLE_BOARD_ROWS: readonly LayerInput[] = [
 ];
 
 const EXPECTED_FIELD_CARDS: Record<WallOutputId, CardSnapshot> = {
-  Rw: { status: "unsupported", value: "Not ready" },
+  Rw: { status: "live", value: "51 dB" },
   "R'w": { status: "live", value: "51 dB" },
   "Dn,w": { status: "live", value: "51 dB" },
   "Dn,A": { status: "live", value: "49.6 dB" },
@@ -132,6 +132,7 @@ describe("wall framed facing split warning stability route-card matrix", () => {
     expect(split.cards).toEqual(baseline.cards);
 
     expect(baseline.result.supportedTargetOutputs).toEqual([
+      "Rw",
       "R'w",
       "Dn,w",
       "Dn,A",
@@ -142,7 +143,7 @@ describe("wall framed facing split warning stability route-card matrix", () => {
       "Ctr"
     ]);
     expect(split.result.supportedTargetOutputs).toEqual(baseline.result.supportedTargetOutputs);
-    expect(split.result.unsupportedTargetOutputs).toEqual(["Rw"]);
+    expect(split.result.unsupportedTargetOutputs).toEqual([]);
     expect(split.result.dynamicAirborneTrace?.strategy).toBe(
       "stud_surrogate_blend+framed_wall_calibration"
     );

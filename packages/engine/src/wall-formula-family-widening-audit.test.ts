@@ -352,8 +352,8 @@ describe("wall formula family widening audit", () => {
       rw: 42,
       rwPrime: 42,
       stc: 42,
-      supported: ["R'w", "Dn,w", "Dn,A", "STC", "C", "Ctr"],
-      unsupported: ["Rw", "DnT,w", "DnT,A"]
+      supported: ["Rw", "R'w", "Dn,w", "Dn,A", "STC", "C", "Ctr"],
+      unsupported: ["DnT,w", "DnT,A"]
     });
     expectTrace(
       dynamicField,
@@ -384,8 +384,8 @@ describe("wall formula family widening audit", () => {
       rw: 42,
       rwPrime: 42,
       stc: 42,
-      supported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"],
-      unsupported: ["Rw"]
+      supported: ["Rw", "R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"],
+      unsupported: []
     });
     expectTrace(
       dynamicBuilding,
@@ -513,8 +513,8 @@ describe("wall formula family widening audit", () => {
       rw: 48,
       rwPrime: 48,
       stc: 48,
-      supported: ["R'w", "Dn,w", "Dn,A", "STC", "C", "Ctr"],
-      unsupported: ["Rw", "DnT,w", "DnT,A"]
+      supported: ["Rw", "R'w", "Dn,w", "Dn,A", "STC", "C", "Ctr"],
+      unsupported: ["DnT,w", "DnT,A"]
     });
     expectTrace(
       dynamicField,

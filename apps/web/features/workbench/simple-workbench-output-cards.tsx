@@ -117,7 +117,7 @@ export function pickPrimaryOutputCard(cards: readonly OutputCardModel[], studyMo
 
   const priority =
     studyMode === "floor"
-      ? ["Ln,w", "L'n,w", "L'nT,w", "L'nT,50", "DeltaLw", "Rw", "R'w", "DnT,w", "Dn,w"]
+      ? ["Ln,w", "L'n,w", "L'nT,w", "L'nT,50", "DeltaLw", "Rw", "R'w", "DnT,w", "Dn,w", "DnT,A", "Dn,A"]
       : ["Rw", "R'w", "DnT,w", "Dn,w", "STC", "Ctr", "C"];
 
   for (const label of priority) {

@@ -100,14 +100,12 @@ const LSF_LAB_WARNINGS = [
 const LSF_FIELD_WARNINGS = [
   ...COMMON_FRAMED_WARNINGS,
   LSF_FIELD_OVERLAY_WARNING,
-  UNSUPPORTED_FIELD_WARNING,
   NO_EXACT_FLOOR_WARNING
 ] as const;
 
 const TIMBER_FIELD_WARNINGS = [
   ...COMMON_FRAMED_WARNINGS,
   TIMBER_FIELD_OVERLAY_WARNING,
-  UNSUPPORTED_FIELD_WARNING,
   NO_EXACT_FLOOR_WARNING
 ] as const;
 
@@ -228,8 +226,8 @@ describe("wall framed facing split warning stability Gate B contract", () => {
       exactLabMatchActive: false,
       originalSolidLayerCount: 4,
       strategy: "stud_surrogate_blend+framed_wall_calibration",
-      supported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"],
-      unsupported: ["Rw"],
+      supported: ["Rw", "R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"],
+      unsupported: [],
       values: LSF_FIELD_VALUES,
       warnings: LSF_FIELD_WARNINGS
     });
@@ -291,8 +289,8 @@ describe("wall framed facing split warning stability Gate B contract", () => {
         exactLabMatchActive: false,
         originalSolidLayerCount: 5,
         strategy: "stud_surrogate_blend+framed_wall_calibration",
-        supported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"],
-        unsupported: ["Rw"],
+        supported: ["Rw", "R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"],
+        unsupported: [],
         values: {
           c: 0.4,
           ctr: -4.3,

@@ -27,6 +27,7 @@ type EvidenceTier =
   | "benchmark"
   | "formula"
   | "family"
+  | "anchor"
   | "screening"
   | "bound"
   | "fail_closed"
@@ -420,15 +421,18 @@ const CARTOGRAPHY_CELLS: readonly CartographyCell[] = [
     mode: "field",
     studyMode: "floor",
     family: "floor_raw_or_blocked_carrier",
-    evidenceTier: "fail_closed",
-    originBasisId: null,
-    confidencePosture: "source-blocked exact import; field airborne support only",
-    engineSupportBucket: "fail_closed",
+    evidenceTier: "anchor",
+    originBasisId: "tuas_c11c_visible_iso_weighted_impact_tuple_guarded",
+    confidencePosture: "source-blocked exact import; guarded ISO weighted tuple plus source-absent airborne support",
+    engineSupportBucket: "supported",
     webCardStatus: "covered",
-    candidateType: "source_blocked",
-    expectedSupported: ["R'w", "DnT,w"],
-    expectedUnsupported: ["Rw", "Ln,w", "L'n,w", "L'nT,w", "L'nT,50"],
-    invariants: ["blocked C11c exact import does not leak impact outputs", "source evidence required before reopening"],
+    candidateType: "coverage_confirmed",
+    expectedSupported: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w", "L'nT,50"],
+    expectedUnsupported: [],
+    invariants: [
+      "blocked C11c exact import does not become exact source",
+      "guarded ISO weighted impact tuple is calculated without DeltaLw or ASTM aliases"
+    ],
     evidencePaths: [
       "packages/engine/src/blocked-source-rank-2-c11c-feasibility-contract.test.ts",
       "packages/engine/src/tuas-c11c-exact-import-readiness-design.test.ts"
@@ -1064,7 +1068,6 @@ describe("realistic layer-combination coverage cartography Gate A", () => {
     ]);
 
     expect(CARTOGRAPHY_CELLS.filter((cell) => cell.candidateType === "source_blocked").map((cell) => cell.id)).toEqual([
-      "floor.tuas_c11c_fail_closed.field",
       "floor.dataholz_gdmtxa04a_visible_formula.field"
     ]);
   });

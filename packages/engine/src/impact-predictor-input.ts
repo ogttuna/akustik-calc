@@ -1393,6 +1393,18 @@ function resolveLowerTreatmentSupportClass(
   return undefined;
 }
 
+function resolveLowerTreatmentSupportProductId(
+  cavityLayer: ResolvedLayerStackEntry | undefined
+): "acoustic_hanger_ceiling" | "resilient_stud_ceiling" | undefined {
+  switch (cavityLayer?.material.id) {
+    case "acoustic_hanger_ceiling":
+    case "resilient_stud_ceiling":
+      return cavityLayer.material.id;
+    default:
+      return undefined;
+  }
+}
+
 function resolveLowerTreatmentBoardMaterialClass(
   boardLayer: ResolvedLayerStackEntry | undefined
 ): string | undefined {
@@ -1652,6 +1664,7 @@ export function buildImpactPredictorInputFromLayerStack(
           cavityDepthMm: ceilingCavity?.thicknessMm,
           cavityFillThicknessMm: ceilingFill?.thicknessMm,
           supportClass: resolveLowerTreatmentSupportClass(ceilingCavity),
+          supportProductId: resolveLowerTreatmentSupportProductId(ceilingCavity),
           type: resolveLowerTreatmentType(ceilingCavity)
         }
       : undefined,

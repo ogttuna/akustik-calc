@@ -33,6 +33,10 @@ import {
   GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD,
   GATE_H_LINED_MASSIVE_WALL_SELECTED_CANDIDATE_ID
 } from "./dynamic-airborne-gate-h-lined-masonry-clt";
+import {
+  GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
+  GATE_AR_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
 import { GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD } from "./dynamic-airborne-gate-i-airborne-field-context";
 import { HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS } from "./helper-only-timber-open-web-impact-stack-estimate";
 import { HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS } from "./heavy-concrete-combined-impact-formula-corridor";
@@ -288,7 +292,7 @@ describe("layer combination resolver runtime candidate surface parity contract",
     expect(contract.summary).toEqual({
       boundarySurfaceRowCount: 3,
       selectedNextAction: LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_SURFACE_PARITY_SELECTED_NEXT_ACTION,
-      surfaceRowCount: 35
+      surfaceRowCount: 39
     });
 
     for (const path of REQUIRED_SURFACES) {
@@ -470,6 +474,16 @@ describe("layer combination resolver runtime candidate surface parity contract",
       runtimeBasisId: FLAT_LIST_MULTILEAF_GUARD_FIELD_RUNTIME_METHOD,
       supportBucket: "field_adapter",
       supportedMetrics: ["R'w", "DnT,w", "DnT,A", "Dn,w", "Dn,A"],
+      valuePins: []
+    });
+    expect(rowsById.get(GATE_AR_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID)).toMatchObject({
+      boundaryCandidateIds: [],
+      candidateKind: "field_building_adapter",
+      requestedBasis: "building_prediction",
+      route: "wall",
+      runtimeBasisId: GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
+      supportBucket: "field_adapter",
+      supportedMetrics: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A"],
       valuePins: []
     });
     expect(rowsById.get("generic.required_input_owner.needs_input_boundary")).toMatchObject({

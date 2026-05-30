@@ -431,7 +431,7 @@ describe("post company-internal high-accuracy opening rehearsal Gate C next-slic
       family: "stud_wall_system",
       rw: 48,
       rwPrime: 48,
-      supported: ["R'w", "DnT,w"]
+      supported: ["Rw", "R'w", "DnT,w"]
     });
     expect(readyField.warnings).toMatch(/Curated airborne lab fallback active in field context/i);
 

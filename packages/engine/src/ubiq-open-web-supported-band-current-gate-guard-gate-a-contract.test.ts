@@ -156,7 +156,7 @@ function assemblySnapshot(layers: readonly LayerInput[]) {
     impactBasis: result.impact?.basis ?? null,
     lnW: result.impact?.LnW ?? null,
     lnWPlusCI: result.impact?.LnWPlusCI ?? null,
-    lPrimeNT50: result.impact?.LPrimeNT50 ?? null,
+    lPrimeNT50: result.impact?.LPrimeNT50 ?? result.lowerBoundImpact?.LPrimeNT50UpperBound ?? null,
     lPrimeNTw: result.impact?.LPrimeNTw ?? null,
     lPrimeNW: result.impact?.LPrimeNW ?? null,
     lnWPlusCIUpperBound: result.lowerBoundImpact?.LnWPlusCIUpperBound ?? null,
@@ -301,16 +301,16 @@ describe("UBIQ open-web supported-band current-gate guard Gate A", () => {
       ci: null,
       exactMatchId: null,
       impactBasis: null,
-      lPrimeNT50: null,
+      lPrimeNT50: 45,
       lPrimeNTw: null,
       lPrimeNW: null,
       lnW: null,
       lnWPlusCI: null,
       lnWPlusCIUpperBound: 45,
-      lowerBoundBasis: "official_floor_system_bound_support",
+      lowerBoundBasis: "mixed_bound_plus_estimated_local_guide",
       rw: 64,
-      supported: ["Rw", "Ln,w+CI"],
-      unsupported: ["Ln,w", "CI", "L'n,w", "L'nT,w", "L'nT,50"]
+      supported: ["Rw", "Ln,w+CI", "L'nT,50"],
+      unsupported: ["Ln,w", "CI", "L'n,w", "L'nT,w"]
     });
     expect(impactOnlySnapshot(FL28_CARPET_BOUND_NEAR_MISS)).toEqual({
       boundMatchId: null,

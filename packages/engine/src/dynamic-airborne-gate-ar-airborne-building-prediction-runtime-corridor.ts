@@ -55,6 +55,7 @@ function isPositiveFinite(value: unknown): value is number {
 
 function hasOpeningLeakAdapterFields(context: AirborneContext | null | undefined): boolean {
   return (
+    Boolean(context?.openingLeakFieldBuildingAdapterBoundary) ||
     isPositiveFinite(context?.hostWallAreaM2) ||
     (Array.isArray(context?.openingLeakElements) && context.openingLeakElements.length > 0)
   );

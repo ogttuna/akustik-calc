@@ -2,6 +2,7 @@ import type {
   AcousticAnswerBoundary,
   AssemblyCalculation,
   FloorSystemAirborneRatings,
+  ImpactBoundCalculation,
   ImpactCalculation,
   ImpactErrorBudget,
   ImpactOnlyCalculation,
@@ -17,6 +18,8 @@ import {
   FLOOR_IMPACT_FIELD_BUILDING_ADAPTER_SELECTED_CANDIDATE_ID
 } from "./impact-field-adapter-error-budget";
 import { GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD } from "./dynamic-airborne-gate-i-airborne-field-context";
+import { GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD } from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
+import { GATE_AE_FLAT_MULTICAVITY_RUNTIME_METHOD } from "./dynamic-airborne-gate-ae-flat-multicavity";
 import { COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_RUNTIME_METHOD } from "./dynamic-airborne-company-internal-heavy-composite-wall";
 import { GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD } from "./dynamic-airborne-gate-h-lined-masonry-clt";
 import {
@@ -117,6 +120,7 @@ const BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_M
   "broad_accuracy_wall_triple_leaf_local_substitution_field_context_harmonization_runtime";
 const POST_V1_WALL_MULTILEAF_GENERALIZED_RUNTIME_METHOD =
   "triple_leaf_two_cavity_frequency_solver";
+const FLOOR_SCREENING_AIRBORNE_RUNTIME_BASIS = "screening_mass_law_curve_seed_v3";
 const FLOOR_VERIFIED_EXACT_SOURCE_BASES = new Set<string>([
   "official_floor_system_exact_match",
   "open_measured_floor_system_exact_match"
@@ -197,7 +201,18 @@ type FloorRuntimeValuePinCarrier = {
     | "LPrimeNTw"
     | "LPrimeNW"
     | "LnTA"
-    | "metricBasis"
+      | "metricBasis"
+  > | null;
+	  readonly lowerBoundImpact?: Pick<
+	    ImpactBoundCalculation,
+	    | "CI"
+	    | "CI50_2500"
+	    | "DeltaLwLowerBound"
+	    | "LnWPlusCIUpperBound"
+	    | "LnWUpperBound"
+    | "LPrimeNT50UpperBound"
+    | "LPrimeNTwUpperBound"
+    | "LPrimeNWUpperBound"
   > | null;
   readonly metrics?: Partial<
     Pick<
@@ -470,19 +485,19 @@ function buildFloorRuntimeValuePins(
   }
 
   if (outputSet.has("Ln,w")) {
-    pushFinitePin(pins, "Ln,w", result.impact?.LnW);
+    pushFinitePin(pins, "Ln,w", result.impact?.LnW ?? result.lowerBoundImpact?.LnWUpperBound);
   }
   if (outputSet.has("CI")) {
-    pushFinitePin(pins, "CI", result.impact?.CI);
+    pushFinitePin(pins, "CI", result.impact?.CI ?? result.lowerBoundImpact?.CI);
   }
   if (outputSet.has("CI,50-2500")) {
-    pushFinitePin(pins, "CI,50-2500", result.impact?.CI50_2500);
+    pushFinitePin(pins, "CI,50-2500", result.impact?.CI50_2500 ?? result.lowerBoundImpact?.CI50_2500);
   }
   if (outputSet.has("Ln,w+CI")) {
-    pushFinitePin(pins, "Ln,w+CI", result.impact?.LnWPlusCI);
+    pushFinitePin(pins, "Ln,w+CI", result.impact?.LnWPlusCI ?? result.lowerBoundImpact?.LnWPlusCIUpperBound);
   }
   if (outputSet.has("DeltaLw")) {
-    pushFinitePin(pins, "DeltaLw", result.impact?.DeltaLw);
+    pushFinitePin(pins, "DeltaLw", result.impact?.DeltaLw ?? result.lowerBoundImpact?.DeltaLwLowerBound);
   }
   if (outputSet.has("IIC")) {
     pushFinitePin(pins, "IIC", result.impact?.IIC);
@@ -509,13 +524,13 @@ function buildFloorRuntimeValuePins(
     pushFinitePin(pins, "DnT,A,k", result.metrics?.estimatedDnTAkDb);
   }
   if (outputSet.has("L'n,w")) {
-    pushFinitePin(pins, "L'n,w", result.impact?.LPrimeNW);
+    pushFinitePin(pins, "L'n,w", result.impact?.LPrimeNW ?? result.lowerBoundImpact?.LPrimeNWUpperBound);
   }
   if (outputSet.has("L'nT,w")) {
-    pushFinitePin(pins, "L'nT,w", result.impact?.LPrimeNTw);
+    pushFinitePin(pins, "L'nT,w", result.impact?.LPrimeNTw ?? result.lowerBoundImpact?.LPrimeNTwUpperBound);
   }
   if (outputSet.has("L'nT,50")) {
-    pushFinitePin(pins, "L'nT,50", result.impact?.LPrimeNT50);
+    pushFinitePin(pins, "L'nT,50", result.impact?.LPrimeNT50 ?? result.lowerBoundImpact?.LPrimeNT50UpperBound);
   }
   if (outputSet.has("LnT,A")) {
     pushFinitePin(pins, "LnT,A", result.impact?.LnTA);
@@ -553,15 +568,39 @@ function hasFloorRuntimeValue(
     case "Ctr":
       return Boolean(floorRatings && typeof getFloorSystemCtr(floorRatings) === "number");
     case "Ln,w":
-      return typeof result.impact?.LnW === "number" && Number.isFinite(result.impact.LnW);
+      return (
+        (typeof result.impact?.LnW === "number" && Number.isFinite(result.impact.LnW)) ||
+        (typeof result.lowerBoundImpact?.LnWUpperBound === "number" && Number.isFinite(result.lowerBoundImpact.LnWUpperBound))
+      );
     case "CI":
-      return typeof result.impact?.CI === "number" && Number.isFinite(result.impact.CI);
+      return (
+        (typeof result.impact?.CI === "number" && Number.isFinite(result.impact.CI)) ||
+        (typeof result.lowerBoundImpact?.CI === "number" && Number.isFinite(result.lowerBoundImpact.CI))
+      );
     case "CI,50-2500":
-      return typeof result.impact?.CI50_2500 === "number" && Number.isFinite(result.impact.CI50_2500);
+      return (
+        (typeof result.impact?.CI50_2500 === "number" && Number.isFinite(result.impact.CI50_2500)) ||
+        (
+          typeof result.lowerBoundImpact?.CI50_2500 === "number" &&
+          Number.isFinite(result.lowerBoundImpact.CI50_2500)
+        )
+      );
     case "Ln,w+CI":
-      return typeof result.impact?.LnWPlusCI === "number" && Number.isFinite(result.impact.LnWPlusCI);
+      return (
+        (typeof result.impact?.LnWPlusCI === "number" && Number.isFinite(result.impact.LnWPlusCI)) ||
+        (
+          typeof result.lowerBoundImpact?.LnWPlusCIUpperBound === "number" &&
+          Number.isFinite(result.lowerBoundImpact.LnWPlusCIUpperBound)
+        )
+      );
     case "DeltaLw":
-      return typeof result.impact?.DeltaLw === "number" && Number.isFinite(result.impact.DeltaLw);
+      return (
+        (typeof result.impact?.DeltaLw === "number" && Number.isFinite(result.impact.DeltaLw)) ||
+        (
+          typeof result.lowerBoundImpact?.DeltaLwLowerBound === "number" &&
+          Number.isFinite(result.lowerBoundImpact.DeltaLwLowerBound)
+        )
+      );
     case "IIC":
       return typeof result.impact?.IIC === "number" && Number.isFinite(result.impact.IIC);
     case "AIIC":
@@ -579,11 +618,29 @@ function hasFloorRuntimeValue(
     case "DnT,A,k":
       return typeof result.metrics?.estimatedDnTAkDb === "number" && Number.isFinite(result.metrics.estimatedDnTAkDb);
     case "L'n,w":
-      return typeof result.impact?.LPrimeNW === "number" && Number.isFinite(result.impact.LPrimeNW);
+      return (
+        (typeof result.impact?.LPrimeNW === "number" && Number.isFinite(result.impact.LPrimeNW)) ||
+        (
+          typeof result.lowerBoundImpact?.LPrimeNWUpperBound === "number" &&
+          Number.isFinite(result.lowerBoundImpact.LPrimeNWUpperBound)
+        )
+      );
     case "L'nT,w":
-      return typeof result.impact?.LPrimeNTw === "number" && Number.isFinite(result.impact.LPrimeNTw);
+      return (
+        (typeof result.impact?.LPrimeNTw === "number" && Number.isFinite(result.impact.LPrimeNTw)) ||
+        (
+          typeof result.lowerBoundImpact?.LPrimeNTwUpperBound === "number" &&
+          Number.isFinite(result.lowerBoundImpact.LPrimeNTwUpperBound)
+        )
+      );
     case "L'nT,50":
-      return typeof result.impact?.LPrimeNT50 === "number" && Number.isFinite(result.impact.LPrimeNT50);
+      return (
+        (typeof result.impact?.LPrimeNT50 === "number" && Number.isFinite(result.impact.LPrimeNT50)) ||
+        (
+          typeof result.lowerBoundImpact?.LPrimeNT50UpperBound === "number" &&
+          Number.isFinite(result.lowerBoundImpact.LPrimeNT50UpperBound)
+        )
+      );
     case "LnT,A":
       return typeof result.impact?.LnTA === "number" && Number.isFinite(result.impact.LnTA);
     default:
@@ -613,7 +670,13 @@ function getFloorRuntimeCandidateSupportedMetrics(
   result: FloorRuntimeTraceCarrier
 ): RequestedOutputId[] {
   const supportedOutputSet = new Set(result.supportedTargetOutputs ?? []);
-  if (trace.runtimeBasisId && TIMBER_CLT_DELTA_LW_FORMULA_BASES.has(trace.runtimeBasisId)) {
+  if (
+    trace.runtimeBasisId &&
+    (
+      TIMBER_CLT_DELTA_LW_FORMULA_BASES.has(trace.runtimeBasisId) ||
+      trace.runtimeBasisId === FLOOR_SCREENING_AIRBORNE_RUNTIME_BASIS
+    )
+  ) {
     return trace.supportedMetrics.filter((metric): metric is RequestedOutputId =>
       supportedOutputSet.has(metric as RequestedOutputId)
     );
@@ -701,13 +764,17 @@ function withScenarioSpecificAirborneRuntimePins(
   const isWallFormulaRuntime =
     trace.runtimeBasisId === GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD ||
     trace.runtimeBasisId === COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_RUNTIME_METHOD ||
-    trace.runtimeBasisId === POST_V1_WALL_MULTILEAF_GENERALIZED_RUNTIME_METHOD;
+    trace.runtimeBasisId === POST_V1_WALL_MULTILEAF_GENERALIZED_RUNTIME_METHOD ||
+    trace.runtimeBasisId === GATE_AE_FLAT_MULTICAVITY_RUNTIME_METHOD;
   const isWallCompatibleAnchorDelta =
     trace.runtimeBasisId === POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_RUNTIME_METHOD;
   const isWallFieldAdapter =
     trace.runtimeBasisId === GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD ||
     isWallLocalSubstitutionFieldAdapter ||
     isWallFlatListGuardFieldAdapter;
+  const isWallBuildingAdapter =
+    trace.runtimeBasisId === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD;
+  const isWallContextAdapter = isWallFieldAdapter || isWallBuildingAdapter;
   const isWallLocalSubstitutionRuntime =
     trace.runtimeBasisId === BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_RUNTIME_METHOD ||
     trace.runtimeBasisId === BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_RUNTIME_METHOD ||
@@ -721,7 +788,7 @@ function withScenarioSpecificAirborneRuntimePins(
     !isWallFlatListGuardRuntime &&
     !isWallFormulaRuntime &&
     !isWallCompatibleAnchorDelta &&
-    !isWallFieldAdapter &&
+    !isWallContextAdapter &&
     !isFloorRuntime &&
     !isExactFloor &&
     !isExactImpactSource
@@ -733,7 +800,7 @@ function withScenarioSpecificAirborneRuntimePins(
   const isExactMeasured = trace.runtimeBasisId === WALL_VERIFIED_AIRBORNE_EXACT_SOURCE_BASIS;
   if (
     !isExactMeasured &&
-    !isWallFieldAdapter &&
+    !isWallContextAdapter &&
     result.airborneOverlay?.contextMode &&
     result.airborneOverlay.contextMode !== "element_lab"
   ) {
@@ -747,7 +814,7 @@ function withScenarioSpecificAirborneRuntimePins(
 
   const supportedMetrics = isExactImpactSource
     ? getExactImpactSourceSupportedMetrics(result, result.supportedTargetOutputs)
-    : isWallFieldAdapter
+    : isWallContextAdapter
       ? getRuntimeSupportedMetricsForAssembly(trace, result)
     : isWallCompatibleAnchorDelta
       ? trace.supportedMetrics.filter((metric) =>
@@ -771,13 +838,15 @@ function withScenarioSpecificAirborneRuntimePins(
 
   return {
     ...trace,
-    basis: isExactMeasured || isWallFieldAdapter || isWallCompatibleAnchorDelta ? trace.requestedBasis : trace.basis,
+    basis: isExactMeasured || isWallContextAdapter || isWallCompatibleAnchorDelta ? trace.requestedBasis : trace.basis,
     errorBudgetMetrics: isSingleLeaf ? ["Rw", "STC"] : trace.errorBudgetMetrics,
     supportedMetrics,
     surfaceDetail: isExactMeasured
       ? `${trace.surfaceDetail} Current assembly value pins come from the selected exact measured row.`
       : isWallCompatibleAnchorDelta
         ? `${trace.surfaceDetail} Current assembly value pins come from the measured subassembly anchor plus the owned calculated added-layer delta; companion metrics stay unsupported unless separately owned.`
+      : isWallBuildingAdapter
+        ? `${trace.surfaceDetail} Current wall building-prediction value pins are scenario-specific and come from the active ISO 12354-1 building calculation path; lab companions stay separate.`
       : isWallFieldAdapter
         ? `${trace.surfaceDetail} Current wall field-adapter value pins are scenario-specific and come from the active field-apparent calculation path.`
         : `${trace.surfaceDetail} Current assembly value pins are scenario-specific and are not measured evidence.`,
@@ -941,6 +1010,8 @@ export function buildLayerCombinationResolverTraceForAssembly(
     result.airborneBasis?.method === POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_RUNTIME_METHOD;
   const hasWallFieldAirborneBasis =
     result.airborneBasis?.method === GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD;
+  const hasWallBuildingAirborneBasis =
+    result.airborneBasis?.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD;
   const shouldPreferWallAirborneRoute =
     !hasFloorRoleLayer &&
     (
@@ -950,7 +1021,8 @@ export function buildLayerCombinationResolverTraceForAssembly(
       hasWallLocalSubstitutionBasis ||
       hasWallFormulaAirborneBasis ||
       hasWallCompatibleAnchorDeltaBasis ||
-      hasWallFieldAirborneBasis
+      hasWallFieldAirborneBasis ||
+      hasWallBuildingAirborneBasis
     ) &&
     !hasRequestedImpactMetric(requestedOrUnsupportedOutputs);
   const hasFloorImpactResult =

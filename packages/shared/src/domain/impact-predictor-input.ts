@@ -80,6 +80,7 @@ const ImpactPredictorLowerTreatmentSchema = z
     cavityDepthMm: z.number().positive().optional(),
     cavityFillThicknessMm: z.number().nonnegative().optional(),
     supportClass: ImpactPredictorLowerTreatmentSupportClassSchema.optional(),
+    supportProductId: z.string().min(1).optional(),
     type: ImpactPredictorLowerTreatmentTypeSchema.optional()
   })
   .partial();

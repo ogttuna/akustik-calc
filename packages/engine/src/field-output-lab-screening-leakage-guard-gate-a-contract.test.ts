@@ -419,9 +419,9 @@ describe("field-output lab/screening leakage guard Gate A contract", () => {
       lnW: null,
       rw: 58,
       rwPrime: 58,
-      supported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "Ctr"],
+      supported: ["Rw", "R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "Ctr"],
       systemEstimateKind: null,
-      unsupported: ["Rw", "Ln,w", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"]
+      unsupported: ["Ln,w", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"]
     });
 
     expect(floorBuildingSnapshot(RAW_TERMINAL_CONCRETE_HELPER_LAYERS)).toMatchObject({

@@ -8,6 +8,7 @@ import { formatDecimal } from "@/lib/format";
 
 import type { StudyMode } from "./preset-definitions";
 import type { FieldRelevanceTone, ReviewTabId, WorkbenchSectionTone } from "./simple-workbench-constants";
+import { formatSignedDb } from "./simple-workbench-utils";
 
 export function SectionLead(props: { description?: string; step?: string; title: string; tone?: WorkbenchSectionTone }) {
   const { description, step, title } = props;
@@ -327,6 +328,18 @@ export function CalculationTraceDropdown(props: { result: AssemblyCalculation | 
 
   if (studyMode === "floor" && lowerBound && typeof lowerBound.LnWPlusCIUpperBound === "number") {
     traceRows.push({ label: "Ln,w+CI upper bound", value: `≤ ${formatDecimal(lowerBound.LnWPlusCIUpperBound)} dB` });
+  }
+
+  if (studyMode === "floor" && lowerBound && typeof lowerBound.CI === "number") {
+    traceRows.push({ label: "CI", value: `${formatSignedDb(lowerBound.CI)}` });
+  }
+
+  if (studyMode === "floor" && lowerBound && typeof lowerBound.CI50_2500 === "number") {
+    traceRows.push({ label: "CI,50-2500", value: `${formatSignedDb(lowerBound.CI50_2500)}` });
+  }
+
+  if (studyMode === "floor" && lowerBound && typeof lowerBound.LPrimeNT50UpperBound === "number") {
+    traceRows.push({ label: "L'nT,50 upper bound", value: `≤ ${formatDecimal(lowerBound.LPrimeNT50UpperBound)} dB` });
   }
 
   // Formula notes (first few from dynamic trace)

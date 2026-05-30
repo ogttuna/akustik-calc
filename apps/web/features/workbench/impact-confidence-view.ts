@@ -102,6 +102,10 @@ export function formatConfidenceProvenanceForImpact(input: {
     return "Helper-only timber/open-web formula corridor";
   }
 
+  if (input.basis === "tuas_c11c_visible_iso_weighted_impact_tuple_guarded") {
+    return "TUAS C11c guarded ISO tuple";
+  }
+
   return formatConfidenceProvenance(input.provenance);
 }
 

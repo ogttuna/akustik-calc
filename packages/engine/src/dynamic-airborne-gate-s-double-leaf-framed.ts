@@ -29,6 +29,10 @@ import {
   type GateRDoubleLeafFramedBridgePhysicalInputs
 } from "./dynamic-calculator-double-leaf-framed-bridge-solver-contract";
 import {
+  GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING,
+  maybeBuildGateIAirborneFieldContextBasisFromBase
+} from "./dynamic-airborne-gate-i-airborne-field-context";
+import {
   LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_FORMULA_CORRIDOR_BASIS,
   LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID,
   LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_RUNTIME_CORRIDOR_WARNING
@@ -320,10 +324,20 @@ export function maybeCalculateGateSDoubleLeafFramedBridgeRuntime(input: {
     curve,
     physicalInputs: contract.physicalInputs
   });
-  const candidateResolution = buildGateSCandidateResolution({
-    basis,
+  const fieldContextBasis = maybeBuildGateIAirborneFieldContextBasisFromBase({
+    baseBasis: basis,
+    context: input.options.airborneContext,
     family: contract.candidateFamily,
-    targetOutputs: ["Rw", "STC", "C", "Ctr"]
+    frequencyBands: {
+      bandSet: "layer_combination_resolver_double_leaf_framed_wall_banded_runtime_curve",
+      frequenciesHz: [...curve.frequenciesHz]
+    }
+  });
+  const selectedBasis = fieldContextBasis ?? basis;
+  const candidateResolution = buildGateSCandidateResolution({
+    basis: selectedBasis,
+    family: contract.candidateFamily,
+    targetOutputs: input.options.targetOutputs ?? ["Rw", "STC", "C", "Ctr"]
   });
   const solverRw = ratings.iso717.Rw;
   const screeningRw = input.options.screeningEstimatedRwDb;
@@ -374,7 +388,7 @@ export function maybeCalculateGateSDoubleLeafFramedBridgeRuntime(input: {
   };
 
   return {
-    airborneBasis: basis,
+    airborneBasis: selectedBasis,
     airborneCandidateResolution: candidateResolution,
     airborneCandidateSet: candidateResolution.candidates,
     curve,
@@ -385,6 +399,7 @@ export function maybeCalculateGateSDoubleLeafFramedBridgeRuntime(input: {
     trace,
     warnings: [
       GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_WARNING,
+      ...(fieldContextBasis ? [GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING] : []),
       `Double-leaf/framed runtime is uncalibrated with a ${contract.benchmarkRange.toleranceDb} dB error budget.`
     ]
   };

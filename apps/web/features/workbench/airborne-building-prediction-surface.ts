@@ -22,7 +22,7 @@ export type AirborneBuildingPredictionSurface = {
   warning: string;
 };
 
-const BUILDING_OUTPUTS = new Set<RequestedOutputId>(["R'w", "DnT,w"]);
+const BUILDING_OUTPUTS = new Set<RequestedOutputId>(["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A"]);
 const LAB_ALIAS_OUTPUTS = new Set<RequestedOutputId>(["Rw", "STC", "C", "Ctr"]);
 
 function formatBudget(value: number): string {
@@ -31,6 +31,39 @@ function formatBudget(value: number): string {
 
 function formatMetric(value: number | undefined): string {
   return typeof value === "number" && Number.isFinite(value) ? formatBudget(value) : "unavailable";
+}
+
+function joinMetricText(parts: readonly string[]): string {
+  if (parts.length <= 1) {
+    return parts[0] ?? "unavailable";
+  }
+
+  return `${parts.slice(0, -1).join(", ")} and ${parts[parts.length - 1]}`;
+}
+
+function getBuildingValueText(result: AssemblyCalculation): string {
+  const outputSet = new Set(result.supportedTargetOutputs);
+  const parts: string[] = [];
+
+  if (outputSet.has("R'w")) {
+    parts.push(`R'w ${formatMetric(result.metrics.estimatedRwPrimeDb)} dB`);
+  }
+  if (outputSet.has("Dn,w")) {
+    parts.push(`Dn,w ${formatMetric(result.metrics.estimatedDnWDb)} dB`);
+  }
+  if (outputSet.has("Dn,A")) {
+    parts.push(`Dn,A ${formatMetric(result.metrics.estimatedDnADb)} dB`);
+  }
+  if (outputSet.has("DnT,w")) {
+    parts.push(`DnT,w ${formatMetric(result.metrics.estimatedDnTwDb)} dB`);
+  }
+  if (outputSet.has("DnT,A")) {
+    parts.push(`DnT,A ${formatMetric(result.metrics.estimatedDnTADb)} dB`);
+  }
+
+  return parts.length > 0
+    ? joinMetricText(parts)
+    : `R'w ${formatMetric(result.metrics.estimatedRwPrimeDb)} dB and DnT,w ${formatMetric(result.metrics.estimatedDnTwDb)} dB`;
 }
 
 function getBuildingPredictionBudget(result: AssemblyCalculation): number {
@@ -67,12 +100,15 @@ export function getGateARAirborneBuildingPredictionSurface(
   const warning =
     result.warnings.find((entry: string) => entry === WEB_GATE_AR_AIRBORNE_BUILDING_PREDICTION_WARNING) ??
     WEB_GATE_AR_AIRBORNE_BUILDING_PREDICTION_WARNING;
-  const valueText =
-    `R'w ${formatMetric(result.metrics.estimatedRwPrimeDb)} dB and ` +
-    `DnT,w ${formatMetric(result.metrics.estimatedDnTwDb)} dB`;
+  const supportedLabCompanions = result.supportedTargetOutputs.filter((output: RequestedOutputId) =>
+    LAB_ALIAS_OUTPUTS.has(output)
+  );
+  const valueText = getBuildingValueText(result);
   const aliasText =
     unsupportedAliasOutputs.length > 0
       ? ` Requested lab aliases stay unsupported: ${unsupportedAliasOutputs.join(", ")}.`
+      : supportedLabCompanions.length > 0
+      ? ` Requested lab companions stay on the direct element-lab curve: ${supportedLabCompanions.join(", ")}.`
       : " Lab Rw/STC/C/Ctr are not relabelled as building metrics.";
   const summary =
     `Gate AR airborne building-prediction runtime is active through ${method}. ` +
@@ -118,8 +154,12 @@ export function getGateARAirborneBuildingPredictionOutputDetail(
     return surface.detail;
   }
 
-  if (surface.unsupportedAliasOutputs.includes(output) || LAB_ALIAS_OUTPUTS.has(output)) {
+  if (surface.unsupportedAliasOutputs.includes(output)) {
     return `${surface.detail} ${output} remains unsupported on the Gate AR building-prediction route because lab/spectrum-adapter outputs need their own basis.`;
+  }
+
+  if (LAB_ALIAS_OUTPUTS.has(output) && result?.supportedTargetOutputs.includes(output)) {
+    return `${surface.detail} ${output} is published as a lab direct-curve companion; it is not relabelled as a building metric.`;
   }
 
   return null;

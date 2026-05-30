@@ -135,8 +135,8 @@ describe("Personal-Use MVP Coverage Sprint Gate AS airborne building-prediction 
 
     expect(result.metrics.estimatedRwPrimeDb).toBe(58);
     expect(result.metrics.estimatedDnTwDb).toBe(59);
-    expect(result.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
-    expect(result.unsupportedTargetOutputs).toEqual(["Rw", "STC"]);
+    expect(result.supportedTargetOutputs).toEqual(["Rw", "STC", "R'w", "DnT,w"]);
+    expect(result.unsupportedTargetOutputs).toEqual([]);
     expect(result.airborneCandidateResolution).toMatchObject({
       runtimeValueMovement: true,
       selectedCandidateId: GATE_AR_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID,

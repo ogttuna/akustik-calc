@@ -7,6 +7,10 @@ import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
 import {
+  GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD,
+  GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-gate-i-airborne-field-context";
+import {
   LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_FORMULA_CORRIDOR_BASIS,
   LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID
 } from "./layer-combination-resolver-double-leaf-framed-wall-banded-runtime-constants";
@@ -329,11 +333,22 @@ describe("layer combination resolver double-leaf framed wall banded surface pari
 
     expect(field.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
     expect(field.warnings.join("\n")).toContain("Airborne field-side overlay active.");
+    expect(field.airborneCandidateResolution).toMatchObject({
+      selectedCandidateId: GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
+      selectedOrigin: "family_physics_prediction"
+    });
+    expect(field.airborneBasis).toMatchObject({
+      method: GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD,
+      origin: "family_physics_prediction"
+    });
     expect(field.layerCombinationResolverTrace).toMatchObject({
-      selectedCandidateId: LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID,
+      requestedBasis: "field_apparent",
+      runtimeBasisId: GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD,
+      selectedCandidateId: "wall.airborne_field_context.field_apparent_adapter",
+      supportBucket: "field_adapter",
       valuePins: expect.arrayContaining([
-        { metric: "Rw", value: 45 },
-        { metric: "STC", value: 45 }
+        { metric: "R'w", value: 39 },
+        { metric: "DnT,w", value: 42 }
       ])
     });
 

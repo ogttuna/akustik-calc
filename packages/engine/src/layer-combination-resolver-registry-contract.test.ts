@@ -32,6 +32,10 @@ import {
   GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD,
   GATE_H_LINED_MASSIVE_WALL_SELECTED_CANDIDATE_ID
 } from "./dynamic-airborne-gate-h-lined-masonry-clt";
+import {
+  GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
+  GATE_AR_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
 import { GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD } from "./dynamic-airborne-gate-i-airborne-field-context";
 import { HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS } from "./helper-only-timber-open-web-impact-stack-estimate";
 import {
@@ -200,27 +204,27 @@ describe("layer combination resolver registry contract", () => {
       sourceRowsAreEvidenceNotProduct: true
     });
     expect(contract.summary).toEqual({
-      activeRuntimeCandidateCount: 32,
+      activeRuntimeCandidateCount: 36,
       basisCount: {
         astm_rating_boundary: 2,
-        building_prediction: 1,
-        element_lab: 28,
+        building_prediction: 2,
+        element_lab: 31,
         field_apparent: 4
       },
-      candidateCount: 35,
+      candidateCount: 39,
       kindCount: {
         basis_boundary: 1,
         calibrated_family_solver: 1,
         exact_measured_override: 4,
-        field_building_adapter: 4,
+        field_building_adapter: 5,
         needs_input_boundary: 1,
-        similarity_anchor: 3,
-        source_absent_family_solver: 20,
+        similarity_anchor: 4,
+        source_absent_family_solver: 22,
         unsupported_boundary: 1
       },
       routeCount: {
-        floor: 21,
-        wall: 14
+        floor: 23,
+        wall: 16
       },
       selectedNextAction: LAYER_COMBINATION_RESOLVER_REGISTRY_SELECTED_NEXT_ACTION
     });
@@ -461,6 +465,14 @@ describe("layer combination resolver registry contract", () => {
       priorityRank: 4,
       route: "wall",
       supportedMetrics: ["R'w", "DnT,w", "DnT,A", "Dn,w", "Dn,A"]
+    });
+    expect(byId.get(GATE_AR_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID)).toMatchObject({
+      basis: "building_prediction",
+      kind: "field_building_adapter",
+      ownedRuntimeBasisId: GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
+      priorityRank: 4,
+      route: "wall",
+      supportedMetrics: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A"]
     });
     expect(byId.get("generic.lab_field_building_basis_boundary")).toMatchObject({
       basis: "building_prediction",

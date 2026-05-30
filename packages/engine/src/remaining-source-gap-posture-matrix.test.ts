@@ -78,26 +78,26 @@ const FAIL_CLOSED_IMPACT_UNSUPPORTED: readonly RequestedOutputId[] = [
 
 const CASES: readonly SourceGapCase[] = [
   {
-    id: "tuas C11c wet stack remains deferred and impact-fail-closed",
+    id: "tuas C11c wet stack remains exact-import blocked but guarded ISO impact is live",
     layers: TUAS_C11C_COMBINED_WET_SOURCE_LAYERS,
     expected: {
-      candidateIds: null,
-      ci50_2500: null,
+      candidateIds: ["tuas_c11c_visible_iso_weighted_tuple_2026"],
+      ci50_2500: 1,
       estimateBasis: null,
       estimateKind: null,
       fitPercent: null,
-      impactBasis: null,
-      lPrimeNT50: null,
-      lPrimeNTw: null,
-      lPrimeNW: null,
-      lnW: null,
-      lnWPlusCI: null,
+      impactBasis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+      lPrimeNT50: 59.6,
+      lPrimeNTw: 58.6,
+      lPrimeNW: 61,
+      lnW: 59,
+      lnWPlusCI: 60,
       matchId: null,
       rw: 47,
       rwPrime: 47,
       dnTw: 50,
-      supported: ["R'w", "DnT,w"],
-      unsupported: FAIL_CLOSED_IMPACT_UNSUPPORTED
+      supported: FIELD_OUTPUTS,
+      unsupported: []
     }
   },
   {

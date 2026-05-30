@@ -468,11 +468,11 @@ const CASES: readonly RouteCase[] = [
           lowerBoundBasis: null,
           systemEstimateKind: null
         }),
-        supported: ["R'w", "Dn,w", "Dn,A", "Ctr"],
-        unsupported: ["Rw", "DnT,w", "DnT,A", "Ln,w", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
+        supported: ["Rw", "R'w", "Dn,w", "Dn,A", "Ctr"],
+        unsupported: ["DnT,w", "DnT,A", "Ln,w", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
         cards: {
           ...FIELD_IMPACT_NEEDS_INPUT_CARDS,
-          Rw: { status: "unsupported", value: "Not ready" },
+          Rw: { status: "live", value: "58 dB" },
           "R'w": { status: "live", value: "58 dB" },
           "Dn,w": { status: "live", value: "57 dB" },
           "Dn,A": { status: "live", value: "55.7 dB" },
@@ -494,10 +494,10 @@ const CASES: readonly RouteCase[] = [
           lowerBoundBasis: null,
           systemEstimateKind: null
         }),
-        supported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "Ctr"],
-        unsupported: ["Rw", "Ln,w", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
+        supported: ["Rw", "R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "Ctr"],
+        unsupported: ["Ln,w", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
         cards: {
-          Rw: { status: "unsupported", value: "Not ready" },
+          Rw: { status: "live", value: "58 dB" },
           "R'w": { status: "live", value: "58 dB" },
           "Dn,w": { status: "live", value: "57 dB" },
           "Dn,A": { status: "live", value: "55.7 dB" },

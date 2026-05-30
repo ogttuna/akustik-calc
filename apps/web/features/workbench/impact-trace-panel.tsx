@@ -323,6 +323,15 @@ export function ImpactTracePanel({ result }: ImpactTracePanelProps) {
               detail="Standardized or guide-side ceiling after K / V normalization"
             />
             <MetricCard
+              label="L'nT,50 upper bound"
+              value={
+                typeof lowerBoundImpact.LPrimeNT50UpperBound === "number"
+                  ? `<= ${formatDecimal(lowerBoundImpact.LPrimeNT50UpperBound)} dB`
+                  : "N/A"
+              }
+              detail="Low-frequency field-side ceiling when a selected owner publishes the required companion term"
+            />
+            <MetricCard
               label="Support confidence"
               value={`${formatConfidenceScore(lowerBoundImpact.confidence.score)} · ${formatConfidenceLevel(lowerBoundImpact.confidence.level)}`}
               detail={`${formatConfidenceProvenance(lowerBoundImpact.confidence.provenance)} provenance · ${formatBasisLabel(lowerBoundImpact.basis)}`}

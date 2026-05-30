@@ -336,8 +336,8 @@ const CASES: readonly StressCase[] = [
       lowerBoundBasis: null,
       matchId: null,
       ratingsBasis: "screening_mass_law_curve_seed_v3",
-      supported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "Ctr"],
-      unsupported: ["Rw", "Ln,w", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
+      supported: ["Rw", "R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "Ctr"],
+      unsupported: ["Ln,w", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
       values: {
         deltaLw: null,
         dnA: 55.7,

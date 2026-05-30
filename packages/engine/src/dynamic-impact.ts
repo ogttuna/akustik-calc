@@ -418,6 +418,7 @@ function formatImpactBasisLabel(value: ImpactCalculation["basis"] | ImpactBoundC
       return "Standardized field-volume carry-over";
     case "mixed_exact_plus_estimated_local_guide":
     case "mixed_predicted_plus_estimated_local_guide":
+    case "mixed_bound_plus_estimated_local_guide":
       return "Local-guide carry-over";
     case "mixed_exact_plus_estimated_tr_small_room_normalization":
     case "mixed_predicted_plus_estimated_tr_small_room_normalization":
@@ -443,6 +444,8 @@ function collectMetricLabels(
   if (typeof impact?.LPrimeNTw === "number") labels.push("L'nT,w");
   if (typeof impact?.LPrimeNT50 === "number") labels.push("L'nT,50");
   if (typeof lowerBoundImpact?.LnWUpperBound === "number") labels.push("Ln,w upper bound");
+  if (typeof lowerBoundImpact?.CI === "number") labels.push("CI");
+  if (typeof lowerBoundImpact?.CI50_2500 === "number") labels.push("CI,50-2500");
   if (typeof lowerBoundImpact?.LnWPlusCIUpperBound === "number") labels.push("Ln,w+CI upper bound");
   if (typeof lowerBoundImpact?.DeltaLwLowerBound === "number") labels.push("DeltaLw lower bound");
   if (typeof lowerBoundImpact?.LPrimeNWUpperBound === "number") labels.push("L'n,w upper bound");

@@ -1,4 +1,8 @@
-import type { LayerInput, ResolvedLayer } from "@dynecho/shared";
+import type { ImpactCalculation, LayerInput, ResolvedLayer } from "@dynecho/shared";
+
+import { getImpactConfidenceForBasis } from "./impact-confidence";
+import { buildUniformImpactMetricBasis } from "./impact-metric-basis";
+import { round1 } from "./math";
 
 export const TUAS_C11C_SOURCE_FRAME = {
   id: "C11c",
@@ -43,6 +47,12 @@ export const TUAS_C11C_SOURCE_TUPLE = {
   rw: 74
 } as const;
 
+export const TUAS_C11C_GUARDED_ISO_WEIGHTED_IMPACT_BASIS =
+  "tuas_c11c_visible_iso_weighted_impact_tuple_guarded" as const;
+
+export const TUAS_C11C_GUARDED_ISO_WEIGHTED_IMPACT_SELECTED_CANDIDATE_ID =
+  "floor.tuas_c11c.visible_iso_weighted_impact_tuple_guarded" as const;
+
 export const TUAS_C11C_NEARBY_COMBINED_EXACT_ANCHOR_IDS = [
   "tuas_c2c_clt260_measured_2026",
   "tuas_c3c_clt260_measured_2026",
@@ -68,7 +78,7 @@ export const TUAS_C11C_EXACT_IMPORT_READINESS_DECISION = {
   exactImportEligible: false,
   reason: "weighted_impact_tuple_is_not_explained_by_low_frequency_companion_terms",
   visibleRoutePosture: {
-    route: "screening_only_rw_support_with_impact_fail_closed",
+    route: "screening_airborne_plus_guarded_iso_weighted_impact_tuple",
     closestFamilyCandidateId: "tuas_c7c_clt260_measured_2026",
     predictorMatchingStatus: "parked_by_duplicated_single_entry_floating_screed_surface"
   },
@@ -76,7 +86,7 @@ export const TUAS_C11C_EXACT_IMPORT_READINESS_DECISION = {
     "raw_c11c_one_third_octave_impact_spectrum",
     "source_correction_or_lab_note_explaining_the_weak_weighted_tuple"
   ],
-  runtimeBehaviorChange: false,
+  runtimeBehaviorChange: true,
   selectedFollowUpIfEvidenceExists: "tuas_c11c_exact_import_candidate_v1"
 } as const;
 
@@ -94,9 +104,9 @@ export function isTuasC11cCombinedWetVisibleBoundary(layers: readonly ResolvedLa
   const ceilingCavity = layers.find((layer) => layer.floorRole === "ceiling_cavity");
   const ceilingFill = layers.find((layer) => layer.floorRole === "ceiling_fill");
 
-  // This boundary intentionally stays descriptive only. The duplicated
-  // floating-screed schedule is a known visible/source shape, but the weighted
-  // tuple remains too anomalous to reopen an exact import from shape alone.
+  // The duplicated floating-screed schedule is a known visible/source shape.
+  // It may publish only the weighted ISO impact tuple below; exact raw-band
+  // import still requires the missing C11c spectrum or source correction note.
   return (
     baseStructure?.material.id === TUAS_C11C_SOURCE_FRAME.visibleSchedule.baseStructure.materialId &&
     thicknessNear(baseStructure.thicknessMm, TUAS_C11C_SOURCE_FRAME.visibleSchedule.baseStructure.thicknessMm, 12) &&
@@ -140,4 +150,41 @@ export function isTuasC11cCombinedWetVisibleBoundary(layers: readonly ResolvedLa
     ceilingFill?.material.id === TUAS_C11C_SOURCE_FRAME.visibleSchedule.lowerCeiling.fillMaterialId &&
     thicknessNear(ceilingFill.thicknessMm, TUAS_C11C_SOURCE_FRAME.visibleSchedule.lowerCeiling.fillMm, 30)
   );
+}
+
+export function buildTuasC11cGuardedIsoWeightedImpact(
+  layers: readonly ResolvedLayer[]
+): ImpactCalculation | null {
+  if (!isTuasC11cCombinedWetVisibleBoundary(layers)) {
+    return null;
+  }
+
+  const ci = round1(TUAS_C11C_SOURCE_TUPLE.lnWPlusCI - TUAS_C11C_SOURCE_TUPLE.lnW);
+  const ci50 = round1(TUAS_C11C_SOURCE_TUPLE.lnWPlusCI50_2500 - TUAS_C11C_SOURCE_TUPLE.lnW);
+
+  return {
+    CI: ci,
+    CI50_2500: ci50,
+    LnW: TUAS_C11C_SOURCE_TUPLE.lnW,
+    LnWPlusCI: TUAS_C11C_SOURCE_TUPLE.lnWPlusCI,
+    availableOutputs: ["Ln,w", "CI", "CI,50-2500", "Ln,w+CI"],
+    basis: TUAS_C11C_GUARDED_ISO_WEIGHTED_IMPACT_BASIS,
+    confidence: getImpactConfidenceForBasis(TUAS_C11C_GUARDED_ISO_WEIGHTED_IMPACT_BASIS),
+    estimateCandidateIds: ["tuas_c11c_visible_iso_weighted_tuple_2026"],
+    labOrField: "lab",
+    metricBasis: buildUniformImpactMetricBasis(
+      {
+        CI: ci,
+        CI50_2500: ci50,
+        LnW: TUAS_C11C_SOURCE_TUPLE.lnW,
+        LnWPlusCI: TUAS_C11C_SOURCE_TUPLE.lnWPlusCI
+      },
+      TUAS_C11C_GUARDED_ISO_WEIGHTED_IMPACT_BASIS
+    ),
+    notes: [
+      "TUAS C11c visible weighted ISO 717-2 tuple is guarded as a metric-scoped lab impact anchor; exact raw-band import remains blocked until the C11c spectrum or a source correction note exists.",
+      "Only ISO weighted impact metrics are published from this guarded tuple; DeltaLw and ASTM/IIC aliases stay unsupported."
+    ],
+    scope: "family_estimate"
+  };
 }

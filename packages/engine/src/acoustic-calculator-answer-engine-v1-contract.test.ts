@@ -1973,9 +1973,9 @@ describe("acoustic calculator answer engine V1 contract", () => {
       unsupportedOutputs: ["L'n,w", "L'nT,w"]
     });
     expect(missingFieldContext.impact).toMatchObject({
-      DeltaLw: 31.1,
       LnW: 50
     });
+    expect(missingFieldContext.impact?.DeltaLw).toBeUndefined();
     expect(missingFieldContext.impact?.LPrimeNW).toBeUndefined();
     expect(missingFieldContext.impact?.LPrimeNTw).toBeUndefined();
     expect(missingFieldContext.supportedTargetOutputs).toEqual([]);

@@ -215,7 +215,7 @@ describe("Personal-Use MVP Coverage Sprint Gate P airborne building-prediction r
     expect(result.warnings).not.toContain(GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING);
   });
 
-  it("preserves field/lab/source alias boundaries while keeping owned field context live", () => {
+  it("preserves field/source boundaries while Gate AW keeps broad building lab companions live", () => {
     const contract = buildGatePAirborneBuildingPredictionRuntimeCorridorContract();
     const fieldResult = calculateAssembly(LINED_MASSIVE_WALL, {
       airborneContext: FIELD_CONTEXT,
@@ -253,8 +253,8 @@ describe("Personal-Use MVP Coverage Sprint Gate P airborne building-prediction r
       method: GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
       origin: "family_physics_prediction"
     });
-    expect(labAliasAttempt.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
-    expect(labAliasAttempt.unsupportedTargetOutputs).toEqual(["Rw", "STC"]);
+    expect(labAliasAttempt.supportedTargetOutputs).toEqual(["Rw", "STC", "R'w", "DnT,w"]);
+    expect(labAliasAttempt.unsupportedTargetOutputs).toEqual([]);
   });
 
   it("selects the next highest-ROI calculator lane without reopening broad source crawling", () => {

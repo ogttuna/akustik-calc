@@ -200,7 +200,7 @@ const LIVE_CASES: readonly LiveWallCase[] = [
     expected: {
       c: 0.8,
       cards: {
-        Rw: { status: "unsupported", value: "Not ready" },
+        Rw: { status: "live", value: "42 dB" },
         "R'w": { status: "live", value: "42 dB" },
         "Dn,w": { status: "live", value: "41 dB" },
         "Dn,A": { status: "live", value: "41.8 dB" },
@@ -217,8 +217,8 @@ const LIVE_CASES: readonly LiveWallCase[] = [
       dnW: 41,
       rw: 42,
       rwPrime: 42,
-      supported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"],
-      unsupported: ["Rw"]
+      supported: ["Rw", "R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"],
+      unsupported: []
     }
   },
   {
@@ -227,15 +227,15 @@ const LIVE_CASES: readonly LiveWallCase[] = [
     expected: {
       c: 0.8,
       cards: {
-        Rw: { status: "needs_input", value: "Not ready" },
+        Rw: { status: "live", value: "42 dB" },
         "R'w": { status: "needs_input", value: "Not ready" },
         "Dn,w": { status: "needs_input", value: "Not ready" },
         "Dn,A": { status: "needs_input", value: "Not ready" },
         "DnT,w": { status: "needs_input", value: "Not ready" },
         "DnT,A": { status: "needs_input", value: "Not ready" },
-        STC: { status: "needs_input", value: "Not ready" },
-        C: { status: "needs_input", value: "Not ready" },
-        Ctr: { status: "needs_input", value: "Not ready" }
+        STC: { status: "live", value: "42 dB" },
+        C: { status: "live", value: "+0.8 dB" },
+        Ctr: { status: "live", value: "-4 dB" }
       },
       ctr: -4,
       dnA: null,
@@ -244,8 +244,8 @@ const LIVE_CASES: readonly LiveWallCase[] = [
       dnW: null,
       rw: 42,
       rwPrime: null,
-      supported: [],
-      unsupported: WALL_OUTPUTS
+      supported: ["Rw", "STC", "C", "Ctr"],
+      unsupported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A"]
     }
   },
   {
@@ -281,7 +281,7 @@ const LIVE_CASES: readonly LiveWallCase[] = [
     expected: {
       c: -1.5,
       cards: {
-        Rw: { status: "unsupported", value: "Not ready" },
+        Rw: { status: "live", value: "48 dB" },
         "R'w": { status: "live", value: "48 dB" },
         "Dn,w": { status: "live", value: "47 dB" },
         "Dn,A": { status: "live", value: "45.5 dB" },
@@ -298,8 +298,8 @@ const LIVE_CASES: readonly LiveWallCase[] = [
       dnW: 47,
       rw: 48,
       rwPrime: 48,
-      supported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"],
-      unsupported: ["Rw"]
+      supported: ["Rw", "R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"],
+      unsupported: []
     }
   },
   {
@@ -308,15 +308,15 @@ const LIVE_CASES: readonly LiveWallCase[] = [
     expected: {
       c: -1.5,
       cards: {
-        Rw: { status: "needs_input", value: "Not ready" },
+        Rw: { status: "live", value: "48 dB" },
         "R'w": { status: "needs_input", value: "Not ready" },
         "Dn,w": { status: "needs_input", value: "Not ready" },
         "Dn,A": { status: "needs_input", value: "Not ready" },
         "DnT,w": { status: "needs_input", value: "Not ready" },
         "DnT,A": { status: "needs_input", value: "Not ready" },
-        STC: { status: "needs_input", value: "Not ready" },
-        C: { status: "needs_input", value: "Not ready" },
-        Ctr: { status: "needs_input", value: "Not ready" }
+        STC: { status: "live", value: "48 dB" },
+        C: { status: "live", value: "-1.5 dB" },
+        Ctr: { status: "live", value: "-6.4 dB" }
       },
       ctr: -6.4,
       dnA: null,
@@ -325,8 +325,8 @@ const LIVE_CASES: readonly LiveWallCase[] = [
       dnW: null,
       rw: 48,
       rwPrime: null,
-      supported: [],
-      unsupported: WALL_OUTPUTS
+      supported: ["Rw", "STC", "C", "Ctr"],
+      unsupported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A"]
     }
   }
 ];

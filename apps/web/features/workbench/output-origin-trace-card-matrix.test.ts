@@ -134,8 +134,8 @@ const CASES: readonly RouteCase[] = [
       floorSystemRatingsBasis: "predictor_mass_timber_clt_dataholz_dry_estimate",
       impactBasis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
       lowerBoundBasis: null,
-      supported: ["Rw", "Ln,w", "L'n,w", "L'nT,w", "Ln,w+CI", "L'nT,50"],
-      unsupported: ["R'w", "DnT,w", "Ctr"],
+      supported: ["Rw", "Ln,w", "L'n,w", "L'nT,w", "Ln,w+CI", "L'nT,50", "Ctr"],
+      unsupported: ["R'w", "DnT,w"],
       cards: {
         Rw: { status: "live", value: "65 dB" },
         "R'w": { status: "needs_input", value: "Not ready" },
@@ -145,7 +145,7 @@ const CASES: readonly RouteCase[] = [
         "L'nT,w": { status: "live", value: "49 dB" },
         "Ln,w+CI": { status: "live", value: "53 dB" },
         "L'nT,50": { status: "live", value: "58 dB" },
-        Ctr: { status: "unsupported", value: "Not ready" }
+        Ctr: { status: "live", value: "-5.7 dB" }
       }
     }
   },
@@ -241,10 +241,10 @@ const CASES: readonly RouteCase[] = [
       floorSystemRatingsBasis: "screening_mass_law_curve_seed_v3",
       impactBasis: "predictor_heavy_bare_floor_iso12354_annexc_estimate",
       lowerBoundBasis: null,
-      supported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"],
-      unsupported: ["Rw"],
+      supported: ["Rw", "R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"],
+      unsupported: [],
       cards: {
-        Rw: { status: "unsupported", value: "Not ready" },
+        Rw: { status: "live", value: "59 dB" },
         "R'w": { status: "live", value: "59 dB" },
         "Dn,w": { status: "live", value: "58 dB" },
         "Dn,A": { status: "live", value: "56.9 dB" },

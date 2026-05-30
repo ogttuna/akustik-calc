@@ -212,20 +212,20 @@ describe("layer combination resolver candidate coverage matrix refresh contract"
       sourceRowsAreEvidenceNotProduct: true
     });
     expect(contract.summary).toEqual({
-      activeRuntimeCandidateCount: 32,
+      activeRuntimeCandidateCount: 36,
       allCandidateDeclarationsCovered: true,
       boundaryCandidateCount: 3,
-      candidateDeclarationCount: 35,
-      coverageMatrixRowCount: 35,
+      candidateDeclarationCount: 39,
+      coverageMatrixRowCount: 39,
       readinessBucketCount: {
         needs_input: 1,
         ready: 4,
-        ready_with_budget: 28,
+        ready_with_budget: 32,
         research_only: 0,
         unsupported: 2
       },
       selectedNextAction: LAYER_COMBINATION_RESOLVER_CANDIDATE_COVERAGE_MATRIX_REFRESH_SELECTED_NEXT_ACTION,
-      surfaceRowCount: 35
+      surfaceRowCount: 39
     });
 
     for (const path of REQUIRED_SURFACES) {
@@ -250,6 +250,7 @@ describe("layer combination resolver candidate coverage matrix refresh contract"
       {
         candidateIds: [
           "wall.compatible_anchor_delta.extra_board_on_verified_lsf",
+          "floor.tuas_c11c.visible_iso_weighted_impact_tuple_guarded",
           "floor.open_box_timber.package_transfer_similarity",
           "floor.open_web.supported_band_similarity"
         ],
@@ -271,11 +272,13 @@ describe("layer combination resolver candidate coverage matrix refresh contract"
           GATE_H_LINED_MASSIVE_WALL_SELECTED_CANDIDATE_ID,
           COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_SELECTED_CANDIDATE_ID,
           FLAT_LIST_MULTILEAF_GUARD_LAB_SELECTED_CANDIDATE_ID,
+          "floor.screening_airborne.source_absent",
           "floor.open_box_timber.raw_bare_source_absent",
           "floor.open_web.raw_bare_source_absent",
           "floor.helper_only_timber_open_web.source_absent",
           "floor.open_web.direct_fixed_lining.source_absent",
           "floor.composite_panel.published_interaction_family_solver",
+          "candidate_gate_ae_flat_multicavity_family_physics_prediction",
           LIGHTWEIGHT_CONCRETE_FAMILY_SELECTED_CANDIDATE_ID,
           "floor.lightweight_steel.upper_lower_mass_spring.source_absent",
           "floor.lightweight_steel.suspended_ceiling_only.source_absent",
@@ -292,7 +295,8 @@ describe("layer combination resolver candidate coverage matrix refresh contract"
           BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
           FLAT_LIST_MULTILEAF_GUARD_FIELD_SELECTED_CANDIDATE_ID,
           "floor.impact_field_context.field_building_adapter",
-          "wall.airborne_field_context.field_apparent_adapter"
+          "wall.airborne_field_context.field_apparent_adapter",
+          "candidate_airborne_building_prediction_all_owner_family_physics_prediction"
         ],
         kind: "field_building_adapter",
         resolverOrderRank: 4

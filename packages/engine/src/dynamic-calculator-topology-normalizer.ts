@@ -172,6 +172,58 @@ function hasGroupedTripleLeafTopology(context: AirborneContext | undefined): boo
   return context?.wallTopology?.topologyMode === "grouped_triple_leaf";
 }
 
+function hasExplicitDoubleLeafFramedTopology(context: AirborneContext | undefined): boolean {
+  return context?.wallTopology?.topologyMode === "double_leaf_framed";
+}
+
+function hasLeafBetweenCompliantZones(
+  layers: readonly LayerInput[],
+  catalog: readonly MaterialDefinition[]
+): boolean {
+  let sawCompliantZone = false;
+  let sawLeafAfterCompliantZone = false;
+
+  for (const layer of layers) {
+    const compliant = isCavityLayer(layer, catalog) || isPorousFillLayer(layer, catalog);
+
+    if (compliant) {
+      if (sawCompliantZone && sawLeafAfterCompliantZone) {
+        return true;
+      }
+      sawCompliantZone = true;
+      sawLeafAfterCompliantZone = false;
+      continue;
+    }
+
+    if (sawCompliantZone && isLeafLikeLayer(layer, catalog)) {
+      sawLeafAfterCompliantZone = true;
+    }
+  }
+
+  return false;
+}
+
+function hasExplicitFramedCalibrationMetadata(
+  context: AirborneContext | undefined,
+  layers: readonly LayerInput[],
+  catalog: readonly MaterialDefinition[]
+): boolean {
+  const hasExplicitConnection =
+    context?.connectionType === "line_connection" ||
+    context?.connectionType === "point_connection" ||
+    context?.connectionType === "mixed_connection" ||
+    context?.connectionType === "direct_fix" ||
+    context?.connectionType === "resilient_channel";
+
+  return Boolean(
+    (context?.studType === "light_steel_stud" || context?.studType === "wood_stud") &&
+      hasExplicitConnection &&
+      typeof context.studSpacingMm === "number" &&
+      context.studSpacingMm > 0 &&
+      !hasLeafBetweenCompliantZones(layers, catalog)
+  );
+}
+
 function hasAdvancedWallSourceAbsentContext(context: AirborneContext | undefined): boolean {
   return context?.advancedWall?.wallSolverIntent === "advanced_source_absent_wall";
 }
@@ -351,14 +403,24 @@ export function normalizeDynamicCalculatorTopologyInput(
   const actions: DynamicCalculatorTopologyNormalizationAction[] = [];
   const blockers = validateLayers(input.layers, maxLayerCount);
   const hasAdvancedWallContext = hasAdvancedWallSourceAbsentContext(input.airborneContext);
+  const hasFramedCalibrationMetadata = hasExplicitFramedCalibrationMetadata(
+    input.airborneContext,
+    input.layers,
+    catalog
+  );
+  const previousHasFramedCalibrationMetadata =
+    input.previousLayers !== undefined &&
+    hasExplicitFramedCalibrationMetadata(input.airborneContext, input.previousLayers, catalog);
   const currentLooksLikeMulticavityWall =
     input.route === "wall" &&
     !hasAdvancedWallContext &&
+    !hasFramedCalibrationMetadata &&
     (hasGroupedTripleLeafTopology(input.airborneContext) ||
       looksLikeMultiCavityWall(input.layers, catalog));
   const previousLooksLikeMulticavityWall =
     input.route === "wall" &&
     !hasAdvancedWallContext &&
+    !previousHasFramedCalibrationMetadata &&
     input.previousLayers !== undefined &&
     looksLikeMultiCavityWall(input.previousLayers, catalog);
 
@@ -411,7 +473,8 @@ export function normalizeDynamicCalculatorTopologyInput(
   if (
     input.route === "wall" &&
     currentLooksLikeMulticavityWall &&
-    !hasGroupedTripleLeafTopology(input.airborneContext)
+    !hasGroupedTripleLeafTopology(input.airborneContext) &&
+    !hasExplicitDoubleLeafFramedTopology(input.airborneContext)
   ) {
     blockers.push({
       code: "ambiguous_multicavity_flat_list",

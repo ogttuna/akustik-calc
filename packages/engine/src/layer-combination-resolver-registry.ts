@@ -5,6 +5,10 @@ import {
 } from "./dynamic-airborne-company-internal-heavy-composite-wall";
 import { GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD } from "./dynamic-airborne-gate-i-airborne-field-context";
 import {
+  GATE_AE_FLAT_MULTICAVITY_RUNTIME_METHOD,
+  GATE_AE_FLAT_MULTICAVITY_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-gate-ae-flat-multicavity";
+import {
   GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD,
   GATE_H_LINED_MASSIVE_WALL_SELECTED_CANDIDATE_ID
 } from "./dynamic-airborne-gate-h-lined-masonry-clt";
@@ -75,6 +79,10 @@ import {
   POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_RUNTIME_METHOD,
   POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_SELECTED_CANDIDATE_ID
 } from "./post-v1-wall-compatible-anchor-delta";
+import {
+  TUAS_C11C_GUARDED_ISO_WEIGHTED_IMPACT_BASIS,
+  TUAS_C11C_GUARDED_ISO_WEIGHTED_IMPACT_SELECTED_CANDIDATE_ID
+} from "./tuas-c11c-exact-import-readiness";
 
 const BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_RUNTIME_METHOD =
   "broad_accuracy_wall_triple_leaf_local_substitution_source_absent_rw_runtime_corridor";
@@ -92,6 +100,11 @@ const POST_V1_WALL_MULTILEAF_GENERALIZED_RUNTIME_METHOD =
   "triple_leaf_two_cavity_frequency_solver";
 const POST_V1_WALL_MULTILEAF_GENERALIZED_SELECTED_CANDIDATE_ID =
   "candidate_post_v1_wall_multileaf_generalized_source_absent_family_solver";
+const GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD =
+  "gate_ar_airborne_building_prediction_all_owner_runtime_corridor";
+const GATE_AR_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID =
+  "candidate_airborne_building_prediction_all_owner_family_physics_prediction";
+const FLOOR_SCREENING_AIRBORNE_RUNTIME_BASIS = "screening_mass_law_curve_seed_v3";
 
 export const LAYER_COMBINATION_RESOLVER_REGISTRY_LANDED_GATE =
   "layer_combination_resolver_registry_plan";
@@ -456,6 +469,65 @@ const CANDIDATE_DECLARATIONS = [
     supportedMetrics: ["Ln,w", "CI", "CI,50-2500", "Ln,w+CI", "DeltaLw", "L'nT,w", "L'nT,50", "LnT,A"],
     surfaceRequirements: ELEMENT_LAB_SURFACES,
     valuePins: []
+  },
+  {
+    basis: "element_lab",
+    errorBudgetTerms: [
+      { metric: "Ln,w", notMeasuredEvidence: false, toleranceDb: 3 },
+      { metric: "CI", notMeasuredEvidence: false, toleranceDb: 1 },
+      { metric: "CI,50-2500", notMeasuredEvidence: false, toleranceDb: 1 }
+    ],
+    exactPrecedenceRules: [
+      "same_stack_exact_impact_band_source_wins_before_guarded_weighted_tuple",
+      "tuas_c11c_exact_import_candidate_remains_blocked_until_raw_spectrum_or_source_correction",
+      "guarded_weighted_tuple_does_not_override_floor_airborne_or_field_adapter_owners"
+    ],
+    formulaTerms: [
+      "visible_c11c_stack_shape_guard",
+      "source_weighted_iso_717_2_lnw_tuple",
+      "ci_and_ci50_companion_from_weighted_tuple",
+      "field_outputs_remain_adapter_owned"
+    ],
+    hardCompatibilityGates: [
+      "floor_route",
+      "tuas_c11c_visible_stack_boundary",
+      "element_lab_impact_metric_basis",
+      "exact_raw_band_import_not_eligible",
+      "iso_weighted_impact_metrics_only"
+    ],
+    hostileInputCases: [
+      "drifted_ceiling_or_upper_package_rejected",
+      "delta_lw_request_stays_unsupported_without_improvement_curve_owner",
+      "iic_aiic_requests_remain_unsupported_without_astm_owner"
+    ],
+    id: TUAS_C11C_GUARDED_ISO_WEIGHTED_IMPACT_SELECTED_CANDIDATE_ID,
+    kind: "similarity_anchor",
+    label: "TUAS C11c guarded ISO weighted impact tuple",
+    ownedRuntimeBasisId: TUAS_C11C_GUARDED_ISO_WEIGHTED_IMPACT_BASIS,
+    priorityRank: 1,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      "route=floor",
+      "visibleC11cLayerSchedule",
+      "floorRoleStack",
+      "sourceWeightedIso7172Tuple",
+      "noExactBandImport"
+    ],
+    route: "floor",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "same_visible_c11c_stack_required",
+      "nearby_tuas_rows_do_not_anchor_this_anomalous_tuple",
+      "publish_only_iso_weighted_impact_metrics_from_the_tuple"
+    ],
+    supportedMetrics: ["Ln,w", "CI", "CI,50-2500", "Ln,w+CI"],
+    surfaceRequirements: ELEMENT_LAB_SURFACES,
+    valuePins: [
+      { metric: "Ln,w", value: 59 },
+      { metric: "CI", value: 1 },
+      { metric: "CI,50-2500", value: 1 },
+      { metric: "Ln,w+CI", value: 60 }
+    ]
   },
   {
     basis: "element_lab",
@@ -1237,6 +1309,54 @@ const CANDIDATE_DECLARATIONS = [
     basis: "element_lab",
     errorBudgetTerms: [
       { metric: "Rw", notMeasuredEvidence: true, toleranceDb: 8 },
+      { metric: "STC", notMeasuredEvidence: true, toleranceDb: 8 }
+    ],
+    exactPrecedenceRules: [
+      "exact_floor_system_rows_win_before_screening_airborne_formula",
+      "bound_floor_system_rows_win_before_screening_airborne_formula",
+      "family_specific_floor_formulas_win_before_generic_screening_airborne_formula"
+    ],
+    formulaTerms: [
+      "visible_floor_role_layers",
+      "coalesced_airborne_layer_surface_mass",
+      "calibrated_mass_law_curve_seed",
+      "iso_717_1_rw_c_ctr_adapter",
+      "astm_stc_display_from_same_curve"
+    ],
+    hardCompatibilityGates: [
+      "floor_route",
+      "source_absent_screening_basis",
+      "visible_floor_roles",
+      "element_lab_airborne_metric_basis",
+      "no_impact_or_astm_alias_promotion"
+    ],
+    hostileInputCases: [
+      "exact_floor_metric_scope_not_reopened",
+      "bound_floor_missing_c_not_fabricated",
+      "impact_outputs_remain_stopped_without_impact_owner",
+      "wall_route_needs_input_not_widened"
+    ],
+    id: "floor.screening_airborne.source_absent",
+    kind: "source_absent_family_solver",
+    label: "Floor screening airborne source-absent solver",
+    ownedRuntimeBasisId: FLOOR_SCREENING_AIRBORNE_RUNTIME_BASIS,
+    priorityRank: 3,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: ["visibleFloorRoles", "layerSurfaceMasses", "requestedAirborneLabOutput"],
+    route: "floor",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "screening_airborne_is_not_a_catalog_exact_row",
+      "nearby_measured_floor_rows_may_calibrate_later_but_do_not_override_source_absent_screening_without_same_topology"
+    ],
+    supportedMetrics: ["Rw", "STC", "C", "Ctr"],
+    surfaceRequirements: ELEMENT_LAB_SURFACES,
+    valuePins: []
+  },
+  {
+    basis: "element_lab",
+    errorBudgetTerms: [
+      { metric: "Rw", notMeasuredEvidence: true, toleranceDb: 8 },
       { metric: "Ln,w", notMeasuredEvidence: true, toleranceDb: 10 }
     ],
     exactPrecedenceRules: ["exact_tuas_package_rows_and_package_transfer_rows_win_before_raw_bare_formula"],
@@ -1435,6 +1555,67 @@ const CANDIDATE_DECLARATIONS = [
       "field_or_astm_requests_need_separate_field_or_astm_owner"
     ],
     supportedMetrics: ["Rw", "Ln,w"],
+    surfaceRequirements: ELEMENT_LAB_SURFACES,
+    valuePins: []
+  },
+  {
+    basis: "element_lab",
+    errorBudgetTerms: [
+      { metric: "Rw", notMeasuredEvidence: true, toleranceDb: 7 },
+      { metric: "STC", notMeasuredEvidence: true, toleranceDb: 7 },
+      { metric: "C", notMeasuredEvidence: true, toleranceDb: 3 },
+      { metric: "Ctr", notMeasuredEvidence: true, toleranceDb: 5 }
+    ],
+    exactPrecedenceRules: [
+      "verified_exact_flat_multicavity_rows_win_before_source_absent_formula",
+      "safe_auto_topology_is_a_formula_input_owner_not_a_source_override"
+    ],
+    formulaTerms: [
+      "leaf_porous_cavity_leaf_porous_cavity_leaf_pattern_detection",
+      "explicit_air_gap_plus_porous_fill_cavity_depth_derivation",
+      "safe_grouped_triple_leaf_topology_derivation",
+      "one_third_octave_transmission_loss_curve",
+      "iso_717_1_rw_c_ctr_rating_adapter",
+      "astm_e413_stc_curve_rating_boundary"
+    ],
+    hardCompatibilityGates: [
+      "wall_route",
+      "element_lab_metric_basis",
+      "no_explicit_non_auto_wall_topology",
+      "exactly_two_cavity_segments",
+      "each_cavity_has_air_gap_and_porous_fill",
+      "three_non_empty_leaf_segments"
+    ],
+    hostileInputCases: [
+      "flat_multicavity_without_explicit_air_gaps_still_needs_input",
+      "explicit_flat_layer_order_is_not_overridden",
+      "duplicate_or_invalid_user_groups_stay_blocked",
+      "field_and_building_outputs_require_context_adapters"
+    ],
+    id: GATE_AE_FLAT_MULTICAVITY_SELECTED_CANDIDATE_ID,
+    kind: "source_absent_family_solver",
+    label: "Flat multicavity safe auto-topology source-absent solver",
+    ownedRuntimeBasisId: GATE_AE_FLAT_MULTICAVITY_RUNTIME_METHOD,
+    priorityRank: 3,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      "route=wall",
+      "elementLabBasis",
+      "flatLayerOrder",
+      "twoExplicitAirGapPorousCavitySegments",
+      "threeLeafSegments",
+      "derivedGroupedTripleLeafTopology",
+      "oneThirdOctaveTransmissionLossCurve",
+      "ISO717-1 Rw/C/Ctr adapter",
+      "ASTM E413 STC boundary"
+    ],
+    route: "wall",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "same_family_measured_rows_can_calibrate_only_after topology and metric basis match",
+      "source rows remain exact overrides anchors holdouts or bounds not the product"
+    ],
+    supportedMetrics: ["Rw", "STC", "C", "Ctr"],
     surfaceRequirements: ELEMENT_LAB_SURFACES,
     valuePins: []
   },
@@ -1827,7 +2008,14 @@ const CANDIDATE_DECLARATIONS = [
   },
   {
     basis: "field_apparent",
-    errorBudgetTerms: [{ metric: "L'nT,w", notMeasuredEvidence: true, toleranceDb: 3 }],
+    errorBudgetTerms: [
+      { metric: "R'w", notMeasuredEvidence: true, toleranceDb: 4 },
+      { metric: "Dn,w", notMeasuredEvidence: true, toleranceDb: 4 },
+      { metric: "Dn,A", notMeasuredEvidence: true, toleranceDb: 4 },
+      { metric: "DnT,w", notMeasuredEvidence: true, toleranceDb: 4 },
+      { metric: "DnT,A", notMeasuredEvidence: true, toleranceDb: 4 },
+      { metric: "L'nT,w", notMeasuredEvidence: true, toleranceDb: 3 }
+    ],
     exactPrecedenceRules: ["exact_field_continuation_rows_win_before_any_field_adapter"],
     formulaTerms: [
       "field_k_correction",
@@ -1865,7 +2053,7 @@ const CANDIDATE_DECLARATIONS = [
       "field_values_stay_tied_to_exact_formula_or_family_lab_impact_anchor",
       "nearby_lab_rows_do_not_become_field_measurements_without_context_adapter"
     ],
-    supportedMetrics: ["R'w", "DnT,w", "L'n,w", "L'nT,w", "L'nT,50"],
+    supportedMetrics: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "L'n,w", "L'nT,w", "L'nT,50"],
     surfaceRequirements: FIELD_SURFACES,
     valuePins: [
       { metric: "R'w", value: 77 },
@@ -1922,6 +2110,69 @@ const CANDIDATE_DECLARATIONS = [
       "nearby_lab_rows_may_not_anchor_field_without_context_adapter"
     ],
     supportedMetrics: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "DnT,A,k"],
+    surfaceRequirements: FIELD_SURFACES,
+    valuePins: []
+  },
+  {
+    basis: "building_prediction",
+    errorBudgetTerms: [
+      { metric: "R'w", notMeasuredEvidence: true, toleranceDb: 9 },
+      { metric: "Dn,w", notMeasuredEvidence: true, toleranceDb: 9 },
+      { metric: "Dn,A", notMeasuredEvidence: true, toleranceDb: 9 },
+      { metric: "DnT,w", notMeasuredEvidence: true, toleranceDb: 9 },
+      { metric: "DnT,A", notMeasuredEvidence: true, toleranceDb: 9 }
+    ],
+    exactPrecedenceRules: [
+      "same_stack_building_rows_win_before_source_absent_building_prediction",
+      "lab_exact_rows_do_not_become_building_values",
+      "lab_companions_remain_separate_from_building_candidate_pins"
+    ],
+    formulaTerms: [
+      "owned_direct_separating_element_frequency_curve",
+      "explicit_flanking_path_energy_overlay",
+      "explicit_junction_coupling_length_and_class",
+      "source_and_receiving_room_volume_normalization",
+      "receiving_room_rt60_standardization",
+      "iso_12354_1_building_prediction_runtime_budget"
+    ],
+    hardCompatibilityGates: [
+      "wall_route",
+      "building_prediction_context",
+      "complete_flanking_junction_context",
+      "complete_room_standardization_context",
+      "owned_direct_lab_family_curve",
+      "no_opening_or_leak_route_without_dedicated_owner"
+    ],
+    hostileInputCases: [
+      "missing_support_topology_needs_input",
+      "opening_leak_context_without_owner_blocked",
+      "lab_outputs_requested_with_building_context_do_not_relabel_building_pins",
+      "field_context_cannot_use_building_prediction_basis"
+    ],
+    id: GATE_AR_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID,
+    kind: "field_building_adapter",
+    label: "Wall airborne building-prediction context adapter",
+    ownedRuntimeBasisId: GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
+    priorityRank: 4,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      "airborneContext.contextMode=building_prediction",
+      "airborneContext.panelWidthHeight",
+      "airborneContext.sourceRoomVolumeM3",
+      "airborneContext.receivingRoomVolumeM3",
+      "airborneContext.receivingRoomRt60S",
+      "airborneContext.flankingJunctionClass",
+      "airborneContext.conservativeFlankingAssumption",
+      "airborneContext.junctionCouplingLengthM",
+      "ownedDirectLabFamilyCurve"
+    ],
+    route: "wall",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "building_values_stay_tied_to_owned_direct_curve_and_explicit_building_context",
+      "nearby_lab_rows_may_not_anchor_building_without_same_basis_and_flanking_context"
+    ],
+    supportedMetrics: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A"],
     surfaceRequirements: FIELD_SURFACES,
     valuePins: []
   },

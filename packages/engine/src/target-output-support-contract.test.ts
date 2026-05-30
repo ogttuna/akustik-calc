@@ -96,6 +96,25 @@ describe("target output support contract", () => {
     expect(result.unsupportedImpactOutputs).toEqual(["Ln,w", "CI", "L'n,w", "L'nT,w"]);
   });
 
+  it("supports explicit CI companions on conservative bound impact lanes without making them exact Ln,w", () => {
+    const result = analyzeTargetOutputSupport({
+      impact: null,
+      lowerBoundImpact: lowerBound({
+        CI: -1,
+        LPrimeNT50UpperBound: 53,
+        LPrimeNWUpperBound: 54,
+        LnWPlusCIUpperBound: 50,
+        LnWUpperBound: 51
+      }),
+      targetOutputs: ["Ln,w", "CI", "Ln,w+CI", "L'n,w", "L'nT,50", "IIC"]
+    });
+
+    expect(result.supportedTargetOutputs).toEqual(["Ln,w", "CI", "Ln,w+CI", "L'n,w", "L'nT,50"]);
+    expect(result.unsupportedTargetOutputs).toEqual(["IIC"]);
+    expect(result.supportedImpactOutputs).toEqual(["Ln,w", "CI", "Ln,w+CI", "L'n,w", "L'nT,50"]);
+    expect(result.unsupportedImpactOutputs).toEqual(["IIC"]);
+  });
+
   it("keeps impact-only style carrier support separate from conservative bound impact support", () => {
     const result = analyzeTargetOutputSupport({
       countBoundSupportAsSupported: false,

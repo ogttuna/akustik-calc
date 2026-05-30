@@ -151,7 +151,6 @@ const HOSTILE_LAYER_EDIT_ROW_IDS = [
 ] as const;
 
 const ALIAS_NEGATIVE_ROW_IDS = [
-  "wall.complete_building_prediction_broad_targets.alias_boundary",
   "wall.opening_leak_composite_building_boundary.unsupported",
   "floor.astm_iic_aiic_boundary.unsupported"
 ] as const;
@@ -315,19 +314,19 @@ function buildBroadBuildingAliasBoundaryRow(): PersonalUseMvpCoverageScenarioRow
     basis: "building_prediction",
     currentPosture: runtime.currentPosture,
     expectedPosture: "family_physics",
-    failureClass: "basis_boundary",
+    failureClass: "none",
     family: "wall_complete_airborne_building_prediction_broad_targets",
     hostileVariant: "lab_rw_stc_requested_beside_building_metrics",
     id: "wall.complete_building_prediction_broad_targets.alias_boundary",
     inputCompleteness: "complete",
     nextAction: PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AT_SELECTED_NEXT_ACTION,
-    originSupportBucket: "source_absent_building_prediction_runtime_with_lab_alias_boundary",
+    originSupportBucket: "source_absent_building_prediction_runtime_with_lab_companions",
     requestedMetrics: WALL_BROAD_BUILDING_OUTPUTS,
     route: "wall",
     runtime: runtime.runtime,
     toleranceOrErrorBudget: "gate_aq_plus_minus_9_db_source_absent_budget_not_measured",
     valueOrBlockedReason:
-      "R'w 58 / DnT,w 59 are supported; lab Rw/STC remain unsupported on the building route.",
+      "Rw 58 / STC 58 / R'w 58 / DnT,w 59 are supported by the Gate AW lab-companion path.",
     visibleSurfaceParityTarget: WALL_VISIBLE_SURFACES
   };
 }

@@ -100,7 +100,7 @@ describe("Personal-Use MVP Coverage Sprint Gate AV post-release accuracy and ada
     const roadmap = buildPersonalUseMvpCoverageSprintGateAVRoadmap();
 
     expect(roadmap).toMatchObject({
-      acceptedBoundaryRowCount: 16,
+      acceptedBoundaryRowCount: 15,
       companyInternalDailyUseReady: true,
       exactSourcePrecedencePreserved: true,
       gateAUSelectedNextAction: PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AU_SELECTED_NEXT_ACTION,

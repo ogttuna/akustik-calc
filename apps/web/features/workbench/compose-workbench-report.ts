@@ -227,9 +227,12 @@ function buildFloorSystemCompanionLines(
 }
 
 type ReportImpactBounds = {
+  CI?: number;
+  CI50_2500?: number;
   DeltaLwLowerBound?: number;
   LnWPlusCIUpperBound?: number;
   LnWUpperBound?: number;
+  LPrimeNT50UpperBound?: number;
   LPrimeNTwUpperBound?: number;
   LPrimeNWUpperBound?: number;
   basis?: string;
@@ -251,6 +254,14 @@ function buildImpactBoundReportLines(prefix: string, lowerBound: ReportImpactBou
     lines.push(`- ${labelPrefix}Ln,w+CI upper bound: <= ${formatMetric(lowerBound.LnWPlusCIUpperBound)} dB`);
   }
 
+  if (typeof lowerBound.CI === "number") {
+    lines.push(`- ${labelPrefix}CI: ${formatSignedMetric(lowerBound.CI)} dB`);
+  }
+
+  if (typeof lowerBound.CI50_2500 === "number") {
+    lines.push(`- ${labelPrefix}CI,50-2500: ${formatSignedMetric(lowerBound.CI50_2500)} dB`);
+  }
+
   if (typeof lowerBound.DeltaLwLowerBound === "number") {
     lines.push(`- ${labelPrefix}DeltaLw lower bound: >= ${formatMetric(lowerBound.DeltaLwLowerBound)} dB`);
   }
@@ -261,6 +272,10 @@ function buildImpactBoundReportLines(prefix: string, lowerBound: ReportImpactBou
 
   if (typeof lowerBound.LPrimeNTwUpperBound === "number") {
     lines.push(`- ${labelPrefix}L'nT,w upper bound: <= ${formatMetric(lowerBound.LPrimeNTwUpperBound)} dB`);
+  }
+
+  if (typeof lowerBound.LPrimeNT50UpperBound === "number") {
+    lines.push(`- ${labelPrefix}L'nT,50 upper bound: <= ${formatMetric(lowerBound.LPrimeNT50UpperBound)} dB`);
   }
 
   return lines;

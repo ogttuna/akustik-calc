@@ -172,7 +172,7 @@ const CASES = [
       cards: {
         Rw: { status: "live", value: "62.6 dB" },
         "Ln,w": { status: "live", value: "52.4 dB" },
-        CI: { status: "live", value: "-1.8 dB" },
+        CI: { status: "live", value: "-1.9 dB" },
         "Ln,w+CI": { status: "live", value: "50.5 dB" },
         "L'n,w": { status: "live", value: "54.4 dB" },
         "L'nT,w": { status: "live", value: "52 dB" },
@@ -224,16 +224,16 @@ const CASES = [
         "Ln,w": { status: "unsupported", value: "Not ready" },
         CI: { status: "unsupported", value: "Not ready" },
         "Ln,w+CI": { status: "bound", value: "<= 45 dB" },
-        "L'n,w": { status: "needs_input", value: "Not ready" },
+        "L'n,w": { status: "unsupported", value: "Not ready" },
         "L'nT,w": { status: "needs_input", value: "Not ready" },
-        "L'nT,50": { status: "needs_input", value: "Not ready" }
+        "L'nT,50": { status: "bound", value: "<= 45 dB" }
       },
       estimateKind: null,
       exactMatchId: null,
       impactBasis: null,
-      lowerBoundBasis: "official_floor_system_bound_support",
-      supported: ["Rw", "Ln,w+CI"],
-      unsupported: ["Ln,w", "CI", "L'n,w", "L'nT,w", "L'nT,50"]
+      lowerBoundBasis: "mixed_bound_plus_estimated_local_guide",
+      supported: ["Rw", "Ln,w+CI", "L'nT,50"],
+      unsupported: ["Ln,w", "CI", "L'n,w", "L'nT,w"]
     }
   },
   {

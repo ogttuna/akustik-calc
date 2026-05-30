@@ -133,11 +133,11 @@ describe("company-internal calculation-grade mainline matrix v4 refresh", () => 
         COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V4_STEEL_LNT50_EXACT_FIELD_ROW_ID
       ],
       failureClassCounts: {
-        basis_boundary: 5,
+        basis_boundary: 4,
         correct_block: 13,
         coverage_gap: 0,
         hostile_input_refusal: 4,
-        none: 37,
+        none: 38,
         unsupported_metric: 3
       },
       hiddenScreeningOriginRowIds: [],

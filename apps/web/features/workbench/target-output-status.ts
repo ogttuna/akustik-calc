@@ -92,7 +92,14 @@ function hasGuideValue(
   }
 
   if (output === "L'nT,50") {
-    return { boundOnly: false, value: typeof guideResult.LPrimeNT50 === "number" };
+    return {
+      boundOnly:
+        typeof guideResult.LPrimeNT50 !== "number" &&
+        typeof guideResult.LPrimeNT50UpperBound === "number",
+      value:
+        typeof guideResult.LPrimeNT50 === "number" ||
+        typeof guideResult.LPrimeNT50UpperBound === "number"
+    };
   }
 
   if (output === "L'nT,w") {
@@ -118,7 +125,14 @@ function hasGuideValue(
   }
 
   if (output === "Ln,w+CI") {
-    return { boundOnly: false, value: typeof guideResult.LnWPlusCI === "number" };
+    return {
+      boundOnly:
+        typeof guideResult.LnWPlusCI !== "number" &&
+        typeof guideResult.LnWPlusCIUpperBound === "number",
+      value:
+        typeof guideResult.LnWPlusCI === "number" ||
+        typeof guideResult.LnWPlusCIUpperBound === "number"
+    };
   }
 
   if (output === "CI") {
@@ -149,6 +163,10 @@ function hasEngineBoundValue(output: RequestedOutputId, result: AssemblyCalculat
 
   if (output === "L'nT,w") {
     return typeof bound.LPrimeNTwUpperBound === "number";
+  }
+
+  if (output === "L'nT,50") {
+    return typeof bound.LPrimeNT50UpperBound === "number";
   }
 
   if (output === "DeltaLw") {

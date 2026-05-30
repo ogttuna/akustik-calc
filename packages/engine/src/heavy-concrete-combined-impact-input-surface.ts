@@ -215,12 +215,16 @@ function buildUnsafeTopologyBlockerPredictorInput(
 
 function hasCompleteLowerTreatment(input: ImpactPredictorInput): boolean {
   const lower = input.lowerTreatment;
+  const supportProductId = lower?.supportProductId?.trim().toLowerCase();
+  const hasOwnedVisibleSupportProduct =
+    supportProductId === "acoustic_hanger_ceiling" ||
+    supportProductId === "resilient_stud_ceiling";
 
   return Boolean(
     lower &&
       lower.type &&
       lower.type !== "none" &&
-      lower.supportClass &&
+      (lower.supportClass || hasOwnedVisibleSupportProduct) &&
       hasPositiveNumber(lower.cavityDepthMm) &&
       (
         hasPositiveNumber(lower.boardThicknessMm) ||

@@ -34,6 +34,7 @@ import {
   deriveHelperOnlyTimberOpenWebImpactStackEstimate,
   HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS
 } from "./helper-only-timber-open-web-impact-stack-estimate";
+import { buildTuasC11cGuardedIsoWeightedImpact } from "./tuas-c11c-exact-import-readiness";
 import {
   matchExactFloorSystem,
   recommendFloorSystems,
@@ -41,7 +42,10 @@ import {
   resolveExactFloorSystemImpactSource
 } from "./floor-system-match";
 import { buildOwnedImpactFromExactSource } from "./impact-astm-e989";
-import { applyImpactFieldContextToBoundImpact, applyImpactFieldContextToImpact } from "./impact-field-context";
+import {
+  applyImpactFieldContextToBoundImpact,
+  applyImpactFieldContextToImpact
+} from "./impact-field-context";
 import { estimateImpactFromLayers, estimateImpactFromPredictorInput } from "./impact-estimate";
 import { buildImpactPredictorStatus } from "./impact-predictor-status";
 import { shouldBlockHeavyConcreteCombinedImpactFormulaFallback } from "./heavy-concrete-combined-impact-formula-corridor";
@@ -165,6 +169,46 @@ function buildExplicitDeltaImpact(
     : null;
 }
 
+function hasPositiveNumber(value: unknown): value is number {
+  return typeof value === "number" && Number.isFinite(value) && value > 0;
+}
+
+function hasMassSchedule(
+  layer: ImpactPredictorInput["floorCovering" | "floatingScreed" | "upperFill"] | null | undefined
+): boolean {
+  return hasPositiveNumber(layer?.densityKgM3) && hasPositiveNumber(layer?.thicknessMm);
+}
+
+function hasDynamicStiffnessOrProductOwner(predictorInput: ImpactPredictorInput): boolean {
+  return (
+    hasPositiveNumber(predictorInput.resilientLayer?.dynamicStiffnessMNm3) ||
+    Boolean(predictorInput.resilientLayer?.productId?.trim())
+  );
+}
+
+function hasLoadBasisOrMassSchedule(predictorInput: ImpactPredictorInput): boolean {
+  return (
+    hasPositiveNumber(predictorInput.loadBasisKgM2) ||
+    hasMassSchedule(predictorInput.floorCovering) ||
+    hasMassSchedule(predictorInput.floatingScreed) ||
+    hasMassSchedule(predictorInput.upperFill)
+  );
+}
+
+function shouldBlockHeavyConcreteFloatingFormulaFallback(
+  predictorInput: ImpactPredictorInput | null | undefined
+): boolean {
+  return Boolean(
+    predictorInput &&
+      predictorInput.structuralSupportType === "reinforced_concrete" &&
+      predictorInput.impactSystemType === "heavy_floating_floor" &&
+      (
+        !hasDynamicStiffnessOrProductOwner(predictorInput) ||
+        !hasLoadBasisOrMassSchedule(predictorInput)
+      )
+  );
+}
+
 export function resolveLayerBasedImpactLane(
   input: ResolveLayerBasedImpactLaneInput
 ): ResolvedImpactLane {
@@ -194,6 +238,9 @@ export function resolveLayerBasedImpactLane(
     rawImpactCatalogMatch?.catalog.matchMode === "product_property_delta" &&
     !impactCatalogMatch;
   const blockSteelFormulaFallback = shouldBlockSteelFloorImpactFormulaFallback(input.predictorInput);
+  const blockHeavyConcreteFloatingFormulaFallback = shouldBlockHeavyConcreteFloatingFormulaFallback(
+    input.predictorInput
+  );
   const blockHeavyConcreteCombinedFormulaFallback = shouldBlockHeavyConcreteCombinedImpactFormulaFallback(
     input.predictorInput
   );
@@ -263,6 +310,21 @@ export function resolveLayerBasedImpactLane(
           targetOutputs: input.targetOutputs
         })
       : null;
+  const tuasC11cGuardedIsoWeightedImpact =
+    !input.exactImpact &&
+    !input.officialFloorSystemId &&
+    !floorSystemMatch &&
+    !boundFloorSystemMatch &&
+    !impactCatalogMatch &&
+    !explicitDeltaImpact &&
+    !openBoxTimberSimilarityEstimate &&
+    !openBoxTimberEpsScreedHybridPackageEstimate &&
+    !openBoxTimberRawBareEstimate &&
+    !helperOnlyTimberOpenWebImpactStackEstimate &&
+    !blockSteelFormulaFallback &&
+    !blockHeavyConcreteCombinedFormulaFallback
+      ? buildTuasC11cGuardedIsoWeightedImpact(input.resolvedLayers)
+      : null;
   const predictorFormulaImpact =
     input.predictorInput &&
     !input.officialFloorSystemId &&
@@ -273,7 +335,8 @@ export function resolveLayerBasedImpactLane(
     !openBoxTimberSimilarityEstimate &&
     !openBoxTimberEpsScreedHybridPackageEstimate &&
     !openBoxTimberRawBareEstimate &&
-    !helperOnlyTimberOpenWebImpactStackEstimate
+    !helperOnlyTimberOpenWebImpactStackEstimate &&
+    !tuasC11cGuardedIsoWeightedImpact
       ? estimateImpactFromPredictorInput(input.predictorInput)
       : null;
   const predictorDeltaLwCompanion =
@@ -295,6 +358,7 @@ export function resolveLayerBasedImpactLane(
     !openBoxTimberEpsScreedHybridPackageEstimate &&
     !openBoxTimberRawBareEstimate &&
     !helperOnlyTimberOpenWebImpactStackEstimate &&
+    !tuasC11cGuardedIsoWeightedImpact &&
     !blockSteelFormulaFallback &&
     !blockHeavyConcreteCombinedFormulaFallback
       ? derivePredictorSpecificFloorSystemEstimate(input.predictorInput)
@@ -305,9 +369,10 @@ export function resolveLayerBasedImpactLane(
       explicitDeltaImpact ||
       rejectProductDeltaFormulaFallback ||
       blockSteelFormulaFallback ||
+      blockHeavyConcreteFloatingFormulaFallback ||
       blockHeavyConcreteCombinedFormulaFallback
       ? null
-      : predictorFormulaImpact ?? estimateImpactFromLayers(input.resolvedLayers);
+      : tuasC11cGuardedIsoWeightedImpact ?? predictorFormulaImpact ?? estimateImpactFromLayers(input.resolvedLayers);
   const openWebSupportedBandSimilarityEstimate =
     !input.exactImpact &&
     !input.officialFloorSystemId &&
@@ -389,6 +454,7 @@ export function resolveLayerBasedImpactLane(
           !openBoxTimberEpsScreedHybridPackageEstimate &&
           !openBoxTimberRawBareEstimate &&
           !helperOnlyTimberOpenWebImpactStackEstimate &&
+          !tuasC11cGuardedIsoWeightedImpact &&
           !impactCatalogMatch &&
           !narrowImpact &&
           !blockSteelFormulaFallback &&
@@ -467,7 +533,11 @@ export function finalizeResolvedImpactLane(
     input.exactImpactSource ?? resolveExactFloorSystemImpactSource(input.floorSystemMatch?.system);
   const impactBeforeFieldContext =
     baseImpact?.basis === "predictor_explicit_delta_heavy_reference_derived"
-      ? baseImpact
+      ? applyImpactFieldContextToImpact(baseImpact, input.impactFieldContext, {
+          guideSource: "heavy_reference",
+          ignoreLowerTreatmentReduction: true,
+          skipDirectFlanking: true
+        })
       : baseImpact?.basis === OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS
         ? baseImpact
       : baseImpact?.basis === OPEN_WEB_RAW_BARE_FORMULA_BASIS

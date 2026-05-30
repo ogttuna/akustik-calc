@@ -7,9 +7,17 @@ import { ImpactPredictorInputSchema } from "../domain/impact-predictor-input";
 import { LayerInputSchema } from "../domain/layer";
 import { RequestedOutputSchema } from "../domain/output";
 
+const FloorImpactContextSchema = z
+  .object({
+    loadBasisKgM2: z.number().positive().optional(),
+    resilientLayerDynamicStiffnessMNm3: z.number().positive().optional()
+  })
+  .partial();
+
 const ImpactOnlyRequestSchemaInternal = z
   .object({
     exactImpactSource: ExactImpactSourceSchema.optional(),
+    floorImpactContext: FloorImpactContextSchema.optional(),
     impactFieldContext: ImpactFieldContextSchema.optional(),
     impactPredictorInput: ImpactPredictorInputSchema.optional(),
     layers: z.array(LayerInputSchema).default([]),

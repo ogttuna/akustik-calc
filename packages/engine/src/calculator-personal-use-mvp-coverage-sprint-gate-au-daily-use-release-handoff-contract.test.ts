@@ -123,7 +123,7 @@ describe("Personal-Use MVP Coverage Sprint Gate AU daily-use release handoff", (
     const handoff = buildPersonalUseMvpCoverageSprintGateAUReleaseHandoff(matrix);
 
     expect(handoff).toMatchObject({
-      acceptedFailClosedBoundaryRowCount: 16,
+      acceptedFailClosedBoundaryRowCount: 15,
       basisCoverage: ["element_lab", "field_apparent", "astm_rating_boundary", "building_prediction"],
       companyInternalDailyUseReady: true,
       currentPostureCoverage: ["family_physics", "needs_input", "unsupported", "exact", "source_anchored_delta"],
@@ -143,11 +143,11 @@ describe("Personal-Use MVP Coverage Sprint Gate AU daily-use release handoff", (
       supportedValueRowCount: 26
     });
     expect(handoff.failureClassCounts).toEqual({
-      basis_boundary: 2,
+      basis_boundary: 1,
       correct_block: 10,
       coverage_gap: 0,
       hostile_input_refusal: 3,
-      none: 25,
+      none: 26,
       unsupported_metric: 1
     });
   });
@@ -201,8 +201,7 @@ describe("Personal-Use MVP Coverage Sprint Gate AU daily-use release handoff", (
       "wall.building_prediction_partial_context.needs_input",
       "floor.timber_joist_formula_missing_dynamic_stiffness.needs_input",
       "floor.lightweight_steel_formula_missing_spacing.needs_input",
-      "floor.lightweight_steel_formula_wrong_family.inactive",
-      "wall.complete_building_prediction_broad_targets.alias_boundary"
+      "floor.lightweight_steel_formula_wrong_family.inactive"
     ]));
     expect([...pins]).toEqual(expect.arrayContaining([
       "R'w:58",
@@ -228,8 +227,18 @@ describe("Personal-Use MVP Coverage Sprint Gate AU daily-use release handoff", (
     expect(wallLab.outOfScope).toEqual(["R'w", "DnT,w"] satisfies readonly RequestedOutputId[]);
     expect(wallField.supportedMetrics).toEqual(["R'w", "DnT,w"] satisfies readonly RequestedOutputId[]);
     expect(wallField.outOfScope).toEqual(["Rw", "STC"] satisfies readonly RequestedOutputId[]);
-    expect(wallBuilding.supportedMetrics).toEqual(["R'w", "DnT,w"] satisfies readonly RequestedOutputId[]);
-    expect(wallBuilding.outOfScope).toEqual(["Rw", "STC"] satisfies readonly RequestedOutputId[]);
+    expect(wallBuilding.supportedMetrics).toEqual([
+      "Rw",
+      "STC",
+      "C",
+      "Ctr",
+      "R'w",
+      "Dn,w",
+      "Dn,A",
+      "DnT,w",
+      "DnT,A"
+    ] satisfies readonly RequestedOutputId[]);
+    expect(wallBuilding.outOfScope).toEqual([] satisfies readonly RequestedOutputId[]);
     expect(floorLab.supportedMetrics).toEqual(["Ln,w", "DeltaLw", "Rw"] satisfies readonly RequestedOutputId[]);
     expect(floorLab.outOfScope).toEqual(["IIC", "AIIC", "L'nT,50"] satisfies readonly RequestedOutputId[]);
     expect(floorField.supportedMetrics).toEqual(["L'n,w", "L'nT,w"] satisfies readonly RequestedOutputId[]);

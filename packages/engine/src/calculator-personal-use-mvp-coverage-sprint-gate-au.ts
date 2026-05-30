@@ -121,10 +121,11 @@ const METRIC_ENVELOPE = [
   },
   {
     basis: "building_prediction",
-    caveat: "Building-prediction outputs are source-absent formula estimates with the Gate AQ +/-9 dB budget.",
-    outOfScope: ["Rw", "STC"],
+    caveat:
+      "Building-prediction outputs are source-absent formula estimates with the Gate AQ/Gate AW budget and direct-curve lab companions when the route owns them.",
+    outOfScope: [],
     route: "wall",
-    supportedMetrics: ["R'w", "DnT,w"]
+    supportedMetrics: ["Rw", "STC", "C", "Ctr", "R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A"]
   },
   {
     basis: "element_lab",

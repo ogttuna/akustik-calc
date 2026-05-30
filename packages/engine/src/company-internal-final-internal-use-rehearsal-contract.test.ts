@@ -84,7 +84,7 @@ const REPRESENTATIVE_SUPPORTED_VALUE_PINS = [
   { budget: 8, id: "wall.grouped_triple_leaf_50_50_mineral_wool.lab", pins: { Rw: 53 } },
   { budget: 6, id: "wall.lined_massive_masonry.lab", pins: { Rw: 60, STC: 60 } },
   { budget: 6, id: "wall.clt_mass_timber.lab", pins: { Rw: 42, STC: 42, Ctr: -6.1 } },
-  { budget: 7, id: "wall.complete_field_context.rprime_dnt", pins: { "R'w": 39, "DnT,w": 40 } },
+  { budget: 9, id: "wall.complete_field_context.rprime_dnt", pins: { "R'w": 39, "DnT,w": 40 } },
   { budget: 9, id: "wall.complete_building_prediction.runtime", pins: { "R'w": 58, "DnT,w": 59 } },
   { budget: 6, id: "wall.opening_leak_composite.lab", pins: { Rw: 38.2, STC: 39 } },
   { budget: 8, id: "wall.opening_leak_field_runtime.input_surface", pins: { "R'w": 36.4, "DnT,w": 36.9 } },
@@ -166,7 +166,6 @@ const UNSUPPORTED_BOUNDARY_ROW_IDS = [
 ] as const;
 
 const PARTIAL_SUPPORTED_BOUNDARY_ROW_IDS = [
-  "wall.complete_building_prediction_broad_targets.alias_boundary",
   "floor.lightweight_steel_suspended_ceiling_field_adapter.lprime",
   "floor.reinforced_concrete_combined_field_building.non_alias",
   "floor.lightweight_steel_suspended_ceiling_lnt50_missing_ci.unsupported"
@@ -286,11 +285,11 @@ describe("company-internal final internal-use rehearsal", () => {
       unsupported: 8
     });
     expect(matrixSummary.failureClassCounts).toEqual({
-      basis_boundary: 6,
+      basis_boundary: 5,
       correct_block: 15,
       coverage_gap: 0,
       hostile_input_refusal: 4,
-      none: 42,
+      none: 43,
       unsupported_metric: 4
     });
     expect(countBy(rows, releaseBucket)).toEqual({

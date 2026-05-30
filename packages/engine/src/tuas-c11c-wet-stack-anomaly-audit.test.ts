@@ -72,7 +72,7 @@ describe("TUAS C11c wet-stack anomaly audit", () => {
     expect(TUAS_C11C_SOURCE_TUPLE.lnWPlusCI50_2500 - lnWPlusCI50("tuas_c4c_clt260_measured_2026")).toBe(20);
   });
 
-  it("keeps the visible C11c schedule screening-only and impact-unsupported", () => {
+  it("keeps exact import closed while guarded ISO weighted impact is supported", () => {
     const lab = calculateAssembly(TUAS_C11C_COMBINED_WET_SOURCE_LAYERS, {
       targetOutputs: LAB_OUTPUTS
     });
@@ -90,28 +90,50 @@ describe("TUAS C11c wet-stack anomaly audit", () => {
 
     expect(lab.floorSystemMatch).toBeNull();
     expect(lab.floorSystemEstimate).toBeNull();
-    expect(lab.impact).toBeNull();
+    expect(lab.impact).toMatchObject({
+      CI: 1,
+      CI50_2500: 1,
+      LnW: 59,
+      LnWPlusCI: 60,
+      basis: "tuas_c11c_visible_iso_weighted_impact_tuple_guarded"
+    });
     expect(lab.floorSystemRatings?.Rw).toBe(49);
-    expect(lab.supportedTargetOutputs).toEqual(["Rw"]);
-    expect(lab.unsupportedTargetOutputs).toEqual(["Ln,w", "Ln,w+CI"]);
+    expect(lab.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "Ln,w+CI"]);
+    expect(lab.unsupportedTargetOutputs).toEqual([]);
 
     expect(field.floorSystemMatch).toBeNull();
     expect(field.floorSystemEstimate).toBeNull();
-    expect(field.impact).toBeNull();
-    expect(field.supportedTargetOutputs).toEqual([]);
-    expect(field.unsupportedTargetOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]);
+    expect(field.impact).toMatchObject({
+      LPrimeNT50: 60,
+      LPrimeNTw: 59,
+      LPrimeNW: 61,
+      LnW: 59,
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization"
+    });
+    expect(field.supportedTargetOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]);
+    expect(field.unsupportedTargetOutputs).toEqual([]);
 
     expect(impactOnlyLab.floorSystemMatch).toBeNull();
     expect(impactOnlyLab.floorSystemEstimate).toBeNull();
-    expect(impactOnlyLab.impact).toBeNull();
-    expect(impactOnlyLab.supportedTargetOutputs).toEqual([]);
-    expect(impactOnlyLab.unsupportedTargetOutputs).toEqual(["Ln,w", "Ln,w+CI"]);
+    expect(impactOnlyLab.impact).toMatchObject({
+      LnW: 59,
+      LnWPlusCI: 60,
+      basis: "tuas_c11c_visible_iso_weighted_impact_tuple_guarded"
+    });
+    expect(impactOnlyLab.supportedTargetOutputs).toEqual(["Ln,w", "Ln,w+CI"]);
+    expect(impactOnlyLab.unsupportedTargetOutputs).toEqual([]);
 
     expect(impactOnlyField.floorSystemMatch).toBeNull();
     expect(impactOnlyField.floorSystemEstimate).toBeNull();
-    expect(impactOnlyField.impact).toBeNull();
-    expect(impactOnlyField.supportedTargetOutputs).toEqual([]);
-    expect(impactOnlyField.unsupportedTargetOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]);
+    expect(impactOnlyField.impact).toMatchObject({
+      LPrimeNT50: 60,
+      LPrimeNTw: 59,
+      LPrimeNW: 61,
+      LnW: 59,
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization"
+    });
+    expect(impactOnlyField.supportedTargetOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]);
+    expect(impactOnlyField.unsupportedTargetOutputs).toEqual([]);
     expect(
       lab.warnings.some((warning: string) =>
         /Visible-layer predictor matching is parked because single-entry floor roles are duplicated: floating screed x2/i.test(warning)

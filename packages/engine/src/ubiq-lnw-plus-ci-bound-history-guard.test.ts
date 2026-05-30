@@ -11,6 +11,7 @@ type BoundSnapshot = {
   lnWPlusCI: number | null;
   lnWPlusCIUpperBound: number | null;
   lnWUpperBound: number | null;
+  lPrimeNT50UpperBound: number | null;
   lPrimeNTwUpperBound: number | null;
   lPrimeNWUpperBound: number | null;
   lowerBoundBasis: string | null;
@@ -79,6 +80,7 @@ function snapshot(layers: readonly LayerInput[]): BoundSnapshot {
     lnWPlusCI: result.impact?.LnWPlusCI ?? null,
     lnWPlusCIUpperBound: result.lowerBoundImpact?.LnWPlusCIUpperBound ?? null,
     lnWUpperBound: result.lowerBoundImpact?.LnWUpperBound ?? null,
+    lPrimeNT50UpperBound: result.lowerBoundImpact?.LPrimeNT50UpperBound ?? null,
     lPrimeNTwUpperBound: result.lowerBoundImpact?.LPrimeNTwUpperBound ?? null,
     lPrimeNWUpperBound: result.lowerBoundImpact?.LPrimeNWUpperBound ?? null,
     lowerBoundBasis: result.lowerBoundImpact?.basis ?? null,
@@ -97,12 +99,13 @@ function expectOfficialCombinedBound(snapshotValue: BoundSnapshot, label: string
     lnWPlusCI: null,
     lnWPlusCIUpperBound: 45,
     lnWUpperBound: null,
+    lPrimeNT50UpperBound: 45,
     lPrimeNTwUpperBound: null,
     lPrimeNWUpperBound: null,
-    lowerBoundBasis: "official_floor_system_bound_support",
+    lowerBoundBasis: "mixed_bound_plus_estimated_local_guide",
     rw: 64,
-    supported: ["Rw", "Ln,w+CI"],
-    unsupported: ["Ln,w", "CI", "L'n,w", "L'nT,w", "L'nT,50"]
+    supported: ["Rw", "Ln,w+CI", "L'nT,50"],
+    unsupported: ["Ln,w", "CI", "L'n,w", "L'nT,w"]
   });
 }
 
@@ -144,6 +147,7 @@ describe("UBIQ Ln,w+CI bound hostile-input guard", () => {
       expect(actual.lowerBoundBasis, id).toBeNull();
       expect(actual.lnWPlusCIUpperBound, id).toBeNull();
       expect(actual.lnWUpperBound, id).toBeNull();
+      expect(actual.lPrimeNT50UpperBound, id).toBeNull();
     }
   });
 });

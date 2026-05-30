@@ -18,7 +18,6 @@ import {
   GATE_AB_STALE_FLAT_ORDER_CONTEXT,
   GATE_AB_UNSUPPORTED_ASTM_OUTPUTS,
   GATE_AB_WALL_FIELD_OUTPUTS,
-  GATE_AB_WALL_LAB_CONTEXT,
   GATE_AB_WALL_LAB_OUTPUTS
 } from "./calculator-personal-use-mvp-coverage-sprint-gate-ab";
 import {
@@ -201,7 +200,7 @@ describe("Personal-Use MVP Coverage Sprint Gate AF post-flat-multicavity revalid
     );
   });
 
-  it("keeps stale, duplicate, missing-topology, field, building, ASTM, and IIC boundaries blocked", () => {
+  it("keeps stale, duplicate, field, building, ASTM, and IIC boundaries blocked", () => {
     const staleRuntime = calculateAssembly(GATE_AB_FLAT_MULTICAVITY_MANY_LAYER_WALL, {
       airborneContext: GATE_AB_STALE_FLAT_ORDER_CONTEXT,
       calculator: "dynamic",
@@ -209,11 +208,6 @@ describe("Personal-Use MVP Coverage Sprint Gate AF post-flat-multicavity revalid
     });
     const duplicateRuntime = calculateAssembly(GATE_AB_FLAT_MULTICAVITY_MANY_LAYER_WALL, {
       airborneContext: GATE_AB_DUPLICATE_LAYER_GROUP_CONTEXT,
-      calculator: "dynamic",
-      targetOutputs: GATE_AB_WALL_LAB_OUTPUTS
-    });
-    const missingTopologyRuntime = calculateAssembly(GATE_AB_FLAT_MULTICAVITY_MANY_LAYER_WALL, {
-      airborneContext: GATE_AB_WALL_LAB_CONTEXT,
       calculator: "dynamic",
       targetOutputs: GATE_AB_WALL_LAB_OUTPUTS
     });
@@ -232,7 +226,7 @@ describe("Personal-Use MVP Coverage Sprint Gate AF post-flat-multicavity revalid
     const matrixRows = buildPersonalUseMvpCoverageSprintGateAAScenarioMatrix();
     const buildingRow = matrixRows.find((row) => row.id === "wall.complete_building_prediction.unsupported");
 
-    for (const result of [staleRuntime, duplicateRuntime, missingTopologyRuntime]) {
+    for (const result of [staleRuntime, duplicateRuntime]) {
       expect(result.airborneBasis?.method).not.toBe(GATE_AE_FLAT_MULTICAVITY_RUNTIME_METHOD);
       expect(result.airborneCandidateResolution?.selectedCandidateId).not.toBe(
         GATE_AE_FLAT_MULTICAVITY_SELECTED_CANDIDATE_ID

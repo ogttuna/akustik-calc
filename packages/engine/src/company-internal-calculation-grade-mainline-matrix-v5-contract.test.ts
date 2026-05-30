@@ -134,11 +134,11 @@ describe("company-internal calculation-grade mainline matrix v5 refresh", () => 
         "floor.lightweight_steel_suspended_ceiling_lnt50_exact_field_precedence.field"
       ],
       failureClassCounts: {
-        basis_boundary: 4,
+        basis_boundary: 3,
         correct_block: 14,
         coverage_gap: 0,
         hostile_input_refusal: 4,
-        none: 39,
+        none: 40,
         unsupported_metric: 4
       },
       hiddenScreeningOriginRowIds: [],

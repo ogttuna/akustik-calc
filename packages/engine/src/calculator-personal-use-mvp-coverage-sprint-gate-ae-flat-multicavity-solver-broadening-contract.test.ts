@@ -14,7 +14,6 @@ import {
   GATE_AB_PINNED_GROUPED_TRIPLE_LEAF_WALL,
   GATE_AB_STALE_FLAT_ORDER_CONTEXT,
   GATE_AB_WALL_FIELD_OUTPUTS,
-  GATE_AB_WALL_LAB_CONTEXT,
   GATE_AB_WALL_LAB_OUTPUTS
 } from "./calculator-personal-use-mvp-coverage-sprint-gate-ab";
 import { PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AD_SELECTION_STATUS } from "./calculator-personal-use-mvp-coverage-sprint-gate-ad";
@@ -187,7 +186,7 @@ describe("Personal-Use MVP Coverage Sprint Gate AE flat multicavity solver broad
     });
   });
 
-  it("keeps existing Gate G full-mineral-wool triple-leaf and hostile topology boundaries out of Gate AE", () => {
+  it("keeps existing Gate G full-mineral-wool triple-leaf and hostile explicit topology boundaries out of Gate AE", () => {
     const pinnedResult = calculateAssembly(GATE_AB_PINNED_GROUPED_TRIPLE_LEAF_WALL, {
       airborneContext: GATE_AB_PINNED_GROUPED_TRIPLE_LEAF_CONTEXT,
       calculator: "dynamic",
@@ -200,11 +199,6 @@ describe("Personal-Use MVP Coverage Sprint Gate AE flat multicavity solver broad
     });
     const duplicateResult = calculateAssembly(GATE_AB_FLAT_MULTICAVITY_MANY_LAYER_WALL, {
       airborneContext: GATE_AB_DUPLICATE_LAYER_GROUP_CONTEXT,
-      calculator: "dynamic",
-      targetOutputs: GATE_AB_WALL_LAB_OUTPUTS
-    });
-    const noTopologyResult = calculateAssembly(GATE_AB_FLAT_MULTICAVITY_MANY_LAYER_WALL, {
-      airborneContext: GATE_AB_WALL_LAB_CONTEXT,
       calculator: "dynamic",
       targetOutputs: GATE_AB_WALL_LAB_OUTPUTS
     });
@@ -224,7 +218,7 @@ describe("Personal-Use MVP Coverage Sprint Gate AE flat multicavity solver broad
       "candidate_broad_accuracy_wall_triple_leaf_local_substitution_lab_spectrum_adapter_family_physics_prediction"
     );
 
-    for (const result of [staleResult, duplicateResult, noTopologyResult]) {
+    for (const result of [staleResult, duplicateResult]) {
       expect(result.airborneBasis?.method).not.toBe(GATE_AE_FLAT_MULTICAVITY_RUNTIME_METHOD);
       expect(result.airborneCandidateResolution?.selectedCandidateId).not.toBe(
         GATE_AE_FLAT_MULTICAVITY_SELECTED_CANDIDATE_ID

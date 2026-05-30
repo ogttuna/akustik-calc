@@ -139,6 +139,15 @@ export function getImpactConfidenceForBasis(basis: ImpactEstimateBasis): ImpactC
     };
   }
 
+  if (basis === "mixed_bound_plus_estimated_local_guide") {
+    return {
+      level: "medium",
+      provenance: "exact_floor_system_family",
+      score: 0.67,
+      summary: "Conservative lab-side impact bound carried through the documented Turkish simple-guide K and Hd correction workflow."
+    };
+  }
+
   if (basis === "mixed_bound_plus_estimated_tr_small_room_normalization") {
     return {
       level: "medium",
@@ -357,6 +366,16 @@ export function getImpactConfidenceForBasis(basis: ImpactEstimateBasis): ImpactC
       score: 0.62,
       summary:
         "Helper-only timber/open-web lower-treatment formula corridor with complete carrier, board, cavity, absorber, suspension, and source-absent error budgets."
+    };
+  }
+
+  if (basis === "tuas_c11c_visible_iso_weighted_impact_tuple_guarded") {
+    return {
+      level: "medium",
+      provenance: "published_family_estimate",
+      score: 0.74,
+      summary:
+        "Guarded TUAS C11c visible-stack ISO 717-2 weighted tuple; exact raw-band import remains blocked until the source spectrum or correction note is available."
     };
   }
 

@@ -41,6 +41,8 @@ export function ImpactResultPanel({ result }: ImpactResultPanelProps) {
   const laneKind = getImpactLaneKind({ impact, lowerBoundImpact });
   const metricBasisRows = getActiveImpactMetricBasisRows(impact);
   const reinforcedConcreteLowConfidence = isReinforcedConcreteLowConfidenceFloorLane(result);
+  const heavyReferenceFieldSupplement =
+    impact?.metricBasis?.LnW === "predictor_explicit_delta_heavy_reference_derived";
   const primaryMetricLabel = impact?.labOrField === "field" ? "L'nT,w" : "Ln,w";
   const primaryMetricValue =
     impact?.labOrField === "field" ? impact?.LPrimeNTw ?? null : impact?.LnW ?? null;
@@ -59,7 +61,7 @@ export function ImpactResultPanel({ result }: ImpactResultPanelProps) {
         {boundFloorSystemMatch ? <Pill tone="neutral">Official bound family</Pill> : null}
         {boundFloorSystemEstimate ? <Pill tone="neutral">Bound interpolation</Pill> : null}
         {impact && (typeof impact.LPrimeNW === "number" || typeof impact.LPrimeNTw === "number") ? (
-          <Pill tone="accent">Live field supplement</Pill>
+          <Pill tone="accent">{heavyReferenceFieldSupplement ? "Reference-derived field supplement" : "Live field supplement"}</Pill>
         ) : null}
         {impact?.guideEstimateProfile ? <Pill tone="accent">TR simple guide</Pill> : null}
         {impact ? <Pill tone={getConfidenceTone(impact.confidence.level)}>{formatConfidenceLevel(impact.confidence.level)}</Pill> : null}
@@ -145,7 +147,11 @@ export function ImpactResultPanel({ result }: ImpactResultPanelProps) {
               <MetricCard
                 label="L'n,w"
                 value={`${formatDecimal(impact.LPrimeNW)} dB`}
-                detail="Live field-side supplement derived from the current stack"
+                detail={
+                  heavyReferenceFieldSupplement
+                    ? "Field-side supplement derived from the explicit heavy-reference DeltaLw lane"
+                    : "Live field-side supplement derived from the current stack"
+                }
               />
             ) : null}
             {typeof impact.LPrimeNTw === "number" ? (
@@ -153,9 +159,13 @@ export function ImpactResultPanel({ result }: ImpactResultPanelProps) {
                 label="L'nT,w"
                 value={`${formatDecimal(impact.LPrimeNTw)} dB`}
                 detail={
-                  impact.basis.includes("standardized_field_volume")
-                    ? "Standardized field-volume normalization from the current stack"
-                    : "TR small-room guide normalization from the current stack"
+                  heavyReferenceFieldSupplement
+                    ? impact.basis.includes("standardized_field_volume")
+                      ? "Standardized field-volume normalization from the explicit heavy-reference DeltaLw lane"
+                      : "TR small-room guide normalization from the explicit heavy-reference DeltaLw lane"
+                    : impact.basis.includes("standardized_field_volume")
+                      ? "Standardized field-volume normalization from the current stack"
+                      : "TR small-room guide normalization from the current stack"
                 }
               />
             ) : null}
@@ -168,7 +178,9 @@ export function ImpactResultPanel({ result }: ImpactResultPanelProps) {
                     ? "Turkish simple-guide carry-over from Ln,w+CI + K + Hd"
                     : impact.labOrField === "field"
                     ? "Derived directly from exact field-side impact bands"
-                    : "Carried through the live stack field-side supplement lane"
+                    : heavyReferenceFieldSupplement
+                      ? "Carried through the explicit heavy-reference DeltaLw field-side supplement lane"
+                      : "Carried through the live stack field-side supplement lane"
                 }
               />
             ) : null}

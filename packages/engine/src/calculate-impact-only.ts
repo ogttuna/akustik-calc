@@ -76,7 +76,8 @@ import { getFloorFamilySourceGuard } from "./floor-family-source-guard";
 import { getDefaultMaterialCatalog, resolveMaterial } from "./material-catalog";
 import {
   buildHeavyConcreteCombinedImpactFormulaFallbackBlockerWarning,
-  collectHeavyConcreteCombinedImpactFormulaMissingPhysicalInputs
+  collectHeavyConcreteCombinedImpactFormulaMissingPhysicalInputs,
+  HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS
 } from "./heavy-concrete-combined-impact-formula-corridor";
 import {
   collectTimberCltDeltaLwFormulaMissingPhysicalInputs
@@ -87,10 +88,12 @@ import {
 } from "./reinforced-concrete-low-confidence-airborne";
 import { buildSteelFloorImpactFormulaFallbackBlockerWarning } from "./steel-floor-impact-formula-corridor";
 import { analyzeTargetOutputSupport, buildTargetOutputWarnings } from "./target-output-support";
+import type { DynamicCalculatorFloorImpactContext } from "./dynamic-calculator-route-input-topology";
 
 export type CalculateImpactOnlyOptions = {
   catalog?: readonly MaterialDefinition[];
   exactImpactSource?: ExactImpactSource | null;
+  floorImpactContext?: DynamicCalculatorFloorImpactContext | null;
   impactFieldContext?: ImpactFieldContext | null;
   impactPredictorInput?: ImpactPredictorInput | null;
   officialFloorSystemId?: string | null;
@@ -112,6 +115,24 @@ function resolveLayers(
       surfaceMassKgM2: computeLayerSurfaceMassKgM2(layer, material)
     };
   });
+}
+
+function buildFloorImpactPredictorSeed(input: {
+  floorImpactContext?: DynamicCalculatorFloorImpactContext | null;
+}): ImpactPredictorInput {
+  const dynamicStiffnessMNm3 = input.floorImpactContext?.resilientLayerDynamicStiffnessMNm3;
+  const loadBasisKgM2 = input.floorImpactContext?.loadBasisKgM2;
+
+  return {
+    ...(typeof loadBasisKgM2 === "number" && loadBasisKgM2 > 0 ? { loadBasisKgM2 } : {}),
+    ...(typeof dynamicStiffnessMNm3 === "number" && dynamicStiffnessMNm3 > 0
+      ? {
+          resilientLayer: {
+            dynamicStiffnessMNm3
+          }
+        }
+      : {})
+  };
 }
 
 function pickFloorCarrier(input: {
@@ -241,11 +262,14 @@ function hasAnswerEngineV1ImpactOnlyFieldContext(input: {
       typeof context?.directPathOffsetDb === "number" ||
       (Array.isArray(context?.flankingPaths) && context.flankingPaths.length > 0)
   );
-  const needsStandardizedField = input.targetOutputs.includes("L'nT,w");
+  const needsStandardizedField =
+    input.targetOutputs.includes("L'nT,w") || input.targetOutputs.includes("L'nT,50");
+  const needsLowFrequency = input.targetOutputs.includes("L'nT,50");
   const hasReceivingVolume =
     typeof context?.receivingRoomVolumeM3 === "number" && context.receivingRoomVolumeM3 > 0;
+  const hasLowFrequencyOwner = typeof context?.ci50_2500Db === "number" && Number.isFinite(context.ci50_2500Db);
 
-  return hasFieldPath && (!needsStandardizedField || hasReceivingVolume);
+  return hasFieldPath && (!needsStandardizedField || hasReceivingVolume) && (!needsLowFrequency || hasLowFrequencyOwner);
 }
 
 function applyAcousticCalculatorAnswerEngineV1FloorFieldImpactNeedsInputBoundary(input: {
@@ -508,7 +532,14 @@ export function calculateImpactOnly(
 
     if (canTryDerivedPredictor) {
       visibleLayerPredictorBlockerWarning = getVisibleLayerPredictorBlockerWarning(visibleLayers, catalog);
-      const derivedPredictorInput = maybeBuildImpactPredictorInputFromLayerStack(visibleLayers, {}, undefined, catalog);
+      const derivedPredictorInput = maybeBuildImpactPredictorInputFromLayerStack(
+        visibleLayers,
+        buildFloorImpactPredictorSeed({
+          floorImpactContext: options.floorImpactContext
+        }),
+        undefined,
+        catalog
+      );
 
       if (derivedPredictorInput) {
         const derivedPredictorAdaptation = adaptImpactPredictorInput(derivedPredictorInput);
@@ -527,9 +558,13 @@ export function calculateImpactOnly(
         });
         const derivedHeavyConcreteCombinedFormulaFallbackBlockerWarning =
           buildHeavyConcreteCombinedImpactFormulaFallbackBlockerWarning(derivedPredictorInput);
+        const hasDerivedHeavyConcreteCombinedFormula =
+          derivedImpactLane.narrowImpact?.basis === HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS ||
+          derivedImpactLane.predictorDeltaLwCompanion?.basis === HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS;
         const shouldUseDerived =
           !blocksBoundOnlyUbiqOpenWebCarpetDerivedEstimate &&
           (
+            hasDerivedHeavyConcreteCombinedFormula ||
             Boolean(derivedHeavyConcreteCombinedFormulaFallbackBlockerWarning) ||
             Boolean(
               derivedImpactLane.floorSystemMatch ||
@@ -767,6 +802,10 @@ export function calculateImpactOnly(
     } else if (lowerBoundImpact && typeof lowerBoundImpact.LPrimeNTwUpperBound === "number") {
       warnings.push(
         "Impact-only conservative field-side upper-bound support is active. Bound-only family data is being normalized with K and receiving-room context."
+      );
+    } else if (lowerBoundImpact && typeof lowerBoundImpact.LPrimeNT50UpperBound === "number") {
+      warnings.push(
+        "Impact-only conservative low-frequency upper-bound support is active. Bound-only combined Ln,w+CI data is being carried through K and Hd without fabricating split Ln,w or CI."
       );
     }
   }

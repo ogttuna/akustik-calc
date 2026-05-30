@@ -208,6 +208,54 @@ function hasExplicitDoubleLeafFramedTopology(context: AirborneContext | undefine
   return context?.wallTopology?.topologyMode === "double_leaf_framed";
 }
 
+function hasLeafBetweenCompliantZones(
+  layers: readonly LayerInput[],
+  catalog: readonly MaterialDefinition[]
+): boolean {
+  let sawCompliantZone = false;
+  let sawLeafAfterCompliantZone = false;
+
+  for (const layer of layers) {
+    const compliant = isCavityLayer(layer, catalog) || isPorousFillLayer(layer, catalog);
+
+    if (compliant) {
+      if (sawCompliantZone && sawLeafAfterCompliantZone) {
+        return true;
+      }
+      sawCompliantZone = true;
+      sawLeafAfterCompliantZone = false;
+      continue;
+    }
+
+    if (sawCompliantZone && isLeafLikeLayer(layer, catalog)) {
+      sawLeafAfterCompliantZone = true;
+    }
+  }
+
+  return false;
+}
+
+function hasExplicitFramedCalibrationMetadata(
+  context: AirborneContext | undefined,
+  layers: readonly LayerInput[],
+  catalog: readonly MaterialDefinition[]
+): boolean {
+  const hasExplicitConnection =
+    context?.connectionType === "line_connection" ||
+    context?.connectionType === "point_connection" ||
+    context?.connectionType === "mixed_connection" ||
+    context?.connectionType === "direct_fix" ||
+    context?.connectionType === "resilient_channel";
+
+  return Boolean(
+    (context?.studType === "light_steel_stud" || context?.studType === "wood_stud") &&
+      hasExplicitConnection &&
+      typeof context.studSpacingMm === "number" &&
+      context.studSpacingMm > 0 &&
+      !hasLeafBetweenCompliantZones(layers, catalog)
+  );
+}
+
 function hasExplicitLinedMassiveWallTopology(context: AirborneContext | undefined): boolean {
   return context?.wallTopology?.topologyMode === "lined_massive_wall";
 }
@@ -1307,14 +1355,22 @@ export function buildDynamicCalculatorRouteInputTopologyAssessment(
 
   if (input.route === "wall") {
     const needsAdvancedWallSourceAbsentTopology = hasAdvancedWallSourceAbsentContext(input.airborneContext);
+    const hasDoubleLeafFramedTopology = hasExplicitDoubleLeafFramedTopology(input.airborneContext);
+    const hasFramedCalibrationMetadata = hasExplicitFramedCalibrationMetadata(
+      input.airborneContext,
+      input.layers,
+      catalog
+    );
     const needsGroupedTopology =
       !needsAdvancedWallSourceAbsentTopology &&
+      !hasDoubleLeafFramedTopology &&
+      !hasFramedCalibrationMetadata &&
       (
         hasGroupedTripleLeafTopology(input.airborneContext) ||
         looksLikeMultiCavityWall(input.layers, catalog)
       );
     const needsDoubleLeafFramedTopology =
-      !needsGroupedTopology && hasExplicitDoubleLeafFramedTopology(input.airborneContext);
+      !needsGroupedTopology && hasDoubleLeafFramedTopology;
     const needsLinedMassiveWallTopology =
       !needsGroupedTopology &&
       !needsDoubleLeafFramedTopology &&

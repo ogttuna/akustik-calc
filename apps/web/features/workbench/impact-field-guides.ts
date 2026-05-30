@@ -50,8 +50,13 @@ export function buildImpactGuideFieldGuides(input: {
   const manualMassRatio = hasValue(input.massRatioInput);
   const manualVolume = hasValue(input.receivingRoomVolumeM3);
   const standardizedFieldActive = Boolean(input.guideResult?.standardizedFieldEstimateActive);
-  const guideHasLnWPlusCI = typeof input.guideResult?.LnWPlusCI === "number";
-  const guideBaseKind = input.guideResult?.baseKind ?? (hasBaseLnWUpperBound ? "upper_bound" : hasBaseLnW ? "exact" : null);
+  const guideHasLnWPlusCI =
+    typeof input.guideResult?.LnWPlusCI === "number" ||
+    typeof input.guideResult?.LnWPlusCIUpperBound === "number";
+  const guideHasK = typeof input.guideResult?.K === "number";
+  const guideBaseKind =
+    input.guideResult?.baseKind ??
+    (hasBaseLnWUpperBound || hasBaseLnWPlusCIUpperBound ? "upper_bound" : hasBaseLnW ? "exact" : null);
   const lookupKActive = input.guideResult?.KSource === "lookup_from_mass_ratio";
   const lookupHdActive = input.guideResult?.HdSource === "lookup_from_receiving_room_volume";
 
@@ -134,16 +139,16 @@ export function buildImpactGuideFieldGuides(input: {
           }
       : hasBaseLnWPlusCIUpperBound
         ? {
-            currentUse: "The selected source only has a combined Ln,w+CI upper bound, so guide derivation is not active.",
-            kind: "conditional",
-            meaning: "Guide outputs need an exact Ln,w source or an explicit Ln,w upper-bound lane; a combined Ln,w+CI bound is reportable but not a field-guide base."
+            currentUse: "Guide derivation is currently anchored to the selected combined Ln,w+CI upper-bound source.",
+            kind: "active",
+            meaning: "This base can produce a conservative L'nT,50 upper bound through the Turkish K/Hd local-guide branch, but it cannot fabricate split Ln,w, CI, L'n,w, or L'nT,w."
           }
       : {
           currentUse: "The selected guide base has not produced Ln,w yet. Activate a live impact result or the heavy-reference shortcut first.",
           kind: "conditional",
           meaning: "Guide outputs cannot derive until one upstream lane yields Ln,w."
         },
-    hd: manualHd && manualK && guideHasLnWPlusCI
+    hd: manualHd && guideHasK && guideHasLnWPlusCI
       ? {
           currentUse: "Hd is active in the Turkish K/Hd shortcut and is contributing to L'nT,50 right now.",
           kind: "active",
@@ -186,11 +191,13 @@ export function buildImpactGuideFieldGuides(input: {
             kind: "anchored",
             meaning: "When you do not enter K explicitly, the local-guide lane can derive it from the verified a/(b+c+d+e) mass-ratio brackets."
           }
-        : manualVolume || manualHd || input.smallRoomEstimateEnabled || hasBaseLnW || hasBaseLnWUpperBound
+        : manualVolume || manualHd || input.smallRoomEstimateEnabled || hasBaseLnW || hasBaseLnWUpperBound || hasBaseLnWPlusCIUpperBound
         ? {
-            currentUse: "Downstream field outputs are waiting for K. Without it, the guide lane cannot derive L'n,w or the standardized volume path.",
+            currentUse: hasBaseLnWPlusCIUpperBound && !hasBaseLnW && !hasBaseLnWUpperBound
+              ? "The combined-bound local-guide path is waiting for K. Without it, L'nT,50 upper-bound carry-over cannot run."
+              : "Downstream field outputs are waiting for K. Without it, the guide lane cannot derive L'n,w or the standardized volume path.",
             kind: "conditional",
-            meaning: "K becomes relevant whenever you move from lab-side Ln,w toward field-side estimates."
+            meaning: "K becomes relevant whenever you move from lab-side impact evidence toward field-side estimates."
           }
         : {
             currentUse: "No field-side branch is active yet, so K is not used.",
@@ -261,7 +268,7 @@ export function buildImpactGuideFieldGuides(input: {
             kind: "conditional",
             meaning: "Room volume standardizes L'nT,w from L'n,w through 10 log10(31.3 / V), and it can also supply Hd from the Turkish Table 2.8 lookup."
           }
-        : hasBaseLnW || hasBaseLnWUpperBound
+        : hasBaseLnW || hasBaseLnWUpperBound || hasBaseLnWPlusCIUpperBound
           ? {
               currentUse: "No receiving-room volume path is active. Enter V to unlock standardized normalization or the Turkish Hd lookup branch.",
               kind: "conditional",

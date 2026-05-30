@@ -91,13 +91,13 @@ describe("Dataholz CLT workbench source-truth route", () => {
     expect(scenario.result?.impact?.basis).toBe("predictor_mass_timber_clt_dataholz_dry_estimate");
     expect(scenario.result?.impact?.LnW).toBe(49);
     expect(scenario.result?.impact?.LnWPlusCI).toBe(53);
-    expect(scenario.result?.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "Ln,w+CI"]);
-    expect(scenario.result?.unsupportedTargetOutputs).toEqual(["Ctr"]);
+    expect(scenario.result?.supportedTargetOutputs).toEqual(["Rw", "Ctr", "Ln,w", "Ln,w+CI"]);
+    expect(scenario.result?.unsupportedTargetOutputs).toEqual([]);
 
     const cards = cardsByOutput(scenario.result!, LAB_OUTPUTS);
 
     expect(cards.Rw).toEqual(expect.objectContaining({ status: "live", value: "65 dB" }));
-    expect(cards.Ctr).toEqual(expect.objectContaining({ status: "unsupported", value: "Not ready" }));
+    expect(cards.Ctr).toEqual(expect.objectContaining({ status: "live", value: "-5.7 dB" }));
     expect(cards["Ln,w"]).toEqual(expect.objectContaining({ status: "live", value: "49 dB" }));
     expect(cards["Ln,w+CI"]).toEqual(expect.objectContaining({ status: "live", value: "53 dB" }));
   });

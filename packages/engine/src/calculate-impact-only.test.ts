@@ -1412,7 +1412,7 @@ describe("calculateImpactOnly", () => {
     expect(result.impact?.metricBasis?.DeltaLw).toBe("predictor_explicit_delta_user_input");
   });
 
-  it("keeps explicit DeltaLw heavy-reference input lab-side when field context is present", () => {
+  it("uses explicit DeltaLw heavy-reference input as the base for field companions", () => {
     const result = calculateImpactOnly([], {
       impactPredictorInput: {
         structuralSupportType: "reinforced_concrete",
@@ -1444,13 +1444,18 @@ describe("calculateImpactOnly", () => {
       targetOutputs: ["Ln,w", "DeltaLw", "L'n,w", "L'nT,w"]
     });
 
-    expect(result.impact?.basis).toBe("predictor_explicit_delta_heavy_reference_derived");
+    expect(result.impact?.basis).toBe("mixed_predicted_plus_estimated_standardized_field_volume_normalization");
     expect(result.impact?.LnW).toBe(52);
     expect(result.impact?.DeltaLw).toBe(26);
-    expect(result.impact?.LPrimeNW).toBeUndefined();
-    expect(result.impact?.LPrimeNTw).toBeUndefined();
-    expect(result.supportedImpactOutputs).toEqual(["Ln,w", "DeltaLw"]);
-    expect(result.unsupportedImpactOutputs).toEqual(["L'n,w", "L'nT,w"]);
+    expect(result.impact?.LPrimeNW).toBe(54);
+    expect(result.impact?.LPrimeNTw).toBe(52);
+    expect(result.impact?.metricBasis?.LnW).toBe("predictor_explicit_delta_heavy_reference_derived");
+    expect(result.impact?.metricBasis?.LPrimeNW).toBe("estimated_field_lprimenw_from_lnw_plus_k");
+    expect(result.impact?.metricBasis?.LPrimeNTw).toBe(
+      "estimated_standardized_field_lprimentw_from_lprimenw_plus_room_volume"
+    );
+    expect(result.supportedImpactOutputs).toEqual(["Ln,w", "DeltaLw", "L'n,w", "L'nT,w"]);
+    expect(result.unsupportedImpactOutputs).toEqual([]);
   });
 
   it("can resolve the published composite-panel dry-floor interaction estimate from predictor input", () => {

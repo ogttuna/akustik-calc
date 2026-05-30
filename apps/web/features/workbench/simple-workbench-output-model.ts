@@ -774,12 +774,14 @@ export function buildOutputCard(input: {
       break;
     case "DnT,A":
       if (typeof result?.metrics.estimatedDnTADb === "number") {
+        const gateARBuildingDetail = getGateARAirborneBuildingPredictionOutputDetail(output, result);
         const companyInternalOpeningLeakFieldBuildingDetail =
           getCompanyInternalOpeningLeakFieldBuildingOutputDetail(output, result);
 
         return {
           detail:
             companyInternalOpeningLeakFieldBuildingDetail ??
+            gateARBuildingDetail ??
             getFieldAirborneLiveDetail("DnT,A", result),
           label: "DnT,A",
           output,
@@ -801,12 +803,14 @@ export function buildOutputCard(input: {
       break;
     case "Dn,w":
       if (typeof result?.metrics.estimatedDnWDb === "number") {
+        const gateARBuildingDetail = getGateARAirborneBuildingPredictionOutputDetail(output, result);
         const companyInternalOpeningLeakFieldBuildingDetail =
           getCompanyInternalOpeningLeakFieldBuildingOutputDetail(output, result);
 
         return {
           detail:
             companyInternalOpeningLeakFieldBuildingDetail ??
+            gateARBuildingDetail ??
             getFieldAirborneLiveDetail("Dn,w", result),
           label: "Dn,w",
           output,
@@ -817,12 +821,14 @@ export function buildOutputCard(input: {
       break;
     case "Dn,A":
       if (typeof result?.metrics.estimatedDnADb === "number") {
+        const gateARBuildingDetail = getGateARAirborneBuildingPredictionOutputDetail(output, result);
         const companyInternalOpeningLeakFieldBuildingDetail =
           getCompanyInternalOpeningLeakFieldBuildingOutputDetail(output, result);
 
         return {
           detail:
             companyInternalOpeningLeakFieldBuildingDetail ??
+            gateARBuildingDetail ??
             getFieldAirborneLiveDetail("Dn,A", result),
           label: "Dn,A",
           output,
@@ -927,6 +933,17 @@ export function buildOutputCard(input: {
           value: formatSignedDb(result.impact.CI)
         };
       }
+
+      if (typeof result?.lowerBoundImpact?.CI === "number") {
+        return {
+          detail:
+            "Explicit CI companion carried through the conservative bound-only impact lane.",
+          label: "CI",
+          output,
+          status: "live",
+          value: formatSignedDb(result.lowerBoundImpact.CI)
+        };
+      }
       break;
     case "CI,50-2500":
       if (typeof result?.impact?.CI50_2500 === "number") {
@@ -942,6 +959,17 @@ export function buildOutputCard(input: {
           output,
           status: "live",
           value: formatSignedDb(result.impact.CI50_2500)
+        };
+      }
+
+      if (typeof result?.lowerBoundImpact?.CI50_2500 === "number") {
+        return {
+          detail:
+            "Explicit CI,50-2500 companion carried through the conservative bound-only impact lane.",
+          label: "CI,50-2500",
+          output,
+          status: "live",
+          value: formatSignedDb(result.lowerBoundImpact.CI50_2500)
         };
       }
       break;

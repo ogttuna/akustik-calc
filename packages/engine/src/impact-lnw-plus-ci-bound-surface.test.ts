@@ -11,7 +11,8 @@ const UBIQ_CARPET_BOUND_OUTPUTS: readonly RequestedOutputId[] = [
   "CI",
   "Ln,w+CI",
   "L'n,w",
-  "L'nT,w"
+  "L'nT,w",
+  "L'nT,50"
 ];
 const UBIQ_CARPET_STACK = [
   { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
@@ -57,24 +58,25 @@ describe("combined Ln,w+CI bound surface", () => {
     expect(result.lowerBoundImpact?.LnWUpperBound).toBeUndefined();
     expect(result.lowerBoundImpact?.notes.join(" ")).toContain("Ln,w+CI stays at or below 45 dB");
     expect(result.supportedTargetOutputs).toEqual(["Rw", "Ln,w+CI"]);
-    expect(result.unsupportedTargetOutputs).toEqual(["Ln,w", "CI", "L'n,w", "L'nT,w"]);
+    expect(result.unsupportedTargetOutputs).toEqual(["Ln,w", "CI", "L'n,w", "L'nT,w", "L'nT,50"]);
   });
 
-  it("does not derive field-side upper bounds from a combined Ln,w+CI-only source", () => {
+  it("derives only the local-guide L'nT,50 upper bound from a combined Ln,w+CI-only source", () => {
     const result = calculateAssembly(UBIQ_CARPET_STACK, {
       impactFieldContext: {
-        fieldKDb: 2,
-        receivingRoomVolumeM3: 50
+        fieldKDb: 3,
+        receivingRoomVolumeM3: 32
       },
       targetOutputs: UBIQ_CARPET_BOUND_OUTPUTS
     });
 
     expect(result.boundFloorSystemMatch?.system.id).toBe(UBIQ_CARPET_BOUND_ID);
-    expect(result.lowerBoundImpact?.basis).toBe("official_floor_system_bound_support");
+    expect(result.lowerBoundImpact?.basis).toBe("mixed_bound_plus_estimated_local_guide");
     expect(result.lowerBoundImpact?.LnWPlusCIUpperBound).toBe(45);
+    expect(result.lowerBoundImpact?.LPrimeNT50UpperBound).toBe(48);
     expect(result.lowerBoundImpact?.LPrimeNWUpperBound).toBeUndefined();
     expect(result.lowerBoundImpact?.LPrimeNTwUpperBound).toBeUndefined();
-    expect(result.supportedTargetOutputs).toEqual(["Rw", "Ln,w+CI"]);
+    expect(result.supportedTargetOutputs).toEqual(["Rw", "Ln,w+CI", "L'nT,50"]);
     expect(result.unsupportedTargetOutputs).toEqual(["Ln,w", "CI", "L'n,w", "L'nT,w"]);
   });
 });

@@ -760,8 +760,11 @@ export const FLOOR_OUTPUT_PRESET_FIELD: readonly RequestedOutputId[] = [
   "Ln,w+CI",
   "Rw",
   "R'w",
-  "L'n,w",
-  "Dn,w"
+  "Dn,w",
+  "Dn,A",
+  "DnT,w",
+  "DnT,A",
+  "L'n,w"
 ];
 export const FLOOR_OUTPUT_PRESET_BUILDING: readonly RequestedOutputId[] = [
   "Ln,w",
@@ -769,7 +772,10 @@ export const FLOOR_OUTPUT_PRESET_BUILDING: readonly RequestedOutputId[] = [
   "Ln,w+CI",
   "Rw",
   "R'w",
+  "Dn,w",
+  "Dn,A",
   "DnT,w",
+  "DnT,A",
   "L'n,w",
   "L'nT,w",
   "L'nT,50"

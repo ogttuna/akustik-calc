@@ -183,9 +183,9 @@ describe("calculator model-first physics prediction pivot Gate X", () => {
     expect(lab.supportedTargetOutputs).toEqual(["Ln,w", "DeltaLw"]);
 
     expect(fieldMissingContext.impact).toMatchObject({
-      DeltaLw: 31.1,
       LnW: 50
     });
+    expect(fieldMissingContext.impact?.DeltaLw).toBeUndefined();
     expect(fieldMissingContext.impact?.LPrimeNW).toBeUndefined();
     expect(fieldMissingContext.impact?.LPrimeNTw).toBeUndefined();
     expect(fieldMissingContext.supportedTargetOutputs).toEqual([]);

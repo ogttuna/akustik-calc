@@ -305,6 +305,7 @@ export function WorkbenchShell() {
   const referenceImpact = improvementReferenceImpact ?? manualReferenceImpact;
   const liveImpactFieldContext =
     {
+      ciDb: impactGuideSource === "live_stack" ? parsedImpactGuideCiDb : undefined,
       ci50_2500Db: impactGuideSource === "live_stack" ? parsedImpactGuideCi50_2500Db : undefined,
       directPathOffsetDb: parsedImpactDirectPathOffsetDb,
       enableSmallRoomEstimate: impactGuideSource === "live_stack" ? impactGuideSmallRoomMode : undefined,
@@ -348,6 +349,7 @@ export function WorkbenchShell() {
             sourceRoomVolumeM3: parsedAirborneSourceRoomVolumeM3
           },
           baseImpactFieldContext: {
+            ciDb: impactGuideSource === "live_stack" ? parsedImpactGuideCiDb : undefined,
             ci50_2500Db: impactGuideSource === "live_stack" ? parsedImpactGuideCi50_2500Db : undefined,
             directPathOffsetDb: parsedImpactDirectPathOffsetDb,
             enableSmallRoomEstimate: impactGuideSource === "live_stack" ? impactGuideSmallRoomMode : undefined,
@@ -393,9 +395,16 @@ export function WorkbenchShell() {
   const guideBaseImpact =
     rawGuideBaseImpact && typeof rawGuideBaseImpact.LnW === "number" ? rawGuideBaseImpact : null;
   const guideBaseBound =
-    rawGuideBaseBound && typeof rawGuideBaseBound.LnWUpperBound === "number" ? rawGuideBaseBound : null;
+    rawGuideBaseBound &&
+    (
+      typeof rawGuideBaseBound.LnWUpperBound === "number" ||
+      typeof rawGuideBaseBound.LnWPlusCIUpperBound === "number"
+    )
+      ? rawGuideBaseBound
+      : null;
   const guideBaseLnW = guideBaseImpact?.LnW ?? null;
   const guideBaseLnWUpperBound = guideBaseBound?.LnWUpperBound ?? null;
+  const guideBaseLnWPlusCIUpperBound = guideBaseBound?.LnWPlusCIUpperBound ?? null;
   const hasGuideCarryover =
     typeof guideBaseImpact?.CI === "number" || typeof guideBaseImpact?.CI50_2500 === "number";
   const hasGuideInputs =
@@ -409,11 +418,19 @@ export function WorkbenchShell() {
     impactGuideSmallRoomMode;
   const impactGuide =
     (guideBaseImpact && typeof guideBaseLnW === "number" && hasGuideInputs) ||
-    (guideBaseBound && typeof guideBaseLnWUpperBound === "number" && hasGuideInputs)
+    (
+      guideBaseBound &&
+      (
+        typeof guideBaseLnWUpperBound === "number" ||
+        typeof guideBaseLnWPlusCIUpperBound === "number"
+      ) &&
+      hasGuideInputs
+    )
       ? deriveImpactGuideMetrics({
           baseConfidence: guideBaseImpact?.confidence ?? guideBaseBound?.confidence,
           baseLnW: guideBaseLnW,
           baseLnWUpperBound: guideBaseLnWUpperBound,
+          baseLnWPlusCIUpperBound: guideBaseLnWPlusCIUpperBound,
           ci50_2500Db:
             typeof parsedImpactGuideCi50_2500Db === "number"
               ? parsedImpactGuideCi50_2500Db
@@ -470,6 +487,7 @@ export function WorkbenchShell() {
         impactFieldContext:
           scenario.impactGuideSource === "live_stack"
             ? {
+                ciDb: parseFiniteNumber(scenario.impactGuideCiDb),
                 ci50_2500Db: parseFiniteNumber(scenario.impactGuideCi50_2500Db),
                 enableSmallRoomEstimate: scenario.impactGuideSmallRoomMode,
                 fieldKDb: parseFiniteNumber(scenario.impactGuideKDb),
@@ -492,6 +510,10 @@ export function WorkbenchShell() {
                   sourceRoomVolumeM3: parseFiniteNumber(scenario.airborneSourceRoomVolumeM3)
                 },
                 baseImpactFieldContext: {
+                  ciDb:
+                    scenario.impactGuideSource === "live_stack"
+                      ? parseFiniteNumber(scenario.impactGuideCiDb)
+                      : undefined,
                   ci50_2500Db:
                     scenario.impactGuideSource === "live_stack"
                       ? parseFiniteNumber(scenario.impactGuideCi50_2500Db)

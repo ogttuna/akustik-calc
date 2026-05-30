@@ -20,6 +20,10 @@ import {
   type DynamicAirborneOptions,
   type DynamicAirborneResult
 } from "./dynamic-airborne-helpers";
+import {
+  GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING,
+  maybeBuildGateIAirborneFieldContextBasisFromBase
+} from "./dynamic-airborne-gate-i-airborne-field-context";
 import { ksRound1 } from "./math";
 import { solveWallTripleLeafFrequencyBands } from "./wall-triple-leaf-frequency-solver";
 import { validateWallTripleLeafLayerGroups } from "./wall-triple-leaf-topology-readiness";
@@ -34,7 +38,13 @@ export const GATE_AE_FLAT_MULTICAVITY_PREDICTION_STRATEGY =
   "gate_ae_flat_multicavity_two_cavity_solver_broadening_family_physics_prediction";
 
 export const GATE_AE_FLAT_MULTICAVITY_PREDICTION_WARNING =
-  "Flat multicavity family physics prediction is active from explicit grouped topology. It is not measured exact or source-calibrated; use the 7 dB uncalibrated error budget until same-family holdouts land.";
+  "Flat multicavity family physics prediction is active from explicit or safely derived grouped topology. It is not measured exact or source-calibrated; use the 7 dB uncalibrated error budget until same-family holdouts land.";
+
+const GATE_AE_FLAT_MULTICAVITY_BUILDING_PREDICTION_RUNTIME_METHOD =
+  "gate_ar_airborne_building_prediction_all_owner_runtime_corridor";
+
+const GATE_AE_FLAT_MULTICAVITY_BUILDING_PREDICTION_WARNING =
+  "Airborne building-prediction runtime corridor is active from the Gate AE flat multicavity two-cavity solver, explicit flanking/junction context, room standardization, and a +/-9 dB source-absent uncertainty budget. It is not measured building evidence.";
 
 const REQUIRED_INPUTS = [
   "wallTopology.topologyMode",
@@ -52,6 +62,62 @@ const REQUIRED_INPUTS = [
   "wallTopology.sideBLeafLayerIndices",
   "wallTopology.supportTopology"
 ] as const;
+
+const GATE_AE_BUILDING_REQUIRED_INPUTS = [
+  "panelWidthMm",
+  "panelHeightMm",
+  "sourceRoomVolumeM3",
+  "receivingRoomVolumeM3",
+  "receivingRoomRt60S",
+  "flankingJunctionClass",
+  "conservativeFlankingAssumption",
+  "junctionCouplingLengthM",
+  "buildingPredictionOutputBasis"
+] as const;
+
+type CompleteGateAEBuildingPredictionContext = {
+  buildingPredictionOutputBasis: "apparent" | "apparent_and_standardized" | "standardized";
+  conservativeFlankingAssumption: "multi_path_conservative" | "single_conservative_path" | "worst_case_screening";
+  contextMode: "building_prediction";
+  flankingJunctionClass:
+    | "isolated_junction"
+    | "lightweight_junction"
+    | "mixed_junction"
+    | "rigid_cross_junction"
+    | "rigid_t_junction";
+  junctionCouplingLengthM: number;
+  panelHeightMm: number;
+  panelWidthMm: number;
+  receivingRoomRt60S: number;
+  receivingRoomVolumeM3: number;
+  sourceRoomVolumeM3: number;
+};
+
+function isPositiveFinite(value: unknown): value is number {
+  return typeof value === "number" && Number.isFinite(value) && value > 0;
+}
+
+function hasCompleteGateAEBuildingPredictionContext(
+  context: DynamicAirborneOptions["airborneContext"]
+): context is CompleteGateAEBuildingPredictionContext {
+  return (
+    context?.contextMode === "building_prediction" &&
+    context.flankingJunctionClass !== undefined &&
+    context.flankingJunctionClass !== "unknown" &&
+    context.conservativeFlankingAssumption !== undefined &&
+    context.conservativeFlankingAssumption !== "unknown" &&
+    context.buildingPredictionOutputBasis !== undefined &&
+    context.buildingPredictionOutputBasis !== "unknown" &&
+    isPositiveFinite(context.panelWidthMm) &&
+    isPositiveFinite(context.panelHeightMm) &&
+    isPositiveFinite(context.sourceRoomVolumeM3) &&
+    isPositiveFinite(context.receivingRoomVolumeM3) &&
+    isPositiveFinite(context.receivingRoomRt60S) &&
+    isPositiveFinite(context.junctionCouplingLengthM) &&
+    !isPositiveFinite(context.hostWallAreaM2) &&
+    !(Array.isArray(context.openingLeakElements) && context.openingLeakElements.length > 0)
+  );
+}
 
 function groupContainsLayerText(
   layers: readonly ResolvedLayer[],
@@ -88,7 +154,14 @@ function isGateAEFlatMulticavityTarget(layers: readonly ResolvedLayer[], options
   const contextMode = options.airborneContext?.contextMode ?? "element_lab";
   const topology = options.airborneContext?.wallTopology;
 
-  if (contextMode !== "element_lab" || topology?.topologyMode !== "grouped_triple_leaf") {
+  if (
+    (
+      contextMode !== "element_lab" &&
+      contextMode !== "field_between_rooms" &&
+      contextMode !== "building_prediction"
+    ) ||
+    topology?.topologyMode !== "grouped_triple_leaf"
+  ) {
     return false;
   }
 
@@ -124,9 +197,9 @@ function buildGateAEFlatMulticavityPhysicsBasis(input: {
 }): AirborneResultBasis {
   return {
     assumptions: [
-      "grouped flat/many-layer triple-leaf topology is explicit",
+      "grouped flat/many-layer triple-leaf topology is explicit or safely derived from layer order",
       `two porous absorptive cavities are physically owned (${input.cavityDepthsMm[0].toFixed(0)} mm ${input.fillCoverage[0]} / ${input.cavityDepthsMm[1].toFixed(0)} mm ${input.fillCoverage[1]})`,
-      "layer order is preserved; no automatic grouping or source-row borrowing is applied",
+      "layer order is preserved; safe auto-grouping is limited to leaf / porous-cavity / leaf / porous-cavity / leaf patterns with explicit air gaps or explicit support context",
       "missing source rows block exact/calibrated promotion only, not this formula-backed prediction"
     ],
     calculationStandard: "engine_triple_leaf_two_cavity_frequency_solver",
@@ -159,6 +232,53 @@ function buildGateAEFlatMulticavityPhysicsBasis(input: {
     ],
     ratingStandard: "ISO 717-1",
     requiredInputs: [...REQUIRED_INPUTS],
+    toleranceClass: "uncalibrated_prediction"
+  };
+}
+
+function maybeBuildGateAEFlatMulticavityBuildingPredictionBasis(input: {
+  baseBasis: AirborneResultBasis;
+  context: DynamicAirborneOptions["airborneContext"];
+  frequencyBands: NonNullable<AirborneResultBasis["frequencyBands"]>;
+}): AirborneResultBasis | null {
+  if (!hasCompleteGateAEBuildingPredictionContext(input.context)) {
+    return null;
+  }
+
+  const partitionAreaM2 = (input.context.panelWidthMm * input.context.panelHeightMm) / 1_000_000;
+
+  return {
+    ...input.baseBasis,
+    assumptions: [
+      ...input.baseBasis.assumptions,
+      "building-prediction output is computed only from explicit building_prediction context",
+      "direct separating-element curve comes from the Gate AE flat multicavity two-cavity frequency solver",
+      "flanking/junction contribution is represented by the explicit conservative flanking assumption, named junction class, coupling length, and the existing path-energy overlay",
+      "room standardization owns partition area, source-room volume, receiving-room volume, and receiving-room RT60 instead of borrowing Gate I field context",
+      "+/-9 dB uncertainty budget remains source-absent and not measured evidence",
+      `building context uses ${partitionAreaM2.toFixed(2)} m2 partition area, ${input.context.sourceRoomVolumeM3.toFixed(1)} m3 source-room volume, ${input.context.receivingRoomVolumeM3.toFixed(1)} m3 receiving-room volume, ${input.context.receivingRoomRt60S.toFixed(2)} s RT60, ${input.context.flankingJunctionClass}, ${input.context.conservativeFlankingAssumption}, and ${input.context.junctionCouplingLengthM.toFixed(2)} m coupling length`,
+      `base lab-family method remains ${input.baseBasis.method}`
+    ],
+    calculationStandard: "ISO 12354-1",
+    errorBudgetDb: 9,
+    frequencyBands: input.frequencyBands,
+    kind: "airborne_physics_prediction",
+    method: GATE_AE_FLAT_MULTICAVITY_BUILDING_PREDICTION_RUNTIME_METHOD,
+    missingPhysicalInputs: [],
+    missingSourceEvidence: [
+      "same_building_source_owned_RwPrime_DnTw_holdouts_absent"
+    ],
+    origin: "family_physics_prediction",
+    ratingStandard: "ISO 717-1",
+    requiredInputs: [
+      ...input.baseBasis.requiredInputs,
+      ...GATE_AE_BUILDING_REQUIRED_INPUTS,
+      "ISO_12354_1_direct_separating_element_frequency_curve_owner",
+      "ISO_12354_1_flanking_path_transmission_terms_owner",
+      "ISO_12354_1_junction_vibration_reduction_index_owner",
+      "ISO_12354_1_room_absorption_normalization_owner",
+      "buildingPredictionUncertaintyBudgetOwner"
+    ],
     toleranceClass: "uncalibrated_prediction"
   };
 }
@@ -352,7 +472,33 @@ export function maybeCalculateGateAEFlatMulticavityPrediction(input: {
     ],
     frequenciesHz: solver.curve.frequenciesHz
   });
-  const candidateResolution = buildGateAEFlatMulticavityCandidateResolution({ basis });
+  const fieldContextBasis = maybeBuildGateIAirborneFieldContextBasisFromBase({
+    baseBasis: basis,
+    context: input.options.airborneContext,
+    family: "multileaf_multicavity",
+    frequencyBands: {
+      bandSet: "third_octave_solver_grid",
+      frequenciesHz: [...solver.curve.frequenciesHz]
+    }
+  });
+  const contextMode = input.options.airborneContext?.contextMode ?? "element_lab";
+  if (contextMode === "field_between_rooms" && !fieldContextBasis) {
+    return null;
+  }
+  const buildingPredictionBasis = maybeBuildGateAEFlatMulticavityBuildingPredictionBasis({
+    baseBasis: basis,
+    context: input.options.airborneContext,
+    frequencyBands: {
+      bandSet: "third_octave_solver_grid",
+      frequenciesHz: [...solver.curve.frequenciesHz]
+    }
+  });
+  if (contextMode === "building_prediction" && !buildingPredictionBasis) {
+    return null;
+  }
+
+  const selectedBasis = buildingPredictionBasis ?? fieldContextBasis ?? basis;
+  const candidateResolution = buildGateAEFlatMulticavityCandidateResolution({ basis: selectedBasis });
   const solverRw = ratings.iso717.Rw;
   const screeningRw = input.options.screeningEstimatedRwDb;
   const leafMassNote = solver.leafMasses
@@ -387,7 +533,7 @@ export function maybeCalculateGateAEFlatMulticavityPrediction(input: {
     hasStudLikeSupport: input.topology.hasStudLikeSupport,
     notes: [
       ...input.family.notes,
-      "Gate AE selected the explicit grouped flat/many-layer multicavity solver lane.",
+      "Gate AE selected the explicit or safely derived grouped flat/many-layer multicavity solver lane.",
       `Two-cavity solver leaf masses: ${leafMassNote}.`,
       `Solver mass-air-mass resonances: ${resonanceNote}.`,
       "Source absence is retained as an exact/calibration blocker, not a blocker for formula-backed prediction.",
@@ -408,7 +554,7 @@ export function maybeCalculateGateAEFlatMulticavityPrediction(input: {
   };
 
   return {
-    airborneBasis: basis,
+    airborneBasis: selectedBasis,
     airborneCandidateResolution: candidateResolution,
     airborneCandidateSet: candidateResolution.candidates,
     curve: solver.curve,
@@ -418,8 +564,10 @@ export function maybeCalculateGateAEFlatMulticavityPrediction(input: {
     rw: solverRw,
     trace,
     warnings: [
+      ...(buildingPredictionBasis ? [GATE_AE_FLAT_MULTICAVITY_BUILDING_PREDICTION_WARNING] : []),
+      ...(fieldContextBasis ? [GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING] : []),
       GATE_AE_FLAT_MULTICAVITY_PREDICTION_WARNING,
-      "Dynamic airborne confidence is medium because the topology is explicit, but this broader partial-fill corridor has not been calibrated against same-family holdouts."
+      "Dynamic airborne confidence is medium because the topology is explicit, but this broader flat-multicavity corridor has not been calibrated against same-family holdouts."
     ]
   };
 }

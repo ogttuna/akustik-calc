@@ -35,7 +35,9 @@ export type ImpactGuideDerivation = {
   LPrimeNTw?: number;
   LPrimeNTwUpperBound?: number;
   LPrimeNT50?: number;
+  LPrimeNT50UpperBound?: number;
   LnWPlusCI?: number;
+  LnWPlusCIUpperBound?: number;
   guideProfile?: "tr_simple_method_lnt50_from_lnwci_plus_k_plus_hd";
   massRatio?: number;
   massRatioBracket?: string;
@@ -118,6 +120,7 @@ export function lookupTurkishGuideImpactHdCorrection(
 export function deriveImpactGuideMetrics(input: {
   baseLnW?: number | null;
   baseLnWUpperBound?: number | null;
+  baseLnWPlusCIUpperBound?: number | null;
   baseConfidence?: ImpactConfidence | null;
   ciDb?: number | null;
   ci50_2500Db?: number | null;
@@ -130,16 +133,43 @@ export function deriveImpactGuideMetrics(input: {
 }): ImpactGuideDerivation | null {
   const hasExactBase = Number.isFinite(input.baseLnW);
   const hasBoundBase = Number.isFinite(input.baseLnWUpperBound);
+  const hasBoundCombinedBase = Number.isFinite(input.baseLnWPlusCIUpperBound);
 
-  if (!hasExactBase && !hasBoundBase) {
+  if (!hasExactBase && !hasBoundBase && !hasBoundCombinedBase) {
     return null;
   }
 
   const baseKind: ImpactGuideBaseKind = hasExactBase ? "exact" : "upper_bound";
   const baseLnW = hasExactBase ? ksRound1(input.baseLnW as number) : undefined;
-  const baseLnWUpperBound = !hasExactBase && hasBoundBase ? ksRound1(input.baseLnWUpperBound as number) : undefined;
   const hasCi = Number.isFinite(input.ciDb);
   const ci = hasCi ? ksRound1(input.ciDb as number) : undefined;
+  const explicitBaseLnWUpperBound = !hasExactBase && hasBoundBase
+    ? ksRound1(input.baseLnWUpperBound as number)
+    : undefined;
+  const derivedBaseLnWUpperBound =
+    !hasExactBase &&
+    !hasBoundBase &&
+    hasBoundCombinedBase &&
+    typeof ci === "number"
+      ? ksRound1((input.baseLnWPlusCIUpperBound as number) - ci)
+      : undefined;
+  const baseLnWUpperBound =
+    typeof explicitBaseLnWUpperBound === "number"
+      ? explicitBaseLnWUpperBound
+      : typeof derivedBaseLnWUpperBound === "number" && derivedBaseLnWUpperBound > 0
+        ? derivedBaseLnWUpperBound
+        : undefined;
+  const baseLnWUpperBoundDerivedFromCombined =
+    typeof derivedBaseLnWUpperBound === "number" &&
+    typeof baseLnWUpperBound === "number" &&
+    !hasBoundBase &&
+    baseLnWUpperBound === derivedBaseLnWUpperBound;
+  const lnWPlusCIUpperBound =
+    baseKind === "upper_bound" && hasBoundCombinedBase
+      ? ksRound1(input.baseLnWPlusCIUpperBound as number)
+      : baseKind === "upper_bound" && typeof baseLnWUpperBound === "number" && hasCi
+        ? ksRound1(baseLnWUpperBound + (ci as number))
+        : undefined;
   const hasCi50_2500 = Number.isFinite(input.ci50_2500Db);
   const ci50_2500 = hasCi50_2500 ? ksRound1(input.ci50_2500Db as number) : undefined;
   const lnWPlusCI = baseKind === "exact" && hasCi ? ksRound1((baseLnW as number) + (ci as number)) : undefined;
@@ -175,7 +205,7 @@ export function deriveImpactGuideMetrics(input: {
     hdSource === "lookup_from_receiving_room_volume" ? hdLookup.bracketLabel || undefined : undefined;
   const lPrimeNW = baseKind === "exact" && hasFieldKCorrection ? ksRound1((baseLnW as number) + (k as number)) : undefined;
   const lPrimeNWUpperBound =
-    baseKind === "upper_bound" && hasFieldKCorrection
+    baseKind === "upper_bound" && typeof baseLnWUpperBound === "number" && hasFieldKCorrection
       ? ksRound1((baseLnWUpperBound as number) + (k as number))
       : undefined;
   const standardizedFieldEstimateActive =
@@ -191,22 +221,35 @@ export function deriveImpactGuideMetrics(input: {
       : undefined;
   const smallRoomLPrimeNTw = baseKind === "exact" && smallRoomEstimateActive ? ksRound1((baseLnW as number) + 3) : undefined;
   const smallRoomLPrimeNTwUpperBound =
-    baseKind === "upper_bound" && smallRoomEstimateActive
+    baseKind === "upper_bound" && typeof baseLnWUpperBound === "number" && smallRoomEstimateActive
       ? ksRound1((baseLnWUpperBound as number) + 3)
       : undefined;
   const lPrimeNTw = standardizedLPrimeNTw ?? smallRoomLPrimeNTw;
   const lPrimeNTwUpperBound = standardizedLPrimeNTwUpperBound ?? smallRoomLPrimeNTwUpperBound;
-  const lPrimeNT50 =
-    typeof standardizedLPrimeNTw === "number" && typeof ci50_2500 === "number"
-      ? ksRound1(standardizedLPrimeNTw + ci50_2500)
-      : hasGuideCorrections && typeof lnWPlusCI === "number"
-        ? ksRound1(lnWPlusCI + (k as number) + (hd as number))
-        : undefined;
+  const localGuideLPrimeNT50 =
+    hasGuideCorrections && typeof lnWPlusCI === "number"
+      ? ksRound1(lnWPlusCI + (k as number) + (hd as number))
+      : undefined;
+  const localGuideLPrimeNT50UpperBound =
+    hasGuideCorrections && typeof lnWPlusCIUpperBound === "number"
+      ? ksRound1(lnWPlusCIUpperBound + (k as number) + (hd as number))
+      : undefined;
+  const ci50LPrimeNT50 =
+    typeof lPrimeNTw === "number" && typeof ci50_2500 === "number"
+      ? ksRound1(lPrimeNTw + ci50_2500)
+      : undefined;
+  const ci50LPrimeNT50UpperBound =
+    typeof lPrimeNTwUpperBound === "number" && typeof ci50_2500 === "number"
+      ? ksRound1(lPrimeNTwUpperBound + ci50_2500)
+      : undefined;
+  const lPrimeNT50 = ci50LPrimeNT50 ?? localGuideLPrimeNT50;
+  const lPrimeNT50UpperBound = ci50LPrimeNT50UpperBound ?? localGuideLPrimeNT50UpperBound;
+  const fieldLowFrequencyCi50Active =
+    (typeof ci50LPrimeNT50 === "number" || typeof ci50LPrimeNT50UpperBound === "number") &&
+    typeof ci50_2500 === "number";
   const guideProfile =
-    typeof lPrimeNT50 === "number" &&
-    typeof lnWPlusCI === "number" &&
-    hasGuideCorrections &&
-    !(typeof standardizedLPrimeNTw === "number" && typeof ci50_2500 === "number")
+    !fieldLowFrequencyCi50Active &&
+    (typeof localGuideLPrimeNT50 === "number" || typeof localGuideLPrimeNT50UpperBound === "number")
       ? "tr_simple_method_lnt50_from_lnwci_plus_k_plus_hd"
       : undefined;
 
@@ -229,16 +272,25 @@ export function deriveImpactGuideMetrics(input: {
     LPrimeNTw: lPrimeNTw,
     LPrimeNTwUpperBound: lPrimeNTwUpperBound,
     LPrimeNT50: lPrimeNT50,
+    LPrimeNT50UpperBound: lPrimeNT50UpperBound,
     LnWPlusCI: lnWPlusCI,
+    LnWPlusCIUpperBound: lnWPlusCIUpperBound,
     guideProfile,
     massRatio,
     massRatioBracket,
     notes: [
       ...(typeof lnWPlusCI === "number"
         ? ["Ln,w+CI was derived as Ln,w + CI from the selected lab-side source."]
+        : typeof lnWPlusCIUpperBound === "number" && hasBoundCombinedBase
+          ? ["Ln,w+CI upper bound was carried from the selected bound-only source."]
+          : typeof lnWPlusCIUpperBound === "number"
+            ? ["Ln,w+CI upper bound was derived as Ln,w upper bound + CI from the current bound-only lane."]
         : baseKind === "upper_bound"
-          ? ["Ln,w+CI stays unavailable on the bound-only lane unless an exact Ln,w source is selected."]
+          ? ["Ln,w+CI stays unavailable on the bound-only lane until a source-owned combined bound or explicit CI value is present."]
           : ["Ln,w+CI stays unavailable until an explicit CI value is provided."]),
+      ...(baseLnWUpperBoundDerivedFromCombined
+        ? ["Ln,w upper bound was derived as Ln,w+CI upper bound - explicit CI from the current bound-only lane."]
+        : []),
       ...(typeof lPrimeNW === "number"
         ? [`L'n,w was derived as Ln,w + K using K = ${k} dB.`]
         : typeof lPrimeNWUpperBound === "number"
@@ -253,8 +305,12 @@ export function deriveImpactGuideMetrics(input: {
               ? ["L'nT,w upper bound was derived as Ln,w upper bound + 3 using the explicit TR small-room guide assumption."]
               : ["L'nT,w was derived as Ln,w + 3 using the explicit TR small-room guide assumption."]
             : ["L'nT,w stays unavailable until either the TR small-room guide toggle is enabled or a receiving-room volume is provided with K."]),
-      ...(typeof lPrimeNT50 === "number" && typeof standardizedLPrimeNTw === "number" && typeof ci50_2500 === "number"
+      ...(typeof ci50LPrimeNT50 === "number" && typeof lPrimeNTw === "number" && typeof ci50_2500 === "number"
         ? [`L'nT,50 was derived as L'nT,w + CI,50-2500 using CI,50-2500 = ${ci50_2500} dB.`]
+        : typeof ci50LPrimeNT50UpperBound === "number" && typeof lPrimeNTwUpperBound === "number" && typeof ci50_2500 === "number"
+          ? [`L'nT,50 upper bound was derived as L'nT,w upper bound + CI,50-2500 using CI,50-2500 = ${ci50_2500} dB.`]
+        : hasGuideCorrections && typeof lnWPlusCIUpperBound === "number"
+          ? [`L'nT,50 upper bound was derived as Ln,w+CI upper bound + K + Hd using K = ${k} dB and Hd = ${hd} dB.`]
         : hasGuideCorrections && typeof lnWPlusCI === "number"
           ? [`L'nT,50 was derived as Ln,w+CI + K + Hd using K = ${k} dB and Hd = ${hd} dB.`]
           : ["L'nT,50 stays unavailable until either Ln,w+CI has K and Hd (explicitly or via the verified Turkish guide tables) or the field-volume path has both V and CI,50-2500."]),

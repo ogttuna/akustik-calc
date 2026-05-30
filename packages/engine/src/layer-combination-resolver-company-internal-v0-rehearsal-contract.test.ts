@@ -53,6 +53,7 @@ import { LIGHTWEIGHT_CONCRETE_FAMILY_SELECTED_CANDIDATE_ID } from "./lightweight
 import {
   POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_SELECTED_CANDIDATE_ID
 } from "./post-v1-wall-compatible-anchor-delta";
+import { TUAS_C11C_GUARDED_ISO_WEIGHTED_IMPACT_SELECTED_CANDIDATE_ID } from "./tuas-c11c-exact-import-readiness";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
@@ -119,16 +120,16 @@ describe("layer combination resolver company-internal V0 rehearsal contract", ()
     });
     expect(contract.summary).toEqual({
       allowedExactRowCount: 4,
-      allowedWithBudgetRowCount: 28,
+      allowedWithBudgetRowCount: 32,
       blockedActionCount: 4,
       blockedRowCount: 2,
-      coverageMatrixRowCount: 35,
-      companyInternalV0AllowedRowCount: 32,
+      coverageMatrixRowCount: 39,
+      companyInternalV0AllowedRowCount: 36,
       needsUserInputRowCount: 1,
       readinessBucketCount: {
         needs_input: 1,
         ready: 4,
-        ready_with_budget: 28,
+        ready_with_budget: 32,
         research_only: 0,
         unsupported: 2
       },
@@ -150,6 +151,7 @@ describe("layer combination resolver company-internal V0 rehearsal contract", ()
       [POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
       ["wall.exact_verified_airborne.same_leaf_schedule", "allowed_exact"],
       ["floor.exact_impact_band_source.metric_basis", "allowed_exact"],
+      [TUAS_C11C_GUARDED_ISO_WEIGHTED_IMPACT_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
       ["floor.open_box_timber.package_transfer_similarity", "allowed_with_budget"],
       ["floor.open_web.supported_band_similarity", "allowed_with_budget"],
       ["wall.multileaf_triple_leaf.calibrated_family_solver", "allowed_with_budget"],
@@ -163,11 +165,13 @@ describe("layer combination resolver company-internal V0 rehearsal contract", ()
       [COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
       [FLAT_LIST_MULTILEAF_GUARD_LAB_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
       [FLAT_LIST_MULTILEAF_GUARD_FIELD_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
+      ["floor.screening_airborne.source_absent", "allowed_with_budget"],
       ["floor.open_box_timber.raw_bare_source_absent", "allowed_with_budget"],
       ["floor.open_web.raw_bare_source_absent", "allowed_with_budget"],
       ["floor.helper_only_timber_open_web.source_absent", "allowed_with_budget"],
       ["floor.open_web.direct_fixed_lining.source_absent", "allowed_with_budget"],
       ["floor.composite_panel.published_interaction_family_solver", "allowed_with_budget"],
+      ["candidate_gate_ae_flat_multicavity_family_physics_prediction", "allowed_with_budget"],
       [LIGHTWEIGHT_CONCRETE_FAMILY_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
       ["floor.lightweight_steel.upper_lower_mass_spring.source_absent", "allowed_with_budget"],
       ["floor.lightweight_steel.suspended_ceiling_only.source_absent", "allowed_with_budget"],
@@ -177,6 +181,7 @@ describe("layer combination resolver company-internal V0 rehearsal contract", ()
       ["floor.heavy_concrete_floating_floor.lab_impact_formula", "allowed_with_budget"],
       ["floor.impact_field_context.field_building_adapter", "allowed_with_budget"],
       ["wall.airborne_field_context.field_apparent_adapter", "allowed_with_budget"],
+      ["candidate_airborne_building_prediction_all_owner_family_physics_prediction", "allowed_with_budget"],
       ["generic.required_input_owner.needs_input_boundary", "needs_user_input"],
       ["generic.lab_field_building_basis_boundary", "blocked"],
       [ASTM_E989_IMPACT_RATING_SELECTED_CANDIDATE_ID, "allowed_exact"],

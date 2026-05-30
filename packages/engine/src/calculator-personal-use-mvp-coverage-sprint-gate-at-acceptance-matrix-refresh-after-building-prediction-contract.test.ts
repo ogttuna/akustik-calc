@@ -155,16 +155,16 @@ describe("Personal-Use MVP Coverage Sprint Gate AT acceptance matrix refresh aft
       sourceRowsRequiredForRuntimeSelection: false
     });
     expect(summary.failureClassCounts).toEqual({
-      basis_boundary: 2,
+      basis_boundary: 1,
       correct_block: 10,
       coverage_gap: 0,
       hostile_input_refusal: 3,
-      none: 25,
+      none: 26,
       unsupported_metric: 1
     });
   });
 
-  it("pins complete building prediction runtime and broad-target alias boundaries", () => {
+  it("pins complete building prediction runtime and broad-target lab companions", () => {
     const rows = buildPersonalUseMvpCoverageSprintGateATScenarioMatrix();
     const completeBuilding = byId(rows, "wall.complete_building_prediction.runtime");
     const broadAlias = byId(rows, "wall.complete_building_prediction_broad_targets.alias_boundary");
@@ -192,7 +192,7 @@ describe("Personal-Use MVP Coverage Sprint Gate AT acceptance matrix refresh aft
       basis: "building_prediction",
       currentPosture: "family_physics",
       expectedPosture: "family_physics",
-      failureClass: "basis_boundary",
+      failureClass: "none",
       hostileVariant: "lab_rw_stc_requested_beside_building_metrics",
       requestedMetrics: ["Rw", "STC", "R'w", "DnT,w"],
       runtime: {
@@ -200,11 +200,11 @@ describe("Personal-Use MVP Coverage Sprint Gate AT acceptance matrix refresh aft
         errorBudgetDb: PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AT_BUILDING_ERROR_BUDGET_DB,
         missingPhysicalInputs: [],
         origin: "family_physics_prediction",
-        supportedTargetOutputs: ["R'w", "DnT,w"],
-        unsupportedTargetOutputs: ["Rw", "STC"]
+        supportedTargetOutputs: ["Rw", "STC", "R'w", "DnT,w"],
+        unsupportedTargetOutputs: []
       }
     });
-    expect(values(broadAlias)).toEqual({ "R'w": 58, "DnT,w": 59 });
+    expect(values(broadAlias)).toEqual({ Rw: 58, STC: 58, "R'w": 58, "DnT,w": 59 });
   });
 
   it("keeps partial building, opening/building, ASTM, hostile-layer, and exact-source boundaries explicit", () => {
@@ -220,7 +220,6 @@ describe("Personal-Use MVP Coverage Sprint Gate AT acceptance matrix refresh aft
       "wall.building_prediction_partial_context.needs_input"
     ]);
     expect(summary.aliasNegativeRowIds).toEqual([
-      "wall.complete_building_prediction_broad_targets.alias_boundary",
       "wall.opening_leak_composite_building_boundary.unsupported",
       "floor.astm_iic_aiic_boundary.unsupported"
     ]);

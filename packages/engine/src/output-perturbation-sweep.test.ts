@@ -94,7 +94,7 @@ describe("output perturbation sweep", () => {
           });
 
           expectTargetPartition(lab.supportedTargetOutputs, requested, ["Rw"], `${key} lab`, failures);
-          expectTargetPartition(field.supportedTargetOutputs, requested, ["R'w", "DnT,w", "DnT,A", "Dn,w", "Dn,A"], `${key} field`, failures);
+          expectTargetPartition(field.supportedTargetOutputs, requested, ["Rw", "R'w", "DnT,w", "DnT,A", "Dn,w", "Dn,A"], `${key} field`, failures);
 
           expectFinite(lab.metrics.estimatedRwDb, `${key} lab Rw`, failures);
           expectFinite(field.metrics.estimatedRwPrimeDb, `${key} field R'w`, failures);
@@ -290,7 +290,7 @@ describe("output perturbation sweep", () => {
     expect(failures).toEqual([]);
   });
 
-  it("keeps explicit heavy-reference DeltaLw sweeps exact and fail-closed on field-only requests", () => {
+  it("keeps explicit heavy-reference DeltaLw sweeps exact while deriving field companions from explicit field context", () => {
     const deltaValues = [10, 15, 20, 25, 30, 35] as const;
     const requested: readonly RequestedOutputId[] = ["Rw", "Ln,w", "DeltaLw", "L'n,w", "L'nT,w"];
     const failures: string[] = [];
@@ -328,7 +328,13 @@ describe("output perturbation sweep", () => {
         targetOutputs: requested
       });
 
-      expectTargetPartition(result.supportedTargetOutputs, requested, ["Ln,w", "DeltaLw"], `delta ${deltaLwDb}`, failures);
+      expectTargetPartition(
+        result.supportedTargetOutputs,
+        requested,
+        ["Ln,w", "DeltaLw", "L'n,w", "L'nT,w"],
+        `delta ${deltaLwDb}`,
+        failures
+      );
       expectFinite(result.impact?.LnW, `delta ${deltaLwDb} Ln,w`, failures);
       expectFinite(result.impact?.DeltaLw, `delta ${deltaLwDb} DeltaLw`, failures);
 
@@ -348,8 +354,12 @@ describe("output perturbation sweep", () => {
       if (result.impact?.metricBasis?.DeltaLw !== "predictor_explicit_delta_user_input") {
         failures.push(`delta ${deltaLwDb}: unexpected DeltaLw basis ${result.impact?.metricBasis?.DeltaLw ?? "none"}`);
       }
-      if (typeof result.impact?.LPrimeNW === "number" || typeof result.impact?.LPrimeNTw === "number") {
-        failures.push(`delta ${deltaLwDb}: explicit heavy-reference lane should not fabricate field impact outputs`);
+      if (result.impact?.LPrimeNW !== ksRound1(expectedLnW + 2)) {
+        failures.push(`delta ${deltaLwDb}: expected L'n,w ${ksRound1(expectedLnW + 2)}, got ${result.impact?.LPrimeNW ?? "none"}`);
+      }
+      const expectedLPrimeNTw = ksRound1(expectedLnW + 2 + 10 * Math.log10(31.3 / 50));
+      if (result.impact?.LPrimeNTw !== expectedLPrimeNTw) {
+        failures.push(`delta ${deltaLwDb}: expected L'nT,w ${expectedLPrimeNTw}, got ${result.impact?.LPrimeNTw ?? "none"}`);
       }
       if (result.impact?.LnW !== undefined && result.impact.LnW >= previousLnW) {
         failures.push(`delta ${deltaLwDb}: higher DeltaLw should reduce derived Ln,w (${previousLnW} -> ${result.impact.LnW})`);

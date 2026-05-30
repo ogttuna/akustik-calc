@@ -171,8 +171,10 @@ describe("airborne building-prediction surface parity", () => {
     const [rwCard, stcCard, rwPrimeCard, dntCard] = buildCards(result);
     const surface = getGateARAirborneBuildingPredictionSurface(result);
 
-    expect(result.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
-    expect(result.unsupportedTargetOutputs).toEqual(["Rw", "STC"]);
+    expect(result.supportedTargetOutputs).toEqual(["Rw", "STC", "R'w", "DnT,w"]);
+    expect(result.unsupportedTargetOutputs).toEqual([]);
+    expect(result.metrics.estimatedRwDb).toBe(58);
+    expect(result.metrics.estimatedStc).toBe(58);
     expect(result.metrics.estimatedRwPrimeDb).toBe(58);
     expect(result.metrics.estimatedDnTwDb).toBe(59);
     expect(result.airborneBasis).toMatchObject({
@@ -191,6 +193,7 @@ describe("airborne building-prediction surface parity", () => {
     expect(surface?.detail).toContain("R'w 58 dB and DnT,w 59 dB");
     expect(surface?.detail).toContain("not measured building evidence");
     expect(surface?.detail).toContain("not a lab Rw/STC relabel");
+    expect(surface?.detail).toContain("Requested lab companions stay on the direct element-lab curve: Rw, STC");
 
     for (const card of [rwPrimeCard, dntCard]) {
       expect(card).toMatchObject({
@@ -205,15 +208,16 @@ describe("airborne building-prediction surface parity", () => {
     expect(rwPrimeCard.value).toBe("58 dB");
     expect(dntCard.value).toBe("59 dB");
 
-    for (const card of [rwCard, stcCard]) {
-      expect(card).toMatchObject({
-        postureLabel: "Airborne building boundary",
-        status: "unsupported",
-        value: "Not ready"
-      });
-      expect(card.detail).toContain("lab/spectrum-adapter outputs need their own basis");
-      expect(card.detail).not.toContain("field-context adapter");
-    }
+    expect(rwCard).toMatchObject({
+      status: "live",
+      value: "58 dB"
+    });
+    expect(rwCard.postureDetail).toContain("Requested lab companions stay on the direct element-lab curve: Rw, STC");
+    expect(stcCard).toMatchObject({
+      status: "live",
+      value: "58 dB"
+    });
+    expect(stcCard.postureDetail).toContain("companion term derived from the primary live lane");
 
     const branch = getDynamicCalcBranchSummary({ result, studyMode: "wall" });
     expect(branch).toMatchObject({
@@ -326,8 +330,8 @@ describe("airborne building-prediction surface parity", () => {
     expect(body.ok).toBe(true);
     expect(body.result?.metrics.estimatedRwPrimeDb).toBe(58);
     expect(body.result?.metrics.estimatedDnTwDb).toBe(59);
-    expect(body.result?.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
-    expect(body.result?.unsupportedTargetOutputs).toEqual(["Rw", "STC"]);
+    expect(body.result?.supportedTargetOutputs).toEqual(["Rw", "STC", "R'w", "DnT,w"]);
+    expect(body.result?.unsupportedTargetOutputs).toEqual([]);
     expect(body.result?.airborneBasis?.method).toBe(GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD);
     expect(body.result?.airborneBasis?.errorBudgetDb).toBe(9);
     expect(body.result?.airborneCandidateResolution?.selectedCandidateId).toBe(

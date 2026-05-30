@@ -68,7 +68,9 @@ export function ImpactGuidePanel({
 }: ImpactGuidePanelProps) {
   const baseLnW = typeof baseImpact?.LnW === "number" ? baseImpact.LnW : null;
   const baseLnWUpperBound = typeof baseLowerBoundImpact?.LnWUpperBound === "number" ? baseLowerBoundImpact.LnWUpperBound : null;
-  const hasGuideBase = baseLnW !== null || baseLnWUpperBound !== null;
+  const baseLnWPlusCIUpperBound =
+    typeof baseLowerBoundImpact?.LnWPlusCIUpperBound === "number" ? baseLowerBoundImpact.LnWPlusCIUpperBound : null;
+  const hasGuideBase = baseLnW !== null || baseLnWUpperBound !== null || baseLnWPlusCIUpperBound !== null;
   const sourceOptions: ImpactGuideSource[] = referenceImpactAvailable
     ? ["live_stack", "heavy_reference"]
     : ["live_stack"];
@@ -91,7 +93,7 @@ export function ImpactGuidePanel({
       <div className="flex flex-wrap items-center gap-3">
         <Pill tone="accent">Guide supplement</Pill>
         <Pill tone={guideResult ? "success" : "neutral"}>
-          {guideResult ? "Derived outputs ready" : hasGuideBase ? "Awaiting guide inputs" : "Awaiting selected Ln,w source"}
+          {guideResult ? "Derived outputs ready" : hasGuideBase ? "Awaiting guide inputs" : "Awaiting selected impact base"}
         </Pill>
         {guideResult ? (
           <Pill tone={getConfidenceTone(guideResult.confidence.level)}>
@@ -278,10 +280,16 @@ export function ImpactGuidePanel({
         <>
           <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
             <MetricCard
-              label={guideResult.baseKind === "upper_bound" ? "Base Ln,w upper bound" : "Base Ln,w"}
+              label={
+                guideResult.baseKind === "upper_bound" && typeof guideResult.baseLnWUpperBound !== "number"
+                  ? "Base Ln,w+CI upper bound"
+                  : guideResult.baseKind === "upper_bound"
+                    ? "Base Ln,w upper bound"
+                    : "Base Ln,w"
+              }
               value={
                 guideResult.baseKind === "upper_bound"
-                  ? `<= ${formatDecimal(guideResult.baseLnWUpperBound ?? 0)} dB`
+                  ? `<= ${formatDecimal(guideResult.baseLnWUpperBound ?? guideResult.LnWPlusCIUpperBound ?? 0)} dB`
                   : `${formatDecimal(guideResult.baseLnW ?? 0)} dB`
               }
               detail={
@@ -319,12 +327,16 @@ export function ImpactGuidePanel({
               value={
                 typeof guideResult.LnWPlusCI === "number"
                   ? `${formatDecimal(guideResult.LnWPlusCI)} dB`
-                  : "Need CI"
+                  : typeof guideResult.LnWPlusCIUpperBound === "number"
+                    ? `<= ${formatDecimal(guideResult.LnWPlusCIUpperBound)} dB`
+                    : "Need CI"
               }
               detail={
                 <span className="inline-flex items-center gap-2">
                   <GitCompareArrows className="h-4 w-4" />
-                  Derived from selected Ln,w + CI
+                  {typeof guideResult.LnWPlusCIUpperBound === "number" && typeof guideResult.LnWPlusCI !== "number"
+                    ? "Carried from selected combined-bound source"
+                    : "Derived from selected Ln,w + CI"}
                 </span>
               }
             />
@@ -333,7 +345,9 @@ export function ImpactGuidePanel({
               value={
                 typeof guideResult.LPrimeNT50 === "number"
                   ? `${formatDecimal(guideResult.LPrimeNT50)} dB`
-                  : "Need V + CI,50-2500 or K + Hd"
+                  : typeof guideResult.LPrimeNT50UpperBound === "number"
+                    ? `<= ${formatDecimal(guideResult.LPrimeNT50UpperBound)} dB`
+                    : "Need V + CI,50-2500 or K + Hd"
               }
               detail={
                 <span className="inline-flex items-center gap-2">

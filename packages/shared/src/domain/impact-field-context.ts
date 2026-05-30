@@ -3,6 +3,7 @@ import { z } from "zod";
 import { ImpactFlankingPathSchema } from "./impact-flanking";
 
 export const ImpactFieldContextSchema = z.object({
+  ciDb: z.number().optional(),
   ci50_2500Db: z.number().optional(),
   directPathOffsetDb: z.number().optional(),
   enableSmallRoomEstimate: z.boolean().optional(),

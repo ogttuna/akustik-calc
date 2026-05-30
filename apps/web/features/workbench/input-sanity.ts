@@ -18,6 +18,7 @@ type LayerThicknessGuidance = {
 };
 
 export const GUIDED_INPUT_SANITY_BANDS = {
+  ciDb: { max: 20, min: -15, unit: "dB" },
   ci50_2500Db: { max: 20, min: -15, unit: "dB" },
   fieldKDb: { max: 20, min: -15, unit: "dB" },
   layerThicknessMm: { max: 1000, min: 0.5, unit: "mm" },
@@ -396,6 +397,16 @@ export function collectScenarioInputWarnings(input: {
   }
 
   if (requestedOutputs.includes("L'nT,50")) {
+    const ciWarning = getGuidedNumericSanityWarning({
+      band: GUIDED_INPUT_SANITY_BANDS.ciDb,
+      label: "Impact CI",
+      suffix: "Check the CI source before trusting Ln,w+CI or local-guide L'nT,50.",
+      value: input.impactFieldContext?.ciDb
+    });
+    if (ciWarning) {
+      warnings.push(ciWarning);
+    }
+
     const ci50Warning = getGuidedNumericSanityWarning({
       band: GUIDED_INPUT_SANITY_BANDS.ci50_2500Db,
       label: "Impact CI,50-2500",

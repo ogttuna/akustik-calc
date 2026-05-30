@@ -44,6 +44,21 @@ const BUILDING_PREDICTION_MISSING_INPUT_CARDS: Record<WallOutputId, CardSnapshot
   Ctr: { status: "needs_input", value: "Not ready" }
 };
 
+function buildingPredictionCardsWithLiveLabSpectrum(input: {
+  readonly c: string;
+  readonly ctr: string;
+  readonly rw: string;
+  readonly stc: string;
+}): Record<WallOutputId, CardSnapshot> {
+  return {
+    Rw: { status: "live", value: input.rw },
+    ...BUILDING_PREDICTION_FIELD_CARDS,
+    STC: { status: "live", value: input.stc },
+    C: { status: "live", value: input.c },
+    Ctr: { status: "live", value: input.ctr }
+  };
+}
+
 type PairContextCase = {
   branchDetail: string;
   cards: Record<WallOutputId, CardSnapshot>;
@@ -199,7 +214,7 @@ const LEGACY_AUTO_CASES: readonly PairContextCase[] = [
       "Mass Law anchor is active with stud surrogate blend+framed wall calibration. Stud Wall Surrogate is on an ambiguous boundary with Double Leaf, and a conservative family-boundary hold is active.",
     warningPattern: /No curated exact floor-system landed/i,
     cards: {
-      Rw: { status: "unsupported", value: "Not ready" },
+      Rw: { status: "live", value: "50 dB" },
       "R'w": { status: "live", value: "50 dB" },
       "Dn,w": { status: "live", value: "49 dB" },
       "Dn,A": { status: "live", value: "48 dB" },
@@ -231,7 +246,12 @@ const LEGACY_AUTO_CASES: readonly PairContextCase[] = [
     branchDetail:
       "Mass Law anchor is active with stud surrogate blend+framed wall calibration. Stud Wall Surrogate is on an ambiguous boundary with Double Leaf, and a conservative family-boundary hold is active.",
     warningPattern: /No curated exact floor-system landed/i,
-    cards: BUILDING_PREDICTION_MISSING_INPUT_CARDS
+    cards: buildingPredictionCardsWithLiveLabSpectrum({
+      c: "-1 dB",
+      ctr: "-5.8 dB",
+      rw: "50 dB",
+      stc: "50 dB"
+    })
   }
 ] as const;
 
@@ -486,7 +506,7 @@ const EXPLICIT_SIDE_COUNT_CASES: readonly PairContextCase[] = [
       "Mass Law anchor is active with stud surrogate blend+framed wall calibration. Stud Wall Surrogate is on an ambiguous boundary with Double Leaf, and a conservative family-boundary hold is active.",
     warningPattern: /No curated exact floor-system landed/i,
     cards: {
-      Rw: { status: "unsupported", value: "Not ready" },
+      Rw: { status: "live", value: "50 dB" },
       "R'w": { status: "live", value: "50 dB" },
       "Dn,w": { status: "live", value: "49 dB" },
       "Dn,A": { status: "live", value: "48.2 dB" },
@@ -519,7 +539,7 @@ const EXPLICIT_SIDE_COUNT_CASES: readonly PairContextCase[] = [
       "Mass Law anchor is active with stud surrogate blend+framed wall calibration. Stud Wall Surrogate is on an ambiguous boundary with Double Leaf, and a conservative family-boundary hold is active.",
     warningPattern: /No curated exact floor-system landed/i,
     cards: {
-      Rw: { status: "unsupported", value: "Not ready" },
+      Rw: { status: "live", value: "53 dB" },
       "R'w": { status: "live", value: "53 dB" },
       "Dn,w": { status: "live", value: "52 dB" },
       "Dn,A": { status: "live", value: "51.2 dB" },
@@ -551,7 +571,12 @@ const EXPLICIT_SIDE_COUNT_CASES: readonly PairContextCase[] = [
     branchDetail:
       "Mass Law anchor is active with stud surrogate blend+framed wall calibration. Stud Wall Surrogate is on an ambiguous boundary with Double Leaf, and a conservative family-boundary hold is active.",
     warningPattern: /No curated exact floor-system landed/i,
-    cards: BUILDING_PREDICTION_MISSING_INPUT_CARDS
+    cards: buildingPredictionCardsWithLiveLabSpectrum({
+      c: "-0.8 dB",
+      ctr: "-5.6 dB",
+      rw: "50 dB",
+      stc: "50 dB"
+    })
   },
   {
     pairId: "british_gypsum_rb2_explicit_both_sides_building",
@@ -574,7 +599,12 @@ const EXPLICIT_SIDE_COUNT_CASES: readonly PairContextCase[] = [
     branchDetail:
       "Mass Law anchor is active with stud surrogate blend+framed wall calibration. Stud Wall Surrogate is on an ambiguous boundary with Double Leaf, and a conservative family-boundary hold is active.",
     warningPattern: /No curated exact floor-system landed/i,
-    cards: BUILDING_PREDICTION_MISSING_INPUT_CARDS
+    cards: buildingPredictionCardsWithLiveLabSpectrum({
+      c: "-0.8 dB",
+      ctr: "-5.6 dB",
+      rw: "53 dB",
+      stc: "53 dB"
+    })
   }
 ] as const;
 

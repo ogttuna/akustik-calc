@@ -104,7 +104,7 @@ describe("post-V1 floor field/building expansion Gate N", () => {
       ownedRuntimeBasisId: FLOOR_IMPACT_FIELD_BUILDING_ADAPTER_ERROR_BUDGET_ORIGIN,
       route: "floor",
       runtimeSelectionState: "active_runtime_existing",
-      supportedMetrics: ["R'w", "DnT,w", "L'n,w", "L'nT,w", "L'nT,50"]
+      supportedMetrics: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "L'n,w", "L'nT,w", "L'nT,50"]
     });
   });
 

@@ -69,13 +69,13 @@ const CASES: readonly TrailCase[] = [
         },
         {
           detail:
-            "4 requested outputs are armed. 3 currently resolve through live, bound, or guide-backed lanes. Still explicit: Ctr.",
+            "4 requested outputs are armed. 4 currently resolve through live, bound, or guide-backed lanes. No requested output is currently left as an unresolved placeholder.",
           label: "Output coverage",
-          tone: "warning"
+          tone: "success"
         },
         {
           detail:
-            "6 active warnings. First signal: Layer 3 thickness 65 mm is outside the guided sanity band of 18 to 35 mm for Dry Floating Gypsum Fiberboard in the floor covering role. Check units, role assignment, or split the build-up into separate layers if needed.",
+            "5 active warnings. First signal: Layer 3 thickness 65 mm is outside the guided sanity band of 18 to 35 mm for Dry Floating Gypsum Fiberboard in the floor covering role. Check units, role assignment, or split the build-up into separate layers if needed.",
           label: "Active warnings",
           tone: "warning"
         }

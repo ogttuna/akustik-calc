@@ -34,6 +34,7 @@ export async function POST(request: Request) {
     const payload = parsed.data;
     const result = calculateImpactOnly(payload.layers, {
       exactImpactSource: payload.exactImpactSource ?? null,
+      floorImpactContext: payload.floorImpactContext ?? null,
       impactFieldContext: payload.impactFieldContext ?? null,
       impactPredictorInput: payload.impactPredictorInput ?? null,
       officialFloorSystemId: payload.officialFloorSystemId ?? null,

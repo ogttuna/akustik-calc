@@ -507,8 +507,8 @@ const CASES: readonly GateACase[] = [
           lowerBoundBasis: null,
           systemEstimateKind: null
         }),
-        supported: ["R'w", "Dn,w", "Dn,A", "Ctr"],
-        unsupported: ["Rw", "DnT,w", "DnT,A", "Ln,w", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
+        supported: ["Rw", "R'w", "Dn,w", "Dn,A", "Ctr"],
+        unsupported: ["DnT,w", "DnT,A", "Ln,w", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
         values: {
           deltaLw: null,
           dnA: 55.7,
@@ -535,8 +535,8 @@ const CASES: readonly GateACase[] = [
           lowerBoundBasis: null,
           systemEstimateKind: null
         }),
-        supported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "Ctr"],
-        unsupported: ["Rw", "Ln,w", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
+        supported: ["Rw", "R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "Ctr"],
+        unsupported: ["Ln,w", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"],
         values: {
           deltaLw: null,
           dnA: 55.7,

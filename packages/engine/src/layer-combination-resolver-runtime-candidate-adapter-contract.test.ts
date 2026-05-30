@@ -36,6 +36,10 @@ import {
   GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD,
   GATE_H_LINED_MASSIVE_WALL_SELECTED_CANDIDATE_ID
 } from "./dynamic-airborne-gate-h-lined-masonry-clt";
+import {
+  GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
+  GATE_AR_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
 import { GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD } from "./dynamic-airborne-gate-i-airborne-field-context";
 import { HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS } from "./helper-only-timber-open-web-impact-stack-estimate";
 import { HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS } from "./heavy-concrete-combined-impact-formula-corridor";
@@ -278,7 +282,7 @@ describe("layer combination resolver runtime candidate adapter contract", () => 
       selectionStatus: LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_ADAPTER_SELECTION_STATUS
     });
     expect(contract.summary).toEqual({
-      adaptedRuntimeBasisCount: 32,
+      adaptedRuntimeBasisCount: 36,
       boundaryCandidateCount: 3,
       selectedNextAction: LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_ADAPTER_SELECTED_NEXT_ACTION
     });
@@ -441,6 +445,19 @@ describe("layer combination resolver runtime candidate adapter contract", () => 
         ownedRuntimeBasisId: FLAT_LIST_MULTILEAF_GUARD_FIELD_RUNTIME_METHOD,
         priorityRank: 4,
         supportedMetrics: ["R'w", "DnT,w", "DnT,A", "Dn,w", "Dn,A"]
+      }
+    });
+    expect(rowsByBasis.get(GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD)).toMatchObject({
+      boundaryCandidateIds: [],
+      requestedBasis: "building_prediction",
+      route: "wall",
+      selectedCandidateId: GATE_AR_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID,
+      selectedCandidate: {
+        basis: "building_prediction",
+        kind: "field_building_adapter",
+        ownedRuntimeBasisId: GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
+        priorityRank: 4,
+        supportedMetrics: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A"]
       }
     });
   });

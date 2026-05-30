@@ -46,7 +46,7 @@ const FLOOR_HELPER_ONLY_REQUEST_OUTPUTS = new Set<RequestedOutputId>([
 ]);
 
 const FLOOR_ASTM_IIC_AIIC_OUTPUTS = new Set<RequestedOutputId>(["AIIC", "IIC"]);
-const FLOOR_FIELD_IMPACT_OUTPUTS = new Set<RequestedOutputId>(["L'n,w", "L'nT,w"]);
+const FLOOR_FIELD_IMPACT_OUTPUTS = new Set<RequestedOutputId>(["L'n,w", "L'nT,w", "L'nT,50"]);
 
 const HELPER_ONLY_BASE_MATERIAL_IDS = new Set([
   "open_box_timber_slab",

@@ -124,16 +124,16 @@ const EXPECTED_SUPPORTED_CARPET_BOUND_ROUTE: RouteSnapshot = {
     "Ln,w": { status: "unsupported", value: "Not ready" },
     CI: { status: "unsupported", value: "Not ready" },
     "Ln,w+CI": { status: "bound", value: "<= 45 dB" },
-    "L'n,w": { status: "needs_input", value: "Not ready" },
+    "L'n,w": { status: "unsupported", value: "Not ready" },
     "L'nT,w": { status: "needs_input", value: "Not ready" },
-    "L'nT,50": { status: "needs_input", value: "Not ready" }
+    "L'nT,50": { status: "bound", value: "<= 45 dB" }
   },
   exactMatchId: null,
   floorSystemEstimateKind: null,
   impactBasis: null,
-  lowerBoundBasis: "official_floor_system_bound_support",
-  supported: ["Rw", "Ln,w+CI"],
-  unsupported: ["Ln,w", "CI", "L'n,w", "L'nT,w", "L'nT,50"]
+  lowerBoundBasis: "mixed_bound_plus_estimated_local_guide",
+  supported: ["Rw", "Ln,w+CI", "L'nT,50"],
+  unsupported: ["Ln,w", "CI", "L'n,w", "L'nT,w"]
 };
 
 const EXPECTED_SUPPORTED_TIMBER_EXACT_ROUTE: RouteSnapshot = {

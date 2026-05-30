@@ -98,24 +98,24 @@ const EXPECTED_OFFICIAL_ROUTE: RouteSnapshot = {
     "Ln,w": { status: "unsupported", value: "Not ready" },
     CI: { status: "unsupported", value: "Not ready" },
     "Ln,w+CI": { status: "bound", value: "<= 45 dB" },
-    "L'n,w": { status: "needs_input", value: "Not ready" },
+    "L'n,w": { status: "unsupported", value: "Not ready" },
     "L'nT,w": { status: "needs_input", value: "Not ready" },
-    "L'nT,50": { status: "needs_input", value: "Not ready" }
+    "L'nT,50": { status: "bound", value: "<= 45 dB" }
   },
   exactMatchId: null,
   floorSystemEstimateKind: null,
   impactBasis: null,
-  lPrimeNT50: null,
+  lPrimeNT50: 45,
   lPrimeNTw: null,
   lPrimeNW: null,
   lnW: null,
   lnWPlusCI: null,
   lnWPlusCIUpperBound: 45,
   lnWUpperBound: null,
-  lowerBoundBasis: "official_floor_system_bound_support",
+  lowerBoundBasis: "mixed_bound_plus_estimated_local_guide",
   rw: 64,
-  supported: ["Rw", "Ln,w+CI"],
-  unsupported: ["Ln,w", "CI", "L'n,w", "L'nT,w", "L'nT,50"]
+  supported: ["Rw", "Ln,w+CI", "L'nT,50"],
+  unsupported: ["Ln,w", "CI", "L'n,w", "L'nT,w"]
 };
 
 function createMemoryStorage(): Storage {
@@ -262,7 +262,7 @@ function snapshot(id: string, rows: readonly LayerDraft[]): {
       exactMatchId: result.floorSystemMatch?.system.id ?? null,
       floorSystemEstimateKind: result.floorSystemEstimate?.kind ?? null,
       impactBasis: result.impact?.basis ?? null,
-      lPrimeNT50: result.impact?.LPrimeNT50 ?? null,
+      lPrimeNT50: result.impact?.LPrimeNT50 ?? result.lowerBoundImpact?.LPrimeNT50UpperBound ?? null,
       lPrimeNTw: result.impact?.LPrimeNTw ?? null,
       lPrimeNW: result.impact?.LPrimeNW ?? null,
       lnW: result.impact?.LnW ?? null,

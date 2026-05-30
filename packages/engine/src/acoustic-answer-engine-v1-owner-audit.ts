@@ -6,6 +6,10 @@ import type {
   RequestedOutputId
 } from "@dynecho/shared";
 import { getFloorSystemC, getFloorSystemCtr } from "@dynecho/shared";
+import {
+  hasPostV1FloorFamilyAirborneSpectrumCompanionBasis,
+  hasPostV1FloorScreeningAirborneSpectrumCompanionBasis
+} from "./floor-airborne-spectrum-companion";
 
 export const ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_OWNER_AUDIT_WARNING_PREFIX =
   "Acoustic Calculator Answer Engine V1 owner audit parked ownerless supported outputs";
@@ -49,7 +53,10 @@ type FloorLabCompanionCarrier = {
       | "estimatedDnTAkDb"
       | "estimatedDnTwDb"
       | "estimatedDnWDb"
+      | "estimatedCDb"
+      | "estimatedCtrDb"
       | "estimatedRwPrimeDb"
+      | "estimatedStc"
     >
   >;
   readonly supportedTargetOutputs: readonly RequestedOutputId[];
@@ -69,14 +76,34 @@ function hasOwnedFloorLabCompanionValue(
 ): boolean {
   const floorRatings = input.floorSystemRatings;
   const impact = input.impact;
+  const hasCalculatedAirborneSpectrumCompanionBasis =
+    hasPostV1FloorFamilyAirborneSpectrumCompanionBasis(floorRatings) ||
+    hasPostV1FloorScreeningAirborneSpectrumCompanionBasis(floorRatings);
 
   switch (output) {
     case "Rw":
       return isFiniteNumber(floorRatings?.Rw);
+    case "STC":
+      return Boolean(
+        hasCalculatedAirborneSpectrumCompanionBasis &&
+          isFiniteNumber(input.metrics?.estimatedStc)
+      );
     case "C":
-      return Boolean(floorRatings && isFiniteNumber(getFloorSystemC(floorRatings)));
+      return Boolean(
+        (floorRatings && isFiniteNumber(getFloorSystemC(floorRatings))) ||
+          (
+            hasCalculatedAirborneSpectrumCompanionBasis &&
+            isFiniteNumber(input.metrics?.estimatedCDb)
+          )
+      );
     case "Ctr":
-      return Boolean(floorRatings && isFiniteNumber(getFloorSystemCtr(floorRatings)));
+      return Boolean(
+        (floorRatings && isFiniteNumber(getFloorSystemCtr(floorRatings))) ||
+          (
+            hasCalculatedAirborneSpectrumCompanionBasis &&
+            isFiniteNumber(input.metrics?.estimatedCtrDb)
+          )
+      );
     case "Ln,w":
       return isFiniteNumber(impact?.LnW);
     case "CI":

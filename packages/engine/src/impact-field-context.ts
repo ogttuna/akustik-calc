@@ -12,8 +12,9 @@ import { applyDirectFlankingFieldEstimate } from "./impact-direct-flanking";
 import {
   mergeFloorImpactFieldBuildingAdapterErrorBudgets
 } from "./impact-field-adapter-error-budget";
-import { deriveImpactGuideMetrics } from "./impact-guide";
+import { deriveImpactGuideMetrics, type ImpactGuideSource } from "./impact-guide";
 import { createImpactMetricBasis, mergeImpactMetricBasis } from "./impact-metric-basis";
+import { ksRound1 } from "./math";
 
 function pushOutput(outputs: ImpactCalculation["availableOutputs"], output: ImpactCalculation["availableOutputs"][number]) {
   if (!outputs.includes(output)) {
@@ -23,13 +24,103 @@ function pushOutput(outputs: ImpactCalculation["availableOutputs"], output: Impa
 
 function shouldApplyGuideFieldContext(input: ImpactFieldContext | null | undefined): boolean {
   return Boolean(
-    typeof input?.ci50_2500Db === "number" ||
+    typeof input?.ciDb === "number" ||
+      typeof input?.ci50_2500Db === "number" ||
       typeof input?.fieldKDb === "number" ||
       typeof input?.guideHdDb === "number" ||
       typeof input?.guideMassRatio === "number" ||
       typeof input?.receivingRoomVolumeM3 === "number" ||
       input?.enableSmallRoomEstimate
   );
+}
+
+function shouldApplyLabCompanionContext(input: ImpactFieldContext | null | undefined): boolean {
+  return Boolean(typeof input?.ciDb === "number" || typeof input?.ci50_2500Db === "number");
+}
+
+export function applyImpactLabCompanionContextToImpact(
+  impact: ImpactCalculation | null,
+  fieldContext?: ImpactFieldContext | null
+): ImpactCalculation | null {
+  if (
+    !impact ||
+    impact.labOrField === "field" ||
+    typeof impact.LnW !== "number" ||
+    !shouldApplyLabCompanionContext(fieldContext)
+  ) {
+    return impact;
+  }
+
+  const ci =
+    typeof impact.CI === "number"
+      ? impact.CI
+      : typeof fieldContext?.ciDb === "number"
+        ? ksRound1(fieldContext.ciDb)
+        : undefined;
+  const ci50_2500 =
+    typeof impact.CI50_2500 === "number"
+      ? impact.CI50_2500
+      : typeof fieldContext?.ci50_2500Db === "number"
+        ? ksRound1(fieldContext.ci50_2500Db)
+        : undefined;
+  const lnWPlusCI =
+    typeof impact.LnWPlusCI === "number"
+      ? impact.LnWPlusCI
+      : typeof ci === "number"
+        ? ksRound1(impact.LnW + ci)
+        : undefined;
+  const availableOutputs = [...impact.availableOutputs];
+
+  if (typeof ci === "number") {
+    pushOutput(availableOutputs, "CI");
+  }
+  if (typeof ci50_2500 === "number") {
+    pushOutput(availableOutputs, "CI,50-2500");
+  }
+  if (typeof lnWPlusCI === "number") {
+    pushOutput(availableOutputs, "Ln,w+CI");
+  }
+
+  const explicitCiInputActive = typeof fieldContext?.ciDb === "number" && typeof impact.CI !== "number";
+  const explicitLnWPlusCIInputActive =
+    typeof fieldContext?.ciDb === "number" && typeof impact.LnWPlusCI !== "number";
+  const explicitCi50InputActive =
+    typeof fieldContext?.ci50_2500Db === "number" && typeof impact.CI50_2500 !== "number";
+
+  return {
+    ...impact,
+    CI: ci ?? impact.CI,
+    CI50_2500: ci50_2500 ?? impact.CI50_2500,
+    LnWPlusCI: lnWPlusCI ?? impact.LnWPlusCI,
+    availableOutputs,
+    metricBasis: mergeImpactMetricBasis(
+      impact.metricBasis,
+      explicitCi50InputActive
+        ? createImpactMetricBasis({
+            CI50_2500: "explicit_user_impact_ci50_2500_input"
+          })
+        : undefined,
+      explicitCiInputActive || explicitLnWPlusCIInputActive
+        ? createImpactMetricBasis({
+            CI: explicitCiInputActive ? "explicit_user_impact_ci_input" : undefined,
+            LnWPlusCI: explicitLnWPlusCIInputActive
+              ? "estimated_local_guide_lnwci_from_lnw_plus_ci"
+              : undefined
+          })
+        : undefined
+    ),
+    notes: [
+      ...impact.notes,
+      ...(explicitCiInputActive || explicitLnWPlusCIInputActive
+        ? [
+            `Live lab-side supplement carried CI = ${ci?.toFixed(1)} dB and Ln,w+CI = ${lnWPlusCI?.toFixed(1)} dB from explicit CI input.`
+          ]
+        : []),
+      ...(explicitCi50InputActive
+        ? [`Live lab-side supplement carried CI,50-2500 = ${ci50_2500?.toFixed(1)} dB from explicit CI,50-2500 input.`]
+        : [])
+    ]
+  };
 }
 
 function resolveMixedImpactBasis(
@@ -72,8 +163,13 @@ function resolveMixedImpactBasis(
 }
 
 function resolveMixedBoundBasis(
-  standardizedFieldEstimateActive: boolean
+  standardizedFieldEstimateActive: boolean,
+  guideProfile?: NonNullable<ReturnType<typeof deriveImpactGuideMetrics>>["guideProfile"]
 ): ImpactBoundCalculation["basis"] {
+  if (guideProfile === "tr_simple_method_lnt50_from_lnwci_plus_k_plus_hd") {
+    return "mixed_bound_plus_estimated_local_guide";
+  }
+
   return standardizedFieldEstimateActive
     ? "mixed_bound_plus_estimated_standardized_field_volume_normalization"
     : "mixed_bound_plus_estimated_tr_small_room_normalization";
@@ -110,31 +206,37 @@ export function applyImpactFieldContextToImpact(
   options?: {
     defaultSupportingElementFamily?: ImpactSupportingElementFamily | null;
     exactImpactSource?: ExactImpactSource | null;
+    guideSource?: ImpactGuideSource;
+    ignoreLowerTreatmentReduction?: boolean;
     resolvedLayers?: readonly ResolvedLayer[] | null;
+    skipDirectFlanking?: boolean;
   }
 ): ImpactCalculation | null {
   if (!impact || impact.labOrField === "field") {
     return impact;
   }
 
-  const directFlanking = applyDirectFlankingFieldEstimate({
-    defaultSupportingElementFamily: options?.defaultSupportingElementFamily,
-    exactImpactSource: options?.exactImpactSource,
-    fieldContext: fieldContext ?? { flankingPaths: [] },
-    impact,
-    resolvedLayers: options?.resolvedLayers
-  });
+  if (!options?.skipDirectFlanking) {
+    const directFlanking = applyDirectFlankingFieldEstimate({
+      defaultSupportingElementFamily: options?.defaultSupportingElementFamily,
+      exactImpactSource: options?.exactImpactSource,
+      fieldContext: fieldContext ?? { flankingPaths: [] },
+      impact,
+      resolvedLayers: options?.resolvedLayers
+    });
 
-  if (directFlanking?.impact) {
-    return directFlanking.impact;
+    if (directFlanking?.impact) {
+      return directFlanking.impact;
+    }
   }
 
   if (typeof impact.LnW !== "number" || !shouldApplyGuideFieldContext(fieldContext)) {
     return impact;
   }
 
+  const guideSource = options?.guideSource ?? "live_stack";
   const lowerTreatmentReductionDb =
-    typeof fieldContext?.lowerTreatmentReductionDb === "number"
+    !options?.ignoreLowerTreatmentReduction && typeof fieldContext?.lowerTreatmentReductionDb === "number"
       ? fieldContext.lowerTreatmentReductionDb
       : undefined;
   const adjustedBaseLnW =
@@ -156,26 +258,40 @@ export function applyImpactFieldContextToImpact(
         ? impact.LnWPlusCI - impact.LnW
         : typeof impact.CI === "number"
           ? impact.CI
-          : null,
+          : typeof fieldContext?.ciDb === "number"
+            ? fieldContext.ciDb
+            : null,
     enableSmallRoomEstimate: fieldContext?.enableSmallRoomEstimate,
     hdDb: typeof fieldContext?.guideHdDb === "number" ? fieldContext.guideHdDb : null,
     kDb: typeof fieldContext?.fieldKDb === "number" ? fieldContext.fieldKDb : null,
     massRatio: typeof fieldContext?.guideMassRatio === "number" ? fieldContext.guideMassRatio : null,
     receivingRoomVolumeM3:
       typeof fieldContext?.receivingRoomVolumeM3 === "number" ? fieldContext.receivingRoomVolumeM3 : null,
-    source: "live_stack"
+    source: guideSource
   });
 
   if (
     !guide ||
     (typeof guide.LPrimeNW !== "number" &&
       typeof guide.LPrimeNTw !== "number" &&
-      typeof guide.LPrimeNT50 !== "number")
+      typeof guide.LPrimeNT50 !== "number" &&
+      typeof guide.CI !== "number" &&
+      typeof guide.CI50_2500 !== "number" &&
+      typeof guide.LnWPlusCI !== "number")
   ) {
     return impact;
   }
 
   const availableOutputs = [...impact.availableOutputs];
+  if (typeof guide.CI === "number") {
+    pushOutput(availableOutputs, "CI");
+  }
+  if (typeof guide.CI50_2500 === "number") {
+    pushOutput(availableOutputs, "CI,50-2500");
+  }
+  if (typeof guide.LnWPlusCI === "number") {
+    pushOutput(availableOutputs, "Ln,w+CI");
+  }
   if (typeof guide.LPrimeNW === "number") {
     pushOutput(availableOutputs, "L'n,w");
   }
@@ -192,38 +308,85 @@ export function applyImpactFieldContextToImpact(
     typeof guide.LPrimeNT50 !== "number" &&
     !guide.guideProfile &&
     !guide.standardizedFieldEstimateActive;
-  const basis = resolveMixedImpactBasis(
-    impact.basis,
-    guide.standardizedFieldEstimateActive,
-    fieldKOnlyActive,
-    guide.guideProfile
+  const hasFieldGuideOutput =
+    typeof guide.LPrimeNW === "number" ||
+    typeof guide.LPrimeNTw === "number" ||
+    typeof guide.LPrimeNT50 === "number";
+  const basis = hasFieldGuideOutput
+    ? resolveMixedImpactBasis(
+        impact.basis,
+        guide.standardizedFieldEstimateActive,
+        fieldKOnlyActive,
+        guide.guideProfile
+      )
+    : impact.basis;
+  const confidence = hasFieldGuideOutput ? getImpactConfidenceForBasis(basis) : impact.confidence;
+  const explicitCiInputActive =
+    typeof fieldContext?.ciDb === "number" &&
+    typeof impact.CI !== "number" &&
+    typeof impact.LnWPlusCI !== "number" &&
+    typeof guide.CI === "number" &&
+    typeof guide.LnWPlusCI === "number";
+  const explicitCi50InputActive =
+    typeof fieldContext?.ci50_2500Db === "number" &&
+    typeof impact.CI50_2500 !== "number" &&
+    typeof guide.CI50_2500 === "number";
+  const metricBasis = mergeImpactMetricBasis(
+    impact.metricBasis,
+    buildDerivedMetricBasis(guide),
+    explicitCi50InputActive
+      ? createImpactMetricBasis({
+          CI50_2500: "explicit_user_impact_ci50_2500_input"
+        })
+      : undefined,
+    explicitCiInputActive
+      ? createImpactMetricBasis({
+          CI: "explicit_user_impact_ci_input",
+          LnWPlusCI: "estimated_local_guide_lnwci_from_lnw_plus_ci"
+        })
+      : undefined
   );
-  const confidence = getImpactConfidenceForBasis(basis);
-  const metricBasis = mergeImpactMetricBasis(impact.metricBasis, buildDerivedMetricBasis(guide));
+  const fieldSupplementLabel =
+    guide.source === "heavy_reference"
+      ? "Reference-derived field-side supplement"
+      : "Live field-side supplement";
+  const labSupplementLabel =
+    guide.source === "heavy_reference"
+      ? "Reference-derived lab-side supplement"
+      : "Live lab-side supplement";
+  const guideAnchorLabel =
+    guide.source === "heavy_reference"
+      ? "the heavy-reference quick-derive lane"
+      : "the current stack";
 
   return {
     ...impact,
-    CI: impact.CI,
+    CI: guide.CI ?? impact.CI,
     CI50_2500: guide.CI50_2500 ?? impact.CI50_2500,
     LPrimeNW: guide.LPrimeNW ?? impact.LPrimeNW,
     LPrimeNT50: guide.LPrimeNT50 ?? impact.LPrimeNT50,
     LPrimeNTw: guide.LPrimeNTw ?? impact.LPrimeNTw,
     LnW: impact.LnW,
+    LnWPlusCI: guide.LnWPlusCI ?? impact.LnWPlusCI,
     availableOutputs,
     basis,
     confidence,
-    errorBudgets: mergeFloorImpactFieldBuildingAdapterErrorBudgets({
-      impact,
-      lPrimeNT50: guide.LPrimeNT50,
-      lPrimeNTw: guide.LPrimeNTw,
-      lPrimeNW: guide.LPrimeNW,
-      profile: "standardized_field_volume_normalization"
-    }),
+    errorBudgets: hasFieldGuideOutput
+      ? mergeFloorImpactFieldBuildingAdapterErrorBudgets({
+          impact,
+          lPrimeNT50: guide.LPrimeNT50,
+          lPrimeNTw: guide.LPrimeNTw,
+          lPrimeNW: guide.LPrimeNW,
+          profile: "standardized_field_volume_normalization"
+        })
+      : impact.errorBudgets,
     fieldEstimateKCorrectionDb:
       typeof guide.LPrimeNW === "number" && typeof guide.K === "number"
         ? guide.K
         : impact.fieldEstimateKCorrectionDb,
-    fieldEstimateLowerTreatmentBandReduction: false,
+    fieldEstimateLowerTreatmentBandReduction: hasFieldGuideOutput
+      ? false
+      : impact.fieldEstimateLowerTreatmentBandReduction,
     fieldEstimateLowerTreatmentReductionDb:
       typeof lowerTreatmentReductionDb === "number"
         ? lowerTreatmentReductionDb
@@ -259,24 +422,30 @@ export function applyImpactFieldContextToImpact(
     notes: [
       ...impact.notes,
       ...(typeof guide.LPrimeNW === "number"
-        ? [`Live field-side supplement carried L'n,w = ${guide.LPrimeNW.toFixed(1)} dB from the current stack.`]
+        ? [`${fieldSupplementLabel} carried L'n,w = ${guide.LPrimeNW.toFixed(1)} dB from ${guideAnchorLabel}.`]
         : []),
       ...(typeof guide.LPrimeNTw === "number"
         ? [
             guide.standardizedFieldEstimateActive
-              ? `Live field-side supplement carried L'nT,w = ${guide.LPrimeNTw.toFixed(1)} dB using K and receiving-room volume normalization.`
-              : `Live field-side supplement carried L'nT,w = ${guide.LPrimeNTw.toFixed(1)} dB using the explicit small-room assumption.`
+              ? `${fieldSupplementLabel} carried L'nT,w = ${guide.LPrimeNTw.toFixed(1)} dB using K and receiving-room volume normalization.`
+              : `${fieldSupplementLabel} carried L'nT,w = ${guide.LPrimeNTw.toFixed(1)} dB using the explicit small-room assumption.`
           ]
         : []),
       ...(typeof guide.LPrimeNT50 === "number"
-        ? [`Live field-side supplement carried L'nT,50 = ${guide.LPrimeNT50.toFixed(1)} dB from the current stack.`]
+        ? [`${fieldSupplementLabel} carried L'nT,50 = ${guide.LPrimeNT50.toFixed(1)} dB from ${guideAnchorLabel}.`]
+        : []),
+      ...(explicitCiInputActive
+        ? [`${labSupplementLabel} carried CI = ${guide.CI?.toFixed(1)} dB and Ln,w+CI = ${guide.LnWPlusCI?.toFixed(1)} dB from explicit CI input.`]
+        : []),
+      ...(explicitCi50InputActive
+        ? [`${labSupplementLabel} carried CI,50-2500 = ${guide.CI50_2500?.toFixed(1)} dB from explicit CI,50-2500 input.`]
         : []),
       ...(guide.KSource === "lookup_from_mass_ratio" && typeof guide.massRatio === "number"
-        ? [`Live field-side supplement looked up K from Turkish guide Table 2.7 using a/(b+c+d+e) = ${guide.massRatio.toFixed(1)}.`]
+        ? [`${fieldSupplementLabel} looked up K from Turkish guide Table 2.7 using a/(b+c+d+e) = ${guide.massRatio.toFixed(1)}.`]
         : []),
       ...(guide.HdSource === "lookup_from_receiving_room_volume" && typeof guide.receivingRoomVolumeM3 === "number"
         ? [
-            `Live field-side supplement looked up Hd from Turkish guide Table 2.8 using receiving-room volume V = ${guide.receivingRoomVolumeM3.toFixed(1)} m³.`
+            `${fieldSupplementLabel} looked up Hd from Turkish guide Table 2.8 using receiving-room volume V = ${guide.receivingRoomVolumeM3.toFixed(1)} m³.`
           ]
         : [])
     ]
@@ -287,13 +456,20 @@ export function applyImpactFieldContextToBoundImpact(
   impact: ImpactBoundCalculation | null,
   fieldContext?: ImpactFieldContext | null
 ): ImpactBoundCalculation | null {
-  if (!impact || typeof impact.LnWUpperBound !== "number" || !shouldApplyGuideFieldContext(fieldContext)) {
+  const hasBoundBase =
+    typeof impact?.LnWUpperBound === "number" ||
+    typeof impact?.LnWPlusCIUpperBound === "number";
+
+  if (!impact || !hasBoundBase || !shouldApplyGuideFieldContext(fieldContext)) {
     return impact;
   }
 
   const guide = deriveImpactGuideMetrics({
     baseConfidence: impact.confidence,
     baseLnWUpperBound: impact.LnWUpperBound,
+    baseLnWPlusCIUpperBound: impact.LnWPlusCIUpperBound,
+    ciDb: typeof fieldContext?.ciDb === "number" ? fieldContext.ciDb : null,
+    ci50_2500Db: typeof fieldContext?.ci50_2500Db === "number" ? fieldContext.ci50_2500Db : null,
     enableSmallRoomEstimate: fieldContext?.enableSmallRoomEstimate,
     hdDb: typeof fieldContext?.guideHdDb === "number" ? fieldContext.guideHdDb : null,
     kDb: typeof fieldContext?.fieldKDb === "number" ? fieldContext.fieldKDb : null,
@@ -305,22 +481,64 @@ export function applyImpactFieldContextToBoundImpact(
 
   if (
     !guide ||
-    (typeof guide.LPrimeNWUpperBound !== "number" && typeof guide.LPrimeNTwUpperBound !== "number")
+    (
+      typeof guide.LPrimeNWUpperBound !== "number" &&
+      typeof guide.LPrimeNTwUpperBound !== "number" &&
+      typeof guide.LPrimeNT50UpperBound !== "number" &&
+      typeof guide.CI !== "number" &&
+      typeof guide.CI50_2500 !== "number" &&
+      typeof guide.LnWPlusCIUpperBound !== "number"
+    )
   ) {
     return impact;
   }
 
-  const basis = resolveMixedBoundBasis(guide.standardizedFieldEstimateActive);
-  const confidence = getImpactConfidenceForBasis(basis);
+  const hasFieldGuideOutput =
+    typeof guide.LPrimeNWUpperBound === "number" ||
+    typeof guide.LPrimeNTwUpperBound === "number" ||
+    typeof guide.LPrimeNT50UpperBound === "number";
+  const basis = hasFieldGuideOutput
+    ? resolveMixedBoundBasis(guide.standardizedFieldEstimateActive, guide.guideProfile)
+    : impact.basis;
+  const confidence = hasFieldGuideOutput ? getImpactConfidenceForBasis(basis) : impact.confidence;
 
   return {
     ...impact,
+    CI: guide.CI ?? impact.CI,
+    CI50_2500: guide.CI50_2500 ?? impact.CI50_2500,
+    guideEstimateHdCorrectionDb:
+      guide.guideProfile ? guide.Hd ?? impact.guideEstimateHdCorrectionDb : impact.guideEstimateHdCorrectionDb,
+    guideEstimateHdSource:
+      guide.guideProfile ? guide.HdSource ?? impact.guideEstimateHdSource : impact.guideEstimateHdSource,
+    guideEstimateKCorrectionDb:
+      guide.guideProfile ? guide.K ?? impact.guideEstimateKCorrectionDb : impact.guideEstimateKCorrectionDb,
+    guideEstimateKSource:
+      guide.guideProfile ? guide.KSource ?? impact.guideEstimateKSource : impact.guideEstimateKSource,
+    guideEstimateMassRatio:
+      guide.guideProfile ? guide.massRatio ?? impact.guideEstimateMassRatio : impact.guideEstimateMassRatio,
+    guideEstimateMassRatioBracket:
+      guide.guideProfile
+        ? guide.massRatioBracket ?? impact.guideEstimateMassRatioBracket
+        : impact.guideEstimateMassRatioBracket,
+    guideEstimateProfile: guide.guideProfile ?? impact.guideEstimateProfile,
+    guideEstimateReceivingRoomVolumeBracket:
+      guide.guideProfile
+        ? guide.receivingRoomVolumeBracket ?? impact.guideEstimateReceivingRoomVolumeBracket
+        : impact.guideEstimateReceivingRoomVolumeBracket,
+    guideEstimateReceivingRoomVolumeM3:
+      guide.guideProfile
+        ? guide.receivingRoomVolumeM3 ?? impact.guideEstimateReceivingRoomVolumeM3
+        : impact.guideEstimateReceivingRoomVolumeM3,
+    LPrimeNT50UpperBound: guide.LPrimeNT50UpperBound ?? impact.LPrimeNT50UpperBound,
     LPrimeNTwUpperBound: guide.LPrimeNTwUpperBound ?? impact.LPrimeNTwUpperBound,
     LPrimeNWUpperBound: guide.LPrimeNWUpperBound ?? impact.LPrimeNWUpperBound,
+    LnWPlusCIUpperBound: guide.LnWPlusCIUpperBound ?? impact.LnWPlusCIUpperBound,
+    LnWUpperBound: guide.baseLnWUpperBound ?? impact.LnWUpperBound,
     basis,
     confidence,
     notes: [
       ...impact.notes,
+      ...guide.notes,
       ...(typeof guide.LPrimeNWUpperBound === "number"
         ? [`Live field-side upper bound carried L'n,w <= ${guide.LPrimeNWUpperBound.toFixed(1)} dB from the current stack.`]
         : []),
@@ -329,6 +547,23 @@ export function applyImpactFieldContextToBoundImpact(
             guide.standardizedFieldEstimateActive
               ? `Live field-side upper bound carried L'nT,w <= ${guide.LPrimeNTwUpperBound.toFixed(1)} dB using K and receiving-room volume normalization.`
               : `Live field-side upper bound carried L'nT,w <= ${guide.LPrimeNTwUpperBound.toFixed(1)} dB using the explicit small-room assumption.`
+          ]
+        : []),
+      ...(typeof guide.LPrimeNT50UpperBound === "number"
+        ? [
+            guide.guideProfile === "tr_simple_method_lnt50_from_lnwci_plus_k_plus_hd"
+              ? `Live field-side upper bound carried L'nT,50 <= ${guide.LPrimeNT50UpperBound.toFixed(1)} dB from source Ln,w+CI bound, K, and Hd.`
+              : `Live field-side upper bound carried L'nT,50 <= ${guide.LPrimeNT50UpperBound.toFixed(1)} dB from explicit CI,50-2500.`
+          ]
+        : []),
+      ...(guide.KSource === "lookup_from_mass_ratio" && typeof guide.massRatio === "number"
+        ? [
+            `Live field-side upper-bound supplement looked up K from Turkish guide Table 2.7 using a/(b+c+d+e) = ${guide.massRatio.toFixed(1)}.`
+          ]
+        : []),
+      ...(guide.HdSource === "lookup_from_receiving_room_volume" && typeof guide.receivingRoomVolumeM3 === "number"
+        ? [
+            `Live field-side upper-bound supplement looked up Hd from Turkish guide Table 2.8 using receiving-room volume V = ${guide.receivingRoomVolumeM3.toFixed(1)} m³.`
           ]
         : [])
     ]

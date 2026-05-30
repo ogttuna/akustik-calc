@@ -113,7 +113,7 @@ describe("company-internal airborne building-prediction runtime terms owner reco
     ]);
   });
 
-  it("keeps partial context, lab aliases, and opening/leak building requests fail-closed", () => {
+  it("keeps partial context and opening/leak building requests fail-closed while broad lab companions stay live", () => {
     const contract = buildCompanyInternalAirborneBuildingPredictionRuntimeTermsOwnerContract();
 
     expect(contract.partialBuildingProbe).toMatchObject({
@@ -134,8 +134,8 @@ describe("company-internal airborne building-prediction runtime terms owner reco
       origin: "family_physics_prediction",
       requestedMetrics: ["Rw", "STC", "R'w", "DnT,w"],
       rwPrime: 58,
-      supportedTargetOutputs: ["R'w", "DnT,w"],
-      unsupportedTargetOutputs: ["Rw", "STC"]
+      supportedTargetOutputs: ["Rw", "STC", "R'w", "DnT,w"],
+      unsupportedTargetOutputs: []
     });
     expect(contract.openingLeakBuildingProbe).toMatchObject({
       basisId: "dynamic_calculator_building_prediction_runtime_adapter_owner_missing",

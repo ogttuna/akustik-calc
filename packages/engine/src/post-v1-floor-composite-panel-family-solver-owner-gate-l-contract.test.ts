@@ -108,11 +108,11 @@ describe("post-V1 floor composite-panel family solver owner Gate L", () => {
       { profile: "combined_upper_lower_system", metric: "Rw", value: 60.6 }
     ]);
     expect(registry.summary).toMatchObject({
-      activeRuntimeCandidateCount: 32,
-      candidateCount: 35
+      activeRuntimeCandidateCount: 36,
+      candidateCount: 39
     });
-    expect(adapter.summary.adaptedRuntimeBasisCount).toBe(32);
-    expect(surface.summary.surfaceRowCount).toBe(35);
+    expect(adapter.summary.adaptedRuntimeBasisCount).toBe(36);
+    expect(surface.summary.surfaceRowCount).toBe(39);
     expect(candidate).toMatchObject({
       basis: "element_lab",
       errorBudgetTerms: [
@@ -247,7 +247,7 @@ describe("post-V1 floor composite-panel family solver owner Gate L", () => {
         POST_V1_FLOOR_COMPOSITE_PANEL_FAMILY_SOLVER_OWNER_GATE_L_SELECTED_NEXT_LABEL
       );
       expect(contents, `${relativePath} records resolver counts`).toContain(
-        "35 declared candidates and 32 active runtime-basis mappings"
+        "39 declared candidates and 36 active runtime-basis mappings"
       );
       expect(contents, `${relativePath} records composite dry floating pins`).toContain("Ln,w 69.4 / Rw 45.1");
       expect(contents, `${relativePath} records composite suspended ceiling pins`).toContain("Ln,w 63.3 / Rw 48.6");

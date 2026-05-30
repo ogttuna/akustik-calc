@@ -199,9 +199,9 @@ const CASES: readonly OriginCase[] = [
       lowerBoundBasis: null,
       method: "screening_mass_law_curve_seed_v3",
       origin: "source_family_estimate",
-      supported: ["Rw", "Ln,w", "L'n,w", "L'nT,w", "Ln,w+CI", "L'nT,50"],
+      supported: ["Rw", "Ln,w", "L'n,w", "L'nT,w", "Ln,w+CI", "L'nT,50", "Ctr"],
       supportedImpact: ["Ln,w", "L'n,w", "L'nT,w", "Ln,w+CI", "L'nT,50"],
-      unsupported: ["R'w", "DnT,w", "Ctr"],
+      unsupported: ["R'w", "DnT,w"],
       unsupportedImpact: [],
       values: {
         c: -0.8,
@@ -318,9 +318,9 @@ const CASES: readonly OriginCase[] = [
       lowerBoundBasis: null,
       method: "dynamic",
       origin: "dynamic_airborne_formula",
-      supported: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"],
+      supported: ["Rw", "R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"],
       supportedImpact: [],
-      unsupported: ["Rw"],
+      unsupported: [],
       unsupportedImpact: [],
       values: {
         c: -1.1,

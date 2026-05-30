@@ -216,16 +216,16 @@ const CASES = [
       estimateKind: null,
       exactMatchId: null,
       impactBasis: null,
-      lPrimeNT50: null,
+      lPrimeNT50: 45,
       lPrimeNTw: null,
       lPrimeNW: null,
       lnW: null,
       lnWPlusCI: null,
       lnWPlusCIUpperBound: 45,
-      lowerBoundBasis: "official_floor_system_bound_support",
+      lowerBoundBasis: "mixed_bound_plus_estimated_local_guide",
       rw: 64,
-      supported: ["Rw", "Ln,w+CI"],
-      unsupported: ["Ln,w", "CI", "L'n,w", "L'nT,w", "L'nT,50"]
+      supported: ["Rw", "Ln,w+CI", "L'nT,50"],
+      unsupported: ["Ln,w", "CI", "L'n,w", "L'nT,w"]
     }
   },
   {

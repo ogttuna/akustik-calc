@@ -83,7 +83,7 @@ describe("TUAS C11c frequency/source recheck", () => {
         "raw_c11c_one_third_octave_impact_spectrum",
         "source_correction_or_lab_note_explaining_the_weak_weighted_tuple"
       ],
-      runtimeBehaviorChange: false,
+      runtimeBehaviorChange: true,
       selectedFollowUpIfEvidenceExists: "tuas_c11c_exact_import_candidate_v1"
     });
   });

@@ -240,6 +240,24 @@ function buildImpactLane(
                 label: "L'nT,w",
                 value: impact.LPrimeNTw
               }
+        : typeof impact.LPrimeNTw === "number" &&
+            isSupportedAnswerOutput(result, "L'nT,w") &&
+            !isSupportedAnswerOutput(result, "Ln,w")
+          ? {
+              detail: "Primary standardized field-side impact answer.",
+              direction: "lower_better" as const,
+              label: "L'nT,w",
+              value: impact.LPrimeNTw
+            }
+        : typeof impact.LnWPlusCI === "number" &&
+            isSupportedAnswerOutput(result, "Ln,w+CI") &&
+            !isSupportedAnswerOutput(result, "Ln,w")
+          ? {
+              detail: "Primary lab-side combined impact answer.",
+              direction: "lower_better" as const,
+              label: "Ln,w+CI",
+              value: impact.LnWPlusCI
+            }
         : typeof impact.LnW === "number" && isSupportedAnswerOutput(result, "Ln,w")
           ? { detail: "Primary lab-side weighted impact answer.", direction: "lower_better" as const, label: "Ln,w", value: impact.LnW }
           : typeof impact.LPrimeNW === "number" && isSupportedAnswerOutput(result, "L'n,w")
@@ -256,6 +274,12 @@ function buildImpactLane(
 
     if (typeof impact.LnWPlusCI === "number" && isSupportedAnswerOutput(result, "Ln,w+CI")) {
       companions.push({ label: "Ln,w+CI", valueLabel: `${formatDecimal(impact.LnWPlusCI)} dB` });
+    }
+    if (typeof impact.LPrimeNW === "number" && isSupportedAnswerOutput(result, "L'n,w")) {
+      companions.push({ label: "L'n,w", valueLabel: `${formatDecimal(impact.LPrimeNW)} dB` });
+    }
+    if (typeof impact.LPrimeNTw === "number" && isSupportedAnswerOutput(result, "L'nT,w")) {
+      companions.push({ label: "L'nT,w", valueLabel: `${formatDecimal(impact.LPrimeNTw)} dB` });
     }
     if (typeof impact.LPrimeNT50 === "number" && isSupportedAnswerOutput(result, "L'nT,50")) {
       companions.push({ label: "L'nT,50", valueLabel: `${formatDecimal(impact.LPrimeNT50)} dB` });
@@ -292,14 +316,37 @@ function buildImpactLane(
     };
   }
 
-  if (typeof lowerBoundImpact?.LnWUpperBound === "number") {
+  if (
+    typeof lowerBoundImpact?.LnWUpperBound === "number" &&
+    isSupportedAnswerOutput(result, "Ln,w")
+  ) {
     const parsedTarget = parseTarget(targetLnwDb);
+    const companions: ResultAnswerChartCompanion[] = [];
+
+    if (typeof lowerBoundImpact.LPrimeNWUpperBound === "number" && isSupportedAnswerOutput(result, "L'n,w")) {
+      companions.push({ label: "L'n,w upper bound", valueLabel: `<= ${formatDecimal(lowerBoundImpact.LPrimeNWUpperBound)} dB` });
+    }
+    if (typeof lowerBoundImpact.LPrimeNTwUpperBound === "number" && isSupportedAnswerOutput(result, "L'nT,w")) {
+      companions.push({ label: "L'nT,w upper bound", valueLabel: `<= ${formatDecimal(lowerBoundImpact.LPrimeNTwUpperBound)} dB` });
+    }
+    if (typeof lowerBoundImpact.LPrimeNT50UpperBound === "number" && isSupportedAnswerOutput(result, "L'nT,50")) {
+      companions.push({ label: "L'nT,50 upper bound", valueLabel: `<= ${formatDecimal(lowerBoundImpact.LPrimeNT50UpperBound)} dB` });
+    }
+    if (typeof lowerBoundImpact.LnWPlusCIUpperBound === "number" && isSupportedAnswerOutput(result, "Ln,w+CI")) {
+      companions.push({ label: "Ln,w+CI upper bound", valueLabel: `<= ${formatDecimal(lowerBoundImpact.LnWPlusCIUpperBound)} dB` });
+    }
+    if (typeof lowerBoundImpact.CI === "number" && isSupportedAnswerOutput(result, "CI")) {
+      companions.push({ label: "CI", valueLabel: formatSignedDb(lowerBoundImpact.CI) });
+    }
+    if (typeof lowerBoundImpact.CI50_2500 === "number" && isSupportedAnswerOutput(result, "CI,50-2500")) {
+      companions.push({ label: "CI,50-2500", valueLabel: formatSignedDb(lowerBoundImpact.CI50_2500) });
+    }
+    if (typeof lowerBoundImpact.DeltaLwLowerBound === "number" && isSupportedAnswerOutput(result, "DeltaLw")) {
+      companions.push({ label: "DeltaLw lower bound", valueLabel: `>= ${formatDecimal(lowerBoundImpact.DeltaLwLowerBound)} dB` });
+    }
 
     return {
-      companions:
-        typeof lowerBoundImpact.DeltaLwLowerBound === "number"
-          ? [{ label: "DeltaLw lower bound", valueLabel: `>= ${formatDecimal(lowerBoundImpact.DeltaLwLowerBound)} dB` }]
-          : [],
+      companions,
       detail: "Only a conservative bound is currently available on the impact lane.",
       direction: "lower_better",
       id: "impact-bound",
@@ -315,12 +362,29 @@ function buildImpactLane(
 
   if (typeof lowerBoundImpact?.LnWPlusCIUpperBound === "number") {
     const parsedTarget = parseTarget(targetLnwDb);
+    const companions: ResultAnswerChartCompanion[] = [];
+
+    if (typeof lowerBoundImpact.LPrimeNWUpperBound === "number" && isSupportedAnswerOutput(result, "L'n,w")) {
+      companions.push({ label: "L'n,w upper bound", valueLabel: `<= ${formatDecimal(lowerBoundImpact.LPrimeNWUpperBound)} dB` });
+    }
+    if (typeof lowerBoundImpact.LPrimeNTwUpperBound === "number" && isSupportedAnswerOutput(result, "L'nT,w")) {
+      companions.push({ label: "L'nT,w upper bound", valueLabel: `<= ${formatDecimal(lowerBoundImpact.LPrimeNTwUpperBound)} dB` });
+    }
+    if (typeof lowerBoundImpact.LPrimeNT50UpperBound === "number" && isSupportedAnswerOutput(result, "L'nT,50")) {
+      companions.push({ label: "L'nT,50 upper bound", valueLabel: `<= ${formatDecimal(lowerBoundImpact.LPrimeNT50UpperBound)} dB` });
+    }
+    if (typeof lowerBoundImpact.CI === "number" && isSupportedAnswerOutput(result, "CI")) {
+      companions.push({ label: "CI", valueLabel: formatSignedDb(lowerBoundImpact.CI) });
+    }
+    if (typeof lowerBoundImpact.CI50_2500 === "number" && isSupportedAnswerOutput(result, "CI,50-2500")) {
+      companions.push({ label: "CI,50-2500", valueLabel: formatSignedDb(lowerBoundImpact.CI50_2500) });
+    }
+    if (typeof lowerBoundImpact.DeltaLwLowerBound === "number" && isSupportedAnswerOutput(result, "DeltaLw")) {
+      companions.push({ label: "DeltaLw lower bound", valueLabel: `>= ${formatDecimal(lowerBoundImpact.DeltaLwLowerBound)} dB` });
+    }
 
     return {
-      companions:
-        typeof lowerBoundImpact.DeltaLwLowerBound === "number"
-          ? [{ label: "DeltaLw lower bound", valueLabel: `>= ${formatDecimal(lowerBoundImpact.DeltaLwLowerBound)} dB` }]
-          : [],
+      companions,
       detail: "Only a conservative combined Ln,w+CI bound is currently available on the impact lane.",
       direction: "lower_better",
       id: "impact-bound",

@@ -432,9 +432,8 @@ describe("broad accuracy floor helper-only timber/open-web impact stack owner", 
       LnWPlusCI: 51.7,
       basis: "predictor_floor_system_family_general_estimate"
     });
-    expect(openWebMissingBoard.supportedTargetOutputs).toEqual(["Rw", "Ctr", "Ln,w", "CI", "Ln,w+CI"]);
+    expect(openWebMissingBoard.supportedTargetOutputs).toEqual(["Rw", "C", "Ctr", "Ln,w", "CI", "Ln,w+CI"]);
     expect(openWebMissingBoard.unsupportedTargetOutputs).toEqual([
-      "C",
       "R'w",
       "DnT,w",
       "CI,50-2500",

@@ -14,7 +14,7 @@ const BLOCKED_SOURCE_RANK_2_C11C_FEASIBILITY = {
   auditedCandidateRank: 2,
   feasibilityStatus: "blocked_after_explicit_rank_2_feasibility_audit",
   runtimeReady: false,
-  runtimeBehaviorChange: false,
+  runtimeBehaviorChange: true,
   blocker: "combined_wet_c11c_tuple_remains_frequency_or_source_anomalous_and_cannot_be_imported_honestly",
   rerankProgressStatus: "advance_to_rank_3_without_promoting_rank_2",
   selectedNextComparisonCandidate: "raw_bare_open_box_open_web_impact_widening",
@@ -24,7 +24,7 @@ const BLOCKED_SOURCE_RANK_2_C11C_FEASIBILITY = {
 
 const BLOCKED_SOURCE_RANK_2_C11C_EVIDENCE = {
   exactRowFact: "tuas_c11c_clt260_measured_2026_still_does_not_exist_in_exact_floor_systems",
-  routeFact: "visible_c11c_rows_stay_screening_only_with_rw_only_support_and_all_impact_outputs_fail_closed",
+  routeFact: "visible_c11c_rows_stay_screening_airborne_with_guarded_iso_weighted_impact_support",
   blockerFact: "the_combined_wet_c11c_tuple_remains_much_weaker_than_nearby_combined_clt_rows_and_is_not_source_explained"
 } as const;
 
@@ -36,7 +36,7 @@ describe("blocked-source rank-2 C11c feasibility contract", () => {
       auditedCandidateRank: 2,
       feasibilityStatus: "blocked_after_explicit_rank_2_feasibility_audit",
       runtimeReady: false,
-      runtimeBehaviorChange: false,
+      runtimeBehaviorChange: true,
       blocker: "combined_wet_c11c_tuple_remains_frequency_or_source_anomalous_and_cannot_be_imported_honestly",
       rerankProgressStatus: "advance_to_rank_3_without_promoting_rank_2",
       selectedNextComparisonCandidate: "raw_bare_open_box_open_web_impact_widening",
@@ -55,16 +55,26 @@ describe("blocked-source rank-2 C11c feasibility contract", () => {
     expect(lab.floorSystemMatch).toBeNull();
     expect(lab.floorSystemEstimate).toBeNull();
     expect(lab.floorSystemRatings?.Rw).toBe(49);
-    expect(lab.impact).toBeNull();
-    expect(lab.supportedTargetOutputs).toEqual(["Rw"]);
-    expect(lab.unsupportedTargetOutputs).toEqual(["Ln,w", "Ln,w+CI"]);
+    expect(lab.impact).toMatchObject({
+      CI: 1,
+      CI50_2500: 1,
+      LnW: 59,
+      LnWPlusCI: 60,
+      basis: "tuas_c11c_visible_iso_weighted_impact_tuple_guarded"
+    });
+    expect(lab.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "Ln,w+CI"]);
+    expect(lab.unsupportedTargetOutputs).toEqual([]);
     expect(impactOnly.floorSystemMatch).toBeNull();
     expect(impactOnly.floorSystemEstimate).toBeNull();
-    expect(impactOnly.impact).toBeNull();
+    expect(impactOnly.impact).toMatchObject({
+      LnW: 59,
+      LnWPlusCI: 60,
+      basis: "tuas_c11c_visible_iso_weighted_impact_tuple_guarded"
+    });
 
     expect(BLOCKED_SOURCE_RANK_2_C11C_EVIDENCE).toEqual({
       exactRowFact: "tuas_c11c_clt260_measured_2026_still_does_not_exist_in_exact_floor_systems",
-      routeFact: "visible_c11c_rows_stay_screening_only_with_rw_only_support_and_all_impact_outputs_fail_closed",
+      routeFact: "visible_c11c_rows_stay_screening_airborne_with_guarded_iso_weighted_impact_support",
       blockerFact: "the_combined_wet_c11c_tuple_remains_much_weaker_than_nearby_combined_clt_rows_and_is_not_source_explained"
     });
   });

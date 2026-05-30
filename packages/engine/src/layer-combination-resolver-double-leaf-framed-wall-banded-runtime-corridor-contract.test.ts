@@ -8,6 +8,10 @@ import { describe, expect, it } from "vitest";
 import { calculateAssembly } from "./calculate-assembly";
 import { buildDynamicCalculatorCandidateResolverRuntime } from "./dynamic-calculator-candidate-resolver-runtime";
 import {
+  GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD,
+  GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-gate-i-airborne-field-context";
+import {
   LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_FORMULA_CORRIDOR_BASIS,
   LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_FORMULA_CORRIDOR_LANDED_GATE,
   LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_FORMULA_CORRIDOR_SELECTED_NEXT_ACTION,
@@ -401,12 +405,23 @@ describe("layer combination resolver double-leaf framed wall banded runtime corr
     );
 
     expect(field.airborneCandidateResolution).toMatchObject({
-      selectedCandidateId: LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID,
+      selectedCandidateId: GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
       selectedOrigin: "family_physics_prediction"
     });
     expect(field.airborneBasis).toMatchObject({
-      method: LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_FORMULA_CORRIDOR_BASIS,
+      method: GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD,
       origin: "family_physics_prediction"
+    });
+    expect(field.airborneBasis?.assumptions).toEqual(
+      expect.arrayContaining([
+        `base lab-family method remains ${LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_FORMULA_CORRIDOR_BASIS}`
+      ])
+    );
+    expect(field.layerCombinationResolverTrace).toMatchObject({
+      requestedBasis: "field_apparent",
+      runtimeBasisId: GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD,
+      selectedCandidateId: "wall.airborne_field_context.field_apparent_adapter",
+      supportBucket: "field_adapter"
     });
     expect(field.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
     expect(field.warnings.join("\n")).toContain("Airborne field-side overlay active.");

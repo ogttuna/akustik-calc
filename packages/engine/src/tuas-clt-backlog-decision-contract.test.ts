@@ -200,7 +200,7 @@ const LANDED_TUAS_CLT_COMBINED_STAGED_TIER = ["C3c"] as const;
 const LANDED_TUAS_CLT_COMBINED_HEAVY_DRY_TIER = ["C4c"] as const;
 const NEXT_TUAS_CLT_HEAVY_DRY_TOP_CANDIDATE = [] as const;
 const DEFERRED_TUAS_CLT_HEAVY_DRY_TOP_TIER = [] as const;
-const DEFERRED_TUAS_CLT_COMBINED_SCREENING_TIER = ["C11c"] as const;
+const GUARDED_TUAS_CLT_COMBINED_SCREENING_TIER = ["C11c"] as const;
 const DEFERRED_TUAS_CLT_WET_GEOTEXTILE_TIER = [] as const;
 
 describe("TUAS CLT backlog decision contract", () => {
@@ -621,17 +621,24 @@ describe("TUAS CLT backlog decision contract", () => {
     expect(field.unsupportedTargetOutputs).toEqual([]);
   });
 
-  it("keeps the source-backed C11c combined wet CLT row screening-only until its own wet-stack anomaly audit lands", () => {
+  it("keeps the source-backed C11c combined wet CLT row off exact import while guarded ISO impact is live", () => {
     const lab = calculateAssembly(C11C_COMBINED_SOURCE_LAYERS, {
       targetOutputs: LAB_OUTPUTS
     });
 
     expect(lab.floorSystemMatch).toBeNull();
     expect(lab.floorSystemEstimate).toBeNull();
-    expect(lab.impact).toBeNull();
+    expect(lab.impact).toMatchObject({
+      basis: "tuas_c11c_visible_iso_weighted_impact_tuple_guarded",
+      CI: 1,
+      CI50_2500: 1,
+      estimateCandidateIds: ["tuas_c11c_visible_iso_weighted_tuple_2026"],
+      LnW: 59,
+      LnWPlusCI: 60
+    });
     expect(lab.floorSystemRatings?.Rw).toBe(49);
-    expect(lab.supportedTargetOutputs).toEqual(["Rw"]);
-    expect(lab.unsupportedTargetOutputs).toEqual(["Ln,w", "Ln,w+CI"]);
+    expect(lab.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "Ln,w+CI"]);
+    expect(lab.unsupportedTargetOutputs).toEqual([]);
     expect(
       lab.warnings.some((warning: string) =>
         /Visible-layer predictor matching is parked because single-entry floor roles are duplicated: floating screed x2/i.test(warning)
@@ -686,7 +693,7 @@ describe("TUAS CLT backlog decision contract", () => {
     expect(LANDED_TUAS_CLT_COMBINED_HEAVY_DRY_TIER).toEqual(["C4c"]);
     expect(NEXT_TUAS_CLT_HEAVY_DRY_TOP_CANDIDATE).toEqual([]);
     expect(DEFERRED_TUAS_CLT_HEAVY_DRY_TOP_TIER).toEqual([]);
-    expect(DEFERRED_TUAS_CLT_COMBINED_SCREENING_TIER).toEqual(["C11c"]);
+    expect(GUARDED_TUAS_CLT_COMBINED_SCREENING_TIER).toEqual(["C11c"]);
     expect(DEFERRED_TUAS_CLT_WET_GEOTEXTILE_TIER).toEqual([]);
   });
 });

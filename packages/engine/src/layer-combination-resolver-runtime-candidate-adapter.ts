@@ -148,7 +148,7 @@ function buildBoundaryCandidateIds(input: LayerCombinationResolverRuntimeCandida
   if ((input.missingPhysicalInputIds ?? []).length > 0) {
     ids.push(NEEDS_INPUT_CANDIDATE_ID);
   }
-  if (input.requestedBasis === "building_prediction") {
+  if (input.requestedBasis === "building_prediction" && !input.runtimeBasisId) {
     ids.push(BASIS_BOUNDARY_CANDIDATE_ID);
   }
   if (

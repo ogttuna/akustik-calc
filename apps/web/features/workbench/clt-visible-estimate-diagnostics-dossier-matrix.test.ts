@@ -79,17 +79,17 @@ const CASES: readonly DossierCase[] = [
         },
         {
           detail:
-            "6 live warnings remain explicit. First signal: Layer 3 thickness 65 mm is outside the guided sanity band of 18 to 35 mm for Dry Floating Gypsum Fiberboard in the floor covering role. Check units, role assignment, or split the build-up into separate layers if needed.",
+            "5 live warnings remain explicit. First signal: Layer 3 thickness 65 mm is outside the guided sanity band of 18 to 35 mm for Dry Floating Gypsum Fiberboard in the floor covering role. Check units, role assignment, or split the build-up into separate layers if needed.",
           label: "Warning board",
           tone: "warning",
-          value: "6 active"
+          value: "5 active"
         }
       ],
       headline:
         "Combined upper and lower system is active with scoped estimate posture. 1 trace group and 2 citation lines remain visible so the guided flow can explain why the current route was chosen.",
       linkedCitationCount: 1,
       traceCount: 1,
-      warningCount: 6
+      warningCount: 5
     }
   },
   {

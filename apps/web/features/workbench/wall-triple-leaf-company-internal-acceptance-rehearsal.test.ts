@@ -592,7 +592,7 @@ describe("wall triple-leaf company-internal acceptance rehearsal Gate J", () => 
     expectWarning(splitGrouped.warnings, /lab spectrum adapter is active/i, "grouped lab spectrum adapter is active");
   });
 
-  it("keeps field R'w and DnT,w live but visibly caveated on report/PDF surfaces", () => {
+  it("keeps Rw plus field R'w and DnT,w live but visibly caveated on report/PDF surfaces", () => {
     const field = evaluateWallScenario({
       airborneContext: completeTripleLeafWallContext(TRIPLE_LEAF_FIELD_CONTEXT),
       id: "user-split-rockwool-field-grouped",
@@ -602,7 +602,7 @@ describe("wall triple-leaf company-internal acceptance rehearsal Gate J", () => 
 
     expect(getCard(field.cards, "R'w")).toMatchObject({ status: "live", value: "51 dB" });
     expect(getCard(field.cards, "DnT,w")).toMatchObject({ status: "live", value: "53 dB" });
-    expect(getCard(field.cards, "Rw")).toMatchObject({ status: "unsupported", value: "Not ready" });
+    expect(getCard(field.cards, "Rw")).toMatchObject({ status: "live", value: "51 dB" });
     expect(field.result.dynamicAirborneTrace).toMatchObject({
       confidenceClass: "medium",
       detectedFamily: "multileaf_multicavity",
@@ -627,7 +627,7 @@ describe("wall triple-leaf company-internal acceptance rehearsal Gate J", () => 
     expect(report.diagnostics.warningCount).toBeGreaterThanOrEqual(1);
     expect(report.brief.executiveSummary).toContain("scoped estimate posture");
     expect(report.text).toContain("DnT,w: Live now");
-    expect(report.text).toContain("Rw: Unsupported on lane");
+    expect(report.text).toContain("Rw: Live now");
     expect(report.text).toContain("Local-substitution field-context harmonization is active");
     expect(report.text).toContain("does not replace accredited laboratory or site measurements");
     expect(report.html).toContain("Local-substitution field-context harmonization is active");

@@ -339,7 +339,7 @@ const EXPECTED: Readonly<Record<CorridorLabel, Readonly<Record<ContextName, Pinn
   lab_double_stud: {
     lab: { c: -1.6, ctr: -6.2, detectedFamily: "double_stud_system", dnA: null, dnTA: null, dnTw: null, dnW: null, rw: 61, rwPrime: null, stc: 61 },
     field: { c: -0.9, ctr: -5.6, detectedFamily: "double_stud_system", dnA: 52, dnTA: 51.8, dnTw: 53, dnW: 53, rw: 52, rwPrime: 52, stc: 52 },
-    building: { c: -0.9, ctr: -5.6, detectedFamily: "double_stud_system", dnA: null, dnTA: null, dnTw: null, dnW: null, rw: 52, rwPrime: null, stc: 52 }
+    building: { c: -0.9, ctr: -5.6, detectedFamily: "double_stud_system", dnA: 51.1, dnTA: 52.6, dnTw: 54, dnW: 52, rw: 52, rwPrime: 52, stc: 52 }
   }
 };
 

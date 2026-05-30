@@ -9,7 +9,9 @@ const BUILDING_OUTPUTS: readonly RequestedOutputId[] = [
   "Rw",
   "R'w",
   "Dn,w",
+  "Dn,A",
   "DnT,w",
+  "DnT,A",
   "Ln,w",
   "DeltaLw",
   "Ln,w+CI",
@@ -31,7 +33,18 @@ const BUILDING_IMPACT_FIELD: ImpactFieldContext = {
   receivingRoomVolumeM3: 60
 };
 
-const FIELD_OUTPUTS: readonly RequestedOutputId[] = ["Rw", "R'w", "Dn,w", "Ln,w", "DeltaLw", "Ln,w+CI", "L'n,w"];
+const FIELD_OUTPUTS: readonly RequestedOutputId[] = [
+  "Rw",
+  "R'w",
+  "Dn,w",
+  "Dn,A",
+  "DnT,w",
+  "DnT,A",
+  "Ln,w",
+  "DeltaLw",
+  "Ln,w+CI",
+  "L'n,w"
+];
 
 const FIELD_CONTEXT: AirborneContext = {
   contextMode: "field_between_rooms",

@@ -136,11 +136,11 @@ describe("company-internal calculation-grade mainline matrix v2 refresh", () => 
         "floor.reinforced_concrete_combined_exact_source_precedence.lab"
       ],
       failureClassCounts: {
-        basis_boundary: 5,
+        basis_boundary: 4,
         correct_block: 14,
         coverage_gap: 0,
         hostile_input_refusal: 4,
-        none: 34,
+        none: 35,
         unsupported_metric: 3
       },
       hiddenScreeningOriginRowIds: [],
@@ -187,14 +187,14 @@ describe("company-internal calculation-grade mainline matrix v2 refresh", () => 
     expect(values(complete)).toEqual({ "R'w": 58, "DnT,w": 59 });
 
     expect(broad).toMatchObject({
-      failureClass: "basis_boundary",
+      failureClass: "none",
       requestedMetrics: ["Rw", "STC", "R'w", "DnT,w"],
       runtime: {
-        supportedTargetOutputs: ["R'w", "DnT,w"],
-        unsupportedTargetOutputs: ["Rw", "STC"]
+        supportedTargetOutputs: ["Rw", "STC", "R'w", "DnT,w"],
+        unsupportedTargetOutputs: []
       }
     });
-    expect(values(broad)).toEqual({ "R'w": 58, "DnT,w": 59 });
+    expect(values(broad)).toEqual({ Rw: 58, STC: 58, "R'w": 58, "DnT,w": 59 });
 
     expect(partial).toMatchObject({
       currentPosture: "needs_input",

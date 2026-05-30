@@ -118,17 +118,17 @@ describe("layer combination resolver post single-leaf mass-law banded matrix ref
       sourceRowsAreEvidenceNotProduct: true
     });
     expect(contract.summary).toEqual({
-      activeRuntimeCandidateCount: 32,
+      activeRuntimeCandidateCount: 36,
       allowedExactRowCount: 4,
-      allowedWithBudgetRowCount: 28,
+      allowedWithBudgetRowCount: 32,
       blockedActionCount: 4,
       blockedRowCount: 2,
-      coverageMatrixRowCount: 35,
+      coverageMatrixRowCount: 39,
       needsUserInputRowCount: 1,
       readinessBucketCount: {
         needs_input: 1,
         ready: 4,
-        ready_with_budget: 28,
+        ready_with_budget: 32,
         research_only: 0,
         unsupported: 2
       },

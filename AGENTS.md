@@ -37,6 +37,228 @@ adapters, calibration/holdouts, or input-surface work.
 Current selected post-V1 plan:
 `docs/calculator/POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md`.
 
+Current reconciliation checkpoint:
+`docs/calculator/CHECKPOINT_2026-05-30_POST_V1_GATE_BF_STATE_RECONCILIATION.md`.
+
+Landed Gate AZ planning bridge:
+`docs/calculator/POST_V1_GATE_AZ_NUMERIC_COVERAGE_GAP_PLAN_2026-05-27.md`.
+Gate AZ has now landed as
+`post_v1_next_numeric_coverage_gap_gate_az_plan` with status
+`post_v1_next_numeric_coverage_gap_gate_az_landed_no_runtime_selected_floor_dynamic_stiffness_load_basis_owner_gate_ba`.
+It selected `post_v1_floor_dynamic_stiffness_load_basis_owner_gate_ba_plan`
+in
+`packages/engine/src/post-v1-floor-dynamic-stiffness-load-basis-owner-gate-ba-contract.test.ts`.
+The selected candidate is
+`floor.material_owner_gap.dynamic_stiffness_load_basis`; the other
+ranked source-absent floor-impact candidates are
+`floor.suspended_ceiling.lower_treatment_coupling_gap` and
+`floor.mixed_support_family.multi_family_solver_gap`. Gate AZ itself is
+no-runtime; Gate BA must prove before/after output movement and owner
+fields before runtime values move.
+
+Gate BA has now landed as
+`post_v1_floor_dynamic_stiffness_load_basis_owner_gate_ba_plan` with
+status
+`post_v1_floor_dynamic_stiffness_load_basis_owner_gate_ba_landed_no_runtime_selected_suspended_ceiling_lower_treatment_gate_bb`.
+It pins `resilientLayerDynamicStiffnessMNm3` and `loadBasisKgM2` as
+no-default physical owner fields, preserves the existing `Ln,w 48.7` /
+`DeltaLw 25.8` heavy-floating runtime, and selects
+`post_v1_floor_suspended_ceiling_lower_treatment_gate_bb_plan` in
+`packages/engine/src/post-v1-floor-suspended-ceiling-lower-treatment-gate-bb-contract.test.ts`.
+
+Gate BB has now landed as
+`post_v1_floor_suspended_ceiling_lower_treatment_gate_bb_plan` with
+status
+`post_v1_floor_suspended_ceiling_lower_treatment_gate_bb_landed_selected_surface_parity_gate_bc`.
+It promotes complete visible heavy-concrete combined upper/lower floor
+stacks with `acoustic_hanger_ceiling` or `resilient_stud_ceiling`
+lower-treatment support layers into
+`predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate`.
+The pinned acoustic-hanger case now calculates `Ln,w 45.6` and
+`DeltaLw 28.9`; the resilient-stud case calculates `Ln,w 44.6` and
+`DeltaLw 29.9`. Missing `ceilingOrLowerAssembly` or `loadBasisKgM2`
+still stops instead of guessing, and ASTM `IIC` / `AIIC` aliases remain
+unsupported. Gate BB selects
+`post_v1_floor_suspended_ceiling_lower_treatment_surface_parity_gate_bc_plan`
+in
+`packages/engine/src/post-v1-floor-suspended-ceiling-lower-treatment-surface-parity-gate-bc-contract.test.ts`.
+
+Gate BC has now landed as
+`post_v1_floor_suspended_ceiling_lower_treatment_surface_parity_gate_bc_plan`
+with status
+`post_v1_floor_suspended_ceiling_lower_treatment_surface_parity_gate_bc_landed_selected_coverage_refresh_gate_bd`.
+It is no-runtime surface parity: workbench cards, Markdown report, saved
+replay, estimate API, impact-only API, and resolver trace now expose the
+same layer-derived heavy-concrete combined lower-treatment answer. The
+acoustic-hanger case remains `Ln,w 45.6` / `DeltaLw 28.9`; the
+resilient-stud case remains `Ln,w 44.6` / `DeltaLw 29.9`. Visible
+`acoustic_hanger_ceiling` and `resilient_stud_ceiling` support products
+are accepted without duplicate lower support-class fields, while
+`resilientLayerDynamicStiffnessMNm3` and `loadBasisKgM2` remain required
+physical inputs. ASTM `IIC` / `AIIC` aliases remain unsupported. Gate BC
+selects
+`post_v1_floor_suspended_ceiling_lower_treatment_coverage_refresh_gate_bd_plan`
+in
+`packages/engine/src/post-v1-floor-suspended-ceiling-lower-treatment-coverage-refresh-gate-bd-contract.test.ts`.
+
+Gate BD has now landed as
+`post_v1_floor_suspended_ceiling_lower_treatment_coverage_refresh_gate_bd_plan`
+with status
+`post_v1_floor_suspended_ceiling_lower_treatment_coverage_refresh_gate_bd_landed_no_runtime_selected_next_numeric_coverage_gap_gate_be`.
+It is no-runtime coverage refresh: acoustic-hanger, resilient-stud, and
+impact-only lower-treatment rows are now counted as source-absent
+family-physics coverage with pins `Ln,w 45.6` / `DeltaLw 28.9` and
+`Ln,w 44.6` / `DeltaLw 29.9`; missing load basis, missing lower
+assembly, and ASTM `IIC` / `AIIC` remain value-less boundaries. The
+remaining high-risk `floor.mixed_support_family.multi_family_solver_gap`
+is carried forward for reranking. Gate BD selects
+`post_v1_next_numeric_coverage_gap_gate_be_plan` in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-be-contract.test.ts`.
+
+Gate BE has now landed as
+`post_v1_next_numeric_coverage_gap_gate_be_plan` with status
+`post_v1_next_numeric_coverage_gap_gate_be_landed_no_runtime_selected_floor_suspended_ceiling_lower_treatment_field_companion_gate_bf`.
+It selected
+`floor.suspended_ceiling_lower_treatment.field_companion_assembly_runtime_gap`
+because it directly increases field-output coverage for the new
+lower-treatment formula lane. Gate BE selected
+`post_v1_floor_suspended_ceiling_lower_treatment_field_companion_gate_bf_plan`
+in
+`packages/engine/src/post-v1-floor-suspended-ceiling-lower-treatment-field-companion-gate-bf-contract.test.ts`.
+Gate BF has now landed as
+`post_v1_floor_suspended_ceiling_lower_treatment_field_companion_gate_bf_plan`
+with status
+`post_v1_floor_suspended_ceiling_lower_treatment_field_companion_gate_bf_landed_selected_next_numeric_coverage_gap_gate_bg`.
+assembly field-only lower-treatment now calculates
+`L'n,w 47.6 / L'nT,w 44.8 / L'nT,50 48.8` for acoustic hanger and
+`L'n,w 46.6 / L'nT,w 43.8 / L'nT,50 47.8` for resilient stud; missing
+`impactFieldContext.ci50_2500Db` still stops only `L'nT,50`, and ASTM
+`IIC` / `AIIC` remain unsupported. Gate BF selects
+`post_v1_next_numeric_coverage_gap_gate_bg_plan` in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-bg-contract.test.ts`.
+
+Previous active handoff, 2026-05-27: Gate AR floor small-room
+`CI,50-2500` low-frequency coverage has landed. This is calculator
+coverage and accuracy work, not catalog work. Floor impact lanes that
+already calculate `L'nT,w` through the explicit Turkish small-room guide
+and receive explicit `CI,50-2500` now calculate
+`L'nT,50 = L'nT,w + CI,50-2500` instead of leaving the low-frequency
+field output unavailable. Pinned heavy-concrete small-room case:
+`Ln,w 50`, `L'nT,w 53`, `CI,50-2500 +4`, and `L'nT,50 57`. Pinned UBIQ
+FL-28 open-web carpet combined-bound small-room case:
+`Ln,w+CI <= 45`, `CI -1`, derived `Ln,w <= 46`, `L'nT,w <= 49`,
+`CI,50-2500 +4`, and `L'nT,50 <= 53`. `L'n,w`, ASTM `IIC`, and ASTM
+`AIIC` remain unsupported unless a separate owner/input exists. Gate AR
+status is
+`post_v1_floor_small_room_ci50_low_frequency_gate_ar_landed_selected_next_numeric_coverage_gap_gate_as`;
+the selected next action is `post_v1_next_numeric_coverage_gap_gate_as_plan`.
+Focused validation passed with engine 5 files / 24 tests and web 4
+files / 8 tests. Full `pnpm calculator:gate:current` passed after
+Gate AR with engine 555 files / 3093 tests, web 104 files / 423 passed
++ 18 skipped, repo build 5 / 5, and whitespace guard passed.
+
+Previous active handoff, 2026-05-27: Gate AS floor explicit-CI lab
+companion coverage has landed. This is calculator coverage and accuracy
+work, not catalog work. Floor impact lanes that already own live `Ln,w`
+or conservative `Ln,w` upper bound and receive explicit user `CI` now
+calculate `CI` and `Ln,w+CI` without requiring field K, Hd, receiving
+room volume, small-room toggle, or `CI,50-2500`. Pinned live cases:
+hollow-core vinyl `Ln,w 48`, `CI -1`, `Ln,w+CI 47`; heavy concrete
+`Ln,w 50`, `CI -1`, `Ln,w+CI 49`; steel fallback `Ln,w 58`, `CI -1`,
+`Ln,w+CI 57`. Pinned bound cases: open-web / UBIQ 300 `Ln,w <= 51`,
+`CI -1`, `Ln,w+CI <= 50`; UBIQ 200 `Ln,w <= 53`, `Ln,w+CI <= 52`;
+UBIQ 250 `Ln,w <= 52`, `Ln,w+CI <= 51`. Field outputs `L'n,w`,
+`L'nT,w`, `L'nT,50` still require their own physical inputs, and ASTM
+`IIC` / `AIIC` remain blocked. Gate AS status is
+`post_v1_floor_explicit_ci_lab_companion_gate_as_landed_selected_next_numeric_coverage_gap_gate_at`;
+the selected next action is `post_v1_next_numeric_coverage_gap_gate_at_plan`.
+Focused validation passed with engine 5 files / 24 tests and web 4
+files / 8 tests. Full `pnpm calculator:gate:current` passed after
+Gate AS with engine 556 files / 3097 tests, web 105 files / 425 passed
+and 18 skipped, repo build 5 / 5, and whitespace guard passed.
+
+Previous active handoff, 2026-05-27: Gate AT floor explicit-CI,50-2500
+lab companion coverage has landed. This is calculator coverage and
+accuracy work, not catalog work. Floor impact lanes that already own
+live `Ln,w` or conservative `Ln,w` upper bound and receive explicit user
+`CI,50-2500` now calculate `CI,50-2500` without requiring field K, Hd,
+receiving-room volume, small-room toggle, or `CI`. Pinned live cases:
+hollow-core vinyl `Ln,w 48`, `CI,50-2500 +4`; heavy concrete
+`Ln,w 50`, `CI,50-2500 +4`; steel fallback `Ln,w 58`,
+`CI,50-2500 +4`. Pinned bound cases: open-web / UBIQ 300
+`Ln,w <= 51`, `CI,50-2500 +4`; UBIQ 200 `Ln,w <= 53`,
+`CI,50-2500 +4`; UBIQ 250 `Ln,w <= 52`, `CI,50-2500 +4`. `CI`,
+`Ln,w+CI`, field outputs `L'n,w`, `L'nT,w`, `L'nT,50`, and ASTM
+`IIC` / `AIIC` remain blocked unless their own required inputs/owners
+exist. Gate AT status is
+`post_v1_floor_explicit_ci50_lab_companion_gate_at_landed_selected_next_numeric_coverage_gap_gate_au`;
+the selected next action is `post_v1_next_numeric_coverage_gap_gate_au_plan`.
+Focused validation passed with engine 5 files / 24 tests and web 4
+files / 8 tests. Full `pnpm calculator:gate:current` passed after
+Gate AT with engine 557 files / 3101 tests, web 106 files / 427 passed
+and 18 skipped, repo build 5 / 5, and whitespace guard passed.
+
+Latest active handoff, 2026-05-27: Gate BA floor dynamic stiffness /
+load basis owner has landed. This is calculator coverage and accuracy
+work, not catalog work. Gate AZ selected the highest-ROI floor impact
+source-absent material-owner gap, and Gate BA now pins
+`resilientLayerDynamicStiffnessMNm3` and `loadBasisKgM2` as no-default
+physical owner fields. Complete explicit heavy-floating input preserves
+the existing `Ln,w 48.7` / `DeltaLw 25.8` runtime; missing dynamic
+stiffness or missing load basis cannot invent `DeltaLw`. Gate BA landed
+as `post_v1_floor_dynamic_stiffness_load_basis_owner_gate_ba_plan` with
+status
+`post_v1_floor_dynamic_stiffness_load_basis_owner_gate_ba_landed_no_runtime_selected_suspended_ceiling_lower_treatment_gate_bb`;
+the selected next action is
+`post_v1_floor_suspended_ceiling_lower_treatment_gate_bb_plan`. Full
+`pnpm calculator:gate:current` passed after Gate BF with engine 569
+files / 3155 tests, web 112 files / 435 passed + 18 skipped, repo build
+5 / 5, and whitespace guard passed.
+
+Previous active handoff, 2026-05-27: Gate AY floor TUAS C11c ISO impact
+coverage has landed. This is calculator coverage and accuracy work, not
+catalog work. The `floor-tuas-c11c-fail-closed` visible C11c stack now
+opens a guarded ISO weighted impact tuple on
+`tuas_c11c_visible_iso_weighted_impact_tuple_guarded`: lab impact pins
+are `Ln,w 59`, `CI 1`, `CI,50-2500 1`, and `Ln,w+CI 60`; with explicit
+field context K=3 and receiving-room volume 60 m3 it calculates
+`L'n,w 62`, `L'nT,w 59.2`, and `L'nT,50 60.2`. The C11c exact import
+candidate still does not enter `EXACT_FLOOR_SYSTEMS`; raw C11c
+one-third-octave spectrum or a source correction note is still required
+before exact import. `DeltaLw`, `IIC`, and `AIIC` remain unsupported
+without their own owners. The shared resolver surface now has 39 declared candidates and 36 active runtime-basis mappings. Gate AY landed
+as `post_v1_floor_tuas_c11c_iso_impact_gate_ay_plan` with status
+`post_v1_floor_tuas_c11c_iso_impact_gate_ay_landed_selected_next_numeric_coverage_gap_gate_az`;
+the selected next action is `post_v1_next_numeric_coverage_gap_gate_az_plan`.
+
+Previous active handoff, 2026-05-27: Gate AX wall framed building adapter
+coverage has landed. This is calculator coverage and accuracy work, not
+catalog work. Complete Gate AR wall `building_prediction` requests for
+`wall-lsf-knauf` and `wall-timber-stud` now use explicit framed metadata
+(`studType`, `connectionType`, and positive `studSpacingMm`) to stay on
+the stud-surrogate/framed-calibration direct-curve owner instead of
+asking for unrelated grouped multileaf topology fields. Pinned LSF
+values are `Rw 51`, STC 51, `C -1.4`, `Ctr -6.4`, `R'w 51`, `Dn,w 51`,
+`Dn,A 49.6`, `DnT,w 52`, and `DnT,A 51.1`. Pinned timber values are
+`Rw 42`, STC 42, `C 0.4`, `Ctr -4.3`, `R'w 42`, `Dn,w 42`,
+`Dn,A 42.4`, `DnT,w 43`, and `DnT,A 43.9`. Missing framed metadata and
+incomplete building context still stop as `needs_input`; opening/leak
+building routes, exact-source metric scope, grouped AAC topology prompts,
+floor impact, and ASTM aliases remain closed. Gate AX landed as
+`post_v1_wall_framed_building_adapter_gate_ax_plan` with status
+`post_v1_wall_framed_building_adapter_gate_ax_landed_selected_next_numeric_coverage_gap_gate_ay`;
+the selected next action is `post_v1_next_numeric_coverage_gap_gate_ay_plan`,
+focused on the `floor-tuas-c11c-fail-closed` ISO impact gap. Full
+`pnpm calculator:gate:current` passed after Gate AX with engine 561
+files / 3117 tests, web 110 files / 431 passed + 18 skipped, repo build
+5 / 5, and whitespace guard passed.
+
+Previous active handoff, 2026-05-27: Gate AU floor explicit-DeltaLw lab
+companion coverage has landed. The explicit heavy-reference `DeltaLw`
+lane calculates explicit lab companions: `CI`, `Ln,w+CI`, and
+`CI,50-2500`, with pins `DeltaLw 26`, `Ln,w 52`, `CI -1`,
+`Ln,w+CI 51`, and `CI,50-2500 +4`.
+
 Latest landed post-V1 action:
 `post_v1_calculator_capability_roi_confirmation_gate_0_plan`
 in
@@ -212,15 +434,288 @@ lightweight-concrete field requests with a live lab `Ln,w` anchor plus
 `L'n,w 66.3 / L'nT,w 63.9`. Missing field-impact context stops as
 `needs_input` with `impactFieldContext` and `receivingRoomVolumeM3`;
 building prediction and ASTM `IIC` / `AIIC` aliases remain blocked.
-The selected next action is
+Gate N selected Gate O action was
 `post_v1_input_surface_guided_physical_fields_gate_o_plan` in
 `packages/engine/src/post-v1-input-surface-guided-physical-fields-gate-o-contract.test.ts`;
-selected next label: post-V1 input-surface guided physical fields Gate O. The shared resolver surface now has 35 declared candidates and 32 active runtime-basis mappings.
+Gate N selected Gate O label: post-V1 input-surface guided physical fields Gate O. At Gate N closeout, the shared resolver surface had 37 declared candidates and 34 active runtime-basis mappings.
 Broad source crawl, low-confidence wording, and docs-only work remain
 blocked.
-Latest Gate N validation is green. Full `pnpm calculator:gate:current`
-passed on 2026-05-25 with engine 525 files / 2969 tests, web 95 files /
+Gate O has now landed as a numeric coverage correction, not an
+input-surface-only step:
+`post_v1_wall_flat_multicavity_auto_topology_gate_o_plan` in
+`packages/engine/src/post-v1-wall-flat-multicavity-auto-topology-gate-o-contract.test.ts`.
+Safe flat wall multicavity stacks with explicit air-gap plus porous-fill
+cavity segments now derive grouped triple-leaf topology and calculate
+`Rw 53` / STC 57 / `C -0.6` / `Ctr -8`. Ambiguous flat stacks without
+explicit air gaps, explicit `flat_layer_order`, and invalid duplicate
+groups remain blocked. Gate O status is
+`post_v1_wall_flat_multicavity_auto_topology_gate_o_landed_selected_next_numeric_coverage_gap`;
+selected next action is
+`post_v1_next_numeric_coverage_gap_selection_gate_p_plan`.
+
+Gate P has now landed as a second numeric coverage correction:
+`post_v1_wall_double_leaf_auto_topology_gate_p_plan` in
+`packages/engine/src/post-v1-wall-double-leaf-auto-topology-gate-p-contract.test.ts`.
+Flat double-leaf wall stacks with explicit support context and
+`studSpacingMm` now derive double-leaf/framed topology and calculate
+through the existing mass-air-mass / bridge solver without manual
+side/cavity grouping. Pinned values are independent support `Rw 45` /
+STC 45 / `C -1` / `Ctr -6.1` and resilient both-sides `Rw 47` /
+STC 47 / `C -1` / `Ctr -6.1`. Missing support context is not guessed;
+missing `resilientBarSideCount` remains a precise input stop. Gate P
+status is
+`post_v1_wall_double_leaf_auto_topology_gate_p_landed_selected_next_numeric_coverage_gap_gate_q`.
+
+Gate Q has now landed as a third numeric wall-coverage correction:
+`post_v1_wall_full_fill_multicavity_auto_topology_gate_q_plan` in
+`packages/engine/src/post-v1-wall-full-fill-multicavity-auto-topology-gate-q-contract.test.ts`.
+Full-fill flat multicavity wall stacks with explicit support context now
+derive grouped triple-leaf topology and calculate through the existing
+grouped Rockwool/triple-leaf frequency solver. The pinned
+`gypsum / rockwool / gypsum / rockwool / gypsum` case publishes `Rw 52`
+/ STC 53 / `C -2.6` / `Ctr -9.4`. Legacy support hints are not guessed,
+and explicit `flat_layer_order` remains a stopped topology boundary.
+Gate Q status is
+`post_v1_wall_full_fill_multicavity_auto_topology_gate_q_landed_selected_next_numeric_coverage_gap_gate_r`;
+Gate Q selected Gate R action was
+`post_v1_next_numeric_coverage_gap_gate_r_plan`.
+
+Gate R has now landed as a fourth numeric wall-coverage correction:
+`post_v1_wall_field_auto_topology_gate_r_plan` in
+`packages/engine/src/post-v1-wall-field-auto-topology-gate-r-contract.test.ts`.
+The same explicit-support full-fill flat multicavity wall can now
+calculate complete `field_between_rooms` apparent/standardized outputs
+without manual leaf/cavity grouping: `R'w 50`, `Dn,w 50`, `Dn,A 48.5`,
+`DnT,w 53`, and `DnT,A 50.9`. Missing field RT60 now stops as
+`needs_input` for `receivingRoomRt60S` instead of asking for manual
+topology groups. Support topology is not guessed, and air-gap-only Gate
+O field requests without explicit support do not promote. Gate R status
+is
+`post_v1_wall_field_auto_topology_gate_r_landed_selected_next_numeric_coverage_gap_gate_s`;
+Gate R selected next action was `post_v1_next_numeric_coverage_gap_gate_s_plan`.
+Gate R landing validation is green. Full `pnpm calculator:gate:current`
+passed after Gate R with engine 529 files / 2983 tests, web 95 files /
 402 passed + 18 skipped, repo build 5 / 5, and whitespace guard passed.
+
+Gate S has now landed as a fifth numeric wall-coverage correction:
+`post_v1_wall_double_leaf_field_auto_topology_gate_s_plan` in
+`packages/engine/src/post-v1-wall-double-leaf-field-auto-topology-gate-s-contract.test.ts`.
+The common flat `gypsum / rockwool / gypsum` double-leaf wall with
+explicit support context, `studSpacingMm`, and complete
+`field_between_rooms` data now calculates through the owned double-leaf
+family physics plus Gate I field adapter instead of screening fallback:
+`R'w 39`, `Dn,w 40`, `Dn,A 38.5`, `DnT,w 42`, and `DnT,A 40.9`.
+Missing `receivingRoomRt60S` is the only input stop; support topology is
+not guessed. Gate S status is
+`post_v1_wall_double_leaf_field_auto_topology_gate_s_landed_selected_next_numeric_coverage_gap_gate_t`;
+Gate S selected next action was `post_v1_next_numeric_coverage_gap_gate_t_plan`.
+Gate S landing validation is green. Full `pnpm calculator:gate:current`
+passed after Gate S with engine 530 files / 2987 tests, web 95 files /
+402 passed + 18 skipped, repo build 5 / 5, and whitespace guard passed.
+
+Gate T has now landed as a sixth numeric wall-coverage correction:
+`post_v1_wall_mixed_lab_field_output_gate_t_plan` in
+`packages/engine/src/post-v1-wall-mixed-lab-field-output-gate-t-contract.test.ts`.
+The same complete flat double-leaf field stack now keeps calculable lab
+companions live when the user asks for mixed lab-spectrum and field
+outputs: `Rw 39`, STC 39, `C -1`, `Ctr -5.7`, `R'w 39`, `Dn,w 40`,
+`Dn,A 38.5`, `DnT,w 42`, and `DnT,A 40.9`. The resolver trace remains
+on the field adapter and pins only field metrics, so lab `Rw` is not
+relabelled as a field candidate. Gate T status is
+`post_v1_wall_mixed_lab_field_output_gate_t_landed_selected_next_numeric_coverage_gap_gate_u`;
+Gate T selected next action was `post_v1_next_numeric_coverage_gap_gate_u_plan`.
+Latest Gate T validation is green. Full `pnpm calculator:gate:current`
+passed after Gate T with engine 531 files / 2991 tests, web 95 files /
+402 passed + 18 skipped, repo build 5 / 5, and whitespace guard passed.
+
+Gate U has now landed as a seventh numeric wall-coverage correction:
+`post_v1_wall_multileaf_mixed_lab_field_output_gate_u_plan` in
+`packages/engine/src/post-v1-wall-multileaf-mixed-lab-field-output-gate-u-contract.test.ts`.
+The explicit-support full-fill flat multicavity wall now keeps
+calculable lab companions live when the user asks for mixed lab-spectrum
+and field outputs: `Rw 50`, STC 51, `C -2`, `Ctr -8.5`, `R'w 50`,
+`Dn,w 50`, `Dn,A 48.5`, `DnT,w 53`, and `DnT,A 50.9`. The resolver
+trace remains on the field adapter and pins only field metrics, so lab
+`Rw` is not relabelled as a field candidate. Gate U status is
+`post_v1_wall_multileaf_mixed_lab_field_output_gate_u_landed_selected_next_numeric_coverage_gap_gate_v`;
+Gate U selected next action was `post_v1_next_numeric_coverage_gap_gate_v_plan`.
+Latest Gate U validation is green. Full `pnpm calculator:gate:current`
+passed after Gate U with engine 532 files / 2995 tests, web 95 files /
+402 passed + 18 skipped, repo build 5 / 5, and whitespace guard passed.
+
+Gate V has now landed as an eighth numeric wall-coverage correction:
+`post_v1_wall_rw_field_output_gate_v_plan` in
+`packages/engine/src/post-v1-wall-rw-field-output-gate-v-contract.test.ts`.
+Complete explicit-support double-leaf and full-fill multicavity field
+requests that ask only for `Rw` plus field outputs now keep calculable
+lab `Rw` live without requiring STC or spectrum companions. The pinned
+double-leaf request supports `Rw 39`, `R'w 39`, `DnT,w 42`; the pinned
+multileaf request supports `Rw 50`, `R'w 50`, `DnT,w 53`. Field-only
+requests still remain field-only, and resolver traces still pin only
+field metrics. Gate V status is
+`post_v1_wall_rw_field_output_gate_v_landed_selected_next_numeric_coverage_gap_gate_w`;
+Gate V selected next action was `post_v1_next_numeric_coverage_gap_gate_w_plan`.
+Latest Gate V validation is green. Full `pnpm calculator:gate:current`
+passed after Gate V with engine 533 files / 2999 tests, web 95 files /
+402 passed + 18 skipped, repo build 5 / 5, and whitespace guard passed.
+
+Gate W has now landed as a ninth numeric wall-coverage correction:
+`post_v1_wall_field_rw_companion_gate_w_plan` in
+`packages/engine/src/post-v1-wall-field-rw-companion-gate-w-contract.test.ts`.
+Complete heavy-composite wall and local-substitution grouped triple-leaf
+field requests that ask for `Rw` plus field outputs now keep calculable
+`Rw` live instead of reporting it unsupported. The pinned heavy-composite
+request supports `Rw 60`, `R'w 60`, `DnT,w 61`; the pinned
+local-substitution request supports `Rw 51`, `R'w 51`, `DnT,w 53`.
+Field-only requests still remain field-only, and resolver traces still
+pin only field metrics. Gate W status is
+`post_v1_wall_field_rw_companion_gate_w_landed_selected_next_numeric_coverage_gap_gate_x`;
+selected next action was `post_v1_next_numeric_coverage_gap_gate_x_plan`.
+Latest Gate W validation is green. Full `pnpm calculator:gate:current`
+passed after Gate W with engine 534 files / 3003 tests, web 95 files /
+402 passed + 18 skipped, repo build 5 / 5, and whitespace guard passed.
+
+Gate X has now landed as a tenth numeric coverage correction:
+`post_v1_floor_airborne_spectrum_companion_gate_x_plan` in
+`packages/engine/src/post-v1-floor-airborne-spectrum-companion-gate-x-contract.test.ts`.
+Complete floor family-estimate field requests now keep calculated
+airborne spectrum companions live when the selected family basis owns a
+source-absent or family-estimate airborne curve. The pinned
+heavy-concrete family request supports `STC 58`, `C -0.9`, and
+`Ctr -5.6`; the pinned lightweight-steel family request supports
+`STC 70`, `C -0.9`, and `Ctr -5.6`. Exact measured floor rows still
+publish only source-owned spectrum terms, so exact floor `Rw` rows do
+not become STC aliases. Gate X status is
+`post_v1_floor_airborne_spectrum_companion_gate_x_landed_selected_next_numeric_coverage_gap_gate_y`;
+selected next action is `post_v1_next_numeric_coverage_gap_gate_y_plan`.
+Latest Gate X targeted validation passed 1 file / 4 tests, and the
+relevant regression sentinel passed 11 files / 64 tests. Full
+`pnpm calculator:gate:current` passed after Gate X with engine 535 files
+/ 3007 tests, web 95 files / 402 passed + 18 skipped, repo build 5 / 5,
+and whitespace guard passed.
+
+Gate Y has now landed as an eleventh numeric coverage correction:
+`post_v1_floor_screening_spectrum_companion_gate_y_plan` in
+`packages/engine/src/post-v1-floor-screening-spectrum-companion-gate-y-contract.test.ts`.
+Complete floor `screening_mass_law_curve_seed_v3` field requests now
+keep calculated `STC` and `C` live when the same screening curve already
+owns live `Rw` / `Ctr` / field / impact outputs. The pinned Regupol
+Curve 8 request supports `STC 58`, `C -1.4`, and `Ctr -6.1`; the
+Getzner AFM 35 request supports `STC 58`, `C -0.9`, and `Ctr -5.6`;
+the Regupol Multi 4.5 porcelain request supports `STC 55`, `C -0.8`,
+and `Ctr -5.5`. Exact measured floor rows still stay metric-scoped, and
+ASTM / impact boundary rows stay parked. Gate Y status is
+`post_v1_floor_screening_spectrum_companion_gate_y_landed_selected_next_numeric_coverage_gap_gate_z`;
+selected next action is `post_v1_next_numeric_coverage_gap_gate_z_plan`.
+Latest Gate Y/Gate X targeted validation passed 2 files / 9 tests. Full
+`pnpm calculator:gate:current` passed after Gate Y with engine 536 files /
+3012 tests, web 95 files / 402 passed + 18 skipped, repo build 5 / 5,
+and whitespace guard passed.
+
+Gate Z has now landed as a twelfth numeric coverage correction:
+`post_v1_floor_screening_rw_companion_gate_z_plan` in
+`packages/engine/src/post-v1-floor-screening-rw-companion-gate-z-contract.test.ts`.
+Source-absent floor `screening_mass_law_curve_seed_v3` requests with
+visible floor roles now keep calculated `Rw` live even when impact
+outputs remain stopped. The pinned TUAS C11c fail-closed stack now
+supports `Rw 47`, STC 47, `C -1`, `Ctr -5.7`, `R'w 47`, and `DnT,w 49`
+through `floor.screening_airborne.source_absent`; `Ln,w`, `DeltaLw`,
+`L'n,w`, and `L'nT,w` remain unsupported/needs-owner outputs. Exact
+measured floor rows and UBIQ bound rows stay metric-scoped, so Gate Z
+does not fabricate exact STC / `C` / `Ctr` companions or bound-only
+missing `C`. At Gate Z closeout, the shared resolver surface had 37
+declared candidates and 34 active runtime-basis mappings. Gate Z status is
+`post_v1_floor_screening_rw_companion_gate_z_landed_selected_next_numeric_coverage_gap_gate_aa`;
+Gate Z selected next action was `post_v1_next_numeric_coverage_gap_gate_aa_plan`.
+Latest validation: focused Gate Z / Gate Y / Gate X / resolver passed
+6 files / 30 tests, and full `pnpm calculator:gate:current` passed on
+2026-05-26 with engine 537 files / 3016 tests, web 95 files / 402
+passed + 18 skipped, repo build 5 / 5, and whitespace guard passed.
+
+Gate AA has now landed as a thirteenth numeric coverage correction:
+`post_v1_wall_lined_massive_rw_companion_gate_aa_plan` in
+`packages/engine/src/post-v1-wall-lined-massive-rw-companion-gate-aa-contract.test.ts`.
+The existing Gate H lined-massive wall field route now keeps its
+calculated lab `Rw` companion live when a complete wall field request
+also includes unrelated floor/impact outputs. The pinned concrete lined
+wall now supports `Rw 55`, STC 55, `C -1.6`, `Ctr -6.3`, `R'w 55`,
+`Dn,w 55`, `Dn,A 53.4`, `DnT,w 56`, and `DnT,A 54.9`; floor/impact
+outputs remain stopped instead of fabricated. Grouped-topology wall
+cases still stop as `needs_input`, and exact/floor metric scopes remain
+unchanged. Gate AA status is
+`post_v1_wall_lined_massive_rw_companion_gate_aa_landed_selected_next_numeric_coverage_gap_gate_ab`;
+selected next action is `post_v1_next_numeric_coverage_gap_gate_ab_plan`.
+Latest validation: focused Gate AA / Gate Z / Gate Y / Gate X / Gate W /
+resolver passed 6 files / 26 tests, and full
+`pnpm calculator:gate:current` passed on 2026-05-26 with engine 538
+files / 3019 tests, web 95 files / 402 passed + 18 skipped, repo build
+5 / 5, and whitespace guard passed.
+
+Gate AB has now landed as a fourteenth numeric coverage correction:
+`post_v1_wall_screening_rw_field_companion_gate_ab_plan` in
+`packages/engine/src/post-v1-wall-screening-rw-field-companion-gate-ab-contract.test.ts`.
+Complete single-leaf wall field requests on the screening fallback lane
+now keep the calculated lab `Rw` companion live instead of showing only
+field/apparent and spectrum outputs. The generated masonry brick wall
+now supports `Rw 40`, STC 40, `C -0.2`, `Ctr -4.7`, `R'w 40`,
+`Dn,w 40`, `Dn,A 39.8`, `DnT,w 42`, and `DnT,A 41.3`; the laminated
+CLT wall now supports `Rw 41`, STC 41, `C -1.8`, `Ctr -7.6`,
+`R'w 41`, `Dn,w 41`, `Dn,A 39.2`, `DnT,w 42`, and `DnT,A 40.7`.
+Framed, grouped-topology, and multicavity wall routes that still need
+physical topology inputs remain `needs_input`; exact floor/source
+metric scopes and UBIQ bound missing-`C` guards remain unchanged. Gate
+AB status is
+`post_v1_wall_screening_rw_field_companion_gate_ab_landed_selected_next_numeric_coverage_gap_gate_ac`;
+selected next action was `post_v1_next_numeric_coverage_gap_gate_ac_plan`.
+Latest validation: focused Gate AB passed 1 file / 4 tests; focused
+Gate AB / Gate AA / Gate Z / Gate Y / Gate X / Gate W / resolver /
+origin matrix passed 8 files / 31 tests; web Gate B visibility passed
+1 file / 4 tests; web origin card matrix passed 1 file / 1 test; full
+`pnpm calculator:gate:current` passed on 2026-05-26 with engine 539
+files / 3023 tests, web 95 files / 402 passed + 18 skipped, repo build
+5 / 5, and whitespace guard passed.
+
+Gate AC has now landed as a fifteenth numeric coverage correction:
+`post_v1_floor_field_a_weighted_surface_gate_ac_plan` in
+`packages/engine/src/post-v1-floor-field-a-weighted-surface-gate-ac-contract.test.ts`.
+The shared floor field/building adapter now publishes already-calculated
+airborne field metrics through the resolver trace and automatic
+workbench floor presets: `Dn,w`, `Dn,A`, `DnT,w`, and `DnT,A`. The
+pinned heavy concrete floor supports `Dn,w 57`, `Dn,A 56.1`,
+`DnT,w 60`, and `DnT,A 58.6`; the lightweight steel fallback supports
+`Dn,w 69`, `Dn,A 68.1`, `DnT,w 72`, and `DnT,A 70.6`. Exact floor
+metric scope, bound-only missing-`C`, ASTM/IIC, and unrelated
+`needs_input` boundaries remain closed. Gate AC status is
+`post_v1_floor_field_a_weighted_surface_gate_ac_landed_selected_next_numeric_coverage_gap_gate_ad`;
+selected next action is `post_v1_next_numeric_coverage_gap_gate_ad_plan`.
+Latest validation: focused Gate AC passed engine 1 file / 4 tests and
+web 1 file / 4 tests; focused Gate N + Gate AC passed engine 2 files /
+9 tests; focused Gate AC + floor preset web passed 2 files / 6 tests;
+full `pnpm calculator:gate:current` passed on 2026-05-26 with engine
+540 files / 3027 tests, web 96 files / 406 passed + 18 skipped, repo
+build 5 / 5, and whitespace guard passed.
+
+Gate AD has now landed as a sixteenth numeric coverage correction:
+`post_v1_wall_framed_metadata_auto_topology_gate_ad_plan` in
+`packages/engine/src/post-v1-wall-framed-metadata-auto-topology-gate-ad-contract.test.ts`.
+Flat framed wall field/building requests with explicit `connectionType` /
+`studType` now keep the already-calculated `Rw` companion live on the
+defended stud-surrogate/framed-calibration route. The LSF Knauf framed
+wall supports `Rw 51`, STC 51, `C -1.4`, `Ctr -6.4`, `R'w 51`,
+`Dn,w 51`, `Dn,A 49.6`, `DnT,w 52`, and `DnT,A 51.1`; the timber-stud
+wall supports `Rw 42`, STC 42, `C 0.4`, `Ctr -4.3`, `R'w 42`,
+`Dn,w 42`, `Dn,A 42.4`, `DnT,w 43`, and `DnT,A 43.9`. No-support
+framed metadata and grouped AAC/triple-leaf cases remain `needs_input`;
+exact/bound floor metric scope and ASTM/IIC aliases remain closed. Gate
+AD status is
+`post_v1_wall_framed_metadata_auto_topology_gate_ad_landed_selected_next_numeric_coverage_gap_gate_ae`;
+selected next action is `post_v1_next_numeric_coverage_gap_gate_ae_plan`.
+Latest validation: focused Gate AD passed engine 1 file / 4 tests;
+framed/source regression coverage passed 21 files / 157 tests; resolver
+and answer-engine regression coverage passed 5 files / 41 tests; full
+`pnpm calculator:gate:current` passed on 2026-05-26 with engine 541
+files / 3031 tests, web 96 files / 406 passed + 18 skipped, repo build
+5 / 5, and whitespace guard passed.
 
 ## Product Goal
 

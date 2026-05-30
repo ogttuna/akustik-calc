@@ -219,8 +219,16 @@ describe("internal use operating envelope Gate B visibility", () => {
       const activeRoute = snapshot.brief.assumptionItems.find((item) => item.label === "Active route");
       const recommendation = snapshot.brief.recommendationItems.find((item) => item.label === "Issue as estimate, not measurement");
 
-      if (testCase.id === "wall_lined_heavy_core_screening") {
-        expect(rwCard).toEqual(expect.objectContaining({ status: "live", value: "55 dB" }));
+      const expectedLiveRw =
+        testCase.id === "wall_lined_heavy_core_screening"
+          ? "55 dB"
+          : testCase.id === "wall_clt_local_generated"
+            ? "41 dB"
+            : testCase.id === "wall_timber_double_board_generated"
+              ? "42 dB"
+              : null;
+      if (expectedLiveRw) {
+        expect(rwCard).toEqual(expect.objectContaining({ status: "live", value: expectedLiveRw }));
       } else {
         expect(rwCard).toEqual(expect.objectContaining({ status: "unsupported", value: "Not ready" }));
       }

@@ -475,7 +475,7 @@ describe("post company-internal controlled-use handoff Gate C next-slice selecti
       family: "stud_wall_system",
       rw: 48,
       rwPrime: 48,
-      supported: ["R'w", "DnT,w"]
+      supported: ["Rw", "R'w", "DnT,w"]
     });
     expect(resultSnapshot(pliteq)).toMatchObject({
       lPrimeNTw: 58.2,

@@ -12,6 +12,7 @@ import {
   ASTM_E989_IIC_METRIC_BASIS,
   ASTM_E989_IMPACT_RATING_BASIS
 } from "./impact-astm-e989";
+import { hasPostV1FloorFamilyAirborneSpectrumCompanionBasis } from "./floor-airborne-spectrum-companion";
 
 export type TargetOutputSupportInput = {
   countBoundSupportAsSupported?: boolean;
@@ -120,10 +121,12 @@ function getCarrierCtr(input: TargetOutputSupportInput): number | null {
     const ctr = getFloorSystemCtr(input.floorCarrier);
 
     if (!isFiniteNumber(ctr)) {
-      return null;
+      if (!hasPostV1FloorFamilyAirborneSpectrumCompanionBasis(input.floorCarrier)) {
+        return null;
+      }
+    } else {
+      return ctr ?? null;
     }
-
-    return ctr ?? null;
   }
 
   if (isFiniteNumber(input.metrics?.estimatedCtrDb)) {
@@ -164,7 +167,10 @@ function getCarrierC(input: TargetOutputSupportInput): number | null {
     const basis = (input.floorCarrier as { basis?: string }).basis;
     const isScreeningCarrier = typeof basis === "string" && basis.startsWith("screening_");
 
-    if (!isScreeningCarrier) {
+    if (
+      !isScreeningCarrier &&
+      !hasPostV1FloorFamilyAirborneSpectrumCompanionBasis(input.floorCarrier)
+    ) {
       return null;
     }
   }
@@ -214,9 +220,15 @@ function isTargetOutputAvailable(
         (countBoundSupportAsSupported && isFiniteNumber(input.lowerBoundImpact?.LPrimeNWUpperBound))
       );
     case "CI":
-      return hasAvailableImpactOutput(input.impact, output);
+      return (
+        hasAvailableImpactOutput(input.impact, output) ||
+        (countBoundSupportAsSupported && isFiniteNumber(input.lowerBoundImpact?.CI))
+      );
     case "CI,50-2500":
-      return hasAvailableImpactOutput(input.impact, output);
+      return (
+        hasAvailableImpactOutput(input.impact, output) ||
+        (countBoundSupportAsSupported && isFiniteNumber(input.lowerBoundImpact?.CI50_2500))
+      );
     case "Ln,w+CI":
       return (
         hasAvailableImpactOutput(input.impact, output) ||
@@ -233,7 +245,10 @@ function isTargetOutputAvailable(
         (countBoundSupportAsSupported && isFiniteNumber(input.lowerBoundImpact?.LPrimeNTwUpperBound))
       );
     case "L'nT,50":
-      return hasAvailableImpactOutput(input.impact, output);
+      return (
+        hasAvailableImpactOutput(input.impact, output) ||
+        (countBoundSupportAsSupported && isFiniteNumber(input.lowerBoundImpact?.LPrimeNT50UpperBound))
+      );
     case "LnT,A":
       return hasAvailableImpactOutput(input.impact, output);
     case "AIIC":

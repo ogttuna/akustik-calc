@@ -77,8 +77,14 @@ export function formatImpactMetricBasisLabel(basis: ImpactMetricBasisLabel): str
       return "Exact heavy-reference improvement rating";
     case "exact_source_rating_override":
       return "Exact source rating override";
+    case "explicit_user_impact_ci_input":
+      return "Explicit CI input";
+    case "explicit_user_impact_ci50_2500_input":
+      return "Explicit CI,50-2500 input";
     case "estimated_field_lprimenw_from_lnw_plus_k":
       return "Field K carry-over";
+    case "estimated_local_guide_lnwci_from_lnw_plus_ci":
+      return "TR simple guide Ln,w+CI";
     case "estimated_local_guide_tr_simple_method_lnwci_plus_k_plus_hd":
       return "TR simple guide";
     case "estimated_local_guide_tr_small_rooms_lnw_plus_3":
@@ -115,6 +121,8 @@ export function formatImpactMetricBasisLabel(basis: ImpactMetricBasisLabel): str
       return "Open-box timber EPS/screed hybrid package formula corridor";
     case "broad_accuracy_floor_helper_only_timber_open_web_impact_stack_source_absent_formula_corridor":
       return "Helper-only timber/open-web formula corridor";
+    case "tuas_c11c_visible_iso_weighted_impact_tuple_guarded":
+      return "TUAS C11c guarded ISO tuple";
     case "predictor_catalog_exact_match_official":
       return "Official product-system row";
     case "predictor_catalog_lower_bound_official":
@@ -162,6 +170,12 @@ export function describeImpactMetricBasis(metric: ImpactMetricKey, basis: Impact
       return `${formatImpactMetricLabel(metric)} came directly from the supplied DeltaLw input.`;
     case "estimated_field_lprimenw_from_lnw_plus_k":
       return `${formatImpactMetricLabel(metric)} was derived as Ln,w + K on the active lane.`;
+    case "explicit_user_impact_ci_input":
+      return `${formatImpactMetricLabel(metric)} came from the explicit impact CI input.`;
+    case "explicit_user_impact_ci50_2500_input":
+      return `${formatImpactMetricLabel(metric)} came from the explicit impact CI,50-2500 input.`;
+    case "estimated_local_guide_lnwci_from_lnw_plus_ci":
+      return `${formatImpactMetricLabel(metric)} was derived as Ln,w + CI for the Turkish simple-guide branch.`;
     case "estimated_standardized_field_lprimentw_from_lprimenw_plus_room_volume":
       return `${formatImpactMetricLabel(metric)} was derived as L'n,w + 10 log10(31.3 / V).`;
     case "estimated_standardized_field_lpriment50_from_lprimentw_plus_ci50_2500":
@@ -194,6 +208,8 @@ export function describeImpactMetricBasis(metric: ImpactMetricKey, basis: Impact
       return `${formatImpactMetricLabel(metric)} came from the source-absent open-box timber EPS/screed hybrid package formula lane.`;
     case "broad_accuracy_floor_helper_only_timber_open_web_impact_stack_source_absent_formula_corridor":
       return `${formatImpactMetricLabel(metric)} came from the source-absent helper-only timber/open-web lower-treatment formula lane.`;
+    case "tuas_c11c_visible_iso_weighted_impact_tuple_guarded":
+      return `${formatImpactMetricLabel(metric)} came from the guarded TUAS C11c ISO 717-2 weighted impact tuple; exact raw-band import remains blocked.`;
     default:
       if (basis.startsWith("predictor_")) {
         return `${formatImpactMetricLabel(metric)} came from the active predictor or curated family-estimate lane.`;
