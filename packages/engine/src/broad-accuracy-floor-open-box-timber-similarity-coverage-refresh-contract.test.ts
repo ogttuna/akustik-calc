@@ -336,7 +336,7 @@ describe("broad accuracy floor open-box timber similarity coverage refresh contr
     expect(exact.floorSystemEstimate).toBeNull();
   });
 
-  it("keeps raw, partial, exact-only hybrid, mixed-staged, wrong-support, field/building, and ASTM/IIC cases outside the package-transfer lane", () => {
+  it("keeps raw, partial, exact-only hybrid, mixed-staged, wrong-support, field/building, and ASTM/IIC boundaries precise", () => {
     const rawBare = calculateAssembly(RAW_BARE, { calculator: "dynamic", targetOutputs: LAB_OUTPUTS });
     const partialFinish = calculateAssembly(PARTIAL_FINISH, { calculator: "dynamic", targetOutputs: LAB_OUTPUTS });
     const exactOnlyHybrid = calculateAssembly(EPS_SCREED_EXACT_ONLY, { calculator: "dynamic", targetOutputs: LAB_OUTPUTS });
@@ -351,12 +351,22 @@ describe("broad accuracy floor open-box timber similarity coverage refresh contr
       targetOutputs: FIELD_BUILDING_OUTPUTS
     });
 
-    for (const blocked of [rawBare, partialFinish, exactOnlyHybrid, mixedStaged, wrongSupport, aliasOnly, fieldBuilding]) {
+    for (const blocked of [rawBare, partialFinish, exactOnlyHybrid, mixedStaged, wrongSupport]) {
       expect(blocked.impact?.basis).not.toBe(OPEN_BOX_TIMBER_SIMILARITY_BASIS);
       expect(blocked.floorSystemEstimate?.impact.basis).not.toBe(OPEN_BOX_TIMBER_SIMILARITY_BASIS);
     }
+    expect(aliasOnly.impact).toMatchObject({
+      CI50_2500: 3.3,
+      LnW: 50.8,
+      basis: OPEN_BOX_TIMBER_SIMILARITY_BASIS
+    });
     expect(aliasOnly.supportedTargetOutputs).toEqual([]);
     expect(aliasOnly.unsupportedTargetOutputs).toEqual(["L'n,w", "IIC", "R'w", "DnT,w"]);
+    expect(fieldBuilding.impact).toMatchObject({
+      CI50_2500: 3.3,
+      LnW: 50.8,
+      basis: OPEN_BOX_TIMBER_SIMILARITY_BASIS
+    });
     expect(fieldBuilding.supportedTargetOutputs).toEqual([]);
     expect(fieldBuilding.unsupportedTargetOutputs).toEqual(["L'n,w", "R'w", "DnT,w"]);
   });

@@ -339,13 +339,17 @@ describe("broad accuracy floor open-box timber EPS/screed hybrid package runtime
     }
 
     expect(fieldAlias.impact).toMatchObject({
+      LPrimeNTw: 48,
+      LPrimeNW: 50,
       LnW: 47,
-      basis: OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS,
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
       labOrField: "lab"
     });
-    expect(fieldAlias.impact?.LPrimeNW).toBeUndefined();
-    expect(fieldAlias.impact?.LPrimeNTw).toBeUndefined();
-    expect(fieldAlias.unsupportedTargetOutputs).toEqual(["L'n,w", "L'nT,w", "IIC"]);
+    expect(fieldAlias.impact?.metricBasis).toMatchObject({
+      LnW: OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS
+    });
+    expect(fieldAlias.supportedTargetOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w"]);
+    expect(fieldAlias.unsupportedTargetOutputs).toEqual(["IIC"]);
   });
 
   it("keeps docs, exports, schema, and current-gate runner aligned with the landed runtime corridor", () => {

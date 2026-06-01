@@ -43,7 +43,10 @@ const RUNTIME_TARGET_OUTPUTS = new Set<RequestedOutputId>([
   "Ln,w",
   "CI",
   "CI,50-2500",
-  "Ln,w+CI"
+  "Ln,w+CI",
+  "L'n,w",
+  "L'nT,w",
+  "L'nT,50"
 ]);
 
 const CONTEXT_SOURCE_IDS = [
@@ -56,6 +59,22 @@ const CONTEXT_SOURCE_IDS = [
 
 function uniqueRequestedOutputs(outputs: readonly RequestedOutputId[]): RequestedOutputId[] {
   return [...new Set(outputs)];
+}
+
+function formulaTargetOutputs(outputs: readonly RequestedOutputId[]): RequestedOutputId[] {
+  const mapped = outputs.flatMap((output) => {
+    switch (output) {
+      case "L'n,w":
+      case "L'nT,w":
+        return ["Ln,w" as const];
+      case "L'nT,50":
+        return ["Ln,w" as const, "CI,50-2500" as const];
+      default:
+        return [output];
+    }
+  });
+
+  return uniqueRequestedOutputs(mapped);
 }
 
 function layersForRole(
@@ -330,7 +349,7 @@ export function deriveOpenBoxTimberEpsScreedHybridPackageEstimate(input: {
     separatorThicknessMm: 1,
     supportFamily: "open_box_timber",
     supportThicknessMm: detected.supportThicknessMm,
-    targetOutputs: uniqueRequestedOutputs(requestedOutputs),
+    targetOutputs: formulaTargetOutputs(requestedOutputs),
     upperFillThicknessMm: 35
   });
 
@@ -376,7 +395,7 @@ export function deriveOpenBoxTimberEpsScreedHybridPackageEstimate(input: {
       `Topology state ${detected.roleTopologyState.replaceAll("_", " ")} with ${detected.supportThicknessMm} mm open-box timber support.`,
       `Wet screed design mass ${detected.floatingScreedMassKgM2} kg/m2; R7b is the same-stack anchor, not a measured row for this source-absent stack.`,
       `Context source rows: ${buildSourceNotes(rows, input.layers)}.`,
-      "This is an element-lab source-absent formula corridor; field, building, and ASTM/IIC outputs remain unpromoted."
+      "This is an element-lab source-absent formula corridor; field outputs require the explicit impactFieldContext adapter, and building/ASTM/IIC outputs remain unpromoted."
     ],
     scope: "family_estimate"
   });

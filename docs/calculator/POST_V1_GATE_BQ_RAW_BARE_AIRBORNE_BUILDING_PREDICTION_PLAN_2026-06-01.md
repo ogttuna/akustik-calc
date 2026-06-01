@@ -62,6 +62,27 @@ Selected next file:
 
 `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-br-contract.test.ts`
 
+Gate BR has now landed as:
+
+`post_v1_next_numeric_coverage_gap_gate_br_plan`
+
+Gate BR status:
+
+`post_v1_next_numeric_coverage_gap_gate_br_landed_no_runtime_selected_floor_open_box_eps_screed_field_companion_gate_bs`
+
+Gate BR selected:
+
+`floor.open_box_timber_eps_screed_hybrid.field_companion_runtime_gap`
+
+Gate BR selected next action:
+
+`post_v1_floor_open_box_eps_screed_field_companion_gate_bs_plan`
+
+Gate BS must open `L'n,w`, `L'nT,w`, and `L'nT,50` for the complete
+open-box timber EPS/screed hybrid package with explicit
+`impactFieldContext`, using the owned lab anchor while `R'w`, `DnT,w`,
+and ASTM `IIC` / `AIIC` remain separate owners.
+
 ## Acceptance
 
 The Gate BQ contract proves that:

@@ -48,7 +48,10 @@ const RUNTIME_TARGET_OUTPUTS = new Set<RequestedOutputId>([
   "Ln,w",
   "CI",
   "CI,50-2500",
-  "Ln,w+CI"
+  "Ln,w+CI",
+  "L'n,w",
+  "L'nT,w",
+  "L'nT,50"
 ]);
 
 function layersForRole(
@@ -336,7 +339,19 @@ function uniqueRequestedOutputs(outputs: readonly RequestedOutputId[]): Requeste
 }
 
 function formulaTargetOutputs(outputs: readonly RequestedOutputId[]): RequestedOutputId[] {
-  const mapped = outputs.flatMap((output) => output === "C" ? ["Rw" as const] : [output]);
+  const mapped = outputs.flatMap((output) => {
+    switch (output) {
+      case "C":
+        return ["Rw" as const];
+      case "L'n,w":
+      case "L'nT,w":
+        return ["Ln,w" as const];
+      case "L'nT,50":
+        return ["Ln,w" as const, "CI,50-2500" as const];
+      default:
+        return [output];
+    }
+  });
 
   return uniqueRequestedOutputs(mapped);
 }
@@ -407,7 +422,7 @@ export function deriveOpenBoxTimberSimilarityEstimate(input: {
       `Current support is the 370 mm open-box timber slab with ${lowerFamilyLabel(topology.lowerFamily)} and ${topology.boardSchedule}.`,
       `Upper package: ${topology.upperPackageLabel}.`,
       `Source rows: ${buildSourceNotes(rows, input.layers)}.`,
-      "This is a narrow source-absent lab packet-transfer corridor, not a field/building adapter, ASTM/IIC bridge, or exact-only hybrid transfer."
+      "This is a narrow source-absent lab packet-transfer corridor; field outputs require the explicit impactFieldContext adapter, and building/ASTM/IIC bridges remain separate."
     ],
     scope: "family_estimate"
   });

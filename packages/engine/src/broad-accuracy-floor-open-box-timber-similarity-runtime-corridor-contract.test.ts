@@ -301,10 +301,13 @@ describe("broad accuracy floor open-box timber similarity runtime corridor contr
       RwCtrSemantic: "rw_plus_c"
     });
 
-    for (const blocked of [rawBare, partialFinish, exactOnlyHybrid, wrongSupport, aliasOnly]) {
+    for (const blocked of [rawBare, partialFinish, exactOnlyHybrid, wrongSupport]) {
       expect(blocked.impact?.basis).not.toBe(OPEN_BOX_TIMBER_SIMILARITY_BASIS);
       expect(blocked.floorSystemEstimate?.impact.basis).not.toBe(OPEN_BOX_TIMBER_SIMILARITY_BASIS);
     }
+    expect(aliasOnly.impact?.basis).toBe(OPEN_BOX_TIMBER_SIMILARITY_BASIS);
+    expect(aliasOnly.floorSystemEstimate?.impact.basis).toBe(OPEN_BOX_TIMBER_SIMILARITY_BASIS);
+    expect(aliasOnly.impact?.LPrimeNW).toBeUndefined();
     expect(aliasOnly.supportedTargetOutputs).toEqual([]);
     expect(aliasOnly.unsupportedTargetOutputs).toEqual(["L'n,w", "IIC", "R'w", "DnT,w"]);
   });

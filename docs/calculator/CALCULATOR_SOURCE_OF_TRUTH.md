@@ -299,6 +299,36 @@ Current implementation facts:
   their own ASTM owner. Gate BQ selects
   `post_v1_next_numeric_coverage_gap_gate_br_plan` in
   `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-br-contract.test.ts`.
+- Gate BR has now landed as
+  `post_v1_next_numeric_coverage_gap_gate_br_plan` with status
+  `post_v1_next_numeric_coverage_gap_gate_br_landed_no_runtime_selected_floor_open_box_eps_screed_field_companion_gate_bs`.
+  It selected
+  `floor.open_box_timber_eps_screed_hybrid.field_companion_runtime_gap`
+  because complete open-box timber finished-package lanes already own
+  lab `Ln,w` / `CI,50-2500` anchors. Dry package-transfer mixed
+  requests publish `L'n,w 52.8` / `L'nT,w 50.4` / `L'nT,50 53.7`, but
+  dry field-only requests currently publish a mismatched `46.7` /
+  `44.3` / `48.1` tuple; EPS/screed hybrid field outputs remain
+  blocked. Gate BS must align dry field-only with the mixed-request
+  anchor and apply the existing field-context adapter to the EPS/screed
+  hybrid field route, while `R'w`, `DnT,w`, and ASTM `IIC` / `AIIC`
+  remain separate owners. Gate BR selects
+  `post_v1_floor_open_box_eps_screed_field_companion_gate_bs_plan`
+  in
+  `packages/engine/src/post-v1-floor-open-box-eps-screed-field-companion-gate-bs-contract.test.ts`.
+- Gate BS has now landed as
+  `post_v1_floor_open_box_eps_screed_field_companion_gate_bs_plan` with
+  status
+  `post_v1_floor_open_box_eps_screed_field_companion_gate_bs_landed_selected_next_numeric_coverage_gap_gate_bt`.
+  This is runtime calculator coverage and correctness: dry
+  package-transfer field-only requests now use the same anchor as mixed
+  requests and calculate `L'n,w 52.8` / `L'nT,w 50.4` /
+  `L'nT,50 53.7`; EPS/screed hybrid requests with explicit
+  `impactFieldContext` now calculate `L'n,w 49` / `L'nT,w 46.6` /
+  `L'nT,50 47.6` from the owned `Ln,w 47` / `CI,50-2500 1` lab anchor.
+  Missing `impactFieldContext` remains `needs_input`; `R'w`, `DnT,w`,
+  and ASTM `IIC` / `AIIC` remain separate owners. Gate BS selects
+  `post_v1_next_numeric_coverage_gap_gate_bt_plan`.
 - the previous landed slice was Gate BE next numeric coverage gap:
   `post_v1_next_numeric_coverage_gap_gate_be_plan` with status
   `post_v1_next_numeric_coverage_gap_gate_be_landed_no_runtime_selected_floor_suspended_ceiling_lower_treatment_field_companion_gate_bf`.

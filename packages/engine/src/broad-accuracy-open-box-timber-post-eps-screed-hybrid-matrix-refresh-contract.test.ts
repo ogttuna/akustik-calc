@@ -425,7 +425,7 @@ describe("broad accuracy open-box timber post EPS/screed hybrid matrix refresh",
     }
   });
 
-  it("keeps field/building and ASTM/IIC aliases blocked and ranks raw open-web as the next owner gap", () => {
+  it("keeps field impact, building airborne, and ASTM/IIC aliases on their owned boundaries", () => {
     const fieldBuilding = calculateAssembly(EPS_SCREED_HYBRID_VARIANT, {
       impactFieldContext: { fieldKDb: 2, receivingRoomVolumeM3: 55 },
       targetOutputs: IMPACT_ALIAS_OUTPUTS
@@ -433,9 +433,24 @@ describe("broad accuracy open-box timber post EPS/screed hybrid matrix refresh",
     const astm = calculateAssembly(EPS_SCREED_HYBRID_VARIANT, { targetOutputs: ASTM_OUTPUTS });
     const rawOpenWeb = calculateAssembly(RAW_OPEN_WEB, { targetOutputs: ["Rw", "Ln,w", "Ln,w+CI"] });
 
-    expect(fieldBuilding.impact?.basis).not.toBe(OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS);
-    expect(fieldBuilding.supportedTargetOutputs).toEqual([]);
-    expect(fieldBuilding.unsupportedTargetOutputs).toEqual(["L'n,w", "L'nT,w", "R'w", "DnT,w"]);
+    expect(fieldBuilding.impact).toMatchObject({
+      LPrimeNTw: 46.6,
+      LPrimeNW: 49,
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization"
+    });
+    expect(fieldBuilding.impact?.metricBasis).toMatchObject({
+      LnW: OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS,
+      LPrimeNW: "estimated_field_lprimenw_from_lnw_plus_k",
+      LPrimeNTw: "estimated_standardized_field_lprimentw_from_lprimenw_plus_room_volume"
+    });
+    expect(fieldBuilding.layerCombinationResolverTrace).toMatchObject({
+      requestedBasis: "field_apparent",
+      runtimeBasisId: "source_absent_field_building_adapter_error_budget",
+      selectedCandidateId: "floor.impact_field_context.field_building_adapter",
+      supportedMetrics: ["L'n,w", "L'nT,w"]
+    });
+    expect(fieldBuilding.supportedTargetOutputs).toEqual(["L'n,w", "L'nT,w"]);
+    expect(fieldBuilding.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
     expect(astm.impact).toBeNull();
     expect(astm.supportedTargetOutputs).toEqual([]);
     expect(astm.unsupportedTargetOutputs).toEqual(["IIC", "AIIC"]);
