@@ -227,6 +227,21 @@ hybrid requests with explicit `impactFieldContext` now calculate
 `CI,50-2500 1` lab anchor. Missing `impactFieldContext` remains
 `needs_input`; `R'w`, `DnT,w`, and ASTM `IIC` / `AIIC` remain separate
 owners. Gate BS selects `post_v1_next_numeric_coverage_gap_gate_bt_plan`.
+
+Gate BT has now landed as
+`post_v1_next_numeric_coverage_gap_gate_bt_plan` with status
+`post_v1_next_numeric_coverage_gap_gate_bt_landed_no_runtime_selected_floor_open_box_finished_package_airborne_building_companion_gate_bu`.
+It is no-runtime calculator selection, not source crawling or UI/report
+work. Gate BT selected
+`floor.open_box_timber_finished_package.airborne_building_companion_gap`
+because finished open-box packages already own lab airborne anchors
+(`Rw 66` dry package-transfer and `Rw 72` EPS/screed hybrid), while
+complete building-only `R'w` / `DnT,w` requests can still fall to
+generic predictor or `screening_mass_law_curve_seed_v3` airborne bases
+instead of the package anchor. Gate BT selected
+`post_v1_floor_open_box_finished_package_airborne_building_companion_gate_bu_plan`
+in
+`packages/engine/src/post-v1-floor-open-box-finished-package-airborne-building-companion-gate-bu-contract.test.ts`.
 The landed Gate AZ planning bridge is
 [calculator/POST_V1_GATE_AZ_NUMERIC_COVERAGE_GAP_PLAN_2026-05-27.md](./calculator/POST_V1_GATE_AZ_NUMERIC_COVERAGE_GAP_PLAN_2026-05-27.md).
 Earlier Gate AY evidence remains recorded for closed-gate continuity:

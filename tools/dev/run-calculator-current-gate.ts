@@ -563,6 +563,7 @@ async function main() {
         "src/post-v1-floor-raw-bare-airborne-building-prediction-gate-bq-contract.test.ts",
         "src/post-v1-next-numeric-coverage-gap-gate-br-contract.test.ts",
         "src/post-v1-floor-open-box-eps-screed-field-companion-gate-bs-contract.test.ts",
+        "src/post-v1-next-numeric-coverage-gap-gate-bt-contract.test.ts",
         "src/acoustic-calculator-answer-engine-v1-contract.test.ts",
         "src/acoustic-calculator-company-internal-usable-v1-acceptance-gate-contract.test.ts",
         "src/broad-accuracy-floor-open-box-timber-similarity-transfer-owner-contract.test.ts",

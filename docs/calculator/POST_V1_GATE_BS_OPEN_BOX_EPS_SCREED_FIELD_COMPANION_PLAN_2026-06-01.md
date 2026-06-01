@@ -66,3 +66,31 @@ does not promote airborne building outputs from impact field context.
 Selected next action:
 
 `post_v1_next_numeric_coverage_gap_gate_bt_plan`
+
+## Gate BT Closeout
+
+Gate BT has now landed as:
+
+`post_v1_next_numeric_coverage_gap_gate_bt_plan`
+
+Gate BT status:
+
+`post_v1_next_numeric_coverage_gap_gate_bt_landed_no_runtime_selected_floor_open_box_finished_package_airborne_building_companion_gate_bu`
+
+Selected candidate:
+
+`floor.open_box_timber_finished_package.airborne_building_companion_gap`
+
+Gate BT is no-runtime calculator selection. It selected the finished
+open-box package airborne-building companion because the dry
+package-transfer lane owns `Rw 66` and the EPS/screed hybrid lane owns
+`Rw 72`, but complete building-only `R'w` / `DnT,w` requests can still
+fall to generic predictor or `screening_mass_law_curve_seed_v3` airborne
+bases instead of the package anchor. Gate BU must use the selected
+package `Rw` direct curve with complete `building_prediction` context
+while impact field outputs and ASTM `IIC` / `AIIC` remain separate
+owners.
+
+Selected next action:
+
+`post_v1_floor_open_box_finished_package_airborne_building_companion_gate_bu_plan`
