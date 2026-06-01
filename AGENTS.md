@@ -65,10 +65,33 @@ Current selected post-V1 plan:
 `docs/calculator/POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md`.
 
 Current reconciliation checkpoint:
-`docs/calculator/CHECKPOINT_2026-05-30_POST_V1_GATE_BF_STATE_RECONCILIATION.md`.
+`docs/calculator/CHECKPOINT_2026-06-01_POST_V1_GATE_BT_STATE_RECONCILIATION.md`.
 
-Current Gate BG scope/accuracy rerank plan:
-`docs/calculator/POST_V1_GATE_BG_NUMERIC_COVERAGE_AND_ACCURACY_RERANK_PLAN_2026-06-01.md`.
+Current selected implementation:
+`post_v1_floor_open_box_finished_package_airborne_building_companion_gate_bu_plan`
+in
+`packages/engine/src/post-v1-floor-open-box-finished-package-airborne-building-companion-gate-bu-contract.test.ts`.
+
+Latest landed value-moving runtime action:
+`post_v1_floor_open_box_eps_screed_field_companion_gate_bs_plan`.
+Dry package-transfer field-only requests calculate `L'n,w 52.8` /
+`L'nT,w 50.4` / `L'nT,50 53.7`; EPS/screed hybrid requests with
+explicit `impactFieldContext` calculate `L'n,w 49` / `L'nT,w 46.6` /
+`L'nT,50 47.6`.
+
+Latest landed no-runtime selection:
+`post_v1_next_numeric_coverage_gap_gate_bt_plan` with status
+`post_v1_next_numeric_coverage_gap_gate_bt_landed_no_runtime_selected_floor_open_box_finished_package_airborne_building_companion_gate_bu`.
+It selected `floor.open_box_timber_finished_package.airborne_building_companion_gap`.
+Gate BU must improve finished open-box package `building_prediction`
+airborne scope/correctness by using the owned package `Rw` anchors for
+`R'w`, `Dn,w`, `Dn,A`, `DnT,w`, and `DnT,A` instead of a generic
+predictor or `screening_mass_law_curve_seed_v3`.
+
+Latest full gate checkpoint:
+`pnpm calculator:gate:current` passed after Gate BT on 2026-06-01 with
+engine 584 files / 3227 tests, web 113 files / 437 passed + 18 skipped,
+repo build 5 / 5, and whitespace guard passed.
 
 Landed Gate AZ planning bridge:
 `docs/calculator/POST_V1_GATE_AZ_NUMERIC_COVERAGE_GAP_PLAN_2026-05-27.md`.

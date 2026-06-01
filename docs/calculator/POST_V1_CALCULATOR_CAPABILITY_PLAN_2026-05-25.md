@@ -6,51 +6,18 @@ file selects the next calculator capability slice and gives future
 agents a narrow path that cannot drift into catalog work.
 
 Status: active post-V1 plan. Usable V1 Steps 0-5 are closed for the
-current company-internal envelope. Gate 0 ROI confirmation, Gate A
-input-owner/gap-matrix work, Gate B runtime corridor, Gate C surface
-parity/guided-input work, Gate D compatible anchor-delta work, Gate E
-next formula-gap selection, Gate F ASTM IIC/AIIC contour runtime,
-Gate G ASTM IIC/AIIC surface parity, Gate H floor formula expansion,
-Gate I floor formula gap refresh, Gate J reinforced-concrete combined
-resolver integration, Gate K timber/CLT DeltaLw resolver integration,
-Gate L composite-panel family solver owner, Gate M lightweight-concrete
-family solver owner, Gate N floor field/building expansion, Gate O wall
-flat multicavity auto-topology, Gate P wall double-leaf auto-topology,
-Gate Q wall full-fill multicavity auto-topology, Gate R wall field
-auto-topology, Gate S wall double-leaf field auto-topology, Gate T
-mixed double-leaf lab/field output coverage, Gate U mixed multileaf
-lab/field output coverage, Gate V Rw-plus-field output coverage, Gate W
-field Rw companion coverage, Gate X floor airborne spectrum companion
-coverage, Gate Y floor screening spectrum companion coverage, Gate Z
-floor screening Rw companion coverage, and Gate AA wall lined-massive
-Rw companion coverage, Gate AB wall screening Rw field companion
-coverage, and Gate AC floor field A-weighted surface coverage have
-landed. Gate AD wall framed metadata Rw companion, Gate AE wall framed
-lab-spectrum companion, Gate AF wall source-absent building
-lab-spectrum companion, Gate AG wall heavy-composite building
-lab-spectrum companion, and Gate AH wall multileaf screening Rw field
-companion have landed. Gate AI wall flat-multicavity field physics
-companion has landed. Gate AJ wall flat-multicavity building physics
-has landed. Gate AK floor bound low-frequency field companion has
-landed. Gate AL floor combined-bound local-guide coverage has landed.
-Gate AM floor local-guide input surface has landed. Gate AN floor
-explicit-CI local-guide coverage has landed. Gate AO floor explicit
-`CI,50-2500` standardized-field coverage has landed. Gate AP floor
-bound explicit-CI local-guide coverage has landed. Gate AQ floor
-combined-bound explicit-CI split coverage has landed. Gate AR floor
-small-room `CI,50-2500` low-frequency coverage has landed. Gate AS
-floor explicit-CI lab companion coverage has landed. Gate AT floor
-explicit-CI,50-2500 lab companion coverage has landed. Gate AU floor
-explicit-DeltaLw lab companion coverage has landed. Gate AV floor
-explicit-DeltaLw field companion coverage has landed. Gate AW wall
-building lab companion coverage has landed. Gate AX wall framed building
-adapter coverage has landed. Gate AY floor TUAS C11c ISO impact
-coverage, Gate AZ numeric coverage gap, Gate BA dynamic stiffness /
-load basis ownership, Gate BB suspended-ceiling lower-treatment runtime
-coverage, Gate BC lower-treatment surface parity, Gate BD
-lower-treatment coverage refresh, Gate BE next numeric coverage gap
-selection, and Gate BF lower-treatment field companion runtime coverage
-have landed. Gate BF selected Gate BG next numeric coverage rerank.
+current company-internal envelope. The post-V1 calculator-capability
+chain has advanced through Gate BT. Gate BS is the latest value-moving
+runtime coverage/correctness slice, and Gate BT is the latest
+no-runtime selection slice. Gate BT selected Gate BU as the next
+calculator implementation:
+
+`post_v1_floor_open_box_finished_package_airborne_building_companion_gate_bu_plan`
+
+Gate BU must increase finished open-box package `building_prediction`
+airborne scope/correctness by making complete `R'w`, `Dn,w`, `Dn,A`,
+`DnT,w`, and `DnT,A` requests use the owned package `Rw` anchors instead
+of a generic predictor or `screening_mass_law_curve_seed_v3`.
 
 Post-V1 selection rule: every next gate must be calculator-capability
 work. It must either expand the set of physically valid layer
@@ -64,63 +31,75 @@ calculator scope or accuracy.
 
 Latest landed value-moving action:
 
-`post_v1_floor_suspended_ceiling_lower_treatment_field_companion_gate_bf_plan`
+`post_v1_floor_open_box_eps_screed_field_companion_gate_bs_plan`
 
 Latest landed value-moving file:
 
-`packages/engine/src/post-v1-floor-suspended-ceiling-lower-treatment-field-companion-gate-bf-contract.test.ts`
+`packages/engine/src/post-v1-floor-open-box-eps-screed-field-companion-gate-bs-contract.test.ts`
 
-Gate BF selection status:
+Gate BS selection status:
 
-`post_v1_floor_suspended_ceiling_lower_treatment_field_companion_gate_bf_landed_selected_next_numeric_coverage_gap_gate_bg`
+`post_v1_floor_open_box_eps_screed_field_companion_gate_bs_landed_selected_next_numeric_coverage_gap_gate_bt`
 
-Gate BF selected next action:
+Gate BS selected next action:
 
-`post_v1_next_numeric_coverage_gap_gate_bg_plan`
+`post_v1_next_numeric_coverage_gap_gate_bt_plan`
 
-Gate BF selected next file:
+Gate BS selected next file:
 
-`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-bg-contract.test.ts`
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-bt-contract.test.ts`
 
-Active Gate BG scope/accuracy rerank plan:
+Latest landed no-runtime selection:
 
-[POST_V1_GATE_BG_NUMERIC_COVERAGE_AND_ACCURACY_RERANK_PLAN_2026-06-01.md](./POST_V1_GATE_BG_NUMERIC_COVERAGE_AND_ACCURACY_RERANK_PLAN_2026-06-01.md)
+`post_v1_next_numeric_coverage_gap_gate_bt_plan`
 
-Gate BG must be a no-runtime executable rerank that chooses one next
-calculator-capability slice from current implementation evidence. It
-must compare at least the carried
-`floor.mixed_support_family.multi_family_solver_gap`, current post-V1
-accuracy residual/holdout needs using existing broad benchmark and
-similarity artifacts, metric/basis adapter boundaries, and any current
-source-absent formula-family runtime gap. It must explicitly reject broad
-source crawling, confidence wording, finite scenario packs, report or
-storage/auth work, and generic UI cleanup as active calculator slices.
+Gate BT selection status:
 
-Gate BG has now landed as:
+`post_v1_next_numeric_coverage_gap_gate_bt_landed_no_runtime_selected_floor_open_box_finished_package_airborne_building_companion_gate_bu`
 
-`post_v1_next_numeric_coverage_gap_gate_bg_plan`
+Gate BT selected candidate:
 
-Gate BG selection status:
+`floor.open_box_timber_finished_package.airborne_building_companion_gap`
 
-`post_v1_next_numeric_coverage_gap_gate_bg_landed_no_runtime_selected_floor_mixed_support_family_owner_boundary_gate_bh`
+Gate BT selected next action:
 
-Gate BG selected candidate:
+`post_v1_floor_open_box_finished_package_airborne_building_companion_gate_bu_plan`
 
-`floor.mixed_support_family.multi_family_solver_gap`
+Gate BT selected next file:
 
-Gate BG selected next action:
+`packages/engine/src/post-v1-floor-open-box-finished-package-airborne-building-companion-gate-bu-contract.test.ts`
 
-`post_v1_floor_mixed_support_family_owner_boundary_gate_bh_plan`
+Current full-gate evidence after Gate BT on 2026-06-01:
+`pnpm calculator:gate:current` passed with engine 584 files / 3227
+tests, web 113 files / 437 passed + 18 skipped, repo build 5 / 5, and
+whitespace guard passed. Closed-gate history remains below and is
+historical unless it agrees with the Gate BT/Gate BU selection above.
 
-Gate BG selected next file:
-
+Closed Gate BF-BH continuity anchors remain historical evidence, not
+the current selection. Gate BF landed
+`post_v1_floor_suspended_ceiling_lower_treatment_field_companion_gate_bf_plan`
+with status
+`post_v1_floor_suspended_ceiling_lower_treatment_field_companion_gate_bf_landed_selected_next_numeric_coverage_gap_gate_bg`,
+selected `post_v1_next_numeric_coverage_gap_gate_bg_plan` in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-bg-contract.test.ts`,
+and opened assembly field-only lower-treatment pins
+`L'n,w 47.6 / L'nT,w 44.8 / L'nT,50 48.8`. Gate BG landed as
+`post_v1_next_numeric_coverage_gap_gate_bg_plan` with status
+`post_v1_next_numeric_coverage_gap_gate_bg_landed_no_runtime_selected_floor_mixed_support_family_owner_boundary_gate_bh`,
+selected `floor.mixed_support_family.multi_family_solver_gap`, and
+selected `post_v1_floor_mixed_support_family_owner_boundary_gate_bh_plan`
+in
 `packages/engine/src/post-v1-floor-mixed-support-family-owner-boundary-gate-bh-contract.test.ts`
-
-Gate BG is no-runtime and preserves the Gate BF field companion pins. It
-selects Gate BH because mixed support is the current carried
-wrong-family solver risk; Gate BH must prove explicit carrier/support
-ownership before a later runtime subset can increase mixed-support
-coverage.
+as scope/accuracy work. Gate BH landed as
+`post_v1_floor_mixed_support_family_owner_boundary_gate_bh_plan` with
+status
+`post_v1_floor_mixed_support_family_owner_boundary_gate_bh_landed_no_runtime_selected_floor_mixed_support_family_runtime_corridor_gate_bi`,
+pinned `primaryCarrierFamily`, `dominantImpactTransferFamily`,
+`mixedSupportRolePartition`, `secondarySupportTreatmentOwner`, and
+`duplicateOwnershipGuard`, and selected
+`post_v1_floor_mixed_support_family_runtime_corridor_gate_bi_plan` in
+`packages/engine/src/post-v1-floor-mixed-support-family-runtime-corridor-gate-bi-contract.test.ts`
+as scope/accuracy owner-boundary follow-through.
 
 Gate BH has now landed as:
 
@@ -406,7 +385,7 @@ in
 
 Current reconciliation checkpoint:
 
-[CHECKPOINT_2026-05-30_POST_V1_GATE_BF_STATE_RECONCILIATION.md](./CHECKPOINT_2026-05-30_POST_V1_GATE_BF_STATE_RECONCILIATION.md)
+[CHECKPOINT_2026-06-01_POST_V1_GATE_BT_STATE_RECONCILIATION.md](./CHECKPOINT_2026-06-01_POST_V1_GATE_BT_STATE_RECONCILIATION.md)
 
 Gate AW direction and implementation plan:
 
@@ -424,18 +403,20 @@ selected `post_v1_next_numeric_coverage_gap_gate_az_plan` for
 `CI,50-2500 1`, `Ln,w+CI 60`, and field `L'nT,50 60.2` on
 `tuas_c11c_visible_iso_weighted_impact_tuple_guarded`.
 
-Gate BF landed runtime field-companion coverage for the suspended-ceiling
-lower-treatment floor lane. Assembly field-only lower-treatment now
-calculates `L'n,w 47.6 / L'nT,w 44.8 / L'nT,50 48.8` for the
-acoustic-hanger case and `L'n,w 46.6 / L'nT,w 43.8 / L'nT,50 47.8`
-for the resilient-stud case. Missing `impactFieldContext.ci50_2500Db`
-stops only `L'nT,50`, and ASTM `IIC` / `AIIC` remain unsupported. Gate
-BG is selected through `post_v1_next_numeric_coverage_gap_gate_bg_plan`.
-This remains runtime/surface calculator coverage work, not a broad source
+Gate BS landed runtime field-companion coverage and correctness for the
+finished open-box floor lane. Dry package-transfer field-only requests
+now calculate `L'n,w 52.8 / L'nT,w 50.4 / L'nT,50 53.7` from the same
+anchor as mixed requests, and EPS/screed hybrid requests with explicit
+`impactFieldContext` now calculate `L'n,w 49 / L'nT,w 46.6 /
+L'nT,50 47.6` from the owned `Ln,w 47` / `CI,50-2500 1` lab anchor.
+Gate BT then landed as no-runtime calculator selection and selected
+Gate BU:
+`post_v1_floor_open_box_finished_package_airborne_building_companion_gate_bu_plan`.
+This remains calculator scope/correctness work, not a broad source
 crawl, confidence wording pass, finite scenario pack, or no-runtime
 cartography gate.
-Full `pnpm calculator:gate:current` passed after Gate BF with engine 569
-files / 3155 tests, web 112 files / 435 passed + 18 skipped, repo build
+Full `pnpm calculator:gate:current` passed after Gate BT with engine 584
+files / 3227 tests, web 113 files / 437 passed + 18 skipped, repo build
 5 / 5, and whitespace guard passed.
 
 Gate AZ has now landed as no-runtime numeric coverage selection:
