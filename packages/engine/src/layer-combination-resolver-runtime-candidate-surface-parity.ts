@@ -17,6 +17,9 @@ import {
   FLOOR_IMPACT_FIELD_BUILDING_ADAPTER_ERROR_BUDGET_ORIGIN,
   FLOOR_IMPACT_FIELD_BUILDING_ADAPTER_SELECTED_CANDIDATE_ID
 } from "./impact-field-adapter-error-budget";
+import {
+  FLOOR_RAW_BARE_AIRBORNE_BUILDING_PREDICTION_RUNTIME_BASIS
+} from "./floor-raw-bare-airborne-building-prediction-runtime";
 import { GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD } from "./dynamic-airborne-gate-i-airborne-field-context";
 import { GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD } from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
 import { GATE_AE_FLAT_MULTICAVITY_RUNTIME_METHOD } from "./dynamic-airborne-gate-ae-flat-multicavity";
@@ -395,6 +398,10 @@ function requestedBasisForFloorResult(input: {
     return input.runtimeBasisId === ASTM_E989_IMPACT_RATING_BASIS
       ? "astm_rating_boundary"
       : "field_apparent";
+  }
+
+  if (input.runtimeBasisId === FLOOR_RAW_BARE_AIRBORNE_BUILDING_PREDICTION_RUNTIME_BASIS) {
+    return "building_prediction";
   }
 
   if (
@@ -1012,6 +1019,8 @@ export function buildLayerCombinationResolverTraceForAssembly(
     result.airborneBasis?.method === GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD;
   const hasWallBuildingAirborneBasis =
     result.airborneBasis?.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD;
+  const hasRawBareFloorAirborneBuildingBasis =
+    result.airborneBasis?.method === FLOOR_RAW_BARE_AIRBORNE_BUILDING_PREDICTION_RUNTIME_BASIS;
   const shouldPreferWallAirborneRoute =
     !hasFloorRoleLayer &&
     (
@@ -1063,7 +1072,9 @@ export function buildLayerCombinationResolverTraceForAssembly(
     : hasFieldAdapter
     ? FLOOR_IMPACT_FIELD_BUILDING_ADAPTER_ERROR_BUDGET_ORIGIN
       : route === "floor"
-        ? shouldUseSingleLeafFloorAirborneBasis
+        ? hasRawBareFloorAirborneBuildingBasis
+          ? result.airborneBasis?.method ?? null
+        : shouldUseSingleLeafFloorAirborneBasis
           ? airborneAnswerStop
             ? null
             : result.airborneBasis?.method ?? null

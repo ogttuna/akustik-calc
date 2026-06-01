@@ -488,6 +488,16 @@ export function getImpactConfidenceForBasis(basis: ImpactEstimateBasis): ImpactC
     };
   }
 
+  if (basis === "predictor_mixed_support_primary_heavy_concrete_combined_owner_guarded_estimate") {
+    return {
+      level: "medium",
+      provenance: "formula_estimate_narrow_scope",
+      score: 0.66,
+      summary:
+        "Guarded mixed-support single-primary-carrier estimate with explicit carrier, role partition, load, dynamic stiffness, and lower-treatment owners."
+    };
+  }
+
   if (basis === "predictor_heavy_bare_floor_iso12354_annexc_estimate") {
     return {
       level: "medium",

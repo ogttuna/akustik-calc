@@ -16,6 +16,11 @@ import {
   isHeavyConcreteCombinedFormulaCorridorImpact
 } from "./heavy-concrete-combined-impact-corridor-view";
 import {
+  getMixedSupportFloorImpactCorridorOutputDetail,
+  getMixedSupportFloorImpactCorridorPosture,
+  isMixedSupportFloorImpactCorridorImpact
+} from "./mixed-support-floor-impact-corridor-view";
+import {
   getGateSOpeningLeakCompositeOutputDetail,
   getGateSOpeningLeakCompositeSurface
 } from "./opening-leak-composite-surface";
@@ -352,6 +357,26 @@ export function buildSimpleWorkbenchOutputPosture(input: {
   if (
     studyMode === "floor" &&
     status === "live" &&
+    isMixedSupportFloorImpactCorridorImpact(result) &&
+    (
+      output === "Ln,w" ||
+      output === "DeltaLw" ||
+      output === "L'n,w" ||
+      output === "L'nT,w" ||
+      output === "L'nT,50"
+    )
+  ) {
+    const posture = getMixedSupportFloorImpactCorridorPosture();
+
+    return {
+      ...posture,
+      detail: getMixedSupportFloorImpactCorridorOutputDetail(output, result?.impact) ?? posture.detail
+    };
+  }
+
+  if (
+    studyMode === "floor" &&
+    status === "live" &&
     (output === "IIC" || output === "AIIC") &&
     isAstmE989ImpactRatingResult(result)
   ) {
@@ -539,6 +564,13 @@ export function buildSimpleWorkbenchOutputPosture(input: {
   }
 
   if (studyMode === "floor") {
+    if (
+      isMixedSupportFloorImpactCorridorImpact(result) &&
+      (output === "Ln,w" || output === "DeltaLw" || FIELD_IMPACT_OUTPUTS.has(output))
+    ) {
+      return getMixedSupportFloorImpactCorridorPosture();
+    }
+
     if (isHeavyConcreteCombinedFormulaCorridorImpact(result) && (output === "Ln,w" || output === "DeltaLw")) {
       return getHeavyConcreteCombinedFormulaCorridorPosture();
     }

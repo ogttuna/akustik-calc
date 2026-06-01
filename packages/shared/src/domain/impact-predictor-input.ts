@@ -44,6 +44,19 @@ export const ImpactPredictorLowerTreatmentSupportClassSchema = z.enum([
   "tuas_open_box_family_b"
 ]);
 
+export const ImpactPredictorMixedSupportRolePartitionSchema = z.enum([
+  "single_primary_carrier_secondary_lower_treatment",
+  "duplicate_primary_carriers",
+  "unknown"
+]);
+
+export const ImpactPredictorMixedSupportSecondaryTreatmentOwnerSchema = z.enum([
+  "lower_treatment_only",
+  "upper_treatment_only",
+  "unowned",
+  "unknown"
+]);
+
 const ImpactPredictorSectionSchema = z
   .object({
     densityKgM3: z.number().positive().optional(),
@@ -85,6 +98,16 @@ const ImpactPredictorLowerTreatmentSchema = z
   })
   .partial();
 
+const ImpactPredictorMixedSupportSchema = z
+  .object({
+    dominantImpactTransferFamily: ImpactPredictorStructuralSupportTypeSchema.optional(),
+    duplicateOwnershipGuard: z.boolean().optional(),
+    mixedSupportRolePartition: ImpactPredictorMixedSupportRolePartitionSchema.optional(),
+    primaryCarrierFamily: ImpactPredictorStructuralSupportTypeSchema.optional(),
+    secondarySupportTreatmentOwner: ImpactPredictorMixedSupportSecondaryTreatmentOwnerSchema.optional()
+  })
+  .partial();
+
 const ImpactPredictorInputSchemaInternal = z.object({
   baseSlab: ImpactPredictorSectionSchema.optional(),
   carrierSpacingMm: z.number().positive().optional(),
@@ -93,6 +116,7 @@ const ImpactPredictorInputSchemaInternal = z.object({
   impactSystemType: ImpactPredictorSystemTypeSchema.optional(),
   loadBasisKgM2: z.number().positive().optional(),
   lowerTreatment: ImpactPredictorLowerTreatmentSchema.optional(),
+  mixedSupport: ImpactPredictorMixedSupportSchema.optional(),
   officialFloorSystemId: z.string().min(1).optional(),
   referenceFloorType: z.string().min(1).optional(),
   resilientLayer: ImpactPredictorResilientLayerSchema.optional(),
@@ -107,6 +131,12 @@ export type ImpactPredictorLowerTreatmentSupportClass = z.infer<
   typeof ImpactPredictorLowerTreatmentSupportClassSchema
 >;
 export type ImpactPredictorLowerTreatmentType = z.infer<typeof ImpactPredictorLowerTreatmentTypeSchema>;
+export type ImpactPredictorMixedSupportRolePartition = z.infer<
+  typeof ImpactPredictorMixedSupportRolePartitionSchema
+>;
+export type ImpactPredictorMixedSupportSecondaryTreatmentOwner = z.infer<
+  typeof ImpactPredictorMixedSupportSecondaryTreatmentOwnerSchema
+>;
 export type ImpactPredictorStructuralSupportType = z.infer<typeof ImpactPredictorStructuralSupportTypeSchema>;
 export type ImpactPredictorSupportForm = z.infer<typeof ImpactPredictorSupportFormSchema>;
 export type ImpactPredictorSystemType = z.infer<typeof ImpactPredictorSystemTypeSchema>;

@@ -309,29 +309,29 @@ describe("broad accuracy floor open-web field/building surface parity contract",
     }
   });
 
-  it("keeps raw-bare impact field transfer visible as blocked while airborne field values stay visible", () => {
+  it("keeps raw-bare open-web field transfer visible through the explicit field adapter", () => {
     const rawBare = calculateFieldSurface(RAW_OPEN_WEB_300);
 
-    expect(rawBare.supportedTargetOutputs).toEqual(["Rw", "R'w", "DnT,w", "Ln,w"]);
-    expect(rawBare.unsupportedTargetOutputs).toEqual(["L'n,w", "L'nT,w", "L'nT,50", "IIC"]);
+    expect(rawBare.supportedTargetOutputs).toEqual(["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]);
+    expect(rawBare.unsupportedTargetOutputs).toEqual(["IIC"]);
     expect(rawBare.floorSystemRatings).toMatchObject({ Rw: 32, basis: OPEN_WEB_RAW_BARE_FORMULA_BASIS });
     expect(rawBare.metrics).toMatchObject({ estimatedDnTwDb: 80, estimatedRwPrimeDb: 77 });
     expect(rawBare.impact).toMatchObject({
       CI: 1.8,
       CI50_2500: 5.2,
+      LPrimeNW: 98,
+      LPrimeNTw: 95.6,
+      LPrimeNT50: 100.8,
       LnW: 96,
       LnWPlusCI: 97.8,
-      basis: OPEN_WEB_RAW_BARE_FORMULA_BASIS
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization"
     });
-    expect(rawBare.impact?.LPrimeNW).toBeUndefined();
-    expect(rawBare.impact?.LPrimeNTw).toBeUndefined();
-    expect(rawBare.impact?.LPrimeNT50).toBeUndefined();
     expect(
       rawBare.impact?.errorBudgets?.some((budget) => budget.origin === "source_absent_field_building_adapter_error_budget")
-    ).toBe(false);
+    ).toBe(true);
   });
 
-  it("keeps building prediction and ASTM/IIC surfaces unsupported instead of relabelled", () => {
+  it("keeps building impact and ASTM/IIC surfaces unsupported while later airborne building coverage stays live", () => {
     const building = calculateAssembly(RAW_OPEN_WEB_300, {
       airborneContext: BUILDING_PREDICTION_CONTEXT,
       calculator: "dynamic",
@@ -345,10 +345,12 @@ describe("broad accuracy floor open-web field/building surface parity contract",
       targetOutputs: ASTM_OUTPUTS
     });
 
-    expect(building.supportedTargetOutputs).toEqual([]);
-    expect(building.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]);
-    expect(building.metrics.estimatedRwPrimeDb).toBeUndefined();
-    expect(building.metrics.estimatedDnTwDb).toBeUndefined();
+    expect(building.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
+    expect(building.unsupportedTargetOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w"]);
+    expect(building.metrics).toMatchObject({
+      estimatedDnTwDb: 32,
+      estimatedRwPrimeDb: 30
+    });
     expect(building.impact).toMatchObject({ LnW: 96, basis: OPEN_WEB_RAW_BARE_FORMULA_BASIS });
     expect(
       building.impact?.errorBudgets?.some((budget) => budget.origin === "source_absent_field_building_adapter_error_budget")
@@ -378,7 +380,7 @@ describe("broad accuracy floor open-web field/building surface parity contract",
       expect(normalizedContent, path).toContain("impact-only api");
       expect(normalizedWhitespaceContent, path).toContain("markdown report");
       expect(normalizedWhitespaceContent, path).toContain("source_absent_field_building_adapter_error_budget");
-      expect(normalizedWhitespaceContent, path).toContain("raw-bare impact field transfer remains blocked");
+      expect(normalizedWhitespaceContent, path).toContain("raw-bare open-web field transfer is active");
       expect(normalizedWhitespaceContent, path).toContain("not a broad source crawl");
     }
 

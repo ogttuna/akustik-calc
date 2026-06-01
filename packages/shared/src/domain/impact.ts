@@ -55,7 +55,8 @@ export const ImpactEstimateBasisSchema = z.enum([
   "predictor_explicit_delta_heavy_reference_derived",
   "predictor_heavy_bare_floor_iso12354_annexc_estimate",
   "predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate",
-  "predictor_heavy_floating_floor_iso12354_annexc_estimate"
+  "predictor_heavy_floating_floor_iso12354_annexc_estimate",
+  "predictor_mixed_support_primary_heavy_concrete_combined_owner_guarded_estimate"
 ]);
 
 export const ImpactConfidenceLevelSchema = z.enum(["high", "medium", "low"]);
@@ -118,6 +119,7 @@ export const ImpactScopeSchema = z.enum([
   "narrow_heavy_concrete_only",
   "reference_heavy_floor_derived",
   "heavy_concrete_combined_upper_lower_formula_corridor",
+  "mixed_support_floor_formula_corridor",
   "timber_clt_floor_formula_corridor",
   "steel_floor_formula_corridor"
 ]);

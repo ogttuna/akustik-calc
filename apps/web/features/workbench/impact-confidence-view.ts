@@ -66,6 +66,10 @@ export function formatConfidenceProvenanceForImpact(input: {
     return "Heavy concrete combined formula corridor";
   }
 
+  if (input.basis === "predictor_mixed_support_primary_heavy_concrete_combined_owner_guarded_estimate") {
+    return "Mixed-support single-primary carrier formula corridor";
+  }
+
   if (input.basis === "predictor_lightweight_steel_mass_spring_holdout_corridor_estimate") {
     return "Steel formula corridor";
   }

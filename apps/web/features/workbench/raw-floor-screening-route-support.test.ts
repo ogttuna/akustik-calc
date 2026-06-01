@@ -20,8 +20,6 @@ type RawRouteCase = {
 };
 
 const FIELD_OUTPUTS: readonly RequestedOutputId[] = ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"];
-const OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS =
-  "broad_accuracy_floor_open_box_timber_raw_bare_source_absent_formula_corridor";
 
 const AIRBORNE_FIELD_CONTEXT = {
   contextMode: "field_between_rooms" as const,
@@ -237,10 +235,10 @@ const CASES: readonly RawRouteCase[] = [
     id: "raw_open_box_single",
     rows: [{ id: "a", materialId: "open_box_timber_slab", thicknessMm: 370 }],
     expected: {
-      basis: OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS,
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
       estimateKind: "family_archetype",
       floorSystemMatchId: null,
-      supported: ["Rw", "R'w", "DnT,w", "Ln,w"]
+      supported: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]
     }
   },
   {

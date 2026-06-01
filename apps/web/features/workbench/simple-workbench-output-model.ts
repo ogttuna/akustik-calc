@@ -30,6 +30,10 @@ import {
   isHeavyConcreteCombinedFormulaCorridorImpact
 } from "./heavy-concrete-combined-impact-corridor-view";
 import {
+  getMixedSupportFloorImpactCorridorOutputDetail,
+  isMixedSupportFloorImpactCorridorImpact
+} from "./mixed-support-floor-impact-corridor-view";
+import {
   getSteelFloorFormulaCorridorOutputDetail,
   isSteelFloorFormulaCorridorImpact
 } from "./steel-floor-formula-corridor-view";
@@ -514,6 +518,7 @@ export function buildOutputCard(input: {
   const isReinforcedConcreteLowConfidenceLane =
     isReinforcedConcreteLowConfidenceFloorLane(result);
   const isHeavyConcreteCombinedFormulaCorridor = isHeavyConcreteCombinedFormulaCorridorImpact(result);
+  const isMixedSupportFloorImpactCorridor = isMixedSupportFloorImpactCorridorImpact(result);
   const isSteelFloorFormulaCorridor = isSteelFloorFormulaCorridorImpact(result);
   const isTimberCltDeltaLwFormulaCorridor = isTimberCltDeltaLwFormulaCorridorImpact(result);
   const isOpenWebSupportedBandSimilarity = isOpenWebSupportedBandSimilarityResult(result);
@@ -844,6 +849,9 @@ export function buildOutputCard(input: {
             ? REINFORCED_CONCRETE_LOW_CONFIDENCE_LNW_DETAIL
             : isImpactOnlyLowConfidenceLane
               ? IMPACT_ONLY_LOW_CONFIDENCE_LNW_DETAIL
+              : isMixedSupportFloorImpactCorridor
+                ? getMixedSupportFloorImpactCorridorOutputDetail("Ln,w", result.impact) ??
+                  "Lab-side Ln,w from the active mixed-support formula corridor."
               : isHeavyConcreteCombinedFormulaCorridor
                 ? getHeavyConcreteCombinedFormulaCorridorOutputDetail("Ln,w", result.impact) ??
                   "Lab-side Ln,w from the active heavy-concrete combined formula corridor."
@@ -893,7 +901,10 @@ export function buildOutputCard(input: {
     case "L'n,w":
       if (typeof result?.impact?.LPrimeNW === "number") {
         return {
-          detail: isSteelFloorFormulaCorridor
+          detail: isMixedSupportFloorImpactCorridor
+            ? getMixedSupportFloorImpactCorridorOutputDetail("L'n,w", result.impact) ??
+              `Field-side impact value after K or direct-path carry-over; this is a field-impact continuation, not an independent exact field measurement. ${FIELD_OUTPUT_OWNER_POLICY_GUARD}`
+            : isSteelFloorFormulaCorridor
             ? getSteelFloorFormulaCorridorOutputDetail("L'n,w", result.impact) ??
               `Field-side impact value after K or direct-path carry-over; this is a field-impact continuation, not an independent exact field measurement. ${FIELD_OUTPUT_OWNER_POLICY_GUARD}`
             : `Field-side impact value after K or direct-path carry-over; this is a field-impact continuation, not an independent exact field measurement. ${FIELD_OUTPUT_OWNER_POLICY_GUARD}`,
@@ -1006,7 +1017,10 @@ export function buildOutputCard(input: {
     case "DeltaLw":
       if (typeof result?.impact?.DeltaLw === "number") {
         return {
-          detail: isSteelFloorFormulaCorridor
+          detail: isMixedSupportFloorImpactCorridor
+            ? getMixedSupportFloorImpactCorridorOutputDetail("DeltaLw", result.impact) ??
+              "DeltaLw from the active mixed-support formula corridor."
+            : isSteelFloorFormulaCorridor
             ? getSteelFloorFormulaCorridorOutputDetail("DeltaLw", result.impact) ?? "DeltaLw from the active steel formula corridor."
             : isHeavyConcreteCombinedFormulaCorridor
               ? getHeavyConcreteCombinedFormulaCorridorOutputDetail("DeltaLw", result.impact) ??
@@ -1061,7 +1075,10 @@ export function buildOutputCard(input: {
     case "L'nT,w":
       if (typeof result?.impact?.LPrimeNTw === "number") {
         return {
-          detail: isSteelFloorFormulaCorridor
+          detail: isMixedSupportFloorImpactCorridor
+            ? getMixedSupportFloorImpactCorridorOutputDetail("L'nT,w", result.impact) ??
+              `Standardized field impact result with receiving-room normalization; this is a field-impact continuation, not an independent exact field measurement. ${FIELD_OUTPUT_OWNER_POLICY_GUARD}`
+            : isSteelFloorFormulaCorridor
             ? getSteelFloorFormulaCorridorOutputDetail("L'nT,w", result.impact) ??
               `Standardized field impact result with receiving-room normalization; this is a field-impact continuation, not an independent exact field measurement. ${FIELD_OUTPUT_OWNER_POLICY_GUARD}`
             : `Standardized field impact result with receiving-room normalization; this is a field-impact continuation, not an independent exact field measurement. ${FIELD_OUTPUT_OWNER_POLICY_GUARD}`,
@@ -1086,7 +1103,10 @@ export function buildOutputCard(input: {
     case "L'nT,50":
       if (typeof result?.impact?.LPrimeNT50 === "number") {
         return {
-          detail: isSteelFloorFormulaCorridor
+          detail: isMixedSupportFloorImpactCorridor
+            ? getMixedSupportFloorImpactCorridorOutputDetail("L'nT,50", result.impact) ??
+              `Standardized field impact value with the extended low-frequency companion; this is a field-impact continuation, not an independent exact field measurement. ${FIELD_OUTPUT_OWNER_POLICY_GUARD}`
+            : isSteelFloorFormulaCorridor
             ? getSteelFloorFormulaCorridorOutputDetail("L'nT,50", result.impact) ??
               `Standardized field impact value with the extended low-frequency companion; this is a field-impact continuation, not an independent exact field measurement. ${FIELD_OUTPUT_OWNER_POLICY_GUARD}`
             : `Standardized field impact value with the extended low-frequency companion; this is a field-impact continuation, not an independent exact field measurement. ${FIELD_OUTPUT_OWNER_POLICY_GUARD}`,

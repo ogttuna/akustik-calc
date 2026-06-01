@@ -109,6 +109,13 @@ Authentication:
 Agent workflow:
 
 - read [`AGENTS.md`](./AGENTS.md) before changing calculator behavior
+- treat calculator work as scope/accuracy work only: make more
+  physically valid wall/floor layer combinations calculate correctly, or
+  improve an existing formula/anchor/boundary; do not drift into source
+  catalog, low-confidence wording, report polish, auth/storage, or
+  finite scenario work unless explicitly requested
+- read [`docs/calculator/CALCULATOR_SOURCE_OF_TRUTH.md`](./docs/calculator/CALCULATOR_SOURCE_OF_TRUTH.md)
+  before older roadmap or handoff files
 - use [`docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`](./docs/calculator/NEXT_IMPLEMENTATION_PLAN.md)
   as the current next-step authority
 - run `pnpm calculator:gate:current` for the focused current-slice confidence

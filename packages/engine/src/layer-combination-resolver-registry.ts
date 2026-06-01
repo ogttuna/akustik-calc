@@ -18,6 +18,13 @@ import {
   HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_DELTA_LW_TOLERANCE_DB,
   HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_LN_W_TOLERANCE_DB
 } from "./heavy-concrete-combined-impact-formula-corridor";
+import {
+  MIXED_SUPPORT_FLOOR_IMPACT_FORMULA_BASIS,
+  MIXED_SUPPORT_FLOOR_IMPACT_FORMULA_DELTA_LW_TOLERANCE_DB,
+  MIXED_SUPPORT_FLOOR_IMPACT_FORMULA_LN_W_TOLERANCE_DB,
+  MIXED_SUPPORT_FLOOR_IMPACT_REQUIRED_FIELDS,
+  MIXED_SUPPORT_FLOOR_IMPACT_SELECTED_CANDIDATE_ID
+} from "./mixed-support-floor-impact-runtime-corridor";
 import { HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS } from "./impact-estimate";
 import { EXACT_IMPACT_SOURCE_BAND_CURVE_BASIS } from "./impact-exact";
 import {
@@ -28,6 +35,11 @@ import {
   FLOOR_IMPACT_FIELD_BUILDING_ADAPTER_ERROR_BUDGET_ORIGIN,
   FLOOR_IMPACT_FIELD_BUILDING_ADAPTER_SELECTED_CANDIDATE_ID
 } from "./impact-field-adapter-error-budget";
+import {
+  FLOOR_RAW_BARE_AIRBORNE_BUILDING_PREDICTION_OUTPUTS,
+  FLOOR_RAW_BARE_AIRBORNE_BUILDING_PREDICTION_RUNTIME_BASIS,
+  FLOOR_RAW_BARE_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID
+} from "./floor-raw-bare-airborne-building-prediction-runtime";
 import {
   COMPOSITE_PANEL_PUBLISHED_INTERACTION_ESTIMATE_BASIS,
   COMPOSITE_PANEL_PUBLISHED_INTERACTION_LN_W_TOLERANCE_DB,
@@ -322,6 +334,70 @@ const RESOLVER_ORDER = [
 ] as const satisfies readonly LayerCombinationResolverOrderEntry[];
 
 const CANDIDATE_DECLARATIONS = [
+  {
+    basis: "element_lab",
+    errorBudgetTerms: [
+      {
+        metric: "Ln,w",
+        notMeasuredEvidence: true,
+        toleranceDb: MIXED_SUPPORT_FLOOR_IMPACT_FORMULA_LN_W_TOLERANCE_DB
+      },
+      {
+        metric: "DeltaLw",
+        notMeasuredEvidence: true,
+        toleranceDb: MIXED_SUPPORT_FLOOR_IMPACT_FORMULA_DELTA_LW_TOLERANCE_DB
+      }
+    ],
+    exactPrecedenceRules: [
+      "exact_floor_system_and_exact_impact_band_sources_win_before_mixed_support_formula",
+      "mixed_support_formula_runs_only_after_explicit_single_primary_carrier_ownership"
+    ],
+    formulaTerms: [
+      "primary_carrier_family_owner",
+      "dominant_impact_transfer_family_owner",
+      "mixed_support_role_partition",
+      "secondary_lower_treatment_owner",
+      "duplicate_ownership_guard",
+      "heavy_concrete_combined_upper_lower_formula_corridor"
+    ],
+    hardCompatibilityGates: [
+      "floor_route",
+      "mixed_support_owner_present",
+      "single_primary_reinforced_concrete_carrier",
+      "dominant_transfer_family_reinforced_concrete",
+      "secondary_support_treatment_lower_only",
+      "duplicate_ownership_guard_true",
+      "complete_upper_and_lower_impact_inputs",
+      "element_lab_metric_basis"
+    ],
+    hostileInputCases: [
+      "missing_primary_carrier_family_needs_input",
+      "missing_role_partition_needs_input",
+      "duplicate_primary_carriers_blocked",
+      "secondary_support_as_upper_owner_blocked",
+      "astm_iic_aiic_stays_unsupported"
+    ],
+    id: MIXED_SUPPORT_FLOOR_IMPACT_SELECTED_CANDIDATE_ID,
+    kind: "source_absent_family_solver",
+    label: "Mixed-support single-primary-carrier lab impact formula",
+    ownedRuntimeBasisId: MIXED_SUPPORT_FLOOR_IMPACT_FORMULA_BASIS,
+    priorityRank: 3,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      ...MIXED_SUPPORT_FLOOR_IMPACT_REQUIRED_FIELDS,
+      "ISO_12354_2_Annex_C_lab_impact_adapter"
+    ],
+    route: "floor",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "exact_floor_rows_and_exact_impact_bands_stay_rank_zero",
+      "mixed_support_same_stack_holdouts_may_tighten_budget_later",
+      "field_or_astm_requests_need_separate_field_or_astm_owner"
+    ],
+    supportedMetrics: ["Ln,w", "DeltaLw"],
+    surfaceRequirements: ELEMENT_LAB_SURFACES,
+    valuePins: []
+  },
   {
     basis: "element_lab",
     errorBudgetTerms: [],
@@ -2027,12 +2103,12 @@ const CANDIDATE_DECLARATIONS = [
       "impact_field_context_present",
       "owned_lab_impact_anchor",
       "same_support_family",
-      "no_raw_bare_field_transfer",
+      "raw_bare_open_web_field_transfer_owner_guard",
       "no_building_prediction_transfer"
     ],
     hostileInputCases: [
       "partial_field_context_needs_input",
-      "raw_bare_lab_impact_field_transfer_blocked",
+      "raw_bare_open_box_lab_impact_field_transfer_blocked",
       "building_prediction_context_stays_separate"
     ],
     id: FLOOR_IMPACT_FIELD_BUILDING_ADAPTER_SELECTED_CANDIDATE_ID,
@@ -2059,6 +2135,72 @@ const CANDIDATE_DECLARATIONS = [
       { metric: "R'w", value: 77 },
       { metric: "DnT,w", value: 80 },
       { metric: "L'nT,w", value: 70.6 }
+    ]
+  },
+  {
+    basis: "building_prediction",
+    errorBudgetTerms: [
+      { metric: "R'w", notMeasuredEvidence: true, toleranceDb: 9 },
+      { metric: "Dn,w", notMeasuredEvidence: true, toleranceDb: 9 },
+      { metric: "Dn,A", notMeasuredEvidence: true, toleranceDb: 9 },
+      { metric: "DnT,w", notMeasuredEvidence: true, toleranceDb: 9 },
+      { metric: "DnT,A", notMeasuredEvidence: true, toleranceDb: 9 }
+    ],
+    exactPrecedenceRules: [
+      "same_stack_building_rows_win_before_source_absent_building_prediction",
+      "raw_bare_floor_direct_rw_owner_wins_before_generic_screening_airborne_curve",
+      "impact_field_adapter_does_not_own_airborne_building_outputs"
+    ],
+    formulaTerms: [
+      "owned_raw_bare_floor_direct_rw",
+      "mass_law_curve_calibrated_to_floor_direct_rw",
+      "explicit_building_flanking_context_overlay",
+      "source_and_receiving_room_volume_context",
+      "receiving_room_rt60_context",
+      "iso_717_1_field_and_standardized_rating_adapter"
+    ],
+    hardCompatibilityGates: [
+      "floor_route",
+      "building_prediction_context",
+      "raw_bare_open_box_or_open_web_floor_carrier",
+      "complete_flanking_junction_context",
+      "complete_room_standardization_context",
+      "no_generic_screening_curve_promotion"
+    ],
+    hostileInputCases: [
+      "missing_building_context_needs_input_or_stays_unsupported",
+      "lab_rw_stc_c_ctr_do_not_relabel_as_building_outputs",
+      "impact_ln_w_and_astm_aliases_stay_separate",
+      "field_between_rooms_context_stays_on_field_adapter"
+    ],
+    id: FLOOR_RAW_BARE_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID,
+    kind: "field_building_adapter",
+    label: "Raw-bare floor airborne building-prediction adapter",
+    ownedRuntimeBasisId: FLOOR_RAW_BARE_AIRBORNE_BUILDING_PREDICTION_RUNTIME_BASIS,
+    priorityRank: 4,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      "rawBareFloorDirectRwOwner",
+      "airborneContext.contextMode=building_prediction",
+      "airborneContext.panelWidthHeight",
+      "airborneContext.sourceRoomVolumeM3",
+      "airborneContext.receivingRoomVolumeM3",
+      "airborneContext.receivingRoomRt60S",
+      "airborneContext.flankingJunctionClass",
+      "airborneContext.conservativeFlankingAssumption",
+      "airborneContext.junctionCouplingLengthM"
+    ],
+    route: "floor",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "building_airborne_values_stay_tied_to_the_owned_raw_bare_floor_direct_rw",
+      "nearby lab rows may not anchor building metrics without same basis and flanking context"
+    ],
+    supportedMetrics: [...FLOOR_RAW_BARE_AIRBORNE_BUILDING_PREDICTION_OUTPUTS],
+    surfaceRequirements: FIELD_SURFACES,
+    valuePins: [
+      { metric: "R'w", value: 36 },
+      { metric: "DnT,w", value: 39 }
     ]
   },
   {

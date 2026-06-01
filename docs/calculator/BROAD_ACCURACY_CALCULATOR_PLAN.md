@@ -101,7 +101,7 @@ product by themselves. The product is a resolver that can calculate.
 - owner selected next file:
   `packages/engine/src/broad-accuracy-floor-helper-only-timber-open-web-impact-stack-formula-corridor-contract.test.ts`;
 - exact FL-23, direct-fixed, and supported-band field values remain
-  pinned while raw-bare impact field transfer remains blocked, building
+  pinned while raw-bare open-web field transfer is active, building
   prediction remains unsupported, ASTM/IIC/AIIC aliases remain blocked,
   and broad source crawling remains blocked;
 - the refreshed matrix ranks observed unsupported/needs-input and weak
@@ -771,7 +771,7 @@ selection status
 It is no-runtime: existing exact UBIQ, direct-fixed, and supported-band
 open-web `field_between_rooms` continuations remain pinned, explicit
 `impactFieldContext` owns `L'n,w`, `L'nT,w`, and `L'nT,50` only for
-those lab anchors, raw-bare impact field transfer remains blocked even
+those lab anchors, raw-bare open-web field transfer is active even
 when the raw-bare lab `Ln,w 96` formula corridor is present, building
 prediction remains unsupported until separate flanking/building owners
 exist, and ASTM/IIC aliases remain blocked. The selected next action is
@@ -790,7 +790,7 @@ supported-band field values plus
 `source_absent_field_building_adapter_error_budget` terms. The visible
 pins remain `Rw 51/52/61.5`, `R'w 77/75/45`, `DnT,w 80/78/48`,
 `Ln,w 71/77/61.5`, `L'n,w 73/79/63.5`, `L'nT,w 70.6/76.6/61.1`, and
-`L'nT,50 70/76.5/60`; raw-bare impact field transfer remains blocked,
+`L'nT,50 70/76.5/60`; raw-bare open-web field transfer is active,
 building prediction remains unsupported, and ASTM/IIC aliases remain
 blocked. The selected next action is
 `broad_accuracy_floor_open_web_field_building_input_surface_plan` in
@@ -809,7 +809,7 @@ UI-derived field contexts keep `Rw 51/52/61.5`, `R'w 77/75/45`,
 `DnT,w 80/78/48`, `Ln,w 71/77/61.5`, `L'n,w 73/79/63.5`,
 `L'nT,w 70.6/76.6/61.1`, and `L'nT,50 70/76.5/60`; partial field
 contexts name the missing panel, room, RT60, K, or impact-volume
-inputs; raw-bare impact field transfer remains blocked, building
+inputs; raw-bare open-web field transfer is active, building
 prediction remains unsupported, and ASTM/IIC aliases remain blocked.
 The selected next action is
 `broad_accuracy_floor_open_web_field_building_post_input_surface_revalidation_plan`
@@ -823,8 +823,7 @@ now landed as
 with selection status
 `broad_accuracy_floor_open_web_field_building_post_input_surface_revalidation_landed_no_runtime_selected_matrix_refresh`.
 It is no-runtime: exact, direct-fixed, and supported-band open-web field
-values remain pinned after the input-surface wiring; raw-bare impact
-field transfer remains blocked, building prediction remains unsupported,
+values remain pinned after the input-surface wiring; raw-bare open-web field transfer is active, building prediction remains unsupported,
 ASTM/IIC aliases remain blocked, and broad source crawling remains
 blocked. The selected next action is
 `broad_accuracy_post_open_web_field_building_input_surface_matrix_refresh_plan`

@@ -1,4 +1,5 @@
 import type {
+  AirborneContext,
   DynamicImpactTrace,
   FloorSystemBoundEstimateResult,
   FloorSystemBoundMatchResult,
@@ -70,6 +71,7 @@ import {
   inferImpactSupportingElementFamilyFromImpactCatalogMatch,
   inferImpactSupportingElementFamilyFromPredictorInput
 } from "./impact-supporting-element-family";
+import { shouldBlockMixedSupportFloorImpactFormulaFallback } from "./mixed-support-floor-impact-runtime-corridor";
 
 export type ResolvedImpactLane = {
   boundFloorSystemEstimate: FloorSystemBoundEstimateResult | null;
@@ -102,6 +104,7 @@ export type FinalizedImpactLane = {
 };
 
 type FinalizeResolvedImpactLaneInput = {
+  airborneContext?: AirborneContext | null;
   boundFloorSystemEstimate?: FloorSystemBoundEstimateResult | null;
   boundFloorSystemMatch?: FloorSystemBoundMatchResult | null;
   exactImpactSource?: ExactImpactSource | null;
@@ -117,6 +120,18 @@ type FinalizeResolvedImpactLaneInput = {
   preferredSupplementaryImpact?: ImpactCalculation | null;
   resolvedLayers: readonly ResolvedLayer[];
 };
+
+function hasExplicitImpactBuildingPredictionOwner(context: ImpactFieldContext | null | undefined): boolean {
+  return Boolean(
+    context &&
+      Array.isArray(context.flankingPaths) &&
+      context.flankingPaths.length > 0 &&
+      (
+        typeof context.directPathOffsetDb === "number" ||
+        typeof context.fieldKDb === "number"
+      )
+  );
+}
 
 type BuildResolvedImpactArtifactsInput = {
   boundFloorSystemEstimate?: FloorSystemBoundEstimateResult | null;
@@ -244,6 +259,7 @@ export function resolveLayerBasedImpactLane(
   const blockHeavyConcreteCombinedFormulaFallback = shouldBlockHeavyConcreteCombinedImpactFormulaFallback(
     input.predictorInput
   );
+  const blockMixedSupportFormulaFallback = shouldBlockMixedSupportFloorImpactFormulaFallback(input.predictorInput);
   const floorSystemRecommendations = floorSystemMatch
     ? []
     : recommendFloorSystems(input.resolvedLayers, FLOOR_SYSTEM_VISIBLE_RECOMMENDATION_LIMIT);
@@ -255,7 +271,8 @@ export function resolveLayerBasedImpactLane(
     !impactCatalogMatch &&
     !explicitDeltaImpact &&
     !blockSteelFormulaFallback &&
-    !blockHeavyConcreteCombinedFormulaFallback
+    !blockHeavyConcreteCombinedFormulaFallback &&
+    !blockMixedSupportFormulaFallback
       ? deriveOpenBoxTimberSimilarityEstimate({
           layers: input.resolvedLayers,
           targetOutputs: input.targetOutputs
@@ -270,7 +287,8 @@ export function resolveLayerBasedImpactLane(
     !explicitDeltaImpact &&
     !openBoxTimberSimilarityEstimate &&
     !blockSteelFormulaFallback &&
-    !blockHeavyConcreteCombinedFormulaFallback
+    !blockHeavyConcreteCombinedFormulaFallback &&
+    !blockMixedSupportFormulaFallback
       ? deriveOpenBoxTimberEpsScreedHybridPackageEstimate({
           layers: input.resolvedLayers,
           targetOutputs: input.targetOutputs
@@ -286,7 +304,8 @@ export function resolveLayerBasedImpactLane(
     !openBoxTimberSimilarityEstimate &&
     !openBoxTimberEpsScreedHybridPackageEstimate &&
     !blockSteelFormulaFallback &&
-    !blockHeavyConcreteCombinedFormulaFallback
+    !blockHeavyConcreteCombinedFormulaFallback &&
+    !blockMixedSupportFormulaFallback
       ? deriveOpenBoxTimberRawBareEstimate({
           layers: input.resolvedLayers,
           targetOutputs: input.targetOutputs
@@ -303,7 +322,8 @@ export function resolveLayerBasedImpactLane(
     !openBoxTimberEpsScreedHybridPackageEstimate &&
     !openBoxTimberRawBareEstimate &&
     !blockSteelFormulaFallback &&
-    !blockHeavyConcreteCombinedFormulaFallback
+    !blockHeavyConcreteCombinedFormulaFallback &&
+    !blockMixedSupportFormulaFallback
       ? deriveHelperOnlyTimberOpenWebImpactStackEstimate({
           explicitFloorRoleStack: input.explicitFloorRoleStack,
           layers: input.resolvedLayers,
@@ -322,7 +342,8 @@ export function resolveLayerBasedImpactLane(
     !openBoxTimberRawBareEstimate &&
     !helperOnlyTimberOpenWebImpactStackEstimate &&
     !blockSteelFormulaFallback &&
-    !blockHeavyConcreteCombinedFormulaFallback
+    !blockHeavyConcreteCombinedFormulaFallback &&
+    !blockMixedSupportFormulaFallback
       ? buildTuasC11cGuardedIsoWeightedImpact(input.resolvedLayers)
       : null;
   const predictorFormulaImpact =
@@ -360,7 +381,8 @@ export function resolveLayerBasedImpactLane(
     !helperOnlyTimberOpenWebImpactStackEstimate &&
     !tuasC11cGuardedIsoWeightedImpact &&
     !blockSteelFormulaFallback &&
-    !blockHeavyConcreteCombinedFormulaFallback
+    !blockHeavyConcreteCombinedFormulaFallback &&
+    !blockMixedSupportFormulaFallback
       ? derivePredictorSpecificFloorSystemEstimate(input.predictorInput)
       : null;
   const predictorSpecificFloorSystemEstimate = rawPredictorSpecificFloorSystemEstimate;
@@ -370,7 +392,8 @@ export function resolveLayerBasedImpactLane(
       rejectProductDeltaFormulaFallback ||
       blockSteelFormulaFallback ||
       blockHeavyConcreteFloatingFormulaFallback ||
-      blockHeavyConcreteCombinedFormulaFallback
+      blockHeavyConcreteCombinedFormulaFallback ||
+      blockMixedSupportFormulaFallback
       ? null
       : tuasC11cGuardedIsoWeightedImpact ?? predictorFormulaImpact ?? estimateImpactFromLayers(input.resolvedLayers);
   const openWebSupportedBandSimilarityEstimate =
@@ -383,7 +406,8 @@ export function resolveLayerBasedImpactLane(
     !predictorSpecificFloorSystemEstimate &&
     !narrowImpact &&
     !blockSteelFormulaFallback &&
-    !blockHeavyConcreteCombinedFormulaFallback
+    !blockHeavyConcreteCombinedFormulaFallback &&
+    !blockMixedSupportFormulaFallback
       ? deriveLightweightSteelOpenWebSupportedBandSimilarityEstimate(input.resolvedLayers)
       : null;
   const openWebDirectFixedLiningEstimate =
@@ -397,7 +421,8 @@ export function resolveLayerBasedImpactLane(
     !openWebSupportedBandSimilarityEstimate &&
     !narrowImpact &&
     !blockSteelFormulaFallback &&
-    !blockHeavyConcreteCombinedFormulaFallback
+    !blockHeavyConcreteCombinedFormulaFallback &&
+    !blockMixedSupportFormulaFallback
       ? deriveLightweightSteelOpenWebDirectFixedLiningEstimate({
           layers: input.resolvedLayers,
           targetOutputs: input.targetOutputs
@@ -415,7 +440,8 @@ export function resolveLayerBasedImpactLane(
     !openWebDirectFixedLiningEstimate &&
     !narrowImpact &&
     !blockSteelFormulaFallback &&
-    !blockHeavyConcreteCombinedFormulaFallback
+    !blockHeavyConcreteCombinedFormulaFallback &&
+    !blockMixedSupportFormulaFallback
       ? deriveOpenWebRawBareEstimate({
           layers: input.resolvedLayers,
           targetOutputs: input.targetOutputs
@@ -437,7 +463,8 @@ export function resolveLayerBasedImpactLane(
     !helperOnlyTimberOpenWebImpactStackEstimate &&
     !narrowImpact &&
     !blockSteelFormulaFallback &&
-    !blockHeavyConcreteCombinedFormulaFallback
+    !blockHeavyConcreteCombinedFormulaFallback &&
+    !blockMixedSupportFormulaFallback
       ? deriveBoundFloorSystemEstimate(input.resolvedLayers)
       : null;
   const rawFloorSystemEstimate =
@@ -458,7 +485,8 @@ export function resolveLayerBasedImpactLane(
           !impactCatalogMatch &&
           !narrowImpact &&
           !blockSteelFormulaFallback &&
-          !blockHeavyConcreteCombinedFormulaFallback
+          !blockHeavyConcreteCombinedFormulaFallback &&
+          !blockMixedSupportFormulaFallback
         ? deriveFloorSystemEstimate(input.resolvedLayers, floorSystemRecommendations)
         : null;
   const floorSystemEstimate =
@@ -539,9 +567,37 @@ export function finalizeResolvedImpactLane(
           skipDirectFlanking: true
         })
       : baseImpact?.basis === OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS
-        ? baseImpact
+        ? input.airborneContext?.contextMode === "building_prediction"
+          ? hasExplicitImpactBuildingPredictionOwner(input.impactFieldContext)
+            ? applyImpactFieldContextToImpact(baseImpact, input.impactFieldContext, {
+                defaultSupportingElementFamily,
+                directFlankingOnly: true,
+                exactImpactSource: exactImpactSourceForFieldContext,
+                resolvedLayers: input.resolvedLayers
+              })
+            : baseImpact
+          : applyImpactFieldContextToImpact(baseImpact, input.impactFieldContext, {
+              defaultSupportingElementFamily,
+              exactImpactSource: exactImpactSourceForFieldContext,
+              resolvedLayers: input.resolvedLayers,
+              skipDirectFlanking: true
+            })
       : baseImpact?.basis === OPEN_WEB_RAW_BARE_FORMULA_BASIS
-        ? baseImpact
+        ? input.airborneContext?.contextMode === "building_prediction"
+          ? hasExplicitImpactBuildingPredictionOwner(input.impactFieldContext)
+            ? applyImpactFieldContextToImpact(baseImpact, input.impactFieldContext, {
+                defaultSupportingElementFamily,
+                directFlankingOnly: true,
+                exactImpactSource: exactImpactSourceForFieldContext,
+                resolvedLayers: input.resolvedLayers
+              })
+            : baseImpact
+          : applyImpactFieldContextToImpact(baseImpact, input.impactFieldContext, {
+              defaultSupportingElementFamily,
+              exactImpactSource: exactImpactSourceForFieldContext,
+              resolvedLayers: input.resolvedLayers,
+              skipDirectFlanking: true
+            })
       : baseImpact?.basis === OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS
         ? baseImpact
       : baseImpact?.basis === HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS

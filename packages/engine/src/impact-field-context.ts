@@ -208,6 +208,7 @@ export function applyImpactFieldContextToImpact(
     exactImpactSource?: ExactImpactSource | null;
     guideSource?: ImpactGuideSource;
     ignoreLowerTreatmentReduction?: boolean;
+    directFlankingOnly?: boolean;
     resolvedLayers?: readonly ResolvedLayer[] | null;
     skipDirectFlanking?: boolean;
   }
@@ -227,6 +228,10 @@ export function applyImpactFieldContextToImpact(
 
     if (directFlanking?.impact) {
       return directFlanking.impact;
+    }
+
+    if (options?.directFlankingOnly) {
+      return impact;
     }
   }
 

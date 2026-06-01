@@ -124,7 +124,7 @@ const CASES: readonly SourceGapCase[] = [
     }
   },
   {
-    id: "raw bare open-web uses source-absent raw-bare runtime without field impact aliases",
+    id: "raw bare open-web uses source-absent raw-bare runtime with explicit field impact companions",
     layers: [{ materialId: "open_web_steel_floor", thicknessMm: 300 }],
     expected: {
       candidateIds: ["source_absent_raw_bare_open_web_formula"],
@@ -132,22 +132,22 @@ const CASES: readonly SourceGapCase[] = [
       estimateBasis: OPEN_WEB_RAW_BARE_FORMULA_BASIS,
       estimateKind: "family_archetype",
       fitPercent: 100,
-      impactBasis: OPEN_WEB_RAW_BARE_FORMULA_BASIS,
-      lPrimeNT50: null,
-      lPrimeNTw: null,
-      lPrimeNW: null,
+      impactBasis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+      lPrimeNT50: 100.8,
+      lPrimeNTw: 95.6,
+      lPrimeNW: 98,
       lnW: 96,
       lnWPlusCI: 97.8,
       matchId: null,
       rw: 32,
       rwPrime: 70,
       dnTw: 73,
-      supported: ["Rw", "R'w", "DnT,w", "Ln,w", "CI,50-2500", "Ln,w+CI"],
-      unsupported: ["L'n,w", "L'nT,w", "L'nT,50"]
+      supported: FIELD_OUTPUTS,
+      unsupported: []
     }
   },
   {
-    id: "raw bare open-box uses source-absent raw-bare runtime without field impact aliases",
+    id: "raw bare open-box uses source-absent raw-bare runtime with explicit field impact companions",
     layers: [{ materialId: "open_box_timber_slab", thicknessMm: 220 }],
     expected: {
       candidateIds: ["source_absent_raw_bare_open_box_formula"],
@@ -155,18 +155,18 @@ const CASES: readonly SourceGapCase[] = [
       estimateBasis: OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS,
       estimateKind: "family_archetype",
       fitPercent: 100,
-      impactBasis: OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS,
-      lPrimeNT50: null,
-      lPrimeNTw: null,
-      lPrimeNW: null,
+      impactBasis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+      lPrimeNT50: 94.1,
+      lPrimeNTw: 90.7,
+      lPrimeNW: 93.1,
       lnW: 91.1,
       lnWPlusCI: 90.2,
       matchId: null,
       rw: 38.1,
       rwPrime: 35,
       dnTw: 38,
-      supported: ["Rw", "R'w", "DnT,w", "Ln,w", "CI,50-2500", "Ln,w+CI"],
-      unsupported: ["L'n,w", "L'nT,w", "L'nT,50"]
+      supported: FIELD_OUTPUTS,
+      unsupported: []
     }
   },
   {

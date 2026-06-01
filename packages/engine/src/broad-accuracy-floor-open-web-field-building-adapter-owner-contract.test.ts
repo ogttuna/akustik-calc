@@ -129,10 +129,10 @@ const FIELD_BUILDING_OWNER_REQUIREMENTS = [
     runtimePosture: "owned only for exact/direct-fixed/supported-band lab anchors"
   },
   {
-    id: "raw_bare_impact_field_transfer_boundary",
-    blockedOutputs: ["L'n,w", "L'nT,w", "L'nT,50"],
+    id: "raw_bare_open_web_impact_field_transfer_followup",
+    ownedOutputs: ["L'n,w", "L'nT,w", "L'nT,50"],
     blocker:
-      "raw-bare source-absent open-web Ln,w is not yet admitted to the field impact transfer owner despite having a lab Ln,w formula corridor"
+      "raw-bare source-absent open-web Ln,w was the follow-up field-transfer runtime gap after the owner boundary and is now admitted only with explicit field context"
   },
   {
     id: "open_web_building_prediction_boundary",
@@ -218,7 +218,7 @@ describe("broad accuracy floor open-web field/building adapter owner contract", 
     expect(FIELD_BUILDING_OWNER_REQUIREMENTS.map((requirement) => requirement.id)).toEqual([
       "airborne_field_between_rooms_rwprime_dntw_owner",
       "impact_field_lprime_owner",
-      "raw_bare_impact_field_transfer_boundary",
+      "raw_bare_open_web_impact_field_transfer_followup",
       "open_web_building_prediction_boundary",
       "astm_iic_aiic_boundary"
     ]);
@@ -286,7 +286,7 @@ describe("broad accuracy floor open-web field/building adapter owner contract", 
     }
   });
 
-  it("keeps raw-bare open-web field impact blocked while allowing only the current airborne field side", () => {
+  it("now carries raw-bare open-web field impact through the explicit field adapter", () => {
     const rawBare = calculateAssembly(RAW_OPEN_WEB_300, {
       airborneContext: AIRBORNE_FIELD_CONTEXT,
       calculator: "dynamic",
@@ -294,23 +294,29 @@ describe("broad accuracy floor open-web field/building adapter owner contract", 
       targetOutputs: FIELD_OUTPUTS
     });
 
-    expect(rawBare.supportedTargetOutputs).toEqual(["Rw", "R'w", "DnT,w", "Ln,w"]);
-    expect(rawBare.unsupportedTargetOutputs).toEqual(["L'n,w", "L'nT,w", "L'nT,50", "IIC"]);
+    expect(rawBare.supportedTargetOutputs).toEqual(["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]);
+    expect(rawBare.unsupportedTargetOutputs).toEqual(["IIC"]);
     expect(rawBare.floorSystemRatings).toMatchObject({ Rw: 32, basis: OPEN_WEB_RAW_BARE_FORMULA_BASIS });
     expect(rawBare.metrics).toMatchObject({ estimatedRwPrimeDb: 77, estimatedDnTwDb: 80 });
     expect(rawBare.impact).toMatchObject({
       LnW: 96,
+      LPrimeNW: 98,
+      LPrimeNTw: 95.6,
+      LPrimeNT50: 100.8,
       CI: 1.8,
       CI50_2500: 5.2,
       LnWPlusCI: 97.8,
-      basis: OPEN_WEB_RAW_BARE_FORMULA_BASIS
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization"
     });
-    expect(rawBare.impact?.LPrimeNW).toBeUndefined();
-    expect(rawBare.impact?.LPrimeNTw).toBeUndefined();
-    expect(rawBare.impact?.LPrimeNT50).toBeUndefined();
+    expect(rawBare.impact?.metricBasis).toMatchObject({
+      LPrimeNW: "estimated_field_lprimenw_from_lnw_plus_k",
+      LPrimeNTw: "estimated_standardized_field_lprimentw_from_lprimenw_plus_room_volume",
+      LPrimeNT50: "estimated_standardized_field_lpriment50_from_lprimentw_plus_ci50_2500"
+    });
+    expect(rawBare.impact?.errorBudgets?.some((budget) => budget.origin === "source_absent_field_building_adapter_error_budget")).toBe(true);
   });
 
-  it("keeps building prediction and ASTM/IIC outside the open-web field adapter owner", () => {
+  it("keeps building impact and ASTM/IIC outside the open-web field adapter owner while later airborne building coverage stays live", () => {
     const building = calculateAssembly(RAW_OPEN_WEB_300, {
       airborneContext: BUILDING_PREDICTION_CONTEXT,
       calculator: "dynamic",
@@ -324,10 +330,12 @@ describe("broad accuracy floor open-web field/building adapter owner contract", 
       targetOutputs: ASTM_OUTPUTS
     });
 
-    expect(building.supportedTargetOutputs).toEqual([]);
-    expect(building.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]);
-    expect(building.metrics.estimatedRwPrimeDb).toBeUndefined();
-    expect(building.metrics.estimatedDnTwDb).toBeUndefined();
+    expect(building.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
+    expect(building.unsupportedTargetOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w"]);
+    expect(building.metrics).toMatchObject({
+      estimatedDnTwDb: 32,
+      estimatedRwPrimeDb: 30
+    });
     expect(building.impact).toMatchObject({ LnW: 96, basis: OPEN_WEB_RAW_BARE_FORMULA_BASIS });
 
     expect(astm.supportedTargetOutputs).toEqual([]);

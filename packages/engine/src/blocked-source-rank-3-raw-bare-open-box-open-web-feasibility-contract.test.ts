@@ -60,7 +60,7 @@ const BLOCKED_SOURCE_RANK_3_RAW_BARE_EVIDENCE = {
 } as const;
 
 describe("blocked-source rank-3 raw bare open-box/open-web feasibility contract", () => {
-  it("keeps open-web blocked after the rank-3 audit while acknowledging the later raw-bare open-box runtime corridor", () => {
+  it("tracks raw-bare open-box/open-web runtime resolution after the rank-3 audit", () => {
     expect(BLOCKED_SOURCE_RANK_3_RAW_BARE_FEASIBILITY).toEqual({
       sliceId: "blocked_source_backed_widening_rerank_v1",
       auditedCandidateId: "raw_bare_open_box_open_web_impact_widening",
@@ -109,26 +109,26 @@ describe("blocked-source rank-3 raw bare open-box/open-web feasibility contract"
     expect(openWebField.floorSystemEstimate?.kind).toBe("family_archetype");
     expect(openWebField.impact).toMatchObject({
       CI50_2500: 5.2,
+      LPrimeNW: 98,
+      LPrimeNTw: 95.6,
+      LPrimeNT50: 100.8,
       LnW: 96,
       LnWPlusCI: 97.8,
-      basis: OPEN_WEB_RAW_BARE_FORMULA_BASIS,
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
       labOrField: "lab"
     });
-    expect(openWebField.impact?.LPrimeNW).toBeUndefined();
-    expect(openWebField.impact?.LPrimeNTw).toBeUndefined();
     expect(openWebField.supportedTargetOutputs).toEqual([
       "Rw",
       "R'w",
       "DnT,w",
       "Ln,w",
       "CI,50-2500",
-      "Ln,w+CI"
-    ]);
-    expect(openWebField.unsupportedTargetOutputs).toEqual([
+      "Ln,w+CI",
       "L'n,w",
       "L'nT,w",
       "L'nT,50"
     ]);
+    expect(openWebField.unsupportedTargetOutputs).toEqual([]);
 
     expect(openBoxLab.floorSystemMatch).toBeNull();
     expect(openBoxLab.floorSystemEstimate?.kind).toBe("family_archetype");
@@ -145,19 +145,17 @@ describe("blocked-source rank-3 raw bare open-box/open-web feasibility contract"
     expect(openBoxField.floorSystemEstimate?.kind).toBe("family_archetype");
     expect(openBoxField.impact).toMatchObject({
       CI50_2500: 3.4,
+      LPrimeNT50: 94.1,
+      LPrimeNTw: 90.7,
+      LPrimeNW: 93.1,
       LnW: 91.1,
       LnWPlusCI: 90.2,
-      basis: OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS,
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
       labOrField: "lab"
     });
-    expect(openBoxField.impact?.LPrimeNW).toBeUndefined();
-    expect(openBoxField.impact?.LPrimeNTw).toBeUndefined();
-    expect(openBoxField.supportedTargetOutputs).toEqual(["Rw", "R'w", "DnT,w", "Ln,w", "CI,50-2500", "Ln,w+CI"]);
-    expect(openBoxField.unsupportedTargetOutputs).toEqual([
-      "L'n,w",
-      "L'nT,w",
-      "L'nT,50"
-    ]);
+    expect(openBoxField.impact?.metricBasis?.LnW).toBe(OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS);
+    expect(openBoxField.supportedTargetOutputs).toEqual(FIELD_OUTPUTS);
+    expect(openBoxField.unsupportedTargetOutputs).toEqual([]);
 
     expect(BLOCKED_SOURCE_RANK_3_RAW_BARE_EVIDENCE).toEqual({
       openBoxFact: "visible_bare_open_box_routes_now_use_source_absent_raw_bare_formula_runtime_without_borrowing_packaged_tuas_rows",

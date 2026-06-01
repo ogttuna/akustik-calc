@@ -179,11 +179,11 @@ const MATRIX_ROWS = [
   },
   {
     basisBoundary: "field_between_rooms",
-    currentPosture: "unsupported",
-    expectedPosture: "stay_blocked",
-    failureClass: "raw_bare_lab_impact_cannot_transfer_to_field",
+    currentPosture: "supported",
+    expectedPosture: "stay_pinned",
+    failureClass: "none",
     family: "open_web_raw_bare",
-    id: "floor.open_web_raw_bare_field_transfer.blocked",
+    id: "floor.open_web_raw_bare_field_transfer.active",
     requestedMetrics: ["L'n,w", "L'nT,w", "L'nT,50"],
     sourceCrawlRequired: false
   },
@@ -406,7 +406,7 @@ describe("broad accuracy post open-web field/building input-surface matrix refre
     });
   });
 
-  it("refreshes the observed calculator gap matrix without promoting field/building, ASTM, or source-crawl work", () => {
+  it("refreshes the observed calculator gap matrix while keeping building, ASTM, and source-crawl work closed", () => {
     expect(MATRIX_ROWS).toHaveLength(10);
     expect(MATRIX_ROWS.filter((row) => row.sourceCrawlRequired)).toEqual([]);
     expect(MATRIX_ROWS.filter((row) => row.expectedPosture === "selected_next_owner").map((row) => row.id)).toEqual([
@@ -415,10 +415,10 @@ describe("broad accuracy post open-web field/building input-surface matrix refre
     expect(MATRIX_ROWS.filter((row) => row.expectedPosture === "stay_pinned").map((row) => row.id)).toEqual([
       "floor.open_web_exact_field_context.stable",
       "floor.open_web_direct_fixed_field_context.stable",
-      "floor.open_web_supported_band_field_context.stable"
+      "floor.open_web_supported_band_field_context.stable",
+      "floor.open_web_raw_bare_field_transfer.active"
     ]);
     expect(MATRIX_ROWS.filter((row) => row.expectedPosture === "stay_blocked").map((row) => row.id)).toEqual([
-      "floor.open_web_raw_bare_field_transfer.blocked",
       "floor.open_web_building_prediction.blocked",
       "floor.open_web_astm_iic_alias.blocked"
     ]);
@@ -426,7 +426,7 @@ describe("broad accuracy post open-web field/building input-surface matrix refre
       "none",
       "none",
       "none",
-      "raw_bare_lab_impact_cannot_transfer_to_field",
+      "none",
       "iso_12354_flanking_and_room_owner_missing",
       "astm_iic_aiic_rating_basis_owner_missing",
       "source_absent_floor_impact_solver_missing",
@@ -456,7 +456,7 @@ describe("broad accuracy post open-web field/building input-surface matrix refre
     expect(supportedBand.impact).toMatchObject({ LPrimeNT50: 60, LPrimeNTw: 61.1, LPrimeNW: 63.5, LnW: 61.5 });
   });
 
-  it("keeps raw-bare field transfer, building prediction, ASTM/IIC, and current helper-only postures explicit", () => {
+  it("opens raw-bare field transfer while keeping building prediction, ASTM/IIC, and current helper-only postures explicit", () => {
     const rawBareField = calculateFieldCase(RAW_OPEN_WEB_300);
     const building = calculateAssembly(RAW_OPEN_WEB_300, {
       airborneContext: BUILDING_PREDICTION_CONTEXT,
@@ -473,14 +473,23 @@ describe("broad accuracy post open-web field/building input-surface matrix refre
     const helperOnlyTimber = calculateAssembly(HELPER_ONLY_TIMBER, { targetOutputs: LAB_IMPACT_OUTPUTS });
     const helperOnlyOpenWeb = calculateAssembly(HELPER_ONLY_OPEN_WEB, { targetOutputs: LAB_IMPACT_OUTPUTS });
 
-    expect(rawBareField.supportedTargetOutputs).toEqual(["Rw", "R'w", "DnT,w", "Ln,w"]);
-    expect(rawBareField.unsupportedTargetOutputs).toEqual(["L'n,w", "L'nT,w", "L'nT,50", "IIC"]);
+    expect(rawBareField.supportedTargetOutputs).toEqual(["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]);
+    expect(rawBareField.unsupportedTargetOutputs).toEqual(["IIC"]);
     expect(rawBareField.floorSystemRatings).toMatchObject({ Rw: 32, basis: OPEN_WEB_RAW_BARE_FORMULA_BASIS });
-    expect(rawBareField.impact).toMatchObject({ LnW: 96, basis: OPEN_WEB_RAW_BARE_FORMULA_BASIS });
-    expect(rawBareField.impact?.LPrimeNW).toBeUndefined();
+    expect(rawBareField.impact).toMatchObject({
+      LnW: 96,
+      LPrimeNW: 98,
+      LPrimeNTw: 95.6,
+      LPrimeNT50: 100.8,
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization"
+    });
 
-    expect(building.supportedTargetOutputs).toEqual([]);
-    expect(building.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]);
+    expect(building.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
+    expect(building.unsupportedTargetOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w"]);
+    expect(building.metrics).toMatchObject({
+      estimatedDnTwDb: 32,
+      estimatedRwPrimeDb: 30
+    });
     expect(astm.supportedTargetOutputs).toEqual([]);
     expect(astm.unsupportedTargetOutputs).toEqual(["IIC", "AIIC"]);
 
@@ -533,7 +542,7 @@ describe("broad accuracy post open-web field/building input-surface matrix refre
       expect(content, path).toContain(SELECTED_NEXT_FILE);
       expect(normalizedWhitespaceContent, path).toContain("helper-only timber/open-web");
       expect(normalizedWhitespaceContent, path).toContain("exact, direct-fixed, and supported-band");
-      expect(normalizedWhitespaceContent, path).toContain("raw-bare impact field transfer remains blocked");
+      expect(normalizedWhitespaceContent, path).toContain("raw-bare open-web field transfer is active");
       expect(normalizedWhitespaceContent, path).toContain("building prediction");
       expect(normalizedWhitespaceContent, path).toContain("astm/iic");
       expect(normalizedWhitespaceContent, path).toContain("not a broad source crawl");

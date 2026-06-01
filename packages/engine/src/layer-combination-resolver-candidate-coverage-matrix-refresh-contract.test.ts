@@ -54,6 +54,7 @@ import {
   LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID
 } from "./layer-combination-resolver-single-leaf-mass-law-banded-runtime-constants";
 import { LIGHTWEIGHT_CONCRETE_FAMILY_SELECTED_CANDIDATE_ID } from "./lightweight-concrete-family-runtime-constants";
+import { MIXED_SUPPORT_FLOOR_IMPACT_SELECTED_CANDIDATE_ID } from "./mixed-support-floor-impact-runtime-corridor";
 import { OPEN_BOX_TIMBER_SIMILARITY_BASIS } from "./open-box-timber-similarity-estimate";
 import { OPEN_WEB_RAW_BARE_FORMULA_BASIS } from "./open-web-raw-bare-estimate";
 
@@ -212,20 +213,20 @@ describe("layer combination resolver candidate coverage matrix refresh contract"
       sourceRowsAreEvidenceNotProduct: true
     });
     expect(contract.summary).toEqual({
-      activeRuntimeCandidateCount: 36,
+      activeRuntimeCandidateCount: 38,
       allCandidateDeclarationsCovered: true,
       boundaryCandidateCount: 3,
-      candidateDeclarationCount: 39,
-      coverageMatrixRowCount: 39,
+      candidateDeclarationCount: 41,
+      coverageMatrixRowCount: 41,
       readinessBucketCount: {
         needs_input: 1,
         ready: 4,
-        ready_with_budget: 32,
+        ready_with_budget: 34,
         research_only: 0,
         unsupported: 2
       },
       selectedNextAction: LAYER_COMBINATION_RESOLVER_CANDIDATE_COVERAGE_MATRIX_REFRESH_SELECTED_NEXT_ACTION,
-      surfaceRowCount: 39
+      surfaceRowCount: 41
     });
 
     for (const path of REQUIRED_SURFACES) {
@@ -264,6 +265,7 @@ describe("layer combination resolver candidate coverage matrix refresh contract"
       },
       {
         candidateIds: [
+          MIXED_SUPPORT_FLOOR_IMPACT_SELECTED_CANDIDATE_ID,
           BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_SELECTED_CANDIDATE_ID,
           BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_SELECTED_CANDIDATE_ID,
           "candidate_post_v1_wall_multileaf_generalized_source_absent_family_solver",
@@ -295,6 +297,7 @@ describe("layer combination resolver candidate coverage matrix refresh contract"
           BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
           FLAT_LIST_MULTILEAF_GUARD_FIELD_SELECTED_CANDIDATE_ID,
           "floor.impact_field_context.field_building_adapter",
+          "floor.raw_bare_floor_airborne.building_prediction_adapter",
           "wall.airborne_field_context.field_apparent_adapter",
           "candidate_airborne_building_prediction_all_owner_family_physics_prediction"
         ],

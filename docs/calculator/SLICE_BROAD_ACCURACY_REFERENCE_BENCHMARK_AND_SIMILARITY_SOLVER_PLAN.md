@@ -638,7 +638,7 @@ selection status
 It is no-runtime: existing exact UBIQ, direct-fixed, and supported-band
 open-web `field_between_rooms` continuations remain pinned, explicit
 `impactFieldContext` owns `L'n,w`, `L'nT,w`, and `L'nT,50` only for
-those lab anchors, raw-bare impact field transfer remains blocked even
+those lab anchors, raw-bare open-web field transfer is active even
 when the raw-bare lab `Ln,w 96` formula corridor is present, building
 prediction remains unsupported until separate flanking/building owners
 exist, and ASTM/IIC aliases remain blocked.
@@ -676,7 +676,7 @@ supported-band field values plus
 `source_absent_field_building_adapter_error_budget` terms. The visible
 pins remain `Rw 51/52/61.5`, `R'w 77/75/45`, `DnT,w 80/78/48`,
 `Ln,w 71/77/61.5`, `L'n,w 73/79/63.5`, `L'nT,w 70.6/76.6/61.1`, and
-`L'nT,50 70/76.5/60`; raw-bare impact field transfer remains blocked,
+`L'nT,50 70/76.5/60`; raw-bare open-web field transfer is active,
 building prediction remains unsupported, and ASTM/IIC aliases remain
 blocked.
 

@@ -73,7 +73,7 @@ export function getOpenWebRawBareOutputDetail(
   const basisText =
     "Raw-bare open-web steel formula corridor is active on a source-absent bare-carrier element-lab lane";
   const boundaryText =
-    "Exact UBIQ package rows and direct-fixed INEX/firestop routes still win when they truly match; partial packages, field, building, ASTM, and IIC outputs stay outside this lab lane.";
+    "Exact UBIQ package rows and direct-fixed INEX/firestop routes still win when they truly match; partial packages, building, ASTM, and IIC outputs stay outside this lab lane, while field companions require the explicit field adapter.";
 
   switch (output) {
     case "Rw":

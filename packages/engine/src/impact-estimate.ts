@@ -6,6 +6,10 @@ import { getImpactConfidenceForBasis } from "./impact-confidence";
 import { buildUniformImpactMetricBasis } from "./impact-metric-basis";
 import { ksRound1, log10Safe, round1 } from "./math";
 import {
+  estimateMixedSupportFloorImpactFromPredictorInput,
+  shouldBlockMixedSupportFloorImpactFormulaFallback
+} from "./mixed-support-floor-impact-runtime-corridor";
+import {
   estimateSteelFloorImpactFromPredictorInput,
   estimateSteelFloorSuspendedCeilingOnlyImpactFromPredictorInput
 } from "./steel-floor-impact-formula-corridor";
@@ -228,6 +232,15 @@ function computePredictorBaseSurfaceMassKgM2(
 export function estimateImpactFromPredictorInput(
   input: ImpactPredictorInput
 ): ImpactCalculation | null {
+  const mixedSupportFormulaImpact = estimateMixedSupportFloorImpactFromPredictorInput(input);
+  if (mixedSupportFormulaImpact) {
+    return mixedSupportFormulaImpact;
+  }
+
+  if (shouldBlockMixedSupportFloorImpactFormulaFallback(input)) {
+    return null;
+  }
+
   const steelSuspendedCeilingFormulaImpact = estimateSteelFloorSuspendedCeilingOnlyImpactFromPredictorInput(input);
   if (steelSuspendedCeilingFormulaImpact) {
     return steelSuspendedCeilingFormulaImpact;

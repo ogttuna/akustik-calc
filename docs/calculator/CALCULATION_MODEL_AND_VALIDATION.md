@@ -1,6 +1,6 @@
 # Calculation Model And Validation
 
-Last reviewed: 2026-05-25
+Last reviewed: 2026-06-01
 
 Document role:
 
@@ -18,11 +18,11 @@ to validate a selected calculator answer once the slice is chosen.
 
 Latest checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-23_POST_V1_ACOUSTIC_CALCULATOR_STATE_RECONCILIATION.md`
+`docs/calculator/CHECKPOINT_2026-05-30_POST_V1_GATE_BF_STATE_RECONCILIATION.md`
 
 Latest landed implementation checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-23_POST_V1_ACOUSTIC_CALCULATOR_STATE_RECONCILIATION.md`
+`docs/calculator/CHECKPOINT_2026-05-30_POST_V1_GATE_BF_STATE_RECONCILIATION.md`
 
 Current validation posture:
 
@@ -38,22 +38,41 @@ the user answer when the selected path is `needs_input` or
 `unsupported`.
 
 The current gate keeps the answer-engine contract included in
-`pnpm calculator:gate:current`, 28 declared resolver candidates, and 25
-active runtime-basis mappings after the post-V1 generalized wall
-multileaf Gate B/C corridor and the Gate D compatible anchor-delta
-runtime.
+`pnpm calculator:gate:current`. The shared resolver surface currently
+has 40 declared candidates and 37 active runtime-basis mappings.
 
 The selected post-V1 plan is
 [POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md).
-Its next Gate E must select the next wall or floor formula/runtime gap
-by calculator ROI. Gate D has already proved the first compatible
-measured-anchor wall delta: Knauf LSF exact `Rw 55` plus one compatible
-outer acoustic board publishes `Rw 57` while STC / `C` / `Ctr` remain
-unsupported. Validation for the next gate must prove any new answer
+Gate BF is the latest landed runtime coverage slice:
+`post_v1_floor_suspended_ceiling_lower_treatment_field_companion_gate_bf_plan`.
+Assembly field-only lower-treatment now calculates owned field adapter
+outputs from the same source-absent lab anchor. Gate BF selected
+`post_v1_next_numeric_coverage_gap_gate_bg_plan`.
+The active Gate BG plan is
+[POST_V1_GATE_BG_NUMERIC_COVERAGE_AND_ACCURACY_RERANK_PLAN_2026-06-01.md](./POST_V1_GATE_BG_NUMERIC_COVERAGE_AND_ACCURACY_RERANK_PLAN_2026-06-01.md).
+Gate BG has landed as `post_v1_next_numeric_coverage_gap_gate_bg_plan`
+with status
+`post_v1_next_numeric_coverage_gap_gate_bg_landed_no_runtime_selected_floor_mixed_support_family_owner_boundary_gate_bh`;
+it selected `floor.mixed_support_family.multi_family_solver_gap` and
+`post_v1_floor_mixed_support_family_owner_boundary_gate_bh_plan` in
+`packages/engine/src/post-v1-floor-mixed-support-family-owner-boundary-gate-bh-contract.test.ts`.
+Gate BH has landed as
+`post_v1_floor_mixed_support_family_owner_boundary_gate_bh_plan` with
+status
+`post_v1_floor_mixed_support_family_owner_boundary_gate_bh_landed_no_runtime_selected_floor_mixed_support_family_runtime_corridor_gate_bi`.
+It pins `primaryCarrierFamily`, `dominantImpactTransferFamily`,
+`mixedSupportRolePartition`, `secondarySupportTreatmentOwner`, and
+`duplicateOwnershipGuard` as no-default owner fields and selects
+`post_v1_floor_mixed_support_family_runtime_corridor_gate_bi_plan` in
+`packages/engine/src/post-v1-floor-mixed-support-family-runtime-corridor-gate-bi-contract.test.ts`.
+
+Gate BG and every later gate must be selected by calculator ROI:
+increase calculable layer-combination scope, improve numeric
+correctness/calibration, or tighten a boundary that protects correct
+calculation. Validation for the next gate must prove any new answer
 appears consistently across workbench cards, traces, API payloads,
-reports, and
-missing-input prompts without aliasing field, building, or floor-impact
-metrics.
+reports, and missing-input prompts without aliasing lab, field,
+building, ISO impact, or ASTM metrics.
 
 ## Core Rule
 

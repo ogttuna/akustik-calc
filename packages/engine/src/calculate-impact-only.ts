@@ -83,6 +83,11 @@ import {
   collectTimberCltDeltaLwFormulaMissingPhysicalInputs
 } from "./timber-clt-floor-impact-delta-lw-runtime-corridor";
 import {
+  buildMixedSupportFloorImpactFormulaFallbackBlockerWarning,
+  buildMixedSupportFloorImpactUnsupportedBoundary,
+  collectMixedSupportFloorImpactMissingPhysicalInputs
+} from "./mixed-support-floor-impact-runtime-corridor";
+import {
   hasReinforcedConcreteLowConfidenceProxyAirborne,
   REINFORCED_CONCRETE_LOW_CONFIDENCE_PROXY_AIRBORNE_WARNING
 } from "./reinforced-concrete-low-confidence-airborne";
@@ -383,6 +388,66 @@ function applyAcousticCalculatorAnswerEngineV1TimberCltDeltaLwNeedsInputBoundary
   );
 }
 
+function applyAcousticCalculatorAnswerEngineV1MixedSupportFloorImpactNeedsInputBoundary(input: {
+  predictorInput: ImpactPredictorInput | null;
+  result: ImpactOnlyCalculation;
+}): void {
+  if (input.result.acousticAnswerBoundary || input.result.impact) {
+    return;
+  }
+
+  const missingPhysicalInputs = collectMixedSupportFloorImpactMissingPhysicalInputs(input.predictorInput);
+  const stoppedOutputs: RequestedOutputId[] = input.result.targetOutputs.filter((output: RequestedOutputId) =>
+    output === "Ln,w" || output === "DeltaLw"
+  );
+  const unsupportedOutputSet = new Set<RequestedOutputId>(input.result.unsupportedTargetOutputs);
+
+  if (
+    missingPhysicalInputs.length === 0 ||
+    stoppedOutputs.length === 0 ||
+    !stoppedOutputs.every((output: RequestedOutputId) => unsupportedOutputSet.has(output))
+  ) {
+    return;
+  }
+
+  const boundary = buildAnswerEngineV1FloorImpactNeedsInputBoundary({
+    missingPhysicalInputs,
+    targetOutputs: stoppedOutputs
+  });
+  if (!boundary) {
+    return;
+  }
+
+  input.result.acousticAnswerBoundary = boundary;
+  input.result.warnings.push(
+    `Acoustic Calculator Answer Engine V1 selected needs_input for ${boundary.unsupportedOutputs.join(", ")}; provide ${boundary.missingPhysicalInputs.join(", ")} before DynEcho publishes mixed-support floor impact answers.`
+  );
+}
+
+function applyAcousticCalculatorAnswerEngineV1MixedSupportFloorImpactUnsupportedBoundary(input: {
+  predictorInput: ImpactPredictorInput | null;
+  result: ImpactOnlyCalculation;
+}): void {
+  if (input.result.acousticAnswerBoundary || input.result.impact) {
+    return;
+  }
+
+  const blockerWarning = buildMixedSupportFloorImpactFormulaFallbackBlockerWarning(input.predictorInput);
+  if (!blockerWarning || collectMixedSupportFloorImpactMissingPhysicalInputs(input.predictorInput).length > 0) {
+    return;
+  }
+
+  const boundary = buildMixedSupportFloorImpactUnsupportedBoundary(input.result.targetOutputs);
+  if (!boundary) {
+    return;
+  }
+
+  input.result.acousticAnswerBoundary = boundary;
+  input.result.warnings.push(
+    `Acoustic Calculator Answer Engine V1 selected unsupported for ${boundary.unsupportedOutputs.join(", ")}; mixed-support partitions outside the explicit single-primary-carrier owner corridor need a separate formula owner before DynEcho publishes values.`
+  );
+}
+
 export function calculateImpactOnly(
   inputVisibleLayers: readonly LayerInput[],
   options: CalculateImpactOnlyOptions = {}
@@ -673,9 +738,12 @@ export function calculateImpactOnly(
   const steelFloorFormulaFallbackBlockerWarning = buildSteelFloorImpactFormulaFallbackBlockerWarning(predictorInput);
   const heavyConcreteCombinedFormulaFallbackBlockerWarning =
     buildHeavyConcreteCombinedImpactFormulaFallbackBlockerWarning(predictorInput);
+  const mixedSupportFormulaFallbackBlockerWarning =
+    buildMixedSupportFloorImpactFormulaFallbackBlockerWarning(predictorInput);
   const impactPredictorAdditionalWarnings = [
     ...floorFamilySourceGuardWarnings,
     ...(heavyConcreteCombinedFormulaFallbackBlockerWarning ? [heavyConcreteCombinedFormulaFallbackBlockerWarning] : []),
+    ...(mixedSupportFormulaFallbackBlockerWarning ? [mixedSupportFormulaFallbackBlockerWarning] : []),
     ...(steelFloorFormulaFallbackBlockerWarning ? [steelFloorFormulaFallbackBlockerWarning] : [])
   ];
   const { dynamicImpactTrace, impactPredictorStatus, impactSupport } = buildResolvedImpactArtifacts({
@@ -709,6 +777,9 @@ export function calculateImpactOnly(
   warnings.push(...floorFamilySourceGuardWarnings);
   if (heavyConcreteCombinedFormulaFallbackBlockerWarning) {
     warnings.push(heavyConcreteCombinedFormulaFallbackBlockerWarning);
+  }
+  if (mixedSupportFormulaFallbackBlockerWarning) {
+    warnings.push(mixedSupportFormulaFallbackBlockerWarning);
   }
   if (steelFloorFormulaFallbackBlockerWarning) {
     warnings.push(steelFloorFormulaFallbackBlockerWarning);
@@ -842,6 +913,14 @@ export function calculateImpactOnly(
     result
   });
   applyAcousticCalculatorAnswerEngineV1TimberCltDeltaLwNeedsInputBoundary({
+    predictorInput,
+    result
+  });
+  applyAcousticCalculatorAnswerEngineV1MixedSupportFloorImpactNeedsInputBoundary({
+    predictorInput,
+    result
+  });
+  applyAcousticCalculatorAnswerEngineV1MixedSupportFloorImpactUnsupportedBoundary({
     predictorInput,
     result
   });

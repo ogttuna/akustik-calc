@@ -21,6 +21,12 @@ import {
   isHeavyConcreteCombinedFormulaCorridorImpact
 } from "./heavy-concrete-combined-impact-corridor-view";
 import {
+  MIXED_SUPPORT_FLOOR_IMPACT_LABEL,
+  formatMixedSupportFloorImpactErrorBudgetSummary,
+  formatMixedSupportFloorImpactErrorBudgetTerms,
+  isMixedSupportFloorImpactCorridorImpact
+} from "./mixed-support-floor-impact-corridor-view";
+import {
   formatTimberCltDeltaLwFormulaErrorBudgetSummary,
   formatTimberCltDeltaLwFormulaErrorBudgetTerms,
   isTimberCltDeltaLwFormulaCorridorImpact
@@ -158,6 +164,7 @@ function mapSolverSpreadTone(value: number): SimpleWorkbenchCorridorDossierCard[
 
 function buildImpactFormulaErrorBudgetCards(result: AssemblyCalculation): SimpleWorkbenchCorridorDossierCard[] {
   const isHeavyConcreteCombinedFormula = isHeavyConcreteCombinedFormulaCorridorImpact(result);
+  const isMixedSupportFormula = isMixedSupportFloorImpactCorridorImpact(result);
   const isOpenBoxTimberSimilarity = isOpenBoxTimberSimilarityResult(result);
   const isOpenBoxTimberRawBare = isOpenBoxTimberRawBareResult(result);
   const isOpenBoxTimberEpsScreedHybrid = isOpenBoxTimberEpsScreedHybridResult(result);
@@ -170,6 +177,8 @@ function buildImpactFormulaErrorBudgetCards(result: AssemblyCalculation): Simple
   return (result.impact?.errorBudgets ?? []).map((budget: ImpactErrorBudget) => ({
     detail: isHeavyConcreteCombinedFormula
       ? `${formatHeavyConcreteCombinedFormulaErrorBudgetSummary(budget)}. Terms: ${formatHeavyConcreteCombinedFormulaErrorBudgetTerms(budget)}.`
+      : isMixedSupportFormula
+      ? `${formatMixedSupportFloorImpactErrorBudgetSummary(budget)}. Terms: ${formatMixedSupportFloorImpactErrorBudgetTerms(budget)}.`
       : isOpenWebDirectFixedLining
       ? `${formatOpenWebDirectFixedLiningErrorBudgetSummary(budget)}. Terms: ${formatOpenWebDirectFixedLiningErrorBudgetTerms(budget)}.`
       : isOpenWebRawBare
@@ -265,6 +274,7 @@ function buildFloorCorridorDossier(result: AssemblyCalculation): SimpleWorkbench
   const toleranceLabel = formatImpactValidationTolerance(activeFamily?.maxToleranceDb ?? IMPACT_VALIDATION_CORPUS_SUMMARY.toleranceBandMaxDb);
   const errorBudgetCards = buildImpactFormulaErrorBudgetCards(result);
   const isHeavyConcreteCombinedFormula = isHeavyConcreteCombinedFormulaCorridorImpact(result);
+  const isMixedSupportFormula = isMixedSupportFloorImpactCorridorImpact(result);
   const isOpenBoxTimberSimilarity = isOpenBoxTimberSimilarityResult(result);
   const isOpenBoxTimberRawBare = isOpenBoxTimberRawBareResult(result);
   const isOpenBoxTimberEpsScreedHybrid = isOpenBoxTimberEpsScreedHybridResult(result);
@@ -277,6 +287,8 @@ function buildFloorCorridorDossier(result: AssemblyCalculation): SimpleWorkbench
       ? ""
       : isHeavyConcreteCombinedFormula
         ? " Source-absent heavy-concrete combined upper/lower budgets are structured and marked not measured evidence."
+      : isMixedSupportFormula
+        ? " Source-absent mixed-support single-primary-carrier budgets are structured and marked not measured evidence."
       : isOpenWebDirectFixedLining
         ? " Source-absent direct-fixed budgets are structured and marked not measured evidence."
       : isOpenWebRawBare
@@ -303,6 +315,8 @@ function buildFloorCorridorDossier(result: AssemblyCalculation): SimpleWorkbench
     isOpenWebRawBare ||
     isOpenWebSupportedBandSimilarity
       ? impactPosture.label
+      : isMixedSupportFormula
+        ? MIXED_SUPPORT_FLOOR_IMPACT_LABEL
       : activeMode?.label ??
         (impactPosture.posture !== "inactive" ? corridorSummary.impactLabel : corridorSummary.airborneLabel);
 

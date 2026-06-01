@@ -384,7 +384,7 @@ describe("broad accuracy floor open-web raw-bare coverage refresh contract", () 
     }
   });
 
-  it("keeps partial packages, deck-only rows, out-of-range carriers, field/building, and ASTM/IIC outside raw-bare runtime", () => {
+  it("keeps partial packages, deck-only rows, out-of-range carriers, building, and ASTM/IIC outside raw-bare runtime", () => {
     const partial = calculateAssembly(PARTIAL_PACKAGE, {
       calculator: "dynamic",
       targetOutputs: RAW_BARE_OUTPUTS
@@ -407,7 +407,7 @@ describe("broad accuracy floor open-web raw-bare coverage refresh contract", () 
       targetOutputs: ASTM_OUTPUTS
     });
 
-    for (const blocked of [partial, deckOnly, outOfRange, fieldBuilding, astm]) {
+    for (const blocked of [partial, deckOnly, outOfRange, astm]) {
       expect(blocked.impact?.basis).not.toBe(OPEN_WEB_RAW_BARE_FORMULA_BASIS);
       expect(blocked.floorSystemEstimate?.impact.basis).not.toBe(OPEN_WEB_RAW_BARE_FORMULA_BASIS);
       expect(blocked.impact?.errorBudgets).toBeUndefined();
@@ -428,8 +428,14 @@ describe("broad accuracy floor open-web raw-bare coverage refresh contract", () 
       expect(screening.floorSystemRatings?.basis).toBe("screening_mass_law_curve_seed_v3");
     }
 
-    expect(fieldBuilding.supportedTargetOutputs).toEqual([]);
-    expect(fieldBuilding.unsupportedTargetOutputs).toEqual(["L'n,w", "L'nT,w", "R'w", "DnT,w"]);
+    expect(fieldBuilding.impact).toMatchObject({
+      LnW: 96,
+      LPrimeNW: 99,
+      LPrimeNTw: 97,
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization"
+    });
+    expect(fieldBuilding.supportedTargetOutputs).toEqual(["L'n,w", "L'nT,w"]);
+    expect(fieldBuilding.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
     expect(astm.supportedTargetOutputs).toEqual([]);
     expect(astm.unsupportedTargetOutputs).toEqual(["IIC", "AIIC"]);
   });

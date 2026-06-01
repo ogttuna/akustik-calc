@@ -234,7 +234,7 @@ describe("broad accuracy post raw-bare open-box timber coverage revalidation con
     });
   });
 
-  it("keeps raw-bare, package-transfer, exact-source, and basis-boundary runtime values unchanged", () => {
+  it("keeps lab raw-bare, package-transfer, and exact-source values unchanged while Gate BL opens field companions", () => {
     const raw370 = calculateAssembly(RAW_BARE_370, { calculator: "dynamic", targetOutputs: LAB_OUTPUTS });
     const raw220 = calculateAssembly(RAW_BARE_220, { calculator: "dynamic", targetOutputs: LAB_OUTPUTS });
     const packageTransfer = calculateAssembly(DRY_GYPSUM_FIBER_SOURCE_ABSENT, {
@@ -288,9 +288,16 @@ describe("broad accuracy post raw-bare open-box timber coverage revalidation con
     expect(exact.impact).toMatchObject({ CI: 0, CI50_2500: 3, LnW: 44, basis: "open_measured_floor_system_exact_match" });
     expect(exact.floorSystemRatings).toMatchObject({ Rw: 75, basis: "open_measured_floor_system_exact_match" });
 
-    expect(boundaries.impact).toBeNull();
-    expect(boundaries.supportedTargetOutputs).toEqual([]);
-    expect(boundaries.unsupportedTargetOutputs).toEqual(["L'n,w", "L'nT,w", "R'w", "DnT,w", "IIC", "AIIC"]);
+    expect(boundaries.impact).toMatchObject({
+      LPrimeNT50: 92.3,
+      LPrimeNTw: 89.2,
+      LPrimeNW: 91.2,
+      LnW: 88.2,
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization"
+    });
+    expect(boundaries.impact?.metricBasis?.LnW).toBe(OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS);
+    expect(boundaries.supportedTargetOutputs).toEqual(["L'n,w", "L'nT,w"]);
+    expect(boundaries.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w", "IIC", "AIIC"]);
   });
 
   it("uses exact-only hybrid policy evidence to choose package-transfer residual expansion without admitting runtime", () => {

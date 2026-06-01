@@ -47,6 +47,8 @@ type PathComputation = {
   supportingElementFamily: ImpactSupportingElementFamily | null;
 };
 
+const MAX_SOURCE_ABSENT_SINGLE_NUMBER_DIRECT_FLANKING_UPLIFT_DB = 12;
+
 const IMPACT_PATH_FAMILY_PROFILES: Record<ImpactSupportingElementFamily, Omit<ImpactPathFamilyProfile, "family">> = {
   reinforced_concrete: {
     biasDb: 0.4,
@@ -505,6 +507,18 @@ export function applyDirectFlankingFieldEstimate(
     (typeof singleNumberField === "number" && Number.isFinite(singleNumberField) ? singleNumberField : undefined);
 
   if (typeof lPrimeNW !== "number") {
+    return null;
+  }
+
+  const sourceAbsentSingleNumberUpliftDb =
+    !input.exactImpactSource && typeof input.impact.LnW === "number"
+      ? ksRound1(lPrimeNW - input.impact.LnW)
+      : undefined;
+
+  if (
+    typeof sourceAbsentSingleNumberUpliftDb === "number" &&
+    sourceAbsentSingleNumberUpliftDb > MAX_SOURCE_ABSENT_SINGLE_NUMBER_DIRECT_FLANKING_UPLIFT_DB
+  ) {
     return null;
   }
 

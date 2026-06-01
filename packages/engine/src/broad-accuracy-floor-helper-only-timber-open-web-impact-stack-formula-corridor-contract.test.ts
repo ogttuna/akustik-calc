@@ -433,9 +433,19 @@ describe("broad accuracy floor helper-only timber/open-web impact stack formula 
     expect(supportedBand.impact).toMatchObject({ LPrimeNT50: 60, LPrimeNTw: 61.1, LPrimeNW: 63.5, LnW: 61.5 });
 
     expect(rawBareField.floorSystemRatings).toMatchObject({ Rw: 32, basis: OPEN_WEB_RAW_BARE_FORMULA_BASIS });
-    expect(rawBareField.impact).toMatchObject({ LnW: 96, basis: OPEN_WEB_RAW_BARE_FORMULA_BASIS });
-    expect(rawBareField.impact?.LPrimeNW).toBeUndefined();
-    expect(building.supportedTargetOutputs).toEqual([]);
+    expect(rawBareField.impact).toMatchObject({
+      LnW: 96,
+      LPrimeNW: 98,
+      LPrimeNTw: 95.6,
+      LPrimeNT50: 100.8,
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization"
+    });
+    expect(building.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
+    expect(building.unsupportedTargetOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w"]);
+    expect(building.metrics).toMatchObject({
+      estimatedDnTwDb: 32,
+      estimatedRwPrimeDb: 30
+    });
     expect(astm.supportedTargetOutputs).toEqual([]);
   });
 

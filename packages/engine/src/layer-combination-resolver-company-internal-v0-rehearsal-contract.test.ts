@@ -50,6 +50,7 @@ import {
   LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID
 } from "./layer-combination-resolver-single-leaf-mass-law-banded-runtime-constants";
 import { LIGHTWEIGHT_CONCRETE_FAMILY_SELECTED_CANDIDATE_ID } from "./lightweight-concrete-family-runtime-constants";
+import { MIXED_SUPPORT_FLOOR_IMPACT_SELECTED_CANDIDATE_ID } from "./mixed-support-floor-impact-runtime-corridor";
 import {
   POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_SELECTED_CANDIDATE_ID
 } from "./post-v1-wall-compatible-anchor-delta";
@@ -120,16 +121,16 @@ describe("layer combination resolver company-internal V0 rehearsal contract", ()
     });
     expect(contract.summary).toEqual({
       allowedExactRowCount: 4,
-      allowedWithBudgetRowCount: 32,
+      allowedWithBudgetRowCount: 34,
       blockedActionCount: 4,
       blockedRowCount: 2,
-      coverageMatrixRowCount: 39,
-      companyInternalV0AllowedRowCount: 36,
+      coverageMatrixRowCount: 41,
+      companyInternalV0AllowedRowCount: 38,
       needsUserInputRowCount: 1,
       readinessBucketCount: {
         needs_input: 1,
         ready: 4,
-        ready_with_budget: 32,
+        ready_with_budget: 34,
         research_only: 0,
         unsupported: 2
       },
@@ -147,6 +148,7 @@ describe("layer combination resolver company-internal V0 rehearsal contract", ()
     const rows = buildLayerCombinationResolverCompanyInternalV0RehearsalContract().operatingEnvelopeRows;
 
     expect(rows.map((row) => [row.candidateId, row.companyInternalUse])).toEqual([
+      [MIXED_SUPPORT_FLOOR_IMPACT_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
       ["floor.exact_measured_floor_system.same_topology_metric_basis", "allowed_exact"],
       [POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
       ["wall.exact_verified_airborne.same_leaf_schedule", "allowed_exact"],
@@ -180,6 +182,7 @@ describe("layer combination resolver company-internal V0 rehearsal contract", ()
       ["floor.heavy_concrete_combined_upper_lower.lab_impact_formula", "allowed_with_budget"],
       ["floor.heavy_concrete_floating_floor.lab_impact_formula", "allowed_with_budget"],
       ["floor.impact_field_context.field_building_adapter", "allowed_with_budget"],
+      ["floor.raw_bare_floor_airborne.building_prediction_adapter", "allowed_with_budget"],
       ["wall.airborne_field_context.field_apparent_adapter", "allowed_with_budget"],
       ["candidate_airborne_building_prediction_all_owner_family_physics_prediction", "allowed_with_budget"],
       ["generic.required_input_owner.needs_input_boundary", "needs_user_input"],

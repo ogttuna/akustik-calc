@@ -238,7 +238,7 @@ describe("broad accuracy floor open-box timber raw-bare runtime corridor contrac
     });
   });
 
-  it("keeps exact TUAS package precedence and refuses partial packages, wrong families, and field aliases", () => {
+  it("keeps exact TUAS package precedence and refuses partial packages, wrong families, and ASTM aliases", () => {
     const exact = calculateAssembly(R5B_EXACT_PACKAGE_LAYERS, {
       calculator: "dynamic",
       targetOutputs: TARGET_OUTPUTS
@@ -270,13 +270,15 @@ describe("broad accuracy floor open-box timber raw-bare runtime corridor contrac
     expect(wrongFamily.floorSystemEstimate?.impact.basis).not.toBe(OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS);
 
     expect(fieldAlias.impact).toMatchObject({
+      LPrimeNTw: 89.2,
+      LPrimeNW: 91.2,
       LnW: 88.2,
-      basis: OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS,
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
       labOrField: "lab"
     });
-    expect(fieldAlias.impact?.LPrimeNW).toBeUndefined();
-    expect(fieldAlias.impact?.LPrimeNTw).toBeUndefined();
-    expect(fieldAlias.unsupportedTargetOutputs).toEqual(["L'n,w", "L'nT,w", "IIC"]);
+    expect(fieldAlias.impact?.metricBasis?.LnW).toBe(OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS);
+    expect(fieldAlias.supportedTargetOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w"]);
+    expect(fieldAlias.unsupportedTargetOutputs).toEqual(["IIC"]);
   });
 
   it("keeps docs, exports, schema, and current-gate runner aligned with the landed runtime corridor", () => {

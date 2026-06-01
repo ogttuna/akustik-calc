@@ -83,19 +83,314 @@ Selected next file:
 
 `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-bg-contract.test.ts`
 
-Latest landed no-runtime selection action:
+Active Gate BG plan:
 
-`post_v1_next_numeric_coverage_gap_gate_be_plan`
+[POST_V1_GATE_BG_NUMERIC_COVERAGE_AND_ACCURACY_RERANK_PLAN_2026-06-01.md](./POST_V1_GATE_BG_NUMERIC_COVERAGE_AND_ACCURACY_RERANK_PLAN_2026-06-01.md)
 
-Latest landed no-runtime selection file:
+Gate BG must be a calculator-capability rerank, not a generic planning
+or cleanup turn. It must choose a slice that increases calculable
+wall/floor layer-combination scope, improves numeric correctness, or
+tightens a metric/basis/input boundary that is blocking defensible
+calculation. It must not select broad source crawling, low-confidence
+wording, finite scenario packs, report polish, storage/auth work, or
+unrelated UI cleanup unless that work is explicitly required by the
+chosen calculator scope/accuracy gate.
 
-`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-be-contract.test.ts`
+Gate BG must compare at least the carried
+`floor.mixed_support_family.multi_family_solver_gap`, current
+post-V1 accuracy residual/holdout needs using the existing broad
+benchmark/similarity artifacts, metric/basis adapter boundaries, and any
+current source-absent formula-family runtime gap. The no-runtime Gate BG
+contract must explicitly reject broad source crawling, finite scenario
+packs, confidence wording, report/storage/auth work, and generic UI
+cleanup as active calculator slices.
+
+Gate BG has now landed as a no-runtime scope/accuracy rerank:
+
+`post_v1_next_numeric_coverage_gap_gate_bg_plan`
+
+Gate BG selection status:
+
+`post_v1_next_numeric_coverage_gap_gate_bg_landed_no_runtime_selected_floor_mixed_support_family_owner_boundary_gate_bh`
+
+Gate BG selected candidate:
+
+`floor.mixed_support_family.multi_family_solver_gap`
+
+Gate BG selected next action:
+
+`post_v1_floor_mixed_support_family_owner_boundary_gate_bh_plan`
+
+Gate BG selected next file:
+
+`packages/engine/src/post-v1-floor-mixed-support-family-owner-boundary-gate-bh-contract.test.ts`
+
+Gate BG did not move runtime values. Gate BH must prove explicit
+carrier/support ownership and keep duplicate or unsafe mixed-support
+families fail-closed before any Gate BI runtime subset can calculate.
+
+Gate BH has now landed as a no-runtime mixed-support owner boundary:
+
+`post_v1_floor_mixed_support_family_owner_boundary_gate_bh_plan`
+
+Gate BH selection status:
+
+`post_v1_floor_mixed_support_family_owner_boundary_gate_bh_landed_no_runtime_selected_floor_mixed_support_family_runtime_corridor_gate_bi`
+
+Gate BH pins `primaryCarrierFamily`, `dominantImpactTransferFamily`,
+`mixedSupportRolePartition`, `secondarySupportTreatmentOwner`, and
+`duplicateOwnershipGuard` as no-default owner fields. Existing
+mixed-support stacks stay fail-closed behind `duplicateOwnershipGuard`.
+The admitted runtime subset is explicit single-primary-carrier
+mixed-support only; missing primary carrier, missing role partition, or
+ASTM `IIC` / `AIIC` aliases remain stopped.
+
+Gate BH selected next action:
+
+`post_v1_floor_mixed_support_family_runtime_corridor_gate_bi_plan`
+
+Gate BH selected next file:
+
+`packages/engine/src/post-v1-floor-mixed-support-family-runtime-corridor-gate-bi-contract.test.ts`
+
+Gate BI is the next scope/accuracy value-moving candidate and must prove
+before/after numeric pins for the admitted mixed-support runtime subset
+while preserving all Gate BH negative boundaries.
+
+Gate BI has now landed as a value-moving mixed-support runtime corridor:
+
+`post_v1_floor_mixed_support_family_runtime_corridor_gate_bi_plan`
+
+Gate BI selection status:
+
+`post_v1_floor_mixed_support_family_runtime_corridor_gate_bi_landed_selected_floor_mixed_support_family_surface_parity_gate_bj`
+
+Gate BI opens only the explicit single-primary-carrier mixed-support
+subset. Complete owner input now calculates `Ln,w 44.6` / `DeltaLw
+29.9`; with explicit `impactFieldContext` it also calculates `L'n,w
+46.6`, `L'nT,w 43.8`, and `L'nT,50 47.8`. Missing
+`duplicateOwnershipGuard` or other owner fields still stops as
+`needs_input`, unsafe duplicate partitions do not fall through to the
+heavy-concrete or heavy-floating solver, and ASTM `IIC` / `AIIC` remain
+unsupported.
+
+Gate BI selected next action:
+
+`post_v1_floor_mixed_support_family_surface_parity_gate_bj_plan`
+
+Gate BI selected next file:
+
+`packages/engine/src/post-v1-floor-mixed-support-family-surface-parity-gate-bj-contract.test.ts`
+
+Gate BJ has now landed as no-runtime mixed-support surface parity plus
+usage-placement correction:
+
+`post_v1_floor_mixed_support_family_surface_parity_gate_bj_plan`
+
+Gate BJ selection status:
+
+`post_v1_floor_mixed_support_family_surface_parity_gate_bj_landed_no_runtime_selected_next_numeric_coverage_gap_gate_bk`
+
+workbench cards, Markdown report, saved replay, estimate API,
+impact-only API, resolver trace, and dynamic impact trace now expose the
+same Gate BI mixed-support single-primary-carrier answer. The visible
+mixed-support floor stack calculates `Ln,w 44.6` / `DeltaLw 29.9`; with
+explicit `impactFieldContext` it also calculates `L'n,w 46.6`,
+`L'nT,w 43.8`, and `L'nT,50 47.8` on
+`predictor_mixed_support_primary_heavy_concrete_combined_owner_guarded_estimate`.
+`calculateAssembly` now lets that explicit mixed-support owner path
+through instead of withholding it behind unrelated older floating-floor
+inputs. Missing owner fields, unsafe duplicate partitions, and ASTM
+`IIC` / `AIIC` remain stopped.
+
+Gate BJ selected next action:
+
+`post_v1_next_numeric_coverage_gap_gate_bk_plan`
+
+Gate BJ selected next file:
+
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-bk-contract.test.ts`
+
+Gate BK has now landed as runtime coverage:
+
+`post_v1_floor_open_web_raw_bare_field_companion_gate_bk_plan`
+
+Gate BK selection status:
+
+`post_v1_floor_open_web_raw_bare_field_companion_gate_bk_landed_selected_next_numeric_coverage_gap_gate_bl`
+
+The raw-bare open-web steel base-only stack keeps lab `Ln,w 96`,
+`CI 1.8`, `CI,50-2500 5.2`, and `Ln,w+CI 97.8`. With explicit
+`impactFieldContext` it now calculates `L'n,w 98`, `L'nT,w 95.6`, and
+`L'nT,50 100.8`. Field-only requests derive the lab anchor internally.
+Missing field context remains `needs_input`; building prediction,
+open-box raw-bare field transfer, and ASTM `IIC` / `AIIC` aliases remain
+blocked.
+
+Gate BK selected next action:
+
+`post_v1_next_numeric_coverage_gap_gate_bl_plan`
+
+Active Gate BL plan:
+
+[POST_V1_GATE_BL_NUMERIC_COVERAGE_AND_ACCURACY_RERANK_PLAN_2026-06-01.md](./POST_V1_GATE_BL_NUMERIC_COVERAGE_AND_ACCURACY_RERANK_PLAN_2026-06-01.md)
+
+Gate BL has now landed as a no-runtime scope/accuracy rerank:
+
+`post_v1_next_numeric_coverage_gap_gate_bl_plan`
+
+Gate BL selection status:
+
+`post_v1_next_numeric_coverage_gap_gate_bl_landed_no_runtime_selected_floor_open_box_raw_bare_field_companion_gate_bl`
+
+Gate BL selected candidate:
+
+`floor.open_box_timber_raw_bare.field_companion_runtime_gap`
+
+Gate BL selected next action:
+
+`post_v1_floor_open_box_raw_bare_field_companion_gate_bl_plan`
+
+Gate BL selected next file:
+
+`packages/engine/src/post-v1-floor-open-box-raw-bare-field-companion-gate-bl-contract.test.ts`
+
+Gate BL did not move runtime values. The selected next runtime slice
+must open raw-bare open-box timber field companions through the existing
+explicit `impactFieldContext` adapter. Required pins are `L'n,w 93.1`,
+`L'nT,w 90.7`, and `L'nT,50 94.1` for the 220 mm carrier with K=2 and
+V=55 m3. Building prediction and ASTM `IIC` / `AIIC` remain blocked.
+
+Gate BL runtime has now landed as:
+
+`post_v1_floor_open_box_raw_bare_field_companion_gate_bl_plan`
+
+Gate BL runtime status:
+
+`post_v1_floor_open_box_raw_bare_field_companion_gate_bl_landed_selected_next_numeric_coverage_gap_gate_bm`
+
+Gate BL is runtime calculator coverage. The raw-bare open-box timber
+lane now applies the existing explicit `impactFieldContext` adapter for
+field apparent impact outputs when context mode is not
+`building_prediction`. The 220 mm carrier keeps lab `Ln,w 91.1`, `CI
+-0.9`, `CI,50-2500 3.4`, and `Ln,w+CI 90.2`; with K=2 and V=55 m3 it
+calculates `L'n,w 93.1`, `L'nT,w 90.7`, and `L'nT,50 94.1`. The 370 mm
+carrier calculates `L'n,w 90.2`, `L'nT,w 87.8`, and `L'nT,50 90.9`.
+Field-only requests derive the lab anchor internally. Missing
+`impactFieldContext` still stops field outputs as `needs_input`;
+building prediction and ASTM `IIC` / `AIIC` remain blocked.
+
+Validation after Gate BL runtime: `pnpm calculator:gate:current` passed
+with engine 576 files / 3189 tests, web 113 files / 437 passed + 18
+skipped, repo build 5 / 5, and whitespace guard passed.
+
+Gate BL selected next action:
+
+`post_v1_next_numeric_coverage_gap_gate_bm_plan`
+
+Gate BM has now landed as:
+
+`post_v1_next_numeric_coverage_gap_gate_bm_plan`
+
+Gate BM status:
+
+`post_v1_next_numeric_coverage_gap_gate_bm_landed_runtime_selected_next_numeric_coverage_gap_gate_bn`
+
+Gate BM is runtime calculator coverage for
+`floor.raw_bare_open_web.building_prediction_impact_direct_flanking_runtime_gap`:
+the 300 mm raw-bare open-web steel carrier with explicit direct+flanking
+`impactFieldContext` now calculates `L'n,w 97.8`, `L'nT,w 95.4`, and
+`L'nT,50 100.6` under `contextMode=building_prediction`. `R'w`,
+`DnT,w`, and lab `Ln,w` are not published as floor building outputs,
+open-box raw-bare building prediction remains blocked, and ASTM `IIC` /
+`AIIC` remain unsupported. Source-absent single-number direct+flanking
+uplifts above `12 dB` stay blocked until exact path or impact-band
+evidence exists.
+
+Gate BM selected next action:
+
+`post_v1_next_numeric_coverage_gap_gate_bn_plan`
+
+Gate BM selected next file:
+
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-bn-contract.test.ts`
+
+Gate BM plan:
+
+[POST_V1_GATE_BM_NUMERIC_COVERAGE_AND_ACCURACY_RERANK_PLAN_2026-06-01.md](./POST_V1_GATE_BM_NUMERIC_COVERAGE_AND_ACCURACY_RERANK_PLAN_2026-06-01.md)
+
+Active Gate BN plan:
+
+[POST_V1_GATE_BN_NUMERIC_PLAUSIBILITY_AND_CALIBRATION_PLAN_2026-06-01.md](./POST_V1_GATE_BN_NUMERIC_PLAUSIBILITY_AND_CALIBRATION_PLAN_2026-06-01.md)
+
+Gate BN is selected as an accuracy/plausibility calibration gate before
+opening another source-absent building route. It must compare current
+source-absent field/building impact pins against ISO 12354/INSUL-style
+method constraints, published regulatory context, and measured timber
+floor benchmarks. It must land an executable contract that keeps
+raw-bare high `Ln,w` values admissible only on explicit raw-bare bases,
+blocks unsupported direct/flanking single-number uplifts, preserves
+room-volume and `CI,50-2500` owners for `L'nT,w` / `L'nT,50`, and keeps
+ISO impact metrics from becoming ASTM `IIC` / `AIIC`.
+
+Gate BN has now landed as `post_v1_next_numeric_coverage_gap_gate_bn_plan`
+with status
+`post_v1_next_numeric_coverage_gap_gate_bn_landed_no_runtime_selected_floor_open_box_raw_bare_building_prediction_owner_gate_bo`.
+It is no-runtime accuracy work for
+`calculator.numeric_plausibility_and_calibration_sweep.source_absent_field_building_routes`:
+the executable matrix keeps current source-absent field/building outputs
+inside the `12 dB` uplift guard or blocked as outliers. Gate BN selects
+`floor.open_box_timber_raw_bare.building_prediction_owner_gap` and
+`post_v1_floor_open_box_raw_bare_building_prediction_owner_gate_bo_plan`
+in
+`packages/engine/src/post-v1-floor-open-box-raw-bare-building-prediction-owner-gate-bo-contract.test.ts`.
+
+Latest landed runtime action:
+
+`post_v1_floor_open_box_raw_bare_building_prediction_owner_gate_bo_plan`
+
+Latest landed runtime file:
+
+`packages/engine/src/post-v1-floor-open-box-raw-bare-building-prediction-owner-gate-bo-contract.test.ts`
+
+Gate BO has now landed with status
+`post_v1_floor_open_box_raw_bare_building_prediction_owner_gate_bo_landed_runtime_selected_next_numeric_coverage_gap_gate_bp`.
+This is runtime calculator coverage for
+`floor.open_box_timber_raw_bare.building_prediction_owner_gap`: the 220
+mm raw-bare open-box carrier with explicit direct+flanking
+`impactFieldContext` now calculates `L'n,w 92.9`, `L'nT,w 90.5`, and
+`L'nT,50 93.9` under `contextMode=building_prediction`; the 370 mm
+carrier calculates `L'n,w 90`, `L'nT,w 87.6`, and `L'nT,50 90.7`.
+Simple `fieldKDb`, severe source-absent direct+flanking uplift, `R'w`,
+`DnT,w`, lab `Ln,w`, and ASTM `IIC` / `AIIC` remain blocked. Gate BO
+selects `post_v1_next_numeric_coverage_gap_gate_bp_plan` in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-bp-contract.test.ts`.
+Gate BP has now landed as
+`post_v1_next_numeric_coverage_gap_gate_bp_plan` with status
+`post_v1_next_numeric_coverage_gap_gate_bp_landed_no_runtime_selected_floor_raw_bare_airborne_building_prediction_gate_bq`.
+It selected
+`floor.raw_bare_floor_airborne_building_prediction_owner_gap` and
+`post_v1_floor_raw_bare_airborne_building_prediction_gate_bq_plan` in
+`packages/engine/src/post-v1-floor-raw-bare-airborne-building-prediction-gate-bq-contract.test.ts`.
+This is scope/accuracy calculator work: raw-bare floor building
+airborne outputs (`R'w`, `Dn,w`, `Dn,A`, `DnT,w`, `DnT,A`) must use
+the owned direct raw-bare `Rw` path rather than generic screening.
+Gate BQ has now landed as
+`post_v1_floor_raw_bare_airborne_building_prediction_gate_bq_plan`
+with status
+`post_v1_floor_raw_bare_airborne_building_prediction_gate_bq_landed_runtime_selected_next_numeric_coverage_gap_gate_br`.
+The 220 mm raw-bare open-box building airborne case now publishes
+`R'w 36` and `DnT,w 39`; thicker open-box and open-web raw-bare
+carriers follow the same owner path instead of generic screening.
+ASTM `IIC` / `AIIC` remain unsupported without their own ASTM owner.
+Gate BQ selects `post_v1_next_numeric_coverage_gap_gate_br_plan` in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-br-contract.test.ts`.
 
 Current reconciliation checkpoint:
 
 [CHECKPOINT_2026-05-30_POST_V1_GATE_BF_STATE_RECONCILIATION.md](./CHECKPOINT_2026-05-30_POST_V1_GATE_BF_STATE_RECONCILIATION.md)
 
-The shared resolver surface now has 39 declared candidates and 36 active runtime-basis mappings.
+The shared resolver surface now has 40 declared candidates and 37 active runtime-basis mappings.
 
 Landed Gate AW plan document:
 
@@ -3616,7 +3911,7 @@ selection status
 It is no-runtime: existing exact UBIQ, direct-fixed, and supported-band
 open-web `field_between_rooms` continuations remain pinned, explicit
 `impactFieldContext` owns `L'n,w`, `L'nT,w`, and `L'nT,50` only for
-those lab anchors, raw-bare impact field transfer remains blocked even
+those lab anchors, raw-bare open-web field transfer is active even
 when the raw-bare lab `Ln,w 96` formula corridor is present, building
 prediction remains unsupported until separate flanking/building owners
 exist, and ASTM/IIC aliases remain blocked.
@@ -3654,7 +3949,7 @@ supported-band field values plus
 `source_absent_field_building_adapter_error_budget` terms. The visible
 pins remain `Rw 51/52/61.5`, `R'w 77/75/45`, `DnT,w 80/78/48`,
 `Ln,w 71/77/61.5`, `L'n,w 73/79/63.5`, `L'nT,w 70.6/76.6/61.1`, and
-`L'nT,50 70/76.5/60`; raw-bare impact field transfer remains blocked,
+`L'nT,50 70/76.5/60`; raw-bare open-web field transfer is active,
 building prediction remains unsupported, and ASTM/IIC aliases remain
 blocked.
 

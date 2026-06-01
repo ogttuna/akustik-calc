@@ -22,6 +22,9 @@ import {
   REINFORCED_CONCRETE_LOW_CONFIDENCE_TRACE_CANDIDATE_DETAIL
 } from "./reinforced-concrete-low-confidence-floor-lane";
 import { HEAVY_CONCRETE_COMBINED_FORMULA_BASIS } from "./heavy-concrete-combined-impact-corridor-view";
+import {
+  isMixedSupportFloorImpactCorridorImpact
+} from "./mixed-support-floor-impact-corridor-view";
 import { STEEL_FLOOR_FORMULA_BASIS } from "./steel-floor-formula-corridor-view";
 import { isOpenWebSupportedBandSimilarityResult } from "./open-web-supported-band-similarity-surface";
 import { isOpenWebDirectFixedLiningResult } from "./open-web-direct-fixed-lining-surface";
@@ -191,6 +194,15 @@ export function describeImpactValidationPosture(result: AssemblyCalculation | nu
       return {
         detail:
           "The active floor lane is the Gate BD heavy-concrete combined upper/lower formula corridor with explicit slab mass, load basis, dynamic stiffness, lower ceiling treatment, and bounded coupling. Keep the +/-6.5 dB Ln,w and +/-5.5 dB DeltaLw source-absent budgets attached.",
+        label: trace.selectedLabel,
+        posture: "estimate"
+      };
+    }
+
+    if (isMixedSupportFloorImpactCorridorImpact(result)) {
+      return {
+        detail:
+          "The active floor lane is the Gate BI mixed-support single-primary-carrier formula corridor with explicit primary carrier, transfer family, lower-treatment secondary owner, load basis, dynamic stiffness, and duplicate-ownership guard. Keep the +/-7.5 dB Ln,w and +/-6.5 dB DeltaLw source-absent budgets attached.",
         label: trace.selectedLabel,
         posture: "estimate"
       };

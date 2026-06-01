@@ -327,7 +327,7 @@ describe("broad accuracy floor open-box timber raw-bare coverage refresh contrac
     expect(packageTransfer.floorSystemEstimate?.impact.basis).not.toBe(OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS);
   });
 
-  it("keeps partial package, wrong family, field/building, and ASTM/IIC requests outside the raw-bare lane", () => {
+  it("keeps partial package, wrong family, building-only, and ASTM/IIC requests outside unsafe raw-bare promotion", () => {
     const partial = calculateAssembly(PARTIAL_UPPER_PACKAGE, {
       calculator: "dynamic",
       targetOutputs: RAW_BARE_OUTPUTS
@@ -346,11 +346,22 @@ describe("broad accuracy floor open-box timber raw-bare coverage refresh contrac
       targetOutputs: ASTM_OUTPUTS
     });
 
-    for (const blocked of [partial, fieldBuilding, astm]) {
+    for (const blocked of [partial, astm]) {
       expect(blocked.impact?.basis).not.toBe(OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS);
       expect(blocked.floorSystemEstimate?.impact.basis).not.toBe(OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS);
       expect(blocked.impact?.errorBudgets).toBeUndefined();
     }
+
+    expect(fieldBuilding.impact).toMatchObject({
+      LPrimeNTw: 89.2,
+      LPrimeNW: 91.2,
+      LnW: 88.2,
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+      labOrField: "lab"
+    });
+    expect(fieldBuilding.floorSystemEstimate?.impact.basis).toBe(OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS);
+    expect(fieldBuilding.supportedTargetOutputs).toEqual(["L'n,w", "L'nT,w"]);
+    expect(fieldBuilding.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
 
     expect(wrongFamily.impact).toMatchObject({
       CI: 1.8,
@@ -381,8 +392,8 @@ describe("broad accuracy floor open-box timber raw-bare coverage refresh contrac
     ]);
     expect(wrongFamily.supportedTargetOutputs).toEqual(["Rw", "C", "Ctr", "Ln,w", "CI", "CI,50-2500", "Ln,w+CI"]);
     expect(wrongFamily.unsupportedTargetOutputs).toEqual(["L'n,w", "L'nT,w", "IIC"]);
-    expect(fieldBuilding.supportedTargetOutputs).toEqual([]);
-    expect(fieldBuilding.unsupportedTargetOutputs).toEqual(["L'n,w", "L'nT,w", "R'w", "DnT,w"]);
+    expect(fieldBuilding.supportedTargetOutputs).toEqual(["L'n,w", "L'nT,w"]);
+    expect(fieldBuilding.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
     expect(astm.supportedTargetOutputs).toEqual([]);
     expect(astm.unsupportedTargetOutputs).toEqual(["IIC", "AIIC"]);
   });

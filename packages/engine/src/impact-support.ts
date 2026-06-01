@@ -47,6 +47,11 @@ import { OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS } from "./open-box-timb
 import { OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS } from "./open-box-timber-raw-bare-estimate";
 import { OPEN_WEB_RAW_BARE_FORMULA_BASIS } from "./open-web-raw-bare-estimate";
 import { HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS } from "./helper-only-timber-open-web-impact-stack-estimate";
+import {
+  MIXED_SUPPORT_FLOOR_IMPACT_FORMULA_BASIS,
+  MIXED_SUPPORT_FLOOR_IMPACT_FORMULA_DELTA_LW_TOLERANCE_DB,
+  MIXED_SUPPORT_FLOOR_IMPACT_FORMULA_LN_W_TOLERANCE_DB
+} from "./mixed-support-floor-impact-runtime-corridor";
 
 type BuildImpactSupportInput = {
   boundFloorSystemEstimate?: FloorSystemBoundEstimateResult | null;
@@ -317,6 +322,21 @@ export function buildImpactSupport(input: BuildImpactSupportInput): ImpactSuppor
     pushUnique(
       formulaNotes,
       `Corridor tolerance remains +/-${STEEL_FLOOR_FORMULA_LN_W_TOLERANCE_DB} dB for Ln,w and +/-${STEEL_FLOOR_FORMULA_DELTA_LW_TOLERANCE_DB} dB for DeltaLw.`
+    );
+  }
+
+  if (
+    input.impact?.basis === MIXED_SUPPORT_FLOOR_IMPACT_FORMULA_BASIS ||
+    hasMetricBasis(input.impact, MIXED_SUPPORT_FLOOR_IMPACT_FORMULA_BASIS)
+  ) {
+    notes.push("Mixed-support single-primary-carrier formula corridor is active; duplicate carrier ownership stays blocked.");
+    pushUnique(
+      formulaNotes,
+      "Gate BI mixed-support runtime reuses the heavy-concrete combined upper/lower corridor only when primary carrier, dominant transfer family, role partition, secondary treatment owner, and duplicate-ownership guard are explicit."
+    );
+    pushUnique(
+      formulaNotes,
+      `Corridor tolerance remains +/-${MIXED_SUPPORT_FLOOR_IMPACT_FORMULA_LN_W_TOLERANCE_DB} dB for Ln,w and +/-${MIXED_SUPPORT_FLOOR_IMPACT_FORMULA_DELTA_LW_TOLERANCE_DB} dB for DeltaLw.`
     );
   }
 

@@ -49,6 +49,7 @@ const FORMULA_BASIS_LABELS = new Set<string>([
   "predictor_bare_massive_floor_iso12354_annexc_estimate",
   "predictor_heavy_floating_floor_iso12354_annexc_estimate",
   "predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate",
+  "predictor_mixed_support_primary_heavy_concrete_combined_owner_guarded_estimate",
   "predictor_heavy_concrete_published_upper_treatment_estimate",
   "predictor_lightweight_steel_mass_spring_holdout_corridor_estimate",
   "predictor_lightweight_steel_suspended_ceiling_corridor_estimate",

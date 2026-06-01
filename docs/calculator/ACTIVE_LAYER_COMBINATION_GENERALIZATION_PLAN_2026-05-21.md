@@ -989,7 +989,8 @@ The contract must assert:
 - no runtime value movement;
 - no broad source crawl;
 - exact/direct-fixed/supported-band open-web field values remain pinned;
-- raw-bare impact field transfer remains blocked;
+- raw-bare open-web field transfer is active through the later Gate BK
+  explicit field adapter and must not be retuned by this helper-only gate;
 - building prediction remains unsupported;
 - ASTM/IIC/AIIC aliases remain unsupported.
 

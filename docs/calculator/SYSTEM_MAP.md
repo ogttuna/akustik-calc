@@ -1,6 +1,6 @@
 # System Map
 
-Last reviewed: 2026-05-25
+Last reviewed: 2026-06-01
 
 Document role:
 
@@ -19,10 +19,13 @@ Use this together with the calculator source-of-truth chain:
   authority order
 - [USABLE_V1_EXECUTION_PLAN.md](./USABLE_V1_EXECUTION_PLAN.md)
   — closed company-internal usable V1 acceptance contract
-- [CHECKPOINT_2026-05-23_POST_V1_ACOUSTIC_CALCULATOR_STATE_RECONCILIATION.md](./CHECKPOINT_2026-05-23_POST_V1_ACOUSTIC_CALCULATOR_STATE_RECONCILIATION.md)
+- [CHECKPOINT_2026-05-30_POST_V1_GATE_BF_STATE_RECONCILIATION.md](./CHECKPOINT_2026-05-30_POST_V1_GATE_BF_STATE_RECONCILIATION.md)
   — latest docs/implementation/test reconciliation
 - [POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md)
-  — selected post-V1 capability plan and next Gate A
+  — selected post-V1 capability plan; Gate BH has landed and selected
+  Gate BI mixed-support runtime corridor
+- [POST_V1_GATE_BG_NUMERIC_COVERAGE_AND_ACCURACY_RERANK_PLAN_2026-06-01.md](./POST_V1_GATE_BG_NUMERIC_COVERAGE_AND_ACCURACY_RERANK_PLAN_2026-06-01.md)
+  — landed Gate BG/Gate BH scope/accuracy chain and non-goal guard
 - [ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md](./ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md)
   — historical product correction that is now landed for usable V1
 - [SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md](./SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md)
@@ -47,6 +50,12 @@ And:
 ## Product Contract
 
 This repo is an acoustic calculator for floor and wall assemblies.
+Its product direction is scope and accuracy: more physically valid
+layer combinations should calculate owned acoustic outputs when required
+inputs are present, and existing calculation routes should become more
+correct, calibrated, or better bounded over time. Work that does not
+advance calculator scope or accuracy is product drift unless explicitly
+requested outside calculator behavior.
 
 The user picks wall or floor, enters the layer stack, layer order,
 thicknesses, and any extra physical inputs genuinely required by that

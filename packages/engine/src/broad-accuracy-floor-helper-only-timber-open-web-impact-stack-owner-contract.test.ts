@@ -474,14 +474,23 @@ describe("broad accuracy floor helper-only timber/open-web impact stack owner", 
     expect(supportedBand.metrics).toMatchObject({ estimatedDnTwDb: 48, estimatedRwPrimeDb: 45 });
     expect(supportedBand.impact).toMatchObject({ LPrimeNT50: 60, LPrimeNTw: 61.1, LPrimeNW: 63.5, LnW: 61.5 });
 
-    expect(rawBareField.supportedTargetOutputs).toEqual(["Rw", "R'w", "DnT,w", "Ln,w"]);
-    expect(rawBareField.unsupportedTargetOutputs).toEqual(["L'n,w", "L'nT,w", "L'nT,50", "IIC"]);
+    expect(rawBareField.supportedTargetOutputs).toEqual(["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]);
+    expect(rawBareField.unsupportedTargetOutputs).toEqual(["IIC"]);
     expect(rawBareField.floorSystemRatings).toMatchObject({ Rw: 32, basis: OPEN_WEB_RAW_BARE_FORMULA_BASIS });
-    expect(rawBareField.impact).toMatchObject({ LnW: 96, basis: OPEN_WEB_RAW_BARE_FORMULA_BASIS });
-    expect(rawBareField.impact?.LPrimeNW).toBeUndefined();
+    expect(rawBareField.impact).toMatchObject({
+      LnW: 96,
+      LPrimeNW: 98,
+      LPrimeNTw: 95.6,
+      LPrimeNT50: 100.8,
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization"
+    });
 
-    expect(building.supportedTargetOutputs).toEqual([]);
-    expect(building.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]);
+    expect(building.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
+    expect(building.unsupportedTargetOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w"]);
+    expect(building.metrics).toMatchObject({
+      estimatedDnTwDb: 32,
+      estimatedRwPrimeDb: 30
+    });
     expect(astm.supportedTargetOutputs).toEqual([]);
     expect(astm.unsupportedTargetOutputs).toEqual(["IIC", "AIIC"]);
   });
@@ -498,7 +507,7 @@ describe("broad accuracy floor helper-only timber/open-web impact stack owner", 
       expect(content, path).toContain(SELECTED_NEXT_FILE);
       expect(normalizedWhitespaceContent, path).toContain("helper-only timber/open-web");
       expect(normalizedWhitespaceContent, path).toContain("exact, direct-fixed, and supported-band");
-      expect(normalizedWhitespaceContent, path).toContain("raw-bare impact field transfer remains blocked");
+      expect(normalizedWhitespaceContent, path).toContain("raw-bare open-web field transfer is active");
       expect(normalizedWhitespaceContent, path).toContain("building prediction");
       expect(normalizedWhitespaceContent, path).toContain("astm/iic");
       expect(normalizedWhitespaceContent, path).toContain("not a broad source crawl");

@@ -29,7 +29,10 @@ const RUNTIME_TARGET_OUTPUTS = new Set<RequestedOutputId>([
   "Ln,w",
   "CI",
   "CI,50-2500",
-  "Ln,w+CI"
+  "Ln,w+CI",
+  "L'n,w",
+  "L'nT,w",
+  "L'nT,50"
 ]);
 
 const RAW_BARE_CONTEXT_SOURCE_IDS = [
@@ -55,6 +58,23 @@ type RawBareOpenWebFormulaInputs = {
 
 function uniqueRequestedOutputs(outputs: readonly RequestedOutputId[]): RequestedOutputId[] {
   return [...new Set(outputs)];
+}
+
+function withFieldAnchorOutputs(outputs: readonly RequestedOutputId[]): RequestedOutputId[] {
+  const expanded = [...outputs];
+  const needsFieldAnchor = outputs.some((output) =>
+    output === "L'n,w" || output === "L'nT,w" || output === "L'nT,50"
+  );
+
+  if (needsFieldAnchor) {
+    expanded.push("Ln,w");
+  }
+
+  if (outputs.includes("L'nT,50")) {
+    expanded.push("CI,50-2500");
+  }
+
+  return uniqueRequestedOutputs(expanded);
 }
 
 function isOpenWebSteelBaseLayer(layer: ResolvedLayer): boolean {
@@ -206,7 +226,7 @@ export function deriveOpenWebRawBareEstimate(input: {
     supportFamily: "lightweight_steel",
     supportForm: "open_web_or_rolled",
     supportMaterial: "open_web_steel_floor",
-    targetOutputs: uniqueRequestedOutputs(requestedOutputs)
+    targetOutputs: withFieldAnchorOutputs(requestedOutputs)
   });
 
   if (

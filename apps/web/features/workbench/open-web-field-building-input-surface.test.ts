@@ -456,7 +456,7 @@ describe("open-web field/building input surface", () => {
     expect(report).toContain("source_absent_field_building_adapter_error_budget");
   });
 
-  it("blocks partial, raw-bare field transfer, building prediction, and ASTM aliases without inventing support", () => {
+  it("opens raw-bare field transfer while blocking partial inputs, building prediction, and ASTM aliases", () => {
     const partial = buildScenario({
       surface: {
         ...COMPLETE_FIELD_SURFACE,
@@ -469,13 +469,18 @@ describe("open-web field/building input surface", () => {
     expect(partial.result.unsupportedTargetOutputs).toEqual(["L'n,w", "L'nT,w", "L'nT,50", "IIC"]);
 
     const rawBare = buildScenario({ rows: RAW_BARE_ROWS });
-    expect(rawBare.result.supportedTargetOutputs).toEqual(["Rw", "R'w", "DnT,w", "Ln,w"]);
-    expect(rawBare.result.unsupportedTargetOutputs).toEqual(["L'n,w", "L'nT,w", "L'nT,50", "IIC"]);
+    expect(rawBare.result.supportedTargetOutputs).toEqual(["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]);
+    expect(rawBare.result.unsupportedTargetOutputs).toEqual(["IIC"]);
     expect(rawBare.result.floorSystemRatings).toMatchObject({ Rw: 32, basis: OPEN_WEB_RAW_BARE_BASIS });
-    expect(rawBare.result.impact?.LPrimeNW).toBeUndefined();
+    expect(rawBare.result.impact).toMatchObject({
+      LPrimeNW: 98,
+      LPrimeNTw: 95.6,
+      LPrimeNT50: 100.8,
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization"
+    });
     expect(rawBare.result.impact?.errorBudgets?.some(
       (budget: ImpactErrorBudget) => budget.origin === "source_absent_field_building_adapter_error_budget"
-    )).toBe(false);
+    )).toBe(true);
 
     const building = buildScenario({
       rows: RAW_BARE_ROWS,
@@ -483,8 +488,12 @@ describe("open-web field/building input surface", () => {
       targetOutputs: BUILDING_TARGETS
     });
     expect(building.warnings.join(" ")).toContain("floor_open_web_building_prediction_runtime_owner_missing");
-    expect(building.result.supportedTargetOutputs).toEqual([]);
-    expect(building.result.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]);
+    expect(building.result.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
+    expect(building.result.unsupportedTargetOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w"]);
+    expect(building.result.metrics).toMatchObject({
+      estimatedDnTwDb: 32,
+      estimatedRwPrimeDb: 30
+    });
 
     const astm = buildScenario({
       rows: DIRECT_FIXED_ROWS,
@@ -511,7 +520,7 @@ describe("open-web field/building input surface", () => {
       expect(normalizedWhitespaceContent, path).toContain("calculator api");
       expect(normalizedContent, path).toContain("impact-only api");
       expect(normalizedWhitespaceContent, path).toContain("markdown report");
-      expect(normalizedWhitespaceContent, path).toContain("raw-bare impact field transfer remains blocked");
+      expect(normalizedWhitespaceContent, path).toContain("raw-bare open-web field transfer is active");
       expect(normalizedWhitespaceContent, path).toContain("building prediction remains unsupported");
       expect(normalizedWhitespaceContent, path).toContain("not a broad source crawl");
     }

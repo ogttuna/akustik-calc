@@ -281,8 +281,12 @@ describe("broad accuracy floor open-web raw-bare runtime corridor contract", () 
     expect(openBox.floorSystemEstimate?.structuralFamily).not.toBe("open-web steel raw-bare");
     expect(openBox.impact?.basis).not.toBe(OPEN_WEB_RAW_BARE_FORMULA_BASIS);
 
-    expect(aliasOnly.floorSystemEstimate).toBeNull();
-    expect(aliasOnly.impact).toBeNull();
+    expect(aliasOnly.floorSystemEstimate?.impact.basis).toBe(OPEN_WEB_RAW_BARE_FORMULA_BASIS);
+    expect(aliasOnly.impact).toMatchObject({
+      LnW: 96,
+      basis: OPEN_WEB_RAW_BARE_FORMULA_BASIS
+    });
+    expect(aliasOnly.impact?.LPrimeNW).toBeUndefined();
     expect(aliasOnly.supportedTargetOutputs).toEqual([]);
     expect(aliasOnly.unsupportedTargetOutputs).toEqual(["L'n,w", "IIC"]);
   });

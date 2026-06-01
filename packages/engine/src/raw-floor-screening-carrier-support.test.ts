@@ -257,10 +257,10 @@ const CASES: readonly RawScreeningCase[] = [
       supported: ["Rw", "Ln,w", "Ln,w+CI"]
     },
     expectedField: {
-      basis: OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS,
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
       estimateKind: "family_archetype",
       floorSystemMatchId: null,
-      supported: ["Rw", "R'w", "DnT,w", "Ln,w"]
+      supported: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]
     }
   },
   {

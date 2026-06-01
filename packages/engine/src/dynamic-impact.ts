@@ -27,6 +27,7 @@ import {
 } from "./impact-supporting-element-family";
 import { maybeBuildImpactPredictorInputFromLayerStack } from "./impact-predictor-input";
 import { HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS } from "./heavy-concrete-combined-impact-formula-corridor";
+import { MIXED_SUPPORT_FLOOR_IMPACT_FORMULA_BASIS } from "./mixed-support-floor-impact-runtime-corridor";
 import {
   STEEL_FLOOR_FORMULA_BASIS,
   STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_BASIS,
@@ -101,6 +102,10 @@ function getScopedFormulaSelectionLabel(
 
   if (basisLabels.has(FORMULA_FLOATING_BASIS)) {
     return "Heavy floating-floor formula";
+  }
+
+  if (basisLabels.has(MIXED_SUPPORT_FLOOR_IMPACT_FORMULA_BASIS)) {
+    return "Mixed-support single-primary carrier formula corridor";
   }
 
   if (basisLabels.has(HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS)) {
@@ -373,6 +378,8 @@ function formatImpactBasisLabel(value: ImpactCalculation["basis"] | ImpactBoundC
       return "Heavy floating-floor Annex C style estimate";
     case "predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate":
       return "Heavy concrete combined upper/lower formula corridor";
+    case "predictor_mixed_support_primary_heavy_concrete_combined_owner_guarded_estimate":
+      return "Mixed-support single-primary carrier formula corridor";
     case "predictor_heavy_concrete_published_upper_treatment_estimate":
       return "Published heavy-concrete upper-treatment estimate";
     case "predictor_floor_system_family_archetype_estimate":
@@ -756,6 +763,15 @@ export function buildDynamicImpactTrace(
   if (input.impact?.basis === HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS) {
     notes.push(
       "Helper-only timber/open-web formula corridor used the source-absent lower-treatment path without borrowing exact, package-transfer, raw-bare, field/building, or ASTM/IIC lanes."
+    );
+  }
+
+  if (
+    input.impact?.basis === MIXED_SUPPORT_FLOOR_IMPACT_FORMULA_BASIS ||
+    Object.values(input.impact?.metricBasis ?? {}).includes(MIXED_SUPPORT_FLOOR_IMPACT_FORMULA_BASIS)
+  ) {
+    notes.push(
+      "Mixed-support corridor stayed inside the explicit Gate BI single-primary-carrier owner guard; secondary lower treatment was not counted as another carrier."
     );
   }
 

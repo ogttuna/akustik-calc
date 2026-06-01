@@ -298,7 +298,7 @@ describe("broad accuracy post raw-bare open-web coverage revalidation contract",
     expect(wrongFamily.floorSystemRatings).toMatchObject({ C: -1.5, Ctr: -6, Rw: 40.5 });
   });
 
-  it("keeps field/building and ASTM/IIC blocked while ranking the next owner lane", () => {
+  it("keeps building and ASTM/IIC blocked while raw-bare field transfer is active", () => {
     const fieldBuilding = calculateAssembly(RAW_OPEN_WEB_300, {
       calculator: "dynamic",
       impactFieldContext: { fieldKDb: 3, receivingRoomVolumeM3: 50 },
@@ -306,9 +306,14 @@ describe("broad accuracy post raw-bare open-web coverage revalidation contract",
     });
     const astm = calculateAssembly(RAW_OPEN_WEB_300, { calculator: "dynamic", targetOutputs: ASTM_OUTPUTS });
 
-    expect(fieldBuilding.impact).toBeNull();
-    expect(fieldBuilding.supportedTargetOutputs).toEqual([]);
-    expect(fieldBuilding.unsupportedTargetOutputs).toEqual(["L'n,w", "L'nT,w", "R'w", "DnT,w"]);
+    expect(fieldBuilding.impact).toMatchObject({
+      LnW: 96,
+      LPrimeNW: 99,
+      LPrimeNTw: 97,
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization"
+    });
+    expect(fieldBuilding.supportedTargetOutputs).toEqual(["L'n,w", "L'nT,w"]);
+    expect(fieldBuilding.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
     expect(astm.impact).toBeNull();
     expect(astm.supportedTargetOutputs).toEqual([]);
     expect(astm.unsupportedTargetOutputs).toEqual(["IIC", "AIIC"]);

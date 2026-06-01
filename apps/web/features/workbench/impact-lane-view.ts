@@ -9,6 +9,11 @@ import {
   isHeavyConcreteCombinedFormulaCorridorImpact
 } from "./heavy-concrete-combined-impact-corridor-view";
 import {
+  MIXED_SUPPORT_FLOOR_IMPACT_LABEL,
+  getMixedSupportFloorImpactCorridorNarrative,
+  isMixedSupportFloorImpactCorridorImpact
+} from "./mixed-support-floor-impact-corridor-view";
+import {
   OPEN_WEB_SUPPORTED_BAND_SIMILARITY_LABEL,
   isOpenWebSupportedBandSimilarityImpact
 } from "./open-web-supported-band-similarity-surface";
@@ -44,6 +49,7 @@ export type ImpactLaneKind =
   | "heavy_concrete_combined_formula_corridor"
   | "helper_only_timber_open_web_impact_stack"
   | "low_confidence_fallback"
+  | "mixed_support_floor_formula_corridor"
   | "official_catalog"
   | "open_box_timber_eps_screed_hybrid"
   | "open_box_timber_raw_bare"
@@ -83,6 +89,10 @@ export function getImpactLaneKind(input: {
 
   if (impact.basis === "predictor_floor_system_low_confidence_estimate") {
     return "low_confidence_fallback";
+  }
+
+  if (isMixedSupportFloorImpactCorridorImpact(impact)) {
+    return "mixed_support_floor_formula_corridor";
   }
 
   if (isHeavyConcreteCombinedFormulaCorridorImpact(impact)) {
@@ -160,6 +170,8 @@ export function getImpactLanePillLabel(kind: ImpactLaneKind): string {
       return "Scoped live";
     case "heavy_concrete_combined_formula_corridor":
       return "Heavy concrete formula live";
+    case "mixed_support_floor_formula_corridor":
+      return "Mixed-support formula live";
     case "steel_formula_corridor":
       return "Steel formula live";
     case "unavailable":
@@ -199,6 +211,8 @@ export function getImpactLaneHeadline(kind: ImpactLaneKind): string {
       return "Ln,w and DeltaLw";
     case "heavy_concrete_combined_formula_corridor":
       return "Heavy concrete combined formula corridor";
+    case "mixed_support_floor_formula_corridor":
+      return MIXED_SUPPORT_FLOOR_IMPACT_LABEL;
     case "steel_formula_corridor":
       return "Steel floor formula corridor";
     case "unavailable":
@@ -219,7 +233,7 @@ export function getImpactLaneNarrative(kind: ImpactLaneKind, hasExactFamilyCompa
         : kind === "open_web_direct_fixed_lining"
           ? "This floor lane stays inside the UBIQ FL-23/FL-25/FL-27 open-web steel direct-fixed source grid. Exact rows still win on true matches; resilient suspended-ceiling rows, broad steel blends, field, building, ASTM, and IIC outputs stay outside this lab estimate."
         : kind === "open_web_raw_bare"
-          ? "This floor lane stays on the source-absent raw-bare open-web steel carrier formula. Exact UBIQ package rows and direct-fixed INEX/firestop routes still win; partial packages, field, building, ASTM, and IIC outputs stay outside this lab estimate."
+          ? "This floor lane stays on the source-absent raw-bare open-web steel carrier formula. Exact UBIQ package rows and direct-fixed INEX/firestop routes still win; partial packages, building, ASTM, and IIC outputs stay outside this lab estimate, while field companions require the explicit field adapter."
         : kind === "open_box_timber_raw_bare"
           ? "This floor lane stays on the source-absent raw-bare open-box timber carrier formula. Exact TUAS rows and complete finished package-transfer routes still win; partial packages, field, building, ASTM, and IIC outputs stay outside this lab estimate."
         : kind === "open_box_timber_eps_screed_hybrid"
@@ -238,6 +252,8 @@ export function getImpactLaneNarrative(kind: ImpactLaneKind, hasExactFamilyCompa
                 ? "This lane stays honest: the local formula and predictor branch still covers the narrow heavy-floor estimate path, while exact families, official rows, exact imports, and labeled published-family fallbacks can light up their own evidence lanes when the topology supports them. Broader family import and deeper field-side continuations still need more adoption work."
                 : kind === "heavy_concrete_combined_formula_corridor"
                   ? getHeavyConcreteCombinedFormulaCorridorNarrative()
+                : kind === "mixed_support_floor_formula_corridor"
+                  ? getMixedSupportFloorImpactCorridorNarrative()
                 : kind === "steel_formula_corridor"
                   ? getSteelFloorFormulaCorridorNarrative()
                 : "The current stack does not yet hit a supported impact lane.";
