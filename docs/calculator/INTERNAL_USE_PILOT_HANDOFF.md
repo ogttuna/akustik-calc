@@ -1,11 +1,19 @@
 # Internal Use Pilot Handoff
 
 Status: Gate C closed handoff pack for `internal_use_pilot_handoff_v1`.
-Controlled company-internal use is allowed only inside the envelope
+This is a historical controlled-use handoff. Controlled company-internal use is allowed only inside the envelope
 below. This is not regulatory certification and it does not promote any
 low-confidence, screening, or source-gated family. The selected follow-up
 is `calculator_source_intake_backlog_cleanup_v1`, a no-runtime source
 backlog cleanup slice.
+
+Current-state override, 2026-06-02: this file does not select current
+calculator work. Usable V1 is closed for the current tested envelope.
+Current post-V1 scope/accuracy work is governed by
+[CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md), with
+Gate CD as the latest landed value-moving runtime slice, Gate CE as the
+latest no-runtime numeric coverage rerank, and Gate CF as the selected
+next runtime scope/correctness label.
 
 Read this file before using the calculator for an internal wall or
 floor estimate. For the executable proof, see

@@ -32,9 +32,12 @@ Selected next action:
 
 `post_v1_next_numeric_coverage_gap_gate_ce_plan`
 
-Selected next file:
+Selected next file status:
 
+Gate CE is selected but not scaffolded yet. After Gate CD closeout there
+is no
 `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ce-contract.test.ts`
+file until the next implementation starts it.
 
 ## Before And After
 

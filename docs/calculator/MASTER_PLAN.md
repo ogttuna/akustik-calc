@@ -1,6 +1,17 @@
 # Calculator Master Plan
 
-Last reviewed: 2026-05-08
+Last reviewed: 2026-06-02
+
+Current-state override, 2026-06-02: this is a strategic historical
+roadmap, not the current next-slice selector. Read
+[CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md),
+[CURRENT_STATE.md](./CURRENT_STATE.md), and
+[POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md)
+for current authority. The latest landed value-moving runtime slice is
+Gate CD open-box target-output independence, and the selected next
+action label is Gate CE numeric coverage rerank. Older selected-slice
+language below is historical and must not reopen source-pack,
+productization, UI, or low-confidence work as calculator progress.
 (`wall_coverage_expansion_planning_v2` Gate A closed no-runtime;
 `wall_single_leaf_mass_law_calibration_v1` Gate C closed no-runtime;
 `wall_double_leaf_sharp_davy_scoping_v1` Gate C closed no-runtime;
@@ -49,9 +60,10 @@ no-runtime and selected `internal_use_acceptance_rehearsal_v1`)
 Iteration: 2 (rewritten with implementation state grid, accuracy
 preservation contract, ROI table, quantitative completion targets)
 
-2026-05-21 active product correction:
+2026-05-21 historical product correction:
 [ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md](./ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md)
-is the immediate calculator direction. The next selected action is
+was the immediate calculator direction at that point. The selected
+action was
 `acoustic_calculator_answer_engine_v1_plan` in
 `packages/engine/src/acoustic-calculator-answer-engine-v1-contract.test.ts`.
 The 2026-05-22 checkpoint
@@ -68,7 +80,8 @@ anchors when valid, and otherwise the correct acoustic formula family to
 calculate the result.
 
 Current tactical state is governed by
-[NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md). As of
+[NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md). Older
+notes continue below for history. As of
 2026-05-05 the active correction is the model-first physics prediction
 pivot:
 [SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md](./SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md).

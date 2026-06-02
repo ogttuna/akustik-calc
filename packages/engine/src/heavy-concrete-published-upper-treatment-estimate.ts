@@ -6,6 +6,9 @@ import { buildUniformImpactMetricBasis } from "./impact-metric-basis";
 import { clamp, ksRound1, round1 } from "./math";
 import { buildPredictorFamilyEstimateCase } from "./predictor-family-estimate-shared";
 
+export const HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_ESTIMATE_BASIS =
+  "predictor_heavy_concrete_published_upper_treatment_estimate" as const;
+
 const REGUPOL_CURVE8_CONCRETE_TILE_SUPPORT: ExactFloorSystem = {
   id: "regupol_curve8_concrete_tile_lab_2026",
   label: "REGUPOL curve 8 | 150 mm concrete | 30 mm screed | 8 mm ceramic tile",
@@ -157,7 +160,7 @@ export function deriveHeavyConcretePublishedUpperTreatmentEstimate(
     return null;
   }
 
-  const basis = "predictor_heavy_concrete_published_upper_treatment_estimate";
+  const basis = HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_ESTIMATE_BASIS;
 
   if (input.impactSystemType === "heavy_floating_floor" && !input.lowerTreatment?.type) {
     const fitPercent = round1(

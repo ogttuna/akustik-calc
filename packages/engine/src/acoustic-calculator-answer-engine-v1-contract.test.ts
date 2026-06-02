@@ -42,6 +42,7 @@ import {
 import { GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD } from "./dynamic-airborne-gate-i-airborne-field-context";
 import type { DynamicCalculatorFloorImpactContext } from "./dynamic-calculator-route-input-topology";
 import { HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS } from "./helper-only-timber-open-web-impact-stack-estimate";
+import { HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_ESTIMATE_BASIS } from "./heavy-concrete-published-upper-treatment-estimate";
 import { HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS } from "./impact-estimate";
 import { EXACT_IMPACT_SOURCE_BAND_CURVE_BASIS } from "./impact-exact";
 import {
@@ -1262,19 +1263,29 @@ describe("acoustic calculator answer engine V1 contract", () => {
         expectedBoundary: {
           missingPhysicalInputs: ["loadBasisKgM2"],
           origin: "needs_input",
-          unsupportedOutputs: FLOOR_LAB_IMPACT_OUTPUTS
+          unsupportedOutputs: ["DeltaLw"]
         },
-        expectedSupported: [],
+        expectedSupported: ["Ln,w"],
         expectedTrace: {
-          candidateKind: "needs_input_boundary",
+          boundaryCandidateIds: ["generic.required_input_owner.needs_input_boundary"],
+          candidateKind: "similarity_anchor",
           requestedBasis: "element_lab",
-          requiredInputs: ["loadBasisKgM2"],
+          requiredInputs: [
+            "baseSlabOrFloor",
+            "floatingOrToppingLayer",
+            "resilientLayer",
+            "floorCovering",
+            "publishedFamilyAnchorCandidate",
+            "loadBasisKgM2"
+          ],
           route: "floor",
-          selectedCandidateId: "generic.required_input_owner.needs_input_boundary",
-          supportBucket: "needs_input",
-          supportedMetrics: []
+          runtimeBasisId: HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_ESTIMATE_BASIS,
+          selectedCandidateId: "floor.heavy_concrete_floating.published_upper_treatment_anchor_owned",
+          supportBucket: "anchored_estimate",
+          supportedMetrics: ["Ln,w"]
         },
-        expectedUnsupported: FLOOR_LAB_IMPACT_OUTPUTS,
+        expectedUnsupported: ["DeltaLw"],
+        expectedValues: [{ metric: "Ln,w", value: 50 }],
         label: "floor lab-impact formula missing load basis",
         layers: HEAVY_FLOATING_FLOOR_STACK,
         targetOutputs: FLOOR_LAB_IMPACT_OUTPUTS
@@ -1948,25 +1959,38 @@ describe("acoustic calculator answer engine V1 contract", () => {
       origin: "needs_input",
       requiredInputs: ["loadBasisKgM2"],
       route: "floor",
-      unsupportedOutputs: ["Ln,w", "DeltaLw"]
+      unsupportedOutputs: ["DeltaLw"]
     });
-    expect(missingLoad.impact).toBeNull();
-    expect(missingLoad.supportedTargetOutputs).toEqual([]);
-    expect(missingLoad.unsupportedTargetOutputs).toEqual(["Ln,w", "DeltaLw"]);
+    expect(missingLoad.impact).toMatchObject({
+      LnW: 50,
+      basis: HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_ESTIMATE_BASIS
+    });
+    expect(missingLoad.impact?.DeltaLw).toBeUndefined();
+    expect(missingLoad.supportedTargetOutputs).toEqual(["Ln,w"]);
+    expect(missingLoad.unsupportedTargetOutputs).toEqual(["DeltaLw"]);
     expect(missingLoad.layerCombinationResolverTrace).toMatchObject({
+      boundaryCandidateIds: ["generic.required_input_owner.needs_input_boundary"],
+      candidateKind: "similarity_anchor",
       requestedBasis: "element_lab",
-      requiredInputs: ["loadBasisKgM2"],
+      requiredInputs: [
+        "baseSlabOrFloor",
+        "floatingOrToppingLayer",
+        "resilientLayer",
+        "floorCovering",
+        "publishedFamilyAnchorCandidate",
+        "loadBasisKgM2"
+      ],
       route: "floor",
-      runtimeBasisId: null,
-      selectedCandidateId: "generic.required_input_owner.needs_input_boundary",
-      supportBucket: "needs_input",
-      supportedMetrics: [],
-      valuePins: []
+      runtimeBasisId: HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_ESTIMATE_BASIS,
+      selectedCandidateId: "floor.heavy_concrete_floating.published_upper_treatment_anchor_owned",
+      supportBucket: "anchored_estimate",
+      supportedMetrics: ["Ln,w"],
+      valuePins: [{ metric: "Ln,w", value: 50 }]
     });
     expect(missingLoad.layerCombinationResolverTrace?.surfaceDetail).toContain("Missing physical inputs");
 
     expect(missingFieldContext.acousticAnswerBoundary).toMatchObject({
-      method: ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLOOR_FIELD_IMPACT_NEEDS_INPUT_METHOD,
+      method: ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLOOR_IMPACT_NEEDS_INPUT_METHOD,
       missingPhysicalInputs: ["impactFieldContext", "receivingRoomVolumeM3"],
       origin: "needs_input",
       route: "floor",

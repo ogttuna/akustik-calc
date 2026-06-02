@@ -227,7 +227,9 @@ export function inferSafeFlatWallMulticavityAutoTopology(input: {
 }): WallTopology | null {
   const contextMode = input.context?.contextMode ?? "element_lab";
   const isElementLabRequest = contextMode === "element_lab" && hasWallLabRequest(input.targetOutputs);
-  const isFieldContextRequest = contextMode === "field_between_rooms" && hasWallFieldRequest(input.targetOutputs);
+  const isFieldContextRequest =
+    contextMode === "field_between_rooms" &&
+    (hasWallFieldRequest(input.targetOutputs) || hasWallLabRequest(input.targetOutputs));
   const isBuildingPredictionRequest =
     contextMode === "building_prediction" && hasWallFieldRequest(input.targetOutputs);
   if (
@@ -311,7 +313,9 @@ export function inferSafeFlatWallDoubleLeafAutoTopology(input: {
 }): WallTopology | null {
   const contextMode = input.context?.contextMode ?? "element_lab";
   const isElementLabRequest = contextMode === "element_lab" && hasWallLabRequest(input.targetOutputs);
-  const isFieldContextRequest = contextMode === "field_between_rooms" && hasWallFieldRequest(input.targetOutputs);
+  const isFieldContextRequest =
+    contextMode === "field_between_rooms" &&
+    (hasWallFieldRequest(input.targetOutputs) || hasWallLabRequest(input.targetOutputs));
   if (
     (!isElementLabRequest && !isFieldContextRequest) ||
     !contextAllowsAutoTopology(input.context, ["double_leaf_framed"])

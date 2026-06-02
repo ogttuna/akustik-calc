@@ -43,6 +43,7 @@ import {
   HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_DELTA_LW_TOLERANCE_DB,
   HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_LN_W_TOLERANCE_DB
 } from "./heavy-concrete-combined-impact-formula-corridor";
+import { HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_ESTIMATE_BASIS } from "./heavy-concrete-published-upper-treatment-estimate";
 import {
   ASTM_E989_IMPACT_RATING_BASIS,
   ASTM_E989_IMPACT_RATING_SELECTED_CANDIDATE_ID
@@ -204,26 +205,26 @@ describe("layer combination resolver registry contract", () => {
       sourceRowsAreEvidenceNotProduct: true
     });
     expect(contract.summary).toEqual({
-      activeRuntimeCandidateCount: 39,
+      activeRuntimeCandidateCount: 40,
       basisCount: {
         astm_rating_boundary: 2,
         building_prediction: 4,
-        element_lab: 32,
+        element_lab: 33,
         field_apparent: 4
       },
-      candidateCount: 42,
+      candidateCount: 43,
       kindCount: {
         basis_boundary: 1,
         calibrated_family_solver: 1,
         exact_measured_override: 4,
         field_building_adapter: 7,
         needs_input_boundary: 1,
-        similarity_anchor: 4,
+        similarity_anchor: 5,
         source_absent_family_solver: 23,
         unsupported_boundary: 1
       },
       routeCount: {
-        floor: 26,
+        floor: 27,
         wall: 16
       },
       selectedNextAction: LAYER_COMBINATION_RESOLVER_REGISTRY_SELECTED_NEXT_ACTION
@@ -358,6 +359,15 @@ describe("layer combination resolver registry contract", () => {
       ownedRuntimeBasisId: HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS,
       priorityRank: 3,
       supportedMetrics: ["Ln,w", "DeltaLw"]
+    });
+    expect(byId.get("floor.heavy_concrete_floating.published_upper_treatment_anchor_owned")).toMatchObject({
+      basis: "element_lab",
+      kind: "similarity_anchor",
+      ownedRuntimeBasisId: HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_ESTIMATE_BASIS,
+      priorityRank: 1,
+      route: "floor",
+      supportedMetrics: ["Ln,w"],
+      valuePins: [{ metric: "Ln,w", value: 50 }]
     });
     expect(byId.get(LIGHTWEIGHT_CONCRETE_FAMILY_SELECTED_CANDIDATE_ID)).toMatchObject({
       basis: "element_lab",

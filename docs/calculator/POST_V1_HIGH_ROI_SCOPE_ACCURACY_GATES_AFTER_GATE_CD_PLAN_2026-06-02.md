@@ -1,0 +1,843 @@
+# Post-V1 High-ROI Scope/Accuracy Gates After Gate CD - 2026-06-02
+
+Document role: planning input for Gate CE and the next 5-8 post-V1
+calculator capability gates. This file does not move runtime by itself.
+If it conflicts with `CALCULATOR_SOURCE_OF_TRUTH.md` or the active
+post-V1 capability plan, the source-of-truth chain wins.
+
+## Product Constraint
+
+The only goal of these gates is calculator scope and accuracy:
+
+- more physically valid wall/floor layer combinations calculate owned
+  acoustic outputs when route-required physical inputs are present;
+- existing routes choose a more correct formula, anchor, metric basis,
+  or building/field adapter;
+- missing physical inputs still return exact `needs_input` fields;
+- unsupported metric/basis requests still return `unsupported`.
+
+These gates must not drift into broad source crawling, finite scenario
+packs, confidence wording, report polish, storage/auth work, or generic
+UI cleanup. Source rows are useful only as exact answers, anchors,
+calibration evidence, holdouts, and regression tests.
+
+## Current Implementation Anchor
+
+Current state after Gate CH:
+
+- latest value-moving runtime slice:
+  `post_v1_next_numeric_coverage_gap_gate_ch_plan`;
+- Gate CH landed with status
+  `post_v1_next_numeric_coverage_gap_gate_ch_landed_runtime_selected_next_numeric_coverage_gap_gate_ci`;
+- current selected next action label:
+  `post_v1_next_numeric_coverage_gap_gate_ci_plan`;
+- Gate CH selected next file:
+  `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ci-contract.test.ts`;
+- Gate CH coverage counters: `newCalculableLayerTemplates 2`,
+  `newCalculableRequestShapes 4`,
+  `runtimeCorrectedRequestShapes 3`;
+- Gate CH value movement: complete visible heavy-floating
+  reinforced-concrete upper-treatment stacks with explicit
+  direct/flanking impact context and explicit
+  `impactFieldContext.ci50_2500Db` now keep the Gate CG2 published
+  upper-treatment `Ln,w 50` anchor and calculate `L'n,w 57.5 /
+  L'nT,w 55.1 / L'nT,50 59.1` through
+  `source_absent_field_building_adapter_error_budget`;
+- missing `impactFieldContext.ci50_2500Db` still stops only
+  `L'nT,50` as `needs_input`;
+- ASTM `IIC` / `AIIC` remain unsupported without ASTM E492/E1007
+  owners;
+- previous value-moving runtime slice:
+  `post_v1_floor_common_floating_covering_expansion_gate_cg2_plan`;
+- Gate CG2 landed with status
+  `post_v1_floor_common_floating_covering_expansion_gate_cg2_landed_selected_next_numeric_coverage_gap_gate_ch`;
+- Gate CG2 selected next file:
+  `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ch-contract.test.ts`;
+- Gate CG2 coverage counters: `newCalculableLayerTemplates 2`,
+  `newCalculableRequestShapes 10`,
+  `runtimeCorrectedRequestShapes 8`;
+- Gate CG2 value movement: visible heavy-floating reinforced-concrete
+  upper-treatment stacks now keep the published-family `Ln,w 50` anchor
+  live when `loadBasisKgM2` or
+  `resilientLayerDynamicStiffnessMNm3` is missing, while `DeltaLw`
+  remains `needs_input` for the exact missing owner field. With complete
+  `impactFieldContext`, the same anchor publishes `L'n,w 52`,
+  `L'nT,w 49.6`, and `L'nT,50 53.6`; complete explicit dynamic input
+  still uses `Ln,w 50.3` / `DeltaLw 24.3`. ASTM `IIC` / `AIIC` remain
+  unsupported without ASTM E492/E1007 owners.
+- Gate CG2 added resolver owner
+  `floor.heavy_concrete_floating.published_upper_treatment_anchor_owned`;
+- previous value-moving runtime slice:
+  `post_v1_floor_common_floating_covering_expansion_gate_cg_plan`;
+- Gate CG landed with status
+  `post_v1_floor_common_floating_covering_expansion_gate_cg_landed_partial_selected_floor_common_floating_covering_expansion_gate_cg2`;
+- Gate CG selected next runtime label:
+  `post_v1_floor_common_floating_covering_expansion_gate_cg2_plan`;
+- Gate CG selected next file:
+  `packages/engine/src/post-v1-floor-common-floating-covering-expansion-gate-cg2-contract.test.ts`;
+- Gate CG coverage counters: `newCalculableLayerTemplates 4`,
+  `newCalculableRequestShapes 20`,
+  `runtimeCorrectedRequestShapes 12`;
+- Gate CG value movement: floor-covering-only heavy/reinforced concrete
+  stacks now keep owned bare-heavy `Ln,w` live when `DeltaLw` or field
+  impact companions are requested; with explicit `impactFieldContext`
+  they also publish `L'n,w`, `L'nT,w`, and `L'nT,50`. `DeltaLw` remains
+  `needs_input` for `toppingOrFloatingLayer`,
+  `resilientLayerDynamicStiffnessMNm3`, and `loadBasisKgM2`; ASTM
+  `IIC` / `AIIC` remain unsupported without ASTM E492/E1007 owners.
+- earlier value-moving runtime slice:
+  `post_v1_target_output_independence_sweep_gate_cf_plan`;
+- earlier no-runtime selection slice:
+  `post_v1_next_numeric_coverage_gap_gate_ce_plan`;
+- Gate CE landed with status
+  `post_v1_next_numeric_coverage_gap_gate_ce_landed_no_runtime_selected_target_output_independence_sweep_gate_cf`;
+- Gate CF landed with status
+  `post_v1_target_output_independence_sweep_gate_cf_landed_selected_floor_common_floating_covering_expansion_gate_cg`;
+- Gate CF coverage counters: `newSingleOutputParityPins 37`,
+  `runtimeCorrectedRequestShapes 8`, `newCalculableRequestShapes 8`,
+  `newCalculableLayerTemplates 0`;
+- resolver surface: 43 declared candidates and 40 active runtime-basis
+  mappings;
+- latest full `pnpm calculator:gate:current` after Gate CH passed with
+  engine 599 files / 3301 tests, web 113 files / 437 passed + 18
+  skipped, repo build 5 / 5, and whitespace guard passed.
+
+Gate CD is important evidence: it did not invent a formula. It corrected
+target-output independence so already-owned open-box dry
+package-transfer and EPS/screed hybrid answers publish for single-output
+requests. That pattern should now be searched across the calculator
+before opening lower-readiness formula work.
+
+Gate CF closed that search across six existing runtime families. It
+repaired the value-moving wall field-context lab companion defect:
+single-output `Rw`, STC, `C`, and `Ctr` for flat double-leaf and
+full-fill multileaf field contexts now use the owned family route rather
+than screening fallback or unsupported publication. Raw-bare open-web /
+open-box field impact, heavy-concrete combined lab impact, and steel
+suspended-ceiling field impact single-output parity are pinned as
+already-safe families. Missing field `receivingRoomRt60S`, unsupported
+ASTM `IIC` / `AIIC`, and field-only wall request boundaries remain
+protected.
+
+## External Research Anchors
+
+The following external anchors support the selected capability axes:
+
+- INSUL describes professional prediction scope as walls, floors, and
+  ceilings with 1/3-octave transmission-loss graphs and construction
+  detail choices. Source: https://www.insul.co.nz/
+- Public INSUL feature descriptions include single/double/triple/quad
+  panel walls/floors/ceilings/windows, `Rw`, STC, OITC, `DnT,w`, `C`,
+  `Ctr`, `Ln,w`, IIC, concrete floors with floor coverings, lightweight
+  and timber floors, composite transmission loss, leakage calculation,
+  and EN/ISO 12354 building calculations. Source:
+  https://navcon.com/resources/software/insul/
+- Acoulatis describes the same professional shape: airborne and impact
+  sound insulation for walls and floors, third-octave precision,
+  ISO/ASTM ratings, timber/steel frame walls and floors, CLT/LVL,
+  concrete/CMU/brick/aerated concrete, frame systems, panels, impact
+  boards, and floor coverings. Source:
+  https://www.sonusoft.com/acoulatis
+- ISO 12354-1:2017 estimates airborne sound insulation between rooms
+  using direct or indirect flanking transmission by participating
+  building elements and theoretically derived structural propagation
+  methods. Source: https://www.iso.org/standard/70242.html
+- ISO 12354-2:2017 estimates impact sound insulation between rooms with
+  direct or indirect flanking transmission, frequency-band calculation
+  from 100 Hz to 3150 Hz, and optional extension down to 50 Hz when data
+  exist. Source: https://www.iso.org/standard/70243.html
+- ISO 717-2:2020 defines single-number impact quantities and impact
+  reduction for floor coverings and floating floors from one-third-octave
+  measurement results. Source: https://www.iso.org/standard/69867.html
+- ASTM E989-21 defines ASTM single-number impact metrics. It separates
+  E492 lab IIC from E1007 field AIIC/ISR/NISR and requires the ASTM
+  impact rating basis rather than an ISO `Ln,w` alias. Source:
+  https://store.astm.org/e0989-21.html
+
+These sources support the direction with high confidence. They do not
+authorize guessing missing physical inputs or aliasing ISO and ASTM
+metrics.
+
+## Implementation Audit - 2026-06-02
+
+This plan was checked against the current implementation before Gate CE
+selection. Findings:
+
+- The plan passes the calculator-only rule: every candidate must either
+  increase calculable wall/floor layer/request coverage, route existing
+  coverage to the correct metric basis, block a wrong alias/fallback, or
+  improve holdout-backed accuracy. Generic source crawling, confidence
+  copy, catalog work, auth/storage, and report polish remain non-goals.
+- Gate CF fits the current codebase strongly. Target-output support is
+  already centralized enough to audit, and Gate CD proved the defect
+  class with real output movement.
+- Gate CG fits the current codebase strongly. Floor layer/input schemas
+  already expose resilient layers, floating screeds, coverings,
+  suspended/lower treatments, dynamic stiffness, and load basis fields;
+  the gate must expand usage placement without inventing defaults.
+- Gate CH fits the current codebase, but must remain basis-strict:
+  field/apparent and building-prediction routes are not aliases for lab
+  `Rw` or lab `Ln,w`. Direct-only and direct+flanking adapters must
+  expose their selected basis and missing physical inputs.
+- Gate CI needed one correction from implementation audit: exact ASTM
+  E492/E1007 one-third-octave sources already calculate `IIC` / `AIIC`
+  through the ASTM E989 contour bridge and already have surface parity.
+  Gate CI must therefore be treated as an expansion beyond that baseline
+  into additional true ASTM-band owners or user-supplied ASTM band
+  inputs, not as re-landing the exact-band bridge.
+- Gate CJ is not a start-from-zero wall-topology task. Double-leaf,
+  multicavity, full-fill, and field companions already exist for several
+  explicit-support flat stacks. Gate CJ should expand remaining common
+  flat topologies and protect the existing ambiguity stops.
+- Gate CK is not a start-from-zero opening/leak task. Opening/leak
+  runtime and A-weighted field/building surfaces already exist in
+  company-internal lanes. Gate CK should broaden those adapters only
+  where weak-path energy combination and input ownership are explicit.
+- Gate CL has high accuracy ROI but lower immediate scope ROI. It should
+  be selected when the next runtime move depends on tighter residual
+  budgets or when source-owned calibration and holdout rows are ready.
+- Gate CM is conditional. It is high ROI only after a selected runtime
+  gate names physical fields that the API/workbench/report/replay
+  surfaces cannot yet carry.
+
+## Counting Semantics
+
+Gate value must be counted in two ways:
+
+- `newCalculableLayerTemplates`: newly admitted representative
+  wall/floor construction families, not infinite material permutations.
+- `newCalculableRequestShapes`: newly supported output/request forms for
+  already-owned or newly-owned routes.
+
+For example, Gate CD opened 2 representative finished open-box floor
+stacks across 6 single-output request shapes. It did not claim infinite
+new stacks. Future gates must report these counters explicitly:
+
+- `newCalculableLayerTemplates`;
+- `newCalculableRequestShapes`;
+- `newMetricBasisOwners`;
+- `accuracyOnlyTemplates`;
+- `wrongAliasOrFallbackBlocks`;
+- `requiredPhysicalInputFields`;
+- `surfaceParityRequired`.
+
+The count estimates below are implementation planning estimates until
+Gate CE writes an executable matrix.
+
+## ROI Scoring Policy
+
+Gate CE should rank candidates with these weights:
+
+1. user-frequency / industry commonness;
+2. number of owned outputs unlocked;
+3. implementation readiness in the current codebase;
+4. wrong-number risk reduction;
+5. source-row independence;
+6. ability to prove with focused tests and visible `needs_input` /
+   `unsupported` boundaries.
+
+The current provisional order is:
+
+1. target-output independence sweep;
+2. common floor floating/covering expansion;
+3. field/building direct + flanking adapters;
+4. ASTM IIC/AIIC owner expansion;
+5. common wall auto-topology expansion;
+6. opening/leak/composite wall adapters;
+7. residual accuracy + holdout program;
+8. required physical input surface parity for the selected runtime
+   gates.
+
+## Gate CE - Executable Rerank And Metrics Contract
+
+Type: no-runtime selection gate.
+
+Estimated added calculation coverage:
+
+- `newCalculableLayerTemplates`: 0;
+- `newCalculableRequestShapes`: 0.
+
+Why this is required:
+
+Gate CE must stop agent drift. It must select the next value-moving
+slice by evidence and counters, not by historical handoff inertia or
+agent preference.
+
+Required work:
+
+- create `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ce-contract.test.ts`;
+- rank all eight candidates from this document;
+- import current Gate CD status and docs paths;
+- prove broad source crawling, confidence wording, finite scenario
+  packs, and generic UI/report/storage work are blocked non-goals;
+- choose exactly one next value-moving Gate CF candidate;
+- require future runtime gates to publish the coverage counters listed
+  above.
+
+Acceptance:
+
+- no runtime values move;
+- Gate CE selects one next action and one next contract file;
+- the selected action passes the calculator advancement test;
+- the plan cites this document and the source-of-truth file.
+
+Landed status:
+
+- Gate CE landed as `post_v1_next_numeric_coverage_gap_gate_ce_plan`;
+- selection status:
+  `post_v1_next_numeric_coverage_gap_gate_ce_landed_no_runtime_selected_target_output_independence_sweep_gate_cf`;
+- selected candidate: `target_output_independence_sweep`;
+- selected next action:
+  `post_v1_target_output_independence_sweep_gate_cf_plan`;
+- selected next file:
+  `packages/engine/src/post-v1-target-output-independence-sweep-gate-cf-contract.test.ts`.
+
+## Gate CF - Target-Output Independence Sweep
+
+Type: runtime scope/correctness sweep.
+
+Estimated added calculation coverage:
+
+- `newCalculableLayerTemplates`: 0-4 physical templates;
+- `newCalculableRequestShapes`: 20-60 output/request shapes.
+
+Why this is high ROI:
+
+Gate CD proved a real defect class: the engine can calculate an owned
+value internally, but the value may still be parked as unsupported when
+the user requests only one output instead of a mixed output set. That is
+not an acoustic formula gap; it is a calculator route-publication gap.
+Fixing it gives immediate scope without increasing formula risk.
+
+Route families to audit first:
+
+- finished open-box dry and EPS/screed routes beyond the Gate CD pins;
+- raw-bare open-box and open-web floor routes;
+- heavy/reinforced concrete combined floor routes;
+- steel/lightweight floor formula routes;
+- wall double-leaf, multileaf, and field/building companion routes;
+- opening/leak routes with owned lab or field/building values.
+
+Required implementation:
+
+- add a reusable target-output support audit for all selected candidates;
+- for each audited route, run single-output requests for each owned
+  metric and compare against the mixed-request answer;
+- keep companions parked when the route owns only a subset of metrics;
+- never add unsupported `Ctr`, IIC, AIIC, field, or building outputs by
+  alias.
+
+Expected outputs unlocked:
+
+- wall: `Rw`, STC, `C`, `Ctr`, `R'w`, `Dn,w`, `Dn,A`, `DnT,w`,
+  `DnT,A`;
+- floor: `Rw`, `C`, `Ctr`, `Ln,w`, `DeltaLw`, `CI`, `CI,50-2500`,
+  `Ln,w+CI`, `L'n,w`, `L'nT,w`, `L'nT,50`.
+
+Required negative tests:
+
+- requesting only IIC/AIIC from ISO routes remains unsupported;
+- requesting field outputs without field context remains `needs_input`;
+- requesting building outputs without room/flanking context remains
+  `needs_input`;
+- lab `Rw` must not be relabelled as field `R'w`.
+
+Exit criteria:
+
+- at least 20 new request-shape pins across at least 4 existing runtime
+  families, or Gate CE must document why the sweep is exhausted;
+- no broad formula retune;
+- full current gate green after runtime changes.
+
+Landed status:
+
+- Gate CF landed as `post_v1_target_output_independence_sweep_gate_cf_plan`;
+- selection status:
+  `post_v1_target_output_independence_sweep_gate_cf_landed_selected_floor_common_floating_covering_expansion_gate_cg`;
+- value-moving correction: wall field-context lab companion
+  single-output `Rw`, STC, `C`, and `Ctr` no longer fall to screening or
+  unsupported publication on complete explicit-support flat double-leaf
+  and full-fill multileaf stacks;
+- audited parity pins: raw-bare open-web/open-box field impact,
+  heavy-concrete combined lab impact, steel suspended-ceiling field
+  impact, wall double-leaf field/lab, and wall multileaf field/lab;
+- coverage counters: `newSingleOutputParityPins 37`,
+  `runtimeCorrectedRequestShapes 8`, `newCalculableRequestShapes 8`,
+  `newCalculableLayerTemplates 0`;
+- selected next action:
+  `post_v1_floor_common_floating_covering_expansion_gate_cg_plan`;
+- selected next file:
+  `packages/engine/src/post-v1-floor-common-floating-covering-expansion-gate-cg-contract.test.ts`.
+
+## Gate CG - Common Floor Floating/Covering Expansion
+
+Type: runtime scope expansion.
+
+Estimated added calculation coverage:
+
+- `newCalculableLayerTemplates`: 8-15;
+- `newCalculableRequestShapes`: 40-120.
+
+Why this is high ROI:
+
+Common real floor work is not just a bare slab. It is usually a base
+structure plus floor covering, resilient layer, floating screed or board
+package, and often a suspended ceiling/lower treatment. INSUL and
+Acoulatis both treat floor coverings, impact boards, lightweight/timber
+floors, and concrete floors as central capabilities. ISO 717-2 also
+explicitly covers impact reduction from floor coverings and floating
+floors.
+
+Representative layer templates:
+
+1. reinforced/heavy concrete + resilient underlay + floating screed;
+2. reinforced/heavy concrete + floor covering only;
+3. reinforced/heavy concrete + floating screed + suspended ceiling;
+4. hollow-core slab + resilient underlay + topping;
+5. timber joist + floor covering + resilient ceiling;
+6. mass-timber/CLT + floating dry board package;
+7. lightweight steel/open-web + floor covering + resilient ceiling;
+8. open-box timber + EPS/screed or dry package variants;
+9. mixed upper/lower floor package with one primary carrier and one
+   owned lower treatment.
+
+Required physical inputs:
+
+- base carrier family and thickness;
+- density or mass-per-area for slabs/boards/toppings;
+- resilient layer dynamic stiffness `s'` in MN/m3;
+- resilient layer thickness;
+- load basis kg/m2;
+- screed/topping material, thickness, and mass;
+- floor covering type and thickness;
+- ceiling/lower assembly type, cavity depth, board layers, and fill;
+- field impact context only when field outputs are requested.
+
+Expected outputs:
+
+- lab: `Ln,w`, `DeltaLw`, `CI`, `CI,50-2500`, `Ln,w+CI`;
+- field: `L'n,w`, `L'nT,w`, `L'nT,50` with explicit field context;
+- airborne companions only when the route separately owns `Rw` / `R'w`
+  / `DnT,w`.
+
+Required negative tests:
+
+- missing dynamic stiffness or load basis cannot invent `DeltaLw`;
+- ceiling/lower treatment cannot be guessed from visual layer names
+  alone when owner fields are required;
+- ASTM IIC/AIIC remain unsupported unless the request has current exact
+  ASTM E492/E1007 bands or Gate CI owns a new ASTM basis;
+- lab impact cannot become field impact without `impactFieldContext`.
+
+Exit criteria:
+
+- at least 8 new representative floor templates calculate at least one
+  owned impact output;
+- at least 4 templates calculate both lab and field impact when field
+  context is complete;
+- every stopped output reports exact missing fields.
+
+Partial landed status:
+
+- Gate CG landed as
+  `post_v1_floor_common_floating_covering_expansion_gate_cg_plan`;
+- selection status:
+  `post_v1_floor_common_floating_covering_expansion_gate_cg_landed_partial_selected_floor_common_floating_covering_expansion_gate_cg2`;
+- landed coverage: `newCalculableLayerTemplates 4`,
+  `newCalculableRequestShapes 20`, and
+  `runtimeCorrectedRequestShapes 12`;
+- landed scope: four floor-covering-only heavy/reinforced concrete
+  templates now preserve owned bare-heavy `Ln,w` and field-impact
+  companions from explicit `impactFieldContext` while `DeltaLw` remains
+  `needs_input` for `toppingOrFloatingLayer`,
+  `resilientLayerDynamicStiffnessMNm3`, and `loadBasisKgM2`;
+- Gate CG is intentionally partial and selects
+  `post_v1_floor_common_floating_covering_expansion_gate_cg2_plan` in
+  `packages/engine/src/post-v1-floor-common-floating-covering-expansion-gate-cg2-contract.test.ts`
+  to continue the same high-ROI floor floating/covering expansion
+  before Gate CH is selected.
+
+## Gate CH - Field/Building Direct + Flanking Adapters
+
+Type: runtime scope and accuracy expansion.
+
+Estimated added calculation coverage:
+
+- `newCalculableLayerTemplates`: 8-14 basis templates;
+- `newCalculableRequestShapes`: 50-120.
+
+Why this is high ROI:
+
+Lab values are not field/building values. ISO 12354-1 and ISO 12354-2
+estimate building performance from direct and indirect/flanking
+transmission through participating building elements. Without this gate,
+the calculator can look good in lab metrics while still being incomplete
+or wrong for real `R'w`, `DnT,w`, `L'n,w`, and `L'nT,w` use.
+
+Representative scope:
+
+- wall double-leaf and multileaf lab routes to field/building airborne;
+- wall single-leaf/massive and lined massive routes to field/building
+  airborne;
+- floor airborne routes to `R'w`, `Dn,w`, `DnT,w`;
+- floor impact routes to `L'n,w`, `L'nT,w`, `L'nT,50`;
+- direct+flanking explicit path adapters for common junction cases.
+
+Required physical inputs:
+
+- separating element area;
+- receiving room volume;
+- receiving room RT60;
+- source/receiving room geometry when required by the chosen route;
+- junction class and junction length;
+- flanking element family, area, and path type;
+- path penalty or Kij where explicitly supplied;
+- edge isolation class and short-circuit risk;
+- lower-treatment/flanking reduction where applicable.
+
+Expected outputs:
+
+- airborne: `R'w`, `Dn,w`, `Dn,A`, `DnT,w`, `DnT,A`;
+- impact: `L'n,w`, `L'nT,w`, `L'nT,50`.
+
+Required negative tests:
+
+- lab `Rw` cannot become `R'w`;
+- field/apparent output cannot become building-prediction output unless
+  the selected adapter owns that basis;
+- missing RT60 or room volume returns `needs_input`;
+- direct-only output must not hide flanking penalties when flanking
+  paths are supplied.
+
+Exit criteria:
+
+- at least 8 field/building basis templates publish owned outputs;
+- at least 4 templates include explicit flanking path effects;
+- all adapters expose basis, missing inputs, and value pins through
+  engine/API/workbench/report surfaces required by the selected gate.
+
+Landed status:
+
+- Gate CH landed as `post_v1_next_numeric_coverage_gap_gate_ch_plan`;
+- selection status:
+  `post_v1_next_numeric_coverage_gap_gate_ch_landed_runtime_selected_next_numeric_coverage_gap_gate_ci`;
+- value-moving correction: the Gate CG2 visible heavy-floating
+  upper-treatment field adapter now uses explicit
+  `impactFieldContext.ci50_2500Db` on the direct+flanking path and
+  publishes `L'n,w 57.5 / L'nT,w 55.1 / L'nT,50 59.1`;
+- missing `impactFieldContext.ci50_2500Db` still stops only
+  `L'nT,50` as `needs_input`;
+- ASTM `IIC` / `AIIC` remain unsupported without ASTM E492/E1007
+  owners;
+- coverage counters: `newCalculableLayerTemplates 2`,
+  `newCalculableRequestShapes 4`, and
+  `runtimeCorrectedRequestShapes 3`;
+- selected next action:
+  `post_v1_next_numeric_coverage_gap_gate_ci_plan`;
+- selected next file:
+  `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ci-contract.test.ts`.
+
+## Gate CI - ASTM IIC/AIIC Owner Expansion Beyond Exact Bands
+
+Type: metric-basis owner expansion.
+
+Estimated added calculation coverage:
+
+- `newCalculableLayerTemplates`: 0-4 metric-basis templates;
+- `newCalculableRequestShapes`: 2-20, depending on whether a new ASTM
+  band owner or user ASTM band input route is evidence-ready.
+
+Why this is high ROI:
+
+IIC/AIIC are common in North American floor decisions and codes. ASTM
+E989 separates lab IIC from field AIIC/ISR/NISR and relies on ASTM E492
+or E1007 one-third-octave impact data. The current engine already
+calculates complete exact ASTM E492 lab bands into `IIC` and complete
+ASTM E1007 field bands into `AIIC` through
+`packages/engine/src/impact-astm-e989.ts`, and the shared rating-adapter
+schema blocks ISO/ASTM metric aliases. Gate CI therefore must not repeat
+Gate F/G. Its value is to admit additional true ASTM-band routes or an
+explicit user ASTM-band input surface while preserving the current exact
+ASTM baseline.
+
+Required physical / data inputs:
+
+- complete ASTM impact one-third-octave band data from 100 Hz to
+  3150 Hz;
+- source method marking E492 for lab IIC or E1007 for field AIIC;
+- lab/field basis flag;
+- no ISO-only `Ln,w`, `CI`, or `L'nT,w` shortcut.
+
+Implementation focus:
+
+- reuse `packages/engine/src/impact-astm-e989.ts`;
+- preserve the existing exact ASTM E492 -> `IIC` and ASTM E1007 ->
+  `AIIC` baseline as regression guards;
+- evaluate whether any formula route truly owns an ASTM one-third-octave
+  impact curve. If not, keep formula-derived ASTM ratings blocked;
+- if selected, add explicit user-supplied ASTM band input ownership
+  through API/workbench/report/replay surfaces instead of copying ISO
+  single-number values;
+- make unsupported ASTM outputs visible beside supported ISO outputs
+  without marking ISO routes as ASTM-capable.
+
+Required negative tests:
+
+- ISO `Ln,w` does not become IIC;
+- ISO `L'nT,w` does not become AIIC;
+- incomplete ASTM bands return unsupported/needs-input rather than a
+  guessed rating;
+- E492 data cannot publish AIIC; E1007 data cannot publish lab IIC.
+
+Exit criteria:
+
+- existing lab ASTM E492 exact-band `IIC` and field ASTM E1007
+  exact-band `AIIC` tests remain green;
+- either at least one new true ASTM-band owner/input route is admitted,
+  or Gate CI lands no-runtime evidence that no safe expansion is ready
+  and reranks to the next value-moving gate;
+- at least four ISO impact routes prove ASTM aliases remain blocked.
+
+## Gate CJ - Common Wall Auto-Topology Expansion
+
+Type: runtime scope expansion through safer route selection.
+
+Estimated added calculation coverage:
+
+- `newCalculableLayerTemplates`: 10-18;
+- `newCalculableRequestShapes`: 60-150.
+
+Why this is high ROI:
+
+Users usually enter flat layers such as gypsum / stud cavity / gypsum.
+They do not naturally enter acoustic leaf/cavity grouping. If the
+calculator cannot safely infer common double-leaf and multileaf
+topologies from flat layers, scope remains artificially narrow even when
+the formulas already exist.
+
+Representative layer templates:
+
+1. gypsum / mineral wool cavity / gypsum independent stud;
+2. gypsum / mineral wool cavity / gypsum resilient one-side;
+3. gypsum / mineral wool cavity / gypsum resilient both-sides;
+4. double-stud wall;
+5. staggered-stud wall;
+6. masonry or concrete core with framed liner;
+7. CLT or mass-timber panel with independent lining;
+8. full-fill multicavity gypsum / wool / gypsum / wool / gypsum;
+9. air-gap multicavity with explicit air segments;
+10. asymmetric board-count framed walls.
+
+Required physical inputs:
+
+- support/stud type;
+- stud spacing;
+- connection/shared-track state;
+- resilient bar side count;
+- explicit air-gap and porous-fill layers;
+- board layer count and thickness;
+- material density/mass where not known;
+- field/building context only for field/building outputs.
+
+Required negative tests:
+
+- ambiguous flat order does not guess;
+- duplicate cavity groups do not merge silently;
+- resilient side count missing remains `needs_input` when required;
+- single-leaf mass law does not steal double-leaf or multileaf stacks;
+- lab route does not leak field outputs.
+
+Exit criteria:
+
+- at least 10 new representative wall templates calculate lab outputs;
+- at least 4 of those templates calculate field/building outputs when
+  complete context is present;
+- no unsafe topology promotion from ambiguous layers.
+
+## Gate CK - Opening/Leak/Composite Wall Adapters
+
+Type: runtime scope and wrong-number prevention.
+
+Estimated added calculation coverage:
+
+- `newCalculableLayerTemplates`: 6-12;
+- `newCalculableRequestShapes`: 30-80.
+
+Why this is high ROI:
+
+Real walls often include doors, windows, penetrations, service gaps, or
+perimeter leakage. Ignoring them overstates performance. Professional
+prediction tools expose composite transmission loss and leakage
+calculation because these weak paths frequently dominate final airborne
+performance.
+
+Representative layer templates:
+
+1. wall + single door opening;
+2. wall + window/glazing opening;
+3. wall + multiple openings;
+4. wall + service penetration leak;
+5. wall + perimeter seal leakage;
+6. composite wall with two or more component TL curves;
+7. opening/leak field-between-rooms adapter;
+8. opening/leak building-prediction adapter.
+
+Required physical inputs:
+
+- total separating area;
+- each component/opening area;
+- component TL curve or owned `Rw`/STC basis;
+- leakage path class or equivalent gap area/path length;
+- perimeter seal state;
+- room/RT60/flanking context for field/building outputs;
+- A-weighted spectrum only when `Dn,A` / `DnT,A` owners exist.
+
+Required negative tests:
+
+- base wall result cannot ignore an opening when opening inputs exist;
+- opening lab `Rw` does not become field `R'w` without adapter context;
+- A-weighted outputs remain unsupported without spectrum owner;
+- missing component area returns `needs_input`.
+
+Exit criteria:
+
+- at least 6 composite/opening/leak templates publish owned outputs;
+- at least 3 include field/building outputs;
+- weak-path energy combination lowers or bounds the result instead of
+  leaving the base wall value optimistic.
+
+## Gate CL - Residual Accuracy + Holdout Program
+
+Type: accuracy/calibration program.
+
+Estimated added calculation coverage:
+
+- `newCalculableLayerTemplates`: 0-3;
+- `newCalculableRequestShapes`: 0-15.
+
+Why this is high ROI:
+
+Opening more routes is not enough. Source-absent families such as
+open-box/open-web floors and multileaf walls need holdouts to prove
+numeric quality and tighten error budgets. Without holdouts, the product
+can become broader while remaining too uncertain for industry-grade use.
+
+Initial target families:
+
+- open-box timber raw-bare and finished package transfer;
+- open-web steel raw-bare and supported-band routes;
+- common wall double-leaf and multileaf auto-topology routes;
+- opening/leak composite wall routes;
+- floating floor / covering routes from Gate CG.
+
+Required evidence:
+
+- source-owned calibration rows;
+- source-owned holdout rows not used for fitting;
+- paired negative rows for unsafe near-matches;
+- residual/error-budget policy per metric and basis;
+- before/after predictions stored as executable tests.
+
+Initial acceptance thresholds:
+
+- do not tighten an error budget without at least one calibration row
+  and one holdout row for the same family/basis;
+- target MAE <= 3 dB for airborne one-number lab routes where the
+  evidence set supports that claim;
+- target MAE <= 5 dB for impact one-number routes where the evidence
+  set supports that claim;
+- if holdouts fail, keep the wider budget and document why.
+
+Required negative tests:
+
+- a holdout row cannot also be used as a calibration row;
+- source rows cannot override a different topology or metric basis;
+- exact rows still win only for same stack/topology/metric/basis;
+- budget tightening cannot hide unsupported outputs.
+
+Exit criteria:
+
+- at least 3 family/basis residual ledgers exist;
+- at least 2 families either tighten a budget with holdout proof or
+  explicitly hold the wider budget with failing evidence preserved;
+- no runtime route is promoted solely by source-row proximity.
+
+## Gate CM - Required Physical Input Surface Parity
+
+Type: input-surface unlock for selected runtime gates only.
+
+Estimated added calculation coverage:
+
+- `newCalculableLayerTemplates`: 0 engine templates;
+- `newCalculableRequestShapes`: 5-20 user-usable request shapes.
+
+Why this is high ROI:
+
+An engine route is not useful if users cannot supply the required
+physical inputs through the API/workbench/report/replay surfaces. This
+gate is allowed only when a selected runtime gate already requires these
+fields. It is not generic UI polish.
+
+Required fields depend on the selected runtime gates, but likely include:
+
+- `resilientLayerDynamicStiffnessMNm3`;
+- `loadBasisKgM2`;
+- `impactFieldContext.fieldKDb`;
+- `impactFieldContext.receivingRoomVolumeM3`;
+- `impactFieldContext.receivingRoomRt60S`;
+- flanking path descriptors and path penalties;
+- opening/component areas;
+- stud/support topology fields;
+- ASTM impact band arrays.
+
+Acceptance:
+
+- workbench can enter every required field for the selected route;
+- `/api/estimate`, `/api/impact-only`, saved replay, server snapshot
+  replay, and reports preserve the fields;
+- missing fields surface as exact `needs_input`, not hidden defaults;
+- no formula moves solely because a UI default was saved.
+
+## Expected Product State After These Gates
+
+If Gates CE-CM land with the stated acceptance, DynEcho should move from
+"usable V1 plus strong post-V1 slices" to a much stronger internal
+professional calculator:
+
+- common wall/floor stacks calculate more consistently from flat layer
+  input;
+- common floating floor and floor-covering packages produce impact
+  outputs when physical inputs exist;
+- field/building outputs become more broadly available with explicit
+  room/flanking context;
+- ASTM IIC/AIIC coverage expands only from true ASTM band ownership;
+  the existing exact E492/E1007 E989 bridge remains protected from ISO
+  aliasing;
+- openings/leaks/composite weak paths reduce optimistic wall numbers;
+- selected families have holdout-backed accuracy posture.
+
+This still would not close every industry-grade gap. Remaining large
+programs after these gates:
+
+- facade/glazing/roof/rain/noise-from-outside coverage if selected as
+  product scope;
+- broader third-octave curve ownership for every formula family;
+- larger source-owned calibration and holdout corpus;
+- regional code output adapters beyond ISO/ASTM core metrics;
+- richer material-property governance for density, stiffness, loss
+  factor, damping, and dynamic stiffness.
+
+## Immediate Next Action
+
+Start Gate CI:
+`post_v1_next_numeric_coverage_gap_gate_ci_plan`.
+Gate CH has closed the field/building direct+flanking low-frequency
+correction for the Gate CG2 visible heavy-floating upper-treatment
+route. Gate CI must pick the next highest-ROI calculator scope/accuracy
+slice from remaining explicit formula/adapter/anchor gaps, not broad
+source crawling, confidence wording, report polish, MCP, or generic UI
+work. It must preserve the same rules: missing physical owners stay
+`needs_input`, ISO impact outputs must not become ASTM `IIC` / `AIIC`
+aliases, and any selected runtime move must calculate more physically
+valid layer combinations or route existing combinations through a more
+correct owner.

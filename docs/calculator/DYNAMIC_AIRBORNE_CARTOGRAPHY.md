@@ -1,6 +1,14 @@
 # Dynamic Airborne Cartography
 
-Last reviewed: 2026-05-12
+Last reviewed: 2026-06-02
+
+Current-state override: this is architecture cartography for the
+dynamic-airborne module, not the current calculator slice selector. Read
+[CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md) and
+[NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md) for the
+current Gate CD/Gate CE post-V1 calculator state. Optional module
+carves must not replace calculator scope/accuracy work.
+
 Status: split v1 landed 15 atomic commits that moved the first bounded
 modules out of the original 6630-line monolith. The v2 slice is now
 closed at Gate C: eleven correction guards were carved into
@@ -10,9 +18,10 @@ closed at Gate C: eleven correction guards were carved into
 calculator slice has since grown it to 1969 physical lines after Gate AZ
 airborne building-prediction runtime promotion. That is still below the
 2000-line C6 threshold, so the remaining three recursive guards are optional
-architecture backlog rather than the selected work. The active
-calculator slice is now
-`calculator_model_first_physics_prediction_pivot_v1`.
+architecture backlog rather than the selected work. The historical
+active calculator slice at that time was
+`calculator_model_first_physics_prediction_pivot_v1`; current active
+post-V1 selection is governed by the source-of-truth chain.
 
 ## Gate C Closeout - 2026-04-26
 
@@ -36,7 +45,7 @@ Gate B carve and broad validation.
   build 5/5; broad `pnpm check` green with engine 219 files / 1216 tests, web
   150 files / 864 passed + 18 skipped, build 5/5, and only the known
   non-fatal `sharp/@img` optional-package warnings.
-- Next active slice:
+- Historical next active slice at Gate C closeout:
   `realistic_layer_combination_coverage_cartography_v1`.
 
 ## Why Split

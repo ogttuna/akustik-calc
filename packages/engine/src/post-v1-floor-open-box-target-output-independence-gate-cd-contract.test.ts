@@ -91,6 +91,7 @@ const CURRENT_SELECTION_DOCS = [
   "docs/README.md",
   "docs/calculator/README.md",
   "docs/calculator/CALCULATOR_SOURCE_OF_TRUTH.md",
+  "docs/calculator/CHECKPOINT_2026-06-02_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_CD.md",
   "docs/calculator/CURRENT_STATE.md",
   "docs/calculator/NEXT_IMPLEMENTATION_PLAN.md",
   "docs/calculator/POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md",

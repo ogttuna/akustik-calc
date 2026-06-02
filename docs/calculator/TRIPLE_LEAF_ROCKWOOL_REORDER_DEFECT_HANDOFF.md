@@ -4,23 +4,30 @@ Document role: focused handoff for the user-reported rockwool placement
 defect. Read this before continuing ROCKWOOL source-pack extraction or
 any runtime movement for triple-leaf walls.
 
-Current slice:
+Current-state override, 2026-06-02: this is a historical defect
+handoff, not the current next-slice selector. Read
+[CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md) first.
+The post-V1 chain has advanced through Gate CD, and Gate CE is the
+selected next numeric coverage rerank label. Rockwool notes below are
+background unless reselected by the current post-V1 plan.
+
+Historical slice:
 
 `calculator_source_gap_revalidation_v26`
 
-Current selection status:
+Historical selection status:
 
 `closed_rockwool_split_triple_leaf_numeric_source_closure_selected_source_gap_revalidation_v26`
 
-Current next file:
+Historical next file:
 
 `packages/engine/src/calculator-source-gap-revalidation-v26-gate-a-contract.test.ts`
 
-Current next action:
+Historical next action:
 
 `gate_a_revalidate_source_gap_order_after_rockwool_split_numeric_closure_closeout`
 
-Current planning surface:
+Historical planning surface:
 
 `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V26_PLAN.md`
 
@@ -1518,7 +1525,7 @@ Closed watchlist planning file:
 
 `docs/calculator/SLICE_ROUTE_FAMILY_LANE_DRIFT_COMMON_STACK_WATCHLIST_PLAN.md`
 
-Current selected source:
+Historical selected source:
 
 `floor_raw_role_inference_guardrail_v1`
 

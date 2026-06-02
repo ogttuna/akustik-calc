@@ -326,7 +326,11 @@ function hasDirectFlankingContext(
   );
 }
 
-function buildAvailableOutputs(baseImpact: ImpactCalculation, hasStandardizedField: boolean): ImpactCalculation["availableOutputs"] {
+function buildAvailableOutputs(
+  baseImpact: ImpactCalculation,
+  hasStandardizedField: boolean,
+  hasLowFrequencyField: boolean
+): ImpactCalculation["availableOutputs"] {
   const availableOutputs = [...baseImpact.availableOutputs];
 
   if (!availableOutputs.includes("L'n,w")) {
@@ -335,7 +339,7 @@ function buildAvailableOutputs(baseImpact: ImpactCalculation, hasStandardizedFie
   if (hasStandardizedField && !availableOutputs.includes("L'nT,w")) {
     availableOutputs.push("L'nT,w");
   }
-  if (hasStandardizedField && typeof baseImpact.CI50_2500 === "number" && !availableOutputs.includes("L'nT,50")) {
+  if (hasStandardizedField && hasLowFrequencyField && !availableOutputs.includes("L'nT,50")) {
     availableOutputs.push("L'nT,50");
   }
 
@@ -526,7 +530,11 @@ export function applyDirectFlankingFieldEstimate(
   const lPrimeNTw =
     derivedCurveMetrics?.lPrimeNTw ??
     (standardizedField ? ksRound1(lPrimeNW + standardizedOffsetDb) : undefined);
-  const ci50_2500 = derivedCurveMetrics?.ci50_2500 ?? input.impact.CI50_2500;
+  const explicitFieldCi50 =
+    typeof input.fieldContext.ci50_2500Db === "number"
+      ? ksRound1(input.fieldContext.ci50_2500Db)
+      : undefined;
+  const ci50_2500 = derivedCurveMetrics?.ci50_2500 ?? input.impact.CI50_2500 ?? explicitFieldCi50;
   const lPrimeNT50 =
     derivedCurveMetrics?.lPrimeNT50 ??
     (typeof lPrimeNTw === "number" && typeof ci50_2500 === "number"
@@ -541,7 +549,11 @@ export function applyDirectFlankingFieldEstimate(
     LPrimeNT50: lPrimeNT50 ?? input.impact.LPrimeNT50,
     LPrimeNTw: lPrimeNTw ?? input.impact.LPrimeNTw,
     LPrimeNW: lPrimeNW,
-    availableOutputs: buildAvailableOutputs(input.impact, typeof lPrimeNTw === "number"),
+    availableOutputs: buildAvailableOutputs(
+      input.impact,
+      typeof lPrimeNTw === "number",
+      typeof lPrimeNT50 === "number"
+    ),
     basis,
     confidence: getImpactConfidenceForBasis(basis),
     errorBudgets: mergeFloorImpactFieldBuildingAdapterErrorBudgets({

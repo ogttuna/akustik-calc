@@ -17,6 +17,8 @@ import { inferStructuralSupportTypeFromMaterial } from "./structural-material-cl
 
 export const HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS =
   "predictor_heavy_floating_floor_iso12354_annexc_estimate" as const;
+export const HEAVY_BARE_FLOOR_IMPACT_FORMULA_BASIS =
+  "predictor_heavy_bare_floor_iso12354_annexc_estimate" as const;
 
 const IMPACT_LOAD_ROLES = new Set(["floating_screed", "upper_fill", "floor_covering"]);
 const MIN_HEAVY_CONCRETE_BASE_SURFACE_MASS_KG_M2 = 120;
@@ -129,8 +131,8 @@ export function estimateImpactFromLayers(layers: readonly ResolvedLayer[]): Impa
       availableOutputs: ["Ln,w"],
       bareReferenceLnW,
       baseSurfaceMassKgM2,
-      basis: "predictor_heavy_bare_floor_iso12354_annexc_estimate",
-      confidence: getImpactConfidenceForBasis("predictor_heavy_bare_floor_iso12354_annexc_estimate"),
+      basis: HEAVY_BARE_FLOOR_IMPACT_FORMULA_BASIS,
+      confidence: getImpactConfidenceForBasis(HEAVY_BARE_FLOOR_IMPACT_FORMULA_BASIS),
       metricBasis: buildUniformImpactMetricBasis(
         {
           LnW: bareReferenceLnW

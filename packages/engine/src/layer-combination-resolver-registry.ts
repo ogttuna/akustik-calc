@@ -18,6 +18,7 @@ import {
   HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_DELTA_LW_TOLERANCE_DB,
   HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_LN_W_TOLERANCE_DB
 } from "./heavy-concrete-combined-impact-formula-corridor";
+import { HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_ESTIMATE_BASIS } from "./heavy-concrete-published-upper-treatment-estimate";
 import {
   MIXED_SUPPORT_FLOOR_IMPACT_FORMULA_BASIS,
   MIXED_SUPPORT_FLOOR_IMPACT_FORMULA_DELTA_LW_TOLERANCE_DB,
@@ -2087,6 +2088,59 @@ const CANDIDATE_DECLARATIONS = [
     supportedMetrics: ["Ln,w", "DeltaLw"],
     surfaceRequirements: ELEMENT_LAB_SURFACES,
     valuePins: []
+  },
+  {
+    basis: "element_lab",
+    errorBudgetTerms: [
+      { metric: "Ln,w", notMeasuredEvidence: true, toleranceDb: 4 }
+    ],
+    exactPrecedenceRules: [
+      "exact_floor_system_and_exact_impact_band_sources_win_before_published_upper_treatment_anchor",
+      "same_stack_dynamic_annex_c_formula_delta_lw_does_not_override_published_lnw_anchor",
+      "published_family_anchor_preserves_metric_scope"
+    ],
+    formulaTerms: [
+      "published_regupol_curve8_concrete_tile_anchor",
+      "visible_heavy_floating_upper_treatment_fit",
+      "same_support_family_and_metric_basis"
+    ],
+    hardCompatibilityGates: [
+      "floor_route",
+      "reinforced_concrete_base",
+      "visible_floating_or_topping_layer_present",
+      "visible_resilient_layer_present",
+      "visible_floor_covering_present",
+      "element_lab_lnw_metric_basis"
+    ],
+    hostileInputCases: [
+      "delta_lw_requires_dynamic_stiffness_and_load_basis_owner",
+      "lower_treatment_requires_separate_combined_upper_lower_owner",
+      "field_outputs_require_floor_impact_field_adapter",
+      "astm_iic_aiic_stays_unsupported"
+    ],
+    id: "floor.heavy_concrete_floating.published_upper_treatment_anchor_owned",
+    kind: "similarity_anchor",
+    label: "Heavy concrete published upper-treatment Ln,w anchor",
+    ownedRuntimeBasisId: HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_ESTIMATE_BASIS,
+    priorityRank: 1,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      "baseSlabOrFloor",
+      "floatingOrToppingLayer",
+      "resilientLayer",
+      "floorCovering",
+      "publishedFamilyAnchorCandidate"
+    ],
+    route: "floor",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "curated_regupol_curve8_concrete_tile_row_is_anchor_not_universal_catalog_lookup",
+      "publish_only_owned_lnw_until_delta_lw_owner_inputs_are_complete",
+      "exact_floor_rows_and_exact_impact_bands_stay_rank_zero"
+    ],
+    supportedMetrics: ["Ln,w"],
+    surfaceRequirements: ELEMENT_LAB_SURFACES,
+    valuePins: [{ metric: "Ln,w", value: 50 }]
   },
   {
     basis: "field_apparent",

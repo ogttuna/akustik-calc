@@ -2,9 +2,19 @@
 
 Date: 2026-04-27
 
-Current review note: 2026-05-08
+Current review note: 2026-06-02
 
-2026-05-21 active product correction:
+Current-state override: this is a historical readiness roadmap, not the
+current next-slice selector. Usable V1 Steps 0-5 are closed for the
+current company-internal envelope. Current post-V1 calculator work is
+selected by [CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md)
+and
+[POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md):
+Gate CD is the latest landed value-moving runtime slice and Gate CE is
+the selected next numeric coverage rerank label. Older readiness claims
+and selected-next statements below are historical.
+
+2026-05-21 historical product correction:
 [ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md](./ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md)
 now owns the immediate readiness direction. Personal-use readiness means
 the product behaves as an acoustic calculator: the user enters a
@@ -233,11 +243,11 @@ Start from
 
 ## Current Order
 
-Current validation baseline for this older roadmap is historical. The
-current active chain is the model-first physics prediction pivot through
+Validation baseline for this older roadmap is historical. At that point,
+the active chain was the model-first physics prediction pivot through
 Gate BH, with Gate BI selected only as a no-runtime governance guard and
 `personal_use_mvp_coverage_sprint_after_gate_bi` selected afterward.
-Latest Gate BH validation passed `pnpm calculator:gate:current` with
+Historical Gate BH validation passed `pnpm calculator:gate:current` with
 engine 340 files / 1965 tests, web 66 files / 286 passed + 18 skipped,
 repo build 5/5, and whitespace clean.
 

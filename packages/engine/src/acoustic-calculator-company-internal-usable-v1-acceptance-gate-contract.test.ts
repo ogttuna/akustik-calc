@@ -19,6 +19,7 @@ import { calculateAssembly } from "./calculate-assembly";
 import { calculateImpactOnly } from "./calculate-impact-only";
 import type { DynamicCalculatorFloorImpactContext } from "./dynamic-calculator-route-input-topology";
 import { HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS } from "./helper-only-timber-open-web-impact-stack-estimate";
+import { HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_ESTIMATE_BASIS } from "./heavy-concrete-published-upper-treatment-estimate";
 import { HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS } from "./impact-estimate";
 import { EXACT_IMPACT_SOURCE_BAND_CURVE_BASIS } from "./impact-exact";
 import {
@@ -534,14 +535,15 @@ describe("acoustic calculator company-internal usable V1 acceptance gate", () =>
           method: ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLOOR_IMPACT_NEEDS_INPUT_METHOD,
           missingPhysicalInputs: ["loadBasisKgM2"],
           origin: "needs_input",
-          unsupportedOutputs: FLOOR_IMPACT_OUTPUTS
+          unsupportedOutputs: ["DeltaLw"]
         },
-        expectedCandidateKind: "needs_input_boundary",
-        expectedRuntimeBasisId: null,
-        expectedSelectedCandidateId: "generic.required_input_owner.needs_input_boundary",
-        expectedSupportedOutputs: [],
-        expectedSupportBucket: "needs_input",
-        expectedUnsupportedOutputs: FLOOR_IMPACT_OUTPUTS,
+        expectedCandidateKind: "similarity_anchor",
+        expectedRuntimeBasisId: HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_ESTIMATE_BASIS,
+        expectedSelectedCandidateId: "floor.heavy_concrete_floating.published_upper_treatment_anchor_owned",
+        expectedSupportedOutputs: ["Ln,w"],
+        expectedSupportBucket: "anchored_estimate",
+        expectedUnsupportedOutputs: ["DeltaLw"],
+        expectedValuePins: [{ metric: "Ln,w", value: 50 }],
         label: "floor lab-impact formula missing load basis",
         layers: HEAVY_FLOATING_FLOOR_STACK,
         route: "floor",

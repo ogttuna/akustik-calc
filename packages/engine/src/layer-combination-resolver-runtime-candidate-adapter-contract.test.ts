@@ -43,6 +43,7 @@ import {
 import { GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD } from "./dynamic-airborne-gate-i-airborne-field-context";
 import { HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS } from "./helper-only-timber-open-web-impact-stack-estimate";
 import { HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS } from "./heavy-concrete-combined-impact-formula-corridor";
+import { HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_ESTIMATE_BASIS } from "./heavy-concrete-published-upper-treatment-estimate";
 import {
   ASTM_E989_IMPACT_RATING_BASIS,
   ASTM_E989_IMPACT_RATING_SELECTED_CANDIDATE_ID
@@ -282,7 +283,7 @@ describe("layer combination resolver runtime candidate adapter contract", () => 
       selectionStatus: LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_ADAPTER_SELECTION_STATUS
     });
     expect(contract.summary).toEqual({
-      adaptedRuntimeBasisCount: 39,
+      adaptedRuntimeBasisCount: 40,
       boundaryCandidateCount: 3,
       selectedNextAction: LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_ADAPTER_SELECTED_NEXT_ACTION
     });
@@ -333,6 +334,18 @@ describe("layer combination resolver runtime candidate adapter contract", () => 
     expect(rowsByBasis.get(HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS)?.selectedCandidateId).toBe(
       "floor.heavy_concrete_floating_floor.lab_impact_formula"
     );
+    expect(rowsByBasis.get(HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_ESTIMATE_BASIS)).toMatchObject({
+      requestedBasis: "element_lab",
+      route: "floor",
+      selectedCandidateId: "floor.heavy_concrete_floating.published_upper_treatment_anchor_owned",
+      selectedCandidate: {
+        kind: "similarity_anchor",
+        ownedRuntimeBasisId: HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_ESTIMATE_BASIS,
+        priorityRank: 1,
+        supportedMetrics: ["Ln,w"],
+        valuePins: [{ metric: "Ln,w", value: 50 }]
+      }
+    });
     expect(rowsByBasis.get(HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS)?.selectedCandidateId).toBe(
       "floor.heavy_concrete_combined_upper_lower.lab_impact_formula"
     );

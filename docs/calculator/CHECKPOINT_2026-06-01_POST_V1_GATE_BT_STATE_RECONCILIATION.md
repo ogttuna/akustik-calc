@@ -1,5 +1,11 @@
 # Checkpoint 2026-06-01 - Post-V1 Gate BT State Reconciliation
 
+Superseded for current-state selection by
+[CHECKPOINT_2026-06-02_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_CD.md](./CHECKPOINT_2026-06-02_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_CD.md).
+This file remains historical evidence for the Gate BT -> Gate BU
+handoff. Gate BU, BV, BW, BX, BY, BZ, CA, CB, CC, and CD have since
+landed, so Gate BT is not the current selected next action.
+
 ## Purpose
 
 This checkpoint reconciles the living calculator documents with the
@@ -61,16 +67,18 @@ required building context is present.
 
 ## Implementation Comparison
 
-The committed implementation and executable Gate BT contract agree that
-Gate BU is not yet implemented. The selected Gate BU contract file path
-is intentional next-work scaffolding:
+At this historical checkpoint, the committed implementation and
+executable Gate BT contract agreed that Gate BU was not yet implemented.
+The selected Gate BU contract file path was intentional next-work
+scaffolding:
 
 `packages/engine/src/post-v1-floor-open-box-finished-package-airborne-building-companion-gate-bu-contract.test.ts`
 
-Current open implementation work is therefore bounded: implement Gate BU
-runtime ownership and keep missing building context as `needs_input`;
-do not select broad source crawling, finite scenario packs, confidence
-wording, report/storage/auth work, or generic UI cleanup.
+At this historical checkpoint, open implementation work was bounded:
+implement Gate BU runtime ownership and keep missing building context as
+`needs_input`; do not select broad source crawling, finite scenario
+packs, confidence wording, report/storage/auth work, or generic UI
+cleanup.
 
 ## Validation
 

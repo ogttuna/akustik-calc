@@ -1,25 +1,32 @@
 # Calculator Route and Source Risk Register - 2026-05-01
 
-Document role: active risk register for route-family, source-readiness,
+Document role: historical risk register for route-family, source-readiness,
 field-output, material-mapping, hostile-input, and digitization mistakes
 that can make the calculator look more certain than the implementation
 can defend. Read this with
 [TRIPLE_LEAF_ROCKWOOL_REORDER_DEFECT_HANDOFF.md](./TRIPLE_LEAF_ROCKWOOL_REORDER_DEFECT_HANDOFF.md)
 before ROCKWOOL source-pack extraction or any later runtime movement.
 
-Current urgent slice:
+Current-state override, 2026-06-02: this file no longer selects the
+urgent/current slice. Read
+[CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md) first.
+The post-V1 chain has advanced through Gate CD, and Gate CE is the
+selected next numeric coverage rerank label. Source-risk notes below are
+background unless reselected by the current post-V1 plan.
+
+Historical urgent slice at 2026-05-01:
 
 `calculator_source_gap_revalidation_v25`
 
-Current urgent status:
+Historical urgent status:
 
 `gate_a_kept_rockwool_source_required_values_screening_supported_no_runtime_selected_source_gap_revalidation_v25`
 
-Current urgent next file:
+Historical urgent next file:
 
 `packages/engine/src/calculator-source-gap-revalidation-v25-gate-a-contract.test.ts`
 
-Current urgent next action:
+Historical urgent next action:
 
 `gate_a_revalidate_source_gap_order_after_rockwool_support_posture`
 
@@ -1964,7 +1971,7 @@ Selected CertainTeed planning file:
 
 `docs/calculator/SLICE_CERTAINTEED_SILENTFX_NRC_ASTC_SOURCE_PACK_EXTRACTION_PLAN.md`
 
-Current selected source:
+Historical selected source:
 
 `floor_raw_role_inference_guardrail_v1`
 

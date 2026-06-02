@@ -25,19 +25,124 @@ numeric/correctness gate explicitly selects them.
 
 The current checkpoint is:
 
-[CHECKPOINT_2026-06-01_POST_V1_GATE_BT_STATE_RECONCILIATION.md](./CHECKPOINT_2026-06-01_POST_V1_GATE_BT_STATE_RECONCILIATION.md)
+[CHECKPOINT_2026-06-02_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_CD.md](./CHECKPOINT_2026-06-02_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_CD.md)
+
+Current Gate CE high-ROI planning input:
+
+[POST_V1_HIGH_ROI_SCOPE_ACCURACY_GATES_AFTER_GATE_CD_PLAN_2026-06-02.md](./POST_V1_HIGH_ROI_SCOPE_ACCURACY_GATES_AFTER_GATE_CD_PLAN_2026-06-02.md)
+
+That plan records the post-Gate-CD scope/accuracy candidate set for Gate
+CE. Gate CE has now landed as
+`post_v1_next_numeric_coverage_gap_gate_ce_plan` with status
+`post_v1_next_numeric_coverage_gap_gate_ce_landed_no_runtime_selected_target_output_independence_sweep_gate_cf`.
+It selected `target_output_independence_sweep`, now closed by Gate CF.
+
+## Document Status Map
+
+Current authority for calculator implementation:
+
+- [CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md)
+- [CURRENT_STATE.md](./CURRENT_STATE.md)
+- [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md)
+- [POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md)
+- [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
+- [SYSTEM_MAP.md](./SYSTEM_MAP.md)
+
+Historical or secondary context, not current next-slice selectors:
+
+- `CHECKPOINT_*`, `SLICE_*`, and older `POST_V1_GATE_*` files record
+  landed handoffs and selected-next history.
+- [MASTER_PLAN.md](./MASTER_PLAN.md),
+  [BROAD_ACCURACY_CALCULATOR_PLAN.md](./BROAD_ACCURACY_CALCULATOR_PLAN.md),
+  [CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md](./CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md),
+  [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md), and
+  [SOURCE_READY_INTAKE_BACKLOG.md](./SOURCE_READY_INTAKE_BACKLOG.md)
+  are strategic/history/ledger inputs.
+- [POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md](./POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md),
+  [INTERNAL_USE_PILOT_HANDOFF.md](./INTERNAL_USE_PILOT_HANDOFF.md),
+  [INTERNAL_USE_PILOT_USAGE_NOTE.md](./INTERNAL_USE_PILOT_USAGE_NOTE.md),
+  [COMPANY_INTERNAL_CONTROLLED_USE_HANDOFF.md](./COMPANY_INTERNAL_CONTROLLED_USE_HANDOFF.md),
+  and [COMPANY_INTERNAL_OPERATING_ENVELOPE.md](./COMPANY_INTERNAL_OPERATING_ENVELOPE.md)
+  are not active calculator scope/accuracy selectors.
 
 Usable V1 Steps 0-5 are closed for the current company-internal
 envelope. The answer-engine contract exists at
 `packages/engine/src/acoustic-calculator-answer-engine-v1-contract.test.ts`
 and is included in `pnpm calculator:gate:current`. The current resolver
-surface has 42 declared candidates and 39 active runtime-basis mappings.
+surface has 43 declared candidates and 40 active runtime-basis mappings.
+Historical Gate H-M resolver snapshots recorded 42 declared candidates and 39 active runtime-basis mappings before Gate CG2 added the
+published upper-treatment owner.
 The next implementation is selected explicitly in
 [POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md):
-the latest landed value-moving numeric coverage slice is
-`post_v1_floor_open_box_target_output_independence_gate_cd_plan`
+an earlier landed value-moving numeric coverage slice is
+`post_v1_target_output_independence_sweep_gate_cf_plan`
 in
-`packages/engine/src/post-v1-floor-open-box-target-output-independence-gate-cd-contract.test.ts`.
+`packages/engine/src/post-v1-target-output-independence-sweep-gate-cf-contract.test.ts`.
+Gate CF repaired wall field-context lab companion single-output requests
+so flat double-leaf and full-fill multileaf `Rw`, STC, `C`, and `Ctr`
+use the owned family route instead of screening fallback or unsupported
+publication. It also pins raw-bare open-web/open-box field impact,
+heavy-concrete combined lab impact, and steel suspended-ceiling field
+impact single-output parity. Counters: `newSingleOutputParityPins 37`,
+`runtimeCorrectedRequestShapes 8`, `newCalculableRequestShapes 8`,
+`newCalculableLayerTemplates 0`. Gate CF status is
+`post_v1_target_output_independence_sweep_gate_cf_landed_selected_floor_common_floating_covering_expansion_gate_cg`;
+Gate CF selected
+`post_v1_floor_common_floating_covering_expansion_gate_cg_plan`, with
+selected next file
+`packages/engine/src/post-v1-floor-common-floating-covering-expansion-gate-cg-contract.test.ts`.
+Gate CG has now landed as
+`post_v1_floor_common_floating_covering_expansion_gate_cg_plan` with
+status
+`post_v1_floor_common_floating_covering_expansion_gate_cg_landed_partial_selected_floor_common_floating_covering_expansion_gate_cg2`.
+It is the first common floor floating/covering runtime expansion:
+floor-covering-only heavy/reinforced concrete stacks now keep the owned
+bare-heavy `Ln,w` live when `DeltaLw` or field impact companions are
+requested. Representative covering templates publish `Ln,w 71.2`,
+`71.6`, `71.5`, and `71.4`; with explicit `impactFieldContext` they
+also publish `L'n,w`, `L'nT,w`, and `L'nT,50`. `DeltaLw` remains
+`needs_input` for `toppingOrFloatingLayer`,
+`resilientLayerDynamicStiffnessMNm3`, and `loadBasisKgM2`; ASTM `IIC` /
+`AIIC` remain unsupported without ASTM E492/E1007 owners. Counters:
+`newCalculableLayerTemplates 4`, `newCalculableRequestShapes 20`, and
+`runtimeCorrectedRequestShapes 12`.
+Gate CG selected
+`post_v1_floor_common_floating_covering_expansion_gate_cg2_plan`, with
+selected next file
+`packages/engine/src/post-v1-floor-common-floating-covering-expansion-gate-cg2-contract.test.ts`.
+Gate CG2 has now landed as
+`post_v1_floor_common_floating_covering_expansion_gate_cg2_plan` with
+status
+`post_v1_floor_common_floating_covering_expansion_gate_cg2_landed_selected_next_numeric_coverage_gap_gate_ch`.
+Visible heavy-floating reinforced-concrete upper-treatment stacks now
+keep the published-family `Ln,w 50` anchor live when `loadBasisKgM2` or
+`resilientLayerDynamicStiffnessMNm3` is missing, while `DeltaLw` remains
+`needs_input` for the exact missing owner field. With complete
+`impactFieldContext`, the same anchor publishes `L'n,w 52`,
+`L'nT,w 49.6`, and `L'nT,50 53.6`; complete explicit dynamic input
+still uses `Ln,w 50.3` / `DeltaLw 24.3`. Counters:
+`newCalculableLayerTemplates 2`, `newCalculableRequestShapes 10`, and
+`runtimeCorrectedRequestShapes 8`. ASTM `IIC` / `AIIC` remain
+unsupported without ASTM E492/E1007 owners. The resolver surface now has
+43 declared candidates and 40 active runtime-basis mappings. Gate CG2
+selected
+`post_v1_next_numeric_coverage_gap_gate_ch_plan`, with selected next
+file
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ch-contract.test.ts`.
+Gate CH has now landed as the latest value-moving runtime slice:
+`post_v1_next_numeric_coverage_gap_gate_ch_plan`, with status
+`post_v1_next_numeric_coverage_gap_gate_ch_landed_runtime_selected_next_numeric_coverage_gap_gate_ci`.
+It corrects the field/building direct+flanking low-frequency companion
+for the same visible heavy-floating upper-treatment route: explicit
+direct/flanking impact context plus `impactFieldContext.ci50_2500Db`
+now publishes `L'n,w 57.5 / L'nT,w 55.1 / L'nT,50 59.1` from the
+published upper-treatment `Ln,w 50` anchor. Missing CI50 still stops
+only `L'nT,50`, and ASTM `IIC` / `AIIC` remain unsupported. Gate CH
+selected `post_v1_next_numeric_coverage_gap_gate_ci_plan`, with
+selected next file
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ci-contract.test.ts`.
+The previous value-moving numeric coverage slice is
+`post_v1_floor_open_box_target_output_independence_gate_cd_plan`.
 Gate CD corrects finished open-box target-output independence: complete
 dry package-transfer and EPS/screed hybrid building/impact requests now
 support already-owned single-output asks. Dry pins include `Rw 66`,
@@ -49,9 +154,13 @@ unsupported. `Ctr`, ASTM `IIC`, and ASTM `AIIC` remain unsupported
 because their metric-basis owners are separate.
 Gate CD status is
 `post_v1_floor_open_box_target_output_independence_gate_cd_landed_selected_next_numeric_coverage_gap_gate_ce`;
-the selected next action is `post_v1_next_numeric_coverage_gap_gate_ce_plan`.
-Full `pnpm calculator:gate:current` passed after Gate CD on 2026-06-01
-with engine 594 files / 3276 tests, web 113 files / 437 passed + 18
+the latest no-runtime selection is
+`post_v1_next_numeric_coverage_gap_gate_ce_plan` with status
+`post_v1_next_numeric_coverage_gap_gate_ce_landed_no_runtime_selected_target_output_independence_sweep_gate_cf`.
+Gate CE selected `target_output_independence_sweep`, now closed by Gate
+CF.
+Full `pnpm calculator:gate:current` passed after Gate CH on 2026-06-02
+with engine 599 files / 3301 tests, web 113 files / 437 passed + 18
 skipped, repo build 5 / 5, and whitespace guard passed.
 Gate CC remains the previous no-runtime selection:
 `post_v1_next_numeric_coverage_gap_gate_cc_plan` with status
@@ -411,7 +520,8 @@ assembly field-only lower-treatment calculated
 and `L'n,w 46.6 / L'nT,w 43.8 / L'nT,50 47.8` for the resilient-stud
 case; missing `impactFieldContext.ci50_2500Db` stopped only
 `L'nT,50`, and ASTM `IIC` / `AIIC` remained unsupported. This handoff
-has since advanced through Gate BV; Gate BW is the selected next action.
+has since advanced through Gate CG2; Gate CH is the selected next action
+label.
 Full `pnpm calculator:gate:current` passed after Gate BF with engine 569
 files / 3155 tests, web 112 files / 435 passed + 18 skipped, repo build
 5 / 5, and whitespace guard passed.
@@ -5418,7 +5528,7 @@ drift before starting implementation.
 23. [CHECKPOINT_2026-05-05_STANDARDS_RESEARCH_PLAN_DETAIL_HANDOFF.md](./CHECKPOINT_2026-05-05_STANDARDS_RESEARCH_PLAN_DETAIL_HANDOFF.md)
    — latest standards research and detailed gate plan.
 24. [CHECKPOINT_2026-05-05_DOC_IMPLEMENTATION_RECONCILIATION_HANDOFF.md](./CHECKPOINT_2026-05-05_DOC_IMPLEMENTATION_RECONCILIATION_HANDOFF.md)
-   — latest doc/implementation reconciliation checkpoint.
+   — historical doc/implementation reconciliation checkpoint.
 25. [CHECKPOINT_2026-05-05_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_REPLAN_HANDOFF.md](./CHECKPOINT_2026-05-05_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_REPLAN_HANDOFF.md)
    — model-first re-analysis checkpoint.
 26. [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)

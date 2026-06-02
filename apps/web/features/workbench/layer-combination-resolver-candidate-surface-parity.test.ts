@@ -63,6 +63,10 @@ const DIRECT_FIXED_RUNTIME_BASIS =
   "broad_accuracy_floor_open_web_direct_fixed_lining_direct_source_interpolation_formula_corridor";
 const HEAVY_FLOATING_SELECTED_CANDIDATE_ID = "floor.heavy_concrete_floating_floor.lab_impact_formula";
 const HEAVY_FLOATING_RUNTIME_BASIS = "predictor_heavy_floating_floor_iso12354_annexc_estimate";
+const HEAVY_PUBLISHED_UPPER_TREATMENT_SELECTED_CANDIDATE_ID =
+  "floor.heavy_concrete_floating.published_upper_treatment_anchor_owned";
+const HEAVY_PUBLISHED_UPPER_TREATMENT_RUNTIME_BASIS =
+  "predictor_heavy_concrete_published_upper_treatment_estimate";
 const NEEDS_INPUT_SELECTED_CANDIDATE_ID = "generic.required_input_owner.needs_input_boundary";
 const UNSUPPORTED_BASIS_SELECTED_CANDIDATE_ID = "generic.lab_field_building_basis_boundary";
 const ASTM_UNSUPPORTED_SELECTED_CANDIDATE_ID = "generic.astm_iic_aiic.unsupported_boundary";
@@ -1402,17 +1406,32 @@ describe("layer combination resolver candidate surface parity", () => {
 
     for (const scenario of [savedFloorScenario, serverFloorScenario]) {
       expect(getLayerCombinationResolverCandidateSurface(scenario.result)).toMatchObject({
-        candidateKind: "needs_input_boundary",
-        requiredInputs: ["loadBasisKgM2"],
+        candidateKind: "similarity_anchor",
+        requiredInputs: [
+          "baseSlabOrFloor",
+          "floatingOrToppingLayer",
+          "resilientLayer",
+          "floorCovering",
+          "publishedFamilyAnchorCandidate",
+          "loadBasisKgM2"
+        ],
         route: "floor",
-        selectedCandidateId: NEEDS_INPUT_SELECTED_CANDIDATE_ID,
-        supportBucket: "needs_input",
-        supportedMetrics: [],
-        valuePins: []
+        runtimeBasisId: HEAVY_PUBLISHED_UPPER_TREATMENT_RUNTIME_BASIS,
+        selectedCandidateId: HEAVY_PUBLISHED_UPPER_TREATMENT_SELECTED_CANDIDATE_ID,
+        supportBucket: "anchored_estimate",
+        supportedMetrics: ["Ln,w", "DeltaLw"],
+        valuePins: expect.arrayContaining([
+          { metric: "Ln,w", value: 50 },
+          { metric: "DeltaLw", value: 24.3 }
+        ])
       });
       expect(buildOutputCard({ output: "Ln,w", result: scenario.result, studyMode: "floor" })).toMatchObject({
-        status: "needs_input",
-        value: "Not ready"
+        status: "live",
+        value: "50 dB"
+      });
+      expect(buildOutputCard({ output: "DeltaLw", result: scenario.result, studyMode: "floor" })).toMatchObject({
+        status: "live",
+        value: "24.3 dB"
       });
       const report = buildFloorReport({
         requestedOutputs: FLOOR_LAB_IMPACT_OUTPUTS,
@@ -1420,10 +1439,13 @@ describe("layer combination resolver candidate surface parity", () => {
         title: scenario.id
       });
       const summaryLine = report.split("\n").find((line) => line.startsWith("- Answer summary:"));
-      expect(summaryLine).toContain("impact answer needs_input");
+      expect(summaryLine).toContain("Ln,w");
+      expect(summaryLine).toContain("DeltaLw");
       expect(summaryLine).not.toContain("Rw");
       expect(summaryLine).not.toContain("STC");
-      expect(report).toContain("- Resolver value pins: none");
+      expect(report).toContain(`- Resolver candidate id: ${HEAVY_PUBLISHED_UPPER_TREATMENT_SELECTED_CANDIDATE_ID}`);
+      expect(report).toContain("- Resolver support bucket: anchored_estimate");
+      expect(report).toContain("- Resolver value pins: Ln,w 50, DeltaLw 24.3");
     }
   });
 
@@ -1781,18 +1803,27 @@ describe("layer combination resolver candidate surface parity", () => {
       targetOutputs: FLOOR_LAB_IMPACT_OUTPUTS
     });
     expect(getLayerCombinationResolverCandidateSurface(missingLoadResult)).toMatchObject({
-      candidateKind: "needs_input_boundary",
-      requiredInputs: ["loadBasisKgM2"],
+      boundaryCandidateIds: [NEEDS_INPUT_SELECTED_CANDIDATE_ID],
+      candidateKind: "similarity_anchor",
+      requiredInputs: [
+        "baseSlabOrFloor",
+        "floatingOrToppingLayer",
+        "resilientLayer",
+        "floorCovering",
+        "publishedFamilyAnchorCandidate",
+        "loadBasisKgM2"
+      ],
       route: "floor",
-      selectedCandidateId: NEEDS_INPUT_SELECTED_CANDIDATE_ID,
-      supportBucket: "needs_input",
-      supportedMetrics: [],
-      valuePins: []
+      runtimeBasisId: HEAVY_PUBLISHED_UPPER_TREATMENT_RUNTIME_BASIS,
+      selectedCandidateId: HEAVY_PUBLISHED_UPPER_TREATMENT_SELECTED_CANDIDATE_ID,
+      supportBucket: "anchored_estimate",
+      supportedMetrics: ["Ln,w"],
+      valuePins: [{ metric: "Ln,w", value: 50 }]
     });
     expect(buildOutputCard({ output: "Ln,w", result: missingLoadResult, studyMode: "floor" })).toMatchObject({
       label: "Ln,w",
-      status: "needs_input",
-      value: "Not ready"
+      status: "live",
+      value: "50 dB"
     });
     expect(buildOutputCard({ output: "DeltaLw", result: missingLoadResult, studyMode: "floor" })).toMatchObject({
       label: "DeltaLw",
@@ -1808,12 +1839,13 @@ describe("layer combination resolver candidate surface parity", () => {
       }),
       title: "floor-v1-heavy-missing-load-surface"
     });
-    expect(missingLoadReport).toContain(`- Resolver candidate id: ${NEEDS_INPUT_SELECTED_CANDIDATE_ID}`);
-    expect(missingLoadReport).toContain("- Resolver support bucket: needs_input");
-    expect(missingLoadReport).toContain("- Resolver value pins: none");
+    expect(missingLoadReport).toContain(`- Resolver candidate id: ${HEAVY_PUBLISHED_UPPER_TREATMENT_SELECTED_CANDIDATE_ID}`);
+    expect(missingLoadReport).toContain("- Resolver support bucket: anchored_estimate");
+    expect(missingLoadReport).toContain("- Resolver boundary candidates: generic.required_input_owner.needs_input_boundary");
+    expect(missingLoadReport).toContain("- Resolver value pins: Ln,w 50");
     expect(missingLoadReport).toContain("Missing physical inputs: loadBasisKgM2.");
     const missingLoadSummaryLine = missingLoadReport.split("\n").find((line) => line.startsWith("- Answer summary:"));
-    expect(missingLoadSummaryLine).toContain("impact answer needs_input");
+    expect(missingLoadSummaryLine).toContain("Ln,w");
     expect(missingLoadSummaryLine).not.toContain("Rw");
     expect(missingLoadSummaryLine).not.toContain("STC");
 

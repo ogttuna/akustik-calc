@@ -2,12 +2,20 @@
 
 Status: Gate C closed handoff pack for
 `company_internal_controlled_use_handoff_v1`. This document is now the
-current controlled-use operator pack. Controlled personal/company-
+historical controlled-use operator pack. Controlled personal/company-
 internal use is allowed only inside the envelope below and only with the
 caveats carried with each lane. This is not regulatory certification,
 not external/client certification, and not a broad high-accuracy
 opening.
 Marker: not a broad high-accuracy opening.
+
+Current-state override, 2026-06-02: this handoff is not the current
+calculator next-slice selector. Usable V1 is closed for the current
+tested envelope, and post-V1 scope/accuracy work is governed by
+[CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md) and
+[POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md).
+Gate CD is the latest landed value-moving runtime slice, and Gate CE is
+the selected next numeric coverage rerank label.
 
 The high-accuracy label remains forbidden. Rockwool triple-leaf remains
 screening-only and must not be described as exact or source-validated.

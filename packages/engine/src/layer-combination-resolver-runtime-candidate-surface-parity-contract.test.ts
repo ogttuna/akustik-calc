@@ -40,6 +40,7 @@ import {
 import { GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD } from "./dynamic-airborne-gate-i-airborne-field-context";
 import { HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS } from "./helper-only-timber-open-web-impact-stack-estimate";
 import { HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS } from "./heavy-concrete-combined-impact-formula-corridor";
+import { HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_ESTIMATE_BASIS } from "./heavy-concrete-published-upper-treatment-estimate";
 import {
   ASTM_E989_IMPACT_RATING_BASIS,
   ASTM_E989_IMPACT_RATING_SELECTED_CANDIDATE_ID
@@ -292,7 +293,7 @@ describe("layer combination resolver runtime candidate surface parity contract",
     expect(contract.summary).toEqual({
       boundarySurfaceRowCount: 3,
       selectedNextAction: LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_SURFACE_PARITY_SELECTED_NEXT_ACTION,
-      surfaceRowCount: 42
+      surfaceRowCount: 43
     });
 
     for (const path of REQUIRED_SURFACES) {
@@ -369,6 +370,13 @@ describe("layer combination resolver runtime candidate surface parity contract",
       runtimeBasisId: HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS,
       supportBucket: "source_absent_estimate",
       supportedMetrics: ["Ln,w", "DeltaLw"]
+    });
+    expect(rowsById.get("floor.heavy_concrete_floating.published_upper_treatment_anchor_owned")).toMatchObject({
+      candidateKind: "similarity_anchor",
+      runtimeBasisId: HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_ESTIMATE_BASIS,
+      supportBucket: "anchored_estimate",
+      supportedMetrics: ["Ln,w"],
+      valuePins: [{ metric: "Ln,w", value: 50 }]
     });
     expect(rowsById.get(BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_SELECTED_CANDIDATE_ID)).toMatchObject({
       candidateKind: "source_absent_family_solver",

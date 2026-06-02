@@ -1,6 +1,14 @@
 # Dynamic Calculator Source Gap Ledger
 
-Last reviewed: 2026-04-29
+Last reviewed: 2026-06-02
+
+Current-state override: this is a historical/source-risk ledger, not the
+current next-slice selector. Use it for source-readiness background only
+after reading [CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md).
+The current post-V1 chain has advanced through Gate CD, and Gate CE is
+the selected next numeric coverage rerank label. Older selected-next
+source-gap entries below are consumed handoffs unless the current plan
+explicitly reselects them.
 (`calculator_source_gap_revalidation_v2` Gate A landed no-runtime and
 selected `floor_layer_order_invariance_expansion_v1`;
 `floor_layer_order_invariance_expansion_v1` Gate A landed no-runtime
@@ -298,7 +306,7 @@ Historical blocked-source planning implication:
     - the slice then closed cleanly because no fourth defended boundary
       remained and promoted `dataholz_clt_calibration_tightening` as the next
       honest tightening move
-  - current active-slice posture:
+  - historical active-slice posture:
     - landed runtime anchors:
       - `packages/engine/src/dataholz-clt-source-truth-audit.test.ts`
       - `packages/engine/src/dataholz-clt-calibration-tightening-audit.test.ts`

@@ -1,5 +1,13 @@
 # Source-Ready Intake Backlog
 
+Current-state override, 2026-06-02: this is source-intake history and
+backlog context, not the active calculator implementation plan. Source
+rows can support exact answers, anchors, calibration, and holdouts, but
+they are not the product goal and do not select the next slice. Read
+[CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md) first;
+Gate CD is the latest landed value-moving runtime slice and Gate CE is
+the selected next numeric coverage rerank label.
+
 Status: Gate A artifact for `calculator_source_intake_backlog_cleanup_v1`;
 Gate C source for the selected
 `generated_floor_fallback_topology_delta_v1` follow-up; refreshed after

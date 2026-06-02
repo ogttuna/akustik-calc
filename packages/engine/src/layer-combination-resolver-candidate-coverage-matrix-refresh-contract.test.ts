@@ -55,6 +55,7 @@ import {
 } from "./layer-combination-resolver-single-leaf-mass-law-banded-runtime-constants";
 import { LIGHTWEIGHT_CONCRETE_FAMILY_SELECTED_CANDIDATE_ID } from "./lightweight-concrete-family-runtime-constants";
 import { MIXED_SUPPORT_FLOOR_IMPACT_SELECTED_CANDIDATE_ID } from "./mixed-support-floor-impact-runtime-corridor";
+import { HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_ESTIMATE_BASIS } from "./heavy-concrete-published-upper-treatment-estimate";
 import { OPEN_BOX_TIMBER_SIMILARITY_BASIS } from "./open-box-timber-similarity-estimate";
 import { OPEN_WEB_RAW_BARE_FORMULA_BASIS } from "./open-web-raw-bare-estimate";
 
@@ -213,20 +214,20 @@ describe("layer combination resolver candidate coverage matrix refresh contract"
       sourceRowsAreEvidenceNotProduct: true
     });
     expect(contract.summary).toEqual({
-      activeRuntimeCandidateCount: 39,
+      activeRuntimeCandidateCount: 40,
       allCandidateDeclarationsCovered: true,
       boundaryCandidateCount: 3,
-      candidateDeclarationCount: 42,
-      coverageMatrixRowCount: 42,
+      candidateDeclarationCount: 43,
+      coverageMatrixRowCount: 43,
       readinessBucketCount: {
         needs_input: 1,
         ready: 4,
-        ready_with_budget: 35,
+        ready_with_budget: 36,
         research_only: 0,
         unsupported: 2
       },
       selectedNextAction: LAYER_COMBINATION_RESOLVER_CANDIDATE_COVERAGE_MATRIX_REFRESH_SELECTED_NEXT_ACTION,
-      surfaceRowCount: 42
+      surfaceRowCount: 43
     });
 
     for (const path of REQUIRED_SURFACES) {
@@ -253,7 +254,8 @@ describe("layer combination resolver candidate coverage matrix refresh contract"
           "wall.compatible_anchor_delta.extra_board_on_verified_lsf",
           "floor.tuas_c11c.visible_iso_weighted_impact_tuple_guarded",
           "floor.open_box_timber.package_transfer_similarity",
-          "floor.open_web.supported_band_similarity"
+          "floor.open_web.supported_band_similarity",
+          "floor.heavy_concrete_floating.published_upper_treatment_anchor_owned"
         ],
         kind: "similarity_anchor",
         resolverOrderRank: 1
@@ -450,6 +452,14 @@ describe("layer combination resolver candidate coverage matrix refresh contract"
       runtimeBasisId: HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS,
       supportBucket: "source_absent_estimate",
       supportedMetrics: ["Ln,w", "DeltaLw"]
+    });
+    expect(rowById("floor.heavy_concrete_floating.published_upper_treatment_anchor_owned")).toMatchObject({
+      candidateKind: "similarity_anchor",
+      readinessBucket: "ready_with_budget",
+      runtimeBasisId: HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_ESTIMATE_BASIS,
+      supportBucket: "anchored_estimate",
+      supportedMetrics: ["Ln,w"],
+      valuePins: [{ metric: "Ln,w", value: 50 }]
     });
     expect(rowById("floor.heavy_concrete_combined_upper_lower.lab_impact_formula")).toMatchObject({
       candidateKind: "source_absent_family_solver",

@@ -55,6 +55,7 @@ import {
   MASS_TIMBER_CLT_DELTA_LW_FORMULA_BASIS,
   TIMBER_JOIST_DELTA_LW_FORMULA_BASIS
 } from "./timber-clt-floor-impact-delta-lw-runtime-corridor";
+import { HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_ESTIMATE_BASIS } from "./heavy-concrete-published-upper-treatment-estimate";
 import { round1 } from "./math";
 import type {
   LayerCombinationResolverBasis,
@@ -135,6 +136,9 @@ const TIMBER_CLT_DELTA_LW_FORMULA_BASES = new Set<string>([
   TIMBER_JOIST_DELTA_LW_FORMULA_BASIS,
   MASS_TIMBER_CLT_DELTA_LW_FORMULA_BASIS
 ]);
+const PARTIAL_FLOOR_IMPACT_RUNTIME_BASES = new Set<string>([
+  HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_ESTIMATE_BASIS
+]);
 const POST_V1_WALL_MULTILEAF_GENERALIZED_LAB_METRICS = new Set<RequestedOutputId>([
   "Rw",
   "STC",
@@ -207,15 +211,15 @@ type FloorRuntimeValuePinCarrier = {
     | "LPrimeNTw"
     | "LPrimeNW"
     | "LnTA"
-      | "metricBasis"
+    | "metricBasis"
   > | null;
-	  readonly lowerBoundImpact?: Pick<
-	    ImpactBoundCalculation,
-	    | "CI"
-	    | "CI50_2500"
-	    | "DeltaLwLowerBound"
-	    | "LnWPlusCIUpperBound"
-	    | "LnWUpperBound"
+  readonly lowerBoundImpact?: Pick<
+    ImpactBoundCalculation,
+    | "CI"
+    | "CI50_2500"
+    | "DeltaLwLowerBound"
+    | "LnWPlusCIUpperBound"
+    | "LnWUpperBound"
     | "LPrimeNT50UpperBound"
     | "LPrimeNTwUpperBound"
     | "LPrimeNWUpperBound"
@@ -950,6 +954,24 @@ function getPartialWallFormulaRuntimeBasisId(result: AssemblyCalculation): strin
     : null;
 }
 
+function getPartialFloorImpactRuntimeBasisId(result: AssemblyCalculation): string | null {
+  const boundary = result.acousticAnswerBoundary;
+  if (
+    boundary?.origin !== "needs_input" ||
+    boundary.route !== "floor" ||
+    result.supportedImpactOutputs.length === 0 ||
+    !result.impact
+  ) {
+    return null;
+  }
+
+  const runtimeBasisId = result.impact.metricBasis?.LnW ?? result.impact.basis ?? null;
+
+  return runtimeBasisId && PARTIAL_FLOOR_IMPACT_RUNTIME_BASES.has(runtimeBasisId)
+    ? runtimeBasisId
+    : null;
+}
+
 function requestedBasisForWallResult(result: AssemblyCalculation): LayerCombinationResolverBasis {
   const contextMode = result.airborneOverlay?.contextMode;
   const method = result.airborneBasis?.method ?? "";
@@ -1063,6 +1085,8 @@ export function buildLayerCombinationResolverTraceForAssembly(
     ANSWER_ENGINE_STOP_ORIGINS.has(result.airborneBasis.origin);
   const partialWallFormulaRuntimeBasisId =
     route === "wall" ? getPartialWallFormulaRuntimeBasisId(result) : null;
+  const partialFloorImpactRuntimeBasisId =
+    route === "floor" ? getPartialFloorImpactRuntimeBasisId(result) : null;
   const shouldUseSingleLeafFloorAirborneBasis =
     route === "floor" &&
     hasSingleLeafAirborneBasis &&
@@ -1075,7 +1099,7 @@ export function buildLayerCombinationResolverTraceForAssembly(
           targetOutputs: result.targetOutputs
         })
       : null;
-  const runtimeBasisId = answerBoundary && !partialWallFormulaRuntimeBasisId
+  const runtimeBasisId = answerBoundary && !partialWallFormulaRuntimeBasisId && !partialFloorImpactRuntimeBasisId
     ? null
     : hasFieldAdapter
     ? FLOOR_IMPACT_FIELD_BUILDING_ADAPTER_ERROR_BUDGET_ORIGIN
@@ -1086,7 +1110,11 @@ export function buildLayerCombinationResolverTraceForAssembly(
           ? airborneAnswerStop
             ? null
             : result.airborneBasis?.method ?? null
-        : timberCltDeltaLwRuntimeBasisId ?? result.impact?.basis ?? result.floorSystemRatings?.basis ?? null
+        : partialFloorImpactRuntimeBasisId ??
+          timberCltDeltaLwRuntimeBasisId ??
+          result.impact?.basis ??
+          result.floorSystemRatings?.basis ??
+          null
       : partialWallFormulaRuntimeBasisId ??
         (airborneAnswerStop
         ? null

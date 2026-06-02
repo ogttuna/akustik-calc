@@ -107,6 +107,7 @@ import {
   ASTM_E989_IMPACT_RATING_BASIS,
   buildOwnedImpactFromExactSource
 } from "./impact-astm-e989";
+import { HEAVY_BARE_FLOOR_IMPACT_FORMULA_BASIS } from "./impact-estimate";
 import { OPEN_WEB_DIRECT_FIXED_LINING_BASIS } from "./lightweight-steel-open-web-direct-fixed-lining-estimate";
 import { OPEN_WEB_SUPPORTED_BAND_SIMILARITY_BASIS } from "./lightweight-steel-open-web-supported-band-estimate";
 import { OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS } from "./open-box-timber-eps-screed-hybrid-package-estimate";
@@ -138,6 +139,7 @@ import {
   FLOOR_OPEN_BOX_FINISHED_PACKAGE_AIRBORNE_BUILDING_PREDICTION_OUTPUTS,
   FLOOR_OPEN_BOX_FINISHED_PACKAGE_AIRBORNE_BUILDING_PREDICTION_RUNTIME_BASIS
 } from "./floor-open-box-finished-package-airborne-building-prediction-runtime";
+import { HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_ESTIMATE_BASIS } from "./heavy-concrete-published-upper-treatment-estimate";
 import {
   inferImpactSupportingElementFamilyFromLayers,
   inferImpactSupportingElementFamilyFromPredictorInput
@@ -315,6 +317,22 @@ const POST_V1_OPEN_BOX_FINISHED_PACKAGE_FLOOR_IMPACT_COMPANION_OUTPUTS = [
   "L'nT,w",
   "L'nT,50"
 ] as const satisfies readonly RequestedOutputId[];
+const POST_V1_GATE_CG_BARE_HEAVY_FLOOR_PARTIAL_OUTPUTS = new Set<RequestedOutputId>([
+  "CI,50-2500",
+  "L'n,w",
+  "L'nT,50",
+  "L'nT,w",
+  "Ln,w"
+]);
+const POST_V1_GATE_CG_FLOOR_COVERING_DELTA_LW_MISSING_INPUTS = [
+  "toppingOrFloatingLayer",
+  "resilientLayerDynamicStiffnessMNm3",
+  "loadBasisKgM2"
+] as const;
+const POST_V1_GATE_CG_BARE_HEAVY_FLOOR_LNW_METRIC_BASIS =
+  "predictor_bare_massive_floor_iso12354_annexc_estimate";
+const POST_V1_GATE_CG2_PUBLISHED_UPPER_TREATMENT_LNW_METRIC_BASIS =
+  HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_ESTIMATE_BASIS;
 
 type TargetOutputSupportLike = ReturnType<typeof analyzeTargetOutputSupport>;
 type PostV1RawBareFloorAirborneBuildingPredictionRuntime =
@@ -334,6 +352,30 @@ function hasGateWFloorImpactRequest(targetOutputs: readonly RequestedOutputId[])
 
 function hasGateZFloorImpactFieldRequest(targetOutputs: readonly RequestedOutputId[]): boolean {
   return targetOutputs.some((output) => GATE_Z_FIELD_IMPACT_OUTPUTS.has(output));
+}
+
+function hasPostV1GateCgBareHeavyFloorPartialImpactCandidate(input: {
+  directNarrowImpact: ImpactCalculation | null;
+  layers: readonly ResolvedLayer[];
+  targetOutputs: readonly RequestedOutputId[];
+}): boolean {
+  return Boolean(
+    input.directNarrowImpact?.basis === HEAVY_BARE_FLOOR_IMPACT_FORMULA_BASIS &&
+      isPostV1GateCgVisibleBareHeavyFloorCoveringOnlyStack(input.layers) &&
+      input.targetOutputs.some((output) => POST_V1_GATE_CG_BARE_HEAVY_FLOOR_PARTIAL_OUTPUTS.has(output))
+  );
+}
+
+function hasPostV1GateCg2PublishedUpperTreatmentPartialImpactCandidate(input: {
+  floorSystemEstimate: FloorSystemEstimateResult | null;
+  layers: readonly ResolvedLayer[];
+  targetOutputs: readonly RequestedOutputId[];
+}): boolean {
+  return Boolean(
+    input.floorSystemEstimate?.impact.basis === POST_V1_GATE_CG2_PUBLISHED_UPPER_TREATMENT_LNW_METRIC_BASIS &&
+      isPostV1GateCg2VisibleHeavyFloatingUpperTreatmentStack(input.layers) &&
+      input.targetOutputs.some((output) => POST_V1_GATE_CG_BARE_HEAVY_FLOOR_PARTIAL_OUTPUTS.has(output))
+  );
 }
 
 function gateWLabImpactRuntimeReady(
@@ -794,9 +836,6 @@ function getPostV1MixedWallLabFieldCompanionOutputs(input: {
 }): RequestedOutputId[] {
   const targetOutputSet = new Set(input.support.targetOutputs);
   const unsupportedOutputSet = new Set(input.support.unsupportedTargetOutputs);
-  const hasRequestedFieldOutput = input.support.targetOutputs.some((output) =>
-    ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLOOR_FIELD_CONTINUATION_OUTPUTS.has(output)
-  );
   const hasOwnedLabBase = input.airborneBasis?.assumptions.some((assumption) =>
     [...POST_V1_MIXED_WALL_FIELD_LAB_COMPANION_BASE_METHODS].some((method) =>
       assumption === `base lab-family method remains ${method}`
@@ -813,7 +852,6 @@ function getPostV1MixedWallLabFieldCompanionOutputs(input: {
     !hasOwnedLabBase ||
     !targetOutputSet.has("Rw") ||
     !unsupportedOutputSet.has("Rw") ||
-    !hasRequestedFieldOutput ||
     typeof input.estimatedRwDb !== "number" ||
     !Number.isFinite(input.estimatedRwDb)
   ) {
@@ -2170,6 +2208,148 @@ function applyAcousticCalculatorAnswerEngineV1FloorImpactNeedsInputBoundary(inpu
   );
 }
 
+function isPostV1GateCgVisibleBareHeavyFloorCoveringOnlyStack(layers: readonly ResolvedLayer[]): boolean {
+  const hasHeavyConcreteBase = layers.some((layer) =>
+    layer.floorRole === "base_structure" &&
+      (
+        inferStructuralSupportTypeFromMaterial(layer.material) === "reinforced_concrete" ||
+        layer.material.tags.includes("heavy-base")
+      )
+  );
+  const hasFloorCovering = layers.some((layer) => layer.floorRole === "floor_covering");
+  const hasFloatingOrLowerTreatment = layers.some((layer) =>
+    layer.floorRole === "resilient_layer" ||
+      layer.floorRole === "floating_screed" ||
+      layer.floorRole === "upper_fill" ||
+      layer.floorRole === "ceiling_board" ||
+      layer.floorRole === "ceiling_cavity" ||
+      layer.floorRole === "ceiling_fill"
+  );
+
+  return hasHeavyConcreteBase && hasFloorCovering && !hasFloatingOrLowerTreatment;
+}
+
+function isPostV1GateCg2VisibleHeavyFloatingUpperTreatmentStack(layers: readonly ResolvedLayer[]): boolean {
+  const hasHeavyConcreteBase = layers.some((layer) =>
+    layer.floorRole === "base_structure" &&
+      (
+        inferStructuralSupportTypeFromMaterial(layer.material) === "reinforced_concrete" ||
+        layer.material.tags.includes("heavy-base")
+      )
+  );
+  const hasFloorCovering = layers.some((layer) => layer.floorRole === "floor_covering");
+  const hasFloatingOrUpperTreatment = layers.some((layer) =>
+    layer.floorRole === "floating_screed" || layer.floorRole === "upper_fill"
+  );
+  const hasResilientLayer = layers.some((layer) => layer.floorRole === "resilient_layer");
+  const hasLowerTreatment = layers.some((layer) =>
+    layer.floorRole === "ceiling_board" ||
+      layer.floorRole === "ceiling_cavity" ||
+      layer.floorRole === "ceiling_fill"
+  );
+
+  return hasHeavyConcreteBase && hasFloorCovering && hasFloatingOrUpperTreatment && hasResilientLayer && !hasLowerTreatment;
+}
+
+function getPostV1GateCgPartialImpactLane(result: AssemblyCalculation):
+  | "bare_heavy_floor_covering_only"
+  | "published_upper_treatment"
+  | null {
+  const impact = result.impact;
+  const hasLiveBareHeavyImpact = Boolean(
+    impact &&
+      typeof impact.LnW === "number" &&
+      typeof impact.DeltaLw !== "number" &&
+      (
+        impact.basis === HEAVY_BARE_FLOOR_IMPACT_FORMULA_BASIS ||
+        impact.metricBasis?.LnW === POST_V1_GATE_CG_BARE_HEAVY_FLOOR_LNW_METRIC_BASIS
+      )
+  );
+  if (!hasLiveBareHeavyImpact) {
+    const hasLivePublishedUpperTreatmentImpact = Boolean(
+      impact &&
+        typeof impact.LnW === "number" &&
+        typeof impact.DeltaLw !== "number" &&
+        (
+          impact.basis === POST_V1_GATE_CG2_PUBLISHED_UPPER_TREATMENT_LNW_METRIC_BASIS ||
+          impact.metricBasis?.LnW === POST_V1_GATE_CG2_PUBLISHED_UPPER_TREATMENT_LNW_METRIC_BASIS
+        )
+    );
+
+    if (
+      hasLivePublishedUpperTreatmentImpact &&
+      isPostV1GateCg2VisibleHeavyFloatingUpperTreatmentStack(result.layers)
+    ) {
+      return "published_upper_treatment";
+    }
+
+    return null;
+  }
+
+  return isPostV1GateCgVisibleBareHeavyFloorCoveringOnlyStack(result.layers)
+    ? "bare_heavy_floor_covering_only"
+    : null;
+}
+
+function applyPostV1GateCgBareHeavyFloorCoveringPartialNeedsInputBoundary(input: {
+  gateWFloorImpactContract: GateVFloorImpactDynamicStiffnessContract | null;
+  gateZFloorImpactFieldAssessment: GateYFloorImpactFieldContextAssessment | null;
+  impactFieldContext: ImpactFieldContext | null;
+  result: AssemblyCalculation;
+}): void {
+  if (input.result.acousticAnswerBoundary) {
+    return;
+  }
+
+  const partialLane = getPostV1GateCgPartialImpactLane(input.result);
+  if (!partialLane) {
+    return;
+  }
+
+  const unsupportedOutputSet = new Set(input.result.unsupportedTargetOutputs);
+  const stoppedOutputs = input.result.targetOutputs.filter((output: RequestedOutputId) =>
+    (output === "DeltaLw" || GATE_Z_FIELD_IMPACT_OUTPUTS.has(output)) &&
+      unsupportedOutputSet.has(output)
+  );
+  if (stoppedOutputs.length === 0) {
+    return;
+  }
+
+  const labBoundary = getAnswerEngineV1GateWFloorImpactNeedsInputBoundary({
+    contract: input.gateWFloorImpactContract,
+    result: input.result
+  });
+  const deltaLwMissingInputs =
+    partialLane === "published_upper_treatment"
+      ? labBoundary?.missingPhysicalInputs ?? ["resilientLayerDynamicStiffnessMNm3", "loadBasisKgM2"]
+      : [...POST_V1_GATE_CG_FLOOR_COVERING_DELTA_LW_MISSING_INPUTS];
+  const missingPhysicalInputs = uniqueAnswerEngineV1Strings([
+    ...(stoppedOutputs.includes("DeltaLw")
+      ? [...deltaLwMissingInputs]
+      : []),
+    ...(stoppedOutputs.some((output: RequestedOutputId) => GATE_Z_FIELD_IMPACT_OUTPUTS.has(output))
+      ? getAnswerEngineV1FloorFieldImpactMissingInputs({
+          assessment: input.gateZFloorImpactFieldAssessment,
+          impactFieldContext: input.impactFieldContext,
+          result: input.result
+        })
+      : [])
+  ]);
+  const boundary = buildAnswerEngineV1FloorImpactNeedsInputBoundary({
+    missingPhysicalInputs,
+    targetOutputs: stoppedOutputs
+  });
+  if (!boundary) {
+    return;
+  }
+
+  input.result.acousticAnswerBoundary = boundary;
+  parkResultTargetOutputs(input.result, boundary.unsupportedOutputs);
+  input.result.warnings.push(
+    `Post-V1 Gate ${partialLane === "published_upper_treatment" ? "CG2" : "CG"} kept the ${partialLane === "published_upper_treatment" ? "published upper-treatment" : "bare heavy-floor"} Ln,w answer live for the visible floor stack, but selected needs_input for ${boundary.unsupportedOutputs.join(", ")}; provide ${boundary.missingPhysicalInputs.join(", ")} before DynEcho publishes the stopped impact companions.`
+  );
+}
+
 function applyAcousticCalculatorAnswerEngineV1TimberCltDeltaLwNeedsInputBoundary(input: {
   predictorInput: ImpactPredictorInput | null;
   result: AssemblyCalculation;
@@ -3442,6 +3622,16 @@ export function calculateAssembly(
       floorSystemEstimate?.impact.basis !== OPEN_WEB_RAW_BARE_FORMULA_BASIS &&
       floorSystemEstimate?.impact.basis !== HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS &&
       !postV1GateNFloorFieldImpactLabAnchorAvailable &&
+      !hasPostV1GateCgBareHeavyFloorPartialImpactCandidate({
+        directNarrowImpact,
+        layers: impactResolvedLayers,
+        targetOutputs
+      }) &&
+      !hasPostV1GateCg2PublishedUpperTreatmentPartialImpactCandidate({
+        floorSystemEstimate,
+        layers: impactResolvedLayers,
+        targetOutputs
+      }) &&
       !gateWLabRuntimeReady &&
       !gateZFieldImpactRuntimeReady &&
       !lowerTreatmentFieldCompanionPredictorSeedReady &&
@@ -4432,6 +4622,12 @@ export function calculateAssembly(
   applyAcousticCalculatorAnswerEngineV1FloorImpactNeedsInputBoundary({
     gateWFloorImpactContract,
     gateZFloorImpactFieldAssessment,
+    result
+  });
+  applyPostV1GateCgBareHeavyFloorCoveringPartialNeedsInputBoundary({
+    gateWFloorImpactContract,
+    gateZFloorImpactFieldAssessment,
+    impactFieldContext,
     result
   });
   applyAcousticCalculatorAnswerEngineV1TimberCltDeltaLwNeedsInputBoundary({

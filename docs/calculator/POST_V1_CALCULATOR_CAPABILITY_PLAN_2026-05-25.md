@@ -7,13 +7,84 @@ agents a narrow path that cannot drift into catalog work.
 
 Status: active post-V1 plan. Usable V1 Steps 0-5 are closed for the
 current company-internal envelope. The post-V1 calculator-capability
-chain has advanced through Gate CD. Gate CD is the latest value-moving
-runtime coverage/correctness slice, and Gate CE is the current selected
-next numeric coverage rerank:
+chain has advanced through Gate CH. Gate CH is the latest value-moving
+runtime coverage/correctness slice, and Gate CI is the current selected
+numeric coverage-gap label:
 
-`post_v1_next_numeric_coverage_gap_gate_ce_plan`
+`post_v1_next_numeric_coverage_gap_gate_ci_plan`
 
-Gate CD corrects finished open-box target-output independence. Complete
+Gate CH landed as
+`post_v1_next_numeric_coverage_gap_gate_ch_plan` with status
+`post_v1_next_numeric_coverage_gap_gate_ch_landed_runtime_selected_next_numeric_coverage_gap_gate_ci`.
+It corrects the field/building direct+flanking low-frequency companion
+for visible heavy-floating reinforced-concrete upper-treatment stacks:
+with explicit direct/flanking impact context and explicit
+`impactFieldContext.ci50_2500Db`, the published upper-treatment
+`Ln,w 50` anchor now publishes `L'n,w 57.5 / L'nT,w 55.1 / L'nT,50 59.1` through
+`source_absent_field_building_adapter_error_budget`. Missing
+`impactFieldContext.ci50_2500Db` still stops only `L'nT,50` as
+`needs_input`; ASTM `IIC` / `AIIC` remain unsupported without ASTM
+E492/E1007 owners. Counters: `newCalculableLayerTemplates 2`,
+`newCalculableRequestShapes 4`, and `runtimeCorrectedRequestShapes 3`.
+Gate CH selected `post_v1_next_numeric_coverage_gap_gate_ci_plan` in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ci-contract.test.ts`.
+
+Gate CG2 landed as
+`post_v1_floor_common_floating_covering_expansion_gate_cg2_plan` with
+status
+`post_v1_floor_common_floating_covering_expansion_gate_cg2_landed_selected_next_numeric_coverage_gap_gate_ch`.
+It is the second common floor floating/covering expansion runtime slice:
+visible heavy-floating reinforced-concrete upper-treatment stacks now
+keep the published-family `Ln,w 50` anchor live when `loadBasisKgM2` or
+`resilientLayerDynamicStiffnessMNm3` is missing, while `DeltaLw` remains
+`needs_input` for the exact missing owner field. With complete
+`impactFieldContext`, the same anchor publishes `L'n,w 52`,
+`L'nT,w 49.6`, and `L'nT,50 53.6`; complete explicit dynamic input
+still uses `Ln,w 50.3` / `DeltaLw 24.3`. Counters:
+`newCalculableLayerTemplates 2`, `newCalculableRequestShapes 10`, and
+`runtimeCorrectedRequestShapes 8`. ASTM `IIC` / `AIIC` remain
+unsupported without ASTM E492/E1007 owners. Gate CG2 added shared
+resolver owner
+`floor.heavy_concrete_floating.published_upper_treatment_anchor_owned`;
+the resolver surface now has 43 declared candidates and 40 active
+runtime-basis mappings. Historical Gate H-M resolver snapshots recorded
+42 declared candidates and 39 active runtime-basis mappings before Gate
+CG2 added the published upper-treatment owner. Gate CG2 selected
+`post_v1_next_numeric_coverage_gap_gate_ch_plan` in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ch-contract.test.ts`.
+
+Gate CG landed as
+`post_v1_floor_common_floating_covering_expansion_gate_cg_plan` with
+status
+`post_v1_floor_common_floating_covering_expansion_gate_cg_landed_partial_selected_floor_common_floating_covering_expansion_gate_cg2`.
+It is the first common floor floating/covering expansion runtime slice:
+visible floor-covering-only heavy/reinforced concrete stacks now keep
+the owned bare-heavy `Ln,w` answer live when `DeltaLw` or field impact
+companions are requested. Representative covering templates publish
+`Ln,w 71.2`, `71.6`, `71.5`, and `71.4`; with explicit
+`impactFieldContext` they also publish `L'n,w`, `L'nT,w`, and
+`L'nT,50`. `DeltaLw` remains `needs_input` for
+`toppingOrFloatingLayer`, `resilientLayerDynamicStiffnessMNm3`, and
+`loadBasisKgM2`. Counters: `newCalculableLayerTemplates 4`,
+`newCalculableRequestShapes 20`, and `runtimeCorrectedRequestShapes 12`.
+ASTM `IIC` / `AIIC` remain unsupported without ASTM E492/E1007 owners.
+Gate CG was intentionally marked partial because the broader floor
+floating/covering expansion still needs more common floating and lower
+treatment templates before moving to Gate CH.
+
+Gate CF repairs and pins target-output independence across existing
+runtime families. Flat double-leaf and full-fill multileaf wall
+`field_between_rooms` contexts now calculate single-output `Rw`, STC,
+`C`, and `Ctr` through the owned family route instead of screening
+fallback or unsupported publication. It also pins single-output parity
+for raw-bare open-web/open-box field impact, heavy-concrete combined lab
+impact, and steel suspended-ceiling field impact. Counters:
+`newSingleOutputParityPins 37`, `runtimeCorrectedRequestShapes 8`,
+`newCalculableRequestShapes 8`, `newCalculableLayerTemplates 0`.
+Missing field `receivingRoomRt60S`, ASTM `IIC` / `AIIC`, and field-only
+wall request boundaries remain protected.
+
+Gate CD corrected finished open-box target-output independence. Complete
 dry package-transfer and EPS/screed hybrid building/impact requests now
 support already-owned single-output asks without requiring the user to
 also ask for `R'w` or another building output. Dry pins include
@@ -36,11 +107,79 @@ calculator scope or accuracy.
 
 Latest landed value-moving action:
 
-`post_v1_floor_open_box_target_output_independence_gate_cd_plan`
+`post_v1_next_numeric_coverage_gap_gate_ch_plan`
 
 Latest landed value-moving file:
 
-`packages/engine/src/post-v1-floor-open-box-target-output-independence-gate-cd-contract.test.ts`
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ch-contract.test.ts`
+
+Gate CH selection status:
+
+`post_v1_next_numeric_coverage_gap_gate_ch_landed_runtime_selected_next_numeric_coverage_gap_gate_ci`
+
+Gate CH selected next action:
+
+`post_v1_next_numeric_coverage_gap_gate_ci_plan`
+
+Gate CH selected next file:
+
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ci-contract.test.ts`
+
+Previous landed value-moving action:
+
+`post_v1_floor_common_floating_covering_expansion_gate_cg2_plan`
+
+Previous landed value-moving file:
+
+`packages/engine/src/post-v1-floor-common-floating-covering-expansion-gate-cg2-contract.test.ts`
+
+Gate CG2 selection status:
+
+`post_v1_floor_common_floating_covering_expansion_gate_cg2_landed_selected_next_numeric_coverage_gap_gate_ch`
+
+Gate CG2 selected next action:
+
+`post_v1_next_numeric_coverage_gap_gate_ch_plan`
+
+Gate CG2 selected next file:
+
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ch-contract.test.ts`
+
+Previous landed value-moving action:
+
+`post_v1_floor_common_floating_covering_expansion_gate_cg_plan`
+
+Gate CG selection status:
+
+`post_v1_floor_common_floating_covering_expansion_gate_cg_landed_partial_selected_floor_common_floating_covering_expansion_gate_cg2`
+
+Gate CG selected next action:
+
+`post_v1_floor_common_floating_covering_expansion_gate_cg2_plan`
+
+Gate CG selected next file:
+
+`packages/engine/src/post-v1-floor-common-floating-covering-expansion-gate-cg2-contract.test.ts`
+
+Previous landed value-moving action:
+
+`post_v1_target_output_independence_sweep_gate_cf_plan`
+
+Gate CF selection status:
+
+`post_v1_target_output_independence_sweep_gate_cf_landed_selected_floor_common_floating_covering_expansion_gate_cg`
+
+Gate CF selected next action:
+
+`post_v1_floor_common_floating_covering_expansion_gate_cg_plan`
+
+Gate CF selected next file:
+
+`packages/engine/src/post-v1-floor-common-floating-covering-expansion-gate-cg-contract.test.ts`
+
+Previous landed value-moving action:
+
+`post_v1_floor_open_box_target_output_independence_gate_cd_plan`
 
 Gate CD selection status:
 
@@ -53,6 +192,46 @@ Gate CD selected next action:
 Gate CD selected next file:
 
 `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ce-contract.test.ts`
+
+Previous no-runtime selection:
+
+`post_v1_next_numeric_coverage_gap_gate_ce_plan`
+
+Gate CE selection status:
+
+`post_v1_next_numeric_coverage_gap_gate_ce_landed_no_runtime_selected_target_output_independence_sweep_gate_cf`
+
+Gate CE selected candidate:
+
+`target_output_independence_sweep`
+
+Gate CE selected next action:
+
+`post_v1_target_output_independence_sweep_gate_cf_plan`
+
+Gate CE selected next file:
+
+`packages/engine/src/post-v1-target-output-independence-sweep-gate-cf-contract.test.ts`
+
+Gate CE planning input:
+
+`POST_V1_HIGH_ROI_SCOPE_ACCURACY_GATES_AFTER_GATE_CD_PLAN_2026-06-02.md`
+
+That plan is not runtime movement. It records the high-ROI
+scope/accuracy candidate set that Gate CE must rank before selecting the
+next value-moving post-V1 gate. Gate CE has now selected
+`target_output_independence_sweep` as
+`post_v1_target_output_independence_sweep_gate_cf_plan`, now closed by
+Gate CF. The remaining
+ranked candidates stay as follow-up scope/accuracy options: common floor
+floating/covering expansion, field/building direct + flanking adapters,
+ASTM `IIC` / `AIIC` expansion beyond the already-landed exact
+E492/E1007 E989 bridge, common wall auto-topology expansion,
+opening/leak/composite wall adapters, residual accuracy + holdouts, and
+selected-route physical input surface parity. Its 2026-06-02
+implementation audit also records that existing wall auto-topology,
+opening/leak, ASTM exact-band, and holdout surfaces are baselines to
+preserve and extend, not work to re-land.
 
 Previous landed no-runtime selection:
 
@@ -219,8 +398,8 @@ Gate BT selected next file:
 
 `packages/engine/src/post-v1-floor-open-box-finished-package-airborne-building-companion-gate-bu-contract.test.ts`
 
-Current full-gate evidence after Gate CD on 2026-06-01:
-`pnpm calculator:gate:current` passed with engine 594 files / 3276
+Current full-gate evidence after Gate CH on 2026-06-02:
+`pnpm calculator:gate:current` passed with engine 599 files / 3301
 tests, web 113 files / 437 passed + 18 skipped, repo build 5 / 5, and
 whitespace guard passed. Closed-gate history remains below and is
 historical unless it agrees with the Gate CD/Gate CE selection above.
@@ -535,6 +714,10 @@ in
 
 Current reconciliation checkpoint:
 
+[CHECKPOINT_2026-06-02_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_CD.md](./CHECKPOINT_2026-06-02_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_CD.md)
+
+Historical Gate BT reconciliation checkpoint:
+
 [CHECKPOINT_2026-06-01_POST_V1_GATE_BT_STATE_RECONCILIATION.md](./CHECKPOINT_2026-06-01_POST_V1_GATE_BT_STATE_RECONCILIATION.md)
 
 Gate AW direction and implementation plan:
@@ -565,8 +748,8 @@ Gate BU:
 This remains calculator scope/correctness work, not a broad source
 crawl, confidence wording pass, finite scenario pack, or no-runtime
 cartography gate.
-Latest full `pnpm calculator:gate:current` passed after Gate CD with
-engine 594 files / 3276 tests, web 113 files / 437 passed + 18 skipped,
+Latest full `pnpm calculator:gate:current` passed after Gate CH with
+engine 599 files / 3301 tests, web 113 files / 437 passed + 18 skipped,
 repo build 5 / 5, and whitespace guard passed.
 
 Gate AZ has now landed as no-runtime numeric coverage selection:
@@ -1654,7 +1837,7 @@ ask for missing physical inputs, and calculate owned outputs.
 
 Implementation recheck on 2026-05-25 found:
 
-- the shared resolver registry has 42 declared candidates and 39 active runtime-basis mappings;
+- the shared resolver registry has 43 declared candidates and 40 active runtime-basis mappings;
 - wall already has exact, single-leaf, double-leaf, lined massive,
   heavy-composite, guarded flat-list, local-substitution triple-leaf, and
   field-adapter candidates;

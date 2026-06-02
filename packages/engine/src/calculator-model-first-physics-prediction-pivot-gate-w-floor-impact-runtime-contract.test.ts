@@ -7,6 +7,7 @@ import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
 import { buildGateVFloorImpactDynamicStiffnessContract } from "./dynamic-calculator-floor-impact-dynamic-stiffness-contract";
+import { HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_ESTIMATE_BASIS } from "./heavy-concrete-published-upper-treatment-estimate";
 import { getDefaultMaterialCatalog } from "./material-catalog";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
@@ -182,7 +183,7 @@ describe("calculator model-first physics prediction pivot Gate W", () => {
     expect(result.airborneBasis?.missingPhysicalInputs).toEqual([]);
   });
 
-  it("keeps missing load and missing dynamic stiffness as needs_input, not source-catalog work", () => {
+  it("keeps missing load and missing dynamic stiffness as DeltaLw needs_input while published Ln,w stays live", () => {
     const missingLoad = calculateAssembly(HEAVY_FLOATING_FLOOR_STACK, {
       calculator: "dynamic",
       targetOutputs: LAB_IMPACT_OUTPUTS
@@ -196,24 +197,44 @@ describe("calculator model-first physics prediction pivot Gate W", () => {
       targetOutputs: LAB_IMPACT_OUTPUTS
     });
 
-    expect(missingLoad.impact).toBeNull();
-    expect(missingLoad.supportedTargetOutputs).toEqual([]);
-    expect(missingLoad.unsupportedTargetOutputs).toEqual(["Ln,w", "DeltaLw"]);
+    expect(missingLoad.impact).toMatchObject({
+      LnW: 50,
+      availableOutputs: ["Ln,w"],
+      basis: HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_ESTIMATE_BASIS
+    });
+    expect(missingLoad.impact?.DeltaLw).toBeUndefined();
+    expect(missingLoad.supportedTargetOutputs).toEqual(["Ln,w"]);
+    expect(missingLoad.unsupportedTargetOutputs).toEqual(["DeltaLw"]);
+    expect(missingLoad.acousticAnswerBoundary).toMatchObject({
+      missingPhysicalInputs: ["loadBasisKgM2"],
+      origin: "needs_input",
+      unsupportedOutputs: ["DeltaLw"]
+    });
     expect(missingLoad.airborneCandidateResolution?.selectedOrigin).toBe("needs_input");
     expect(missingLoad.airborneBasis?.missingPhysicalInputs).toEqual(["loadBasisKgM2"]);
     expect(missingLoad.warnings).toContain(
-      "Dynamic Calculator floor-impact runtime is waiting for loadBasisKgM2 before promoting Ln,w / DeltaLw from the physics lane."
+      "Post-V1 Gate CG2 kept the published upper-treatment Ln,w answer live for the visible floor stack, but selected needs_input for DeltaLw; provide loadBasisKgM2 before DynEcho publishes the stopped impact companions."
     );
 
-    expect(missingDynamic.impact).toBeNull();
-    expect(missingDynamic.supportedTargetOutputs).toEqual([]);
-    expect(missingDynamic.unsupportedTargetOutputs).toEqual(["Ln,w", "DeltaLw"]);
+    expect(missingDynamic.impact).toMatchObject({
+      LnW: 50,
+      availableOutputs: ["Ln,w"],
+      basis: HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_ESTIMATE_BASIS
+    });
+    expect(missingDynamic.impact?.DeltaLw).toBeUndefined();
+    expect(missingDynamic.supportedTargetOutputs).toEqual(["Ln,w"]);
+    expect(missingDynamic.unsupportedTargetOutputs).toEqual(["DeltaLw"]);
+    expect(missingDynamic.acousticAnswerBoundary).toMatchObject({
+      missingPhysicalInputs: ["resilientLayerDynamicStiffnessMNm3"],
+      origin: "needs_input",
+      unsupportedOutputs: ["DeltaLw"]
+    });
     expect(missingDynamic.airborneCandidateResolution?.selectedOrigin).toBe("needs_input");
     expect(missingDynamic.airborneBasis?.missingPhysicalInputs).toEqual([
       "resilientLayerDynamicStiffnessMNm3"
     ]);
     expect(missingDynamic.warnings).toContain(
-      "Dynamic Calculator floor-impact runtime is waiting for resilientLayerDynamicStiffnessMNm3 before promoting Ln,w / DeltaLw from the physics lane."
+      "Post-V1 Gate CG2 kept the published upper-treatment Ln,w answer live for the visible floor stack, but selected needs_input for DeltaLw; provide resilientLayerDynamicStiffnessMNm3 before DynEcho publishes the stopped impact companions."
     );
   });
 

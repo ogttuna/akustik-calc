@@ -2,6 +2,16 @@
 
 Status: OPEN (authored 2026-04-23)
 
+Current-state override, 2026-06-02: this is a productization backlog,
+not the active calculator implementation plan. It must not select the
+next calculator slice. For current calculator scope/accuracy work, read
+[CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md) and
+[POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md).
+The current selected next action label is Gate CE numeric coverage
+rerank after Gate CD; auth, storage, collaboration, billing, and report
+polish remain outside calculator progress unless explicitly requested as
+separate productization work.
+
 This document starts only after `good_calculator_final_audit_v1` has
 made the calculator audit surface executable. It is intentionally not a
 runtime widening plan. Calculator source-backed gaps remain in the
@@ -197,7 +207,7 @@ evidence.
 - Completed wall coverage planning Gate A:
   `wall_coverage_expansion_planning_v2` (closed no-runtime
   2026-04-27).
-- Current selected calculator follow-up:
+- Historical selected calculator follow-up:
   `calculator_source_pack_readiness_triage_v1` Gate A source-pack
   readiness ranking.
 - Calculator personal/internal-use readiness:
@@ -210,8 +220,8 @@ future desktop sync story. With explicit sync/list/load, owner-only
 policy-backed route authorization, and proposal/report honesty now
 landed, calculator priority returned to source/readiness work. The
 internal-use operating-envelope Gate C closeout is closed no-runtime.
-The current selected calculator step is source-pack readiness triage. It
-must not alter calculator formulas, values, source posture, output
-support, confidence scores, evidence tiers, API shape, route-card
-values, or output-card statuses unless a bounded source pack is
+At that historical point, the selected calculator step was source-pack
+readiness triage. It must not alter calculator formulas, values, source
+posture, output support, confidence scores, evidence tiers, API shape,
+route-card values, or output-card statuses unless a bounded source pack is
 deliberately selected by a later contract.

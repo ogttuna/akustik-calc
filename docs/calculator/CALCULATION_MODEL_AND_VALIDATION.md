@@ -1,6 +1,6 @@
 # Calculation Model And Validation
 
-Last reviewed: 2026-06-01
+Last reviewed: 2026-06-02
 
 Document role:
 
@@ -18,11 +18,11 @@ to validate a selected calculator answer once the slice is chosen.
 
 Latest checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-30_POST_V1_GATE_BF_STATE_RECONCILIATION.md`
+`docs/calculator/CHECKPOINT_2026-06-02_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_CD.md`
 
 Latest landed implementation checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-30_POST_V1_GATE_BF_STATE_RECONCILIATION.md`
+`docs/calculator/CHECKPOINT_2026-06-02_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_CD.md`
 
 Current validation posture:
 
@@ -43,30 +43,22 @@ has 42 declared candidates and 39 active runtime-basis mappings.
 
 The selected post-V1 plan is
 [POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md).
-Gate BF is the latest landed runtime coverage slice:
-`post_v1_floor_suspended_ceiling_lower_treatment_field_companion_gate_bf_plan`.
-Assembly field-only lower-treatment now calculates owned field adapter
-outputs from the same source-absent lab anchor. Gate BF selected
-`post_v1_next_numeric_coverage_gap_gate_bg_plan`.
-The active Gate BG plan is
-[POST_V1_GATE_BG_NUMERIC_COVERAGE_AND_ACCURACY_RERANK_PLAN_2026-06-01.md](./POST_V1_GATE_BG_NUMERIC_COVERAGE_AND_ACCURACY_RERANK_PLAN_2026-06-01.md).
-Gate BG has landed as `post_v1_next_numeric_coverage_gap_gate_bg_plan`
-with status
-`post_v1_next_numeric_coverage_gap_gate_bg_landed_no_runtime_selected_floor_mixed_support_family_owner_boundary_gate_bh`;
-it selected `floor.mixed_support_family.multi_family_solver_gap` and
-`post_v1_floor_mixed_support_family_owner_boundary_gate_bh_plan` in
-`packages/engine/src/post-v1-floor-mixed-support-family-owner-boundary-gate-bh-contract.test.ts`.
-Gate BH has landed as
-`post_v1_floor_mixed_support_family_owner_boundary_gate_bh_plan` with
-status
-`post_v1_floor_mixed_support_family_owner_boundary_gate_bh_landed_no_runtime_selected_floor_mixed_support_family_runtime_corridor_gate_bi`.
-It pins `primaryCarrierFamily`, `dominantImpactTransferFamily`,
-`mixedSupportRolePartition`, `secondarySupportTreatmentOwner`, and
-`duplicateOwnershipGuard` as no-default owner fields and selects
-`post_v1_floor_mixed_support_family_runtime_corridor_gate_bi_plan` in
-`packages/engine/src/post-v1-floor-mixed-support-family-runtime-corridor-gate-bi-contract.test.ts`.
+Gate CD is the latest landed runtime scope/correctness slice:
+`post_v1_floor_open_box_target_output_independence_gate_cd_plan`.
+Complete finished open-box dry package-transfer and EPS/screed hybrid
+building/impact requests now support already-owned single-output asks
+without requiring the user to also request `R'w` or another building
+output. Dry single-output pins include `Rw 66`, `C -3.9`,
+`Ln,w 50.8`, `L'n,w 52.8`, `L'nT,w 50.4`, and `L'nT,50 53.7`;
+EPS/screed pins include `Rw 72`, `C -1.3`, `Ln,w 47`,
+`L'n,w 49`, `L'nT,w 46.6`, and `L'nT,50 47.6`.
+Gate CD selected the next action label
+`post_v1_next_numeric_coverage_gap_gate_ce_plan`. Gate CE is selected
+but not scaffolded yet; after Gate CD closeout there is no
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ce-contract.test.ts`
+file until the next implementation starts it.
 
-Gate BG and every later gate must be selected by calculator ROI:
+Gate CE and every later gate must be selected by calculator ROI:
 increase calculable layer-combination scope, improve numeric
 correctness/calibration, or tighten a boundary that protects correct
 calculation. Validation for the next gate must prove any new answer
