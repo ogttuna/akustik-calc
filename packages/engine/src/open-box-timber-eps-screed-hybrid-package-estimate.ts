@@ -3,7 +3,6 @@ import {
   ImpactCalculationSchema,
   type ExactFloorSystem,
   type FloorSystemEstimateResult,
-  type ImpactCalculation,
   type ImpactErrorBudget,
   type ImpactErrorBudgetTerm,
   type RequestedOutputId,
@@ -11,7 +10,6 @@ import {
 } from "@dynecho/shared";
 
 import {
-  BROAD_ACCURACY_FLOOR_OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_FORMULA_CORRIDOR_BASIS,
   evaluateBroadAccuracyFloorOpenBoxTimberEpsScreedHybridPackageFormulaCorridor,
   type BroadAccuracyFloorOpenBoxTimberEpsScreedHybridPackageErrorBudget,
   type BroadAccuracyFloorOpenBoxTimberEpsScreedHybridPackageErrorBudgetTerm,
@@ -28,8 +26,6 @@ import { round1 } from "./math";
 
 export const OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS =
   "broad_accuracy_floor_open_box_timber_eps_screed_hybrid_package_formula_corridor";
-
-type RuntimeImpactFormulaMetricKey = keyof Pick<ImpactCalculation, "CI" | "CI50_2500" | "LnW" | "LnWPlusCI">;
 
 type DetectedEpsScreedHybridPackage = {
   readonly floatingScreedMassKgM2: number;
@@ -248,21 +244,6 @@ function formulaMetricEstimate(
       return metrics.Rw;
     case "Rw+C":
       return metrics.RwPlusC;
-  }
-}
-
-function impactMetricKey(
-  metricId: Extract<BroadAccuracyFloorOpenBoxTimberEpsScreedHybridPackageFormulaMetricId, "CI" | "CI,50-2500" | "Ln,w" | "Ln,w+CI">
-): RuntimeImpactFormulaMetricKey {
-  switch (metricId) {
-    case "CI":
-      return "CI";
-    case "CI,50-2500":
-      return "CI50_2500";
-    case "Ln,w":
-      return "LnW";
-    case "Ln,w+CI":
-      return "LnWPlusCI";
   }
 }
 

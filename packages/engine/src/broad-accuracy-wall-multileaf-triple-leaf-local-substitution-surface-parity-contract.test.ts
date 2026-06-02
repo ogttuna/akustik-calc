@@ -29,7 +29,6 @@ import {
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 const TARGET_OUTPUTS = ["Rw", "STC", "C", "Ctr", "R'w", "DnT,w"] as const satisfies readonly RequestedOutputId[];
-const LAB_OUTPUTS = ["Rw", "STC", "C", "Ctr"] as const satisfies readonly RequestedOutputId[];
 
 const REQUIRED_SURFACES = [
   "packages/engine/src/broad-accuracy-wall-multileaf-triple-leaf-local-substitution-runtime-corridor.ts",

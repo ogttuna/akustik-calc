@@ -3229,9 +3229,6 @@ export function summarizeCompanyInternalBuildingAstmBoundaryRevalidation(
   requireRows(matrix, COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_ROW_IDS, "building/ASTM boundary revalidation");
 
   const rowsById = new Map(matrix.map((row) => [row.id, row]));
-  const boundaryRows = COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_ROW_IDS.map((rowId) =>
-    requireRow(matrix, rowId, "building/ASTM boundary revalidation")
-  );
   const buildingRows = COMPANY_INTERNAL_BUILDING_ASTM_BOUNDARY_REVALIDATION_BUILDING_ROW_IDS.map((rowId) =>
     requireRow(matrix, rowId, "building boundary revalidation")
   );

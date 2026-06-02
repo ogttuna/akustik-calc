@@ -5,8 +5,7 @@ import {
   BROAD_ACCURACY_OPEN_BOX_TIMBER_POST_EPS_SCREED_HYBRID_MATRIX_REFRESH_LANDED_GATE,
   BROAD_ACCURACY_OPEN_BOX_TIMBER_POST_EPS_SCREED_HYBRID_MATRIX_REFRESH_SELECTED_NEXT_ACTION,
   BROAD_ACCURACY_OPEN_BOX_TIMBER_POST_EPS_SCREED_HYBRID_MATRIX_REFRESH_SELECTED_NEXT_FILE,
-  BROAD_ACCURACY_OPEN_BOX_TIMBER_POST_EPS_SCREED_HYBRID_MATRIX_REFRESH_SELECTION_STATUS,
-  buildBroadAccuracyOpenBoxTimberPostEpsScreedHybridMatrixRefreshContract
+  BROAD_ACCURACY_OPEN_BOX_TIMBER_POST_EPS_SCREED_HYBRID_MATRIX_REFRESH_SELECTION_STATUS
 } from "./broad-accuracy-open-box-timber-post-eps-screed-hybrid-matrix-refresh";
 
 export const BROAD_ACCURACY_FLOOR_OPEN_WEB_RAW_BARE_CARRIER_OWNER_LANDED_GATE =
@@ -312,8 +311,6 @@ export function buildBroadAccuracyFloorOpenWebRawBareEvidenceInventory():
 
 export function buildBroadAccuracyFloorOpenWebRawBareCarrierOwnerContract():
   BroadAccuracyFloorOpenWebRawBareCarrierOwnerContract {
-  const previousMatrixRefresh = buildBroadAccuracyOpenBoxTimberPostEpsScreedHybridMatrixRefreshContract();
-
   return {
     basisAliasBlocked: {
       astmIicAiic: true,

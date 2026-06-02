@@ -14,8 +14,7 @@ import { getFloorSystemC, getFloorSystemCtr } from "@dynecho/shared";
 import { EXACT_IMPACT_SOURCE_BAND_CURVE_BASIS } from "./impact-exact";
 import { ASTM_E989_IMPACT_RATING_BASIS } from "./impact-astm-e989";
 import {
-  FLOOR_IMPACT_FIELD_BUILDING_ADAPTER_ERROR_BUDGET_ORIGIN,
-  FLOOR_IMPACT_FIELD_BUILDING_ADAPTER_SELECTED_CANDIDATE_ID
+  FLOOR_IMPACT_FIELD_BUILDING_ADAPTER_ERROR_BUDGET_ORIGIN
 } from "./impact-field-adapter-error-budget";
 import {
   FLOOR_RAW_BARE_AIRBORNE_BUILDING_PREDICTION_RUNTIME_BASIS

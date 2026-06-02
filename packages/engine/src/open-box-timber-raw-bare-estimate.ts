@@ -3,7 +3,6 @@ import {
   ImpactCalculationSchema,
   type ExactFloorSystem,
   type FloorSystemEstimateResult,
-  type ImpactCalculation,
   type ImpactErrorBudget,
   type ImpactErrorBudgetTerm,
   type RequestedOutputId,

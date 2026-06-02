@@ -30,10 +30,6 @@ const CURRENT_SELECTION_DOCS = [
   "docs/calculator/POST_V1_GATE_BL_NUMERIC_COVERAGE_AND_ACCURACY_RERANK_PLAN_2026-06-01.md"
 ] as const;
 
-const RAW_OPEN_BOX_220 = [
-  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 220 }
-] as const satisfies readonly LayerInput[];
-
 const RAW_OPEN_WEB_300 = [
   { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 300 }
 ] as const satisfies readonly LayerInput[];

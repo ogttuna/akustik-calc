@@ -86,7 +86,6 @@ const MONOTONIC_FLOOR_WARNING =
   "A framed reinforcement monotonic floor was applied because one-face board reinforcement unexpectedly scored below its lighter sibling variant.";
 const UNSUPPORTED_LAB_WARNING =
   "Unsupported target outputs: R'w, Dn,w, Dn,A, DnT,w, DnT,A. These outputs were requested but not calculated.";
-const UNSUPPORTED_FIELD_WARNING = "Unsupported target outputs: Rw. These outputs were requested but not calculated.";
 const NO_EXACT_FLOOR_WARNING =
   "No curated exact floor-system landed. Nearby scored rows existed, but DynEcho withheld the closest candidate label because it drifted outside the defended same-family route.";
 

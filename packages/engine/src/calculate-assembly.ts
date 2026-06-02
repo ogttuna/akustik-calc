@@ -498,9 +498,7 @@ function finiteFloorAirborneBuildingMetric(
   }
 }
 
-function buildRawBareFloorAirborneBuildingPredictionBasis(input: {
-  sourceBasis: typeof OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS | typeof OPEN_WEB_RAW_BARE_FORMULA_BASIS;
-}): AirborneResultBasis {
+function buildRawBareFloorAirborneBuildingPredictionBasis(): AirborneResultBasis {
   return {
     assumptions: [
       "raw-bare floor building airborne values are tied to the owned floor direct Rw, not the generic screening airborne curve",
@@ -4593,9 +4591,7 @@ export function calculateAssembly(
     rawBareFloorAirborneBuildingPredictionRuntime &&
     ownedFloorBuildingPredictionAirborneOutputs.size > 0
   ) {
-    result.airborneBasis = buildRawBareFloorAirborneBuildingPredictionBasis({
-      sourceBasis: rawBareFloorAirborneBuildingPredictionRuntime.sourceBasis
-    });
+    result.airborneBasis = buildRawBareFloorAirborneBuildingPredictionBasis();
   }
   if (
     openBoxFinishedPackageFloorAirborneBuildingPredictionRuntime &&

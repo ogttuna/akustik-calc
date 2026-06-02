@@ -24,7 +24,6 @@ import {
   buildBroadAccuracyWallTripleLeafLocalSubstitutionLabSpectrumAdapterContract
 } from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-lab-spectrum-adapter";
 import {
-  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_RUNTIME_METHOD,
   BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_RUNTIME_STRATEGY,
   BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_SELECTED_CANDIDATE_ID
 } from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-runtime-corridor";

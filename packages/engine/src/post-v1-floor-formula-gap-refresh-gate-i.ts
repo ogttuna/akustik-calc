@@ -22,7 +22,6 @@ export const POST_V1_FLOOR_FORMULA_GAP_REFRESH_GATE_I_SELECTED_NEXT_LABEL =
   "post-V1 floor reinforced-concrete combined resolver Gate J";
 
 const GATE_H_ACTION = "post_v1_floor_formula_expansion_gate_h_plan";
-const GATE_H_FILE = "packages/engine/src/post-v1-floor-formula-expansion-gate-h-contract.test.ts";
 const GATE_H_SELECTION_STATUS =
   "post_v1_floor_formula_expansion_gate_h_landed_selected_gate_i_floor_formula_gap_refresh";
 

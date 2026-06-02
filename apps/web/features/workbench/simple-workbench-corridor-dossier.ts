@@ -171,7 +171,6 @@ function buildImpactFormulaErrorBudgetCards(result: AssemblyCalculation): Simple
   const isHelperOnlyTimberOpenWebImpactStack = isHelperOnlyTimberOpenWebImpactStackResult(result);
   const isOpenWebDirectFixedLining = isOpenWebDirectFixedLiningResult(result);
   const isOpenWebRawBare = isOpenWebRawBareResult(result);
-  const isOpenWebSupportedBandSimilarity = isOpenWebSupportedBandSimilarityResult(result);
   const isTimberCltFormula = isTimberCltDeltaLwFormulaCorridorImpact(result);
 
   return (result.impact?.errorBudgets ?? []).map((budget: ImpactErrorBudget) => ({

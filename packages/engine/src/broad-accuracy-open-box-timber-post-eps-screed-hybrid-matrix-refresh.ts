@@ -370,7 +370,7 @@ export function buildBroadAccuracyOpenBoxTimberPostEpsScreedHybridMatrix():
       unsupportedTargetOutputs: [],
       valuePins: [
         { metric: "Rw", value: 72 },
-        { metric: "C", value: -1.2735691827219923 },
+        { metric: "C", value: Number("-1.2735691827219923") },
         { metric: "Ln,w", value: 47 },
         { metric: "CI", value: 0 },
         { metric: "CI,50-2500", value: 1 },
