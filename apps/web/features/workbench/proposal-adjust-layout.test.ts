@@ -44,4 +44,33 @@ describe("proposal adjust layout", () => {
     expect(source).not.toContain("PDF only");
     expect(source).not.toContain("Simple PDF map");
   });
+
+  it("keeps assistant report manipulation behind app validation and explicit persistence", () => {
+    const source = readFileSync(
+      new URL("../../app/workbench/proposal/configure/proposal-adjust-client-page.tsx", import.meta.url),
+      "utf8"
+    );
+
+    expect(source).toContain("Assistant guarded report adjustments");
+    expect(source).toContain("Ask assistant for a report patch");
+    expect(source).toContain("Generate guarded patch");
+    expect(source).toContain("/api/report-assistant/patch");
+    expect(source).toContain("Review value plausibility");
+    expect(source).toContain("Review plausibility");
+    expect(source).toContain("Use configured source research");
+    expect(source).toContain("research: plausibilityResearchRequested");
+    expect(source).toContain("/api/report-assistant/plausibility");
+    expect(source).toContain("Load suggested patch");
+    expect(source).toContain("Log calculator review finding");
+    expect(source).toContain("Log review finding");
+    expect(source).toContain("/api/report-assistant/findings");
+    expect(source).toContain("confirmed: true");
+    expect(source).toContain("Paste assistant patch JSON");
+    expect(source).toContain("Apply validated patch");
+    expect(source).toContain("Engine values and calculator inputs were not changed.");
+    expect(source).toContain('scope: "export_only"');
+    expect(source).toContain('markReportAdjustmentScope(editableDocument, "export_only")');
+    expect(source).toContain('markReportAdjustmentScope(editableDocument, "saved_snapshot")');
+    expect(source).not.toContain("persistCurrentDocument({ silent: true });\n    setIsDownloadingExport");
+  });
 });

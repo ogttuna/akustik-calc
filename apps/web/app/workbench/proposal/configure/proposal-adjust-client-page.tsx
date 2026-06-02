@@ -1,12 +1,19 @@
 "use client";
 
 import { SurfacePanel } from "@dynecho/ui";
-import { ArrowLeft, ChevronDown, Download, Eye, FileText, Layers3, RefreshCcw, RotateCcw, Save, Send, SlidersHorizontal } from "lucide-react";
+import { ArrowLeft, Bot, ChevronDown, Download, Eye, FileText, Layers3, RefreshCcw, RotateCcw, Save, Send, ShieldCheck, SlidersHorizontal } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { type ReactNode, useDeferredValue, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
+import { buildReportAssistantContext } from "@/features/workbench/report-assistant-context";
+import {
+  applyValidatedReportAssistantPatch,
+  findReportValueMentions,
+  validateReportAssistantPatch,
+  type ReportAssistantPatchValidationResult
+} from "@/features/workbench/report-assistant-patch";
 import {
   type SimpleWorkbenchProposalCoverageStatus,
   type SimpleWorkbenchProposalDocument
@@ -151,6 +158,213 @@ function formatNumberList(values: readonly number[]): string {
 
 function patchArrayItem<T extends object>(items: readonly T[], index: number, patch: Partial<T>): T[] {
   return items.map((item, itemIndex) => (itemIndex === index ? { ...item, ...patch } : item));
+}
+
+function markReportAdjustmentScope(
+  document: SimpleWorkbenchProposalDocument,
+  scope: "export_only" | "saved_snapshot"
+): SimpleWorkbenchProposalDocument {
+  if (!document.reportAdjustments?.length || document.reportAdjustments.every((adjustment) => adjustment.scope === scope)) {
+    return document;
+  }
+
+  return {
+    ...document,
+    reportAdjustments: document.reportAdjustments.map((adjustment) => ({
+      ...adjustment,
+      scope
+    }))
+  };
+}
+
+function parseAssistantPatchDraft(value: string): { empty: boolean; parseError?: string; payload?: unknown } {
+  if (value.trim().length === 0) {
+    return { empty: true };
+  }
+
+  try {
+    return {
+      empty: false,
+      payload: JSON.parse(value) as unknown
+    };
+  } catch (error) {
+    return {
+      empty: false,
+      parseError: error instanceof Error ? error.message : "Patch JSON could not be parsed."
+    };
+  }
+}
+
+function getAssistantValidationTone(validation: ReportAssistantPatchValidationResult | null): string {
+  if (!validation) {
+    return "border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--ink-soft)]";
+  }
+
+  if (validation.status === "rejected") {
+    return "border-red-300 bg-red-50 text-red-900";
+  }
+
+  if (validation.status === "requires_confirmation") {
+    return "border-amber-300 bg-amber-50 text-amber-950";
+  }
+
+  return "border-emerald-300 bg-emerald-50 text-emerald-950";
+}
+
+function getAssistantValidationLabel(validation: ReportAssistantPatchValidationResult | null): string {
+  if (!validation) {
+    return "Waiting for patch";
+  }
+
+  if (validation.status === "rejected") {
+    return "Rejected";
+  }
+
+  if (validation.status === "requires_confirmation") {
+    return "Needs confirmation";
+  }
+
+  return "Valid";
+}
+
+function formatAssistantBasisLabel(value: string): string {
+  return value
+    .replace(/_/gu, " ")
+    .replace(/\b\w/gu, (match) => match.toUpperCase());
+}
+
+function getReportAssistantEndpointMessages(payload: unknown): string[] {
+  if (!payload || typeof payload !== "object") {
+    return ["Report assistant endpoint returned an invalid response."];
+  }
+
+  const record = payload as {
+    error?: unknown;
+    errors?: unknown;
+  };
+  if (Array.isArray(record.errors)) {
+    return record.errors.filter((entry): entry is string => typeof entry === "string");
+  }
+  if (typeof record.error === "string") {
+    return [record.error];
+  }
+
+  return ["Report assistant endpoint returned an invalid response."];
+}
+
+function getReportAssistantEndpointWarnings(payload: unknown): string[] {
+  if (!payload || typeof payload !== "object") {
+    return [];
+  }
+
+  const warnings = (payload as { warnings?: unknown }).warnings;
+  return Array.isArray(warnings) ? warnings.filter((entry): entry is string => typeof entry === "string") : [];
+}
+
+function getReportAssistantEndpointSource(payload: unknown): "deterministic" | "model" | null {
+  if (!payload || typeof payload !== "object") {
+    return null;
+  }
+
+  const source = (payload as { source?: unknown }).source;
+  return source === "deterministic" || source === "model" ? source : null;
+}
+
+function getReportAssistantPlausibilitySource(payload: unknown): "context" | "research_provider" | null {
+  if (!payload || typeof payload !== "object") {
+    return null;
+  }
+
+  const source = (payload as { source?: unknown }).source;
+  return source === "context" || source === "research_provider" ? source : null;
+}
+
+function getReportAssistantEndpointPatch(payload: unknown): unknown {
+  return payload && typeof payload === "object" ? (payload as { patch?: unknown }).patch : undefined;
+}
+
+function getReportAssistantFindingRecordId(payload: unknown): string | null {
+  if (!payload || typeof payload !== "object") {
+    return null;
+  }
+
+  const record = (payload as { record?: unknown }).record;
+  if (!record || typeof record !== "object") {
+    return null;
+  }
+
+  const id = (record as { id?: unknown }).id;
+  return typeof id === "string" ? id : null;
+}
+
+type ReportAssistantPlausibilityReviewView = {
+  engineDisplayValue?: string;
+  metric: string;
+  metricId: string;
+  rationale: readonly string[];
+  severity: string;
+  sources: readonly {
+    note?: string;
+    title: string;
+    url: string;
+  }[];
+  suggestedReportPatch?: unknown;
+  valueReviewed: string;
+  verdict: string;
+};
+
+function getReportAssistantPlausibilityReview(payload: unknown): ReportAssistantPlausibilityReviewView | null {
+  if (!payload || typeof payload !== "object") {
+    return null;
+  }
+
+  const review = (payload as { review?: unknown }).review;
+  if (!review || typeof review !== "object") {
+    return null;
+  }
+
+  const record = review as {
+    engineDisplayValue?: unknown;
+    metric?: unknown;
+    metricId?: unknown;
+    rationale?: unknown;
+    severity?: unknown;
+    sources?: unknown;
+    suggestedReportPatch?: unknown;
+    valueReviewed?: unknown;
+    verdict?: unknown;
+  };
+
+  if (
+    typeof record.metric !== "string" ||
+    typeof record.metricId !== "string" ||
+    typeof record.severity !== "string" ||
+    typeof record.valueReviewed !== "string" ||
+    typeof record.verdict !== "string" ||
+    !Array.isArray(record.rationale)
+  ) {
+    return null;
+  }
+
+  return {
+    engineDisplayValue: typeof record.engineDisplayValue === "string" ? record.engineDisplayValue : undefined,
+    metric: record.metric,
+    metricId: record.metricId,
+    rationale: record.rationale.filter((entry): entry is string => typeof entry === "string"),
+    severity: record.severity,
+    sources: Array.isArray(record.sources)
+      ? record.sources
+          .filter((entry): entry is { note?: string; title: string; url: string } =>
+            Boolean(entry) &&
+            typeof entry === "object" &&
+            typeof (entry as { title?: unknown }).title === "string" &&
+            typeof (entry as { url?: unknown }).url === "string"
+          )
+      : [],
+    suggestedReportPatch: record.suggestedReportPatch,
+    valueReviewed: record.valueReviewed,
+    verdict: record.verdict
+  };
 }
 
 function EditorField(props: {
@@ -313,6 +527,640 @@ function EmptyArrayNote(props: { children: ReactNode }) {
   );
 }
 
+function ReportAssistantPatchPanel(props: {
+  baseDocument: SimpleWorkbenchProposalDocument | null;
+  document: SimpleWorkbenchProposalDocument;
+  onApply: (document: SimpleWorkbenchProposalDocument) => void;
+}) {
+  const { baseDocument, document, onApply } = props;
+  const [assistantEndpointMessages, setAssistantEndpointMessages] = useState<string[]>([]);
+  const [assistantEndpointWarnings, setAssistantEndpointWarnings] = useState<string[]>([]);
+  const [findingMessages, setFindingMessages] = useState<string[]>([]);
+  const [findingMetricId, setFindingMetricId] = useState("");
+  const [findingReason, setFindingReason] = useState("");
+  const [findingSeverity, setFindingSeverity] = useState<"high" | "low" | "medium">("medium");
+  const [findingUserInstruction, setFindingUserInstruction] = useState("");
+  const [findingVerdict, setFindingVerdict] = useState<"insufficient_context" | "likely_wrong" | "suspicious">("suspicious");
+  const [instructionDraft, setInstructionDraft] = useState("");
+  const [isGeneratingPatch, setIsGeneratingPatch] = useState(false);
+  const [isLoggingFinding, setIsLoggingFinding] = useState(false);
+  const [isReviewingPlausibility, setIsReviewingPlausibility] = useState(false);
+  const [patchDraft, setPatchDraft] = useState("");
+  const [plausibilityMessages, setPlausibilityMessages] = useState<string[]>([]);
+  const [plausibilityMetricId, setPlausibilityMetricId] = useState("");
+  const [plausibilityResearchRequested, setPlausibilityResearchRequested] = useState(false);
+  const [plausibilityReview, setPlausibilityReview] = useState<ReportAssistantPlausibilityReviewView | null>(null);
+  const [plausibilitySource, setPlausibilitySource] = useState<"context" | "research_provider" | null>(null);
+  const [plausibilityUserInstruction, setPlausibilityUserInstruction] = useState("");
+  const [plausibilityWarnings, setPlausibilityWarnings] = useState<string[]>([]);
+  const [confirmationChecked, setConfirmationChecked] = useState(false);
+  const assistantContext = useMemo(
+    () =>
+      buildReportAssistantContext({
+        baseDocument: baseDocument ?? undefined,
+        document
+      }),
+    [baseDocument, document]
+  );
+  const parsedPatchDraft = useMemo(() => parseAssistantPatchDraft(patchDraft), [patchDraft]);
+  const validation = useMemo(() => {
+    if (!parsedPatchDraft.payload) {
+      return null;
+    }
+
+    return validateReportAssistantPatch({
+      context: assistantContext,
+      document,
+      patch: parsedPatchDraft.payload
+    });
+  }, [assistantContext, document, parsedPatchDraft.payload]);
+  const staleValueMentions = useMemo(() => {
+    if (!validation) {
+      return [];
+    }
+
+    return validation.operations.flatMap((operation) => {
+      if (operation.type !== "metric_value") {
+        return [];
+      }
+
+      return findReportValueMentions(document, operation.beforeValue).map((mention) => ({
+        ...mention,
+        label: operation.label
+      }));
+    });
+  }, [document, validation]);
+
+  useEffect(() => {
+    setConfirmationChecked(false);
+  }, [assistantContext.documentSignature, patchDraft]);
+
+  useEffect(() => {
+    const firstMetricId = assistantContext.metrics[0]?.id ?? "";
+    setFindingMetricId((current) =>
+      current.length > 0 && assistantContext.metrics.some((metric) => metric.id === current) ? current : firstMetricId
+    );
+    setPlausibilityMetricId((current) =>
+      current.length > 0 && assistantContext.metrics.some((metric) => metric.id === current) ? current : firstMetricId
+    );
+  }, [assistantContext.metrics]);
+
+  const canApply =
+    validation?.status === "valid" ||
+    (validation?.status === "requires_confirmation" && confirmationChecked);
+
+  async function handleGeneratePatchFromInstruction() {
+    if (instructionDraft.trim().length === 0) {
+      toast.error("Report assistant instruction is empty", {
+        description: "Name a metric and the report-only value movement."
+      });
+      return;
+    }
+
+    setIsGeneratingPatch(true);
+    setAssistantEndpointMessages([]);
+    setAssistantEndpointWarnings([]);
+
+    try {
+      const response = await fetch("/api/report-assistant/patch", {
+        body: JSON.stringify({
+          context: assistantContext,
+          document,
+          instruction: instructionDraft
+        }),
+        headers: {
+          "content-type": "application/json"
+        },
+        method: "POST"
+      });
+      const payload = (await response.json()) as unknown;
+      const patch = getReportAssistantEndpointPatch(payload);
+      const warnings = getReportAssistantEndpointWarnings(payload);
+      const source = getReportAssistantEndpointSource(payload);
+      setAssistantEndpointWarnings(warnings);
+
+      if (!response.ok || !patch) {
+        const messages = getReportAssistantEndpointMessages(payload);
+        setAssistantEndpointMessages(messages);
+        toast.error("Assistant patch was rejected", {
+          description: messages[0] ?? "The report assistant could not produce a valid patch."
+        });
+        return;
+      }
+
+      setAssistantEndpointMessages([
+        source === "model" ? "Patch proposal came from the configured model provider." : "Patch proposal came from the deterministic parser."
+      ]);
+      setPatchDraft(JSON.stringify(patch, null, 2));
+      toast.success("Assistant patch generated", {
+        description: "Review the guarded preview before applying it to the report snapshot."
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "The report assistant endpoint failed.";
+      setAssistantEndpointMessages([message]);
+      toast.error("Assistant patch failed", {
+        description: message
+      });
+    } finally {
+      setIsGeneratingPatch(false);
+    }
+  }
+
+  async function handleLogReviewFinding() {
+    if (findingMetricId.length === 0) {
+      toast.error("No report metric selected", {
+        description: "Choose a current report metric before logging a review finding."
+      });
+      return;
+    }
+
+    if (findingReason.trim().length === 0) {
+      toast.error("Finding reason is empty", {
+        description: "Add the concern you want future calculator review to inspect."
+      });
+      return;
+    }
+
+    setIsLoggingFinding(true);
+    setFindingMessages([]);
+
+    try {
+      const response = await fetch("/api/report-assistant/findings", {
+        body: JSON.stringify({
+          confirmed: true,
+          context: assistantContext,
+          finding: {
+            metricId: findingMetricId,
+            reason: findingReason,
+            severity: findingSeverity,
+            sources: [],
+            userInstruction: findingUserInstruction,
+            verdict: findingVerdict
+          }
+        }),
+        headers: {
+          "content-type": "application/json"
+        },
+        method: "POST"
+      });
+      const payload = (await response.json()) as unknown;
+
+      if (!response.ok) {
+        const messages = getReportAssistantEndpointMessages(payload);
+        setFindingMessages(messages);
+        toast.error("Review finding was not logged", {
+          description: messages[0] ?? "The review queue rejected this finding."
+        });
+        return;
+      }
+
+      const recordId = getReportAssistantFindingRecordId(payload);
+      setFindingMessages([recordId ? `Logged finding ${recordId}.` : "Review finding logged."]);
+      setFindingReason("");
+      setFindingUserInstruction("");
+      toast.success("Review finding logged", {
+        description: "The record was appended outside calculator outputs and project scenario snapshots."
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "The review finding route failed.";
+      setFindingMessages([message]);
+      toast.error("Review finding failed", {
+        description: message
+      });
+    } finally {
+      setIsLoggingFinding(false);
+    }
+  }
+
+  async function handleReviewPlausibility() {
+    if (plausibilityMetricId.length === 0) {
+      toast.error("No report metric selected", {
+        description: "Choose a current report metric before reviewing plausibility."
+      });
+      return;
+    }
+
+    setIsReviewingPlausibility(true);
+    setPlausibilityMessages([]);
+    setPlausibilityReview(null);
+    setPlausibilitySource(null);
+    setPlausibilityWarnings([]);
+
+    try {
+      const response = await fetch("/api/report-assistant/plausibility", {
+        body: JSON.stringify({
+          context: assistantContext,
+          document,
+          review: {
+            metricId: plausibilityMetricId,
+            research: plausibilityResearchRequested,
+            sources: [],
+            suggestPatch: true,
+            userInstruction: plausibilityUserInstruction
+          }
+        }),
+        headers: {
+          "content-type": "application/json"
+        },
+        method: "POST"
+      });
+      const payload = (await response.json()) as unknown;
+      const review = getReportAssistantPlausibilityReview(payload);
+      const source = getReportAssistantPlausibilitySource(payload);
+      const warnings = getReportAssistantEndpointWarnings(payload);
+
+      if (!response.ok || !review) {
+        const messages = getReportAssistantEndpointMessages(payload);
+        setPlausibilityMessages(messages);
+        toast.error("Plausibility review failed", {
+          description: messages[0] ?? "The review endpoint could not produce a result."
+        });
+        return;
+      }
+
+      setPlausibilityReview(review);
+      setPlausibilitySource(source);
+      setPlausibilityWarnings(warnings);
+      setFindingMetricId(review.metricId);
+      setFindingReason(review.rationale.join(" "));
+      setFindingSeverity(review.severity === "high" || review.severity === "low" ? review.severity : "medium");
+      setFindingUserInstruction(plausibilityUserInstruction);
+      setFindingVerdict(
+        review.verdict === "likely_wrong" || review.verdict === "insufficient_context"
+          ? review.verdict
+          : "suspicious"
+      );
+      toast.success("Plausibility review ready", {
+        description: "The review did not change the report or calculator output."
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "The plausibility review route failed.";
+      setPlausibilityMessages([message]);
+      toast.error("Plausibility review failed", {
+        description: message
+      });
+    } finally {
+      setIsReviewingPlausibility(false);
+    }
+  }
+
+  function handleApplyPatch() {
+    if (!validation) {
+      toast.error("No assistant patch loaded", {
+        description: "Paste a JSON patch before applying guarded report changes."
+      });
+      return;
+    }
+
+    if (!canApply) {
+      toast.error("Assistant patch is not ready", {
+        description:
+          validation.status === "requires_confirmation"
+            ? "Confirm the large dB movement before applying this report-only patch."
+            : "Resolve rejected operations before applying a report patch."
+      });
+      return;
+    }
+
+    try {
+      const nextDocument = applyValidatedReportAssistantPatch(document, validation, {
+        confirmed: confirmationChecked,
+        scope: "export_only",
+        source: "assistant"
+      });
+      onApply(nextDocument);
+      toast.success("Assistant patch applied to this report snapshot", {
+        description: "Engine values and calculator inputs were not changed."
+      });
+    } catch (error) {
+      toast.error("Assistant patch failed", {
+        description: error instanceof Error ? error.message : "The guarded patch could not be applied."
+      });
+    }
+  }
+
+  return (
+    <div className="grid gap-4">
+      <div className="rounded-[1rem] border hairline bg-[color:var(--paper)]/82 px-4 py-4">
+        <div className="flex min-w-0 items-center gap-2">
+          <Bot className="h-4 w-4 shrink-0 text-[color:var(--accent)]" />
+          <div className="text-sm font-semibold text-[color:var(--ink)]">Ask assistant for a report patch</div>
+        </div>
+        <div className="mt-3 grid gap-3 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
+          <EditorTextarea
+            label="Instruction"
+            note="Examples: set Rw to 55 dB, make Ln,w 3 dB lower, raise DnT,w by 2 dB."
+            onChange={setInstructionDraft}
+            rows={3}
+            value={instructionDraft}
+          />
+          <button
+            className="focus-ring inline-flex items-center justify-center gap-2 rounded-full border hairline px-4 py-3 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={isGeneratingPatch}
+            onClick={() => void handleGeneratePatchFromInstruction()}
+            type="button"
+          >
+            <Send className="h-4 w-4" />
+            {isGeneratingPatch ? "Generating..." : "Generate guarded patch"}
+          </button>
+        </div>
+        {assistantEndpointMessages.length > 0 ? (
+          <div className="mt-3 grid gap-2 rounded-[1rem] border border-red-300 bg-red-50 px-3 py-3 text-sm leading-6 text-red-800">
+            {assistantEndpointMessages.map((message) => <div key={message}>{message}</div>)}
+          </div>
+        ) : null}
+        {assistantEndpointWarnings.length > 0 ? (
+          <div className="mt-3 grid gap-2 rounded-[1rem] border border-amber-300 bg-amber-50 px-3 py-3 text-sm leading-6 text-amber-950">
+            {assistantEndpointWarnings.map((warning) => <div key={warning}>{warning}</div>)}
+          </div>
+        ) : null}
+      </div>
+
+      <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_minmax(16rem,0.65fr)]">
+        <div className="rounded-[1rem] border hairline bg-[color:var(--paper)]/82 px-4 py-4">
+          <div className="flex min-w-0 items-center gap-2">
+            <Bot className="h-4 w-4 shrink-0 text-[color:var(--accent)]" />
+            <div className="text-sm font-semibold text-[color:var(--ink)]">Paste assistant patch JSON</div>
+          </div>
+          <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">
+            The assistant may propose values, but this screen validates and applies them. Numeric edits cannot create unsupported or missing-input outputs.
+          </p>
+          <textarea
+            className="focus-ring mt-3 min-h-[13rem] w-full rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3 font-mono text-[0.78rem] leading-5 text-[color:var(--ink)]"
+            onChange={(event) => setPatchDraft(event.target.value)}
+            placeholder={`{"summary":"Lower Rw by 2 dB for this issue.","documentSignature":"${assistantContext.documentSignature}","operations":[{"type":"adjust_metric_db","metricId":"output:Rw","deltaDb":-2,"reason":"User requested a conservative issued-report value."}]}`}
+            spellCheck={false}
+            value={patchDraft}
+          />
+        </div>
+
+        <div className="rounded-[1rem] border hairline bg-[color:var(--paper)]/82 px-4 py-4">
+          <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Patch guard</div>
+          <div className={`mt-3 rounded-[1rem] border px-3 py-3 text-sm font-semibold ${getAssistantValidationTone(validation)}`}>
+            {parsedPatchDraft.parseError ? "Invalid JSON" : getAssistantValidationLabel(validation)}
+          </div>
+          {parsedPatchDraft.parseError ? (
+            <p className="mt-3 text-sm leading-6 text-red-700">{parsedPatchDraft.parseError}</p>
+          ) : null}
+          <div className="mt-3 grid gap-2 text-sm leading-6 text-[color:var(--ink-soft)]">
+            <div>Document signature: <span className="font-mono text-[0.78rem]">{assistantContext.documentSignature}</span></div>
+            <div>{assistantContext.metrics.length} report metric{assistantContext.metrics.length === 1 ? "" : "s"} exposed to the assistant context.</div>
+            <div>Default scope: export-only until Save edits is clicked.</div>
+          </div>
+          {validation?.requiresUserConfirmation ? (
+            <label className="mt-4 flex items-start gap-3 rounded-[1rem] border hairline bg-[color:var(--panel)] px-3 py-3">
+              <input
+                checked={confirmationChecked}
+                className="mt-1 h-4 w-4 accent-[color:var(--accent)]"
+                onChange={(event) => setConfirmationChecked(event.target.checked)}
+                type="checkbox"
+              />
+              <span className="text-sm leading-6 text-[color:var(--ink-soft)]">
+                Confirm this over-5 dB report movement. Over-10 dB assistant movements stay rejected.
+              </span>
+            </label>
+          ) : null}
+          <button
+            className="focus-ring mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={!canApply}
+            onClick={handleApplyPatch}
+            type="button"
+          >
+            <ShieldCheck className="h-4 w-4" />
+            Apply validated patch
+          </button>
+        </div>
+      </div>
+
+      <div className="rounded-[1rem] border hairline bg-[color:var(--paper)]/82 px-4 py-4">
+        <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Assistant metric context</div>
+        <div className="mt-3 grid gap-2">
+          {assistantContext.metrics.map((metric) => (
+            <div className="grid gap-2 rounded-[1rem] border hairline bg-[color:var(--panel)] px-3 py-3 text-sm md:grid-cols-[minmax(8rem,0.45fr)_minmax(0,1fr)]" key={metric.id}>
+              <div className="min-w-0">
+                <div className="font-semibold text-[color:var(--ink)]">{metric.label}</div>
+                <div className="break-all font-mono text-[0.74rem] text-[color:var(--ink-faint)]">{metric.id}</div>
+              </div>
+              <div className="grid gap-1 text-[color:var(--ink-soft)]">
+                <div>Report: <span className="font-semibold text-[color:var(--ink)]">{metric.reportDisplayValue}</span></div>
+                <div>Engine: <span className="font-semibold text-[color:var(--ink)]">{metric.engineDisplayValue ?? "Not captured"}</span></div>
+                <div>{formatAssistantBasisLabel(metric.basis)} | {metric.direction.replace(/_/gu, " ")} | {metric.status}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {validation ? (
+        <div className="rounded-[1rem] border hairline bg-[color:var(--paper)]/82 px-4 py-4">
+          <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Patch preview</div>
+          <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">{validation.patchSummary || "No summary supplied."}</p>
+          {validation.errors.length > 0 ? (
+            <div className="mt-3 grid gap-2 text-sm leading-6 text-red-700">
+              {validation.errors.map((error) => <div key={error}>{error}</div>)}
+            </div>
+          ) : null}
+          {validation.warnings.length > 0 ? (
+            <div className="mt-3 grid gap-2 text-sm leading-6 text-amber-800">
+              {validation.warnings.map((warning) => <div key={warning}>{warning}</div>)}
+            </div>
+          ) : null}
+          <div className="mt-3 grid gap-2">
+            {validation.operations.map((operation, index) => (
+              <div className="rounded-[1rem] border hairline bg-[color:var(--panel)] px-3 py-3 text-sm leading-6 text-[color:var(--ink-soft)]" key={`${operation.type}-${index}`}>
+                {operation.type === "metric_value" ? (
+                  <>
+                    <div className="font-semibold text-[color:var(--ink)]">
+                      {operation.label}: {operation.beforeValue} {"->"} {operation.afterValue}
+                    </div>
+                    <div>{operation.reason}</div>
+                  </>
+                ) : (
+                  <>
+                    <div className="font-semibold text-[color:var(--ink)]">Append {operation.section} note</div>
+                    <div>{operation.text}</div>
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+          {staleValueMentions.length > 0 ? (
+            <div className="mt-3 rounded-[1rem] border border-amber-300 bg-amber-50 px-3 py-3 text-sm leading-6 text-amber-950">
+              <div className="font-semibold">Old value text still appears outside metric rows.</div>
+              {staleValueMentions.map((mention) => (
+                <div key={`${mention.label}-${mention.path}`}>{mention.label}: {mention.path}</div>
+              ))}
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+
+      <div className="rounded-[1rem] border hairline bg-[color:var(--paper)]/82 px-4 py-4">
+        <div className="flex min-w-0 items-center gap-2">
+            <Eye className="h-4 w-4 shrink-0 text-[color:var(--accent)]" />
+          <div className="text-sm font-semibold text-[color:var(--ink)]">Review value plausibility</div>
+        </div>
+        <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">
+          This review compares the report value with the captured engine value and trace metadata. Source research runs only when requested and a research provider endpoint is configured.
+        </p>
+        <div className="mt-3 grid gap-4 md:grid-cols-[minmax(12rem,0.5fr)_minmax(0,1fr)]">
+          <EditorSelect<string>
+            label="Metric"
+            onChange={setPlausibilityMetricId}
+            options={assistantContext.metrics.map((metric) => ({
+              label: `${metric.label} (${metric.reportDisplayValue})`,
+              value: metric.id
+            }))}
+            value={plausibilityMetricId}
+          />
+          <EditorTextarea
+            label="Review instruction"
+            note="Optional context, for example: this Rw feels too high for the issued report."
+            onChange={setPlausibilityUserInstruction}
+            rows={3}
+            value={plausibilityUserInstruction}
+          />
+        </div>
+        <div className="mt-3">
+          <EditorCheckbox
+            checked={plausibilityResearchRequested}
+            label="Use configured source research"
+            note="Calls the optional source-bounded research provider. If it is not configured or fails, the endpoint returns a context-only review."
+            onChange={setPlausibilityResearchRequested}
+          />
+        </div>
+        <button
+          className="focus-ring mt-4 inline-flex items-center justify-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={isReviewingPlausibility}
+          onClick={() => void handleReviewPlausibility()}
+          type="button"
+        >
+          <Eye className="h-4 w-4" />
+          {isReviewingPlausibility ? "Reviewing..." : "Review plausibility"}
+        </button>
+        {plausibilityMessages.length > 0 ? (
+          <div className="mt-3 grid gap-2 rounded-[1rem] border border-red-300 bg-red-50 px-3 py-3 text-sm leading-6 text-red-800">
+            {plausibilityMessages.map((message) => <div key={message}>{message}</div>)}
+          </div>
+        ) : null}
+        {plausibilityWarnings.length > 0 ? (
+          <div className="mt-3 grid gap-2 rounded-[1rem] border border-amber-300 bg-amber-50 px-3 py-3 text-sm leading-6 text-amber-950">
+            {plausibilityWarnings.map((warning) => <div key={warning}>{warning}</div>)}
+          </div>
+        ) : null}
+        {plausibilityReview ? (
+          <div className="mt-3 rounded-[1rem] border hairline bg-[color:var(--panel)] px-3 py-3 text-sm leading-6 text-[color:var(--ink-soft)]">
+            <div className="font-semibold text-[color:var(--ink)]">
+              {plausibilityReview.metric}: {plausibilityReview.verdict} / {plausibilityReview.severity}
+            </div>
+            {plausibilitySource ? (
+              <div>Review source: {plausibilitySource === "research_provider" ? "configured source research provider" : "context-only review"}</div>
+            ) : null}
+            <div>
+              Report {plausibilityReview.valueReviewed}
+              {plausibilityReview.engineDisplayValue ? ` | Engine ${plausibilityReview.engineDisplayValue}` : ""}
+            </div>
+            <div className="mt-2 grid gap-1">
+              {plausibilityReview.rationale.map((line) => <div key={line}>{line}</div>)}
+            </div>
+            {plausibilityReview.sources.length > 0 ? (
+              <div className="mt-3 grid gap-2 rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3">
+                <div className="font-semibold text-[color:var(--ink)]">Sources</div>
+                {plausibilityReview.sources.map((source) => (
+                  <a className="break-words text-[color:var(--accent)] underline" href={source.url} key={source.url} rel="noreferrer" target="_blank">
+                    {source.title}
+                  </a>
+                ))}
+              </div>
+            ) : null}
+            {plausibilityReview.suggestedReportPatch ? (
+              <button
+                className="focus-ring mt-3 inline-flex items-center gap-2 rounded-full border hairline px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--paper)]"
+                onClick={() => setPatchDraft(JSON.stringify(plausibilityReview.suggestedReportPatch, null, 2))}
+                type="button"
+              >
+                <SlidersHorizontal className="h-4 w-4" />
+                Load suggested patch
+              </button>
+            ) : null}
+          </div>
+        ) : null}
+      </div>
+
+      <div className="rounded-[1rem] border hairline bg-[color:var(--paper)]/82 px-4 py-4">
+        <div className="flex min-w-0 items-center gap-2">
+          <ShieldCheck className="h-4 w-4 shrink-0 text-[color:var(--accent)]" />
+          <div className="text-sm font-semibold text-[color:var(--ink)]">Log calculator review finding</div>
+        </div>
+        <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">
+          This appends a suspicious-value record to the report-assistant review queue only. It does not change the report, project scenario, or engine output.
+        </p>
+        <div className="mt-3 grid gap-4 md:grid-cols-3">
+          <EditorSelect<string>
+            label="Metric"
+            onChange={setFindingMetricId}
+            options={assistantContext.metrics.map((metric) => ({
+              label: `${metric.label} (${metric.reportDisplayValue})`,
+              value: metric.id
+            }))}
+            value={findingMetricId}
+          />
+          <EditorSelect<typeof findingVerdict>
+            label="Verdict"
+            onChange={setFindingVerdict}
+            options={[
+              { label: "Suspicious", value: "suspicious" },
+              { label: "Likely wrong", value: "likely_wrong" },
+              { label: "Insufficient context", value: "insufficient_context" }
+            ]}
+            value={findingVerdict}
+          />
+          <EditorSelect<typeof findingSeverity>
+            label="Severity"
+            onChange={setFindingSeverity}
+            options={[
+              { label: "Medium", value: "medium" },
+              { label: "High", value: "high" },
+              { label: "Low", value: "low" }
+            ]}
+            value={findingSeverity}
+          />
+        </div>
+        <div className="mt-4 grid gap-4 md:grid-cols-2">
+          <EditorTextarea
+            label="Reason"
+            note="Describe why this value should be reviewed later."
+            onChange={setFindingReason}
+            rows={3}
+            value={findingReason}
+          />
+          <EditorTextarea
+            label="User instruction"
+            note="Optional context from the current assistant conversation."
+            onChange={setFindingUserInstruction}
+            rows={3}
+            value={findingUserInstruction}
+          />
+        </div>
+        {findingMessages.length > 0 ? (
+          <div className="mt-3 grid gap-2 rounded-[1rem] border hairline bg-[color:var(--panel)] px-3 py-3 text-sm leading-6 text-[color:var(--ink-soft)]">
+            {findingMessages.map((message) => <div key={message}>{message}</div>)}
+          </div>
+        ) : null}
+        <button
+          className="focus-ring mt-4 inline-flex items-center justify-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={isLoggingFinding}
+          onClick={() => void handleLogReviewFinding()}
+          type="button"
+        >
+          <Save className="h-4 w-4" />
+          {isLoggingFinding ? "Logging..." : "Log review finding"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export function ProposalAdjustClientPage() {
   const searchParams = useSearchParams();
   const [baseDocument, setBaseDocument] = useState<SimpleWorkbenchProposalDocument | null>(null);
@@ -402,9 +1250,12 @@ export function ProposalAdjustClientPage() {
       return true;
     }
 
-    const nextCustomizedAtIso = storeSimpleWorkbenchProposalPreviewCustomizations(editableDocument);
+    const documentToPersist = markReportAdjustmentScope(editableDocument, "saved_snapshot");
+    const nextCustomizedAtIso = storeSimpleWorkbenchProposalPreviewCustomizations(documentToPersist);
+    const nextSignature = JSON.stringify(documentToPersist);
+    setEditableDocument(documentToPersist);
     setCustomizedAtIso(nextCustomizedAtIso);
-    setLastSavedSignature(currentSignature);
+    setLastSavedSignature(nextSignature);
 
     if (!options?.silent) {
       toast.success("Report edits saved", {
@@ -456,24 +1307,24 @@ export function ProposalAdjustClientPage() {
       return;
     }
 
-    persistCurrentDocument({ silent: true });
     setIsDownloadingExport(true);
 
     try {
+      const documentToExport = markReportAdjustmentScope(editableDocument, "export_only");
       if (format === "docx") {
-        await downloadSimpleWorkbenchProposalDocx(editableDocument, {
+        await downloadSimpleWorkbenchProposalDocx(documentToExport, {
           style
         });
       } else {
-        await downloadSimpleWorkbenchProposalPdf(editableDocument, {
+        await downloadSimpleWorkbenchProposalPdf(documentToExport, {
           style
         });
       }
       toast.success(`${getSimpleWorkbenchProposalExportLabel({ format, style })} downloaded`, {
         description:
           format === "docx"
-            ? "The current proposal snapshot was sent to the Word renderer."
-            : "The current proposal snapshot was sent to the PDF renderer."
+            ? "The current export-only proposal snapshot was sent to the Word renderer."
+            : "The current export-only proposal snapshot was sent to the PDF renderer."
       });
     } catch (error) {
       toast.error(`${getSimpleWorkbenchProposalExportLabel({ format, style })} failed`, {
@@ -695,6 +1546,20 @@ export function ProposalAdjustClientPage() {
                     />
                   ) : null}
                 </EditorSection>
+
+                <CollapsibleEditorSection
+                  defaultOpen={(editableDocument.reportAdjustments?.length ?? 0) > 0}
+                  description="Paste a model-proposed patch here when the assistant should manipulate report values. The app validates metric ids, current values, unsupported outputs, and large dB movements before applying anything."
+                  eyebrow="Assistant guard"
+                  summary={`${editableDocument.reportAdjustments?.length ?? 0} report adjustment${(editableDocument.reportAdjustments?.length ?? 0) === 1 ? "" : "s"}`}
+                  title="Assistant guarded report adjustments"
+                >
+                  <ReportAssistantPatchPanel
+                    baseDocument={baseDocument}
+                    document={editableDocument}
+                    onApply={(nextDocument) => setEditableDocument(nextDocument)}
+                  />
+                </CollapsibleEditorSection>
 
                 <CollapsibleEditorSection
                   defaultOpen

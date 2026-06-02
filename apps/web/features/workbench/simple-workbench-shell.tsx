@@ -32,6 +32,11 @@ import { getGuidedValidationSummary } from "./guided-validation-summary";
 import { isImpactOnlyLowConfidenceFloorLane } from "./impact-only-low-confidence-floor-lane";
 import { getGuidedNumericSanityWarning, GUIDED_INPUT_SANITY_BANDS } from "./input-sanity";
 import { getPresetById, type PresetId } from "./preset-definitions";
+import {
+  getReportAssistantMetricBasis,
+  getReportAssistantMetricDirection,
+  getReportAssistantMetricId
+} from "./report-assistant-context";
 import { evaluateScenario } from "./scenario-analysis";
 import { buildSimpleWorkbenchEvidencePacket } from "./simple-workbench-evidence";
 import { buildSimpleWorkbenchMethodDossier } from "./simple-workbench-method-dossier";
@@ -910,10 +915,30 @@ export function SimpleWorkbenchShell() {
       if (!outputUnlockActionById.has(output)) outputUnlockActionById.set(output, group.title);
     }
   }
-  const proposalMetrics = readyCards.map((card) => ({ detail: card.detail, label: card.label, value: card.value }));
+  const proposalMetrics = readyCards.map((card) => ({
+    detail: card.detail,
+    engineDisplayValue: card.value,
+    label: card.label,
+    metricBasis: getReportAssistantMetricBasis(card.output, { contextLabel: getEnvironmentLabel(airborneContextMode) }),
+    metricDirection: getReportAssistantMetricDirection(card.output),
+    outputId: card.output,
+    reportMetricId: getReportAssistantMetricId(card.output),
+    value: card.value
+  }));
   const proposalCoverageItems = outputCards.map((card) => ({
-    detail: card.detail, label: card.label, nextStep: card.status === "needs_input" ? outputUnlockActionById.get(card.output) : undefined,
-    postureDetail: card.postureDetail, postureLabel: card.postureLabel, postureTone: card.postureTone, status: card.status, value: card.value
+    detail: card.detail,
+    engineDisplayValue: card.value,
+    label: card.label,
+    metricBasis: getReportAssistantMetricBasis(card.output, { contextLabel: getEnvironmentLabel(airborneContextMode) }),
+    metricDirection: getReportAssistantMetricDirection(card.output),
+    nextStep: card.status === "needs_input" ? outputUnlockActionById.get(card.output) : undefined,
+    outputId: card.output,
+    postureDetail: card.postureDetail,
+    postureLabel: card.postureLabel,
+    postureTone: card.postureTone,
+    reportMetricId: getReportAssistantMetricId(card.output),
+    status: card.status,
+    value: card.value
   }));
   const proposalLayers = rows.map((row, index) => {
     const material = materials.find((entry) => entry.id === row.materialId);

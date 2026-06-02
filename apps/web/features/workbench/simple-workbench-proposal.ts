@@ -1,4 +1,8 @@
-import type { ReportProfile } from "@dynecho/shared";
+import {
+  REQUESTED_OUTPUT_IDS,
+  type ReportProfile,
+  type RequestedOutputId
+} from "@dynecho/shared";
 
 import type {
   SimpleWorkbenchProposalCitation,
@@ -30,7 +34,12 @@ import type {
 
 export type SimpleWorkbenchProposalMetric = {
   detail: string;
+  engineDisplayValue?: string;
   label: string;
+  metricBasis?: SimpleWorkbenchProposalMetricBasis;
+  metricDirection?: SimpleWorkbenchProposalMetricDirection;
+  outputId?: RequestedOutputId;
+  reportMetricId?: string;
   value: string;
   visible?: boolean;
 };
@@ -46,16 +55,37 @@ export type SimpleWorkbenchProposalLayer = {
 };
 
 export type SimpleWorkbenchProposalCoverageStatus = "bound" | "live" | "needs_input" | "unsupported";
+export type SimpleWorkbenchProposalMetricBasis = "building_prediction" | "field" | "lab" | "unknown";
+export type SimpleWorkbenchProposalMetricDirection = "higher_is_better" | "lower_is_better" | "neutral";
 
 export type SimpleWorkbenchProposalCoverageItem = {
   detail: string;
+  engineDisplayValue?: string;
   label: string;
+  metricBasis?: SimpleWorkbenchProposalMetricBasis;
+  metricDirection?: SimpleWorkbenchProposalMetricDirection;
   nextStep?: string;
+  outputId?: RequestedOutputId;
   postureDetail: string;
   postureLabel: string;
   postureTone: SimpleWorkbenchOutputPostureTone;
+  reportMetricId?: string;
   status: SimpleWorkbenchProposalCoverageStatus;
   value: string;
+};
+
+export type SimpleWorkbenchProposalReportAdjustment = {
+  afterValue: string;
+  appliedAtIso: string;
+  beforeValue: string;
+  engineValuePreserved: true;
+  id: string;
+  label: string;
+  metricId: string;
+  outputId?: RequestedOutputId;
+  reason: string;
+  scope: "export_only" | "saved_snapshot";
+  source: "assistant" | "manual";
 };
 
 export type SimpleWorkbenchProposalIssueRegisterItem = {
@@ -130,6 +160,7 @@ export type SimpleWorkbenchProposalDocument = {
   proposalSubject: string;
   proposalValidityNote: string;
   recommendationItems: readonly SimpleWorkbenchProposalBriefItem[];
+  reportAdjustments?: readonly SimpleWorkbenchProposalReportAdjustment[];
   reportProfile: ReportProfile;
   reportProfileLabel: string;
   responseCurves?: readonly WorkbenchResponseCurveFigure[];
@@ -148,6 +179,24 @@ function isObjectRecord(value: unknown): value is Record<string, unknown> {
 
 function isStringArray(value: unknown): value is string[] {
   return Array.isArray(value) && value.every((entry) => typeof entry === "string");
+}
+
+const REQUESTED_OUTPUT_ID_SET = new Set<string>(REQUESTED_OUTPUT_IDS);
+
+function normalizeRequestedOutputId(value: unknown): RequestedOutputId | undefined {
+  return typeof value === "string" && REQUESTED_OUTPUT_ID_SET.has(value) ? (value as RequestedOutputId) : undefined;
+}
+
+function normalizeProposalMetricBasis(value: unknown): SimpleWorkbenchProposalMetricBasis | undefined {
+  return value === "building_prediction" || value === "field" || value === "lab" || value === "unknown"
+    ? value
+    : undefined;
+}
+
+function normalizeProposalMetricDirection(value: unknown): SimpleWorkbenchProposalMetricDirection | undefined {
+  return value === "higher_is_better" || value === "lower_is_better" || value === "neutral"
+    ? value
+    : undefined;
 }
 
 function isNumberArray(value: unknown): value is number[] {
@@ -235,8 +284,12 @@ function normalizeCoverageItem(value: unknown): SimpleWorkbenchProposalCoverageI
 
   return {
     detail: value.detail,
+    engineDisplayValue: typeof value.engineDisplayValue === "string" ? value.engineDisplayValue : undefined,
     label: value.label,
+    metricBasis: normalizeProposalMetricBasis(value.metricBasis),
+    metricDirection: normalizeProposalMetricDirection(value.metricDirection),
     nextStep: typeof value.nextStep === "string" ? value.nextStep : undefined,
+    outputId: normalizeRequestedOutputId(value.outputId),
     postureDetail: typeof value.postureDetail === "string" ? value.postureDetail : fallbackPosture.detail,
     postureLabel: typeof value.postureLabel === "string" ? value.postureLabel : fallbackPosture.label,
     postureTone:
@@ -246,6 +299,7 @@ function normalizeCoverageItem(value: unknown): SimpleWorkbenchProposalCoverageI
       value.postureTone === "warning"
         ? value.postureTone
         : fallbackPosture.tone,
+    reportMetricId: typeof value.reportMetricId === "string" ? value.reportMetricId : undefined,
     status,
     value: value.value
   };
@@ -262,9 +316,50 @@ function normalizeProposalMetric(value: unknown): SimpleWorkbenchProposalMetric 
 
   return {
     detail: value.detail,
+    engineDisplayValue: typeof value.engineDisplayValue === "string" ? value.engineDisplayValue : undefined,
     label: value.label,
+    metricBasis: normalizeProposalMetricBasis(value.metricBasis),
+    metricDirection: normalizeProposalMetricDirection(value.metricDirection),
+    outputId: normalizeRequestedOutputId(value.outputId),
+    reportMetricId: typeof value.reportMetricId === "string" ? value.reportMetricId : undefined,
     value: value.value,
     visible: value.visible === false ? false : true
+  };
+}
+
+function normalizeReportAdjustment(value: unknown): SimpleWorkbenchProposalReportAdjustment | null {
+  if (!isObjectRecord(value)) {
+    return null;
+  }
+
+  if (
+    typeof value.afterValue !== "string" ||
+    typeof value.appliedAtIso !== "string" ||
+    typeof value.beforeValue !== "string" ||
+    value.engineValuePreserved !== true ||
+    typeof value.id !== "string" ||
+    typeof value.label !== "string" ||
+    typeof value.metricId !== "string" ||
+    typeof value.reason !== "string"
+  ) {
+    return null;
+  }
+
+  const scope = value.scope === "saved_snapshot" ? "saved_snapshot" : "export_only";
+  const source = value.source === "manual" ? "manual" : "assistant";
+
+  return {
+    afterValue: value.afterValue,
+    appliedAtIso: value.appliedAtIso,
+    beforeValue: value.beforeValue,
+    engineValuePreserved: true,
+    id: value.id,
+    label: value.label,
+    metricId: value.metricId,
+    outputId: normalizeRequestedOutputId(value.outputId),
+    reason: value.reason,
+    scope,
+    source
   };
 }
 
@@ -288,6 +383,11 @@ export function parseSimpleWorkbenchProposalDocument(value: unknown): SimpleWork
     ? value.responseCurves
         .map((entry) => normalizeResponseCurveFigure(entry))
         .filter((entry): entry is WorkbenchResponseCurveFigure => entry !== null)
+    : [];
+  const reportAdjustments = Array.isArray(value.reportAdjustments)
+    ? value.reportAdjustments
+        .map((entry) => normalizeReportAdjustment(entry))
+        .filter((entry): entry is SimpleWorkbenchProposalReportAdjustment => entry !== null)
     : [];
   const consultantAddress =
     typeof value.consultantAddress === "string" ? value.consultantAddress : "Office address not entered";
@@ -416,6 +516,7 @@ export function parseSimpleWorkbenchProposalDocument(value: unknown): SimpleWork
         ? value.proposalValidityNote
         : DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_VALIDITY_NOTE,
     primaryMetricVisible: value.primaryMetricVisible === false ? false : true,
+    reportAdjustments: reportAdjustments.length > 0 ? reportAdjustments : undefined,
     reportProfile:
       typeof value.reportProfile === "string" &&
       (value.reportProfile === "consultant" || value.reportProfile === "developer" || value.reportProfile === "lab_ready")
