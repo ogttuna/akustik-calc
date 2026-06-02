@@ -20,6 +20,9 @@ import {
 import {
   FLOOR_RAW_BARE_AIRBORNE_BUILDING_PREDICTION_RUNTIME_BASIS
 } from "./floor-raw-bare-airborne-building-prediction-runtime";
+import {
+  FLOOR_OPEN_BOX_FINISHED_PACKAGE_AIRBORNE_BUILDING_PREDICTION_RUNTIME_BASIS
+} from "./floor-open-box-finished-package-airborne-building-prediction-runtime";
 import { GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD } from "./dynamic-airborne-gate-i-airborne-field-context";
 import { GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD } from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
 import { GATE_AE_FLAT_MULTICAVITY_RUNTIME_METHOD } from "./dynamic-airborne-gate-ae-flat-multicavity";
@@ -400,7 +403,10 @@ function requestedBasisForFloorResult(input: {
       : "field_apparent";
   }
 
-  if (input.runtimeBasisId === FLOOR_RAW_BARE_AIRBORNE_BUILDING_PREDICTION_RUNTIME_BASIS) {
+  if (
+    input.runtimeBasisId === FLOOR_RAW_BARE_AIRBORNE_BUILDING_PREDICTION_RUNTIME_BASIS ||
+    input.runtimeBasisId === FLOOR_OPEN_BOX_FINISHED_PACKAGE_AIRBORNE_BUILDING_PREDICTION_RUNTIME_BASIS
+  ) {
     return "building_prediction";
   }
 
@@ -1021,6 +1027,8 @@ export function buildLayerCombinationResolverTraceForAssembly(
     result.airborneBasis?.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD;
   const hasRawBareFloorAirborneBuildingBasis =
     result.airborneBasis?.method === FLOOR_RAW_BARE_AIRBORNE_BUILDING_PREDICTION_RUNTIME_BASIS;
+  const hasOpenBoxFinishedPackageFloorAirborneBuildingBasis =
+    result.airborneBasis?.method === FLOOR_OPEN_BOX_FINISHED_PACKAGE_AIRBORNE_BUILDING_PREDICTION_RUNTIME_BASIS;
   const shouldPreferWallAirborneRoute =
     !hasFloorRoleLayer &&
     (
@@ -1072,7 +1080,7 @@ export function buildLayerCombinationResolverTraceForAssembly(
     : hasFieldAdapter
     ? FLOOR_IMPACT_FIELD_BUILDING_ADAPTER_ERROR_BUDGET_ORIGIN
       : route === "floor"
-        ? hasRawBareFloorAirborneBuildingBasis
+        ? hasRawBareFloorAirborneBuildingBasis || hasOpenBoxFinishedPackageFloorAirborneBuildingBasis
           ? result.airborneBasis?.method ?? null
         : shouldUseSingleLeafFloorAirborneBasis
           ? airborneAnswerStop

@@ -40,6 +40,11 @@ type DetectedEpsScreedHybridPackage = {
 const RUNTIME_TARGET_OUTPUTS = new Set<RequestedOutputId>([
   "Rw",
   "C",
+  "R'w",
+  "Dn,w",
+  "Dn,A",
+  "DnT,w",
+  "DnT,A",
   "Ln,w",
   "CI",
   "CI,50-2500",
@@ -64,6 +69,12 @@ function uniqueRequestedOutputs(outputs: readonly RequestedOutputId[]): Requeste
 function formulaTargetOutputs(outputs: readonly RequestedOutputId[]): RequestedOutputId[] {
   const mapped = outputs.flatMap((output) => {
     switch (output) {
+      case "R'w":
+      case "Dn,w":
+      case "Dn,A":
+      case "DnT,w":
+      case "DnT,A":
+        return ["Rw" as const];
       case "L'n,w":
       case "L'nT,w":
         return ["Ln,w" as const];
@@ -395,7 +406,7 @@ export function deriveOpenBoxTimberEpsScreedHybridPackageEstimate(input: {
       `Topology state ${detected.roleTopologyState.replaceAll("_", " ")} with ${detected.supportThicknessMm} mm open-box timber support.`,
       `Wet screed design mass ${detected.floatingScreedMassKgM2} kg/m2; R7b is the same-stack anchor, not a measured row for this source-absent stack.`,
       `Context source rows: ${buildSourceNotes(rows, input.layers)}.`,
-      "This is an element-lab source-absent formula corridor; field outputs require the explicit impactFieldContext adapter, and building/ASTM/IIC outputs remain unpromoted."
+      "This is an element-lab source-absent formula corridor; field outputs require the explicit impactFieldContext adapter, airborne building outputs require the explicit building-context adapter, and ASTM/IIC outputs remain unpromoted."
     ],
     scope: "family_estimate"
   });

@@ -135,6 +135,10 @@ import {
   FLOOR_RAW_BARE_AIRBORNE_BUILDING_PREDICTION_RUNTIME_BASIS
 } from "./floor-raw-bare-airborne-building-prediction-runtime";
 import {
+  FLOOR_OPEN_BOX_FINISHED_PACKAGE_AIRBORNE_BUILDING_PREDICTION_OUTPUTS,
+  FLOOR_OPEN_BOX_FINISHED_PACKAGE_AIRBORNE_BUILDING_PREDICTION_RUNTIME_BASIS
+} from "./floor-open-box-finished-package-airborne-building-prediction-runtime";
+import {
   inferImpactSupportingElementFamilyFromLayers,
   inferImpactSupportingElementFamilyFromPredictorInput
 } from "./impact-supporting-element-family";
@@ -299,12 +303,29 @@ const POST_V1_WALL_SOURCE_ABSENT_BUILDING_LAB_SPECTRUM_FAMILIES = new Set([
 const POST_V1_RAW_BARE_FLOOR_AIRBORNE_BUILDING_OUTPUT_SET = new Set<RequestedOutputId>(
   FLOOR_RAW_BARE_AIRBORNE_BUILDING_PREDICTION_OUTPUTS
 );
+const POST_V1_OPEN_BOX_FINISHED_PACKAGE_FLOOR_AIRBORNE_BUILDING_OUTPUT_SET = new Set<RequestedOutputId>(
+  FLOOR_OPEN_BOX_FINISHED_PACKAGE_AIRBORNE_BUILDING_PREDICTION_OUTPUTS
+);
+const POST_V1_OPEN_BOX_FINISHED_PACKAGE_FLOOR_IMPACT_COMPANION_OUTPUTS = [
+  "Ln,w",
+  "CI",
+  "CI,50-2500",
+  "Ln,w+CI",
+  "L'n,w",
+  "L'nT,w",
+  "L'nT,50"
+] as const satisfies readonly RequestedOutputId[];
 
 type TargetOutputSupportLike = ReturnType<typeof analyzeTargetOutputSupport>;
 type PostV1RawBareFloorAirborneBuildingPredictionRuntime =
   ReturnType<typeof applyAirborneContextOverlay> & {
     readonly directRwDb: number;
     readonly sourceBasis: typeof OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS | typeof OPEN_WEB_RAW_BARE_FORMULA_BASIS;
+  };
+type PostV1OpenBoxFinishedPackageFloorAirborneBuildingPredictionRuntime =
+  ReturnType<typeof applyAirborneContextOverlay> & {
+    readonly directRwDb: number;
+    readonly sourceBasis: typeof OPEN_BOX_TIMBER_SIMILARITY_BASIS | typeof OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS;
   };
 
 function hasGateWFloorImpactRequest(targetOutputs: readonly RequestedOutputId[]): boolean {
@@ -368,7 +389,13 @@ function isRawBareFloorAirborneBasis(
   return basis === OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS || basis === OPEN_WEB_RAW_BARE_FORMULA_BASIS;
 }
 
-function hasCompleteRawBareFloorAirborneBuildingPredictionContext(
+function isOpenBoxFinishedPackageFloorAirborneBasis(
+  basis: string | null | undefined
+): basis is typeof OPEN_BOX_TIMBER_SIMILARITY_BASIS | typeof OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS {
+  return basis === OPEN_BOX_TIMBER_SIMILARITY_BASIS || basis === OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS;
+}
+
+function hasCompleteFloorAirborneBuildingPredictionContext(
   context: AirborneContext | null | undefined
 ): boolean {
   return Boolean(
@@ -405,11 +432,11 @@ function hasRawBareFloorAirborneBuildingPredictionSeedRequest(input: {
   return Boolean(
     hasBuildingAirborneOutput &&
       rawBareCarrierOnly &&
-      hasCompleteRawBareFloorAirborneBuildingPredictionContext(input.airborneContext)
+      hasCompleteFloorAirborneBuildingPredictionContext(input.airborneContext)
   );
 }
 
-function finiteRawBareFloorAirborneBuildingMetric(
+function finiteFloorAirborneBuildingMetric(
   ratings: AssemblyRatings,
   output: RequestedOutputId
 ): boolean {
@@ -464,6 +491,42 @@ function buildRawBareFloorAirborneBuildingPredictionBasis(input: {
   };
 }
 
+function buildOpenBoxFinishedPackageFloorAirborneBuildingPredictionBasis(input: {
+  sourceBasis: typeof OPEN_BOX_TIMBER_SIMILARITY_BASIS | typeof OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS;
+}): AirborneResultBasis {
+  return {
+    assumptions: [
+      "finished open-box floor building airborne values are tied to the owned package-transfer direct Rw, not the generic screening airborne curve",
+      "complete building-prediction room and flanking context is required before R'w / Dn / DnT outputs are published",
+      "lab Rw/C stay tied to the package owner; STC/Ctr, impact Ln,w, and ASTM IIC/AIIC remain separate metric owners"
+    ],
+    calculationStandard: "ISO 12354-1",
+    curveBasis: "calculated_frequency_curve",
+    errorBudgetDb: 9,
+    family: "single_leaf_panel",
+    kind: "airborne_physics_prediction",
+    method: FLOOR_OPEN_BOX_FINISHED_PACKAGE_AIRBORNE_BUILDING_PREDICTION_RUNTIME_BASIS,
+    missingPhysicalInputs: [],
+    missingSourceEvidence: [],
+    origin: "family_physics_prediction",
+    propertyDefaults: [],
+    ratingStandard: "ISO 717-1",
+    requiredInputs: [
+      "openBoxFinishedPackageDirectRwOwner",
+      input.sourceBasis,
+      "airborneContext.contextMode=building_prediction",
+      "airborneContext.panelWidthHeight",
+      "airborneContext.sourceRoomVolumeM3",
+      "airborneContext.receivingRoomVolumeM3",
+      "airborneContext.receivingRoomRt60S",
+      "airborneContext.flankingJunctionClass",
+      "airborneContext.conservativeFlankingAssumption",
+      "airborneContext.junctionCouplingLengthM"
+    ],
+    toleranceClass: "uncalibrated_prediction"
+  };
+}
+
 function maybeBuildRawBareFloorAirborneBuildingPredictionRuntime(input: {
   airborneContext: AirborneContext | null | undefined;
   floorSystemRatings: (FloorSystemAirborneRatings & { readonly basis?: string }) | null;
@@ -475,7 +538,39 @@ function maybeBuildRawBareFloorAirborneBuildingPredictionRuntime(input: {
 
   if (
     !isRawBareFloorAirborneBasis(sourceBasis) ||
-    !hasCompleteRawBareFloorAirborneBuildingPredictionContext(input.airborneContext) ||
+    !hasCompleteFloorAirborneBuildingPredictionContext(input.airborneContext) ||
+    !hasPositiveNumber(directRwDb) ||
+    !hasPositiveNumber(input.surfaceMassKgM2)
+  ) {
+    return null;
+  }
+
+  const directCurve = buildCalibratedMassLawCurve(input.surfaceMassKgM2, directRwDb);
+  const runtime = applyAirborneContextOverlay(
+    directCurve,
+    input.resolvedLayers,
+    input.airborneContext
+  );
+
+  return {
+    ...runtime,
+    directRwDb: round1(directRwDb),
+    sourceBasis
+  };
+}
+
+function maybeBuildOpenBoxFinishedPackageFloorAirborneBuildingPredictionRuntime(input: {
+  airborneContext: AirborneContext | null | undefined;
+  floorSystemRatings: (FloorSystemAirborneRatings & { readonly basis?: string }) | null;
+  resolvedLayers: readonly ResolvedLayer[];
+  surfaceMassKgM2: number;
+}): PostV1OpenBoxFinishedPackageFloorAirborneBuildingPredictionRuntime | null {
+  const sourceBasis = input.floorSystemRatings?.basis;
+  const directRwDb = input.floorSystemRatings?.Rw;
+
+  if (
+    !isOpenBoxFinishedPackageFloorAirborneBasis(sourceBasis) ||
+    !hasCompleteFloorAirborneBuildingPredictionContext(input.airborneContext) ||
     !hasPositiveNumber(directRwDb) ||
     !hasPositiveNumber(input.surfaceMassKgM2)
   ) {
@@ -832,6 +927,102 @@ function getFiniteRequestedUnsupportedLabSpectrumOutputs(input: {
   }
 
   return companionOutputs;
+}
+
+function getPostV1OpenBoxFinishedPackageBuildingLabCompanionOutputs(input: {
+  readonly floorSystemRatings: (FloorSystemAirborneRatings & { readonly basis?: string }) | null;
+  readonly runtime: PostV1OpenBoxFinishedPackageFloorAirborneBuildingPredictionRuntime | null;
+  readonly support: TargetOutputSupportLike;
+}): RequestedOutputId[] {
+  const ratings = input.floorSystemRatings;
+
+  if (
+    !input.runtime ||
+    !ratings ||
+    !isOpenBoxFinishedPackageFloorAirborneBasis(ratings.basis)
+  ) {
+    return [];
+  }
+
+  const targetOutputSet = new Set(input.support.targetOutputs);
+  const unsupportedOutputSet = new Set(input.support.unsupportedTargetOutputs);
+  const outputs: RequestedOutputId[] = [];
+  const cDb = getFloorSystemC(ratings);
+  const ctrDb = getFloorSystemCtr(ratings);
+
+  if (
+    targetOutputSet.has("Rw") &&
+    unsupportedOutputSet.has("Rw") &&
+    typeof ratings.Rw === "number" &&
+    Number.isFinite(ratings.Rw)
+  ) {
+    outputs.push("Rw");
+  }
+  if (
+    targetOutputSet.has("C") &&
+    unsupportedOutputSet.has("C") &&
+    typeof cDb === "number" &&
+    Number.isFinite(cDb)
+  ) {
+    outputs.push("C");
+  }
+  if (
+    targetOutputSet.has("Ctr") &&
+    unsupportedOutputSet.has("Ctr") &&
+    typeof ctrDb === "number" &&
+    Number.isFinite(ctrDb)
+  ) {
+    outputs.push("Ctr");
+  }
+
+  return outputs;
+}
+
+function hasFiniteImpactMetricForOutput(
+  impact: ImpactCalculation,
+  output: RequestedOutputId
+): boolean {
+  switch (output) {
+    case "Ln,w":
+      return typeof impact.LnW === "number" && Number.isFinite(impact.LnW);
+    case "CI":
+      return typeof impact.CI === "number" && Number.isFinite(impact.CI);
+    case "CI,50-2500":
+      return typeof impact.CI50_2500 === "number" && Number.isFinite(impact.CI50_2500);
+    case "Ln,w+CI":
+      return typeof impact.LnWPlusCI === "number" && Number.isFinite(impact.LnWPlusCI);
+    case "L'n,w":
+      return typeof impact.LPrimeNW === "number" && Number.isFinite(impact.LPrimeNW);
+    case "L'nT,w":
+      return typeof impact.LPrimeNTw === "number" && Number.isFinite(impact.LPrimeNTw);
+    case "L'nT,50":
+      return typeof impact.LPrimeNT50 === "number" && Number.isFinite(impact.LPrimeNT50);
+    default:
+      return false;
+  }
+}
+
+function getPostV1OpenBoxFinishedPackageBuildingImpactCompanionOutputs(input: {
+  readonly impact: ImpactCalculation | null | undefined;
+  readonly runtime: PostV1OpenBoxFinishedPackageFloorAirborneBuildingPredictionRuntime | null;
+  readonly support: TargetOutputSupportLike;
+}): RequestedOutputId[] {
+  if (!input.runtime || !input.impact) {
+    return [];
+  }
+
+  const impact = input.impact;
+  const targetOutputSet = new Set(input.support.targetOutputs);
+  const unsupportedOutputSet = new Set(input.support.unsupportedTargetOutputs);
+  const availableOutputSet = new Set<RequestedOutputId>(impact.availableOutputs);
+
+  return POST_V1_OPEN_BOX_FINISHED_PACKAGE_FLOOR_IMPACT_COMPANION_OUTPUTS.filter(
+    (output) =>
+      targetOutputSet.has(output) &&
+      unsupportedOutputSet.has(output) &&
+      availableOutputSet.has(output) &&
+      hasFiniteImpactMetricForOutput(impact, output)
+  );
 }
 
 function hasOpeningLeakRouteRequest(context: AirborneContext | null | undefined): boolean {
@@ -3347,13 +3538,46 @@ export function calculateAssembly(
       resolvedLayers: airborneResolvedLayers,
       surfaceMassKgM2
     });
-  const ratingsWithRawBareFloorAirborneBuildingPredictionRuntime =
-    rawBareFloorAirborneBuildingPredictionRuntime?.ratings ?? ratingsWithOpeningLeakFieldBuildingRuntime;
+  const openBoxFinishedPackageFloorAirborneBuildingPredictionRuntime =
+    maybeBuildOpenBoxFinishedPackageFloorAirborneBuildingPredictionRuntime({
+      airborneContext,
+      floorSystemRatings,
+      resolvedLayers: airborneResolvedLayers,
+      surfaceMassKgM2
+    });
+  const floorAirborneBuildingPredictionRuntime =
+    rawBareFloorAirborneBuildingPredictionRuntime ?? openBoxFinishedPackageFloorAirborneBuildingPredictionRuntime;
+  const ratingsWithFloorAirborneBuildingPredictionRuntime =
+    floorAirborneBuildingPredictionRuntime?.ratings ?? ratingsWithOpeningLeakFieldBuildingRuntime;
   const visibleAirborneOverlay =
-    rawBareFloorAirborneBuildingPredictionRuntime?.overlay ?? airborneOverlayResult.overlay;
+    floorAirborneBuildingPredictionRuntime?.overlay ?? airborneOverlayResult.overlay;
   const visibleEstimatedRwDbWithFieldBuildingRuntime =
-    rawBareFloorAirborneBuildingPredictionRuntime?.directRwDb ??
+    floorAirborneBuildingPredictionRuntime?.directRwDb ??
     visibleEstimatedRwDbWithOpeningLeakFieldBuildingRuntime;
+  const openBoxFinishedPackageLabRwDb =
+    floorSystemRatings && isOpenBoxFinishedPackageFloorAirborneBasis(floorSystemRatings.basis)
+      ? floorSystemRatings.Rw
+      : undefined;
+  const openBoxFinishedPackageLabCDb =
+    floorSystemRatings && isOpenBoxFinishedPackageFloorAirborneBasis(floorSystemRatings.basis)
+      ? getFloorSystemC(floorSystemRatings)
+      : undefined;
+  const openBoxFinishedPackageLabCtrDb =
+    floorSystemRatings && isOpenBoxFinishedPackageFloorAirborneBasis(floorSystemRatings.basis)
+      ? getFloorSystemCtr(floorSystemRatings)
+      : undefined;
+  const visibleEstimatedRwDbWithFloorPackageLabCompanion =
+    typeof openBoxFinishedPackageLabRwDb === "number" && Number.isFinite(openBoxFinishedPackageLabRwDb)
+      ? round1(openBoxFinishedPackageLabRwDb)
+      : visibleEstimatedRwDbWithFieldBuildingRuntime;
+  const visibleEstimatedCDbWithFloorPackageLabCompanion =
+    typeof openBoxFinishedPackageLabCDb === "number" && Number.isFinite(openBoxFinishedPackageLabCDb)
+      ? round1(openBoxFinishedPackageLabCDb)
+      : ratingsWithFloorAirborneBuildingPredictionRuntime.iso717.C;
+  const visibleEstimatedCtrDbWithFloorPackageLabCompanion =
+    typeof openBoxFinishedPackageLabCtrDb === "number" && Number.isFinite(openBoxFinishedPackageLabCtrDb)
+      ? round1(openBoxFinishedPackageLabCtrDb)
+      : ratingsWithFloorAirborneBuildingPredictionRuntime.iso717.Ctr;
   const hasInferredConcreteCeilingHelperCarrierSignal = hasInferredConcreteCeilingHelperSupportSignal({
     inferredImpactLayers,
     visibleLayers: layers
@@ -3384,17 +3608,17 @@ export function calculateAssembly(
     impact,
     lowerBoundImpact,
     metrics: {
-      airborneIsoDescriptor: ratingsWithRawBareFloorAirborneBuildingPredictionRuntime.iso717.descriptor,
-      estimatedCDb: ratingsWithRawBareFloorAirborneBuildingPredictionRuntime.iso717.C,
-      estimatedCtrDb: ratingsWithRawBareFloorAirborneBuildingPredictionRuntime.iso717.Ctr,
-      estimatedDnADb: ratingsWithRawBareFloorAirborneBuildingPredictionRuntime.field?.DnA,
-      estimatedDnTADb: ratingsWithRawBareFloorAirborneBuildingPredictionRuntime.field?.DnTA,
-      estimatedDnTAkDb: ratingsWithRawBareFloorAirborneBuildingPredictionRuntime.field?.DnTAk,
-      estimatedDnTwDb: ratingsWithRawBareFloorAirborneBuildingPredictionRuntime.field?.DnTw,
-      estimatedDnWDb: ratingsWithRawBareFloorAirborneBuildingPredictionRuntime.field?.DnW,
-      estimatedRwDb: visibleEstimatedRwDbWithFieldBuildingRuntime,
-      estimatedRwPrimeDb: ratingsWithRawBareFloorAirborneBuildingPredictionRuntime.field?.RwPrime ??
-        ratingsWithRawBareFloorAirborneBuildingPredictionRuntime.iso717.RwPrime,
+      airborneIsoDescriptor: ratingsWithFloorAirborneBuildingPredictionRuntime.iso717.descriptor,
+      estimatedCDb: visibleEstimatedCDbWithFloorPackageLabCompanion,
+      estimatedCtrDb: visibleEstimatedCtrDbWithFloorPackageLabCompanion,
+      estimatedDnADb: ratingsWithFloorAirborneBuildingPredictionRuntime.field?.DnA,
+      estimatedDnTADb: ratingsWithFloorAirborneBuildingPredictionRuntime.field?.DnTA,
+      estimatedDnTAkDb: ratingsWithFloorAirborneBuildingPredictionRuntime.field?.DnTAk,
+      estimatedDnTwDb: ratingsWithFloorAirborneBuildingPredictionRuntime.field?.DnTw,
+      estimatedDnWDb: ratingsWithFloorAirborneBuildingPredictionRuntime.field?.DnW,
+      estimatedRwDb: visibleEstimatedRwDbWithFloorPackageLabCompanion,
+      estimatedRwPrimeDb: ratingsWithFloorAirborneBuildingPredictionRuntime.field?.RwPrime ??
+        ratingsWithFloorAirborneBuildingPredictionRuntime.iso717.RwPrime,
       estimatedStc: visibleEstimatedStcDb
     },
     targetOutputs: options.targetOutputs ?? []
@@ -3466,7 +3690,7 @@ export function calculateAssembly(
   const postV1MixedWallLabFieldCompanionOutputs =
     getPostV1MixedWallLabFieldCompanionOutputs({
       airborneBasis: dynamicAirborneResult?.airborneBasis,
-      estimatedRwDb: visibleEstimatedRwDbWithFieldBuildingRuntime,
+      estimatedRwDb: visibleEstimatedRwDbWithFloorPackageLabCompanion,
       support: rockwoolSplitTripleLeafExactOutputWithhold.targetOutputSupport
     });
   const postV1WallScreeningFieldLabCompanionOutputs =
@@ -3474,7 +3698,7 @@ export function calculateAssembly(
       airborneBasis: dynamicAirborneResult?.airborneBasis,
       airborneContext,
       airborneTrace: dynamicAirborneResult?.trace,
-      estimatedRwDb: visibleEstimatedRwDbWithFieldBuildingRuntime,
+      estimatedRwDb: visibleEstimatedRwDbWithFloorPackageLabCompanion,
       support: rockwoolSplitTripleLeafExactOutputWithhold.targetOutputSupport
     });
   const targetOutputSupport = moveUnsupportedOutputsToSupported(
@@ -3593,11 +3817,14 @@ export function calculateAssembly(
   const ownedFloorBuildingPredictionAirborneOutputs = new Set<RequestedOutputId>(
     dynamicCandidateResolverRuntime?.routeInputAssessment.route === "floor" &&
       dynamicCandidateResolverRuntime.routeInputAssessment.outputBasis === "building_prediction" &&
-      rawBareFloorAirborneBuildingPredictionRuntime
+      floorAirborneBuildingPredictionRuntime
       ? targetOutputSupport.targetOutputs.filter((output) =>
-          POST_V1_RAW_BARE_FLOOR_AIRBORNE_BUILDING_OUTPUT_SET.has(output) &&
-          finiteRawBareFloorAirborneBuildingMetric(
-            rawBareFloorAirborneBuildingPredictionRuntime.ratings,
+          (
+            POST_V1_RAW_BARE_FLOOR_AIRBORNE_BUILDING_OUTPUT_SET.has(output) ||
+            POST_V1_OPEN_BOX_FINISHED_PACKAGE_FLOOR_AIRBORNE_BUILDING_OUTPUT_SET.has(output)
+          ) &&
+          finiteFloorAirborneBuildingMetric(
+            floorAirborneBuildingPredictionRuntime.ratings,
             output
           )
         )
@@ -3711,9 +3938,9 @@ export function calculateAssembly(
     getPostV1WallFramedCalibrationLabSpectrumCompanionOutputs({
       airborneContext,
       airborneTrace: dynamicAirborneResult?.trace,
-      estimatedCDb: ratingsWithRawBareFloorAirborneBuildingPredictionRuntime.iso717.C,
-      estimatedCtrDb: ratingsWithRawBareFloorAirborneBuildingPredictionRuntime.iso717.Ctr,
-      estimatedRwDb: visibleEstimatedRwDbWithFieldBuildingRuntime,
+      estimatedCDb: visibleEstimatedCDbWithFloorPackageLabCompanion,
+      estimatedCtrDb: visibleEstimatedCtrDbWithFloorPackageLabCompanion,
+      estimatedRwDb: visibleEstimatedRwDbWithFloorPackageLabCompanion,
       estimatedStcDb: visibleEstimatedStcDb,
       support: visibleTargetOutputSupportWithExactMetricScope
     });
@@ -3724,9 +3951,9 @@ export function calculateAssembly(
       catalogLabFallbackApplied: verifiedAirborneAnchorResult.warnings.some((warning) =>
         /Curated airborne lab fallback/i.test(warning)
       ),
-      estimatedCDb: ratingsWithRawBareFloorAirborneBuildingPredictionRuntime.iso717.C,
-      estimatedCtrDb: ratingsWithRawBareFloorAirborneBuildingPredictionRuntime.iso717.Ctr,
-      estimatedRwDb: visibleEstimatedRwDbWithFieldBuildingRuntime,
+      estimatedCDb: visibleEstimatedCDbWithFloorPackageLabCompanion,
+      estimatedCtrDb: visibleEstimatedCtrDbWithFloorPackageLabCompanion,
+      estimatedRwDb: visibleEstimatedRwDbWithFloorPackageLabCompanion,
       estimatedStcDb: visibleEstimatedStcDb,
       sourceAnchorCandidatePresent: Boolean(
         compatibleWallAnchorDeltaResult.match || verifiedAirborneAnchorResult.match
@@ -3740,9 +3967,9 @@ export function calculateAssembly(
       catalogLabFallbackApplied: verifiedAirborneAnchorResult.warnings.some((warning) =>
         /Curated airborne lab fallback/i.test(warning)
       ),
-      estimatedCDb: ratingsWithRawBareFloorAirborneBuildingPredictionRuntime.iso717.C,
-      estimatedCtrDb: ratingsWithRawBareFloorAirborneBuildingPredictionRuntime.iso717.Ctr,
-      estimatedRwDb: visibleEstimatedRwDbWithFieldBuildingRuntime,
+      estimatedCDb: visibleEstimatedCDbWithFloorPackageLabCompanion,
+      estimatedCtrDb: visibleEstimatedCtrDbWithFloorPackageLabCompanion,
+      estimatedRwDb: visibleEstimatedRwDbWithFloorPackageLabCompanion,
       estimatedStcDb: visibleEstimatedStcDb,
       sourceAnchorCandidatePresent: Boolean(
         compatibleWallAnchorDeltaResult.match || verifiedAirborneAnchorResult.match
@@ -3758,13 +3985,25 @@ export function calculateAssembly(
       catalogLabFallbackApplied: verifiedAirborneAnchorResult.warnings.some((warning) =>
         /Curated airborne lab fallback/i.test(warning)
       ),
-      estimatedCDb: ratingsWithRawBareFloorAirborneBuildingPredictionRuntime.iso717.C,
-      estimatedCtrDb: ratingsWithRawBareFloorAirborneBuildingPredictionRuntime.iso717.Ctr,
-      estimatedRwDb: visibleEstimatedRwDbWithFieldBuildingRuntime,
+      estimatedCDb: visibleEstimatedCDbWithFloorPackageLabCompanion,
+      estimatedCtrDb: visibleEstimatedCtrDbWithFloorPackageLabCompanion,
+      estimatedRwDb: visibleEstimatedRwDbWithFloorPackageLabCompanion,
       estimatedStcDb: visibleEstimatedStcDb,
       sourceAnchorCandidatePresent: Boolean(
         compatibleWallAnchorDeltaResult.match || verifiedAirborneAnchorResult.match
       ),
+      support: visibleTargetOutputSupportWithExactMetricScope
+    });
+  const postV1OpenBoxFinishedPackageBuildingLabCompanionOutputs =
+    getPostV1OpenBoxFinishedPackageBuildingLabCompanionOutputs({
+      floorSystemRatings,
+      runtime: openBoxFinishedPackageFloorAirborneBuildingPredictionRuntime,
+      support: visibleTargetOutputSupportWithExactMetricScope
+    });
+  const postV1OpenBoxFinishedPackageBuildingImpactCompanionOutputs =
+    getPostV1OpenBoxFinishedPackageBuildingImpactCompanionOutputs({
+      impact,
+      runtime: openBoxFinishedPackageFloorAirborneBuildingPredictionRuntime,
       support: visibleTargetOutputSupportWithExactMetricScope
     });
   const visibleTargetOutputSupportWithPostV1Companions = moveUnsupportedOutputsToSupported(
@@ -3774,7 +4013,9 @@ export function calculateAssembly(
         ...postV1WallFramedCalibrationLabSpectrumCompanionOutputs,
         ...postV1WallSourceAbsentBuildingLabSpectrumCompanionOutputs,
         ...postV1WallHeavyCompositeBuildingLabSpectrumCompanionOutputs,
-        ...postV1GateARBuildingLabSpectrumCompanionOutputs
+        ...postV1GateARBuildingLabSpectrumCompanionOutputs,
+        ...postV1OpenBoxFinishedPackageBuildingLabCompanionOutputs,
+        ...postV1OpenBoxFinishedPackageBuildingImpactCompanionOutputs
       ])
     ]
   );
@@ -3784,14 +4025,14 @@ export function calculateAssembly(
     );
   const visibleRatings = hideParkedAirborneBuildingPredictionMetrics
     ? {
-        ...ratingsWithRawBareFloorAirborneBuildingPredictionRuntime,
+        ...ratingsWithFloorAirborneBuildingPredictionRuntime,
         iso717: {
-          ...ratingsWithRawBareFloorAirborneBuildingPredictionRuntime.iso717,
+          ...ratingsWithFloorAirborneBuildingPredictionRuntime.iso717,
           RwPrime: undefined
         },
         field: undefined
       }
-    : ratingsWithRawBareFloorAirborneBuildingPredictionRuntime;
+    : ratingsWithFloorAirborneBuildingPredictionRuntime;
   const warnings = buildEstimateWarnings(resolvedLayers, selectedCalculatorLabel);
   warnings.push(
     ...(localSubstitutionLabSpectrumAdapter
@@ -3804,12 +4045,17 @@ export function calculateAssembly(
   );
   if (!suppressParkedBuildingPredictionOverlayWarnings) {
     warnings.push(
-      ...(rawBareFloorAirborneBuildingPredictionRuntime?.warnings ?? airborneOverlayResult.warnings)
+      ...(floorAirborneBuildingPredictionRuntime?.warnings ?? airborneOverlayResult.warnings)
     );
   }
   if (rawBareFloorAirborneBuildingPredictionRuntime) {
     warnings.push(
       `Raw-bare floor airborne building-prediction adapter active: ${rawBareFloorAirborneBuildingPredictionRuntime.sourceBasis} direct Rw ${rawBareFloorAirborneBuildingPredictionRuntime.directRwDb} was used before building flanking and room normalization; the generic screening airborne curve was not used for R'w / Dn / DnT.`
+    );
+  }
+  if (openBoxFinishedPackageFloorAirborneBuildingPredictionRuntime) {
+    warnings.push(
+      `Finished open-box floor airborne building-prediction adapter active: ${openBoxFinishedPackageFloorAirborneBuildingPredictionRuntime.sourceBasis} direct Rw ${openBoxFinishedPackageFloorAirborneBuildingPredictionRuntime.directRwDb} was used before building flanking and room normalization; the generic screening airborne curve was not used for R'w / Dn / DnT.`
     );
   }
   warnings.push(...verifiedAirborneAnchorResult.warnings);
@@ -3948,7 +4194,7 @@ export function calculateAssembly(
         : floorSystemEstimate.impact.basis === OPEN_BOX_TIMBER_SIMILARITY_BASIS
           ? `Published family estimate active: open-box timber package-transfer corridor at ${floorSystemEstimate.fitPercent}% fit. DynEcho stayed inside the TUAS open-box timber packet family instead of borrowing open-web steel rows, exact-only hybrids, or a broad low-confidence blend.`
         : floorSystemEstimate.impact.basis === OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS
-          ? `Scoped formula estimate active: open-box timber EPS/screed hybrid package formula corridor at ${floorSystemEstimate.fitPercent}% fit. DynEcho used the R7b same-stack design anchor with source-absent budgets while keeping exact rows, dry package-transfer, field/building, and ASTM/IIC aliases out.`
+          ? `Scoped formula estimate active: open-box timber EPS/screed hybrid package formula corridor at ${floorSystemEstimate.fitPercent}% fit. DynEcho used the R7b same-stack design anchor with source-absent budgets while keeping exact rows, dry package-transfer, unsupported field routes, and ASTM/IIC aliases out.`
         : floorSystemEstimate.impact.basis === OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS
           ? `Scoped formula estimate active: raw-bare open-box timber formula corridor at ${floorSystemEstimate.fitPercent}% fit. DynEcho used the bare-carrier source-absent formula and kept finished package-transfer, field/building, and ASTM/IIC aliases out.`
         : floorSystemEstimate.impact.basis === OPEN_WEB_RAW_BARE_FORMULA_BASIS
@@ -4083,12 +4329,12 @@ export function calculateAssembly(
       airborneIsoDescriptor: visibleRatings.iso717.descriptor,
       totalThicknessMm,
       surfaceMassKgM2,
-      estimatedRwDb: visibleEstimatedRwDbWithFieldBuildingRuntime,
+      estimatedRwDb: visibleEstimatedRwDbWithFloorPackageLabCompanion,
       estimatedRwPrimeDb: hideParkedAirborneBuildingPredictionMetrics
         ? undefined
         : visibleRatings.field?.RwPrime ?? visibleRatings.iso717.RwPrime,
-      estimatedCDb: visibleRatings.iso717.C,
-      estimatedCtrDb: visibleRatings.iso717.Ctr,
+      estimatedCDb: visibleEstimatedCDbWithFloorPackageLabCompanion,
+      estimatedCtrDb: visibleEstimatedCtrDbWithFloorPackageLabCompanion,
       estimatedDnTwDb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatings.field?.DnTw,
       estimatedDnTADb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatings.field?.DnTA,
       estimatedDnTAkDb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatings.field?.DnTAk,
@@ -4159,6 +4405,14 @@ export function calculateAssembly(
   ) {
     result.airborneBasis = buildRawBareFloorAirborneBuildingPredictionBasis({
       sourceBasis: rawBareFloorAirborneBuildingPredictionRuntime.sourceBasis
+    });
+  }
+  if (
+    openBoxFinishedPackageFloorAirborneBuildingPredictionRuntime &&
+    ownedFloorBuildingPredictionAirborneOutputs.size > 0
+  ) {
+    result.airborneBasis = buildOpenBoxFinishedPackageFloorAirborneBuildingPredictionBasis({
+      sourceBasis: openBoxFinishedPackageFloorAirborneBuildingPredictionRuntime.sourceBasis
     });
   }
 

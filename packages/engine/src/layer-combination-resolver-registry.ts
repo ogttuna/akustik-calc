@@ -41,6 +41,11 @@ import {
   FLOOR_RAW_BARE_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID
 } from "./floor-raw-bare-airborne-building-prediction-runtime";
 import {
+  FLOOR_OPEN_BOX_FINISHED_PACKAGE_AIRBORNE_BUILDING_PREDICTION_OUTPUTS,
+  FLOOR_OPEN_BOX_FINISHED_PACKAGE_AIRBORNE_BUILDING_PREDICTION_RUNTIME_BASIS,
+  FLOOR_OPEN_BOX_FINISHED_PACKAGE_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID
+} from "./floor-open-box-finished-package-airborne-building-prediction-runtime";
+import {
   COMPOSITE_PANEL_PUBLISHED_INTERACTION_ESTIMATE_BASIS,
   COMPOSITE_PANEL_PUBLISHED_INTERACTION_LN_W_TOLERANCE_DB,
   COMPOSITE_PANEL_PUBLISHED_INTERACTION_REQUIRED_FIELDS,
@@ -72,6 +77,7 @@ import {
 import { OPEN_WEB_DIRECT_FIXED_LINING_BASIS } from "./lightweight-steel-open-web-direct-fixed-lining-estimate";
 import { OPEN_WEB_SUPPORTED_BAND_SIMILARITY_BASIS } from "./lightweight-steel-open-web-supported-band-estimate";
 import { OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS } from "./open-box-timber-raw-bare-estimate";
+import { OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS } from "./open-box-timber-eps-screed-hybrid-package-estimate";
 import { OPEN_BOX_TIMBER_SIMILARITY_BASIS } from "./open-box-timber-similarity-estimate";
 import { OPEN_WEB_RAW_BARE_FORMULA_BASIS } from "./open-web-raw-bare-estimate";
 import {
@@ -2201,6 +2207,73 @@ const CANDIDATE_DECLARATIONS = [
     valuePins: [
       { metric: "R'w", value: 36 },
       { metric: "DnT,w", value: 39 }
+    ]
+  },
+  {
+    basis: "building_prediction",
+    errorBudgetTerms: [
+      { metric: "R'w", notMeasuredEvidence: true, toleranceDb: 9 },
+      { metric: "Dn,w", notMeasuredEvidence: true, toleranceDb: 9 },
+      { metric: "Dn,A", notMeasuredEvidence: true, toleranceDb: 9 },
+      { metric: "DnT,w", notMeasuredEvidence: true, toleranceDb: 9 },
+      { metric: "DnT,A", notMeasuredEvidence: true, toleranceDb: 9 }
+    ],
+    exactPrecedenceRules: [
+      "same_stack_building_rows_win_before_source_absent_building_prediction",
+      "finished_package_direct_rw_owner_wins_before_generic_screening_airborne_curve",
+      "impact_field_adapter_does_not_own_airborne_building_outputs"
+    ],
+    formulaTerms: [
+      OPEN_BOX_TIMBER_SIMILARITY_BASIS,
+      OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS,
+      "mass_law_curve_calibrated_to_finished_package_direct_rw",
+      "explicit_building_flanking_context_overlay",
+      "source_and_receiving_room_volume_context",
+      "receiving_room_rt60_context",
+      "iso_717_1_field_and_standardized_rating_adapter"
+    ],
+    hardCompatibilityGates: [
+      "floor_route",
+      "building_prediction_context",
+      "open_box_timber_finished_package",
+      "complete_flanking_junction_context",
+      "complete_room_standardization_context",
+      "no_generic_screening_curve_promotion"
+    ],
+    hostileInputCases: [
+      "missing_building_context_needs_input_or_stays_unsupported",
+      "lab_rw_stc_c_ctr_do_not_relabel_as_building_outputs",
+      "impact_ln_w_and_astm_aliases_stay_separate",
+      "raw_bare_floor_carrier_stays_on_raw_bare_building_adapter"
+    ],
+    id: FLOOR_OPEN_BOX_FINISHED_PACKAGE_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID,
+    kind: "field_building_adapter",
+    label: "Finished open-box floor airborne building-prediction adapter",
+    ownedRuntimeBasisId: FLOOR_OPEN_BOX_FINISHED_PACKAGE_AIRBORNE_BUILDING_PREDICTION_RUNTIME_BASIS,
+    priorityRank: 4,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      "finishedPackageDirectRwOwner",
+      "airborneContext.contextMode=building_prediction",
+      "airborneContext.panelWidthHeight",
+      "airborneContext.sourceRoomVolumeM3",
+      "airborneContext.receivingRoomVolumeM3",
+      "airborneContext.receivingRoomRt60S",
+      "airborneContext.flankingJunctionClass",
+      "airborneContext.conservativeFlankingAssumption",
+      "airborneContext.junctionCouplingLengthM"
+    ],
+    route: "floor",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "building_airborne_values_stay_tied_to_the_owned_finished_package_floor_direct_rw",
+      "nearby lab rows may not anchor building metrics without same basis and flanking context"
+    ],
+    supportedMetrics: [...FLOOR_OPEN_BOX_FINISHED_PACKAGE_AIRBORNE_BUILDING_PREDICTION_OUTPUTS],
+    surfaceRequirements: FIELD_SURFACES,
+    valuePins: [
+      { metric: "R'w", value: 64 },
+      { metric: "DnT,w", value: 67 }
     ]
   },
   {

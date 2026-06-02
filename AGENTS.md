@@ -67,30 +67,112 @@ Current selected post-V1 plan:
 Current reconciliation checkpoint:
 `docs/calculator/CHECKPOINT_2026-06-01_POST_V1_GATE_BT_STATE_RECONCILIATION.md`.
 
-Current selected implementation:
-`post_v1_floor_open_box_finished_package_airborne_building_companion_gate_bu_plan`
-in
-`packages/engine/src/post-v1-floor-open-box-finished-package-airborne-building-companion-gate-bu-contract.test.ts`.
-
 Latest landed value-moving runtime action:
-`post_v1_floor_open_box_eps_screed_field_companion_gate_bs_plan`.
-Dry package-transfer field-only requests calculate `L'n,w 52.8` /
-`L'nT,w 50.4` / `L'nT,50 53.7`; EPS/screed hybrid requests with
-explicit `impactFieldContext` calculate `L'n,w 49` / `L'nT,w 46.6` /
-`L'nT,50 47.6`.
+`post_v1_floor_open_box_target_output_independence_gate_cd_plan`
+with status
+`post_v1_floor_open_box_target_output_independence_gate_cd_landed_selected_next_numeric_coverage_gap_gate_ce`.
+Gate CD improves finished open-box target-output independence: complete
+dry package-transfer and EPS/screed hybrid building/impact requests now
+support already-owned single-output requests without requiring the user
+to also ask for `R'w` or another building output. Dry single-output
+pins include `Rw 66`, `C -3.9`, `Ln,w 50.8`, `L'n,w 52.8`,
+`L'nT,w 50.4`, and `L'nT,50 53.7`; EPS/screed single-output pins
+include `Rw 72`, `C -1.3`, `Ln,w 47`, `L'n,w 49`,
+`L'nT,w 46.6`, and `L'nT,50 47.6`. Missing `impactFieldContext`
+still leaves `L'n,w`, `L'nT,w`, and `L'nT,50` unsupported. `Ctr`,
+ASTM `IIC`, and ASTM `AIIC` remain unsupported unless their own
+metric-basis owners exist.
+The shared resolver surface now has 42 declared candidates and 39 active runtime-basis mappings.
 
-Latest landed no-runtime selection:
+Current selected next action:
+`post_v1_next_numeric_coverage_gap_gate_ce_plan` in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ce-contract.test.ts`.
+
+Previous no-runtime selection:
+`post_v1_next_numeric_coverage_gap_gate_cc_plan` with status
+`post_v1_next_numeric_coverage_gap_gate_cc_landed_no_runtime_selected_floor_open_box_target_output_independence_gate_cd`.
+It selected
+`floor.open_box_timber_finished_package.target_output_independence_gap`,
+now closed by Gate CD. Gate CC selected next file:
+`packages/engine/src/post-v1-floor-open-box-target-output-independence-gate-cd-contract.test.ts`.
+
+Previous value-moving action:
+`post_v1_floor_open_box_eps_screed_full_mixed_field_building_gate_cb_plan`
+with status
+`post_v1_floor_open_box_eps_screed_full_mixed_field_building_gate_cb_landed_selected_next_numeric_coverage_gap_gate_cc`.
+Gate CB improves EPS/screed open-box full mixed building/impact scope:
+the same complete request that already had the EPS/screed lab impact
+tuple now also applies the explicit field-impact adapter beside the
+airborne building answer. EPS/screed hybrid publishes
+`Rw 72 / C -1.3`, `R'w 70 / DnT,w 73`,
+`Ln,w 47 / CI 0 / CI,50-2500 1 / Ln,w+CI 47`, and
+`L'n,w 49 / L'nT,w 46.6 / L'nT,50 47.6`. Missing
+`impactFieldContext` still leaves `L'n,w`, `L'nT,w`, and `L'nT,50`
+unsupported. `Ctr`, ASTM `IIC`, and ASTM `AIIC` remain unsupported
+unless their own metric-basis owners exist.
+
+Previous no-runtime selection:
+`post_v1_next_numeric_coverage_gap_gate_ca_plan` with status
+`post_v1_next_numeric_coverage_gap_gate_ca_landed_no_runtime_selected_floor_open_box_eps_screed_full_mixed_field_building_gate_cb`.
+It selected
+`floor.open_box_timber_eps_screed_hybrid.full_mixed_field_building_gap`,
+now closed by Gate CB.
+
+Previous value-moving action:
+`post_v1_floor_open_box_finished_package_full_mixed_building_impact_gate_bz_plan`
+with status
+`post_v1_floor_open_box_finished_package_full_mixed_building_impact_gate_bz_landed_selected_next_numeric_coverage_gap_gate_ca`.
+Gate BZ improves finished open-box package full mixed building/impact
+scope: the same complete request now keeps airborne building outputs and
+already-computed impact outputs live together. Dry package-transfer
+publishes `Rw 66 / C -3.9`, `R'w 64 / DnT,w 67`,
+`Ln,w 50.8 / CI 1.2 / CI,50-2500 3.3 / Ln,w+CI 52`, and
+`L'n,w 52.8 / L'nT,w 50.4 / L'nT,50 53.7`. EPS/screed hybrid
+publishes `Rw 72 / C -1.3`, `R'w 70 / DnT,w 73`,
+`Ln,w 47 / CI 0 / CI,50-2500 1 / Ln,w+CI 47`, and after Gate CB
+`L'n,w 49 / L'nT,w 46.6 / L'nT,50 47.6`.
+
+Previous no-runtime selection:
+`post_v1_next_numeric_coverage_gap_gate_by_plan` with status
+`post_v1_next_numeric_coverage_gap_gate_by_landed_no_runtime_selected_floor_open_box_finished_package_full_mixed_building_impact_gate_bz`.
+It selected `floor.open_box_timber_finished_package.full_mixed_building_impact_gap`,
+now closed by Gate BZ.
+
+Previous value-moving action:
+`post_v1_floor_open_box_finished_package_lab_metric_projection_gate_bx_plan`
+with status
+`post_v1_floor_open_box_finished_package_lab_metric_projection_gate_bx_landed_selected_next_numeric_coverage_gap_gate_by`.
+Gate BX improves finished open-box package mixed lab-impact correctness:
+mixed lab-impact and lab-field-impact requests now project the owned
+package lab metrics into the visible answer. Dry package-transfer
+publishes `Rw 66 / C -3.9`; EPS/screed hybrid publishes
+`Rw 72 / C -1.3`. Existing impact pins remain unchanged, `Ctr` remains
+unsupported because these package owners declare `Rw+C`, not a true
+`Ctr`, and ASTM `IIC` / `AIIC` remain separate owners.
+
+Previous no-runtime selection:
+`post_v1_next_numeric_coverage_gap_gate_bw_plan` with status
+`post_v1_next_numeric_coverage_gap_gate_bw_landed_no_runtime_selected_floor_open_box_finished_package_lab_metric_projection_gate_bx`.
+It selected `floor.open_box_timber_finished_package.lab_metric_projection_gap`,
+now closed by Gate BX.
+
+Previous value-moving action:
+`post_v1_floor_open_box_finished_package_mixed_lab_building_companion_gate_bv_plan`
+with status
+`post_v1_floor_open_box_finished_package_mixed_lab_building_companion_gate_bv_landed_selected_next_numeric_coverage_gap_gate_bw`.
+Gate BV keeps package lab `Rw/C` live beside finished open-box building
+outputs: dry `Rw 66 / C -3.9` with `R'w 64 / DnT,w 67`, and
+EPS/screed `Rw 72 / C -1.3` with `R'w 70 / DnT,w 73`.
+
+Previous no-runtime selection:
 `post_v1_next_numeric_coverage_gap_gate_bt_plan` with status
 `post_v1_next_numeric_coverage_gap_gate_bt_landed_no_runtime_selected_floor_open_box_finished_package_airborne_building_companion_gate_bu`.
-It selected `floor.open_box_timber_finished_package.airborne_building_companion_gap`.
-Gate BU must improve finished open-box package `building_prediction`
-airborne scope/correctness by using the owned package `Rw` anchors for
-`R'w`, `Dn,w`, `Dn,A`, `DnT,w`, and `DnT,A` instead of a generic
-predictor or `screening_mass_law_curve_seed_v3`.
+It selected `floor.open_box_timber_finished_package.airborne_building_companion_gap`,
+now closed by Gate BU.
 
 Latest full gate checkpoint:
-`pnpm calculator:gate:current` passed after Gate BT on 2026-06-01 with
-engine 584 files / 3227 tests, web 113 files / 437 passed + 18 skipped,
+`pnpm calculator:gate:current` passed after Gate CD on 2026-06-01 with
+engine 594 files / 3276 tests, web 113 files / 437 passed + 18 skipped,
 repo build 5 / 5, and whitespace guard passed.
 
 Landed Gate AZ planning bridge:

@@ -292,7 +292,7 @@ describe("layer combination resolver runtime candidate surface parity contract",
     expect(contract.summary).toEqual({
       boundarySurfaceRowCount: 3,
       selectedNextAction: LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_SURFACE_PARITY_SELECTED_NEXT_ACTION,
-      surfaceRowCount: 41
+      surfaceRowCount: 42
     });
 
     for (const path of REQUIRED_SURFACES) {

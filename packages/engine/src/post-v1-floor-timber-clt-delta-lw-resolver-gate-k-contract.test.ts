@@ -139,11 +139,11 @@ describe("post-V1 floor timber/CLT DeltaLw resolver Gate K", () => {
     ]);
     expect(contract.toleranceDb).toBe(TIMBER_CLT_DELTA_LW_FORMULA_TOLERANCE_DB);
     expect(registry.summary).toMatchObject({
-      activeRuntimeCandidateCount: 38,
-      candidateCount: 41
+      activeRuntimeCandidateCount: 39,
+      candidateCount: 42
     });
-    expect(adapter.summary.adaptedRuntimeBasisCount).toBe(38);
-    expect(surface.summary.surfaceRowCount).toBe(41);
+    expect(adapter.summary.adaptedRuntimeBasisCount).toBe(39);
+    expect(surface.summary.surfaceRowCount).toBe(42);
 
     for (const [candidate, basis] of [
       [timberCandidate, TIMBER_JOIST_DELTA_LW_FORMULA_BASIS],
@@ -264,7 +264,7 @@ describe("post-V1 floor timber/CLT DeltaLw resolver Gate K", () => {
         POST_V1_FLOOR_TIMBER_CLT_DELTA_LW_RESOLVER_GATE_K_SELECTED_NEXT_LABEL
       );
       expect(contents, `${relativePath} records resolver counts`).toContain(
-        "40 declared candidates and 37 active runtime-basis mappings"
+        "42 declared candidates and 39 active runtime-basis mappings"
       );
       expect(contents, `${relativePath} records timber DeltaLw`).toContain("DeltaLw 25.2");
       expect(contents, `${relativePath} records CLT DeltaLw`).toContain("DeltaLw 22.6");

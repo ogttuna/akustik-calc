@@ -7,17 +7,22 @@ agents a narrow path that cannot drift into catalog work.
 
 Status: active post-V1 plan. Usable V1 Steps 0-5 are closed for the
 current company-internal envelope. The post-V1 calculator-capability
-chain has advanced through Gate BT. Gate BS is the latest value-moving
-runtime coverage/correctness slice, and Gate BT is the latest
-no-runtime selection slice. Gate BT selected Gate BU as the next
-calculator implementation:
+chain has advanced through Gate CD. Gate CD is the latest value-moving
+runtime coverage/correctness slice, and Gate CE is the current selected
+next numeric coverage rerank:
 
-`post_v1_floor_open_box_finished_package_airborne_building_companion_gate_bu_plan`
+`post_v1_next_numeric_coverage_gap_gate_ce_plan`
 
-Gate BU must increase finished open-box package `building_prediction`
-airborne scope/correctness by making complete `R'w`, `Dn,w`, `Dn,A`,
-`DnT,w`, and `DnT,A` requests use the owned package `Rw` anchors instead
-of a generic predictor or `screening_mass_law_curve_seed_v3`.
+Gate CD corrects finished open-box target-output independence. Complete
+dry package-transfer and EPS/screed hybrid building/impact requests now
+support already-owned single-output asks without requiring the user to
+also ask for `R'w` or another building output. Dry pins include
+`Rw 66`, `C -3.9`, `Ln,w 50.8`, `L'n,w 52.8`, `L'nT,w 50.4`, and
+`L'nT,50 53.7`; EPS/screed pins include `Rw 72`, `C -1.3`,
+`Ln,w 47`, `L'n,w 49`, `L'nT,w 46.6`, and `L'nT,50 47.6`. Missing
+`impactFieldContext` still leaves field impact outputs unsupported.
+`Ctr`, ASTM `IIC`, and ASTM `AIIC` remain unsupported because these
+metric-basis owners are separate.
 
 Post-V1 selection rule: every next gate must be calculator-capability
 work. It must either expand the set of physically valid layer
@@ -31,25 +36,170 @@ calculator scope or accuracy.
 
 Latest landed value-moving action:
 
-`post_v1_floor_open_box_eps_screed_field_companion_gate_bs_plan`
+`post_v1_floor_open_box_target_output_independence_gate_cd_plan`
 
 Latest landed value-moving file:
 
-`packages/engine/src/post-v1-floor-open-box-eps-screed-field-companion-gate-bs-contract.test.ts`
+`packages/engine/src/post-v1-floor-open-box-target-output-independence-gate-cd-contract.test.ts`
 
-Gate BS selection status:
+Gate CD selection status:
 
-`post_v1_floor_open_box_eps_screed_field_companion_gate_bs_landed_selected_next_numeric_coverage_gap_gate_bt`
+`post_v1_floor_open_box_target_output_independence_gate_cd_landed_selected_next_numeric_coverage_gap_gate_ce`
 
-Gate BS selected next action:
+Gate CD selected next action:
 
-`post_v1_next_numeric_coverage_gap_gate_bt_plan`
+`post_v1_next_numeric_coverage_gap_gate_ce_plan`
 
-Gate BS selected next file:
+Gate CD selected next file:
 
-`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-bt-contract.test.ts`
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ce-contract.test.ts`
 
-Latest landed no-runtime selection:
+Previous landed no-runtime selection:
+
+`post_v1_next_numeric_coverage_gap_gate_cc_plan`
+
+Gate CC selection status:
+
+`post_v1_next_numeric_coverage_gap_gate_cc_landed_no_runtime_selected_floor_open_box_target_output_independence_gate_cd`
+
+Gate CC selected candidate:
+
+`floor.open_box_timber_finished_package.target_output_independence_gap`
+
+Gate CC selected next action:
+
+`post_v1_floor_open_box_target_output_independence_gate_cd_plan`
+
+Gate CC selected next file:
+
+`packages/engine/src/post-v1-floor-open-box-target-output-independence-gate-cd-contract.test.ts`
+
+Previous landed value-moving action:
+
+`post_v1_floor_open_box_eps_screed_full_mixed_field_building_gate_cb_plan`
+
+Gate CB selection status:
+
+`post_v1_floor_open_box_eps_screed_full_mixed_field_building_gate_cb_landed_selected_next_numeric_coverage_gap_gate_cc`
+
+Gate CB selected next action:
+
+`post_v1_next_numeric_coverage_gap_gate_cc_plan`
+
+Previous landed no-runtime selection:
+
+`post_v1_next_numeric_coverage_gap_gate_ca_plan`
+
+Gate CA selection status:
+
+`post_v1_next_numeric_coverage_gap_gate_ca_landed_no_runtime_selected_floor_open_box_eps_screed_full_mixed_field_building_gate_cb`
+
+Gate CA selected candidate:
+
+`floor.open_box_timber_eps_screed_hybrid.full_mixed_field_building_gap`
+
+Gate CA selected next action:
+
+`post_v1_floor_open_box_eps_screed_full_mixed_field_building_gate_cb_plan`
+
+Previous landed value-moving action:
+
+`post_v1_floor_open_box_finished_package_full_mixed_building_impact_gate_bz_plan`
+
+Gate BZ selection status:
+
+`post_v1_floor_open_box_finished_package_full_mixed_building_impact_gate_bz_landed_selected_next_numeric_coverage_gap_gate_ca`
+
+Gate BZ closeout pins include dry `Rw 66 / C -3.9`,
+`R'w 64 / DnT,w 67`,
+`Ln,w 50.8 / CI 1.2 / CI,50-2500 3.3 / Ln,w+CI 52`, and
+`L'n,w 52.8 / L'nT,w 50.4 / L'nT,50 53.7`; EPS/screed remains
+`Rw 72 / C -1.3`, `R'w 70 / DnT,w 73`, and
+`Ln,w 47 / CI 0 / CI,50-2500 1 / Ln,w+CI 47`. After Gate CB the same
+EPS/screed full mixed route also publishes
+`L'n,w 49 / L'nT,w 46.6 / L'nT,50 47.6`.
+
+Previous landed no-runtime selection:
+
+`post_v1_next_numeric_coverage_gap_gate_by_plan`
+
+Gate BY selection status:
+
+`post_v1_next_numeric_coverage_gap_gate_by_landed_no_runtime_selected_floor_open_box_finished_package_full_mixed_building_impact_gate_bz`
+
+Gate BY selected candidate:
+
+`floor.open_box_timber_finished_package.full_mixed_building_impact_gap`
+
+Gate BY selected next action:
+
+`post_v1_floor_open_box_finished_package_full_mixed_building_impact_gate_bz_plan`
+
+Gate BY selected next file:
+
+`packages/engine/src/post-v1-floor-open-box-finished-package-full-mixed-building-impact-gate-bz-contract.test.ts`
+
+Previous landed value-moving action:
+
+`post_v1_floor_open_box_finished_package_lab_metric_projection_gate_bx_plan`
+
+Gate BX selection status:
+
+`post_v1_floor_open_box_finished_package_lab_metric_projection_gate_bx_landed_selected_next_numeric_coverage_gap_gate_by`
+
+Gate BX selected next action:
+
+`post_v1_next_numeric_coverage_gap_gate_by_plan`
+
+Gate BX selected next file:
+
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-by-contract.test.ts`
+
+Previous landed no-runtime selection:
+
+`post_v1_next_numeric_coverage_gap_gate_bw_plan`
+
+Gate BW selection status:
+
+`post_v1_next_numeric_coverage_gap_gate_bw_landed_no_runtime_selected_floor_open_box_finished_package_lab_metric_projection_gate_bx`
+
+Gate BW selected candidate:
+
+`floor.open_box_timber_finished_package.lab_metric_projection_gap`
+
+Gate BW selected next action:
+
+`post_v1_floor_open_box_finished_package_lab_metric_projection_gate_bx_plan`
+
+Gate BW selected next file:
+
+`packages/engine/src/post-v1-floor-open-box-finished-package-lab-metric-projection-gate-bx-contract.test.ts`
+
+Previous landed value-moving action:
+
+`post_v1_floor_open_box_finished_package_mixed_lab_building_companion_gate_bv_plan`
+
+Gate BV selection status:
+
+`post_v1_floor_open_box_finished_package_mixed_lab_building_companion_gate_bv_landed_selected_next_numeric_coverage_gap_gate_bw`
+
+Gate BV selected next action:
+
+`post_v1_next_numeric_coverage_gap_gate_bw_plan`
+
+Gate BV selected next file:
+
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-bw-contract.test.ts`
+
+Previous landed value-moving action:
+
+`post_v1_floor_open_box_finished_package_airborne_building_companion_gate_bu_plan`
+
+Gate BU selection status:
+
+`post_v1_floor_open_box_finished_package_airborne_building_companion_gate_bu_landed_selected_next_numeric_coverage_gap_gate_bv`
+
+Previous landed no-runtime selection:
 
 `post_v1_next_numeric_coverage_gap_gate_bt_plan`
 
@@ -69,11 +219,11 @@ Gate BT selected next file:
 
 `packages/engine/src/post-v1-floor-open-box-finished-package-airborne-building-companion-gate-bu-contract.test.ts`
 
-Current full-gate evidence after Gate BT on 2026-06-01:
-`pnpm calculator:gate:current` passed with engine 584 files / 3227
+Current full-gate evidence after Gate CD on 2026-06-01:
+`pnpm calculator:gate:current` passed with engine 594 files / 3276
 tests, web 113 files / 437 passed + 18 skipped, repo build 5 / 5, and
 whitespace guard passed. Closed-gate history remains below and is
-historical unless it agrees with the Gate BT/Gate BU selection above.
+historical unless it agrees with the Gate CD/Gate CE selection above.
 
 Closed Gate BF-BH continuity anchors remain historical evidence, not
 the current selection. Gate BF landed
@@ -415,9 +565,9 @@ Gate BU:
 This remains calculator scope/correctness work, not a broad source
 crawl, confidence wording pass, finite scenario pack, or no-runtime
 cartography gate.
-Full `pnpm calculator:gate:current` passed after Gate BT with engine 584
-files / 3227 tests, web 113 files / 437 passed + 18 skipped, repo build
-5 / 5, and whitespace guard passed.
+Latest full `pnpm calculator:gate:current` passed after Gate CD with
+engine 594 files / 3276 tests, web 113 files / 437 passed + 18 skipped,
+repo build 5 / 5, and whitespace guard passed.
 
 Gate AZ has now landed as no-runtime numeric coverage selection:
 
@@ -1504,7 +1654,7 @@ ask for missing physical inputs, and calculate owned outputs.
 
 Implementation recheck on 2026-05-25 found:
 
-- the shared resolver registry has 40 declared candidates and 37 active runtime-basis mappings;
+- the shared resolver registry has 42 declared candidates and 39 active runtime-basis mappings;
 - wall already has exact, single-leaf, double-leaf, lined massive,
   heavy-composite, guarded flat-list, local-substitution triple-leaf, and
   field-adapter candidates;

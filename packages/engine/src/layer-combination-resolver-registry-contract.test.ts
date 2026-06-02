@@ -204,26 +204,26 @@ describe("layer combination resolver registry contract", () => {
       sourceRowsAreEvidenceNotProduct: true
     });
     expect(contract.summary).toEqual({
-      activeRuntimeCandidateCount: 38,
+      activeRuntimeCandidateCount: 39,
       basisCount: {
         astm_rating_boundary: 2,
-        building_prediction: 3,
+        building_prediction: 4,
         element_lab: 32,
         field_apparent: 4
       },
-      candidateCount: 41,
+      candidateCount: 42,
       kindCount: {
         basis_boundary: 1,
         calibrated_family_solver: 1,
         exact_measured_override: 4,
-        field_building_adapter: 6,
+        field_building_adapter: 7,
         needs_input_boundary: 1,
         similarity_anchor: 4,
         source_absent_family_solver: 23,
         unsupported_boundary: 1
       },
       routeCount: {
-        floor: 25,
+        floor: 26,
         wall: 16
       },
       selectedNextAction: LAYER_COMBINATION_RESOLVER_REGISTRY_SELECTED_NEXT_ACTION

@@ -39,7 +39,7 @@ the user answer when the selected path is `needs_input` or
 
 The current gate keeps the answer-engine contract included in
 `pnpm calculator:gate:current`. The shared resolver surface currently
-has 40 declared candidates and 37 active runtime-basis mappings.
+has 42 declared candidates and 39 active runtime-basis mappings.
 
 The selected post-V1 plan is
 [POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md).

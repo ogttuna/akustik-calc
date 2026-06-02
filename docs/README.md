@@ -29,27 +29,85 @@ rules.
 The selected post-V1 implementation plan is
 [calculator/POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./calculator/POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md).
 The latest landed value-moving numeric coverage slice is
-`post_v1_floor_open_box_eps_screed_field_companion_gate_bs_plan` in
-`packages/engine/src/post-v1-floor-open-box-eps-screed-field-companion-gate-bs-contract.test.ts`.
-It corrects finished open-box impact field companions: dry
-package-transfer field-only requests now calculate `L'n,w 52.8 /
-L'nT,w 50.4 / L'nT,50 53.7`, and EPS/screed hybrid requests with
-explicit `impactFieldContext` now calculate `L'n,w 49 /
-L'nT,w 46.6 / L'nT,50 47.6`. Missing `impactFieldContext`, airborne
-building outputs, and ASTM `IIC` / `AIIC` remain separate owners.
-The latest no-runtime selection is
+`post_v1_floor_open_box_target_output_independence_gate_cd_plan`
+in
+`packages/engine/src/post-v1-floor-open-box-target-output-independence-gate-cd-contract.test.ts`.
+Gate CD corrects finished open-box target-output independence: complete
+dry package-transfer and EPS/screed hybrid building/impact requests now
+support already-owned single-output asks. Dry pins include `Rw 66`,
+`C -3.9`, `Ln,w 50.8`, `L'n,w 52.8`, `L'nT,w 50.4`, and
+`L'nT,50 53.7`; EPS/screed pins include `Rw 72`, `C -1.3`,
+`Ln,w 47`, `L'n,w 49`, `L'nT,w 46.6`, and `L'nT,50 47.6`.
+Missing `impactFieldContext` still leaves the field impact outputs
+unsupported; `Ctr`, ASTM `IIC`, and ASTM `AIIC` remain unsupported
+without their own metric-basis owners.
+Gate CD status is
+`post_v1_floor_open_box_target_output_independence_gate_cd_landed_selected_next_numeric_coverage_gap_gate_ce`;
+the current selected next action is
+`post_v1_next_numeric_coverage_gap_gate_ce_plan` in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ce-contract.test.ts`.
+Full `pnpm calculator:gate:current` passed after Gate CD on 2026-06-01
+with engine 594 files / 3276 tests, web 113 files / 437 passed + 18
+skipped, repo build 5 / 5, and whitespace guard passed.
+Gate CC remains the previous no-runtime selection:
+`post_v1_next_numeric_coverage_gap_gate_cc_plan` with status
+`post_v1_next_numeric_coverage_gap_gate_cc_landed_no_runtime_selected_floor_open_box_target_output_independence_gate_cd`.
+It selected
+`floor.open_box_timber_finished_package.target_output_independence_gap`,
+now closed by Gate CD. Gate CC selected next file:
+`packages/engine/src/post-v1-floor-open-box-target-output-independence-gate-cd-contract.test.ts`.
+Gate CB remains the previous value-moving runtime slice:
+`post_v1_floor_open_box_eps_screed_full_mixed_field_building_gate_cb_plan`
+with status
+`post_v1_floor_open_box_eps_screed_full_mixed_field_building_gate_cb_landed_selected_next_numeric_coverage_gap_gate_cc`.
+It corrected EPS/screed open-box full mixed building/impact scope:
+complete mixed requests publish visible `Rw 72 / C -1.3`,
+`R'w 70 / DnT,w 73`,
+`Ln,w 47 / CI 0 / CI,50-2500 1 / Ln,w+CI 47`, and
+`L'n,w 49 / L'nT,w 46.6 / L'nT,50 47.6`.
+Gate CA remains the previous no-runtime selection:
+`post_v1_next_numeric_coverage_gap_gate_ca_plan` with status
+`post_v1_next_numeric_coverage_gap_gate_ca_landed_no_runtime_selected_floor_open_box_eps_screed_full_mixed_field_building_gate_cb`.
+It selected
+`floor.open_box_timber_eps_screed_hybrid.full_mixed_field_building_gap`,
+now closed by Gate CB.
+Gate BZ remains the previous value-moving runtime slice:
+`post_v1_floor_open_box_finished_package_full_mixed_building_impact_gate_bz_plan`
+with status
+`post_v1_floor_open_box_finished_package_full_mixed_building_impact_gate_bz_landed_selected_next_numeric_coverage_gap_gate_ca`.
+It corrected finished open-box package full mixed building/impact
+scope: dry package-transfer mixed requests publish visible
+`Rw 66 / C -3.9`, `R'w 64 / DnT,w 67`,
+`Ln,w 50.8 / CI 1.2 / CI,50-2500 3.3 / Ln,w+CI 52`, and
+`L'n,w 52.8 / L'nT,w 50.4 / L'nT,50 53.7`, while EPS/screed hybrid
+mixed requests publish `Rw 72 / C -1.3`, `R'w 70 / DnT,w 73`,
+`Ln,w 47 / CI 0 / CI,50-2500 1 / Ln,w+CI 47`, and after Gate CB
+`L'n,w 49 / L'nT,w 46.6 / L'nT,50 47.6`.
+Gate BY remains the previous no-runtime selection:
+`post_v1_next_numeric_coverage_gap_gate_by_plan` with status
+`post_v1_next_numeric_coverage_gap_gate_by_landed_no_runtime_selected_floor_open_box_finished_package_full_mixed_building_impact_gate_bz`.
+It selected `floor.open_box_timber_finished_package.full_mixed_building_impact_gap`,
+now closed by Gate BZ.
+Gate BX remains the previous value-moving runtime slice:
+`post_v1_floor_open_box_finished_package_lab_metric_projection_gate_bx_plan`
+with status
+`post_v1_floor_open_box_finished_package_lab_metric_projection_gate_bx_landed_selected_next_numeric_coverage_gap_gate_by`.
+It selected `post_v1_next_numeric_coverage_gap_gate_by_plan` after
+correcting finished open-box package mixed lab-impact metric projection:
+dry package-transfer mixed requests publish visible `Rw 66 / C -3.9`,
+while EPS/screed hybrid mixed requests publish `Rw 72 / C -1.3`.
+Gate BW remains the previous no-runtime selection:
+`post_v1_next_numeric_coverage_gap_gate_bw_plan` with status
+`post_v1_next_numeric_coverage_gap_gate_bw_landed_no_runtime_selected_floor_open_box_finished_package_lab_metric_projection_gate_bx`.
+It selected `floor.open_box_timber_finished_package.lab_metric_projection_gap`,
+now closed by Gate BX.
+Gate BV remains the previous value-moving runtime slice:
+`post_v1_floor_open_box_finished_package_mixed_lab_building_companion_gate_bv_plan`
+with status
+`post_v1_floor_open_box_finished_package_mixed_lab_building_companion_gate_bv_landed_selected_next_numeric_coverage_gap_gate_bw`.
+Gate BT remains the previous no-runtime selection:
 `post_v1_next_numeric_coverage_gap_gate_bt_plan` with status
 `post_v1_next_numeric_coverage_gap_gate_bt_landed_no_runtime_selected_floor_open_box_finished_package_airborne_building_companion_gate_bu`.
-It selected `floor.open_box_timber_finished_package.airborne_building_companion_gap`
-and the next implementation
-`post_v1_floor_open_box_finished_package_airborne_building_companion_gate_bu_plan`
-in
-`packages/engine/src/post-v1-floor-open-box-finished-package-airborne-building-companion-gate-bu-contract.test.ts`.
-Gate BU is calculator scope/correctness work: complete finished open-box
-package `building_prediction` `R'w` / `DnT,w` requests must use the
-owned package `Rw` anchors instead of a generic predictor or
-`screening_mass_law_curve_seed_v3`. This is calculator coverage work,
-not catalog/source crawling.
 Closed Gate BF-BH continuity anchors remain historical evidence, not
 the current selection. Gate BF landed
 `post_v1_floor_suspended_ceiling_lower_treatment_field_companion_gate_bf_plan`
@@ -345,7 +403,7 @@ assembly field-only lower-treatment calculated
 and `L'n,w 46.6 / L'nT,w 43.8 / L'nT,50 47.8` for the resilient-stud
 case; missing `impactFieldContext.ci50_2500Db` stopped only
 `L'nT,50`, and ASTM `IIC` / `AIIC` remained unsupported. This handoff
-has since advanced through Gate BT; Gate BU is current.
+has since advanced through Gate BV; Gate BW is the selected next action.
 Full `pnpm calculator:gate:current` passed after Gate BF with engine 569
 files / 3155 tests, web 112 files / 435 passed + 18 skipped, repo build
 5 / 5, and whitespace guard passed.
@@ -543,7 +601,7 @@ data now calculates `R'w 39`, `Dn,w 40`, `Dn,A 38.5`, `DnT,w 42`, and
 `DnT,A 40.9` through the double-leaf family physics plus field adapter
 instead of screening fallback. Missing `receivingRoomRt60S` is the only
 input stop and support is not guessed. The current shared resolver
-surface has 40 declared candidates and 37 active runtime-basis mappings.
+surface has 42 declared candidates and 39 active runtime-basis mappings.
 Gate T has now landed as
 `post_v1_wall_mixed_lab_field_output_gate_t_plan`: the same complete
 flat double-leaf field stack now supports mixed lab-spectrum plus field
@@ -768,7 +826,7 @@ Current calculator handoff:
   envelope. DynEcho now has the answer-engine contract in
   `packages/engine/src/acoustic-calculator-answer-engine-v1-contract.test.ts`,
   and it is part of `pnpm calculator:gate:current`. The current shared
-  resolver surface has 40 declared candidates and 37 active runtime-basis mappings across exact measured overrides, compatible
+  resolver surface has 42 declared candidates and 39 active runtime-basis mappings across exact measured overrides, compatible
   anchors, calibrated and source-absent family solvers, field/building
   adapters, `needs_input`, basis-boundary, and unsupported candidates.
   The next implementation must be selected as post-V1 accuracy/adapters

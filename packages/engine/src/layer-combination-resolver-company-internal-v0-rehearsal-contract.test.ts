@@ -121,16 +121,16 @@ describe("layer combination resolver company-internal V0 rehearsal contract", ()
     });
     expect(contract.summary).toEqual({
       allowedExactRowCount: 4,
-      allowedWithBudgetRowCount: 34,
+      allowedWithBudgetRowCount: 35,
       blockedActionCount: 4,
       blockedRowCount: 2,
-      coverageMatrixRowCount: 41,
-      companyInternalV0AllowedRowCount: 38,
+      coverageMatrixRowCount: 42,
+      companyInternalV0AllowedRowCount: 39,
       needsUserInputRowCount: 1,
       readinessBucketCount: {
         needs_input: 1,
         ready: 4,
-        ready_with_budget: 34,
+        ready_with_budget: 35,
         research_only: 0,
         unsupported: 2
       },
@@ -183,6 +183,7 @@ describe("layer combination resolver company-internal V0 rehearsal contract", ()
       ["floor.heavy_concrete_floating_floor.lab_impact_formula", "allowed_with_budget"],
       ["floor.impact_field_context.field_building_adapter", "allowed_with_budget"],
       ["floor.raw_bare_floor_airborne.building_prediction_adapter", "allowed_with_budget"],
+      ["floor.open_box_timber_finished_package.airborne_building_prediction_adapter", "allowed_with_budget"],
       ["wall.airborne_field_context.field_apparent_adapter", "allowed_with_budget"],
       ["candidate_airborne_building_prediction_all_owner_family_physics_prediction", "allowed_with_budget"],
       ["generic.required_input_owner.needs_input_boundary", "needs_user_input"],

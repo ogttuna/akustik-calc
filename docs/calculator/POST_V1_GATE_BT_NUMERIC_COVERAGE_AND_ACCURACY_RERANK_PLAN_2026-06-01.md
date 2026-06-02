@@ -92,3 +92,26 @@ Gate BU must prove:
 4. Missing `airborneContext.contextMode=building_prediction` and
    missing room/flanking inputs remain `needs_input`.
 5. Impact field outputs and ASTM `IIC` / `AIIC` remain separate owners.
+
+## Gate BU Closeout
+
+Gate BU has now landed:
+
+`post_v1_floor_open_box_finished_package_airborne_building_companion_gate_bu_plan`
+
+Gate BU status:
+
+`post_v1_floor_open_box_finished_package_airborne_building_companion_gate_bu_landed_selected_next_numeric_coverage_gap_gate_bv`
+
+Gate BU closed the selected Gate BT gap by routing complete finished
+open-box package `building_prediction` airborne requests through the
+owned package `Rw` anchors before building flanking and room
+normalization. Dry package-transfer requests now calculate `R'w 64` and
+`DnT,w 67` from `Rw 66`; EPS/screed hybrid requests now calculate
+`R'w 70` and `DnT,w 73` from `Rw 72`. The generic screening predictor
+and `screening_mass_law_curve_seed_v3` are not used for these building
+outputs.
+
+Gate BU selected next action:
+
+`post_v1_next_numeric_coverage_gap_gate_bv_plan`

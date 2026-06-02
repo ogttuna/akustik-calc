@@ -105,11 +105,11 @@ describe("post-V1 floor lightweight-concrete family solver owner Gate M", () => 
       { profile: "low_density_predictor_input", metric: "Rw", value: 49 }
     ]);
     expect(registry.summary).toMatchObject({
-      activeRuntimeCandidateCount: 38,
-      candidateCount: 41
+      activeRuntimeCandidateCount: 39,
+      candidateCount: 42
     });
-    expect(adapter.summary.adaptedRuntimeBasisCount).toBe(38);
-    expect(surface.summary.surfaceRowCount).toBe(41);
+    expect(adapter.summary.adaptedRuntimeBasisCount).toBe(39);
+    expect(surface.summary.surfaceRowCount).toBe(42);
     expect(candidate).toMatchObject({
       basis: "element_lab",
       errorBudgetTerms: [
@@ -243,7 +243,7 @@ describe("post-V1 floor lightweight-concrete family solver owner Gate M", () => 
         POST_V1_FLOOR_LIGHTWEIGHT_CONCRETE_FAMILY_SOLVER_OWNER_GATE_M_SELECTED_NEXT_LABEL
       );
       expect(contents, `${relativePath} records resolver counts`).toContain(
-        "40 declared candidates and 37 active runtime-basis mappings"
+        "42 declared candidates and 39 active runtime-basis mappings"
       );
       expect(contents, `${relativePath} records visible lightweight concrete pins`).toContain("Ln,w 64.3 / Rw 53");
       expect(contents, `${relativePath} records low-density predictor pins`).toContain("Ln,w 47 / Rw 49");

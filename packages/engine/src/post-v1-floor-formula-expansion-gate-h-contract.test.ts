@@ -83,10 +83,10 @@ describe("post-V1 floor formula expansion Gate H", () => {
     const surfaceRowsById = new Map(surface.surfaceRows.map((row) => [row.selectedCandidateId, row]));
 
     expect(registry.summary).toMatchObject({
-      activeRuntimeCandidateCount: 38,
-      candidateCount: 41
+      activeRuntimeCandidateCount: 39,
+      candidateCount: 42
     });
-    expect(surface.summary.surfaceRowCount).toBe(41);
+    expect(surface.summary.surfaceRowCount).toBe(42);
 
     expect(registryRowsById.get(STEEL_UPPER_LOWER_CANDIDATE_ID)).toMatchObject({
       basis: "element_lab",
@@ -214,7 +214,7 @@ describe("post-V1 floor formula expansion Gate H", () => {
       expect(contents, `${relativePath} records selected Gate I label`).toContain(GATE_I_LABEL);
       expect(contents, `${relativePath} records steel upper/lower values`).toContain("Ln,w 51.6");
       expect(contents, `${relativePath} records steel suspended-only values`).toContain("Ln,w 62.2");
-      expect(contents, `${relativePath} records resolver counts`).toContain("40 declared candidates and 37 active runtime-basis mappings");
+      expect(contents, `${relativePath} records resolver counts`).toContain("42 declared candidates and 39 active runtime-basis mappings");
     }
 
     const currentGateRunner = readRepoFile("tools/dev/run-calculator-current-gate.ts");

@@ -100,8 +100,8 @@ describe("post-V1 floor reinforced-concrete combined resolver Gate J", () => {
     });
 
     expect(registry.summary).toMatchObject({
-      activeRuntimeCandidateCount: 38,
-      candidateCount: 41
+      activeRuntimeCandidateCount: 39,
+      candidateCount: 42
     });
     expect(candidate).toMatchObject({
       basis: "element_lab",
@@ -209,7 +209,7 @@ describe("post-V1 floor reinforced-concrete combined resolver Gate J", () => {
         POST_V1_FLOOR_REINFORCED_CONCRETE_COMBINED_RESOLVER_GATE_J_SELECTED_NEXT_LABEL
       );
       expect(contents, `${relativePath} records resolver counts`).toContain(
-        "40 declared candidates and 37 active runtime-basis mappings"
+        "42 declared candidates and 39 active runtime-basis mappings"
       );
       expect(contents, `${relativePath} records reinforced-concrete values`).toContain("Ln,w 58.1");
       expect(contents, `${relativePath} records reinforced-concrete DeltaLw`).toContain("DeltaLw 13.7");

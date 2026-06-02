@@ -45,6 +45,11 @@ type OpenBoxTimberTopology = {
 const RUNTIME_TARGET_OUTPUTS = new Set<RequestedOutputId>([
   "Rw",
   "C",
+  "R'w",
+  "Dn,w",
+  "Dn,A",
+  "DnT,w",
+  "DnT,A",
   "Ln,w",
   "CI",
   "CI,50-2500",
@@ -342,6 +347,11 @@ function formulaTargetOutputs(outputs: readonly RequestedOutputId[]): RequestedO
   const mapped = outputs.flatMap((output) => {
     switch (output) {
       case "C":
+      case "R'w":
+      case "Dn,w":
+      case "Dn,A":
+      case "DnT,w":
+      case "DnT,A":
         return ["Rw" as const];
       case "L'n,w":
       case "L'nT,w":
@@ -422,7 +432,7 @@ export function deriveOpenBoxTimberSimilarityEstimate(input: {
       `Current support is the 370 mm open-box timber slab with ${lowerFamilyLabel(topology.lowerFamily)} and ${topology.boardSchedule}.`,
       `Upper package: ${topology.upperPackageLabel}.`,
       `Source rows: ${buildSourceNotes(rows, input.layers)}.`,
-      "This is a narrow source-absent lab packet-transfer corridor; field outputs require the explicit impactFieldContext adapter, and building/ASTM/IIC bridges remain separate."
+      "This is a narrow source-absent lab packet-transfer corridor; field outputs require the explicit impactFieldContext adapter, airborne building outputs require the explicit building-context adapter, and ASTM/IIC bridges remain separate."
     ],
     scope: "family_estimate"
   });

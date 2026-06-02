@@ -599,14 +599,12 @@ export function finalizeResolvedImpactLane(
               skipDirectFlanking: true
             })
       : baseImpact?.basis === OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS
-        ? input.airborneContext?.contextMode === "building_prediction"
-          ? baseImpact
-          : applyImpactFieldContextToImpact(baseImpact, input.impactFieldContext, {
-              defaultSupportingElementFamily,
-              exactImpactSource: exactImpactSourceForFieldContext,
-              resolvedLayers: input.resolvedLayers,
-              skipDirectFlanking: true
-            })
+        ? applyImpactFieldContextToImpact(baseImpact, input.impactFieldContext, {
+            defaultSupportingElementFamily,
+            exactImpactSource: exactImpactSourceForFieldContext,
+            resolvedLayers: input.resolvedLayers,
+            skipDirectFlanking: true
+          })
       : baseImpact?.basis === HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS
         ? baseImpact
       : applyImpactFieldContextToImpact(baseImpact, input.impactFieldContext, {

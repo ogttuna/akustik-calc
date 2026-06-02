@@ -140,7 +140,7 @@ describe("post-V1 next numeric coverage gap Gate BT", () => {
     }
   });
 
-  it("proves the selected Gate BU runtime gap is finished-package building airborne ownership", () => {
+  it("keeps the selected Gate BU finished-package building airborne lane executable", () => {
     const dryBuildingOnly = calculateAssembly(DRY_GYPSUM_FIBER_SOURCE_ABSENT, {
       airborneContext: BUILDING_CONTEXT,
       calculator: "dynamic",
@@ -163,33 +163,49 @@ describe("post-V1 next numeric coverage gap Gate BT", () => {
     });
 
     expect(dryBuildingOnly.floorSystemRatings).toMatchObject({
-      Rw: 68.9,
-      basis: "predictor_floor_system_family_archetype_estimate"
+      Rw: 66,
+      basis: OPEN_BOX_TIMBER_SIMILARITY_BASIS
     });
-    expect(dryBuildingOnly.floorSystemRatings?.basis).not.toBe(OPEN_BOX_TIMBER_SIMILARITY_BASIS);
     expect(dryBuildingOnly.supportedTargetOutputs).toEqual([...BUILDING_AIRBORNE_OUTPUTS]);
+    expect(dryBuildingOnly.metrics).toMatchObject({
+      estimatedDnTwDb: 67,
+      estimatedRwPrimeDb: 64
+    });
 
     expect(epsBuildingOnly.floorSystemRatings).toMatchObject({
-      Rw: 52,
-      basis: "screening_mass_law_curve_seed_v3"
+      Rw: 72,
+      basis: OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS
     });
-    expect(epsBuildingOnly.floorSystemRatings?.basis).not.toBe(OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS);
     expect(epsBuildingOnly.supportedTargetOutputs).toEqual([...BUILDING_AIRBORNE_OUTPUTS]);
+    expect(epsBuildingOnly.metrics).toMatchObject({
+      estimatedDnTwDb: 73,
+      estimatedRwPrimeDb: 70
+    });
 
     expect(dryMixed.floorSystemRatings).toMatchObject({
       Rw: 66,
       basis: OPEN_BOX_TIMBER_SIMILARITY_BASIS
     });
-    expect(dryMixed.supportedTargetOutputs).toEqual([...BUILDING_AIRBORNE_OUTPUTS]);
-    expect(dryMixed.unsupportedTargetOutputs).toEqual(["Rw", "C", "Ctr"]);
+    expect(dryMixed.supportedTargetOutputs).toEqual(["Rw", "C", ...BUILDING_AIRBORNE_OUTPUTS]);
+    expect(dryMixed.unsupportedTargetOutputs).toEqual(["Ctr"]);
+    expect(dryMixed.metrics).toMatchObject({
+      estimatedCDb: -3.9,
+      estimatedDnTwDb: 67,
+      estimatedRwPrimeDb: 64
+    });
 
     expect(epsMixed.floorSystemRatings).toMatchObject({
       C: -1.3,
       Rw: 72,
       basis: OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS
     });
-    expect(epsMixed.supportedTargetOutputs).toEqual([...BUILDING_AIRBORNE_OUTPUTS]);
-    expect(epsMixed.unsupportedTargetOutputs).toEqual(["Rw", "C", "Ctr"]);
+    expect(epsMixed.supportedTargetOutputs).toEqual(["Rw", "C", ...BUILDING_AIRBORNE_OUTPUTS]);
+    expect(epsMixed.unsupportedTargetOutputs).toEqual(["Ctr"]);
+    expect(epsMixed.metrics).toMatchObject({
+      estimatedCDb: -1.3,
+      estimatedDnTwDb: 73,
+      estimatedRwPrimeDb: 70
+    });
   });
 
   it("keeps docs and current-gate runner aligned with Gate BT selection", () => {
@@ -198,7 +214,6 @@ describe("post-V1 next numeric coverage gap Gate BT", () => {
 
       expect(contents, path).toContain(POST_V1_NEXT_NUMERIC_COVERAGE_GAP_GATE_BT_LANDED_GATE);
       expect(contents, path).toContain(POST_V1_NEXT_NUMERIC_COVERAGE_GAP_GATE_BT_SELECTION_STATUS);
-      expect(contents, path).toContain(POST_V1_NEXT_NUMERIC_COVERAGE_GAP_GATE_BT_SELECTED_NEXT_ACTION);
       expect(contents, path).toContain("floor.open_box_timber_finished_package.airborne_building_companion_gap");
       expect(contents, path).toContain("R'w");
       expect(contents, path).toContain("DnT,w");
