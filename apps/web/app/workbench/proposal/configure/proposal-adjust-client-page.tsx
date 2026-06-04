@@ -4,12 +4,46 @@ import { SurfacePanel } from "@dynecho/ui";
 import { ArrowLeft, Bot, ChevronDown, Download, Eye, FileText, Layers3, RefreshCcw, RotateCcw, Save, Send, ShieldCheck, SlidersHorizontal } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { type ReactNode, useDeferredValue, useEffect, useMemo, useState } from "react";
+import { type ReactNode, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
-import { buildReportAssistantContext } from "@/features/workbench/report-assistant-context";
+import type { ReportAssistantAssemblyAlternativeReview } from "@/features/workbench/report-assistant-assembly-alternatives";
+import {
+  buildReportAssistantContext,
+  type ReportAssistantMetric
+} from "@/features/workbench/report-assistant-context";
+import {
+  createReportAssistantConversationMessage,
+  createReportAssistantResearchReviewPacket,
+  getLatestReportAssistantResearchReviewPacket,
+  readReportAssistantConversationStorage,
+  writeReportAssistantConversationStorage,
+  type ReportAssistantConversationMessage,
+  type ReportAssistantConversationSource,
+  type ReportAssistantConversationStatus
+} from "@/features/workbench/report-assistant-conversation-storage";
+import { resolveReportAssistantInstructionMetric } from "@/features/workbench/report-assistant-instruction";
+import {
+  buildReportAssistantFollowUpPatchInstruction,
+  classifyReportAssistantInstructionIntent,
+  shouldRequestExplicitFollowUpPatchTarget
+} from "@/features/workbench/report-assistant-intent";
+import {
+  sendReportAssistantRequest,
+  type ReportAssistantRequestResult
+} from "@/features/workbench/report-assistant-request-client";
+import {
+  createReportAssistantActiveRequestRegistry,
+  finishReportAssistantRequest,
+  isReportAssistantRequestRecordActive,
+  isReportAssistantRequestResultActive,
+  startReportAssistantRequest,
+  type ReportAssistantActiveRequest
+} from "@/features/workbench/report-assistant-request-lifecycle";
+import { buildReportAssistantContextTraceAnswer } from "@/features/workbench/report-assistant-trace-explanation";
 import {
   applyValidatedReportAssistantPatch,
+  findReportAdjustmentConsistencyMentions,
   findReportValueMentions,
   validateReportAssistantPatch,
   type ReportAssistantPatchValidationResult
@@ -65,6 +99,44 @@ const COVERAGE_STATUS_OPTIONS = [
 ] as const;
 
 type ToneValue = (typeof TONE_OPTIONS)[number]["value"];
+
+type AssistantResponseState = {
+  detail: string;
+  requestMeta?: {
+    attempts: number;
+    durationMs: number;
+    requestId: string;
+    timedOut: boolean;
+  };
+  source: ReportAssistantConversationSource;
+  status: ReportAssistantConversationStatus;
+  summary: string;
+};
+
+type AssistantRetryRequest =
+  | {
+      displayInstruction: string;
+      kind: "patch_proposal";
+      metricId?: string;
+      requestInstruction: string;
+    }
+  | {
+      instruction: string;
+      kind: "assistant_assembly_research";
+    }
+  | {
+      instruction: string;
+      kind: "assistant_research";
+      metricId: string;
+    }
+  | {
+      kind: "manual_plausibility";
+      metricId: string;
+      researchRequested: boolean;
+      userInstruction: string;
+    };
+
+type AssistantConversationMessage = ReportAssistantConversationMessage;
 
 type ProposalEditorSection = {
   detail: string;
@@ -227,6 +299,276 @@ function getAssistantValidationLabel(validation: ReportAssistantPatchValidationR
   return "Valid";
 }
 
+function getAssistantResponseTone(status: AssistantResponseState["status"]): string {
+  if (status === "rejected") {
+    return "border-red-300 bg-red-50 text-red-900";
+  }
+
+  if (status === "applied") {
+    return "border-emerald-300 bg-emerald-50 text-emerald-950";
+  }
+
+  return "border-[color:var(--line)] bg-[color:var(--panel)] text-[color:var(--ink-soft)]";
+}
+
+function getAssistantSourceLabel(source: AssistantResponseState["source"]): string {
+  if (source === "research_provider") {
+    return "source research";
+  }
+
+  if (source === "context") {
+    return "context-only review";
+  }
+
+  if (source === "model") {
+    return "AI model";
+  }
+
+  if (source === "deterministic") {
+    return "rule parser";
+  }
+
+  return "report assistant";
+}
+
+function getAssistantRequestMessages(result: ReportAssistantRequestResult): string[] {
+  return result.errors.length > 0 ? result.errors : getReportAssistantEndpointMessages(result.payload);
+}
+
+function getAssistantRequestMeta(result: ReportAssistantRequestResult): NonNullable<AssistantResponseState["requestMeta"]> {
+  return {
+    attempts: result.meta.attempt,
+    durationMs: result.meta.durationMs,
+    requestId: result.meta.requestId,
+    timedOut: result.timedOut
+  };
+}
+
+function formatAssistantRequestMeta(meta: NonNullable<AssistantResponseState["requestMeta"]>): string {
+  const retryLabel = meta.attempts > 1 ? ` | attempts ${meta.attempts}` : "";
+  const timeoutLabel = meta.timedOut ? " | timed out" : "";
+  return `request ${meta.requestId} | ${meta.durationMs} ms${retryLabel}${timeoutLabel}`;
+}
+
+function trimAssistantConversationText(value: string, maxLength = 520): string {
+  const trimmed = value.trim().replace(/\s+/gu, " ");
+  return trimmed.length > maxLength ? `${trimmed.slice(0, maxLength - 1)}...` : trimmed;
+}
+
+function buildAssistantConversationInstruction(input: {
+  conversation: readonly AssistantConversationMessage[];
+  instruction: string;
+}): string {
+  const recentMessages = input.conversation.slice(-8);
+  if (recentMessages.length === 0) {
+    return input.instruction;
+  }
+
+  return [
+    `Current user message: ${input.instruction}`,
+    "Recent in-page assistant conversation:",
+    ...recentMessages.map((message) => `${message.role}: ${trimAssistantConversationText(message.content, 420)}`),
+    "Answer the current user message. Use the recent conversation only as local context; do not change report values."
+  ].join("\n");
+}
+
+function buildPlausibilityConversationText(review: ReportAssistantPlausibilityReviewView): string {
+  return trimAssistantConversationText(buildPlausibilityAssistantDetail(review, { maxRationale: 4, maxSources: 3 }), 1800);
+}
+
+function getConversationMessageTone(message: AssistantConversationMessage): string {
+  if (message.role === "user") {
+    return "border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--ink)]";
+  }
+
+  if (message.status === "rejected") {
+    return "border-red-300 bg-red-50 text-red-900";
+  }
+
+  if (message.status === "applied") {
+    return "border-emerald-300 bg-emerald-50 text-emerald-950";
+  }
+
+  return "border-[color:var(--line)] bg-[color:var(--panel)] text-[color:var(--ink-soft)]";
+}
+
+function getUsefulPlausibilityRationale(review: ReportAssistantPlausibilityReviewView, maxLines: number): string[] {
+  return review.rationale
+    .filter((line) =>
+      !/^Review mode:/iu.test(line) &&
+      !/^Attached sources are retained/iu.test(line) &&
+      !/^No acceptable http\/https source metadata/iu.test(line)
+    )
+    .slice(0, maxLines);
+}
+
+function formatPlausibilitySourceLine(
+  source: ReportAssistantPlausibilityReviewView["sources"][number],
+  index: number
+): string {
+  const note = source.note ? ` - ${source.note}` : "";
+  return `${index + 1}. ${source.title}${note}\n   ${source.url}`;
+}
+
+function buildPlausibilityAssistantDetail(
+  review: ReportAssistantPlausibilityReviewView,
+  options?: {
+    maxRationale?: number;
+    maxSources?: number;
+  }
+): string {
+  const maxRationale = options?.maxRationale ?? 5;
+  const maxSources = options?.maxSources ?? 4;
+  const lines: string[] = [
+    review.answerText ??
+      `I reviewed ${review.metric}: report ${review.valueReviewed}${review.engineDisplayValue ? `, engine ${review.engineDisplayValue}` : ""}. Verdict: ${review.verdict} / ${review.severity}.`
+  ];
+  const rationale = getUsefulPlausibilityRationale(review, maxRationale);
+  const sources = review.sources.slice(0, maxSources);
+
+  if (review.recommendedActionText) {
+    lines.push(`Recommendation: ${review.recommendedActionText}`);
+  }
+
+  if (review.comparability || review.sourceQuality || review.confidence || review.valueRecommendation || review.valueRange) {
+    const evidence = [
+      review.comparability ? `comparability ${formatAssemblyAlternativeLabel(review.comparability)}` : null,
+      review.sourceQuality ? `source quality ${formatAssemblyAlternativeLabel(review.sourceQuality)}` : null,
+      review.confidence ? `confidence ${formatAssemblyAlternativeLabel(review.confidence)}` : null,
+      review.valueRecommendation ? `recommendation ${formatPlausibilityValueRecommendation(review.valueRecommendation)}` : null,
+      review.valueRange ? `value range ${formatPlausibilityValueRange(review.valueRange)}` : null
+    ].filter((entry): entry is string => entry !== null);
+    lines.push(`Evidence: ${evidence.join("; ")}.`);
+  }
+
+  if (review.insufficientSourcesReason) {
+    lines.push(`Source limitation: ${review.insufficientSourcesReason}`);
+  }
+
+  if (review.missingEvidence.length > 0) {
+    lines.push(`Missing evidence:\n${review.missingEvidence.map((line) => `- ${line}`).join("\n")}`);
+  }
+
+  if (review.comparableAssemblies.length > 0) {
+    lines.push(
+      `Comparable assemblies:\n${review.comparableAssemblies
+        .slice(0, 3)
+        .map((assembly, index) => {
+          const metrics = assembly.metricValues.length > 0 ? `; metrics ${assembly.metricValues.join(", ")}` : "";
+          const matches = assembly.matchingLayers.length > 0 ? `; matches ${assembly.matchingLayers.join(", ")}` : "";
+          const differences = assembly.weakeningDifferences.length > 0 ? `; differences ${assembly.weakeningDifferences.join(", ")}` : "";
+          return `${index + 1}. ${assembly.label}${metrics}${matches}${differences}`;
+        })
+        .join("\n")}`
+    );
+  }
+
+  if (rationale.length > 0) {
+    lines.push(`Reasoning:\n${rationale.map((line) => `- ${line}`).join("\n")}`);
+  }
+
+  if (sources.length > 0) {
+    const hiddenCount = review.sources.length - sources.length;
+    lines.push(
+      `Sources:\n${sources.map(formatPlausibilitySourceLine).join("\n")}${hiddenCount > 0 ? `\n+${hiddenCount} more source${hiddenCount === 1 ? "" : "s"}` : ""}`
+    );
+  }
+
+  lines.push("No report value was changed.");
+
+  return lines.join("\n\n");
+}
+
+function formatPlausibilityValueRange(valueRange: NonNullable<ReportAssistantPlausibilityReviewView["valueRange"]>): string {
+  const min = typeof valueRange.minDb === "number" ? `${valueRange.minDb} dB` : null;
+  const max = typeof valueRange.maxDb === "number" ? `${valueRange.maxDb} dB` : null;
+  const range = min && max ? `${min}-${max}` : min ?? max;
+  return [range, valueRange.note].filter((entry): entry is string => Boolean(entry)).join(" | ");
+}
+
+function formatPlausibilityValueRecommendation(
+  valueRecommendation: NonNullable<ReportAssistantPlausibilityReviewView["valueRecommendation"]>
+): string {
+  const target = typeof valueRecommendation.targetDb === "number" ? `${valueRecommendation.targetDb} dB` : valueRecommendation.displayValue;
+  const min = typeof valueRecommendation.minDb === "number" ? `${valueRecommendation.minDb} dB` : null;
+  const max = typeof valueRecommendation.maxDb === "number" ? `${valueRecommendation.maxDb} dB` : null;
+  const range = min && max ? `${min}-${max}` : min ?? max;
+  return [target, range, valueRecommendation.note].filter((entry): entry is string => Boolean(entry)).join(" | ");
+}
+
+function buildAssemblyAlternativeConversationText(review: ReportAssistantAssemblyAlternativeReview): string {
+  return trimAssistantConversationText(buildAssemblyAlternativeAssistantDetail(review, { maxAlternatives: 3, maxSources: 3 }), 1800);
+}
+
+function formatAssemblyAlternativeLabel(value: string): string {
+  return value
+    .replace(/_/gu, " ")
+    .replace(/\b\w/gu, (match) => match.toUpperCase());
+}
+
+function formatAssemblyAlternativeSuggestion(
+  suggestion: ReportAssistantAssemblyAlternativeReview["suggestedAlternatives"][number],
+  index: number
+): string {
+  const layers = suggestion.affectedLayers.length > 0 ? `\n   Layers: ${suggestion.affectedLayers.join("; ")}` : "";
+  const tradeoffs = suggestion.expectedTradeoffs.length > 0 ? `\n   Tradeoffs: ${suggestion.expectedTradeoffs.join("; ")}` : "";
+  const rationale = suggestion.rationale.length > 0 ? `\n   Reason: ${suggestion.rationale.join("; ")}` : "";
+
+  return `${index + 1}. ${suggestion.label} (${formatAssemblyAlternativeLabel(suggestion.expectedMetricDirection)})${layers}${tradeoffs}${rationale}`;
+}
+
+function buildAssemblyAlternativeAssistantDetail(
+  review: ReportAssistantAssemblyAlternativeReview,
+  options?: {
+    maxAlternatives?: number;
+    maxSources?: number;
+  }
+): string {
+  const maxAlternatives = options?.maxAlternatives ?? 4;
+  const maxSources = options?.maxSources ?? 4;
+  const lines = [review.answerText];
+  const suggestions = review.suggestedAlternatives.slice(0, maxAlternatives);
+  const sources = review.sources.slice(0, maxSources);
+
+  if (review.recommendedActionText) {
+    lines.push(`Recommendation: ${review.recommendedActionText}`);
+  }
+
+  if (suggestions.length > 0) {
+    const hiddenCount = review.suggestedAlternatives.length - suggestions.length;
+    lines.push(
+      `Alternatives:\n${suggestions.map(formatAssemblyAlternativeSuggestion).join("\n")}${hiddenCount > 0 ? `\n+${hiddenCount} more alternative${hiddenCount === 1 ? "" : "s"}` : ""}`
+    );
+  }
+
+  if (review.expectedTradeoffs.length > 0) {
+    lines.push(`Expected tradeoffs:\n${review.expectedTradeoffs.map((line) => `- ${line}`).join("\n")}`);
+  }
+
+  lines.push(
+    `Evidence: ${formatAssemblyAlternativeLabel(review.comparability)} comparability; ${formatAssemblyAlternativeLabel(review.sourceQuality)} source quality.`
+  );
+
+  if (review.insufficientSourcesReason) {
+    lines.push(`Source limitation: ${review.insufficientSourcesReason}`);
+  }
+
+  if (review.missingEvidence.length > 0) {
+    lines.push(`Missing evidence:\n${review.missingEvidence.map((line) => `- ${line}`).join("\n")}`);
+  }
+
+  if (sources.length > 0) {
+    const hiddenCount = review.sources.length - sources.length;
+    lines.push(
+      `Sources:\n${sources.map(formatPlausibilitySourceLine).join("\n")}${hiddenCount > 0 ? `\n+${hiddenCount} more source${hiddenCount === 1 ? "" : "s"}` : ""}`
+    );
+  }
+
+  lines.push("No report value was changed.");
+
+  return lines.join("\n\n");
+}
+
 function formatAssistantBasisLabel(value: string): string {
   return value
     .replace(/_/gu, " ")
@@ -252,15 +594,6 @@ function getReportAssistantEndpointMessages(payload: unknown): string[] {
   return ["Report assistant endpoint returned an invalid response."];
 }
 
-function getReportAssistantEndpointWarnings(payload: unknown): string[] {
-  if (!payload || typeof payload !== "object") {
-    return [];
-  }
-
-  const warnings = (payload as { warnings?: unknown }).warnings;
-  return Array.isArray(warnings) ? warnings.filter((entry): entry is string => typeof entry === "string") : [];
-}
-
 function getReportAssistantEndpointSource(payload: unknown): "deterministic" | "model" | null {
   if (!payload || typeof payload !== "object") {
     return null;
@@ -283,6 +616,15 @@ function getReportAssistantEndpointPatch(payload: unknown): unknown {
   return payload && typeof payload === "object" ? (payload as { patch?: unknown }).patch : undefined;
 }
 
+function getReportAssistantPatchSummary(patch: unknown): string | null {
+  if (!patch || typeof patch !== "object") {
+    return null;
+  }
+
+  const summary = (patch as { summary?: unknown }).summary;
+  return typeof summary === "string" && summary.trim().length > 0 ? summary.trim() : null;
+}
+
 function getReportAssistantFindingRecordId(payload: unknown): string | null {
   if (!payload || typeof payload !== "object") {
     return null;
@@ -298,17 +640,46 @@ function getReportAssistantFindingRecordId(payload: unknown): string | null {
 }
 
 type ReportAssistantPlausibilityReviewView = {
+  answerText?: string;
+  comparableAssemblies: readonly {
+    comparisonNote?: string;
+    description?: string;
+    label: string;
+    matchingLayers: readonly string[];
+    metricValues: readonly string[];
+    sourceTitle?: string;
+    sourceUrl?: string;
+    weakeningDifferences: readonly string[];
+  }[];
+  comparability?: string;
+  confidence?: string;
   engineDisplayValue?: string;
+  insufficientSourcesReason?: string;
+  missingEvidence: readonly string[];
   metric: string;
   metricId: string;
   rationale: readonly string[];
+  recommendedActionText?: string;
   severity: string;
+  sourceQuality?: string;
   sources: readonly {
     note?: string;
     title: string;
     url: string;
   }[];
   suggestedReportPatch?: unknown;
+  valueRecommendation?: {
+    displayValue?: string;
+    maxDb?: number;
+    minDb?: number;
+    note?: string;
+    targetDb?: number;
+  };
+  valueRange?: {
+    maxDb?: number;
+    minDb?: number;
+    note?: string;
+  };
   valueReviewed: string;
   verdict: string;
 };
@@ -325,12 +696,22 @@ function getReportAssistantPlausibilityReview(payload: unknown): ReportAssistant
 
   const record = review as {
     engineDisplayValue?: unknown;
+    answerText?: unknown;
+    comparableAssemblies?: unknown;
+    comparability?: unknown;
+    confidence?: unknown;
+    insufficientSourcesReason?: unknown;
+    missingEvidence?: unknown;
     metric?: unknown;
     metricId?: unknown;
     rationale?: unknown;
+    recommendedActionText?: unknown;
     severity?: unknown;
+    sourceQuality?: unknown;
     sources?: unknown;
     suggestedReportPatch?: unknown;
+    valueRecommendation?: unknown;
+    valueRange?: unknown;
     valueReviewed?: unknown;
     verdict?: unknown;
   };
@@ -347,11 +728,21 @@ function getReportAssistantPlausibilityReview(payload: unknown): ReportAssistant
   }
 
   return {
+    answerText: typeof record.answerText === "string" && record.answerText.trim().length > 0 ? record.answerText.trim() : undefined,
+    comparableAssemblies: parsePlausibilityComparableAssembliesView(record.comparableAssemblies),
+    comparability: typeof record.comparability === "string" ? record.comparability : undefined,
+    confidence: typeof record.confidence === "string" ? record.confidence : undefined,
     engineDisplayValue: typeof record.engineDisplayValue === "string" ? record.engineDisplayValue : undefined,
+    insufficientSourcesReason: typeof record.insufficientSourcesReason === "string" ? record.insufficientSourcesReason : undefined,
+    missingEvidence: Array.isArray(record.missingEvidence)
+      ? record.missingEvidence.filter((entry): entry is string => typeof entry === "string")
+      : [],
     metric: record.metric,
     metricId: record.metricId,
     rationale: record.rationale.filter((entry): entry is string => typeof entry === "string"),
+    recommendedActionText: typeof record.recommendedActionText === "string" ? record.recommendedActionText : undefined,
     severity: record.severity,
+    sourceQuality: typeof record.sourceQuality === "string" ? record.sourceQuality : undefined,
     sources: Array.isArray(record.sources)
       ? record.sources
           .filter((entry): entry is { note?: string; title: string; url: string } =>
@@ -362,9 +753,145 @@ function getReportAssistantPlausibilityReview(payload: unknown): ReportAssistant
           )
       : [],
     suggestedReportPatch: record.suggestedReportPatch,
+    valueRecommendation: parsePlausibilityValueRecommendationView(record.valueRecommendation),
+    valueRange: parsePlausibilityValueRangeView(record.valueRange),
     valueReviewed: record.valueReviewed,
     verdict: record.verdict
   };
+}
+
+function parsePlausibilityValueRangeView(value: unknown): ReportAssistantPlausibilityReviewView["valueRange"] {
+  if (!value || typeof value !== "object") {
+    return undefined;
+  }
+
+  const record = value as {
+    maxDb?: unknown;
+    minDb?: unknown;
+    note?: unknown;
+  };
+  const minDb = typeof record.minDb === "number" && Number.isFinite(record.minDb) ? record.minDb : undefined;
+  const maxDb = typeof record.maxDb === "number" && Number.isFinite(record.maxDb) ? record.maxDb : undefined;
+  const note = typeof record.note === "string" && record.note.trim().length > 0 ? record.note.trim() : undefined;
+
+  return typeof minDb === "number" || typeof maxDb === "number" || note
+    ? {
+        maxDb,
+        minDb,
+        note
+      }
+    : undefined;
+}
+
+function parsePlausibilityValueRecommendationView(value: unknown): ReportAssistantPlausibilityReviewView["valueRecommendation"] {
+  if (!value || typeof value !== "object") {
+    return undefined;
+  }
+
+  const record = value as {
+    displayValue?: unknown;
+    maxDb?: unknown;
+    minDb?: unknown;
+    note?: unknown;
+    targetDb?: unknown;
+  };
+  const displayValue = typeof record.displayValue === "string" && record.displayValue.trim().length > 0 ? record.displayValue.trim() : undefined;
+  const minDb = typeof record.minDb === "number" && Number.isFinite(record.minDb) ? record.minDb : undefined;
+  const maxDb = typeof record.maxDb === "number" && Number.isFinite(record.maxDb) ? record.maxDb : undefined;
+  const targetDb = typeof record.targetDb === "number" && Number.isFinite(record.targetDb) ? record.targetDb : undefined;
+  const note = typeof record.note === "string" && record.note.trim().length > 0 ? record.note.trim() : undefined;
+
+  return displayValue || typeof minDb === "number" || typeof maxDb === "number" || typeof targetDb === "number" || note
+    ? {
+        displayValue,
+        maxDb,
+        minDb,
+        note,
+        targetDb
+      }
+    : undefined;
+}
+
+function parsePlausibilityStringArray(value: unknown): string[] {
+  return Array.isArray(value)
+    ? value.filter((entry): entry is string => typeof entry === "string" && entry.trim().length > 0)
+    : [];
+}
+
+function parsePlausibilityComparableAssembliesView(value: unknown): ReportAssistantPlausibilityReviewView["comparableAssemblies"] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  const assemblies: ReportAssistantPlausibilityReviewView["comparableAssemblies"][number][] = [];
+
+  for (const entry of value) {
+    if (!entry || typeof entry !== "object") {
+      continue;
+    }
+
+    const record = entry as Record<string, unknown>;
+    const label = typeof record.label === "string" && record.label.trim().length > 0 ? record.label.trim() : null;
+    if (!label) {
+      continue;
+    }
+
+    assemblies.push({
+      comparisonNote: typeof record.comparisonNote === "string" ? record.comparisonNote : undefined,
+      description: typeof record.description === "string" ? record.description : undefined,
+      label,
+      matchingLayers: parsePlausibilityStringArray(record.matchingLayers),
+      metricValues: parsePlausibilityStringArray(record.metricValues),
+      sourceTitle: typeof record.sourceTitle === "string" ? record.sourceTitle : undefined,
+      sourceUrl: typeof record.sourceUrl === "string" && /^https?:\/\//iu.test(record.sourceUrl) ? record.sourceUrl : undefined,
+      weakeningDifferences: parsePlausibilityStringArray(record.weakeningDifferences)
+    });
+  }
+
+  return assemblies;
+}
+
+function getReportAssistantAssemblyAlternativeReview(payload: unknown): ReportAssistantAssemblyAlternativeReview | null {
+  if (!payload || typeof payload !== "object") {
+    return null;
+  }
+
+  const review = (payload as { review?: unknown }).review;
+  if (!review || typeof review !== "object") {
+    return null;
+  }
+
+  const record = review as {
+    affectedLayers?: unknown;
+    answerText?: unknown;
+    comparableAssemblies?: unknown;
+    comparability?: unknown;
+    expectedMetricDirection?: unknown;
+    expectedTradeoffs?: unknown;
+    missingEvidence?: unknown;
+    rationale?: unknown;
+    sourceQuality?: unknown;
+    sources?: unknown;
+    suggestedAlternatives?: unknown;
+  };
+
+  if (
+    typeof record.answerText !== "string" ||
+    typeof record.comparability !== "string" ||
+    typeof record.expectedMetricDirection !== "string" ||
+    typeof record.sourceQuality !== "string" ||
+    !Array.isArray(record.affectedLayers) ||
+    !Array.isArray(record.comparableAssemblies) ||
+    !Array.isArray(record.expectedTradeoffs) ||
+    !Array.isArray(record.missingEvidence) ||
+    !Array.isArray(record.rationale) ||
+    !Array.isArray(record.sources) ||
+    !Array.isArray(record.suggestedAlternatives)
+  ) {
+    return null;
+  }
+
+  return review as ReportAssistantAssemblyAlternativeReview;
 }
 
 function EditorField(props: {
@@ -535,6 +1062,8 @@ function ReportAssistantPatchPanel(props: {
   const { baseDocument, document, onApply } = props;
   const [assistantEndpointMessages, setAssistantEndpointMessages] = useState<string[]>([]);
   const [assistantEndpointWarnings, setAssistantEndpointWarnings] = useState<string[]>([]);
+  const [assistantConversation, setAssistantConversation] = useState<AssistantConversationMessage[]>([]);
+  const [assistantResponse, setAssistantResponse] = useState<AssistantResponseState | null>(null);
   const [findingMessages, setFindingMessages] = useState<string[]>([]);
   const [findingMetricId, setFindingMetricId] = useState("");
   const [findingReason, setFindingReason] = useState("");
@@ -545,6 +1074,7 @@ function ReportAssistantPatchPanel(props: {
   const [isGeneratingPatch, setIsGeneratingPatch] = useState(false);
   const [isLoggingFinding, setIsLoggingFinding] = useState(false);
   const [isReviewingPlausibility, setIsReviewingPlausibility] = useState(false);
+  const [lastAssistantRetryRequest, setLastAssistantRetryRequest] = useState<AssistantRetryRequest | null>(null);
   const [patchDraft, setPatchDraft] = useState("");
   const [plausibilityMessages, setPlausibilityMessages] = useState<string[]>([]);
   const [plausibilityMetricId, setPlausibilityMetricId] = useState("");
@@ -562,6 +1092,10 @@ function ReportAssistantPatchPanel(props: {
       }),
     [baseDocument, document]
   );
+  const activeAssistantRequestsRef = useRef(createReportAssistantActiveRequestRegistry());
+  const latestAssistantContextSignatureRef = useRef(assistantContext.assistantContextSignature);
+  const skipConversationStorageWriteRef = useRef(true);
+  latestAssistantContextSignatureRef.current = assistantContext.assistantContextSignature;
   const parsedPatchDraft = useMemo(() => parseAssistantPatchDraft(patchDraft), [patchDraft]);
   const validation = useMemo(() => {
     if (!parsedPatchDraft.payload) {
@@ -579,21 +1113,72 @@ function ReportAssistantPatchPanel(props: {
       return [];
     }
 
+    const coveredTextReplacementKeys = new Set(
+      validation.operations.flatMap((operation) =>
+        operation.type === "text_value"
+          ? [`${operation.path}\u0000${operation.beforeValue}`]
+          : []
+      )
+    );
+
     return validation.operations.flatMap((operation) => {
       if (operation.type !== "metric_value") {
         return [];
       }
 
-      return findReportValueMentions(document, operation.beforeValue).map((mention) => ({
-        ...mention,
-        label: operation.label
-      }));
+      return findReportValueMentions(document, operation.beforeValue)
+        .filter((mention) => !coveredTextReplacementKeys.has(`${mention.path}\u0000${operation.beforeValue}`))
+        .map((mention) => ({
+          ...mention,
+          afterValue: operation.afterValue,
+          beforeValue: operation.beforeValue,
+          label: operation.label,
+          metricId: operation.metricId
+        }));
     });
   }, [document, validation]);
+  const lastConversationMetric = useMemo(() => {
+    for (let index = assistantConversation.length - 1; index >= 0; index -= 1) {
+      const metricId = assistantConversation[index]?.metricId;
+      const metric = metricId ? assistantContext.metrics.find((entry) => entry.id === metricId) : undefined;
+      if (metric) {
+        return metric;
+      }
+    }
+
+    return assistantContext.metrics.length === 1 ? assistantContext.metrics[0] : undefined;
+  }, [assistantContext.metrics, assistantConversation]);
+  const lastRecommendationText = useMemo(() => {
+    for (let index = assistantConversation.length - 1; index >= 0; index -= 1) {
+      const message = assistantConversation[index];
+      if (message?.role === "assistant" && message.recommendedActionText && message.metricId) {
+        const metricStillExists = assistantContext.metrics.some((metric) => metric.id === message.metricId);
+        if (metricStillExists) {
+          return message.recommendedActionText;
+        }
+      }
+    }
+
+    return undefined;
+  }, [assistantContext.metrics, assistantConversation]);
 
   useEffect(() => {
     setConfirmationChecked(false);
-  }, [assistantContext.documentSignature, patchDraft]);
+  }, [assistantContext.assistantContextSignature, patchDraft]);
+
+  useEffect(() => {
+    skipConversationStorageWriteRef.current = true;
+    setAssistantConversation(readReportAssistantConversationStorage(assistantContext.assistantContextSignature));
+  }, [assistantContext.assistantContextSignature]);
+
+  useEffect(() => {
+    if (skipConversationStorageWriteRef.current) {
+      skipConversationStorageWriteRef.current = false;
+      return;
+    }
+
+    writeReportAssistantConversationStorage(assistantContext.assistantContextSignature, assistantConversation);
+  }, [assistantContext.assistantContextSignature, assistantConversation]);
 
   useEffect(() => {
     const firstMetricId = assistantContext.metrics[0]?.id ?? "";
@@ -609,60 +1194,735 @@ function ReportAssistantPatchPanel(props: {
     validation?.status === "valid" ||
     (validation?.status === "requires_confirmation" && confirmationChecked);
 
-  async function handleGeneratePatchFromInstruction() {
-    if (instructionDraft.trim().length === 0) {
+  function appendAssistantConversationMessages(messages: readonly AssistantConversationMessage[]) {
+    setAssistantConversation((current) => [...current, ...messages].slice(-14));
+  }
+
+  function startAssistantRequest(kind: Parameters<typeof startReportAssistantRequest>[0]["kind"]): ReportAssistantActiveRequest {
+    return startReportAssistantRequest({
+      documentSignature: assistantContext.assistantContextSignature,
+      kind,
+      registry: activeAssistantRequestsRef.current
+    });
+  }
+
+  function isAssistantRequestActive(result: ReportAssistantRequestResult): boolean {
+    return isReportAssistantRequestResultActive({
+      currentDocumentSignature: latestAssistantContextSignatureRef.current,
+      registry: activeAssistantRequestsRef.current,
+      result
+    });
+  }
+
+  function isAssistantRequestRecordActive(
+    kind: Parameters<typeof isReportAssistantRequestRecordActive>[0]["kind"],
+    request: ReportAssistantActiveRequest
+  ): boolean {
+    return isReportAssistantRequestRecordActive({
+      currentDocumentSignature: latestAssistantContextSignatureRef.current,
+      kind,
+      registry: activeAssistantRequestsRef.current,
+      request
+    });
+  }
+
+  function finishAssistantRequest(kind: Parameters<typeof finishReportAssistantRequest>[0]["kind"], requestId: string) {
+    finishReportAssistantRequest({
+      kind,
+      registry: activeAssistantRequestsRef.current,
+      requestId
+    });
+  }
+
+  function getAssistantMetricById(metricId: string | undefined): ReportAssistantMetric | undefined {
+    return metricId ? assistantContext.metrics.find((metric) => metric.id === metricId) : undefined;
+  }
+
+  function getAssistantRetryLabel(request: AssistantRetryRequest | null): string {
+    if (!request) {
+      return "Retry latest";
+    }
+
+    if (request.kind === "patch_proposal") {
+      return "Retry patch";
+    }
+
+    if (request.kind === "assistant_assembly_research") {
+      return "Retry layer research";
+    }
+
+    return "Retry research";
+  }
+
+  async function handleRetryLatestAssistantRequest() {
+    if (!lastAssistantRetryRequest) {
+      toast.error("No assistant request to retry", {
+        description: "Send a research, plausibility, or patch request first."
+      });
+      return;
+    }
+
+    if (lastAssistantRetryRequest.kind === "patch_proposal") {
+      await handleGeneratePatchFromInstruction({
+        appendUserMessage: false,
+        displayInstruction: lastAssistantRetryRequest.displayInstruction,
+        instruction: lastAssistantRetryRequest.requestInstruction,
+        metric: getAssistantMetricById(lastAssistantRetryRequest.metricId)
+      });
+      return;
+    }
+
+    if (lastAssistantRetryRequest.kind === "assistant_assembly_research") {
+      await handleAssemblyAlternativeResearchInstruction({
+        appendUserMessage: false,
+        instruction: lastAssistantRetryRequest.instruction
+      });
+      return;
+    }
+
+    if (lastAssistantRetryRequest.kind === "assistant_research") {
+      const metric = getAssistantMetricById(lastAssistantRetryRequest.metricId);
+      if (!metric) {
+        toast.error("Cannot retry assistant research", {
+          description: "The original metric is no longer available in the current report document."
+        });
+        return;
+      }
+
+      await handleResearchAssistantInstruction({
+        appendUserMessage: false,
+        instruction: lastAssistantRetryRequest.instruction,
+        intentMetric: metric,
+        usePreviousResearchPacket: true
+      });
+      return;
+    }
+
+    await handleReviewPlausibility({
+      metricId: lastAssistantRetryRequest.metricId,
+      researchRequested: lastAssistantRetryRequest.researchRequested,
+      userInstruction: lastAssistantRetryRequest.userInstruction
+    });
+  }
+
+  async function handleAskAssistant() {
+    const instruction = instructionDraft.trim();
+    const intent = classifyReportAssistantInstructionIntent({
+      context: assistantContext,
+      instruction
+    });
+    const intentMetric = intent.metric ?? lastConversationMetric;
+    const followUpPatch = buildReportAssistantFollowUpPatchInstruction({
+      instruction,
+      previousMetric: intentMetric,
+      previousRecommendationText: lastRecommendationText
+    });
+
+    if (followUpPatch) {
+      await handleGeneratePatchFromInstruction({
+        displayInstruction: instruction,
+        instruction: followUpPatch.instruction,
+        metric: followUpPatch.metric
+      });
+      return;
+    }
+
+    if (
+      shouldRequestExplicitFollowUpPatchTarget({
+        instruction,
+        previousMetric: intentMetric,
+        previousRecommendationText: lastRecommendationText
+      })
+    ) {
+      handleAmbiguousFollowUpPatchInstruction(instruction, intentMetric);
+      return;
+    }
+
+    if (intent.intent === "explain") {
+      handleExplainAssistantInstruction(instruction, intentMetric);
+      return;
+    }
+
+    if (
+      intent.intentClass === "research_assembly_alternatives" ||
+      (intent.intentClass === "challenge_or_retry" && lastAssistantRetryRequest?.kind === "assistant_assembly_research")
+    ) {
+      await handleAssemblyAlternativeResearchInstruction({ instruction });
+      return;
+    }
+
+    if (intent.intent === "research") {
+      await handleResearchAssistantInstruction({
+        intentMetric,
+        usePreviousResearchPacket: intent.intentClass === "challenge_or_retry"
+      });
+      return;
+    }
+
+    await handleGeneratePatchFromInstruction({
+      displayInstruction: instruction,
+      metric: intentMetric
+    });
+  }
+
+  function handleAmbiguousFollowUpPatchInstruction(instruction: string, metric?: ReportAssistantMetric) {
+    if (instruction.length === 0) {
+      toast.error("Report assistant instruction is empty", {
+        description: "Ask about a current report metric or give a specific edit."
+      });
+      return;
+    }
+
+    const metricLabel = metric?.label ?? "the report value";
+    const detail = `I need a specific target before changing ${metricLabel}. Use a message like "${metricLabel} değerini 2 dB düşür" or "${metricLabel} 55 dB yap".`;
+    appendAssistantConversationMessages([
+      createReportAssistantConversationMessage({
+        content: instruction,
+        metricId: metric?.id,
+        role: "user"
+      }),
+      createReportAssistantConversationMessage({
+        content: detail,
+        metricId: metric?.id,
+        role: "assistant",
+        source: null,
+        status: "generated"
+      })
+    ]);
+    setInstructionDraft("");
+    setAssistantEndpointMessages([]);
+    setAssistantEndpointWarnings([]);
+    setAssistantResponse({
+      detail,
+      source: null,
+      status: "generated",
+      summary: "Edit needs a specific dB target."
+    });
+    toast.error("Assistant edit needs a target", {
+      description: `Give a dB movement or final value for ${metricLabel}.`
+    });
+  }
+
+  function handleExplainAssistantInstruction(instruction: string, metric?: ReportAssistantMetric) {
+    if (instruction.length === 0) {
+      toast.error("Report assistant instruction is empty", {
+        description: "Ask about the current report context, selected lane, formula, or one metric."
+      });
+      return;
+    }
+
+    const answer = buildReportAssistantContextTraceAnswer({
+      context: assistantContext,
+      instruction,
+      metric
+    });
+    appendAssistantConversationMessages([
+      createReportAssistantConversationMessage({
+        content: instruction,
+        metricId: answer.metricId,
+        role: "user"
+      }),
+      createReportAssistantConversationMessage({
+        content: answer.detail,
+        metricId: answer.metricId,
+        role: "assistant",
+        source: "context",
+        status: "generated"
+      })
+    ]);
+    setInstructionDraft("");
+    setAssistantEndpointMessages([]);
+    setAssistantEndpointWarnings([]);
+    setAssistantResponse({
+      detail: answer.detail,
+      source: "context",
+      status: "generated",
+      summary: answer.summary
+    });
+    toast.success("Assistant answer ready", {
+      description: "No report value was changed."
+    });
+  }
+
+  async function handleAssemblyAlternativeResearchInstruction(options?: {
+    appendUserMessage?: boolean;
+    instruction?: string;
+  }) {
+    const instruction = options?.instruction?.trim() ?? instructionDraft.trim();
+    if (instruction.length === 0) {
+      toast.error("Report assistant instruction is empty", {
+        description: "Ask about a layer or material alternative."
+      });
+      return;
+    }
+
+    const conversationInstruction = buildAssistantConversationInstruction({
+      conversation: assistantConversation,
+      instruction
+    });
+    if (options?.appendUserMessage ?? true) {
+      appendAssistantConversationMessages([
+        createReportAssistantConversationMessage({
+          content: instruction,
+          role: "user"
+        })
+      ]);
+      setInstructionDraft("");
+    }
+    setLastAssistantRetryRequest({
+      instruction,
+      kind: "assistant_assembly_research"
+    });
+    setIsReviewingPlausibility(true);
+    setAssistantEndpointMessages([]);
+    setAssistantEndpointWarnings([]);
+    setAssistantResponse(null);
+    setPlausibilityMessages([]);
+
+    const activeRequest = startAssistantRequest("assembly_alternatives_research");
+    let requestResult: ReportAssistantRequestResult | null = null;
+
+    try {
+      requestResult = await sendReportAssistantRequest({
+        body: {
+          context: assistantContext,
+          document,
+          request: {
+            research: true,
+            userInstruction: conversationInstruction
+          }
+        },
+        documentSignature: assistantContext.assistantContextSignature,
+        kind: "assembly_alternatives_research",
+        requestId: activeRequest.requestId,
+        url: "/api/report-assistant/assembly-alternatives"
+      });
+      if (!isAssistantRequestActive(requestResult)) {
+        return;
+      }
+
+      const payload = requestResult.payload;
+      const review = getReportAssistantAssemblyAlternativeReview(payload);
+      const source = getReportAssistantPlausibilitySource(payload);
+      const warnings = requestResult.warnings;
+
+      setAssistantEndpointWarnings(warnings);
+      if (!requestResult.ok || !review) {
+        const messages = getAssistantRequestMessages(requestResult);
+        setAssistantEndpointMessages(messages);
+        setAssistantResponse({
+          detail: messages.join(" "),
+          requestMeta: getAssistantRequestMeta(requestResult),
+          source,
+          status: "rejected",
+          summary: "Assistant layer research could not produce a review."
+        });
+        appendAssistantConversationMessages([
+          createReportAssistantConversationMessage({
+            content: messages.join(" "),
+            role: "assistant",
+            source,
+            status: "rejected"
+          })
+        ]);
+        toast.error("Assistant layer research failed", {
+          description: messages[0] ?? "The assembly alternative endpoint could not produce a result."
+        });
+        return;
+      }
+
+      setAssistantEndpointMessages([]);
+      setAssistantResponse({
+        detail: buildAssemblyAlternativeAssistantDetail(review),
+        requestMeta: getAssistantRequestMeta(requestResult),
+        source,
+        status: "generated",
+        summary: `Layer alternatives: ${formatAssemblyAlternativeLabel(review.comparability)} / ${formatAssemblyAlternativeLabel(review.sourceQuality)}`
+      });
+      appendAssistantConversationMessages([
+        createReportAssistantConversationMessage({
+          content: buildAssemblyAlternativeConversationText(review),
+          recommendedActionText: review.recommendedActionText,
+          role: "assistant",
+          source,
+          status: "generated"
+        })
+      ]);
+      toast.success("Assistant layer research ready", {
+        description: "The answer did not change the report. Send a separate edit instruction if you want a patch."
+      });
+    } catch (error) {
+      if (!isAssistantRequestRecordActive("assembly_alternatives_research", activeRequest)) {
+        return;
+      }
+
+      const message = error instanceof Error ? error.message : "The assembly alternative research route failed.";
+      setAssistantEndpointMessages([message]);
+      setAssistantResponse({
+        detail: message,
+        source: null,
+        status: "rejected",
+        summary: "Assistant layer research failed."
+      });
+      appendAssistantConversationMessages([
+        createReportAssistantConversationMessage({
+          content: message,
+          role: "assistant",
+          source: null,
+          status: "rejected"
+        })
+      ]);
+      toast.error("Assistant layer research failed", {
+        description: message
+      });
+    } finally {
+      if (!requestResult || isAssistantRequestActive(requestResult)) {
+        setIsReviewingPlausibility(false);
+      }
+      finishAssistantRequest("assembly_alternatives_research", activeRequest.requestId);
+    }
+  }
+
+  async function handleResearchAssistantInstruction(options?: {
+    appendUserMessage?: boolean;
+    instruction?: string;
+    intentMetric?: ReportAssistantMetric;
+    usePreviousResearchPacket?: boolean;
+  }) {
+    const instruction = options?.instruction?.trim() ?? instructionDraft.trim();
+    if (instruction.length === 0) {
+      toast.error("Report assistant instruction is empty", {
+        description: "Ask about a current report metric."
+      });
+      return;
+    }
+
+    const metricResolution = options?.intentMetric
+      ? { errors: [], metric: options.intentMetric }
+      : resolveReportAssistantInstructionMetric({
+          context: assistantContext,
+          instruction
+        });
+    if (!metricResolution.metric) {
+      setAssistantEndpointMessages(metricResolution.errors);
+      setAssistantEndpointWarnings([]);
+      setAssistantResponse({
+        detail: metricResolution.errors.join(" "),
+        source: null,
+        status: "rejected",
+        summary: "Research question needs one current report metric."
+      });
+      toast.error("Assistant research needs a metric", {
+        description: metricResolution.errors[0] ?? "Name a metric such as Rw, DnT,w, or Ln,w."
+      });
+      return;
+    }
+
+    const conversationInstruction = buildAssistantConversationInstruction({
+      conversation: assistantConversation,
+      instruction
+    });
+    const previousResearchReviewPacket = options?.usePreviousResearchPacket
+      ? getLatestReportAssistantResearchReviewPacket({
+          assistantContextSignature: assistantContext.assistantContextSignature,
+          messages: assistantConversation,
+          metricId: metricResolution.metric.id
+        })
+      : undefined;
+    if (options?.appendUserMessage ?? true) {
+      appendAssistantConversationMessages([
+        createReportAssistantConversationMessage({
+          content: instruction,
+          metricId: metricResolution.metric.id,
+          role: "user"
+        })
+      ]);
+      setInstructionDraft("");
+    }
+    setLastAssistantRetryRequest({
+      instruction,
+      kind: "assistant_research",
+      metricId: metricResolution.metric.id
+    });
+    setIsReviewingPlausibility(true);
+    setAssistantEndpointMessages([]);
+    setAssistantEndpointWarnings([]);
+    setAssistantResponse(null);
+    setPlausibilityMessages([]);
+    setPlausibilityMetricId(metricResolution.metric.id);
+    setPlausibilityResearchRequested(true);
+    setPlausibilityReview(null);
+    setPlausibilitySource(null);
+    setPlausibilityUserInstruction(instruction);
+    setPlausibilityWarnings([]);
+
+    const activeRequest = startAssistantRequest("plausibility_research");
+    let requestResult: ReportAssistantRequestResult | null = null;
+
+    try {
+      requestResult = await sendReportAssistantRequest({
+        body: {
+          context: assistantContext,
+          document,
+          review: {
+            metricId: metricResolution.metric.id,
+            previousReview: previousResearchReviewPacket,
+            research: true,
+            sources: [],
+            suggestPatch: false,
+            userChallengeText: previousResearchReviewPacket ? instruction : undefined,
+            userInstruction: conversationInstruction
+          }
+        },
+        documentSignature: assistantContext.assistantContextSignature,
+        kind: "plausibility_research",
+        requestId: activeRequest.requestId,
+        url: "/api/report-assistant/plausibility"
+      });
+      if (!isAssistantRequestActive(requestResult)) {
+        return;
+      }
+
+      const payload = requestResult.payload;
+      const review = getReportAssistantPlausibilityReview(payload);
+      const source = getReportAssistantPlausibilitySource(payload);
+      const warnings = requestResult.warnings;
+
+      setAssistantEndpointWarnings(warnings);
+      if (!requestResult.ok || !review) {
+        const messages = getAssistantRequestMessages(requestResult);
+        setAssistantEndpointMessages(messages);
+        setPlausibilityMessages(messages);
+        setAssistantResponse({
+          detail: messages.join(" "),
+          requestMeta: getAssistantRequestMeta(requestResult),
+          source,
+          status: "rejected",
+          summary: "Assistant research could not produce a review."
+        });
+        appendAssistantConversationMessages([
+          createReportAssistantConversationMessage({
+            content: messages.join(" "),
+            metricId: metricResolution.metric.id,
+            role: "assistant",
+            source,
+            status: "rejected"
+          })
+        ]);
+        toast.error("Assistant research failed", {
+          description: messages[0] ?? "The review endpoint could not produce a result."
+        });
+        return;
+      }
+
+      setPlausibilityReview(review);
+      setPlausibilitySource(source);
+      setPlausibilityWarnings(warnings);
+      setFindingMetricId(review.metricId);
+      setFindingReason(review.rationale.join(" "));
+      setFindingSeverity(review.severity === "high" || review.severity === "low" ? review.severity : "medium");
+      setFindingUserInstruction(instruction);
+      setFindingVerdict(
+        review.verdict === "likely_wrong" || review.verdict === "insufficient_context"
+          ? review.verdict
+          : "suspicious"
+      );
+      setAssistantEndpointMessages([]);
+      setAssistantResponse({
+        detail: buildPlausibilityAssistantDetail(review),
+        requestMeta: getAssistantRequestMeta(requestResult),
+        source,
+        status: "generated",
+        summary: `${review.metric}: ${review.verdict} / ${review.severity}`
+      });
+      appendAssistantConversationMessages([
+        createReportAssistantConversationMessage({
+          content: buildPlausibilityConversationText(review),
+          metricId: review.metricId,
+          recommendedActionText: review.recommendedActionText,
+          researchReviewPacket: createReportAssistantResearchReviewPacket({
+            assistantContextSignature: assistantContext.assistantContextSignature,
+            review,
+            source,
+            userInstruction: instruction
+          }),
+          role: "assistant",
+          source,
+          status: "generated"
+        })
+      ]);
+      toast.success("Assistant research ready", {
+        description: "The answer did not change the report. Send a separate edit instruction if you want a patch."
+      });
+    } catch (error) {
+      if (!isAssistantRequestRecordActive("plausibility_research", activeRequest)) {
+        return;
+      }
+
+      const message = error instanceof Error ? error.message : "The plausibility review route failed.";
+      setAssistantEndpointMessages([message]);
+      setPlausibilityMessages([message]);
+      setAssistantResponse({
+        detail: message,
+        source: null,
+        status: "rejected",
+        summary: "Assistant research failed."
+      });
+      appendAssistantConversationMessages([
+        createReportAssistantConversationMessage({
+          content: message,
+          metricId: metricResolution.metric.id,
+          role: "assistant",
+          source: null,
+          status: "rejected"
+        })
+      ]);
+      toast.error("Assistant research failed", {
+        description: message
+      });
+    } finally {
+      if (!requestResult || isAssistantRequestActive(requestResult)) {
+        setIsReviewingPlausibility(false);
+      }
+      finishAssistantRequest("plausibility_research", activeRequest.requestId);
+    }
+  }
+
+  async function handleGeneratePatchFromInstruction(options?: {
+    appendUserMessage?: boolean;
+    displayInstruction?: string;
+    instruction?: string;
+    metric?: ReportAssistantMetric;
+  }) {
+    const displayInstruction = options?.displayInstruction?.trim() ?? instructionDraft.trim();
+    const requestInstruction = options?.instruction?.trim() ?? displayInstruction;
+    if (displayInstruction.length === 0 || requestInstruction.length === 0) {
       toast.error("Report assistant instruction is empty", {
         description: "Name a metric and the report-only value movement."
       });
       return;
     }
 
+    if (options?.appendUserMessage ?? true) {
+      appendAssistantConversationMessages([
+        createReportAssistantConversationMessage({
+          content: displayInstruction,
+          metricId: options?.metric?.id,
+          role: "user"
+        })
+      ]);
+      setInstructionDraft("");
+    }
+    setLastAssistantRetryRequest({
+      displayInstruction,
+      kind: "patch_proposal",
+      metricId: options?.metric?.id,
+      requestInstruction
+    });
     setIsGeneratingPatch(true);
     setAssistantEndpointMessages([]);
     setAssistantEndpointWarnings([]);
+    setAssistantResponse(null);
+
+    const activeRequest = startAssistantRequest("patch_proposal");
+    let requestResult: ReportAssistantRequestResult | null = null;
 
     try {
-      const response = await fetch("/api/report-assistant/patch", {
-        body: JSON.stringify({
+      requestResult = await sendReportAssistantRequest({
+        body: {
           context: assistantContext,
           document,
-          instruction: instructionDraft
-        }),
-        headers: {
-          "content-type": "application/json"
+          instruction: requestInstruction
         },
-        method: "POST"
+        documentSignature: assistantContext.assistantContextSignature,
+        kind: "patch_proposal",
+        requestId: activeRequest.requestId,
+        url: "/api/report-assistant/patch"
       });
-      const payload = (await response.json()) as unknown;
+      if (!isAssistantRequestActive(requestResult)) {
+        return;
+      }
+
+      const payload = requestResult.payload;
       const patch = getReportAssistantEndpointPatch(payload);
-      const warnings = getReportAssistantEndpointWarnings(payload);
+      const warnings = requestResult.warnings;
       const source = getReportAssistantEndpointSource(payload);
+      const patchSummary = getReportAssistantPatchSummary(patch);
       setAssistantEndpointWarnings(warnings);
 
-      if (!response.ok || !patch) {
-        const messages = getReportAssistantEndpointMessages(payload);
+      if (!requestResult.ok || !patch) {
+        const messages = getAssistantRequestMessages(requestResult);
         setAssistantEndpointMessages(messages);
+        if (patch) {
+          setPatchDraft(JSON.stringify(patch, null, 2));
+        }
+        setAssistantResponse({
+          detail: messages.join(" ") || "No report values were changed.",
+          requestMeta: getAssistantRequestMeta(requestResult),
+          source,
+          status: "rejected",
+          summary: patchSummary ?? "The assistant returned a patch, but the guard rejected it."
+        });
+        appendAssistantConversationMessages([
+          createReportAssistantConversationMessage({
+            content: `${patchSummary ?? "Patch rejected."} ${messages.join(" ")}`,
+            metricId: options?.metric?.id,
+            role: "assistant",
+            source,
+            status: "rejected"
+          })
+        ]);
         toast.error("Assistant patch was rejected", {
           description: messages[0] ?? "The report assistant could not produce a valid patch."
         });
         return;
       }
 
-      setAssistantEndpointMessages([
-        source === "model" ? "Patch proposal came from the configured model provider." : "Patch proposal came from the deterministic parser."
+      setAssistantEndpointMessages([]);
+      setAssistantResponse({
+        detail: "This is only a proposal. The report snapshot is unchanged until Apply validated patch succeeds.",
+        requestMeta: getAssistantRequestMeta(requestResult),
+        source,
+        status: "generated",
+        summary: patchSummary ?? "The assistant generated a guarded patch."
+      });
+      appendAssistantConversationMessages([
+        createReportAssistantConversationMessage({
+          content: patchSummary ?? "The assistant generated a guarded patch preview.",
+          metricId: options?.metric?.id,
+          role: "assistant",
+          source,
+          status: "generated"
+        })
       ]);
       setPatchDraft(JSON.stringify(patch, null, 2));
       toast.success("Assistant patch generated", {
         description: "Review the guarded preview before applying it to the report snapshot."
       });
     } catch (error) {
+      if (!isAssistantRequestRecordActive("patch_proposal", activeRequest)) {
+        return;
+      }
+
       const message = error instanceof Error ? error.message : "The report assistant endpoint failed.";
       setAssistantEndpointMessages([message]);
+      appendAssistantConversationMessages([
+        createReportAssistantConversationMessage({
+          content: message,
+          metricId: options?.metric?.id,
+          role: "assistant",
+          source: null,
+          status: "rejected"
+        })
+      ]);
       toast.error("Assistant patch failed", {
         description: message
       });
     } finally {
-      setIsGeneratingPatch(false);
+      if (!requestResult || isAssistantRequestActive(requestResult)) {
+        setIsGeneratingPatch(false);
+      }
+      finishAssistantRequest("patch_proposal", activeRequest.requestId);
     }
   }
 
@@ -684,9 +1944,12 @@ function ReportAssistantPatchPanel(props: {
     setIsLoggingFinding(true);
     setFindingMessages([]);
 
+    const activeRequest = startAssistantRequest("finding_log");
+    let requestResult: ReportAssistantRequestResult | null = null;
+
     try {
-      const response = await fetch("/api/report-assistant/findings", {
-        body: JSON.stringify({
+      requestResult = await sendReportAssistantRequest({
+        body: {
           confirmed: true,
           context: assistantContext,
           finding: {
@@ -697,16 +1960,20 @@ function ReportAssistantPatchPanel(props: {
             userInstruction: findingUserInstruction,
             verdict: findingVerdict
           }
-        }),
-        headers: {
-          "content-type": "application/json"
         },
-        method: "POST"
+        documentSignature: assistantContext.assistantContextSignature,
+        kind: "finding_log",
+        requestId: activeRequest.requestId,
+        url: "/api/report-assistant/findings"
       });
-      const payload = (await response.json()) as unknown;
+      if (!isAssistantRequestActive(requestResult)) {
+        return;
+      }
 
-      if (!response.ok) {
-        const messages = getReportAssistantEndpointMessages(payload);
+      const payload = requestResult.payload;
+
+      if (!requestResult.ok) {
+        const messages = getAssistantRequestMessages(requestResult);
         setFindingMessages(messages);
         toast.error("Review finding was not logged", {
           description: messages[0] ?? "The review queue rejected this finding."
@@ -722,18 +1989,108 @@ function ReportAssistantPatchPanel(props: {
         description: "The record was appended outside calculator outputs and project scenario snapshots."
       });
     } catch (error) {
+      if (!isAssistantRequestRecordActive("finding_log", activeRequest)) {
+        return;
+      }
+
       const message = error instanceof Error ? error.message : "The review finding route failed.";
       setFindingMessages([message]);
       toast.error("Review finding failed", {
         description: message
       });
     } finally {
-      setIsLoggingFinding(false);
+      if (!requestResult || isAssistantRequestActive(requestResult)) {
+        setIsLoggingFinding(false);
+      }
+      finishAssistantRequest("finding_log", activeRequest.requestId);
     }
   }
 
-  async function handleReviewPlausibility() {
-    if (plausibilityMetricId.length === 0) {
+  function handleAddConsistencyReplacements() {
+    if (!validation || validation.status === "rejected" || !parsedPatchDraft.payload || staleValueMentions.length === 0) {
+      toast.error("No consistency replacements to add", {
+        description: "Generate a valid metric patch with stale report text mentions first."
+      });
+      return;
+    }
+
+    const currentPatch = parsedPatchDraft.payload;
+    if (
+      !currentPatch ||
+      typeof currentPatch !== "object" ||
+      typeof (currentPatch as { summary?: unknown }).summary !== "string" ||
+      !Array.isArray((currentPatch as { operations?: unknown }).operations)
+    ) {
+      toast.error("Patch JSON is not ready", {
+        description: "The current patch draft must be valid before consistency replacements can be added."
+      });
+      return;
+    }
+
+    const patchRecord = currentPatch as {
+      documentSignature?: unknown;
+      operations: unknown[];
+      requiresUserConfirmation?: unknown;
+      summary: string;
+    };
+    const existingReplacementKeys = new Set(
+      patchRecord.operations.flatMap((operation) => {
+        if (!operation || typeof operation !== "object") {
+          return [];
+        }
+
+        const record = operation as {
+          afterValue?: unknown;
+          beforeValue?: unknown;
+          path?: unknown;
+          type?: unknown;
+        };
+        return record.type === "replace_report_text_value" &&
+          typeof record.path === "string" &&
+          typeof record.beforeValue === "string" &&
+          typeof record.afterValue === "string"
+          ? [`${record.path}\u0000${record.beforeValue}\u0000${record.afterValue}`]
+          : [];
+      })
+    );
+    const consistencyOperations = staleValueMentions
+      .filter((mention) => !existingReplacementKeys.has(`${mention.path}\u0000${mention.beforeValue}\u0000${mention.afterValue}`))
+      .map((mention) => ({
+        afterValue: mention.afterValue,
+        beforeText: mention.value,
+        beforeValue: mention.beforeValue,
+        path: mention.path,
+        reason: `Keep ${mention.label} narrative text consistent with the approved report value ${mention.afterValue}.`,
+        type: "replace_report_text_value"
+      }));
+
+    if (consistencyOperations.length === 0) {
+      toast.info("Consistency replacements already added", {
+        description: "The current patch draft already contains guarded replacements for the detected stale text."
+      });
+      return;
+    }
+
+    setPatchDraft(JSON.stringify({
+      ...patchRecord,
+      summary: `${patchRecord.summary} Resolve stale report text mentions.`,
+      operations: [...patchRecord.operations, ...consistencyOperations]
+    }, null, 2));
+    toast.success("Consistency replacements added", {
+      description: "Review the updated guarded patch preview before applying it."
+    });
+  }
+
+  async function handleReviewPlausibility(options?: {
+    metricId?: string;
+    researchRequested?: boolean;
+    userInstruction?: string;
+  }) {
+    const reviewMetricId = options?.metricId ?? plausibilityMetricId;
+    const reviewResearchRequested = options?.researchRequested ?? plausibilityResearchRequested;
+    const reviewUserInstruction = options?.userInstruction ?? plausibilityUserInstruction;
+
+    if (reviewMetricId.length === 0) {
       toast.error("No report metric selected", {
         description: "Choose a current report metric before reviewing plausibility."
       });
@@ -745,32 +2102,45 @@ function ReportAssistantPatchPanel(props: {
     setPlausibilityReview(null);
     setPlausibilitySource(null);
     setPlausibilityWarnings([]);
+    setLastAssistantRetryRequest({
+      kind: "manual_plausibility",
+      metricId: reviewMetricId,
+      researchRequested: reviewResearchRequested,
+      userInstruction: reviewUserInstruction
+    });
+
+    const activeRequest = startAssistantRequest("plausibility_research");
+    let requestResult: ReportAssistantRequestResult | null = null;
 
     try {
-      const response = await fetch("/api/report-assistant/plausibility", {
-        body: JSON.stringify({
+      requestResult = await sendReportAssistantRequest({
+        body: {
           context: assistantContext,
           document,
           review: {
-            metricId: plausibilityMetricId,
-            research: plausibilityResearchRequested,
+            metricId: reviewMetricId,
+            research: reviewResearchRequested,
             sources: [],
-            suggestPatch: true,
-            userInstruction: plausibilityUserInstruction
+            suggestPatch: !reviewResearchRequested,
+            userInstruction: reviewUserInstruction
           }
-        }),
-        headers: {
-          "content-type": "application/json"
         },
-        method: "POST"
+        documentSignature: assistantContext.assistantContextSignature,
+        kind: "plausibility_research",
+        requestId: activeRequest.requestId,
+        url: "/api/report-assistant/plausibility"
       });
-      const payload = (await response.json()) as unknown;
+      if (!isAssistantRequestActive(requestResult)) {
+        return;
+      }
+
+      const payload = requestResult.payload;
       const review = getReportAssistantPlausibilityReview(payload);
       const source = getReportAssistantPlausibilitySource(payload);
-      const warnings = getReportAssistantEndpointWarnings(payload);
+      const warnings = requestResult.warnings;
 
-      if (!response.ok || !review) {
-        const messages = getReportAssistantEndpointMessages(payload);
+      if (!requestResult.ok || !review) {
+        const messages = getAssistantRequestMessages(requestResult);
         setPlausibilityMessages(messages);
         toast.error("Plausibility review failed", {
           description: messages[0] ?? "The review endpoint could not produce a result."
@@ -784,7 +2154,7 @@ function ReportAssistantPatchPanel(props: {
       setFindingMetricId(review.metricId);
       setFindingReason(review.rationale.join(" "));
       setFindingSeverity(review.severity === "high" || review.severity === "low" ? review.severity : "medium");
-      setFindingUserInstruction(plausibilityUserInstruction);
+      setFindingUserInstruction(reviewUserInstruction);
       setFindingVerdict(
         review.verdict === "likely_wrong" || review.verdict === "insufficient_context"
           ? review.verdict
@@ -794,13 +2164,20 @@ function ReportAssistantPatchPanel(props: {
         description: "The review did not change the report or calculator output."
       });
     } catch (error) {
+      if (!isAssistantRequestRecordActive("plausibility_research", activeRequest)) {
+        return;
+      }
+
       const message = error instanceof Error ? error.message : "The plausibility review route failed.";
       setPlausibilityMessages([message]);
       toast.error("Plausibility review failed", {
         description: message
       });
     } finally {
-      setIsReviewingPlausibility(false);
+      if (!requestResult || isAssistantRequestActive(requestResult)) {
+        setIsReviewingPlausibility(false);
+      }
+      finishAssistantRequest("plausibility_research", activeRequest.requestId);
     }
   }
 
@@ -823,12 +2200,31 @@ function ReportAssistantPatchPanel(props: {
     }
 
     try {
+      const responseSource = assistantResponse?.source ?? null;
+      const appliedSummary = validation.patchSummary || "Assistant patch applied.";
       const nextDocument = applyValidatedReportAssistantPatch(document, validation, {
         confirmed: confirmationChecked,
         scope: "export_only",
         source: "assistant"
       });
       onApply(nextDocument);
+      setPatchDraft("");
+      setAssistantEndpointMessages([]);
+      setAssistantEndpointWarnings([]);
+      setAssistantResponse({
+        detail: "The PDF editor snapshot now contains the assistant adjustment. Click Save edits to persist it for preview/export.",
+        source: responseSource,
+        status: "applied",
+        summary: appliedSummary
+      });
+      appendAssistantConversationMessages([
+        createReportAssistantConversationMessage({
+          content: appliedSummary,
+          role: "assistant",
+          source: responseSource,
+          status: "applied"
+        })
+      ]);
       toast.success("Assistant patch applied to this report snapshot", {
         description: "Engine values and calculator inputs were not changed."
       });
@@ -844,26 +2240,49 @@ function ReportAssistantPatchPanel(props: {
       <div className="rounded-[1rem] border hairline bg-[color:var(--paper)]/82 px-4 py-4">
         <div className="flex min-w-0 items-center gap-2">
           <Bot className="h-4 w-4 shrink-0 text-[color:var(--accent)]" />
-          <div className="text-sm font-semibold text-[color:var(--ink)]">Ask assistant for a report patch</div>
+          <div className="text-sm font-semibold text-[color:var(--ink)]">Ask report assistant</div>
         </div>
         <div className="mt-3 grid gap-3 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
           <EditorTextarea
-            label="Instruction"
-            note="Examples: set Rw to 55 dB, make Ln,w 3 dB lower, raise DnT,w by 2 dB."
+            label="Message"
+            note="Write naturally: sence Rw doğru mu, internette araştır, Rw değerini 2 dB düşür."
             onChange={setInstructionDraft}
             rows={3}
             value={instructionDraft}
           />
-          <button
-            className="focus-ring inline-flex items-center justify-center gap-2 rounded-full border hairline px-4 py-3 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
-            disabled={isGeneratingPatch}
-            onClick={() => void handleGeneratePatchFromInstruction()}
-            type="button"
-          >
-            <Send className="h-4 w-4" />
-            {isGeneratingPatch ? "Generating..." : "Generate guarded patch"}
-          </button>
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              className="focus-ring inline-flex items-center justify-center gap-2 rounded-full border hairline px-4 py-3 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={isGeneratingPatch || isReviewingPlausibility}
+              onClick={() => void handleAskAssistant()}
+              type="button"
+            >
+              <Send className="h-4 w-4" />
+              {isGeneratingPatch || isReviewingPlausibility ? "Working..." : "Ask assistant"}
+            </button>
+            <button
+              className="focus-ring inline-flex items-center justify-center gap-2 rounded-full border hairline px-4 py-3 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={!lastAssistantRetryRequest || isGeneratingPatch || isReviewingPlausibility}
+              onClick={() => void handleRetryLatestAssistantRequest()}
+              type="button"
+            >
+              <RefreshCcw className="h-4 w-4" />
+              {getAssistantRetryLabel(lastAssistantRetryRequest)}
+            </button>
+          </div>
         </div>
+        {assistantConversation.length > 0 ? (
+          <div className="mt-4 grid gap-2 border-t border-[color:var(--line)] pt-3">
+            {assistantConversation.map((message) => (
+              <div className={`rounded-[0.9rem] border px-3 py-2 text-sm leading-6 ${getConversationMessageTone(message)}`} key={message.id}>
+                <div className="text-[0.66rem] font-semibold uppercase tracking-[0.16em] opacity-75">
+                  {message.role === "user" ? "You" : `Assistant | ${getAssistantSourceLabel(message.source ?? null)}`}
+                </div>
+                <div className="mt-1 whitespace-pre-wrap break-words">{message.content}</div>
+              </div>
+            ))}
+          </div>
+        ) : null}
         {assistantEndpointMessages.length > 0 ? (
           <div className="mt-3 grid gap-2 rounded-[1rem] border border-red-300 bg-red-50 px-3 py-3 text-sm leading-6 text-red-800">
             {assistantEndpointMessages.map((message) => <div key={message}>{message}</div>)}
@@ -872,6 +2291,20 @@ function ReportAssistantPatchPanel(props: {
         {assistantEndpointWarnings.length > 0 ? (
           <div className="mt-3 grid gap-2 rounded-[1rem] border border-amber-300 bg-amber-50 px-3 py-3 text-sm leading-6 text-amber-950">
             {assistantEndpointWarnings.map((warning) => <div key={warning}>{warning}</div>)}
+          </div>
+        ) : null}
+        {assistantResponse ? (
+          <div className={`mt-3 rounded-[1rem] border px-3 py-3 text-sm leading-6 ${getAssistantResponseTone(assistantResponse.status)}`}>
+            <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] opacity-80">
+              Assistant response | {getAssistantSourceLabel(assistantResponse.source)}
+            </div>
+            <div className="mt-2 font-semibold">{assistantResponse.summary}</div>
+            <div className="mt-1 whitespace-pre-wrap break-words">{assistantResponse.detail}</div>
+            {assistantResponse.requestMeta ? (
+              <div className="mt-2 text-[0.68rem] font-semibold uppercase tracking-[0.14em] opacity-70">
+                {formatAssistantRequestMeta(assistantResponse.requestMeta)}
+              </div>
+            ) : null}
           </div>
         ) : null}
       </div>
@@ -899,11 +2332,19 @@ function ReportAssistantPatchPanel(props: {
           <div className={`mt-3 rounded-[1rem] border px-3 py-3 text-sm font-semibold ${getAssistantValidationTone(validation)}`}>
             {parsedPatchDraft.parseError ? "Invalid JSON" : getAssistantValidationLabel(validation)}
           </div>
+          <p className="mt-3 text-sm leading-6 text-[color:var(--ink-soft)]">
+            {validation
+              ? validation.status === "rejected"
+                ? "Rejected means preview only: this patch cannot change the report unless the guard becomes valid."
+                : "Generated patches are preview only until Apply validated patch succeeds."
+              : "Ask the assistant or paste a patch JSON to see a guarded preview."}
+          </p>
           {parsedPatchDraft.parseError ? (
             <p className="mt-3 text-sm leading-6 text-red-700">{parsedPatchDraft.parseError}</p>
           ) : null}
           <div className="mt-3 grid gap-2 text-sm leading-6 text-[color:var(--ink-soft)]">
             <div>Document signature: <span className="font-mono text-[0.78rem]">{assistantContext.documentSignature}</span></div>
+            <div>Assistant context signature: <span className="font-mono text-[0.78rem]">{assistantContext.assistantContextSignature}</span></div>
             <div>{assistantContext.metrics.length} report metric{assistantContext.metrics.length === 1 ? "" : "s"} exposed to the assistant context.</div>
             <div>Default scope: export-only until Save edits is clicked.</div>
           </div>
@@ -975,10 +2416,23 @@ function ReportAssistantPatchPanel(props: {
                     </div>
                     <div>{operation.reason}</div>
                   </>
-                ) : (
+                ) : operation.type === "report_note" ? (
                   <>
                     <div className="font-semibold text-[color:var(--ink)]">Append {operation.section} note</div>
                     <div>{operation.text}</div>
+                  </>
+                ) : (
+                  <>
+                    <div className="font-semibold text-[color:var(--ink)]">
+                      Replace stale text at {operation.path}: {operation.beforeValue} {"->"} {operation.afterValue}
+                    </div>
+                    <div>{operation.reason}</div>
+                    <div className="mt-2 rounded-[0.75rem] border hairline bg-[color:var(--paper)] px-3 py-2">
+                      {operation.afterText}
+                    </div>
+                    {operation.replacementCount > 1 ? (
+                      <div className="mt-1 text-amber-800">{operation.replacementCount} literal occurrences will be replaced in this text field.</div>
+                    ) : null}
                   </>
                 )}
               </div>
@@ -988,8 +2442,17 @@ function ReportAssistantPatchPanel(props: {
             <div className="mt-3 rounded-[1rem] border border-amber-300 bg-amber-50 px-3 py-3 text-sm leading-6 text-amber-950">
               <div className="font-semibold">Old value text still appears outside metric rows.</div>
               {staleValueMentions.map((mention) => (
-                <div key={`${mention.label}-${mention.path}`}>{mention.label}: {mention.path}</div>
+                <div key={`${mention.label}-${mention.path}`}>{mention.label}: {mention.path} ({mention.beforeValue} {"->"} {mention.afterValue})</div>
               ))}
+              <button
+                className="focus-ring mt-3 inline-flex items-center justify-center gap-2 rounded-full border border-amber-400 bg-white/70 px-3 py-2 text-sm font-semibold text-amber-950 hover:bg-white disabled:cursor-not-allowed disabled:opacity-50"
+                disabled={validation.status === "rejected"}
+                onClick={handleAddConsistencyReplacements}
+                type="button"
+              >
+                <ShieldCheck className="h-4 w-4" />
+                Add guarded text replacements
+              </button>
             </div>
           ) : null}
         </div>
@@ -1060,16 +2523,69 @@ function ReportAssistantPatchPanel(props: {
               Report {plausibilityReview.valueReviewed}
               {plausibilityReview.engineDisplayValue ? ` | Engine ${plausibilityReview.engineDisplayValue}` : ""}
             </div>
+            {plausibilityReview.comparability || plausibilityReview.sourceQuality || plausibilityReview.confidence || plausibilityReview.valueRecommendation || plausibilityReview.valueRange ? (
+              <div className="mt-2 rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3">
+                {plausibilityReview.comparability ? `Comparability: ${formatAssemblyAlternativeLabel(plausibilityReview.comparability)}. ` : ""}
+                {plausibilityReview.sourceQuality ? `Source quality: ${formatAssemblyAlternativeLabel(plausibilityReview.sourceQuality)}. ` : ""}
+                {plausibilityReview.confidence ? `Confidence: ${formatAssemblyAlternativeLabel(plausibilityReview.confidence)}. ` : ""}
+                {plausibilityReview.valueRecommendation ? `Value recommendation: ${formatPlausibilityValueRecommendation(plausibilityReview.valueRecommendation)}. ` : ""}
+                {plausibilityReview.valueRange ? `Value range: ${formatPlausibilityValueRange(plausibilityReview.valueRange)}.` : ""}
+              </div>
+            ) : null}
+            {plausibilityReview.answerText ? (
+              <div className="mt-3 whitespace-pre-wrap rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3 font-semibold text-[color:var(--ink)]">
+                {plausibilityReview.answerText}
+              </div>
+            ) : null}
+            {plausibilityReview.insufficientSourcesReason ? (
+              <div className="mt-3 rounded-[1rem] border border-amber-300 bg-amber-50 px-3 py-3 font-semibold text-amber-950">
+                {plausibilityReview.insufficientSourcesReason}
+              </div>
+            ) : null}
+            {plausibilityReview.missingEvidence.length > 0 ? (
+              <div className="mt-3 grid gap-1 rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3">
+                <div className="font-semibold text-[color:var(--ink)]">Missing evidence</div>
+                {plausibilityReview.missingEvidence.map((line) => <div key={line}>{line}</div>)}
+              </div>
+            ) : null}
+            {plausibilityReview.comparableAssemblies.length > 0 ? (
+              <div className="mt-3 grid gap-2 rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3">
+                <div className="font-semibold text-[color:var(--ink)]">Comparable assemblies</div>
+                {plausibilityReview.comparableAssemblies.map((assembly) => (
+                  <div className="grid gap-1" key={assembly.label}>
+                    <div className="font-semibold text-[color:var(--ink)]">{assembly.label}</div>
+                    {assembly.description ? <div>{assembly.description}</div> : null}
+                    {assembly.metricValues.length > 0 ? <div>Metrics: {assembly.metricValues.join(", ")}</div> : null}
+                    {assembly.matchingLayers.length > 0 ? <div>Similar layers: {assembly.matchingLayers.join(", ")}</div> : null}
+                    {assembly.weakeningDifferences.length > 0 ? <div>Weakening differences: {assembly.weakeningDifferences.join(", ")}</div> : null}
+                    {assembly.comparisonNote ? <div>{assembly.comparisonNote}</div> : null}
+                    {assembly.sourceUrl ? (
+                      <a className="break-words text-[color:var(--accent)] underline" href={assembly.sourceUrl} rel="noreferrer" target="_blank">
+                        {assembly.sourceTitle ?? assembly.sourceUrl}
+                      </a>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            ) : null}
             <div className="mt-2 grid gap-1">
               {plausibilityReview.rationale.map((line) => <div key={line}>{line}</div>)}
             </div>
+            {plausibilityReview.recommendedActionText ? (
+              <div className="mt-3 rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3 font-semibold text-[color:var(--ink)]">
+                {plausibilityReview.recommendedActionText}
+              </div>
+            ) : null}
             {plausibilityReview.sources.length > 0 ? (
               <div className="mt-3 grid gap-2 rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3">
                 <div className="font-semibold text-[color:var(--ink)]">Sources</div>
                 {plausibilityReview.sources.map((source) => (
-                  <a className="break-words text-[color:var(--accent)] underline" href={source.url} key={source.url} rel="noreferrer" target="_blank">
-                    {source.title}
-                  </a>
+                  <div className="grid gap-1" key={source.url}>
+                    <a className="break-words text-[color:var(--accent)] underline" href={source.url} rel="noreferrer" target="_blank">
+                      {source.title}
+                    </a>
+                    {source.note ? <div className="text-xs leading-5 text-[color:var(--ink-faint)]">{source.note}</div> : null}
+                  </div>
                 ))}
               </div>
             ) : null}
@@ -1217,6 +2733,20 @@ export function ProposalAdjustClientPage() {
   const responseCurves = editableDocument?.responseCurves ?? [];
   const isSimplePdfMode = activePdfStyle === "simple";
   const editorSectionMap = isSimplePdfMode ? SIMPLE_PDF_SECTION_MAP : BRANDED_PDF_SECTION_MAP;
+  const reportConsistencyMentions = useMemo(
+    () =>
+      editableDocument
+        ? findReportAdjustmentConsistencyMentions(editableDocument, {
+            baseDocument: baseDocument ?? undefined
+          })
+        : [],
+    [baseDocument, editableDocument]
+  );
+  const blockingReportConsistencyMentions = useMemo(
+    () => reportConsistencyMentions.filter((mention) => mention.blocking),
+    [reportConsistencyMentions]
+  );
+  const reportConsistencyGateBlocked = blockingReportConsistencyMentions.length > 0;
 
   function updateDocument(mutator: (current: SimpleWorkbenchProposalDocument) => SimpleWorkbenchProposalDocument) {
     setEditableDocument((current) => (current ? mutator(current) : current));
@@ -1231,6 +2761,15 @@ export function ProposalAdjustClientPage() {
 
   function persistCurrentDocument(options?: { silent?: boolean }): boolean {
     if (!editableDocument || !baseDocument) {
+      return false;
+    }
+
+    if (reportConsistencyGateBlocked) {
+      if (!options?.silent) {
+        toast.error("Resolve report consistency findings before saving", {
+          description: `${blockingReportConsistencyMentions.length} report text finding${blockingReportConsistencyMentions.length === 1 ? "" : "s"} still need consistency handling.`
+        });
+      }
       return false;
     }
 
@@ -1295,7 +2834,12 @@ export function ProposalAdjustClientPage() {
       return;
     }
 
-    persistCurrentDocument({ silent: true });
+    if (!persistCurrentDocument({ silent: true })) {
+      toast.error("Resolve report consistency findings before preview", {
+        description: "The preview is blocked until report text and qualitative claims are consistent with approved value changes."
+      });
+      return;
+    }
     window.location.assign(`/workbench/proposal?style=${activePdfStyle}`);
   }
 
@@ -1303,6 +2847,13 @@ export function ProposalAdjustClientPage() {
     if (!editableDocument) {
       toast.error("No proposal loaded", {
         description: "Return to the workbench and package a proposal first."
+      });
+      return;
+    }
+
+    if (reportConsistencyGateBlocked) {
+      toast.error("Resolve report consistency findings before export", {
+        description: `${blockingReportConsistencyMentions.length} report text finding${blockingReportConsistencyMentions.length === 1 ? "" : "s"} still refer to stale values or qualitative claims.`
       });
       return;
     }
@@ -1441,6 +2992,20 @@ export function ProposalAdjustClientPage() {
         </div>
       </SurfacePanel>
 
+      <CollapsibleEditorSection
+        defaultOpen
+        description="Current snapshot context for acoustic value review and guarded PDF edits."
+        eyebrow="Assistant"
+        summary={`${editableDocument.primaryMetricLabel} ${editableDocument.primaryMetricValue}`}
+        title="Report assistant"
+      >
+        <ReportAssistantPatchPanel
+          baseDocument={baseDocument}
+          document={editableDocument}
+          onApply={(nextDocument) => setEditableDocument(nextDocument)}
+        />
+      </CollapsibleEditorSection>
+
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1.08fr)_minmax(28rem,0.92fr)] 2xl:grid-cols-[minmax(0,1.02fr)_minmax(32rem,0.98fr)]">
         <div className="grid gap-4">
             {activeEditorTab === "essentials" ? (
@@ -1546,20 +3111,6 @@ export function ProposalAdjustClientPage() {
                     />
                   ) : null}
                 </EditorSection>
-
-                <CollapsibleEditorSection
-                  defaultOpen={(editableDocument.reportAdjustments?.length ?? 0) > 0}
-                  description="Paste a model-proposed patch here when the assistant should manipulate report values. The app validates metric ids, current values, unsupported outputs, and large dB movements before applying anything."
-                  eyebrow="Assistant guard"
-                  summary={`${editableDocument.reportAdjustments?.length ?? 0} report adjustment${(editableDocument.reportAdjustments?.length ?? 0) === 1 ? "" : "s"}`}
-                  title="Assistant guarded report adjustments"
-                >
-                  <ReportAssistantPatchPanel
-                    baseDocument={baseDocument}
-                    document={editableDocument}
-                    onApply={(nextDocument) => setEditableDocument(nextDocument)}
-                  />
-                </CollapsibleEditorSection>
 
                 <CollapsibleEditorSection
                   defaultOpen
@@ -2557,9 +4108,34 @@ export function ProposalAdjustClientPage() {
                 </div>
               </div>
 
+              {reportConsistencyMentions.length > 0 ? (
+                <div className={`mt-4 rounded-[1rem] border px-3 py-3 text-sm leading-6 ${
+                  reportConsistencyGateBlocked
+                    ? "border-amber-300 bg-amber-50 text-amber-950"
+                    : "border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--ink-soft)]"
+                }`}>
+                  <div className="font-semibold text-[color:var(--ink)]">
+                    {reportConsistencyGateBlocked ? "Report consistency blocks save/export" : "Report consistency checked"}
+                  </div>
+                  <div className="mt-1">
+                    {reportConsistencyGateBlocked
+                      ? "Resolve these stale value mentions or qualitative metric claims before saving, previewing, or exporting."
+                      : "Only non-blocking value/evidence mentions remain."}
+                  </div>
+                  <div className="mt-2 grid gap-1">
+                    {reportConsistencyMentions.map((mention) => (
+                      <div key={`${mention.metricId}-${mention.path}-${mention.beforeValue}`}>
+                        {mention.label}: {mention.path} ({mention.beforeValue} {"->"} {mention.afterValue}) | {mention.classification}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+
               <div className="mt-4 flex flex-wrap gap-2">
                 <button
-                  className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
+                  className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
+                  disabled={reportConsistencyGateBlocked}
                   onClick={() => persistCurrentDocument()}
                   type="button"
                 >
@@ -2567,7 +4143,8 @@ export function ProposalAdjustClientPage() {
                   Save edits
                 </button>
                 <button
-                  className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
+                  className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
+                  disabled={reportConsistencyGateBlocked}
                   onClick={handleOpenPreview}
                   type="button"
                 >
@@ -2576,7 +4153,7 @@ export function ProposalAdjustClientPage() {
                 </button>
                 <button
                   className="focus-ring ink-button-solid inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-50"
-                  disabled={isDownloadingExport}
+                  disabled={isDownloadingExport || reportConsistencyGateBlocked}
                   onClick={() => void handleDownloadExport(activePdfStyle, "pdf")}
                   type="button"
                 >
@@ -2585,7 +4162,7 @@ export function ProposalAdjustClientPage() {
                 </button>
                 <button
                   className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
-                  disabled={isDownloadingExport}
+                  disabled={isDownloadingExport || reportConsistencyGateBlocked}
                   onClick={() => void handleDownloadExport(activePdfStyle, "docx")}
                   type="button"
                 >

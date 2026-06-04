@@ -7,6 +7,7 @@ import {
   getReportAssistantMetricId
 } from "./report-assistant-context";
 import {
+  buildSystemLlmGeminiProxyRequest,
   createReportAssistantPatchProposal,
   extractReportAssistantPatchFromModelResponse,
   getReportAssistantModelSettings
@@ -187,6 +188,7 @@ describe("report assistant model patch provider", () => {
       instruction: "make Rw a bit more conservative",
       settings: {
         endpoint: "http://system_llm:4000/gemini-proxy",
+        provider: "custom_patch_provider",
         timeoutMs: 1000
       }
     });
@@ -216,6 +218,7 @@ describe("report assistant model patch provider", () => {
       instruction: "make Rw 3 dB lower",
       settings: {
         endpoint: "http://system_llm:4000/gemini-proxy",
+        provider: "custom_patch_provider",
         timeoutMs: 1000
       }
     });
@@ -249,8 +252,15 @@ describe("report assistant model patch provider", () => {
       })
     ).toMatchObject({
       endpoint: "http://system_llm:4000/gemini-proxy",
+      provider: "custom_patch_provider",
       timeoutMs: 30000
     });
+    expect(
+      getReportAssistantModelSettings({
+        DYNECHO_REPORT_ASSISTANT_MODEL_ENDPOINT: "http://system_llm:4000/gemini-proxy",
+        DYNECHO_REPORT_ASSISTANT_MODEL_PROVIDER: "unknown_provider"
+      })
+    ).toBeNull();
 
     expect(
       extractReportAssistantPatchFromModelResponse({
@@ -265,6 +275,175 @@ describe("report assistant model patch provider", () => {
     ).toEqual({
       operations: [],
       summary: "ok"
+    });
+  });
+
+  it("builds system_llm Gemini proxy generateContent requests without document rewrites", () => {
+    const currentContext = context();
+    const request = buildSystemLlmGeminiProxyRequest({
+      context: currentContext,
+      instruction: "make Rw 2 dB lower",
+      settings: {
+        endpoint: "http://system_llm:4000/gemini-proxy?token=do-not-forward",
+        model: "gemini-3-flash-preview",
+        provider: "system_llm_gemini_proxy",
+        proxyKey: "proxy-secret",
+        timeoutMs: 12000
+      }
+    });
+
+    expect(request.url).toBe("http://system_llm:4000/gemini-proxy/v1beta/models/gemini-3-flash-preview:generateContent");
+    expect(request.headers).toMatchObject({
+      Authorization: "Bearer proxy-secret",
+      "content-type": "application/json",
+      "x-goog-api-key": "proxy-secret"
+    });
+    expect(JSON.stringify(request.body)).not.toContain("do-not-forward");
+    expect(request.body).toMatchObject({
+      generationConfig: {
+        maxOutputTokens: 2048,
+        responseMimeType: "application/json",
+        temperature: 0
+      },
+      systemInstruction: {
+        parts: [
+          {
+            text: expect.stringContaining("Return only one ReportAssistantPatch JSON object.")
+          }
+        ]
+      }
+    });
+
+    const userText = request.body.contents[0]?.parts[0]?.text ?? "";
+    const payload = JSON.parse(userText) as {
+      context: {
+        documentSignature: string;
+        metrics: readonly {
+          id: string;
+          reportDisplayValue: string;
+        }[];
+      };
+      contract: {
+        output: string;
+        schema: {
+          operations: readonly unknown[];
+        };
+      };
+      instruction: string;
+      task: string;
+    };
+
+    expect(payload).toMatchObject({
+      contract: {
+        output: "ReportAssistantPatch JSON only"
+      },
+      context: {
+        documentSignature: currentContext.documentSignature,
+        metrics: [
+          expect.objectContaining({
+            id: RW_METRIC_ID,
+            reportDisplayValue: "61 dB"
+          })
+        ]
+      },
+      instruction: "make Rw 2 dB lower",
+      task: "dynecho.report_assistant.patch_proposal"
+    });
+    expect(payload.contract.schema.operations).toEqual([
+      expect.objectContaining({
+        deltaDb: -2,
+        metricId: "output:Rw",
+        type: "adjust_metric_db"
+      }),
+      expect.objectContaining({
+        displayValue: "55 dB",
+        type: "set_metric_display_value"
+      }),
+      expect.objectContaining({
+        section: "assumptions",
+        type: "append_report_note"
+      })
+    ]);
+    expect(JSON.stringify(payload)).not.toContain("executiveSummary");
+  });
+
+  it("calls system_llm Gemini proxy and parses candidate patch text", async () => {
+    const fetchMock = vi.fn(async (url: string | URL | Request, init?: RequestInit) => {
+      expect(String(url)).toBe("http://system_llm:4000/gemini-proxy/v1beta/models/gemini-3-flash-preview:generateContent");
+      expect(init?.headers).toMatchObject({
+        Authorization: "Bearer proxy-secret",
+        "x-goog-api-key": "proxy-secret"
+      });
+
+      const body = JSON.parse(String(init?.body)) as {
+        contents: readonly {
+          parts: readonly { text: string }[];
+        }[];
+        generationConfig: {
+          responseMimeType: string;
+        };
+        systemInstruction: {
+          parts: readonly { text: string }[];
+        };
+      };
+      expect(body.generationConfig.responseMimeType).toBe("application/json");
+      expect(body.systemInstruction.parts[0]?.text).toContain("Do not apply");
+      expect(JSON.parse(body.contents[0]?.parts[0]?.text ?? "{}")).toMatchObject({
+        task: "dynecho.report_assistant.patch_proposal"
+      });
+
+      return new Response(
+        JSON.stringify({
+          candidates: [
+            {
+              content: {
+                parts: [
+                  {
+                    text: JSON.stringify({
+                      documentSignature: context().documentSignature,
+                      operations: [
+                        {
+                          deltaDb: -2,
+                          metricId: RW_METRIC_ID,
+                          reason: "Model proposed a conservative issued-report value.",
+                          type: "adjust_metric_db"
+                        }
+                      ],
+                      summary: "Lower Rw by 2 dB."
+                    })
+                  }
+                ]
+              }
+            }
+          ]
+        })
+      );
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const result = await createReportAssistantPatchProposal({
+      context: context(),
+      instruction: "make Rw 2 dB lower",
+      settings: {
+        endpoint: "http://system_llm:4000/gemini-proxy",
+        model: "gemini-3-flash-preview",
+        provider: "system_llm_gemini_proxy",
+        proxyKey: "proxy-secret",
+        timeoutMs: 1000
+      }
+    });
+
+    expect(result).toMatchObject({
+      ok: true,
+      patch: {
+        operations: [
+          {
+            deltaDb: -2,
+            metricId: RW_METRIC_ID
+          }
+        ]
+      },
+      source: "model"
     });
   });
 });

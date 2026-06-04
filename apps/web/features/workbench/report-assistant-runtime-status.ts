@@ -1,5 +1,5 @@
 import { REPORT_ASSISTANT_FINDINGS_RELATIVE_PATH } from "./report-assistant-finding";
-import { getReportAssistantModelSettings } from "./report-assistant-model";
+import { getReportAssistantModelSettings, type ReportAssistantModelProvider } from "./report-assistant-model";
 import { getReportAssistantPlausibilityResearchSettings } from "./report-assistant-plausibility-research";
 import { REPORT_ASSISTANT_MCP_TOOL_DEFINITIONS } from "./report-assistant-tools";
 
@@ -11,6 +11,9 @@ export type ReportAssistantProviderRuntimeStatus = {
     pathname: string;
   };
   model?: string;
+  provider?: ReportAssistantModelProvider | "research_provider";
+  proxyKeyConfigured?: boolean;
+  readinessWarnings?: readonly string[];
   timeoutMs?: number;
 };
 
@@ -41,6 +44,8 @@ function providerStatus(input: {
   apiKey?: string;
   endpoint?: string;
   model?: string;
+  provider?: ReportAssistantModelProvider | "research_provider";
+  proxyKey?: string;
   timeoutMs?: number;
 } | null): ReportAssistantProviderRuntimeStatus {
   if (!input) {
@@ -55,8 +60,28 @@ function providerStatus(input: {
     configured: true,
     endpoint: input.endpoint ? summarizeEndpoint(input.endpoint) : undefined,
     model: input.model,
+    provider: input.provider,
+    proxyKeyConfigured: Boolean(input.proxyKey),
+    readinessWarnings: readinessWarnings(input),
     timeoutMs: input.timeoutMs
   };
+}
+
+function readinessWarnings(input: {
+  endpoint?: string;
+  provider?: ReportAssistantModelProvider | "research_provider";
+}): string[] {
+  if (input.provider !== "system_llm_gemini_proxy" || !input.endpoint) {
+    return [];
+  }
+
+  const endpoint = new URL(input.endpoint);
+  const warnings: string[] = [];
+  if (!endpoint.pathname.endsWith("/gemini-proxy")) {
+    warnings.push("system_llm_gemini_proxy endpoint should end with /gemini-proxy.");
+  }
+
+  return warnings;
 }
 
 export function getReportAssistantRuntimeStatus(input?: {
@@ -73,7 +98,7 @@ export function getReportAssistantRuntimeStatus(input?: {
     generatedAtIso: now().toISOString(),
     modelProvider: providerStatus(modelSettings),
     mutatingToolsExposed: false,
-    researchProvider: providerStatus(researchSettings),
+    researchProvider: providerStatus(researchSettings ? { ...researchSettings, provider: "research_provider" } : null),
     tools: REPORT_ASSISTANT_MCP_TOOL_DEFINITIONS.map((tool) => ({
       description: tool.description,
       mutates: false,

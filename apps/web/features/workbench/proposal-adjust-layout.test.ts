@@ -51,15 +51,45 @@ describe("proposal adjust layout", () => {
       "utf8"
     );
 
-    expect(source).toContain("Assistant guarded report adjustments");
-    expect(source).toContain("Ask assistant for a report patch");
-    expect(source).toContain("Generate guarded patch");
+    expect(source).toContain("Ask report assistant");
+    expect(source).toContain("Ask assistant");
+    expect(source).toContain("sendReportAssistantRequest");
+    expect(source).toContain("createReportAssistantResearchReviewPacket");
+    expect(source).toContain("getLatestReportAssistantResearchReviewPacket");
+    expect(source).toContain("createReportAssistantActiveRequestRegistry");
+    expect(source).toContain("isReportAssistantRequestResultActive");
+    expect(source).toContain("startAssistantRequest");
+    expect(source).toContain("isAssistantRequestActive");
+    expect(source).toContain("readReportAssistantConversationStorage");
+    expect(source).toContain("writeReportAssistantConversationStorage");
+    expect(source).toContain("handleRetryLatestAssistantRequest");
+    expect(source).toContain("Retry patch");
+    expect(source).toContain("Retry research");
+    expect(source).toContain("Retry layer research");
+    expect(source).toContain('if (intent.intent === "explain")');
+    expect(source).toContain("handleExplainAssistantInstruction(instruction, intentMetric);");
+    expect(source).toContain("requestId: activeRequest.requestId");
+    expect(source).toContain("latestAssistantContextSignatureRef");
+    expect(source).toContain("documentSignature: assistantContext.assistantContextSignature");
+    expect(source).toContain('"documentSignature":"${assistantContext.documentSignature}"');
+    expect(source).toContain("Document signature:");
+    expect(source).toContain("Assistant context signature:");
     expect(source).toContain("/api/report-assistant/patch");
+    expect(source).toContain('startAssistantRequest("assembly_alternatives_research")');
+    expect(source).toContain('kind: "assembly_alternatives_research"');
+    expect(source).toContain('url: "/api/report-assistant/assembly-alternatives"');
+    expect(source).toContain('isAssistantRequestRecordActive("assembly_alternatives_research", activeRequest)');
+    expect(source).toContain('finishAssistantRequest("assembly_alternatives_research", activeRequest.requestId)');
     expect(source).toContain("Review value plausibility");
     expect(source).toContain("Review plausibility");
     expect(source).toContain("Use configured source research");
-    expect(source).toContain("research: plausibilityResearchRequested");
+    expect(source).toContain("research: reviewResearchRequested");
     expect(source).toContain("/api/report-assistant/plausibility");
+    expect(source).toContain("usePreviousResearchPacket: intent.intentClass === \"challenge_or_retry\"");
+    expect(source).toContain("previousReview: previousResearchReviewPacket");
+    expect(source).toContain("userChallengeText: previousResearchReviewPacket ? instruction : undefined");
+    expect(source).toContain("Numeric edits cannot create unsupported or missing-input outputs.");
+    expect(source).toContain("{plausibilityReview.suggestedReportPatch ? (");
     expect(source).toContain("Load suggested patch");
     expect(source).toContain("Log calculator review finding");
     expect(source).toContain("Log review finding");
@@ -68,9 +98,58 @@ describe("proposal adjust layout", () => {
     expect(source).toContain("Paste assistant patch JSON");
     expect(source).toContain("Apply validated patch");
     expect(source).toContain("Engine values and calculator inputs were not changed.");
+    expect(source).toContain("No report value was changed.");
+    expect(source).toContain("Add guarded text replacements");
+    expect(source).toContain("handleAddConsistencyReplacements");
+    expect(source).toContain("findReportAdjustmentConsistencyMentions");
+    expect(source).toContain("baseDocument: baseDocument ?? undefined");
+    expect(source).toContain("reportConsistencyGateBlocked");
+    expect(source).toContain("Report consistency blocks save/export");
+    expect(source).toContain("Resolve report consistency findings before export");
+    expect(source).toContain("qualitative metric claims");
+    expect(source).toContain("disabled={isDownloadingExport || reportConsistencyGateBlocked}");
+    expect(source).toContain("replace_report_text_value");
+    expect(source).toContain("beforeText: mention.value");
+    expect(source).toContain("afterValue: mention.afterValue");
     expect(source).toContain('scope: "export_only"');
     expect(source).toContain('markReportAdjustmentScope(editableDocument, "export_only")');
     expect(source).toContain('markReportAdjustmentScope(editableDocument, "saved_snapshot")');
     expect(source).not.toContain("persistCurrentDocument({ silent: true });\n    setIsDownloadingExport");
+  });
+
+  it("keeps explain intent local and non-mutating", () => {
+    const source = readFileSync(
+      new URL("../../app/workbench/proposal/configure/proposal-adjust-client-page.tsx", import.meta.url),
+      "utf8"
+    );
+    const start = source.indexOf("function handleExplainAssistantInstruction");
+    const end = source.indexOf("async function handleAssemblyAlternativeResearchInstruction");
+    const explainBody = source.slice(start, end);
+
+    expect(start).toBeGreaterThanOrEqual(0);
+    expect(end).toBeGreaterThan(start);
+    expect(explainBody).toContain("buildReportAssistantContextTraceAnswer");
+    expect(explainBody).toContain('source: "context"');
+    expect(explainBody).toContain("No report value was changed.");
+    expect(explainBody).not.toContain("sendReportAssistantRequest");
+    expect(explainBody).not.toContain("setPatchDraft");
+  });
+
+  it("keeps proposal preview exports behind the same consistency gate", () => {
+    const source = readFileSync(
+      new URL("../../app/workbench/proposal/proposal-preview-client-page.tsx", import.meta.url),
+      "utf8"
+    );
+
+    expect(source).toContain("findReportAdjustmentConsistencyMentions");
+    expect(source).toContain("baseDocument: loadedPreview?.baseDocument");
+    expect(source).toContain("reportConsistencyGateBlocked");
+    expect(source).toContain("Report consistency blocks export");
+    expect(source).toContain("qualitative metric claims");
+    expect(source).toContain("showReportConsistencyBlockedToast(\"export\")");
+    expect(source).toContain("showReportConsistencyBlockedToast(\"printing\")");
+    expect(source).toContain("showReportConsistencyBlockedToast(\"copying\")");
+    expect(source).toContain("disabled={!proposalDocument || isDownloadingPdf || reportConsistencyGateBlocked}");
+    expect(source).toContain("disabled={reportConsistencyGateBlocked}");
   });
 });

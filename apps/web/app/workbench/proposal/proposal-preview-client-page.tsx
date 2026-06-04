@@ -4,13 +4,14 @@ import { SurfacePanel } from "@dynecho/ui";
 import { ArrowLeft, Copy, Download, FilePenLine, Printer, RefreshCcw, RotateCcw } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import {
   buildSimpleWorkbenchProposalText,
   type SimpleWorkbenchProposalDocument
 } from "@/features/workbench/simple-workbench-proposal";
+import { findReportAdjustmentConsistencyMentions } from "@/features/workbench/report-assistant-patch";
 import { buildSimpleWorkbenchProposalPreviewHtml } from "@/features/workbench/simple-workbench-proposal-preview-html";
 import { buildSimpleWorkbenchProposalConstructionSection } from "@/features/workbench/simple-workbench-proposal-construction-section";
 import { SimpleWorkbenchProposalConstructionFigure } from "@/features/workbench/simple-workbench-proposal-construction-figure";
@@ -104,6 +105,20 @@ export function ProposalPreviewClientPage() {
     () => (proposalDocument ? buildSimpleWorkbenchProposalText(proposalDocument) : ""),
     [proposalDocument]
   );
+  const reportConsistencyMentions = useMemo(
+    () =>
+      proposalDocument
+        ? findReportAdjustmentConsistencyMentions(proposalDocument, {
+            baseDocument: loadedPreview?.baseDocument
+          })
+        : [],
+    [loadedPreview?.baseDocument, proposalDocument]
+  );
+  const blockingReportConsistencyMentions = useMemo(
+    () => reportConsistencyMentions.filter((mention) => mention.blocking),
+    [reportConsistencyMentions]
+  );
+  const reportConsistencyGateBlocked = blockingReportConsistencyMentions.length > 0;
   const proposalBranding = useMemo(
     () =>
       proposalDocument
@@ -149,7 +164,18 @@ export function ProposalPreviewClientPage() {
   );
   const shouldAutoPrint = searchParams.get("autoprint") === "1";
 
-  function handlePrint() {
+  const showReportConsistencyBlockedToast = useCallback((action: string) => {
+    toast.error(`Resolve report consistency findings before ${action}`, {
+      description: `${blockingReportConsistencyMentions.length} report text finding${blockingReportConsistencyMentions.length === 1 ? "" : "s"} still need consistency handling in the report editor.`
+    });
+  }, [blockingReportConsistencyMentions.length]);
+
+  const handlePrint = useCallback(() => {
+    if (reportConsistencyGateBlocked) {
+      showReportConsistencyBlockedToast("printing");
+      return;
+    }
+
     const frameWindow = iframeRef.current?.contentWindow;
 
     if (!frameWindow) {
@@ -161,13 +187,18 @@ export function ProposalPreviewClientPage() {
 
     frameWindow.focus();
     frameWindow.print();
-  }
+  }, [reportConsistencyGateBlocked, showReportConsistencyBlockedToast]);
 
   async function handleCopySummary() {
     if (!proposalText) {
       toast.error("No proposal loaded", {
         description: "Return to the workbench and package a proposal first."
       });
+      return;
+    }
+
+    if (reportConsistencyGateBlocked) {
+      showReportConsistencyBlockedToast("copying");
       return;
     }
 
@@ -191,6 +222,11 @@ export function ProposalPreviewClientPage() {
       toast.error("No proposal loaded", {
         description: "Return to the workbench and package a proposal first."
       });
+      return;
+    }
+
+    if (reportConsistencyGateBlocked) {
+      showReportConsistencyBlockedToast("export");
       return;
     }
 
@@ -241,7 +277,7 @@ export function ProposalPreviewClientPage() {
   }
 
   useEffect(() => {
-    if (!proposalDocument || !shouldAutoPrint || !frameReady) {
+    if (!proposalDocument || !shouldAutoPrint || !frameReady || reportConsistencyGateBlocked) {
       return;
     }
 
@@ -250,7 +286,7 @@ export function ProposalPreviewClientPage() {
     }, 220);
 
     return () => window.clearTimeout(timer);
-  }, [frameReady, proposalDocument, shouldAutoPrint]);
+  }, [frameReady, handlePrint, proposalDocument, reportConsistencyGateBlocked, shouldAutoPrint]);
 
   return (
     <main className="ui-shell flex min-h-screen flex-col gap-6 overflow-x-clip px-4 pb-12 pt-4 sm:px-6 lg:px-8">
@@ -267,6 +303,22 @@ export function ProposalPreviewClientPage() {
             <div className="mt-4 inline-flex rounded-full border hairline bg-[color:var(--paper)]/82 px-3 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
               {activeStyleDescriptor.shortLabel}
             </div>
+            {reportConsistencyMentions.length > 0 ? (
+              <div className={`mt-4 rounded-[1rem] border px-3 py-3 text-sm leading-6 ${
+                reportConsistencyGateBlocked
+                  ? "border-amber-300 bg-amber-50 text-amber-950"
+                  : "border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--ink-soft)]"
+              }`}>
+                <div className="font-semibold text-[color:var(--ink)]">
+                  {reportConsistencyGateBlocked ? "Report consistency blocks export" : "Report consistency checked"}
+                </div>
+                <div className="mt-1">
+                  {reportConsistencyGateBlocked
+                    ? "Open the report editor and resolve stale value mentions or qualitative metric claims before exporting or printing."
+                    : "Only non-blocking value/evidence mentions remain."}
+                </div>
+              </div>
+            ) : null}
           </div>
           <div className="flex flex-wrap gap-2">
             <Link
@@ -277,7 +329,8 @@ export function ProposalPreviewClientPage() {
               Back to workbench
             </Link>
             <button
-              className="focus-ring surface-subtle-hover inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)]"
+              className="focus-ring surface-subtle-hover inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={reportConsistencyGateBlocked}
               onClick={() => void handleCopySummary()}
               type="button"
             >
@@ -315,7 +368,7 @@ export function ProposalPreviewClientPage() {
             ) : null}
             <button
               className="focus-ring surface-subtle-hover inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] disabled:cursor-not-allowed disabled:opacity-50"
-              disabled={!proposalDocument || isDownloadingPdf}
+              disabled={!proposalDocument || isDownloadingPdf || reportConsistencyGateBlocked}
               onClick={() => void handleDownloadExport()}
               type="button"
             >
@@ -324,7 +377,7 @@ export function ProposalPreviewClientPage() {
             </button>
             <button
               className="focus-ring surface-subtle-hover inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] disabled:cursor-not-allowed disabled:opacity-50"
-              disabled={!proposalDocument || isDownloadingPdf}
+              disabled={!proposalDocument || isDownloadingPdf || reportConsistencyGateBlocked}
               onClick={() => void handleDownloadExport("branded", "docx")}
               type="button"
             >
@@ -333,7 +386,7 @@ export function ProposalPreviewClientPage() {
             </button>
             <button
               className="focus-ring surface-subtle-hover inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] disabled:cursor-not-allowed disabled:opacity-50"
-              disabled={!proposalDocument || isDownloadingPdf}
+              disabled={!proposalDocument || isDownloadingPdf || reportConsistencyGateBlocked}
               onClick={() => void handleDownloadExport("simple")}
               type="button"
             >
@@ -342,7 +395,7 @@ export function ProposalPreviewClientPage() {
             </button>
             <button
               className="focus-ring surface-subtle-hover inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] disabled:cursor-not-allowed disabled:opacity-50"
-              disabled={!proposalDocument || isDownloadingPdf}
+              disabled={!proposalDocument || isDownloadingPdf || reportConsistencyGateBlocked}
               onClick={() => void handleDownloadExport("simple", "docx")}
               type="button"
             >
@@ -350,7 +403,8 @@ export function ProposalPreviewClientPage() {
               {isDownloadingPdf ? "Preparing file..." : "Simple DOCX"}
             </button>
             <button
-              className="focus-ring ink-button-solid inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold"
+              className="focus-ring ink-button-solid inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={reportConsistencyGateBlocked}
               onClick={handlePrint}
               type="button"
             >

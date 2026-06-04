@@ -27,6 +27,10 @@ import {
   DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_ISSUE_PURPOSE,
   DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_VALIDITY_NOTE
 } from "./simple-workbench-proposal-policy-presets";
+import {
+  parseSimpleWorkbenchAssistantTraceSnapshot,
+  type SimpleWorkbenchAssistantTraceSnapshot
+} from "./simple-workbench-assistant-trace-snapshot";
 import type {
   WorkbenchResponseCurveFigure,
   WorkbenchResponseCurveSeries
@@ -114,6 +118,7 @@ export type SimpleWorkbenchProposalMethodTraceGroup = {
 export type SimpleWorkbenchProposalCorridorDossierCard = SimpleWorkbenchProposalMethodDossierCard;
 
 export type SimpleWorkbenchProposalDocument = {
+  assistantTraceSnapshot?: SimpleWorkbenchAssistantTraceSnapshot;
   assemblyHeadline: string;
   assumptionItems: readonly SimpleWorkbenchProposalBriefItem[];
   approverTitle: string;
@@ -389,6 +394,7 @@ export function parseSimpleWorkbenchProposalDocument(value: unknown): SimpleWork
         .map((entry) => normalizeReportAdjustment(entry))
         .filter((entry): entry is SimpleWorkbenchProposalReportAdjustment => entry !== null)
     : [];
+  const assistantTraceSnapshot = parseSimpleWorkbenchAssistantTraceSnapshot(value.assistantTraceSnapshot);
   const consultantAddress =
     typeof value.consultantAddress === "string" ? value.consultantAddress : "Office address not entered";
   const consultantEmail =
@@ -437,6 +443,7 @@ export function parseSimpleWorkbenchProposalDocument(value: unknown): SimpleWork
 
   return {
     ...(value as SimpleWorkbenchProposalDocument),
+    assistantTraceSnapshot,
     approverTitle,
     consultantAddress,
     consultantEmail,
@@ -1028,6 +1035,36 @@ function renderProposalStandardCards(standards: readonly ProposalReportStandardR
     .join("");
 }
 
+export function buildSimpleWorkbenchProposalAdjustmentNote(document: SimpleWorkbenchProposalDocument): string | null {
+  const adjustments = (document.reportAdjustments ?? [])
+    .filter((adjustment) => adjustment.beforeValue !== adjustment.afterValue)
+    .slice(0, 4);
+
+  if (adjustments.length === 0) {
+    return null;
+  }
+
+  const adjustmentSummary = adjustments
+    .map((adjustment) => `${adjustment.label} ${adjustment.beforeValue} -> ${adjustment.afterValue}`)
+    .join("; ");
+  const hiddenCount = Math.max(0, (document.reportAdjustments?.length ?? 0) - adjustments.length);
+  const hiddenLabel = hiddenCount > 0 ? `; +${hiddenCount} more` : "";
+
+  return `Report-only override: ${adjustmentSummary}${hiddenLabel}. Calculator inputs and captured engine values remain unchanged; any response curve shown remains the calculated evidence curve.`;
+}
+
+function renderProposalAdjustmentChartNote(document: SimpleWorkbenchProposalDocument): string {
+  const note = buildSimpleWorkbenchProposalAdjustmentNote(document);
+
+  return note
+    ? `
+        <div class="chart-band-strip">
+          <span class="chart-band-pill chart-band-pill-high">${escapeHtml(note)}</span>
+        </div>
+      `
+    : "";
+}
+
 function renderProposalMetricGraph(document: SimpleWorkbenchProposalDocument): string {
   const rows = buildProposalMetricChartRows(document);
 
@@ -1063,6 +1100,7 @@ function renderProposalMetricGraph(document: SimpleWorkbenchProposalDocument): s
           <span class="chart-band-pill">Shared dB ruler</span>
           <span class="chart-band-pill">Proposal interpretation</span>
       </div>
+      ${renderProposalAdjustmentChartNote(document)}
       <div class="plot-shell">
         ${renderProposalMetricPlotSvg(rows)}
       </div>
@@ -1388,6 +1426,7 @@ function renderProposalResponseCurves(document: SimpleWorkbenchProposalDocument)
             <div class="chart-band-strip">
               ${PROPOSAL_CURVE_BANDS.map((band) => `<span class="chart-band-pill chart-band-pill-${band.id}">${escapeHtml(band.label)} · ${escapeHtml(band.note)}</span>`).join("")}
             </div>
+            ${renderProposalAdjustmentChartNote(document)}
             <div class="plot-shell">
               ${renderProposalResponseCurveSvg(figure)}
             </div>
@@ -1513,6 +1552,7 @@ export function buildSimpleWorkbenchProposalText(document: SimpleWorkbenchPropos
     document.briefNote.trim().length > 0
       ? document.briefNote.trim()
       : "No additional consultant note entered.";
+  const adjustmentNote = buildSimpleWorkbenchProposalAdjustmentNote(document);
 
   return [
     `Acoustic Proposal | ${document.projectName}`,
@@ -1612,6 +1652,7 @@ export function buildSimpleWorkbenchProposalText(document: SimpleWorkbenchPropos
     "",
     "Live outputs",
     ...visibleMetrics.map((metric) => `- ${metric.label}: ${metric.value} (${metric.detail})`),
+    ...(adjustmentNote ? ["", "Report-only override note", adjustmentNote] : []),
     "",
     "Applied method and deliverable basis",
     `- Dynamic route: ${document.dynamicBranchLabel} | ${document.dynamicBranchDetail}`,

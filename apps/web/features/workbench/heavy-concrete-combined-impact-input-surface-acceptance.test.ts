@@ -28,7 +28,10 @@ import type { LayerDraft, ScenarioSnapshot } from "./workbench-store";
 
 const AUTH_ENV_KEYS = ["DYNECHO_AUTH_USERNAME", "DYNECHO_AUTH_PASSWORD", "DYNECHO_AUTH_SECRET"] as const;
 const TARGET_OUTPUTS = ["Rw", "Ln,w", "DeltaLw"] as const satisfies readonly RequestedOutputId[];
+const PRESET_IMPACT_TARGET_OUTPUTS = ["Rw", "Ln,w", "DeltaLw", "Ln,w+CI"] as const satisfies readonly RequestedOutputId[];
 const FIELD_TARGET_OUTPUTS = ["L'n,w", "L'nT,w", "IIC"] as const satisfies readonly RequestedOutputId[];
+const HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_BASIS =
+  "predictor_heavy_concrete_published_upper_treatment_estimate";
 
 const HEAVY_CONCRETE_ROWS: readonly LayerDraft[] = [
   { floorRole: "floor_covering", id: "finish", materialId: "ceramic_tile", thicknessMm: "8" },
@@ -49,6 +52,20 @@ const COMPLETE_HEAVY_CONCRETE_SURFACE = {
   impactHeavyConcreteLowerSupportClass: "furred_channels",
   impactHeavyConcreteResilientLayerDynamicStiffnessMNm3: "30",
   impactHeavyConcreteResilientLayerThicknessMm: "8"
+} as const satisfies WorkbenchHeavyConcreteCombinedImpactInputSurfaceDraft;
+
+const EMPTY_HEAVY_CONCRETE_SURFACE = {
+  impactHeavyConcreteBaseSlabDensityKgM3: "",
+  impactHeavyConcreteBaseSlabThicknessMm: "",
+  impactHeavyConcreteLoadBasisKgM2: "",
+  impactHeavyConcreteLowerAssemblyType: "",
+  impactHeavyConcreteLowerBoardLayerCount: "",
+  impactHeavyConcreteLowerBoardThicknessMm: "",
+  impactHeavyConcreteLowerCavityDepthMm: "",
+  impactHeavyConcreteLowerCavityFillThicknessMm: "",
+  impactHeavyConcreteLowerSupportClass: "",
+  impactHeavyConcreteResilientLayerDynamicStiffnessMNm3: "",
+  impactHeavyConcreteResilientLayerThicknessMm: ""
 } as const satisfies WorkbenchHeavyConcreteCombinedImpactInputSurfaceDraft;
 
 let originalEnv: Record<string, string | undefined>;
@@ -151,6 +168,32 @@ function evaluateHeavyConcreteScenario(input: {
   });
 }
 
+function buildHeavyConcreteImpactPresetRows(): LayerDraft[] {
+  const preset = getPresetById("heavy_concrete_impact_floor");
+
+  return preset.rows.map((row, index) => ({
+    ...row,
+    id: `heavy-concrete-impact-preset-${index + 1}`,
+    thicknessMm: String(row.thicknessMm)
+  }));
+}
+
+function evaluateHeavyConcreteImpactPreset(input: {
+  id?: string;
+  surface?: WorkbenchHeavyConcreteCombinedImpactInputSurfaceDraft | null;
+  targetOutputs?: readonly RequestedOutputId[];
+} = {}): EvaluatedScenario {
+  return evaluateScenario({
+    heavyConcreteCombinedImpactInputSurface: input.surface,
+    id: input.id ?? "heavy-concrete-impact-preset-surface-regression",
+    name: "Heavy concrete impact preset surface regression",
+    rows: buildHeavyConcreteImpactPresetRows(),
+    source: "current",
+    studyMode: "floor",
+    targetOutputs: input.targetOutputs ?? PRESET_IMPACT_TARGET_OUTPUTS
+  });
+}
+
 function expectHeavyConcreteFormulaResult(result: AssemblyCalculation | null | undefined) {
   expect(result?.impact).toMatchObject({
     basis: HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS,
@@ -162,6 +205,17 @@ function expectHeavyConcreteFormulaResult(result: AssemblyCalculation | null | u
     implementedFormulaEstimate: true,
     inputMode: "explicit_predictor_input"
   });
+}
+
+function expectPublishedUpperTreatmentAnchorScenario(scenario: EvaluatedScenario) {
+  expect(scenario.result?.impact).toMatchObject({
+    LnW: 50,
+    basis: HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_BASIS,
+    labOrField: "lab"
+  });
+  expect(scenario.result?.supportedTargetOutputs).toContain("Ln,w");
+  expect(scenario.result?.unsupportedTargetOutputs).not.toContain("Ln,w");
+  expect(scenario.result?.impactPredictorStatus?.inputMode).not.toBe("explicit_predictor_input");
 }
 
 function expectHeavyConcreteFormulaScenario(scenario: EvaluatedScenario) {
@@ -282,6 +336,39 @@ afterEach(() => {
 });
 
 describe("heavy concrete combined input surface acceptance", () => {
+  it("keeps the actual impact-floor preset Ln,w anchor live when the combined surface is blank or partial", () => {
+    const baseline = evaluateHeavyConcreteImpactPreset({
+      id: "heavy-concrete-impact-preset-no-surface-baseline"
+    });
+    const blankSurface = evaluateHeavyConcreteImpactPreset({
+      id: "heavy-concrete-impact-preset-blank-surface",
+      surface: EMPTY_HEAVY_CONCRETE_SURFACE
+    });
+    const partialSurface = evaluateHeavyConcreteImpactPreset({
+      id: "heavy-concrete-impact-preset-partial-surface",
+      surface: {
+        ...COMPLETE_HEAVY_CONCRETE_SURFACE,
+        impactHeavyConcreteResilientLayerDynamicStiffnessMNm3: ""
+      }
+    });
+
+    expectPublishedUpperTreatmentAnchorScenario(baseline);
+    expectPublishedUpperTreatmentAnchorScenario(blankSurface);
+    expectPublishedUpperTreatmentAnchorScenario(partialSurface);
+
+    expect(blankSurface.result?.supportedTargetOutputs).toEqual(baseline.result?.supportedTargetOutputs);
+    expect(blankSurface.result?.unsupportedTargetOutputs).toEqual(baseline.result?.unsupportedTargetOutputs);
+
+    const blankWarnings = blankSurface.warnings.join("\n");
+    expect(blankWarnings).toContain("Upper resilient dynamic stiffness (MN/m3)");
+    expect(blankWarnings).toContain("Loaded upper treatment mass basis (kg/m2)");
+    expect(blankWarnings).toContain("Lower ceiling assembly");
+
+    const partialWarnings = partialSurface.warnings.join("\n");
+    expect(partialWarnings).toContain("Upper resilient dynamic stiffness (MN/m3)");
+    expect(partialSurface.result?.impact?.basis).not.toBe(HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS);
+  });
+
   it("keeps complete heavy-concrete input-surface parity across live, local saved, server snapshot, cards, and report", async () => {
     const liveScenario = evaluateHeavyConcreteScenario({ id: "gate-bf-live" });
     expectHeavyConcreteFormulaScenario(liveScenario);

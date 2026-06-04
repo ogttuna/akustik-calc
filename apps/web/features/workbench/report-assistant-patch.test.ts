@@ -6,8 +6,11 @@ import {
   getReportAssistantMetricDirection,
   getReportAssistantMetricId
 } from "./report-assistant-context";
+import { parseReportAssistantContextPayload } from "./report-assistant-instruction";
 import {
   applyValidatedReportAssistantPatch,
+  collectReportConsistencyTextPaths,
+  findReportAdjustmentConsistencyMentions,
   findReportValueMentions,
   validateReportAssistantPatch
 } from "./report-assistant-patch";
@@ -222,8 +225,46 @@ describe("report assistant Phase A patch core", () => {
   });
 
   it("preserves assistant metadata and report adjustment audit records while parsing proposals", () => {
+    const assistantTraceSnapshot = {
+      airborne: {
+        candidateMethods: [
+          {
+            label: "Sharp",
+            method: "sharp",
+            rwDb: 59,
+            selected: false
+          },
+          {
+            label: "KS calibrated",
+            method: "ks_rw_calibrated",
+            rwDb: 61,
+            selected: true
+          }
+        ],
+        confidenceClass: "medium",
+        detectedFamily: "double_leaf",
+        selectedLabel: "KS calibrated double-leaf lane",
+        selectedMethod: "ks_rw_calibrated",
+        solverSpreadRwDb: 2
+      },
+      layerCombinationResolver: {
+        basis: "element_lab",
+        candidateKind: "calibrated_family_solver",
+        route: "wall",
+        selectedCandidateId: "candidate-ks",
+        surfaceDetail: "Calibrated double-leaf resolver picked the KS lane.",
+        supportedMetrics: ["Rw"],
+        valuePins: [
+          {
+            metric: "Rw",
+            value: 61
+          }
+        ]
+      }
+    };
     const parsed = parseSimpleWorkbenchProposalDocument({
       ...BASE_DOCUMENT,
+      assistantTraceSnapshot,
       reportAdjustments: [
         {
           afterValue: "58 dB",
@@ -253,6 +294,21 @@ describe("report assistant Phase A patch core", () => {
       engineValuePreserved: true,
       metricId: RW_METRIC_ID,
       scope: "export_only"
+    });
+    expect(parsed?.assistantTraceSnapshot?.airborne).toMatchObject({
+      selectedLabel: "KS calibrated double-leaf lane",
+      selectedMethod: "ks_rw_calibrated"
+    });
+
+    const context = buildReportAssistantContext({
+      document: parsed!,
+      reportId: "trace-round-trip"
+    });
+    const roundTrip = parseReportAssistantContextPayload(JSON.parse(JSON.stringify(context)) as unknown);
+
+    expect(roundTrip?.assistantTraceSnapshot?.layerCombinationResolver).toMatchObject({
+      selectedCandidateId: "candidate-ks",
+      supportedMetrics: ["Rw"]
     });
   });
 
@@ -445,11 +501,472 @@ describe("report assistant Phase A patch core", () => {
   });
 
   it("finds stale literal value mentions for preview warnings", () => {
-    expect(findReportValueMentions(BASE_DOCUMENT, "61 dB")).toEqual([
-      {
+    expect(findReportValueMentions(BASE_DOCUMENT, "61 dB")).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        path: "assemblyHeadline",
+        value: "Rw 61 dB and Ln,w 49 dB are packaged for issue."
+      }),
+      expect.objectContaining({
         path: "executiveSummary",
         value: "Riverside Residences currently reads Rw 61 dB."
+      })
+    ]));
+  });
+
+  it("collects replaceable report text paths without making source or audit values replaceable", () => {
+    const document: SimpleWorkbenchProposalDocument = {
+      ...BASE_DOCUMENT,
+      citations: [
+        {
+          detail: "Comparable source reports Rw 61 dB for a related assembly.",
+          href: "https://example.com/rw-61",
+          label: "Source Rw 61 dB"
+        }
+      ],
+      coverageItems: BASE_DOCUMENT.coverageItems.map((item) =>
+        item.label === "Rw" ? { ...item, detail: "Coverage still says Rw 61 dB.", engineDisplayValue: "61 dB" } : item
+      ),
+      methodTraceGroups: [
+        {
+          detail: "Trace detail still says Rw 61 dB.",
+          label: "Trace",
+          notes: ["Trace note still says Rw 61 dB."],
+          tone: "neutral",
+          value: "Rw 61 dB trace"
+        }
+      ]
+    };
+    const records = collectReportConsistencyTextPaths(document);
+
+    expect(records).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        path: "coverageItems.0.detail",
+        replaceable: true,
+        surfacePolicy: "client_narrative"
+      }),
+      expect.objectContaining({
+        path: "methodTraceGroups.0.notes.0",
+        replaceable: true,
+        surfacePolicy: "technical_narrative"
+      }),
+      expect.objectContaining({
+        path: "citations.0.detail",
+        replaceable: false,
+        surfacePolicy: "evidence_source"
+      }),
+      expect.objectContaining({
+        auditExempt: true,
+        path: "coverageItems.0.engineDisplayValue",
+        replaceable: false,
+        surfacePolicy: "audit_engine"
+      })
+    ]));
+  });
+
+  it("classifies report-adjustment stale value mentions by metric evidence", () => {
+    const documentWithNarrativeValues: SimpleWorkbenchProposalDocument = {
+      ...BASE_DOCUMENT,
+      executiveSummary: "Riverside Residences currently reads Rw 61 dB.",
+      recommendationItems: [
+        {
+          detail: "Old benchmark values remain 61 dB and 49 dB until text is reconciled.",
+          label: "Review note",
+          tone: "warning"
+        },
+        {
+          detail: "Ln,w 61 dB is a separate impact placeholder.",
+          label: "Other metric note",
+          tone: "neutral"
+        }
+      ],
+      validationDetail: "Rw should be checked. Current narrative value still says 61 dB."
+    };
+    const context = buildContext(documentWithNarrativeValues);
+    const validation = validateReportAssistantPatch({
+      context,
+      document: documentWithNarrativeValues,
+      patch: {
+        documentSignature: context.documentSignature,
+        operations: [
+          {
+            deltaDb: -3,
+            metricId: RW_METRIC_ID,
+            reason: "Lower Rw for issued report.",
+            type: "adjust_metric_db"
+          },
+          {
+            deltaDb: 2,
+            metricId: LNW_METRIC_ID,
+            reason: "Raise Ln,w for issued report.",
+            type: "adjust_metric_db"
+          }
+        ],
+        summary: "Adjust Rw and Ln,w."
       }
-    ]);
+    });
+    const applied = applyValidatedReportAssistantPatch(documentWithNarrativeValues, validation);
+    const mentions = findReportAdjustmentConsistencyMentions(applied);
+
+    expect(mentions).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        beforeValue: "61 dB",
+        blocking: true,
+        classification: "exact_metric_label_value",
+        label: "Rw",
+        path: "executiveSummary"
+      }),
+      expect.objectContaining({
+        beforeValue: "61 dB",
+        blocking: true,
+        classification: "ambiguous_numeric_only",
+        label: "Rw",
+        path: "recommendationItems.0.detail"
+      }),
+      expect.objectContaining({
+        beforeValue: "61 dB",
+        blocking: false,
+        classification: "unrelated_numeric_mention",
+        label: "Rw",
+        path: "recommendationItems.1.detail"
+      }),
+      expect.objectContaining({
+        beforeValue: "61 dB",
+        blocking: true,
+        classification: "unresolved",
+        label: "Rw",
+        path: "validationDetail"
+      }),
+      expect.objectContaining({
+        beforeValue: "49 dB",
+        blocking: true,
+        classification: "ambiguous_numeric_only",
+        label: "Ln,w",
+        path: "recommendationItems.0.detail"
+      })
+    ]));
+  });
+
+  it("clears report-adjustment consistency mentions after approved text replacements", () => {
+    const context = buildContext();
+    const validation = validateReportAssistantPatch({
+      context,
+      document: BASE_DOCUMENT,
+      patch: {
+        documentSignature: context.documentSignature,
+        operations: [
+          {
+            deltaDb: -3,
+            metricId: RW_METRIC_ID,
+            reason: "Lower Rw for issued report.",
+            type: "adjust_metric_db"
+          },
+          {
+            afterValue: "58 dB",
+            beforeText: "Riverside Residences currently reads Rw 61 dB.",
+            beforeValue: "61 dB",
+            path: "executiveSummary",
+            reason: "Keep summary consistent with the approved Rw report value.",
+            type: "replace_report_text_value"
+          },
+          {
+            afterValue: "58 dB",
+            beforeText: "Rw 61 dB and Ln,w 49 dB are packaged for issue.",
+            beforeValue: "61 dB",
+            path: "assemblyHeadline",
+            reason: "Keep assembly headline consistent with the approved Rw report value.",
+            type: "replace_report_text_value"
+          }
+        ],
+        summary: "Lower Rw and update summary."
+      }
+    });
+    const applied = applyValidatedReportAssistantPatch(BASE_DOCUMENT, validation);
+
+    expect(findReportAdjustmentConsistencyMentions(applied)).toEqual([]);
+  });
+
+  it("applies guarded text-location replacements without touching engine values", () => {
+    const context = buildContext();
+    const validation = validateReportAssistantPatch({
+      context,
+      document: BASE_DOCUMENT,
+      patch: {
+        documentSignature: context.documentSignature,
+        operations: [
+          {
+            afterValue: "58 dB",
+            beforeText: "Riverside Residences currently reads Rw 61 dB.",
+            beforeValue: "61 dB",
+            path: "executiveSummary",
+            reason: "Keep the executive summary consistent with the approved Rw report value.",
+            type: "replace_report_text_value"
+          }
+        ],
+        summary: "Replace stale Rw text."
+      }
+    });
+
+    expect(validation.status).toBe("valid");
+    expect(validation.operations[0]).toMatchObject({
+      afterText: "Riverside Residences currently reads Rw 58 dB.",
+      afterValue: "58 dB",
+      beforeValue: "61 dB",
+      path: "executiveSummary",
+      type: "text_value"
+    });
+
+    const applied = applyValidatedReportAssistantPatch(BASE_DOCUMENT, validation);
+
+    expect(applied.executiveSummary).toBe("Riverside Residences currently reads Rw 58 dB.");
+    expect(applied.primaryMetricValue).toBe("61 dB");
+    expect(applied.reportAdjustments).toBeUndefined();
+  });
+
+  it("rejects text replacements for stale text or disallowed paths", () => {
+    const context = buildContext();
+    const staleText = validateReportAssistantPatch({
+      context,
+      document: BASE_DOCUMENT,
+      patch: {
+        documentSignature: context.documentSignature,
+        operations: [
+          {
+            afterValue: "58 dB",
+            beforeText: "Riverside Residences currently reads Rw 60 dB.",
+            beforeValue: "61 dB",
+            path: "executiveSummary",
+            reason: "Stale text replacement.",
+            type: "replace_report_text_value"
+          }
+        ],
+        summary: "Reject stale text."
+      }
+    });
+
+    expect(staleText.status).toBe("rejected");
+    expect(staleText.errors.join(" ")).toContain("no longer matches");
+
+    const allowedHeadline = validateReportAssistantPatch({
+      context,
+      document: BASE_DOCUMENT,
+      patch: {
+        documentSignature: context.documentSignature,
+        operations: [
+          {
+            afterValue: "58 dB",
+            beforeText: BASE_DOCUMENT.assemblyHeadline,
+            beforeValue: "61 dB",
+            path: "assemblyHeadline",
+            reason: "Allowed exact headline value replacement.",
+            type: "replace_report_text_value"
+          }
+        ],
+        summary: "Allow headline path."
+      }
+    });
+
+    expect(allowedHeadline.status).toBe("valid");
+
+    const disallowedPath = validateReportAssistantPatch({
+      context,
+      document: BASE_DOCUMENT,
+      patch: {
+        documentSignature: context.documentSignature,
+        operations: [
+          {
+            afterValue: "58 dB",
+            beforeText: "Riverside Residences",
+            beforeValue: "61 dB",
+            path: "projectName",
+            reason: "Disallowed metadata rewrite.",
+            type: "replace_report_text_value"
+          }
+        ],
+        summary: "Reject disallowed path."
+      }
+    });
+
+    expect(disallowedPath.status).toBe("rejected");
+    expect(disallowedPath.errors.join(" ")).toContain("not an allowed report text location");
+  });
+
+  it("detects manual metric edits from the packaged base document", () => {
+    const editedDocument: SimpleWorkbenchProposalDocument = {
+      ...BASE_DOCUMENT,
+      executiveSummary: "Riverside Residences currently reads Rw 61 dB.",
+      metrics: BASE_DOCUMENT.metrics.map((metric) =>
+        metric.label === "Rw" ? { ...metric, value: "58 dB" } : metric
+      ),
+      primaryMetricValue: "58 dB"
+    };
+    const mentions = findReportAdjustmentConsistencyMentions(editedDocument, {
+      baseDocument: BASE_DOCUMENT
+    });
+
+    expect(mentions).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        afterValue: "58 dB",
+        beforeValue: "61 dB",
+        blocking: true,
+        label: "Rw",
+        path: "executiveSummary"
+      }),
+      expect.objectContaining({
+        afterValue: "58 dB",
+        beforeValue: "61 dB",
+        blocking: true,
+        label: "Rw",
+        path: "assemblyHeadline"
+      })
+    ]));
+  });
+
+  it("classifies source evidence old values without blocking export", () => {
+    const documentWithSourceValue: SimpleWorkbenchProposalDocument = {
+      ...BASE_DOCUMENT,
+      citations: [
+        {
+          detail: "Published comparable source reports Rw 61 dB.",
+          href: "https://example.com/source",
+          label: "Comparable source"
+        }
+      ]
+    };
+    const context = buildContext(documentWithSourceValue);
+    const validation = validateReportAssistantPatch({
+      context,
+      document: documentWithSourceValue,
+      patch: {
+        documentSignature: context.documentSignature,
+        operations: [
+          {
+            deltaDb: -3,
+            metricId: RW_METRIC_ID,
+            reason: "Lower Rw for issued report.",
+            type: "adjust_metric_db"
+          }
+        ],
+        summary: "Lower Rw."
+      }
+    });
+    const applied = applyValidatedReportAssistantPatch(documentWithSourceValue, validation);
+    const mentions = findReportAdjustmentConsistencyMentions(applied);
+
+    expect(mentions).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        blocking: false,
+        classification: "evidence_source_value",
+        path: "citations.0.detail"
+      })
+    ]));
+  });
+
+  it("flags semantic stale copy even when the old numeric value was removed", () => {
+    const documentWithSemanticCopy: SimpleWorkbenchProposalDocument = {
+      ...BASE_DOCUMENT,
+      citations: [
+        {
+          detail: "Comparable source says this family can pass its target.",
+          href: "https://example.com/source",
+          label: "Comparable source"
+        }
+      ],
+      executiveSummary: "Riverside Residences Rw comfortably exceeds the target and passes by 2 dB.",
+      metrics: BASE_DOCUMENT.metrics.map((metric) =>
+        metric.label === "Rw" ? { ...metric, detail: "Comfortably passes the target margin." } : metric
+      ),
+      recommendationItems: [
+        {
+          detail: "Comfortably exceeds the target after coordination.",
+          label: "General recommendation",
+          tone: "neutral"
+        }
+      ]
+    };
+    const context = buildContext(documentWithSemanticCopy);
+    const validation = validateReportAssistantPatch({
+      context,
+      document: documentWithSemanticCopy,
+      patch: {
+        documentSignature: context.documentSignature,
+        operations: [
+          {
+            deltaDb: -3,
+            metricId: RW_METRIC_ID,
+            reason: "Lower Rw for issued report.",
+            type: "adjust_metric_db"
+          }
+        ],
+        summary: "Lower Rw."
+      }
+    });
+    const applied = applyValidatedReportAssistantPatch(documentWithSemanticCopy, validation);
+    const mentions = findReportAdjustmentConsistencyMentions(applied);
+
+    expect(mentions).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        blocking: true,
+        classification: "semantic_metric_claim",
+        path: "executiveSummary"
+      }),
+      expect.objectContaining({
+        blocking: true,
+        classification: "semantic_metric_claim",
+        path: "metrics.0.detail"
+      })
+    ]));
+    expect(mentions).not.toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        classification: "semantic_metric_claim",
+        path: "citations.0.detail"
+      }),
+      expect.objectContaining({
+        classification: "semantic_metric_claim",
+        path: "recommendationItems.0.detail"
+      })
+    ]));
+  });
+
+  it("applies metric and approved stale-text replacements in one guarded patch", () => {
+    const context = buildContext();
+    const validation = validateReportAssistantPatch({
+      context,
+      document: BASE_DOCUMENT,
+      patch: {
+        documentSignature: context.documentSignature,
+        operations: [
+          {
+            deltaDb: -3,
+            metricId: RW_METRIC_ID,
+            reason: "User requested Rw to be 3 dB lower for the issued report.",
+            type: "adjust_metric_db"
+          },
+          {
+            afterValue: "58 dB",
+            beforeText: "Riverside Residences currently reads Rw 61 dB.",
+            beforeValue: "61 dB",
+            path: "executiveSummary",
+            reason: "Keep executive summary consistent with the approved Rw report value.",
+            type: "replace_report_text_value"
+          }
+        ],
+        summary: "Lower Rw and update stale report text."
+      }
+    });
+
+    expect(validation.status).toBe("valid");
+
+    const applied = applyValidatedReportAssistantPatch(BASE_DOCUMENT, validation, {
+      appliedAtIso: "2026-06-02T09:07:00.000Z"
+    });
+
+    expect(applied.primaryMetricValue).toBe("58 dB");
+    expect(applied.executiveSummary).toBe("Riverside Residences currently reads Rw 58 dB.");
+    expect(applied.reportAdjustments).toHaveLength(1);
+    expect(applied.reportAdjustments?.[0]).toMatchObject({
+      afterValue: "58 dB",
+      beforeValue: "61 dB",
+      metricId: RW_METRIC_ID
+    });
   });
 });

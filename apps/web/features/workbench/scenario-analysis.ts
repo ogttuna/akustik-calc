@@ -102,6 +102,18 @@ function collectInactiveOfficialProductWarnings(input: {
   return warnings;
 }
 
+type HeavyConcreteCombinedSurfaceBridgeStatus =
+  | "inactive"
+  | "needs_input"
+  | "ready_for_formula_corridor"
+  | "unsafe_topology";
+
+function shouldForwardHeavyConcreteCombinedImpactPredictor(
+  surface: { readonly status: HeavyConcreteCombinedSurfaceBridgeStatus } | null | undefined
+): boolean {
+  return surface?.status === "ready_for_formula_corridor" || surface?.status === "unsafe_topology";
+}
+
 export type EvaluatedScenario = {
   airborneContext?: AirborneContext | null;
   id: string;
@@ -314,7 +326,7 @@ export function evaluateScenario(input: {
   const activeInputSurfacePredictors = [
     steelFloorFormulaInputSurface?.status !== "inactive" ? steelFloorFormulaInputSurface?.impactPredictorInput : null,
     timberCltDeltaLwInputSurface?.status !== "inactive" ? timberCltDeltaLwInputSurface?.impactPredictorInput : null,
-    heavyConcreteCombinedImpactInputSurface?.status !== "inactive"
+    shouldForwardHeavyConcreteCombinedImpactPredictor(heavyConcreteCombinedImpactInputSurface)
       ? heavyConcreteCombinedImpactInputSurface?.impactPredictorInput
       : null
   ].filter((item): item is ImpactPredictorInput => item !== null && item !== undefined);

@@ -40,8 +40,23 @@ async function gotoSimpleWorkbench(page: Page) {
   await page.goto("/workbench");
 }
 
+async function openAdvancedSetup(page: Page) {
+  const presetButton = page.getByRole("button", { name: /^Load preset / }).first();
+  if (await presetButton.isVisible()) {
+    return;
+  }
+
+  const setupSummary = page.locator("summary").filter({
+    has: page.getByText("Advanced setup", { exact: true })
+  }).first();
+  await expect(setupSummary).toBeVisible();
+  await setupSummary.click();
+  await expect(presetButton).toBeVisible();
+}
+
 async function gotoAdvancedWorkbench(page: Page) {
   await page.goto("/workbench?view=advanced");
+  await openAdvancedSetup(page);
 }
 
 async function openFloorGuidedFlow(page: Page) {
@@ -55,10 +70,11 @@ async function openWallGuidedFlow(page: Page) {
 }
 
 async function loadGuidedSample(page: Page, label: string) {
-  if (!(await page.getByLabel("Example stack").isVisible())) {
+  const sampleSelect = page.getByLabel("Load sample rows");
+  if (!(await sampleSelect.isVisible())) {
     await page.getByText("Tools", { exact: true }).click();
   }
-  await page.getByLabel("Example stack").selectOption({ label });
+  await sampleSelect.selectOption({ label });
   await page.waitForTimeout(100);
 }
 
@@ -195,6 +211,7 @@ async function ensureGuidedToolsOpen(page: Page, actionName: string) {
 }
 
 async function loadAdvancedPreset(page: Page, label: string) {
+  await openAdvancedSetup(page);
   await page.getByRole("button", { exact: true, name: `Load preset ${label}` }).click();
   await page.waitForTimeout(100);
 }
@@ -556,7 +573,7 @@ test("workbench supports study-mode preset switching and inline layer editing", 
 
   await selectGuidedSurface(page, "floor");
   await expect(page.getByRole("heading", { name: "Floor calculator" })).toBeVisible();
-  await expect(page.getByLabel("Example stack")).toHaveValue("heavy_concrete_impact_floor");
+  await expect(page.getByLabel("Load sample rows")).toHaveValue("heavy_concrete_impact_floor");
   await expect(page.getByText("4 rows", { exact: true }).first()).toBeVisible();
   await expect(page.getByRole("button", { name: /^Remove$/ })).toHaveCount(4);
 
@@ -587,18 +604,18 @@ test("guided study-type switching keeps the default preset and rows in sync", as
   await gotoSimpleWorkbench(page);
 
   await expect(page.getByRole("heading", { name: "Wall calculator" })).toBeVisible();
-  await expect(page.getByLabel("Example stack")).toHaveValue("concrete_wall");
+  await expect(page.getByLabel("Load sample rows")).toHaveValue("concrete_wall");
   await expect(page.getByText("4 rows", { exact: true }).first()).toBeVisible();
 
   await selectGuidedSurface(page, "floor");
   await expect(page.getByRole("heading", { name: "Floor calculator" })).toBeVisible();
-  await expect(page.getByLabel("Example stack")).toHaveValue("heavy_concrete_impact_floor");
+  await expect(page.getByLabel("Load sample rows")).toHaveValue("heavy_concrete_impact_floor");
   await expect(page.getByText("4 rows", { exact: true }).first()).toBeVisible();
   await expect(page.getByRole("button", { name: /^Remove$/ })).toHaveCount(4);
 
   await selectGuidedSurface(page, "wall");
   await expect(page.getByRole("heading", { name: "Wall calculator" })).toBeVisible();
-  await expect(page.getByLabel("Example stack")).toHaveValue("concrete_wall");
+  await expect(page.getByLabel("Load sample rows")).toHaveValue("concrete_wall");
   await expect(page.getByText("4 rows", { exact: true }).first()).toBeVisible();
   await expect(page.getByRole("button", { name: /^Remove$/ })).toHaveCount(4);
 });
@@ -1874,7 +1891,7 @@ test("guided diagnostics keeps provenance and trace surfaces visible without lea
 
 test("guided exact floor presets keep exact-family notes visible without generic screening-only copy", async ({ page }) => {
   await openFloorGuidedFlow(page);
-  await page.getByLabel("Example stack").selectOption("dataholz_clt_dry_exact");
+  await page.getByLabel("Load sample rows").selectOption("dataholz_clt_dry_exact");
   await openGuidedWorkspacePanel(page, "Setup");
   const routeSummary = visibleGuidedRouteSummary(page);
 
@@ -1898,7 +1915,7 @@ test("guided exact floor presets keep exact-family notes visible without generic
 
 test("guided bound floor presets keep the next action on evidence tightening", async ({ page }) => {
   await openFloorGuidedFlow(page);
-  await page.getByLabel("Example stack").selectOption("ubiq_open_web_300_bound");
+  await page.getByLabel("Load sample rows").selectOption("ubiq_open_web_300_bound");
   const routeSummary = visibleGuidedRouteSummary(page);
 
   await expect(routeSummary).toContainText("Validation");
@@ -1912,7 +1929,7 @@ test("guided bound floor presets keep live airborne companions separate from con
   page
 }) => {
   await openFloorGuidedFlow(page);
-  await page.getByLabel("Example stack").selectOption("ubiq_open_web_300_bound");
+  await page.getByLabel("Load sample rows").selectOption("ubiq_open_web_300_bound");
   await selectGuidedProjectContext(page, "building_prediction");
 
   await page.getByLabel("Partition width (mm)").fill("4200");
@@ -1942,7 +1959,7 @@ test("guided bound floor presets keep live airborne companions separate from con
 
 test("guided steel crossover bound can lock the support form into a narrower family corridor", async ({ page }) => {
   await openFloorGuidedFlow(page);
-  await page.getByLabel("Example stack").selectOption("ubiq_steel_300_unspecified_bound");
+  await page.getByLabel("Load sample rows").selectOption("ubiq_steel_300_unspecified_bound");
   const routeSummary = visibleGuidedRouteSummary(page);
 
   await expect(routeSummary).toContainText("Conservative bound");
@@ -1964,7 +1981,7 @@ test("guided steel crossover bound can lock the support form into a narrower fam
 
 test("guided converged 200 mm steel bound stays off the support-form gap lane", async ({ page }) => {
   await openFloorGuidedFlow(page);
-  await page.getByLabel("Example stack").selectOption("ubiq_steel_200_unspecified_bound");
+  await page.getByLabel("Load sample rows").selectOption("ubiq_steel_200_unspecified_bound");
   const routeSummary = visibleGuidedRouteSummary(page);
 
   await expect(routeSummary).toContainText("Conservative bound");
@@ -1977,7 +1994,7 @@ test("guided converged 200 mm steel bound stays off the support-form gap lane", 
 
 test("guided steel suspended preset keeps the fallback posture explicit while flagging the remaining topology gap", async ({ page }) => {
   await openFloorGuidedFlow(page);
-  await page.getByLabel("Example stack").selectOption("steel_suspended_fallback");
+  await page.getByLabel("Load sample rows").selectOption("steel_suspended_fallback");
   const routeSummary = visibleGuidedRouteSummary(page);
 
   await expect(routeSummary).toContainText("Validation");
@@ -1994,7 +2011,7 @@ test("guided steel suspended preset keeps the fallback posture explicit while fl
 
 test("guided timber bare low-confidence preset keeps the broad fallback and exposed companions explicit", async ({ page }) => {
   await openFloorGuidedFlow(page);
-  await page.getByLabel("Example stack").selectOption("timber_bare_impact_only_fallback");
+  await page.getByLabel("Load sample rows").selectOption("timber_bare_impact_only_fallback");
   const routeSummary = visibleGuidedRouteSummary(page);
 
   await expect(routeSummary).toContainText("Validation");
@@ -2015,7 +2032,7 @@ test("guided timber bare low-confidence preset keeps the broad fallback and expo
 
 test("guided timber fallback helper can move the stack into a narrower timber family lane", async ({ page }) => {
   await openFloorGuidedFlow(page);
-  await page.getByLabel("Example stack").selectOption("timber_bare_impact_only_fallback");
+  await page.getByLabel("Load sample rows").selectOption("timber_bare_impact_only_fallback");
   const routeSummary = visibleGuidedRouteSummary(page);
 
   await ensureGuidedToolsOpen(page, "Add direct ceiling board");

@@ -506,6 +506,38 @@ describe("simple workbench proposal helpers", () => {
     expect(html).toContain("This offer form summarises the acoustic calculation");
   });
 
+  it("shows report-only override notes beside charts and text export", () => {
+    const adjustedDocument = {
+      ...BASE_DOCUMENT,
+      primaryMetricValue: "58 dB",
+      reportAdjustments: [
+        {
+          afterValue: "58 dB",
+          appliedAtIso: "2026-06-04T12:00:00.000Z",
+          beforeValue: "61 dB",
+          engineValuePreserved: true,
+          id: "report-adjustment-test-rw",
+          label: "Rw",
+          metricId: "output:Rw",
+          outputId: "Rw",
+          reason: "Issued report override.",
+          scope: "saved_snapshot",
+          source: "assistant"
+        }
+      ]
+    } as const;
+    const note = "Report-only override: Rw 61 dB -&gt; 58 dB. Calculator inputs and captured engine values remain unchanged; any response curve shown remains the calculated evidence curve.";
+
+    const brandedHtml = buildSimpleWorkbenchProposalHtml(adjustedDocument);
+    const simpleHtml = buildSimpleWorkbenchProposalSimpleHtml(adjustedDocument);
+    const text = buildSimpleWorkbenchProposalText(adjustedDocument);
+
+    expect(brandedHtml).toContain(note);
+    expect(simpleHtml).toContain(note);
+    expect(text).toContain("Report-only override note");
+    expect(text).toContain("Report-only override: Rw 61 dB -> 58 dB. Calculator inputs and captured engine values remain unchanged; any response curve shown remains the calculated evidence curve.");
+  });
+
   it("omits hidden metrics and the hidden primary headline metric from branded and simple html", () => {
     const hiddenMetricDocument = {
       ...BASE_DOCUMENT,

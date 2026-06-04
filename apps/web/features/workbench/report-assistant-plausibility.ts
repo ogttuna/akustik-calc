@@ -1,6 +1,14 @@
 import type { ReportAssistantContext } from "./report-assistant-context";
+import {
+  sanitizeReportAssistantResearchReviewPacket,
+  type ReportAssistantResearchReviewPacket
+} from "./report-assistant-conversation-storage";
 import type { PlausibilitySourceSummary } from "./report-assistant-finding";
 import type { ReportAssistantPatch } from "./report-assistant-patch";
+import {
+  appendReportAssistantTraceExplanation,
+  buildReportAssistantTraceExplanationLines
+} from "./report-assistant-trace-explanation";
 
 export type ReportAssistantPlausibilityVerdict =
   | "insufficient_context"
@@ -10,22 +18,73 @@ export type ReportAssistantPlausibilityVerdict =
 
 export type ReportAssistantPlausibilitySeverity = "high" | "low" | "medium";
 
+export type ReportAssistantPlausibilityComparability =
+  | "direct"
+  | "partial"
+  | "same_family"
+  | "not_comparable";
+
+export type ReportAssistantPlausibilityConfidence = "high" | "low" | "medium";
+
+export type ReportAssistantPlausibilitySourceQuality =
+  | "mixed"
+  | "none"
+  | "strong"
+  | "weak";
+
+export type ReportAssistantPlausibilityValueRange = {
+  maxDb?: number;
+  minDb?: number;
+  note?: string;
+};
+
+export type ReportAssistantPlausibilityValueRecommendation = {
+  displayValue?: string;
+  maxDb?: number;
+  minDb?: number;
+  note?: string;
+  targetDb?: number;
+};
+
+export type ReportAssistantComparableAssembly = {
+  comparisonNote?: string;
+  description?: string;
+  label: string;
+  matchingLayers: readonly string[];
+  metricValues: readonly string[];
+  sourceTitle?: string;
+  sourceUrl?: string;
+  weakeningDifferences: readonly string[];
+};
+
 export type ReportAssistantPlausibilityRequest = {
   metricId: string;
+  previousReview?: ReportAssistantResearchReviewPacket;
   research?: boolean;
   sources?: readonly PlausibilitySourceSummary[];
   suggestPatch?: boolean;
+  userChallengeText?: string;
   userInstruction?: string;
 };
 
 export type ReportAssistantPlausibilityReview = {
+  answerText?: string;
+  comparableAssemblies: readonly ReportAssistantComparableAssembly[];
+  comparability: ReportAssistantPlausibilityComparability;
+  confidence: ReportAssistantPlausibilityConfidence;
   engineDisplayValue?: string;
+  insufficientSourcesReason?: string;
+  missingEvidence: readonly string[];
   metric: string;
   metricId: string;
   rationale: readonly string[];
+  recommendedActionText?: string;
   severity: ReportAssistantPlausibilitySeverity;
+  sourceQuality: ReportAssistantPlausibilitySourceQuality;
   sources: readonly PlausibilitySourceSummary[];
   suggestedReportPatch?: ReportAssistantPatch;
+  valueRecommendation?: ReportAssistantPlausibilityValueRecommendation;
+  valueRange?: ReportAssistantPlausibilityValueRange;
   valueReviewed: string;
   verdict: ReportAssistantPlausibilityVerdict;
 };
@@ -85,9 +144,11 @@ export function parseReportAssistantPlausibilityRequest(value: unknown): ReportA
 
   return {
     metricId: value.metricId,
+    previousReview: sanitizeReportAssistantResearchReviewPacket(value.previousReview),
     research: value.research === true,
     sources,
     suggestPatch: value.suggestPatch !== false,
+    userChallengeText: normalizeOptionalString(value.userChallengeText),
     userInstruction: normalizeOptionalString(value.userInstruction)
   };
 }
@@ -153,6 +214,95 @@ function reviewFromContextOnly(input: {
   };
 }
 
+function getContextOnlyConfidence(input: {
+  engineDisplayValue?: string;
+  sources: readonly PlausibilitySourceSummary[];
+  verdict: ReportAssistantPlausibilityVerdict;
+}): ReportAssistantPlausibilityConfidence {
+  if (input.verdict === "insufficient_context") {
+    return "low";
+  }
+
+  if (input.engineDisplayValue) {
+    return input.sources.length > 0 ? "medium" : "low";
+  }
+
+  return "low";
+}
+
+function getContextOnlyComparability(input: {
+  engineDisplayValue?: string;
+  sources: readonly PlausibilitySourceSummary[];
+  verdict: ReportAssistantPlausibilityVerdict;
+}): ReportAssistantPlausibilityComparability {
+  if (input.verdict === "insufficient_context") {
+    return "not_comparable";
+  }
+
+  return input.sources.length > 0 ? "partial" : "not_comparable";
+}
+
+function getContextOnlySourceQuality(sources: readonly PlausibilitySourceSummary[]): ReportAssistantPlausibilitySourceQuality {
+  return sources.length > 0 ? "weak" : "none";
+}
+
+function getContextOnlyMissingEvidence(input: {
+  engineDisplayValue?: string;
+  sources: readonly PlausibilitySourceSummary[];
+}): string[] {
+  const missingEvidence: string[] = [];
+
+  if (!input.engineDisplayValue) {
+    missingEvidence.push("A captured engine value for this metric in the current report context.");
+  }
+  if (input.sources.length === 0) {
+    missingEvidence.push("Comparable external acoustic sources for the exact or closely matched layer combination.");
+  }
+
+  return missingEvidence;
+}
+
+function getContextOnlyInsufficientSourcesReason(sources: readonly PlausibilitySourceSummary[]): string | undefined {
+  return sources.length === 0
+    ? "No external web/source research is attached to this context-only metric review."
+    : undefined;
+}
+
+function getContextOnlyEvidenceFields(input: {
+  engineDisplayValue?: string;
+  status?: string;
+  sources: readonly PlausibilitySourceSummary[];
+  verdict: ReportAssistantPlausibilityVerdict;
+}): Pick<
+  ReportAssistantPlausibilityReview,
+  "comparableAssemblies" | "comparability" | "confidence" | "insufficientSourcesReason" | "missingEvidence" | "sourceQuality" | "valueRecommendation"
+> {
+  const engineValue = parseDbValue(input.engineDisplayValue);
+  const canRecommendEngineValue =
+    input.status !== "needs_input" &&
+    input.status !== "unsupported" &&
+    input.verdict !== "insufficient_context" &&
+    typeof input.engineDisplayValue === "string";
+
+  return {
+    comparableAssemblies: [],
+    comparability: getContextOnlyComparability(input),
+    confidence: getContextOnlyConfidence(input),
+    insufficientSourcesReason: getContextOnlyInsufficientSourcesReason(input.sources),
+    missingEvidence: getContextOnlyMissingEvidence(input),
+    sourceQuality: getContextOnlySourceQuality(input.sources),
+    valueRecommendation: canRecommendEngineValue
+      ? {
+          displayValue: input.engineDisplayValue,
+          note: "Captured engine value from the current report context; not an external source-backed recommendation.",
+          targetDb: engineValue?.numericDb
+        }
+      : {
+          note: "No source-backed numeric recommendation is available from this context-only review."
+        }
+  };
+}
+
 function buildRestoreEnginePatch(input: {
   context: ReportAssistantContext;
   engineDisplayValue: string;
@@ -173,6 +323,33 @@ function buildRestoreEnginePatch(input: {
   };
 }
 
+function buildContextOnlyAnswer(input: {
+  absoluteDeltaDb?: number;
+  engineDisplayValue?: string;
+  metricLabel: string;
+  reportDisplayValue: string;
+  status?: string;
+  traceLines?: readonly string[];
+  verdict: ReportAssistantPlausibilityVerdict;
+}): string {
+  let answerText: string;
+
+  if (input.status === "needs_input" || input.status === "unsupported") {
+    answerText = `${input.metricLabel} is ${input.status}; I cannot verify or publish it as a numeric value from the current context.`;
+  } else if (!input.engineDisplayValue) {
+    answerText = `I could not compare ${input.metricLabel} against a captured engine value, so the current context is not enough for a numeric plausibility answer.`;
+  } else if (typeof input.absoluteDeltaDb !== "number") {
+    answerText = `I could not parse the report value for ${input.metricLabel}, so the current context is not enough for a numeric plausibility answer.`;
+  } else {
+    answerText = `I compared ${input.metricLabel}: report ${input.reportDisplayValue} against engine ${input.engineDisplayValue}. The difference is ${input.absoluteDeltaDb} dB, so the context-only verdict is ${input.verdict}.`;
+  }
+
+  return appendReportAssistantTraceExplanation({
+    answerText,
+    lines: input.traceLines ?? []
+  });
+}
+
 export function reviewReportAssistantMetricPlausibility(input: {
   context: ReportAssistantContext;
   request: ReportAssistantPlausibilityRequest;
@@ -185,10 +362,15 @@ export function reviewReportAssistantMetricPlausibility(input: {
     };
   }
 
+  const traceExplanationLines = buildReportAssistantTraceExplanationLines({
+    context: input.context,
+    metric
+  });
   const sources = input.request.sources ?? [];
   const rationale: string[] = [
     `Review mode: context-only${sources.length > 0 ? " with user-supplied source metadata" : "; no external web research is attached"}.`,
-    `Metric ${metric.label} is ${metric.status}, basis ${metric.basis}, direction ${metric.direction}.`
+    `Metric ${metric.label} is ${metric.status}, basis ${metric.basis}, direction ${metric.direction}.`,
+    ...traceExplanationLines
   ];
 
   if (input.context.traceSummary.selectedCandidateId || input.context.traceSummary.selectedOrigin) {
@@ -202,6 +384,19 @@ export function reviewReportAssistantMetricPlausibility(input: {
     return {
       ok: true,
       review: {
+        answerText: buildContextOnlyAnswer({
+          metricLabel: metric.label,
+          reportDisplayValue: metric.reportDisplayValue,
+          status: metric.status,
+          traceLines: traceExplanationLines,
+          verdict: "insufficient_context"
+        }),
+        ...getContextOnlyEvidenceFields({
+          engineDisplayValue: metric.engineDisplayValue,
+          status: metric.status,
+          sources,
+          verdict: "insufficient_context"
+        }),
         engineDisplayValue: metric.engineDisplayValue,
         metric: metric.metric,
         metricId: metric.id,
@@ -220,6 +415,19 @@ export function reviewReportAssistantMetricPlausibility(input: {
     return {
       ok: true,
       review: {
+        answerText: buildContextOnlyAnswer({
+          engineDisplayValue: metric.engineDisplayValue,
+          metricLabel: metric.label,
+          reportDisplayValue: metric.reportDisplayValue,
+          traceLines: traceExplanationLines,
+          verdict: "insufficient_context"
+        }),
+        ...getContextOnlyEvidenceFields({
+          engineDisplayValue: metric.engineDisplayValue,
+          status: metric.status,
+          sources,
+          verdict: "insufficient_context"
+        }),
         engineDisplayValue: metric.engineDisplayValue,
         metric: metric.metric,
         metricId: metric.id,
@@ -238,6 +446,18 @@ export function reviewReportAssistantMetricPlausibility(input: {
     return {
       ok: true,
       review: {
+        answerText: buildContextOnlyAnswer({
+          metricLabel: metric.label,
+          reportDisplayValue: metric.reportDisplayValue,
+          traceLines: traceExplanationLines,
+          verdict: sources.length > 0 ? "plausible" : "insufficient_context"
+        }),
+        ...getContextOnlyEvidenceFields({
+          engineDisplayValue: metric.engineDisplayValue,
+          status: metric.status,
+          sources,
+          verdict: sources.length > 0 ? "plausible" : "insufficient_context"
+        }),
         engineDisplayValue: metric.engineDisplayValue,
         metric: metric.metric,
         metricId: metric.id,
@@ -285,6 +505,20 @@ export function reviewReportAssistantMetricPlausibility(input: {
   return {
     ok: true,
     review: {
+      answerText: buildContextOnlyAnswer({
+        absoluteDeltaDb,
+        engineDisplayValue: metric.engineDisplayValue,
+        metricLabel: metric.label,
+        reportDisplayValue: metric.reportDisplayValue,
+        traceLines: traceExplanationLines,
+        verdict: contextReview.verdict
+      }),
+      ...getContextOnlyEvidenceFields({
+        engineDisplayValue: metric.engineDisplayValue,
+        status: metric.status,
+        sources,
+        verdict: contextReview.verdict
+      }),
       engineDisplayValue: metric.engineDisplayValue,
       metric: metric.metric,
       metricId: metric.id,

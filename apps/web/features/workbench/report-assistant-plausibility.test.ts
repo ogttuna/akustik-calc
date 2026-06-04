@@ -136,6 +136,29 @@ function context(document: SimpleWorkbenchProposalDocument = DOCUMENT) {
       document,
       reportId: "plausibility-test"
     }),
+    assistantTraceSnapshot: {
+      airborne: {
+        confidenceClass: "medium",
+        detectedFamilyLabel: "Heavy floor",
+        selectedLabel: "Scoped estimate Rw lane",
+        selectedMethod: "source_absent_predictor",
+        solverSpreadRwDb: 4
+      },
+      airborneCandidateResolution: {
+        selectedCandidateId: "candidate.rw.test",
+        selectedOrigin: "source_absent_predictor"
+      },
+      layerCombinationResolver: {
+        basis: "predictor_gate",
+        candidateKind: "source_absent_family_estimate",
+        route: "floor",
+        selectedCandidateId: "candidate.rw.test",
+        supportedMetrics: ["Rw"],
+        surfaceDetail: "Resolver selected the scoped source-absent floor estimate lane.",
+        surfaceLabel: "Scoped Rw estimate",
+        valuePins: [{ metric: "Rw", value: 61 }]
+      }
+    },
     traceSummary: {
       basis: "predictor_gate",
       dynamicAirborneFamily: "heavy floor",
@@ -193,7 +216,11 @@ describe("report assistant plausibility review", () => {
       }
     });
     if (result.ok) {
+      expect(result.review.answerText).toContain("report 49 dB against engine 61 dB");
+      expect(result.review.answerText).toContain("Engine trace:");
+      expect(result.review.answerText).toContain("Scoped estimate Rw lane");
       expect(result.review.rationale.join(" ")).toContain("differs from captured engine value");
+      expect(result.review.rationale.join(" ")).toContain("Layer resolver:");
       expect(result.review.rationale.join(" ")).toContain("above the assistant patch limit");
       expect(result.review.suggestedReportPatch).toBeUndefined();
     }

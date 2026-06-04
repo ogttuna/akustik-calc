@@ -6,6 +6,8 @@ import type {
 } from "./simple-workbench-proposal";
 import {
   createReportAssistantDocumentSignature,
+  getReportAssistantMetricId,
+  inferReportAssistantOutputId,
   type ReportAssistantContext,
   type ReportAssistantMetric,
   type ReportAssistantMetricLocation
@@ -23,6 +25,14 @@ export type ReportAssistantPatchOperation =
       metricId: string;
       reason: string;
       type: "set_metric_display_value";
+    }
+  | {
+      afterValue: string;
+      beforeText: string;
+      beforeValue: string;
+      path: string;
+      reason: string;
+      type: "replace_report_text_value";
     }
   | {
       reason: string;
@@ -58,6 +68,17 @@ export type ReportAssistantPatchPreviewOperation =
       text: string;
       type: "report_note";
       warnings: readonly string[];
+    }
+  | {
+      afterText: string;
+      afterValue: string;
+      beforeText: string;
+      beforeValue: string;
+      path: string;
+      reason: string;
+      replacementCount: number;
+      type: "text_value";
+      warnings: readonly string[];
     };
 
 export type ReportAssistantPatchValidationResult = {
@@ -71,8 +92,47 @@ export type ReportAssistantPatchValidationResult = {
 };
 
 export type ReportAssistantValueMention = {
+  auditExempt?: boolean;
   path: string;
+  replaceable?: boolean;
+  surfacePolicy?: ReportConsistencySurfacePolicy;
   value: string;
+};
+
+export type ReportAssistantValueMentionClassification =
+  | "ambiguous_numeric_only"
+  | "audit_engine_value"
+  | "evidence_source_value"
+  | "exact_metric_label_value"
+  | "semantic_metric_claim"
+  | "unrelated_numeric_mention"
+  | "unresolved";
+
+export type ReportAssistantClassifiedValueMention = ReportAssistantValueMention & {
+  afterValue: string;
+  beforeValue: string;
+  blocking: boolean;
+  classification: ReportAssistantValueMentionClassification;
+  label: string;
+  metricId: string;
+  reason: string;
+};
+
+export type ReportConsistencySurfacePolicy =
+  | "audit_engine"
+  | "client_narrative"
+  | "evidence_source"
+  | "issue_metadata"
+  | "metric_value"
+  | "non_report_metadata"
+  | "technical_narrative";
+
+export type ReportConsistencyTextPath = {
+  auditExempt: boolean;
+  path: string;
+  replaceable: boolean;
+  surfacePolicy: ReportConsistencySurfacePolicy;
+  text: string;
 };
 
 type ParsedReportDbValue = {
@@ -85,6 +145,54 @@ type ParsedReportDbValue = {
 const SIGNED_OUTPUT_IDS = new Set(["C", "CI", "CI,50-2500", "Ctr"]);
 const MAX_CONFIRMATION_FREE_MOVEMENT_DB = 5;
 const MAX_ASSISTANT_MOVEMENT_DB = 10;
+const DIRECT_TEXT_REPLACEMENT_FIELDS = new Set<keyof SimpleWorkbenchProposalDocument>([
+  "assemblyHeadline",
+  "briefNote",
+  "corridorDossierHeadline",
+  "decisionTrailHeadline",
+  "dynamicBranchDetail",
+  "executiveSummary",
+  "methodDossierHeadline",
+  "validationDetail"
+]);
+const SEMANTIC_STALE_CLAIM_PATTERNS = [
+  /\bpass(?:es|ed|ing)?\b/u,
+  /\bfail(?:s|ed|ing)?\b/u,
+  /\btarget\b/u,
+  /\bmargin\b/u,
+  /\bclass\b/u,
+  /\bcomfortably\b/u,
+  /\bexceed(?:s|ed|ing)?\b/u,
+  /\bstrong\b/u,
+  /\bweak\b/u,
+  /\boptimistic\b/u,
+  /\bconservative\b/u,
+  /\brecommend(?:s|ed|ing|ation)?\b/u,
+  /\bno\s+change\b/u,
+  /\bhigh\b/u,
+  /\blow\b/u,
+  /\bfazla\b/u,
+  /\bdusuk\b/u,
+  /\byuksek\b/u,
+  /\biyi\b/u,
+  /\bkotu\b/u,
+  /\bmakul\b/u,
+  /\bsinir\b/u,
+  /\bhedef\b/u,
+  /\bkarsil(?:ar|iyor|adi|amak|ayan)\b/u,
+  /\bgecer(?:li)?\b/u,
+  /\bkaldirir\b/u,
+  /\brahat(?:ca)?\b/u,
+  /\bmarj\b/u,
+  /\boner(?:i|ilir|mek)\b/u
+] as const;
+
+type MetricValueSnapshot = {
+  label: string;
+  metricId: string;
+  outputId?: RequestedOutputId;
+  value: string;
+};
 
 function isObjectRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
@@ -94,6 +202,18 @@ function isMetricOperation(
   operation: ReportAssistantPatchPreviewOperation
 ): operation is Extract<ReportAssistantPatchPreviewOperation, { type: "metric_value" }> {
   return operation.type === "metric_value";
+}
+
+function isReportNoteOperation(
+  operation: ReportAssistantPatchPreviewOperation
+): operation is Extract<ReportAssistantPatchPreviewOperation, { type: "report_note" }> {
+  return operation.type === "report_note";
+}
+
+function isTextValueOperation(
+  operation: ReportAssistantPatchPreviewOperation
+): operation is Extract<ReportAssistantPatchPreviewOperation, { type: "text_value" }> {
+  return operation.type === "text_value";
 }
 
 function parseReportDbValue(value: string): ParsedReportDbValue | null {
@@ -190,6 +310,24 @@ function validatePatchShape(patch: unknown): ReportAssistantPatch | null {
         section: operation.section,
         text: operation.text,
         type: "append_report_note"
+      });
+      continue;
+    }
+
+    if (
+      operation.type === "replace_report_text_value" &&
+      typeof operation.path === "string" &&
+      typeof operation.beforeText === "string" &&
+      typeof operation.beforeValue === "string" &&
+      typeof operation.afterValue === "string"
+    ) {
+      operations.push({
+        afterValue: operation.afterValue,
+        beforeText: operation.beforeText,
+        beforeValue: operation.beforeValue,
+        path: operation.path,
+        reason: operation.reason,
+        type: "replace_report_text_value"
       });
       continue;
     }
@@ -310,6 +448,551 @@ function previewMetricOperation(input: {
   };
 }
 
+function addConsistencyTextPath(
+  records: ReportConsistencyTextPath[],
+  input: {
+    auditExempt?: boolean;
+    path: string;
+    replaceable: boolean;
+    surfacePolicy: ReportConsistencySurfacePolicy;
+    text?: string;
+  }
+): void {
+  if (typeof input.text !== "string") {
+    return;
+  }
+
+  records.push({
+    auditExempt: input.auditExempt === true,
+    path: input.path,
+    replaceable: input.replaceable,
+    surfacePolicy: input.surfacePolicy,
+    text: input.text
+  });
+}
+
+export function collectReportConsistencyTextPaths(
+  document: SimpleWorkbenchProposalDocument
+): ReportConsistencyTextPath[] {
+  const records: ReportConsistencyTextPath[] = [];
+
+  addConsistencyTextPath(records, {
+    path: "assemblyHeadline",
+    replaceable: true,
+    surfacePolicy: "client_narrative",
+    text: document.assemblyHeadline
+  });
+  addConsistencyTextPath(records, {
+    path: "executiveSummary",
+    replaceable: true,
+    surfacePolicy: "client_narrative",
+    text: document.executiveSummary
+  });
+  addConsistencyTextPath(records, {
+    path: "briefNote",
+    replaceable: true,
+    surfacePolicy: "client_narrative",
+    text: document.briefNote
+  });
+  addConsistencyTextPath(records, {
+    path: "validationDetail",
+    replaceable: true,
+    surfacePolicy: "client_narrative",
+    text: document.validationDetail
+  });
+  addConsistencyTextPath(records, {
+    path: "dynamicBranchDetail",
+    replaceable: true,
+    surfacePolicy: "client_narrative",
+    text: document.dynamicBranchDetail
+  });
+  addConsistencyTextPath(records, {
+    path: "corridorDossierHeadline",
+    replaceable: true,
+    surfacePolicy: "technical_narrative",
+    text: document.corridorDossierHeadline
+  });
+  addConsistencyTextPath(records, {
+    path: "methodDossierHeadline",
+    replaceable: true,
+    surfacePolicy: "technical_narrative",
+    text: document.methodDossierHeadline
+  });
+  addConsistencyTextPath(records, {
+    path: "decisionTrailHeadline",
+    replaceable: true,
+    surfacePolicy: "technical_narrative",
+    text: document.decisionTrailHeadline
+  });
+
+  document.warnings.forEach((warning, index) =>
+    addConsistencyTextPath(records, {
+      path: `warnings.${String(index)}`,
+      replaceable: true,
+      surfacePolicy: "client_narrative",
+      text: warning
+    })
+  );
+  document.assumptionItems.forEach((item, index) =>
+    addConsistencyTextPath(records, {
+      path: `assumptionItems.${String(index)}.detail`,
+      replaceable: true,
+      surfacePolicy: "client_narrative",
+      text: item.detail
+    })
+  );
+  document.recommendationItems.forEach((item, index) =>
+    addConsistencyTextPath(records, {
+      path: `recommendationItems.${String(index)}.detail`,
+      replaceable: true,
+      surfacePolicy: "client_narrative",
+      text: item.detail
+    })
+  );
+  document.metrics.forEach((metric, index) => {
+    addConsistencyTextPath(records, {
+      path: `metrics.${String(index)}.detail`,
+      replaceable: true,
+      surfacePolicy: "client_narrative",
+      text: metric.detail
+    });
+    addConsistencyTextPath(records, {
+      auditExempt: true,
+      path: `metrics.${String(index)}.engineDisplayValue`,
+      replaceable: false,
+      surfacePolicy: "audit_engine",
+      text: metric.engineDisplayValue
+    });
+  });
+  document.coverageItems.forEach((item, index) => {
+    addConsistencyTextPath(records, {
+      path: `coverageItems.${String(index)}.detail`,
+      replaceable: true,
+      surfacePolicy: "client_narrative",
+      text: item.detail
+    });
+    addConsistencyTextPath(records, {
+      path: `coverageItems.${String(index)}.postureDetail`,
+      replaceable: true,
+      surfacePolicy: "client_narrative",
+      text: item.postureDetail
+    });
+    addConsistencyTextPath(records, {
+      path: `coverageItems.${String(index)}.nextStep`,
+      replaceable: true,
+      surfacePolicy: "client_narrative",
+      text: item.nextStep
+    });
+    addConsistencyTextPath(records, {
+      auditExempt: true,
+      path: `coverageItems.${String(index)}.engineDisplayValue`,
+      replaceable: false,
+      surfacePolicy: "audit_engine",
+      text: item.engineDisplayValue
+    });
+  });
+  document.corridorDossierCards.forEach((card, index) => {
+    addConsistencyTextPath(records, {
+      path: `corridorDossierCards.${String(index)}.value`,
+      replaceable: true,
+      surfacePolicy: "technical_narrative",
+      text: card.value
+    });
+    addConsistencyTextPath(records, {
+      path: `corridorDossierCards.${String(index)}.detail`,
+      replaceable: true,
+      surfacePolicy: "technical_narrative",
+      text: card.detail
+    });
+  });
+  document.methodDossierCards.forEach((card, index) => {
+    addConsistencyTextPath(records, {
+      path: `methodDossierCards.${String(index)}.value`,
+      replaceable: true,
+      surfacePolicy: "technical_narrative",
+      text: card.value
+    });
+    addConsistencyTextPath(records, {
+      path: `methodDossierCards.${String(index)}.detail`,
+      replaceable: true,
+      surfacePolicy: "technical_narrative",
+      text: card.detail
+    });
+  });
+  document.methodTraceGroups.forEach((group, groupIndex) => {
+    addConsistencyTextPath(records, {
+      path: `methodTraceGroups.${String(groupIndex)}.value`,
+      replaceable: true,
+      surfacePolicy: "technical_narrative",
+      text: group.value
+    });
+    addConsistencyTextPath(records, {
+      path: `methodTraceGroups.${String(groupIndex)}.detail`,
+      replaceable: true,
+      surfacePolicy: "technical_narrative",
+      text: group.detail
+    });
+    group.notes.forEach((note, noteIndex) =>
+      addConsistencyTextPath(records, {
+        path: `methodTraceGroups.${String(groupIndex)}.notes.${String(noteIndex)}`,
+        replaceable: true,
+        surfacePolicy: "technical_narrative",
+        text: note
+      })
+    );
+  });
+  document.decisionTrailItems.forEach((item, index) =>
+    addConsistencyTextPath(records, {
+      path: `decisionTrailItems.${String(index)}.detail`,
+      replaceable: true,
+      surfacePolicy: "technical_narrative",
+      text: item.detail
+    })
+  );
+  document.issueRegisterItems.forEach((item, index) =>
+    addConsistencyTextPath(records, {
+      path: `issueRegisterItems.${String(index)}.detail`,
+      replaceable: true,
+      surfacePolicy: "issue_metadata",
+      text: item.detail
+    })
+  );
+  document.citations.forEach((citation, index) => {
+    addConsistencyTextPath(records, {
+      path: `citations.${String(index)}.label`,
+      replaceable: false,
+      surfacePolicy: "evidence_source",
+      text: citation.label
+    });
+    addConsistencyTextPath(records, {
+      path: `citations.${String(index)}.detail`,
+      replaceable: false,
+      surfacePolicy: "evidence_source",
+      text: citation.detail
+    });
+    addConsistencyTextPath(records, {
+      path: `citations.${String(index)}.href`,
+      replaceable: false,
+      surfacePolicy: "evidence_source",
+      text: citation.href
+    });
+  });
+  document.reportAdjustments?.forEach((adjustment, index) => {
+    addConsistencyTextPath(records, {
+      auditExempt: true,
+      path: `reportAdjustments.${String(index)}.beforeValue`,
+      replaceable: false,
+      surfacePolicy: "audit_engine",
+      text: adjustment.beforeValue
+    });
+    addConsistencyTextPath(records, {
+      auditExempt: true,
+      path: `reportAdjustments.${String(index)}.afterValue`,
+      replaceable: false,
+      surfacePolicy: "audit_engine",
+      text: adjustment.afterValue
+    });
+  });
+
+  return records;
+}
+
+function getStringAtPath(document: SimpleWorkbenchProposalDocument, path: string): string | null {
+  if (DIRECT_TEXT_REPLACEMENT_FIELDS.has(path as keyof SimpleWorkbenchProposalDocument)) {
+    const value = document[path as keyof SimpleWorkbenchProposalDocument];
+    return typeof value === "string" ? value : null;
+  }
+
+  const warningMatch = /^warnings\.(\d+)$/u.exec(path);
+  if (warningMatch) {
+    const index = Number(warningMatch[1]);
+    return Number.isInteger(index) ? document.warnings[index] ?? null : null;
+  }
+
+  const briefItemMatch = /^(assumptionItems|recommendationItems)\.(\d+)\.detail$/u.exec(path);
+  if (briefItemMatch) {
+    const collection = briefItemMatch[1] === "assumptionItems" ? document.assumptionItems : document.recommendationItems;
+    const index = Number(briefItemMatch[2]);
+    return Number.isInteger(index) ? collection[index]?.detail ?? null : null;
+  }
+
+  const metricMatch = /^metrics\.(\d+)\.detail$/u.exec(path);
+  if (metricMatch) {
+    const index = Number(metricMatch[1]);
+    return Number.isInteger(index) ? document.metrics[index]?.detail ?? null : null;
+  }
+
+  const coverageMatch = /^coverageItems\.(\d+)\.(detail|postureDetail|nextStep)$/u.exec(path);
+  if (coverageMatch) {
+    const index = Number(coverageMatch[1]);
+    const key = coverageMatch[2] as "detail" | "nextStep" | "postureDetail";
+    return Number.isInteger(index) ? document.coverageItems[index]?.[key] ?? null : null;
+  }
+
+  const dossierCardMatch = /^(corridorDossierCards|methodDossierCards)\.(\d+)\.(detail|value)$/u.exec(path);
+  if (dossierCardMatch) {
+    const collection = dossierCardMatch[1] === "corridorDossierCards"
+      ? document.corridorDossierCards
+      : document.methodDossierCards;
+    const index = Number(dossierCardMatch[2]);
+    const key = dossierCardMatch[3] as "detail" | "value";
+    return Number.isInteger(index) ? collection[index]?.[key] ?? null : null;
+  }
+
+  const traceGroupMatch = /^methodTraceGroups\.(\d+)\.(detail|value)$/u.exec(path);
+  if (traceGroupMatch) {
+    const index = Number(traceGroupMatch[1]);
+    const key = traceGroupMatch[2] as "detail" | "value";
+    return Number.isInteger(index) ? document.methodTraceGroups[index]?.[key] ?? null : null;
+  }
+
+  const traceNoteMatch = /^methodTraceGroups\.(\d+)\.notes\.(\d+)$/u.exec(path);
+  if (traceNoteMatch) {
+    const groupIndex = Number(traceNoteMatch[1]);
+    const noteIndex = Number(traceNoteMatch[2]);
+    return Number.isInteger(groupIndex) && Number.isInteger(noteIndex)
+      ? document.methodTraceGroups[groupIndex]?.notes[noteIndex] ?? null
+      : null;
+  }
+
+  const decisionTrailMatch = /^decisionTrailItems\.(\d+)\.detail$/u.exec(path);
+  if (decisionTrailMatch) {
+    const index = Number(decisionTrailMatch[1]);
+    return Number.isInteger(index) ? document.decisionTrailItems[index]?.detail ?? null : null;
+  }
+
+  const issueRegisterMatch = /^issueRegisterItems\.(\d+)\.detail$/u.exec(path);
+  if (issueRegisterMatch) {
+    const index = Number(issueRegisterMatch[1]);
+    return Number.isInteger(index) ? document.issueRegisterItems[index]?.detail ?? null : null;
+  }
+
+  const citationMatch = /^citations\.(\d+)\.(detail|href|label)$/u.exec(path);
+  if (citationMatch) {
+    const index = Number(citationMatch[1]);
+    const key = citationMatch[2] as "detail" | "href" | "label";
+    return Number.isInteger(index) ? document.citations[index]?.[key] ?? null : null;
+  }
+
+  return null;
+}
+
+function getReportTextAtPath(document: SimpleWorkbenchProposalDocument, path: string): string | null {
+  const record = collectReportConsistencyTextPaths(document).find((entry) => entry.path === path);
+  if (!record?.replaceable) {
+    return null;
+  }
+
+  return getStringAtPath(document, path);
+}
+
+function setReportTextAtPath(
+  document: SimpleWorkbenchProposalDocument,
+  path: string,
+  value: string
+): SimpleWorkbenchProposalDocument {
+  if (DIRECT_TEXT_REPLACEMENT_FIELDS.has(path as keyof SimpleWorkbenchProposalDocument)) {
+    return {
+      ...document,
+      [path]: value
+    };
+  }
+
+  const warningMatch = /^warnings\.(\d+)$/u.exec(path);
+  if (warningMatch) {
+    const index = Number(warningMatch[1]);
+    return Number.isInteger(index)
+      ? {
+          ...document,
+          warnings: document.warnings.map((warning, warningIndex) => (warningIndex === index ? value : warning))
+        }
+      : document;
+  }
+
+  const briefItemMatch = /^(assumptionItems|recommendationItems)\.(\d+)\.detail$/u.exec(path);
+  if (briefItemMatch) {
+    const collectionKey = briefItemMatch[1] as "assumptionItems" | "recommendationItems";
+    const index = Number(briefItemMatch[2]);
+    return Number.isInteger(index)
+      ? {
+          ...document,
+          [collectionKey]: document[collectionKey].map((item, itemIndex) => (itemIndex === index ? { ...item, detail: value } : item))
+        }
+      : document;
+  }
+
+  const metricMatch = /^metrics\.(\d+)\.detail$/u.exec(path);
+  if (metricMatch) {
+    const index = Number(metricMatch[1]);
+    return Number.isInteger(index)
+      ? {
+          ...document,
+          metrics: document.metrics.map((metric, metricIndex) => (metricIndex === index ? { ...metric, detail: value } : metric))
+        }
+      : document;
+  }
+
+  const coverageMatch = /^coverageItems\.(\d+)\.(detail|postureDetail|nextStep)$/u.exec(path);
+  if (coverageMatch) {
+    const index = Number(coverageMatch[1]);
+    const key = coverageMatch[2] as "detail" | "nextStep" | "postureDetail";
+    return Number.isInteger(index)
+      ? {
+          ...document,
+          coverageItems: document.coverageItems.map((item, itemIndex) => (itemIndex === index ? { ...item, [key]: value } : item))
+        }
+      : document;
+  }
+
+  const dossierCardMatch = /^(corridorDossierCards|methodDossierCards)\.(\d+)\.(detail|value)$/u.exec(path);
+  if (dossierCardMatch) {
+    const collectionKey = dossierCardMatch[1] as "corridorDossierCards" | "methodDossierCards";
+    const index = Number(dossierCardMatch[2]);
+    const key = dossierCardMatch[3] as "detail" | "value";
+    return Number.isInteger(index)
+      ? {
+          ...document,
+          [collectionKey]: document[collectionKey].map((item, itemIndex) => (itemIndex === index ? { ...item, [key]: value } : item))
+        }
+      : document;
+  }
+
+  const traceGroupMatch = /^methodTraceGroups\.(\d+)\.(detail|value)$/u.exec(path);
+  if (traceGroupMatch) {
+    const index = Number(traceGroupMatch[1]);
+    const key = traceGroupMatch[2] as "detail" | "value";
+    return Number.isInteger(index)
+      ? {
+          ...document,
+          methodTraceGroups: document.methodTraceGroups.map((group, groupIndex) => (groupIndex === index ? { ...group, [key]: value } : group))
+        }
+      : document;
+  }
+
+  const traceNoteMatch = /^methodTraceGroups\.(\d+)\.notes\.(\d+)$/u.exec(path);
+  if (traceNoteMatch) {
+    const groupIndex = Number(traceNoteMatch[1]);
+    const noteIndex = Number(traceNoteMatch[2]);
+    return Number.isInteger(groupIndex) && Number.isInteger(noteIndex)
+      ? {
+          ...document,
+          methodTraceGroups: document.methodTraceGroups.map((group, index) =>
+            index === groupIndex
+              ? { ...group, notes: group.notes.map((note, nestedIndex) => (nestedIndex === noteIndex ? value : note)) }
+              : group
+          )
+        }
+      : document;
+  }
+
+  const decisionTrailMatch = /^decisionTrailItems\.(\d+)\.detail$/u.exec(path);
+  if (decisionTrailMatch) {
+    const index = Number(decisionTrailMatch[1]);
+    return Number.isInteger(index)
+      ? {
+          ...document,
+          decisionTrailItems: document.decisionTrailItems.map((item, itemIndex) => (itemIndex === index ? { ...item, detail: value } : item))
+        }
+      : document;
+  }
+
+  const issueRegisterMatch = /^issueRegisterItems\.(\d+)\.detail$/u.exec(path);
+  if (issueRegisterMatch) {
+    const index = Number(issueRegisterMatch[1]);
+    return Number.isInteger(index)
+      ? {
+          ...document,
+          issueRegisterItems: document.issueRegisterItems.map((item, itemIndex) => (itemIndex === index ? { ...item, detail: value } : item))
+        }
+      : document;
+  }
+
+  return document;
+}
+
+function countLiteralOccurrences(input: {
+  haystack: string;
+  needle: string;
+}): number {
+  if (input.needle.length === 0) {
+    return 0;
+  }
+
+  let count = 0;
+  let index = input.haystack.indexOf(input.needle);
+  while (index !== -1) {
+    count += 1;
+    index = input.haystack.indexOf(input.needle, index + input.needle.length);
+  }
+
+  return count;
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+}
+
+function previewTextValueOperation(input: {
+  document: SimpleWorkbenchProposalDocument;
+  operation: Extract<ReportAssistantPatchOperation, { type: "replace_report_text_value" }>;
+}): { errors: string[]; operation?: ReportAssistantPatchPreviewOperation; warnings: string[] } {
+  const { document, operation } = input;
+  const errors: string[] = [];
+  const warnings: string[] = [];
+  const path = operation.path.trim();
+  const beforeValue = operation.beforeValue.trim();
+  const afterValue = operation.afterValue.trim();
+
+  if (path.length === 0) {
+    errors.push("Text replacement path cannot be empty.");
+  }
+  if (beforeValue.length === 0 || afterValue.length === 0) {
+    errors.push("Text replacement beforeValue and afterValue cannot be empty.");
+  }
+
+  const currentText = getReportTextAtPath(document, path);
+  if (currentText === null) {
+    errors.push(`Text replacement path ${path} is not an allowed report text location.`);
+  } else if (currentText !== operation.beforeText) {
+    errors.push(`Text replacement path ${path} no longer matches the expected current text.`);
+  } else if (!currentText.includes(beforeValue)) {
+    errors.push(`Text replacement path ${path} does not contain ${beforeValue}.`);
+  }
+
+  if (errors.length > 0 || currentText === null) {
+    return { errors, warnings };
+  }
+
+  const replacementCount = countLiteralOccurrences({
+    haystack: currentText,
+    needle: beforeValue
+  });
+  const afterText = currentText.split(beforeValue).join(afterValue);
+  if (replacementCount > 1) {
+    warnings.push(`Text replacement path ${path} contains ${replacementCount} occurrences of ${beforeValue}; all are replaced in this one text field.`);
+  }
+  if (afterText === currentText) {
+    errors.push(`Text replacement path ${path} would not change the current report text.`);
+    return { errors, warnings };
+  }
+
+  return {
+    errors,
+    operation: {
+      afterText,
+      afterValue,
+      beforeText: currentText,
+      beforeValue,
+      path,
+      reason: operation.reason,
+      replacementCount,
+      type: "text_value",
+      warnings
+    },
+    warnings
+  };
+}
+
 export function validateReportAssistantPatch(input: {
   context: ReportAssistantContext;
   document: SimpleWorkbenchProposalDocument;
@@ -359,6 +1042,19 @@ export function validateReportAssistantPatch(input: {
         type: "report_note",
         warnings: []
       });
+      continue;
+    }
+
+    if (operation.type === "replace_report_text_value") {
+      const preview = previewTextValueOperation({
+        document: input.document,
+        operation
+      });
+      errors.push(...preview.errors);
+      warnings.push(...preview.warnings);
+      if (preview.operation) {
+        operations.push(preview.operation);
+      }
       continue;
     }
 
@@ -507,7 +1203,14 @@ export function applyValidatedReportAssistantPatch(
       return;
     }
 
-    nextDocument = appendReportNote(nextDocument, operation);
+    if (isReportNoteOperation(operation)) {
+      nextDocument = appendReportNote(nextDocument, operation);
+      return;
+    }
+
+    if (isTextValueOperation(operation)) {
+      nextDocument = setReportTextAtPath(nextDocument, operation.path, operation.afterText);
+    }
   });
 
   if (adjustments.length === 0) {
@@ -520,38 +1223,412 @@ export function applyValidatedReportAssistantPatch(
   };
 }
 
-function collectStringMentions(input: {
-  mentions: ReportAssistantValueMention[];
-  path: string;
-  value: string;
-  needle: string;
-}): void {
-  if (input.needle.trim().length > 0 && input.value.includes(input.needle)) {
-    input.mentions.push({
-      path: input.path,
-      value: input.value
-    });
+function normalizeMentionLabel(value: string): string {
+  return value
+    .replace(/[İIı]/gu, "i")
+    .normalize("NFKD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/gu, "");
+}
+
+function normalizeSemanticText(value: string): string {
+  return value
+    .replace(/[İIı]/gu, "i")
+    .normalize("NFKD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9+-]+/gu, " ")
+    .replace(/\s+/gu, " ")
+    .trim();
+}
+
+function includesSemanticStaleClaim(value: string): boolean {
+  const normalized = normalizeSemanticText(value);
+  return SEMANTIC_STALE_CLAIM_PATTERNS.some((pattern) => pattern.test(normalized));
+}
+
+function containsMetricLabel(input: {
+  label: string;
+  text: string;
+}): boolean {
+  const normalizedLabel = normalizeMentionLabel(input.label);
+  if (normalizedLabel.length === 0) {
+    return false;
   }
+
+  return input.text
+    .split(/[^A-Za-z0-9İIıĞÜŞÖÇğüşöç,+-]+/u)
+    .some((token) => normalizeMentionLabel(token) === normalizedLabel);
+}
+
+function hasNearbyMetricLabelValue(input: {
+  label: string;
+  text: string;
+  value: string;
+}): boolean {
+  const label = input.label.trim();
+  const value = input.value.trim();
+  if (label.length === 0 || value.length === 0) {
+    return false;
+  }
+
+  const labelPattern = escapeRegExp(label).replace(/\\,/gu, "\\s*,\\s*");
+  const valuePattern = escapeRegExp(value).replace(/\\ /gu, "\\s+");
+  const between = "[^\\n.;:]{0,48}";
+  return new RegExp(`(?:${labelPattern}${between}${valuePattern}|${valuePattern}${between}${labelPattern})`, "iu").test(input.text);
+}
+
+function getDocumentMetricIdForLabel(input: {
+  label: string;
+  outputId?: RequestedOutputId;
+  reportMetricId?: string;
+}): string {
+  return getMetricSnapshotId({
+    label: input.label,
+    outputId: input.outputId,
+    reportMetricId: input.reportMetricId
+  });
+}
+
+function isMetricOwnedTextPath(input: {
+  adjustment: SimpleWorkbenchProposalReportAdjustment;
+  document: SimpleWorkbenchProposalDocument;
+  path: string;
+}): boolean {
+  const metricMatch = /^metrics\.(\d+)\.detail$/u.exec(input.path);
+  if (metricMatch) {
+    const index = Number(metricMatch[1]);
+    const metric = Number.isInteger(index) ? input.document.metrics[index] : undefined;
+    return metric
+      ? getDocumentMetricIdForLabel({
+          label: metric.label,
+          outputId: metric.outputId,
+          reportMetricId: metric.reportMetricId
+        }) === input.adjustment.metricId
+      : false;
+  }
+
+  const coverageMatch = /^coverageItems\.(\d+)\.(detail|postureDetail|nextStep)$/u.exec(input.path);
+  if (coverageMatch) {
+    const index = Number(coverageMatch[1]);
+    const item = Number.isInteger(index) ? input.document.coverageItems[index] : undefined;
+    return item
+      ? getDocumentMetricIdForLabel({
+          label: item.label,
+          outputId: item.outputId,
+          reportMetricId: item.reportMetricId
+        }) === input.adjustment.metricId
+      : false;
+  }
+
+  return false;
+}
+
+function shouldFlagSemanticConsistencyClaim(input: {
+  adjustment: SimpleWorkbenchProposalReportAdjustment;
+  document: SimpleWorkbenchProposalDocument;
+  record: ReportConsistencyTextPath;
+}): boolean {
+  if (!input.record.replaceable || input.record.auditExempt || input.record.surfacePolicy === "evidence_source") {
+    return false;
+  }
+
+  if (input.record.text.includes(input.adjustment.beforeValue)) {
+    return false;
+  }
+
+  if (!includesSemanticStaleClaim(input.record.text)) {
+    return false;
+  }
+
+  return (
+    isMetricOwnedTextPath({
+      adjustment: input.adjustment,
+      document: input.document,
+      path: input.record.path
+    }) ||
+    containsMetricLabel({
+      label: input.adjustment.label,
+      text: input.record.text
+    })
+  );
+}
+
+function classifyReportAdjustmentMention(input: {
+  adjustment: SimpleWorkbenchProposalReportAdjustment;
+  document: SimpleWorkbenchProposalDocument;
+  mention: ReportAssistantValueMention;
+}): ReportAssistantClassifiedValueMention {
+  const { adjustment, document, mention } = input;
+  const currentLabelMatches = containsMetricLabel({
+    label: adjustment.label,
+    text: mention.value
+  });
+  const otherLabelMatches = [
+    document.primaryMetricLabel,
+    ...document.metrics.map((metric) => metric.label),
+    ...document.coverageItems.map((item) => item.label)
+  ].some((label) =>
+    normalizeMentionLabel(label) !== normalizeMentionLabel(adjustment.label) &&
+    containsMetricLabel({
+      label,
+      text: mention.value
+    })
+  );
+  let classification: ReportAssistantValueMentionClassification;
+  let blocking = true;
+  let reason: string;
+
+  if (mention.surfacePolicy === "audit_engine" || mention.auditExempt) {
+    classification = "audit_engine_value";
+    blocking = false;
+    reason = `${adjustment.beforeValue} is preserved in an engine/audit field, not stale report copy.`;
+  } else if (mention.surfacePolicy === "evidence_source") {
+    classification = "evidence_source_value";
+    blocking = false;
+    reason = `${adjustment.beforeValue} appears in source/evidence text; review it as evidence instead of replacing it automatically.`;
+  } else if (
+    hasNearbyMetricLabelValue({
+      label: adjustment.label,
+      text: mention.value,
+      value: adjustment.beforeValue
+    })
+  ) {
+    classification = "exact_metric_label_value";
+    reason = `${adjustment.label} old value ${adjustment.beforeValue} still appears in report text.`;
+  } else if (currentLabelMatches) {
+    classification = "unresolved";
+    reason = `${adjustment.label} is mentioned with old value ${adjustment.beforeValue}, but the exact label/value relation needs review.`;
+  } else if (otherLabelMatches) {
+    classification = "unrelated_numeric_mention";
+    blocking = false;
+    reason = `${adjustment.beforeValue} appears with another metric label, so it is not automatically treated as stale ${adjustment.label} text.`;
+  } else {
+    classification = "ambiguous_numeric_only";
+    reason = `${adjustment.beforeValue} appears without a metric label; resolve or confirm it before export.`;
+  }
+
+  return {
+    ...mention,
+    afterValue: adjustment.afterValue,
+    beforeValue: adjustment.beforeValue,
+    blocking,
+    classification,
+    label: adjustment.label,
+    metricId: adjustment.metricId,
+    reason
+  };
 }
 
 export function findReportValueMentions(
   document: SimpleWorkbenchProposalDocument,
   needle: string
 ): ReportAssistantValueMention[] {
-  const mentions: ReportAssistantValueMention[] = [];
+  const trimmedNeedle = needle.trim();
+  if (trimmedNeedle.length === 0) {
+    return [];
+  }
 
-  collectStringMentions({ mentions, needle, path: "executiveSummary", value: document.executiveSummary });
-  collectStringMentions({ mentions, needle, path: "briefNote", value: document.briefNote });
-  collectStringMentions({ mentions, needle, path: "validationDetail", value: document.validationDetail });
-  document.warnings.forEach((warning, index) =>
-    collectStringMentions({ mentions, needle, path: `warnings.${String(index)}`, value: warning })
+  return collectReportConsistencyTextPaths(document)
+    .filter((record) => record.replaceable && record.text.includes(trimmedNeedle))
+    .map((record) => ({
+      auditExempt: record.auditExempt,
+      path: record.path,
+      replaceable: record.replaceable,
+      surfacePolicy: record.surfacePolicy,
+      value: record.text
+    }));
+}
+
+function findReportConsistencyValueMentions(
+  document: SimpleWorkbenchProposalDocument,
+  needle: string
+): ReportAssistantValueMention[] {
+  const trimmedNeedle = needle.trim();
+  if (trimmedNeedle.length === 0) {
+    return [];
+  }
+
+  return collectReportConsistencyTextPaths(document)
+    .filter((record) => !record.auditExempt && record.text.includes(trimmedNeedle))
+    .map((record) => ({
+      auditExempt: record.auditExempt,
+      path: record.path,
+      replaceable: record.replaceable,
+      surfacePolicy: record.surfacePolicy,
+      value: record.text
+    }));
+}
+
+function getMetricSnapshotId(input: {
+  label: string;
+  outputId?: RequestedOutputId;
+  reportMetricId?: string;
+}): string {
+  const outputId = inferReportAssistantOutputId({
+    label: input.label,
+    outputId: input.outputId
+  });
+
+  return input.reportMetricId ?? (outputId ? getReportAssistantMetricId(outputId) : `label:${normalizeMentionLabel(input.label)}`);
+}
+
+function collectMetricValueSnapshots(document: SimpleWorkbenchProposalDocument): MetricValueSnapshot[] {
+  const snapshots = new Map<string, MetricValueSnapshot>();
+  const addSnapshot = (input: {
+    label: string;
+    outputId?: RequestedOutputId;
+    reportMetricId?: string;
+    value: string;
+  }) => {
+    const metricId = getMetricSnapshotId(input);
+    if (snapshots.has(metricId)) {
+      return;
+    }
+
+    snapshots.set(metricId, {
+      label: input.label,
+      metricId,
+      outputId: input.outputId,
+      value: input.value
+    });
+  };
+
+  addSnapshot({
+    label: document.primaryMetricLabel,
+    value: document.primaryMetricValue
+  });
+  document.metrics.forEach((metric) =>
+    addSnapshot({
+      label: metric.label,
+      outputId: metric.outputId,
+      reportMetricId: metric.reportMetricId,
+      value: metric.value
+    })
   );
-  document.assumptionItems.forEach((item, index) =>
-    collectStringMentions({ mentions, needle, path: `assumptionItems.${String(index)}.detail`, value: item.detail })
-  );
-  document.recommendationItems.forEach((item, index) =>
-    collectStringMentions({ mentions, needle, path: `recommendationItems.${String(index)}.detail`, value: item.detail })
+  document.coverageItems.forEach((item) =>
+    addSnapshot({
+      label: item.label,
+      outputId: item.outputId,
+      reportMetricId: item.reportMetricId,
+      value: item.value
+    })
   );
 
-  return mentions;
+  return [...snapshots.values()];
+}
+
+function buildManualReportAdjustments(input: {
+  baseDocument?: SimpleWorkbenchProposalDocument;
+  document: SimpleWorkbenchProposalDocument;
+}): SimpleWorkbenchProposalReportAdjustment[] {
+  if (!input.baseDocument) {
+    return [];
+  }
+
+  const baseByMetricId = new Map(collectMetricValueSnapshots(input.baseDocument).map((snapshot) => [snapshot.metricId, snapshot]));
+  const adjustments: SimpleWorkbenchProposalReportAdjustment[] = [];
+
+  collectMetricValueSnapshots(input.document).forEach((snapshot, index) => {
+    const base = baseByMetricId.get(snapshot.metricId);
+    if (!base || base.value === snapshot.value) {
+      return;
+    }
+
+    adjustments.push({
+      afterValue: snapshot.value,
+      appliedAtIso: "manual-current-snapshot",
+      beforeValue: base.value,
+      engineValuePreserved: true,
+      id: `manual-report-adjustment-${snapshot.metricId.replace(/[^0-9A-Za-z]+/gu, "-")}-${String(index + 1)}`,
+      label: snapshot.label,
+      metricId: snapshot.metricId,
+      outputId: snapshot.outputId,
+      reason: "Manual report metric value differs from the packaged calculator snapshot.",
+      scope: "export_only",
+      source: "manual"
+    });
+  });
+
+  return adjustments;
+}
+
+function collectEffectiveReportAdjustments(input: {
+  baseDocument?: SimpleWorkbenchProposalDocument;
+  document: SimpleWorkbenchProposalDocument;
+}): SimpleWorkbenchProposalReportAdjustment[] {
+  const adjustmentByKey = new Map<string, SimpleWorkbenchProposalReportAdjustment>();
+
+  [...(input.document.reportAdjustments ?? []), ...buildManualReportAdjustments(input)].forEach((adjustment) => {
+    const key = `${adjustment.metricId}\u0000${adjustment.beforeValue}\u0000${adjustment.afterValue}`;
+    if (!adjustmentByKey.has(key)) {
+      adjustmentByKey.set(key, adjustment);
+    }
+  });
+
+  return [...adjustmentByKey.values()];
+}
+
+function findSemanticReportConsistencyMentions(input: {
+  adjustment: SimpleWorkbenchProposalReportAdjustment;
+  document: SimpleWorkbenchProposalDocument;
+}): ReportAssistantClassifiedValueMention[] {
+  return collectReportConsistencyTextPaths(input.document)
+    .filter((record) =>
+      shouldFlagSemanticConsistencyClaim({
+        adjustment: input.adjustment,
+        document: input.document,
+        record
+      })
+    )
+    .map((record) => ({
+      afterValue: input.adjustment.afterValue,
+      auditExempt: record.auditExempt,
+      beforeValue: input.adjustment.beforeValue,
+      blocking: true,
+      classification: "semantic_metric_claim" as const,
+      label: input.adjustment.label,
+      metricId: input.adjustment.metricId,
+      path: record.path,
+      reason:
+        `${input.adjustment.label} changed from ${input.adjustment.beforeValue} to ${input.adjustment.afterValue}, ` +
+        `but this text contains qualitative target/pass/margin wording that may no longer be true. Review and rewrite it manually.`,
+      replaceable: record.replaceable,
+      surfacePolicy: record.surfacePolicy,
+      value: record.text
+    }));
+}
+
+export function findReportAdjustmentConsistencyMentions(
+  document: SimpleWorkbenchProposalDocument,
+  options?: {
+    baseDocument?: SimpleWorkbenchProposalDocument;
+  }
+): ReportAssistantClassifiedValueMention[] {
+  const classified: ReportAssistantClassifiedValueMention[] = [];
+
+  for (const adjustment of collectEffectiveReportAdjustments({
+    baseDocument: options?.baseDocument,
+    document
+  })) {
+    if (adjustment.beforeValue.trim().length === 0 || adjustment.beforeValue === adjustment.afterValue) {
+      continue;
+    }
+
+    for (const mention of findReportConsistencyValueMentions(document, adjustment.beforeValue)) {
+      classified.push(classifyReportAdjustmentMention({
+        adjustment,
+        document,
+        mention
+      }));
+    }
+
+    classified.push(...findSemanticReportConsistencyMentions({
+      adjustment,
+      document
+    }));
+  }
+
+  return classified;
 }

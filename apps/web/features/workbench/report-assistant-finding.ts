@@ -8,6 +8,7 @@ import type {
   ReportAssistantContext,
   ReportAssistantTraceSummary
 } from "./report-assistant-context";
+import type { SimpleWorkbenchAssistantTraceSnapshot } from "./simple-workbench-assistant-trace-snapshot";
 
 export const REPORT_ASSISTANT_FINDINGS_RELATIVE_PATH =
   ".dynecho/calculator-review-queue/report-assistant-findings.jsonl";
@@ -23,6 +24,7 @@ export type ReportAssistantFindingVerdict = "insufficient_context" | "likely_wro
 export type ReportAssistantFindingSeverity = "high" | "low" | "medium";
 
 export type ReportAssistantFindingRecord = {
+  assistantTraceSnapshot?: SimpleWorkbenchAssistantTraceSnapshot;
   createdAtIso: string;
   engineDisplayValue?: string;
   id: string;
@@ -142,6 +144,7 @@ export function prepareReportAssistantFindingRecord(input: {
   return {
     ok: true,
     record: {
+      assistantTraceSnapshot: input.context.assistantTraceSnapshot,
       createdAtIso: nowIso,
       engineDisplayValue: metric.engineDisplayValue,
       id: input.idFactory?.() ?? randomUUID(),

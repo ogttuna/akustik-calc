@@ -61,6 +61,7 @@ describe("report assistant runtime status", () => {
         DYNECHO_REPORT_ASSISTANT_MODEL: "gemini-proxy-model",
         DYNECHO_REPORT_ASSISTANT_MODEL_API_KEY: "secret-model-key",
         DYNECHO_REPORT_ASSISTANT_MODEL_ENDPOINT: "http://system_llm:4000/gemini-proxy?token=secret",
+        DYNECHO_REPORT_ASSISTANT_MODEL_PROVIDER: "custom_patch_provider",
         DYNECHO_REPORT_ASSISTANT_MODEL_TIMEOUT_MS: "12345",
         DYNECHO_REPORT_ASSISTANT_RESEARCH_API_KEY: "secret-research-key",
         DYNECHO_REPORT_ASSISTANT_RESEARCH_ENDPOINT: "https://research.example.test/search?key=secret"
@@ -76,6 +77,8 @@ describe("report assistant runtime status", () => {
         pathname: "/gemini-proxy"
       },
       model: "gemini-proxy-model",
+      provider: "custom_patch_provider",
+      proxyKeyConfigured: false,
       timeoutMs: 12345
     });
     expect(status.researchProvider).toMatchObject({
@@ -84,9 +87,53 @@ describe("report assistant runtime status", () => {
       endpoint: {
         origin: "https://research.example.test",
         pathname: "/search"
-      }
+      },
+      provider: "research_provider"
     });
     expect(JSON.stringify(status)).not.toContain("secret");
+  });
+
+  it("reports system_llm proxy readiness without exposing the proxy key", () => {
+    const status = getReportAssistantRuntimeStatus({
+      env: {
+        DYNECHO_REPORT_ASSISTANT_MODEL: "gemini-3-flash-preview",
+        DYNECHO_REPORT_ASSISTANT_MODEL_ENDPOINT: "http://system_llm:4000/gemini-proxy?token=secret",
+        DYNECHO_REPORT_ASSISTANT_MODEL_PROVIDER: "system_llm_gemini_proxy",
+        DYNECHO_REPORT_ASSISTANT_MODEL_PROXY_KEY: "proxy-secret"
+      },
+      now: () => new Date("2026-06-03T08:00:00.000Z")
+    });
+
+    expect(status.modelProvider).toMatchObject({
+      apiKeyConfigured: false,
+      configured: true,
+      endpoint: {
+        origin: "http://system_llm:4000",
+        pathname: "/gemini-proxy"
+      },
+      model: "gemini-3-flash-preview",
+      provider: "system_llm_gemini_proxy",
+      proxyKeyConfigured: true,
+      readinessWarnings: []
+    });
+    expect(JSON.stringify(status)).not.toContain("proxy-secret");
+    expect(JSON.stringify(status)).not.toContain("token=secret");
+  });
+
+  it("warns when system_llm proxy endpoint path is not the expected base path", () => {
+    const status = getReportAssistantRuntimeStatus({
+      env: {
+        DYNECHO_REPORT_ASSISTANT_MODEL_ENDPOINT: "http://system_llm:4000/not-gemini",
+        DYNECHO_REPORT_ASSISTANT_MODEL_PROVIDER: "system_llm_gemini_proxy"
+      }
+    });
+
+    expect(status.modelProvider).toMatchObject({
+      configured: true,
+      model: "gemini-3-flash-preview",
+      provider: "system_llm_gemini_proxy",
+      readinessWarnings: ["system_llm_gemini_proxy endpoint should end with /gemini-proxy."]
+    });
   });
 
   it("returns route status behind the existing auth guard", async () => {

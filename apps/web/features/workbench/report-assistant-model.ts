@@ -4,10 +4,14 @@ import type { ReportAssistantPatch } from "./report-assistant-patch";
 
 export type ReportAssistantPatchProposalSource = "deterministic" | "model";
 
+export type ReportAssistantModelProvider = "custom_patch_provider" | "system_llm_gemini_proxy";
+
 export type ReportAssistantModelSettings = {
   apiKey?: string;
   endpoint: string;
   model?: string;
+  provider: ReportAssistantModelProvider;
+  proxyKey?: string;
   timeoutMs: number;
 };
 
@@ -26,8 +30,11 @@ export type ReportAssistantPatchProposalResult =
     };
 
 const DEFAULT_MODEL_TIMEOUT_MS = 12000;
+const DEFAULT_SYSTEM_LLM_GEMINI_MODEL = "gemini-3-flash-preview";
 const MAX_MODEL_TIMEOUT_MS = 30000;
+const MODEL_MAX_OUTPUT_TOKENS = 2048;
 const MIN_MODEL_TIMEOUT_MS = 1000;
+const MODEL_PROVIDER_VALUES = new Set<string>(["custom_patch_provider", "system_llm_gemini_proxy"]);
 
 function isObjectRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
@@ -50,18 +57,38 @@ function normalizeTimeoutMs(value: unknown): number {
   return Math.min(Math.max(Math.round(parsed), MIN_MODEL_TIMEOUT_MS), MAX_MODEL_TIMEOUT_MS);
 }
 
+function normalizeModelProvider(value: unknown): ReportAssistantModelProvider | null {
+  if (value === undefined || value === null || String(value).trim().length === 0) {
+    return "custom_patch_provider";
+  }
+
+  const normalized = String(value).trim();
+  return MODEL_PROVIDER_VALUES.has(normalized) ? normalized as ReportAssistantModelProvider : null;
+}
+
 export function getReportAssistantModelSettings(
   env: Record<string, string | undefined> = process.env
 ): ReportAssistantModelSettings | null {
+  const provider = normalizeModelProvider(env.DYNECHO_REPORT_ASSISTANT_MODEL_PROVIDER);
+  if (!provider) {
+    return null;
+  }
+
   const endpoint = normalizeOptionalString(env.DYNECHO_REPORT_ASSISTANT_MODEL_ENDPOINT);
   if (!endpoint || !/^https?:\/\//iu.test(endpoint)) {
     return null;
   }
 
+  const model = normalizeOptionalString(env.DYNECHO_REPORT_ASSISTANT_MODEL);
   return {
-    apiKey: normalizeOptionalString(env.DYNECHO_REPORT_ASSISTANT_MODEL_API_KEY),
     endpoint,
-    model: normalizeOptionalString(env.DYNECHO_REPORT_ASSISTANT_MODEL),
+    ...(provider === "custom_patch_provider"
+      ? { apiKey: normalizeOptionalString(env.DYNECHO_REPORT_ASSISTANT_MODEL_API_KEY), model }
+      : {
+          model: model ?? DEFAULT_SYSTEM_LLM_GEMINI_MODEL,
+          proxyKey: normalizeOptionalString(env.DYNECHO_REPORT_ASSISTANT_MODEL_PROXY_KEY)
+        }),
+    provider,
     timeoutMs: normalizeTimeoutMs(env.DYNECHO_REPORT_ASSISTANT_MODEL_TIMEOUT_MS)
   };
 }
@@ -154,6 +181,7 @@ function buildModelRequestBody(input: {
 }) {
   return {
     context: {
+      assistantTraceSnapshot: input.context.assistantTraceSnapshot,
       createdAtIso: input.context.createdAtIso,
       documentSignature: input.context.documentSignature,
       layersSummary: input.context.layersSummary,
@@ -176,18 +204,135 @@ function buildModelRequestBody(input: {
         "Return operations only; do not apply, export, save, reset, or write files.",
         "Use only metric ids present in context.metrics.",
         "Do not turn needs_input or unsupported outputs into numeric values.",
+        "For adjust_metric_db, the numeric movement field must be named deltaDb; never use value, amount, or db.",
         "Numeric movement above 10 dB will be rejected by the app validator.",
         "The app validator and user confirmation layer own all mutations."
       ],
       schema: {
         documentSignature: input.context.documentSignature,
-        operations: "array of adjust_metric_db, set_metric_display_value, or append_report_note operations",
+        operations: [
+          {
+            deltaDb: -2,
+            metricId: "output:Rw",
+            reason: "User requested a report-only 2 dB reduction.",
+            type: "adjust_metric_db"
+          },
+          {
+            displayValue: "55 dB",
+            metricId: "output:Rw",
+            reason: "User requested an explicit report display value.",
+            type: "set_metric_display_value"
+          },
+          {
+            reason: "User requested a bounded explanatory note.",
+            section: "assumptions",
+            text: "Short report-only note.",
+            type: "append_report_note"
+          }
+        ],
         summary: "short string"
       }
     },
     instruction: input.instruction,
     model: input.settings.model,
     task: "dynecho.report_assistant.patch_proposal"
+  };
+}
+
+export function buildSystemLlmGeminiProxyRequest(input: {
+  context: ReportAssistantContext;
+  instruction: string;
+  settings: ReportAssistantModelSettings;
+}): {
+  body: {
+    contents: readonly {
+      parts: readonly { text: string }[];
+      role: "user";
+    }[];
+    generationConfig: {
+      maxOutputTokens: number;
+      responseMimeType: "application/json";
+      temperature: number;
+    };
+    systemInstruction: {
+      parts: readonly { text: string }[];
+    };
+  };
+  headers: Record<string, string>;
+  url: string;
+} {
+  const endpoint = new URL(input.settings.endpoint);
+  endpoint.search = "";
+  endpoint.hash = "";
+
+  const base = endpoint.toString().replace(/\/$/u, "");
+  const model = input.settings.model ?? DEFAULT_SYSTEM_LLM_GEMINI_MODEL;
+  const headers: Record<string, string> = {
+    "content-type": "application/json"
+  };
+
+  if (input.settings.proxyKey) {
+    headers.Authorization = `Bearer ${input.settings.proxyKey}`;
+    headers["x-goog-api-key"] = input.settings.proxyKey;
+  }
+
+  return {
+    body: {
+      contents: [
+        {
+          parts: [
+            {
+              text: JSON.stringify(buildModelRequestBody(input))
+            }
+          ],
+          role: "user"
+        }
+      ],
+      generationConfig: {
+        maxOutputTokens: MODEL_MAX_OUTPUT_TOKENS,
+        responseMimeType: "application/json",
+        temperature: 0
+      },
+      systemInstruction: {
+        parts: [
+          {
+            text: [
+              "You are the Akustikhesap report assistant.",
+              "Return only one ReportAssistantPatch JSON object.",
+              "Allowed operation types are adjust_metric_db, set_metric_display_value, and append_report_note.",
+              "For adjust_metric_db use the exact key deltaDb for numeric dB movement.",
+              "Do not apply, export, save, reset, write files, call tools, or rewrite the full report.",
+              "The Akustikhesap app validates and applies any accepted patch."
+            ].join(" ")
+          }
+        ]
+      }
+    },
+    headers,
+    url: `${base}/v1beta/models/${encodeURIComponent(model)}:generateContent`
+  };
+}
+
+function buildModelFetchRequest(input: {
+  context: ReportAssistantContext;
+  instruction: string;
+  settings: ReportAssistantModelSettings;
+}): {
+  body: unknown;
+  headers: Record<string, string>;
+  url: string;
+} {
+  if (input.settings.provider === "system_llm_gemini_proxy") {
+    return buildSystemLlmGeminiProxyRequest(input);
+  }
+
+  return {
+    body: buildModelRequestBody(input),
+    headers: {
+      ...(input.settings.apiKey ? { Authorization: `Bearer ${input.settings.apiKey}` } : {}),
+      "content-type": "application/json"
+    },
+    url: input.settings.endpoint
   };
 }
 
@@ -200,12 +345,10 @@ async function fetchModelPatch(input: {
   const timeout = setTimeout(() => controller.abort(), input.settings.timeoutMs);
 
   try {
-    const response = await fetch(input.settings.endpoint, {
-      body: JSON.stringify(buildModelRequestBody(input)),
-      headers: {
-        ...(input.settings.apiKey ? { Authorization: `Bearer ${input.settings.apiKey}` } : {}),
-        "content-type": "application/json"
-      },
+    const request = buildModelFetchRequest(input);
+    const response = await fetch(request.url, {
+      body: JSON.stringify(request.body),
+      headers: request.headers,
       method: "POST",
       signal: controller.signal
     });

@@ -1,5 +1,6 @@
 import type { SimpleWorkbenchProposalDocument } from "./simple-workbench-proposal";
 import {
+  buildSimpleWorkbenchProposalAdjustmentNote,
   buildSimpleWorkbenchProposalFilename,
   getVisibleProposalMetrics,
   isPrimaryProposalMetricVisible
@@ -473,6 +474,7 @@ function renderSimpleCurveSvg(figure: SimpleCurveFigure): string {
 
 function renderSimpleCurveFigures(document: SimpleWorkbenchProposalDocument): string {
   const figures = (document.responseCurves ?? []).slice(0, 2);
+  const adjustmentNote = buildSimpleWorkbenchProposalAdjustmentNote(document);
 
   if (figures.length === 0) {
     return "";
@@ -492,6 +494,11 @@ function renderSimpleCurveFigures(document: SimpleWorkbenchProposalDocument): st
           <div class="curve-band-strip">
             ${SIMPLE_CURVE_BANDS.map((band) => `<span class="curve-band-pill curve-band-pill-${band.id}">${escapeHtml(band.label)} · ${escapeHtml(band.note)}</span>`).join("")}
           </div>
+          ${
+            adjustmentNote
+              ? `<div class="curve-band-strip"><span class="curve-band-pill curve-band-pill-high">${escapeHtml(adjustmentNote)}</span></div>`
+              : ""
+          }
           <div class="curve-shell">
             ${renderSimpleCurveSvg(figure)}
           </div>

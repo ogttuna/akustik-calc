@@ -36,6 +36,20 @@ function createMemoryStorage(): Storage {
 
 const DOCUMENT: SimpleWorkbenchProposalDocument = {
   assemblyHeadline: "3 live rows, heavy floating floor estimate active.",
+  assistantTraceSnapshot: {
+    impact: {
+      evidenceTier: "estimate",
+      fieldContinuation: "standardized_room_volume",
+      selectedLabel: "Heavy concrete combined upper/lower formula corridor",
+      selectedSourceIds: ["floor-system-heavy-concrete"],
+      supportFamily: "reinforced_concrete"
+    },
+    impactSupport: {
+      basis: "family_estimate",
+      formulaNotes: ["Heavy concrete formula corridor."],
+      labOrField: "field"
+    }
+  },
   assumptionItems: [],
   approverTitle: "Lead Acoustic Consultant",
   briefNote: "Check flanking risk before issue.",
@@ -154,6 +168,13 @@ describe("simple workbench proposal preview storage", () => {
     expect(loaded?.document.proposalSubject).toBe("Riverside Residences floor acoustic proposal");
     expect(loaded?.document.proposalValidityNote).toBe("Valid for 30 calendar days unless superseded by a later issue.");
     expect(loaded?.document.reportProfile).toBe("consultant");
+    expect(loaded?.document.assistantTraceSnapshot?.impact).toMatchObject({
+      fieldContinuation: "standardized_room_volume",
+      selectedLabel: "Heavy concrete combined upper/lower formula corridor"
+    });
+    expect(loaded?.document.assistantTraceSnapshot?.impactSupport?.formulaNotes).toEqual([
+      "Heavy concrete formula corridor."
+    ]);
     expect(loaded?.baseDocument.projectName).toBe("Riverside Residences");
     expect(loaded?.hasCustomizations).toBe(false);
     expect(loaded?.savedAtIso).toMatch(/^20/);
@@ -182,6 +203,7 @@ describe("simple workbench proposal preview storage", () => {
   it("hydrates legacy preview snapshots that predate consultant identity fields", () => {
     const legacyDocument = { ...DOCUMENT } as Record<string, unknown>;
     delete legacyDocument.approverTitle;
+    delete legacyDocument.assistantTraceSnapshot;
     delete legacyDocument.consultantAddress;
     delete legacyDocument.consultantEmail;
     delete legacyDocument.consultantLogoDataUrl;
@@ -215,6 +237,7 @@ describe("simple workbench proposal preview storage", () => {
     const loaded = readSimpleWorkbenchProposalPreview();
 
     expect(loaded?.document.approverTitle).toBe("Acoustic Consultant");
+    expect(loaded?.document.assistantTraceSnapshot).toBeUndefined();
     expect(loaded?.document.consultantAddress).toBe("Office address not entered");
     expect(loaded?.document.consultantEmail).toBe("Contact email not entered");
     expect(loaded?.document.consultantLogoDataUrl).toBe("");

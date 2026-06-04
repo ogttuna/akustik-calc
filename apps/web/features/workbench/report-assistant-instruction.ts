@@ -4,8 +4,11 @@ import {
   type ReportAssistantContext,
   type ReportAssistantMetric,
   type ReportAssistantMetricLocation,
+  type ReportAssistantOutputFact,
+  type ReportAssistantOutputFactBasisCategory,
   type ReportAssistantTraceSummary
 } from "./report-assistant-context";
+import { parseSimpleWorkbenchAssistantTraceSnapshot } from "./simple-workbench-assistant-trace-snapshot";
 import type { SimpleWorkbenchProposalCoverageStatus } from "./simple-workbench-proposal";
 import type { ReportAssistantPatch } from "./report-assistant-patch";
 
@@ -24,6 +27,17 @@ export type ReportAssistantInstructionPatchResult =
 const METRIC_STATUSES = new Set<string>(["bound", "live", "needs_input", "unsupported"]);
 const METRIC_BASES = new Set<string>(["building_prediction", "field", "lab", "unknown"]);
 const METRIC_DIRECTIONS = new Set<string>(["higher_is_better", "lower_is_better", "neutral"]);
+const OUTPUT_FACT_BASIS_CATEGORIES = new Set<string>([
+  "bound",
+  "exact_measured",
+  "field_adapter",
+  "formula_corridor",
+  "needs_input",
+  "published_anchor",
+  "source_absent_estimate",
+  "unknown",
+  "unsupported"
+]);
 const FORBIDDEN_ACTION_HINTS = /\b(?:apply|export|download|save|reset|write|delete|read\s+file|tool|system|ignore)\b/iu;
 
 function isObjectRecord(value: unknown): value is Record<string, unknown> {
@@ -121,6 +135,88 @@ function parseAssistantMetric(value: unknown): ReportAssistantMetric | null {
   };
 }
 
+function stringArray(value: unknown): string[] {
+  return Array.isArray(value) ? value.filter((entry): entry is string => typeof entry === "string") : [];
+}
+
+function fallbackOutputFactFromMetric(metric: ReportAssistantMetric): ReportAssistantOutputFact {
+  return {
+    basis: metric.basis,
+    basisCategory:
+      metric.status === "bound" || metric.status === "needs_input" || metric.status === "unsupported"
+        ? metric.status
+        : "unknown",
+    engineDisplayValue: metric.engineDisplayValue,
+    label: metric.label,
+    metricId: metric.id,
+    missingInputs: [],
+    outputId: metric.outputId,
+    reportDisplayValue: metric.reportDisplayValue,
+    status: metric.status,
+    usedInputs: [],
+    warnings: []
+  };
+}
+
+function parseAssistantOutputFact(value: unknown, metrics: readonly ReportAssistantMetric[]): ReportAssistantOutputFact | null {
+  if (!isObjectRecord(value)) {
+    return null;
+  }
+
+  const metric =
+    typeof value.metricId === "string"
+      ? metrics.find((entry) => entry.id === value.metricId)
+      : undefined;
+  const outputId = isRequestedOutputId(value.outputId) ? value.outputId : metric?.outputId;
+  const basis = METRIC_BASES.has(String(value.basis))
+    ? (value.basis as ReportAssistantMetric["basis"])
+    : metric?.basis;
+  const status = METRIC_STATUSES.has(String(value.status))
+    ? (value.status as SimpleWorkbenchProposalCoverageStatus)
+    : metric?.status;
+
+  if (
+    typeof value.metricId !== "string" ||
+    typeof value.label !== "string" ||
+    typeof value.reportDisplayValue !== "string" ||
+    !basis ||
+    !status
+  ) {
+    return null;
+  }
+
+  return {
+    basis,
+    basisCategory: OUTPUT_FACT_BASIS_CATEGORIES.has(String(value.basisCategory))
+      ? (value.basisCategory as ReportAssistantOutputFactBasisCategory)
+      : fallbackOutputFactFromMetric(metric ?? {
+          basis,
+          direction: "neutral",
+          id: value.metricId,
+          label: value.label,
+          locations: [],
+          metric: outputId ?? value.label,
+          outputId,
+          reportDisplayValue: value.reportDisplayValue,
+          status
+        }).basisCategory,
+    engineDisplayValue: typeof value.engineDisplayValue === "string" ? value.engineDisplayValue : metric?.engineDisplayValue,
+    formulaOrSupportNote: typeof value.formulaOrSupportNote === "string" ? value.formulaOrSupportNote : undefined,
+    label: value.label,
+    metricId: value.metricId,
+    missingInputs: stringArray(value.missingInputs),
+    outputId,
+    parkedReason: typeof value.parkedReason === "string" ? value.parkedReason : undefined,
+    reportDisplayValue: value.reportDisplayValue,
+    selectedCandidateId: typeof value.selectedCandidateId === "string" ? value.selectedCandidateId : undefined,
+    status,
+    supportBucket: typeof value.supportBucket === "string" ? value.supportBucket : undefined,
+    usedInputs: stringArray(value.usedInputs),
+    valuePinDb: typeof value.valuePinDb === "number" && Number.isFinite(value.valuePinDb) ? value.valuePinDb : undefined,
+    warnings: stringArray(value.warnings)
+  };
+}
+
 export function parseReportAssistantContextPayload(value: unknown): ReportAssistantContext | null {
   if (!isObjectRecord(value) || !Array.isArray(value.metrics) || !Array.isArray(value.layersSummary) || !Array.isArray(value.warnings)) {
     return null;
@@ -141,7 +237,19 @@ export function parseReportAssistantContextPayload(value: unknown): ReportAssist
     return null;
   }
 
+  const assistantOutputFacts = Array.isArray(value.assistantOutputFacts)
+    ? value.assistantOutputFacts
+        .map((entry) => parseAssistantOutputFact(entry, metrics))
+        .filter((entry): entry is ReportAssistantOutputFact => entry !== null)
+    : metrics.map(fallbackOutputFactFromMetric);
+
   return {
+    assistantContextSignature:
+      typeof value.assistantContextSignature === "string"
+        ? value.assistantContextSignature
+        : value.documentSignature,
+    assistantOutputFacts,
+    assistantTraceSnapshot: parseSimpleWorkbenchAssistantTraceSnapshot(value.assistantTraceSnapshot),
     createdAtIso: value.createdAtIso,
     documentSignature: value.documentSignature,
     layersSummary: value.layersSummary.filter((entry): entry is string => typeof entry === "string"),
@@ -164,7 +272,7 @@ function getMetricAliases(metric: ReportAssistantMetric): string[] {
   ].filter((entry): entry is string => Boolean(entry));
 }
 
-function resolveInstructionMetric(input: {
+export function resolveReportAssistantInstructionMetric(input: {
   context: ReportAssistantContext;
   instruction: string;
 }): { errors: string[]; metric?: ReportAssistantMetric } {
@@ -302,7 +410,7 @@ export function createReportAssistantPatchFromInstruction(input: {
     };
   }
 
-  const metricResolution = resolveInstructionMetric({
+  const metricResolution = resolveReportAssistantInstructionMetric({
     context: input.context,
     instruction
   });

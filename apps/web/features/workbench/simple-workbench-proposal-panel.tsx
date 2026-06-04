@@ -17,6 +17,7 @@ import {
   type SimpleWorkbenchProposalMethodTraceGroup,
   type SimpleWorkbenchProposalMetric
 } from "./simple-workbench-proposal";
+import { buildSimpleWorkbenchAssistantTraceSnapshot } from "./simple-workbench-assistant-trace-snapshot";
 import { SimpleWorkbenchProposalConstructionFigure } from "./simple-workbench-proposal-construction-figure";
 import { buildSimpleWorkbenchProposalDossier } from "./simple-workbench-proposal-dossier";
 import type {
@@ -452,6 +453,7 @@ function buildProposalDocument(
 
   return {
     approverTitle: props.approverTitle.trim() || "Acoustic Consultant",
+    assistantTraceSnapshot: buildSimpleWorkbenchAssistantTraceSnapshot(props.result),
     assemblyHeadline: props.assemblyHeadline,
     assumptionItems: proposalBrief.assumptionItems,
     briefNote: props.briefNote,

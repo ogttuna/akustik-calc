@@ -232,21 +232,28 @@ describe("report assistant MCP-compatible tool adapter", () => {
       }
     });
     expect(mentions).toMatchObject({
-      mentions: [
-        {
-          label: "Rw",
-          metricId: RW_METRIC_ID,
-          path: "executiveSummary"
-        },
-        {
-          label: "Rw",
-          metricId: RW_METRIC_ID,
-          path: "briefNote"
-        }
-      ],
       mutates: false,
       ok: true
     });
+    expect(mentions).toEqual(expect.objectContaining({
+      mentions: expect.arrayContaining([
+        expect.objectContaining({
+          label: "Rw",
+          metricId: RW_METRIC_ID,
+          path: "assemblyHeadline"
+        }),
+        expect.objectContaining({
+          label: "Rw",
+          metricId: RW_METRIC_ID,
+          path: "executiveSummary"
+        }),
+        expect.objectContaining({
+          label: "Rw",
+          metricId: RW_METRIC_ID,
+          path: "briefNote"
+        })
+      ])
+    }));
     expect(DOCUMENT.primaryMetricValue).toBe("61 dB");
   });
 
