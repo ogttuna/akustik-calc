@@ -152,6 +152,9 @@ import {
 } from "./heavy-concrete-combined-impact-formula-corridor";
 import { MIXED_SUPPORT_FLOOR_IMPACT_FORMULA_BASIS } from "./mixed-support-floor-impact-runtime-corridor";
 import {
+  collectCompositePanelPublishedInteractionDeltaLwMissingPhysicalInputs
+} from "./composite-panel-published-interaction-estimate";
+import {
   collectTimberCltDeltaLwFormulaMissingPhysicalInputs
 } from "./timber-clt-floor-impact-delta-lw-runtime-corridor";
 import {
@@ -2438,6 +2441,44 @@ function applyAcousticCalculatorAnswerEngineV1TimberCltDeltaLwNeedsInputBoundary
   input.result.acousticAnswerBoundary = boundary;
   input.result.warnings.push(
     `Acoustic Calculator Answer Engine V1 selected needs_input for ${boundary.unsupportedOutputs.join(", ")}; provide ${boundary.missingPhysicalInputs.join(", ")} before DynEcho publishes timber/CLT floor DeltaLw answers.`
+  );
+}
+
+function applyPostV1GateCYCompositePanelDeltaLwNeedsInputBoundary(input: {
+  predictorInput: ImpactPredictorInput | null;
+  result: AssemblyCalculation;
+}): void {
+  if (input.result.acousticAnswerBoundary) {
+    return;
+  }
+
+  const missingPhysicalInputs = collectCompositePanelPublishedInteractionDeltaLwMissingPhysicalInputs(
+    input.predictorInput
+  );
+  const stoppedOutputs: RequestedOutputId[] = input.result.targetOutputs.filter((output: RequestedOutputId) =>
+    output === "DeltaLw"
+  );
+  const unsupportedOutputSet = new Set<RequestedOutputId>(input.result.unsupportedTargetOutputs);
+
+  if (
+    missingPhysicalInputs.length === 0 ||
+    stoppedOutputs.length === 0 ||
+    !stoppedOutputs.every((output: RequestedOutputId) => unsupportedOutputSet.has(output))
+  ) {
+    return;
+  }
+
+  const boundary = buildAnswerEngineV1FloorImpactNeedsInputBoundary({
+    missingPhysicalInputs,
+    targetOutputs: stoppedOutputs
+  });
+  if (!boundary) {
+    return;
+  }
+
+  input.result.acousticAnswerBoundary = boundary;
+  input.result.warnings.push(
+    `Post-V1 Gate CY selected needs_input for ${boundary.unsupportedOutputs.join(", ")}; provide ${boundary.missingPhysicalInputs.join(", ")} before DynEcho publishes composite-panel DeltaLw from the same-family bare-minus-treated Ln,w owner.`
   );
 }
 
@@ -4821,6 +4862,10 @@ export function calculateAssembly(
     result
   });
   applyAcousticCalculatorAnswerEngineV1TimberCltDeltaLwNeedsInputBoundary({
+    predictorInput,
+    result
+  });
+  applyPostV1GateCYCompositePanelDeltaLwNeedsInputBoundary({
     predictorInput,
     result
   });

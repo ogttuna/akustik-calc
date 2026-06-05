@@ -35,6 +35,39 @@ chain under `docs/calculator/`: `CALCULATOR_SOURCE_OF_TRUTH.md`,
 productization files are historical or secondary context unless the
 source-of-truth chain explicitly reselects them.
 
+## Current Implementation Snapshot
+
+As of 2026-06-05, usable V1 Steps 0-5 are closed for the current
+company-internal envelope. The post-V1 calculator chain has advanced
+through Gate DA. The latest value-moving new-output runtime slice is
+`post_v1_floor_composite_panel_delta_lw_owner_gate_cy_plan`, with status
+`post_v1_floor_composite_panel_delta_lw_owner_gate_cy_landed_runtime_selected_next_numeric_coverage_gap_gate_cz`.
+It keeps composite-panel `Rw` / `Ln,w` pins unchanged and adds
+same-family ISO `DeltaLw`: dry floating `14.6`, suspended-ceiling-only
+`20.7`, and combined upper/lower treatment `35.5`. Gate CZ then landed
+as the latest no-runtime numeric coverage rerank and selected the
+lightweight-concrete `DeltaLw` owner-contract step.
+
+Gate DA has now landed as
+`post_v1_floor_lightweight_concrete_delta_lw_owner_contract_gate_da_plan`
+with status
+`post_v1_floor_lightweight_concrete_delta_lw_owner_contract_gate_da_landed_runtime_boundary_selected_delta_lw_runtime_corridor_gate_db`.
+It does not publish new lightweight-concrete `DeltaLw` yet. It pins the
+family owner fields, prevents low-density predictor input from
+borrowing `heavy_concrete_annex_c_delta_lw`, keeps existing
+lightweight-concrete `Rw` / `Ln,w` / field-impact pins unchanged, and
+selects
+`post_v1_floor_lightweight_concrete_delta_lw_runtime_corridor_gate_db_plan`.
+The resolver surface is 43 declared candidates and 40 active
+runtime-basis mappings.
+
+The closed-gate ledger below is retained for contract-test continuity
+and historical traceability. Do not use an older "selected next" line in
+that ledger as current authority when it conflicts with the snapshot or
+the living calculator docs.
+
+## Closed-Gate Ledger
+
 The selected post-V1 implementation plan is
 [calculator/POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./calculator/POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md).
 The post-Gate-CD high-ROI scope/accuracy planning input for Gate CE is

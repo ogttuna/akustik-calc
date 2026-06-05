@@ -38,6 +38,97 @@ function hasUpperPackageContent(input: ImpactPredictorInput): boolean {
   );
 }
 
+function hasPositiveNumber(value: number | undefined): boolean {
+  return typeof value === "number" && value > 0;
+}
+
+function hasDryFloatingUpperPackage(input: ImpactPredictorInput): boolean {
+  return Boolean(
+    input.floorCovering?.mode === "material_layer" &&
+      input.floorCovering.materialClass === "dry_floating_gypsum_fiberboard" &&
+      hasPositiveNumber(input.floorCovering.thicknessMm)
+  );
+}
+
+export function collectCompositePanelPublishedInteractionDeltaLwMissingPhysicalInputs(
+  input: ImpactPredictorInput | null | undefined
+): string[] {
+  if (!input || input.structuralSupportType !== "composite_panel" || input.officialFloorSystemId) {
+    return [];
+  }
+
+  if (
+    input.impactSystemType !== "dry_floating_floor" &&
+    input.impactSystemType !== "combined_upper_lower_system" &&
+    input.impactSystemType !== "suspended_ceiling_only"
+  ) {
+    return [];
+  }
+
+  const missing: string[] = [];
+  if (!hasPositiveNumber(input.baseSlab?.thicknessMm)) {
+    missing.push("baseSlabOrFloor");
+  }
+
+  if (input.impactSystemType === "suspended_ceiling_only") {
+    if (hasUpperPackageContent(input)) {
+      return [];
+    }
+
+    if (!input.lowerTreatment || input.lowerTreatment.type !== "suspended_ceiling_elastic_hanger") {
+      missing.push("ceilingOrLowerAssembly_when_lower_treatment_is_requested");
+    } else {
+      if (!hasPositiveNumber(input.lowerTreatment.boardLayerCount)) {
+        missing.push("ceilingBoardLayerCount");
+      }
+      if (!hasPositiveNumber(input.lowerTreatment.boardThicknessMm)) {
+        missing.push("ceilingBoardThicknessMm");
+      }
+      if (!hasPositiveNumber(input.lowerTreatment.cavityDepthMm)) {
+        missing.push("ceilingCavityDepthMm");
+      }
+    }
+
+    return [...new Set(missing)];
+  }
+
+  if (input.floorCovering) {
+    if (
+      input.floorCovering.mode !== "material_layer" ||
+      input.floorCovering.materialClass !== "dry_floating_gypsum_fiberboard"
+    ) {
+      return [];
+    }
+    if (!hasPositiveNumber(input.floorCovering.thicknessMm)) {
+      missing.push("toppingOrFloatingLayer");
+    }
+  } else {
+    missing.push("toppingOrFloatingLayer");
+  }
+
+  if (!hasPositiveNumber(input.resilientLayer?.thicknessMm)) {
+    missing.push("resilientLayerThicknessMm_or_equivalent_family_row");
+  }
+
+  if (input.impactSystemType === "combined_upper_lower_system") {
+    if (!input.lowerTreatment || input.lowerTreatment.type !== "suspended_ceiling_elastic_hanger") {
+      missing.push("ceilingOrLowerAssembly_when_lower_treatment_is_requested");
+    } else {
+      if (!hasPositiveNumber(input.lowerTreatment.boardLayerCount)) {
+        missing.push("ceilingBoardLayerCount");
+      }
+      if (!hasPositiveNumber(input.lowerTreatment.boardThicknessMm)) {
+        missing.push("ceilingBoardThicknessMm");
+      }
+      if (!hasPositiveNumber(input.lowerTreatment.cavityDepthMm)) {
+        missing.push("ceilingCavityDepthMm");
+      }
+    }
+  }
+
+  return [...new Set(missing)];
+}
+
 export function deriveCompositePanelPublishedInteractionEstimate(
   input: ImpactPredictorInput
 ): FloorSystemEstimateResult | null {
@@ -120,21 +211,27 @@ export function deriveCompositePanelPublishedInteractionEstimate(
       "This ceiling-only lane remains a published-family interaction estimate, not an exact measured ceiling-only row."
     ];
 
+    const roundedLnW = ksRound1(lnW);
+    const deltaLw = ksRound1(bareRow.impactRatings.LnW - roundedLnW);
+
     return {
       airborneRatings: {
         Rw: ksRound1(rw)
       },
       fitPercent,
       impact: {
-        LnW: ksRound1(lnW),
-        availableOutputs: ["Ln,w"],
+        DeltaLw: deltaLw,
+        LnW: roundedLnW,
+        availableOutputs: ["Ln,w", "DeltaLw"],
+        bareReferenceLnW: bareRow.impactRatings.LnW,
         basis: COMPOSITE_PANEL_PUBLISHED_INTERACTION_ESTIMATE_BASIS,
         confidence: getImpactConfidenceForBasis(COMPOSITE_PANEL_PUBLISHED_INTERACTION_ESTIMATE_BASIS),
         estimateCandidateIds: [c2Row.id, c1Row.id, bareRow.id],
         labOrField: "lab",
         metricBasis: buildUniformImpactMetricBasis(
           {
-            LnW: ksRound1(lnW)
+            DeltaLw: deltaLw,
+            LnW: roundedLnW
           },
           COMPOSITE_PANEL_PUBLISHED_INTERACTION_ESTIMATE_BASIS
         ),
@@ -148,15 +245,16 @@ export function deriveCompositePanelPublishedInteractionEstimate(
     };
   }
 
-  if (input.floorCovering?.mode !== "material_layer" || input.floorCovering.materialClass !== "dry_floating_gypsum_fiberboard") {
+  const dryFloorCovering = input.floorCovering;
+  if (!hasDryFloatingUpperPackage(input) || !dryFloorCovering || dryFloorCovering.mode !== "material_layer") {
     return null;
   }
 
   const baseThicknessMm = input.baseSlab?.thicknessMm;
   const resilientThicknessMm = input.resilientLayer?.thicknessMm;
   const upperSurfaceMassKgM2 = surfaceMassKgM2(
-    input.floorCovering.thicknessMm,
-    input.floorCovering.densityKgM3,
+    dryFloorCovering.thicknessMm,
+    dryFloorCovering.densityKgM3,
     900
   );
 
@@ -256,21 +354,27 @@ export function deriveCompositePanelPublishedInteractionEstimate(
     )
   );
 
+  const roundedLnW = ksRound1(lnW);
+  const deltaLw = ksRound1(bareLnW - roundedLnW);
+
   return {
     airborneRatings: {
       Rw: ksRound1(rw)
     },
     fitPercent,
     impact: {
-      LnW: ksRound1(lnW),
-      availableOutputs: ["Ln,w"],
+      DeltaLw: deltaLw,
+      LnW: roundedLnW,
+      availableOutputs: ["Ln,w", "DeltaLw"],
+      bareReferenceLnW: bareLnW,
       basis: COMPOSITE_PANEL_PUBLISHED_INTERACTION_ESTIMATE_BASIS,
       confidence: getImpactConfidenceForBasis(COMPOSITE_PANEL_PUBLISHED_INTERACTION_ESTIMATE_BASIS),
       estimateCandidateIds,
       labOrField: "lab",
       metricBasis: buildUniformImpactMetricBasis(
         {
-          LnW: ksRound1(lnW)
+          DeltaLw: deltaLw,
+          LnW: roundedLnW
         },
         COMPOSITE_PANEL_PUBLISHED_INTERACTION_ESTIMATE_BASIS
       ),

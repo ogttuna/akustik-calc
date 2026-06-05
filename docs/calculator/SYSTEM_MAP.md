@@ -19,15 +19,17 @@ Use this together with the calculator source-of-truth chain:
   authority order
 - [USABLE_V1_EXECUTION_PLAN.md](./USABLE_V1_EXECUTION_PLAN.md)
   — closed company-internal usable V1 acceptance contract
-- [CHECKPOINT_2026-06-05_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_CW.md](./CHECKPOINT_2026-06-05_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_CW.md)
-  — current docs/implementation/test reconciliation after Gate CW;
-  selected next action is Gate CX
+- [CHECKPOINT_2026-06-05_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_DA.md](./CHECKPOINT_2026-06-05_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_DA.md)
+  — latest docs/implementation/test reconciliation after Gate DA;
+  Gate CX/CY/CZ/DA have landed, the latest full gate passed after Gate DA,
+  and Gate DA selected Gate DB
 - [POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md)
-  — selected post-V1 capability plan; Gate CW has landed and selected
-  Gate CX numeric coverage-gap label
+  — selected post-V1 capability plan; Gate CY landed the
+  composite-panel `DeltaLw` owner, Gate DA pinned the
+  lightweight-concrete `DeltaLw` owner boundary, and Gate DB is selected
 - [POST_V1_HIGH_ROI_SCOPE_ACCURACY_GATES_AFTER_GATE_CD_PLAN_2026-06-02.md](./POST_V1_HIGH_ROI_SCOPE_ACCURACY_GATES_AFTER_GATE_CD_PLAN_2026-06-02.md)
-  — current post-Gate-CW candidate framework; Gate CX must use it to
-  rerank the next highest-ROI calculator scope/accuracy slice
+  — current high-ROI candidate framework; Gate DA used it to preserve
+  correctness boundaries and select the next value-moving Gate DB
 - [POST_V1_GATE_CD_OPEN_BOX_TARGET_OUTPUT_INDEPENDENCE_PLAN_2026-06-01.md](./POST_V1_GATE_CD_OPEN_BOX_TARGET_OUTPUT_INDEPENDENCE_PLAN_2026-06-01.md)
   — landed historical Gate CD target-output independence scope/correctness slice
 - [ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md](./ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md)

@@ -65,7 +65,7 @@ Current selected post-V1 plan:
 `docs/calculator/POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md`.
 
 Current reconciliation checkpoint:
-`docs/calculator/CHECKPOINT_2026-06-05_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_CW.md`.
+`docs/calculator/CHECKPOINT_2026-06-05_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_DA.md`.
 
 Previous landed value-moving runtime action:
 `post_v1_floor_visible_layer_upper_package_delta_lw_gate_co_plan`
@@ -284,6 +284,110 @@ and no ASTM or floor-impact aliases are published. Coverage counters:
 `post_v1_next_numeric_coverage_gap_gate_cx_plan` in
 `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-cx-contract.test.ts`.
 
+Latest landed no-runtime numeric coverage selection:
+`post_v1_next_numeric_coverage_gap_gate_cx_plan`
+with status
+`post_v1_next_numeric_coverage_gap_gate_cx_landed_no_runtime_selected_floor_composite_panel_delta_lw_owner_gate_cy`.
+Gate CX selects the highest-ROI engine-only formula-owner gap:
+`floor.composite_panel_delta_lw_published_interaction_owner_gap`.
+Composite-panel published-interaction routes already own same-family bare
+and treated `Ln,w` anchors for dry floating, suspended-ceiling, and
+combined treated stacks, but ISO `DeltaLw` remains unsupported for those
+visible treated combinations. Gate CY must add a separate
+composite-panel `DeltaLw` owner from same-family bare-minus-treated
+`Ln,w`; it must not borrow heavy-concrete Annex C formulas, must keep
+existing composite-panel `Rw` / `Ln,w` pins unchanged, must preserve
+missing owner fields as `needs_input`, and must not publish ASTM `IIC`
+/ `AIIC` aliases. Gate CX moved no runtime values and touched no
+frontend implementation. Counters: `candidateCount 12`,
+`newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+`runtimeValuesMoved 0`, `estimatedNextNewCalculableLayerTemplates 3`,
+and `estimatedNextNewCalculableRequestShapes 3`. Gate CX selects
+`post_v1_floor_composite_panel_delta_lw_owner_gate_cy_plan` in
+`packages/engine/src/post-v1-floor-composite-panel-delta-lw-owner-gate-cy-contract.test.ts`.
+
+Latest landed value-moving runtime action:
+`post_v1_floor_composite_panel_delta_lw_owner_gate_cy_plan`
+with status
+`post_v1_floor_composite_panel_delta_lw_owner_gate_cy_landed_runtime_selected_next_numeric_coverage_gap_gate_cz`.
+Gate CY closes the Gate CX selected composite-panel `DeltaLw` owner gap.
+Composite-panel published-interaction floor stacks now keep their
+existing `Rw` / `Ln,w` pins and additionally calculate ISO `DeltaLw`
+from the same-family bare-minus-treated `Ln,w` owner: dry floating
+calculates `Ln,w 69.4 / Rw 45.1 / DeltaLw 14.6`,
+suspended-ceiling-only calculates `Ln,w 63.3 / Rw 48.6 / DeltaLw 20.7`,
+and combined upper/lower treatment calculates `Ln,w 48.5 / Rw 60.6 /
+DeltaLw 35.5`. Missing composite-panel owner fields remain
+`needs_input`; exact same-stack official PMC rows remain primary and do
+not receive source-absent `DeltaLw` aliases; heavy-concrete,
+timber/CLT, and lightweight-concrete `DeltaLw` formulas are not borrowed;
+and ASTM `IIC` / `AIIC` remain unsupported. Coverage counters:
+`newCalculableLayerTemplates 3`, `newCalculableRequestShapes 3`,
+`runtimeCorrectedLayerTemplates 0`, and
+`runtimeCorrectedRequestShapes 0`. Gate CY selects
+`post_v1_next_numeric_coverage_gap_gate_cz_plan` in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-cz-contract.test.ts`.
+
+Latest landed no-runtime numeric coverage selection:
+`post_v1_next_numeric_coverage_gap_gate_cz_plan`
+with status
+`post_v1_next_numeric_coverage_gap_gate_cz_landed_no_runtime_selected_floor_lightweight_concrete_delta_lw_owner_contract_gate_da`.
+Gate CZ selects the highest-ROI engine-only owner-contract gap:
+`floor.lightweight_concrete_delta_lw_family_owner_contract_gap`.
+Gate M already owns lightweight-concrete family `Rw` / `Ln,w` routes,
+and Gate N already proves explicit field-impact companions can adapt
+that owned `Ln,w` anchor when field context is present, but ISO
+`DeltaLw` is still intentionally blocked because no family-specific
+owner contract has pinned the bare-vs-treated or dynamic-improvement
+basis. Gate DA must pin the lightweight-concrete `DeltaLw` owner
+contract before runtime values move; it must not borrow heavy-concrete
+Annex C, composite-panel bare-minus-treated, timber/CLT, or steel
+mass-spring routes, must keep existing lightweight-concrete `Rw` /
+`Ln,w` / field-impact pins unchanged, must preserve missing owner
+fields as `needs_input` or `unsupported`, and must not publish ASTM
+`IIC` / `AIIC` aliases. Gate CZ moved no runtime values and touched no
+frontend implementation. Counters: `candidateCount 13`,
+`newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+`runtimeValuesMoved 0`, `estimatedNextNewCalculableLayerTemplates 0`,
+`estimatedNextNewCalculableRequestShapes 0`,
+`estimatedFollowOnNewCalculableLayerTemplates 2`, and
+`estimatedFollowOnNewCalculableRequestShapes 2`. Gate CZ selects
+`post_v1_floor_lightweight_concrete_delta_lw_owner_contract_gate_da_plan`
+in
+`packages/engine/src/post-v1-floor-lightweight-concrete-delta-lw-owner-contract-gate-da-contract.test.ts`.
+
+Latest landed lightweight-concrete `DeltaLw` owner-boundary action:
+`post_v1_floor_lightweight_concrete_delta_lw_owner_contract_gate_da_plan`
+with status
+`post_v1_floor_lightweight_concrete_delta_lw_owner_contract_gate_da_landed_runtime_boundary_selected_delta_lw_runtime_corridor_gate_db`.
+Gate DA closes the Gate CZ selected owner-contract step for
+`floor.lightweight_concrete.delta_lw_family_owner_contract`. It does
+not publish new lightweight-concrete `DeltaLw` values yet. It pins the
+family-specific physical owner fields
+`baseSlabThicknessMm`,
+`baseSlabDensityKgM3_or_lightweightConcreteMaterialClass`,
+`upperTreatmentState`, `floorCoveringOrWalkingSurface`,
+`resilientLayerOrToppingState`,
+`resilientLayerDynamicStiffnessMNm3_or_productCurve`,
+`loadBasisKgM2`, and `elementLabMetricBasis`, all with no runtime
+default. It also corrects a wrong-family boundary: low-density
+predictor input with complete dynamic stiffness and load basis now stays
+on the lightweight-concrete `Rw` / `Ln,w` family route and does not
+borrow `heavy_concrete_annex_c_delta_lw`. Composite-panel
+bare-minus-treated, timber/CLT, and steel mass-spring `DeltaLw` routes
+are also forbidden for this family. Existing visible lightweight-concrete
+`Rw 53 / Ln,w 64.3`, the Gate M non-dynamic low-density predictor
+`Rw 49 / Ln,w 47`, and field-impact companions stay unchanged; the
+complete dynamic low-density predictor also stays lightweight at
+`Rw 53 / Ln,w 64.3` without `DeltaLw`. `DeltaLw` remains unsupported
+until Gate DB lands the family runtime corridor, and ASTM `IIC` /
+`AIIC` remain unsupported. Counters: `newCalculableLayerTemplates 0`,
+`newCalculableRequestShapes 0`, `runtimeCorrectedRequestShapes 1`, and
+`falseHeavyConcreteDeltaLwPublicationsPrevented 1`. Gate DA selects
+`post_v1_floor_lightweight_concrete_delta_lw_runtime_corridor_gate_db_plan`
+in
+`packages/engine/src/post-v1-floor-lightweight-concrete-delta-lw-runtime-corridor-gate-db-contract.test.ts`.
+
 Previous landed value-moving runtime action:
 `post_v1_opening_leak_composite_wall_adapters_gate_ck_plan`
 with status
@@ -497,9 +601,9 @@ Gate CE selected next file:
 `packages/engine/src/post-v1-target-output-independence-sweep-gate-cf-contract.test.ts`.
 
 Current selected next action label:
-`post_v1_next_numeric_coverage_gap_gate_cx_plan`.
-Gate CW selected Gate CX:
-`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-cx-contract.test.ts`.
+`post_v1_floor_lightweight_concrete_delta_lw_runtime_corridor_gate_db_plan`.
+Gate DA selected Gate DB:
+`packages/engine/src/post-v1-floor-lightweight-concrete-delta-lw-runtime-corridor-gate-db-contract.test.ts`.
 
 Previous value-moving action:
 `post_v1_floor_open_box_target_output_independence_gate_cd_plan`
@@ -600,8 +704,8 @@ It selected `floor.open_box_timber_finished_package.airborne_building_companion_
 now closed by Gate BU.
 
 Latest full gate checkpoint:
-`NEXT_DIST_DIR=.next-gate-cw pnpm calculator:gate:current` passed after
-Gate CW on 2026-06-05 with engine 614 files / 3378 tests, web 113 files
+`NEXT_DIST_DIR=.next-gate-da pnpm calculator:gate:current` passed after
+Gate DA on 2026-06-05 with engine 618 files / 3396 tests, web 113 files
 / 438 passed + 18 skipped, repo build 5 / 5, and whitespace guard
 passed.
 

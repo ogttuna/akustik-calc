@@ -16,11 +16,11 @@ with that file, the usable V1 execution plan wins.
 
 Active slice status: usable V1 is closed for the current tested
 company-internal envelope. The post-V1 calculator-capability chain has
-advanced through Gate CW. Gate CW is the latest value-moving runtime
-slice, Gate CM is the latest no-runtime required physical input guard,
-and Gate CV is the latest landed no-runtime numeric coverage rerank. The
-current active selected target is Gate CX, the next numeric coverage
-rerank after the local-substitution building adapter runtime slice.
+advanced through Gate DA. Gate CY is the latest value-moving new-output
+runtime slice, Gate DA is the latest lightweight-concrete owner-boundary
+runtime correction, and Gate CZ is the latest landed no-runtime numeric
+coverage rerank. The current active selected target is Gate DB, the
+lightweight-concrete `DeltaLw` runtime corridor.
 
 Previous value-moving runtime slice:
 
@@ -329,6 +329,147 @@ Gate CW selected next action:
 Gate CW selected next file:
 
 `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-cx-contract.test.ts`
+
+Latest no-runtime numeric coverage selection:
+
+`post_v1_next_numeric_coverage_gap_gate_cx_plan`
+
+Gate CX status:
+
+`post_v1_next_numeric_coverage_gap_gate_cx_landed_no_runtime_selected_floor_composite_panel_delta_lw_owner_gate_cy`
+
+Gate CX selects
+`floor.composite_panel_delta_lw_published_interaction_owner_gap` as the
+highest-ROI next engine-only formula-owner slice. Composite-panel
+published-interaction routes already own same-family bare and treated
+`Ln,w` anchors for dry floating, suspended-ceiling, and combined treated
+stacks, but ISO `DeltaLw` is still unsupported for those visible treated
+combinations. Gate CY must add a separate composite-panel `DeltaLw`
+owner from same-family bare-minus-treated `Ln,w`. It must not borrow
+heavy-concrete Annex C formulas, must keep existing composite-panel
+`Rw` / `Ln,w` pins unchanged, must preserve missing owner fields as
+`needs_input`, and must not publish ASTM `IIC` / `AIIC` aliases. Gate CX
+moved no runtime values, touched no frontend implementation, selected no
+source crawl, and selected no confidence wording. Counters:
+`candidateCount 12`, `newCalculableLayerTemplates 0`,
+`newCalculableRequestShapes 0`, `runtimeValuesMoved 0`,
+`estimatedNextNewCalculableLayerTemplates 3`, and
+`estimatedNextNewCalculableRequestShapes 3`.
+
+Gate CX selected next action:
+
+`post_v1_floor_composite_panel_delta_lw_owner_gate_cy_plan`
+
+Gate CX selected next file:
+
+`packages/engine/src/post-v1-floor-composite-panel-delta-lw-owner-gate-cy-contract.test.ts`
+
+Latest value-moving runtime slice:
+
+`post_v1_floor_composite_panel_delta_lw_owner_gate_cy_plan`
+
+Gate CY status:
+
+`post_v1_floor_composite_panel_delta_lw_owner_gate_cy_landed_runtime_selected_next_numeric_coverage_gap_gate_cz`
+
+Gate CY closes the Gate CX selected composite-panel `DeltaLw` owner gap.
+Composite-panel published-interaction floor stacks now keep existing
+`Rw` / `Ln,w` pins and calculate ISO `DeltaLw` from the same-family
+bare-minus-treated `Ln,w` owner. Dry floating calculates
+`Ln,w 69.4 / Rw 45.1 / DeltaLw 14.6`; suspended-ceiling-only calculates
+`Ln,w 63.3 / Rw 48.6 / DeltaLw 20.7`; combined upper/lower treatment
+calculates `Ln,w 48.5 / Rw 60.6 / DeltaLw 35.5`. Missing
+composite-panel owner fields remain `needs_input`, exact same-stack
+official PMC rows remain primary without source-absent `DeltaLw`
+aliases, heavy-concrete / timber-CLT / lightweight-concrete formulas are
+not borrowed, and ASTM `IIC` / `AIIC` remain unsupported. Counters:
+`newCalculableLayerTemplates 3`, `newCalculableRequestShapes 3`,
+`runtimeCorrectedLayerTemplates 0`, and `runtimeCorrectedRequestShapes
+0`.
+
+Gate CY selected next action:
+
+`post_v1_next_numeric_coverage_gap_gate_cz_plan`
+
+Gate CY selected next file:
+
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-cz-contract.test.ts`
+
+Latest no-runtime numeric coverage selection:
+
+`post_v1_next_numeric_coverage_gap_gate_cz_plan`
+
+Gate CZ status:
+
+`post_v1_next_numeric_coverage_gap_gate_cz_landed_no_runtime_selected_floor_lightweight_concrete_delta_lw_owner_contract_gate_da`
+
+Gate CZ selects
+`floor.lightweight_concrete_delta_lw_family_owner_contract_gap` as the
+highest-ROI engine-only owner-contract slice after Gate CY. Lightweight
+concrete already has owned `Rw` / `Ln,w` family routes and explicit
+field-impact companion adaptation from that `Ln,w` anchor, but ISO
+`DeltaLw` remains blocked because the family-specific owner contract has
+not pinned the required bare-vs-treated or dynamic-improvement basis.
+Gate DA must pin that owner boundary before runtime values move. It
+must not borrow heavy-concrete, composite-panel, timber/CLT, or steel
+`DeltaLw` routes, must keep existing lightweight-concrete `Rw` / `Ln,w`
+/ field-impact pins unchanged, must preserve missing owner fields as
+`needs_input` or `unsupported`, and must not publish ASTM `IIC` /
+`AIIC` aliases. Gate CZ moved no runtime values, touched no frontend
+implementation, selected no source crawl, and selected no confidence
+wording. Counters: `candidateCount 13`,
+`newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+`runtimeValuesMoved 0`, `estimatedNextNewCalculableLayerTemplates 0`,
+`estimatedNextNewCalculableRequestShapes 0`,
+`estimatedFollowOnNewCalculableLayerTemplates 2`, and
+`estimatedFollowOnNewCalculableRequestShapes 2`.
+
+Gate CZ selected next action:
+
+`post_v1_floor_lightweight_concrete_delta_lw_owner_contract_gate_da_plan`
+
+Gate CZ selected next file:
+
+`packages/engine/src/post-v1-floor-lightweight-concrete-delta-lw-owner-contract-gate-da-contract.test.ts`
+
+Latest lightweight-concrete owner-boundary action:
+
+`post_v1_floor_lightweight_concrete_delta_lw_owner_contract_gate_da_plan`
+
+Gate DA status:
+
+`post_v1_floor_lightweight_concrete_delta_lw_owner_contract_gate_da_landed_runtime_boundary_selected_delta_lw_runtime_corridor_gate_db`
+
+Gate DA closes the Gate CZ selected owner-contract step for
+`floor.lightweight_concrete.delta_lw_family_owner_contract`. It does
+not publish new lightweight-concrete `DeltaLw` values yet. It pins the
+family-specific no-default owner fields `baseSlabThicknessMm`,
+`baseSlabDensityKgM3_or_lightweightConcreteMaterialClass`,
+`upperTreatmentState`, `floorCoveringOrWalkingSurface`,
+`resilientLayerOrToppingState`,
+`resilientLayerDynamicStiffnessMNm3_or_productCurve`, `loadBasisKgM2`,
+and `elementLabMetricBasis`. It also corrects one wrong-family boundary:
+low-density predictor input with complete dynamic stiffness and load
+basis now stays on the lightweight-concrete `Rw` / `Ln,w` route and
+does not borrow `heavy_concrete_annex_c_delta_lw`. Composite-panel
+bare-minus-treated, timber/CLT, and steel mass-spring `DeltaLw` routes
+remain forbidden for this family. Existing visible lightweight-concrete
+`Rw 53 / Ln,w 64.3`, the Gate M non-dynamic low-density predictor
+`Rw 49 / Ln,w 47`, and field-impact companions stay unchanged; the
+complete dynamic low-density predictor also stays lightweight at
+`Rw 53 / Ln,w 64.3` without `DeltaLw`. `DeltaLw` remains unsupported
+until Gate DB lands the family runtime corridor, and ASTM `IIC` /
+`AIIC` remain unsupported. Counters: `newCalculableLayerTemplates 0`,
+`newCalculableRequestShapes 0`, `runtimeCorrectedRequestShapes 1`, and
+`falseHeavyConcreteDeltaLwPublicationsPrevented 1`.
+
+Gate DA selected next action:
+
+`post_v1_floor_lightweight_concrete_delta_lw_runtime_corridor_gate_db_plan`
+
+Gate DA selected next file:
+
+`packages/engine/src/post-v1-floor-lightweight-concrete-delta-lw-runtime-corridor-gate-db-contract.test.ts`
 
 Previous value-moving runtime slice:
 
@@ -1026,7 +1167,7 @@ in
 
 Current reconciliation checkpoint:
 
-[CHECKPOINT_2026-06-05_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_CW.md](./CHECKPOINT_2026-06-05_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_CW.md)
+[CHECKPOINT_2026-06-05_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_DA.md](./CHECKPOINT_2026-06-05_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_DA.md)
 
 The shared resolver surface now has 43 declared candidates and 40 active runtime-basis mappings.
 

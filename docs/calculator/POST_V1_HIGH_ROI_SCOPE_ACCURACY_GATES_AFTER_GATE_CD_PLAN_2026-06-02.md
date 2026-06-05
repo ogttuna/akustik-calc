@@ -23,9 +23,18 @@ calibration evidence, holdouts, and regression tests.
 
 ## Current Implementation Anchor
 
-Current state after Gate CW:
+Current state after Gate DA:
 
 - latest value-moving runtime slice:
+  `post_v1_floor_composite_panel_delta_lw_owner_gate_cy_plan`;
+- Gate CY landed with status
+  `post_v1_floor_composite_panel_delta_lw_owner_gate_cy_landed_runtime_selected_next_numeric_coverage_gap_gate_cz`;
+- Gate CY closes the composite-panel `DeltaLw` owner gap: dry floating
+  now calculates `Ln,w 69.4 / Rw 45.1 / DeltaLw 14.6`,
+  suspended-ceiling-only calculates `Ln,w 63.3 / Rw 48.6 / DeltaLw 20.7`,
+  and combined upper/lower treatment calculates `Ln,w 48.5 / Rw 60.6 /
+  DeltaLw 35.5`;
+- previous value-moving runtime slice:
   `post_v1_wall_local_substitution_building_adapter_gate_cw_plan`;
 - Gate CW landed with status
   `post_v1_wall_local_substitution_building_adapter_gate_cw_landed_runtime_selected_next_numeric_coverage_gap_gate_cx`;
@@ -40,6 +49,36 @@ Current state after Gate CW:
 - Gate CU landed with status
   `post_v1_wall_flat_layer_order_multicavity_gate_cu_landed_runtime_selected_next_numeric_coverage_gap_gate_cv`;
 - latest no-runtime numeric coverage rerank:
+  `post_v1_next_numeric_coverage_gap_gate_cx_plan`;
+- Gate CX landed with status
+  `post_v1_next_numeric_coverage_gap_gate_cx_landed_no_runtime_selected_floor_composite_panel_delta_lw_owner_gate_cy`;
+- Gate CX selected
+  `floor.composite_panel_delta_lw_published_interaction_owner_gap` as
+  the next runtime formula-owner slice;
+- latest no-runtime numeric coverage rerank:
+  `post_v1_next_numeric_coverage_gap_gate_cz_plan`;
+- Gate CZ landed with status
+  `post_v1_next_numeric_coverage_gap_gate_cz_landed_no_runtime_selected_floor_lightweight_concrete_delta_lw_owner_contract_gate_da`;
+- Gate CZ selected
+  `floor.lightweight_concrete_delta_lw_family_owner_contract_gap` as
+  the next engine-only owner-contract slice; lightweight-concrete
+  `Rw` / `Ln,w` and field-impact companions already have owned routes,
+  but ISO `DeltaLw` still needs a family-specific owner contract before
+  runtime values can move without borrowing heavy-concrete,
+  composite-panel, timber/CLT, or steel corridors;
+- latest lightweight-concrete owner-boundary action:
+  `post_v1_floor_lightweight_concrete_delta_lw_owner_contract_gate_da_plan`;
+- Gate DA landed with status
+  `post_v1_floor_lightweight_concrete_delta_lw_owner_contract_gate_da_landed_runtime_boundary_selected_delta_lw_runtime_corridor_gate_db`;
+- Gate DA closed
+  `floor.lightweight_concrete.delta_lw_family_owner_contract` by pinning
+  no-default owner fields including
+  `resilientLayerDynamicStiffnessMNm3_or_productCurve` and
+  `loadBasisKgM2`; it also keeps low-density predictor input from
+  borrowing `heavy_concrete_annex_c_delta_lw`, while existing
+  lightweight-concrete `Rw` / `Ln,w` and field-impact companions remain
+  unchanged and `DeltaLw` waits for Gate DB;
+- previous no-runtime numeric coverage rerank:
   `post_v1_next_numeric_coverage_gap_gate_cv_plan`;
 - Gate CV landed with status
   `post_v1_next_numeric_coverage_gap_gate_cv_landed_no_runtime_selected_wall_local_substitution_building_adapter_gate_cw`;
@@ -84,7 +123,15 @@ Current state after Gate CW:
 - Gate CR landed with status
   `post_v1_next_numeric_coverage_gap_gate_cr_landed_no_runtime_selected_wall_common_auto_topology_second_pass_gate_cs`;
 - current selected next action label:
-  `post_v1_next_numeric_coverage_gap_gate_cx_plan`;
+  `post_v1_floor_lightweight_concrete_delta_lw_runtime_corridor_gate_db_plan`;
+- Gate DA selected next file:
+  `packages/engine/src/post-v1-floor-lightweight-concrete-delta-lw-runtime-corridor-gate-db-contract.test.ts`;
+- Gate CZ selected next file:
+  `packages/engine/src/post-v1-floor-lightweight-concrete-delta-lw-owner-contract-gate-da-contract.test.ts`;
+- Gate CY selected next file:
+  `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-cz-contract.test.ts`;
+- Gate CX selected next file:
+  `packages/engine/src/post-v1-floor-composite-panel-delta-lw-owner-gate-cy-contract.test.ts`;
 - Gate CW selected next file:
   `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-cx-contract.test.ts`;
 - Gate CK selected next file:
@@ -250,6 +297,30 @@ Current state after Gate CW:
   `estimatedNextNewCalculableLayerTemplates 1`,
   `estimatedNextNewCalculableRequestShapes 5`, and
   `runtimeValuesMoved 0`;
+- Gate CX no-runtime selection:
+  `floor.composite_panel_delta_lw_published_interaction_owner_gap`. Gate
+  CX picks composite-panel `DeltaLw` because the existing
+  published-interaction estimator already owns same-family bare and
+  treated `Ln,w` anchors for dry floating, suspended-ceiling, and
+  combined treated stacks, while ISO `DeltaLw` remains unsupported for
+  those visible combinations. Gate CX also records that the
+  local-substitution flat-order building route and composite-panel field
+  companions are already runtime-capable, so they should not be selected
+  as fake scope moves. Counters: `candidateCount 12`,
+  `estimatedNextNewCalculableLayerTemplates 3`,
+  `estimatedNextNewCalculableRequestShapes 3`, and
+  `runtimeValuesMoved 0`;
+- Gate CY value movement: composite-panel published-interaction floor
+  stacks now keep the existing `Rw` / `Ln,w` owner and calculate ISO
+  `DeltaLw` from same-family bare-minus-treated `Ln,w`. Dry floating is
+  `Ln,w 69.4 / Rw 45.1 / DeltaLw 14.6`; suspended-ceiling-only is
+  `Ln,w 63.3 / Rw 48.6 / DeltaLw 20.7`; combined upper/lower treatment
+  is `Ln,w 48.5 / Rw 60.6 / DeltaLw 35.5`. Missing owner fields remain
+  `needs_input`, exact official PMC rows stay primary, wrong-family
+  `DeltaLw` formulas are not borrowed, and ASTM `IIC` / `AIIC` remain
+  unsupported. Counters: `newCalculableLayerTemplates 3`,
+  `newCalculableRequestShapes 3`, `runtimeCorrectedLayerTemplates 0`,
+  and `runtimeCorrectedRequestShapes 0`;
 - Gate CK value movement: complete top-level field opening/leak context
   now calculates `R'w 36.4 / Dn,w 36.7 / DnT,w 36.9`, and complete
   top-level building-prediction opening/leak context now calculates

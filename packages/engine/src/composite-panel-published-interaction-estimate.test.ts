@@ -23,6 +23,8 @@ describe("deriveCompositePanelPublishedInteractionEstimate", () => {
     expect(result?.kind).toBe("family_general");
     expect(result?.impact.basis).toBe("predictor_composite_panel_published_interaction_estimate");
     expect(result?.impact.LnW).toBe(63.3);
+    expect(result?.impact.DeltaLw).toBe(20.7);
+    expect(result?.impact.availableOutputs).toEqual(["Ln,w", "DeltaLw"]);
     expect(result?.airborneRatings.Rw).toBe(48.6);
     expect(result?.impact.estimateCandidateIds).toEqual([
       "pmc_m1_dry_floating_plus_c2x_lab_2026",

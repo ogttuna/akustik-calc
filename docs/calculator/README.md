@@ -25,7 +25,7 @@ numeric/correctness gate explicitly selects them.
 
 Latest reconciliation checkpoint:
 
-[CHECKPOINT_2026-06-05_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_CW.md](./CHECKPOINT_2026-06-05_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_CW.md)
+[CHECKPOINT_2026-06-05_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_DA.md](./CHECKPOINT_2026-06-05_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_DA.md)
 
 Post-Gate-CD high-ROI planning input:
 
@@ -38,18 +38,45 @@ CE. Gate CE has now landed as
 It selected `target_output_independence_sweep`, now closed by Gate CF.
 
 As of 2026-06-05, the living implementation state has advanced through
-Gate CW. The latest value-moving runtime slice is
-`post_v1_wall_local_substitution_building_adapter_gate_cw_plan`, with
-status
-`post_v1_wall_local_substitution_building_adapter_gate_cw_landed_runtime_selected_next_numeric_coverage_gap_gate_cx`.
-It publishes `R'w 51 / Dn,w 51 / Dn,A 52.4 / DnT,w 53 / DnT,A 53.9`
-for complete local Rockwool / MLV / plaster grouped triple-leaf wall
-building-prediction requests. Missing building physical inputs remain
-`needs_input`, exact same-stack field/building source rows remain higher
-precedence, and lab, field, and building metric owners stay separate.
-Gate CW selected `post_v1_next_numeric_coverage_gap_gate_cx_plan`, with
-selected next file
-`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-cx-contract.test.ts`.
+Gate DA. The latest value-moving new-output runtime slice is
+`post_v1_floor_composite_panel_delta_lw_owner_gate_cy_plan`, with status
+`post_v1_floor_composite_panel_delta_lw_owner_gate_cy_landed_runtime_selected_next_numeric_coverage_gap_gate_cz`.
+It closes the Gate CX selected composite-panel `DeltaLw` owner gap:
+dry floating composite-panel stacks now calculate `DeltaLw 14.6`,
+suspended-ceiling-only stacks calculate `DeltaLw 20.7`, and combined
+upper/lower treatment stacks calculate `DeltaLw 35.5`, while existing
+`Rw` / `Ln,w` pins stay unchanged. Missing owner fields remain
+`needs_input`, exact PMC rows remain primary without source-absent
+`DeltaLw` aliases, wrong-family formulas are not borrowed, and ASTM
+`IIC` / `AIIC` remain unsupported. Gate CY selected
+`post_v1_next_numeric_coverage_gap_gate_cz_plan`, with selected next
+file
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-cz-contract.test.ts`.
+Gate CZ has now landed as the latest no-runtime numeric coverage
+selection:
+`post_v1_next_numeric_coverage_gap_gate_cz_plan`, with status
+`post_v1_next_numeric_coverage_gap_gate_cz_landed_no_runtime_selected_floor_lightweight_concrete_delta_lw_owner_contract_gate_da`.
+It selects `floor.lightweight_concrete_delta_lw_family_owner_contract_gap`
+and the next owner-contract gate
+`post_v1_floor_lightweight_concrete_delta_lw_owner_contract_gate_da_plan`
+in
+`packages/engine/src/post-v1-floor-lightweight-concrete-delta-lw-owner-contract-gate-da-contract.test.ts`.
+Gate DA has now landed as the latest lightweight-concrete owner-boundary
+action:
+`post_v1_floor_lightweight_concrete_delta_lw_owner_contract_gate_da_plan`,
+with status
+`post_v1_floor_lightweight_concrete_delta_lw_owner_contract_gate_da_landed_runtime_boundary_selected_delta_lw_runtime_corridor_gate_db`.
+It pins `floor.lightweight_concrete.delta_lw_family_owner_contract`,
+prevents low-density predictor input from borrowing
+`heavy_concrete_annex_c_delta_lw`, and selects
+`post_v1_floor_lightweight_concrete_delta_lw_runtime_corridor_gate_db_plan`
+in
+`packages/engine/src/post-v1-floor-lightweight-concrete-delta-lw-runtime-corridor-gate-db-contract.test.ts`.
+Full `NEXT_DIST_DIR=.next-gate-da pnpm calculator:gate:current` passed
+after Gate DA on 2026-06-05 with engine 618 files / 3396 tests, web 113
+files / 438 passed + 18 skipped, repo build 5 / 5, and whitespace guard
+passed. Post-Gate-DA targeted engine validation also passed for the
+Gate DA, M/N/CZ/DA, and CX/CY/CZ/DA regression sets.
 
 ## Document Status Map
 

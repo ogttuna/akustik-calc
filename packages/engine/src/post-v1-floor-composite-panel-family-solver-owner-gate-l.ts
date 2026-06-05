@@ -1,6 +1,7 @@
 import type { ImpactPredictorInput, RequestedOutputId } from "@dynecho/shared";
 
 import {
+  COMPOSITE_PANEL_PUBLISHED_INTERACTION_DELTA_LW_TOLERANCE_DB,
   COMPOSITE_PANEL_PUBLISHED_INTERACTION_ESTIMATE_BASIS,
   COMPOSITE_PANEL_PUBLISHED_INTERACTION_LN_W_TOLERANCE_DB,
   COMPOSITE_PANEL_PUBLISHED_INTERACTION_REQUIRED_FIELDS,
@@ -69,7 +70,7 @@ export const POST_V1_GATE_L_COMPOSITE_COMBINED_INPUT = {
 } as const satisfies ImpactPredictorInput;
 
 export type PostV1FloorCompositePanelFamilySolverOwnerGateLContract = {
-  readonly blockedMetricsUntilSeparateOwner: readonly ["DeltaLw", "IIC", "AIIC", "L'n,w", "L'nT,w"];
+  readonly blockedMetricsUntilSeparateOwner: readonly ["IIC", "AIIC", "L'n,w", "L'nT,w"];
   readonly candidateId: typeof COMPOSITE_PANEL_PUBLISHED_INTERACTION_SELECTED_CANDIDATE_ID;
   readonly landedGate: typeof POST_V1_FLOOR_COMPOSITE_PANEL_FAMILY_SOLVER_OWNER_GATE_L_LANDED_GATE;
   readonly numericRuntimeValueMovement: false;
@@ -93,17 +94,21 @@ export type PostV1FloorCompositePanelFamilySolverOwnerGateLContract = {
   readonly selectedNextLabel: typeof POST_V1_FLOOR_COMPOSITE_PANEL_FAMILY_SOLVER_OWNER_GATE_L_SELECTED_NEXT_LABEL;
   readonly selectionStatus: typeof POST_V1_FLOOR_COMPOSITE_PANEL_FAMILY_SOLVER_OWNER_GATE_L_SELECTION_STATUS;
   readonly sourceRowsAreAnchorsNotProduct: true;
-  readonly supportedMetrics: readonly ["Rw", "Ln,w"];
+  readonly supportedMetrics: readonly ["Rw", "Ln,w", "DeltaLw"];
   readonly toleranceDb: {
+    readonly DeltaLw: typeof COMPOSITE_PANEL_PUBLISHED_INTERACTION_DELTA_LW_TOLERANCE_DB;
     readonly "Ln,w": typeof COMPOSITE_PANEL_PUBLISHED_INTERACTION_LN_W_TOLERANCE_DB;
     readonly Rw: typeof COMPOSITE_PANEL_PUBLISHED_INTERACTION_RW_TOLERANCE_DB;
   };
   readonly valuePins: readonly [
     { readonly profile: "dry_floating_floor"; readonly metric: "Ln,w"; readonly value: 69.4 },
+    { readonly profile: "dry_floating_floor"; readonly metric: "DeltaLw"; readonly value: 14.6 },
     { readonly profile: "dry_floating_floor"; readonly metric: "Rw"; readonly value: 45.1 },
     { readonly profile: "suspended_ceiling_only"; readonly metric: "Ln,w"; readonly value: 63.3 },
+    { readonly profile: "suspended_ceiling_only"; readonly metric: "DeltaLw"; readonly value: 20.7 },
     { readonly profile: "suspended_ceiling_only"; readonly metric: "Rw"; readonly value: 48.6 },
     { readonly profile: "combined_upper_lower_system"; readonly metric: "Ln,w"; readonly value: 48.5 },
+    { readonly profile: "combined_upper_lower_system"; readonly metric: "DeltaLw"; readonly value: 35.5 },
     { readonly profile: "combined_upper_lower_system"; readonly metric: "Rw"; readonly value: 60.6 }
   ];
   readonly visibleBoundaryPolicy: {
@@ -114,7 +119,7 @@ export type PostV1FloorCompositePanelFamilySolverOwnerGateLContract = {
 export function buildPostV1FloorCompositePanelFamilySolverOwnerGateLContract():
   PostV1FloorCompositePanelFamilySolverOwnerGateLContract {
   return {
-    blockedMetricsUntilSeparateOwner: ["DeltaLw", "IIC", "AIIC", "L'n,w", "L'nT,w"],
+    blockedMetricsUntilSeparateOwner: ["IIC", "AIIC", "L'n,w", "L'nT,w"],
     candidateId: COMPOSITE_PANEL_PUBLISHED_INTERACTION_SELECTED_CANDIDATE_ID,
     landedGate: POST_V1_FLOOR_COMPOSITE_PANEL_FAMILY_SOLVER_OWNER_GATE_L_LANDED_GATE,
     numericRuntimeValueMovement: false,
@@ -138,21 +143,25 @@ export function buildPostV1FloorCompositePanelFamilySolverOwnerGateLContract():
     selectedNextLabel: POST_V1_FLOOR_COMPOSITE_PANEL_FAMILY_SOLVER_OWNER_GATE_L_SELECTED_NEXT_LABEL,
     selectionStatus: POST_V1_FLOOR_COMPOSITE_PANEL_FAMILY_SOLVER_OWNER_GATE_L_SELECTION_STATUS,
     sourceRowsAreAnchorsNotProduct: true,
-    supportedMetrics: ["Rw", "Ln,w"],
+    supportedMetrics: ["Rw", "Ln,w", "DeltaLw"],
     toleranceDb: {
+      DeltaLw: COMPOSITE_PANEL_PUBLISHED_INTERACTION_DELTA_LW_TOLERANCE_DB,
       "Ln,w": COMPOSITE_PANEL_PUBLISHED_INTERACTION_LN_W_TOLERANCE_DB,
       Rw: COMPOSITE_PANEL_PUBLISHED_INTERACTION_RW_TOLERANCE_DB
     },
     valuePins: [
       { profile: "dry_floating_floor", metric: "Ln,w", value: 69.4 },
+      { profile: "dry_floating_floor", metric: "DeltaLw", value: 14.6 },
       { profile: "dry_floating_floor", metric: "Rw", value: 45.1 },
       { profile: "suspended_ceiling_only", metric: "Ln,w", value: 63.3 },
+      { profile: "suspended_ceiling_only", metric: "DeltaLw", value: 20.7 },
       { profile: "suspended_ceiling_only", metric: "Rw", value: 48.6 },
       { profile: "combined_upper_lower_system", metric: "Ln,w", value: 48.5 },
+      { profile: "combined_upper_lower_system", metric: "DeltaLw", value: 35.5 },
       { profile: "combined_upper_lower_system", metric: "Rw", value: 60.6 }
     ],
     visibleBoundaryPolicy: {
-      unsupportedAliases: ["DeltaLw", "IIC", "AIIC", "L'n,w", "L'nT,w"]
+      unsupportedAliases: ["IIC", "AIIC", "L'n,w", "L'nT,w"]
     }
   };
 }

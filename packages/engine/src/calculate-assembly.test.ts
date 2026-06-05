@@ -2,6 +2,9 @@ import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
 
+const HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_BASIS =
+  "predictor_heavy_concrete_published_upper_treatment_estimate";
+
 function expectBlockedHeavyConcreteCombinedAssembly(
   result: ReturnType<typeof calculateAssembly>,
   supportedTargetOutputs: readonly string[],
@@ -17,6 +20,37 @@ function expectBlockedHeavyConcreteCombinedAssembly(
   expect(result.warnings.join("\n")).toContain(
     "Dynamic Calculator reinforced-concrete combined upper/lower impact runtime is waiting for"
   );
+}
+
+function expectPublishedHeavyConcreteCombinedAssembly(
+  result: ReturnType<typeof calculateAssembly>,
+  input: {
+    candidateIds: readonly string[];
+    lnw: number;
+    rw: number;
+    rwCtr?: number;
+    supportedTargetOutputs: readonly string[];
+    unsupportedTargetOutputs: readonly string[];
+  }
+): void {
+  expect(result.impact?.basis).toBe(HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_BASIS);
+  expect(result.impact?.LnW).toBe(input.lnw);
+  expect(result.impact?.DeltaLw).toBeUndefined();
+  expect(result.impact?.availableOutputs).toEqual(["Ln,w"]);
+  expect(result.impact?.estimateCandidateIds).toEqual(input.candidateIds);
+  expect(result.impact?.metricBasis?.LnW).toBe(HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_BASIS);
+  expect(result.floorSystemEstimate?.impact.basis).toBe(HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_BASIS);
+  expect(result.floorSystemRatings?.basis).toBe(HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_BASIS);
+  expect(result.floorSystemRatings?.Rw).toBe(input.rw);
+  if (typeof input.rwCtr === "number") {
+    expect(result.floorSystemRatings?.RwCtr).toBe(input.rwCtr);
+  } else {
+    expect(result.floorSystemRatings?.RwCtr).toBeUndefined();
+  }
+  expect(result.supportedTargetOutputs).toEqual(input.supportedTargetOutputs);
+  expect(result.unsupportedTargetOutputs).toEqual(input.unsupportedTargetOutputs);
+  expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
+  expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
 }
 
 const EXACT_IMPACT_SOURCE_19 = {
@@ -6804,7 +6838,13 @@ describe("calculateAssembly", () => {
       }
     );
 
-    expectBlockedHeavyConcreteCombinedAssembly(result, ["Rw"], ["Ln,w", "DeltaLw"]);
+    expectPublishedHeavyConcreteCombinedAssembly(result, {
+      candidateIds: ["euracoustics_f2_elastic_ceiling_concrete_lab_2026"],
+      lnw: 43,
+      rw: 77,
+      supportedTargetOutputs: ["Ln,w", "Rw"],
+      unsupportedTargetOutputs: ["DeltaLw"]
+    });
   });
 
   it("routes reinforced-concrete combined wet predictor input with a rigid gypsum ceiling onto the defended published upper-treatment lane on the assembly route", () => {
@@ -6851,7 +6891,18 @@ describe("calculateAssembly", () => {
       }
     );
 
-    expectBlockedHeavyConcreteCombinedAssembly(result, ["Rw", "Ctr"], ["Ln,w", "DeltaLw"]);
+    expectPublishedHeavyConcreteCombinedAssembly(result, {
+      candidateIds: [
+        "euracoustics_f1_rigid_ceiling_concrete_lab_2026",
+        "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
+        "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
+      ],
+      lnw: 51.5,
+      rw: 70,
+      rwCtr: 57,
+      supportedTargetOutputs: ["Ln,w", "Rw", "Ctr"],
+      unsupportedTargetOutputs: ["DeltaLw"]
+    });
   });
 
   it("derives the defended published upper-treatment lane from a visible combined wet stack with an elastic gypsum ceiling on the assembly route", () => {
@@ -6871,7 +6922,13 @@ describe("calculateAssembly", () => {
       }
     );
 
-    expectBlockedHeavyConcreteCombinedAssembly(result, ["Rw"], ["Ln,w", "DeltaLw"]);
+    expectPublishedHeavyConcreteCombinedAssembly(result, {
+      candidateIds: ["euracoustics_f2_elastic_ceiling_concrete_lab_2026"],
+      lnw: 43,
+      rw: 77,
+      supportedTargetOutputs: ["Ln,w", "Rw"],
+      unsupportedTargetOutputs: ["DeltaLw"]
+    });
   });
 
   it("derives the defended published upper-treatment lane from a visible combined wet stack with a rigid gypsum ceiling on the assembly route", () => {
@@ -6891,7 +6948,18 @@ describe("calculateAssembly", () => {
       }
     );
 
-    expectBlockedHeavyConcreteCombinedAssembly(result, ["Rw", "Ctr"], ["Ln,w", "DeltaLw"]);
+    expectPublishedHeavyConcreteCombinedAssembly(result, {
+      candidateIds: [
+        "euracoustics_f1_rigid_ceiling_concrete_lab_2026",
+        "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
+        "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
+      ],
+      lnw: 51.5,
+      rw: 70,
+      rwCtr: 57,
+      supportedTargetOutputs: ["Ln,w", "Rw", "Ctr"],
+      unsupportedTargetOutputs: ["DeltaLw"]
+    });
   });
 
   it("keeps lightweight-concrete floating floors off the heavy-concrete-specific impact lanes", () => {
@@ -7413,12 +7481,17 @@ describe("calculateAssembly", () => {
     expect(rawConcreteCeilingHelper.supportedTargetOutputs).toEqual(["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]);
     expect(rawConcreteCeilingHelper.unsupportedTargetOutputs).toEqual([]);
 
-    expect(openBoxBare.impact?.basis).toBe("broad_accuracy_floor_open_box_timber_raw_bare_source_absent_formula_corridor");
+    expect(openBoxBare.impact?.basis).toBe("mixed_predicted_plus_estimated_standardized_field_volume_normalization");
     expect(openBoxBare.impact?.LnW).toBe(88.2);
+    expect(openBoxBare.impact?.LPrimeNW).toBe(90.2);
+    expect(openBoxBare.impact?.LPrimeNTw).toBe(87.8);
+    expect(openBoxBare.impact?.metricBasis?.LnW).toBe(
+      "broad_accuracy_floor_open_box_timber_raw_bare_source_absent_formula_corridor"
+    );
     expect(openBoxBare.floorSystemRatings?.basis).toBe("broad_accuracy_floor_open_box_timber_raw_bare_source_absent_formula_corridor");
     expect(openBoxBare.floorSystemRatings?.Rw).toBe(42.3);
-    expect(openBoxBare.supportedTargetOutputs).toEqual(["Rw", "R'w", "DnT,w", "Ln,w"]);
-    expect(openBoxBare.unsupportedTargetOutputs).toEqual(["L'n,w", "L'nT,w"]);
+    expect(openBoxBare.supportedTargetOutputs).toEqual(["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]);
+    expect(openBoxBare.unsupportedTargetOutputs).toEqual([]);
 
     expect(wallLikeConcreteHybrid.impact).not.toBeNull();
     expect(wallLikeConcreteHybrid.floorSystemRatings?.basis).toBe("screening_mass_law_curve_seed_v3");

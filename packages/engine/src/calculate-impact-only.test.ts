@@ -1519,6 +1519,7 @@ describe("calculateImpactOnly", () => {
     expect(result.sourceMode).toBe("predictor_input");
     expect(result.impact?.basis).toBe("predictor_composite_panel_published_interaction_estimate");
     expect(result.impact?.LnW).toBe(69.4);
+    expect(result.impact?.DeltaLw).toBe(14.6);
     expect(result.floorSystemRatings?.Rw).toBe(45.1);
     expect(result.impact?.estimateCandidateIds).toEqual([
       "pmc_m1_dry_floating_floor_lab_2026",
@@ -3654,6 +3655,7 @@ describe("calculateImpactOnly", () => {
     expect(result.floorSystemEstimate?.kind).toBe("family_general");
     expect(result.impact?.basis).toBe("predictor_composite_panel_published_interaction_estimate");
     expect(result.impact?.LnW).toBe(63.3);
+    expect(result.impact?.DeltaLw).toBe(20.7);
     expect(result.floorSystemRatings?.Rw).toBe(48.6);
     expect(result.impact?.estimateCandidateIds).toEqual([
       "pmc_m1_dry_floating_plus_c2x_lab_2026",

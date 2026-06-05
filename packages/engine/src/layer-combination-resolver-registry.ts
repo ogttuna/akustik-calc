@@ -60,6 +60,7 @@ import {
 } from "./floor-open-box-finished-package-airborne-building-prediction-runtime";
 import {
   COMPOSITE_PANEL_PUBLISHED_INTERACTION_ESTIMATE_BASIS,
+  COMPOSITE_PANEL_PUBLISHED_INTERACTION_DELTA_LW_TOLERANCE_DB,
   COMPOSITE_PANEL_PUBLISHED_INTERACTION_LN_W_TOLERANCE_DB,
   COMPOSITE_PANEL_PUBLISHED_INTERACTION_REQUIRED_FIELDS,
   COMPOSITE_PANEL_PUBLISHED_INTERACTION_RW_TOLERANCE_DB,
@@ -1609,6 +1610,11 @@ const CANDIDATE_DECLARATIONS = [
         metric: "Ln,w",
         notMeasuredEvidence: true,
         toleranceDb: COMPOSITE_PANEL_PUBLISHED_INTERACTION_LN_W_TOLERANCE_DB
+      },
+      {
+        metric: "DeltaLw",
+        notMeasuredEvidence: true,
+        toleranceDb: COMPOSITE_PANEL_PUBLISHED_INTERACTION_DELTA_LW_TOLERANCE_DB
       }
     ],
     exactPrecedenceRules: [
@@ -1620,6 +1626,7 @@ const CANDIDATE_DECLARATIONS = [
       "dry_floating_upper_surface_mass",
       "resilient_layer_thickness_scaling",
       "suspended_ceiling_board_count_and_cavity_depth_when_present",
+      "same_family_bare_minus_treated_lnw_delta_lw_owner",
       "published_pmc_m1_family_interaction_blend"
     ],
     hardCompatibilityGates: [
@@ -1631,7 +1638,7 @@ const CANDIDATE_DECLARATIONS = [
     ],
     hostileInputCases: [
       "composite_panel_not_reinforced_concrete",
-      "delta_lw_requested_without_owned_delta_lw_basis_remains_unsupported",
+      "delta_lw_requested_without_same_family_bare_and_treated_lnw_anchors_remains_stopped",
       "astm_iic_aiic_stays_unsupported",
       "field_outputs_need_field_adapter"
     ],
@@ -1649,7 +1656,7 @@ const CANDIDATE_DECLARATIONS = [
       "dry_floating_and_suspended_ceiling_interactions_stay_in_the_composite_panel_family",
       "field_or_astm_requests_need_separate_field_or_astm_owner"
     ],
-    supportedMetrics: ["Rw", "Ln,w"],
+    supportedMetrics: ["Rw", "Ln,w", "DeltaLw"],
     surfaceRequirements: ELEMENT_LAB_SURFACES,
     valuePins: []
   },

@@ -50,6 +50,7 @@ import {
 import { estimateImpactFromLayers, estimateImpactFromPredictorInput } from "./impact-estimate";
 import { buildImpactPredictorStatus } from "./impact-predictor-status";
 import { shouldBlockHeavyConcreteCombinedImpactFormulaFallback } from "./heavy-concrete-combined-impact-formula-corridor";
+import { isPredictorHeavyConcreteCarrierEligible } from "./heavy-concrete-carrier-eligibility";
 import { deriveHeavyConcretePublishedUpperTreatmentEstimate } from "./heavy-concrete-published-upper-treatment-estimate";
 import {
   filterImpactCatalogMatchForExplicitPredictorInput,
@@ -214,11 +215,17 @@ function hasLoadBasisOrMassSchedule(predictorInput: ImpactPredictorInput): boole
 function shouldBlockHeavyConcreteFloatingFormulaFallback(
   predictorInput: ImpactPredictorInput | null | undefined
 ): boolean {
-  return Boolean(
+  const isHeavyFloatingConcreteCandidate = Boolean(
     predictorInput &&
       predictorInput.structuralSupportType === "reinforced_concrete" &&
-      predictorInput.impactSystemType === "heavy_floating_floor" &&
+      predictorInput.impactSystemType === "heavy_floating_floor"
+  );
+
+  return Boolean(
+    predictorInput &&
+      isHeavyFloatingConcreteCandidate &&
       (
+        !isPredictorHeavyConcreteCarrierEligible(predictorInput.baseSlab) ||
         !hasDynamicStiffnessOrProductOwner(predictorInput) ||
         !hasLoadBasisOrMassSchedule(predictorInput)
       )

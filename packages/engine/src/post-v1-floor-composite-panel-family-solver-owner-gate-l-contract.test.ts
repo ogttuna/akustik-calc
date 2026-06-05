@@ -7,6 +7,7 @@ import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
 import {
+  COMPOSITE_PANEL_PUBLISHED_INTERACTION_DELTA_LW_TOLERANCE_DB,
   COMPOSITE_PANEL_PUBLISHED_INTERACTION_ESTIMATE_BASIS,
   COMPOSITE_PANEL_PUBLISHED_INTERACTION_LN_W_TOLERANCE_DB,
   COMPOSITE_PANEL_PUBLISHED_INTERACTION_REQUIRED_FIELDS,
@@ -69,7 +70,7 @@ describe("post-V1 floor composite-panel family solver owner Gate L", () => {
     );
 
     expect(contract).toMatchObject({
-      blockedMetricsUntilSeparateOwner: ["DeltaLw", "IIC", "AIIC", "L'n,w", "L'nT,w"],
+      blockedMetricsUntilSeparateOwner: ["IIC", "AIIC", "L'n,w", "L'nT,w"],
       candidateId: COMPOSITE_PANEL_PUBLISHED_INTERACTION_SELECTED_CANDIDATE_ID,
       landedGate: POST_V1_FLOOR_COMPOSITE_PANEL_FAMILY_SOLVER_OWNER_GATE_L_LANDED_GATE,
       numericRuntimeValueMovement: false,
@@ -86,8 +87,9 @@ describe("post-V1 floor composite-panel family solver owner Gate L", () => {
       selectedNextLabel: POST_V1_FLOOR_COMPOSITE_PANEL_FAMILY_SOLVER_OWNER_GATE_L_SELECTED_NEXT_LABEL,
       selectionStatus: POST_V1_FLOOR_COMPOSITE_PANEL_FAMILY_SOLVER_OWNER_GATE_L_SELECTION_STATUS,
       sourceRowsAreAnchorsNotProduct: true,
-      supportedMetrics: ["Rw", "Ln,w"],
+      supportedMetrics: ["Rw", "Ln,w", "DeltaLw"],
       toleranceDb: {
+        DeltaLw: COMPOSITE_PANEL_PUBLISHED_INTERACTION_DELTA_LW_TOLERANCE_DB,
         "Ln,w": COMPOSITE_PANEL_PUBLISHED_INTERACTION_LN_W_TOLERANCE_DB,
         Rw: COMPOSITE_PANEL_PUBLISHED_INTERACTION_RW_TOLERANCE_DB
       }
@@ -101,10 +103,13 @@ describe("post-V1 floor composite-panel family solver owner Gate L", () => {
     ]);
     expect(contract.valuePins).toEqual([
       { profile: "dry_floating_floor", metric: "Ln,w", value: 69.4 },
+      { profile: "dry_floating_floor", metric: "DeltaLw", value: 14.6 },
       { profile: "dry_floating_floor", metric: "Rw", value: 45.1 },
       { profile: "suspended_ceiling_only", metric: "Ln,w", value: 63.3 },
+      { profile: "suspended_ceiling_only", metric: "DeltaLw", value: 20.7 },
       { profile: "suspended_ceiling_only", metric: "Rw", value: 48.6 },
       { profile: "combined_upper_lower_system", metric: "Ln,w", value: 48.5 },
+      { profile: "combined_upper_lower_system", metric: "DeltaLw", value: 35.5 },
       { profile: "combined_upper_lower_system", metric: "Rw", value: 60.6 }
     ]);
     expect(registry.summary).toMatchObject({
@@ -117,13 +122,14 @@ describe("post-V1 floor composite-panel family solver owner Gate L", () => {
       basis: "element_lab",
       errorBudgetTerms: [
         { metric: "Rw", notMeasuredEvidence: true, toleranceDb: COMPOSITE_PANEL_PUBLISHED_INTERACTION_RW_TOLERANCE_DB },
-        { metric: "Ln,w", notMeasuredEvidence: true, toleranceDb: COMPOSITE_PANEL_PUBLISHED_INTERACTION_LN_W_TOLERANCE_DB }
+        { metric: "Ln,w", notMeasuredEvidence: true, toleranceDb: COMPOSITE_PANEL_PUBLISHED_INTERACTION_LN_W_TOLERANCE_DB },
+        { metric: "DeltaLw", notMeasuredEvidence: true, toleranceDb: COMPOSITE_PANEL_PUBLISHED_INTERACTION_DELTA_LW_TOLERANCE_DB }
       ],
       kind: "source_absent_family_solver",
       ownedRuntimeBasisId: COMPOSITE_PANEL_PUBLISHED_INTERACTION_ESTIMATE_BASIS,
       route: "floor",
       runtimeSelectionState: "active_runtime_existing",
-      supportedMetrics: ["Rw", "Ln,w"]
+      supportedMetrics: ["Rw", "Ln,w", "DeltaLw"]
     });
   });
 
@@ -142,6 +148,7 @@ describe("post-V1 floor composite-panel family solver owner Gate L", () => {
     });
 
     expect(dry.impact).toMatchObject({
+      DeltaLw: 14.6,
       LnW: 69.4,
       basis: COMPOSITE_PANEL_PUBLISHED_INTERACTION_ESTIMATE_BASIS
     });
@@ -149,21 +156,23 @@ describe("post-V1 floor composite-panel family solver owner Gate L", () => {
       Rw: 45.1,
       basis: COMPOSITE_PANEL_PUBLISHED_INTERACTION_ESTIMATE_BASIS
     });
-    expect(dry.supportedTargetOutputs).toEqual(["Rw", "Ln,w"]);
-    expect(dry.unsupportedTargetOutputs).toEqual(["DeltaLw", "IIC", "AIIC"]);
+    expect(dry.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "DeltaLw"]);
+    expect(dry.unsupportedTargetOutputs).toEqual(["IIC", "AIIC"]);
     expect(dry.layerCombinationResolverTrace).toMatchObject({
       boundaryCandidateIds: ["generic.astm_iic_aiic.unsupported_boundary"],
       runtimeBasisId: COMPOSITE_PANEL_PUBLISHED_INTERACTION_ESTIMATE_BASIS,
       selectedCandidateId: COMPOSITE_PANEL_PUBLISHED_INTERACTION_SELECTED_CANDIDATE_ID,
       supportBucket: "source_absent_estimate",
-      supportedMetrics: ["Rw", "Ln,w"],
+      supportedMetrics: ["Rw", "Ln,w", "DeltaLw"],
       valuePins: [
         { metric: "Rw", value: 45.1 },
-        { metric: "Ln,w", value: 69.4 }
+        { metric: "Ln,w", value: 69.4 },
+        { metric: "DeltaLw", value: 14.6 }
       ]
     });
 
     expect(ceiling.impact).toMatchObject({
+      DeltaLw: 20.7,
       LnW: 63.3,
       basis: COMPOSITE_PANEL_PUBLISHED_INTERACTION_ESTIMATE_BASIS
     });
@@ -180,6 +189,7 @@ describe("post-V1 floor composite-panel family solver owner Gate L", () => {
     });
 
     expect(combined.impact).toMatchObject({
+      DeltaLw: 35.5,
       LnW: 48.5,
       basis: COMPOSITE_PANEL_PUBLISHED_INTERACTION_ESTIMATE_BASIS
     });
@@ -187,26 +197,27 @@ describe("post-V1 floor composite-panel family solver owner Gate L", () => {
       Rw: 60.6,
       basis: COMPOSITE_PANEL_PUBLISHED_INTERACTION_ESTIMATE_BASIS
     });
-    expect(combined.unsupportedTargetOutputs).toEqual(["DeltaLw"]);
+    expect(combined.unsupportedTargetOutputs).toEqual([]);
     expect(combined.layerCombinationResolverTrace).toMatchObject({
       selectedCandidateId: COMPOSITE_PANEL_PUBLISHED_INTERACTION_SELECTED_CANDIDATE_ID,
-      supportedMetrics: ["Rw", "Ln,w"],
+      supportedMetrics: ["Rw", "Ln,w", "DeltaLw"],
       valuePins: [
         { metric: "Rw", value: 60.6 },
-        { metric: "Ln,w", value: 48.5 }
+        { metric: "Ln,w", value: 48.5 },
+        { metric: "DeltaLw", value: 35.5 }
       ]
     });
   });
 
-  it("keeps composite DeltaLw, ASTM, and field aliases out until a separate owner exists", () => {
+  it("keeps composite ASTM and field aliases out while DeltaLw has its separate owner", () => {
     const result = calculateAssembly(COMPOSITE_TRACE_LAYERS, {
       impactPredictorInput: POST_V1_GATE_L_COMPOSITE_DRY_FLOATING_INPUT,
       targetOutputs: ["DeltaLw", "IIC", "AIIC", "L'n,w", "L'nT,w"]
     });
 
-    expect(result.supportedTargetOutputs).toEqual([]);
-    expect(result.unsupportedTargetOutputs).toEqual(["DeltaLw", "IIC", "AIIC", "L'n,w", "L'nT,w"]);
-    expect(result.impact?.DeltaLw).toBeUndefined();
+    expect(result.supportedTargetOutputs).toEqual(["DeltaLw"]);
+    expect(result.unsupportedTargetOutputs).toEqual(["IIC", "AIIC", "L'n,w", "L'nT,w"]);
+    expect(result.impact?.DeltaLw).toBe(14.6);
     expect(result.impact?.IIC).toBeUndefined();
     expect(result.impact?.AIIC).toBeUndefined();
     expect(result.impact?.LPrimeNW).toBeUndefined();
@@ -214,8 +225,8 @@ describe("post-V1 floor composite-panel family solver owner Gate L", () => {
     expect(result.layerCombinationResolverTrace).toMatchObject({
       boundaryCandidateIds: ["generic.astm_iic_aiic.unsupported_boundary"],
       selectedCandidateId: COMPOSITE_PANEL_PUBLISHED_INTERACTION_SELECTED_CANDIDATE_ID,
-      supportedMetrics: [],
-      valuePins: []
+      supportedMetrics: ["DeltaLw"],
+      valuePins: [{ metric: "DeltaLw", value: 14.6 }]
     });
   });
 
