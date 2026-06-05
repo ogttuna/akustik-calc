@@ -133,11 +133,11 @@ describe("company-internal calculation-grade mainline matrix v3 refresh", () => 
         "floor.reinforced_concrete_combined_exact_source_precedence.lab"
       ],
       failureClassCounts: {
-        basis_boundary: 4,
+        basis_boundary: 3,
         correct_block: 13,
         coverage_gap: 0,
         hostile_input_refusal: 4,
-        none: 36,
+        none: 37,
         unsupported_metric: 3
       },
       hiddenScreeningOriginRowIds: [],

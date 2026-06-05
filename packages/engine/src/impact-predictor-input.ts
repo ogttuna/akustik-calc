@@ -1495,7 +1495,7 @@ function impactCoverClassActsAsUpperTreatment(materialClass: string | undefined)
 }
 
 function resolveImpactSystemType(input: ImpactPredictorInput): ImpactPredictorInput["impactSystemType"] {
-  const hasLowerTreatment = Boolean(input.lowerTreatment?.type);
+  const hasLowerTreatment = Boolean(input.lowerTreatment?.type && input.lowerTreatment.type !== "none");
   const hasResilientUpperLayer = Boolean(
     input.resilientLayer?.productId ||
       typeof input.resilientLayer?.dynamicStiffnessMNm3 === "number" ||

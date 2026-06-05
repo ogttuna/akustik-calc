@@ -214,20 +214,20 @@ describe("layer combination resolver candidate coverage matrix refresh contract"
       sourceRowsAreEvidenceNotProduct: true
     });
     expect(contract.summary).toEqual({
-      activeRuntimeCandidateCount: 40,
+      activeRuntimeCandidateCount: 43,
       allCandidateDeclarationsCovered: true,
       boundaryCandidateCount: 3,
-      candidateDeclarationCount: 43,
-      coverageMatrixRowCount: 43,
+      candidateDeclarationCount: 46,
+      coverageMatrixRowCount: 46,
       readinessBucketCount: {
         needs_input: 1,
         ready: 4,
-        ready_with_budget: 36,
+        ready_with_budget: 39,
         research_only: 0,
         unsupported: 2
       },
       selectedNextAction: LAYER_COMBINATION_RESOLVER_CANDIDATE_COVERAGE_MATRIX_REFRESH_SELECTED_NEXT_ACTION,
-      surfaceRowCount: 43
+      surfaceRowCount: 46
     });
 
     for (const path of REQUIRED_SURFACES) {
@@ -299,6 +299,9 @@ describe("layer combination resolver candidate coverage matrix refresh contract"
           BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
           FLAT_LIST_MULTILEAF_GUARD_FIELD_SELECTED_CANDIDATE_ID,
           "floor.impact_field_context.field_building_adapter",
+          "candidate_company_internal_opening_leak_building_family_physics_prediction",
+          "candidate_company_internal_opening_leak_field_family_physics_prediction",
+          "candidate_company_internal_opening_leak_a_weighted_family_physics_prediction",
           "floor.raw_bare_floor_airborne.building_prediction_adapter",
           "floor.open_box_timber_finished_package.airborne_building_prediction_adapter",
           "wall.airborne_field_context.field_apparent_adapter",

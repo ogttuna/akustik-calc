@@ -121,16 +121,16 @@ describe("layer combination resolver company-internal V0 rehearsal contract", ()
     });
     expect(contract.summary).toEqual({
       allowedExactRowCount: 4,
-      allowedWithBudgetRowCount: 36,
+      allowedWithBudgetRowCount: 39,
       blockedActionCount: 4,
       blockedRowCount: 2,
-      coverageMatrixRowCount: 43,
-      companyInternalV0AllowedRowCount: 40,
+      coverageMatrixRowCount: 46,
+      companyInternalV0AllowedRowCount: 43,
       needsUserInputRowCount: 1,
       readinessBucketCount: {
         needs_input: 1,
         ready: 4,
-        ready_with_budget: 36,
+        ready_with_budget: 39,
         research_only: 0,
         unsupported: 2
       },
@@ -183,6 +183,9 @@ describe("layer combination resolver company-internal V0 rehearsal contract", ()
       ["floor.heavy_concrete_floating_floor.lab_impact_formula", "allowed_with_budget"],
       ["floor.heavy_concrete_floating.published_upper_treatment_anchor_owned", "allowed_with_budget"],
       ["floor.impact_field_context.field_building_adapter", "allowed_with_budget"],
+      ["candidate_company_internal_opening_leak_building_family_physics_prediction", "allowed_with_budget"],
+      ["candidate_company_internal_opening_leak_field_family_physics_prediction", "allowed_with_budget"],
+      ["candidate_company_internal_opening_leak_a_weighted_family_physics_prediction", "allowed_with_budget"],
       ["floor.raw_bare_floor_airborne.building_prediction_adapter", "allowed_with_budget"],
       ["floor.open_box_timber_finished_package.airborne_building_prediction_adapter", "allowed_with_budget"],
       ["wall.airborne_field_context.field_apparent_adapter", "allowed_with_budget"],

@@ -4,6 +4,7 @@ import type {
   DynamicAirborneConfidenceClass,
   DynamicAirborneDelegateMethod,
   DynamicAirborneFamily,
+  RequestedOutputId,
   ResolvedLayer,
   TransmissionLossCurve
 } from "@dynecho/shared";
@@ -30,6 +31,17 @@ const METHOD_LABEL_BY_DELEGATE: Record<DynamicAirborneDelegateMethod, string> = 
   sharp: "sharp_single_leaf_panel_coincidence_delegate",
   triple_leaf_two_cavity_frequency_solver: "triple_leaf_two_cavity_frequency_solver"
 };
+
+const WALL_BUILDING_OUTPUTS = new Set<RequestedOutputId>([
+  "R'w",
+  "Dn,w",
+  "Dn,A",
+  "DnT,w",
+  "DnT,A",
+  "DnT,A,k"
+]);
+
+const GATE_CJ_LIGHTWEIGHT_DOUBLE_LEAF_MAX_VISIBLE_LEAF_MASS_KG_M2 = 55;
 
 type CompleteGateARBuildingPredictionContext = AirborneContext & {
   buildingPredictionOutputBasis: "apparent" | "apparent_and_standardized" | "standardized";
@@ -58,6 +70,75 @@ function hasOpeningLeakAdapterFields(context: AirborneContext | null | undefined
     Boolean(context?.openingLeakFieldBuildingAdapterBoundary) ||
     isPositiveFinite(context?.hostWallAreaM2) ||
     (Array.isArray(context?.openingLeakElements) && context.openingLeakElements.length > 0)
+  );
+}
+
+function hasWallBuildingOutputRequest(targetOutputs: readonly RequestedOutputId[] | undefined): boolean {
+  return !targetOutputs?.length || targetOutputs.some((output) => WALL_BUILDING_OUTPUTS.has(output));
+}
+
+function hasCompleteFramedWallMetadata(context: AirborneContext | null | undefined): boolean {
+  return (
+    isPositiveFinite(context?.studSpacingMm) &&
+    typeof context?.studType === "string" &&
+    typeof context.connectionType === "string" &&
+    context.connectionType !== "none" &&
+    context.connectionType !== "direct_fix"
+  );
+}
+
+function hasCompleteDoubleLeafBuildingOwnerInputs(context: AirborneContext | null | undefined): boolean {
+  const supportTopology = context?.wallTopology?.supportTopology;
+  if (!isPositiveFinite(context?.studSpacingMm)) {
+    return false;
+  }
+
+  if (!supportTopology || supportTopology === "unknown" || supportTopology === "direct_fixed") {
+    return hasCompleteFramedWallMetadata(context);
+  }
+
+  return !(
+    supportTopology === "resilient_channel" &&
+    context?.resilientBarSideCount === undefined
+  );
+}
+
+function isLightweightFramedDoubleLeafCandidate(topology: AirborneTopologySummary): boolean {
+  const maxVisibleLeafMassKgM2 = Math.max(...topology.visibleLeafMassesKgM2, 0);
+
+  return (
+    topology.visibleLeafCount === 2 &&
+    topology.cavityCount === 1 &&
+    (topology.hasPorousFill || topology.totalGapThicknessMm > 0) &&
+    maxVisibleLeafMassKgM2 < GATE_CJ_LIGHTWEIGHT_DOUBLE_LEAF_MAX_VISIBLE_LEAF_MASS_KG_M2
+  );
+}
+
+function isGateCJDoubleLeafBuildingOwnerBoundary(input: {
+  context: AirborneContext | null | undefined;
+  options: DynamicAirborneOptions;
+  topology: AirborneTopologySummary;
+}): boolean {
+  if (!hasWallBuildingOutputRequest(input.options.targetOutputs)) {
+    return false;
+  }
+
+  const topologyMode = input.context?.wallTopology?.topologyMode;
+  if (
+    topologyMode &&
+    topologyMode !== "auto" &&
+    topologyMode !== "double_leaf_framed" &&
+    topologyMode !== "flat_layer_order"
+  ) {
+    return false;
+  }
+
+  return (
+    isLightweightFramedDoubleLeafCandidate(input.topology) &&
+    (
+      topologyMode === "flat_layer_order" ||
+      !hasCompleteDoubleLeafBuildingOwnerInputs(input.context)
+    )
   );
 }
 
@@ -105,7 +186,14 @@ export function maybeBuildGateARAirborneBuildingPredictionRuntimeBasis(input: {
   topology: AirborneTopologySummary;
 }): AirborneResultBasis | null {
   const context = input.options.airborneContext;
-  if (!hasCompleteGateARBuildingPredictionContext(context)) {
+  if (
+    !hasCompleteGateARBuildingPredictionContext(context) ||
+    isGateCJDoubleLeafBuildingOwnerBoundary({
+      context,
+      options: input.options,
+      topology: input.topology
+    })
+  ) {
     return null;
   }
 

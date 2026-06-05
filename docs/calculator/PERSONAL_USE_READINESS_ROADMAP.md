@@ -2,7 +2,7 @@
 
 Date: 2026-04-27
 
-Current review note: 2026-06-02
+Current review note: 2026-06-05
 
 Current-state override: this is a historical readiness roadmap, not the
 current next-slice selector. Usable V1 Steps 0-5 are closed for the
@@ -10,9 +10,10 @@ current company-internal envelope. Current post-V1 calculator work is
 selected by [CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md)
 and
 [POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md):
-Gate CD is the latest landed value-moving runtime slice and Gate CE is
-the selected next numeric coverage rerank label. Older readiness claims
-and selected-next statements below are historical.
+Gate CH is the latest landed value-moving runtime slice and
+`post_v1_next_numeric_coverage_gap_gate_ci_plan` is the selected next
+numeric coverage-gap label. Older readiness claims and selected-next
+statements below are historical.
 
 2026-05-21 historical product correction:
 [ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md](./ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md)

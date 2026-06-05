@@ -1,6 +1,6 @@
 # Calculation Model And Validation
 
-Last reviewed: 2026-06-02
+Last reviewed: 2026-06-05
 
 Document role:
 
@@ -16,13 +16,17 @@ Read [CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md)
 first for product goal and next-slice selection. This file explains how
 to validate a selected calculator answer once the slice is chosen.
 
-Latest checkpoint:
+Current authority:
 
-`docs/calculator/CHECKPOINT_2026-06-02_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_CD.md`
+- `docs/calculator/CALCULATOR_SOURCE_OF_TRUTH.md`
+- `docs/calculator/USABLE_V1_EXECUTION_PLAN.md`
+- `docs/calculator/POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md`
+- `docs/calculator/CURRENT_STATE.md`
+- `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
 
-Latest landed implementation checkpoint:
-
-`docs/calculator/CHECKPOINT_2026-06-02_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_CD.md`
+The 2026-06-02 Gate-CD reconciliation checkpoint remains useful history,
+but it is not the current selected-next state. The living documents have
+advanced through Gate CH and now select Gate CI.
 
 Current validation posture:
 
@@ -39,26 +43,26 @@ the user answer when the selected path is `needs_input` or
 
 The current gate keeps the answer-engine contract included in
 `pnpm calculator:gate:current`. The shared resolver surface currently
-has 42 declared candidates and 39 active runtime-basis mappings.
+has 43 declared candidates and 40 active runtime-basis mappings.
 
 The selected post-V1 plan is
 [POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md).
-Gate CD is the latest landed runtime scope/correctness slice:
-`post_v1_floor_open_box_target_output_independence_gate_cd_plan`.
-Complete finished open-box dry package-transfer and EPS/screed hybrid
-building/impact requests now support already-owned single-output asks
-without requiring the user to also request `R'w` or another building
-output. Dry single-output pins include `Rw 66`, `C -3.9`,
-`Ln,w 50.8`, `L'n,w 52.8`, `L'nT,w 50.4`, and `L'nT,50 53.7`;
-EPS/screed pins include `Rw 72`, `C -1.3`, `Ln,w 47`,
-`L'n,w 49`, `L'nT,w 46.6`, and `L'nT,50 47.6`.
-Gate CD selected the next action label
-`post_v1_next_numeric_coverage_gap_gate_ce_plan`. Gate CE is selected
-but not scaffolded yet; after Gate CD closeout there is no
-`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ce-contract.test.ts`
-file until the next implementation starts it.
+Gate CH is the latest landed runtime scope/correctness slice:
+`post_v1_next_numeric_coverage_gap_gate_ch_plan`.
+Complete visible heavy-floating reinforced-concrete upper-treatment
+stacks with explicit direct/flanking impact context and explicit
+`impactFieldContext.ci50_2500Db` keep the published upper-treatment
+`Ln,w 50` anchor and calculate `L'n,w 57.5`, `L'nT,w 55.1`, and
+`L'nT,50 59.1` through the
+`source_absent_field_building_adapter_error_budget` field adapter.
+Missing `impactFieldContext.ci50_2500Db` still stops only `L'nT,50` as
+`needs_input`; ASTM `IIC` / `AIIC` remain unsupported unless an ASTM
+E492/E1007 owner exists. Gate CH selected the next action label:
+`post_v1_next_numeric_coverage_gap_gate_ci_plan`. The selected Gate CI
+contract file is not present yet, so Gate CI is the next implementation
+to scaffold.
 
-Gate CE and every later gate must be selected by calculator ROI:
+Gate CI and every later gate must be selected by calculator ROI:
 increase calculable layer-combination scope, improve numeric
 correctness/calibration, or tighten a boundary that protects correct
 calculation. Validation for the next gate must prove any new answer

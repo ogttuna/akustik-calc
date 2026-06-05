@@ -234,7 +234,7 @@ export function inferSafeFlatWallMulticavityAutoTopology(input: {
     contextMode === "building_prediction" && hasWallFieldRequest(input.targetOutputs);
   if (
     (!isElementLabRequest && !isFieldContextRequest && !isBuildingPredictionRequest) ||
-    !contextAllowsAutoTopology(input.context, ["grouped_triple_leaf"])
+    !contextAllowsAutoTopology(input.context, ["grouped_triple_leaf", "flat_layer_order"])
   ) {
     return null;
   }
@@ -270,6 +270,8 @@ export function inferSafeFlatWallMulticavityAutoTopology(input: {
   const cavity1HasPorousFill = segmentHasPorousFill(cavity1, input.layers, input.catalog);
   const cavity2HasPorousFill = segmentHasPorousFill(cavity2, input.layers, input.catalog);
   const explicitSupportTopology = inferExplicitWallSupportTopology(input.context);
+  const isExplicitFlatLayerOrder =
+    input.context?.wallTopology?.topologyMode === "flat_layer_order";
   const hasExplicitAirGapTopology =
     cavity1HasAir && cavity2HasAir && cavity1HasPorousFill && cavity2HasPorousFill;
   const hasExplicitSupportBackedPorousTopology = Boolean(
@@ -281,6 +283,7 @@ export function inferSafeFlatWallMulticavityAutoTopology(input: {
     cavity1DepthMm > 220 ||
     cavity2DepthMm < 25 ||
     cavity2DepthMm > 220 ||
+    (isExplicitFlatLayerOrder && !explicitSupportTopology) ||
     (!hasExplicitAirGapTopology && !hasExplicitSupportBackedPorousTopology) ||
     (isFieldContextRequest && !hasExplicitSupportBackedPorousTopology)
   ) {
@@ -316,9 +319,11 @@ export function inferSafeFlatWallDoubleLeafAutoTopology(input: {
   const isFieldContextRequest =
     contextMode === "field_between_rooms" &&
     (hasWallFieldRequest(input.targetOutputs) || hasWallLabRequest(input.targetOutputs));
+  const isBuildingPredictionRequest =
+    contextMode === "building_prediction" && hasWallFieldRequest(input.targetOutputs);
   if (
-    (!isElementLabRequest && !isFieldContextRequest) ||
-    !contextAllowsAutoTopology(input.context, ["double_leaf_framed"])
+    (!isElementLabRequest && !isFieldContextRequest && !isBuildingPredictionRequest) ||
+    !contextAllowsAutoTopology(input.context, ["double_leaf_framed", "flat_layer_order"])
   ) {
     return null;
   }

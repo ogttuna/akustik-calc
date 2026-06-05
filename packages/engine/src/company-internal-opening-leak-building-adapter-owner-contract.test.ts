@@ -24,7 +24,10 @@ import {
   COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V4_SELECTED_NEXT_LABEL,
   COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V4_SELECTION_STATUS
 } from "./company-internal-calculation-grade-mainline-matrix";
-import { GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD } from "./dynamic-airborne-gate-i-airborne-field-context";
+import {
+  COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD,
+  COMPANY_INTERNAL_OPENING_LEAK_FIELD_RUNTIME_METHOD
+} from "./company-internal-opening-leak-building-runtime-corridor";
 import { GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD } from "./dynamic-airborne-gate-s-opening-leak-composite-transmission-loss-runtime-corridor";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
@@ -173,7 +176,7 @@ describe("company-internal opening/leak field/building adapter owner contract", 
     });
   });
 
-  it("keeps current runtime blocked for field/building opening requests while preserving lab Rw/STC", () => {
+  it("keeps lab Rw/STC separate while the landed field/building runtimes calculate owned outputs", () => {
     const contract = buildCompanyInternalOpeningLeakBuildingAdapterOwnerContract();
 
     expect(contract.currentRuntimeProbes.labOpeningProbe).toMatchObject({
@@ -188,25 +191,25 @@ describe("company-internal opening/leak field/building adapter owner contract", 
     });
 
     expect(contract.currentRuntimeProbes.fieldOpeningProbe).toMatchObject({
-      basisId: GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD,
-      computedDnTwDb: 59,
-      computedRwPrimeDb: 58,
-      openingAliasWarningPresent: true,
+      basisId: COMPANY_INTERNAL_OPENING_LEAK_FIELD_RUNTIME_METHOD,
+      computedDnTwDb: 36.9,
+      computedRwPrimeDb: 36.4,
+      openingAliasWarningPresent: false,
       origin: "family_physics_prediction",
       requestedMetrics: ["R'w", "DnT,w"],
-      supportedTargetOutputs: [],
-      unsupportedTargetOutputs: ["R'w", "DnT,w"]
+      supportedTargetOutputs: ["R'w", "DnT,w"],
+      unsupportedTargetOutputs: []
     });
 
     expect(contract.currentRuntimeProbes.buildingOpeningProbe).toMatchObject({
-      basisId: "dynamic_calculator_building_prediction_runtime_adapter_owner_missing",
-      computedDnTwDb: null,
-      computedRwPrimeDb: null,
-      openingAliasWarningPresent: true,
-      origin: "unsupported",
+      basisId: COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD,
+      computedDnTwDb: 32.1,
+      computedRwPrimeDb: 31.6,
+      openingAliasWarningPresent: false,
+      origin: "family_physics_prediction",
       requestedMetrics: ["R'w", "DnT,w"],
-      supportedTargetOutputs: [],
-      unsupportedTargetOutputs: ["R'w", "DnT,w"]
+      supportedTargetOutputs: ["R'w", "DnT,w"],
+      unsupportedTargetOutputs: []
     });
   });
 

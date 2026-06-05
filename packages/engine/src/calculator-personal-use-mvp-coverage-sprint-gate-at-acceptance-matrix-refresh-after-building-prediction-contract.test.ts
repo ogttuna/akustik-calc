@@ -155,11 +155,11 @@ describe("Personal-Use MVP Coverage Sprint Gate AT acceptance matrix refresh aft
       sourceRowsRequiredForRuntimeSelection: false
     });
     expect(summary.failureClassCounts).toEqual({
-      basis_boundary: 1,
+      basis_boundary: 0,
       correct_block: 10,
       coverage_gap: 0,
       hostile_input_refusal: 3,
-      none: 26,
+      none: 27,
       unsupported_metric: 1
     });
   });
@@ -220,7 +220,6 @@ describe("Personal-Use MVP Coverage Sprint Gate AT acceptance matrix refresh aft
       "wall.building_prediction_partial_context.needs_input"
     ]);
     expect(summary.aliasNegativeRowIds).toEqual([
-      "wall.opening_leak_composite_building_boundary.unsupported",
       "floor.astm_iic_aiic_boundary.unsupported"
     ]);
     expect(summary.hostileLayerEditRowIds).toEqual([
@@ -257,13 +256,16 @@ describe("Personal-Use MVP Coverage Sprint Gate AT acceptance matrix refresh aft
       }
     });
     expect(openingBuilding).toMatchObject({
-      currentPosture: "unsupported",
-      failureClass: "basis_boundary",
+      currentPosture: "family_physics",
+      failureClass: "none",
       runtime: {
-        errorBudgetDb: null,
-        supportedTargetOutputs: [],
-        unsupportedTargetOutputs: ["Rw", "STC", "R'w", "DnT,w"],
-        valuePins: []
+        errorBudgetDb: 10,
+        supportedTargetOutputs: ["R'w", "DnT,w"],
+        unsupportedTargetOutputs: ["Rw", "STC"],
+        valuePins: [
+          { metric: "R'w", value: 31.6 },
+          { metric: "DnT,w", value: 32.1 }
+        ]
       }
     });
     expect(astmBoundary).toMatchObject({

@@ -147,7 +147,8 @@ import {
 import { computeLayerSurfaceMassKgM2 } from "./layer-surface-mass";
 import { getDefaultMaterialCatalog, resolveMaterial } from "./material-catalog";
 import {
-  buildHeavyConcreteCombinedImpactFormulaFallbackBlockerWarning
+  buildHeavyConcreteCombinedImpactFormulaFallbackBlockerWarning,
+  collectHeavyConcreteCombinedImpactFormulaMissingPhysicalInputs
 } from "./heavy-concrete-combined-impact-formula-corridor";
 import { MIXED_SUPPORT_FLOOR_IMPACT_FORMULA_BASIS } from "./mixed-support-floor-impact-runtime-corridor";
 import {
@@ -194,6 +195,9 @@ import {
 import {
   BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD
 } from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-field-context-harmonization";
+import {
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_BUILDING_RUNTIME_METHOD
+} from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-building-adapter";
 import {
   BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_WARNING,
   maybeBuildBroadAccuracyWallTripleLeafLocalSubstitutionLabSpectrumAdapter
@@ -265,6 +269,7 @@ const ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_NUMERIC_ORIGINS = new Set([
   "screening_fallback"
 ]);
 const ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_EXACT_FLOOR_BASES = new Set([
+  "mixed_exact_plus_estimated_local_guide",
   "official_floor_system_exact_match",
   "open_measured_floor_system_exact_match"
 ]);
@@ -373,7 +378,10 @@ function hasPostV1GateCg2PublishedUpperTreatmentPartialImpactCandidate(input: {
 }): boolean {
   return Boolean(
     input.floorSystemEstimate?.impact.basis === POST_V1_GATE_CG2_PUBLISHED_UPPER_TREATMENT_LNW_METRIC_BASIS &&
-      isPostV1GateCg2VisibleHeavyFloatingUpperTreatmentStack(input.layers) &&
+      (
+        isPostV1GateCg2VisibleHeavyFloatingUpperTreatmentStack(input.layers) ||
+        isPostV1GateCqVisibleHeavyFloatingLowerTreatmentStack(input.layers)
+      ) &&
       input.targetOutputs.some((output) => POST_V1_GATE_CG_BARE_HEAVY_FLOOR_PARTIAL_OUTPUTS.has(output))
   );
 }
@@ -2249,8 +2257,31 @@ function isPostV1GateCg2VisibleHeavyFloatingUpperTreatmentStack(layers: readonly
   return hasHeavyConcreteBase && hasFloorCovering && hasFloatingOrUpperTreatment && hasResilientLayer && !hasLowerTreatment;
 }
 
+function isPostV1GateCqVisibleHeavyFloatingLowerTreatmentStack(layers: readonly ResolvedLayer[]): boolean {
+  const hasHeavyConcreteBase = layers.some((layer) =>
+    layer.floorRole === "base_structure" &&
+      (
+        inferStructuralSupportTypeFromMaterial(layer.material) === "reinforced_concrete" ||
+        layer.material.tags.includes("heavy-base")
+      )
+  );
+  const hasFloorCovering = layers.some((layer) => layer.floorRole === "floor_covering");
+  const hasFloatingOrUpperTreatment = layers.some((layer) =>
+    layer.floorRole === "floating_screed" || layer.floorRole === "upper_fill"
+  );
+  const hasResilientLayer = layers.some((layer) => layer.floorRole === "resilient_layer");
+  const hasLowerTreatment = layers.some((layer) =>
+    layer.floorRole === "ceiling_board" ||
+      layer.floorRole === "ceiling_cavity" ||
+      layer.floorRole === "ceiling_fill"
+  );
+
+  return hasHeavyConcreteBase && hasFloorCovering && hasFloatingOrUpperTreatment && hasResilientLayer && hasLowerTreatment;
+}
+
 function getPostV1GateCgPartialImpactLane(result: AssemblyCalculation):
   | "bare_heavy_floor_covering_only"
+  | "published_upper_treatment_lower_treatment"
   | "published_upper_treatment"
   | null {
   const impact = result.impact;
@@ -2281,6 +2312,13 @@ function getPostV1GateCgPartialImpactLane(result: AssemblyCalculation):
       return "published_upper_treatment";
     }
 
+    if (
+      hasLivePublishedUpperTreatmentImpact &&
+      isPostV1GateCqVisibleHeavyFloatingLowerTreatmentStack(result.layers)
+    ) {
+      return "published_upper_treatment_lower_treatment";
+    }
+
     return null;
   }
 
@@ -2293,6 +2331,7 @@ function applyPostV1GateCgBareHeavyFloorCoveringPartialNeedsInputBoundary(input:
   gateWFloorImpactContract: GateVFloorImpactDynamicStiffnessContract | null;
   gateZFloorImpactFieldAssessment: GateYFloorImpactFieldContextAssessment | null;
   impactFieldContext: ImpactFieldContext | null;
+  predictorInput: ImpactPredictorInput | null;
   result: AssemblyCalculation;
 }): void {
   if (input.result.acousticAnswerBoundary) {
@@ -2317,8 +2356,16 @@ function applyPostV1GateCgBareHeavyFloorCoveringPartialNeedsInputBoundary(input:
     contract: input.gateWFloorImpactContract,
     result: input.result
   });
+  const combinedDeltaLwMissingInputs = collectHeavyConcreteCombinedImpactFormulaMissingPhysicalInputs(
+    input.predictorInput
+  ).filter((field) =>
+    field === "resilientLayerDynamicStiffnessMNm3" || field === "loadBasisKgM2"
+  );
   const deltaLwMissingInputs =
-    partialLane === "published_upper_treatment"
+    partialLane === "published_upper_treatment_lower_treatment" &&
+    combinedDeltaLwMissingInputs.length > 0
+      ? combinedDeltaLwMissingInputs
+      : partialLane === "published_upper_treatment"
       ? labBoundary?.missingPhysicalInputs ?? ["resilientLayerDynamicStiffnessMNm3", "loadBasisKgM2"]
       : [...POST_V1_GATE_CG_FLOOR_COVERING_DELTA_LW_MISSING_INPUTS];
   const missingPhysicalInputs = uniqueAnswerEngineV1Strings([
@@ -2344,7 +2391,17 @@ function applyPostV1GateCgBareHeavyFloorCoveringPartialNeedsInputBoundary(input:
   input.result.acousticAnswerBoundary = boundary;
   parkResultTargetOutputs(input.result, boundary.unsupportedOutputs);
   input.result.warnings.push(
-    `Post-V1 Gate ${partialLane === "published_upper_treatment" ? "CG2" : "CG"} kept the ${partialLane === "published_upper_treatment" ? "published upper-treatment" : "bare heavy-floor"} Ln,w answer live for the visible floor stack, but selected needs_input for ${boundary.unsupportedOutputs.join(", ")}; provide ${boundary.missingPhysicalInputs.join(", ")} before DynEcho publishes the stopped impact companions.`
+    `Post-V1 Gate ${
+      partialLane === "published_upper_treatment_lower_treatment"
+        ? "CQ"
+        : partialLane === "published_upper_treatment"
+          ? "CG2"
+          : "CG"
+    } kept the ${
+      partialLane === "bare_heavy_floor_covering_only"
+        ? "bare heavy-floor"
+        : "published upper-treatment"
+    } Ln,w answer live for the visible floor stack, but selected needs_input for ${boundary.unsupportedOutputs.join(", ")}; provide ${boundary.missingPhysicalInputs.join(", ")} before DynEcho publishes the stopped impact companions.`
   );
 }
 
@@ -2447,6 +2504,80 @@ function buildGateWImpactPredictorSeed(input: {
         }
       : {})
   };
+}
+
+const VISIBLE_DELTA_LW_UPPER_PACKAGE_ROLES = new Set<LayerInput["floorRole"]>([
+  "floor_covering",
+  "floating_screed",
+  "resilient_layer",
+  "upper_fill"
+]);
+
+function resolveVisibleFloorBaseStructuralSupportType(input: {
+  catalog: readonly MaterialDefinition[];
+  layers: readonly LayerInput[];
+}): ImpactPredictorInput["structuralSupportType"] | undefined {
+  const baseStructureLayer = input.layers.find((layer) => layer.floorRole === "base_structure");
+  if (!baseStructureLayer) {
+    return undefined;
+  }
+
+  const baseMaterial = resolveMaterial(baseStructureLayer.materialId, input.catalog);
+  return inferStructuralSupportTypeFromMaterial(baseMaterial);
+}
+
+function hasVisibleTimberCltUpperPackageDeltaLwCandidate(input: {
+  catalog: readonly MaterialDefinition[];
+  layers: readonly LayerInput[];
+}): boolean {
+  const structuralSupportType = resolveVisibleFloorBaseStructuralSupportType(input);
+  if (structuralSupportType !== "timber_joists" && structuralSupportType !== "mass_timber_clt") {
+    return false;
+  }
+
+  return input.layers.some((layer) => VISIBLE_DELTA_LW_UPPER_PACKAGE_ROLES.has(layer.floorRole));
+}
+
+function buildVisibleTimberCltDeltaLwPredictorSeed(input: {
+  catalog: readonly MaterialDefinition[];
+  floorImpactContext?: DynamicCalculatorFloorImpactContext | null;
+  layers: readonly LayerInput[];
+}): ImpactPredictorInput {
+  const seed = buildGateWImpactPredictorSeed(input);
+  const structuralSupportType = resolveVisibleFloorBaseStructuralSupportType(input);
+  const visibleResilientChannelCeiling = input.layers.some(
+    (layer) => layer.floorRole === "ceiling_cavity" && layer.materialId === "resilient_channel"
+  );
+
+  return ImpactPredictorInputSchema.parse({
+    ...seed,
+    lowerTreatment:
+      structuralSupportType === "mass_timber_clt"
+        ? {
+            ...seed.lowerTreatment,
+            type: "none"
+          }
+        : structuralSupportType === "timber_joists" && visibleResilientChannelCeiling
+          ? {
+              ...seed.lowerTreatment,
+              supportClass: "furred_channels"
+            }
+        : seed.lowerTreatment
+  });
+}
+
+function mergeImpactPredictorSeeds(
+  primarySeed: ImpactPredictorInput,
+  secondarySeed: ImpactPredictorInput
+): ImpactPredictorInput {
+  return ImpactPredictorInputSchema.parse({
+    ...primarySeed,
+    ...secondarySeed,
+    resilientLayer: {
+      ...primarySeed.resilientLayer,
+      ...secondarySeed.resilientLayer
+    }
+  });
 }
 
 function resolveLayers(
@@ -3290,6 +3421,25 @@ export function calculateAssembly(
         layers
       })
     : {};
+  const visibleTimberCltDeltaLwLayerStackReady =
+    !explicitPredictorInput &&
+    targetOutputs.includes("DeltaLw") &&
+    hasVisibleTimberCltUpperPackageDeltaLwCandidate({
+      catalog: baseCatalog,
+      layers
+    });
+  const visibleLayerDeltaLwPredictorSeed =
+    visibleTimberCltDeltaLwLayerStackReady
+      ? buildVisibleTimberCltDeltaLwPredictorSeed({
+          catalog: baseCatalog,
+          floorImpactContext,
+          layers
+        })
+      : {};
+  const layerDerivedImpactPredictorSeed = mergeImpactPredictorSeeds(
+    gateWImpactPredictorSeed,
+    visibleLayerDeltaLwPredictorSeed
+  );
   const resolvedLayers = resolveLayers(layers, catalog);
   const hasFullyTaggedFloorStack = layers.length > 0 && layers.every((layer) => Boolean(layer.floorRole));
   const normalizedExplicitImpactLayers = hasFullyTaggedFloorStack
@@ -3461,16 +3611,39 @@ export function calculateAssembly(
     }) && !targetOutputs.includes("Ln,w")
       ? [...targetOutputs, "Ln,w" as const]
       : options.targetOutputs;
+  const visibleLayerDeltaLwPredictorInput =
+    visibleTimberCltDeltaLwLayerStackReady
+      ? maybeBuildImpactPredictorInputFromLayerStack(
+          layers,
+          layerDerivedImpactPredictorSeed,
+          undefined,
+          catalog
+        )
+      : null;
+  const directImpactLanePredictorInput = predictorInput ?? visibleLayerDeltaLwPredictorInput;
   const directImpactLane = resolveLayerBasedImpactLane({
     catalog,
     exactImpact,
     explicitFloorRoleStack: hasFullyTaggedFloorStack,
     explicitPredictorInput,
-    predictorInput,
+    predictorInput: directImpactLanePredictorInput,
     officialFloorSystemId: predictorAdaptation?.officialFloorSystemId ?? null,
     resolvedLayers: impactResolvedLayers,
     targetOutputs: impactLaneTargetOutputs
   });
+  const visibleLayerDeltaLwMissingPhysicalInputs =
+    collectTimberCltDeltaLwFormulaMissingPhysicalInputs(visibleLayerDeltaLwPredictorInput);
+  if (
+    !predictorInput &&
+    visibleLayerDeltaLwPredictorInput &&
+    (
+      directImpactLane.predictorDeltaLwCompanion ||
+      visibleLayerDeltaLwMissingPhysicalInputs.length > 0
+    )
+  ) {
+    predictorInput = visibleLayerDeltaLwPredictorInput;
+    predictorInputMode = "derived_from_visible_layers";
+  }
   const directNarrowImpact = directImpactLane.narrowImpact;
   let floorSystemMatch = directImpactLane.floorSystemMatch;
   let boundFloorSystemMatch = directImpactLane.boundFloorSystemMatch;
@@ -3524,7 +3697,7 @@ export function calculateAssembly(
   ) {
     const derivedPredictorInput = maybeBuildImpactPredictorInputFromLayerStack(
       layers,
-      gateWImpactPredictorSeed,
+      layerDerivedImpactPredictorSeed,
       undefined,
       catalog
     );
@@ -3555,6 +3728,7 @@ export function calculateAssembly(
               derivedImpactLane.floorSystemMatch ||
               derivedImpactLane.boundFloorSystemMatch ||
               derivedImpactLane.impactCatalogMatch ||
+              derivedImpactLane.predictorDeltaLwCompanion ||
               derivedImpactLane.predictorSpecificFloorSystemEstimate ||
               (
                 (
@@ -3573,6 +3747,12 @@ export function calculateAssembly(
                 derivedImpactLane.floorSystemEstimate ||
                 derivedImpactLane.boundFloorSystemEstimate
             ))
+          ||
+          (
+            visibleTimberCltDeltaLwLayerStackReady &&
+            targetOutputs.includes("DeltaLw") &&
+            collectTimberCltDeltaLwFormulaMissingPhysicalInputs(derivedPredictorInput).length > 0
+          )
         );
 
       if (shouldUseDerived) {
@@ -3843,8 +4023,11 @@ export function calculateAssembly(
           ]
         }
       : dynamicAirborneResult?.trace;
+  const localSubstitutionBuildingRuntimeActive =
+    dynamicAirborneResult?.airborneBasis?.method ===
+    BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_BUILDING_RUNTIME_METHOD;
   const localSubstitutionRuntimeBlockedOutputs =
-    options.calculator === "dynamic"
+    options.calculator === "dynamic" && !localSubstitutionBuildingRuntimeActive
       ? getBroadAccuracyWallTripleLeafLocalSubstitutionRuntimeBlockedOutputs({
           airborneContext,
           catalog,
@@ -3958,7 +4141,9 @@ export function calculateAssembly(
                 dynamicAirborneResult.airborneBasis,
               detectedFamily: dynamicAirborneResult.trace.detectedFamily,
               runtimeValueMovement:
-                dynamicAirborneResult.airborneBasis?.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD
+                dynamicAirborneResult.airborneBasis?.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD ||
+                dynamicAirborneResult.airborneBasis?.method ===
+                  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_BUILDING_RUNTIME_METHOD
                   ? true
                   : dynamicAirborneResult.airborneCandidateResolution?.runtimeValueMovement,
               selectedMethod: dynamicAirborneResult.trace.selectedMethod,
@@ -4123,65 +4308,73 @@ export function calculateAssembly(
     exactMeasuredFloorMetricUnsupportedOutputs
   );
   const postV1WallFramedCalibrationLabSpectrumCompanionOutputs =
-    getPostV1WallFramedCalibrationLabSpectrumCompanionOutputs({
-      airborneContext,
-      airborneTrace: dynamicAirborneResult?.trace,
-      estimatedCDb: visibleEstimatedCDbWithFloorPackageLabCompanion,
-      estimatedCtrDb: visibleEstimatedCtrDbWithFloorPackageLabCompanion,
-      estimatedRwDb: visibleEstimatedRwDbWithFloorPackageLabCompanion,
-      estimatedStcDb: visibleEstimatedStcDb,
-      support: visibleTargetOutputSupportWithExactMetricScope
-    });
+    hasVisibleFloorCarrier
+      ? []
+      : getPostV1WallFramedCalibrationLabSpectrumCompanionOutputs({
+          airborneContext,
+          airborneTrace: dynamicAirborneResult?.trace,
+          estimatedCDb: visibleEstimatedCDbWithFloorPackageLabCompanion,
+          estimatedCtrDb: visibleEstimatedCtrDbWithFloorPackageLabCompanion,
+          estimatedRwDb: visibleEstimatedRwDbWithFloorPackageLabCompanion,
+          estimatedStcDb: visibleEstimatedStcDb,
+          support: visibleTargetOutputSupportWithExactMetricScope
+        });
   const postV1WallSourceAbsentBuildingLabSpectrumCompanionOutputs =
-    getPostV1WallSourceAbsentBuildingLabSpectrumCompanionOutputs({
-      airborneContext,
-      airborneTrace: dynamicAirborneResult?.trace,
-      catalogLabFallbackApplied: verifiedAirborneAnchorResult.warnings.some((warning) =>
-        /Curated airborne lab fallback/i.test(warning)
-      ),
-      estimatedCDb: visibleEstimatedCDbWithFloorPackageLabCompanion,
-      estimatedCtrDb: visibleEstimatedCtrDbWithFloorPackageLabCompanion,
-      estimatedRwDb: visibleEstimatedRwDbWithFloorPackageLabCompanion,
-      estimatedStcDb: visibleEstimatedStcDb,
-      sourceAnchorCandidatePresent: Boolean(
-        compatibleWallAnchorDeltaResult.match || verifiedAirborneAnchorResult.match
-      ),
-      support: visibleTargetOutputSupportWithExactMetricScope
-    });
+    hasVisibleFloorCarrier
+      ? []
+      : getPostV1WallSourceAbsentBuildingLabSpectrumCompanionOutputs({
+          airborneContext,
+          airborneTrace: dynamicAirborneResult?.trace,
+          catalogLabFallbackApplied: verifiedAirborneAnchorResult.warnings.some((warning) =>
+            /Curated airborne lab fallback/i.test(warning)
+          ),
+          estimatedCDb: visibleEstimatedCDbWithFloorPackageLabCompanion,
+          estimatedCtrDb: visibleEstimatedCtrDbWithFloorPackageLabCompanion,
+          estimatedRwDb: visibleEstimatedRwDbWithFloorPackageLabCompanion,
+          estimatedStcDb: visibleEstimatedStcDb,
+          sourceAnchorCandidatePresent: Boolean(
+            compatibleWallAnchorDeltaResult.match || verifiedAirborneAnchorResult.match
+          ),
+          support: visibleTargetOutputSupportWithExactMetricScope
+        });
   const postV1WallHeavyCompositeBuildingLabSpectrumCompanionOutputs =
-    getPostV1WallHeavyCompositeBuildingLabSpectrumCompanionOutputs({
-      airborneContext,
-      airborneTrace: dynamicAirborneResult?.trace,
-      catalogLabFallbackApplied: verifiedAirborneAnchorResult.warnings.some((warning) =>
-        /Curated airborne lab fallback/i.test(warning)
-      ),
-      estimatedCDb: visibleEstimatedCDbWithFloorPackageLabCompanion,
-      estimatedCtrDb: visibleEstimatedCtrDbWithFloorPackageLabCompanion,
-      estimatedRwDb: visibleEstimatedRwDbWithFloorPackageLabCompanion,
-      estimatedStcDb: visibleEstimatedStcDb,
-      sourceAnchorCandidatePresent: Boolean(
-        compatibleWallAnchorDeltaResult.match || verifiedAirborneAnchorResult.match
-      ),
-      support: visibleTargetOutputSupportWithExactMetricScope
-    });
+    hasVisibleFloorCarrier
+      ? []
+      : getPostV1WallHeavyCompositeBuildingLabSpectrumCompanionOutputs({
+          airborneContext,
+          airborneTrace: dynamicAirborneResult?.trace,
+          catalogLabFallbackApplied: verifiedAirborneAnchorResult.warnings.some((warning) =>
+            /Curated airborne lab fallback/i.test(warning)
+          ),
+          estimatedCDb: visibleEstimatedCDbWithFloorPackageLabCompanion,
+          estimatedCtrDb: visibleEstimatedCtrDbWithFloorPackageLabCompanion,
+          estimatedRwDb: visibleEstimatedRwDbWithFloorPackageLabCompanion,
+          estimatedStcDb: visibleEstimatedStcDb,
+          sourceAnchorCandidatePresent: Boolean(
+            compatibleWallAnchorDeltaResult.match || verifiedAirborneAnchorResult.match
+          ),
+          support: visibleTargetOutputSupportWithExactMetricScope
+        });
   const postV1GateARBuildingLabSpectrumCompanionOutputs =
-    getPostV1GateARBuildingLabSpectrumCompanionOutputs({
-      airborneBasis:
-        dynamicCandidateResolverRuntime?.resolution.selectedBasis ?? dynamicAirborneResult?.airborneBasis,
-      airborneContext,
-      airborneTrace: dynamicAirborneResult?.trace,
-      catalogLabFallbackApplied: verifiedAirborneAnchorResult.warnings.some((warning) =>
-        /Curated airborne lab fallback/i.test(warning)
-      ),
-      estimatedCDb: visibleEstimatedCDbWithFloorPackageLabCompanion,
-      estimatedCtrDb: visibleEstimatedCtrDbWithFloorPackageLabCompanion,
-      estimatedRwDb: visibleEstimatedRwDbWithFloorPackageLabCompanion,
-      estimatedStcDb: visibleEstimatedStcDb,
-      sourceAnchorCandidatePresent: Boolean(
-        compatibleWallAnchorDeltaResult.match || verifiedAirborneAnchorResult.match
-      ),
-      support: visibleTargetOutputSupportWithExactMetricScope
-    });
+    hasVisibleFloorCarrier
+      ? []
+      : getPostV1GateARBuildingLabSpectrumCompanionOutputs({
+          airborneBasis:
+            dynamicCandidateResolverRuntime?.resolution.selectedBasis ?? dynamicAirborneResult?.airborneBasis,
+          airborneContext,
+          airborneTrace: dynamicAirborneResult?.trace,
+          catalogLabFallbackApplied: verifiedAirborneAnchorResult.warnings.some((warning) =>
+            /Curated airborne lab fallback/i.test(warning)
+          ),
+          estimatedCDb: visibleEstimatedCDbWithFloorPackageLabCompanion,
+          estimatedCtrDb: visibleEstimatedCtrDbWithFloorPackageLabCompanion,
+          estimatedRwDb: visibleEstimatedRwDbWithFloorPackageLabCompanion,
+          estimatedStcDb: visibleEstimatedStcDb,
+          sourceAnchorCandidatePresent: Boolean(
+            compatibleWallAnchorDeltaResult.match || verifiedAirborneAnchorResult.match
+          ),
+          support: visibleTargetOutputSupportWithExactMetricScope
+        });
   const postV1OpenBoxFinishedPackageBuildingLabCompanionOutputs =
     getPostV1OpenBoxFinishedPackageBuildingLabCompanionOutputs({
       floorSystemRatings,
@@ -4624,6 +4817,7 @@ export function calculateAssembly(
     gateWFloorImpactContract,
     gateZFloorImpactFieldAssessment,
     impactFieldContext,
+    predictorInput,
     result
   });
   applyAcousticCalculatorAnswerEngineV1TimberCltDeltaLwNeedsInputBoundary({

@@ -263,22 +263,23 @@ describe("Personal-Use MVP Coverage Sprint Gate AR airborne building-prediction 
     });
   });
 
-  it("keeps opening/leak building outputs blocked until a dedicated building adapter owns them", () => {
+  it("keeps opening/leak building outputs on their dedicated building adapter", () => {
     const result = calculateAssembly(LINED_MASSIVE_WALL, {
       airborneContext: OPENING_BUILDING_CONTEXT,
       calculator: "dynamic",
       targetOutputs: ["Rw", "STC", "R'w", "DnT,w"]
     });
 
-    expect(result.supportedTargetOutputs).toEqual([]);
-    expect(result.unsupportedTargetOutputs).toEqual(["Rw", "STC", "R'w", "DnT,w"]);
-    expect(result.metrics.estimatedRwPrimeDb).toBeUndefined();
-    expect(result.metrics.estimatedDnTwDb).toBeUndefined();
+    expect(result.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
+    expect(result.unsupportedTargetOutputs).toEqual(["Rw", "STC"]);
+    expect(result.metrics.estimatedRwPrimeDb).toBe(31.6);
+    expect(result.metrics.estimatedDnTwDb).toBe(32.1);
     expect(result.airborneCandidateResolution).toMatchObject({
-      selectedCandidateId: "candidate_dynamic_unsupported",
-      selectedOrigin: "unsupported"
+      selectedCandidateId: "candidate_company_internal_opening_leak_building_family_physics_prediction",
+      selectedOrigin: "family_physics_prediction"
     });
     expect(result.airborneBasis?.method).not.toBe(GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD);
+    expect(result.airborneBasis?.method).toBe("company_internal_opening_leak_building_area_energy_runtime_corridor");
   });
 
   it("preserves field and lab route separation", () => {

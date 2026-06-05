@@ -266,8 +266,11 @@ describe("Personal-Use MVP Coverage Sprint Gate AH opening/leak STC spectrum ada
     expect(stcOpeningBasis.supportedTargetOutputs).toEqual([]);
     expect(stcOpeningBasis.unsupportedTargetOutputs).toEqual(["Rw", "STC"]);
     expect(stcOpeningBasis.ratingAdapterBasisSet).toBeUndefined();
-    expect(buildingAlias.supportedTargetOutputs).toEqual([]);
-    expect(buildingAlias.unsupportedTargetOutputs).toEqual(["STC", "R'w", "DnT,w"]);
+    expect(buildingAlias.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
+    expect(buildingAlias.unsupportedTargetOutputs).toEqual(["STC"]);
+    expect(buildingAlias.metrics.estimatedStc).not.toBe(39);
+    expect(buildingAlias.metrics.estimatedRwPrimeDb).toBe(31.6);
+    expect(buildingAlias.metrics.estimatedDnTwDb).toBe(32.1);
     expect(buildingAlias.ratingAdapterBasisSet).toBeUndefined();
   });
 

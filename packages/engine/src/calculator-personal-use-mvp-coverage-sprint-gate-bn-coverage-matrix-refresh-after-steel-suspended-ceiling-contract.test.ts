@@ -157,11 +157,11 @@ describe("Personal-Use MVP Coverage Sprint Gate BN coverage matrix refresh after
       ]
     });
     expect(summary.failureClassCounts).toEqual({
-      basis_boundary: 3,
+      basis_boundary: 2,
       correct_block: 11,
       coverage_gap: 1,
       hostile_input_refusal: 4,
-      none: 29,
+      none: 30,
       unsupported_metric: 3
     });
     expect(summary.correctlyBlockedRowIds).toEqual(expect.arrayContaining([

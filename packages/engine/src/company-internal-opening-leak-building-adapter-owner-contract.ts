@@ -9,9 +9,12 @@ import {
   COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V4_SELECTED_NEXT_LABEL,
   COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V4_SELECTION_STATUS
 } from "./company-internal-calculation-grade-mainline-matrix";
-import { GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD } from "./dynamic-airborne-gate-i-airborne-field-context";
 import { GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING } from "./dynamic-airborne-gate-n-building-prediction-runtime-adapter";
 import { GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD } from "./dynamic-airborne-gate-s-opening-leak-composite-transmission-loss-runtime-corridor";
+import {
+  COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD,
+  COMPANY_INTERNAL_OPENING_LEAK_FIELD_RUNTIME_METHOD
+} from "./company-internal-opening-leak-building-runtime-corridor";
 
 export const COMPANY_INTERNAL_OPENING_LEAK_BUILDING_ADAPTER_OWNER_LANDED_GATE =
   "company_internal_opening_leak_building_adapter_owner_contract_plan";
@@ -525,19 +528,21 @@ export function assertCompanyInternalOpeningLeakBuildingAdapterOwnerContract(
   }
 
   if (
-    fieldOpeningProbe.supportedTargetOutputs.length > 0 ||
-    fieldOpeningProbe.basisId !== GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD ||
-    fieldOpeningProbe.openingAliasWarningPresent !== true
+    fieldOpeningProbe.basisId !== COMPANY_INTERNAL_OPENING_LEAK_FIELD_RUNTIME_METHOD ||
+    fieldOpeningProbe.computedRwPrimeDb !== 36.4 ||
+    fieldOpeningProbe.computedDnTwDb !== 36.9 ||
+    fieldOpeningProbe.supportedTargetOutputs.join("|") !== "R'w|DnT,w"
   ) {
-    throw new Error("Opening/leak field request must remain blocked until the dedicated field adapter runtime lands.");
+    throw new Error("Opening/leak field request must use the landed dedicated field adapter runtime.");
   }
 
   if (
-    buildingOpeningProbe.supportedTargetOutputs.length > 0 ||
-    buildingOpeningProbe.origin !== "unsupported" ||
-    buildingOpeningProbe.openingAliasWarningPresent !== true
+    buildingOpeningProbe.basisId !== COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD ||
+    buildingOpeningProbe.computedRwPrimeDb !== 31.6 ||
+    buildingOpeningProbe.computedDnTwDb !== 32.1 ||
+    buildingOpeningProbe.supportedTargetOutputs.join("|") !== "R'w|DnT,w"
   ) {
-    throw new Error("Opening/leak building request must remain unsupported until the dedicated building adapter runtime lands.");
+    throw new Error("Opening/leak building request must use the landed dedicated building adapter runtime.");
   }
 
   if (!GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING.includes("building-prediction runtime adapter")) {

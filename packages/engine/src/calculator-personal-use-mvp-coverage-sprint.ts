@@ -1583,14 +1583,14 @@ function buildGateWAdditionalRows(): readonly PersonalUseMvpCoverageScenarioRow[
     }),
     buildRow({
       basis: "building_prediction",
-      expectedPosture: "unsupported",
-      failureClass: "basis_boundary",
+      expectedPosture: "family_physics",
+      failureClass: "none",
       family: "wall_opening_leak_building_boundary",
-      hostileVariant: "opening_lab_corridor_requested_under_building_prediction",
+      hostileVariant: null,
       id: "wall.opening_leak_composite_building_boundary.unsupported",
       inputCompleteness: "complete",
-      nextAction: "airborne_building_prediction_runtime_terms",
-      originSupportBucket: "building_prediction_adapter_not_owned",
+      nextAction: "regression_guard",
+      originSupportBucket: "source_absent_opening_leak_building_adapter",
       requestedMetrics: OPENING_LEAK_OUTPUTS,
       route: "wall",
       run: () => assemblyRuntime({
@@ -1598,8 +1598,8 @@ function buildGateWAdditionalRows(): readonly PersonalUseMvpCoverageScenarioRow[
         layers: LINED_MASSIVE_WALL,
         targetOutputs: OPENING_LEAK_OUTPUTS
       }),
-      toleranceOrErrorBudget: "blocked_no_lab_to_building_alias",
-      valueOrBlockedReason: "Opening/leak lab Rw corridor is blocked for R'w/DnT,w building outputs",
+      toleranceOrErrorBudget: "opening_leak_building_10_db_source_absent_budget",
+      valueOrBlockedReason: "R'w 31.6 / DnT,w 32.1 through the owned opening/leak building adapter; lab Rw/STC remain unsupported on this building basis",
       visibleSurfaceParityTarget: WALL_VISIBLE_SURFACES
     }),
     buildRow({

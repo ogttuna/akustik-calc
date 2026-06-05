@@ -93,6 +93,10 @@ import {
   BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID
 } from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-field-context-harmonization";
 import {
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_BUILDING_RUNTIME_METHOD,
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_BUILDING_SELECTED_CANDIDATE_ID
+} from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-building-adapter";
+import {
   LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_FORMULA_CORRIDOR_BASIS,
   LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID
 } from "./layer-combination-resolver-single-leaf-mass-law-banded-runtime-constants";
@@ -628,6 +632,8 @@ function selectLane(input: {
 
   if (input.assessment.outputBasis === "building_prediction") {
     return input.runtimeSignal?.airborneBasis?.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD ||
+      input.runtimeSignal?.airborneBasis?.method ===
+        BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_BUILDING_RUNTIME_METHOD ||
       input.runtimeSignal?.airborneBasis?.method === COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD ||
       input.runtimeSignal?.airborneBasis?.method === COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD
       ? "family_physics"
@@ -717,6 +723,10 @@ function familyPhysicsCandidateId(runtimeBasis?: AirborneResultBasis): string {
 
   if (runtimeBasis?.method === BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD) {
     return BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID;
+  }
+
+  if (runtimeBasis?.method === BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_BUILDING_RUNTIME_METHOD) {
+    return BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_BUILDING_SELECTED_CANDIDATE_ID;
   }
 
   if (runtimeBasis?.method === GATE_X_AAC_NONHOMOGENEOUS_MASONRY_RUNTIME_METHOD) {

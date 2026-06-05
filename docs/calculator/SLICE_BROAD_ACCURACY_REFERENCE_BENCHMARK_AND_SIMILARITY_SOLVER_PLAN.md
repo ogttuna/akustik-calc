@@ -1,10 +1,13 @@
 # Slice Plan - Broad Accuracy Reference Benchmark And Similarity Solver
 
-Historical status, 2026-05-25: this landed slice is reference material
+Historical status, 2026-06-05: this landed slice is reference material
 only. It does not select current work. Read
 [CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md) first
-and select any new post-V1 slice explicitly. Older "current selected
-next lane" statements below are consumed handoffs.
+and select any new post-V1 slice explicitly. Gate CH is the latest
+landed value-moving runtime slice, and
+`post_v1_next_numeric_coverage_gap_gate_ci_plan` is the selected next
+numeric coverage-gap label. Older "current selected next lane"
+statements below are consumed handoffs.
 
 Status: LANDED no-runtime broad-accuracy benchmark expansion after the
 controlled company-internal envelope proof.

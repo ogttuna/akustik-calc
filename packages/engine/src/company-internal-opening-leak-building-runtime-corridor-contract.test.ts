@@ -143,18 +143,19 @@ describe("company-internal opening/leak field/building runtime corridor", () => 
     });
   });
 
-  it("keeps legacy top-level opening contexts blocked until the explicit field/building adapter boundary is present", () => {
+  it("keeps the legacy adapter boundary optional when explicit opening/leak route fields are present", () => {
     const contract = buildCompanyInternalOpeningLeakBuildingRuntimeCorridorContract();
 
     expect(contract.boundaryAbsentProbe).toMatchObject({
-      computedDnTwDb: 59,
-      computedRwPrimeDb: 58,
+      basisId: COMPANY_INTERNAL_OPENING_LEAK_FIELD_RUNTIME_METHOD,
+      computedDnTwDb: 36.9,
+      computedRwDb: 38.2,
+      computedRwPrimeDb: 36.4,
       origin: "family_physics_prediction",
-      supportedTargetOutputs: [],
-      unsupportedTargetOutputs: ["R'w", "DnT,w"],
-      warningMatched: false
+      supportedTargetOutputs: ["R'w", "DnT,w"],
+      unsupportedTargetOutputs: [],
+      warningMatched: true
     });
-    expect(contract.boundaryAbsentProbe.basisId).not.toBe(COMPANY_INTERNAL_OPENING_LEAK_FIELD_RUNTIME_METHOD);
   });
 
   it("keeps docs and the current-gate runner aligned with opening/leak runtime closeout", () => {

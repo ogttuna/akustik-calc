@@ -3,6 +3,18 @@ import {
   COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_RUNTIME_METHOD,
   COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_SELECTED_CANDIDATE_ID
 } from "./dynamic-airborne-company-internal-heavy-composite-wall";
+import {
+  COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD,
+  COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_SELECTED_CANDIDATE_ID,
+  COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD,
+  COMPANY_INTERNAL_OPENING_LEAK_BUILDING_SELECTED_CANDIDATE_ID,
+  COMPANY_INTERNAL_OPENING_LEAK_BUILDING_TOLERANCE_DB,
+  COMPANY_INTERNAL_OPENING_LEAK_FIELD_RUNTIME_METHOD,
+  COMPANY_INTERNAL_OPENING_LEAK_FIELD_SELECTED_CANDIDATE_ID,
+  COMPANY_INTERNAL_OPENING_LEAK_FIELD_TOLERANCE_DB,
+  COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_BUILDING_TOLERANCE_DB,
+  COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FIELD_TOLERANCE_DB
+} from "./company-internal-opening-leak-building-runtime-corridor";
 import { GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD } from "./dynamic-airborne-gate-i-airborne-field-context";
 import {
   GATE_AE_FLAT_MULTICAVITY_RUNTIME_METHOD,
@@ -2196,6 +2208,182 @@ const CANDIDATE_DECLARATIONS = [
       { metric: "DnT,w", value: 80 },
       { metric: "L'nT,w", value: 70.6 }
     ]
+  },
+  {
+    basis: "building_prediction",
+    errorBudgetTerms: [
+      { metric: "R'w", notMeasuredEvidence: true, toleranceDb: COMPANY_INTERNAL_OPENING_LEAK_BUILDING_TOLERANCE_DB },
+      { metric: "DnT,w", notMeasuredEvidence: true, toleranceDb: COMPANY_INTERNAL_OPENING_LEAK_BUILDING_TOLERANCE_DB }
+    ],
+    exactPrecedenceRules: [
+      "same_stack_opening_leak_building_rows_win_before_source_absent_adapter",
+      "lab_opening_leak_rw_stc_rows_do_not_become_building_values",
+      "field_opening_leak_values_do_not_become_building_values_without_building_context"
+    ],
+    formulaTerms: [
+      "gate_s_opening_leak_lab_composite_rw_anchor",
+      "field_flanking_penalty",
+      "building_junction_and_flanking_add_on",
+      "receiving_room_volume_rt60_standardization",
+      "explicit_opening_leak_area_energy_terms"
+    ],
+    hardCompatibilityGates: [
+      "wall_route",
+      "opening_leak_route_present",
+      "building_prediction_context",
+      "host_wall_area_present",
+      "opening_leak_elements_present",
+      "source_and_receiving_room_terms_present",
+      "flanking_junction_terms_present"
+    ],
+    hostileInputCases: [
+      "missing_room_or_flanking_terms_needs_input",
+      "lab_outputs_requested_with_building_context_do_not_relabel_building_pins",
+      "field_context_cannot_use_building_prediction_opening_leak_basis"
+    ],
+    id: COMPANY_INTERNAL_OPENING_LEAK_BUILDING_SELECTED_CANDIDATE_ID,
+    kind: "field_building_adapter",
+    label: "Wall opening/leak building-prediction area-energy adapter",
+    ownedRuntimeBasisId: COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD,
+    priorityRank: 4,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      "GateSOpeningLeakCompositeRw",
+      "openingLeakElementsOrHostWallAreaRouteOwner",
+      "hostWallAreaM2",
+      "openingLeakElements",
+      "airborneContext.contextMode=building_prediction",
+      "airborneContext.panelWidthHeight",
+      "airborneContext.sourceRoomVolumeM3",
+      "airborneContext.receivingRoomVolumeM3",
+      "airborneContext.receivingRoomRt60S",
+      "airborneContext.flankingJunctionClass",
+      "airborneContext.conservativeFlankingAssumption",
+      "airborneContext.junctionCouplingLengthM",
+      "airborneContext.buildingPredictionOutputBasis"
+    ],
+    route: "wall",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "opening_leak_building_values_stay_tied_to_same_opening_leak_route_and_explicit_building_context",
+      "nearby_lab_opening_leak_rows_may_not_anchor_building_without same-basis room and flanking terms"
+    ],
+    supportedMetrics: ["R'w", "DnT,w"],
+    surfaceRequirements: FIELD_SURFACES,
+    valuePins: []
+  },
+  {
+    basis: "field_apparent",
+    errorBudgetTerms: [
+      { metric: "R'w", notMeasuredEvidence: true, toleranceDb: COMPANY_INTERNAL_OPENING_LEAK_FIELD_TOLERANCE_DB },
+      { metric: "Dn,w", notMeasuredEvidence: true, toleranceDb: COMPANY_INTERNAL_OPENING_LEAK_FIELD_TOLERANCE_DB },
+      { metric: "DnT,w", notMeasuredEvidence: true, toleranceDb: COMPANY_INTERNAL_OPENING_LEAK_FIELD_TOLERANCE_DB }
+    ],
+    exactPrecedenceRules: [
+      "same_stack_opening_leak_field_rows_win_before_source_absent_adapter",
+      "lab_opening_leak_rw_stc_rows_do_not_become_field_values",
+      "building_opening_leak_values_do_not_become_field_values_without_field_context"
+    ],
+    formulaTerms: [
+      "gate_s_opening_leak_lab_composite_rw_anchor",
+      "field_flanking_penalty",
+      "partition_area_dn_offset",
+      "receiving_room_volume_rt60_standardization",
+      "explicit_opening_leak_area_energy_terms"
+    ],
+    hardCompatibilityGates: [
+      "wall_route",
+      "opening_leak_route_present",
+      "field_between_rooms_context",
+      "host_wall_area_present",
+      "opening_leak_elements_present",
+      "receiving_room_terms_present"
+    ],
+    hostileInputCases: [
+      "missing_room_terms_needs_input",
+      "lab_outputs_requested_with_field_context_do_not_relabel_field_pins",
+      "building_context_cannot_use_field_opening_leak_basis"
+    ],
+    id: COMPANY_INTERNAL_OPENING_LEAK_FIELD_SELECTED_CANDIDATE_ID,
+    kind: "field_building_adapter",
+    label: "Wall opening/leak field-apparent area-energy adapter",
+    ownedRuntimeBasisId: COMPANY_INTERNAL_OPENING_LEAK_FIELD_RUNTIME_METHOD,
+    priorityRank: 4,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      "GateSOpeningLeakCompositeRw",
+      "openingLeakElementsOrHostWallAreaRouteOwner",
+      "hostWallAreaM2",
+      "openingLeakElements",
+      "airborneContext.contextMode=field_between_rooms",
+      "airborneContext.panelWidthHeight",
+      "airborneContext.receivingRoomVolumeM3",
+      "airborneContext.receivingRoomRt60S"
+    ],
+    route: "wall",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "opening_leak_field_values_stay_tied_to_same_opening_leak_route_and_explicit field context",
+      "nearby_lab_opening_leak_rows_may_not_anchor_field_without_same-basis room terms"
+    ],
+    supportedMetrics: ["R'w", "Dn,w", "DnT,w"],
+    surfaceRequirements: FIELD_SURFACES,
+    valuePins: []
+  },
+  {
+    basis: "field_apparent",
+    errorBudgetTerms: [
+      { metric: "Dn,A", notMeasuredEvidence: true, toleranceDb: COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FIELD_TOLERANCE_DB },
+      { metric: "DnT,A", notMeasuredEvidence: true, toleranceDb: COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_BUILDING_TOLERANCE_DB }
+    ],
+    exactPrecedenceRules: [
+      "same_stack_opening_leak_a_weighted_rows_win_before_source_absent_adapter",
+      "lab_opening_leak_rw_stc_rows_do_not_become_a_weighted_values",
+      "single_number_field_building_values_do_not_become_a_weighted_without_frequency_band_set"
+    ],
+    formulaTerms: [
+      "gate_s_opening_leak_lab_composite_rw_anchor",
+      "opening_leak_field_or_building_area_energy_adapter",
+      "minus_0_8_db_a_weighted_spectrum_adapter",
+      "third_octave_100_3150_frequency_band_set"
+    ],
+    hardCompatibilityGates: [
+      "wall_route",
+      "opening_leak_route_present",
+      "field_or_building_context_complete",
+      "frequencyBandSet=third_octave_100_3150"
+    ],
+    hostileInputCases: [
+      "missing_frequency_band_set_needs_input",
+      "lab_outputs_requested_with_a_weighted_context_do_not_relabel_a_weighted_pins",
+      "astm_or_impact_aliases_stay_unsupported"
+    ],
+    id: COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_SELECTED_CANDIDATE_ID,
+    kind: "field_building_adapter",
+    label: "Wall opening/leak A-weighted spectrum adapter",
+    ownedRuntimeBasisId: COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD,
+    priorityRank: 4,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      "GateSOpeningLeakCompositeRw",
+      "openingLeakElementsOrHostWallAreaRouteOwner",
+      "hostWallAreaM2",
+      "openingLeakElements",
+      "airborneContext.contextMode",
+      "airborneContext.panelWidthHeight",
+      "airborneContext.receivingRoomVolumeM3",
+      "airborneContext.receivingRoomRt60S",
+      "frequencyBandSet=third_octave_100_3150"
+    ],
+    route: "wall",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "opening_leak_a_weighted_values_stay_tied_to_frequency_band_set_owner",
+      "nearby_single_number_rows_may_not_anchor_a_weighted_values_without_frequency_basis"
+    ],
+    supportedMetrics: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A"],
+    surfaceRequirements: FIELD_SURFACES,
+    valuePins: []
   },
   {
     basis: "building_prediction",

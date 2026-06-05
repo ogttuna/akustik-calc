@@ -405,19 +405,21 @@ Use direct Vitest commands so file filters do not accidentally run the
 entire package.
 
 ```bash
-cd /home/dkmserver/Desktop/Machinity/landing/akustikhesap/apps/web
-pnpm exec vitest run features/workbench/heavy-concrete-combined-impact-input-surface-acceptance.test.ts --config vitest.config.ts
+pnpm --filter @dynecho/web exec vitest run \
+  features/workbench/heavy-concrete-combined-impact-input-surface-acceptance.test.ts \
+  --maxWorkers=1
 ```
 
 ```bash
-cd /home/dkmserver/Desktop/Machinity/landing/akustikhesap/packages/engine
-pnpm exec vitest run src/post-v1-floor-common-floating-covering-expansion-gate-cg2-contract.test.ts src/calculator-model-first-physics-prediction-pivot-gate-w-floor-impact-runtime-contract.test.ts --maxWorkers=1
+pnpm --filter @dynecho/engine exec vitest run \
+  src/post-v1-floor-common-floating-covering-expansion-gate-cg2-contract.test.ts \
+  src/calculator-model-first-physics-prediction-pivot-gate-w-floor-impact-runtime-contract.test.ts \
+  --maxWorkers=1
 ```
 
 Then run a runtime spot check equivalent to the analysis:
 
 ```bash
-cd /home/dkmserver/Desktop/Machinity/landing/akustikhesap
 pnpm exec tsx -e '<evaluate preset no-surface, empty-surface, complete-surface and print basis/value partitions>'
 ```
 
@@ -445,7 +447,6 @@ If targeted checks pass, run the current calculator gate if the working
 tree is stable enough:
 
 ```bash
-cd /home/dkmserver/Desktop/Machinity/landing/akustikhesap
 pnpm calculator:gate:current
 ```
 

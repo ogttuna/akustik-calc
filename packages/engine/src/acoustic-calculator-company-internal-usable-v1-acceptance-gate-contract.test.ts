@@ -17,6 +17,10 @@ import {
 } from "./acoustic-answer-engine-v1-floor-boundary";
 import { calculateAssembly } from "./calculate-assembly";
 import { calculateImpactOnly } from "./calculate-impact-only";
+import {
+  COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD,
+  COMPANY_INTERNAL_OPENING_LEAK_BUILDING_SELECTED_CANDIDATE_ID
+} from "./company-internal-opening-leak-building-runtime-corridor";
 import type { DynamicCalculatorFloorImpactContext } from "./dynamic-calculator-route-input-topology";
 import { HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS } from "./helper-only-timber-open-web-impact-stack-estimate";
 import { HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_ESTIMATE_BASIS } from "./heavy-concrete-published-upper-treatment-estimate";
@@ -444,17 +448,17 @@ describe("acoustic calculator company-internal usable V1 acceptance gate", () =>
       },
       {
         airborneContext: OPENING_BUILDING_CONTEXT,
-        expectedBoundary: {
-          origin: "unsupported",
-          unsupportedOutputs: ["Rw", "STC", "R'w", "DnT,w"]
-        },
-        expectedCandidateKind: "basis_boundary",
-        expectedRuntimeBasisId: null,
-        expectedSelectedCandidateId: "generic.lab_field_building_basis_boundary",
-        expectedSupportedOutputs: [],
-        expectedSupportBucket: "basis_boundary",
-        expectedUnsupportedOutputs: ["Rw", "STC", "R'w", "DnT,w"],
-        label: "wall building/opening request stays unsupported",
+        expectedCandidateKind: "field_building_adapter",
+        expectedRuntimeBasisId: COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD,
+        expectedSelectedCandidateId: COMPANY_INTERNAL_OPENING_LEAK_BUILDING_SELECTED_CANDIDATE_ID,
+        expectedSupportedOutputs: ["R'w", "DnT,w"],
+        expectedSupportBucket: "field_adapter",
+        expectedUnsupportedOutputs: ["Rw", "STC"],
+        expectedValuePins: [
+          { metric: "R'w", value: 31.6 },
+          { metric: "DnT,w", value: 32.1 }
+        ],
+        label: "wall building/opening adapter calculates owned field metrics",
         layers: LINED_MASSIVE_WALL,
         route: "wall",
         targetOutputs: ["Rw", "STC", "R'w", "DnT,w"]
@@ -612,8 +616,7 @@ describe("acoustic calculator company-internal usable V1 acceptance gate", () =>
         "similarity_anchor",
         "source_absent_family_solver",
         "needs_input_boundary",
-        "unsupported_boundary",
-        "basis_boundary"
+        "unsupported_boundary"
       ])
     );
 
@@ -646,13 +649,18 @@ describe("acoustic calculator company-internal usable V1 acceptance gate", () =>
     expect(floorAstm.layerCombinationResolverTrace?.supportedMetrics).not.toContain("Ln,w");
 
     expect(wallBuilding.layerCombinationResolverTrace).toMatchObject({
-      candidateKind: "basis_boundary",
+      candidateKind: "field_building_adapter",
       requestedBasis: "building_prediction",
-      selectedCandidateId: "generic.lab_field_building_basis_boundary",
-      supportedMetrics: [],
-      valuePins: []
+      runtimeBasisId: COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD,
+      selectedCandidateId: COMPANY_INTERNAL_OPENING_LEAK_BUILDING_SELECTED_CANDIDATE_ID,
+      supportedMetrics: ["R'w", "DnT,w"],
+      valuePins: [
+        { metric: "R'w", value: 31.6 },
+        { metric: "DnT,w", value: 32.1 }
+      ]
     });
-    expect(wallBuilding.supportedTargetOutputs).toEqual([]);
+    expect(wallBuilding.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
+    expect(wallBuilding.unsupportedTargetOutputs).toEqual(["Rw", "STC"]);
 
     expect(mixedImpactBand.layerCombinationResolverTrace).toMatchObject({
       candidateKind: "exact_measured_override",

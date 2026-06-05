@@ -177,8 +177,7 @@ describe("Personal-Use MVP Coverage Sprint Gate W coverage matrix refresh after 
       "coverage_gap",
       "correct_block",
       "hostile_input_refusal",
-      "unsupported_metric",
-      "basis_boundary"
+      "unsupported_metric"
     ]);
 
     for (const row of rows) {
@@ -290,15 +289,23 @@ describe("Personal-Use MVP Coverage Sprint Gate W coverage matrix refresh after 
 
     expect(byId(rows, "wall.opening_leak_composite_building_boundary.unsupported")).toMatchObject({
       basis: "building_prediction",
-      currentPosture: "unsupported",
-      failureClass: "basis_boundary",
+      currentPosture: "family_physics",
+      failureClass: "none",
       runtime: {
-        basisId: "dynamic_calculator_building_prediction_runtime_adapter_owner_missing",
-        supportedTargetOutputs: [],
-        unsupportedTargetOutputs: ["Rw", "STC", "R'w", "DnT,w"]
+        basisId: "company_internal_opening_leak_building_area_energy_runtime_corridor",
+        errorBudgetDb: 10,
+        supportedTargetOutputs: ["R'w", "DnT,w"],
+        unsupportedTargetOutputs: ["Rw", "STC"],
+        valuePins: [
+          { metric: "R'w", value: 31.6 },
+          { metric: "DnT,w", value: 32.1 }
+        ]
       }
     });
-    expect(values(byId(rows, "wall.opening_leak_composite_building_boundary.unsupported"))).toEqual({});
+    expect(values(byId(rows, "wall.opening_leak_composite_building_boundary.unsupported"))).toEqual({
+      "DnT,w": 32.1,
+      "R'w": 31.6
+    });
 
     expect(byId(rows, "wall.complete_building_prediction.unsupported")).toMatchObject({
       currentPosture: "family_physics",

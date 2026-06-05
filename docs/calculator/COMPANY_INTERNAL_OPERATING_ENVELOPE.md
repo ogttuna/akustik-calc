@@ -4,15 +4,16 @@ Date: 2026-05-15
 
 File: `COMPANY_INTERNAL_OPERATING_ENVELOPE.md`
 
-Current-state override, 2026-06-02: this is a controlled-use operating
+Current-state override, 2026-06-05: this is a controlled-use operating
 snapshot, not the current post-V1 next-slice selector and not the full
 calculator product goal. Usable V1 Steps 0-5 are closed for the current
 tested envelope. Current post-V1 calculator scope/accuracy work is
 governed by [CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md)
 and
 [POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md).
-Gate CD is the latest landed value-moving runtime slice, and Gate CE is
-the selected next numeric coverage rerank label.
+Gate CH is the latest landed value-moving runtime slice, and
+`post_v1_next_numeric_coverage_gap_gate_ci_plan` is the selected next
+numeric coverage-gap label.
 
 This document is the operating envelope for the current controlled
 company-internal calculator state. It is tied to:

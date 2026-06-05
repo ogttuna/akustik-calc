@@ -50,6 +50,7 @@ import {
 import { estimateImpactFromLayers, estimateImpactFromPredictorInput } from "./impact-estimate";
 import { buildImpactPredictorStatus } from "./impact-predictor-status";
 import { shouldBlockHeavyConcreteCombinedImpactFormulaFallback } from "./heavy-concrete-combined-impact-formula-corridor";
+import { deriveHeavyConcretePublishedUpperTreatmentEstimate } from "./heavy-concrete-published-upper-treatment-estimate";
 import {
   filterImpactCatalogMatchForExplicitPredictorInput,
   matchImpactProductCatalog
@@ -361,14 +362,33 @@ export function resolveLayerBasedImpactLane(
       ? estimateImpactFromPredictorInput(input.predictorInput)
       : null;
   const predictorDeltaLwCompanion =
-    input.explicitPredictorInput &&
+    input.predictorInput &&
     input.targetOutputs?.includes("DeltaLw") &&
     !input.officialFloorSystemId &&
     !impactCatalogMatch &&
     !explicitDeltaImpact
-      ? estimateTimberCltDeltaLwFromPredictorInput(input.explicitPredictorInput)
+      ? estimateTimberCltDeltaLwFromPredictorInput(input.predictorInput)
       : null;
-  const rawPredictorSpecificFloorSystemEstimate =
+  const heavyConcreteCombinedPublishedUpperTreatmentEstimate =
+    input.predictorInput &&
+    blockHeavyConcreteCombinedFormulaFallback &&
+    !input.officialFloorSystemId &&
+    !input.exactImpact &&
+    !floorSystemMatch &&
+    !boundFloorSystemMatch &&
+    !impactCatalogMatch &&
+    !explicitDeltaImpact &&
+    !predictorFormulaImpact &&
+    !openBoxTimberSimilarityEstimate &&
+    !openBoxTimberEpsScreedHybridPackageEstimate &&
+    !openBoxTimberRawBareEstimate &&
+    !helperOnlyTimberOpenWebImpactStackEstimate &&
+    !tuasC11cGuardedIsoWeightedImpact &&
+    !blockSteelFormulaFallback &&
+    !blockMixedSupportFormulaFallback
+      ? deriveHeavyConcretePublishedUpperTreatmentEstimate(input.predictorInput)
+      : null;
+  const genericPredictorSpecificFloorSystemEstimate =
     input.predictorInput &&
     !input.officialFloorSystemId &&
     !floorSystemMatch &&
@@ -385,6 +405,8 @@ export function resolveLayerBasedImpactLane(
     !blockMixedSupportFormulaFallback
       ? derivePredictorSpecificFloorSystemEstimate(input.predictorInput)
       : null;
+  const rawPredictorSpecificFloorSystemEstimate =
+    heavyConcreteCombinedPublishedUpperTreatmentEstimate ?? genericPredictorSpecificFloorSystemEstimate;
   const predictorSpecificFloorSystemEstimate = rawPredictorSpecificFloorSystemEstimate;
   const narrowImpact =
     input.officialFloorSystemId ||

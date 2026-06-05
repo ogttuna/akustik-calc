@@ -7,6 +7,7 @@ import type {
   AirborneCandidate,
   AirborneCandidateRejectionReason,
   AirborneCandidateResolution,
+  AirborneContext,
   AirborneResultBasis,
   DynamicAirborneFamily,
   DynamicAirborneTrace,
@@ -32,6 +33,13 @@ import {
   GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING,
   maybeBuildGateIAirborneFieldContextBasisFromBase
 } from "./dynamic-airborne-gate-i-airborne-field-context";
+import {
+  GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
+  GATE_AR_AIRBORNE_BUILDING_PREDICTION_WARNING,
+  hasCompleteGateARBuildingPredictionContext
+} from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
+import { GATE_O_AIRBORNE_BUILDING_PREDICTION_TOLERANCE_DB } from "./dynamic-airborne-gate-o-building-prediction-formula-corridor";
+import { GATE_M_AIRBORNE_BUILDING_PREDICTION_REQUIRED_PHYSICAL_INPUTS } from "./dynamic-calculator-route-input-topology";
 import {
   LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_FORMULA_CORRIDOR_BASIS,
   LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID,
@@ -126,6 +134,56 @@ type GateSAirborneCandidateSeed = Omit<AirborneCandidate, "rejectionReasons" | "
 };
 
 const GATE_S_WALL_OUTPUTS = ["Rw", "STC", "C", "Ctr"] as const satisfies readonly RequestedOutputId[];
+
+function maybeBuildGateSDoubleLeafBuildingPredictionBasis(input: {
+  baseBasis: AirborneResultBasis;
+  context: AirborneContext | null | undefined;
+  family: DynamicAirborneFamily;
+  frequencyBands: NonNullable<AirborneResultBasis["frequencyBands"]>;
+}): AirborneResultBasis | null {
+  if (!hasCompleteGateARBuildingPredictionContext(input.context)) {
+    return null;
+  }
+
+  const partitionAreaM2 = (input.context.panelWidthMm * input.context.panelHeightMm) / 1_000_000;
+
+  return {
+    ...input.baseBasis,
+    assumptions: [
+      ...input.baseBasis.assumptions,
+      "building-prediction output is computed only from explicit building_prediction context",
+      "direct separating-element curve comes from the Gate S double-leaf/framed bridge frequency solver",
+      "flanking/junction contribution is represented by the explicit conservative flanking assumption, named junction class, coupling length, and the existing path-energy overlay",
+      "room standardization owns partition area, source-room volume, receiving-room volume, and receiving-room RT60 instead of borrowing Gate I field context",
+      `Gate AQ +/-${GATE_O_AIRBORNE_BUILDING_PREDICTION_TOLERANCE_DB} dB uncertainty budget remains source-absent and not measured evidence`,
+      `building context uses ${partitionAreaM2.toFixed(2)} m2 partition area, ${input.context.sourceRoomVolumeM3.toFixed(1)} m3 source-room volume, ${input.context.receivingRoomVolumeM3.toFixed(1)} m3 receiving-room volume, ${input.context.receivingRoomRt60S.toFixed(2)} s RT60, ${input.context.flankingJunctionClass}, ${input.context.conservativeFlankingAssumption}, and ${input.context.junctionCouplingLengthM.toFixed(2)} m coupling length`,
+      `base lab-family method remains ${input.baseBasis.method}`
+    ],
+    calculationStandard: "ISO 12354-1",
+    errorBudgetDb: GATE_O_AIRBORNE_BUILDING_PREDICTION_TOLERANCE_DB,
+    family: input.family,
+    frequencyBands: input.frequencyBands,
+    kind: "airborne_physics_prediction",
+    method: GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
+    missingPhysicalInputs: [],
+    missingSourceEvidence: [
+      "same_building_source_owned_RwPrime_DnTw_holdouts_absent"
+    ],
+    origin: "family_physics_prediction",
+    ratingStandard: "ISO 717-1",
+    requiredInputs: [
+      ...input.baseBasis.requiredInputs,
+      ...GATE_M_AIRBORNE_BUILDING_PREDICTION_REQUIRED_PHYSICAL_INPUTS,
+      "ISO_12354_1_direct_separating_element_frequency_curve_owner",
+      "ISO_12354_1_flanking_path_transmission_terms_owner",
+      "ISO_12354_1_junction_vibration_reduction_index_owner",
+      "ISO_12354_1_room_absorption_normalization_owner",
+      "buildingPredictionUncertaintyBudgetOwner",
+      "GateS_double_leaf_framed_direct_curve_owner"
+    ],
+    toleranceClass: "uncalibrated_prediction"
+  };
+}
 
 function measuredExactBasis(family: DynamicAirborneFamily): AirborneResultBasis {
   return {
@@ -333,7 +391,16 @@ export function maybeCalculateGateSDoubleLeafFramedBridgeRuntime(input: {
       frequenciesHz: [...curve.frequenciesHz]
     }
   });
-  const selectedBasis = fieldContextBasis ?? basis;
+  const buildingPredictionBasis = maybeBuildGateSDoubleLeafBuildingPredictionBasis({
+    baseBasis: basis,
+    context: input.options.airborneContext,
+    family: contract.candidateFamily,
+    frequencyBands: {
+      bandSet: "layer_combination_resolver_double_leaf_framed_wall_banded_runtime_curve",
+      frequenciesHz: [...curve.frequenciesHz]
+    }
+  });
+  const selectedBasis = buildingPredictionBasis ?? fieldContextBasis ?? basis;
   const candidateResolution = buildGateSCandidateResolution({
     basis: selectedBasis,
     family: contract.candidateFamily,
@@ -399,6 +466,7 @@ export function maybeCalculateGateSDoubleLeafFramedBridgeRuntime(input: {
     trace,
     warnings: [
       GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_WARNING,
+      ...(buildingPredictionBasis ? [GATE_AR_AIRBORNE_BUILDING_PREDICTION_WARNING] : []),
       ...(fieldContextBasis ? [GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING] : []),
       `Double-leaf/framed runtime is uncalibrated with a ${contract.benchmarkRange.toleranceDb} dB error budget.`
     ]

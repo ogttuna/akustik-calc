@@ -144,11 +144,11 @@ describe("Personal-Use MVP Coverage Sprint Gate AK coverage matrix refresh after
       stcAwareMatrixRefresh: true
     });
     expect(summary.failureClassCounts).toEqual({
-      basis_boundary: 1,
+      basis_boundary: 0,
       correct_block: 10,
       coverage_gap: 0,
       hostile_input_refusal: 3,
-      none: 25,
+      none: 26,
       unsupported_metric: 1
     });
 
@@ -263,14 +263,17 @@ describe("Personal-Use MVP Coverage Sprint Gate AK coverage matrix refresh after
 
     expect(openingBuilding).toMatchObject({
       basis: "building_prediction",
-      currentPosture: "unsupported",
-      failureClass: "basis_boundary",
+      currentPosture: "family_physics",
+      failureClass: "none",
       runtime: {
-        basisId: "dynamic_calculator_building_prediction_runtime_adapter_owner_missing",
-        errorBudgetDb: null,
-        supportedTargetOutputs: [],
-        unsupportedTargetOutputs: ["Rw", "STC", "R'w", "DnT,w"],
-        valuePins: []
+        basisId: "company_internal_opening_leak_building_area_energy_runtime_corridor",
+        errorBudgetDb: 10,
+        supportedTargetOutputs: ["R'w", "DnT,w"],
+        unsupportedTargetOutputs: ["Rw", "STC"],
+        valuePins: [
+          { metric: "R'w", value: 31.6 },
+          { metric: "DnT,w", value: 32.1 }
+        ]
       }
     });
 

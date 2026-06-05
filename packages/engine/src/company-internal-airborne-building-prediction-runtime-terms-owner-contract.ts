@@ -20,6 +20,7 @@ import {
   GATE_AR_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID
 } from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
 import { GATE_O_AIRBORNE_BUILDING_PREDICTION_TOLERANCE_DB } from "./dynamic-airborne-gate-o-building-prediction-formula-corridor";
+import { COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD } from "./company-internal-opening-leak-building-runtime-corridor";
 
 export const COMPANY_INTERNAL_AIRBORNE_BUILDING_PREDICTION_RUNTIME_TERMS_OWNER_LANDED_GATE =
   "company_internal_airborne_building_prediction_runtime_terms_owner_contract_plan";
@@ -241,7 +242,11 @@ export function assertCompanyInternalAirborneBuildingPredictionRuntimeTermsOwner
     throw new Error("Company-internal building-prediction partial context must stay needs_input.");
   }
 
-  if (contract.openingLeakBuildingProbe.origin !== "unsupported") {
-    throw new Error("Opening/leak building prediction must stay unsupported until a dedicated adapter owns it.");
+  if (
+    contract.openingLeakBuildingProbe.basisId !== COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD ||
+    contract.openingLeakBuildingProbe.rwPrime !== 31.6 ||
+    contract.openingLeakBuildingProbe.dnTw !== 32.1
+  ) {
+    throw new Error("Opening/leak building prediction must use the landed dedicated adapter owner.");
   }
 }

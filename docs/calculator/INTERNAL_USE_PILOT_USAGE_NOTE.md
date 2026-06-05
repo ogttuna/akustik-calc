@@ -7,12 +7,13 @@ then-active next slice was `calculator_source_intake_backlog_cleanup_v1`. For
 the concise operator handoff, read
 [INTERNAL_USE_PILOT_HANDOFF.md](./INTERNAL_USE_PILOT_HANDOFF.md).
 
-Current-state override, 2026-06-02: this note is not the current
+Current-state override, 2026-06-05: this note is not the current
 calculator next-slice selector. Usable V1 is closed for the current
 tested envelope. Current post-V1 scope/accuracy work is governed by
-[CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md), with
-Gate CD as the latest landed value-moving runtime slice and Gate CE as
-the selected next numeric coverage rerank label.
+[CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md).
+Gate CH is the latest landed value-moving runtime slice, and
+`post_v1_next_numeric_coverage_gap_gate_ci_plan` is the selected next
+numeric coverage-gap label.
 
 Use this note when running short company-internal calculator pilots. It
 does not certify a design and it does not promote any low-confidence,

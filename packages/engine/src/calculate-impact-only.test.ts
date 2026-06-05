@@ -3,6 +3,9 @@ import { describe, expect, it } from "vitest";
 
 import { calculateImpactOnly } from "./calculate-impact-only";
 
+const HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_BASIS =
+  "predictor_heavy_concrete_published_upper_treatment_estimate";
+
 function expectBlockedHeavyConcreteCombinedImpactOnly(
   result: ReturnType<typeof calculateImpactOnly>,
   unsupportedTargetOutputs: readonly string[]
@@ -18,6 +21,40 @@ function expectBlockedHeavyConcreteCombinedImpactOnly(
   expect(result.warnings.join("\n")).toContain(
     "Dynamic Calculator reinforced-concrete combined upper/lower impact runtime is waiting for"
   );
+}
+
+function expectPublishedHeavyConcreteCombinedUpperTreatmentImpactOnly(
+  result: ReturnType<typeof calculateImpactOnly>,
+  input: {
+    candidateIds: readonly string[];
+    lnw: number;
+    rw: number;
+    rwCtr?: number;
+    supportedTargetOutputs: readonly string[];
+    unsupportedTargetOutputs: readonly string[];
+  }
+): void {
+  expect(result.sourceMode).toBe("predictor_input");
+  expect(result.impact?.basis).toBe(HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_BASIS);
+  expect(result.impact?.LnW).toBe(input.lnw);
+  expect(result.impact?.DeltaLw).toBeUndefined();
+  expect(result.impact?.availableOutputs).toEqual(["Ln,w"]);
+  expect(result.impact?.estimateCandidateIds).toEqual(input.candidateIds);
+  expect(result.impact?.metricBasis?.LnW).toBe(HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_BASIS);
+  expect(result.floorSystemEstimate?.impact.basis).toBe(HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_BASIS);
+  expect(result.floorSystemRatings?.basis).toBe(HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_BASIS);
+  expect(result.floorSystemRatings?.Rw).toBe(input.rw);
+  if (typeof input.rwCtr === "number") {
+    expect(result.floorSystemRatings?.RwCtr).toBe(input.rwCtr);
+  } else {
+    expect(result.floorSystemRatings?.RwCtr).toBeUndefined();
+  }
+  expect(result.supportedImpactOutputs).toEqual(["Ln,w"]);
+  expect(result.unsupportedImpactOutputs).toEqual(["DeltaLw"]);
+  expect(result.supportedTargetOutputs).toEqual(input.supportedTargetOutputs);
+  expect(result.unsupportedTargetOutputs).toEqual(input.unsupportedTargetOutputs);
+  expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
+  expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
 }
 
 const EXACT_IMPACT_SOURCE_19 = {
@@ -1576,7 +1613,13 @@ describe("calculateImpactOnly", () => {
         })
       ])
     );
-    expectBlockedHeavyConcreteCombinedImpactOnly(result, ["Ln,w", "DeltaLw", "Rw"]);
+    expectPublishedHeavyConcreteCombinedUpperTreatmentImpactOnly(result, {
+      candidateIds: ["euracoustics_f2_elastic_ceiling_concrete_lab_2026"],
+      lnw: 43,
+      rw: 77,
+      supportedTargetOutputs: ["Ln,w", "Rw"],
+      unsupportedTargetOutputs: ["DeltaLw"]
+    });
   });
 
   it("routes reinforced-concrete combined wet predictor input with a rigid gypsum ceiling onto the defended published upper-treatment lane", () => {
@@ -1615,7 +1658,18 @@ describe("calculateImpactOnly", () => {
       targetOutputs: ["Ln,w", "Rw", "Ctr", "DeltaLw"]
     });
 
-    expectBlockedHeavyConcreteCombinedImpactOnly(result, ["Ln,w", "Rw", "Ctr", "DeltaLw"]);
+    expectPublishedHeavyConcreteCombinedUpperTreatmentImpactOnly(result, {
+      candidateIds: [
+        "euracoustics_f1_rigid_ceiling_concrete_lab_2026",
+        "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
+        "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
+      ],
+      lnw: 51.5,
+      rw: 70,
+      rwCtr: 57,
+      supportedTargetOutputs: ["Ln,w", "Rw", "Ctr"],
+      unsupportedTargetOutputs: ["DeltaLw"]
+    });
   });
 
   it("derives the defended published upper-treatment lane from a visible combined wet stack with an elastic gypsum ceiling", () => {
@@ -1632,7 +1686,13 @@ describe("calculateImpactOnly", () => {
       targetOutputs: ["Ln,w", "DeltaLw", "Rw"]
     });
 
-    expectBlockedHeavyConcreteCombinedImpactOnly(result, ["Ln,w", "DeltaLw", "Rw"]);
+    expectPublishedHeavyConcreteCombinedUpperTreatmentImpactOnly(result, {
+      candidateIds: ["euracoustics_f2_elastic_ceiling_concrete_lab_2026"],
+      lnw: 43,
+      rw: 77,
+      supportedTargetOutputs: ["Ln,w", "Rw"],
+      unsupportedTargetOutputs: ["DeltaLw"]
+    });
   });
 
   it("derives the defended published upper-treatment lane from a visible combined wet stack with a rigid gypsum ceiling", () => {
@@ -1649,7 +1709,18 @@ describe("calculateImpactOnly", () => {
       targetOutputs: ["Ln,w", "Rw", "Ctr", "DeltaLw"]
     });
 
-    expectBlockedHeavyConcreteCombinedImpactOnly(result, ["Ln,w", "Rw", "Ctr", "DeltaLw"]);
+    expectPublishedHeavyConcreteCombinedUpperTreatmentImpactOnly(result, {
+      candidateIds: [
+        "euracoustics_f1_rigid_ceiling_concrete_lab_2026",
+        "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
+        "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
+      ],
+      lnw: 51.5,
+      rw: 70,
+      rwCtr: 57,
+      supportedTargetOutputs: ["Ln,w", "Rw", "Ctr"],
+      unsupportedTargetOutputs: ["DeltaLw"]
+    });
   });
 
   it("keeps low-density reinforced-concrete predictor input off the heavy-concrete-specific upper-treatment lanes", () => {

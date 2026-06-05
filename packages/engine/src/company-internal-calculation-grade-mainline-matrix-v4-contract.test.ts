@@ -122,8 +122,7 @@ describe("company-internal calculation-grade mainline matrix v4 refresh", () => 
       basisCoverage: ["element_lab", "field_apparent", "astm_rating_boundary", "building_prediction"],
       correctlyBlockedRowIds: expect.arrayContaining([
         "floor.lightweight_steel_suspended_ceiling_lnt50_missing_ci.unsupported",
-        "floor.lightweight_steel_suspended_ceiling_astm.unsupported",
-        "wall.opening_leak_composite_building_boundary.unsupported"
+        "floor.lightweight_steel_suspended_ceiling_astm.unsupported"
       ]),
       currentPostureCoverage: ["family_physics", "needs_input", "unsupported", "exact", "source_anchored_delta"],
       exactSourcePrecedenceRowIds: [
@@ -133,11 +132,11 @@ describe("company-internal calculation-grade mainline matrix v4 refresh", () => 
         COMPANY_INTERNAL_CALCULATION_GRADE_MATRIX_V4_STEEL_LNT50_EXACT_FIELD_ROW_ID
       ],
       failureClassCounts: {
-        basis_boundary: 4,
+        basis_boundary: 3,
         correct_block: 13,
         coverage_gap: 0,
         hostile_input_refusal: 4,
-        none: 38,
+        none: 39,
         unsupported_metric: 3
       },
       hiddenScreeningOriginRowIds: [],

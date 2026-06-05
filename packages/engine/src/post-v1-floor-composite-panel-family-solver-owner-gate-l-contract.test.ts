@@ -108,11 +108,11 @@ describe("post-V1 floor composite-panel family solver owner Gate L", () => {
       { profile: "combined_upper_lower_system", metric: "Rw", value: 60.6 }
     ]);
     expect(registry.summary).toMatchObject({
-      activeRuntimeCandidateCount: 40,
-      candidateCount: 43
+      activeRuntimeCandidateCount: 43,
+      candidateCount: 46
     });
-    expect(adapter.summary.adaptedRuntimeBasisCount).toBe(40);
-    expect(surface.summary.surfaceRowCount).toBe(43);
+    expect(adapter.summary.adaptedRuntimeBasisCount).toBe(43);
+    expect(surface.summary.surfaceRowCount).toBe(46);
     expect(candidate).toMatchObject({
       basis: "element_lab",
       errorBudgetTerms: [

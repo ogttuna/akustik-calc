@@ -7,13 +7,13 @@ low-confidence, screening, or source-gated family. The selected follow-up
 is `calculator_source_intake_backlog_cleanup_v1`, a no-runtime source
 backlog cleanup slice.
 
-Current-state override, 2026-06-02: this file does not select current
+Current-state override, 2026-06-05: this file does not select current
 calculator work. Usable V1 is closed for the current tested envelope.
 Current post-V1 scope/accuracy work is governed by
-[CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md), with
-Gate CD as the latest landed value-moving runtime slice, Gate CE as the
-latest no-runtime numeric coverage rerank, and Gate CF as the selected
-next runtime scope/correctness label.
+[CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md).
+Gate CH is the latest landed value-moving runtime slice, and
+`post_v1_next_numeric_coverage_gap_gate_ci_plan` is the selected next
+numeric coverage-gap label.
 
 Read this file before using the calculator for an internal wall or
 floor estimate. For the executable proof, see

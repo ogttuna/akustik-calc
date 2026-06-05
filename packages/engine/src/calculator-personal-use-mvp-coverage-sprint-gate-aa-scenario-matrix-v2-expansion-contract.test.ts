@@ -132,7 +132,7 @@ describe("Personal-Use MVP Coverage Sprint Gate AA scenario matrix v2 expansion"
     expect(summary).toMatchObject({
       basisCoverage: ["element_lab", "field_apparent", "astm_rating_boundary", "building_prediction"],
       currentPostureCoverage: ["family_physics", "needs_input", "unsupported", "exact", "source_anchored_delta"],
-      failureClassCoverage: ["none", "correct_block", "hostile_input_refusal", "unsupported_metric", "basis_boundary"],
+      failureClassCoverage: ["none", "correct_block", "hostile_input_refusal", "unsupported_metric"],
       gapFreeAfterGateAA: true,
       matrixV2AddedRowCount: 12,
       matrixV2AddedRowIds: [...EXPECTED_GATE_AA_ADDED_ROW_IDS],
@@ -144,11 +144,11 @@ describe("Personal-Use MVP Coverage Sprint Gate AA scenario matrix v2 expansion"
       selectedNextAction: "gate_ab_personal_use_mvp_flat_multicavity_topology_input_surface_plan"
     });
     expect(summary.failureClassCounts).toEqual({
-      basis_boundary: 1,
+      basis_boundary: 0,
       correct_block: 10,
       coverage_gap: 0,
       hostile_input_refusal: 3,
-      none: 25,
+      none: 26,
       unsupported_metric: 1
     });
     expect(summary.correctlyBlockedRowIds).toEqual([
@@ -160,7 +160,6 @@ describe("Personal-Use MVP Coverage Sprint Gate AA scenario matrix v2 expansion"
       "floor.astm_iic_aiic_boundary.unsupported",
       "hostile.invalid_thickness_zero.refused",
       "wall.opening_leak_composite_partial.needs_input",
-      "wall.opening_leak_composite_building_boundary.unsupported",
       ...EXPECTED_GATE_AA_ADDED_ROW_IDS.filter((id) =>
         ![
           "wall.double_leaf_split_board_layers.lab",

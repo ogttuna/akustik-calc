@@ -1,12 +1,12 @@
 # Dynamic Airborne Cartography
 
-Last reviewed: 2026-06-02
+Last reviewed: 2026-06-05
 
 Current-state override: this is architecture cartography for the
 dynamic-airborne module, not the current calculator slice selector. Read
 [CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md) and
 [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md) for the
-current Gate CD/Gate CE post-V1 calculator state. Optional module
+current post-Gate-CH / Gate-CI post-V1 calculator state. Optional module
 carves must not replace calculator scope/accuracy work.
 
 Status: split v1 landed 15 atomic commits that moved the first bounded
@@ -14,12 +14,12 @@ modules out of the original 6630-line monolith. The v2 slice is now
 closed at Gate C: eleven correction guards were carved into
 `dynamic-airborne-correction-guards.ts`, recursive probes use
 `DynamicAirborneComposer` injection where needed, and
-`dynamic-airborne.ts` was 1793 lines at Gate C closeout. The active
-calculator slice has since grown it to 1969 physical lines after Gate AZ
-airborne building-prediction runtime promotion. That is still below the
-2000-line C6 threshold, so the remaining three recursive guards are optional
-architecture backlog rather than the selected work. The historical
-active calculator slice at that time was
+`dynamic-airborne.ts` was 1793 lines at Gate C closeout and is 2010
+physical lines as of 2026-06-05. That size is architecture hygiene
+signal, not calculator scope/accuracy selection authority; any remaining
+recursive-guard carve stays optional backlog unless explicitly selected
+by the living source-of-truth chain. The historical active calculator
+slice at Gate C closeout was
 `calculator_model_first_physics_prediction_pivot_v1`; current active
 post-V1 selection is governed by the source-of-truth chain.
 
@@ -57,9 +57,9 @@ Gate B carve and broad validation.
   this file; diffs mix orthogonal concerns and agent context fills
   with irrelevant neighbours.
 - Hygiene debt: MASTER_PLAN §3 grid row
-  `dynamic-airborne.ts size` is now closed for C6 after v2 Gate C:
-  `dynamic-airborne.ts` is 1969 physical lines after Gate AZ and remains
-  below the 2000-line threshold.
+  `dynamic-airborne.ts size` closed for C6 after v2 Gate C. As of
+  2026-06-05 the file is 2010 physical lines, which is a maintenance
+  signal only and does not select work over the current calculator gate.
 
 ## Target Structure (Three Files)
 

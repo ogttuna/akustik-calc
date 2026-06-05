@@ -65,9 +65,339 @@ Current selected post-V1 plan:
 `docs/calculator/POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md`.
 
 Current reconciliation checkpoint:
-`docs/calculator/CHECKPOINT_2026-06-02_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_CD.md`.
+`docs/calculator/CHECKPOINT_2026-06-05_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_CW.md`.
+
+Previous landed value-moving runtime action:
+`post_v1_floor_visible_layer_upper_package_delta_lw_gate_co_plan`
+with status
+`post_v1_floor_visible_layer_upper_package_delta_lw_gate_co_landed_runtime_selected_next_numeric_coverage_gap_gate_cp`.
+Gate CO closes the Gate CN highest-ROI formula-routing gap: visible
+tagged timber joist and CLT upper-package floor stacks now derive the
+same route-owned predictor input used by the existing timber/CLT
+`DeltaLw` formula owners. Complete visible timber now keeps the exact
+`Ln,w 51` anchor and calculates `DeltaLw 25.2`; with explicit
+`impactFieldContext` it also calculates `L'n,w 53 / L'nT,w 50.6 /
+L'nT,50 53.6`. Complete visible CLT now keeps the published-family
+`Ln,w 50` anchor and calculates `DeltaLw 22.6`; with explicit
+`impactFieldContext` it also calculates `L'n,w 52 / L'nT,w 49.6 /
+L'nT,50 52.6`. Missing `loadBasisKgM2` or
+`resilientLayerDynamicStiffnessMNm3` remains `needs_input`, and ISO
+`DeltaLw` still does not alias to ASTM `IIC` / `AIIC`. Coverage
+counters: `newCalculableLayerTemplates 2`,
+`newCalculableRequestShapes 10`, `runtimeCorrectedLayerTemplates 0`,
+and `runtimeCorrectedRequestShapes 0`. Gate CO selects
+`post_v1_next_numeric_coverage_gap_gate_cp_plan` in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-cp-contract.test.ts`.
+
+Previous landed no-runtime numeric coverage selection:
+`post_v1_next_numeric_coverage_gap_gate_cp_plan`
+with status
+`post_v1_next_numeric_coverage_gap_gate_cp_landed_no_runtime_selected_floor_common_floating_lower_treatment_anchor_gate_cq`.
+Gate CP selects the highest-ROI engine-only runtime scope candidate:
+`floor.common_floating_lower_treatment_published_anchor_gap`. The
+current gap is visible heavy-floating reinforced-concrete stacks with
+lower ceiling treatment: without `floorImpactContext` they currently
+publish airborne `Rw` / `Ctr` but hide all requested impact outputs
+behind the combined-formula `loadBasisKgM2` needs-input guard, even
+though the published upper-treatment family already owns an `Ln,w`
+anchor for elastic and rigid gypsum-ceiling variants. Gate CQ must keep
+that published-family `Ln,w` anchor and field impact companions live for
+two common visible lower-treatment templates while leaving `DeltaLw` as
+`needs_input` until `loadBasisKgM2` and
+`resilientLayerDynamicStiffnessMNm3` are present. Complete physical
+inputs must stay on the heavy combined upper/lower formula corridor, and
+ASTM `IIC` / `AIIC` remain unsupported. Gate CP is no-runtime: counters
+`candidateCount 8`, `newCalculableLayerTemplates 0`,
+`newCalculableRequestShapes 0`, `runtimeValuesMoved 0`,
+`estimatedNextNewCalculableLayerTemplates 2`, and
+`estimatedNextNewCalculableRequestShapes 10`. Gate CP selects
+`post_v1_floor_common_floating_lower_treatment_anchor_gate_cq_plan` in
+`packages/engine/src/post-v1-floor-common-floating-lower-treatment-anchor-gate-cq-contract.test.ts`.
+
+Previous landed value-moving runtime action:
+`post_v1_floor_common_floating_lower_treatment_anchor_gate_cq_plan`
+with status
+`post_v1_floor_common_floating_lower_treatment_anchor_gate_cq_landed_runtime_selected_next_numeric_coverage_gap_gate_cr`.
+Gate CQ closes the Gate CP selected runtime scope gap. Visible
+heavy-floating reinforced-concrete lower-treatment stacks now keep the
+published-family `Ln,w` anchor live instead of stopping all impact
+outputs behind the combined-formula needs-input guard. The
+`acoustic_hanger_ceiling` template calculates `Ln,w 43`; with explicit
+`impactFieldContext` it also calculates `L'n,w 45 / L'nT,w 42.6 /
+L'nT,50 46.6`. The `resilient_stud_ceiling` template calculates
+`Ln,w 51.5`; with explicit `impactFieldContext` it also calculates
+`L'n,w 53.5 / L'nT,w 51.1 / L'nT,50 55.1`. `DeltaLw` remains
+`needs_input` until `loadBasisKgM2` and
+`resilientLayerDynamicStiffnessMNm3` are present, complete physical
+inputs still use the heavy combined upper/lower formula corridor, and
+ASTM `IIC` / `AIIC` remain unsupported. Coverage counters:
+`newCalculableLayerTemplates 2`, `newCalculableRequestShapes 10`, and
+`runtimeCorrectedRequestShapes 8`. Gate CQ selects
+`post_v1_next_numeric_coverage_gap_gate_cr_plan` in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-cr-contract.test.ts`.
+
+Latest landed no-runtime numeric coverage selection:
+`post_v1_next_numeric_coverage_gap_gate_cr_plan`
+with status
+`post_v1_next_numeric_coverage_gap_gate_cr_landed_no_runtime_selected_wall_common_auto_topology_second_pass_gate_cs`.
+Gate CR selects the highest-ROI engine-only formula-routing candidate:
+`wall.common_auto_topology_second_pass_after_cj`. Gate CQ closed the
+floor lower-treatment anchor gap, so the next best scope move returns to
+wall layer-order entry. Gate CJ proved support-owned common flat
+double-leaf building requests can use the Gate S double-leaf/framed
+direct curve through the Gate AR building adapter; the remaining runtime
+gap is explicit `flat_layer_order` wall requests that are safely
+segmentable and have required support/stud owner inputs but are still
+blocked by the older ambiguity guard. Gate CS must admit only that safe
+explicit flat-entry subset, keep ambiguous multicavity flat lists
+blocked, preserve missing `supportTopology`, missing `studSpacingMm`,
+and missing `resilientBarSideCount` as `needs_input`, and keep lab `Rw`
+/ STC / `C` / `Ctr` separate from field/building `R'w` / `Dn,w` /
+`DnT,w` outputs. Gate CR moved no runtime values and touched no frontend
+implementation. Counters: `candidateCount 9`,
+`newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+`runtimeValuesMoved 0`, `estimatedNextRuntimeCorrectedLayerTemplates 5`,
+and `estimatedNextRuntimeCorrectedRequestShapes 25`. Gate CR selects
+`post_v1_wall_common_auto_topology_second_pass_gate_cs_plan` in
+`packages/engine/src/post-v1-wall-common-auto-topology-second-pass-gate-cs-contract.test.ts`.
+
+Previous landed value-moving runtime action:
+`post_v1_wall_common_auto_topology_second_pass_gate_cs_plan`
+with status
+`post_v1_wall_common_auto_topology_second_pass_gate_cs_landed_runtime_selected_next_numeric_coverage_gap_gate_ct`.
+Gate CS closes the Gate CR selected wall flat-entry routing gap. Safe
+explicit `flat_layer_order` double-leaf wall requests with complete
+support/stud owner inputs now use the Gate S double-leaf/framed direct
+curve through the Gate AR building adapter instead of falling into the
+generic lab/field/building basis boundary. The explicit flat-order
+variants keep the Gate CJ pins: simple independent `R'w 39 / Dn,w 40 /
+Dn,A 38.5 / DnT,w 42 / DnT,A 40.9`, resilient both-sides `R'w 41 /
+Dn,w 42 / Dn,A 40.5 / DnT,w 44 / DnT,A 42.9`, multi-board `R'w 46 /
+Dn,w 47 / Dn,A 45.7 / DnT,w 49 / DnT,A 48.1`, split air/porous cavity
+`R'w 44 / Dn,w 44 / Dn,A 43.1 / DnT,w 47 / DnT,A 45.5`, and
+asymmetric board-count `R'w 43 / Dn,w 43 / Dn,A 42.1 / DnT,w 46 /
+DnT,A 44.5`. Gate CS carried explicit `flat_layer_order` multicavity
+stacks forward to a separate grouped multicavity owner instead of
+widening them in the double-leaf slice; missing
+`supportTopology`, missing `studSpacingMm`, and missing
+`resilientBarSideCount` remain `needs_input`; lab metrics still do not
+alias into field/building metrics. Counters:
+`newCalculableLayerTemplates 0`, `newCalculableRequestShapes 5`,
+`runtimeCorrectedLayerTemplates 5`, and
+`runtimeCorrectedRequestShapes 25`. Gate CS selects
+`post_v1_next_numeric_coverage_gap_gate_ct_plan` in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ct-contract.test.ts`.
+
+Latest landed no-runtime numeric coverage selection:
+`post_v1_next_numeric_coverage_gap_gate_ct_plan`
+with status
+`post_v1_next_numeric_coverage_gap_gate_ct_landed_no_runtime_selected_wall_flat_layer_order_multicavity_gate_cu`.
+Gate CT selects the highest-ROI engine-only formula-routing candidate:
+`wall.flat_layer_order_multicavity_grouped_owner_gap`. The selected
+Gate CU runtime gap is safe explicit `flat_layer_order` multicavity wall
+entry: a user-entered five-segment `leaf / cavity / leaf / cavity /
+leaf` stack with explicit `supportTopology` can already be represented
+by the existing grouped multicavity owner, but it was still stopped by
+the older flat-order ambiguity guard. Gate CU must connect that layer
+order to the already-owned Gate AE multicavity lab formula and the Gate
+I / Gate AR field/building adapters, keep missing `supportTopology` as
+`needs_input`, keep contradictory explicit grouped indices blocked, keep
+lab/field/building metric owners separate, and avoid frontend/shared
+surface work. Gate CT moved no runtime values and touched no frontend
+implementation. Counters: `candidateCount 10`,
+`newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+`runtimeValuesMoved 0`, `estimatedNextNewCalculableLayerTemplates 1`,
+and `estimatedNextNewCalculableRequestShapes 14`. Gate CT selects
+`post_v1_wall_flat_layer_order_multicavity_gate_cu_plan` in
+`packages/engine/src/post-v1-wall-flat-layer-order-multicavity-gate-cu-contract.test.ts`.
+
+Previous landed value-moving runtime action:
+`post_v1_wall_flat_layer_order_multicavity_gate_cu_plan`
+with status
+`post_v1_wall_flat_layer_order_multicavity_gate_cu_landed_runtime_selected_next_numeric_coverage_gap_gate_cv`.
+Gate CU closes the Gate CT selected flat-layer-order multicavity routing
+gap. Safe explicit `flat_layer_order` multicavity wall requests with a
+five-segment leaf/cavity/leaf/cavity/leaf layer order and explicit
+`supportTopology` now use the Gate AE two-cavity multicavity formula for
+lab `Rw/STC/C/Ctr`, the Gate I field adapter for field/apparent
+outputs, and the Gate AR building adapter for building-prediction
+outputs. The pinned lab answer is `Rw 53 / STC 57 / C -0.6 / Ctr -8`;
+field and building requests publish `R'w 53 / Dn,w 53 / Dn,A 52 /
+DnT,w 54 / DnT,A 53.5`. Missing `supportTopology` remains
+`needs_input`, contradictory explicit grouped indices on
+`flat_layer_order` remain blocked, field/building requests still require
+their own room/flanking context, and lab metrics are not relabelled as
+field/building metrics without the owned adapters. Coverage counters:
+Gate CU exact pins: `Rw 53 / STC 57 / C -0.6 / Ctr -8`; `R'w 53 / Dn,w 53 / Dn,A 52 / DnT,w 54 / DnT,A 53.5`.
+`newCalculableLayerTemplates 1`, `newCalculableRequestShapes 14`,
+`runtimeCorrectedLayerTemplates 1`, and
+`runtimeCorrectedRequestShapes 14`. Gate CU selects
+`post_v1_next_numeric_coverage_gap_gate_cv_plan` in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-cv-contract.test.ts`.
+
+Latest landed no-runtime numeric coverage selection:
+`post_v1_next_numeric_coverage_gap_gate_cv_plan`
+with status
+`post_v1_next_numeric_coverage_gap_gate_cv_landed_no_runtime_selected_wall_local_substitution_building_adapter_gate_cw`.
+Gate CV selects the highest-ROI engine-only formula/adapter-routing
+candidate:
+`wall.local_substitution_building_prediction_adapter_gap`. Gate CU
+closed the flat layer-order multicavity wall gap, and a probe showed the
+Gate CQ lower-treatment direct/flanking field route is already
+runtime-capable, so the next value-moving scope gap is local-substitution
+triple-leaf wall building prediction. Lab `Rw/STC/C/Ctr` and field
+`R'w/DnT,w` are already owned for the local-substitution family, but the
+same complete stack with explicit `building_prediction` flanking,
+junction, room, and output-basis context still stops as unsupported.
+Gate CW must connect that family-specific lab curve to the existing
+building-prediction corridor, preserve missing building physical inputs
+as `needs_input` / `unsupported`, keep exact same-stack source rows
+higher precedence, and avoid relabelling lab or field metrics as
+building outputs. Gate CV moved no runtime values and touched no
+frontend implementation. Counters: `candidateCount 11`,
+`newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+`runtimeValuesMoved 0`, `estimatedNextNewCalculableLayerTemplates 1`,
+and `estimatedNextNewCalculableRequestShapes 5`. Gate CV selects
+`post_v1_wall_local_substitution_building_adapter_gate_cw_plan` in
+`packages/engine/src/post-v1-wall-local-substitution-building-adapter-gate-cw-contract.test.ts`.
 
 Latest landed value-moving runtime action:
+`post_v1_wall_local_substitution_building_adapter_gate_cw_plan`
+with status
+`post_v1_wall_local_substitution_building_adapter_gate_cw_landed_runtime_selected_next_numeric_coverage_gap_gate_cx`.
+Gate CW closes the Gate CV selected local-substitution building adapter
+gap. Complete local Rockwool / MLV / plaster grouped triple-leaf wall
+requests with explicit `building_prediction` flanking, junction, room,
+panel, RT60, and output-basis inputs now route the family-specific
+local-substitution lab curve through the building-prediction adapter
+instead of stopping as unsupported. The pinned building answer is
+`R'w 51 / Dn,w 51 / Dn,A 52.4 / DnT,w 53 / DnT,A 53.9` with a
+`+/-11 dB` source-absent budget. Missing `buildingPredictionOutputBasis`,
+`flankingJunctionClass`, `conservativeFlankingAssumption`, room volumes,
+RT60, panel dimensions, or `junctionCouplingLengthM` remains
+`needs_input`; exact same-stack field/building source rows still win;
+lab `Rw/STC/C/Ctr` and field `R'w/DnT,w` remain separate metric owners;
+and no ASTM or floor-impact aliases are published. Coverage counters:
+`newCalculableLayerTemplates 1`, `newCalculableRequestShapes 5`,
+`runtimeCorrectedLayerTemplates 1`, and
+`runtimeCorrectedRequestShapes 5`. Gate CW selects
+`post_v1_next_numeric_coverage_gap_gate_cx_plan` in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-cx-contract.test.ts`.
+
+Previous landed value-moving runtime action:
+`post_v1_opening_leak_composite_wall_adapters_gate_ck_plan`
+with status
+`post_v1_opening_leak_composite_wall_adapters_gate_ck_landed_runtime_selected_next_numeric_coverage_gap_gate_cl`.
+Gate CK corrects opening/leak field/building adapter selection: explicit
+top-level `openingLeakElements` plus `hostWallAreaM2` now route through
+the owned Gate S opening/leak lab composite anchor and the
+company-internal field/building area-energy adapters without requiring a
+hidden `openingLeakFieldBuildingAdapterBoundary` flag. Complete field
+opening/leak context now calculates `R'w 36.4 / Dn,w 36.7 / DnT,w 36.9`
+with the `+/-8 dB` source-absent field budget; complete
+building-prediction opening/leak context now calculates `R'w 31.6 /
+DnT,w 32.1` with the `+/-10 dB` building budget. Missing room/flanking
+physical inputs still stop as `needs_input`, `Dn,A` / `DnT,A` still
+require `frequencyBandSet`, and lab `Rw` / STC still do not alias into
+field or building outputs. Counters: `newCalculableLayerTemplates 2`,
+`newCalculableRequestShapes 5`, `runtimeCorrectedLayerTemplates 2`, and
+`runtimeCorrectedRequestShapes 5`. Gate CK selects
+`post_v1_next_numeric_coverage_gap_gate_cl_plan` in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-cl-contract.test.ts`.
+
+Latest landed no-runtime accuracy selection:
+`post_v1_next_numeric_coverage_gap_gate_cl_plan`
+with status
+`post_v1_next_numeric_coverage_gap_gate_cl_landed_no_runtime_selected_required_physical_input_surface_parity_gate_cm`.
+Gate CL is a residual/holdout program gate, not a source-row catalog or
+confidence-label pass. It creates five source-owned residual ledgers for
+common flat double-leaf building prediction, opening/leak field/building,
+open-box raw-bare lab impact, open-web raw-bare lab impact, and heavy
+floating upper-treatment field companion routes. All five ledgers keep
+the existing wider error budgets because same-family calibration rows and
+same-basis holdout rows are still insufficient for budget tightening.
+Near-source rows are recorded only as evidence candidates; no runtime
+value is promoted from source proximity, and Gate CK / Gate CJ numeric
+pins stay frozen. Counters: `residualLedgers 5`, `budgetsHeldWide 5`,
+`budgetsTightened 0`, `newCalculableLayerTemplates 0`,
+`newCalculableRequestShapes 0`, and
+`runtimePromotionsFromSourceProximity 0`. Gate CL selects
+`post_v1_required_physical_input_surface_parity_gate_cm_plan` in
+`packages/engine/src/post-v1-required-physical-input-surface-parity-gate-cm-contract.test.ts`.
+
+Latest landed no-runtime input-surface guard:
+`post_v1_required_physical_input_surface_parity_gate_cm_plan`
+with status
+`post_v1_required_physical_input_surface_parity_gate_cm_landed_no_runtime_selected_next_numeric_coverage_gap_gate_cn`.
+Gate CM is intentionally narrow: it pins selected-route required
+physical input and `needs_input` boundaries for Gate CK opening/leak
+field/building, Gate CJ common flat double-leaf building prediction,
+Gate CG2 heavy-floating dynamic `DeltaLw`, and Gate CH direct/flanking
+field-impact `L'nT,50`. It does not touch frontend implementation,
+retune formulas, crawl source rows, or move runtime values. Counters:
+`inputSurfaceLedgers 4`, `requiredPhysicalInputsPinned 20`,
+`guardedRequestShapes 15`, `newCalculableLayerTemplates 0`,
+`newCalculableRequestShapes 0`, and `runtimeValuesMoved 0`. Gate CM
+returns the chain to numeric coverage and accuracy work by selecting
+`post_v1_next_numeric_coverage_gap_gate_cn_plan` in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-cn-contract.test.ts`.
+
+Latest landed no-runtime numeric coverage selection:
+`post_v1_next_numeric_coverage_gap_gate_cn_plan`
+with status
+`post_v1_next_numeric_coverage_gap_gate_cn_landed_no_runtime_selected_floor_visible_layer_upper_package_delta_lw_gate_co`.
+Gate CN selected
+`floor.visible_layer_upper_package_delta_lw_formula_routing_gap` as the
+highest-ROI engine slice for the current product goal. Existing
+timber/CLT `DeltaLw` formula owners calculate when explicit
+`impactPredictorInput` is supplied, but visible tagged CLT and timber
+upper-package layer stacks with equivalent physical inputs still publish
+only `Ln,w`. Gate CO must route those layer-entered packages to the
+existing `DeltaLw` metric owners while exact/predicted `Ln,w` remains
+first, missing physical inputs remain `needs_input`, and ISO `DeltaLw`
+does not alias to ASTM `IIC` / `AIIC`. Gate CN moved no runtime values,
+touched no frontend implementation, selected no source crawl, and
+selected no confidence wording. Counters: `candidateCount 7`,
+`newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+`runtimeValuesMoved 0`, `estimatedNextNewCalculableLayerTemplates 2`,
+and `estimatedNextNewCalculableRequestShapes 10`. Gate CN selected
+`post_v1_floor_visible_layer_upper_package_delta_lw_gate_co_plan` in
+`packages/engine/src/post-v1-floor-visible-layer-upper-package-delta-lw-gate-co-contract.test.ts`.
+
+Previous landed value-moving runtime action:
+`post_v1_wall_common_auto_topology_expansion_gate_cj_plan`
+with status
+`post_v1_wall_common_auto_topology_expansion_gate_cj_landed_runtime_selected_opening_leak_composite_wall_adapters_gate_ck`.
+Gate CJ corrects common flat double-leaf wall
+`building_prediction` routing: complete support-owned flat double-leaf,
+multi-board, split air/porous cavity, asymmetric, and resilient
+both-sides stacks now use the Gate S double-leaf/framed direct curve
+inside the Gate AR building adapter instead of generic building fallback
+or unsupported explicit-topology behavior. Missing `supportTopology`,
+missing `studSpacingMm`, explicit `flat_layer_order`, and missing
+`resilientBarSideCount` remain value-less boundaries. Counters:
+`newCalculableLayerTemplates 1`, `newCalculableRequestShapes 5`,
+`runtimeCorrectedLayerTemplates 5`, and
+`runtimeCorrectedRequestShapes 25`. Gate CJ selects
+`post_v1_opening_leak_composite_wall_adapters_gate_ck_plan` in
+`packages/engine/src/post-v1-opening-leak-composite-wall-adapters-gate-ck-contract.test.ts`.
+
+Previous landed no-runtime selection:
+`post_v1_next_numeric_coverage_gap_gate_ci_plan`
+with status
+`post_v1_next_numeric_coverage_gap_gate_ci_landed_no_runtime_selected_wall_common_auto_topology_expansion_gate_cj`.
+Gate CI preserves the exact ASTM E492/E1007 one-third-octave
+`IIC`/`AIIC` owner, proves four ISO/source-absent impact routes keep
+ASTM aliases unsupported, defers user-supplied ASTM band input until a
+separate API/workbench/report/replay surface slice is selected, and
+selects `wall.common_auto_topology_expansion` as the next value-moving
+engine slice. The Gate CI/CJ plan is
+`docs/calculator/POST_V1_GATE_CI_CJ_ENGINE_PLAN_2026-06-05.md`.
+Gate CI selected
+`post_v1_wall_common_auto_topology_expansion_gate_cj_plan` in
+`packages/engine/src/post-v1-wall-common-auto-topology-expansion-gate-cj-contract.test.ts`.
+
+Previous landed value-moving runtime action:
 `post_v1_next_numeric_coverage_gap_gate_ch_plan`
 with status
 `post_v1_next_numeric_coverage_gap_gate_ch_landed_runtime_selected_next_numeric_coverage_gap_gate_ci`.
@@ -167,9 +497,9 @@ Gate CE selected next file:
 `packages/engine/src/post-v1-target-output-independence-sweep-gate-cf-contract.test.ts`.
 
 Current selected next action label:
-`post_v1_next_numeric_coverage_gap_gate_ci_plan`.
-Gate CH selected Gate CI:
-`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ci-contract.test.ts`.
+`post_v1_next_numeric_coverage_gap_gate_cx_plan`.
+Gate CW selected Gate CX:
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-cx-contract.test.ts`.
 
 Previous value-moving action:
 `post_v1_floor_open_box_target_output_independence_gate_cd_plan`
@@ -270,9 +600,10 @@ It selected `floor.open_box_timber_finished_package.airborne_building_companion_
 now closed by Gate BU.
 
 Latest full gate checkpoint:
-`pnpm calculator:gate:current` passed after Gate CH on 2026-06-02 with
-engine 599 files / 3301 tests, web 113 files / 437 passed + 18 skipped,
-repo build 5 / 5, and whitespace guard passed.
+`NEXT_DIST_DIR=.next-gate-cw pnpm calculator:gate:current` passed after
+Gate CW on 2026-06-05 with engine 614 files / 3378 tests, web 113 files
+/ 438 passed + 18 skipped, repo build 5 / 5, and whitespace guard
+passed.
 
 Landed Gate AZ planning bridge:
 `docs/calculator/POST_V1_GATE_AZ_NUMERIC_COVERAGE_GAP_PLAN_2026-05-27.md`.

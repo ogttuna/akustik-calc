@@ -151,7 +151,6 @@ const HOSTILE_LAYER_EDIT_ROW_IDS = [
 ] as const;
 
 const ALIAS_NEGATIVE_ROW_IDS = [
-  "wall.opening_leak_composite_building_boundary.unsupported",
   "floor.astm_iic_aiic_boundary.unsupported"
 ] as const;
 

@@ -2,14 +2,15 @@
 
 Status: ROADMAP, not an active implementation slice.
 
-Current-state override, 2026-06-02: this roadmap is strategic accuracy
+Current-state override, 2026-06-05: this roadmap is strategic accuracy
 context only. It does not select current work. Current authority is
 [CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md) and
 [POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md).
-Gate CD is the latest landed value-moving runtime slice, and Gate CE is
-the selected next numeric coverage rerank label. Older source-acquisition
-or source-gap statements below are historical unless reselected by the
-current post-V1 plan.
+Gate CH is the latest landed value-moving runtime slice, and
+`post_v1_next_numeric_coverage_gap_gate_ci_plan` is the selected next
+numeric coverage-gap label. Older source-acquisition or source-gap
+statements below are historical unless reselected by the current
+post-V1 plan.
 
 Current review note 2026-05-12:
 the company-internal daily-use bar is being tracked separately from the

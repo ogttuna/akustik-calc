@@ -55,6 +55,19 @@ const EXPLICIT_FLAT_CONTEXT = {
   }
 } as const satisfies AirborneContext;
 
+const CONTRADICTORY_EXPLICIT_FLAT_GROUP_CONTEXT = {
+  contextMode: "element_lab",
+  wallTopology: {
+    cavity1LayerIndices: [1],
+    cavity2LayerIndices: [3],
+    internalLeafLayerIndices: [2],
+    sideALeafLayerIndices: [0],
+    sideBLeafLayerIndices: [4],
+    supportTopology: "independent_frames",
+    topologyMode: "flat_layer_order"
+  }
+} as const satisfies AirborneContext;
+
 function readRepoFile(path: string): string {
   return readFileSync(join(REPO_ROOT, path), "utf8");
 }
@@ -116,7 +129,7 @@ describe("post-V1 wall full-fill multicavity auto-topology Gate Q", () => {
     expect(result.unsupportedTargetOutputs).toEqual([]);
   });
 
-  it("does not guess full-fill support topology from legacy hints or override explicit flat topology", () => {
+  it("keeps legacy support hints and contradictory explicit flat topology out of the runtime route", () => {
     const legacyHintOnly = calculateAssembly(FULL_FILL_FLAT_MULTICAVITY_STACK, {
       airborneContext: LEGACY_SUPPORT_HINT_ONLY_CONTEXT,
       calculator: "dynamic",
@@ -124,6 +137,11 @@ describe("post-V1 wall full-fill multicavity auto-topology Gate Q", () => {
     });
     const explicitFlat = calculateAssembly(FULL_FILL_FLAT_MULTICAVITY_STACK, {
       airborneContext: EXPLICIT_FLAT_CONTEXT,
+      calculator: "dynamic",
+      targetOutputs: WALL_OUTPUTS
+    });
+    const contradictoryExplicitFlatGroups = calculateAssembly(FULL_FILL_FLAT_MULTICAVITY_STACK, {
+      airborneContext: CONTRADICTORY_EXPLICIT_FLAT_GROUP_CONTEXT,
       calculator: "dynamic",
       targetOutputs: WALL_OUTPUTS
     });
@@ -137,7 +155,14 @@ describe("post-V1 wall full-fill multicavity auto-topology Gate Q", () => {
       })
     ).toBeNull();
 
-    for (const result of [legacyHintOnly, explicitFlat]) {
+    expect(explicitFlat.airborneBasis).toMatchObject({
+      method: "triple_leaf_two_cavity_frequency_solver",
+      missingPhysicalInputs: [],
+      origin: "family_physics_prediction"
+    });
+    expect(explicitFlat.supportedTargetOutputs).toEqual(["Rw", "STC", "C", "Ctr"]);
+
+    for (const result of [legacyHintOnly, contradictoryExplicitFlatGroups]) {
       expect(result.airborneBasis?.method).not.toBe("triple_leaf_two_cavity_frequency_solver");
       expect(result.airborneCandidateResolution?.selectedCandidateId).not.toBe(
         "candidate_grouped_rockwool_family_physics_prediction"

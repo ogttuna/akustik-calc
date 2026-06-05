@@ -150,7 +150,7 @@ describe("Personal-Use MVP Coverage Sprint Gate Z post-CLT-Ctr coverage revalida
     expect(summary).toMatchObject({
       basisCoverage: ["element_lab", "field_apparent", "astm_rating_boundary", "building_prediction"],
       currentPostureCoverage: ["family_physics", "needs_input", "unsupported", "exact", "source_anchored_delta"],
-      failureClassCoverage: ["none", "correct_block", "hostile_input_refusal", "unsupported_metric", "basis_boundary"],
+      failureClassCoverage: ["none", "correct_block", "hostile_input_refusal", "unsupported_metric"],
       gapFreeAfterGatesXAndY: true,
       numericRuntimeValueMovement: false,
       previousSelectionStatus:
@@ -162,11 +162,11 @@ describe("Personal-Use MVP Coverage Sprint Gate Z post-CLT-Ctr coverage revalida
       selectedNextAction: "gate_aa_personal_use_mvp_scenario_matrix_v2_expansion_plan"
     });
     expect(summary.failureClassCounts).toEqual({
-      basis_boundary: 1,
+      basis_boundary: 0,
       correct_block: 5,
       coverage_gap: 0,
       hostile_input_refusal: 2,
-      none: 19,
+      none: 20,
       unsupported_metric: 1
     });
     expect(summary.correctlyBlockedRowIds).toEqual([
@@ -177,8 +177,7 @@ describe("Personal-Use MVP Coverage Sprint Gate Z post-CLT-Ctr coverage revalida
       "floor.missing_field_impact_context.needs_input",
       "floor.astm_iic_aiic_boundary.unsupported",
       "hostile.invalid_thickness_zero.refused",
-      "wall.opening_leak_composite_partial.needs_input",
-      "wall.opening_leak_composite_building_boundary.unsupported"
+      "wall.opening_leak_composite_partial.needs_input"
     ]);
 
     for (const row of rows) {
@@ -312,15 +311,19 @@ describe("Personal-Use MVP Coverage Sprint Gate Z post-CLT-Ctr coverage revalida
     });
 
     expect(openingBuilding).toMatchObject({
-      currentPosture: "unsupported",
-      failureClass: "basis_boundary",
+      currentPosture: "family_physics",
+      failureClass: "none",
       runtime: {
-        basisId: GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_METHOD,
-        errorBudgetDb: null,
-        supportedTargetOutputs: []
+        basisId: "company_internal_opening_leak_building_area_energy_runtime_corridor",
+        errorBudgetDb: 10,
+        supportedTargetOutputs: ["R'w", "DnT,w"],
+        unsupportedTargetOutputs: ["Rw", "STC"]
       }
     });
-    expect(openingBuilding.runtime.valuePins).toEqual([]);
+    expect(openingBuilding.runtime.valuePins).toEqual([
+      { metric: "R'w", value: 31.6 },
+      { metric: "DnT,w", value: 32.1 }
+    ]);
 
     expect(astm).toMatchObject({
       currentPosture: "unsupported",

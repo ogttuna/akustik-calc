@@ -100,7 +100,7 @@ describe("Personal-Use MVP Coverage Sprint Gate AV post-release accuracy and ada
     const roadmap = buildPersonalUseMvpCoverageSprintGateAVRoadmap();
 
     expect(roadmap).toMatchObject({
-      acceptedBoundaryRowCount: 15,
+      acceptedBoundaryRowCount: 14,
       companyInternalDailyUseReady: true,
       exactSourcePrecedencePreserved: true,
       gateAUSelectedNextAction: PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AU_SELECTED_NEXT_ACTION,
@@ -115,7 +115,7 @@ describe("Personal-Use MVP Coverage Sprint Gate AV post-release accuracy and ada
       selectedNextFile: PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AV_SELECTED_NEXT_FILE,
       selectionStatus: PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AV_SELECTION_STATUS,
       sourceAbsentSolverGapsRankedBeforeSourceCrawl: true,
-      supportedValueRowCount: 26
+      supportedValueRowCount: 27
     });
     expect(gateAU.selectedNextAction).toBe(PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AV_LANDED_GATE);
     expect(roadmap.roadmapRules).toContain(

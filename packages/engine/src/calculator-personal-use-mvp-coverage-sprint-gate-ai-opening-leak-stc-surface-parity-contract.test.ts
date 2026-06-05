@@ -294,8 +294,10 @@ describe("Personal-Use MVP Coverage Sprint Gate AI opening/leak STC surface pari
       expect(result.warnings.join("\n"), blockedReason).toContain(blockedReason);
     }
 
-    expect(buildingAlias.supportedTargetOutputs).toEqual([]);
-    expect(buildingAlias.unsupportedTargetOutputs).toEqual(["STC", "R'w", "DnT,w"]);
+    expect(buildingAlias.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
+    expect(buildingAlias.unsupportedTargetOutputs).toEqual(["STC"]);
+    expect(buildingAlias.metrics.estimatedRwPrimeDb).toBe(31.6);
+    expect(buildingAlias.metrics.estimatedDnTwDb).toBe(32.1);
     expect(buildingAlias.ratingAdapterBasisSet).toBeUndefined();
     expect(buildingAlias.warnings.join("\n")).not.toContain(GATE_AH_OPENING_LEAK_STC_SPECTRUM_ADAPTER_WARNING);
   });

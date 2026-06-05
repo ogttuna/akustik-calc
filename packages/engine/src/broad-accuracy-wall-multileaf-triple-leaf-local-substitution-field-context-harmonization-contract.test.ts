@@ -18,6 +18,10 @@ import {
   buildBroadAccuracyWallTripleLeafLocalSubstitutionFieldContextHarmonizationContract
 } from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-field-context-harmonization";
 import {
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_BUILDING_RUNTIME_METHOD,
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_BUILDING_SELECTED_CANDIDATE_ID
+} from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-building-adapter";
+import {
   BROAD_ACCURACY_WALL_MULTILEAF_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_COVERAGE_REFRESH_LANDED_GATE,
   BROAD_ACCURACY_WALL_MULTILEAF_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_COVERAGE_REFRESH_SELECTED_NEXT_ACTION,
   BROAD_ACCURACY_WALL_MULTILEAF_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_COVERAGE_REFRESH_SELECTED_NEXT_FILE,
@@ -240,7 +244,7 @@ describe("broad accuracy wall triple-leaf local substitution field-context harmo
     });
   });
 
-  it("keeps missing field inputs, lab-context field requests, and building requests out of the field runtime", () => {
+  it("keeps missing field inputs and lab-context field requests out of the field runtime while routing building requests separately", () => {
     const missingRt60 = calculateAssembly(LOCAL_ROCKWOOL_MLV_PLASTER_STACK, {
       airborneContext: {
         ...LOCAL_FIELD_CONTEXT,
@@ -287,13 +291,15 @@ describe("broad accuracy wall triple-leaf local substitution field-context harmo
       BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD
     );
 
+    expect(building.supportedTargetOutputs).toEqual(FIELD_OUTPUTS);
+    expect(building.unsupportedTargetOutputs).toEqual([]);
     expect(building.airborneCandidateResolution).toMatchObject({
-      selectedCandidateId: "candidate_dynamic_unsupported",
-      selectedOrigin: "unsupported"
+      selectedCandidateId: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_BUILDING_SELECTED_CANDIDATE_ID,
+      selectedOrigin: "family_physics_prediction"
     });
     expect(building.airborneBasis).toMatchObject({
-      method: "dynamic_calculator_building_prediction_runtime_adapter_owner_missing",
-      origin: "unsupported"
+      method: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_BUILDING_RUNTIME_METHOD,
+      origin: "family_physics_prediction"
     });
     expect(building.airborneBasis?.method).not.toBe(
       BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD

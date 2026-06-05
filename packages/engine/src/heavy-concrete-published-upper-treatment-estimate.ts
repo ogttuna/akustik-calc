@@ -96,6 +96,16 @@ function calculateCandidateOffset(value: number | undefined, target: number, sca
   return typeof value === "number" ? Math.abs(value - target) / scale : 1;
 }
 
+function hasPositiveNumber(value: unknown): value is number {
+  return typeof value === "number" && Number.isFinite(value) && value > 0;
+}
+
+function hasMassSchedule(
+  layer: ImpactPredictorInput["floorCovering" | "floatingScreed" | "upperFill"] | null | undefined
+): boolean {
+  return hasPositiveNumber(layer?.densityKgM3) && hasPositiveNumber(layer?.thicknessMm);
+}
+
 function isHeavyConcreteGypsumBoardClass(value: string | undefined): boolean {
   const normalized = String(value ?? "").trim().toLowerCase();
 
@@ -134,7 +144,18 @@ export function deriveHeavyConcretePublishedUpperTreatmentEstimate(
     return null;
   }
 
-  if (typeof input.resilientLayer?.dynamicStiffnessMNm3 === "number" || input.resilientLayer?.productId) {
+  if (
+    input.resilientLayer?.productId ||
+    (
+      typeof input.resilientLayer?.dynamicStiffnessMNm3 === "number" &&
+      (
+        typeof input.loadBasisKgM2 === "number" ||
+        hasMassSchedule(input.floorCovering) ||
+        hasMassSchedule(input.floatingScreed) ||
+        hasMassSchedule(input.upperFill)
+      )
+    )
+  ) {
     return null;
   }
 
@@ -215,6 +236,7 @@ export function deriveHeavyConcretePublishedUpperTreatmentEstimate(
   const cavityDepthMm = input.lowerTreatment?.cavityDepthMm;
   const cavityFillThicknessMm = input.lowerTreatment?.cavityFillThicknessMm;
   const boardThicknessMm = input.lowerTreatment?.boardThicknessMm;
+  const lowerSupportProductId = input.lowerTreatment?.supportProductId;
 
   // Keep the combined wet+ceiling widening narrow. This corridor is only
   // source-backed today while the wet package stays generic; branch-specific
@@ -252,7 +274,10 @@ export function deriveHeavyConcretePublishedUpperTreatmentEstimate(
   );
 
   if (
-    input.lowerTreatment?.type === "suspended_ceiling_elastic_hanger" &&
+    (
+      input.lowerTreatment?.type === "suspended_ceiling_elastic_hanger" ||
+      lowerSupportProductId === "acoustic_hanger_ceiling"
+    ) &&
     thicknessNear(cavityDepthMm, 65, 20) &&
     thicknessNear(cavityFillThicknessMm, 100, 25) &&
     thicknessNear(boardThicknessMm, 13, 2)
@@ -295,7 +320,10 @@ export function deriveHeavyConcretePublishedUpperTreatmentEstimate(
   // ceilings already fall onto a different visible-layer lane, so this
   // predictor branch only mirrors the current gypsum/no-tag corridor.
   if (
-    input.lowerTreatment?.type !== "suspended_ceiling_rigid_hanger" ||
+    (
+      input.lowerTreatment?.type !== "suspended_ceiling_rigid_hanger" &&
+      lowerSupportProductId !== "resilient_stud_ceiling"
+    ) ||
     !isHeavyConcreteGypsumBoardClass(boardMaterialClass) ||
     !thicknessNear(cavityDepthMm, 130, 25) ||
     !thicknessNear(cavityFillThicknessMm, 100, 25) ||

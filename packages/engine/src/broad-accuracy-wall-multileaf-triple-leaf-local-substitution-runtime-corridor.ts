@@ -27,6 +27,11 @@ import {
   type BroadAccuracyWallTripleLeafLocalSubstitutionFormulaEvaluation
 } from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-formula-corridor";
 import {
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_BUILDING_SELECTED_CANDIDATE_ID,
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_BUILDING_WARNING,
+  maybeBuildBroadAccuracyWallTripleLeafLocalSubstitutionBuildingBasis
+} from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-building-adapter";
+import {
   BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
   BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_WARNING,
   maybeBuildBroadAccuracyWallTripleLeafLocalSubstitutionFieldContextBasis
@@ -110,6 +115,14 @@ const BLOCKED_LOCAL_SUBSTITUTION_OUTPUTS = new Set<RequestedOutputId>([
 ]);
 const LOCAL_SUBSTITUTION_LAB_SPECTRUM_OUTPUTS = new Set<RequestedOutputId>(["C", "Ctr", "STC"]);
 const LOCAL_SUBSTITUTION_FIELD_OUTPUTS = new Set<RequestedOutputId>(["R'w", "DnT,w"]);
+const LOCAL_SUBSTITUTION_BUILDING_OUTPUTS = new Set<RequestedOutputId>([
+  "Dn,A",
+  "Dn,w",
+  "DnT,A",
+  "DnT,A,k",
+  "DnT,w",
+  "R'w"
+]);
 
 function includeParentRwForLabSpectrumAdapter(
   targetOutputs: readonly RequestedOutputId[] | undefined
@@ -128,6 +141,10 @@ function includeParentRwForLabSpectrumAdapter(
 
 function includesFieldContextOutputs(targetOutputs: readonly RequestedOutputId[] | undefined): boolean {
   return Boolean(targetOutputs?.some((output) => LOCAL_SUBSTITUTION_FIELD_OUTPUTS.has(output)));
+}
+
+function includesBuildingPredictionOutputs(targetOutputs: readonly RequestedOutputId[] | undefined): boolean {
+  return Boolean(targetOutputs?.some((output) => LOCAL_SUBSTITUTION_BUILDING_OUTPUTS.has(output)));
 }
 
 function toLayerInputs(layers: readonly ResolvedLayer[]): readonly LayerInput[] {
@@ -416,8 +433,11 @@ export function maybeCalculateBroadAccuracyWallTripleLeafLocalSubstitutionRuntim
   const fieldContextRequested =
     input.options.airborneContext?.contextMode === "field_between_rooms" &&
     includesFieldContextOutputs(targetOutputs);
+  const buildingContextRequested =
+    input.options.airborneContext?.contextMode === "building_prediction" &&
+    includesBuildingPredictionOutputs(targetOutputs);
   const formulaAirborneContext: AirborneContext =
-    fieldContextRequested && input.options.airborneContext
+    (fieldContextRequested || buildingContextRequested) && input.options.airborneContext
       ? {
           ...input.options.airborneContext,
           contextMode: "element_lab"
@@ -426,7 +446,10 @@ export function maybeCalculateBroadAccuracyWallTripleLeafLocalSubstitutionRuntim
   const evaluation = evaluateBroadAccuracyWallTripleLeafLocalSubstitutionFormulaCorridor({
     airborneContext: formulaAirborneContext,
     layers: layerInputs,
-    targetOutputs: fieldContextRequested ? ["Rw"] : includeParentRwForLabSpectrumAdapter(input.options.targetOutputs)
+    targetOutputs:
+      fieldContextRequested || buildingContextRequested
+        ? ["Rw"]
+        : includeParentRwForLabSpectrumAdapter(input.options.targetOutputs)
   });
 
   if (!canPromoteRuntime(evaluation)) {
@@ -451,26 +474,45 @@ export function maybeCalculateBroadAccuracyWallTripleLeafLocalSubstitutionRuntim
         }
       })
     : null;
+  const buildingContextBasis = buildingContextRequested
+    ? maybeBuildBroadAccuracyWallTripleLeafLocalSubstitutionBuildingBasis({
+        baseBasis: basis,
+        context: input.options.airborneContext,
+        curve: anchored.curve,
+        family: input.family.family,
+        layers: input.layers,
+        options: input.options,
+        strategy: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_RUNTIME_STRATEGY,
+        topology: input.topology
+      })
+    : null;
 
   if (fieldContextRequested && !fieldContextBasis) {
     return null;
   }
+  if (buildingContextRequested && !buildingContextBasis) {
+    return null;
+  }
 
-  const selectedBasis = fieldContextBasis ?? basis;
+  const selectedBasis = buildingContextBasis ?? fieldContextBasis ?? basis;
   const ratings = buildRatingsFromCurve(
     anchored.curve.frequenciesHz,
     anchored.curve.transmissionLossDb,
-    fieldContextBasis ? input.options.airborneContext : { contextMode: "element_lab" }
+    fieldContextBasis || buildingContextBasis ? input.options.airborneContext : { contextMode: "element_lab" }
   );
   const candidateResolution = buildRuntimeCandidateResolution({
     basis: selectedBasis,
     outputIds: targetOutputs,
-    selectedCandidateId: fieldContextBasis
-      ? BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID
-      : undefined,
-    selectedMetricIds: fieldContextBasis
-      ? targetOutputs.filter((output) => LOCAL_SUBSTITUTION_FIELD_OUTPUTS.has(output))
-      : undefined
+    selectedCandidateId: buildingContextBasis
+      ? BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_BUILDING_SELECTED_CANDIDATE_ID
+      : fieldContextBasis
+        ? BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID
+        : undefined,
+    selectedMetricIds: buildingContextBasis
+      ? targetOutputs.filter((output) => LOCAL_SUBSTITUTION_BUILDING_OUTPUTS.has(output))
+      : fieldContextBasis
+        ? targetOutputs.filter((output) => LOCAL_SUBSTITUTION_FIELD_OUTPUTS.has(output))
+        : undefined
   });
   const screeningRw = input.options.screeningEstimatedRwDb;
   const trace: DynamicAirborneTrace = {
@@ -502,7 +544,9 @@ export function maybeCalculateBroadAccuracyWallTripleLeafLocalSubstitutionRuntim
       `Local substitution runtime selected ${evaluation.candidateId ?? "unknown"} from the source-absent formula corridor.`,
       `Formula design corridor Rw ${(evaluation.designCorridorRwDb ?? ratings.iso717.Rw).toFixed(1)} with live ISO-rounded Rw ${ratings.iso717.Rw.toFixed(0)} and +/-${basis.errorBudgetDb?.toFixed(0) ?? "?"} dB not-measured budget.`,
       "The shifted NRC 2024 Assembly B curve is used only as an anchor shape; this is not measured exact evidence.",
-      fieldContextBasis
+      buildingContextBasis
+        ? "Building R'w, Dn,w, Dn,A, DnT,w, and DnT,A are calculated from the local-substitution lab curve plus explicit building flanking, junction, and room context."
+        : fieldContextBasis
         ? "Field R'w and DnT,w are harmonized from the local-substitution lab curve plus explicit receiving-room context; building prediction remains blocked."
         : "STC, C, Ctr, field, and building adapters remain blocked by the runtime corridor."
     ],
@@ -530,7 +574,12 @@ export function maybeCalculateBroadAccuracyWallTripleLeafLocalSubstitutionRuntim
     ratings,
     rw: ratings.iso717.Rw,
     trace,
-    warnings: fieldContextBasis
+    warnings: buildingContextBasis
+      ? [
+          BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_BUILDING_WARNING,
+          `Local substitution building prediction carries a +/-${buildingContextBasis.errorBudgetDb?.toFixed(0) ?? "?"} dB source-absent error budget for R'w, Dn, and DnT outputs.`
+        ]
+      : fieldContextBasis
       ? [
           BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_WARNING,
           `Local substitution field context carries a +/-${fieldContextBasis.errorBudgetDb?.toFixed(0) ?? "?"} dB source-absent error budget for R'w and DnT,w.`

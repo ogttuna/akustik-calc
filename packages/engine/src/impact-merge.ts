@@ -89,6 +89,16 @@ function canSupplementPublishedUpperTreatmentDelta(
   );
 }
 
+function canPublishedUpperTreatmentReceiveDeltaCompanion(
+  impact: ImpactCalculation | null
+): impact is ImpactCalculation {
+  return Boolean(
+    impact?.basis === "predictor_heavy_concrete_published_upper_treatment_estimate" &&
+      typeof impact.DeltaLw !== "number" &&
+      impact.estimateCandidateIds?.includes("regupol_curve8_concrete_tile_lab_2026")
+  );
+}
+
 export function mergePublishedUpperTreatmentDeltaCompanion(
   primaryImpact: ImpactCalculation | null,
   preferredSupplementaryImpact: ImpactCalculation | null,
@@ -98,10 +108,7 @@ export function mergePublishedUpperTreatmentDeltaCompanion(
     return null;
   }
 
-  if (
-    primaryImpact.basis !== "predictor_heavy_concrete_published_upper_treatment_estimate" ||
-    typeof primaryImpact.DeltaLw === "number"
-  ) {
+  if (!canPublishedUpperTreatmentReceiveDeltaCompanion(primaryImpact)) {
     return cloneImpact(primaryImpact);
   }
 

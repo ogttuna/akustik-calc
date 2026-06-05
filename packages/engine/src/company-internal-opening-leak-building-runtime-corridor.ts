@@ -67,7 +67,7 @@ export const COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_MISSING_FREQUENCY_WARNING 
 type CompleteOpeningLeakFieldContext = AirborneContext & {
   contextMode: "field_between_rooms";
   frequencyBandSet?: typeof COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FREQUENCY_BAND_SET;
-  openingLeakFieldBuildingAdapterBoundary: true;
+  openingLeakFieldBuildingAdapterBoundary?: true;
   panelHeightMm: number;
   panelWidthMm: number;
   receivingRoomRt60S: number;
@@ -86,7 +86,7 @@ type CompleteOpeningLeakBuildingContext = AirborneContext & {
     | "rigid_t_junction";
   junctionCouplingLengthM: number;
   frequencyBandSet?: typeof COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FREQUENCY_BAND_SET;
-  openingLeakFieldBuildingAdapterBoundary: true;
+  openingLeakFieldBuildingAdapterBoundary?: true;
   panelHeightMm: number;
   panelWidthMm: number;
   receivingRoomRt60S: number;
@@ -155,6 +155,10 @@ function openingRouteRequested(context: AirborneContext | null | undefined): boo
   return finitePositive(context?.hostWallAreaM2) || (context?.openingLeakElements?.length ?? 0) > 0;
 }
 
+function hasOpeningLeakFieldBuildingRouteOwner(context: AirborneContext | null | undefined): boolean {
+  return hasOpeningLeakFieldBuildingAdapterBoundary(context) || openingRouteRequested(context);
+}
+
 function requestedOpeningFieldBuildingOutputs(outputs: readonly RequestedOutputId[]): RequestedOutputId[] {
   return outputs.filter((output) => OPENING_ROUTE_OUTPUTS.has(output));
 }
@@ -183,7 +187,7 @@ function completeFieldContext(
 ): context is CompleteOpeningLeakFieldContext {
   return (
     context?.contextMode === "field_between_rooms" &&
-    hasOpeningLeakFieldBuildingAdapterBoundary(context) &&
+    hasOpeningLeakFieldBuildingRouteOwner(context) &&
     missingCommonFieldInputs(context).length === 0
   );
 }
@@ -211,7 +215,7 @@ function completeBuildingContext(
 ): context is CompleteOpeningLeakBuildingContext {
   return (
     context?.contextMode === "building_prediction" &&
-    hasOpeningLeakFieldBuildingAdapterBoundary(context) &&
+    hasOpeningLeakFieldBuildingRouteOwner(context) &&
     missingBuildingInputs(context).length === 0
   );
 }
@@ -359,7 +363,7 @@ function basisForPromotedRuntime(input: {
     ratingStandard: "ISO 717-1",
     requiredInputs: [
       "GateSOpeningLeakCompositeRw",
-      "openingLeakFieldBuildingAdapterBoundary",
+      "openingLeakElementsOrHostWallAreaRouteOwner",
       "hostWallAreaM2",
       "openingLeakElements",
       "panelWidthMm",
@@ -387,7 +391,7 @@ function blockedBasis(input: {
 }): AirborneResultBasis {
   return AirborneResultBasisSchema.parse({
     assumptions: [
-      "Opening/leak field/building runtime is blocked until the explicit adapter boundary and required room/flanking physical terms are present."
+      "Opening/leak field/building runtime is blocked until explicit opening/leak route fields and required room/flanking physical terms are present."
     ],
     calculationStandard: "none",
     curveBasis: "no_curve",
@@ -532,7 +536,7 @@ export function maybeBuildCompanyInternalOpeningLeakFieldBuildingRuntimeCorridor
     return null;
   }
 
-  if (!hasOpeningLeakFieldBuildingAdapterBoundary(context)) {
+  if (!hasOpeningLeakFieldBuildingRouteOwner(context)) {
     return null;
   }
 

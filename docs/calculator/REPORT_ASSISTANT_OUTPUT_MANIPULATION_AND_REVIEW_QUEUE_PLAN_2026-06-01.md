@@ -9,6 +9,11 @@ scope/accuracy gate chain. It does not select a new calculator slice and
 must not change acoustic formulas, candidate selection, runtime values,
 `needs_input` boundaries, or `unsupported` boundaries.
 
+Workspace note: production commands and machine-specific paths later in
+this document are historical Akustikhesap deployment evidence, not
+instructions for this repository. Do not use them for calculator work or
+as current workspace commands.
+
 ## Implementation Progress
 
 2026-06-02:
@@ -355,9 +360,9 @@ must not change acoustic formulas, candidate selection, runtime values,
 
 - The assistant slice was rebuilt and deployed to Akustikhesap
   production with
-  `docker compose -f /home/dkmserver/Desktop/Machinity/landing/akustikhesap-compose.yml build app`
+  `docker compose -f <akustikhesap-compose.yml> build app`
   followed by
-  `docker compose -f /home/dkmserver/Desktop/Machinity/landing/akustikhesap-compose.yml up -d --no-deps app`.
+  `docker compose -f <akustikhesap-compose.yml> up -d --no-deps app`.
   The `akustikhesap_landing` container came back healthy, HTTPS root and
   `/api/health` returned `200`, and the authenticated report-assistant
   preflight passed with `modelReady: true`, `researchReady: true`, and
@@ -3994,8 +3999,7 @@ This implementation must treat the three live projects on the server as
 separate systems:
 
 - Akustikhesap is the only writable target for this slice:
-  `/home/dkmserver/Desktop/Machinity/landing/akustikhesap` and
-  `/home/dkmserver/Desktop/Machinity/landing/akustikhesap-compose.yml`.
+  `<akustikhesap repo>` and `<akustikhesap-compose.yml>`.
 - `system.machinity.ai` is read-only reference infrastructure for this
   slice. Its `system_llm` Gemini proxy may be consumed over private
   Docker networking, but the `machinity-kanban` repo, compose file, and

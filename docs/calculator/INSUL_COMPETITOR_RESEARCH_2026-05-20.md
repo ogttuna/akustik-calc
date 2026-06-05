@@ -22,12 +22,17 @@ and return `needs_input` or `unsupported` instead of guessing. INSUL does
 not justify a broad source crawl or finite scenario library as the next
 default move.
 
-Implementation consequence after the 2026-05-25 recheck:
+Historical implementation consequence after the 2026-05-25 recheck:
 [POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md)
-selects wall multileaf generalized formula Gate A. That choice follows
-the INSUL lesson that broad calculator usefulness comes from family
-models and required-input ownership. It also avoids copying proprietary
-equations, UI assets, or measured data.
+selected wall multileaf generalized formula Gate A at that point. That
+choice followed the INSUL lesson that broad calculator usefulness comes
+from family models and required-input ownership. It also avoided copying
+proprietary equations, UI assets, or measured data.
+
+Current note, 2026-06-05: the post-V1 chain has advanced through Gate
+CH, and `post_v1_next_numeric_coverage_gap_gate_ci_plan` is the selected
+next numeric coverage-gap label. This INSUL note remains product-category
+context only.
 
 ## 2026-05-21 Historical Addendum
 

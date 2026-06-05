@@ -16,6 +16,10 @@ import {
   BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_WARNING
 } from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-field-context-harmonization";
 import {
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_BUILDING_RUNTIME_METHOD,
+  BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_BUILDING_SELECTED_CANDIDATE_ID
+} from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-building-adapter";
+import {
   BROAD_ACCURACY_WALL_MULTILEAF_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SURFACE_PARITY_LANDED_GATE,
   BROAD_ACCURACY_WALL_MULTILEAF_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SURFACE_PARITY_SELECTED_NEXT_ACTION,
   BROAD_ACCURACY_WALL_MULTILEAF_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SURFACE_PARITY_SELECTED_NEXT_FILE,
@@ -335,10 +339,15 @@ describe("broad accuracy wall triple-leaf local substitution field-context surfa
       BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD
     );
 
+    expect(building.supportedTargetOutputs).toEqual(FIELD_OUTPUTS);
+    expect(building.unsupportedTargetOutputs).toEqual([]);
     expect(building.airborneCandidateResolution).toMatchObject({
-      selectedCandidateId: "candidate_dynamic_unsupported",
-      selectedOrigin: "unsupported"
+      selectedCandidateId: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_BUILDING_SELECTED_CANDIDATE_ID,
+      selectedOrigin: "family_physics_prediction"
     });
+    expect(building.airborneBasis?.method).toBe(
+      BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_BUILDING_RUNTIME_METHOD
+    );
     expect(building.airborneBasis?.method).not.toBe(
       BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD
     );

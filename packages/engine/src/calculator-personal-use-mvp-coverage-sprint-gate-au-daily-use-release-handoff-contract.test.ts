@@ -123,7 +123,7 @@ describe("Personal-Use MVP Coverage Sprint Gate AU daily-use release handoff", (
     const handoff = buildPersonalUseMvpCoverageSprintGateAUReleaseHandoff(matrix);
 
     expect(handoff).toMatchObject({
-      acceptedFailClosedBoundaryRowCount: 15,
+      acceptedFailClosedBoundaryRowCount: 14,
       basisCoverage: ["element_lab", "field_apparent", "astm_rating_boundary", "building_prediction"],
       companyInternalDailyUseReady: true,
       currentPostureCoverage: ["family_physics", "needs_input", "unsupported", "exact", "source_anchored_delta"],
@@ -140,14 +140,14 @@ describe("Personal-Use MVP Coverage Sprint Gate AU daily-use release handoff", (
       selectedNextAction: PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AU_SELECTED_NEXT_ACTION,
       selectedNextFile: PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AU_SELECTED_NEXT_FILE,
       selectionStatus: PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AU_SELECTION_STATUS,
-      supportedValueRowCount: 26
+      supportedValueRowCount: 27
     });
     expect(handoff.failureClassCounts).toEqual({
-      basis_boundary: 1,
+      basis_boundary: 0,
       correct_block: 10,
       coverage_gap: 0,
       hostile_input_refusal: 3,
-      none: 26,
+      none: 27,
       unsupported_metric: 1
     });
   });
@@ -177,6 +177,7 @@ describe("Personal-Use MVP Coverage Sprint Gate AU daily-use release handoff", (
       "floor.complete_field_impact_context.lprime",
       "floor.many_layer_stress_exact_stable",
       "wall.opening_leak_composite.lab",
+      "wall.opening_leak_composite_building_boundary.unsupported",
       "wall.complete_building_prediction.runtime",
       "wall.double_leaf_split_board_layers.lab",
       "wall.grouped_triple_leaf_safe_reverse_order.lab",
@@ -195,7 +196,6 @@ describe("Personal-Use MVP Coverage Sprint Gate AU daily-use release handoff", (
       "floor.astm_iic_aiic_boundary.unsupported",
       "hostile.invalid_thickness_zero.refused",
       "wall.opening_leak_composite_partial.needs_input",
-      "wall.opening_leak_composite_building_boundary.unsupported",
       "wall.flat_multicavity_many_layer_schedule.needs_input",
       "wall.opening_leak_duplicate_id.refused",
       "wall.building_prediction_partial_context.needs_input",

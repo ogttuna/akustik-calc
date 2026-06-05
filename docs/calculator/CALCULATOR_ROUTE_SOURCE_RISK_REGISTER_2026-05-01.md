@@ -7,12 +7,13 @@ can defend. Read this with
 [TRIPLE_LEAF_ROCKWOOL_REORDER_DEFECT_HANDOFF.md](./TRIPLE_LEAF_ROCKWOOL_REORDER_DEFECT_HANDOFF.md)
 before ROCKWOOL source-pack extraction or any later runtime movement.
 
-Current-state override, 2026-06-02: this file no longer selects the
+Current-state override, 2026-06-05: this file no longer selects the
 urgent/current slice. Read
 [CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md) first.
-The post-V1 chain has advanced through Gate CD, and Gate CE is the
-selected next numeric coverage rerank label. Source-risk notes below are
-background unless reselected by the current post-V1 plan.
+The post-V1 chain has advanced through Gate CH, and
+`post_v1_next_numeric_coverage_gap_gate_ci_plan` is the selected next
+numeric coverage-gap label. Source-risk notes below are background
+unless reselected by the current post-V1 plan.
 
 Historical urgent slice at 2026-05-01:
 

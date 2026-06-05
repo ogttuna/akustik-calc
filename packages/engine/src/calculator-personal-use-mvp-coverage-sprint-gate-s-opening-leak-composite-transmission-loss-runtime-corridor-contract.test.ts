@@ -26,8 +26,11 @@ import {
   GATE_R_OPENING_LEAK_COMPOSITE_FORMULA_CORRIDOR_PLAN,
   GATE_R_OPENING_LEAK_COMPOSITE_FORMULA_CORRIDOR_STATUS
 } from "./dynamic-airborne-gate-r-opening-leak-composite-transmission-loss-formula-corridor";
-import { GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING } from "./dynamic-airborne-gate-n-building-prediction-runtime-adapter";
 import { GATE_AH_OPENING_LEAK_STC_SPECTRUM_ADAPTER_WARNING } from "./dynamic-airborne-gate-ah-opening-leak-stc-spectrum-adapter";
+import {
+  COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD,
+  COMPANY_INTERNAL_OPENING_LEAK_RUNTIME_WARNING
+} from "./company-internal-opening-leak-building-runtime-corridor";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
@@ -284,7 +287,7 @@ describe("Personal-Use MVP Coverage Sprint Gate S opening/leak composite runtime
     expect(duplicate.warnings.join("\n")).toMatch(/duplicateOpeningId/);
   });
 
-  it("keeps building and field contexts parked on their own adapters when opening inputs are present", () => {
+  it("keeps building and field contexts on their own adapters when opening inputs are present", () => {
     const buildingWithOpening = calculateAssembly(HOST_WALL, {
       airborneContext: COMPLETE_BUILDING_CONTEXT_WITH_OPENING,
       calculator: "dynamic",
@@ -302,13 +305,13 @@ describe("Personal-Use MVP Coverage Sprint Gate S opening/leak composite runtime
       runtimeRwDb: null,
       status: "blocked_context_alias"
     });
-    expect(buildingWithOpening.supportedTargetOutputs).toEqual([]);
-    expect(buildingWithOpening.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
-    expect(buildingWithOpening.metrics.estimatedRwPrimeDb).toBeUndefined();
-    expect(buildingWithOpening.metrics.estimatedDnTwDb).toBeUndefined();
+    expect(buildingWithOpening.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
+    expect(buildingWithOpening.unsupportedTargetOutputs).toEqual([]);
+    expect(buildingWithOpening.metrics.estimatedRwPrimeDb).toBe(31.6);
+    expect(buildingWithOpening.metrics.estimatedDnTwDb).toBe(32.1);
     expect(buildingWithOpening.airborneBasis?.method).not.toBe(GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD);
-    expect(buildingWithOpening.warnings).toContain(GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING);
-    expect(buildingWithOpening.warnings.join("\n")).toMatch(/does not alias it to R'w or DnT,w/);
+    expect(buildingWithOpening.airborneBasis?.method).toBe(COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD);
+    expect(buildingWithOpening.warnings).toContain(COMPANY_INTERNAL_OPENING_LEAK_RUNTIME_WARNING);
   });
 
   it("keeps docs and the current-gate runner aligned with Gate S closeout and Gate T selection", () => {

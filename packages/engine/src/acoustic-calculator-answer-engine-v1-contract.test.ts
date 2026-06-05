@@ -36,6 +36,10 @@ import {
   COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_SELECTED_CANDIDATE_ID
 } from "./dynamic-airborne-company-internal-heavy-composite-wall";
 import {
+  COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD,
+  COMPANY_INTERNAL_OPENING_LEAK_BUILDING_SELECTED_CANDIDATE_ID
+} from "./company-internal-opening-leak-building-runtime-corridor";
+import {
   GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD,
   GATE_H_LINED_MASSIVE_WALL_SELECTED_CANDIDATE_ID
 } from "./dynamic-airborne-gate-h-lined-masonry-clt";
@@ -1025,21 +1029,21 @@ describe("acoustic calculator answer engine V1 contract", () => {
       },
       {
         context: OPENING_BUILDING_CONTEXT,
-        expectedBoundary: {
-          origin: "unsupported",
-          unsupportedOutputs: ["Rw", "STC", "R'w", "DnT,w"]
-        },
         expectedTrace: {
-          candidateKind: "basis_boundary",
+          candidateKind: "field_building_adapter",
           requestedBasis: "building_prediction",
           route: "wall",
-          runtimeBasisId: null,
-          selectedCandidateId: "generic.lab_field_building_basis_boundary",
-          supportBucket: "basis_boundary",
-          supportedMetrics: []
+          runtimeBasisId: COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD,
+          selectedCandidateId: COMPANY_INTERNAL_OPENING_LEAK_BUILDING_SELECTED_CANDIDATE_ID,
+          supportBucket: "field_adapter",
+          supportedMetrics: ["R'w", "DnT,w"]
         },
-        expectedUnsupported: ["Rw", "STC", "R'w", "DnT,w"],
-        label: "wall unsupported opening building owner",
+        expectedUnsupported: ["Rw", "STC"],
+        expectedValues: [
+          { metric: "R'w", value: 31.6 },
+          { metric: "DnT,w", value: 32.1 }
+        ],
+        label: "wall opening building adapter",
         layers: LINED_MASSIVE_WALL,
         targetOutputs: ["Rw", "STC", ...WALL_FIELD_OUTPUTS]
       }
@@ -2220,29 +2224,21 @@ describe("acoustic calculator answer engine V1 contract", () => {
       valuePins: []
     });
 
-    expect(openingBuilding.acousticAnswerBoundary).toMatchObject({
-      missingPhysicalInputs: [],
-      origin: "unsupported",
-      route: "wall",
-      unsupportedOutputs: ["Rw", "STC", "R'w", "DnT,w"]
-    });
-    expect(openingBuilding.acousticAnswerBoundary?.requiredInputs).toContain(
-      "ISO_12354_1_flanking_transmission_adapter_owner"
-    );
-    expect(openingBuilding.supportedTargetOutputs).toEqual([]);
-    expect(openingBuilding.unsupportedTargetOutputs).toEqual(["Rw", "STC", "R'w", "DnT,w"]);
+    expect(openingBuilding.acousticAnswerBoundary).toBeUndefined();
+    expect(openingBuilding.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
+    expect(openingBuilding.unsupportedTargetOutputs).toEqual(["Rw", "STC"]);
     expect(openingBuilding.layerCombinationResolverTrace).toMatchObject({
       requestedBasis: "building_prediction",
       route: "wall",
-      runtimeBasisId: null,
-      selectedCandidateId: "generic.lab_field_building_basis_boundary",
-      supportBucket: "basis_boundary",
-      supportedMetrics: [],
-      valuePins: []
+      runtimeBasisId: COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD,
+      selectedCandidateId: COMPANY_INTERNAL_OPENING_LEAK_BUILDING_SELECTED_CANDIDATE_ID,
+      supportBucket: "field_adapter",
+      supportedMetrics: ["R'w", "DnT,w"],
+      valuePins: [
+        { metric: "R'w", value: 31.6 },
+        { metric: "DnT,w", value: 32.1 }
+      ]
     });
-    expect(openingBuilding.layerCombinationResolverTrace?.requiredInputs).toContain(
-      "ISO_12354_1_flanking_transmission_adapter_owner"
-    );
   });
 
   it("parks roleless helper-only floor-like stacks until floor roles are assigned", () => {

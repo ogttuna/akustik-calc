@@ -24,6 +24,11 @@ import {
 } from "./floor-open-box-finished-package-airborne-building-prediction-runtime";
 import { GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD } from "./dynamic-airborne-gate-i-airborne-field-context";
 import { GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD } from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
+import {
+  COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD,
+  COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD,
+  COMPANY_INTERNAL_OPENING_LEAK_FIELD_RUNTIME_METHOD
+} from "./company-internal-opening-leak-building-runtime-corridor";
 import { GATE_AE_FLAT_MULTICAVITY_RUNTIME_METHOD } from "./dynamic-airborne-gate-ae-flat-multicavity";
 import { COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_RUNTIME_METHOD } from "./dynamic-airborne-company-internal-heavy-composite-wall";
 import { GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD } from "./dynamic-airborne-gate-h-lined-masonry-clt";
@@ -786,10 +791,20 @@ function withScenarioSpecificAirborneRuntimePins(
     trace.runtimeBasisId === POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_RUNTIME_METHOD;
   const isWallFieldAdapter =
     trace.runtimeBasisId === GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD ||
+    trace.runtimeBasisId === COMPANY_INTERNAL_OPENING_LEAK_FIELD_RUNTIME_METHOD ||
+    (
+      trace.runtimeBasisId === COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD &&
+      trace.requestedBasis !== "building_prediction"
+    ) ||
     isWallLocalSubstitutionFieldAdapter ||
     isWallFlatListGuardFieldAdapter;
   const isWallBuildingAdapter =
-    trace.runtimeBasisId === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD;
+    trace.runtimeBasisId === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD ||
+    trace.runtimeBasisId === COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD ||
+    (
+      trace.runtimeBasisId === COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD &&
+      trace.requestedBasis === "building_prediction"
+    );
   const isWallContextAdapter = isWallFieldAdapter || isWallBuildingAdapter;
   const isWallLocalSubstitutionRuntime =
     trace.runtimeBasisId === BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_RUNTIME_METHOD ||
@@ -1043,9 +1058,12 @@ export function buildLayerCombinationResolverTraceForAssembly(
   const hasWallCompatibleAnchorDeltaBasis =
     result.airborneBasis?.method === POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_RUNTIME_METHOD;
   const hasWallFieldAirborneBasis =
-    result.airborneBasis?.method === GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD;
+    result.airborneBasis?.method === GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD ||
+    result.airborneBasis?.method === COMPANY_INTERNAL_OPENING_LEAK_FIELD_RUNTIME_METHOD ||
+    result.airborneBasis?.method === COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD;
   const hasWallBuildingAirborneBasis =
-    result.airborneBasis?.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD;
+    result.airborneBasis?.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD ||
+    result.airborneBasis?.method === COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD;
   const hasRawBareFloorAirborneBuildingBasis =
     result.airborneBasis?.method === FLOOR_RAW_BARE_AIRBORNE_BUILDING_PREDICTION_RUNTIME_BASIS;
   const hasOpenBoxFinishedPackageFloorAirborneBuildingBasis =

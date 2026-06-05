@@ -10,11 +10,14 @@ import {
   GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD,
   GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING
 } from "./dynamic-airborne-gate-i-airborne-field-context";
-import { GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING } from "./dynamic-airborne-gate-n-building-prediction-runtime-adapter";
 import {
   GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD
 } from "./dynamic-airborne-gate-s-opening-leak-composite-transmission-loss-runtime-corridor";
 import { GATE_AH_OPENING_LEAK_STC_SPECTRUM_ADAPTER_WARNING } from "./dynamic-airborne-gate-ah-opening-leak-stc-spectrum-adapter";
+import {
+  COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD,
+  COMPANY_INTERNAL_OPENING_LEAK_RUNTIME_WARNING
+} from "./company-internal-opening-leak-building-runtime-corridor";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
@@ -235,12 +238,13 @@ describe("Personal-Use MVP Coverage Sprint Gate V post opening/leak input-surfac
     });
     expect(field.warnings).toContain(GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING);
 
-    expect(buildingWithOpening.supportedTargetOutputs).toEqual([]);
-    expect(buildingWithOpening.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
-    expect(buildingWithOpening.metrics.estimatedRwPrimeDb).toBeUndefined();
-    expect(buildingWithOpening.metrics.estimatedDnTwDb).toBeUndefined();
+    expect(buildingWithOpening.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
+    expect(buildingWithOpening.unsupportedTargetOutputs).toEqual([]);
+    expect(buildingWithOpening.metrics.estimatedRwPrimeDb).toBe(31.6);
+    expect(buildingWithOpening.metrics.estimatedDnTwDb).toBe(32.1);
     expect(buildingWithOpening.airborneBasis?.method).not.toBe(GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD);
-    expect(buildingWithOpening.warnings).toContain(GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING);
+    expect(buildingWithOpening.airborneBasis?.method).toBe(COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD);
+    expect(buildingWithOpening.warnings).toContain(COMPANY_INTERNAL_OPENING_LEAK_RUNTIME_WARNING);
   });
 
   it("records the next-lane decision without falling back to source crawling", () => {

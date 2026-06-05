@@ -4,12 +4,13 @@ Document role: focused handoff for the user-reported rockwool placement
 defect. Read this before continuing ROCKWOOL source-pack extraction or
 any runtime movement for triple-leaf walls.
 
-Current-state override, 2026-06-02: this is a historical defect
+Current-state override, 2026-06-05: this is a historical defect
 handoff, not the current next-slice selector. Read
 [CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md) first.
-The post-V1 chain has advanced through Gate CD, and Gate CE is the
-selected next numeric coverage rerank label. Rockwool notes below are
-background unless reselected by the current post-V1 plan.
+The post-V1 chain has advanced through Gate CH, and
+`post_v1_next_numeric_coverage_gap_gate_ci_plan` is the selected next
+numeric coverage-gap label. Rockwool notes below are background unless
+reselected by the current post-V1 plan.
 
 Historical slice:
 

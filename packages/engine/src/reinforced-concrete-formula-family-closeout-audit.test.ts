@@ -189,7 +189,7 @@ const CASES: readonly CloseoutCase[] = [
     }
   },
   {
-    id: "combined wet elastic ceiling parks impact until reinforced-concrete formula owners are complete",
+    id: "combined wet elastic ceiling keeps the published anchor while DeltaLw waits for formula owners",
     evaluate: () =>
       calculateAssembly(
         [
@@ -207,27 +207,27 @@ const CASES: readonly CloseoutCase[] = [
         }
       ),
     expected: {
-      candidateIds: null,
+      candidateIds: ["euracoustics_f2_elastic_ceiling_concrete_lab_2026"],
       companionDeltaLwFromAnnexC: false,
-      floorRatingsBasis: "screening_mass_law_curve_seed_v3",
-      floorSystemEstimateKind: null,
-      impactBasis: null,
+      floorRatingsBasis: "predictor_heavy_concrete_published_upper_treatment_estimate",
+      floorSystemEstimateKind: "family_general",
+      impactBasis: "predictor_heavy_concrete_published_upper_treatment_estimate",
       impactDeltaLw: null,
-      impactLnW: null,
+      impactLnW: 43,
       metricBasisDeltaLw: null,
-      metricBasisLnW: null,
+      metricBasisLnW: "predictor_heavy_concrete_published_upper_treatment_estimate",
       noteMentionsLowConfidenceFallback: false,
       noteMentionsNearbyRowRankingSupport: false,
-      noteMentionsPublishedFamily: false,
+      noteMentionsPublishedFamily: true,
       noteMentionsProxyAirborneHonesty: false,
       rawEstimateNotesMentionNearbyPublishedLineage: false,
       rawEstimateNotesMentionCuratedLineage: false,
       rawImpactNotesMentionLowConfidenceFallbackRecord: false,
       rawImpactNotesMentionPublishedFamilyRecord: false,
-      rw: 61,
-      rwCtr: 55,
-      supportedTargetOutputs: ["Rw"],
-      unsupportedTargetOutputs: ["Ln,w", "DeltaLw"]
+      rw: 77,
+      rwCtr: null,
+      supportedTargetOutputs: ["Rw", "Ln,w"],
+      unsupportedTargetOutputs: ["DeltaLw"]
     }
   },
   {

@@ -1,12 +1,12 @@
 # Active Layer Combination Generalization Plan - 2026-05-21
 
-Historical status, 2026-05-25: this file is retained as implementation
+Historical status, 2026-06-05: this file is retained as implementation
 history only. It does not select the next slice. Read
 [CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md) first;
-usable V1 Steps 0-5 are closed, and new work must be explicitly selected
-as post-V1 formula coverage, adapters, calibration/holdouts, or input
-ergonomics. Older "selected next" entries below are consumed handoffs,
-not current authority.
+usable V1 Steps 0-5 are closed, Gate CH is the latest landed
+value-moving runtime slice, and `post_v1_next_numeric_coverage_gap_gate_ci_plan`
+is the selected next numeric coverage-gap label. Older "selected next"
+entries below are consumed handoffs, not current authority.
 
 Status: historical execution-plan record after repo/doc/implementation
 reconciliation. This document exists because the earlier living docs

@@ -36,7 +36,6 @@ import {
   GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD,
   GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING
 } from "./dynamic-airborne-gate-i-airborne-field-context";
-import { GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING } from "./dynamic-airborne-gate-n-building-prediction-runtime-adapter";
 import {
   GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD
 } from "./dynamic-airborne-gate-s-opening-leak-composite-transmission-loss-runtime-corridor";
@@ -435,13 +434,12 @@ describe("Personal-Use MVP Coverage Sprint Gate AJ post opening/leak STC surface
     expect(field.warnings).toContain(GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING);
     expect(field.ratingAdapterBasisSet).toBeUndefined();
 
-    expect(buildingAlias.supportedTargetOutputs).toEqual([]);
-    expect(buildingAlias.unsupportedTargetOutputs).toEqual(["STC", "R'w", "DnT,w"]);
+    expect(buildingAlias.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
+    expect(buildingAlias.unsupportedTargetOutputs).toEqual(["STC"]);
     expect(buildingAlias.metrics.estimatedStc).not.toBe(39);
-    expect(buildingAlias.metrics.estimatedRwPrimeDb).toBeUndefined();
-    expect(buildingAlias.metrics.estimatedDnTwDb).toBeUndefined();
+    expect(buildingAlias.metrics.estimatedRwPrimeDb).toBe(31.6);
+    expect(buildingAlias.metrics.estimatedDnTwDb).toBe(32.1);
     expect(buildingAlias.ratingAdapterBasisSet).toBeUndefined();
-    expect(buildingAlias.warnings.join("\n")).toContain(GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING);
     expect(buildingAlias.warnings.join("\n")).not.toContain(GATE_AH_OPENING_LEAK_STC_SPECTRUM_ADAPTER_WARNING);
   });
 
@@ -502,11 +500,17 @@ describe("Personal-Use MVP Coverage Sprint Gate AJ post opening/leak STC surface
     });
     expect(values(openingStc)).toEqual({ STC: 39 });
 
-    for (const row of [duplicateOpening, buildingOpening]) {
-      expect(row.runtime.supportedTargetOutputs).toEqual([]);
-      expect(row.runtime.valuePins).toEqual([]);
-      expect(row.runtime.errorBudgetDb).toBeNull();
-    }
+    expect(duplicateOpening.runtime.supportedTargetOutputs).toEqual([]);
+    expect(duplicateOpening.runtime.valuePins).toEqual([]);
+    expect(duplicateOpening.runtime.errorBudgetDb).toBeNull();
+
+    expect(buildingOpening.runtime.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
+    expect(buildingOpening.runtime.unsupportedTargetOutputs).toEqual(["Rw", "STC"]);
+    expect(buildingOpening.runtime.valuePins).toEqual([
+      { metric: "R'w", value: 31.6 },
+      { metric: "DnT,w", value: 32.1 }
+    ]);
+    expect(buildingOpening.runtime.errorBudgetDb).toBe(10);
   });
 
   it("selects the STC-aware matrix refresh ahead of runtime promotion and source crawling", () => {

@@ -359,7 +359,7 @@ export function mergeTimberCltDeltaLwFormulaCompanion(
   }
 
   const note =
-    "DeltaLw companion was carried from the explicit timber/CLT formula corridor while Ln,w stayed on its exact or published-family lane.";
+    "DeltaLw companion was carried from the timber/CLT formula corridor while Ln,w stayed on its exact or published-family lane.";
 
   if (!merged.notes.includes(note)) {
     merged.notes.push(note);

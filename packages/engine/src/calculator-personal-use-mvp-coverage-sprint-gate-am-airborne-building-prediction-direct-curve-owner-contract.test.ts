@@ -327,17 +327,17 @@ describe("Personal-Use MVP Coverage Sprint Gate AM airborne building-prediction 
     expect(field.airborneBasis?.method).not.toBe(GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_METHOD);
 
     expect(openingBuilding.airborneCandidateResolution).toMatchObject({
-      selectedCandidateId: "candidate_dynamic_unsupported",
-      selectedOrigin: "unsupported"
+      selectedCandidateId: "candidate_company_internal_opening_leak_building_family_physics_prediction",
+      selectedOrigin: "family_physics_prediction"
     });
     expect(openingBuilding.airborneBasis).toMatchObject({
-      method: GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_METHOD,
-      origin: "unsupported"
+      method: "company_internal_opening_leak_building_area_energy_runtime_corridor",
+      origin: "family_physics_prediction"
     });
-    expect(openingBuilding.supportedTargetOutputs).toEqual([]);
-    expect(openingBuilding.unsupportedTargetOutputs).toEqual(["Rw", "STC", "R'w", "DnT,w"]);
-    expect(openingBuilding.metrics.estimatedRwPrimeDb).toBeUndefined();
-    expect(openingBuilding.metrics.estimatedDnTwDb).toBeUndefined();
+    expect(openingBuilding.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
+    expect(openingBuilding.unsupportedTargetOutputs).toEqual(["Rw", "STC"]);
+    expect(openingBuilding.metrics.estimatedRwPrimeDb).toBe(31.6);
+    expect(openingBuilding.metrics.estimatedDnTwDb).toBe(32.1);
     expect(owner.labSingleNumberCanSatisfyDirectEnergyTerm).toBe(false);
     expect(owner.rejectedSignalIds).toEqual([
       "lab_rw_single_number",

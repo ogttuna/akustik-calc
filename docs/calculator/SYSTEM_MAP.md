@@ -1,6 +1,6 @@
 # System Map
 
-Last reviewed: 2026-06-02
+Last reviewed: 2026-06-05
 
 Document role:
 
@@ -19,13 +19,17 @@ Use this together with the calculator source-of-truth chain:
   authority order
 - [USABLE_V1_EXECUTION_PLAN.md](./USABLE_V1_EXECUTION_PLAN.md)
   — closed company-internal usable V1 acceptance contract
-- [CHECKPOINT_2026-06-02_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_CD.md](./CHECKPOINT_2026-06-02_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_CD.md)
-  — latest docs/implementation/test reconciliation
+- [CHECKPOINT_2026-06-05_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_CW.md](./CHECKPOINT_2026-06-05_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_CW.md)
+  — current docs/implementation/test reconciliation after Gate CW;
+  selected next action is Gate CX
 - [POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md)
-  — selected post-V1 capability plan; Gate CD has landed and selected
-  Gate CE numeric coverage rerank label
+  — selected post-V1 capability plan; Gate CW has landed and selected
+  Gate CX numeric coverage-gap label
+- [POST_V1_HIGH_ROI_SCOPE_ACCURACY_GATES_AFTER_GATE_CD_PLAN_2026-06-02.md](./POST_V1_HIGH_ROI_SCOPE_ACCURACY_GATES_AFTER_GATE_CD_PLAN_2026-06-02.md)
+  — current post-Gate-CW candidate framework; Gate CX must use it to
+  rerank the next highest-ROI calculator scope/accuracy slice
 - [POST_V1_GATE_CD_OPEN_BOX_TARGET_OUTPUT_INDEPENDENCE_PLAN_2026-06-01.md](./POST_V1_GATE_CD_OPEN_BOX_TARGET_OUTPUT_INDEPENDENCE_PLAN_2026-06-01.md)
-  — landed Gate CD target-output independence scope/correctness slice
+  — landed historical Gate CD target-output independence scope/correctness slice
 - [ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md](./ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md)
   — historical product correction that is now landed for usable V1
 - [SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md](./SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md)
@@ -36,7 +40,7 @@ Use this together with the calculator source-of-truth chain:
 - [CHECKPOINT_2026-05-05_STANDARDS_RESEARCH_PLAN_DETAIL_HANDOFF.md](./CHECKPOINT_2026-05-05_STANDARDS_RESEARCH_PLAN_DETAIL_HANDOFF.md)
   — latest standards research and plan detail
 - [CURRENT_STATE.md](./CURRENT_STATE.md) — snapshot (what just closed, what is selected)
-- [MASTER_PLAN.md](./MASTER_PLAN.md) — strategic roadmap + implementation state grid (§3)
+- [MASTER_PLAN.md](./MASTER_PLAN.md) — historical strategic roadmap; not a selector
 - [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md) — tactical slice detail
 - [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
   — answer-origin and validation contract

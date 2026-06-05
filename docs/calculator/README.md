@@ -23,11 +23,11 @@ confidence wording, finite scenarios, report polish, auth/storage, and
 generic UI work are not calculator progress unless an executable
 numeric/correctness gate explicitly selects them.
 
-The current checkpoint is:
+Latest reconciliation checkpoint:
 
-[CHECKPOINT_2026-06-02_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_CD.md](./CHECKPOINT_2026-06-02_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_CD.md)
+[CHECKPOINT_2026-06-05_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_CW.md](./CHECKPOINT_2026-06-05_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_CW.md)
 
-Current Gate CE high-ROI planning input:
+Post-Gate-CD high-ROI planning input:
 
 [POST_V1_HIGH_ROI_SCOPE_ACCURACY_GATES_AFTER_GATE_CD_PLAN_2026-06-02.md](./POST_V1_HIGH_ROI_SCOPE_ACCURACY_GATES_AFTER_GATE_CD_PLAN_2026-06-02.md)
 
@@ -36,6 +36,20 @@ CE. Gate CE has now landed as
 `post_v1_next_numeric_coverage_gap_gate_ce_plan` with status
 `post_v1_next_numeric_coverage_gap_gate_ce_landed_no_runtime_selected_target_output_independence_sweep_gate_cf`.
 It selected `target_output_independence_sweep`, now closed by Gate CF.
+
+As of 2026-06-05, the living implementation state has advanced through
+Gate CW. The latest value-moving runtime slice is
+`post_v1_wall_local_substitution_building_adapter_gate_cw_plan`, with
+status
+`post_v1_wall_local_substitution_building_adapter_gate_cw_landed_runtime_selected_next_numeric_coverage_gap_gate_cx`.
+It publishes `R'w 51 / Dn,w 51 / Dn,A 52.4 / DnT,w 53 / DnT,A 53.9`
+for complete local Rockwool / MLV / plaster grouped triple-leaf wall
+building-prediction requests. Missing building physical inputs remain
+`needs_input`, exact same-stack field/building source rows remain higher
+precedence, and lab, field, and building metric owners stay separate.
+Gate CW selected `post_v1_next_numeric_coverage_gap_gate_cx_plan`, with
+selected next file
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-cx-contract.test.ts`.
 
 ## Document Status Map
 
@@ -72,7 +86,12 @@ and is included in `pnpm calculator:gate:current`. The current resolver
 surface has 43 declared candidates and 40 active runtime-basis mappings.
 Historical Gate H-M resolver snapshots recorded 42 declared candidates and 39 active runtime-basis mappings before Gate CG2 added the
 published upper-treatment owner.
-The next implementation is selected explicitly in
+The closed-gate ledger below is retained for contract-test continuity
+and historical traceability. Do not use an older "selected next" line in
+that ledger as current authority when it conflicts with the living
+source-of-truth chain.
+
+The selected post-V1 implementation plan is
 [POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md):
 an earlier landed value-moving numeric coverage slice is
 `post_v1_target_output_independence_sweep_gate_cf_plan`

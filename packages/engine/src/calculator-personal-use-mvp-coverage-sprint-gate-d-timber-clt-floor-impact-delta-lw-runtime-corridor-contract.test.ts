@@ -147,7 +147,7 @@ describe("Personal-Use MVP Coverage Sprint Gate D timber/CLT DeltaLw runtime cor
     expect(result.supportedTargetOutputs).toEqual(["Ln,w", "DeltaLw"]);
     expect(result.unsupportedTargetOutputs).toEqual([]);
     expect(result.impact?.notes).toContain(
-      "DeltaLw companion was carried from the explicit timber/CLT formula corridor while Ln,w stayed on its exact or published-family lane."
+      "DeltaLw companion was carried from the timber/CLT formula corridor while Ln,w stayed on its exact or published-family lane."
     );
   });
 

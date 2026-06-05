@@ -100,8 +100,8 @@ describe("post-V1 floor reinforced-concrete combined resolver Gate J", () => {
     });
 
     expect(registry.summary).toMatchObject({
-      activeRuntimeCandidateCount: 40,
-      candidateCount: 43
+      activeRuntimeCandidateCount: 43,
+      candidateCount: 46
     });
     expect(candidate).toMatchObject({
       basis: "element_lab",

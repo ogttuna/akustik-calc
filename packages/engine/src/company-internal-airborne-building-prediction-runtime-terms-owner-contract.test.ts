@@ -27,6 +27,11 @@ import {
   GATE_AR_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID
 } from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
 import { GATE_O_AIRBORNE_BUILDING_PREDICTION_TOLERANCE_DB } from "./dynamic-airborne-gate-o-building-prediction-formula-corridor";
+import {
+  COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD,
+  COMPANY_INTERNAL_OPENING_LEAK_BUILDING_SELECTED_CANDIDATE_ID,
+  COMPANY_INTERNAL_OPENING_LEAK_BUILDING_TOLERANCE_DB
+} from "./company-internal-opening-leak-building-runtime-corridor";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
@@ -113,7 +118,7 @@ describe("company-internal airborne building-prediction runtime terms owner reco
     ]);
   });
 
-  it("keeps partial context and opening/leak building requests fail-closed while broad lab companions stay live", () => {
+  it("keeps partial context fail-closed while opening/leak building requests use the landed adapter", () => {
     const contract = buildCompanyInternalAirborneBuildingPredictionRuntimeTermsOwnerContract();
 
     expect(contract.partialBuildingProbe).toMatchObject({
@@ -138,13 +143,14 @@ describe("company-internal airborne building-prediction runtime terms owner reco
       unsupportedTargetOutputs: []
     });
     expect(contract.openingLeakBuildingProbe).toMatchObject({
-      basisId: "dynamic_calculator_building_prediction_runtime_adapter_owner_missing",
-      candidateId: "candidate_dynamic_unsupported",
-      dnTw: null,
-      errorBudgetDb: null,
-      origin: "unsupported",
-      supportedTargetOutputs: [],
-      unsupportedTargetOutputs: ["Rw", "STC", "R'w", "DnT,w"]
+      basisId: COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD,
+      candidateId: COMPANY_INTERNAL_OPENING_LEAK_BUILDING_SELECTED_CANDIDATE_ID,
+      dnTw: 32.1,
+      errorBudgetDb: COMPANY_INTERNAL_OPENING_LEAK_BUILDING_TOLERANCE_DB,
+      origin: "family_physics_prediction",
+      rwPrime: 31.6,
+      supportedTargetOutputs: ["R'w", "DnT,w"],
+      unsupportedTargetOutputs: ["Rw", "STC"]
     });
   });
 

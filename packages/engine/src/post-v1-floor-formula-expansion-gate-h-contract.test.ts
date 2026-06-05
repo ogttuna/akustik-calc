@@ -83,10 +83,10 @@ describe("post-V1 floor formula expansion Gate H", () => {
     const surfaceRowsById = new Map(surface.surfaceRows.map((row) => [row.selectedCandidateId, row]));
 
     expect(registry.summary).toMatchObject({
-      activeRuntimeCandidateCount: 40,
-      candidateCount: 43
+      activeRuntimeCandidateCount: 43,
+      candidateCount: 46
     });
-    expect(surface.summary.surfaceRowCount).toBe(43);
+    expect(surface.summary.surfaceRowCount).toBe(46);
 
     expect(registryRowsById.get(STEEL_UPPER_LOWER_CANDIDATE_ID)).toMatchObject({
       basis: "element_lab",

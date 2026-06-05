@@ -1,97 +1,25 @@
 # Calculator Master Plan
 
-Last reviewed: 2026-06-02
+Last reviewed: 2026-06-05
 
-Current-state override, 2026-06-02: this is a strategic historical
+Current-state override, 2026-06-05: this is a strategic historical
 roadmap, not the current next-slice selector. Read
 [CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md),
 [CURRENT_STATE.md](./CURRENT_STATE.md), and
 [POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md)
 for current authority. The latest landed value-moving runtime slice is
-Gate CD open-box target-output independence, and the selected next
-action label is Gate CE numeric coverage rerank. Older selected-slice
-language below is historical and must not reopen source-pack,
-productization, UI, or low-confidence work as calculator progress.
-(`wall_coverage_expansion_planning_v2` Gate A closed no-runtime;
-`wall_single_leaf_mass_law_calibration_v1` Gate C closed no-runtime;
-`wall_double_leaf_sharp_davy_scoping_v1` Gate C closed no-runtime;
-`wall_double_leaf_source_evidence_acquisition_v1` Gate C closed
-no-runtime and selected `wall_source_catalog_acquisition_v1`;
-`wall_source_catalog_acquisition_v1` Gate C closed no-runtime and
-selected `wall_no_stud_double_leaf_source_research_v1`;
-`wall_no_stud_double_leaf_source_research_v1` Gate C closed no-runtime
-and selected `wall_timber_double_board_source_research_v1`;
-`wall_timber_double_board_source_research_v1` Gate A landed no-runtime
-and Gate C closed no-runtime and selected
-`wall_clt_wall_source_research_v1`;
-`wall_clt_wall_source_research_v1` Gate C closed no-runtime and
-selected `wall_lined_massive_heavy_core_source_research_v1`;
-`wall_lined_massive_heavy_core_source_research_v1` Gate C closed
-no-runtime and selected `calculator_source_gap_revalidation_v2`;
-`calculator_source_gap_revalidation_v2` Gate A landed no-runtime and
-selected `floor_layer_order_invariance_expansion_v1`;
-`floor_layer_order_invariance_expansion_v1` Gate A landed no-runtime
-and Gate C closed no-runtime and selected
-`wall_framed_facing_split_warning_stability_v1`;
-`wall_framed_facing_split_warning_stability_v1` Gate A landed
-no-runtime and selected Gate B value/warning stability fix;
-`wall_framed_facing_split_warning_stability_v1` Gate B fixed the LSF
-field board-split value/warning drift and Gate C selected
-`calculator_source_gap_revalidation_v3`;
-`calculator_source_gap_revalidation_v3` Gate A landed no-runtime and
-selected `internal_use_operating_envelope_v1`;
-`internal_use_operating_envelope_v1` Gate A landed no-runtime with the
-short company pilot usage note and scenario summary;
-`internal_use_operating_envelope_v1` Gate B landed the regular-use
-visibility audit and selected Gate C closeout / next-slice selection;
-post-Gate-B broad `pnpm check` is green;
-`internal_use_operating_envelope_v1` Gate C closed no-runtime and
-selected `calculator_source_pack_readiness_triage_v1`;
-`calculator_source_pack_readiness_triage_v1` Gate A landed no-runtime
-and selected `clt_mass_timber_wall_source_pack_extraction_v1` as a
-source-row and metric-context extraction slice;
-`clt_mass_timber_wall_source_pack_extraction_v1` Gate A landed
-no-runtime source-group extraction and selected Gate B metric-mapping /
-formula-tolerance decision;
-`clt_mass_timber_wall_source_pack_extraction_v1` Gate B landed
-no-runtime and selected Gate C closeout / next-slice selection;
-`clt_mass_timber_wall_source_pack_extraction_v1` Gate C closed
-no-runtime and selected `internal_use_acceptance_rehearsal_v1`)
-Iteration: 2 (rewritten with implementation state grid, accuracy
-preservation contract, ROI table, quantitative completion targets)
+Gate CH field/building direct+flanking correction, and the selected next
+action label is `post_v1_next_numeric_coverage_gap_gate_ci_plan`.
+Older selected-slice language below is historical and must not reopen
+source-pack, productization, UI, report polish, or low-confidence work
+as calculator progress.
 
-2026-05-21 historical product correction:
-[ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md](./ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md)
-was the immediate calculator direction at that point. The selected
-action was
-`acoustic_calculator_answer_engine_v1_plan` in
-`packages/engine/src/acoustic-calculator-answer-engine-v1-contract.test.ts`.
-The 2026-05-22 checkpoint
-[CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md](./CHECKPOINT_2026-05-22_ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_RECONCILIATION.md)
-validated the current gate and confirmed the remaining product gap:
-existing solver lanes are useful, but the final answer-selection layer
-is not implemented yet.
-This master plan remains the strategic frame, but older selected-slice
-wording below must not override the answer-engine goal: DynEcho is an
-acoustic calculator. A user enters wall/floor layers, thicknesses,
-requested outputs, and any genuinely required physical inputs; the
-engine uses exact measured answers when available, compatible measured
-anchors when valid, and otherwise the correct acoustic formula family to
-calculate the result.
-
-Current tactical state is governed by
-[NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md). Older
-notes continue below for history. As of
-2026-05-05 the active correction is the model-first physics prediction
-pivot:
-[SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md](./SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md).
-As of 2026-05-08 Gate BH is landed and the current strategic ROI replan
-is:
-[CHECKPOINT_2026-05-08_STRATEGIC_ROI_REPLAN_HANDOFF.md](./CHECKPOINT_2026-05-08_STRATEGIC_ROI_REPLAN_HANDOFF.md).
-This master plan remains the strategic frame, but any older source-pack,
-internal-use, or steel-floor-only selected-slice wording below must not
-override the current calculator-first pivot and post-Gate-BI Personal-Use
-MVP Coverage Sprint.
+Historical selected-next chains and old checkpoint summaries remain in
+the body below only as background. Do not use them to choose current
+work. Current tactical state is governed by
+[NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md), and the
+closed answer-engine V1 correction remains captured by
+[USABLE_V1_EXECUTION_PLAN.md](./USABLE_V1_EXECUTION_PLAN.md).
 
 This is the top-level roadmap for the DynEcho acoustic calculator. It is
 the second doc a fresh agent reads after `CURRENT_STATE.md`. It answers:
