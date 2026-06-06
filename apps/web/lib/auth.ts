@@ -8,6 +8,7 @@ export const AUTH_COOKIE_NAME = "dynecho-auth-session";
 export const PUBLIC_PREVIEW_USERNAME = "Preview mode";
 
 const DEFAULT_SESSION_TTL_HOURS = 12;
+const DEFAULT_AUTH_NEXT_PATH = "/workbench-v2";
 
 type EnabledAuthConfig = {
   configured: true;
@@ -135,11 +136,11 @@ export function buildAuthConfigurationErrorMessage(missingKeys: string[]) {
 
 export function normalizeNextPath(value: string | null | undefined) {
   if (typeof value !== "string") {
-    return "/workbench";
+    return DEFAULT_AUTH_NEXT_PATH;
   }
 
   if (!value.startsWith("/") || value.startsWith("//")) {
-    return "/workbench";
+    return DEFAULT_AUTH_NEXT_PATH;
   }
 
   return value;

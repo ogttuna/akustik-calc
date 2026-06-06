@@ -1,13 +1,13 @@
 import { Suspense } from "react";
 
-import { ThemeModeToggle } from "@/components/theme-mode-toggle";
-import { ReportEditor } from "@/features/workbench-rebuild/report-editor";
+import { CalculatorWorkbench } from "@/features/workbench-rebuild/calculator-workbench";
 import { requireAuthenticatedPage } from "@/lib/auth";
+import { ThemeModeToggle } from "@/components/theme-mode-toggle";
 
 export const dynamic = "force-dynamic";
 
-export default async function WorkbenchProposalPage() {
-  const session = await requireAuthenticatedPage("/workbench/proposal");
+export default async function WorkbenchV2Page() {
+  const session = await requireAuthenticatedPage("/workbench-v2");
 
   return (
     <div className="min-h-screen bg-[color:var(--surface-app)]">
@@ -30,16 +30,16 @@ export default async function WorkbenchProposalPage() {
       </header>
       <Suspense
         fallback={
-          <main className="report-page">
-            <div className="report-shell">
-              <section className="report-empty">
-                <h1>Loading report editor...</h1>
-              </section>
+          <main className="calc-page">
+            <div className="calc-shell">
+              <div className="ui-panel px-6 py-8 text-sm text-[color:var(--text-secondary)]">
+                Loading workbench...
+              </div>
             </div>
           </main>
         }
       >
-        <ReportEditor />
+        <CalculatorWorkbench />
       </Suspense>
     </div>
   );

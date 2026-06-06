@@ -289,8 +289,8 @@ const CASES: readonly RouteCase[] = [
           ...FIELD_IMPACT_NEEDS_INPUT_CARDS,
           Rw: { status: "live", value: "60 dB" },
           "Ln,w": { status: "live", value: "61 dB" },
-          "Ln,w+CI": { status: "unsupported", value: "Not ready" },
-          DeltaLw: { status: "unsupported", value: "Not ready" },
+          "Ln,w+CI": { status: "needs_input", value: "Not ready" },
+          DeltaLw: { status: "needs_input", value: "Not ready" },
           Ctr: { status: "live", value: "-7 dB" }
         }
       },
@@ -315,8 +315,8 @@ const CASES: readonly RouteCase[] = [
           "DnT,w": { status: "needs_input", value: "Not ready" },
           "DnT,A": { status: "needs_input", value: "Not ready" },
           "Ln,w": { status: "live", value: "61 dB" },
-          "Ln,w+CI": { status: "unsupported", value: "Not ready" },
-          DeltaLw: { status: "unsupported", value: "Not ready" },
+          "Ln,w+CI": { status: "needs_input", value: "Not ready" },
+          DeltaLw: { status: "needs_input", value: "Not ready" },
           Ctr: { status: "live", value: "-7 dB" }
         }
       },
@@ -340,11 +340,11 @@ const CASES: readonly RouteCase[] = [
           "DnT,w": { status: "live", value: "46 dB" },
           "DnT,A": { status: "live", value: "44.5 dB" },
           "Ln,w": { status: "live", value: "61 dB" },
-          "Ln,w+CI": { status: "unsupported", value: "Not ready" },
-          DeltaLw: { status: "unsupported", value: "Not ready" },
+          "Ln,w+CI": { status: "needs_input", value: "Not ready" },
+          DeltaLw: { status: "needs_input", value: "Not ready" },
           "L'n,w": { status: "live", value: "64 dB" },
           "L'nT,w": { status: "live", value: "61.2 dB" },
-          "L'nT,50": { status: "unsupported", value: "Not ready" },
+          "L'nT,50": { status: "needs_input", value: "Not ready" },
           Ctr: { status: "live", value: "-7 dB" }
         }
       }
@@ -372,8 +372,8 @@ const CASES: readonly RouteCase[] = [
           Rw: { status: "live", value: "62 dB" },
           "Ln,w": { status: "live", value: "50 dB" },
           "Ln,w+CI": { status: "live", value: "49 dB" },
-          DeltaLw: { status: "unsupported", value: "Not ready" },
-          Ctr: { status: "unsupported", value: "Not ready" }
+          DeltaLw: { status: "needs_input", value: "Not ready" },
+          Ctr: { status: "needs_input", value: "Not ready" }
         }
       },
       field: {
@@ -398,8 +398,8 @@ const CASES: readonly RouteCase[] = [
           "DnT,A": { status: "needs_input", value: "Not ready" },
           "Ln,w": { status: "live", value: "50 dB" },
           "Ln,w+CI": { status: "live", value: "49 dB" },
-          DeltaLw: { status: "unsupported", value: "Not ready" },
-          Ctr: { status: "unsupported", value: "Not ready" }
+          DeltaLw: { status: "needs_input", value: "Not ready" },
+          Ctr: { status: "needs_input", value: "Not ready" }
         }
       },
       building: {
@@ -423,11 +423,11 @@ const CASES: readonly RouteCase[] = [
           "DnT,A": { status: "live", value: "46.2 dB" },
           "Ln,w": { status: "live", value: "50 dB" },
           "Ln,w+CI": { status: "live", value: "49 dB" },
-          DeltaLw: { status: "unsupported", value: "Not ready" },
+          DeltaLw: { status: "needs_input", value: "Not ready" },
           "L'n,w": { status: "live", value: "53 dB" },
           "L'nT,w": { status: "live", value: "50.2 dB" },
           "L'nT,50": { status: "live", value: "50 dB" },
-          Ctr: { status: "unsupported", value: "Not ready" }
+          Ctr: { status: "needs_input", value: "Not ready" }
         }
       }
     }

@@ -124,7 +124,7 @@ export function SimpleWorkbenchResultsPanel(props: {
   return (
     <div
       className={isDesktop
-        ? "col-start-3 row-start-1 min-h-0 min-w-0 overflow-y-auto px-4 py-4"
+        ? `${activeWorkspacePanel === "setup" ? "col-start-3" : "col-start-2"} row-start-1 min-h-0 min-w-0 overflow-y-auto bg-[color:color-mix(in_oklch,var(--panel)_36%,var(--paper))] px-5 py-5`
         : `stage-enter-3 min-h-0 min-w-0 overflow-y-auto px-4 py-4 ${activeWorkspacePanel === "results" ? "block" : "hidden"}`
       }
     >

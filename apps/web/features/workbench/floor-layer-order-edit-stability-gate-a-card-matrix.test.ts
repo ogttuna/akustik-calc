@@ -194,11 +194,11 @@ const DATAHOLZ_EXACT_EXPECTED: RouteSnapshot = {
     "DnT,A": { status: "live", value: "46.2 dB" },
     "Ln,w": { status: "live", value: "50 dB" },
     "Ln,w+CI": { status: "live", value: "49 dB" },
-    DeltaLw: { status: "unsupported", value: "Not ready" },
+    DeltaLw: { status: "needs_input", value: "Not ready" },
     "L'n,w": { status: "live", value: "53 dB" },
     "L'nT,w": { status: "live", value: "50.2 dB" },
     "L'nT,50": { status: "live", value: "50 dB" },
-    Ctr: { status: "unsupported", value: "Not ready" }
+    Ctr: { status: "needs_input", value: "Not ready" }
   },
   origin: {
     estimateKind: null,

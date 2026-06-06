@@ -1,29 +1,23 @@
-import { Suspense } from "react";
+import { redirect } from "next/navigation";
 
-import { WorkbenchSessionBar } from "@/components/auth/workbench-session-bar";
 import { requireAuthenticatedPage } from "@/lib/auth";
-
-import { ProposalAdjustClientPage } from "./proposal-adjust-client-page";
 
 export const dynamic = "force-dynamic";
 
-export default async function WorkbenchProposalConfigurePage() {
-  const session = await requireAuthenticatedPage("/workbench/proposal/configure");
+type WorkbenchProposalConfigurePageProps = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
 
-  return (
-    <>
-      <WorkbenchSessionBar username={session.username} />
-      <Suspense
-        fallback={
-          <main className="flex min-h-screen flex-col gap-8 overflow-x-clip px-[clamp(0.75rem,1.6vw,1.5rem)] pb-10 pt-4">
-            <div className="rounded-[1.5rem] border hairline bg-[color:var(--panel)] px-6 py-8 text-sm text-[color:var(--ink-soft)]">
-              Loading report editor...
-            </div>
-          </main>
-        }
-      >
-        <ProposalAdjustClientPage />
-      </Suspense>
-    </>
-  );
+function pickSingleValue(value: string | string[] | undefined): string | undefined {
+  return typeof value === "string" ? value : undefined;
+}
+
+export default async function WorkbenchProposalConfigurePage({
+  searchParams
+}: WorkbenchProposalConfigurePageProps) {
+  const params = await searchParams;
+  const style = pickSingleValue(params.style);
+  await requireAuthenticatedPage("/workbench/proposal/configure");
+
+  redirect(style === "simple" ? "/workbench/proposal?style=simple" : "/workbench/proposal");
 }

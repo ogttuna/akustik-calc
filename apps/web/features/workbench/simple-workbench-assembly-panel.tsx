@@ -340,7 +340,7 @@ export function SimpleWorkbenchAssemblyPanel(props: {
   return (
     <div
       className={isDesktop
-        ? "col-start-2 row-start-1 min-h-0 min-w-0 overflow-y-auto border-r border-[color:var(--line)] px-4 py-4"
+        ? `${activeWorkspacePanel === "setup" ? "col-start-2" : "col-start-1"} row-start-1 min-h-0 min-w-0 overflow-y-auto border-r border-[color:var(--line)] px-5 py-5`
         : `stage-enter-2 min-h-0 min-w-0 overflow-y-auto px-4 py-4 ${activeWorkspacePanel === "stack" ? "block" : "hidden"}`
       }
     >

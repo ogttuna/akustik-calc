@@ -1455,10 +1455,14 @@ export function SimpleWorkbenchShell() {
   const serverProjectStatusLabel = activeServerProject
     ? `${serverProjectMessage} · ${activeServerProject.name}`
     : serverProjectMessage;
+  const desktopWorkspaceGridClass =
+    activeWorkspacePanel === "setup"
+      ? "grid-cols-[minmax(14rem,0.46fr)_minmax(38rem,1.45fr)_minmax(21rem,0.74fr)]"
+      : "grid-cols-[minmax(42rem,1.56fr)_minmax(23rem,0.72fr)]";
 
   // ── Render ───────────────────────────────────────────────────────────────
   return (
-    <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded border border-[color:var(--line)] bg-[color:var(--paper)]" style={SIMPLE_WORKBENCH_THEME}>
+    <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded border border-[color:var(--line)] bg-[color:var(--paper)] xl:rounded-none xl:border-0" style={SIMPLE_WORKBENCH_THEME}>
       <SimpleWorkbenchToolbar
         exportReady={exportReady}
         isExportingPdf={isExportingPdf}
@@ -1475,18 +1479,16 @@ export function SimpleWorkbenchShell() {
         theme={theme}
       />
 
-      {!isDesktop ? (
-        <div className="flex shrink-0 border-b border-[color:var(--line)] bg-[color:var(--paper)] px-2">
-          <WorkspacePanelButton active={activeWorkspacePanel === "setup"} label="Setup" onClick={() => openWorkspacePanel("setup")} />
-          <WorkspacePanelButton active={activeWorkspacePanel === "stack"} badge={rows.length ? String(rows.length) : undefined} label="Assembly" onClick={() => openWorkspacePanel("stack")} shortLabel="Stack" />
-          <WorkspacePanelButton active={activeWorkspacePanel === "results"} badge={readyOutputCount ? String(readyOutputCount) : undefined} label="Results" onClick={() => openWorkspacePanel("results")} shortLabel="Result" />
-          <WorkspacePanelButton active={activeWorkspacePanel === "review"} badge={scenario.warnings.length ? String(scenario.warnings.length) : undefined} label="Review" onClick={() => openWorkspacePanel("review")} shortLabel="Review" />
-        </div>
-      ) : null}
+      <div className="flex shrink-0 border-b border-[color:var(--line)] bg-[color:color-mix(in_oklch,var(--paper)_86%,var(--panel))] px-2 xl:px-4">
+        <WorkspacePanelButton active={activeWorkspacePanel === "setup"} label="Setup" onClick={() => openWorkspacePanel("setup")} />
+        <WorkspacePanelButton active={activeWorkspacePanel === "stack"} badge={rows.length ? String(rows.length) : undefined} label="Assembly" onClick={() => openWorkspacePanel("stack")} shortLabel="Stack" />
+        <WorkspacePanelButton active={activeWorkspacePanel === "results"} badge={readyOutputCount ? String(readyOutputCount) : undefined} label="Results" onClick={() => openWorkspacePanel("results")} shortLabel="Result" />
+        <WorkspacePanelButton active={activeWorkspacePanel === "review"} badge={scenario.warnings.length ? String(scenario.warnings.length) : undefined} label="Review" onClick={() => openWorkspacePanel("review")} shortLabel="Review" />
+      </div>
 
       <section
         className={`${!isDesktop && activeWorkspacePanel === "review" ? "hidden" : "grid"} min-h-0 min-w-0 flex-1 overflow-hidden ${
-          isDesktop ? "grid-cols-[minmax(13rem,0.58fr)_minmax(40rem,1.55fr)_minmax(22rem,0.82fr)]" : ""
+          isDesktop ? desktopWorkspaceGridClass : ""
         }`}
       >
         <SimpleWorkbenchRoutePanel

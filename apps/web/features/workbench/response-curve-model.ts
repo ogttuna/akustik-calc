@@ -1,6 +1,7 @@
 import type { AssemblyCalculation, ImpactTraceSeries } from "@dynecho/shared";
 
 export type WorkbenchResponseCurveDirection = "higher_better" | "lower_better";
+export type WorkbenchResponseCurveEvidenceTone = "apparent" | "calculated" | "screening" | "trace";
 
 export type WorkbenchResponseCurveSeries = {
   active: boolean;
@@ -14,6 +15,8 @@ export type WorkbenchResponseCurveFigure = {
   activeSeriesId?: string;
   direction: WorkbenchResponseCurveDirection;
   domainLabel: string;
+  evidenceLabel?: string;
+  evidenceTone?: WorkbenchResponseCurveEvidenceTone;
   id: "airborne" | "impact";
   note: string;
   series: readonly WorkbenchResponseCurveSeries[];
@@ -37,15 +40,41 @@ function buildAirborneFigure(result: AssemblyCalculation): WorkbenchResponseCurv
     return null;
   }
 
+  const isApparentCurve =
+    result.airborneOverlay?.contextMode === "field_prediction" || result.airborneOverlay?.contextMode === "building_prediction";
+  const method = result.metrics.method.toLowerCase();
+  const isDynamicCalculator = method === "dynamic";
+  const isScreeningMassLaw = method.includes("screening_mass_law_curve_seed");
+  const evidence = isApparentCurve
+    ? {
+        evidenceLabel: "Apparent overlay",
+        evidenceTone: "apparent" as const,
+        note: "Final apparent curve after the active leakage and field overlays."
+      }
+    : isDynamicCalculator
+      ? {
+          evidenceLabel: "Dynamic topology",
+          evidenceTone: "calculated" as const,
+          note: "Curve returned by the dynamic calculator for the active layer topology."
+        }
+    : isScreeningMassLaw
+      ? {
+          evidenceLabel: "Mass-law screening",
+          evidenceTone: "screening" as const,
+          note: "Values shift per result; shape follows the screening mass-law family until exact bands exist."
+        }
+      : {
+          evidenceLabel: "Calculated bands",
+          evidenceTone: "calculated" as const,
+          note: "Active airborne band data from the current result."
+        };
+
   const series: WorkbenchResponseCurveSeries[] = [
     {
       active: true,
       frequenciesHz: [...result.curve.frequenciesHz],
       id: "airborne",
-      label:
-        result.airborneOverlay?.contextMode === "field_prediction" || result.airborneOverlay?.contextMode === "building_prediction"
-          ? "Final apparent airborne curve"
-          : "Active transmission-loss curve",
+      label: isApparentCurve ? "Final apparent airborne curve" : "Active transmission-loss curve",
       valuesDb: [...result.curve.transmissionLossDb]
     }
   ];
@@ -54,11 +83,10 @@ function buildAirborneFigure(result: AssemblyCalculation): WorkbenchResponseCurv
     activeSeriesId: "airborne",
     direction: "higher_better",
     domainLabel: buildDomainLabel(series),
+    evidenceLabel: evidence.evidenceLabel,
+    evidenceTone: evidence.evidenceTone,
     id: "airborne",
-    note:
-      result.airborneOverlay?.contextMode === "field_prediction" || result.airborneOverlay?.contextMode === "building_prediction"
-        ? "Higher dB is better. This is the final apparent airborne curve after the active leakage and field overlays."
-        : "Higher dB is better. This is the active airborne transmission-loss curve behind the current weighted answer.",
+    note: evidence.note,
     series,
     title: "Airborne response curve"
   };
@@ -94,10 +122,12 @@ function buildImpactFigure(result: AssemblyCalculation): WorkbenchResponseCurveF
     activeSeriesId: trace.activeSeriesId,
     direction: "lower_better",
     domainLabel: buildDomainLabel(series),
+    evidenceLabel: "Trace-backed bands",
+    evidenceTone: "trace",
     id: "impact",
     note: activeLabel
-      ? `Lower dB is better. ${activeLabel} is the active impact curve on this lane; source and continuation curves stay overlaid for comparison.`
-      : "Lower dB is better. Exact source and continuation curves are overlaid whenever the active lane exposes real impact bands.",
+      ? `${activeLabel} is active; source and continuation curves stay overlaid.`
+      : "Exact source and continuation curves are overlaid when the lane exposes impact bands.",
     series,
     title: "Impact response curve"
   };

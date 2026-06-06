@@ -851,17 +851,17 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
 
       .page-grid {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-columns: minmax(0, 1fr);
         gap: 3mm;
       }
 
       .page-grid-wide {
-        grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+        grid-template-columns: minmax(0, 1fr);
       }
 
       .curve-grid {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: minmax(0, 1fr);
         gap: 3mm;
       }
 
@@ -1083,7 +1083,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
 
       .notes-grid {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-columns: minmax(0, 1fr);
         gap: 3mm;
       }
 
@@ -1196,13 +1196,30 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
         color: var(--ink-faint);
       }
 
+      @media screen {
+        body {
+          background: #e8eef3;
+          padding: 14mm 0;
+        }
+
+        .document {
+          display: grid;
+          gap: 8mm;
+          justify-items: center;
+        }
+
+        .page {
+          width: min(186mm, calc(100vw - 24px));
+          border: 1px solid var(--line);
+          background: var(--panel);
+          padding: 0;
+        }
+      }
+
       @media (max-width: 900px) {
         .report-title-row,
         .report-meta,
-        .result-strip,
-        .page-grid,
-        .curve-grid,
-        .notes-grid {
+        .result-strip {
           grid-template-columns: 1fr;
         }
       }

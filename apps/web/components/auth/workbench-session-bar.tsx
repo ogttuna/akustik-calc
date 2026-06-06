@@ -1,15 +1,17 @@
 import Link from "next/link";
 
+import { ThemeModeToggle } from "@/components/theme-mode-toggle";
+
 type WorkbenchSessionBarProps = {
   username: string;
 };
 
 export function WorkbenchSessionBar({ username }: WorkbenchSessionBarProps) {
   return (
-    <div className="shrink-0 border-b border-[color:var(--line)] bg-[color:var(--paper)] px-3 py-2">
+    <div className="ui-topbar shrink-0 px-3 py-2">
       <div className="flex min-h-11 flex-wrap items-center justify-between gap-3 text-sm">
         <div className="flex min-w-0 flex-wrap items-center gap-3 text-[color:var(--ink-soft)]">
-          <span className="inline-flex h-8 w-12 items-center justify-center rounded border border-[color:var(--line-strong)] bg-[color:var(--ink)] text-[0.72rem] font-semibold tracking-[0.14em] text-[color:var(--paper)]">
+          <span className="ui-logo-mark">
             DAC
           </span>
           <span className="font-semibold uppercase tracking-[0.08em] text-[color:var(--ink)]">
@@ -21,12 +23,13 @@ export function WorkbenchSessionBar({ username }: WorkbenchSessionBarProps) {
           </span>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <Link className="focus-ring touch-target rounded px-3 py-2 font-semibold hover:bg-[color:var(--panel)]" href="/">
+          <ThemeModeToggle />
+          <Link className="focus-ring ui-button ui-button-ghost touch-target" href="/">
             Overview
           </Link>
           <form action="/logout" method="post">
             <button
-              className="focus-ring touch-target rounded border hairline px-3 py-2 font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
+              className="focus-ring ui-button touch-target"
               type="submit"
             >
               Sign out

@@ -197,11 +197,11 @@ describe("auth session helpers", () => {
   });
 
   it("normalizes next paths without allowing external redirects", () => {
-    expect(normalizeNextPath(undefined)).toBe("/workbench");
-    expect(normalizeNextPath(null)).toBe("/workbench");
-    expect(normalizeNextPath("workbench")).toBe("/workbench");
-    expect(normalizeNextPath("https://example.test/workbench")).toBe("/workbench");
-    expect(normalizeNextPath("//example.test/workbench")).toBe("/workbench");
+    expect(normalizeNextPath(undefined)).toBe("/workbench-v2");
+    expect(normalizeNextPath(null)).toBe("/workbench-v2");
+    expect(normalizeNextPath("workbench")).toBe("/workbench-v2");
+    expect(normalizeNextPath("https://example.test/workbench")).toBe("/workbench-v2");
+    expect(normalizeNextPath("//example.test/workbench")).toBe("/workbench-v2");
     expect(normalizeNextPath("/workbench?panel=projects")).toBe("/workbench?panel=projects");
     expect(normalizeNextPath("/login")).toBe("/login");
   });

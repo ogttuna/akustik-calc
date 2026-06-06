@@ -79,10 +79,10 @@ export function LoginForm({ authConfigured, configurationMessage, nextPath }: Lo
   return (
     <form className="grid gap-4" onSubmit={handleSubmit}>
       <label className="grid gap-2">
-        <span className="text-sm font-semibold text-[color:var(--ink)]">Username</span>
+        <span className="text-sm font-semibold text-[color:var(--text-primary)]">Username</span>
         <input
           autoComplete="username"
-          className="focus-ring rounded-[1rem] border hairline bg-white px-4 py-3 text-sm text-[color:var(--ink)] shadow-[inset_0_1px_0_rgba(255,255,255,0.35)] outline-none disabled:cursor-not-allowed disabled:opacity-60"
+          className="focus-ring ui-field min-h-11 px-4 py-3 disabled:cursor-not-allowed disabled:opacity-60"
           disabled={!authConfigured || isPending}
           name="username"
           onChange={(event) => setUsername(event.target.value)}
@@ -93,10 +93,10 @@ export function LoginForm({ authConfigured, configurationMessage, nextPath }: Lo
       </label>
 
       <label className="grid gap-2">
-        <span className="text-sm font-semibold text-[color:var(--ink)]">Password</span>
+        <span className="text-sm font-semibold text-[color:var(--text-primary)]">Password</span>
         <input
           autoComplete="current-password"
-          className="focus-ring rounded-[1rem] border hairline bg-white px-4 py-3 text-sm text-[color:var(--ink)] shadow-[inset_0_1px_0_rgba(255,255,255,0.35)] outline-none disabled:cursor-not-allowed disabled:opacity-60"
+          className="focus-ring ui-field min-h-11 px-4 py-3 disabled:cursor-not-allowed disabled:opacity-60"
           disabled={!authConfigured || isPending}
           name="password"
           onChange={(event) => setPassword(event.target.value)}
@@ -107,13 +107,11 @@ export function LoginForm({ authConfigured, configurationMessage, nextPath }: Lo
       </label>
 
       {errorMessage ? (
-        <div className="rounded-[1rem] border border-amber-950/12 bg-amber-100/80 px-4 py-3 text-sm leading-6 text-amber-950">
-          {errorMessage}
-        </div>
+        <div className="ui-warning-panel">{errorMessage}</div>
       ) : null}
 
       <button
-        className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full bg-[color:var(--ink)] px-5 py-3 text-sm font-semibold text-white transition hover:opacity-92 disabled:cursor-not-allowed disabled:opacity-55"
+        className="focus-ring ui-button ui-button-primary min-h-11 w-full px-5 py-3 disabled:cursor-not-allowed disabled:opacity-55"
         disabled={!authConfigured || isPending}
         type="submit"
       >

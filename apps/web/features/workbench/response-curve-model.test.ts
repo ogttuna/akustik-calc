@@ -91,6 +91,9 @@ describe("response curve model", () => {
     expect(figures[0]).toEqual(
       expect.objectContaining({
         direction: "higher_better",
+        evidenceLabel: "Mass-law screening",
+        evidenceTone: "screening",
+        note: "Values shift per result; shape follows the screening mass-law family until exact bands exist.",
         title: "Airborne response curve"
       })
     );
@@ -98,6 +101,8 @@ describe("response curve model", () => {
       expect.objectContaining({
         activeSeriesId: "standardized",
         direction: "lower_better",
+        evidenceLabel: "Trace-backed bands",
+        evidenceTone: "trace",
         title: "Impact response curve"
       })
     );
@@ -124,5 +129,24 @@ describe("response curve model", () => {
     );
 
     expect(figures.map((figure) => figure.id)).toEqual(["airborne"]);
+  });
+
+  it("labels dynamic calculator curves as dynamic topology evidence", () => {
+    const figures = buildWorkbenchResponseCurveFigures(
+      buildFixture({
+        metrics: {
+          ...buildFixture().metrics,
+          method: "dynamic"
+        }
+      })
+    );
+
+    expect(figures[0]).toEqual(
+      expect.objectContaining({
+        evidenceLabel: "Dynamic topology",
+        evidenceTone: "calculated",
+        note: "Curve returned by the dynamic calculator for the active layer topology."
+      })
+    );
   });
 });

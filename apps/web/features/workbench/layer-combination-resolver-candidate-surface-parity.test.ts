@@ -69,6 +69,10 @@ const HEAVY_PUBLISHED_UPPER_TREATMENT_RUNTIME_BASIS =
   "predictor_heavy_concrete_published_upper_treatment_estimate";
 const NEEDS_INPUT_SELECTED_CANDIDATE_ID = "generic.required_input_owner.needs_input_boundary";
 const UNSUPPORTED_BASIS_SELECTED_CANDIDATE_ID = "generic.lab_field_building_basis_boundary";
+const OPENING_LEAK_BUILDING_SELECTED_CANDIDATE_ID =
+  "candidate_company_internal_opening_leak_building_family_physics_prediction";
+const OPENING_LEAK_BUILDING_RUNTIME_BASIS =
+  "company_internal_opening_leak_building_area_energy_runtime_corridor";
 const ASTM_UNSUPPORTED_SELECTED_CANDIDATE_ID = "generic.astm_iic_aiic.unsupported_boundary";
 const ASTM_E989_SELECTED_CANDIDATE_ID = "floor.astm_e989_impact_rating.contour_runtime";
 const ASTM_E989_RUNTIME_BASIS = "astm_e989_impact_rating_metric_schema_adapter_bridge";
@@ -1449,7 +1453,7 @@ describe("layer combination resolver candidate surface parity", () => {
     }
   });
 
-  it("keeps unsupported wall building/opening owners value-less across cards, report, and calculator API", async () => {
+  it("keeps opening/leak building owners live without aliasing lab metrics across cards, report, and calculator API", async () => {
     const scenario = buildWallScenario({
       airborneContext: OPENING_BUILDING_CONTEXT,
       id: "wall-v1-unsupported-building-surface",
@@ -1459,16 +1463,19 @@ describe("layer combination resolver candidate surface parity", () => {
     const trace = getLayerCombinationResolverCandidateSurface(scenario.result);
 
     expect(trace).toMatchObject({
-      candidateKind: "basis_boundary",
+      candidateKind: "field_building_adapter",
       requestedBasis: "building_prediction",
       route: "wall",
-      runtimeBasisId: null,
-      selectedCandidateId: UNSUPPORTED_BASIS_SELECTED_CANDIDATE_ID,
-      supportBucket: "basis_boundary",
-      supportedMetrics: [],
-      valuePins: []
+      runtimeBasisId: OPENING_LEAK_BUILDING_RUNTIME_BASIS,
+      selectedCandidateId: OPENING_LEAK_BUILDING_SELECTED_CANDIDATE_ID,
+      supportBucket: "field_adapter",
+      supportedMetrics: ["R'w", "DnT,w"],
+      valuePins: expect.arrayContaining([
+        { metric: "R'w", value: 31.6 },
+        { metric: "DnT,w", value: 32.1 }
+      ])
     });
-    expect(scenario.result.unsupportedTargetOutputs).toEqual(["Rw", "STC", "R'w", "DnT,w"]);
+    expect(scenario.result.unsupportedTargetOutputs).toEqual(["Rw", "STC"]);
     expect(buildOutputCard({ output: "Rw", result: scenario.result, studyMode: "wall" })).toMatchObject({
       label: "Rw",
       status: "unsupported",
@@ -1476,8 +1483,8 @@ describe("layer combination resolver candidate surface parity", () => {
     });
     expect(buildOutputCard({ output: "DnT,w", result: scenario.result, studyMode: "wall" })).toMatchObject({
       label: "DnT,w",
-      status: "unsupported",
-      value: "Not ready"
+      status: "live",
+      value: "32.1 dB"
     });
 
     const report = buildWallReport({
@@ -1485,11 +1492,11 @@ describe("layer combination resolver candidate surface parity", () => {
       scenario,
       title: "Wall V1 Unsupported Building Surface"
     });
-    expect(report).toContain(`- Resolver candidate id: ${UNSUPPORTED_BASIS_SELECTED_CANDIDATE_ID}`);
-    expect(report).toContain("- Resolver support bucket: basis_boundary");
+    expect(report).toContain(`- Resolver candidate id: ${OPENING_LEAK_BUILDING_SELECTED_CANDIDATE_ID}`);
+    expect(report).toContain("- Resolver support bucket: field_adapter");
     expect(report).toContain("- Resolver route / basis: wall / building_prediction");
-    expect(report).toContain("- Resolver runtime basis: none");
-    expect(report).toContain("- Resolver value pins: none");
+    expect(report).toContain(`- Resolver runtime basis: ${OPENING_LEAK_BUILDING_RUNTIME_BASIS}`);
+    expect(report).toContain("- Resolver value pins: R'w 31.6, DnT,w 32.1");
 
     const { POST: estimate } = await import("../../app/api/estimate/route");
     const estimateResponse = await estimate(
@@ -1509,11 +1516,15 @@ describe("layer combination resolver candidate surface parity", () => {
     expect(estimateBody.ok).toBe(true);
     expect(getLayerCombinationResolverCandidateSurface(estimateBody.result)).toMatchObject({
       requestedBasis: "building_prediction",
-      selectedCandidateId: UNSUPPORTED_BASIS_SELECTED_CANDIDATE_ID,
-      supportBucket: "basis_boundary",
-      valuePins: []
+      runtimeBasisId: OPENING_LEAK_BUILDING_RUNTIME_BASIS,
+      selectedCandidateId: OPENING_LEAK_BUILDING_SELECTED_CANDIDATE_ID,
+      supportBucket: "field_adapter",
+      valuePins: expect.arrayContaining([
+        { metric: "R'w", value: 31.6 },
+        { metric: "DnT,w", value: 32.1 }
+      ])
     });
-    expect(estimateBody.result?.unsupportedTargetOutputs).toEqual(["Rw", "STC", "R'w", "DnT,w"]);
+    expect(estimateBody.result?.unsupportedTargetOutputs).toEqual(["Rw", "STC"]);
   });
 
   it("keeps Step 3 floor exact, anchor, and source-absent formula candidates aligned across cards, report, and calculator API", async () => {

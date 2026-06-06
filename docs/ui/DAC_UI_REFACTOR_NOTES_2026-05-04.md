@@ -1,5 +1,11 @@
 # DAC UI Refactor Notes - 2026-05-04
 
+## Superseded Master Plan Notice - 2026-06-05
+
+New UI work must follow
+`docs/ui/DYNECHO_UI_REBUILD_MASTER_PLAN_2026-06-05.md`. This older note
+remains only as historical issue context.
+
 Scope: web UI only. Calculator, engine, shared schemas, source evidence, and runtime acoustic logic stay untouched.
 
 ## User-Reported Issues

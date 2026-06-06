@@ -7,8 +7,11 @@ import {
   getAuthState,
   normalizeNextPath
 } from "@/lib/auth";
+import { ThemeModeToggle } from "@/components/theme-mode-toggle";
 
 export const dynamic = "force-dynamic";
+
+const REBUILD_LOGIN_DEFAULT_NEXT = "/workbench-v2";
 
 type LoginPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -20,7 +23,7 @@ function pickSingleValue(value: string | string[] | undefined) {
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
   const params = await searchParams;
-  const nextPath = normalizeNextPath(pickSingleValue(params.next));
+  const nextPath = normalizeNextPath(pickSingleValue(params.next) ?? REBUILD_LOGIN_DEFAULT_NEXT);
   const authState = await getAuthState();
 
   if (!authState.configured || authState.session) {
@@ -28,13 +31,16 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
   }
 
   return (
-    <main className="ui-shell flex min-h-screen items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
-      <section className="surface-shadow grid w-full max-w-[30rem] gap-6 rounded-[2rem] border hairline bg-[color:var(--panel)] px-6 py-6 sm:px-7 sm:py-7">
+    <main className="ui-shell flex min-h-screen items-center justify-center bg-[color:var(--surface-app)] px-4 py-8 sm:px-6 lg:px-8">
+      <section className="surface-shadow grid w-full max-w-[30rem] gap-6 rounded-[var(--radius-panel)] border hairline bg-[color:var(--surface-control)] px-6 py-6 sm:px-7 sm:py-7">
+        <div className="flex justify-end">
+          <ThemeModeToggle />
+        </div>
         <div className="space-y-3">
-          <div className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Protected DAC access</div>
+          <div className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--text-muted)]">Protected DAC access</div>
           <div className="space-y-2">
-            <h1 className="font-display text-[clamp(2rem,4vw,2.6rem)] leading-none text-[color:var(--ink)]">Sign in to the workbench</h1>
-            <p className="text-sm leading-7 text-[color:var(--ink-soft)]">
+            <h1 className="font-display text-[clamp(2rem,4vw,2.6rem)] leading-none text-[color:var(--text-primary)]">Sign in to the workbench</h1>
+            <p className="text-sm leading-7 text-[color:var(--text-secondary)]">
               The landing page stays public. The calculation workspace, proposal preview, and server-side calculation routes now require an authenticated session.
             </p>
           </div>
@@ -42,13 +48,13 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
         <LoginForm authConfigured={authState.configured} configurationMessage={null} nextPath={nextPath} />
 
-        <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-[color:var(--ink-soft)]">
+        <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-[color:var(--text-secondary)]">
           <Link className="focus-ring surface-subtle-hover rounded-full px-3 py-2 font-semibold" href="/">
             Back to overview
           </Link>
           <div className="text-right">
             <div>Next route</div>
-            <div className="font-mono text-[0.78rem] text-[color:var(--ink)]">{nextPath}</div>
+            <div className="font-mono text-[0.78rem] text-[color:var(--text-primary)]">{nextPath}</div>
           </div>
         </div>
       </section>

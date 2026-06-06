@@ -519,7 +519,9 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
   return (
     <div
       className={isDesktop
-        ? "col-start-1 row-start-1 min-h-0 min-w-0 overflow-y-auto border-r border-[color:var(--line)] px-4 py-4"
+        ? activeWorkspacePanel === "setup"
+          ? "col-start-1 row-start-1 min-h-0 min-w-0 overflow-y-auto border-r border-[color:var(--line)] bg-[color:color-mix(in_oklch,var(--panel)_54%,var(--paper))] px-4 py-4"
+          : "hidden"
         : `stage-enter-2 min-h-0 min-w-0 overflow-y-auto px-4 py-4 ${activeWorkspacePanel === "setup" ? "block" : "hidden"}`
       }
     >

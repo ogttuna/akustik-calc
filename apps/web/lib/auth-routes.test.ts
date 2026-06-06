@@ -141,7 +141,7 @@ describe("auth API routes", () => {
     expect(response.status).toBe(200);
     expect(body).toEqual({
       ok: true,
-      redirectTo: "/workbench"
+      redirectTo: "/workbench-v2"
     });
     expect(response.headers.get("set-cookie")).toBeNull();
   });
@@ -197,7 +197,7 @@ describe("auth API routes", () => {
     expect(response.status).toBe(200);
     expect(body).toEqual({
       ok: true,
-      redirectTo: "/workbench"
+      redirectTo: "/workbench-v2"
     });
     expect(setCookie).toContain(`${AUTH_COOKIE_NAME}=`);
     expect(setCookie).toContain("Path=/");
