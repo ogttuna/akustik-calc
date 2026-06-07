@@ -132,7 +132,7 @@ describe("Personal-Use MVP Coverage Sprint Gate AT acceptance matrix refresh aft
     expect(rows.map((row) => row.id)).not.toContain("wall.complete_building_prediction.unsupported");
     expect(summary).toMatchObject({
       basisCoverage: ["element_lab", "field_apparent", "astm_rating_boundary", "building_prediction"],
-      currentPostureCoverage: ["family_physics", "needs_input", "unsupported", "exact", "source_anchored_delta"],
+      currentPostureCoverage: ["family_physics", "bounded_screening", "needs_input", "unsupported", "exact", "source_anchored_delta"],
       dailyUseAcceptanceMatrixReadyForReleaseHandoff: true,
       dailyUseReleaseBlockerIds: [],
       gapFreeAfterGateAT: true,

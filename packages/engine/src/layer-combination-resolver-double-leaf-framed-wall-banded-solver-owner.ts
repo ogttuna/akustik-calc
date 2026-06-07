@@ -1,4 +1,6 @@
 import {
+  GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_RUNTIME_METHOD,
+  GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_SELECTED_CANDIDATE_ID,
   GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_RUNTIME_METHOD,
   GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_SELECTED_CANDIDATE_ID
 } from "./dynamic-airborne-gate-s-double-leaf-framed";
@@ -95,7 +97,7 @@ export type LayerCombinationResolverDoubleLeafFramedWallBandedRouteAdmission = {
 };
 
 export type LayerCombinationResolverDoubleLeafFramedWallBandedRuntimeProbeId =
-  | "wall.direct_fixed_double_leaf_screening_boundary"
+  | "wall.direct_fixed_double_leaf_gate_eo_separate_runtime"
   | "wall.explicit_independent_absorbed_double_leaf_runtime"
   | "wall.grouped_triple_leaf_calibrated_boundary"
   | "wall.resilient_double_leaf_missing_side_count_needs_input"
@@ -107,11 +109,12 @@ export type LayerCombinationResolverDoubleLeafFramedWallBandedRuntimeProbe = {
   readonly currentRw: number | null;
   readonly currentStc: number | null;
   readonly id: LayerCombinationResolverDoubleLeafFramedWallBandedRuntimeProbeId;
-  readonly noRuntimeValueMovement: true;
+  readonly runtimeValueMovement: boolean;
   readonly selectedCandidateId: string;
   readonly status:
     | "existing_runtime_supported"
     | "needs_input"
+    | "separate_direct_fixed_runtime_supported"
     | "screening_boundary"
     | "separate_calibrated_owner";
 };
@@ -409,7 +412,7 @@ const ROUTE_ADMISSIONS = [
     route: "wall",
     selectedForFormulaCorridor: false,
     status: "blocked_boundary",
-    visibleReason: "direct-fixed bridge loss needs a separate owner before it can enter this corridor"
+    visibleReason: "direct-fixed bridge loss stays outside Gate S and is handled by the Gate EO separate owner"
   },
   {
     basis: "element_lab",
@@ -446,7 +449,7 @@ const RUNTIME_PROBES = [
     currentRw: 45,
     currentStc: 45,
     id: "wall.explicit_independent_absorbed_double_leaf_runtime",
-    noRuntimeValueMovement: true,
+    runtimeValueMovement: false,
     selectedCandidateId: GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_SELECTED_CANDIDATE_ID,
     status: "existing_runtime_supported"
   },
@@ -456,7 +459,7 @@ const RUNTIME_PROBES = [
     currentRw: 46,
     currentStc: 46,
     id: "wall.resilient_double_leaf_runtime",
-    noRuntimeValueMovement: true,
+    runtimeValueMovement: false,
     selectedCandidateId: GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_SELECTED_CANDIDATE_ID,
     status: "existing_runtime_supported"
   },
@@ -466,19 +469,19 @@ const RUNTIME_PROBES = [
     currentRw: null,
     currentStc: null,
     id: "wall.resilient_double_leaf_missing_side_count_needs_input",
-    noRuntimeValueMovement: true,
+    runtimeValueMovement: false,
     selectedCandidateId: "candidate_dynamic_needs_input",
     status: "needs_input"
   },
   {
-    currentErrorBudgetDb: null,
-    currentMethod: null,
-    currentRw: null,
-    currentStc: null,
-    id: "wall.direct_fixed_double_leaf_screening_boundary",
-    noRuntimeValueMovement: true,
-    selectedCandidateId: "candidate_multileaf_screening_fallback",
-    status: "screening_boundary"
+    currentErrorBudgetDb: 6,
+    currentMethod: GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_RUNTIME_METHOD,
+    currentRw: 31,
+    currentStc: 31,
+    id: "wall.direct_fixed_double_leaf_gate_eo_separate_runtime",
+    runtimeValueMovement: true,
+    selectedCandidateId: GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_SELECTED_CANDIDATE_ID,
+    status: "separate_direct_fixed_runtime_supported"
   },
   {
     currentErrorBudgetDb: null,
@@ -486,7 +489,7 @@ const RUNTIME_PROBES = [
     currentRw: 53,
     currentStc: 64,
     id: "wall.grouped_triple_leaf_calibrated_boundary",
-    noRuntimeValueMovement: true,
+    runtimeValueMovement: false,
     selectedCandidateId: "wall.multileaf_triple_leaf.calibrated_family_solver",
     status: "separate_calibrated_owner"
   }
@@ -502,7 +505,7 @@ const BLOCKED_NEXT_ACTIONS = [
   {
     id: "direct_fixed_double_leaf_runtime",
     reason:
-      "direct-fixed double-leaf cases need a separate mechanical bridge-loss owner before runtime promotion",
+      "direct-fixed double-leaf cases are closed by the Gate EO separate mechanical bridge-loss owner, not by the Gate S runtime corridor",
     selectedNow: false
   },
   {

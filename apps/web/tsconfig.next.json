@@ -3,11 +3,18 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
+    ".next-debug-3124/types/**/*.ts",
     ".next-dev/types/**/*.ts",
+    ".next-gate-da/types/**/*.ts",
+    ".next-gate-db/types/**/*.ts",
+    ".next-gate-dc/types/**/*.ts",
+    ".next-gate-dd/types/**/*.ts",
+    ".next-gate-de/types/**/*.ts",
+    ".next-gate-df/types/**/*.ts",
+    ".next-gate-dg/types/**/*.ts",
     ".next-typecheck/types/**/*.ts",
     ".next/types/**/*.ts",
-    "next-env.d.ts",
-    ".next-debug-3124/types/**/*.ts"
+    "next-env.d.ts"
   ],
   "exclude": [
     "node_modules"

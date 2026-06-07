@@ -544,15 +544,20 @@ describe("post-V1 wall multileaf generalized formula Gate A", () => {
     const registry = buildLayerCombinationResolverRegistryContract();
 
     expect(exact.metrics.estimatedRwDb).toBe(55);
-    expect(exact.supportedTargetOutputs).toEqual(["Rw"]);
-    expect(exact.unsupportedTargetOutputs).toEqual(["STC", "C", "Ctr"]);
+    expect(exact.supportedTargetOutputs).toEqual(["Rw", "STC", "C", "Ctr"]);
+    expect(exact.unsupportedTargetOutputs).toEqual([]);
     expect(exact.layerCombinationResolverTrace).toMatchObject({
       route: "wall",
-      runtimeBasisId: "verified_airborne_exact_source",
-      selectedCandidateId: "wall.exact_verified_airborne.same_leaf_schedule",
-      supportBucket: "exact",
-      supportedMetrics: ["Rw"],
-      valuePins: [{ metric: "Rw", value: 55 }]
+      runtimeBasisId: "gate_dv_lsf_exact_rw_calculated_lab_companion_runtime",
+      selectedCandidateId: "candidate_lsf_exact_rw_calculated_lab_companions",
+      supportBucket: "source_absent_estimate",
+      supportedMetrics: ["Rw", "STC", "C", "Ctr"],
+      valuePins: [
+        { metric: "Rw", value: 55 },
+        { metric: "STC", value: 55 },
+        { metric: "C", value: -1.5 },
+        { metric: "Ctr", value: -6.4 }
+      ]
     });
 
     expect(ambiguous.acousticAnswerBoundary).toMatchObject({

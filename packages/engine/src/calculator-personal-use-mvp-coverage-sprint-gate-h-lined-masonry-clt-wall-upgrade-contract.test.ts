@@ -215,15 +215,16 @@ describe("Personal-Use MVP Coverage Sprint Gate H lined masonry and CLT wall upg
       curveBasis: "calculated_frequency_curve",
       errorBudgetDb: 6,
       family: "lined_massive_wall",
+      kind: "airborne_bound",
       method: GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD,
-      origin: "family_physics_prediction",
+      origin: "bounded_prediction",
       ratingStandard: "ISO 717-1",
-      toleranceClass: "uncalibrated_prediction"
+      toleranceClass: "bounded_prediction"
     });
     expect(lined.airborneCandidateResolution).toMatchObject({
       runtimeValueMovement: false,
       selectedCandidateId: GATE_H_LINED_MASSIVE_WALL_SELECTED_CANDIDATE_ID,
-      selectedOrigin: "family_physics_prediction"
+      selectedOrigin: "bounded_prediction"
     });
     expect(lined.warnings).toContain(GATE_H_LINED_MASSIVE_WALL_WARNING);
   });

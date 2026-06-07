@@ -49,6 +49,9 @@ import {
 import {
   LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID
 } from "./layer-combination-resolver-single-leaf-mass-law-banded-runtime-constants";
+import {
+  LIGHTWEIGHT_CONCRETE_DELTA_LW_SELECTED_CANDIDATE_ID
+} from "./lightweight-concrete-delta-lw-runtime-corridor";
 import { LIGHTWEIGHT_CONCRETE_FAMILY_SELECTED_CANDIDATE_ID } from "./lightweight-concrete-family-runtime-constants";
 import { MIXED_SUPPORT_FLOOR_IMPACT_SELECTED_CANDIDATE_ID } from "./mixed-support-floor-impact-runtime-corridor";
 import {
@@ -121,16 +124,16 @@ describe("layer combination resolver company-internal V0 rehearsal contract", ()
     });
     expect(contract.summary).toEqual({
       allowedExactRowCount: 4,
-      allowedWithBudgetRowCount: 39,
+      allowedWithBudgetRowCount: 41,
       blockedActionCount: 4,
       blockedRowCount: 2,
-      coverageMatrixRowCount: 46,
-      companyInternalV0AllowedRowCount: 43,
+      coverageMatrixRowCount: 48,
+      companyInternalV0AllowedRowCount: 45,
       needsUserInputRowCount: 1,
       readinessBucketCount: {
         needs_input: 1,
         ready: 4,
-        ready_with_budget: 39,
+        ready_with_budget: 41,
         research_only: 0,
         unsupported: 2
       },
@@ -151,6 +154,7 @@ describe("layer combination resolver company-internal V0 rehearsal contract", ()
       [MIXED_SUPPORT_FLOOR_IMPACT_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
       ["floor.exact_measured_floor_system.same_topology_metric_basis", "allowed_exact"],
       [POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
+      ["candidate_lsf_exact_rw_calculated_lab_companions", "allowed_with_budget"],
       ["wall.exact_verified_airborne.same_leaf_schedule", "allowed_exact"],
       ["floor.exact_impact_band_source.metric_basis", "allowed_exact"],
       [TUAS_C11C_GUARDED_ISO_WEIGHTED_IMPACT_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
@@ -175,6 +179,7 @@ describe("layer combination resolver company-internal V0 rehearsal contract", ()
       ["floor.composite_panel.published_interaction_family_solver", "allowed_with_budget"],
       ["candidate_gate_ae_flat_multicavity_family_physics_prediction", "allowed_with_budget"],
       [LIGHTWEIGHT_CONCRETE_FAMILY_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
+      [LIGHTWEIGHT_CONCRETE_DELTA_LW_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
       ["floor.lightweight_steel.upper_lower_mass_spring.source_absent", "allowed_with_budget"],
       ["floor.lightweight_steel.suspended_ceiling_only.source_absent", "allowed_with_budget"],
       ["floor.timber_joist.delta_lw_formula", "allowed_with_budget"],

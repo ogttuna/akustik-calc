@@ -126,7 +126,7 @@ describe("Personal-Use MVP Coverage Sprint Gate AU daily-use release handoff", (
       acceptedFailClosedBoundaryRowCount: 14,
       basisCoverage: ["element_lab", "field_apparent", "astm_rating_boundary", "building_prediction"],
       companyInternalDailyUseReady: true,
-      currentPostureCoverage: ["family_physics", "needs_input", "unsupported", "exact", "source_anchored_delta"],
+      currentPostureCoverage: ["family_physics", "bounded_screening", "needs_input", "unsupported", "exact", "source_anchored_delta"],
       dailyUseReleaseBlockerIds: [],
       gateAtLandedGate: PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AT_LANDED_GATE,
       gateAtSelectedNextAction: PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AT_SELECTED_NEXT_ACTION,

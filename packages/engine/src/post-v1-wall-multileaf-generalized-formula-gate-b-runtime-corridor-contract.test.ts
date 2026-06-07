@@ -6,6 +6,10 @@ import type { AirborneContext, LayerInput, RequestedOutputId } from "@dynecho/sh
 import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
+import {
+  GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD,
+  GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-gate-dv-lsf-exact-source-mixed-companion";
 import { adaptLayerCombinationRuntimeCandidate } from "./layer-combination-resolver-runtime-candidate-adapter";
 import { buildLayerCombinationResolverRegistryContract } from "./layer-combination-resolver-registry";
 
@@ -125,8 +129,8 @@ describe("post-V1 wall multileaf generalized formula Gate B runtime corridor", (
     });
 
     expect(registry.summary).toMatchObject({
-      activeRuntimeCandidateCount: 43,
-      candidateCount: 46
+      activeRuntimeCandidateCount: 45,
+      candidateCount: 48
     });
     expect(candidate).toMatchObject({
       basis: "element_lab",
@@ -219,13 +223,18 @@ describe("post-V1 wall multileaf generalized formula Gate B runtime corridor", (
 
     expect(exact.metrics.estimatedRwDb).toBe(55);
     expect(exact.layerCombinationResolverTrace).toMatchObject({
-      runtimeBasisId: "verified_airborne_exact_source",
-      selectedCandidateId: "wall.exact_verified_airborne.same_leaf_schedule",
-      supportBucket: "exact",
-      supportedMetrics: ["Rw"],
-      valuePins: [{ metric: "Rw", value: 55 }]
+      runtimeBasisId: GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD,
+      selectedCandidateId: GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_SELECTED_CANDIDATE_ID,
+      supportBucket: "source_absent_estimate",
+      supportedMetrics: ["Rw", "STC", "C", "Ctr"],
+      valuePins: [
+        { metric: "Rw", value: 55 },
+        { metric: "STC", value: 55 },
+        { metric: "C", value: -1.5 },
+        { metric: "Ctr", value: -6.4 }
+      ]
     });
-    expect(exact.unsupportedTargetOutputs).toEqual(["STC", "C", "Ctr"]);
+    expect(exact.unsupportedTargetOutputs).toEqual([]);
 
     expect(ambiguous.acousticAnswerBoundary).toMatchObject({
       missingPhysicalInputs: [...FLAT_MULTICAVITY_MISSING_INPUTS],

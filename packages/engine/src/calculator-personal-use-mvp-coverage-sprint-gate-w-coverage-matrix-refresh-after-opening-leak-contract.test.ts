@@ -217,7 +217,7 @@ describe("Personal-Use MVP Coverage Sprint Gate W coverage matrix refresh after 
       runtime: {
         basisId: "gate_h_lined_massive_wall_cavity_aware_family_physics_runtime",
         errorBudgetDb: 6,
-        origin: "family_physics_prediction"
+        origin: "bounded_prediction"
       }
     });
     expect(values(lined)).toMatchObject({ C: -0.8, Ctr: -5.7, Rw: 60, STC: 60 });

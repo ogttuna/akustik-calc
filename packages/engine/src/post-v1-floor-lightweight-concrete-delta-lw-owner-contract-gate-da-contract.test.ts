@@ -130,7 +130,7 @@ describe("post-V1 floor lightweight-concrete DeltaLw owner contract Gate DA", ()
     });
   });
 
-  it("keeps visible lightweight-concrete stacks on Rw and Ln,w until the DeltaLw runtime corridor lands", () => {
+  it("keeps visible lightweight-concrete stacks on Rw and Ln,w and observes the Gate DB DeltaLw runtime corridor", () => {
     const result = calculateAssembly(LIGHTWEIGHT_VISIBLE_LAYERS, {
       calculator: "dynamic",
       floorImpactContext: {
@@ -145,24 +145,26 @@ describe("post-V1 floor lightweight-concrete DeltaLw owner contract Gate DA", ()
       basis: LIGHTWEIGHT_CONCRETE_FAMILY_ESTIMATE_BASIS
     });
     expect(result.impact).toMatchObject({
+      DeltaLw: 24.9,
       LnW: 64.3,
       basis: LIGHTWEIGHT_CONCRETE_FAMILY_ESTIMATE_BASIS
     });
-    expect(result.impact?.DeltaLw).toBeUndefined();
-    expect(result.supportedTargetOutputs).toEqual(["Rw", "Ln,w"]);
-    expect(result.unsupportedTargetOutputs).toEqual(["DeltaLw"]);
+    expect(result.impact?.basis).not.toBe(HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS);
+    expect(result.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "DeltaLw"]);
+    expect(result.unsupportedTargetOutputs).toEqual([]);
     expect(result.layerCombinationResolverTrace).toMatchObject({
       runtimeBasisId: LIGHTWEIGHT_CONCRETE_FAMILY_ESTIMATE_BASIS,
       selectedCandidateId: LIGHTWEIGHT_CONCRETE_FAMILY_SELECTED_CANDIDATE_ID,
-      supportedMetrics: ["Rw", "Ln,w"],
+      supportedMetrics: ["Rw", "Ln,w", "DeltaLw"],
       valuePins: [
         { metric: "Rw", value: 53 },
-        { metric: "Ln,w", value: 64.3 }
+        { metric: "Ln,w", value: 64.3 },
+        { metric: "DeltaLw", value: 24.9 }
       ]
     });
   });
 
-  it("blocks low-density predictor input from borrowing the heavy-concrete Annex C DeltaLw formula", () => {
+  it("calculates low-density predictor DeltaLw after Gate DB without borrowing the heavy-concrete Annex C basis", () => {
     const result = calculateImpactOnly([], {
       impactPredictorInput: POST_V1_GATE_DA_LOW_DENSITY_COMPLETE_DYNAMIC_INPUT,
       targetOutputs: ["Ln,w", "Rw", "DeltaLw"]
@@ -171,24 +173,25 @@ describe("post-V1 floor lightweight-concrete DeltaLw owner contract Gate DA", ()
     expect(result.sourceMode).toBe("predictor_input");
     expect(result.sourceLayers.at(-1)?.material.id).toBe("lightweight_concrete");
     expect(result.impact).toMatchObject({
+      DeltaLw: 24.9,
       LnW: 64.3,
       basis: LIGHTWEIGHT_CONCRETE_FAMILY_ESTIMATE_BASIS
     });
-    expect(result.impact?.DeltaLw).toBeUndefined();
     expect(result.impact?.basis).not.toBe(HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS);
     expect(result.floorSystemRatings).toMatchObject({
       Rw: 53,
       basis: LIGHTWEIGHT_CONCRETE_FAMILY_ESTIMATE_BASIS
     });
-    expect(result.supportedTargetOutputs).toEqual(["Ln,w", "Rw"]);
-    expect(result.unsupportedTargetOutputs).toEqual(["DeltaLw"]);
+    expect(result.supportedTargetOutputs).toEqual(["Ln,w", "Rw", "DeltaLw"]);
+    expect(result.unsupportedTargetOutputs).toEqual([]);
     expect(result.layerCombinationResolverTrace).toMatchObject({
       runtimeBasisId: LIGHTWEIGHT_CONCRETE_FAMILY_ESTIMATE_BASIS,
       selectedCandidateId: LIGHTWEIGHT_CONCRETE_FAMILY_SELECTED_CANDIDATE_ID,
-      supportedMetrics: ["Ln,w", "Rw"],
+      supportedMetrics: ["Ln,w", "Rw", "DeltaLw"],
       valuePins: [
         { metric: "Rw", value: 53 },
-        { metric: "Ln,w", value: 64.3 }
+        { metric: "Ln,w", value: 64.3 },
+        { metric: "DeltaLw", value: 24.9 }
       ]
     });
   });

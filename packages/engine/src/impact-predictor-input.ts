@@ -1395,9 +1395,10 @@ function resolveLowerTreatmentSupportClass(
 
 function resolveLowerTreatmentSupportProductId(
   cavityLayer: ResolvedLayerStackEntry | undefined
-): "acoustic_hanger_ceiling" | "resilient_stud_ceiling" | undefined {
+): "acoustic_hanger_ceiling" | "resilient_channel" | "resilient_stud_ceiling" | undefined {
   switch (cavityLayer?.material.id) {
     case "acoustic_hanger_ceiling":
+    case "resilient_channel":
     case "resilient_stud_ceiling":
       return cavityLayer.material.id;
     default:
@@ -1634,6 +1635,15 @@ export function buildImpactPredictorInputFromLayerStack(
   const boardMaterialClass = resolveLowerTreatmentBoardMaterialClass(firstCeilingBoard);
 
   const structuralSupport = resolveStructuralSupportFromBaseLayer(baseStructure);
+  const lowerTreatmentSupportProductId = resolveLowerTreatmentSupportProductId(ceilingCavity);
+  const hasHeavyConcreteBaseLayer =
+    baseStructure?.material.id === "concrete" ||
+    baseStructure?.material.id === "heavy_concrete";
+  const boundedLowerTreatmentSupportProductId =
+    lowerTreatmentSupportProductId === "resilient_channel" &&
+    (!hasHeavyConcreteBaseLayer || structuralSupport.structuralSupportType !== "reinforced_concrete")
+      ? undefined
+      : lowerTreatmentSupportProductId;
 
   const derivedInput: ImpactPredictorInput = {
     ...structuralSupport,
@@ -1664,7 +1674,7 @@ export function buildImpactPredictorInputFromLayerStack(
           cavityDepthMm: ceilingCavity?.thicknessMm,
           cavityFillThicknessMm: ceilingFill?.thicknessMm,
           supportClass: resolveLowerTreatmentSupportClass(ceilingCavity),
-          supportProductId: resolveLowerTreatmentSupportProductId(ceilingCavity),
+          supportProductId: boundedLowerTreatmentSupportProductId,
           type: resolveLowerTreatmentType(ceilingCavity)
         }
       : undefined,

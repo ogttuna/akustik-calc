@@ -478,6 +478,16 @@ export function getImpactConfidenceForBasis(basis: ImpactEstimateBasis): ImpactC
     };
   }
 
+  if (basis === "predictor_lightweight_concrete_delta_lw_dynamic_improvement_estimate") {
+    return {
+      level: "medium",
+      provenance: "formula_estimate_narrow_scope",
+      score: 0.66,
+      summary:
+        "Lightweight-concrete DeltaLw companion with explicit load basis and resilient dynamic stiffness, separate from heavy-concrete carrier publication."
+    };
+  }
+
   if (basis === "predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate") {
     return {
       level: "medium",

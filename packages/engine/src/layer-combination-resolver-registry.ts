@@ -95,6 +95,12 @@ import { OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS } from "./open-box-timb
 import { OPEN_BOX_TIMBER_SIMILARITY_BASIS } from "./open-box-timber-similarity-estimate";
 import { OPEN_WEB_RAW_BARE_FORMULA_BASIS } from "./open-web-raw-bare-estimate";
 import {
+  LIGHTWEIGHT_CONCRETE_DELTA_LW_REQUIRED_FIELDS,
+  LIGHTWEIGHT_CONCRETE_DELTA_LW_RUNTIME_BASIS,
+  LIGHTWEIGHT_CONCRETE_DELTA_LW_SELECTED_CANDIDATE_ID,
+  LIGHTWEIGHT_CONCRETE_DELTA_LW_TOLERANCE_DB
+} from "./lightweight-concrete-delta-lw-runtime-corridor";
+import {
   STEEL_FLOOR_FORMULA_BASIS,
   STEEL_FLOOR_FORMULA_DELTA_LW_TOLERANCE_DB,
   STEEL_FLOOR_FORMULA_LN_W_TOLERANCE_DB,
@@ -111,6 +117,10 @@ import {
   POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_RUNTIME_METHOD,
   POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_SELECTED_CANDIDATE_ID
 } from "./post-v1-wall-compatible-anchor-delta";
+import {
+  GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD,
+  GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-gate-dv-lsf-exact-source-mixed-companion";
 import {
   TUAS_C11C_GUARDED_ISO_WEIGHTED_IMPACT_BASIS,
   TUAS_C11C_GUARDED_ISO_WEIGHTED_IMPACT_SELECTED_CANDIDATE_ID
@@ -498,6 +508,63 @@ const CANDIDATE_DECLARATIONS = [
       "publish_only_anchor_owned_rw"
     ],
     supportedMetrics: ["Rw"],
+    surfaceRequirements: ELEMENT_LAB_SURFACES,
+    valuePins: []
+  },
+  {
+    basis: "element_lab",
+    errorBudgetTerms: [
+      { metric: "STC", notMeasuredEvidence: true, toleranceDb: 2.5 },
+      { metric: "C", notMeasuredEvidence: true, toleranceDb: 2.5 },
+      { metric: "Ctr", notMeasuredEvidence: true, toleranceDb: 4.5 }
+    ],
+    exactPrecedenceRules: [
+      "knauf_416889_exact_rw_source_stays_rank_zero_for_single_output_rw",
+      "mixed_lab_companions_use_calculated_curve_terms_not_source_aliases",
+      "same_stack_sources_reporting_stc_c_ctr_would_win_before_this_companion"
+    ],
+    formulaTerms: [
+      "exact_full_stack_source_rw_anchor",
+      "stud_wall_system_calculated_transmission_loss_curve",
+      "astm_e413_stc_from_curve",
+      "iso_717_1_c_from_curve",
+      "iso_717_1_ctr_from_curve"
+    ],
+    hardCompatibilityGates: [
+      "wall_route",
+      "element_lab_metric_basis",
+      "source_id=knauf_lab_416889_primary_2026",
+      "source_metric=Rw",
+      "dynamic_family=stud_wall_system",
+      "no_field_or_building_metric_promotion"
+    ],
+    hostileInputCases: [
+      "stc_c_ctr_are_not_measured_source_metrics",
+      "field_request_rejected_without_field_adapter_owner",
+      "building_prediction_rejected_without_flanking_owner",
+      "non_knauf_lsf_exact_sources_require_separate_selection"
+    ],
+    id: GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_SELECTED_CANDIDATE_ID,
+    kind: "source_absent_family_solver",
+    label: "Wall LSF exact-Rw calculated lab spectrum companions",
+    ownedRuntimeBasisId: GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD,
+    priorityRank: 3,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      "route=wall",
+      "elementLabMetricBasis",
+      "exactFullStackSource:Rw",
+      "calculatedTransmissionLossCurve",
+      "ASTM_E413_STC_curve_rating",
+      "ISO_717_1_C_Ctr_curve_rating"
+    ],
+    route: "wall",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "exact_rw_anchor_does_not_measure_unreported_companion_metrics",
+      "field_or_building_rows_cannot_anchor_element_lab_spectrum_terms"
+    ],
+    supportedMetrics: ["Rw", "STC", "C", "Ctr"],
     surfaceRequirements: ELEMENT_LAB_SURFACES,
     valuePins: []
   },
@@ -1775,6 +1842,58 @@ const CANDIDATE_DECLARATIONS = [
       "field_or_astm_requests_need_separate_field_or_astm_owner"
     ],
     supportedMetrics: ["Rw", "Ln,w"],
+    surfaceRequirements: ELEMENT_LAB_SURFACES,
+    valuePins: []
+  },
+  {
+    basis: "element_lab",
+    errorBudgetTerms: [
+      {
+        metric: "DeltaLw",
+        notMeasuredEvidence: true,
+        toleranceDb: LIGHTWEIGHT_CONCRETE_DELTA_LW_TOLERANCE_DB
+      }
+    ],
+    exactPrecedenceRules: [
+      "exact_lightweight_concrete_floor_rows_win_for_owned_exact_metrics_before_formula_delta_lw",
+      "lightweight_family_lnw_rows_do_not_own_delta_lw_without separate metric basis"
+    ],
+    formulaTerms: [
+      "lightweight_concrete_or_low_density_concrete_carrier_guard",
+      "upper_package_load_mass",
+      "resilient_layer_dynamic_stiffness",
+      "dynamic_improvement_delta_lw_companion",
+      "lightweight_family_lnw_anchor_kept_separate"
+    ],
+    hardCompatibilityGates: [
+      "floor_route",
+      "lightweight_concrete_or_low_density_concrete_support",
+      "complete_upper_package_load_basis",
+      "resilient_layer_dynamic_stiffness_present",
+      "element_lab_metric_basis"
+    ],
+    hostileInputCases: [
+      "heavy_concrete_annex_c_delta_lw_basis_is_not_reused",
+      "missing_dynamic_stiffness_needs_input",
+      "missing_load_basis_needs_input",
+      "field_outputs_need_field_adapter",
+      "astm_iic_aiic_stays_unsupported"
+    ],
+    id: LIGHTWEIGHT_CONCRETE_DELTA_LW_SELECTED_CANDIDATE_ID,
+    kind: "source_absent_family_solver",
+    label: "Lightweight-concrete DeltaLw dynamic-improvement formula",
+    ownedRuntimeBasisId: LIGHTWEIGHT_CONCRETE_DELTA_LW_RUNTIME_BASIS,
+    priorityRank: 3,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [...LIGHTWEIGHT_CONCRETE_DELTA_LW_REQUIRED_FIELDS],
+    route: "floor",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "existing_lightweight_family_lnw_rows_can_remain_lab_lnw_companions",
+      "same_family_lightweight_iso_delta_lw_holdouts_may_tighten_budget_later",
+      "field_or_astm_requests_need_separate_field_or_astm_owner"
+    ],
+    supportedMetrics: ["DeltaLw"],
     surfaceRequirements: ELEMENT_LAB_SURFACES,
     valuePins: []
   },

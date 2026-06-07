@@ -4,6 +4,7 @@ import {
   ImpactOnlyCalculationSchema,
   ImpactPredictorInputSchema,
   LayerInputSchema,
+  type AcousticInputFieldId,
   type FloorSystemBoundEstimateResult,
   type FloorSystemBoundMatchResult,
   type FloorSystemEstimateResult,
@@ -86,6 +87,13 @@ import {
   collectTimberCltDeltaLwFormulaMissingPhysicalInputs
 } from "./timber-clt-floor-impact-delta-lw-runtime-corridor";
 import {
+  collectLightweightConcreteDeltaLwMissingPhysicalInputs
+} from "./lightweight-concrete-delta-lw-runtime-corridor";
+import {
+  buildSteelFloorFormulaPredictorInputFromSurface,
+  type SteelFloorFormulaInputSurface
+} from "./steel-floor-formula-input-surface";
+import {
   buildMixedSupportFloorImpactFormulaFallbackBlockerWarning,
   buildMixedSupportFloorImpactUnsupportedBoundary,
   collectMixedSupportFloorImpactMissingPhysicalInputs
@@ -107,6 +115,7 @@ export type CalculateImpactOnlyOptions = {
   officialFloorSystemId?: string | null;
   officialImpactCatalogId?: string | null;
   sourceLayers?: readonly LayerInput[];
+  steelFloorFormulaSurface?: SteelFloorFormulaInputSurface | null;
   targetOutputs?: readonly RequestedOutputId[];
 };
 
@@ -429,6 +438,86 @@ function applyPostV1GateCYCompositePanelDeltaLwNeedsInputBoundary(input: {
   );
 }
 
+function applyPostV1GateDBLightweightConcreteDeltaLwNeedsInputBoundary(input: {
+  predictorInput: ImpactPredictorInput | null;
+  result: ImpactOnlyCalculation;
+}): void {
+  if (input.result.acousticAnswerBoundary) {
+    return;
+  }
+
+  const missingPhysicalInputs = collectLightweightConcreteDeltaLwMissingPhysicalInputs(input.predictorInput);
+  if (missingPhysicalInputs.length === 0) {
+    return;
+  }
+
+  const unsupportedOutputSet = new Set<RequestedOutputId>(input.result.unsupportedTargetOutputs);
+  const stoppedOutputs = input.result.targetOutputs.filter((output: RequestedOutputId) =>
+    output === "DeltaLw" && unsupportedOutputSet.has(output)
+  );
+  if (stoppedOutputs.length === 0) {
+    return;
+  }
+
+  const boundary = buildAnswerEngineV1FloorImpactNeedsInputBoundary({
+    missingPhysicalInputs,
+    targetOutputs: stoppedOutputs
+  });
+  if (!boundary) {
+    return;
+  }
+
+  input.result.acousticAnswerBoundary = boundary;
+  parkImpactOnlyTargetOutputs(input.result, boundary.unsupportedOutputs);
+  input.result.warnings.push(
+    `Post-V1 Gate DB selected needs_input for ${boundary.unsupportedOutputs.join(", ")}; provide ${boundary.missingPhysicalInputs.join(", ")} before DynEcho publishes lightweight-concrete DeltaLw.`
+  );
+}
+
+function applyPostV1GateDKSteelVisibleFormulaInputNeedsInputBoundary(input: {
+  missingPhysicalInputs: readonly AcousticInputFieldId[];
+  result: ImpactOnlyCalculation;
+}): void {
+  if (input.result.acousticAnswerBoundary) {
+    return;
+  }
+
+  const unsupportedOutputSet = new Set<RequestedOutputId>(input.result.unsupportedTargetOutputs);
+  const stoppedOutputs: RequestedOutputId[] = input.result.targetOutputs.filter((output: RequestedOutputId) =>
+    (output === "DeltaLw" || output === "Ln,w") && unsupportedOutputSet.has(output)
+  );
+
+  if (input.missingPhysicalInputs.length === 0 || stoppedOutputs.length === 0) {
+    return;
+  }
+
+  const boundary = buildAnswerEngineV1FloorImpactNeedsInputBoundary({
+    missingPhysicalInputs: input.missingPhysicalInputs,
+    targetOutputs: stoppedOutputs
+  });
+  if (!boundary) {
+    return;
+  }
+
+  input.result.acousticAnswerBoundary = boundary;
+  parkImpactOnlyTargetOutputs(input.result, boundary.unsupportedOutputs);
+  input.result.boundFloorSystemEstimate = null;
+  input.result.boundFloorSystemMatch = null;
+  input.result.dynamicImpactTrace = undefined;
+  input.result.floorCarrier = null;
+  input.result.floorSystemEstimate = null;
+  input.result.floorSystemMatch = null;
+  input.result.floorSystemRatings = null;
+  input.result.impact = null;
+  input.result.impactCatalogMatch = null;
+  input.result.impactPredictorStatus = null;
+  input.result.impactSupport = null;
+  input.result.lowerBoundImpact = null;
+  input.result.warnings.push(
+    `Post-V1 Gate DK selected needs_input for ${boundary.unsupportedOutputs.join(", ")}; provide ${boundary.missingPhysicalInputs.join(", ")} before DynEcho routes visible steel floor layers through the steel Ln,w / DeltaLw formula corridor on the impact-only surface.`
+  );
+}
+
 function applyAcousticCalculatorAnswerEngineV1MixedSupportFloorImpactNeedsInputBoundary(input: {
   predictorInput: ImpactPredictorInput | null;
   result: ImpactOnlyCalculation;
@@ -497,11 +586,45 @@ export function calculateImpactOnly(
   const explicitPredictorInput = options.impactPredictorInput
     ? ImpactPredictorInputSchema.parse(options.impactPredictorInput)
     : null;
-  let predictorInput = explicitPredictorInput;
-  let predictorInputMode: "derived_from_visible_layers" | "explicit_predictor_input" | undefined =
-    explicitPredictorInput ? "explicit_predictor_input" : undefined;
-  let predictorAdaptation = predictorInput ? adaptImpactPredictorInput(predictorInput) : null;
   const baseCatalog = mergePredictorCatalog(getDefaultMaterialCatalog(), options.catalog ?? []);
+  const steelFloorFormulaSurface = options.steelFloorFormulaSurface ?? null;
+  const canUseVisibleSteelFormulaSurface = Boolean(
+    !explicitPredictorInput &&
+      !options.exactImpactSource &&
+      !options.officialFloorSystemId &&
+      !options.officialImpactCatalogId &&
+      !options.sourceLayers &&
+      steelFloorFormulaSurface
+  );
+  const visibleSteelFormulaSurfaceResult =
+    canUseVisibleSteelFormulaSurface && steelFloorFormulaSurface
+      ? buildSteelFloorFormulaPredictorInputFromSurface({
+          catalog: baseCatalog,
+          layers: visibleLayers,
+          surface: steelFloorFormulaSurface,
+          targetOutputs: options.targetOutputs
+        })
+      : null;
+  const visibleSteelFormulaSurfaceRouteActive = Boolean(
+    visibleSteelFormulaSurfaceResult?.formulaTargetOutputRequested &&
+      visibleSteelFormulaSurfaceResult.steelFloorStackDetected
+  );
+  const visibleSteelFormulaPredictorInput =
+    visibleSteelFormulaSurfaceRouteActive
+      ? visibleSteelFormulaSurfaceResult?.impactPredictorInput ?? null
+      : null;
+  const visibleSteelFormulaMissingPhysicalInputs =
+    visibleSteelFormulaSurfaceRouteActive
+      ? visibleSteelFormulaSurfaceResult?.missingPhysicalInputs ?? []
+      : [];
+  let predictorInput = explicitPredictorInput ?? visibleSteelFormulaPredictorInput;
+  let predictorInputMode: "derived_from_visible_layers" | "explicit_predictor_input" | undefined =
+    explicitPredictorInput
+      ? "explicit_predictor_input"
+      : visibleSteelFormulaPredictorInput
+        ? "derived_from_visible_layers"
+        : undefined;
+  let predictorAdaptation = predictorInput ? adaptImpactPredictorInput(predictorInput) : null;
   let catalog = mergePredictorCatalog(baseCatalog, predictorAdaptation?.catalogAdditions ?? []);
   let sourceLayersInput = predictorAdaptation?.sourceLayers.length
     ? predictorAdaptation.sourceLayers.map((layer) => LayerInputSchema.parse(layer))
@@ -584,7 +707,16 @@ export function calculateImpactOnly(
       predictorDeltaLwCompanion = predictorImpactLane.predictorDeltaLwCompanion;
       boundFloorSystemEstimate = predictorImpactLane.boundFloorSystemEstimate;
       floorSystemEstimate = predictorImpactLane.floorSystemEstimate;
-      if (!floorSystemMatch && (predictorDeltaLwCompanion || options.targetOutputs?.includes("Ln,w"))) {
+      if (visibleSteelFormulaMissingPhysicalInputs.length > 0) {
+        floorSystemMatch = null;
+        boundFloorSystemMatch = null;
+        impactCatalogMatch = null;
+        explicitDeltaImpact = null;
+        narrowImpact = null;
+        predictorDeltaLwCompanion = null;
+        boundFloorSystemEstimate = null;
+        floorSystemEstimate = null;
+      } else if (!floorSystemMatch && (predictorDeltaLwCompanion || options.targetOutputs?.includes("Ln,w"))) {
         const visibleFamily = inferImpactSupportingElementFamilyFromLayers(resolvedVisibleLayers);
         const predictorFamily = inferImpactSupportingElementFamilyFromPredictorInput(predictorInput);
         const canUseVisibleAnchor = Boolean(
@@ -711,6 +843,7 @@ export function calculateImpactOnly(
 
     if (
       !blocksBoundOnlyUbiqOpenWebCarpetDerivedEstimate &&
+      visibleSteelFormulaMissingPhysicalInputs.length === 0 &&
       !floorSystemEstimate &&
       !boundFloorSystemEstimate &&
       !buildHeavyConcreteCombinedImpactFormulaFallbackBlockerWarning(predictorInput)
@@ -959,6 +1092,14 @@ export function calculateImpactOnly(
   });
   applyPostV1GateCYCompositePanelDeltaLwNeedsInputBoundary({
     predictorInput,
+    result
+  });
+  applyPostV1GateDBLightweightConcreteDeltaLwNeedsInputBoundary({
+    predictorInput,
+    result
+  });
+  applyPostV1GateDKSteelVisibleFormulaInputNeedsInputBoundary({
+    missingPhysicalInputs: visibleSteelFormulaMissingPhysicalInputs,
     result
   });
   applyAcousticCalculatorAnswerEngineV1MixedSupportFloorImpactNeedsInputBoundary({

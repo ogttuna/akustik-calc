@@ -98,8 +98,13 @@ import {
 } from "./dynamic-airborne-company-internal-heavy-composite-wall";
 import {
   GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING,
-  maybeBuildGateIAirborneFieldContextBasis
+  maybeBuildGateIAirborneFieldContextBasis,
+  maybeBuildGateIAirborneFieldContextBasisFromBase
 } from "./dynamic-airborne-gate-i-airborne-field-context";
+import {
+  GATE_DN_TIMBER_STUD_BOUNDED_WARNING,
+  maybeBuildGateDNTimberStudBoundedBasis
+} from "./dynamic-airborne-gate-dn-timber-stud-bounded";
 import {
   GATE_AR_AIRBORNE_BUILDING_PREDICTION_WARNING,
   maybeBuildGateARAirborneBuildingPredictionRuntimeBasis
@@ -1947,6 +1952,43 @@ export function calculateDynamicAirborneResult(
         : GATE_H_CLT_MASS_TIMBER_WALL_WARNING
     );
   }
+  const gateDNTimberStudLabBasis = maybeBuildGateDNTimberStudBoundedBasis({
+    confidenceClass,
+    curve: dynamicCurve,
+    family: family.family,
+    layers: analysisLayers,
+    options: {
+      ...options,
+      airborneContext: options.airborneContext
+        ? {
+            ...options.airborneContext,
+            contextMode: "element_lab"
+          }
+        : options.airborneContext
+    },
+    selectedMethod: blendSelection.blend.selectedMethod,
+    strategy,
+    topology
+  });
+  const gateDNTimberStudFieldContextBasis = gateDNTimberStudLabBasis
+    ? maybeBuildGateIAirborneFieldContextBasisFromBase({
+        baseBasis: gateDNTimberStudLabBasis,
+        context: options.airborneContext,
+        family: family.family,
+        frequencyBands: {
+          bandSet: "dynamic_airborne_delegate_grid",
+          frequenciesHz: [...dynamicCurve.frequenciesHz]
+        }
+      })
+    : null;
+  const gateDNTimberStudBasis = gateDNTimberStudFieldContextBasis ?? gateDNTimberStudLabBasis;
+
+  if (gateDNTimberStudBasis) {
+    warnings.push(GATE_DN_TIMBER_STUD_BOUNDED_WARNING);
+  }
+  if (gateDNTimberStudFieldContextBasis) {
+    warnings.push(GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING);
+  }
   const companyInternalHeavyCompositeWallBasis = maybeBuildCompanyInternalHeavyCompositeWallBasis({
     curve: dynamicCurve,
     family: family.family,
@@ -1994,6 +2036,7 @@ export function calculateDynamicAirborneResult(
     airborneBasis:
       gateARAirborneBuildingPredictionBasis ??
       gateIAirborneFieldContextBasis ??
+      gateDNTimberStudBasis ??
       gateHLinedMasonryCltWallBasis ??
       companyInternalHeavyCompositeWallBasis ??
       gateXAacNonHomogeneousMasonryBasis ??

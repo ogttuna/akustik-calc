@@ -105,11 +105,11 @@ describe("post-V1 floor lightweight-concrete family solver owner Gate M", () => 
       { profile: "low_density_predictor_input", metric: "Rw", value: 49 }
     ]);
     expect(registry.summary).toMatchObject({
-      activeRuntimeCandidateCount: 43,
-      candidateCount: 46
+      activeRuntimeCandidateCount: 45,
+      candidateCount: 48
     });
-    expect(adapter.summary.adaptedRuntimeBasisCount).toBe(43);
-    expect(surface.summary.surfaceRowCount).toBe(46);
+    expect(adapter.summary.adaptedRuntimeBasisCount).toBe(45);
+    expect(surface.summary.surfaceRowCount).toBe(48);
     expect(candidate).toMatchObject({
       basis: "element_lab",
       errorBudgetTerms: [
@@ -149,14 +149,11 @@ describe("post-V1 floor lightweight-concrete family solver owner Gate M", () => 
     expect(result.unsupportedTargetOutputs).toEqual(["DeltaLw", "IIC", "AIIC"]);
     expect(result.layerCombinationResolverTrace).toMatchObject({
       boundaryCandidateIds: ["generic.astm_iic_aiic.unsupported_boundary"],
-      runtimeBasisId: LIGHTWEIGHT_CONCRETE_FAMILY_ESTIMATE_BASIS,
-      selectedCandidateId: LIGHTWEIGHT_CONCRETE_FAMILY_SELECTED_CANDIDATE_ID,
-      supportBucket: "source_absent_estimate",
-      supportedMetrics: ["Rw", "Ln,w"],
-      valuePins: [
-        { metric: "Rw", value: 53 },
-        { metric: "Ln,w", value: 64.3 }
-      ]
+      runtimeBasisId: null,
+      selectedCandidateId: "generic.required_input_owner.needs_input_boundary",
+      supportBucket: "needs_input",
+      supportedMetrics: [],
+      valuePins: []
     });
   });
 
@@ -185,17 +182,14 @@ describe("post-V1 floor lightweight-concrete family solver owner Gate M", () => 
     expect(result.supportedTargetOutputs).toEqual(["Ln,w", "Rw"]);
     expect(result.unsupportedTargetOutputs).toEqual(["DeltaLw"]);
     expect(result.layerCombinationResolverTrace).toMatchObject({
-      runtimeBasisId: LIGHTWEIGHT_CONCRETE_FAMILY_ESTIMATE_BASIS,
-      selectedCandidateId: LIGHTWEIGHT_CONCRETE_FAMILY_SELECTED_CANDIDATE_ID,
-      supportedMetrics: ["Ln,w", "Rw"],
-      valuePins: [
-        { metric: "Rw", value: 49 },
-        { metric: "Ln,w", value: 47 }
-      ]
+      runtimeBasisId: null,
+      selectedCandidateId: "generic.required_input_owner.needs_input_boundary",
+      supportedMetrics: [],
+      valuePins: []
     });
   });
 
-  it("keeps lightweight-concrete DeltaLw, ASTM, and field aliases out until a separate owner exists", () => {
+  it("keeps lightweight-concrete DeltaLw, ASTM, and field aliases out when required physical inputs are missing", () => {
     const result = calculateAssembly(LIGHTWEIGHT_VISIBLE_LAYERS, {
       targetOutputs: ["DeltaLw", "IIC", "AIIC", "L'n,w", "L'nT,w"]
     });
@@ -209,7 +203,7 @@ describe("post-V1 floor lightweight-concrete family solver owner Gate M", () => 
     expect(result.impact?.LPrimeNTw).toBeUndefined();
     expect(result.layerCombinationResolverTrace).toMatchObject({
       boundaryCandidateIds: ["generic.astm_iic_aiic.unsupported_boundary"],
-      selectedCandidateId: LIGHTWEIGHT_CONCRETE_FAMILY_SELECTED_CANDIDATE_ID,
+      selectedCandidateId: "generic.required_input_owner.needs_input_boundary",
       supportedMetrics: [],
       valuePins: []
     });

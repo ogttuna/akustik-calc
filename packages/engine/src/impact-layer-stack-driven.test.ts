@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
 import { calculateImpactOnly } from "./calculate-impact-only";
+import {
+  COMPOSITE_PANEL_PUBLISHED_INTERACTION_ESTIMATE_BASIS,
+  COMPOSITE_PANEL_PUBLISHED_INTERACTION_SELECTED_CANDIDATE_ID
+} from "./composite-panel-published-interaction-runtime-constants";
 import { buildImpactPredictorInputFromLayerStack } from "./impact-predictor-input";
 
 function calculateFloorLayers(
@@ -145,24 +149,29 @@ describe("layer-driven impact parity", () => {
     expect(result.impactPredictorStatus?.matchedFloorSystemId).toBe("pmc_m1_dry_floating_floor_lab_2026");
   });
 
-  it("keeps composite suspended-ceiling-only layer stacks on the upstream low-confidence lane", () => {
-    const result = calculateFloorLayers([
-      { materialId: "steel_deck_composite", thicknessMm: 150, floorRole: "base_structure" },
-      { materialId: "resilient_channel", thicknessMm: 150, floorRole: "ceiling_cavity" },
-      { materialId: "rockwool", thicknessMm: 100, floorRole: "ceiling_fill" },
-      { materialId: "firestop_board", thicknessMm: 16, floorRole: "ceiling_board" },
-      { materialId: "firestop_board", thicknessMm: 16, floorRole: "ceiling_board" }
-    ]);
+  it("routes composite suspended-ceiling-only layer stacks to the published interaction owner", () => {
+    const result = calculateFloorLayers(
+      [
+        { materialId: "steel_deck_composite", thicknessMm: 150, floorRole: "base_structure" },
+        { materialId: "resilient_channel", thicknessMm: 150, floorRole: "ceiling_cavity" },
+        { materialId: "rockwool", thicknessMm: 100, floorRole: "ceiling_fill" },
+        { materialId: "firestop_board", thicknessMm: 16, floorRole: "ceiling_board" },
+        { materialId: "firestop_board", thicknessMm: 16, floorRole: "ceiling_board" }
+      ],
+      ["Rw", "Ln,w", "DeltaLw"]
+    );
 
     expect(result.ok).toBe(true);
-    expect(result.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
+    expect(result.impact?.basis).toBe(COMPOSITE_PANEL_PUBLISHED_INTERACTION_ESTIMATE_BASIS);
     expect(result.impact?.LnW).toBe(63.3);
+    expect(result.impact?.DeltaLw).toBe(20.7);
     expect(result.floorSystemRatings?.Rw).toBe(48.6);
-    expect(result.impact?.estimateCandidateIds).toEqual([
-      "pmc_m1_bare_composite_lab_2026",
-      "pmc_m1_dry_floating_plus_c2x_lab_2026",
-      "pmc_m1_dry_floating_plus_c1x_lab_2026",
-      "pmc_m1_dry_floating_floor_lab_2026"
-    ]);
+    expect(result.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "DeltaLw"]);
+    expect(result.unsupportedTargetOutputs).toEqual([]);
+    expect(result.layerCombinationResolverTrace).toMatchObject({
+      runtimeBasisId: COMPOSITE_PANEL_PUBLISHED_INTERACTION_ESTIMATE_BASIS,
+      selectedCandidateId: COMPOSITE_PANEL_PUBLISHED_INTERACTION_SELECTED_CANDIDATE_ID,
+      supportedMetrics: ["Rw", "Ln,w", "DeltaLw"]
+    });
   });
 });

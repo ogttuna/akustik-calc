@@ -23,6 +23,8 @@ import {
   type DynamicCalculatorTopologyNormalizationResult
 } from "./dynamic-calculator-topology-normalizer";
 import {
+  GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_RUNTIME_METHOD,
+  GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_SELECTED_CANDIDATE_ID,
   GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_RUNTIME_METHOD,
   GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_SELECTED_CANDIDATE_ID
 } from "./dynamic-airborne-gate-s-double-leaf-framed";
@@ -45,9 +47,25 @@ import {
   GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID
 } from "./dynamic-airborne-gate-i-airborne-field-context";
 import {
+  GATE_DN_TIMBER_STUD_BOUNDED_RUNTIME_METHOD,
+  GATE_DN_TIMBER_STUD_BOUNDED_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-gate-dn-timber-stud-bounded";
+import {
   GATE_X_AAC_NONHOMOGENEOUS_MASONRY_RUNTIME_METHOD,
   GATE_X_AAC_NONHOMOGENEOUS_MASONRY_SELECTED_CANDIDATE_ID
 } from "./dynamic-airborne-gate-x-aac-nonhomogeneous-masonry";
+import {
+  GATE_DT_MASONRY_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD,
+  GATE_DT_MASONRY_EXACT_RW_CALCULATED_COMPANION_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-gate-dt-masonry-exact-source-mixed-companion";
+import {
+  GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD,
+  GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-gate-dv-lsf-exact-source-mixed-companion";
+import {
+  GATE_DX_EXACT_SOURCE_FAMILY_FIELD_CONTEXT_RUNTIME_METHOD,
+  GATE_DX_EXACT_SOURCE_FAMILY_FIELD_CONTEXT_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-gate-dx-exact-source-family-field-context";
 import {
   GATE_Y_CLT_MASS_TIMBER_CTR_SPECTRUM_ADAPTER_RUNTIME_METHOD,
   GATE_Y_CLT_MASS_TIMBER_CTR_SPECTRUM_ADAPTER_SELECTED_CANDIDATE_ID
@@ -122,6 +140,7 @@ export type DynamicCalculatorCandidateResolverSourceAnchor = {
     metricValue?: number;
     sourceMode: "field" | "lab";
   } | null;
+  numericValueMoved?: boolean;
 };
 
 export type DynamicCalculatorCandidateResolverRuntimeSignal = {
@@ -601,6 +620,13 @@ function selectLane(input: {
   }
 
   if (
+    input.runtimeSignal?.airborneBasis?.method === GATE_DT_MASONRY_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD ||
+    input.runtimeSignal?.airborneBasis?.method === GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD
+  ) {
+    return "family_physics";
+  }
+
+  if (
     exactSourceEligible({
       assessment: input.assessment,
       sourceAnchor: input.sourceAnchor,
@@ -657,6 +683,10 @@ function selectLane(input: {
     return "family_physics";
   }
 
+  if (input.runtimeSignal?.airborneBasis?.origin === "bounded_prediction") {
+    return "bounded";
+  }
+
   return "screening";
 }
 
@@ -697,6 +727,10 @@ function familyPhysicsCandidateId(runtimeBasis?: AirborneResultBasis): string {
     return GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_SELECTED_CANDIDATE_ID;
   }
 
+  if (runtimeBasis?.method === GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_RUNTIME_METHOD) {
+    return GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_SELECTED_CANDIDATE_ID;
+  }
+
   if (runtimeBasis?.method === GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD) {
     return GATE_H_LINED_MASSIVE_WALL_SELECTED_CANDIDATE_ID;
   }
@@ -711,6 +745,10 @@ function familyPhysicsCandidateId(runtimeBasis?: AirborneResultBasis): string {
 
   if (runtimeBasis?.method === GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD) {
     return GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID;
+  }
+
+  if (runtimeBasis?.method === GATE_DN_TIMBER_STUD_BOUNDED_RUNTIME_METHOD) {
+    return GATE_DN_TIMBER_STUD_BOUNDED_SELECTED_CANDIDATE_ID;
   }
 
   if (runtimeBasis?.method === FLAT_LIST_MULTILEAF_GUARD_FIELD_RUNTIME_METHOD) {
@@ -731,6 +769,18 @@ function familyPhysicsCandidateId(runtimeBasis?: AirborneResultBasis): string {
 
   if (runtimeBasis?.method === GATE_X_AAC_NONHOMOGENEOUS_MASONRY_RUNTIME_METHOD) {
     return GATE_X_AAC_NONHOMOGENEOUS_MASONRY_SELECTED_CANDIDATE_ID;
+  }
+
+  if (runtimeBasis?.method === GATE_DT_MASONRY_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD) {
+    return GATE_DT_MASONRY_EXACT_RW_CALCULATED_COMPANION_SELECTED_CANDIDATE_ID;
+  }
+
+  if (runtimeBasis?.method === GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD) {
+    return GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_SELECTED_CANDIDATE_ID;
+  }
+
+  if (runtimeBasis?.method === GATE_DX_EXACT_SOURCE_FAMILY_FIELD_CONTEXT_RUNTIME_METHOD) {
+    return GATE_DX_EXACT_SOURCE_FAMILY_FIELD_CONTEXT_SELECTED_CANDIDATE_ID;
   }
 
   if (runtimeBasis?.method === GATE_Y_CLT_MASS_TIMBER_CTR_SPECTRUM_ADAPTER_RUNTIME_METHOD) {
@@ -770,7 +820,7 @@ function candidateIdForLane(
     case "anchored_delta":
       return "candidate_dynamic_exact_subassembly_plus_calculated_delta";
     case "bounded":
-      return "candidate_dynamic_bounded_prediction";
+      return runtimeBasis ? familyPhysicsCandidateId(runtimeBasis) : "candidate_dynamic_bounded_prediction";
     case "exact_full_stack":
       return "candidate_blocked_rockwool_exact_source";
     case "family_physics":
@@ -966,8 +1016,12 @@ function buildSeeds(input: {
       outputIds: outputs
     },
     {
-      basis: boundedBasis({ family: input.family }),
-      id: "candidate_dynamic_bounded_prediction",
+      basis: input.runtimeBasis?.origin === "bounded_prediction"
+        ? input.runtimeBasis
+        : boundedBasis({ family: input.family }),
+      id: input.runtimeBasis?.origin === "bounded_prediction"
+        ? familyPhysicsCandidateId(input.runtimeBasis)
+        : "candidate_dynamic_bounded_prediction",
       metricIds: metric,
       origin: "bounded_prediction",
       outputIds: outputs
@@ -1028,7 +1082,7 @@ function runtimeMovementFor(input: {
   sourceAnchor?: DynamicCalculatorCandidateResolverSourceAnchor | null;
 }): boolean {
   if (input.lane === "exact_full_stack" || input.lane === "anchored_delta") {
-    return Boolean(input.sourceAnchor?.applied);
+    return input.sourceAnchor?.numericValueMoved ?? Boolean(input.sourceAnchor?.applied);
   }
 
   if (input.lane === "family_physics") {

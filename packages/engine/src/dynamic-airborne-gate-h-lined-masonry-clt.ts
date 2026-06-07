@@ -28,7 +28,7 @@ export const GATE_H_CLT_MASS_TIMBER_WALL_SELECTED_CANDIDATE_ID =
   "candidate_clt_mass_timber_wall_family_physics_prediction";
 
 export const GATE_H_LINED_MASSIVE_WALL_WARNING =
-  "Lined massive-wall family physics prediction is active from the cavity-aware dynamic delegate curve. It is source-absent and uncalibrated; exact rights-safe source rows can still override it when eligible.";
+  "Lined massive-wall bounded prediction is active from the cavity-aware dynamic delegate curve. It is source-absent and bounded to the declared heavy-core / light-lining envelope; exact rights-safe source rows can still override it when eligible.";
 
 export const GATE_H_CLT_MASS_TIMBER_WALL_WARNING =
   "CLT / mass-timber wall family physics prediction is active from the current timber-panel delegate curve. It uses nominal orthotropic simplification, is source-absent, and must keep the visible uncalibrated error budget.";
@@ -164,8 +164,8 @@ function buildLinedMassiveBasis(input: {
   return {
     assumptions: [
       "lined massive-wall topology has one light lining leaf, one heavy masonry/concrete leaf, and one explicit compliant cavity zone",
-      "source absence blocks exact/calibrated promotion only, not this formula-backed family prediction",
-      "Gate H promotes the existing cavity-aware dynamic delegate curve to family physics origin without retuning numeric values",
+      "source absence blocks exact/calibrated promotion only, not this formula-backed bounded prediction",
+      "Gate DG keeps the existing cavity-aware dynamic delegate curve but classifies it as a bounded lined-massive owner without retuning numeric values",
       "field/apparent outputs remain outside this lab element basis until a field-context route owns them",
       `current dynamic strategy remains ${input.strategy}`
     ],
@@ -180,11 +180,11 @@ function buildLinedMassiveBasis(input: {
       bandSet: "dynamic_airborne_delegate_grid",
       frequenciesHz: [...input.curve.frequenciesHz]
     },
-    kind: "airborne_physics_prediction",
+    kind: "airborne_bound",
     method: GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD,
     missingPhysicalInputs: [],
     missingSourceEvidence: [],
-    origin: "family_physics_prediction",
+    origin: "bounded_prediction",
     propertyDefaults: buildPropertyDefaults(input.layers),
     ratingStandard: "ISO 717-1",
     requiredInputs: [
@@ -193,17 +193,19 @@ function buildLinedMassiveBasis(input: {
       "cavityDepthMm",
       "cavityFillCoverage",
       "absorberClass",
+      "boundedOwner:wall.heavy_core_lined_massive.bounded_rule_owner_contract",
       `selectedDelegateCurve:${METHOD_LABEL_BY_DELEGATE[input.selectedMethod]}`,
       "ISO717-1 rating adapter",
       "ASTM E413 STC adapter boundary"
     ],
-    toleranceClass: "uncalibrated_prediction"
+    toleranceClass: "bounded_prediction"
   };
 }
 
 function buildCltMassTimberBasis(input: {
   confidenceClass: DynamicAirborneConfidenceClass;
   curve: TransmissionLossCurve;
+  family: Extract<DynamicAirborneFamily, "single_leaf_panel" | "laminated_single_leaf">;
   layers: readonly ResolvedLayer[];
   selectedMethod: DynamicAirborneDelegateMethod;
   strategy: string;
@@ -223,7 +225,7 @@ function buildCltMassTimberBasis(input: {
       confidenceClass: input.confidenceClass,
       family: "clt_mass_timber_wall"
     }),
-    family: "single_leaf_panel",
+    family: input.family,
     frequencyBands: {
       bandSet: "dynamic_airborne_delegate_grid",
       frequenciesHz: [...input.curve.frequenciesHz]
@@ -237,6 +239,10 @@ function buildCltMassTimberBasis(input: {
     ratingStandard: "ISO 717-1",
     requiredInputs: [
       "materialClass:mass_timber",
+      "leafGrouping=single_leaf_or_laminated_single_leaf",
+      "visibleLeafCount=1",
+      "cavityCount=0",
+      "supportLayerCount=0",
       "densityKgM3",
       "surfaceMassKgM2",
       "thicknessMm",
@@ -246,6 +252,12 @@ function buildCltMassTimberBasis(input: {
     ],
     toleranceClass: "uncalibrated_prediction"
   };
+}
+
+function isGateHCltMassTimberFamily(
+  family: DynamicAirborneFamily
+): family is Extract<DynamicAirborneFamily, "single_leaf_panel" | "laminated_single_leaf"> {
+  return family === "single_leaf_panel" || family === "laminated_single_leaf";
 }
 
 export function maybeBuildGateHLinedMasonryCltWallBasis(input: {
@@ -277,7 +289,7 @@ export function maybeBuildGateHLinedMasonryCltWallBasis(input: {
   }
 
   if (
-    input.family === "single_leaf_panel" &&
+    isGateHCltMassTimberFamily(input.family) &&
     input.topology.visibleLeafCount === 1 &&
     input.topology.cavityCount === 0 &&
     input.topology.supportLayerCount === 0 &&
@@ -286,7 +298,14 @@ export function maybeBuildGateHLinedMasonryCltWallBasis(input: {
     hasMassTimberOrClt(input.layers) &&
     hasCompleteMassInputs(input.layers)
   ) {
-    return buildCltMassTimberBasis(input);
+    return buildCltMassTimberBasis({
+      confidenceClass: input.confidenceClass,
+      curve: input.curve,
+      family: input.family,
+      layers: input.layers,
+      selectedMethod: input.selectedMethod,
+      strategy: input.strategy
+    });
   }
 
   return null;

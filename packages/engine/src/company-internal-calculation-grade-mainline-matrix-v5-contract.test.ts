@@ -126,7 +126,7 @@ describe("company-internal calculation-grade mainline matrix v5 refresh", () => 
         "wall.building_prediction_partial_context.needs_input",
         "floor.lightweight_steel_suspended_ceiling_astm.unsupported"
       ]),
-      currentPostureCoverage: ["family_physics", "needs_input", "unsupported", "exact", "source_anchored_delta"],
+      currentPostureCoverage: ["family_physics", "bounded_screening", "needs_input", "unsupported", "exact", "source_anchored_delta"],
       exactSourcePrecedenceRowIds: [
         "floor.lightweight_steel_exact_source_precedence.lab",
         "floor.lightweight_steel_suspended_ceiling_exact_source_precedence.lab",

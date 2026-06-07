@@ -65,8 +65,8 @@ export type PostV1GateDALightweightDeltaLwOwnerField = {
 export type PostV1GateDALightweightDeltaLwRuntimeBoundaryProbe = {
   deltaLwDb: number | null;
   id:
-    | "visible_lightweight_complete_dynamic_context_still_blocks_delta_lw"
-    | "low_density_predictor_complete_dynamic_context_not_heavy_concrete"
+    | "visible_lightweight_complete_dynamic_context_calculates_after_gate_db"
+    | "low_density_predictor_complete_dynamic_context_calculates_after_gate_db"
     | "missing_dynamic_or_load_still_blocks_delta_lw";
   lnWDb: number | null;
   rwDb: number | null;
@@ -162,20 +162,20 @@ const PHYSICAL_OWNER_FIELDS = [
 
 const RUNTIME_PROBE_EXPECTATIONS = [
   {
-    deltaLwDb: null,
-    id: "visible_lightweight_complete_dynamic_context_still_blocks_delta_lw",
+    deltaLwDb: 24.9,
+    id: "visible_lightweight_complete_dynamic_context_calculates_after_gate_db",
     lnWDb: 64.3,
     rwDb: 53,
-    supportedOutputs: ["Rw", "Ln,w"],
-    unsupportedOutputs: ["DeltaLw"]
+    supportedOutputs: ["Rw", "Ln,w", "DeltaLw"],
+    unsupportedOutputs: []
   },
   {
-    deltaLwDb: null,
-    id: "low_density_predictor_complete_dynamic_context_not_heavy_concrete",
+    deltaLwDb: 24.9,
+    id: "low_density_predictor_complete_dynamic_context_calculates_after_gate_db",
     lnWDb: 64.3,
     rwDb: 53,
-    supportedOutputs: ["Ln,w", "Rw"],
-    unsupportedOutputs: ["DeltaLw"]
+    supportedOutputs: ["Ln,w", "Rw", "DeltaLw"],
+    unsupportedOutputs: []
   },
   {
     deltaLwDb: null,

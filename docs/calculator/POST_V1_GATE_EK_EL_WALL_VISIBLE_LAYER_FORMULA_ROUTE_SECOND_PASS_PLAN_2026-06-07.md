@@ -1,6 +1,8 @@
 # Post-V1 Gate EK/EL - Wall Visible-Layer Formula-Route Second Pass
 
-Status: Gate EK selected Gate EL no-runtime on 2026-06-07.
+Status: Gate EK selected Gate EL no-runtime on 2026-06-07. Gate EL
+landed no-runtime on 2026-06-07 and selected Gate EM numeric coverage
+rerank.
 
 Gate EK landed as:
 `post_v1_next_numeric_coverage_gap_gate_ek_plan`.
@@ -11,6 +13,19 @@ Gate EK status:
 Gate EK selected:
 `post_v1_wall_visible_layer_formula_route_second_pass_gate_el_plan` in
 `packages/engine/src/post-v1-wall-visible-layer-formula-route-second-pass-gate-el-contract.test.ts`.
+
+Gate EL landed as:
+`post_v1_wall_visible_layer_formula_route_second_pass_gate_el_plan`.
+
+Gate EL status:
+`post_v1_wall_visible_layer_formula_route_second_pass_gate_el_landed_no_runtime_selected_next_numeric_coverage_gap_gate_em`.
+
+Gate EL selected:
+`post_v1_next_numeric_coverage_gap_gate_em_plan` in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-em-contract.test.ts`.
+
+Gate EL selected outcome:
+`wall.visible_layer_formula_route_second_pass_no_fresh_runtime_candidate_after_current_reconciliation`.
 
 Selected candidate:
 `wall.visible_layer_formula_route_second_pass_after_gate_ej`.
@@ -188,6 +203,48 @@ Gate EL should test candidates in this order:
    selected candidate explicitly requires a rights-safe holdout or
    calibration row.
 
+## Gate EL Runtime Probe Result
+
+Gate EL ran the no-runtime reconciliation contract requested above.
+It did not find a fresh visible-wall runtime candidate. This is a
+positive guardrail result, not a product pivot: several high-value wall
+routes are already live, and the remaining items in this selected wall
+second-pass list are boundaries that would produce worse calculator
+answers if forced.
+
+Executable contract:
+`packages/engine/src/post-v1-wall-visible-layer-formula-route-second-pass-gate-el-contract.test.ts`.
+
+Gate EL classifications:
+
+| Probe | Classification | Result |
+| --- | --- | --- |
+| `wall.visible_advanced_wall_payload_surface_gap` | `already_live` | Complete explicit advanced-wall payload already calculates through Gate AY/AZ; missing panel loss factor / critical frequency remains `needs_input`, and field/building aliases remain unsupported. |
+| `wall.double_leaf_framed_visible_resolver_reachability_gap` | `already_live` | Complete visible double-leaf/framed lab stack already reaches `layer_combination_resolver_double_leaf_framed_wall_banded_source_absent_formula_corridor` and publishes `Rw 45 / STC 45 / C -1 / Ctr -6.1` with resolver trace. |
+| `wall.common_flat_order_double_leaf_building_repeat_gate_cs` | `closed_repeat` | Gate CS already routes complete flat-order double-leaf building requests through Gate S plus Gate AR. |
+| `wall.flat_layer_order_multicavity_repeat_gate_cu` | `closed_repeat` | Gate CU already owns complete explicit flat-order multicavity lab/field/building requests. |
+| `wall.local_substitution_building_repeat_gate_cw` | `closed_repeat` | Gate CW already owns local-substitution building adapter behavior. |
+| `wall.timber_stud_visible_repeat_gate_dn` | `closed_repeat` | Gate DN already carries timber-stud visible runtime basis. |
+| `wall.clt_laminated_visible_repeat_gate_dp` | `closed_repeat` | Gate DP already carries CLT / mass-timber laminated visible runtime basis. |
+| `wall.heavy_core_lined_massive_repeat_gate_dg` | `closed_repeat` | Gate DG already carries heavy-core / lined-massive bounded runtime basis. |
+| `wall.exact_source_mixed_companion_repeat_gate_dt_dv_dx` | `closed_repeat` | Gates DT/DV/DX already protect exact-source mixed companions and field context basis without lab/field aliasing. |
+| `wall.direct_fixed_double_leaf_bridge_owner_gap` | `unsupported_boundary` | Still blocked until a direct-fixed bridge-loss owner is selected. |
+| `wall.supportless_or_no_stud_flat_entry_gap` | `needs_input_boundary` | Still requires route-owner physical inputs such as support topology, support spacing, side count, or grouped topology fields. |
+| `wall.source_row_or_holdout_tightening` | `unsupported_boundary` | Deferred until a selected owner names a rights-safe holdout/calibration route. |
+
+Gate EL counters: `probeCount 12`, `alreadyLiveProbeCount 2`,
+`closedRepeatProbeCount 7`, `needsInputBoundaryProbeCount 1`,
+`unsupportedBoundaryProbeCount 2`, `freshCandidateCount 0`,
+`newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+`runtimeBasisPromotions 0`, `runtimeFormulaRetunes 0`,
+`runtimeValuesMoved 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+
+Gate EL selected no runtime movement and returns to numeric
+coverage/accuracy ranking:
+`post_v1_next_numeric_coverage_gap_gate_em_plan` in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-em-contract.test.ts`.
+
 ## Gate EL Acceptance
 
 Gate EL must:
@@ -210,3 +267,17 @@ Gate EL must:
 Gate EL may move runtime only after it proves a fresh visible wall
 route subset with before/after tests and negative boundaries. Otherwise
 it should close no-runtime and select the next calculator slice.
+
+## Gate EM Follow-Up
+
+Gate EM has now landed as
+`post_v1_next_numeric_coverage_gap_gate_em_plan` with status
+`post_v1_next_numeric_coverage_gap_gate_em_landed_no_runtime_selected_wall_direct_fixed_double_leaf_bridge_loss_owner_gate_en`.
+It selected `wall.direct_fixed_double_leaf_bridge_loss_owner_gap` after
+two ROI plan iterations (`roiAnalysisIterations: 2`). The selected next
+action is Gate EN direct-fixed double-leaf bridge-loss owner proof:
+`post_v1_wall_direct_fixed_double_leaf_bridge_loss_owner_gate_en_plan`
+in
+`packages/engine/src/post-v1-wall-direct-fixed-double-leaf-bridge-loss-owner-gate-en-contract.test.ts`.
+Gate EM moved no runtime values: `runtimeValuesMoved 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.

@@ -6,6 +6,7 @@ import { ImpactOnlyCalculationSchema } from "../domain/impact-only";
 import { ImpactPredictorInputSchema } from "../domain/impact-predictor-input";
 import { LayerInputSchema } from "../domain/layer";
 import { RequestedOutputSchema } from "../domain/output";
+import { SteelFloorFormulaInputSurfaceSchema } from "../domain/steel-floor-formula-input-surface";
 
 const FloorImpactContextSchema = z
   .object({
@@ -24,6 +25,7 @@ const ImpactOnlyRequestSchemaInternal = z
     officialFloorSystemId: z.string().min(1).optional(),
     officialImpactCatalogId: z.string().min(1).optional(),
     sourceLayers: z.array(LayerInputSchema).optional(),
+    steelFloorFormulaSurface: SteelFloorFormulaInputSurfaceSchema.optional(),
     targetOutputs: z.array(RequestedOutputSchema).min(1).optional()
   })
   .superRefine((value, ctx) => {

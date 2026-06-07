@@ -126,7 +126,7 @@ describe("Personal-Use MVP Coverage Sprint Gate AK coverage matrix refresh after
     expect(gateAKRows.map((row) => row.id)).toEqual(gateAARows.map((row) => row.id));
     expect(summary).toMatchObject({
       basisCoverage: ["element_lab", "field_apparent", "astm_rating_boundary", "building_prediction"],
-      currentPostureCoverage: ["family_physics", "needs_input", "unsupported", "exact", "source_anchored_delta"],
+      currentPostureCoverage: ["family_physics", "bounded_screening", "needs_input", "unsupported", "exact", "source_anchored_delta"],
       gapFreeAfterGateAK: true,
       matrixRowsAddedAtGateAK: 0,
       numericRuntimeValueMovement: false,

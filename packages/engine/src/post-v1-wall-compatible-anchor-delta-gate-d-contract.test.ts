@@ -7,6 +7,10 @@ import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
 import {
+  GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD,
+  GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-gate-dv-lsf-exact-source-mixed-companion";
+import {
   POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_RUNTIME_METHOD,
   POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_SELECTED_CANDIDATE_ID,
   POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_WARNING
@@ -141,16 +145,23 @@ describe("post-V1 wall compatible anchor-delta Gate D", () => {
 
     expect(exact.airborneBasis).toMatchObject({
       exactSourceId: "knauf_lab_416889_primary_2026",
-      method: "verified_airborne_catalog_exact_match",
-      origin: "measured_exact_full_stack"
+      method: GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD,
+      origin: "family_physics_prediction"
     });
     expect(exact.metrics.estimatedRwDb).toBe(55);
     expect(exact.layerCombinationResolverTrace).toMatchObject({
-      runtimeBasisId: "verified_airborne_exact_source",
-      selectedCandidateId: "wall.exact_verified_airborne.same_leaf_schedule",
-      supportBucket: "exact",
-      valuePins: [{ metric: "Rw", value: 55 }]
+      runtimeBasisId: GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD,
+      selectedCandidateId: GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_SELECTED_CANDIDATE_ID,
+      supportBucket: "source_absent_estimate",
+      supportedMetrics: ["Rw", "STC", "C", "Ctr"],
+      valuePins: [
+        { metric: "Rw", value: 55 },
+        { metric: "STC", value: 55 },
+        { metric: "C", value: -1.5 },
+        { metric: "Ctr", value: -6.4 }
+      ]
     });
+    expect(exact.unsupportedTargetOutputs).toEqual([]);
 
     expect(unsafeCavityBoard.acousticAnswerBoundary).toMatchObject({
       origin: "needs_input",

@@ -278,8 +278,9 @@ describe("company-internal final internal-use rehearsal", () => {
       field_apparent: 15
     });
     expect(countBy(rows, (row) => row.currentPosture)).toEqual({
+      bounded_screening: 1,
       exact: 5,
-      family_physics: 39,
+      family_physics: 38,
       needs_input: 17,
       source_anchored_delta: 2,
       unsupported: 8
@@ -302,12 +303,15 @@ describe("company-internal final internal-use rehearsal", () => {
     expect(matrixSummary.hiddenScreeningOriginRowIds).toEqual([]);
     expect(rowIds.filter((id) => id.includes("coverage_gap"))).toEqual([]);
 
+    const supportedBoundedRows = rows.filter((row) =>
+      releaseBucket(row) === "release_supported" && row.currentPosture === "bounded_screening"
+    );
     const leakedScreeningRows = rows.filter((row) =>
       releaseBucket(row) === "release_supported" &&
-      (row.currentPosture === "bounded_screening" ||
-        row.originSupportBucket.includes("screening_fallback") ||
+      (row.originSupportBucket.includes("screening_fallback") ||
         row.runtime.origin === "screening_fallback")
     );
+    expect(supportedBoundedRows.map((row) => row.id)).toEqual(["wall.lined_massive_masonry.lab"]);
     expect(leakedScreeningRows.map((row) => row.id)).toEqual([]);
   });
 

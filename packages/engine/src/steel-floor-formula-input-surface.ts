@@ -4,10 +4,11 @@ import type {
   ImpactPredictorInput,
   ImpactPredictorLowerTreatmentSupportClass,
   ImpactPredictorLowerTreatmentType,
-  ImpactPredictorSupportForm,
   LayerInput,
   MaterialDefinition,
-  RequestedOutputId
+  RequestedOutputId,
+  SteelFloorFormulaInputSurface as SharedSteelFloorFormulaInputSurface,
+  SteelFloorLowerCeilingIsolationSupportForm as SharedSteelFloorLowerCeilingIsolationSupportForm
 } from "@dynecho/shared";
 import {
   ImpactPredictorInputSchema,
@@ -26,19 +27,8 @@ import {
   STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_BASIS
 } from "./steel-floor-impact-formula-corridor";
 
-export type SteelFloorLowerCeilingIsolationSupportForm =
-  | "direct_to_joists"
-  | "elastic_furred_channels"
-  | "rigid_furred_channels";
-
-export type SteelFloorFormulaInputSurface = {
-  loadBasisKgM2?: number;
-  lowerCeilingIsolationSupportForm?: SteelFloorLowerCeilingIsolationSupportForm;
-  resilientLayerDynamicStiffnessMNm3?: number;
-  steelCarrierDepthMm?: number;
-  steelCarrierSpacingMm?: number;
-  steelSupportForm?: ImpactPredictorSupportForm;
-};
+export type SteelFloorLowerCeilingIsolationSupportForm = SharedSteelFloorLowerCeilingIsolationSupportForm;
+export type SteelFloorFormulaInputSurface = SharedSteelFloorFormulaInputSurface;
 
 export type SteelFloorFormulaInputSurfaceStatus =
   | "inactive"

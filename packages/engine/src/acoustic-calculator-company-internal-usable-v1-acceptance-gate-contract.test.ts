@@ -318,14 +318,19 @@ describe("acoustic calculator company-internal usable V1 acceptance gate", () =>
     const cases = [
       {
         airborneContext: EXACT_LSF_LAB_CONTEXT,
-        expectedCandidateKind: "exact_measured_override",
-        expectedRuntimeBasisId: "verified_airborne_exact_source",
-        expectedSelectedCandidateId: "wall.exact_verified_airborne.same_leaf_schedule",
-        expectedSupportedOutputs: ["Rw"],
-        expectedSupportBucket: "exact",
-        expectedUnsupportedOutputs: ["STC", "C", "Ctr"],
-        expectedValuePins: [{ metric: "Rw", value: 55 }],
-        label: "wall exact measured row wins without metric aliasing",
+        expectedCandidateKind: "source_absent_family_solver",
+        expectedRuntimeBasisId: "gate_dv_lsf_exact_rw_calculated_lab_companion_runtime",
+        expectedSelectedCandidateId: "candidate_lsf_exact_rw_calculated_lab_companions",
+        expectedSupportedOutputs: ["Rw", "STC", "C", "Ctr"],
+        expectedSupportBucket: "source_absent_estimate",
+        expectedUnsupportedOutputs: [],
+        expectedValuePins: [
+          { metric: "Rw", value: 55 },
+          { metric: "STC", value: 55 },
+          { metric: "C", value: -1.5 },
+          { metric: "Ctr", value: -6.4 }
+        ],
+        label: "wall exact Rw plus calculated lab companions stays basis-separated",
         layers: EXACT_LSF_LAB_STACK,
         route: "wall",
         targetOutputs: WALL_AIRBORNE_OUTPUTS

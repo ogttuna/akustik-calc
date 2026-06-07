@@ -12,6 +12,10 @@ import {
   GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID
 } from "./dynamic-airborne-gate-i-airborne-field-context";
 import {
+  GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_RUNTIME_METHOD,
+  GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-gate-s-double-leaf-framed";
+import {
   LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_FORMULA_CORRIDOR_BASIS,
   LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_FORMULA_CORRIDOR_LANDED_GATE,
   LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_FORMULA_CORRIDOR_SELECTED_NEXT_ACTION,
@@ -390,8 +394,15 @@ describe("layer combination resolver double-leaf framed wall banded runtime corr
     );
 
     expect(directFixed.airborneCandidateResolution).toMatchObject({
-      selectedCandidateId: "candidate_multileaf_screening_fallback",
-      selectedOrigin: "screening_fallback"
+      runtimeValueMovement: true,
+      selectedCandidateId: GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_SELECTED_CANDIDATE_ID,
+      selectedOrigin: "family_physics_prediction"
+    });
+    expect(directFixed.metrics).toMatchObject({ estimatedRwDb: 31, estimatedStc: 31 });
+    expect(directFixed.airborneBasis).toMatchObject({
+      errorBudgetDb: 6,
+      method: GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_RUNTIME_METHOD,
+      origin: "family_physics_prediction"
     });
     expect(directFixed.airborneBasis?.method).not.toBe(
       LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_FORMULA_CORRIDOR_BASIS

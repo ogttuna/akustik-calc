@@ -39,6 +39,7 @@ export async function POST(request: Request) {
       floorImpactContext: payload.floorImpactContext ?? null,
       impactFieldContext: payload.impactFieldContext ?? null,
       impactPredictorInput: payload.impactPredictorInput ?? null,
+      steelFloorFormulaSurface: payload.steelFloorFormulaSurface ?? null,
       targetOutputs: payload.targetOutputs ?? []
     });
 

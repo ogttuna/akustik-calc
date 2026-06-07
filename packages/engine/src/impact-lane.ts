@@ -68,6 +68,11 @@ import {
   mergeTimberCltDeltaLwFormulaCompanion
 } from "./timber-clt-floor-impact-delta-lw-runtime-corridor";
 import {
+  estimateLightweightConcreteDeltaLwFromPredictorInput,
+  mergeLightweightConcreteDeltaLwCompanion
+} from "./lightweight-concrete-delta-lw-runtime-corridor";
+import { mergeMassTimberCltUpperPackageDeltaLwCompanion } from "./mass-timber-clt-upper-package-delta-lw-runtime";
+import {
   inferImpactSupportingElementFamilyFromExactFloorSystem,
   inferImpactSupportingElementFamilyFromFloorSystemEstimate,
   inferImpactSupportingElementFamilyFromImpactCatalogMatch,
@@ -368,7 +373,7 @@ export function resolveLayerBasedImpactLane(
     !tuasC11cGuardedIsoWeightedImpact
       ? estimateImpactFromPredictorInput(input.predictorInput)
       : null;
-  const predictorDeltaLwCompanion =
+  const timberCltDeltaLwCompanion =
     input.predictorInput &&
     input.targetOutputs?.includes("DeltaLw") &&
     !input.officialFloorSystemId &&
@@ -376,6 +381,15 @@ export function resolveLayerBasedImpactLane(
     !explicitDeltaImpact
       ? estimateTimberCltDeltaLwFromPredictorInput(input.predictorInput)
       : null;
+  const lightweightConcreteDeltaLwCompanion =
+    input.predictorInput &&
+    input.targetOutputs?.includes("DeltaLw") &&
+    !input.officialFloorSystemId &&
+    !impactCatalogMatch &&
+    !explicitDeltaImpact
+      ? estimateLightweightConcreteDeltaLwFromPredictorInput(input.predictorInput)
+      : null;
+  const predictorDeltaLwCompanion = timberCltDeltaLwCompanion ?? lightweightConcreteDeltaLwCompanion;
   const heavyConcreteCombinedPublishedUpperTreatmentEstimate =
     input.predictorInput &&
     blockHeavyConcreteCombinedFormulaFallback &&
@@ -556,13 +570,21 @@ export function finalizeResolvedImpactLane(
     input.preferredSupplementaryImpact ?? null,
     input.fallbackSupplementaryImpact ?? null
   );
-  const floorSystemMatchImpact = mergeTimberCltDeltaLwFormulaCompanion(
+  const floorSystemMatchImpactWithCltUpperPackageDeltaLw = mergeMassTimberCltUpperPackageDeltaLwCompanion(
     input.floorSystemMatch ? input.floorSystemMatch.impact : null,
+    input.floorSystemMatch?.system ?? null
+  );
+  const floorSystemMatchImpact = mergeTimberCltDeltaLwFormulaCompanion(
+    floorSystemMatchImpactWithCltUpperPackageDeltaLw,
     input.floorSystemMatch ? input.predictorDeltaLwCompanion ?? null : null
   );
   const floorEstimateImpactWithTimberCltCompanion = mergeTimberCltDeltaLwFormulaCompanion(
     floorEstimateImpact,
     floorEstimateImpact ? input.predictorDeltaLwCompanion ?? null : null
+  );
+  const floorEstimateImpactWithDeltaLwCompanion = mergeLightweightConcreteDeltaLwCompanion(
+    floorEstimateImpactWithTimberCltCompanion,
+    floorEstimateImpactWithTimberCltCompanion ? input.predictorDeltaLwCompanion ?? null : null
   );
   const baseImpact = exactImpact
     ? mergeImpactCalculations(exactImpact, exactSupplementaryImpact)
@@ -570,7 +592,7 @@ export function finalizeResolvedImpactLane(
         floorSystemMatchImpact ??
         input.impactCatalogMatch?.impact ??
         input.explicitDeltaImpact ??
-        floorEstimateImpactWithTimberCltCompanion ??
+        floorEstimateImpactWithDeltaLwCompanion ??
         input.narrowImpact ??
         input.predictorDeltaLwCompanion ??
         null

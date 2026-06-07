@@ -354,7 +354,13 @@ export function mergeTimberCltDeltaLwFormulaCompanion(
 ): ImpactCalculation | null {
   const merged = mergeImpactCalculations(primaryImpact, companionImpact);
 
-  if (!merged || !primaryImpact || !companionImpact || typeof companionImpact.DeltaLw !== "number") {
+  if (
+    !merged ||
+    !primaryImpact ||
+    !companionImpact ||
+    typeof companionImpact.DeltaLw !== "number" ||
+    !TIMBER_CLT_DELTA_LW_FORMULA_BASES.includes(companionImpact.basis as (typeof TIMBER_CLT_DELTA_LW_FORMULA_BASES)[number])
+  ) {
     return merged;
   }
 

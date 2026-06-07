@@ -108,6 +108,10 @@ const LSF_FIELD_OVERLAY_WARNING =
   "Airborne field-side overlay active. The current field between rooms context is carrying a conservative flanking penalty of 7.4 dB.";
 const TIMBER_FIELD_OVERLAY_WARNING =
   "Airborne field-side overlay active. The current field between rooms context is carrying a conservative flanking penalty of 6.6 dB.";
+const TIMBER_STUD_BOUNDED_WARNING =
+  "Timber-stud bounded prediction is active for the direct wood-stud double-board corridor. It uses the existing framed-wall calibration curve without retuning numeric values, and exact source rows can still override it when eligible.";
+const TIMBER_STUD_FIELD_CONTEXT_WARNING =
+  "Airborne field/apparent context family prediction is active from an owned lab-family route plus explicit receiving-room context. It is not a measured field row and must keep its field uncertainty separate from lab Rw/STC.";
 const UNSUPPORTED_LAB_WARNING =
   "Unsupported target outputs: R'w, Dn,w, Dn,A, DnT,w, DnT,A. These outputs were requested but not calculated.";
 const NO_EXACT_FLOOR_WARNING =
@@ -128,11 +132,26 @@ const LSF_FIELD_BASE_WARNINGS = [
 
 const TIMBER_LAB_WARNINGS = [
   ...COMMON_FRAMED_WARNINGS,
+  TIMBER_STUD_BOUNDED_WARNING,
   UNSUPPORTED_LAB_WARNING,
   NO_EXACT_FLOOR_WARNING
 ] as const;
 
 const TIMBER_FIELD_WARNINGS = [
+  ...COMMON_FRAMED_WARNINGS,
+  TIMBER_STUD_BOUNDED_WARNING,
+  TIMBER_STUD_FIELD_CONTEXT_WARNING,
+  TIMBER_FIELD_OVERLAY_WARNING,
+  NO_EXACT_FLOOR_WARNING
+] as const;
+
+const TIMBER_SPLIT_LAB_WARNINGS = [
+  ...COMMON_FRAMED_WARNINGS,
+  UNSUPPORTED_LAB_WARNING,
+  NO_EXACT_FLOOR_WARNING
+] as const;
+
+const TIMBER_SPLIT_FIELD_WARNINGS = [
   ...COMMON_FRAMED_WARNINGS,
   TIMBER_FIELD_OVERLAY_WARNING,
   NO_EXACT_FLOOR_WARNING
@@ -376,14 +395,16 @@ describe("wall framed facing split warning stability Gate A contract", () => {
     for (const rowIndex of boardRowIndexes(timber)) {
       expect(snapshot(timber, "lab", splitBoard(timber, rowIndex)), `timber lab board row ${rowIndex}`).toEqual({
         ...timberLabBaseline,
-        originalSolidLayerCount: 5
+        originalSolidLayerCount: 5,
+        warnings: TIMBER_SPLIT_LAB_WARNINGS
       });
       expect(
         snapshot(timber, "field", splitBoard(timber, rowIndex)),
         `timber field board row ${rowIndex}`
       ).toEqual({
         ...timberFieldBaseline,
-        originalSolidLayerCount: 5
+        originalSolidLayerCount: 5,
+        warnings: TIMBER_SPLIT_FIELD_WARNINGS
       });
     }
   });

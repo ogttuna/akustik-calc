@@ -23,7 +23,159 @@ calibration evidence, holdouts, and regression tests.
 
 ## Current Implementation Anchor
 
-Current state after Gate EK:
+Current state after Gate EP:
+
+- latest no-runtime numeric coverage/accuracy rerank:
+  `post_v1_next_numeric_coverage_gap_gate_ep_plan`;
+- Gate EP landed with status
+  `post_v1_next_numeric_coverage_gap_gate_ep_landed_no_runtime_selected_wall_direct_fixed_double_leaf_field_building_adapter_owner_gate_eq`;
+- Gate EP selected
+  `post_v1_wall_direct_fixed_double_leaf_field_building_adapter_owner_gate_eq_plan`
+  in
+  `packages/engine/src/post-v1-wall-direct-fixed-double-leaf-field-building-adapter-owner-gate-eq-contract.test.ts`;
+- readable selected next label: Gate EQ;
+- readable selected next scope: direct-fixed double-leaf field/building adapter;
+- selected candidate:
+  `wall.direct_fixed_double_leaf_field_building_adapter_owner_gap`;
+- Gate EP ran two ROI plan iterations (`roiAnalysisIterations: 2`);
+- Gate EO closed the element-lab direct-fixed bridge-loss route, but
+  complete direct-fixed `field_between_rooms` requests still calculate
+  `R'w`/`Dn,w`/`DnT,w` through `screening_mass_law_curve_seed_v3`, and
+  complete `building_prediction` requests still stop as
+  `dynamic_calculator_building_prediction_runtime_adapter_owner_missing`;
+- counters: `candidateCount 9`, `estimatedNextAdapterOwnerLedgers 2`,
+  `estimatedNextNewCalculableLayerTemplates 1`,
+  `estimatedNextNewCalculableRequestShapes 3`,
+  `estimatedNextRuntimeCorrectedLayerTemplates 1`,
+  `estimatedNextRuntimeCorrectedRequestShapes 3`,
+  `newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+  `runtimeBasisPromotions 0`, `runtimeFormulaRetunes 0`,
+  `runtimeValuesMoved 0`, `sourceRowsImported: 0`, and
+  `frontendImplementationFilesTouched: 0`;
+- Gate EP/EQ plan:
+  `docs/calculator/POST_V1_GATE_EP_EQ_WALL_DIRECT_FIXED_DOUBLE_LEAF_FIELD_BUILDING_ADAPTER_PLAN_2026-06-07.md`.
+
+Previous state after Gate EO:
+
+- latest value-moving runtime action:
+  `post_v1_wall_direct_fixed_double_leaf_bridge_loss_runtime_gate_eo_plan`;
+- Gate EO landed with status
+  `post_v1_wall_direct_fixed_double_leaf_bridge_loss_runtime_gate_eo_landed_runtime_selected_next_numeric_coverage_gap_gate_ep`;
+- Gate EO selected
+  `post_v1_next_numeric_coverage_gap_gate_ep_plan`
+  in
+  `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ep-contract.test.ts`;
+- runtime method:
+  `wall.direct_fixed_double_leaf.equivalent_coupled_mass_bridge_loss_owner`;
+- Gate EO routes complete element-lab direct-fixed double-leaf wall
+  stacks through the equivalent coupled mass bridge-loss owner instead
+  of the old screening fallback or the Gate S mass-air-mass corridor;
+- the representative direct-fixed empty-cavity stack now calculates
+  `Rw 31 / STC 31 / C -1.2 / Ctr -5.9`;
+- missing `supportSpacingMm` remains `needs_input`, independent and
+  resilient double-leaf systems stay on Gate S, and field/building
+  requests do not select Gate EO;
+- counters: `runtimeBasisPromotions 1`,
+  `runtimeCorrectedLayerTemplates 1`, `runtimeCorrectedRequestShapes 4`,
+  `runtimeValuesMoved 4`, `newCalculableLayerTemplates 0`,
+  `newCalculableRequestShapes 0`, `runtimeFormulaRetunes 0`,
+  `fieldBuildingRequestShapesWidened 0`, `sourceRowsImported: 0`, and
+  `frontendImplementationFilesTouched: 0`;
+- Gate EM/EN plan:
+  `docs/calculator/POST_V1_GATE_EM_EN_WALL_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_OWNER_PLAN_2026-06-07.md`.
+
+Previous state after Gate EN:
+
+- latest no-runtime owner proof:
+  `post_v1_wall_direct_fixed_double_leaf_bridge_loss_owner_gate_en_plan`;
+- Gate EN landed with status
+  `post_v1_wall_direct_fixed_double_leaf_bridge_loss_owner_gate_en_landed_no_runtime_selected_wall_direct_fixed_double_leaf_bridge_loss_runtime_gate_eo`;
+- Gate EN selected
+  `post_v1_wall_direct_fixed_double_leaf_bridge_loss_runtime_gate_eo_plan`
+  in
+  `packages/engine/src/post-v1-wall-direct-fixed-double-leaf-bridge-loss-runtime-gate-eo-contract.test.ts`;
+- readable selected next label: Gate EO;
+- accepted owner:
+  `wall.direct_fixed_double_leaf.bridge_loss_owner`;
+- accepted formula corridor:
+  `wall.direct_fixed_double_leaf.equivalent_coupled_mass_bridge_loss_owner`;
+- Gate EN moves no runtime values. It proves the direct-fixed equivalent coupled mass owner and
+  keeps Gate S non-direct-fixed families, missing-input boundaries,
+  multicavity/triple-leaf routes, field/building aliases, and source-row
+  crawling out of scope;
+- counters: `acceptedOwnerLedgers 1`, `boundaryLedgersPinned 5`,
+  `newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+  `runtimeBasisPromotions 0`, `runtimeFormulaRetunes 0`,
+  `runtimeValuesMoved 0`, `sourceRowsImported: 0`, and
+  `frontendImplementationFilesTouched: 0`;
+- Gate EM/EN plan:
+  `docs/calculator/POST_V1_GATE_EM_EN_WALL_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_OWNER_PLAN_2026-06-07.md`.
+
+Previous state after Gate EM:
+
+- latest no-runtime numeric coverage/accuracy rerank:
+  `post_v1_next_numeric_coverage_gap_gate_em_plan`;
+- Gate EM landed with status
+  `post_v1_next_numeric_coverage_gap_gate_em_landed_no_runtime_selected_wall_direct_fixed_double_leaf_bridge_loss_owner_gate_en`;
+- Gate EM selected
+  `post_v1_wall_direct_fixed_double_leaf_bridge_loss_owner_gate_en_plan`
+  in
+  `packages/engine/src/post-v1-wall-direct-fixed-double-leaf-bridge-loss-owner-gate-en-contract.test.ts`;
+- selected candidate:
+  `wall.direct_fixed_double_leaf_bridge_loss_owner_gap`;
+- Gate EM ran two ROI plan iterations (`roiAnalysisIterations: 2`)
+  after Gate EL. It subtracts already-live advanced-wall and
+  double-leaf/framed resolver routes, closed Gate
+  CS/CU/CW/DN/DP/DG/DT/DV/DX wall repeats, closed floor/ASTM repeats,
+  supportless wall entries that correctly remain `needs_input`,
+  broad source crawling, confidence wording, and frontend polish;
+- the selected highest-ROI action is Gate EN direct-fixed double-leaf bridge-loss owner proof. Current implementation already classifies
+  complete direct-fixed double-leaf input as `direct_fixed_bridge` and
+  `negative_boundary` because
+  `direct_fixed_bridge_behaves_like_mechanically_coupled_single_partition_until_a_dedicated_bridge_loss_model_is_owned`;
+- counters: `candidateCount 11`, `estimatedNextBridgeLossOwnerLedgers
+  1`, `estimatedNextBoundaryLedgers 4`,
+  `estimatedRuntimeCandidateFamiliesToEvaluateAfterGateEN 1`,
+  `newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+  `runtimeBasisPromotions 0`, `runtimeFormulaRetunes 0`,
+  `runtimeValuesMoved 0`, `sourceRowsImported: 0`, and
+  `frontendImplementationFilesTouched: 0`;
+- Gate EM/EN plan:
+  `docs/calculator/POST_V1_GATE_EM_EN_WALL_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_OWNER_PLAN_2026-06-07.md`.
+
+Previous state after Gate EL:
+
+- latest no-runtime wall route reconciliation:
+  `post_v1_wall_visible_layer_formula_route_second_pass_gate_el_plan`;
+- Gate EL landed with status
+  `post_v1_wall_visible_layer_formula_route_second_pass_gate_el_landed_no_runtime_selected_next_numeric_coverage_gap_gate_em`;
+- Gate EL selected
+  `post_v1_next_numeric_coverage_gap_gate_em_plan`
+  in
+  `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-em-contract.test.ts`;
+- selected outcome:
+  `wall.visible_layer_formula_route_second_pass_no_fresh_runtime_candidate_after_current_reconciliation`;
+- Gate EL reconciled 12 current visible wall route probes and selected
+  no runtime movement. Complete explicit advanced-wall payloads are
+  already live through Gate AY/AZ, complete visible double-leaf/framed
+  lab stacks already reach the layer-combination resolver Gate S
+  corridor, Gate CS/CU/CW/DN/DP/DG/DT/DV/DX route repeats are closed,
+  direct-fixed bridge is now handled by the Gate EN/EO separate owner
+  chain,
+  supportless/roleless flat entries remain `needs_input`, and
+  source-row or holdout tightening remains blocked until a selected
+  owner names the route;
+- counters: `probeCount 12`, `alreadyLiveProbeCount 2`,
+  `closedRepeatProbeCount 7`, `needsInputBoundaryProbeCount 1`,
+  `unsupportedBoundaryProbeCount 2`, `freshCandidateCount 0`,
+  `newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+  `runtimeBasisPromotions 0`, `runtimeFormulaRetunes 0`,
+  `runtimeValuesMoved 0`, `sourceRowsImported: 0`, and
+  `frontendImplementationFilesTouched: 0`;
+- Gate EK/EL plan:
+  `docs/calculator/POST_V1_GATE_EK_EL_WALL_VISIBLE_LAYER_FORMULA_ROUTE_SECOND_PASS_PLAN_2026-06-07.md`.
+
+Previous state after Gate EK:
 
 - latest no-runtime numeric coverage/accuracy rerank:
   `post_v1_next_numeric_coverage_gap_gate_ek_plan`;
@@ -2298,46 +2450,18 @@ programs after these gates:
 
 ## Immediate Next Action
 
-Start Gate CO:
-`post_v1_floor_visible_layer_upper_package_delta_lw_gate_co_plan`.
-Gate CH closed the field/building direct+flanking low-frequency
-correction for the Gate CG2 visible heavy-floating upper-treatment
-route. Gate CI then closed no-runtime: exact ASTM E492/E1007
-one-third-octave `IIC` / `AIIC` remains the only ASTM runtime owner, ISO
-impact outputs still do not become ASTM aliases, and
-`wall.common_auto_topology_expansion` was selected as the next
-value-moving engine slice. Gate CJ then landed: complete flat
-double-leaf wall `building_prediction` requests now use the Gate S
-double-leaf/framed direct curve through the Gate AR building adapter,
-while ambiguous topology, missing resilient side count, missing support
-topology, missing stud spacing, and explicit `flat_layer_order`
-boundaries remain closed. Gate CJ selects opening/leak/composite wall
-adapters as the next calculator slice. Gate CK then landed: complete
-top-level field opening/leak context calculates `R'w 36.4 / Dn,w 36.7 /
-DnT,w 36.9`, complete top-level building-prediction opening/leak context
-calculates `R'w 31.6 / DnT,w 32.1`, and missing room/flanking,
-A-weighted frequency, and lab/field/building metric boundaries remain
-closed. Gate CK selected the next numeric coverage gap rerank. Gate CL
-then landed no-runtime: residual and holdout ledgers were created for
-five existing runtime families, all wider budgets were held, no
-source-proximity runtime promotion was admitted, and budget tightening is
-blocked until same-family calibration plus same-basis holdout evidence
-exists. Gate CL selected required physical input surface parity as the
-next calculator slice:
-`post_v1_required_physical_input_surface_parity_gate_cm_plan` in
-`packages/engine/src/post-v1-required-physical-input-surface-parity-gate-cm-contract.test.ts`.
-Gate CM then landed no-runtime: selected-route required physical input
-and `needs_input` boundaries were pinned for Gate CK/CJ/CG2/CH runtime
-routes without frontend implementation, formula retuning, source
-crawling, or runtime value movement. Gate CM returns the chain to
-numeric scope/accuracy work by selecting
-`post_v1_next_numeric_coverage_gap_gate_cn_plan` in
-`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-cn-contract.test.ts`.
-Gate CN then landed no-runtime: it selected
-`floor.visible_layer_upper_package_delta_lw_formula_routing_gap` as the
-highest-ROI next engine slice and selected
-`post_v1_floor_visible_layer_upper_package_delta_lw_gate_co_plan` in
-`packages/engine/src/post-v1-floor-visible-layer-upper-package-delta-lw-gate-co-contract.test.ts`.
-Gate CO must move runtime only by routing visible tagged CLT/timber
-upper-package layer stacks to the existing `DeltaLw` formula owners when
-the route-required physical inputs are present.
+Start Gate EQ:
+`post_v1_wall_direct_fixed_double_leaf_field_building_adapter_owner_gate_eq_plan`.
+Gate EP selected this as the current highest-ROI calculator step after
+Gate EO. Gate EQ must prove the direct-fixed double-leaf field/building
+adapter owner before any runtime values move. The reason is concrete:
+Gate EO now owns the direct-fixed element-lab curve, but complete
+`field_between_rooms` direct-fixed requests still publish
+`R'w`/`Dn,w`/`DnT,w` through `screening_mass_law_curve_seed_v3`, and
+complete `building_prediction` direct-fixed requests still stop as
+`dynamic_calculator_building_prediction_runtime_adapter_owner_missing`.
+Gate EQ must pin the field/building required inputs, keep lab
+`Rw`/STC/`C`/`Ctr` separate from field/building metrics, preserve
+missing-input stops, and prepare the next runtime gate to route this
+complete direct-fixed subset through the Gate EO direct curve plus
+owned field/building adapter semantics.

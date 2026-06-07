@@ -7,6 +7,8 @@ import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
 import {
+  GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_RUNTIME_METHOD,
+  GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_SELECTED_CANDIDATE_ID,
   GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_RUNTIME_METHOD,
   GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_SELECTED_CANDIDATE_ID,
   GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_WARNING
@@ -352,8 +354,18 @@ describe("layer combination resolver double-leaf framed wall banded solver owner
     });
 
     expect(directFixed.airborneCandidateResolution).toMatchObject({
-      selectedCandidateId: "candidate_multileaf_screening_fallback",
-      selectedOrigin: "screening_fallback"
+      runtimeValueMovement: true,
+      selectedCandidateId: GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_SELECTED_CANDIDATE_ID,
+      selectedOrigin: "family_physics_prediction"
+    });
+    expect(directFixed.metrics).toMatchObject({
+      estimatedRwDb: 31,
+      estimatedStc: 31
+    });
+    expect(directFixed.airborneBasis).toMatchObject({
+      errorBudgetDb: 6,
+      method: GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_RUNTIME_METHOD,
+      origin: "family_physics_prediction"
     });
     expect(directFixed.airborneBasis?.method).not.toBe(GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_RUNTIME_METHOD);
 
@@ -367,7 +379,13 @@ describe("layer combination resolver double-leaf framed wall banded solver owner
       expect.objectContaining({ currentRw: 45, currentStc: 45, id: "wall.explicit_independent_absorbed_double_leaf_runtime" }),
       expect.objectContaining({ currentRw: 46, currentStc: 46, id: "wall.resilient_double_leaf_runtime" }),
       expect.objectContaining({ currentRw: null, id: "wall.resilient_double_leaf_missing_side_count_needs_input" }),
-      expect.objectContaining({ currentRw: null, id: "wall.direct_fixed_double_leaf_screening_boundary" }),
+      expect.objectContaining({
+        currentMethod: GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_RUNTIME_METHOD,
+        currentRw: 31,
+        currentStc: 31,
+        id: "wall.direct_fixed_double_leaf_gate_eo_separate_runtime",
+        selectedCandidateId: GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_SELECTED_CANDIDATE_ID
+      }),
       expect.objectContaining({ currentRw: 53, currentStc: 64, id: "wall.grouped_triple_leaf_calibrated_boundary" })
     ]);
   });

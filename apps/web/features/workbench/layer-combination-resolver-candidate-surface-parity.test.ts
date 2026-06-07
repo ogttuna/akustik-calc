@@ -38,8 +38,10 @@ const DOUBLE_LEAF_BASIS =
   "layer_combination_resolver_double_leaf_framed_wall_banded_source_absent_formula_corridor";
 const DOUBLE_LEAF_SELECTED_CANDIDATE_ID =
   "candidate_layer_combination_resolver_double_leaf_framed_wall_banded_source_absent_family_solver";
-const WALL_EXACT_SELECTED_CANDIDATE_ID = "wall.exact_verified_airborne.same_leaf_schedule";
-const WALL_EXACT_RUNTIME_BASIS = "verified_airborne_exact_source";
+const WALL_EXACT_LSF_LAB_COMPANION_SELECTED_CANDIDATE_ID =
+  "candidate_lsf_exact_rw_calculated_lab_companions";
+const WALL_EXACT_LSF_LAB_COMPANION_RUNTIME_BASIS =
+  "gate_dv_lsf_exact_rw_calculated_lab_companion_runtime";
 const WALL_ANCHOR_DELTA_SELECTED_CANDIDATE_ID =
   "wall.compatible_anchor_delta.extra_board_on_verified_lsf";
 const WALL_ANCHOR_DELTA_RUNTIME_BASIS = "exact_subassembly_source_plus_calculated_delta";
@@ -1082,16 +1084,21 @@ describe("layer combination resolver candidate surface parity", () => {
     const trace = getLayerCombinationResolverCandidateSurface(scenario.result);
 
     expect(trace).toMatchObject({
-      candidateKind: "exact_measured_override",
+      candidateKind: "source_absent_family_solver",
       requestedBasis: "element_lab",
       route: "wall",
-      runtimeBasisId: WALL_EXACT_RUNTIME_BASIS,
-      selectedCandidateId: WALL_EXACT_SELECTED_CANDIDATE_ID,
-      supportBucket: "exact",
-      supportedMetrics: ["Rw"],
-      valuePins: [{ metric: "Rw", value: 55 }]
+      runtimeBasisId: WALL_EXACT_LSF_LAB_COMPANION_RUNTIME_BASIS,
+      selectedCandidateId: WALL_EXACT_LSF_LAB_COMPANION_SELECTED_CANDIDATE_ID,
+      supportBucket: "source_absent_estimate",
+      supportedMetrics: ["Rw", "STC", "C", "Ctr"],
+      valuePins: [
+        { metric: "Rw", value: 55 },
+        { metric: "STC", value: 55 },
+        { metric: "C", value: -1.5 },
+        { metric: "Ctr", value: -6.4 }
+      ]
     });
-    expect(scenario.result.unsupportedTargetOutputs).toEqual(["STC", "C", "Ctr"]);
+    expect(scenario.result.unsupportedTargetOutputs).toEqual([]);
     expect(buildOutputCard({ output: "Rw", result: scenario.result, studyMode: "wall" })).toMatchObject({
       label: "Rw",
       status: "live",
@@ -1099,8 +1106,8 @@ describe("layer combination resolver candidate surface parity", () => {
     });
     expect(buildOutputCard({ output: "STC", result: scenario.result, studyMode: "wall" })).toMatchObject({
       label: "STC",
-      status: "unsupported",
-      value: "Not ready"
+      status: "live",
+      value: "55 dB"
     });
 
     const report = buildWallReport({
@@ -1108,11 +1115,11 @@ describe("layer combination resolver candidate surface parity", () => {
       scenario,
       title: "Wall V1 Exact Resolver Surface"
     });
-    expect(report).toContain(`- Resolver candidate id: ${WALL_EXACT_SELECTED_CANDIDATE_ID}`);
-    expect(report).toContain(`- Resolver runtime basis: ${WALL_EXACT_RUNTIME_BASIS}`);
+    expect(report).toContain(`- Resolver candidate id: ${WALL_EXACT_LSF_LAB_COMPANION_SELECTED_CANDIDATE_ID}`);
+    expect(report).toContain(`- Resolver runtime basis: ${WALL_EXACT_LSF_LAB_COMPANION_RUNTIME_BASIS}`);
     expect(report).toContain("- Resolver route / basis: wall / element_lab");
-    expect(report).toContain("- Resolver supported metrics: Rw");
-    expect(report).toContain("- Resolver value pins: Rw 55");
+    expect(report).toContain("- Resolver supported metrics: Rw, STC, C, Ctr");
+    expect(report).toContain("- Resolver value pins: Rw 55, STC 55, C -1.5, Ctr -6.4");
 
     const { POST: estimate } = await import("../../app/api/estimate/route");
     const estimateResponse = await estimate(
@@ -1131,11 +1138,16 @@ describe("layer combination resolver candidate surface parity", () => {
     expect(estimateResponse.status).toBe(200);
     expect(estimateBody.ok).toBe(true);
     expect(getLayerCombinationResolverCandidateSurface(estimateBody.result)).toMatchObject({
-      selectedCandidateId: WALL_EXACT_SELECTED_CANDIDATE_ID,
-      supportedMetrics: ["Rw"],
-      valuePins: [{ metric: "Rw", value: 55 }]
+      selectedCandidateId: WALL_EXACT_LSF_LAB_COMPANION_SELECTED_CANDIDATE_ID,
+      supportedMetrics: ["Rw", "STC", "C", "Ctr"],
+      valuePins: [
+        { metric: "Rw", value: 55 },
+        { metric: "STC", value: 55 },
+        { metric: "C", value: -1.5 },
+        { metric: "Ctr", value: -6.4 }
+      ]
     });
-    expect(estimateBody.result?.unsupportedTargetOutputs).toEqual(["STC", "C", "Ctr"]);
+    expect(estimateBody.result?.unsupportedTargetOutputs).toEqual([]);
   });
 
   it("surfaces compatible wall anchor-delta answers across cards, report, and calculator API", async () => {

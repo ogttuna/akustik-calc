@@ -8,6 +8,7 @@ import { ImpactFieldContextSchema } from "../domain/impact-field-context";
 import { ImpactPredictorInputSchema } from "../domain/impact-predictor-input";
 import { LayerInputSchema } from "../domain/layer";
 import { RequestedOutputSchema } from "../domain/output";
+import { SteelFloorFormulaInputSurfaceSchema } from "../domain/steel-floor-formula-input-surface";
 
 const FloorImpactContextSchema = z
   .object({
@@ -24,6 +25,7 @@ const EstimateRequestSchemaInternal = z.object({
   impactFieldContext: ImpactFieldContextSchema.optional(),
   impactPredictorInput: ImpactPredictorInputSchema.optional(),
   layers: z.array(LayerInputSchema).min(1),
+  steelFloorFormulaSurface: SteelFloorFormulaInputSurfaceSchema.optional(),
   targetOutputs: z.array(RequestedOutputSchema).min(1).optional()
 });
 

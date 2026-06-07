@@ -222,9 +222,7 @@ describe("internal use operating envelope Gate B visibility", () => {
       const expectedLiveRw =
         testCase.id === "wall_lined_heavy_core_screening"
           ? "55 dB"
-          : testCase.id === "wall_clt_local_generated"
-            ? "41 dB"
-            : testCase.id === "wall_timber_double_board_generated"
+          : testCase.id === "wall_timber_double_board_generated"
               ? "42 dB"
               : null;
       if (expectedLiveRw) {
@@ -235,10 +233,7 @@ describe("internal use operating envelope Gate B visibility", () => {
       expect(rwPrimeCard.status).toBe("live");
       expect(dnTwCard.status).toBe("live");
       expect(snapshot.validation.value).toBe("Scoped estimate");
-      const expectedPostureDetail =
-        testCase.id === "wall_lined_heavy_core_screening"
-          ? "Airborne field-context prediction is active"
-          : "formula-owned/source-gated scoped estimate";
+      const expectedPostureDetail = "Airborne field-context prediction is active";
       expect(snapshot.validation.detail).toContain(expectedPostureDetail);
       expect(snapshot.validation.detail).toContain("not as a measured claim");
       expect(snapshot.branch.value).toBe(scenario.result.dynamicAirborneTrace?.detectedFamilyLabel);

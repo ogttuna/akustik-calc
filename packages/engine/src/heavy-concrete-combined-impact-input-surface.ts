@@ -218,6 +218,7 @@ function hasCompleteLowerTreatment(input: ImpactPredictorInput): boolean {
   const supportProductId = lower?.supportProductId?.trim().toLowerCase();
   const hasOwnedVisibleSupportProduct =
     supportProductId === "acoustic_hanger_ceiling" ||
+    supportProductId === "resilient_channel" ||
     supportProductId === "resilient_stud_ceiling";
 
   return Boolean(

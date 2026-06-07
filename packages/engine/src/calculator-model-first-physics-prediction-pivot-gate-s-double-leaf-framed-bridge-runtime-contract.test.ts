@@ -14,6 +14,9 @@ import { describe, expect, it } from "vitest";
 import { calculateAssembly } from "./calculate-assembly";
 import { buildDynamicCalculatorCandidateResolverRuntime } from "./dynamic-calculator-candidate-resolver-runtime";
 import {
+  GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_RUNTIME_METHOD,
+  GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_SELECTED_CANDIDATE_ID,
+  GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_WARNING,
   GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_RUNTIME_METHOD,
   GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_SELECTED_CANDIDATE_ID,
   GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_WARNING
@@ -348,7 +351,7 @@ describe("calculator model-first physics prediction pivot Gate S", () => {
     });
   });
 
-  it("keeps missing-input and negative bridge boundaries out of Gate S runtime promotion", () => {
+  it("keeps missing-input boundaries out of Gate S and routes direct-fixed through the later Gate EO owner", () => {
     const missingSideCount = calculateAssembly(DOUBLE_LEAF_ABSORBED_STACK, {
       airborneContext: RESILIENT_MISSING_SIDE_COUNT_CONTEXT,
       calculator: "dynamic",
@@ -371,13 +374,24 @@ describe("calculator model-first physics prediction pivot Gate S", () => {
     expect(missingSideCount.airborneBasis?.method).not.toBe(GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_RUNTIME_METHOD);
     expect(missingSideCount.warnings).not.toContain(GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_WARNING);
 
-    expect(directFixed.airborneCandidateResolution).toMatchObject({
-      runtimeValueMovement: false,
-      selectedCandidateId: "candidate_multileaf_screening_fallback",
-      selectedOrigin: "screening_fallback"
+    expect(directFixed.metrics).toMatchObject({
+      estimatedCDb: -1.2,
+      estimatedCtrDb: -5.9,
+      estimatedRwDb: 31,
+      estimatedStc: 31
     });
-    expect(directFixed.airborneBasis?.method).not.toBe(GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_RUNTIME_METHOD);
+    expect(directFixed.airborneCandidateResolution).toMatchObject({
+      runtimeValueMovement: true,
+      selectedCandidateId: GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_SELECTED_CANDIDATE_ID,
+      selectedOrigin: "family_physics_prediction"
+    });
+    expect(directFixed.airborneBasis).toMatchObject({
+      errorBudgetDb: 6,
+      method: GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_RUNTIME_METHOD,
+      origin: "family_physics_prediction"
+    });
     expect(directFixed.warnings).not.toContain(GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_WARNING);
+    expect(directFixed.warnings).toContain(GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_WARNING);
   });
 
   it("keeps prior Gate G/O runtime pins stable after Gate S lands", () => {

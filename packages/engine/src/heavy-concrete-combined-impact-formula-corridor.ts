@@ -88,6 +88,7 @@ function lowerBoardMassKgM2(input: ImpactPredictorInput): number {
 function hasOwnedLowerSupportProduct(input: ImpactPredictorInput): boolean {
   switch (input.lowerTreatment?.supportProductId?.trim().toLowerCase()) {
     case "acoustic_hanger_ceiling":
+    case "resilient_channel":
     case "resilient_stud_ceiling":
       return true;
     default:

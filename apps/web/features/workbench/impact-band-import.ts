@@ -65,6 +65,43 @@ function getBandSetSummary(
   return labOrField === "field" ? "L'nT,w + CI + CI,50-2500 + L'nT,50" : "Ln,w + CI + CI,50-2500";
 }
 
+function normalizeMethodText(text: string): string {
+  return text.toUpperCase().replace(/[^A-Z0-9]/g, "");
+}
+
+function detectImpactBandStandardMethod(text: string): string | null {
+  const normalized = normalizeMethodText(text);
+
+  if (normalized.includes("ASTME1007") || normalized.includes("E1007")) {
+    return "ASTM E1007 / ASTM E989";
+  }
+
+  if (normalized.includes("ASTME492") || normalized.includes("E492")) {
+    return "ASTM E492 / ASTM E989";
+  }
+
+  if (normalized.includes("ISO162832") || normalized.includes("162832")) {
+    return "ISO 16283-2";
+  }
+
+  if (normalized.includes("ISO101403") || normalized.includes("101403")) {
+    return "ISO 10140-3";
+  }
+
+  return null;
+}
+
+function defaultImpactBandStandardMethod(labOrField: ExactImpactSourceLabOrField): string {
+  return labOrField === "field" ? "ISO 16283-2" : "ISO 10140-3";
+}
+
+function stripRecognizedStandardMethodLines(text: string): string {
+  return text
+    .split(/\r?\n/)
+    .filter((line) => !detectImpactBandStandardMethod(line))
+    .join("\n");
+}
+
 function parseExactPairs(text: string): { frequenciesHz: number[]; levelsDb: number[] } | null {
   const lines = text
     .split(/\r?\n/)
@@ -104,6 +141,7 @@ function parseValueOnly(text: string): { frequenciesHz: number[]; levelsDb: numb
 
 export function parseImpactBandImport(input: {
   labOrField: ExactImpactSourceLabOrField;
+  standardMethod?: string | null;
   text: string;
 }): { error: string | null; parsed: ParsedImpactBandImport | null } {
   const trimmed = input.text.trim();
@@ -111,8 +149,10 @@ export function parseImpactBandImport(input: {
     return { error: null, parsed: null };
   }
 
-  const pairParse = parseExactPairs(trimmed);
-  const valueParse = pairParse ? null : parseValueOnly(trimmed);
+  const detectedStandardMethod = detectImpactBandStandardMethod(trimmed);
+  const bandText = stripRecognizedStandardMethodLines(trimmed).trim();
+  const pairParse = parseExactPairs(bandText);
+  const valueParse = pairParse ? null : parseValueOnly(bandText);
   const parsedBands = pairParse ?? valueParse;
 
   if (!parsedBands) {
@@ -140,7 +180,8 @@ export function parseImpactBandImport(input: {
         frequenciesHz: parsedBands.frequenciesHz,
         labOrField: input.labOrField,
         levelsDb: parsedBands.levelsDb,
-        standardMethod: input.labOrField === "field" ? "ISO 16283-2" : "ISO 10140-3"
+        standardMethod:
+          input.standardMethod?.trim() || detectedStandardMethod || defaultImpactBandStandardMethod(input.labOrField)
       },
       summary: getBandSetSummary(detectedBandSet.id, input.labOrField),
       valueCount: parsedBands.levelsDb.length

@@ -29,3 +29,4 @@ export * from "./domain/output";
 export * from "./domain/project";
 export * from "./domain/rating";
 export * from "./domain/rating-adapter";
+export * from "./domain/steel-floor-formula-input-surface";

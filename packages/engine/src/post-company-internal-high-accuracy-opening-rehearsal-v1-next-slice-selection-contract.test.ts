@@ -422,7 +422,7 @@ describe("post company-internal high-accuracy opening rehearsal Gate C next-slic
       family: "stud_wall_system",
       rw: 55,
       stc: 55,
-      supported: ["Rw"]
+      supported: ["Rw", "STC", "C", "Ctr"]
     });
     expect(readyLab.warnings).toMatch(/Curated exact airborne lab match active/i);
 

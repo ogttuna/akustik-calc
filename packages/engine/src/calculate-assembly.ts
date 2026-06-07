@@ -11,6 +11,7 @@ import {
   ImpactPredictorInputSchema,
   LayerInputSchema,
   type AcousticAnswerBoundary,
+  type AcousticInputFieldId,
   type AirborneResultBasis,
   type DynamicAirborneTrace,
   type AssemblyCalculation,
@@ -71,6 +72,18 @@ import {
   GATE_Y_CLT_MASS_TIMBER_CTR_SPECTRUM_ADAPTER_WARNING,
   maybeBuildGateYCltMassTimberCtrSpectrumAdapterBasis
 } from "./dynamic-airborne-gate-y-clt-mass-timber-ctr-spectrum-adapter";
+import {
+  GATE_DT_MASONRY_EXACT_RW_CALCULATED_COMPANION_WARNING,
+  maybeBuildGateDTMasonryExactRwCalculatedCompanionBasis
+} from "./dynamic-airborne-gate-dt-masonry-exact-source-mixed-companion";
+import {
+  GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_WARNING,
+  maybeBuildGateDVLsfExactRwCalculatedCompanionBasis
+} from "./dynamic-airborne-gate-dv-lsf-exact-source-mixed-companion";
+import {
+  GATE_DX_EXACT_SOURCE_FAMILY_FIELD_CONTEXT_WARNING,
+  maybeBuildGateDXExactSourceFamilyFieldContextBasis
+} from "./dynamic-airborne-gate-dx-exact-source-family-field-context";
 import {
   maybeBuildGateSOpeningLeakCompositeRuntimeCorridor
 } from "./dynamic-airborne-gate-s-opening-leak-composite-transmission-loss-runtime-corridor";
@@ -158,10 +171,17 @@ import {
   collectTimberCltDeltaLwFormulaMissingPhysicalInputs
 } from "./timber-clt-floor-impact-delta-lw-runtime-corridor";
 import {
+  collectLightweightConcreteDeltaLwMissingPhysicalInputs
+} from "./lightweight-concrete-delta-lw-runtime-corridor";
+import {
   hasReinforcedConcreteLowConfidenceProxyAirborne,
   REINFORCED_CONCRETE_LOW_CONFIDENCE_PROXY_AIRBORNE_WARNING
 } from "./reinforced-concrete-low-confidence-airborne";
 import { buildSteelFloorImpactFormulaFallbackBlockerWarning } from "./steel-floor-impact-formula-corridor";
+import {
+  buildSteelFloorFormulaPredictorInputFromSurface,
+  type SteelFloorFormulaInputSurface
+} from "./steel-floor-formula-input-surface";
 import {
   detectMixedPlainFilledSingleBoardFamily,
   getMixedPlainFilledSingleBoardProfile,
@@ -218,6 +238,7 @@ export type CalculateAssemblyOptions = {
   floorImpactContext?: DynamicCalculatorFloorImpactContext | null;
   impactFieldContext?: ImpactFieldContext | null;
   impactPredictorInput?: ImpactPredictorInput | null;
+  steelFloorFormulaSurface?: SteelFloorFormulaInputSurface | null;
   targetOutputs?: readonly RequestedOutputId[];
 };
 
@@ -1291,6 +1312,24 @@ function getAnswerEngineV1ExactMeasuredMetricUnsupportedOutputs(input: {
 
   const exactOutputSet = new Set(exactOutputs);
   return input.supportedTargetOutputs.filter((output) => !exactOutputSet.has(output));
+}
+
+function canPromoteZeroDeltaVerifiedAirborneExactSource(input: {
+  sourceAnchorAlreadyApplied: boolean;
+  sourceMetricLabel: string | null | undefined;
+  targetOutputs: readonly RequestedOutputId[];
+}): boolean {
+  if (input.sourceAnchorAlreadyApplied || input.targetOutputs.length === 0) {
+    return false;
+  }
+
+  const exactOutputs = outputsForExactMeasuredAirborneMetric(input.sourceMetricLabel);
+  if (exactOutputs.length === 0) {
+    return false;
+  }
+
+  const exactOutputSet = new Set(exactOutputs);
+  return input.targetOutputs.every((output) => exactOutputSet.has(output));
 }
 
 function getAnswerEngineV1AnchoredDeltaMetricUnsupportedOutputs(input: {
@@ -2482,6 +2521,73 @@ function applyPostV1GateCYCompositePanelDeltaLwNeedsInputBoundary(input: {
   );
 }
 
+function applyPostV1GateDBLightweightConcreteDeltaLwNeedsInputBoundary(input: {
+  predictorInput: ImpactPredictorInput | null;
+  result: AssemblyCalculation;
+}): void {
+  if (input.result.acousticAnswerBoundary) {
+    return;
+  }
+
+  const missingPhysicalInputs = collectLightweightConcreteDeltaLwMissingPhysicalInputs(input.predictorInput);
+  const stoppedOutputs: RequestedOutputId[] = input.result.targetOutputs.filter((output: RequestedOutputId) =>
+    output === "DeltaLw"
+  );
+  const unsupportedOutputSet = new Set<RequestedOutputId>(input.result.unsupportedTargetOutputs);
+
+  if (
+    missingPhysicalInputs.length === 0 ||
+    stoppedOutputs.length === 0 ||
+    !stoppedOutputs.every((output: RequestedOutputId) => unsupportedOutputSet.has(output))
+  ) {
+    return;
+  }
+
+  const boundary = buildAnswerEngineV1FloorImpactNeedsInputBoundary({
+    missingPhysicalInputs,
+    targetOutputs: stoppedOutputs
+  });
+  if (!boundary) {
+    return;
+  }
+
+  input.result.acousticAnswerBoundary = boundary;
+  input.result.warnings.push(
+    `Post-V1 Gate DB selected needs_input for ${boundary.unsupportedOutputs.join(", ")}; provide ${boundary.missingPhysicalInputs.join(", ")} before DynEcho publishes lightweight-concrete DeltaLw.`
+  );
+}
+
+function applyPostV1GateDISteelVisibleFormulaInputNeedsInputBoundary(input: {
+  missingPhysicalInputs: readonly AcousticInputFieldId[];
+  result: AssemblyCalculation;
+}): void {
+  if (input.result.acousticAnswerBoundary) {
+    return;
+  }
+
+  const unsupportedOutputSet = new Set<RequestedOutputId>(input.result.unsupportedTargetOutputs);
+  const stoppedOutputs: RequestedOutputId[] = input.result.targetOutputs.filter((output: RequestedOutputId) =>
+    (output === "DeltaLw" || output === "Ln,w") && unsupportedOutputSet.has(output)
+  );
+
+  if (input.missingPhysicalInputs.length === 0 || stoppedOutputs.length === 0) {
+    return;
+  }
+
+  const boundary = buildAnswerEngineV1FloorImpactNeedsInputBoundary({
+    missingPhysicalInputs: input.missingPhysicalInputs,
+    targetOutputs: stoppedOutputs
+  });
+  if (!boundary) {
+    return;
+  }
+
+  input.result.acousticAnswerBoundary = boundary;
+  input.result.warnings.push(
+    `Post-V1 Gate DI selected needs_input for ${boundary.unsupportedOutputs.join(", ")}; provide ${boundary.missingPhysicalInputs.join(", ")} before DynEcho routes visible steel floor layers through the steel Ln,w / DeltaLw formula corridor.`
+  );
+}
+
 function resolveOpeningLeakHostWallBasis(input: {
   dynamicRuntimeActive: boolean;
   importedCalculatorActive: boolean;
@@ -2579,6 +2685,23 @@ function hasVisibleTimberCltUpperPackageDeltaLwCandidate(input: {
   return input.layers.some((layer) => VISIBLE_DELTA_LW_UPPER_PACKAGE_ROLES.has(layer.floorRole));
 }
 
+function hasVisibleLightweightConcreteUpperPackageDeltaLwCandidate(input: {
+  catalog: readonly MaterialDefinition[];
+  layers: readonly LayerInput[];
+}): boolean {
+  const baseStructureLayer = input.layers.find((layer) => layer.floorRole === "base_structure");
+  if (!baseStructureLayer) {
+    return false;
+  }
+
+  const baseMaterial = resolveMaterial(baseStructureLayer.materialId, input.catalog);
+  if (baseMaterial.id !== "lightweight_concrete") {
+    return false;
+  }
+
+  return input.layers.some((layer) => VISIBLE_DELTA_LW_UPPER_PACKAGE_ROLES.has(layer.floorRole));
+}
+
 function buildVisibleTimberCltDeltaLwPredictorSeed(input: {
   catalog: readonly MaterialDefinition[];
   floorImpactContext?: DynamicCalculatorFloorImpactContext | null;
@@ -2603,8 +2726,16 @@ function buildVisibleTimberCltDeltaLwPredictorSeed(input: {
               ...seed.lowerTreatment,
               supportClass: "furred_channels"
             }
-        : seed.lowerTreatment
+    : seed.lowerTreatment
   });
+}
+
+function buildVisibleLightweightConcreteDeltaLwPredictorSeed(input: {
+  catalog: readonly MaterialDefinition[];
+  floorImpactContext?: DynamicCalculatorFloorImpactContext | null;
+  layers: readonly LayerInput[];
+}): ImpactPredictorInput {
+  return buildGateWImpactPredictorSeed(input);
 }
 
 function mergeImpactPredictorSeeds(
@@ -3404,6 +3535,7 @@ export function calculateAssembly(
   const impactFieldContext = options.impactFieldContext ? ImpactFieldContextSchema.parse(options.impactFieldContext) : null;
   const parsedAirborneContext = options.airborneContext ? AirborneContextSchema.parse(options.airborneContext) : null;
   const targetOutputs = options.targetOutputs ?? [];
+  const steelFloorFormulaSurface = options.steelFloorFormulaSurface ?? null;
   const inferredWallAutoTopology = options.calculator === "dynamic"
     ? inferSafeFlatWallAutoTopology({
         catalog,
@@ -3469,6 +3601,13 @@ export function calculateAssembly(
       catalog: baseCatalog,
       layers
     });
+  const visibleLightweightConcreteDeltaLwLayerStackReady =
+    !explicitPredictorInput &&
+    targetOutputs.includes("DeltaLw") &&
+    hasVisibleLightweightConcreteUpperPackageDeltaLwCandidate({
+      catalog: baseCatalog,
+      layers
+    });
   const visibleLayerDeltaLwPredictorSeed =
     visibleTimberCltDeltaLwLayerStackReady
       ? buildVisibleTimberCltDeltaLwPredictorSeed({
@@ -3476,6 +3615,12 @@ export function calculateAssembly(
           floorImpactContext,
           layers
         })
+      : visibleLightweightConcreteDeltaLwLayerStackReady
+        ? buildVisibleLightweightConcreteDeltaLwPredictorSeed({
+            catalog: baseCatalog,
+            floorImpactContext,
+            layers
+          })
       : {};
   const layerDerivedImpactPredictorSeed = mergeImpactPredictorSeeds(
     gateWImpactPredictorSeed,
@@ -3653,7 +3798,7 @@ export function calculateAssembly(
       ? [...targetOutputs, "Ln,w" as const]
       : options.targetOutputs;
   const visibleLayerDeltaLwPredictorInput =
-    visibleTimberCltDeltaLwLayerStackReady
+    visibleTimberCltDeltaLwLayerStackReady || visibleLightweightConcreteDeltaLwLayerStackReady
       ? maybeBuildImpactPredictorInputFromLayerStack(
           layers,
           layerDerivedImpactPredictorSeed,
@@ -3661,8 +3806,30 @@ export function calculateAssembly(
           catalog
         )
       : null;
-  const directImpactLanePredictorInput = predictorInput ?? visibleLayerDeltaLwPredictorInput;
-  const directImpactLane = resolveLayerBasedImpactLane({
+  const visibleSteelFormulaSurfaceResult =
+    !explicitPredictorInput && steelFloorFormulaSurface
+      ? buildSteelFloorFormulaPredictorInputFromSurface({
+          catalog: baseCatalog,
+          layers,
+          surface: steelFloorFormulaSurface,
+          targetOutputs
+        })
+      : null;
+  const visibleSteelFormulaSurfaceRouteActive = Boolean(
+    visibleSteelFormulaSurfaceResult?.formulaTargetOutputRequested &&
+      visibleSteelFormulaSurfaceResult.steelFloorStackDetected
+  );
+  const visibleSteelFormulaPredictorInput =
+    visibleSteelFormulaSurfaceRouteActive
+      ? visibleSteelFormulaSurfaceResult?.impactPredictorInput ?? null
+      : null;
+  const visibleSteelFormulaMissingPhysicalInputs =
+    visibleSteelFormulaSurfaceRouteActive
+      ? visibleSteelFormulaSurfaceResult?.missingPhysicalInputs ?? []
+      : [];
+  const directImpactLanePredictorInput =
+    predictorInput ?? visibleLayerDeltaLwPredictorInput ?? visibleSteelFormulaPredictorInput;
+  const rawDirectImpactLane = resolveLayerBasedImpactLane({
     catalog,
     exactImpact,
     explicitFloorRoleStack: hasFullyTaggedFloorStack,
@@ -3672,8 +3839,23 @@ export function calculateAssembly(
     resolvedLayers: impactResolvedLayers,
     targetOutputs: impactLaneTargetOutputs
   });
+  const directImpactLane =
+    visibleSteelFormulaMissingPhysicalInputs.length > 0
+      ? {
+          ...rawDirectImpactLane,
+          explicitDeltaImpact: null,
+          floorSystemEstimate: null,
+          narrowImpact: null,
+          predictorDeltaLwCompanion: null,
+          predictorSpecificFloorSystemEstimate: null
+        }
+      : rawDirectImpactLane;
   const visibleLayerDeltaLwMissingPhysicalInputs =
-    collectTimberCltDeltaLwFormulaMissingPhysicalInputs(visibleLayerDeltaLwPredictorInput);
+    visibleTimberCltDeltaLwLayerStackReady
+      ? collectTimberCltDeltaLwFormulaMissingPhysicalInputs(visibleLayerDeltaLwPredictorInput)
+      : visibleLightweightConcreteDeltaLwLayerStackReady
+        ? collectLightweightConcreteDeltaLwMissingPhysicalInputs(visibleLayerDeltaLwPredictorInput)
+        : [];
   if (
     !predictorInput &&
     visibleLayerDeltaLwPredictorInput &&
@@ -3683,6 +3865,17 @@ export function calculateAssembly(
     )
   ) {
     predictorInput = visibleLayerDeltaLwPredictorInput;
+    predictorInputMode = "derived_from_visible_layers";
+  }
+  if (
+    !predictorInput &&
+    visibleSteelFormulaPredictorInput &&
+    (
+      directImpactLane.narrowImpact ||
+      visibleSteelFormulaMissingPhysicalInputs.length > 0
+    )
+  ) {
+    predictorInput = visibleSteelFormulaPredictorInput;
     predictorInputMode = "derived_from_visible_layers";
   }
   const directNarrowImpact = directImpactLane.narrowImpact;
@@ -3730,6 +3923,7 @@ export function calculateAssembly(
       : null;
 
   if (
+    !visibleSteelFormulaSurfaceRouteActive &&
     !explicitPredictorInput &&
     !exactImpact &&
     !directImpactLane.floorSystemMatch &&
@@ -3790,9 +3984,12 @@ export function calculateAssembly(
             ))
           ||
           (
-            visibleTimberCltDeltaLwLayerStackReady &&
+            (visibleTimberCltDeltaLwLayerStackReady || visibleLightweightConcreteDeltaLwLayerStackReady) &&
             targetOutputs.includes("DeltaLw") &&
-            collectTimberCltDeltaLwFormulaMissingPhysicalInputs(derivedPredictorInput).length > 0
+            (
+              collectTimberCltDeltaLwFormulaMissingPhysicalInputs(derivedPredictorInput).length > 0 ||
+              collectLightweightConcreteDeltaLwMissingPhysicalInputs(derivedPredictorInput).length > 0
+            )
           )
         );
 
@@ -4052,6 +4249,39 @@ export function calculateAssembly(
           targetOutputs: targetOutputSupportWithGateYCltCtr.targetOutputs
         })
       : null;
+  const gateDTMasonryExactRwCompanionBasis =
+    options.calculator === "dynamic"
+      ? maybeBuildGateDTMasonryExactRwCalculatedCompanionBasis({
+          airborneContext,
+          dynamicFamily: dynamicAirborneResult?.trace.detectedFamily,
+          sourceMatch: verifiedAirborneAnchorResult.match,
+          strategy: dynamicAirborneResult?.trace.strategy,
+          targetOutputs: targetOutputSupportWithGateYCltCtr.targetOutputs,
+          transmissionLossCurve: curve
+        })
+      : null;
+  const gateDVLsfExactRwCompanionBasis =
+    options.calculator === "dynamic"
+      ? maybeBuildGateDVLsfExactRwCalculatedCompanionBasis({
+          airborneContext,
+          dynamicFamily: dynamicAirborneResult?.trace.detectedFamily,
+          sourceMatch: verifiedAirborneAnchorResult.match,
+          strategy: dynamicAirborneResult?.trace.strategy,
+          targetOutputs: targetOutputSupportWithGateYCltCtr.targetOutputs,
+          transmissionLossCurve: curve
+        })
+      : null;
+  const gateDXExactSourceFamilyFieldContextBasis =
+    options.calculator === "dynamic"
+      ? maybeBuildGateDXExactSourceFamilyFieldContextBasis({
+          airborneContext,
+          dynamicFamily: dynamicAirborneResult?.trace.detectedFamily,
+          sourceAnchorApplied: compatibleWallAnchorDeltaResult.applied || verifiedAirborneAnchorResult.applied,
+          strategy: dynamicAirborneResult?.trace.strategy,
+          targetOutputs: targetOutputSupportWithGateYCltCtr.targetOutputs,
+          transmissionLossCurve: curve
+        })
+      : null;
   const visibleDynamicAirborneTrace =
     localSubstitutionLabSpectrumAdapter && dynamicAirborneResult?.trace
       ? {
@@ -4156,6 +4386,13 @@ export function calculateAssembly(
     resolvedLayers: impactResolvedLayers,
     targetOutputSupport
   });
+  const zeroDeltaVerifiedAirborneExactSourceApplied =
+    canPromoteZeroDeltaVerifiedAirborneExactSource({
+      sourceAnchorAlreadyApplied: compatibleWallAnchorDeltaResult.applied || verifiedAirborneAnchorResult.applied,
+      sourceMetricLabel: verifiedAirborneAnchorResult.match?.metricLabel,
+      targetOutputs: targetOutputSupport.targetOutputs
+    });
+  const sourceAnchorMatch = compatibleWallAnchorDeltaResult.match ?? verifiedAirborneAnchorResult.match;
   const dynamicCandidateResolverRuntime = options.calculator === "dynamic"
     ? buildDynamicCalculatorCandidateResolverRuntime({
         airborneContext,
@@ -4179,6 +4416,9 @@ export function calculateAssembly(
               airborneBasis:
                 localSubstitutionLabSpectrumAdapter?.basis ??
                 gateYCltMassTimberCtrSpectrumAdapterBasis ??
+                gateDTMasonryExactRwCompanionBasis ??
+                gateDVLsfExactRwCompanionBasis ??
+                gateDXExactSourceFamilyFieldContextBasis ??
                 dynamicAirborneResult.airborneBasis,
               detectedFamily: dynamicAirborneResult.trace.detectedFamily,
               runtimeValueMovement:
@@ -4193,16 +4433,20 @@ export function calculateAssembly(
           : null,
         sourceAnchor: {
           anchorKind: compatibleWallAnchorDeltaResult.applied ? "compatible_delta" : "exact_full_stack",
-          applied: compatibleWallAnchorDeltaResult.applied || verifiedAirborneAnchorResult.applied,
-          match: (compatibleWallAnchorDeltaResult.match ?? verifiedAirborneAnchorResult.match)
+          applied:
+            compatibleWallAnchorDeltaResult.applied ||
+            verifiedAirborneAnchorResult.applied ||
+            zeroDeltaVerifiedAirborneExactSourceApplied,
+          match: sourceAnchorMatch
             ? {
-                id: (compatibleWallAnchorDeltaResult.match ?? verifiedAirborneAnchorResult.match)?.id ?? "",
-                label: (compatibleWallAnchorDeltaResult.match ?? verifiedAirborneAnchorResult.match)?.label ?? "",
-                metricLabel: (compatibleWallAnchorDeltaResult.match ?? verifiedAirborneAnchorResult.match)?.metricLabel ?? "Rw",
-                metricValue: (compatibleWallAnchorDeltaResult.match ?? verifiedAirborneAnchorResult.match)?.metricValue,
-                sourceMode: (compatibleWallAnchorDeltaResult.match ?? verifiedAirborneAnchorResult.match)?.sourceMode ?? "lab"
+                id: sourceAnchorMatch.id,
+                label: sourceAnchorMatch.label,
+                metricLabel: sourceAnchorMatch.metricLabel,
+                metricValue: sourceAnchorMatch.metricValue,
+                sourceMode: sourceAnchorMatch.sourceMode
               }
-            : null
+            : null,
+          numericValueMoved: compatibleWallAnchorDeltaResult.applied || verifiedAirborneAnchorResult.applied
         },
         targetOutputs: targetOutputSupport.targetOutputs
       })
@@ -4465,6 +4709,15 @@ export function calculateAssembly(
         )
       : (dynamicAirborneResult?.warnings ?? []))
   );
+  if (gateDTMasonryExactRwCompanionBasis) {
+    warnings.push(GATE_DT_MASONRY_EXACT_RW_CALCULATED_COMPANION_WARNING);
+  }
+  if (gateDVLsfExactRwCompanionBasis) {
+    warnings.push(GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_WARNING);
+  }
+  if (gateDXExactSourceFamilyFieldContextBasis) {
+    warnings.push(GATE_DX_EXACT_SOURCE_FAMILY_FIELD_CONTEXT_WARNING);
+  }
   if (!suppressParkedBuildingPredictionOverlayWarnings) {
     warnings.push(
       ...(floorAirborneBuildingPredictionRuntime?.warnings ?? airborneOverlayResult.warnings)
@@ -4843,7 +5096,8 @@ export function calculateAssembly(
       gateSOpeningLeakCompositeRuntime?.basis ||
       companyInternalOpeningLeakFieldBuildingRuntime?.basis ||
       localSubstitutionLabSpectrumAdapter?.basis ||
-      gateYCltMassTimberCtrSpectrumAdapterBasis
+      gateYCltMassTimberCtrSpectrumAdapterBasis ||
+      gateDXExactSourceFamilyFieldContextBasis
     ),
     result
   });
@@ -4867,6 +5121,14 @@ export function calculateAssembly(
   });
   applyPostV1GateCYCompositePanelDeltaLwNeedsInputBoundary({
     predictorInput,
+    result
+  });
+  applyPostV1GateDBLightweightConcreteDeltaLwNeedsInputBoundary({
+    predictorInput,
+    result
+  });
+  applyPostV1GateDISteelVisibleFormulaInputNeedsInputBoundary({
+    missingPhysicalInputs: visibleSteelFormulaMissingPhysicalInputs,
     result
   });
   applyAcousticCalculatorAnswerEngineV1FloorRolelessHelperOnlyBoundary(result);

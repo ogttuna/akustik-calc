@@ -131,7 +131,7 @@ describe("Personal-Use MVP Coverage Sprint Gate AA scenario matrix v2 expansion"
     expect(rows).toHaveLength(40);
     expect(summary).toMatchObject({
       basisCoverage: ["element_lab", "field_apparent", "astm_rating_boundary", "building_prediction"],
-      currentPostureCoverage: ["family_physics", "needs_input", "unsupported", "exact", "source_anchored_delta"],
+      currentPostureCoverage: ["family_physics", "bounded_screening", "needs_input", "unsupported", "exact", "source_anchored_delta"],
       failureClassCoverage: ["none", "correct_block", "hostile_input_refusal", "unsupported_metric"],
       gapFreeAfterGateAA: true,
       matrixV2AddedRowCount: 12,

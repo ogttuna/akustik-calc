@@ -26,6 +26,7 @@ export const ImpactEstimateBasisSchema = z.enum([
   "peer_reviewed_floor_system_exact_match",
   "predictor_composite_panel_published_interaction_estimate",
   "predictor_heavy_concrete_published_upper_treatment_estimate",
+  "predictor_lightweight_concrete_delta_lw_dynamic_improvement_estimate",
   "predictor_lightweight_concrete_family_estimate",
   "predictor_mass_timber_clt_bare_interpolation_estimate",
   "predictor_mass_timber_clt_dataholz_dry_estimate",

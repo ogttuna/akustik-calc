@@ -44,6 +44,11 @@ import {
   GATE_H_LINED_MASSIVE_WALL_SELECTED_CANDIDATE_ID
 } from "./dynamic-airborne-gate-h-lined-masonry-clt";
 import { GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD } from "./dynamic-airborne-gate-i-airborne-field-context";
+import {
+  GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD,
+  GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_SELECTED_CANDIDATE_ID,
+  GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_WARNING
+} from "./dynamic-airborne-gate-dv-lsf-exact-source-mixed-companion";
 import type { DynamicCalculatorFloorImpactContext } from "./dynamic-calculator-route-input-topology";
 import { HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS } from "./helper-only-timber-open-web-impact-stack-estimate";
 import { HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_ESTIMATE_BASIS } from "./heavy-concrete-published-upper-treatment-estimate";
@@ -744,17 +749,27 @@ describe("acoustic calculator answer engine V1 contract", () => {
       {
         context: EXACT_LSF_LAB_CONTEXT,
         expectedTrace: {
-          candidateKind: "exact_measured_override",
+          candidateKind: "source_absent_family_solver",
           requestedBasis: "element_lab",
           route: "wall",
-          runtimeBasisId: "verified_airborne_exact_source",
-          selectedCandidateId: "wall.exact_verified_airborne.same_leaf_schedule",
-          supportBucket: "exact",
-          supportedMetrics: ["Rw"],
-          valuePins: [{ metric: "Rw", value: 55 }]
+          runtimeBasisId: GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD,
+          selectedCandidateId: GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_SELECTED_CANDIDATE_ID,
+          supportBucket: "source_absent_estimate",
+          supportedMetrics: ["Rw", "STC", "C", "Ctr"],
+          valuePins: [
+            { metric: "Rw", value: 55 },
+            { metric: "STC", value: 55 },
+            { metric: "C", value: -1.5 },
+            { metric: "Ctr", value: -6.4 }
+          ]
         },
-        expectedUnsupported: ["STC", "C", "Ctr"],
-        expectedValues: [{ metric: "Rw", value: 55 }],
+        expectedUnsupported: [],
+        expectedValues: [
+          { metric: "Rw", value: 55 },
+          { metric: "STC", value: 55 },
+          { metric: "C", value: -1.5 },
+          { metric: "Ctr", value: -6.4 }
+        ],
         label: "wall exact measured same-stack metric scope",
         layers: EXACT_LSF_LAB_STACK,
         targetOutputs: WALL_OUTPUTS
@@ -1572,22 +1587,25 @@ describe("acoustic calculator answer engine V1 contract", () => {
     });
 
     expect(mixedMetrics.airborneCandidateResolution).toMatchObject({
-      selectedCandidateId: "candidate_blocked_rockwool_exact_source",
-      selectedOrigin: "measured_exact_full_stack"
+      selectedCandidateId: GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_SELECTED_CANDIDATE_ID,
+      selectedOrigin: "family_physics_prediction"
     });
-    expect(mixedMetrics.supportedTargetOutputs).toEqual(["Rw"]);
-    expect(mixedMetrics.unsupportedTargetOutputs).toEqual(["STC", "C", "Ctr"]);
+    expect(mixedMetrics.supportedTargetOutputs).toEqual(["Rw", "STC", "C", "Ctr"]);
+    expect(mixedMetrics.unsupportedTargetOutputs).toEqual([]);
     expect(mixedMetrics.layerCombinationResolverTrace).toMatchObject({
       route: "wall",
-      runtimeBasisId: "verified_airborne_exact_source",
-      selectedCandidateId: "wall.exact_verified_airborne.same_leaf_schedule",
-      supportBucket: "exact",
-      supportedMetrics: ["Rw"],
-      valuePins: [{ metric: "Rw", value: 55 }]
+      runtimeBasisId: GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD,
+      selectedCandidateId: GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_SELECTED_CANDIDATE_ID,
+      supportBucket: "source_absent_estimate",
+      supportedMetrics: ["Rw", "STC", "C", "Ctr"],
+      valuePins: [
+        { metric: "Rw", value: 55 },
+        { metric: "STC", value: 55 },
+        { metric: "C", value: -1.5 },
+        { metric: "Ctr", value: -6.4 }
+      ]
     });
-    expect(mixedMetrics.warnings.some((warning) =>
-      /reports Rw; DynEcho kept STC, C, Ctr out of the exact answer/i.test(warning)
-    )).toBe(true);
+    expect(mixedMetrics.warnings).toContain(GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_WARNING);
   });
 
   it("keeps field exact source traces scoped to the measured field metric", () => {

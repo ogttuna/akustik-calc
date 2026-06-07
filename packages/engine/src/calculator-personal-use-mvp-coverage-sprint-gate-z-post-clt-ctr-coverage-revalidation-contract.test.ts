@@ -149,7 +149,7 @@ describe("Personal-Use MVP Coverage Sprint Gate Z post-CLT-Ctr coverage revalida
     expect(rows.map((row) => row.id)).toEqual([...EXPECTED_GATE_Z_ROW_IDS]);
     expect(summary).toMatchObject({
       basisCoverage: ["element_lab", "field_apparent", "astm_rating_boundary", "building_prediction"],
-      currentPostureCoverage: ["family_physics", "needs_input", "unsupported", "exact", "source_anchored_delta"],
+      currentPostureCoverage: ["family_physics", "bounded_screening", "needs_input", "unsupported", "exact", "source_anchored_delta"],
       failureClassCoverage: ["none", "correct_block", "hostile_input_refusal", "unsupported_metric"],
       gapFreeAfterGatesXAndY: true,
       numericRuntimeValueMovement: false,

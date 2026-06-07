@@ -40,6 +40,7 @@ export async function POST(request: Request) {
       officialFloorSystemId: payload.officialFloorSystemId ?? null,
       officialImpactCatalogId: payload.officialImpactCatalogId ?? null,
       sourceLayers: payload.sourceLayers,
+      steelFloorFormulaSurface: payload.steelFloorFormulaSurface ?? null,
       targetOutputs: payload.targetOutputs ?? []
     });
 

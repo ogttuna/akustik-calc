@@ -100,7 +100,10 @@ export function maybeBuildGateIAirborneFieldContextBasisFromBase(input: {
   family?: DynamicAirborneFamily;
   frequencyBands?: AirborneResultBasis["frequencyBands"];
 }): AirborneResultBasis | null {
-  if (input.baseBasis.origin !== "family_physics_prediction" || !hasCompleteFieldContext(input.context)) {
+  if (
+    !["bounded_prediction", "family_physics_prediction"].includes(input.baseBasis.origin) ||
+    !hasCompleteFieldContext(input.context)
+  ) {
     return null;
   }
 

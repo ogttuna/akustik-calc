@@ -33,6 +33,8 @@ export * from "./post-v1-floor-suspended-ceiling-lower-treatment-surface-parity-
 export * from "./post-v1-next-numeric-coverage-gap-gate-be";
 export * from "./post-v1-next-numeric-coverage-gap-gate-bg";
 export * from "./post-v1-next-numeric-coverage-gap-gate-bm";
+export * from "./post-v1-next-numeric-coverage-gap-gate-ep";
+export * from "./post-v1-wall-direct-fixed-double-leaf-bridge-loss-runtime-gate-eo";
 export * from "./curve-rating";
 export * from "./dynamic-airborne";
 export * from "./dynamic-airborne-broad-accuracy-wall-triple-leaf-calibrated";

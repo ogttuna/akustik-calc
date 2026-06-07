@@ -27,7 +27,8 @@ import {
 import {
   buildGateRDoubleLeafFramedBridgeSolverContract,
   type GateRDoubleLeafFramedBridgeBenchmarkRange,
-  type GateRDoubleLeafFramedBridgePhysicalInputs
+  type GateRDoubleLeafFramedBridgePhysicalInputs,
+  type GateRDoubleLeafFramedBridgeSolverContract
 } from "./dynamic-calculator-double-leaf-framed-bridge-solver-contract";
 import {
   GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING,
@@ -56,6 +57,15 @@ export const GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_SELECTED_CANDIDATE_ID =
 export const GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_WARNING =
   LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_RUNTIME_CORRIDOR_WARNING;
 
+export const GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_RUNTIME_METHOD =
+  "wall.direct_fixed_double_leaf.equivalent_coupled_mass_bridge_loss_owner" as const;
+
+export const GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_SELECTED_CANDIDATE_ID =
+  "candidate_wall_direct_fixed_double_leaf_bridge_loss_equivalent_coupled_mass" as const;
+
+export const GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_WARNING =
+  "Gate EO direct-fixed double-leaf bridge-loss runtime is active only for complete element-lab direct-fixed wall stacks. Values use an equivalent coupled-mass bridge-loss formula owner; field/building outputs and measured-source calibration remain separate owners." as const;
+
 function buildGateSCurve(input: {
   benchmark: GateRDoubleLeafFramedBridgeBenchmarkRange;
   frequenciesHz?: readonly number[];
@@ -83,6 +93,38 @@ function buildGateSCurve(input: {
           : 0;
 
       return Math.max(0, Math.min(95, value - resonanceNotchDb - bridgeLossTiltDb));
+    })
+  };
+
+  return anchorCurveToMetric(shapedCurve, targetRw).curve;
+}
+
+function buildGateEODirectFixedCurve(input: {
+  benchmark: GateRDoubleLeafFramedBridgeBenchmarkRange;
+  frequenciesHz?: readonly number[];
+  physicalInputs: GateRDoubleLeafFramedBridgePhysicalInputs;
+}): TransmissionLossCurve {
+  const targetRw = input.benchmark.estimatedRwDb.center;
+  const totalLeafMass =
+    (input.physicalInputs.sideALeafMassKgM2 ?? 0) +
+    (input.physicalInputs.sideBLeafMassKgM2 ?? 0);
+  const baseCurve = buildCalibratedMassLawCurve(
+    Math.max(totalLeafMass, 1),
+    targetRw,
+    input.frequenciesHz
+  );
+  const supportSpacingMm = input.physicalInputs.supportSpacingMm ?? 400;
+  const spacingSeverity = Math.max(0.65, Math.min(1.15, 450 / Math.max(supportSpacingMm, 250)));
+  const shapedCurve: TransmissionLossCurve = {
+    frequenciesHz: [...baseCurve.frequenciesHz],
+    transmissionLossDb: baseCurve.transmissionLossDb.map((value, index) => {
+      const frequency = baseCurve.frequenciesHz[index] ?? 1;
+      const lowFrequencyCouplingPenaltyDb =
+        frequency <= 250 ? Math.min(1.8, Math.max(0, Math.log2(315 / Math.max(frequency, 1)) * 0.55)) : 0;
+      const highFrequencyBridgeTiltDb =
+        frequency >= 500 ? Math.min(3.4, Math.log2(frequency / 400) * 0.85 * spacingSeverity) : 0;
+
+      return Math.max(0, Math.min(95, value - lowFrequencyCouplingPenaltyDb - highFrequencyBridgeTiltDb));
     })
   };
 
@@ -129,11 +171,60 @@ function buildGateSBasis(input: {
   });
 }
 
+function buildGateEODirectFixedBasis(input: {
+  benchmark: GateRDoubleLeafFramedBridgeBenchmarkRange;
+  curve: TransmissionLossCurve;
+  physicalInputs: GateRDoubleLeafFramedBridgePhysicalInputs;
+}): AirborneResultBasis {
+  return AirborneResultBasisSchema.parse({
+    assumptions: [
+      "Gate EO owns this complete direct-fixed double-leaf element-lab wall route as a formula-backed calculator result.",
+      "The direct-fixed leaves are treated as an equivalent mechanically coupled mass with explicit bridge-loss penalty, not as an independent mass-air-mass boosted double leaf.",
+      "Side A and side B leaf masses, cavity depth, direct-fixed support topology, connection type, and support spacing are explicit physical inputs.",
+      "Rw, STC, C, and Ctr are rating-adapter outputs over the calculated frequency curve; STC is not an alias of Rw.",
+      "Field/building outputs require separate field/building adapters and are not published from this lab-only owner."
+    ],
+    calculationStandard: "engine_double_leaf_cavity",
+    curveBasis: "calculated_frequency_curve",
+    errorBudgetDb: input.benchmark.toleranceDb,
+    family: "double_leaf",
+    frequencyBands: {
+      bandSet: "gate_eo_direct_fixed_double_leaf_bridge_loss_runtime_curve",
+      frequenciesHz: [...input.curve.frequenciesHz]
+    },
+    kind: "airborne_physics_prediction",
+    method: GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_RUNTIME_METHOD,
+    missingPhysicalInputs: [],
+    missingSourceEvidence: ["same_family_direct_fixed_double_leaf_holdout_rows_absent"],
+    origin: "family_physics_prediction",
+    propertyDefaults: [],
+    ratingStandard: "ISO 717-1",
+    requiredInputs: [
+      "sideALeafGroup",
+      "sideBLeafGroup",
+      "sideALeafMassKgM2",
+      "sideBLeafMassKgM2",
+      "cavity1DepthMm",
+      "supportTopology=direct_fixed",
+      "connectionType=direct_fix",
+      "supportSpacingMm",
+      "directFixedEquivalentCoupledMassOwner",
+      "directFixedBridgeLossOwner",
+      "directFixedNoMassAirMassBoostBoundary",
+      "bridgeCouplingDeltaDb",
+      "ISO717-1 Rw adapter",
+      "ASTM E413 STC adapter boundary"
+    ],
+    toleranceClass: "uncalibrated_prediction"
+  });
+}
+
 type GateSAirborneCandidateSeed = Omit<AirborneCandidate, "rejectionReasons" | "selected"> & {
   blockedReasons?: readonly AirborneCandidateRejectionReason[];
 };
 
 const GATE_S_WALL_OUTPUTS = ["Rw", "STC", "C", "Ctr"] as const satisfies readonly RequestedOutputId[];
+const GATE_S_WALL_OUTPUT_SET = new Set<RequestedOutputId>(GATE_S_WALL_OUTPUTS);
 
 function maybeBuildGateSDoubleLeafBuildingPredictionBasis(input: {
   baseBasis: AirborneResultBasis;
@@ -245,11 +336,16 @@ function screeningBasis(family: DynamicAirborneFamily): AirborneResultBasis {
 function buildGateSCandidateResolution(input: {
   basis: AirborneResultBasis;
   family: DynamicAirborneFamily;
+  resolverId?: string;
+  runtimeValueMovement?: boolean;
+  selectedCandidateId?: string;
   targetOutputs: readonly RequestedOutputId[];
 }): AirborneCandidateResolution {
   const outputIds: RequestedOutputId[] =
     input.targetOutputs.length > 0 ? [...input.targetOutputs] : [...GATE_S_WALL_OUTPUTS];
   const metricIds: string[] = [...outputIds];
+  const selectedCandidateId =
+    input.selectedCandidateId ?? GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_SELECTED_CANDIDATE_ID;
   const seeds: GateSAirborneCandidateSeed[] = [
     {
       basis: measuredExactBasis(input.family),
@@ -281,7 +377,7 @@ function buildGateSCandidateResolution(input: {
     },
     {
       basis: input.basis,
-      id: GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_SELECTED_CANDIDATE_ID,
+      id: selectedCandidateId,
       metricIds: [...metricIds],
       origin: "family_physics_prediction",
       outputIds: [...outputIds]
@@ -296,14 +392,14 @@ function buildGateSCandidateResolution(input: {
   ];
 
   const candidates: AirborneCandidate[] = seeds.map((seed) => {
-    const selected = seed.id === GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_SELECTED_CANDIDATE_ID;
+    const selected = seed.id === selectedCandidateId;
     const rejectionReasons: AirborneCandidateRejectionReason[] = selected
       ? []
       : [
           ...(seed.blockedReasons ?? [
             {
               code: "lower_precedence_than_selected",
-              detail: `Candidate loses to ${GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_SELECTED_CANDIDATE_ID} under model-first airborne precedence.`
+              detail: `Candidate loses to ${selectedCandidateId} under model-first airborne precedence.`
             }
           ])
         ];
@@ -330,7 +426,7 @@ function buildGateSCandidateResolution(input: {
       "source_evidence_completeness",
       "stable_candidate_id"
     ],
-    id: "resolver_double_leaf_framed_wall_banded_runtime_corridor",
+    id: input.resolverId ?? "resolver_double_leaf_framed_wall_banded_runtime_corridor",
     inputCompletenessIds: ["gate_q_double_leaf_framed_bridge_route_inputs"],
     policyId: "model_first_airborne_candidate_precedence_v1",
     ratingAdapterBasisIds: [
@@ -338,15 +434,144 @@ function buildGateSCandidateResolution(input: {
       "astm_e413_stc_from_airborne_transmission_loss_curve"
     ],
     rejectedCandidateIds: candidates.filter((candidate) => !candidate.selected).map((candidate) => candidate.id),
-    runtimeValueMovement: false,
+    runtimeValueMovement: input.runtimeValueMovement ?? false,
     selectedBasis: input.basis,
-    selectedCandidateId: GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_SELECTED_CANDIDATE_ID,
+    selectedCandidateId,
     selectedOrigin: "family_physics_prediction"
   });
 }
 
 function familyLabel(family: DynamicAirborneFamily): string {
-  return family === "double_stud_system" ? "Double Frame / Double Stud" : "Stud Wall Surrogate";
+  switch (family) {
+    case "double_leaf":
+      return "Direct-Fixed Double Leaf";
+    case "double_stud_system":
+      return "Double Frame / Double Stud";
+    case "stud_wall_system":
+      return "Stud Wall Surrogate";
+    default:
+      return "Double-Leaf Wall";
+  }
+}
+
+function hasCompleteDirectFixedPhysicalInputs(
+  physicalInputs: GateRDoubleLeafFramedBridgePhysicalInputs
+): boolean {
+  return Boolean(
+    physicalInputs.bridgeClass === "direct_fixed_bridge" &&
+      typeof physicalInputs.sideALeafMassKgM2 === "number" &&
+      physicalInputs.sideALeafMassKgM2 > 0 &&
+      typeof physicalInputs.sideBLeafMassKgM2 === "number" &&
+      physicalInputs.sideBLeafMassKgM2 > 0 &&
+      typeof physicalInputs.cavityDepthMm === "number" &&
+      physicalInputs.cavityDepthMm > 0 &&
+      typeof physicalInputs.supportSpacingMm === "number" &&
+      physicalInputs.supportSpacingMm > 0
+  );
+}
+
+function maybeCalculateGateEODirectFixedDoubleLeafBridgeLossRuntime(input: {
+  contract: GateRDoubleLeafFramedBridgeSolverContract;
+  family: { family: DynamicAirborneFamily; notes: string[] };
+  options: DynamicAirborneOptions;
+  topology: AirborneTopologySummary;
+}): DynamicAirborneResult | null {
+  const requestedOutputs = input.options.targetOutputs ?? [];
+  const requestedLabOutputs = requestedOutputs.filter((output) => GATE_S_WALL_OUTPUT_SET.has(output));
+
+  if (
+    input.options.airborneContext?.contextMode !== "element_lab" ||
+    (requestedOutputs.length > 0 && requestedLabOutputs.length === 0) ||
+    input.contract.bridgeClass !== "direct_fixed_bridge" ||
+    input.contract.inputContract.inputCompleteness.status !== "complete" ||
+    input.contract.missingPhysicalInputs.length > 0 ||
+    !input.contract.benchmarkRange ||
+    !hasCompleteDirectFixedPhysicalInputs(input.contract.physicalInputs)
+  ) {
+    return null;
+  }
+
+  const curve = buildGateEODirectFixedCurve({
+    benchmark: input.contract.benchmarkRange,
+    frequenciesHz: input.options.frequenciesHz,
+    physicalInputs: input.contract.physicalInputs
+  });
+  const ratings = buildRatingsFromCurve(curve.frequenciesHz, curve.transmissionLossDb);
+  const basis = buildGateEODirectFixedBasis({
+    benchmark: input.contract.benchmarkRange,
+    curve,
+    physicalInputs: input.contract.physicalInputs
+  });
+  const candidateResolution = buildGateSCandidateResolution({
+    basis,
+    family: "double_leaf",
+    resolverId: "resolver_direct_fixed_double_leaf_bridge_loss_runtime_corridor",
+    runtimeValueMovement: true,
+    selectedCandidateId: GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_SELECTED_CANDIDATE_ID,
+    targetOutputs: requestedLabOutputs.length > 0 ? requestedLabOutputs : [...GATE_S_WALL_OUTPUTS]
+  });
+  const solverRw = ratings.iso717.Rw;
+  const screeningRw = input.options.screeningEstimatedRwDb;
+  const trace: DynamicAirborneTrace = {
+    adjustmentDb: ksRound1(solverRw - screeningRw),
+    candidateMethods: [
+      {
+        label: getDelegateLabel("screening_mass_law_curve_seed_v3"),
+        method: "screening_mass_law_curve_seed_v3",
+        rwDb: screeningRw,
+        selected: false
+      },
+      {
+        label: "Direct-Fixed Double-Leaf Bridge-Loss Solver",
+        method: "mass_law",
+        rwDb: solverRw,
+        selected: true
+      }
+    ],
+    cavityCount: input.topology.cavityCount,
+    confidenceClass: "medium",
+    confidenceScore: 0.58,
+    detectedFamily: "double_leaf",
+    detectedFamilyLabel: familyLabel("double_leaf"),
+    familyDecisionClass: "clear",
+    hasPorousFill: input.topology.hasPorousFill,
+    hasStudLikeSupport: input.topology.hasStudLikeSupport,
+    notes: [
+      ...input.family.notes,
+      "Gate EO selected the direct-fixed double-leaf bridge-loss owner for complete element-lab input.",
+      `Leaf masses are ${input.contract.physicalInputs.sideALeafMassKgM2?.toFixed(1)} and ${input.contract.physicalInputs.sideBLeafMassKgM2?.toFixed(1)} kg/m2.`,
+      `Direct-fixed bridge coupling delta is ${input.contract.benchmarkRange.bridgeCouplingDeltaDb.toFixed(1)} dB with no mass-air-mass boost.`,
+      "Field/building metrics remain outside this owner and require separate adapters."
+    ],
+    originalSolidLayerCount: input.topology.originalSolidLayerCount,
+    porousLayerCount: input.topology.porousLayerCount,
+    selectedLabel: "Direct-Fixed Double-Leaf Bridge-Loss Formula",
+    selectedFamilyScore: 0.58,
+    selectedMethod: "mass_law",
+    solverSpreadRwDb: ksRound1(Math.abs(solverRw - screeningRw)),
+    strategy: "direct_fixed_double_leaf_equivalent_coupled_mass_bridge_loss_runtime",
+    supportLayerCount: input.topology.supportLayerCount,
+    surfaceMassKgM2: input.topology.surfaceMassKgM2,
+    totalGapThicknessMm: input.topology.totalGapThicknessMm,
+    visibleLeafCount: input.topology.visibleLeafCount,
+    visibleLeafMassRatio: input.topology.visibleLeafMassRatio
+  };
+
+  return {
+    airborneBasis: basis,
+    airborneCandidateResolution: candidateResolution,
+    airborneCandidateSet: candidateResolution.candidates,
+    curve,
+    id: "dynamic",
+    label: "Dynamic Topology",
+    ratings,
+    rw: solverRw,
+    trace,
+    warnings: [
+      GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_WARNING,
+      `Direct-fixed double-leaf bridge-loss runtime is uncalibrated with a ${input.contract.benchmarkRange.toleranceDb} dB error budget.`
+    ]
+  };
 }
 
 export function maybeCalculateGateSDoubleLeafFramedBridgeRuntime(input: {
@@ -360,6 +585,16 @@ export function maybeCalculateGateSDoubleLeafFramedBridgeRuntime(input: {
     layers: input.layers,
     targetOutputs: ["Rw", "STC", "C", "Ctr"]
   });
+
+  const gateEODirectFixedRuntime = maybeCalculateGateEODirectFixedDoubleLeafBridgeLossRuntime({
+    contract,
+    family: input.family,
+    options: input.options,
+    topology: input.topology
+  });
+  if (gateEODirectFixedRuntime) {
+    return gateEODirectFixedRuntime;
+  }
 
   if (
     contract.readinessStatus !== "solver_candidate_ready" ||
