@@ -1209,10 +1209,12 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
         }
 
         .page {
-          width: min(186mm, calc(100vw - 24px));
+          width: min(210mm, calc(100vw - 24px));
+          min-height: 297mm;
           border: 1px solid var(--line);
           background: var(--panel);
-          padding: 0;
+          padding: 12mm;
+          box-shadow: 0 14px 34px rgba(24, 38, 52, 0.12);
         }
       }
 

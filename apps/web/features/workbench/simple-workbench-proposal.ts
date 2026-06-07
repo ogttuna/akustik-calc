@@ -1770,7 +1770,6 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
       }
 
       .frame {
-        border: 1.4px solid var(--ink);
         background: var(--panel);
       }
 
@@ -1833,9 +1832,10 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
       .card,
       .metric,
       .note-box {
-        border: 1px solid var(--line);
-        background: #ffffff;
-        padding: 12px 14px;
+        border: 0;
+        border-top: 1px solid var(--line);
+        background: transparent;
+        padding: 11px 0 13px;
       }
 
       .card strong,
@@ -1865,8 +1865,9 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
 
       .primary-metric {
         border-left: 4px solid var(--accent);
-        border-color: var(--line);
+        border-top: 0;
         background: color-mix(in srgb, var(--accent) 8%, white);
+        padding: 13px 15px;
       }
 
       .section {
@@ -2014,9 +2015,10 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
 
       .standard-pill {
         min-width: 0;
-        border: 1px solid var(--line);
-        background: #ffffff;
-        padding: 10px 12px;
+        border: 0;
+        border-top: 1px solid var(--line);
+        background: transparent;
+        padding: 10px 0 0;
       }
 
       .standard-pill strong {
@@ -2062,9 +2064,10 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
 
       .result-chip,
       .standard-card {
-        border: 1px solid var(--line);
-        background: #ffffff;
-        padding: 14px;
+        border: 0;
+        border-top: 1px solid var(--line);
+        background: transparent;
+        padding: 12px 0;
         break-inside: avoid;
       }
 
@@ -2512,8 +2515,9 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
       }
 
       .construction-summary-card {
-        border: 1px solid var(--line);
-        background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(244,247,250,0.98));
+        border: 0;
+        border-left: 3px solid var(--accent);
+        background: color-mix(in srgb, var(--accent) 7%, white);
         padding: 12px 14px;
       }
 
@@ -2551,9 +2555,10 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
       }
 
       .cover-summary {
-        border: 1px solid var(--line);
-        background: #f8fbfd;
-        padding: 18px;
+        border: 0;
+        border-left: 3px solid var(--accent);
+        background: color-mix(in srgb, var(--accent) 6%, white);
+        padding: 16px 18px;
       }
 
       .cover-summary p {
@@ -2564,9 +2569,10 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
 
       .signature-box {
         min-height: 128px;
-        border: 1px solid var(--line);
-        background: #ffffff;
-        padding: 16px 16px 14px;
+        border: 0;
+        border-top: 1px solid var(--line);
+        background: transparent;
+        padding: 14px 0 12px;
       }
 
       .signature-line {
@@ -2585,8 +2591,8 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
 
       .page-header {
         padding: 10mm 12mm 8mm;
-        border-bottom: 1.4px solid var(--ink);
-        background: linear-gradient(180deg, rgba(248, 251, 253, 0.98), rgba(255, 255, 255, 0.98));
+        border-bottom: 1px solid var(--line);
+        background: #ffffff;
       }
 
         .page-header-grid {
@@ -2639,9 +2645,10 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
       }
 
       .method-box {
-        border: 1px solid var(--line);
-        background: #ffffff;
-        padding: 14px;
+        border: 0;
+        border-left: 2px solid var(--line);
+        background: transparent;
+        padding: 3px 0 4px 14px;
         break-inside: avoid;
       }
 
@@ -2668,8 +2675,10 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
 
       .note-box {
         margin-top: 12px;
+        border: 0;
+        border-left: 3px solid rgba(160, 90, 58, 0.42);
         background: var(--warning-soft);
-        border-color: rgba(160, 90, 58, 0.24);
+        padding: 12px 14px;
       }
 
       .note-box p {
@@ -2684,7 +2693,17 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
         color: var(--ink-soft);
       }
 
-        @media screen and (max-width: 900px) {
+      @media screen {
+        .frame {
+          box-shadow: 0 16px 36px rgba(25, 50, 70, 0.12);
+        }
+
+        .frame + .frame {
+          margin-top: 12mm;
+        }
+      }
+
+      @media screen and (max-width: 900px) {
         .hero-grid,
         .cover-grid,
         .cover-standard-strip,
@@ -2711,6 +2730,10 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
 
         .sheet {
           padding: 0;
+        }
+
+        .frame {
+          box-shadow: none;
         }
       }
     </style>

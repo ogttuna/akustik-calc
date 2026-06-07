@@ -82,7 +82,8 @@ describe("simple workbench proposal preview html helper", () => {
     expect(html).toMatch(/\.page-grid\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\);/u);
     expect(html).toMatch(/\.curve-grid\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\);/u);
     expect(html).toMatch(/\.notes-grid\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\);/u);
-    expect(html).toContain("width: min(186mm, calc(100vw - 24px));");
+    expect(html).toContain("width: min(210mm, calc(100vw - 24px));");
+    expect(html).toContain("padding: 12mm;");
     expect(html).not.toContain("This DAC sheet summarizes a project estimate");
   });
 });
