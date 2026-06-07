@@ -23,7 +23,991 @@ calibration evidence, holdouts, and regression tests.
 
 ## Current Implementation Anchor
 
-Current state after Gate DA:
+Current state after Gate EK:
+
+- latest no-runtime numeric coverage/accuracy rerank:
+  `post_v1_next_numeric_coverage_gap_gate_ek_plan`;
+- Gate EK landed with status
+  `post_v1_next_numeric_coverage_gap_gate_ek_landed_no_runtime_selected_wall_visible_layer_formula_route_second_pass_gate_el`;
+- Gate EK selected
+  `post_v1_wall_visible_layer_formula_route_second_pass_gate_el_plan`
+  in
+  `packages/engine/src/post-v1-wall-visible-layer-formula-route-second-pass-gate-el-contract.test.ts`;
+- selected candidate:
+  `wall.visible_layer_formula_route_second_pass_after_gate_ej`;
+- selected route phrase: wall visible-layer formula-route second pass;
+- Gate EK ran two ROI plan iterations (`roiAnalysisIterations: 2`)
+  after Gate EJ. It rejects repeating the now-closed ASTM exact-band
+  input surface, closed floor formula-route gates, already-live
+  open-web/open-box field-building routes, supportless wall topology
+  entries that correctly remain `needs_input`, historical
+  Dataholz/C11c/raw source reopens, and opening/leak holdout tightening;
+- the selected highest-ROI action is the wall visible-layer
+  formula-route second pass: Gate EL must reconcile the old wall
+  coverage/source chain against the current post-V1 wall implementation
+  and select only a fresh visible wall layer subset that can improve
+  calculator scope or accuracy without weakening metric-basis or
+  `needs_input` / `unsupported` boundaries;
+- counters: `candidateCount 10`, `roiAnalysisIterations: 2`,
+  `estimatedNextWallCoverageLedgers 1`,
+  `estimatedNextRouteFamilyCandidatesToReconcile 8`,
+  `newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+  `runtimeBasisPromotions 0`, `runtimeFormulaRetunes 0`,
+  `runtimeValuesMoved 0`, `sourceRowsImported: 0`, and
+  `frontendImplementationFilesTouched: 0`;
+- Gate EK/EL plan:
+  `docs/calculator/POST_V1_GATE_EK_EL_WALL_VISIBLE_LAYER_FORMULA_ROUTE_SECOND_PASS_PLAN_2026-06-07.md`.
+
+Previous state after Gate EJ:
+
+- latest input-surface scope action:
+  `post_v1_floor_astm_iic_aiic_exact_band_input_surface_gate_ej_plan`;
+- Gate EJ landed with status
+  `post_v1_floor_astm_iic_aiic_exact_band_input_surface_gate_ej_landed_surface_parity_selected_next_numeric_coverage_gap_gate_ek`;
+- Gate EJ selected
+  `post_v1_next_numeric_coverage_gap_gate_ek_plan`
+  in
+  `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ek-contract.test.ts`;
+- selected candidate:
+  `floor.astm_iic_aiic_user_band_input_surface`;
+- explicitly ASTM-labelled one-third-octave user/import bands now carry
+  `standardMethod` through shared estimate, shared impact-only, API
+  forwarding, and the workbench exact-band import helper;
+- lab `ASTM E492 / ASTM E989` bands calculate owned `IIC`; field
+  `ASTM E1007 / ASTM E989` bands calculate owned `AIIC`;
+- ISO import defaults remain ISO, missing/ambiguous standard methods,
+  lab/field metric mismatch, and formula-derived ISO `Ln,w`,
+  `DeltaLw`, `CI`, or `CI,50-2500` remain non-ASTM boundaries;
+- counters: `inputSurfaceLedgers 1`,
+  `newCalculableMetricBasisRequestShapes: 2`,
+  `newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+  `runtimeBasisPromotions 0`, `runtimeFormulaRetunes 0`,
+  `runtimeValuesMoved 0`, `sourceRowsImported: 0`, and
+  `frontendImplementationFilesTouched: 1`;
+- Gate EI/EJ plan:
+  `docs/calculator/POST_V1_GATE_EI_EJ_ASTM_IIC_AIIC_EXACT_BAND_INPUT_SURFACE_PLAN_2026-06-07.md`.
+
+Previous state after Gate EI:
+
+- latest no-runtime numeric coverage/accuracy rerank:
+  `post_v1_next_numeric_coverage_gap_gate_ei_plan`;
+- Gate EI landed with status
+  `post_v1_next_numeric_coverage_gap_gate_ei_landed_no_runtime_selected_floor_astm_iic_aiic_exact_band_input_surface_gate_ej`;
+- Gate EI selected
+  `post_v1_floor_astm_iic_aiic_exact_band_input_surface_gate_ej_plan`
+  in
+  `packages/engine/src/post-v1-floor-astm-iic-aiic-exact-band-input-surface-gate-ej-contract.test.ts`;
+- selected Gate EJ file:
+  `packages/engine/src/post-v1-floor-astm-iic-aiic-exact-band-input-surface-gate-ej-contract.test.ts`;
+- selected candidate:
+  `floor.astm_iic_aiic_user_band_input_surface`;
+- Gate EI ran two ROI plan iterations (`roiAnalysisIterations: 2`)
+  after Gate EH. Gate EH proved the ASTM exact-band owner, shared/API
+  payloads already carry `exactImpactSource.standardMethod`, and the
+  remaining high-ROI scope move is the selected input surface that lets
+  explicitly ASTM-labelled one-third-octave user/import bands publish
+  owned `IIC` / `AIIC` without turning ISO bands or formula-derived ISO
+  impact values into ASTM ratings;
+- Gate EI rejects closed formula-route repeats, already-live
+  held-AAC/grouped multicavity and open-web/open-box field-building
+  routes, cross-family lower-treatment `DeltaLw` subtraction,
+  opening/leak holdout tightening, broad source crawling, and
+  confidence/frontend polish;
+- counters: `candidateCount 10`, `roiAnalysisIterations: 2`,
+  `estimatedNextInputSurfaceLedgers 1`,
+  `estimatedNextNewCalculableMetricBasisRequestShapes 2`,
+  `newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+  `runtimeBasisPromotions 0`, `runtimeFormulaRetunes 0`,
+  `runtimeValuesMoved 0`, `sourceRowsImported: 0`, and
+  `frontendImplementationFilesTouched: 0`;
+- Gate EI/EJ plan:
+  `docs/calculator/POST_V1_GATE_EI_EJ_ASTM_IIC_AIIC_EXACT_BAND_INPUT_SURFACE_PLAN_2026-06-07.md`.
+
+Previous state after Gate EH:
+
+- latest no-runtime input-owner proof:
+  `post_v1_floor_astm_iic_aiic_exact_band_input_owner_gate_eh_plan`;
+- Gate EH landed with status
+  `post_v1_floor_astm_iic_aiic_exact_band_input_owner_gate_eh_landed_no_runtime_selected_next_numeric_coverage_gap_gate_ei`;
+- Gate EH selected
+  `post_v1_next_numeric_coverage_gap_gate_ei_plan`
+  in
+  `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ei-contract.test.ts`;
+- owner:
+  `floor.astm_iic_aiic.exact_band_standard_method_owner`;
+- Gate EH closes the Gate EG selected ASTM exact-band input owner. Lab
+  ASTM E492/E989 exact one-third-octave sources own `IIC`, field ASTM
+  E1007/E989 exact one-third-octave sources own `AIIC`, and ISO
+  one-third-octave sources or missing/ambiguous `standardMethod` do not
+  publish ASTM ratings;
+- Gate EH moves no runtime values, retunes no formulas, imports no
+  source rows, and touches no frontend implementation. Counters:
+  `acceptedOwnerLedgers: 1`, `astmExactBandRequestShapesPinned: 2`,
+  `newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+  `runtimeBasisPromotions 0`, `runtimeFormulaRetunes 0`,
+  `runtimeValuesMoved 0`, `sourceRowsImported: 0`, and
+  `frontendImplementationFilesTouched: 0`.
+
+Previous state after Gate EG:
+
+- latest no-runtime numeric coverage/accuracy rerank:
+  `post_v1_next_numeric_coverage_gap_gate_eg_plan`;
+- Gate EG landed with status
+  `post_v1_next_numeric_coverage_gap_gate_eg_landed_no_runtime_selected_floor_astm_iic_aiic_exact_band_input_owner_gate_eh`;
+- Gate EG selected
+  `post_v1_floor_astm_iic_aiic_exact_band_input_owner_gate_eh_plan`
+  in
+  `packages/engine/src/post-v1-floor-astm-iic-aiic-exact-band-input-owner-gate-eh-contract.test.ts`;
+- selected candidate:
+  `floor.astm_iic_aiic_exact_band_user_input_owner_gap`;
+- Gate EG ran two ROI plan iterations (`roiAnalysisIterations: 2`)
+  after Gate EF and selected the ASTM exact-band input owner as the
+  highest-ROI next calculator slice;
+- the engine already owns ASTM E492/E1007 one-third-octave `IIC` /
+  `AIIC` through the ASTM E989 owner, and shared/API schemas already
+  carry `exactImpactSource` with `standardMethod`, but user/import
+  surfaces need a pinned owner boundary before ASTM bands can be
+  promoted safely;
+- Gate EG rejects open-web and open-box field/building companions as
+  already live, lower-treatment `DeltaLw` subtraction as wrong-metric,
+  residual/holdout tightening as blocked, broad source crawling, and
+  frontend polish as lower ROI;
+- counters: `candidateCount 12`, `roiAnalysisIterations: 2`,
+  `estimatedNextInputOwnerLedgers 1`,
+  `estimatedFollowingNewCalculableMetricBasisRequestShapesIfGateEHProvesOwner 2`,
+  `newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+  `runtimeValuesMoved 0`, `runtimeFormulaRetunes 0`,
+  `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`;
+- Gate EG/EH plan:
+  `docs/calculator/POST_V1_GATE_EG_EH_ASTM_IIC_AIIC_EXACT_BAND_INPUT_OWNER_PLAN_2026-06-07.md`.
+
+Previous state after Gate EF:
+
+- latest runtime-basis route-boundary action:
+  `post_v1_floor_composite_panel_suspended_ceiling_only_route_boundary_gate_ef_plan`;
+- Gate EF landed with status
+  `post_v1_floor_composite_panel_suspended_ceiling_only_route_boundary_gate_ef_landed_runtime_basis_no_value_selected_next_numeric_coverage_gap_gate_eg`;
+- Gate EF selected
+  `post_v1_next_numeric_coverage_gap_gate_eg_plan`
+  in
+  `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-eg-contract.test.ts`;
+- Gate EF closes the Gate EE selected composite-panel
+  suspended-ceiling-only route boundary. The visible
+  `steel_deck_composite 150 / resilient_channel 150 / rockwool 100 / 2 x
+  firestop_board 16` stack now pins the owned Gate CY route
+  `predictor_composite_panel_published_interaction_estimate` instead of
+  the stale upstream low-confidence expectation;
+- the route publishes `Rw 48.6 / Ln,w 63.3 / DeltaLw 20.7` with
+  runtime candidate `floor.composite_panel.published_interaction_family_solver`;
+- Gate EF does not retune formulas, import source rows, promote ASTM
+  `IIC` / `AIIC`, or derive generic lower-treatment `DeltaLw` for
+  open-web, hollow-core, steel, Pliteq, or Knauf lanes;
+- counters: `routeBoundaryLedgersPinned: 1`,
+  `staleLowConfidenceParityRowsCorrected: 1`,
+  `newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+  `runtimeBasisPromotions: 0`, `runtimeValuesMoved: 0`,
+  `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Previous state after Gate EE:
+
+- latest no-runtime numeric coverage/accuracy rerank:
+  `post_v1_next_numeric_coverage_gap_gate_ee_plan`;
+- Gate EE landed with status
+  `post_v1_next_numeric_coverage_gap_gate_ee_landed_no_runtime_selected_floor_composite_panel_suspended_ceiling_only_route_boundary_gate_ef`;
+- Gate EE selected
+  `post_v1_floor_composite_panel_suspended_ceiling_only_route_boundary_gate_ef_plan`
+  in
+  `packages/engine/src/post-v1-floor-composite-panel-suspended-ceiling-only-route-boundary-gate-ef-contract.test.ts`;
+- selected candidate:
+  `floor.composite_panel_suspended_ceiling_only_route_boundary`;
+- Gate EE ran two ROI plan iterations (`roiAnalysisIterations: 2`)
+  after Gate ED and selected the composite-panel
+  suspended-ceiling-only route boundary as the highest-ROI engine-only
+  calculator slice;
+- Gate CY already owns the composite-panel published-interaction
+  family. The visible suspended-ceiling-only stack currently resolves to
+  `predictor_composite_panel_published_interaction_estimate` with
+  `Rw 48.6 / Ln,w 63.3 / DeltaLw 20.7`, while a legacy
+  layer-driven parity row still expects the upstream low-confidence
+  lane. Gate EF must reconcile that route boundary and either pin the
+  owned published-family route or add a guard if the current owner is
+  disproven;
+- Gate EE rejects ASTM user-band intake, explicit CI input-surface
+  work, held-AAC missing topology, opening/leak holdout tightening,
+  wrong-metric lower-treatment `DeltaLw` derivations, broad source
+  crawling, and frontend polish as lower ROI for the current calculator
+  goal;
+- Gate EE moves no runtime values and touches no frontend
+  implementation. Counters: `candidateCount 10`,
+  `roiAnalysisIterations: 2`, `estimatedNextAccuracyBoundaryLedgers 1`,
+  `estimatedNextRuntimeCorrectedLayerTemplates 1`,
+  `estimatedNextRuntimeCorrectedRequestShapes 3`,
+  `newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+  `runtimeValuesMoved 0`, `sourceRowsImported: 0`, and
+  `frontendImplementationFilesTouched: 0`;
+- Gate EE/EF plan:
+  `docs/calculator/POST_V1_GATE_EE_EF_COMPOSITE_PANEL_SUSPENDED_CEILING_ROUTE_PLAN_2026-06-07.md`.
+
+Previous state after Gate ED:
+
+- latest value-moving runtime action:
+  `post_v1_floor_heavy_concrete_combined_resilient_channel_lower_treatment_runtime_gate_ed_plan`;
+- Gate ED landed with status
+  `post_v1_floor_heavy_concrete_combined_resilient_channel_lower_treatment_runtime_gate_ed_landed_runtime_selected_next_numeric_coverage_gap_gate_ee`;
+- Gate ED selected
+  `post_v1_next_numeric_coverage_gap_gate_ee_plan`
+  in
+  `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ee-contract.test.ts`;
+- Gate ED closes the Gate EC selected resilient-channel lower-treatment
+  runtime gap. Visible heavy-concrete combined upper/lower stacks with
+  `resilient_channel` lower treatment and complete route-required
+  physical inputs now route through the existing
+  `predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate`
+  formula corridor. The newly calculable visible stack publishes
+  `Ln,w 44.6 / DeltaLw 29.9` with runtime candidate
+  `floor.heavy_concrete_combined_upper_lower.lab_impact_formula`;
+- missing `loadBasisKgM2`, `resilientLayerDynamicStiffnessMNm3`, base
+  slab, floating/topping layer, board schedule, cavity depth, or cavity
+  fill remains `needs_input`; adjacent `furring_channel`,
+  `acoustic_hanger_ceiling`, and `resilient_stud_ceiling` pins are
+  unchanged; and ISO `DeltaLw` still does not alias to ASTM `IIC` /
+  `AIIC`;
+- Gate ED moves runtime scope but does not retune the formula, import
+  source rows, or touch frontend implementation. Counters:
+  `newCalculableLayerTemplates 1`, `newCalculableRequestShapes 4`,
+  `runtimeCorrectedLayerTemplates 1`, `runtimeCorrectedRequestShapes 4`,
+  `formulaCorridorGuardsWeakened 0`, `astmAliasesPromoted 0`,
+  `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Previous state after Gate EC:
+
+- latest no-runtime owner proof:
+  `post_v1_floor_heavy_concrete_combined_resilient_channel_lower_treatment_owner_gate_ec_plan`;
+- Gate EC landed with status
+  `post_v1_floor_heavy_concrete_combined_resilient_channel_lower_treatment_owner_gate_ec_landed_no_runtime_selected_resilient_channel_lower_treatment_runtime_gate_ed`;
+- Gate EC selected
+  `post_v1_floor_heavy_concrete_combined_resilient_channel_lower_treatment_runtime_gate_ed_plan`
+  in
+  `packages/engine/src/post-v1-floor-heavy-concrete-combined-resilient-channel-lower-treatment-runtime-gate-ed-contract.test.ts`;
+- Gate EC owner:
+  `floor.heavy_concrete_combined.resilient_channel_lower_treatment_owner`;
+- Gate EC proves the bounded visible heavy-concrete combined
+  upper/lower `resilient_channel` lower-treatment owner before runtime
+  values move. The owner is only the existing heavy-concrete combined
+  ISO 12354-2 Annex C formula corridor with complete route-required
+  physical inputs, including `supportProductId=resilient_channel`,
+  `lowerTreatment.type=suspended_ceiling_elastic_hanger`,
+  `resilientLayerDynamicStiffnessMNm3`, `loadBasisKgM2`,
+  `ceilingBoardSchedule`, `ceilingCavityDepthMm`, and
+  `ceilingFillThicknessMm`. Gate EC moves no runtime values, imports no
+  source rows, and touches no frontend implementation. It preserves
+  already-live `furring_channel`, `acoustic_hanger_ceiling`, and
+  `resilient_stud_ceiling` corridors, keeps missing physical inputs as
+  `needs_input`, keeps the old generic reinforced-concrete
+  low-confidence fallback closed, rejects wrong-metric lower-treatment
+  `DeltaLw` subtraction, and keeps ASTM `IIC` / `AIIC` unsupported.
+  Counters: `acceptedOwnerLedgers: 1`,
+  `estimatedNextNewCalculableLayerTemplates 1`,
+  `estimatedNextNewCalculableRequestShapes 4`,
+  `newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+  `runtimeBasisPromotions 0`, `runtimeValuesMoved 0`,
+  `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+  Gate ED is expected to calculate the visible `resilient_channel`
+  stack as `Ln,w 44.6 / DeltaLw 29.9` through
+  `predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate`
+  when all required physical inputs are present.
+
+Previous state after Gate EB:
+
+- latest no-runtime numeric coverage/accuracy rerank:
+  `post_v1_next_numeric_coverage_gap_gate_eb_plan`;
+- Gate EB landed with status
+  `post_v1_next_numeric_coverage_gap_gate_eb_landed_no_runtime_selected_floor_heavy_concrete_combined_resilient_channel_lower_treatment_owner_gate_ec`;
+- Gate EB selected
+  `post_v1_floor_heavy_concrete_combined_resilient_channel_lower_treatment_owner_gate_ec_plan`
+  in
+  `packages/engine/src/post-v1-floor-heavy-concrete-combined-resilient-channel-lower-treatment-owner-gate-ec-contract.test.ts`;
+- Gate EB candidate:
+  `floor.heavy_concrete_combined_resilient_channel_lower_treatment_owner_gap`;
+- Gate EB selected the heavy-concrete combined resilient-channel
+  lower-treatment owner proof after two ROI plan iterations
+  (`roiAnalysisIterations: 2`). The selected gap is a visible
+  heavy-concrete combined upper/lower stack with `resilient_channel`
+  lower treatment: with route-required `loadBasisKgM2` and
+  `resilientLayerDynamicStiffnessMNm3` it currently publishes airborne
+  `Rw` / `Ctr` but keeps `Ln,w` and `DeltaLw` unsupported behind the
+  lower-assembly owner boundary. Nearby `furring_channel`,
+  `acoustic_hanger_ceiling`, and `resilient_stud_ceiling` stacks
+  already calculate through the existing heavy-concrete combined formula
+  corridor. Gate EC must prove whether `resilient_channel` can be mapped
+  to that owner without reopening the old reinforced-concrete
+  low-confidence fallback. Gate EB rejects
+  open-web/hollow-core/Pliteq/Knauf lower-treatment row subtraction as
+  wrong metric derivation, keeps ASTM `IIC` / `AIIC` separate,
+  preserves `loadBasisKgM2`, `resilientLayerDynamicStiffnessMNm3`, and
+  `ceilingOrLowerAssembly` guards, imports no source rows, and touches
+  no frontend implementation. Counters: `candidateCount 10`,
+  `estimatedNextOwnerLedgers 1`,
+  `estimatedFollowingNewCalculableLayerTemplatesIfGateECProvesOwner 1`,
+  `estimatedFollowingNewCalculableRequestShapesIfGateECProvesOwner 4`,
+  `newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+  `runtimeBasisPromotions 0`, `runtimeValuesMoved 0`,
+  `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Previous state after Gate EA:
+
+- latest value-moving runtime action:
+  `post_v1_floor_mass_timber_clt_upper_package_delta_lw_runtime_gate_ea_plan`;
+- Gate EA landed with status
+  `post_v1_floor_mass_timber_clt_upper_package_delta_lw_runtime_gate_ea_landed_runtime_selected_next_numeric_coverage_gap_gate_eb`;
+- Gate EA selected
+  `post_v1_next_numeric_coverage_gap_gate_eb_plan`
+  in
+  `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-eb-contract.test.ts`;
+- Gate EA candidate:
+  `candidate_mass_timber_clt_upper_package_delta_lw_same_source_pair`;
+- Gate EA closes the Gate DZ selected CLT upper-package `DeltaLw`
+  runtime gap. The five accepted TUAS same-source/same-carrier
+  upper-only CLT treated rows now keep exact measured `Ln,w` and
+  calculate the companion `DeltaLw`: X3/X2 `Ln,w 52 / DeltaLw 9`,
+  X4/X2 `Ln,w 50 / DeltaLw 11`, C3/C2 `Ln,w 47 / DeltaLw 8`,
+  C4/C2 `Ln,w 45 / DeltaLw 10`, and C7/C2 `Ln,w 39 / DeltaLw 16`.
+  The companion uses the `open_measured_floor_system_exact_match`
+  basis, carries `bareReferenceLnW` / `treatedReferenceLnW`, and does
+  not import source rows or create a product catalog. X2/C2 reference
+  rows, X5/C5 non-positive deltas, C2c/C3c/C4c/C5c/C7c
+  lower-treatment combined rows, shorthand/published-family estimates
+  without the exact pair, cross-family borrowing, and ASTM `IIC` /
+  `AIIC` aliases remain unsupported. The existing timber/CLT formula
+  corridor still requires `loadBasisKgM2` and
+  `resilientLayerDynamicStiffnessMNm3` when it is not using an accepted
+  same-source exact pair. Counters: `newCalculableLayerTemplates: 5`,
+  `newCalculableRequestShapes: 5`, `runtimeCorrectedLayerTemplates 5`,
+  `runtimeCorrectedRequestShapes 5`, `sourceRowsImported 0`,
+  `formulaCorridorGuardsWeakened 0`, `astmAliasesPromoted 0`, and
+  `frontendImplementationFilesTouched: 0`;
+
+Previous state after Gate DZ:
+
+- latest no-runtime owner proof:
+  `post_v1_floor_mass_timber_clt_upper_package_delta_lw_owner_gate_dz_plan`;
+- Gate DZ landed with status
+  `post_v1_floor_mass_timber_clt_upper_package_delta_lw_owner_gate_dz_landed_no_runtime_selected_mass_timber_clt_upper_package_delta_lw_runtime_gate_ea`;
+- Gate DZ selected
+  `post_v1_floor_mass_timber_clt_upper_package_delta_lw_runtime_gate_ea_plan`
+  in
+  `packages/engine/src/post-v1-floor-mass-timber-clt-upper-package-delta-lw-runtime-gate-ea-contract.test.ts`;
+- Gate DZ owner:
+  `floor.mass_timber_clt.upper_package_delta_lw_same_source_reference_owner`;
+- Gate DZ proves the bounded same-source/same-carrier mass-timber CLT
+  upper-package `DeltaLw` owner policy before runtime values move. It
+  accepts only five TUAS open-measured upper-only CLT pairs with the
+  same reference finish package and positive measured `Ln,w` reduction:
+  X3/X2 `DeltaLw 9`, X4/X2 `DeltaLw 11`, C3/C2 `DeltaLw 8`, C4/C2
+  `DeltaLw 10`, and C7/C2 `DeltaLw 16`. It rejects X2/C2 baselines as
+  reference-only rows, X5/C5 non-positive deltas, C2c/C3c/C4c/C5c/C7c
+  combined lower-treatment rows, shorthand/published-family estimates
+  without the exact pair, cross-family borrowing, and ASTM `IIC` /
+  `AIIC` aliases. Counters: `acceptedSameSourcePairs: 5`,
+  `rejectedBoundaryExamples 9`, `estimatedNextNewCalculableLayerTemplates
+  5`, `estimatedNextNewCalculableRequestShapes 5`,
+  `newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+  `runtimeBasisPromotions 0`, `runtimeValuesMoved 0`,
+  `sourceRowsImported 0`, `broadSourceCrawlSelected false`, and
+  `frontendImplementationFilesTouched: 0`;
+
+Previous state after Gate DY:
+
+- latest no-runtime numeric coverage/accuracy rerank:
+  `post_v1_next_numeric_coverage_gap_gate_dy_plan`;
+- Gate DY landed with status
+  `post_v1_next_numeric_coverage_gap_gate_dy_landed_no_runtime_selected_floor_mass_timber_clt_upper_package_delta_lw_owner_gate_dz`;
+- Gate DY selected
+  `post_v1_floor_mass_timber_clt_upper_package_delta_lw_owner_gate_dz_plan`
+  in
+  `packages/engine/src/post-v1-floor-mass-timber-clt-upper-package-delta-lw-owner-gate-dz-contract.test.ts`;
+- Gate DY selected candidate:
+  `floor.mass_timber_clt_upper_package_delta_lw_owner_gap`;
+- Gate DY ran two ROI plan iterations (`roiAnalysisIterations: 2`).
+  It rejected held-AAC without `supportTopology` as a false gap,
+  explicit impact `CI` / `CI,50-2500` / `Ln,w+CI` / `L'nT,50` as
+  already runtime-capable with `impactFieldContext`, broad
+  bare-minus-treated `DeltaLw` subtraction across open-box/open-web or
+  lower-treatment lanes as unsafe metric derivation, broad source
+  crawling, confidence wording, frontend work, and ISO-to-ASTM impact
+  aliases. Gate DZ must prove a bounded same-family mass-timber CLT
+  upper-package `DeltaLw` owner before runtime values move. Counters:
+  `candidateCount 10`, `estimatedNextOwnerLedgers 1`,
+  `estimatedFollowingNewCalculableLayerTemplatesIfGateDZProvesOwner 2`,
+  `estimatedFollowingNewCalculableRequestShapesIfGateDZProvesOwner 2`,
+  `runtimeBasisPromotions 0`, `newCalculableLayerTemplates 0`,
+  `newCalculableRequestShapes 0`, `runtimeValuesMoved 0`,
+  `frontendImplementationFilesTouched: 0`;
+
+Previous state after Gate DX:
+
+- latest runtime-basis accuracy action:
+  `post_v1_wall_exact_source_field_context_basis_gate_dx_plan`;
+- Gate DX landed with status
+  `post_v1_wall_exact_source_field_context_basis_gate_dx_landed_runtime_basis_no_value_selected_next_numeric_coverage_gap_gate_dy`;
+- Gate DX selected
+  `post_v1_next_numeric_coverage_gap_gate_dy_plan` in
+  `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-dy-contract.test.ts`;
+- Gate DX closes the Gate DW selected wall exact-source family
+  field-context basis gap without moving numeric values. Generated
+  `wall-masonry-brick` field keeps `R'w 40 / Dn,w 40 / DnT,w 42 /
+  DnT,A 41.3`; generated `wall-lsf-knauf` field keeps `R'w 51 /
+  Dn,w 51 / DnT,w 52 / DnT,A 51.1`. Both now select
+  `gate_dx_exact_source_family_calculated_field_context_runtime` with
+  runtime candidate
+  `candidate_exact_source_family_calculated_field_context` instead of
+  `screening_fallback`;
+- explicit `airtightness:"good"` lab-anchor field deltas keep
+  precedence, lab mixed companions remain on Gates DT/DV, held-AAC
+  multicavity-style flat lists still need explicit support/topology
+  inputs, and no frontend implementation was touched. Counters:
+  `runtimeBasisPromotions: 2`, `runtimeCorrectedLayerTemplates 2`,
+  `runtimeCorrectedRequestShapes 8`, `protectedExactAnchorRequestShapes
+  2`, `protectedLabRequestShapes 2`, `protectedNeedsInputRequestShapes
+  1`, `newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+  and `runtimeValuesMoved: 0`;
+
+- latest no-runtime numeric coverage/accuracy rerank:
+  `post_v1_next_numeric_coverage_gap_gate_dw_plan`;
+- Gate DW landed with status
+  `post_v1_next_numeric_coverage_gap_gate_dw_landed_no_runtime_selected_wall_exact_source_field_context_basis_gate_dx`;
+- Gate DW selected
+  `post_v1_wall_exact_source_field_context_basis_gate_dx_plan` in
+  `packages/engine/src/post-v1-wall-exact-source-field-context-basis-gate-dx-contract.test.ts`;
+- Gate DW selected candidate:
+  `wall.exact_source_family_field_context_basis_gap`;
+- Gate DW ran two ROI plan iterations (`roiAnalysisIterations: 2`) and
+  rejected broad source crawling, confidence wording, frontend work,
+  ISO-to-ASTM impact aliases, source-absent steel `DeltaLw` guessing,
+  and lab `Rw` field relabeling. Counters: `candidateCount 10`,
+  `estimatedNextRuntimeBasisPromotions 2`,
+  `estimatedNextRuntimeCorrectedLayerTemplates 2`,
+  `estimatedNextRuntimeCorrectedRequestShapes 8`,
+  `frontendImplementationFilesTouched: 0`, and `runtimeValuesMoved: 0`;
+
+Previous state after Gate DV:
+
+- latest runtime scope/basis action:
+  `post_v1_wall_lsf_exact_source_mixed_metric_companion_gate_dv_plan`;
+- Gate DV landed with status
+  `post_v1_wall_lsf_exact_source_mixed_metric_companion_gate_dv_landed_runtime_scope_basis_selected_next_numeric_coverage_gap_gate_dw`;
+- Gate DV selected
+  `post_v1_next_numeric_coverage_gap_gate_dw_plan` in
+  `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-dw-contract.test.ts`;
+- Gate DV closes the Gate DU selected LSF exact-source mixed lab
+  companion gap without moving numeric values. The exact source
+  `knauf_lab_416889_primary_2026` still owns only `Rw`; the generated
+  `wall-lsf-knauf` mixed lab request now publishes `Rw 55 / STC 55 / C
+  -1.5 / Ctr -6.4` through
+  `gate_dv_lsf_exact_rw_calculated_lab_companion_runtime` with selected
+  candidate `candidate_lsf_exact_rw_calculated_lab_companions`;
+- single-output `Rw` stays exact, field/building outputs are not
+  relabelled from lab `Rw`, and no frontend implementation was touched.
+  Counters: `newCalculableLayerTemplates 1`,
+  `newCalculableRequestShapes 1`, `newCalculableTargetOutputs: 3`,
+  `runtimeBasisPromotions 1`,
+  `protectedSingleOutputExactRequestShapes 1`,
+  `protectedFieldOrBuildingAliasRequestShapes 1`, and
+  `runtimeValuesMoved: 0`;
+
+- latest no-runtime numeric coverage/accuracy rerank:
+  `post_v1_next_numeric_coverage_gap_gate_du_plan`;
+- Gate DU landed with status
+  `post_v1_next_numeric_coverage_gap_gate_du_landed_no_runtime_selected_wall_lsf_exact_source_mixed_metric_companion_gate_dv`;
+- Gate DU selected
+  `post_v1_wall_lsf_exact_source_mixed_metric_companion_gate_dv_plan` in
+  `packages/engine/src/post-v1-wall-lsf-exact-source-mixed-metric-companion-gate-dv-contract.test.ts`;
+- Gate DU selected candidate:
+  `wall.lsf_exact_source_mixed_lab_companion_gap`;
+- Gate DU ran two ROI plan iterations (`roiAnalysisIterations: 2`) and
+  rejected broad source crawling, confidence wording, frontend work,
+  field/building aliasing, and numeric retuning. Counters:
+  `candidateCount 11`, `estimatedNextNewCalculableLayerTemplates 1`,
+  `estimatedNextNewCalculableRequestShapes 1`,
+  `estimatedNextNewCalculableTargetOutputs 3`,
+  `estimatedNextRuntimeBasisPromotions 1`,
+  `frontendImplementationFilesTouched: 0`, and `runtimeValuesMoved: 0`;
+
+Previous state after Gate DT:
+
+- latest runtime-basis accuracy action:
+  `post_v1_wall_masonry_exact_source_mixed_metric_companion_gate_dt_plan`;
+- Gate DT landed with status
+  `post_v1_wall_masonry_exact_source_mixed_metric_companion_gate_dt_landed_runtime_basis_no_value_selected_next_numeric_coverage_gap_gate_du`;
+- Gate DT selected
+  `post_v1_next_numeric_coverage_gap_gate_du_plan` in
+  `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-du-contract.test.ts`;
+- Gate DT closes the mixed-metric masonry companion policy gap without
+  moving numeric values. The generated `wall-masonry-brick` mixed lab
+  request keeps `Rw 43 / STC 43 / C -1 / Ctr -5.5` and now selects
+  `family_physics_prediction` through
+  `gate_dt_masonry_exact_rw_calculated_lab_companion_runtime` with exact
+  source `wienerberger_porotherm_100_dense_plaster_primary_2026` and
+  selected candidate `candidate_masonry_exact_rw_calculated_lab_companions`;
+- the exact source owns only `Rw`; STC, C, and Ctr remain calculated
+  companions from the dynamic curve and rating adapters. Single-output
+  `Rw` stays on the Gate DR `measured_exact_full_stack` route, and
+  field/building outputs remain separate instead of aliasing lab `Rw`;
+- Gate DT moved no numeric values and touched no frontend
+  implementation. Counters: `runtimeBasisPromotions: 1`,
+  `runtimeCorrectedLayerTemplates 1`, `runtimeCorrectedRequestShapes 1`,
+  `protectedMixedCompanionRequestShapes 1`,
+  `protectedFieldOrBuildingAliasRequestShapes 1`,
+  `newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+  `frontendImplementationFilesTouched: 0`, and `runtimeValuesMoved: 0`;
+
+- latest no-runtime numeric coverage/accuracy rerank:
+  `post_v1_next_numeric_coverage_gap_gate_ds_plan`;
+- Gate DS landed with status
+  `post_v1_next_numeric_coverage_gap_gate_ds_landed_no_runtime_selected_wall_masonry_exact_source_mixed_metric_companion_gate_dt`;
+- Gate DS selected
+  `post_v1_wall_masonry_exact_source_mixed_metric_companion_gate_dt_plan` in
+  `packages/engine/src/post-v1-wall-masonry-exact-source-mixed-metric-companion-gate-dt-contract.test.ts`;
+- Gate DS selected candidate:
+  `wall.masonry_exact_source_mixed_metric_companion_policy_gap`;
+- Gate DS ran two ROI plan iterations (`roiAnalysisIterations: 2`):
+  first rejecting lower-scope or surface-heavy work, then rejecting
+  unsafe exact-source overclaiming, mixed companion narrowing, source
+  proximity retunes, and frontend work;
+- Gate DS moved no runtime values and touched no frontend implementation.
+  Counters: `candidateCount 10`,
+  `estimatedNextRuntimeBasisPromotions 1`,
+  `estimatedNextRuntimeCorrectedLayerTemplates 1`,
+  `estimatedNextRuntimeCorrectedRequestShapes 1`,
+  `newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+  `frontendImplementationFilesTouched: 0`, and `runtimeValuesMoved 0`;
+
+Previous state after Gate DR:
+
+- latest runtime-basis accuracy action:
+  `post_v1_wall_exact_source_zero_delta_basis_gate_dr_plan`;
+- Gate DR landed with status
+  `post_v1_wall_exact_source_zero_delta_basis_gate_dr_landed_runtime_basis_no_value_selected_next_numeric_coverage_gap_gate_ds`;
+- Gate DR selected
+  `post_v1_next_numeric_coverage_gap_gate_ds_plan` in
+  `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ds-contract.test.ts`;
+- Gate DR closes the exact-source zero-delta runtime-basis repair
+  without moving numeric values. The generated `wall-masonry-brick`
+  single-output `Rw` request keeps `Rw 43` but now selects
+  `measured_exact_full_stack` through
+  `verified_airborne_catalog_exact_match` with exact source
+  `wienerberger_porotherm_100_dense_plaster_primary_2026` and selected
+  candidate `candidate_blocked_rockwool_exact_source`;
+- mixed `Rw/STC/C/Ctr` masonry requests remain calculated companions on
+  `candidate_multileaf_screening_fallback`; field/building outputs are
+  not relabelled from lab `Rw`; LSF field anchoring still requires its
+  airtightness and field context inputs; floor CI plus ASTM IIC/AIIC
+  boundaries are unchanged;
+- Gate DR moved no numeric values and touched no frontend
+  implementation. Counters: `runtimeBasisPromotions: 1`,
+  `runtimeCorrectedLayerTemplates 1`, `runtimeCorrectedRequestShapes 1`,
+  `protectedMixedCompanionRequestShapes 1`,
+  `protectedFieldOrBuildingAliasRequestShapes 1`,
+  `newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+  `frontendImplementationFilesTouched: 0`, and `runtimeValuesMoved: 0`;
+
+- latest no-runtime numeric coverage/accuracy rerank:
+  `post_v1_next_numeric_coverage_gap_gate_dq_plan`;
+- Gate DQ landed with status
+  `post_v1_next_numeric_coverage_gap_gate_dq_landed_no_runtime_selected_wall_exact_source_zero_delta_basis_gate_dr`;
+- Gate DQ selected
+  `post_v1_wall_exact_source_zero_delta_basis_gate_dr_plan` in
+  `packages/engine/src/post-v1-wall-exact-source-zero-delta-basis-gate-dr-contract.test.ts`;
+- Gate DQ selected candidate:
+  `wall.exact_source_zero_delta_single_output_basis_gap`;
+- Gate DQ records the current answer-order accuracy gap: the
+  `wall-masonry-brick` single-output `Rw` route had exact source
+  `wienerberger_porotherm_100_dense_plaster_primary_2026` and already
+  landed on `Rw 43`, but because no numeric delta was needed the public
+  basis stayed `screening_fallback`;
+- Gate DQ moved no runtime values and touched no frontend
+  implementation. Counters: `candidateCount 11`,
+  `estimatedNextRuntimeBasisPromotions 1`,
+  `estimatedNextRuntimeCorrectedLayerTemplates 1`,
+  `estimatedNextRuntimeCorrectedRequestShapes 1`,
+  `newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+  `frontendImplementationFilesTouched: 0`, and `runtimeValuesMoved 0`;
+
+Previous state after Gate DP:
+
+- latest runtime-basis accuracy action:
+  `post_v1_wall_clt_laminated_leaf_runtime_basis_gate_dp_plan`;
+- Gate DP landed with status
+  `post_v1_wall_clt_laminated_leaf_runtime_basis_gate_dp_landed_runtime_basis_no_value_selected_next_numeric_coverage_gap_gate_dq`;
+- Gate DP selected
+  `post_v1_next_numeric_coverage_gap_gate_dq_plan` in
+  `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-dq-contract.test.ts`;
+- Gate DP closes the CLT laminated-leaf runtime-basis repair without
+  moving values. The generated `wall-clt-local` CLT + gypsum lab route
+  keeps `Rw 42 / STC 43 / C -1.1 / Ctr -7.1` and now routes through the
+  existing CLT family owner lineage
+  `gate_h_clt_mass_timber_wall_single_leaf_family_physics_runtime`;
+  when lab `Ctr` is requested, the selected lab candidate is the
+  existing Gate Y spectrum adapter over that base;
+- explicit field context keeps `R'w 41 / Dn,w 41 / DnT,w 42 /
+  DnT,A 40.7` on Gate I over the CLT base instead of relabelling lab
+  `Rw`;
+- the selected runtime candidate lineage includes
+  `candidate_clt_mass_timber_wall_family_physics_prediction`; ordinary
+  gypsum laminated leaves, plywood/NLT/DLT timber boards, double-leaf
+  CLT, timber-stud, LSF, lined massive, grouped multicavity,
+  floor-system source rows, and STC/FSTC/ASTC context aliases remain
+  outside this repair;
+- Gate DP moved no numeric values and touched no frontend
+  implementation. Counters: `runtimeBasisPromotions 1`,
+  `runtimeCorrectedLayerTemplates 1`, `runtimeCorrectedRequestShapes 8`,
+  `newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+  `protectedRuntimePins 8`, and `runtimeValuesMoved 0`;
+
+- latest no-runtime numeric coverage/accuracy rerank:
+  `post_v1_next_numeric_coverage_gap_gate_do_plan`;
+- Gate DO landed with status
+  `post_v1_next_numeric_coverage_gap_gate_do_landed_no_runtime_selected_wall_clt_laminated_leaf_runtime_basis_gate_dp`;
+- Gate DO selected
+  `post_v1_wall_clt_laminated_leaf_runtime_basis_gate_dp_plan` in
+  `packages/engine/src/post-v1-wall-clt-laminated-leaf-runtime-basis-gate-dp-contract.test.ts`;
+- Gate DO selected candidate:
+  `wall.clt_laminated_leaf_runtime_basis_gap`;
+- Gate DO records the current CLT formula-routing gap: generated
+  `wall-clt-local` CLT + gypsum wall stacks already calculate lab
+  `Rw 42 / STC 43 / C -1.1 / Ctr -7.1` and field
+  `R'w 41 / Dn,w 41 / DnT,w 42 / DnT,A 40.7`, but the selected basis is
+  still `screening_fallback` with selected runtime candidate
+  `candidate_multileaf_screening_fallback`;
+- Gate DP must reuse the existing Gate H CLT / mass-timber wall family
+  physics owner for the safe laminated single-leaf topology, keep
+  numeric pins frozen, keep explicit field context on the Gate I adapter,
+  and leave Dataholz floor-system rows, WoodWorks/NRC STC/FSTC/ASTC
+  context, ordinary gypsum laminated leaves, NLT, double-leaf CLT,
+  timber-stud, LSF, lined massive, and grouped multicavity routes outside
+  this repair;
+- Gate DO moved no runtime values and touched no frontend
+  implementation. Counters: `candidateCount 11`,
+  `estimatedNextRuntimeBasisPromotions 1`,
+  `estimatedNextRuntimeCorrectedLayerTemplates 1`,
+  `estimatedNextRuntimeCorrectedRequestShapes 8`,
+  `newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`, and
+  `runtimeValuesMoved 0`;
+- previous runtime-basis accuracy action:
+  `post_v1_wall_timber_stud_bounded_runtime_basis_gate_dn_plan`;
+- Gate DN landed with status
+  `post_v1_wall_timber_stud_bounded_runtime_basis_gate_dn_landed_runtime_basis_no_value_selected_next_numeric_coverage_gap_gate_do`;
+- Gate DN selected
+  `post_v1_next_numeric_coverage_gap_gate_do_plan` in
+  `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-do-contract.test.ts`;
+
+- previous runtime-basis accuracy action:
+  `post_v1_wall_timber_stud_bounded_runtime_basis_gate_dn_plan`;
+- Gate DN landed with status
+  `post_v1_wall_timber_stud_bounded_runtime_basis_gate_dn_landed_runtime_basis_no_value_selected_next_numeric_coverage_gap_gate_do`;
+- Gate DN selected
+  `post_v1_next_numeric_coverage_gap_gate_do_plan` in
+  `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-do-contract.test.ts`;
+- Gate DN closes the Gate DM selected timber-stud runtime-basis step
+  without retuning live values. The direct wood-stud double-board lab
+  route now reports `bounded_prediction` through
+  `gate_dn_timber_stud_bounded_wall_runtime` with selected candidate
+  `candidate_timber_stud_bounded_wall_prediction` instead of generic
+  screening. Explicit field context continues through the Gate I field
+  adapter over the Gate DN base, so lab `Rw` is not relabelled as field
+  metrics;
+- Gate DN preserves live pins: `Rw 50 / STC 50 / C 0.5 / Ctr -4.2` and
+  field `R'w 42 / Dn,w 42 / DnT,w 43 / DnT,A 43.9`. Exact
+  single-board timber rows, resilient-bar exact rows, the secondary
+  direct double-board benchmark, steel-framed holdouts,
+  `light_steel_stud_or_resilient_bar`, split double-stud, grouped
+  multicavity, CLT/mass-timber, and field/building aliases remain
+  outside this owner;
+- Gate DN moved no numeric values and touched no frontend
+  implementation. Counters: `boundedRuntimeBasisPromotions 1`,
+  `fieldAdapterAliasesAdded 0`, `newCalculableLayerTemplates 0`,
+  `newCalculableRequestShapes 0`, `protectedRuntimePins 8`, and
+  `runtimeValuesMoved 0`;
+- latest no-runtime bounded-rule owner action:
+  `post_v1_wall_timber_stud_bounded_rule_gate_dm_plan`;
+- Gate DM landed with status
+  `post_v1_wall_timber_stud_bounded_rule_gate_dm_landed_no_runtime_selected_timber_stud_bounded_runtime_basis_gate_dn`;
+- Gate DM selected
+  `post_v1_wall_timber_stud_bounded_runtime_basis_gate_dn_plan` in
+  `packages/engine/src/post-v1-wall-timber-stud-bounded-runtime-basis-gate-dn-contract.test.ts`;
+- Gate DM closes the timber-stud owner-contract step without retuning
+  live values. Selected owner id:
+  `wall.timber_stud.bounded_rule_owner_contract`. The bounded owner is
+  intentionally narrow: direct
+  `wood_stud`, line-connected, 600 mm stud spacing, board-dominant
+  double-board gypsum leaves, one 100 mm cavity/core with 50 mm mineral
+  fill, and the current
+  `stud_surrogate_blend + framed_wall_calibration` coefficient corridor.
+  Exact single-board timber rows, resilient-bar exact rows, the
+  secondary direct double-board benchmark, steel-framed holdouts,
+  `light_steel_stud_or_resilient_bar`, split double-stud, grouped
+  multicavity, CLT/mass-timber, and field/building aliases remain
+  outside this owner;
+- Gate DM moved no runtime values and touched no frontend
+  implementation. Counters: `boundedOwnerLedgers 1`,
+  `boundedRuntimeBasisPromotions 0`, `newCalculableLayerTemplates 0`,
+  `newCalculableRequestShapes 0`, and `runtimeValuesMoved 0`;
+- previous no-runtime numeric coverage/accuracy rerank:
+  `post_v1_next_numeric_coverage_gap_gate_dl_plan`;
+- Gate DL landed with status
+  `post_v1_next_numeric_coverage_gap_gate_dl_landed_no_runtime_selected_wall_timber_stud_bounded_rule_gate_dm`;
+- Gate DL selected
+  `wall.timber_stud_formula_bounded_rule_owner_gap` as the highest-ROI
+  engine-only accuracy owner step after Gate DK. The live timber-stud
+  wall stack already calculates through
+  `stud_surrogate_blend+framed_wall_calibration` with `Rw 50` and field
+  `R'w 42 / Dn,w 42 / DnT,w 43 / DnT,A 43.9`, but previous source
+  audits prove no exact or lab-fallback source row matches the live
+  double-board, fill, cavity, and wood-stud topology. Gate DM must
+  define the bounded timber-stud formula owner with coefficient scope,
+  tolerance, and negative boundaries before any runtime values move;
+- Gate DL rejects stale steel work after Gate DK, already-live exact
+  ASTM band routes, support-backed AAC/multicavity fake gaps,
+  opening/leak holdout tightening without holdouts, heavy-core direct
+  retune without a source or coefficient rule, broad source crawling,
+  confidence wording, and frontend polish;
+- Gate DL moved no runtime values and touched no frontend implementation.
+  Counters: `candidateCount 12`, `boundedOwnerLedgersEstimated 1`,
+  `newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`, and
+  `runtimeValuesMoved 0`;
+- Gate DL selected
+  `post_v1_wall_timber_stud_bounded_rule_gate_dm_plan` in
+  `packages/engine/src/post-v1-wall-timber-stud-bounded-rule-gate-dm-contract.test.ts`;
+- latest value-moving runtime slice:
+  `post_v1_floor_lightweight_concrete_delta_lw_runtime_corridor_gate_db_plan`;
+- Gate DB landed with status
+  `post_v1_floor_lightweight_concrete_delta_lw_runtime_corridor_gate_db_landed_runtime_selected_next_numeric_coverage_gap_gate_dc`;
+- Gate DB closes the Gate DA lightweight-concrete `DeltaLw` runtime
+  corridor. Complete visible lightweight-concrete floating-floor stacks
+  with `loadBasisKgM2` and
+  `resilientLayerDynamicStiffnessMNm3` keep `Rw 53 / Ln,w 64.3` and now
+  calculate `DeltaLw 24.9` through
+  `predictor_lightweight_concrete_delta_lw_dynamic_improvement_estimate`.
+  Complete low-density predictor input keeps `Rw 53 / Ln,w 64.3` and
+  also calculates `DeltaLw 24.9`. Missing `loadBasisKgM2` or
+  `resilientLayerDynamicStiffnessMNm3` remains `needs_input`, the Gate M
+  non-dynamic low-density predictor remains `Rw 49 / Ln,w 47`, and ASTM
+  `IIC` / `AIIC` remain unsupported;
+- heavy-concrete Annex-C, composite-panel bare-minus-treated,
+  timber/CLT, and steel `DeltaLw` routes are not borrowed;
+- Gate DB selected
+  `post_v1_next_numeric_coverage_gap_gate_dc_plan` in
+  `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-dc-contract.test.ts`;
+- latest no-runtime accuracy selection:
+  `post_v1_next_numeric_coverage_gap_gate_dc_plan`;
+- Gate DC landed with status
+  `post_v1_next_numeric_coverage_gap_gate_dc_landed_no_runtime_selected_wall_heavy_core_lined_massive_accuracy_gate_dd`;
+- Gate DC selected
+  `wall.heavy_core_lined_massive_accuracy_tightening_gap` as the next
+  accuracy-safe engine slice. Gate DD must not retune lined-massive /
+  heavy-core wall `Rw`, field, or building values until a wall-specific
+  source row or bounded lining rule is named. Generated
+  `wall-screening-concrete` rows, workbench concrete presets, selector
+  value pins, deep-hybrid guards, and floor-only concrete ceiling rows
+  are not calibration holdouts;
+- Gate DC selected
+  `post_v1_wall_heavy_core_lined_massive_accuracy_gate_dd_plan` in
+  `packages/engine/src/post-v1-wall-heavy-core-lined-massive-accuracy-gate-dd-contract.test.ts`;
+- latest no-runtime accuracy readiness action:
+  `post_v1_wall_heavy_core_lined_massive_accuracy_gate_dd_plan`;
+- Gate DD landed with status
+  `post_v1_wall_heavy_core_lined_massive_accuracy_gate_dd_landed_no_runtime_selected_next_numeric_coverage_gap_gate_de`;
+- Gate DD pinned the live `wall-screening-concrete` route as
+  source-absent screening behavior instead of retuning values: lab
+  `Rw 57 / STC 57 / C -1.6 / Ctr -6.5`, and field `R'w 55 / Dn,w 55 /
+  DnT,w 56 / DnT,A 54.9 / C -1.6 / Ctr -6.3`;
+- exact verified wall source and lab-fallback matches remain absent;
+  Knauf CC60 concrete floor rows, manufacturer lining context, selector
+  pins, deep-hybrid guards, workbench concrete presets, and ISO/Sharp/Davy
+  framework context remain non-promotable until a wall-specific
+  same-stack source row or a named bounded lined-massive wall rule
+  exists;
+- Gate DD selected
+  `post_v1_next_numeric_coverage_gap_gate_de_plan` in
+  `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-de-contract.test.ts`;
+- latest no-runtime numeric coverage/accuracy rerank:
+  `post_v1_next_numeric_coverage_gap_gate_de_plan`;
+- Gate DE landed with status
+  `post_v1_next_numeric_coverage_gap_gate_de_landed_no_runtime_selected_wall_heavy_core_lined_massive_bounded_rule_gate_df`;
+- Gate DE selected
+  `wall.heavy_core_lined_massive_bounded_rule_owner_gap` as the
+  highest-ROI next engine-only accuracy owner step after rejecting stale
+  or already-live candidates. Gate DF must not retune
+  `wall-screening-concrete` directly; it must decide whether the
+  existing lined-massive/heavy-core route can be promoted from
+  source-absent screening to a bounded formula owner with coefficient
+  scope, tolerance, and negative boundaries. Exact ASTM band ownership is
+  already separate, ISO impact still does not alias to ASTM `IIC` /
+  `AIIC`, and steel fallback `L'nT,50` is already calculable when
+  explicit `impactFieldContext.ci50_2500Db` is present;
+- Gate DE moved no runtime values, touched no frontend implementation,
+  and selected
+  `post_v1_wall_heavy_core_lined_massive_bounded_rule_gate_df_plan` in
+  `packages/engine/src/post-v1-wall-heavy-core-lined-massive-bounded-rule-gate-df-contract.test.ts`;
+- latest no-runtime bounded-rule owner action:
+  `post_v1_wall_heavy_core_lined_massive_bounded_rule_gate_df_plan`;
+- Gate DF landed with status
+  `post_v1_wall_heavy_core_lined_massive_bounded_rule_gate_df_landed_no_runtime_selected_bounded_runtime_basis_gate_dg`;
+- Gate DF closes the Gate DE owner-contract step without retuning
+  `wall-screening-concrete` numeric values. The existing Gate H lab
+  lined-massive route remains `Rw 57 / STC 57 / C -1.6 / Ctr -6.5`
+  through `lined_massive_wall` / `lined_massive_blend`; Gate DF narrows
+  the bounded-rule envelope to element-lab, two visible leaves, one
+  compliant cavity, no support layer, a light board/lining leaf, a heavy
+  masonry/concrete leaf, explicit cavity/fill state from visible layers,
+  and the current `0.75 mass_law + 0.25 screening seed` coefficient
+  scope;
+- field/apparent values remain on the explicit Gate I adapter
+  (`R'w 55 / Dn,w 55 / DnT,w 56 / DnT,A 54.9`) instead of aliasing lab
+  `Rw`; `heavy_composite_double_leaf_sibling`, AAC/multicavity grouped
+  topology, floor rows, workbench presets, selector pins, and source-row
+  promotion remain negative boundaries;
+- Gate DF moved no runtime values, touched no frontend implementation,
+  and selected
+  `post_v1_wall_heavy_core_lined_massive_bounded_runtime_basis_gate_dg_plan`
+  in
+  `packages/engine/src/post-v1-wall-heavy-core-lined-massive-bounded-runtime-basis-gate-dg-contract.test.ts`;
+- Gate DF selected candidate:
+  `wall.heavy_core_lined_massive.bounded_rule_owner_contract`;
+- latest runtime-basis accuracy action:
+  `post_v1_wall_heavy_core_lined_massive_bounded_runtime_basis_gate_dg_plan`;
+- Gate DG landed with status
+  `post_v1_wall_heavy_core_lined_massive_bounded_runtime_basis_gate_dg_landed_runtime_basis_no_value_selected_next_numeric_coverage_gap_gate_dh`;
+- Gate DG keeps `wall-screening-concrete` values unchanged while
+  changing the lab lined-massive runtime basis to `bounded_prediction` /
+  `airborne_bound`: `Rw 57 / STC 57 / C -1.6 / Ctr -6.5`. The
+  candidate resolver selects the existing Gate H lined-massive candidate
+  instead of the generic bounded fallback;
+- field/apparent values remain on Gate I with
+  `family_physics_prediction` origin:
+  `R'w 55 / Dn,w 55 / DnT,w 56 / DnT,A 54.9`. Heavy composite,
+  AAC/multicavity, floor rows, workbench presets, and source-row
+  promotion remain blocked from this bounded lane;
+- Gate DG counters: `boundedRuntimeBasisPromotions 1`,
+  `newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`, and
+  `runtimeValuesMoved 0`;
+- Gate DG selected
+  `post_v1_next_numeric_coverage_gap_gate_dh_plan` in
+  `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-dh-contract.test.ts`;
+- latest no-runtime numeric coverage/accuracy rerank:
+  `post_v1_next_numeric_coverage_gap_gate_dh_plan`;
+- Gate DH landed with status
+  `post_v1_next_numeric_coverage_gap_gate_dh_landed_no_runtime_selected_floor_steel_visible_formula_input_bridge_gate_di`;
+- Gate DH selected `floor.steel_visible_formula_input_bridge_gap` as the
+  highest-ROI engine-only scope move after Gate DG. Visible generated
+  steel/open-web floor stacks currently keep `Ln,w` live but leave
+  `DeltaLw` unsupported unless the existing steel formula owner receives
+  complete physical inputs;
+- Gate DI must bridge visible steel/open-web layers plus
+  `steelSupportForm`, `steelCarrierDepthMm`, `steelCarrierSpacingMm`,
+  `toppingOrFloatingLayer`, `resilientLayerDynamicStiffnessMNm3`,
+  `loadBasisKgM2`, and `lowerCeilingIsolationSupportForm` into the
+  existing steel mass-spring formula corridor. Bound-only UBIQ/open-web
+  `Ln,w` rows, generic steel archetypes, and ASTM aliases must not
+  publish `DeltaLw`; missing owner inputs remain `needs_input`, and ISO
+  `DeltaLw` still does not alias to ASTM `IIC` / `AIIC`;
+- Gate DH moved no runtime values, touched no frontend implementation,
+  and recorded counters: `candidateCount 13`,
+  `estimatedNextNewCalculableLayerTemplates 2`,
+  `estimatedNextNewCalculableRequestShapes 4`,
+  `protectedCurrentlyUnsupportedRequestShapes 5`,
+  `newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`, and
+  `runtimeValuesMoved 0`;
+- Gate DH selected
+  `post_v1_floor_steel_visible_formula_input_bridge_gate_di_plan` in
+  `packages/engine/src/post-v1-floor-steel-visible-formula-input-bridge-gate-di-contract.test.ts`;
+- latest value-moving runtime scope action:
+  `post_v1_floor_steel_visible_formula_input_bridge_gate_di_plan`;
+- Gate DI landed with status
+  `post_v1_floor_steel_visible_formula_input_bridge_gate_di_landed_runtime_selected_next_numeric_coverage_gap_gate_dj`;
+- Gate DI closes the Gate DH selected
+  `floor.steel_visible_formula_input_bridge_gap`. Visible steel/open-web
+  floor layers with complete steel owner inputs now route through the
+  existing steel mass-spring formula corridor without requiring explicit
+  `impactPredictorInput`: steel joist calculates
+  `Ln,w 51.6 / DeltaLw 22.4`, and open-web calculates
+  `Ln,w 52.2 / DeltaLw 22.4`;
+- missing `steelSupportForm`, `steelCarrierDepthMm`,
+  `steelCarrierSpacingMm`, `toppingOrFloatingLayer`,
+  `resilientLayerDynamicStiffnessMNm3`, `loadBasisKgM2`, or
+  `lowerCeilingIsolationSupportForm` remains `needs_input`;
+  surface-absent generated steel/open-web rows keep their previous
+  `Ln,w`-only posture; and ISO `DeltaLw` still does not alias to ASTM
+  `IIC` / `AIIC`;
+- Gate DI counters: `newCalculableLayerTemplates 2`,
+  `newCalculableRequestShapes 4`, `runtimeCorrectedLayerTemplates 0`,
+  `runtimeCorrectedRequestShapes 0`,
+  `protectedNoSurfaceGeneratedRequestShapes 5`, and
+  `astmAliasRequestShapesKeptUnsupported 2`;
+- Gate DI selected
+  `post_v1_next_numeric_coverage_gap_gate_dj_plan` in
+  `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-dj-contract.test.ts`;
+- latest no-runtime numeric coverage/accuracy rerank:
+  `post_v1_next_numeric_coverage_gap_gate_dj_plan`;
+- Gate DJ landed with status
+  `post_v1_next_numeric_coverage_gap_gate_dj_landed_no_runtime_selected_floor_steel_visible_formula_input_surface_parity_gate_dk`;
+- Gate DJ selected
+  `floor.steel_visible_formula_input_surface_parity_gap` as the
+  highest-ROI next calculator slice. The selected Gate DK work is not a
+  new formula or source-row pass: Gate DI already made visible
+  steel/open-web floor layers calculate through the existing steel
+  mass-spring formula inside `calculateAssembly`, and Gate DK must carry
+  the same steel owner inputs through calculator surfaces while
+  preserving the exact `needs_input` and ASTM unsupported boundaries;
+- Gate DJ rejects `wall.held_aac_board_fill_gap_multicavity_gap` as
+  fake scope because the wall-held AAC/multicavity route already
+  calculates when `supportTopology` is supplied and correctly stops as
+  `needs_input` without it. It rejects
+  `floor.astm_iic_aiic_user_band_input_surface` for this slot because
+  exact ASTM E492/E1007 bands already calculate `IIC` / `AIIC`, while a
+  broader user-band program is lower ROI than making the just-landed
+  steel formula route surface-reachable. Opening/leak holdout
+  tightening and heavy-core direct retune remain blocked by source/rule
+  requirements;
+- Gate DJ moved no runtime values, touched no frontend implementation,
+  and recorded counters: `candidateCount 10`,
+  `estimatedNextSurfaceRequestShapes 4`,
+  `newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`, and
+  `runtimeValuesMoved 0`;
+- Gate DJ selected
+  `post_v1_floor_steel_visible_formula_input_surface_parity_gate_dk_plan`
+  in
+  `packages/engine/src/post-v1-floor-steel-visible-formula-input-surface-parity-gate-dk-contract.test.ts`;
+- latest calculator surface parity action:
+  `post_v1_floor_steel_visible_formula_input_surface_parity_gate_dk_plan`;
+- Gate DK landed with status
+  `post_v1_floor_steel_visible_formula_input_surface_parity_gate_dk_landed_surface_parity_selected_next_numeric_coverage_gap_gate_dl`;
+- Gate DK closes `floor.steel_visible_formula_input_surface_parity_gap`:
+  shared `steelFloorFormulaSurface`, estimate API payloads, server
+  estimate route plumbing, impact-only API payloads, server impact-only
+  route plumbing, and engine `calculateImpactOnly` now carry the Gate DI
+  steel owner inputs into the existing steel mass-spring formula
+  corridor. Complete steel joist surface payloads calculate
+  `Ln,w 51.6 / DeltaLw 22.4`; complete open-web surface payloads
+  calculate `Ln,w 52.2 / DeltaLw 22.4`;
+- Gate DK keeps missing `steelSupportForm`, `steelCarrierDepthMm`,
+  `steelCarrierSpacingMm`, `toppingOrFloatingLayer`,
+  `resilientLayerDynamicStiffnessMNm3`, `loadBasisKgM2`, or
+  `lowerCeilingIsolationSupportForm` as `needs_input`; surface-absent
+  generated steel/open-web rows still do not publish `DeltaLw`; and ISO
+  `DeltaLw` still does not alias to ASTM `IIC` / `AIIC`;
+- Gate DK moved the calculator surface, not the formula: no steel
+  formula retune, no source-row crawl, and no frontend UI
+  implementation. Counters: `newCalculableLayerTemplates 0`,
+  `newCalculableRequestShapes 4`, `impactOnlySurfaceRequestShapes 4`,
+  `runtimeCorrectedLayerTemplates 0`, `runtimeCorrectedRequestShapes 0`,
+  `protectedNoSurfaceGeneratedRequestShapes 5`, and
+  `astmAliasRequestShapesKeptUnsupported 2`;
+- Gate DK selected
+  `post_v1_next_numeric_coverage_gap_gate_dl_plan` in
+  `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-dl-contract.test.ts`;
+
+Previous state after Gate DA:
 
 - latest value-moving runtime slice:
   `post_v1_floor_composite_panel_delta_lw_owner_gate_cy_plan`;
@@ -122,8 +1106,20 @@ Current state after Gate DA:
   `post_v1_next_numeric_coverage_gap_gate_cr_plan`;
 - Gate CR landed with status
   `post_v1_next_numeric_coverage_gap_gate_cr_landed_no_runtime_selected_wall_common_auto_topology_second_pass_gate_cs`;
-- current selected next action label:
-  `post_v1_floor_lightweight_concrete_delta_lw_runtime_corridor_gate_db_plan`;
+- historical selected next action label at that checkpoint:
+  `post_v1_next_numeric_coverage_gap_gate_du_plan`;
+- Gate DT selected next file:
+  `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-du-contract.test.ts`;
+- Gate DH selected candidate:
+  `floor.steel_visible_formula_input_bridge_gap`;
+- Gate DH selected status:
+  `post_v1_next_numeric_coverage_gap_gate_dh_landed_no_runtime_selected_floor_steel_visible_formula_input_bridge_gate_di`;
+- Gate DF selected next file:
+  `packages/engine/src/post-v1-wall-heavy-core-lined-massive-bounded-runtime-basis-gate-dg-contract.test.ts`;
+- Gate DE selected next file:
+  `packages/engine/src/post-v1-wall-heavy-core-lined-massive-bounded-rule-gate-df-contract.test.ts`;
+- Gate DD selected next file:
+  `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-de-contract.test.ts`;
 - Gate DA selected next file:
   `packages/engine/src/post-v1-floor-lightweight-concrete-delta-lw-runtime-corridor-gate-db-contract.test.ts`;
 - Gate CZ selected next file:
@@ -406,8 +1402,8 @@ Current state after Gate DA:
   `newCalculableLayerTemplates 0`;
 - resolver surface: 43 declared candidates and 40 active runtime-basis
   mappings;
-- latest full `NEXT_DIST_DIR=.next-gate-cw pnpm calculator:gate:current`
-  after Gate CW passed with engine 614 files / 3378 tests, web 113 files
+- latest full `NEXT_DIST_DIR=.next-gate-dg pnpm calculator:gate:current`
+  after Gate DG passed with engine 624 files / 3428 tests, web 113 files
   / 438 passed + 18 skipped, repo build 5 / 5, and whitespace guard
   passed.
 
