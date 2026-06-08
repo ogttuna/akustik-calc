@@ -99,6 +99,14 @@ type ResidualExpansionRow = {
   readonly sourceId: BroadAccuracyFloorOpenBoxTimberExactOnlyHybridSourceId;
 };
 
+function residualExpansionPackageBucket(packageId: string): ResidualExpansionRow["packageBucket"] {
+  if (packageId === "eps_screed_or_hybrid_upper" || packageId === "mixed_staged_upper") {
+    return packageId;
+  }
+
+  throw new Error(`Package ${packageId} is not a residual expansion bucket`);
+}
+
 function readRepoFile(path: string): string {
   return readFileSync(join(REPO_ROOT, path), "utf8");
 }
@@ -189,6 +197,10 @@ function buildResidualExpansionRows(): readonly ResidualExpansionRow[] {
   }
 
   return policy.policyRows.map((row) => {
+    if (row.packageId === "dry_gypsum_fiber_upper") {
+      throw new Error("Dry gypsum-fiber package is the residual baseline, not an expansion row");
+    }
+
     const nextOwner =
       row.sourceId === "tuas_r7b_open_box_timber_measured_2026"
         ? "eps_screed_hybrid_package_owner"
@@ -216,7 +228,7 @@ function buildResidualExpansionRows(): readonly ResidualExpansionRow[] {
         RwDb: Number((row.measuredMetrics.Rw - dryPackage.Rw).toFixed(1))
       },
       nextOwner,
-      packageBucket: row.packageId,
+      packageBucket: residualExpansionPackageBucket(row.packageId),
       policyDecision: row.policyDecision,
       selectedNextCandidate: row.sourceId === "tuas_r7b_open_box_timber_measured_2026",
       sourceId: row.sourceId

@@ -98,8 +98,12 @@ describe("post-V1 next numeric coverage gap Gate DQ", () => {
 
   it("selects the highest-ROI exact-source basis repair and rejects closed, blocked, or non-calculator work", () => {
     const candidates = rankPostV1GateDQNumericCoverageCandidates();
-    const selected = candidates.find((candidate) => candidate.selected);
-    const byId = new Map(candidates.map((candidate) => [candidate.id, candidate]));
+    const selected = candidates.find(
+      (candidate: { id: string; score?: number; selected?: boolean }) => candidate.selected
+    );
+    const byId = new Map(
+      candidates.map((candidate: { id: string; score?: number; selected?: boolean }) => [candidate.id, candidate])
+    );
 
     expect(candidates).toHaveLength(POST_V1_GATE_DQ_NO_RUNTIME_COUNTERS.candidateCount);
     expect(selected).toMatchObject({
@@ -144,7 +148,7 @@ describe("post-V1 next numeric coverage gap Gate DQ", () => {
 
   it("records the former masonry Rw screening-basis gap and verifies the landed DR exact-source repair", () => {
     const gateDqSelected = rankPostV1GateDQNumericCoverageCandidates().find(
-      (candidate) => candidate.id === POST_V1_GATE_DQ_SELECTED_CANDIDATE_ID
+      (candidate: { id: string; selected?: boolean }) => candidate.id === POST_V1_GATE_DQ_SELECTED_CANDIDATE_ID
     );
     const testCase = generatedCase(MASONRY_GENERATED_CASE_ID);
     const options = {
@@ -191,7 +195,7 @@ describe("post-V1 next numeric coverage gap Gate DQ", () => {
     const testCase = generatedCase(MASONRY_GENERATED_CASE_ID);
     const result = calculateAssembly(testCase.rows, testCase.labOptions);
     const exactCandidate = result.airborneCandidateResolution?.candidates.find(
-      (candidate) => candidate.id === "candidate_blocked_rockwool_exact_source"
+      (candidate: { id: string; selected?: boolean }) => candidate.id === "candidate_blocked_rockwool_exact_source"
     );
 
     expect(resultSnapshot(result)).toMatchObject({

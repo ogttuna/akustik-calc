@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { EXACT_FLOOR_SYSTEMS } from "@dynecho/catalogs";
-import type {
+import type { ImpactErrorBudget,
   ExactFloorSystem,
   FloorRole,
   FloorSystemRoleCriteria,
@@ -215,7 +215,7 @@ function expectHybridRuntime(layers: readonly LayerInput[]) {
     LnW: OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS,
     LnWPlusCI: OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS
   });
-  expect(result.impact?.errorBudgets?.map((budget) => [budget.metricId, budget.toleranceDb])).toEqual([
+  expect(result.impact?.errorBudgets?.map((budget: ImpactErrorBudget) => [budget.metricId, budget.toleranceDb])).toEqual([
     ["Rw", 7],
     ["C", 3],
     ["Rw+C", 7.5],
@@ -224,7 +224,7 @@ function expectHybridRuntime(layers: readonly LayerInput[]) {
     ["CI,50-2500", 3],
     ["Ln,w+CI", 8.5]
   ]);
-  expect(result.impact?.errorBudgets?.every((budget) => budget.notMeasuredEvidence)).toBe(true);
+  expect(result.impact?.errorBudgets?.every((budget: ImpactErrorBudget) => budget.notMeasuredEvidence)).toBe(true);
   expect(result.floorSystemRatings).toMatchObject({
     C: -1.3,
     Rw: 72,

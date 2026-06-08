@@ -120,7 +120,7 @@ describe("post-V1 wall compatible anchor-delta Gate D", () => {
         valuePins: [{ metric: "Rw", value: 57 }]
       });
       expect(result.warnings).toContain(POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_WARNING);
-      expect(result.warnings.some((warning) =>
+      expect(result.warnings.some((warning: string) =>
         /kept STC, C, Ctr out of the anchored answer/i.test(warning)
       )).toBe(true);
     }

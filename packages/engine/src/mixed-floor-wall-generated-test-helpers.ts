@@ -80,11 +80,13 @@ export type SplitPlan = {
   rowIndex: number;
 };
 
+type EngineMixedGeneratedCaseOptions = NonNullable<Parameters<typeof calculateAssembly>[1]>;
+
 export type EngineMixedGeneratedCase = {
-  fieldOptions: Parameters<typeof calculateAssembly>[1];
+  fieldOptions: EngineMixedGeneratedCaseOptions;
   id: string;
   label: string;
-  labOptions: Parameters<typeof calculateAssembly>[1];
+  labOptions: EngineMixedGeneratedCaseOptions;
   rows: readonly LayerInput[];
   splitPlans: readonly SplitPlan[];
   studyMode: "floor" | "wall";
@@ -171,6 +173,7 @@ export function resultSnapshot(result: ReturnType<typeof calculateAssembly>) {
     dnTw: result.metrics.estimatedDnTwDb ?? null,
     dnW: result.metrics.estimatedDnWDb ?? null,
     dynamicFamily: result.dynamicAirborneTrace?.detectedFamily ?? null,
+    deltaLw: result.impact?.DeltaLw,
     floorSystemEstimateBasis: result.floorSystemEstimate?.impact.basis ?? null,
     floorSystemEstimateKind: result.floorSystemEstimate?.kind ?? null,
     floorSystemMatchId: result.floorSystemMatch?.system.id ?? null,

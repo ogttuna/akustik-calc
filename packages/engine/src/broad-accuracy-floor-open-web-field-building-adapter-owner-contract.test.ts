@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import type { AirborneContext, ImpactFieldContext, LayerInput, RequestedOutputId } from "@dynecho/shared";
+import type { ImpactErrorBudget, AirborneContext, ImpactFieldContext, LayerInput, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
@@ -282,7 +282,7 @@ describe("broad accuracy floor open-web field/building adapter owner contract", 
     });
 
     for (const result of [exact, directFixed, supportedBand]) {
-      expect(result.impact?.errorBudgets?.some((budget) => budget.origin === "source_absent_field_building_adapter_error_budget")).toBe(true);
+      expect(result.impact?.errorBudgets?.some((budget: ImpactErrorBudget) => budget.origin === "source_absent_field_building_adapter_error_budget")).toBe(true);
     }
   });
 
@@ -313,7 +313,7 @@ describe("broad accuracy floor open-web field/building adapter owner contract", 
       LPrimeNTw: "estimated_standardized_field_lprimentw_from_lprimenw_plus_room_volume",
       LPrimeNT50: "estimated_standardized_field_lpriment50_from_lprimentw_plus_ci50_2500"
     });
-    expect(rawBare.impact?.errorBudgets?.some((budget) => budget.origin === "source_absent_field_building_adapter_error_budget")).toBe(true);
+    expect(rawBare.impact?.errorBudgets?.some((budget: ImpactErrorBudget) => budget.origin === "source_absent_field_building_adapter_error_budget")).toBe(true);
   });
 
   it("keeps building impact and ASTM/IIC outside the open-web field adapter owner while later airborne building coverage stays live", () => {

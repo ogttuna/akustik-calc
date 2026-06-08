@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import type { AirborneContext, ImpactFieldContext, RequestedOutputId } from "@dynecho/shared";
+import type { ImpactErrorBudget, AirborneContext, ImpactFieldContext, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
@@ -166,7 +166,7 @@ describe("post-V1 floor open-box raw-bare building prediction owner Gate BO", ()
       LPrimeNTw: "estimated_standardized_field_lprimentw_from_direct_flanking_energy_sum_plus_room_volume",
       LPrimeNT50: "estimated_standardized_field_lpriment50_from_direct_flanking_energy_sum_plus_ci50_2500"
     });
-    expect(result.impact?.errorBudgets?.some((budget) => budget.origin === "source_absent_field_building_adapter_error_budget")).toBe(true);
+    expect(result.impact?.errorBudgets?.some((budget: ImpactErrorBudget) => budget.origin === "source_absent_field_building_adapter_error_budget")).toBe(true);
     expect(result.layerCombinationResolverTrace).toMatchObject({
       runtimeBasisId: "source_absent_field_building_adapter_error_budget",
       selectedCandidateId: "floor.impact_field_context.field_building_adapter",

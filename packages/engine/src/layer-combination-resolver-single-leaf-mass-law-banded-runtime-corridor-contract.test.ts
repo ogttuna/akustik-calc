@@ -197,7 +197,7 @@ describe("layer combination resolver single-leaf mass-law banded runtime corrido
       family: "single_leaf_panel"
     });
     const exactCandidate = sourceAbsent.airborneCandidateResolution?.candidates.find(
-      (candidate) => candidate.id === "candidate_blocked_rockwool_exact_source"
+      (candidate: { id: string; selected?: boolean }) => candidate.id === "candidate_blocked_rockwool_exact_source"
     );
     const cavity = calculateSingleLeaf(CAVITY_WALL);
     const clt = calculateSingleLeaf(CLT_PANEL);
@@ -211,7 +211,7 @@ describe("layer combination resolver single-leaf mass-law banded runtime corrido
       origin: "measured_exact_full_stack",
       selected: false
     });
-    expect(exactCandidate?.rejectionReasons.map((reason) => reason.code)).toContain("missing_source_evidence");
+    expect(exactCandidate?.rejectionReasons.map((reason: { code: string }) => reason.code)).toContain("missing_source_evidence");
     expect(cavity.airborneBasis?.method).not.toBe(LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_FORMULA_CORRIDOR_BASIS);
     expect(clt.airborneBasis?.method).not.toBe(LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_FORMULA_CORRIDOR_BASIS);
     expect(field.airborneBasis).toMatchObject({

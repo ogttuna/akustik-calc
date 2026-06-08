@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import type { AirborneContext, ImpactFieldContext, LayerInput, RequestedOutputId } from "@dynecho/shared";
+import type { ImpactErrorBudget, AirborneContext, ImpactFieldContext, LayerInput, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
@@ -223,7 +223,7 @@ function expectFieldErrorBudgetSurface(result: ReturnType<typeof calculateFieldS
   for (const metricId of ["L'n,w", "L'nT,w", "L'nT,50"]) {
     expect(
       result.impact?.errorBudgets?.some(
-        (budget) =>
+        (budget: ImpactErrorBudget) =>
           budget.metricId === metricId &&
           budget.notMeasuredEvidence === true &&
           budget.origin === "source_absent_field_building_adapter_error_budget"
@@ -327,7 +327,7 @@ describe("broad accuracy floor open-web field/building surface parity contract",
       basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization"
     });
     expect(
-      rawBare.impact?.errorBudgets?.some((budget) => budget.origin === "source_absent_field_building_adapter_error_budget")
+      rawBare.impact?.errorBudgets?.some((budget: ImpactErrorBudget) => budget.origin === "source_absent_field_building_adapter_error_budget")
     ).toBe(true);
   });
 
@@ -353,7 +353,7 @@ describe("broad accuracy floor open-web field/building surface parity contract",
     });
     expect(building.impact).toMatchObject({ LnW: 96, basis: OPEN_WEB_RAW_BARE_FORMULA_BASIS });
     expect(
-      building.impact?.errorBudgets?.some((budget) => budget.origin === "source_absent_field_building_adapter_error_budget")
+      building.impact?.errorBudgets?.some((budget: ImpactErrorBudget) => budget.origin === "source_absent_field_building_adapter_error_budget")
     ).toBe(false);
 
     expect(astm.supportedTargetOutputs).toEqual([]);

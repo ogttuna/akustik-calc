@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import type { AirborneContext, ImpactFieldContext, LayerInput, RequestedOutputId } from "@dynecho/shared";
+import type { ImpactErrorBudget, AirborneContext, ImpactFieldContext, LayerInput, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
@@ -113,7 +113,7 @@ describe("post-V1 floor open-web raw-bare field companion Gate BK", () => {
       LPrimeNTw: "estimated_standardized_field_lprimentw_from_lprimenw_plus_room_volume",
       LPrimeNT50: "estimated_standardized_field_lpriment50_from_lprimentw_plus_ci50_2500"
     });
-    expect(result.impact?.errorBudgets?.some((budget) => budget.origin === "source_absent_field_building_adapter_error_budget")).toBe(true);
+    expect(result.impact?.errorBudgets?.some((budget: ImpactErrorBudget) => budget.origin === "source_absent_field_building_adapter_error_budget")).toBe(true);
     expect(result.layerCombinationResolverTrace).toMatchObject({
       requestedBasis: "field_apparent",
       runtimeBasisId: "source_absent_field_building_adapter_error_budget",

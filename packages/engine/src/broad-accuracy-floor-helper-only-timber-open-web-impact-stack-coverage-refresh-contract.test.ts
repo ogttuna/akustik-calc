@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import type { AirborneContext, ImpactFieldContext, LayerInput, RequestedOutputId } from "@dynecho/shared";
+import type { ImpactErrorBudget, AirborneContext, ImpactFieldContext, LayerInput, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -221,7 +221,7 @@ function readRepoFile(path: string): string {
 function expectHelperOnlyRuntime(
   layers: readonly LayerInput[],
   expected: {
-    readonly budgets: readonly [string, number][];
+    readonly budgets: readonly (readonly [string, number])[];
     readonly C: number;
     readonly CI: number;
     readonly CI50_2500: number;
@@ -258,8 +258,8 @@ function expectHelperOnlyRuntime(
     RwCtr: Number((expected.Rw + expected.C).toFixed(1)),
     basis: HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS
   });
-  expect(result.impact?.errorBudgets?.map((budget) => [budget.metricId, budget.toleranceDb])).toEqual(expected.budgets);
-  expect(result.impact?.errorBudgets?.every((budget) => budget.notMeasuredEvidence)).toBe(true);
+  expect(result.impact?.errorBudgets?.map((budget: ImpactErrorBudget) => [budget.metricId, budget.toleranceDb])).toEqual(expected.budgets);
+  expect(result.impact?.errorBudgets?.every((budget: ImpactErrorBudget) => budget.notMeasuredEvidence)).toBe(true);
   expect(result.supportedTargetOutputs).toEqual(["Rw", "C", "Ctr", "Ln,w", "CI", "CI,50-2500", "Ln,w+CI"]);
   expect(result.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w", "L'n,w", "L'nT,w", "IIC", "AIIC"]);
 

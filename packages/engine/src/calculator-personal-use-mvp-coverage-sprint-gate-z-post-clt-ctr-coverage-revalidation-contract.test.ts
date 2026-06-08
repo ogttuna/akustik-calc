@@ -20,7 +20,6 @@ import {
 import { GATE_X_AAC_NONHOMOGENEOUS_MASONRY_RUNTIME_METHOD } from "./dynamic-airborne-gate-x-aac-nonhomogeneous-masonry";
 import { GATE_Y_CLT_MASS_TIMBER_CTR_SPECTRUM_ADAPTER_RUNTIME_METHOD } from "./dynamic-airborne-gate-y-clt-mass-timber-ctr-spectrum-adapter";
 import { GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD } from "./dynamic-airborne-gate-s-opening-leak-composite-transmission-loss-runtime-corridor";
-import { GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_METHOD } from "./dynamic-airborne-gate-n-building-prediction-runtime-adapter";
 import { GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD } from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
 import { GATE_O_AIRBORNE_BUILDING_PREDICTION_TOLERANCE_DB } from "./dynamic-airborne-gate-o-building-prediction-formula-corridor";
 

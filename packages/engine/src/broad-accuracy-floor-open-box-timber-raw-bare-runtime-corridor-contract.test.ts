@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import type { LayerInput, RequestedOutputId } from "@dynecho/shared";
+import type { ImpactErrorBudget, LayerInput, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -137,7 +137,7 @@ function expectRawBareRuntime(
     LnW: OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS,
     LnWPlusCI: OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS
   });
-  expect(result.impact?.errorBudgets?.map((budget) => [budget.metricId, budget.toleranceDb])).toEqual([
+  expect(result.impact?.errorBudgets?.map((budget: ImpactErrorBudget) => [budget.metricId, budget.toleranceDb])).toEqual([
     ["Rw", 8],
     ["C", 2.5],
     ["Ctr", 3.5],
@@ -146,7 +146,7 @@ function expectRawBareRuntime(
     ["CI,50-2500", 4],
     ["Ln,w+CI", 10.5]
   ]);
-  expect(result.impact?.errorBudgets?.every((budget) => budget.notMeasuredEvidence)).toBe(true);
+  expect(result.impact?.errorBudgets?.every((budget: ImpactErrorBudget) => budget.notMeasuredEvidence)).toBe(true);
   expect(result.floorSystemRatings).toMatchObject({
     C: expected.C,
     Ctr: expected.Ctr,

@@ -42,11 +42,11 @@ function generatedCase(id: string) {
 }
 
 function buildingContext(
-  context: AirborneContext | undefined,
+  context: AirborneContext | null | undefined,
   patch: Partial<AirborneContext> = {}
 ): AirborneContext {
   return {
-    ...context,
+    ...(context ?? {}),
     contextMode: "building_prediction",
     ...patch
   };

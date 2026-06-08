@@ -126,15 +126,15 @@ function buildContext(input: {
       cavity1AbsorptionClass: "porous_absorptive",
       cavity1DepthMm: input.cavity1DepthMm,
       cavity1FillCoverage: "full",
-      cavity1LayerIndices: input.cavity1,
+      cavity1LayerIndices: [...input.cavity1],
       cavity2AbsorptionClass: "porous_absorptive",
       cavity2DepthMm: input.cavity2DepthMm,
       cavity2FillCoverage: "full",
-      cavity2LayerIndices: input.cavity2,
+      cavity2LayerIndices: [...input.cavity2],
       internalLeafCoupling: "independent",
-      internalLeafLayerIndices: input.internal,
-      sideALeafLayerIndices: input.sideA,
-      sideBLeafLayerIndices: input.sideB,
+      internalLeafLayerIndices: [...input.internal],
+      sideALeafLayerIndices: [...input.sideA],
+      sideBLeafLayerIndices: [...input.sideB],
       supportTopology: input.supportTopology,
       topologyMode: "grouped_triple_leaf"
     }
@@ -244,7 +244,7 @@ describe("broad accuracy wall multileaf triple-leaf local substitution surface p
     expect(mixedFieldRequest.airborneBasis?.origin).toBe("needs_input");
     expect(
       mixedFieldRequest.airborneCandidateResolution?.candidates.some(
-        (candidate) =>
+        (candidate: { id: string; selected?: boolean }) =>
           candidate.id === BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_SELECTED_CANDIDATE_ID ||
           candidate.id === BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_SELECTED_CANDIDATE_ID
       )

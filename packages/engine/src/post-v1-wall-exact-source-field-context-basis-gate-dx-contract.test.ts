@@ -110,7 +110,7 @@ describe("post-V1 wall exact-source family field-context basis Gate DX", () => {
     const testCase = generatedCase(MASONRY_GENERATED_CASE_ID);
     const result = calculateAssembly(testCase.rows, testCase.fieldOptions);
     const selectedCandidate = result.airborneCandidateResolution?.candidates.find(
-      (candidate) => candidate.id === GATE_DX_EXACT_SOURCE_FAMILY_FIELD_CONTEXT_SELECTED_CANDIDATE_ID
+      (candidate: { id: string; selected?: boolean }) => candidate.id === GATE_DX_EXACT_SOURCE_FAMILY_FIELD_CONTEXT_SELECTED_CANDIDATE_ID
     );
 
     expect(resultSnapshot(result)).toMatchObject({

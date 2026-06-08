@@ -53,9 +53,9 @@ function generatedCase(id: string) {
   return testCase;
 }
 
-function supportBackedFieldContext(context: AirborneContext | undefined): AirborneContext {
+function supportBackedFieldContext(context: AirborneContext | null | undefined): AirborneContext {
   return {
-    ...context,
+    ...(context ?? {}),
     contextMode: "field_between_rooms",
     wallTopology: {
       ...context?.wallTopology,
@@ -64,7 +64,7 @@ function supportBackedFieldContext(context: AirborneContext | undefined): Airbor
   };
 }
 
-function supportBackedFieldContextMissingRt60(context: AirborneContext | undefined): AirborneContext {
+function supportBackedFieldContextMissingRt60(context: AirborneContext | null | undefined): AirborneContext {
   return {
     ...supportBackedFieldContext(context),
     receivingRoomRt60S: undefined

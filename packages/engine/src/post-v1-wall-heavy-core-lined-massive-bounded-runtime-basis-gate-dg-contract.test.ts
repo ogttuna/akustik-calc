@@ -101,7 +101,7 @@ describe("post-V1 wall heavy-core / lined-massive bounded runtime-basis Gate DG"
     const testCase = generatedCase(POST_V1_GATE_DD_LIVE_ROUTE_PINS.generatedCaseId);
     const lab = calculateAssembly(testCase.rows, testCase.labOptions);
     const labSnapshot = resultSnapshot(lab);
-    const candidatesById = new Map(lab.airborneCandidateResolution?.candidates.map((candidate) => [candidate.id, candidate]));
+    const candidatesById = new Map(lab.airborneCandidateResolution?.candidates.map((candidate: { id: string; selected?: boolean }) => [candidate.id, candidate]));
 
     expect(labSnapshot).toMatchObject({
       c: POST_V1_GATE_DD_LIVE_ROUTE_PINS.labPins.C,

@@ -115,7 +115,7 @@ describe("post-V1 wall exact-source zero-delta basis Gate DR", () => {
     const snapshot = resultSnapshot(result);
     const exactMatch = findVerifiedAirborneAssemblyMatch(result.layers, options.airborneContext);
     const exactCandidate = result.airborneCandidateResolution?.candidates.find(
-      (candidate) => candidate.id === "candidate_blocked_rockwool_exact_source"
+      (candidate: { id: string; selected?: boolean }) => candidate.id === "candidate_blocked_rockwool_exact_source"
     );
 
     expect(snapshot).toMatchObject({
@@ -151,7 +151,7 @@ describe("post-V1 wall exact-source zero-delta basis Gate DR", () => {
     const testCase = generatedCase(MASONRY_GENERATED_CASE_ID);
     const result = calculateAssembly(testCase.rows, testCase.labOptions);
     const exactCandidate = result.airborneCandidateResolution?.candidates.find(
-      (candidate) => candidate.id === "candidate_blocked_rockwool_exact_source"
+      (candidate: { id: string; selected?: boolean }) => candidate.id === "candidate_blocked_rockwool_exact_source"
     );
 
     expect(resultSnapshot(result)).toMatchObject({

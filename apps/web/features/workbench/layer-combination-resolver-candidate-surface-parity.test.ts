@@ -70,7 +70,6 @@ const HEAVY_PUBLISHED_UPPER_TREATMENT_SELECTED_CANDIDATE_ID =
 const HEAVY_PUBLISHED_UPPER_TREATMENT_RUNTIME_BASIS =
   "predictor_heavy_concrete_published_upper_treatment_estimate";
 const NEEDS_INPUT_SELECTED_CANDIDATE_ID = "generic.required_input_owner.needs_input_boundary";
-const UNSUPPORTED_BASIS_SELECTED_CANDIDATE_ID = "generic.lab_field_building_basis_boundary";
 const OPENING_LEAK_BUILDING_SELECTED_CANDIDATE_ID =
   "candidate_company_internal_opening_leak_building_family_physics_prediction";
 const OPENING_LEAK_BUILDING_RUNTIME_BASIS =

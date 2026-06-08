@@ -235,6 +235,9 @@ describe("post-V1 floor steel visible formula input surface parity Gate DK", () 
       COMPANY_INTERNAL_STEEL_SUSPENDED_CEILING_DELTA_LW_COMPLETE_SURFACE;
     const { loadBasisKgM2: _missingLoadBasis, ...missingLoadBasis } =
       COMPANY_INTERNAL_STEEL_SUSPENDED_CEILING_DELTA_LW_COMPLETE_SURFACE;
+    void _missingSupportForm;
+    void _missingCarrierSpacing;
+    void _missingLoadBasis;
 
     for (
       const [surface, missingField] of [

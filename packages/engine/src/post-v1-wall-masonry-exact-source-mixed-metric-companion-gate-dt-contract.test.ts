@@ -108,10 +108,10 @@ describe("post-V1 wall masonry exact-source mixed-metric companion Gate DT", () 
     const testCase = generatedCase(MASONRY_GENERATED_CASE_ID);
     const result = calculateAssembly(testCase.rows, testCase.labOptions);
     const exactCandidate = result.airborneCandidateResolution?.candidates.find(
-      (candidate) => candidate.id === "candidate_blocked_rockwool_exact_source"
+      (candidate: { id: string; selected?: boolean }) => candidate.id === "candidate_blocked_rockwool_exact_source"
     );
     const selectedCandidate = result.airborneCandidateResolution?.candidates.find(
-      (candidate) => candidate.id === GATE_DT_MASONRY_EXACT_RW_CALCULATED_COMPANION_SELECTED_CANDIDATE_ID
+      (candidate: { id: string; selected?: boolean }) => candidate.id === GATE_DT_MASONRY_EXACT_RW_CALCULATED_COMPANION_SELECTED_CANDIDATE_ID
     );
 
     expect(resultSnapshot(result)).toMatchObject({

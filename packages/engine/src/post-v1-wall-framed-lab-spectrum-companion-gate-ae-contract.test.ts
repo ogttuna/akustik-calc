@@ -40,9 +40,9 @@ function generatedCase(id: string) {
   return testCase;
 }
 
-function buildingContext(context: AirborneContext | undefined): AirborneContext {
+function buildingContext(context: AirborneContext | null | undefined): AirborneContext {
   return {
-    ...context,
+    ...(context ?? {}),
     contextMode: "building_prediction"
   };
 }

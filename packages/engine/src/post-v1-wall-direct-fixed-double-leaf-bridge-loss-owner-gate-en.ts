@@ -3,7 +3,6 @@ import type { AirborneContext, LayerInput, RequestedOutputId } from "@dynecho/sh
 import { buildGateRDoubleLeafFramedBridgeSolverContract } from "./dynamic-calculator-double-leaf-framed-bridge-solver-contract";
 import {
   POST_V1_GATE_EM_NO_RUNTIME_COUNTERS,
-  POST_V1_GATE_EM_PLAN_DOC_PATH,
   POST_V1_GATE_EM_SELECTED_CANDIDATE_ID,
   POST_V1_NEXT_NUMERIC_COVERAGE_GAP_GATE_EM_LANDED_GATE,
   POST_V1_NEXT_NUMERIC_COVERAGE_GAP_GATE_EM_SELECTED_NEXT_ACTION,

@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import type { LayerInput, RequestedOutputId } from "@dynecho/shared";
+import type { ImpactErrorBudget, LayerInput, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -182,7 +182,7 @@ function expectOpenBoxRuntime(
     RwCtrSemantic: "rw_plus_c",
     basis: OPEN_BOX_TIMBER_SIMILARITY_BASIS
   });
-  expect(result.impact?.errorBudgets?.map((budget) => [budget.metricId, budget.toleranceDb])).toEqual([
+  expect(result.impact?.errorBudgets?.map((budget: ImpactErrorBudget) => [budget.metricId, budget.toleranceDb])).toEqual([
     ["Ln,w", 7],
     ["CI", 2],
     ["CI,50-2500", 2.5],

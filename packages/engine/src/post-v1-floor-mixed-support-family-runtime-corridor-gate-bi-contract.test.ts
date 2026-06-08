@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import type { ImpactErrorBudget } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import { ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLOOR_IMPACT_NEEDS_INPUT_METHOD } from "./acoustic-answer-engine-v1-floor-boundary";
@@ -138,7 +139,7 @@ describe("post-V1 floor mixed-support family runtime corridor Gate BI", () => {
       DeltaLw: MIXED_SUPPORT_FLOOR_IMPACT_FORMULA_BASIS,
       LnW: MIXED_SUPPORT_FLOOR_IMPACT_FORMULA_BASIS
     });
-    expect(result.impact?.errorBudgets?.map((budget) => [budget.metricId, budget.toleranceDb])).toEqual([
+    expect(result.impact?.errorBudgets?.map((budget: ImpactErrorBudget) => [budget.metricId, budget.toleranceDb])).toEqual([
       ["Ln,w", MIXED_SUPPORT_FLOOR_IMPACT_FORMULA_LN_W_TOLERANCE_DB],
       ["DeltaLw", MIXED_SUPPORT_FLOOR_IMPACT_FORMULA_DELTA_LW_TOLERANCE_DB]
     ]);
@@ -210,7 +211,7 @@ describe("post-V1 floor mixed-support family runtime corridor Gate BI", () => {
       origin: "needs_input",
       unsupportedOutputs: [...POST_V1_GATE_BI_LAB_OUTPUTS]
     });
-    expect(result.warnings.some((warning) => warning.includes("mixed-support floor impact runtime is waiting"))).toBe(true);
+    expect(result.warnings.some((warning: string) => warning.includes("mixed-support floor impact runtime is waiting"))).toBe(true);
   });
 
   it("blocks unsafe mixed-support partitions without silently selecting another family solver", () => {
@@ -238,7 +239,7 @@ describe("post-V1 floor mixed-support family runtime corridor Gate BI", () => {
       supportBucket: "unsupported"
     });
     expect(
-      result.warnings.some((warning) =>
+      result.warnings.some((warning: string) =>
         warning.includes("only supports the explicit single-primary reinforced-concrete carrier")
       )
     ).toBe(true);

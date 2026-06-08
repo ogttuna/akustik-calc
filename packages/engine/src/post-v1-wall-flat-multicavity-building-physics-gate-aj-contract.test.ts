@@ -55,9 +55,9 @@ function generatedCase(id: string) {
   return testCase;
 }
 
-function completeSupportBackedBuildingContext(context: AirborneContext | undefined): AirborneContext {
+function completeSupportBackedBuildingContext(context: AirborneContext | null | undefined): AirborneContext {
   return {
-    ...context,
+    ...(context ?? {}),
     buildingPredictionOutputBasis: "apparent_and_standardized",
     conservativeFlankingAssumption: "multi_path_conservative",
     contextMode: "building_prediction",

@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import type { ImpactErrorBudget, LayerInput } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
@@ -68,7 +69,9 @@ function readRepoFile(path: string): string {
   return readFileSync(join(REPO_ROOT, path), "utf8");
 }
 
-function calculateGateBB(layers = POST_V1_GATE_BB_VISIBLE_HEAVY_CONCRETE_ACOUSTIC_HANGER_LAYERS) {
+function calculateGateBB(
+  layers: readonly LayerInput[] = POST_V1_GATE_BB_VISIBLE_HEAVY_CONCRETE_ACOUSTIC_HANGER_LAYERS
+) {
   return calculateAssembly(layers, {
     calculator: "dynamic",
     floorImpactContext: POST_V1_GATE_BB_COMPLETE_FLOOR_IMPACT_CONTEXT,
@@ -137,7 +140,7 @@ describe("post-V1 floor suspended-ceiling lower-treatment Gate BB", () => {
         }
       ]
     });
-    expect(result.impact?.errorBudgets?.map((budget) => budget.metricId)).toEqual(["Ln,w", "DeltaLw"]);
+    expect(result.impact?.errorBudgets?.map((budget: ImpactErrorBudget) => budget.metricId)).toEqual(["Ln,w", "DeltaLw"]);
   });
 
   it("calculates the same heavy-concrete combined family for visible resilient-stud lower support", () => {
@@ -189,7 +192,7 @@ describe("post-V1 floor suspended-ceiling lower-treatment Gate BB", () => {
     expect(result.supportedTargetOutputs).toEqual([]);
     expect(result.unsupportedTargetOutputs).toEqual(["Ln,w", "DeltaLw"]);
     expect(
-      result.warnings.some((warning) =>
+      result.warnings.some((warning: string) =>
         warning.includes("ceilingOrLowerAssembly") &&
           warning.includes("before promoting Ln,w / DeltaLw")
       )

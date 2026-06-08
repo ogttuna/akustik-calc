@@ -139,15 +139,15 @@ function buildContext(input: {
       cavity1AbsorptionClass: "porous_absorptive",
       cavity1DepthMm: input.cavity1DepthMm,
       cavity1FillCoverage: "full",
-      cavity1LayerIndices: input.cavity1,
+      cavity1LayerIndices: [...input.cavity1],
       cavity2AbsorptionClass: "porous_absorptive",
       cavity2DepthMm: input.cavity2DepthMm,
       cavity2FillCoverage: "full",
-      cavity2LayerIndices: input.cavity2,
+      cavity2LayerIndices: [...input.cavity2],
       internalLeafCoupling: "independent",
-      internalLeafLayerIndices: input.internal,
-      sideALeafLayerIndices: input.sideA,
-      sideBLeafLayerIndices: input.sideB,
+      internalLeafLayerIndices: [...input.internal],
+      sideALeafLayerIndices: [...input.sideA],
+      sideBLeafLayerIndices: [...input.sideB],
       supportTopology: "independent_frames",
       topologyMode: "grouped_triple_leaf"
     }
@@ -241,11 +241,11 @@ describe("broad accuracy wall triple-leaf local substitution lab spectrum adapte
     expect(result.dynamicAirborneTrace).toMatchObject({
       strategy: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_RUNTIME_STRATEGY
     });
-    expect(result.airborneCandidateSet?.some((candidate) =>
+    expect(result.airborneCandidateSet?.some((candidate: { id: string; selected?: boolean }) =>
       candidate.id === BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_SELECTED_CANDIDATE_ID
     )).toBe(false);
-    expect(result.ratingAdapterBasisSet?.map((basis) => basis.metricId)).toEqual(["STC", "C", "Ctr"]);
-    expect(result.ratingAdapterBasisSet?.map((basis) => basis.ratingStandard)).toEqual([
+    expect(result.ratingAdapterBasisSet?.map((basis: { metricId: string; ratingStandard: string }) => basis.metricId)).toEqual(["STC", "C", "Ctr"]);
+    expect(result.ratingAdapterBasisSet?.map((basis: { metricId: string; ratingStandard: string }) => basis.ratingStandard)).toEqual([
       "ASTM E413",
       "ISO 717-1",
       "ISO 717-1"

@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import type { AirborneContext, ImpactFieldContext, LayerInput, RequestedOutputId } from "@dynecho/shared";
+import type { ImpactErrorBudget, AirborneContext, ImpactFieldContext, LayerInput, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -220,13 +220,13 @@ function expectHelperOnlySurface(
     selectionKindLabel: "Scoped formula estimate",
     systemTypeLabel: "Suspended ceiling only"
   });
-  expect(result.impact?.errorBudgets?.find((budget) => budget.metricId === "Rw")).toMatchObject({
+  expect(result.impact?.errorBudgets?.find((budget: ImpactErrorBudget) => budget.metricId === "Rw")).toMatchObject({
     estimate: expected.Rw,
     notMeasuredEvidence: true,
     origin: "source_absent_formula_error_budget",
     toleranceDb: expected.rwBudgetToleranceDb
   });
-  expect(result.impact?.errorBudgets?.find((budget) => budget.metricId === "Ln,w")).toMatchObject({
+  expect(result.impact?.errorBudgets?.find((budget: ImpactErrorBudget) => budget.metricId === "Ln,w")).toMatchObject({
     estimate: expected.LnW,
     notMeasuredEvidence: true,
     origin: "source_absent_formula_error_budget",

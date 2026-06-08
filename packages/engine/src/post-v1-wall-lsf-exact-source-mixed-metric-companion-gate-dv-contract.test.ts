@@ -109,10 +109,10 @@ describe("post-V1 wall LSF exact-source mixed-metric companion Gate DV", () => {
     const testCase = generatedCase(LSF_GENERATED_CASE_ID);
     const result = calculateAssembly(testCase.rows, testCase.labOptions);
     const exactCandidate = result.airborneCandidateResolution?.candidates.find(
-      (candidate) => candidate.id === "candidate_blocked_rockwool_exact_source"
+      (candidate: { id: string; selected?: boolean }) => candidate.id === "candidate_blocked_rockwool_exact_source"
     );
     const selectedCandidate = result.airborneCandidateResolution?.candidates.find(
-      (candidate) => candidate.id === GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_SELECTED_CANDIDATE_ID
+      (candidate: { id: string; selected?: boolean }) => candidate.id === GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_SELECTED_CANDIDATE_ID
     );
 
     expect(resultSnapshot(result)).toMatchObject({

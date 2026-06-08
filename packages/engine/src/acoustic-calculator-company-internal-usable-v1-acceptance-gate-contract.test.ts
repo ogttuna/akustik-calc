@@ -258,8 +258,8 @@ function expectNoUnownedPublishedValues(label: string, result: CalculationResult
 
   const supportedOutputs = new Set(result.supportedTargetOutputs);
   const supportedMetrics = new Set(trace.supportedMetrics);
-  const unownedSupportedOutputs = result.supportedTargetOutputs.filter((output) => !supportedMetrics.has(output));
-  const unownedValuePins = trace.valuePins.filter((pin) => !supportedOutputs.has(pin.metric));
+  const unownedSupportedOutputs = result.supportedTargetOutputs.filter((output: RequestedOutputId) => !supportedMetrics.has(output));
+  const unownedValuePins = trace.valuePins.filter((pin: { metric: RequestedOutputId }) => !supportedOutputs.has(pin.metric));
 
   expect(unownedSupportedOutputs, `${label} unowned supported outputs`).toEqual([]);
   expect(unownedValuePins, `${label} unowned value pins`).toEqual([]);

@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import type { LayerInput, RequestedOutputId } from "@dynecho/shared";
+import type { ImpactErrorBudget, LayerInput, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -248,7 +248,7 @@ describe("broad accuracy floor open-web direct-fixed lining formula corridor con
       "ubiq_fl23_open_web_steel_200_19mm_timber_underlay_exact_lab_2026",
       "ubiq_fl23_open_web_steel_300_19mm_timber_underlay_exact_lab_2026"
     ]);
-    expect(sourceAbsent.impact?.errorBudgets?.find((budget) => budget.metricId === "Ln,w")).toMatchObject({
+    expect(sourceAbsent.impact?.errorBudgets?.find((budget: ImpactErrorBudget) => budget.metricId === "Ln,w")).toMatchObject({
       notMeasuredEvidence: true,
       origin: "source_absent_formula_error_budget",
       toleranceDb: 4

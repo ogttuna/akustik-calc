@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import type { AirborneContext, ImpactFieldContext, LayerInput, RequestedOutputId } from "@dynecho/shared";
+import type { ImpactErrorBudget, AirborneContext, ImpactFieldContext, LayerInput, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -294,11 +294,11 @@ function expectHelperOnlyPins(
     Rw: expected.Rw,
     basis: HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS
   });
-  expect(result.impact?.errorBudgets?.find((budget) => budget.metricId === "Rw")).toMatchObject({
+  expect(result.impact?.errorBudgets?.find((budget: ImpactErrorBudget) => budget.metricId === "Rw")).toMatchObject({
     notMeasuredEvidence: true,
     toleranceDb: expected.rwBudgetToleranceDb
   });
-  expect(result.impact?.errorBudgets?.find((budget) => budget.metricId === "Ln,w")).toMatchObject({
+  expect(result.impact?.errorBudgets?.find((budget: ImpactErrorBudget) => budget.metricId === "Ln,w")).toMatchObject({
     notMeasuredEvidence: true,
     toleranceDb: expected.lnwBudgetToleranceDb
   });

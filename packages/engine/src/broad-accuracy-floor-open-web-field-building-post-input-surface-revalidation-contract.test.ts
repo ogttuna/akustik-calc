@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import type { AirborneContext, ImpactFieldContext, LayerInput, RequestedOutputId } from "@dynecho/shared";
+import type { ImpactErrorBudget, AirborneContext, ImpactFieldContext, LayerInput, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
@@ -280,7 +280,7 @@ describe("broad accuracy floor open-web field/building post-input-surface revali
         LPrimeNW: entry.expected.LPrimeNW,
         LnW: entry.expected.LnW
       });
-      expect(result.impact?.errorBudgets?.some((budget) => budget.origin === "source_absent_field_building_adapter_error_budget")).toBe(true);
+      expect(result.impact?.errorBudgets?.some((budget: ImpactErrorBudget) => budget.origin === "source_absent_field_building_adapter_error_budget")).toBe(true);
       expect(result.dynamicImpactTrace, entry.id).toMatchObject({
         fieldContinuation: "local_guide_simple",
         fieldOutputsActive: true,
@@ -319,7 +319,7 @@ describe("broad accuracy floor open-web field/building post-input-surface revali
       basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization"
     });
     expect(
-      rawBareField.impact?.errorBudgets?.some((budget) => budget.origin === "source_absent_field_building_adapter_error_budget")
+      rawBareField.impact?.errorBudgets?.some((budget: ImpactErrorBudget) => budget.origin === "source_absent_field_building_adapter_error_budget")
     ).toBe(true);
 
     expect(building.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);

@@ -37,9 +37,9 @@ function generatedCase(id: string) {
   return testCase;
 }
 
-function supportBackedFieldContext(context: AirborneContext | undefined): AirborneContext {
+function supportBackedFieldContext(context: AirborneContext | null | undefined): AirborneContext {
   return {
-    ...context,
+    ...(context ?? {}),
     contextMode: "field_between_rooms",
     wallTopology: {
       ...context?.wallTopology,

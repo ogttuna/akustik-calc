@@ -4,10 +4,8 @@ import { fileURLToPath } from "node:url";
 
 import type {
   AirborneContext,
-  AssemblyCalculation,
   ExactImpactSource,
   ImpactFieldContext,
-  ImpactOnlyCalculation,
   LayerCombinationResolverTrace,
   LayerInput,
   RequestedOutputId
@@ -429,10 +427,10 @@ function readRepoFile(path: string): string {
   return readFileSync(join(REPO_ROOT, path), "utf8");
 }
 
-type AnswerEngineV1OwnedOutputProbe = Pick<
-  AssemblyCalculation | ImpactOnlyCalculation,
-  "layerCombinationResolverTrace" | "supportedTargetOutputs" | "unsupportedTargetOutputs"
->;
+type AnswerEngineV1OwnedOutputProbe = {
+  readonly layerCombinationResolverTrace?: LayerCombinationResolverTrace;
+  readonly supportedTargetOutputs?: readonly RequestedOutputId[];
+};
 
 type WallV1AcceptanceCase = {
   readonly context: AirborneContext;
@@ -484,10 +482,15 @@ function expectSupportedOutputsOwnedBySelectedCandidate(
     return;
   }
 
+  const supportedTargetOutputs = result.supportedTargetOutputs;
+  if (!supportedTargetOutputs) {
+    throw new Error(`${label} supported target outputs are missing`);
+  }
+
   const ownedMetricSet = new Set<RequestedOutputId>(trace.supportedMetrics);
-  const supportedOutputSet = new Set<RequestedOutputId>(result.supportedTargetOutputs);
-  const ownerlessSupportedOutputs = result.supportedTargetOutputs.filter(
-    (output) => !ownedMetricSet.has(output)
+  const supportedOutputSet = new Set<RequestedOutputId>(supportedTargetOutputs);
+  const ownerlessSupportedOutputs = supportedTargetOutputs.filter(
+    (output: RequestedOutputId) => !ownedMetricSet.has(output)
   );
 
   expect(ownerlessSupportedOutputs, `${label} ownerless supported outputs`).toEqual([]);
@@ -1642,7 +1645,7 @@ describe("acoustic calculator answer engine V1 contract", () => {
     });
     expect(result.layerCombinationResolverTrace?.supportedMetrics).not.toContain("Rw");
     expect(result.layerCombinationResolverTrace?.valuePins).not.toContainEqual({ metric: "Rw", value: 42 });
-    expect(result.warnings.some((warning) =>
+    expect(result.warnings.some((warning: string) =>
       /reports DnT,A,k; DynEcho kept R'w, DnT,w out of the exact answer/i.test(warning)
     )).toBe(true);
   });
@@ -1693,7 +1696,7 @@ describe("acoustic calculator answer engine V1 contract", () => {
     expect(result.layerCombinationResolverTrace?.supportedMetrics).not.toContain("STC");
     expect(result.layerCombinationResolverTrace?.supportedMetrics).not.toContain("IIC");
     expect(result.layerCombinationResolverTrace?.valuePins).not.toContainEqual({ metric: "STC", value: 56 });
-    expect(result.warnings.some((warning) =>
+    expect(result.warnings.some((warning: string) =>
       /Exact measured floor source .* reports Rw, C, Ln,w, CI, CI,50-2500, Ln,w\+CI; DynEcho kept STC out of the exact answer/i.test(warning)
     )).toBe(true);
   });
@@ -1845,7 +1848,7 @@ describe("acoustic calculator answer engine V1 contract", () => {
     expect(mixedAssemblyLab.layerCombinationResolverTrace?.supportedMetrics).not.toContain("Ctr");
     expect(mixedAssemblyLab.layerCombinationResolverTrace?.valuePins).not.toContainEqual({ metric: "Rw", value: 59 });
     expect(mixedAssemblyLab.layerCombinationResolverTrace?.valuePins).not.toContainEqual({ metric: "Ctr", value: -7.2 });
-    expect(mixedAssemblyLab.warnings.some((warning) =>
+    expect(mixedAssemblyLab.warnings.some((warning: string) =>
       warning.includes(ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_OWNER_AUDIT_WARNING_PREFIX) &&
       /Rw, STC, C, Ctr/i.test(warning)
     )).toBe(true);
@@ -1892,7 +1895,7 @@ describe("acoustic calculator answer engine V1 contract", () => {
         valuePins: []
       });
       expect(result.layerCombinationResolverTrace?.surfaceDetail).toContain("Unsupported answer outputs");
-      expect(result.warnings.some((warning) => /ASTM IIC\/AIIC need/i.test(warning))).toBe(true);
+      expect(result.warnings.some((warning: string) => /ASTM IIC\/AIIC need/i.test(warning))).toBe(true);
     }
   });
 
@@ -2064,7 +2067,7 @@ describe("acoustic calculator answer engine V1 contract", () => {
       supportedMetrics: [],
       valuePins: []
     });
-    expect(result.warnings.some((warning) => /Answer Engine V1 selected needs_input/i.test(warning))).toBe(true);
+    expect(result.warnings.some((warning: string) => /Answer Engine V1 selected needs_input/i.test(warning))).toBe(true);
   });
 
   it("parks flat double-leaf-like wall stacks until topology fields are supplied", () => {
@@ -2139,7 +2142,7 @@ describe("acoustic calculator answer engine V1 contract", () => {
       valuePins: []
     });
     expect(result.layerCombinationResolverTrace?.surfaceDetail).toContain("Missing physical inputs");
-    expect(result.warnings.some((warning) => /Answer Engine V1 selected needs_input/i.test(warning))).toBe(true);
+    expect(result.warnings.some((warning: string) => /Answer Engine V1 selected needs_input/i.test(warning))).toBe(true);
   });
 
   it("parks wall field-apparent answers until required room context is supplied", () => {
@@ -2299,7 +2302,7 @@ describe("acoustic calculator answer engine V1 contract", () => {
         valuePins: []
       });
       expect(result.layerCombinationResolverTrace?.surfaceDetail).toContain("Missing physical inputs");
-      expect(result.warnings.some((warning) =>
+      expect(result.warnings.some((warning: string) =>
         /Floor roles needed before impact output promotion/i.test(warning)
       )).toBe(true);
     }

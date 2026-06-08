@@ -63,11 +63,11 @@ function generatedCase(id: string) {
 }
 
 function completeBuildingContext(
-  context: AirborneContext | undefined,
+  context: AirborneContext | null | undefined,
   patch: Partial<AirborneContext> = {}
 ): AirborneContext {
   return {
-    ...context,
+    ...(context ?? {}),
     buildingPredictionOutputBasis: "apparent_and_standardized",
     conservativeFlankingAssumption: "multi_path_conservative",
     contextMode: "building_prediction",
@@ -126,7 +126,7 @@ describe("post-V1 next numeric coverage gap Gate AW", () => {
         selectedCandidateId: GATE_AR_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID,
         supportedMetrics: [...BUILDING_OUTPUTS]
       });
-      expect(result.layerCombinationResolverTrace?.valuePins.map((pin) => pin.metric)).toEqual(
+      expect(result.layerCombinationResolverTrace?.valuePins.map((pin: { metric: RequestedOutputId }) => pin.metric)).toEqual(
         expect.arrayContaining([...BUILDING_OUTPUTS])
       );
       expect(result.layerCombinationResolverTrace?.valuePins).toHaveLength(BUILDING_OUTPUTS.length);

@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import type { AirborneContext, ImpactFieldContext, LayerInput, RequestedOutputId } from "@dynecho/shared";
+import type { ImpactErrorBudget, AirborneContext, ImpactFieldContext, LayerInput, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -176,7 +176,7 @@ function readRepoFile(path: string): string {
 function expectHelperOnlyRuntime(
   layers: readonly LayerInput[],
   expected: {
-    budgets: readonly [string, number][];
+    budgets: readonly (readonly [string, number])[];
     C: number;
     CI: number;
     CI50_2500: number;
@@ -218,8 +218,8 @@ function expectHelperOnlyRuntime(
     LnW: HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS,
     LnWPlusCI: HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS
   });
-  expect(result.impact?.errorBudgets?.map((budget) => [budget.metricId, budget.toleranceDb])).toEqual(expected.budgets);
-  expect(result.impact?.errorBudgets?.every((budget) => budget.notMeasuredEvidence)).toBe(true);
+  expect(result.impact?.errorBudgets?.map((budget: ImpactErrorBudget) => [budget.metricId, budget.toleranceDb])).toEqual(expected.budgets);
+  expect(result.impact?.errorBudgets?.every((budget: ImpactErrorBudget) => budget.notMeasuredEvidence)).toBe(true);
   expect(result.floorSystemRatings).toMatchObject({
     C: expected.C,
     Ctr: expected.Ctr,

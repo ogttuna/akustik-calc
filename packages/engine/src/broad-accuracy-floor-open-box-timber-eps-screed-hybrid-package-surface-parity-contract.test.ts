@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { EXACT_FLOOR_SYSTEMS } from "@dynecho/catalogs";
-import type {
+import type { ImpactErrorBudget,
   ExactFloorSystem,
   FloorRole,
   FloorSystemRoleCriteria,
@@ -223,7 +223,7 @@ function expectHybridSurface(
     systemTypeLabel: "Dry floating floor"
   });
   expect(result.dynamicImpactTrace?.selectedSourceIds).toEqual(["tuas_r7b_open_box_timber_measured_2026"]);
-  expect(result.impact?.errorBudgets?.map((budget) => [budget.metricId, budget.toleranceDb])).toEqual([
+  expect(result.impact?.errorBudgets?.map((budget: ImpactErrorBudget) => [budget.metricId, budget.toleranceDb])).toEqual([
     ["Rw", 7],
     ["C", 3],
     ["Rw+C", 7.5],
@@ -232,7 +232,7 @@ function expectHybridSurface(
     ["CI,50-2500", 3],
     ["Ln,w+CI", 8.5]
   ]);
-  expect(result.impact?.errorBudgets?.every((budget) => budget.notMeasuredEvidence)).toBe(true);
+  expect(result.impact?.errorBudgets?.every((budget: ImpactErrorBudget) => budget.notMeasuredEvidence)).toBe(true);
   expect(result.supportedTargetOutputs).toEqual(["Rw", "C", "Ln,w", "CI", "CI,50-2500", "Ln,w+CI"]);
   expect(result.unsupportedTargetOutputs).toEqual(["L'n,w", "IIC"]);
 

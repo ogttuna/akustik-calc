@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import type { LayerInput, RequestedOutputId } from "@dynecho/shared";
+import type { ImpactErrorBudget, LayerInput, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -259,7 +259,7 @@ describe("broad accuracy post raw-bare open-web coverage revalidation contract",
       basis: OPEN_WEB_RAW_BARE_FORMULA_BASIS
     });
     expect(raw300.floorSystemRatings).toMatchObject({ C: -2.2, Ctr: -7.8, Rw: 32 });
-    expect(raw300.impact?.errorBudgets?.map((budget) => [budget.metricId, budget.toleranceDb])).toEqual([
+    expect(raw300.impact?.errorBudgets?.map((budget: ImpactErrorBudget) => [budget.metricId, budget.toleranceDb])).toEqual([
       ["Rw", 9],
       ["C", 3],
       ["Ctr", 4.5],
