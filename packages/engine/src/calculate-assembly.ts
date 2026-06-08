@@ -272,6 +272,13 @@ const ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLAT_DOUBLE_LEAF_MISSING_INPUTS = [
   "supportTopology",
   "supportSpacingMm"
 ] as const;
+const ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_DOUBLE_LEAF_FRAMED_ROUTE_INPUT_MISSING_INPUTS =
+  new Set<string>(ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLAT_DOUBLE_LEAF_MISSING_INPUTS);
+const ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLAT_DOUBLE_LEAF_LEAF_BEHAVIORS = new Set([
+  "limp_mass_membrane",
+  "panel_leaf",
+  "rigid_mass"
+]);
 const ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_WALL_AIRBORNE_OUTPUTS = new Set<RequestedOutputId>([
   "C",
   "Ctr",
@@ -1415,7 +1422,20 @@ function getAnswerEngineV1ExactFloorMetricUnsupportedOutputs(input: {
   );
 }
 
-function isAnswerEngineV1FlatGypsumAbsorberGypsum(input: {
+function isAnswerEngineV1FlatDoubleLeafLeafLayer(layer: ResolvedLayer): boolean {
+  const acousticBehavior = layer.material.acoustic?.behavior ?? "";
+  if (ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLAT_DOUBLE_LEAF_LEAF_BEHAVIORS.has(acousticBehavior)) {
+    return true;
+  }
+
+  if (layer.material.category === "gap" || layer.material.category === "insulation" || layer.material.category === "support") {
+    return false;
+  }
+
+  return layer.material.category === "finish" || layer.material.category === "mass";
+}
+
+function isAnswerEngineV1FlatDoubleLeafAbsorberStack(input: {
   airborneContext?: AirborneContext | null;
   layers: readonly ResolvedLayer[];
 }): boolean {
@@ -1429,8 +1449,8 @@ function isAnswerEngineV1FlatGypsumAbsorberGypsum(input: {
   }
 
   return (
-    left.material.id === "gypsum_board" &&
-    right.material.id === "gypsum_board" &&
+    isAnswerEngineV1FlatDoubleLeafLeafLayer(left) &&
+    isAnswerEngineV1FlatDoubleLeafLeafLayer(right) &&
     (
       middle.material.id === "rockwool" ||
       middle.material.category === "insulation" ||
@@ -1442,7 +1462,7 @@ function isAnswerEngineV1FlatGypsumAbsorberGypsum(input: {
 function buildAnswerEngineV1FlatDoubleLeafNeedsInputBasis(): AirborneResultBasis {
   return {
     assumptions: [
-      "Flat gypsum / porous absorber / gypsum input is physically double-leaf-like but lacks explicit leaf, cavity, and support ownership.",
+      "Flat leaf / porous absorber / leaf input is physically double-leaf-like but lacks explicit leaf, cavity, and support ownership.",
       "Answer Engine V1 blocks the screening number from becoming the published answer until the double-leaf formula inputs are supplied."
     ],
     calculationStandard: "none",
@@ -1621,6 +1641,20 @@ function hasAnswerEngineV1GroupedTopologyMissingPhysicalInput(
   );
 }
 
+function isAnswerEngineV1DoubleLeafFramedRouteInputStop(input: {
+  basis: AirborneResultBasis | undefined;
+  resolution: AirborneCandidateResolution | undefined;
+}): boolean {
+  return Boolean(
+    input.basis?.origin === "needs_input" &&
+      input.basis.method === "dynamic_calculator_route_input_contract_missing_physical_fields" &&
+      input.resolution?.inputCompletenessIds.includes("gate_q_double_leaf_framed_bridge_route_inputs") &&
+      input.basis.missingPhysicalInputs.some((missingInput) =>
+        ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_DOUBLE_LEAF_FRAMED_ROUTE_INPUT_MISSING_INPUTS.has(missingInput)
+      )
+  );
+}
+
 function getAnswerEngineV1WallNeedsInputUnsupportedOutputs(input: {
   basis: AirborneResultBasis;
   contextMode?: AirborneContext["contextMode"];
@@ -1763,6 +1797,7 @@ function shouldApplyAnswerEngineV1WallNeedsInputBoundary(input: {
 
   return (
     isAnswerEngineV1WallOwnedPhysicalInputStop(input) ||
+    isAnswerEngineV1DoubleLeafFramedRouteInputStop(input) ||
     isAnswerEngineV1GroupedTopologyNeedsInputBoundary(input) ||
     isAnswerEngineV1WallFieldOrBuildingNeedsInputBoundary(input)
   );
@@ -1886,7 +1921,7 @@ function applyAcousticCalculatorAnswerEngineV1FlatDoubleLeafBoundary(input: {
     input.dynamicFamilyRuntimeBasisActive ||
     input.result.airborneCandidateResolution?.selectedOrigin !== "screening_fallback" ||
     input.result.dynamicAirborneTrace?.detectedFamily !== "double_leaf" ||
-    !isAnswerEngineV1FlatGypsumAbsorberGypsum({
+    !isAnswerEngineV1FlatDoubleLeafAbsorberStack({
       airborneContext: input.airborneContext,
       layers: input.result.layers
     })
@@ -1930,6 +1965,10 @@ function applyAcousticCalculatorAnswerEngineV1WallNeedsInputBoundary(
     contextMode: result.airborneOverlay?.contextMode,
     outputs: result.targetOutputs
   });
+  const doubleLeafFramedRouteInputStop = isAnswerEngineV1DoubleLeafFramedRouteInputStop({
+    basis: result.airborneBasis,
+    resolution: result.airborneCandidateResolution
+  });
 
   if (
     result.acousticAnswerBoundary ||
@@ -1937,6 +1976,7 @@ function applyAcousticCalculatorAnswerEngineV1WallNeedsInputBoundary(
     (
       hasAnswerEngineV1SupportedWallAirborneOutput(result.supportedTargetOutputs) &&
       !ownedPhysicalInputStop &&
+      !doubleLeafFramedRouteInputStop &&
       !fieldOrBuildingInputStop
     ) ||
     !shouldApplyAnswerEngineV1WallNeedsInputBoundary({
@@ -4539,13 +4579,21 @@ export function calculateAssembly(
           strategy: dynamicAirborneResult?.trace.strategy
         })
       : false;
+  const answerEngineV1DoubleLeafFramedRouteInputStop =
+    dynamicCandidateResolverRuntime
+      ? isAnswerEngineV1DoubleLeafFramedRouteInputStop({
+          basis: dynamicCandidateResolverRuntime.resolution.selectedBasis,
+          resolution: dynamicCandidateResolverRuntime.resolution
+        })
+      : false;
   const shouldParkAnswerEngineV1Outputs =
     dynamicCandidateResolverRuntime &&
     dynamicCandidateResolverRuntime.resolution.selectedOrigin === "needs_input" &&
     dynamicCandidateResolverRuntime.routeInputAssessment.route === "wall" &&
     (
       !hasAnswerEngineV1SupportedWallAirborneOutput(targetOutputSupport.supportedTargetOutputs) ||
-      answerEngineV1OwnedPhysicalInputStop
+      answerEngineV1OwnedPhysicalInputStop ||
+      answerEngineV1DoubleLeafFramedRouteInputStop
     ) &&
     shouldApplyAnswerEngineV1WallNeedsInputBoundary({
       basis: dynamicCandidateResolverRuntime.resolution.selectedBasis,

@@ -131,6 +131,30 @@ const DOUBLE_LEAF_ABSORBED_STACK = [
   { materialId: "gypsum_board", thicknessMm: 12.5 }
 ] as const satisfies readonly LayerInput[];
 
+const MIXED_ACOUSTIC_DOUBLE_LEAF_ABSORBED_STACK = [
+  { materialId: "gypsum_board", thicknessMm: 12.5 },
+  { materialId: "rockwool", thicknessMm: 90 },
+  { materialId: "acoustic_gypsum_board", thicknessMm: 12.5 }
+] as const satisfies readonly LayerInput[];
+
+const ENHANCED_PANEL_DOUBLE_LEAF_ABSORBED_STACK = [
+  { materialId: "diamond_board", thicknessMm: 12.5 },
+  { materialId: "rockwool", thicknessMm: 90 },
+  { materialId: "silentboard", thicknessMm: 12.5 }
+] as const satisfies readonly LayerInput[];
+
+const RIGID_BOARD_DOUBLE_LEAF_ABSORBED_STACK = [
+  { materialId: "cement_board", thicknessMm: 12.5 },
+  { materialId: "rockwool", thicknessMm: 90 },
+  { materialId: "cement_board", thicknessMm: 12.5 }
+] as const satisfies readonly LayerInput[];
+
+const FLOOR_SYSTEM_BOARD_DOUBLE_LEAF_ABSORBED_STACK = [
+  { materialId: "gypsum_board", thicknessMm: 12.5 },
+  { materialId: "rockwool", thicknessMm: 90 },
+  { materialId: "firestop_board", thicknessMm: 12.5 }
+] as const satisfies readonly LayerInput[];
+
 const EXACT_LSF_LAB_STACK = [
   { materialId: "acoustic_gypsum_board", thicknessMm: 12.5 },
   { materialId: "acoustic_gypsum_board", thicknessMm: 12.5 },
@@ -194,6 +218,14 @@ const INDEPENDENT_ABSORBED_CONTEXT: AirborneContext = {
     sideALeafLayerIndices: [0],
     sideBLeafLayerIndices: [2],
     supportTopology: "independent_frames",
+    topologyMode: "double_leaf_framed"
+  }
+};
+
+const CAVITY_DEPTH_ONLY_DOUBLE_LEAF_CONTEXT: AirborneContext = {
+  contextMode: "element_lab",
+  wallTopology: {
+    cavity1DepthMm: 90,
     topologyMode: "double_leaf_framed"
   }
 };
@@ -838,6 +870,50 @@ describe("acoustic calculator answer engine V1 contract", () => {
         targetOutputs: WALL_OUTPUTS
       },
       {
+        context: INDEPENDENT_ABSORBED_CONTEXT,
+        expectedTrace: {
+          candidateKind: "source_absent_family_solver",
+          requestedBasis: "element_lab",
+          route: "wall",
+          runtimeBasisId: LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_FORMULA_CORRIDOR_BASIS,
+          selectedCandidateId: LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID,
+          supportBucket: "source_absent_estimate",
+          supportedMetrics: ["Rw", "C", "Ctr", "STC"]
+        },
+        expectedUnsupported: [],
+        expectedValues: [
+          { metric: "Rw", value: 46 },
+          { metric: "STC", value: 46 },
+          { metric: "C", value: -1.1 },
+          { metric: "Ctr", value: -6.2 }
+        ],
+        label: "wall source-absent mixed acoustic-gypsum double-leaf formula",
+        layers: MIXED_ACOUSTIC_DOUBLE_LEAF_ABSORBED_STACK,
+        targetOutputs: WALL_OUTPUTS
+      },
+      {
+        context: INDEPENDENT_ABSORBED_CONTEXT,
+        expectedTrace: {
+          candidateKind: "source_absent_family_solver",
+          requestedBasis: "element_lab",
+          route: "wall",
+          runtimeBasisId: LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_FORMULA_CORRIDOR_BASIS,
+          selectedCandidateId: LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID,
+          supportBucket: "source_absent_estimate",
+          supportedMetrics: ["Rw", "C", "Ctr", "STC"]
+        },
+        expectedUnsupported: [],
+        expectedValues: [
+          { metric: "Rw", value: 49 },
+          { metric: "STC", value: 49 },
+          { metric: "C", value: -1.5 },
+          { metric: "Ctr", value: -6.5 }
+        ],
+        label: "wall source-absent enhanced panel double-leaf formula",
+        layers: ENHANCED_PANEL_DOUBLE_LEAF_ABSORBED_STACK,
+        targetOutputs: WALL_OUTPUTS
+      },
+      {
         context: { contextMode: "element_lab" },
         expectedTrace: {
           candidateKind: "source_absent_family_solver",
@@ -957,6 +1033,184 @@ describe("acoustic calculator answer engine V1 contract", () => {
         expectedUnsupported: WALL_OUTPUTS,
         label: "wall flat double-leaf missing topology",
         layers: DOUBLE_LEAF_ABSORBED_STACK,
+        targetOutputs: WALL_OUTPUTS
+      },
+      {
+        context: CAVITY_DEPTH_ONLY_DOUBLE_LEAF_CONTEXT,
+        expectedBoundary: {
+          missingPhysicalInputs: [
+            "sideALeafGroup",
+            "sideBLeafGroup",
+            "frameBridgeClass",
+            "supportTopology",
+            "supportSpacingMm"
+          ],
+          origin: "needs_input",
+          unsupportedOutputs: WALL_OUTPUTS
+        },
+        expectedTrace: {
+          candidateKind: "needs_input_boundary",
+          requiredInputs: [
+            "sideALeafGroup",
+            "sideBLeafGroup",
+            "frameBridgeClass",
+            "supportTopology",
+            "supportSpacingMm"
+          ],
+          requestedBasis: "element_lab",
+          route: "wall",
+          runtimeBasisId: null,
+          selectedCandidateId: "generic.required_input_owner.needs_input_boundary",
+          supportBucket: "needs_input",
+          supportedMetrics: []
+        },
+        expectedUnsupported: WALL_OUTPUTS,
+        label: "wall partial double-leaf topology still asks for remaining physical inputs",
+        layers: DOUBLE_LEAF_ABSORBED_STACK,
+        targetOutputs: WALL_OUTPUTS
+      },
+      {
+        context: { contextMode: "element_lab" },
+        expectedBoundary: {
+          missingPhysicalInputs: [
+            "sideALeafGroup",
+            "cavity1DepthMm",
+            "sideBLeafGroup",
+            "frameBridgeClass",
+            "supportTopology",
+            "supportSpacingMm"
+          ],
+          origin: "needs_input",
+          unsupportedOutputs: WALL_OUTPUTS
+        },
+        expectedTrace: {
+          candidateKind: "needs_input_boundary",
+          requiredInputs: [
+            "sideALeafGroup",
+            "cavity1DepthMm",
+            "sideBLeafGroup",
+            "frameBridgeClass",
+            "supportTopology",
+            "supportSpacingMm"
+          ],
+          requestedBasis: "element_lab",
+          route: "wall",
+          runtimeBasisId: null,
+          selectedCandidateId: "generic.required_input_owner.needs_input_boundary",
+          supportBucket: "needs_input",
+          supportedMetrics: []
+        },
+        expectedUnsupported: WALL_OUTPUTS,
+        label: "wall mixed acoustic-gypsum double-leaf missing topology",
+        layers: MIXED_ACOUSTIC_DOUBLE_LEAF_ABSORBED_STACK,
+        targetOutputs: WALL_OUTPUTS
+      },
+      {
+        context: { contextMode: "element_lab" },
+        expectedBoundary: {
+          missingPhysicalInputs: [
+            "sideALeafGroup",
+            "cavity1DepthMm",
+            "sideBLeafGroup",
+            "frameBridgeClass",
+            "supportTopology",
+            "supportSpacingMm"
+          ],
+          origin: "needs_input",
+          unsupportedOutputs: WALL_OUTPUTS
+        },
+        expectedTrace: {
+          candidateKind: "needs_input_boundary",
+          requiredInputs: [
+            "sideALeafGroup",
+            "cavity1DepthMm",
+            "sideBLeafGroup",
+            "frameBridgeClass",
+            "supportTopology",
+            "supportSpacingMm"
+          ],
+          requestedBasis: "element_lab",
+          route: "wall",
+          runtimeBasisId: null,
+          selectedCandidateId: "generic.required_input_owner.needs_input_boundary",
+          supportBucket: "needs_input",
+          supportedMetrics: []
+        },
+        expectedUnsupported: WALL_OUTPUTS,
+        label: "wall enhanced panel double-leaf missing topology",
+        layers: ENHANCED_PANEL_DOUBLE_LEAF_ABSORBED_STACK,
+        targetOutputs: WALL_OUTPUTS
+      },
+      {
+        context: { contextMode: "element_lab" },
+        expectedBoundary: {
+          missingPhysicalInputs: [
+            "sideALeafGroup",
+            "cavity1DepthMm",
+            "sideBLeafGroup",
+            "frameBridgeClass",
+            "supportTopology",
+            "supportSpacingMm"
+          ],
+          origin: "needs_input",
+          unsupportedOutputs: WALL_OUTPUTS
+        },
+        expectedTrace: {
+          candidateKind: "needs_input_boundary",
+          requiredInputs: [
+            "sideALeafGroup",
+            "cavity1DepthMm",
+            "sideBLeafGroup",
+            "frameBridgeClass",
+            "supportTopology",
+            "supportSpacingMm"
+          ],
+          requestedBasis: "element_lab",
+          route: "wall",
+          runtimeBasisId: null,
+          selectedCandidateId: "generic.required_input_owner.needs_input_boundary",
+          supportBucket: "needs_input",
+          supportedMetrics: []
+        },
+        expectedUnsupported: WALL_OUTPUTS,
+        label: "wall rigid-board double-leaf missing topology",
+        layers: RIGID_BOARD_DOUBLE_LEAF_ABSORBED_STACK,
+        targetOutputs: WALL_OUTPUTS
+      },
+      {
+        context: { contextMode: "element_lab" },
+        expectedBoundary: {
+          missingPhysicalInputs: [
+            "sideALeafGroup",
+            "cavity1DepthMm",
+            "sideBLeafGroup",
+            "frameBridgeClass",
+            "supportTopology",
+            "supportSpacingMm"
+          ],
+          origin: "needs_input",
+          unsupportedOutputs: WALL_OUTPUTS
+        },
+        expectedTrace: {
+          candidateKind: "needs_input_boundary",
+          requiredInputs: [
+            "sideALeafGroup",
+            "cavity1DepthMm",
+            "sideBLeafGroup",
+            "frameBridgeClass",
+            "supportTopology",
+            "supportSpacingMm"
+          ],
+          requestedBasis: "element_lab",
+          route: "wall",
+          runtimeBasisId: null,
+          selectedCandidateId: "generic.required_input_owner.needs_input_boundary",
+          supportBucket: "needs_input",
+          supportedMetrics: []
+        },
+        expectedUnsupported: WALL_OUTPUTS,
+        label: "wall board-like fallback material double-leaf missing topology",
+        layers: FLOOR_SYSTEM_BOARD_DOUBLE_LEAF_ABSORBED_STACK,
         targetOutputs: WALL_OUTPUTS
       },
       {
