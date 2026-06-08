@@ -397,11 +397,11 @@ describe("simple workbench generated proposal document honesty", () => {
       "Awaiting route input",
       "resilientLayerDynamicStiffnessMNm3",
       "loadBasisKgM2",
-      "ceilingOrLowerAssembly",
       "L'n,w",
       "Awaiting field input",
       "DeltaLw"
     ]);
+    expect(document.metrics.map((metric) => metric.detail).join(" ")).not.toContain("ceilingOrLowerAssembly");
     expectOfferPreviewsToOmitInternalPosture(document, ["Awaiting route input", "Awaiting field input"]);
   });
 
@@ -418,8 +418,8 @@ describe("simple workbench generated proposal document honesty", () => {
       targetOutputs: ["R'w", "Dn,w", "DnT,w", "Rw", "STC", "C", "Ctr"]
     });
 
-    expect(scenario.result?.supportedTargetOutputs).toEqual(["R'w", "Dn,w", "DnT,w", "STC", "C", "Ctr"]);
-    expect(scenario.result?.unsupportedTargetOutputs).toEqual(["Rw"]);
+    expect(scenario.result?.supportedTargetOutputs).toEqual(["R'w", "Dn,w", "DnT,w", "Rw", "STC", "C", "Ctr"]);
+    expect(scenario.result?.unsupportedTargetOutputs).toEqual([]);
     expect(coverageItems.find((item) => item.label === "R'w")).toEqual(
       expect.objectContaining({ postureLabel: "Airborne field-context prediction", status: "live", value: "59 dB" })
     );
@@ -430,15 +430,15 @@ describe("simple workbench generated proposal document honesty", () => {
       expect.objectContaining({ postureLabel: "Airborne field-context prediction", status: "live", value: "61 dB" })
     );
     expect(coverageItems.find((item) => item.label === "Rw")).toEqual(
-      expect.objectContaining({ postureLabel: "Unsupported on route", status: "unsupported", value: "Not ready" })
+      expect.objectContaining({ postureLabel: "Airborne screening lane", status: "live", value: "59 dB" })
     );
 
     expectProposalTextToContain(document, [
       "Airborne field-context prediction",
+      "Airborne screening lane",
       "R'w",
       "Dn,w",
       "DnT,w",
-      "Unsupported on route",
       "Rw"
     ]);
     expectOfferPreviewsToOmitInternalPosture(document, ["Unsupported on route"]);

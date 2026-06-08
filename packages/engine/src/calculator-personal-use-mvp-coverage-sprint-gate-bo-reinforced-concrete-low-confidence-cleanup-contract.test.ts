@@ -159,8 +159,7 @@ describe("Personal-Use MVP Coverage Sprint Gate BO reinforced-concrete low-confi
       inputMode: "derived_from_visible_layers",
       missingPhysicalInputs: [
         "resilientLayerDynamicStiffnessMNm3",
-        "loadBasisKgM2",
-        "ceilingOrLowerAssembly"
+        "loadBasisKgM2"
       ],
       origin: "needs_input",
       supportedTargetOutputs: ["Rw", "Ctr"],

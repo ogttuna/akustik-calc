@@ -1,6 +1,6 @@
 # System Map
 
-Last reviewed: 2026-06-05
+Last reviewed: 2026-06-08
 
 Document role:
 
@@ -19,17 +19,22 @@ Use this together with the calculator source-of-truth chain:
   authority order
 - [USABLE_V1_EXECUTION_PLAN.md](./USABLE_V1_EXECUTION_PLAN.md)
   — closed company-internal usable V1 acceptance contract
-- [CHECKPOINT_2026-06-05_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_DA.md](./CHECKPOINT_2026-06-05_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_DA.md)
-  — latest docs/implementation/test reconciliation after Gate DA;
-  Gate CX/CY/CZ/DA have landed, the latest full gate passed after Gate DA,
-  and Gate DA selected Gate DB
+- [CHECKPOINT_2026-06-08_GATE_ET_BOUNDARY_HANDOFF.md](./CHECKPOINT_2026-06-08_GATE_ET_BOUNDARY_HANDOFF.md)
+  — latest docs/implementation/test reconciliation after Gate ET; Gate
+  EM/EN/EO/EP/EQ/ER/ES/ET evidence is focused-green and Gate EU is selected
 - [POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md)
-  — selected post-V1 capability plan; Gate CY landed the
-  composite-panel `DeltaLw` owner, Gate DA pinned the
-  lightweight-concrete `DeltaLw` owner boundary, and Gate DB is selected
+  — selected post-V1 capability plan; the chain has advanced through
+  Gate ET and now selects Gate EU
+- [POST_V1_GATE_ES_ET_REINFORCED_CONCRETE_VISIBLE_DERIVED_BOUNDARY_PLAN_2026-06-08.md](./POST_V1_GATE_ES_ET_REINFORCED_CONCRETE_VISIBLE_DERIVED_BOUNDARY_PLAN_2026-06-08.md)
+  — landed Gate ES/ET plan for the reinforced-concrete visible-derived missing-input boundary
+- [POST_V1_GATE_EQ_ER_WALL_DIRECT_FIXED_DOUBLE_LEAF_FIELD_BUILDING_ADAPTER_RUNTIME_PLAN_2026-06-08.md](./POST_V1_GATE_EQ_ER_WALL_DIRECT_FIXED_DOUBLE_LEAF_FIELD_BUILDING_ADAPTER_RUNTIME_PLAN_2026-06-08.md)
+  — landed Gate ER runtime plan for direct-fixed double-leaf
+  field/building adapters
+- [POST_V1_GATE_EP_EQ_WALL_DIRECT_FIXED_DOUBLE_LEAF_FIELD_BUILDING_ADAPTER_PLAN_2026-06-07.md](./POST_V1_GATE_EP_EQ_WALL_DIRECT_FIXED_DOUBLE_LEAF_FIELD_BUILDING_ADAPTER_PLAN_2026-06-07.md)
+  — landed Gate EQ owner-proof plan
 - [POST_V1_HIGH_ROI_SCOPE_ACCURACY_GATES_AFTER_GATE_CD_PLAN_2026-06-02.md](./POST_V1_HIGH_ROI_SCOPE_ACCURACY_GATES_AFTER_GATE_CD_PLAN_2026-06-02.md)
-  — current high-ROI candidate framework; Gate DA used it to preserve
-  correctness boundaries and select the next value-moving Gate DB
+  — high-ROI candidate framework; useful planning input, not an older
+  selected-next override
 - [POST_V1_GATE_CD_OPEN_BOX_TARGET_OUTPUT_INDEPENDENCE_PLAN_2026-06-01.md](./POST_V1_GATE_CD_OPEN_BOX_TARGET_OUTPUT_INDEPENDENCE_PLAN_2026-06-01.md)
   — landed historical Gate CD target-output independence scope/correctness slice
 - [ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md](./ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_PLAN_2026-05-21.md)
@@ -37,10 +42,6 @@ Use this together with the calculator source-of-truth chain:
 - [SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md](./SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md)
   — historical model-first physics prediction pivot; still useful as
   foundation, but no longer the active next-action document
-- [CHECKPOINT_2026-05-05_DOC_IMPLEMENTATION_RECONCILIATION_HANDOFF.md](./CHECKPOINT_2026-05-05_DOC_IMPLEMENTATION_RECONCILIATION_HANDOFF.md)
-  — historical doc/implementation reconciliation
-- [CHECKPOINT_2026-05-05_STANDARDS_RESEARCH_PLAN_DETAIL_HANDOFF.md](./CHECKPOINT_2026-05-05_STANDARDS_RESEARCH_PLAN_DETAIL_HANDOFF.md)
-  — latest standards research and plan detail
 - [CURRENT_STATE.md](./CURRENT_STATE.md) — snapshot (what just closed, what is selected)
 - [MASTER_PLAN.md](./MASTER_PLAN.md) — historical strategic roadmap; not a selector
 - [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md) — tactical slice detail
@@ -54,6 +55,50 @@ And:
   behavior plan.
 
 ## Product Contract
+
+Latest boundary closeout: Gate ET landed
+`post_v1_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et_plan`
+with status
+`post_v1_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et_landed_no_runtime_selected_next_numeric_coverage_gap_gate_eu`.
+Boundary id:
+`floor.reinforced_concrete.visible_derived_lower_assembly_from_layers_missing_dynamic_stiffness_and_load`.
+Visible-derived reinforced-concrete combined upper/lower floors park
+`Ln,w` / `DeltaLw` as `needs_input` for exactly
+`resilientLayerDynamicStiffnessMNm3` and `loadBasisKgM2`; explicit
+partial predictor input still asks for `loadBasisKgM2` and
+`ceilingOrLowerAssembly`. This moved `runtimeValuesMoved 0`, cleared
+`currentGateFailuresCleared 6`, imported `sourceRowsImported: 0`, and
+touched `frontendImplementationFilesTouched: 1`. Gate ET selects
+`post_v1_next_numeric_coverage_gap_gate_eu_plan` in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-eu-contract.test.ts`.
+
+Latest no-runtime rerank: Gate ES landed
+`post_v1_next_numeric_coverage_gap_gate_es_plan` with status
+`post_v1_next_numeric_coverage_gap_gate_es_landed_no_runtime_selected_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et`.
+It selected
+`floor.reinforced_concrete_visible_derived_missing_input_boundary_refresh`
+after two ROI iterations (`roiAnalysisIterations: 2`) and selected Gate
+ET in
+`packages/engine/src/post-v1-floor-reinforced-concrete-visible-derived-missing-input-boundary-gate-et-contract.test.ts`.
+Gate ES estimated the selected boundary-surface touch as
+`estimatedNextFrontendImplementationFilesTouched 1`.
+Gate ES moved `runtimeValuesMoved 0`, imported `sourceRowsImported: 0`,
+and touched `frontendImplementationFilesTouched: 0`.
+
+Latest runtime closeout: Gate ER landed
+`post_v1_wall_direct_fixed_double_leaf_field_building_adapter_runtime_gate_er_plan`
+with status
+`post_v1_wall_direct_fixed_double_leaf_field_building_adapter_runtime_gate_er_landed_runtime_selected_next_numeric_coverage_gap_gate_es`.
+Readable label: direct-fixed double-leaf field/building adapter runtime.
+Complete direct-fixed double-leaf `field_between_rooms` requests now use
+`gate_i_airborne_field_apparent_context_adapter_runtime`, and complete
+`building_prediction` requests now use
+`gate_ar_airborne_building_prediction_all_owner_runtime_corridor`; both
+calculate `R'w 23 / Dn,w 24 / DnT,w 27` over the Gate EO direct
+separating-element curve. This moved `runtimeValuesMoved 6` with
+`sourceRowsImported: 0` and `frontendImplementationFilesTouched: 0`.
+Gate ER selected Gate ES file:
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-es-contract.test.ts`.
 
 This repo is an acoustic calculator for floor and wall assemblies.
 Its product direction is scope and accuracy: more physically valid
@@ -328,7 +373,7 @@ validation path before and after a refactor.
 
 ## Current Architectural Hotspots
 
-As of 2026-05-25, the current calculator hotspots are post-V1 product
+As of 2026-06-08, the current calculator hotspots are post-V1 product
 gaps, not missing answer-engine architecture:
 
 - `packages/engine/src/layer-combination-resolver-registry.ts` is the
@@ -352,10 +397,17 @@ gaps, not missing answer-engine architecture:
   holdouts, and required-input ergonomics while preserving exact /
   anchor / formula / `needs_input` / `unsupported` answer order.
 
-Current selected hotspot: generalized wall multileaf/triple-leaf formula
-coverage. Gate A in
-[POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md)
-must define the input owner and gap matrix before any runtime movement.
+Current selected hotspot: Gate ER direct-fixed double-leaf
+field/building adapter runtime. Gate EQ accepted
+`wall.direct_fixed_double_leaf.field_between_rooms_adapter_owner` and
+`wall.direct_fixed_double_leaf.building_prediction_adapter_owner`
+without moving runtime values. Complete `field_between_rooms` requests
+still use `screening_mass_law_curve_seed_v3` and complete
+`building_prediction` requests still stop as
+`dynamic_calculator_building_prediction_runtime_adapter_owner_missing`.
+Gate ER is the value-moving step that should connect the Gate EO direct
+curve to Gate I/AR adapter semantics for the bounded direct-fixed
+subset while preserving `needs_input` / `unsupported` boundaries.
 
 ### Historical 2026-04-27 Snapshot
 

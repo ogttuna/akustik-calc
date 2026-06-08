@@ -62,7 +62,7 @@ field/building adapter:
 - complete `field_between_rooms` requests for `R'w`, `Dn,w`, and
   `DnT,w` currently support the requested outputs but select
   `candidate_multileaf_screening_fallback` with method
-  `screening_mass_law_curve_seed_v3`, calculating `R'w 25 / Dn,w 25 /
+  `screening_mass_law_curve_seed_v3`, calculating `R'w 25 / Dn,w 26 /
   DnT,w 28`;
 - complete `building_prediction` requests for `R'w`, `Dn,w`, and
   `DnT,w` currently stop as unsupported with method
@@ -137,6 +137,59 @@ owned field/building adapter semantics. Expected future movement:
 `estimatedNextNewCalculableRequestShapes 3`,
 `estimatedNextRuntimeCorrectedLayerTemplates 1`, and
 `estimatedNextRuntimeCorrectedRequestShapes 3`.
+
+## Gate EQ Owner Proof Result
+
+Gate EQ lands as:
+
+`post_v1_wall_direct_fixed_double_leaf_field_building_adapter_owner_gate_eq_plan`
+
+Gate EQ status:
+
+`post_v1_wall_direct_fixed_double_leaf_field_building_adapter_owner_gate_eq_landed_no_runtime_selected_wall_direct_fixed_double_leaf_field_building_adapter_runtime_gate_er`
+
+Accepted owners:
+
+- `wall.direct_fixed_double_leaf.field_between_rooms_adapter_owner`;
+- `wall.direct_fixed_double_leaf.building_prediction_adapter_owner`.
+
+Gate EQ accepts the Gate EO direct separating-element curve as the base
+curve for the bounded direct-fixed field/building adapters, proves the
+required field/building physical inputs, and keeps lab `Rw`/STC/`C`/`Ctr`
+separate from `R'w`/`Dn,w`/`DnT,w`. It moves no runtime values.
+
+Counters: `acceptedAdapterOwnerLedgers 2`, `boundaryLedgersPinned 8`,
+`estimatedNextNewCalculableLayerTemplates 1`,
+`estimatedNextNewCalculableRequestShapes 3`,
+`estimatedNextRuntimeCorrectedLayerTemplates 1`,
+`estimatedNextRuntimeCorrectedRequestShapes 3`,
+`newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+`runtimeBasisPromotions 0`, `runtimeFormulaRetunes 0`,
+`runtimeValuesMoved 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+
+Selected next action:
+
+`post_v1_wall_direct_fixed_double_leaf_field_building_adapter_runtime_gate_er_plan`
+
+Selected next file:
+
+`packages/engine/src/post-v1-wall-direct-fixed-double-leaf-field-building-adapter-runtime-gate-er-contract.test.ts`
+
+## Gate ER Work Order
+
+Gate ER is the direct-fixed double-leaf field/building adapter runtime.
+It should move runtime values only for the complete direct-fixed subset:
+route complete `field_between_rooms` requests through the Gate EO direct
+curve plus Gate I field adapter, and complete `building_prediction`
+requests through the Gate EO direct curve plus Gate AR building adapter.
+Missing support spacing, missing room RT60, missing building/flanking
+context, multicavity/triple-leaf routes, non-direct-fixed routes, source
+crawling, frontend work, and formula retuning remain out of scope.
+
+Runtime plan:
+
+`docs/calculator/POST_V1_GATE_EQ_ER_WALL_DIRECT_FIXED_DOUBLE_LEAF_FIELD_BUILDING_ADAPTER_RUNTIME_PLAN_2026-06-08.md`
 
 ## Non-Goals
 

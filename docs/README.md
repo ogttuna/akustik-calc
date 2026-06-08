@@ -28,8 +28,14 @@ rules.
 
 For current calculator implementation, use only the living authority
 chain under `docs/calculator/`: `CALCULATOR_SOURCE_OF_TRUTH.md`,
-`CURRENT_STATE.md`, `NEXT_IMPLEMENTATION_PLAN.md`,
+`USABLE_V1_EXECUTION_PLAN.md`, `CURRENT_STATE.md`,
+`NEXT_IMPLEMENTATION_PLAN.md`,
 `POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md`,
+`CHECKPOINT_2026-06-08_GATE_ET_BOUNDARY_HANDOFF.md`,
+the active Gate ES/ET boundary plan
+`POST_V1_GATE_ES_ET_REINFORCED_CONCRETE_VISIBLE_DERIVED_BOUNDARY_PLAN_2026-06-08.md`,
+the active Gate EQ/ER runtime plan
+`POST_V1_GATE_EQ_ER_WALL_DIRECT_FIXED_DOUBLE_LEAF_FIELD_BUILDING_ADAPTER_RUNTIME_PLAN_2026-06-08.md`,
 `CALCULATION_MODEL_AND_VALIDATION.md`, and `SYSTEM_MAP.md`. Older
 `CHECKPOINT_*`, `SLICE_*`, roadmap, source-ledger, pilot, and
 productization files are historical or secondary context unless the
@@ -37,34 +43,73 @@ source-of-truth chain explicitly reselects them.
 
 ## Current Implementation Snapshot
 
-As of 2026-06-05, usable V1 Steps 0-5 are closed for the current
+As of 2026-06-08, usable V1 Steps 0-5 are closed for the current
 company-internal envelope. The post-V1 calculator chain has advanced
-through Gate DA. The latest value-moving new-output runtime slice is
-`post_v1_floor_composite_panel_delta_lw_owner_gate_cy_plan`, with status
-`post_v1_floor_composite_panel_delta_lw_owner_gate_cy_landed_runtime_selected_next_numeric_coverage_gap_gate_cz`.
-It keeps composite-panel `Rw` / `Ln,w` pins unchanged and adds
-same-family ISO `DeltaLw`: dry floating `14.6`, suspended-ceiling-only
-`20.7`, and combined upper/lower treatment `35.5`. Gate CZ then landed
-as the latest no-runtime numeric coverage rerank and selected the
-lightweight-concrete `DeltaLw` owner-contract step.
+through Gate ET. The current selected next action is Gate EU:
+`post_v1_next_numeric_coverage_gap_gate_eu_plan` in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-eu-contract.test.ts`.
 
-Gate DA has now landed as
-`post_v1_floor_lightweight_concrete_delta_lw_owner_contract_gate_da_plan`
+The latest no-runtime boundary slice is
+`post_v1_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et_plan`
 with status
-`post_v1_floor_lightweight_concrete_delta_lw_owner_contract_gate_da_landed_runtime_boundary_selected_delta_lw_runtime_corridor_gate_db`.
-It does not publish new lightweight-concrete `DeltaLw` yet. It pins the
-family owner fields, prevents low-density predictor input from
-borrowing `heavy_concrete_annex_c_delta_lw`, keeps existing
-lightweight-concrete `Rw` / `Ln,w` / field-impact pins unchanged, and
-selects
-`post_v1_floor_lightweight_concrete_delta_lw_runtime_corridor_gate_db_plan`.
-The resolver surface is 43 declared candidates and 40 active
-runtime-basis mappings.
+`post_v1_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et_landed_no_runtime_selected_next_numeric_coverage_gap_gate_eu`.
+Boundary id:
+`floor.reinforced_concrete.visible_derived_lower_assembly_from_layers_missing_dynamic_stiffness_and_load`.
+Gate ET pins the reinforced-concrete visible-derived missing-input boundary:
+visible layer roles already define the lower assembly, so
+`Ln,w` / `DeltaLw` stop on `resilientLayerDynamicStiffnessMNm3` and
+`loadBasisKgM2`; explicit partial predictor input still requires
+`loadBasisKgM2` and `ceilingOrLowerAssembly`. Counters:
+`currentGateFailuresCleared 6`, `runtimeValuesMoved 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 1`.
+
+The latest no-runtime numeric coverage/accuracy rerank is
+`post_v1_next_numeric_coverage_gap_gate_es_plan` with status
+`post_v1_next_numeric_coverage_gap_gate_es_landed_no_runtime_selected_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et`.
+Gate ES selected
+`floor.reinforced_concrete_visible_derived_missing_input_boundary_refresh`
+after two ROI iterations (`roiAnalysisIterations: 2`) and selected Gate
+ET in
+`packages/engine/src/post-v1-floor-reinforced-concrete-visible-derived-missing-input-boundary-gate-et-contract.test.ts`.
+Estimated Gate ET boundary-surface touch:
+`estimatedNextFrontendImplementationFilesTouched 1`.
+Gate ES counters include `runtimeValuesMoved 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+The latest value-moving runtime slice is
+`post_v1_wall_direct_fixed_double_leaf_field_building_adapter_runtime_gate_er_plan`
+with status
+`post_v1_wall_direct_fixed_double_leaf_field_building_adapter_runtime_gate_er_landed_runtime_selected_next_numeric_coverage_gap_gate_es`.
+Readable label: direct-fixed double-leaf field/building adapter runtime.
+Gate ER connects the Gate EO direct separating-element curve to
+`gate_i_airborne_field_apparent_context_adapter_runtime` for complete
+direct-fixed `field_between_rooms` requests and to
+`gate_ar_airborne_building_prediction_all_owner_runtime_corridor` for
+complete direct-fixed `building_prediction` requests. The representative
+direct-fixed empty-cavity stack calculates `R'w 23 / Dn,w 24 / DnT,w 27`
+in both contexts. Missing `receivingRoomRt60S` and missing
+`supportSpacingMm` remain `needs_input`, lab output remains
+`Rw 31 / STC 31 / C -1.2 / Ctr -5.9`, `runtimeValuesMoved 6`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+Gate ER selected Gate ES file:
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-es-contract.test.ts`.
+
+Gate EQ remains the latest landed no-runtime adapter owner proof. It
+accepted `wall.direct_fixed_double_leaf.field_between_rooms_adapter_owner`
+and `wall.direct_fixed_double_leaf.building_prediction_adapter_owner`
+before Gate ER moved runtime values. Broad source crawling, source-row
+cataloguing, confidence-label work, and UI/product polish are not
+selected calculator work for this step.
+
+Focused Gate EM/EN/EO/EP/EQ/ER/ES/ET implementation checks are green
+when run by their targeted Vitest files. Gate ET specifically resolves
+the earlier reinforced-concrete visible-derived expectation drift by
+aligning the contracts to the runtime boundary above.
 
 The closed-gate ledger below is retained for contract-test continuity
-and historical traceability. Do not use an older "selected next" line in
-that ledger as current authority when it conflicts with the snapshot or
-the living calculator docs.
+and historical traceability. Do not use an older "selected next" or
+"latest" line in that ledger as current authority when it conflicts with
+the snapshot or the living calculator docs.
 
 ## Closed-Gate Ledger
 
@@ -133,17 +178,17 @@ selected
 `post_v1_next_numeric_coverage_gap_gate_ch_plan`, with selected next
 file
 `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ch-contract.test.ts`.
-Gate CH has now landed as the latest value-moving runtime slice:
+Gate CH later landed as a historical value-moving runtime slice:
 `post_v1_next_numeric_coverage_gap_gate_ch_plan`, with status
 `post_v1_next_numeric_coverage_gap_gate_ch_landed_runtime_selected_next_numeric_coverage_gap_gate_ci`.
 It corrects the field/building direct+flanking low-frequency companion
 for the same visible heavy-floating upper-treatment route: explicit
 direct/flanking impact context plus `impactFieldContext.ci50_2500Db`
-now publishes `L'n,w 57.5 / L'nT,w 55.1 / L'nT,50 59.1` from the
+publishes `L'n,w 57.5 / L'nT,w 55.1 / L'nT,50 59.1` from the
 published upper-treatment `Ln,w 50` anchor. Missing CI50 still stops
-only `L'nT,50`, and ASTM `IIC` / `AIIC` remain unsupported. Gate CH
-selected `post_v1_next_numeric_coverage_gap_gate_ci_plan`, with
-selected next file
+only `L'nT,50`, and ASTM `IIC` / `AIIC` remain unsupported. At that
+historical point, Gate CH selected
+`post_v1_next_numeric_coverage_gap_gate_ci_plan`, with selected next file
 `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ci-contract.test.ts`.
 The previous value-moving numeric coverage slice is
 `post_v1_floor_open_box_target_output_independence_gate_cd_plan`.

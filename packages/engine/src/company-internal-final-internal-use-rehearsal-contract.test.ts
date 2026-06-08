@@ -148,7 +148,7 @@ const NEEDS_INPUT_EXPECTATIONS = [
   },
   {
     id: "floor.reinforced_concrete_combined_visible_derived.needs_input",
-    missing: ["resilientLayerDynamicStiffnessMNm3", "loadBasisKgM2", "ceilingOrLowerAssembly"]
+    missing: ["resilientLayerDynamicStiffnessMNm3", "loadBasisKgM2"]
   },
   { id: "floor.reinforced_concrete_combined_incomplete_explicit.needs_input", missing: ["loadBasisKgM2", "ceilingOrLowerAssembly"] },
   { id: "wall.opening_leak_building_missing_owner.needs_input", missing: ["sourceRoomVolumeM3"] },

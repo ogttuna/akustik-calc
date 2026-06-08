@@ -22,25 +22,115 @@ measured/reference residual bar.
 The active broad-accuracy slice plan is
 [SLICE_BROAD_ACCURACY_REFERENCE_BENCHMARK_AND_SIMILARITY_SOLVER_PLAN.md](./SLICE_BROAD_ACCURACY_REFERENCE_BENCHMARK_AND_SIMILARITY_SOLVER_PLAN.md).
 The latest checkpoint is
-[CHECKPOINT_2026-06-07_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_EP.md](./CHECKPOINT_2026-06-07_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_EP.md).
-It records the Gate EP docs / implementation sync, the Gate EQ selected
-next action, the focused Gate EM/EN/EO/EP green validation, and the
-repo-wide current-gate red status caused by reinforced-concrete
-visible-derived missing-input expectations. Gate CX/CY/CZ/DA/DB/DC/DD/DE/DF/DG/DH/DI/DJ/DK/DL/DM/DN/DO/DP/DQ/DR/DS/DT/DU/DV/DW/DX/DY/DZ/EA have landed. The latest full documented
+[CHECKPOINT_2026-06-08_GATE_ET_BOUNDARY_HANDOFF.md](./CHECKPOINT_2026-06-08_GATE_ET_BOUNDARY_HANDOFF.md).
+It records the Gate ES rerank, the Gate ET boundary closeout, the Gate
+EU selected next action, and the focused Gate EM/EN/EO/EP/EQ/ER/ES/ET
+green validation. Gate CX/CY/CZ/DA/DB/DC/DD/DE/DF/DG/DH/DI/DJ/DK/DL/DM/DN/DO/DP/DQ/DR/DS/DT/DU/DV/DW/DX/DY/DZ/EA have landed. The latest full documented
 passing gate remains the Gate DG run:
 `NEXT_DIST_DIR=.next-gate-dg pnpm calculator:gate:current` on
 2026-06-06 passed with engine 624 files / 3428 tests, web 113 files /
 438 passed and 18 skipped, repo build 5 / 5, and whitespace guard
-passed. Gate DD/DE/DF/DG/DH/DI/DJ/DK/DL/DM/DN/DO/DP/DQ/DR/DS/DT/DU/DV/DW/DX/DY/DZ/EA/EB/EC/ED/EE/EF/EG/EH/EI/EJ/EK/EL/EM/EN/EO/EP are closed; Gate EO is
-the latest value-moving runtime accuracy action, Gate ED is the previous
+passed. Gate DD/DE/DF/DG/DH/DI/DJ/DK/DL/DM/DN/DO/DP/DQ/DR/DS/DT/DU/DV/DW/DX/DY/DZ/EA/EB/EC/ED/EE/EF/EG/EH/EI/EJ/EK/EL/EM/EN/EO/EP/EQ/ER/ES/ET are closed; Gate ET is
+the latest no-runtime boundary action, Gate ES is the latest no-runtime
+numeric coverage/accuracy rerank, Gate ER is the latest value-moving
+runtime scope/accuracy action, Gate EO is the previous
+value-moving runtime accuracy action, Gate ED is the previous
 value-moving runtime scope action, Gate EC is the latest
 previous no-runtime owner proof, Gate EF is the latest runtime-basis
 route-boundary action, Gate EH is the latest no-runtime input-owner
-proof, Gate EN is the latest no-runtime owner proof, Gate EL is the latest no-runtime wall route reconciliation, Gate
-EP is the latest no-runtime numeric coverage/accuracy rerank, Gate EJ
+proof, Gate EQ is the latest no-runtime adapter owner proof, Gate EN is the previous no-runtime owner proof, Gate EL is the latest no-runtime wall route reconciliation, Gate
+EP is the previous no-runtime numeric coverage/accuracy rerank, Gate EJ
 is the latest input-surface scope action, and Gate DK is the latest
 calculator surface parity action. The current selected next action is
-`post_v1_wall_direct_fixed_double_leaf_field_building_adapter_owner_gate_eq_plan`.
+`post_v1_next_numeric_coverage_gap_gate_eu_plan`.
+Latest landed no-runtime boundary action:
+`post_v1_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et_plan`
+with status
+`post_v1_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et_landed_no_runtime_selected_next_numeric_coverage_gap_gate_eu`.
+Gate ET pins the reinforced-concrete visible-derived missing-input boundary
+`floor.reinforced_concrete.visible_derived_lower_assembly_from_layers_missing_dynamic_stiffness_and_load`.
+Visible-derived reinforced-concrete combined upper/lower impact now
+keeps `Ln,w` / `DeltaLw` parked as `needs_input` with exactly
+`resilientLayerDynamicStiffnessMNm3` and `loadBasisKgM2`; explicit
+partial predictor input still requires `loadBasisKgM2` and
+`ceilingOrLowerAssembly`, and complete explicit input still calculates
+`Ln,w 58.1` / `DeltaLw 13.7`. Counters:
+`boundaryLedgersPinned 1`, `staleExpectationRowsCorrected 6`,
+`currentGateFailuresCleared 6`, `newCalculableLayerTemplates 0`,
+`newCalculableRequestShapes 0`, `runtimeBasisPromotions 0`,
+`runtimeFormulaRetunes 0`, `runtimeValuesMoved 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 1`.
+Gate ET selects Gate EU:
+`post_v1_next_numeric_coverage_gap_gate_eu_plan`
+in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-eu-contract.test.ts`.
+Latest landed no-runtime numeric coverage/accuracy rerank:
+`post_v1_next_numeric_coverage_gap_gate_es_plan`
+with status
+`post_v1_next_numeric_coverage_gap_gate_es_landed_no_runtime_selected_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et`.
+Gate ES selected
+`floor.reinforced_concrete_visible_derived_missing_input_boundary_refresh`
+after two ROI plan iterations (`roiAnalysisIterations: 2`) and selected
+Gate ET:
+`post_v1_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et_plan`
+in
+`packages/engine/src/post-v1-floor-reinforced-concrete-visible-derived-missing-input-boundary-gate-et-contract.test.ts`.
+Counters: `candidateCount 10`, `estimatedNextBoundaryLedgers 1`,
+`estimatedNextCurrentGateFailuresCleared 6`,
+`estimatedNextStaleExpectationRowsCorrected 6`,
+`estimatedNextFrontendImplementationFilesTouched 1`,
+`newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+`runtimeBasisPromotions 0`, `runtimeFormulaRetunes 0`,
+`runtimeValuesMoved 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. Gate ES/ET plan:
+`docs/calculator/POST_V1_GATE_ES_ET_REINFORCED_CONCRETE_VISIBLE_DERIVED_BOUNDARY_PLAN_2026-06-08.md`.
+Latest landed value-moving runtime action:
+`post_v1_wall_direct_fixed_double_leaf_field_building_adapter_runtime_gate_er_plan`
+with status
+`post_v1_wall_direct_fixed_double_leaf_field_building_adapter_runtime_gate_er_landed_runtime_selected_next_numeric_coverage_gap_gate_es`.
+Gate ER connects the Gate EO direct separating-element curve to
+`gate_i_airborne_field_apparent_context_adapter_runtime` and
+`gate_ar_airborne_building_prediction_all_owner_runtime_corridor` for
+complete bounded direct-fixed double-leaf field/building requests. The
+representative `gypsum_board 12.5 / air_gap 45 / gypsum_board 12.5`
+stack now calculates `R'w 23 / Dn,w 24 / DnT,w 27` for both complete
+`field_between_rooms` and complete `building_prediction` contexts.
+Missing `receivingRoomRt60S` and missing `supportSpacingMm` remain
+`needs_input`; lab `Rw`/STC/`C`/`Ctr` remains Gate EO. Counters:
+`fieldBuildingRequestShapesWidened 3`, `newCalculableLayerTemplates 1`,
+`newCalculableRequestShapes 3`, `runtimeBasisPromotions 2`,
+`runtimeCorrectedLayerTemplates 1`, `runtimeCorrectedRequestShapes 3`,
+`runtimeFormulaRetunes 0`, `runtimeValuesMoved 6`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+Gate ER selects Gate ES:
+`post_v1_next_numeric_coverage_gap_gate_es_plan`
+in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-es-contract.test.ts`.
+Latest landed no-runtime adapter owner proof:
+`post_v1_wall_direct_fixed_double_leaf_field_building_adapter_owner_gate_eq_plan`
+with status
+`post_v1_wall_direct_fixed_double_leaf_field_building_adapter_owner_gate_eq_landed_no_runtime_selected_wall_direct_fixed_double_leaf_field_building_adapter_runtime_gate_er`.
+Gate EQ accepts
+`wall.direct_fixed_double_leaf.field_between_rooms_adapter_owner` and
+`wall.direct_fixed_double_leaf.building_prediction_adapter_owner`, pins
+the Gate EO direct separating-element curve as the bounded field/building
+base, and keeps lab `Rw`/STC/`C`/`Ctr` separate from
+`R'w`/`Dn,w`/`DnT,w`. It moves no runtime values. Counters:
+`acceptedAdapterOwnerLedgers 2`, `boundaryLedgersPinned 8`,
+`estimatedNextNewCalculableLayerTemplates 1`,
+`estimatedNextNewCalculableRequestShapes 3`,
+`estimatedNextRuntimeCorrectedLayerTemplates 1`,
+`estimatedNextRuntimeCorrectedRequestShapes 3`,
+`newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+`runtimeBasisPromotions 0`, `runtimeFormulaRetunes 0`,
+`runtimeValuesMoved 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. Gate EQ selects Gate ER, the
+direct-fixed double-leaf field/building adapter runtime:
+`post_v1_wall_direct_fixed_double_leaf_field_building_adapter_runtime_gate_er_plan`
+in
+`packages/engine/src/post-v1-wall-direct-fixed-double-leaf-field-building-adapter-runtime-gate-er-contract.test.ts`.
+Gate EQ/ER plan:
+`docs/calculator/POST_V1_GATE_EQ_ER_WALL_DIRECT_FIXED_DOUBLE_LEAF_FIELD_BUILDING_ADAPTER_RUNTIME_PLAN_2026-06-08.md`.
 Latest landed no-runtime numeric coverage/accuracy rerank:
 `post_v1_next_numeric_coverage_gap_gate_ep_plan`
 with status

@@ -1,6 +1,6 @@
 # Calculation Model And Validation
 
-Last reviewed: 2026-06-05
+Last reviewed: 2026-06-08
 
 Document role:
 
@@ -24,9 +24,10 @@ Current authority:
 - `docs/calculator/CURRENT_STATE.md`
 - `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
 
-The 2026-06-02 Gate-CD reconciliation checkpoint remains useful history,
-but it is not the current selected-next state. The living documents have
-advanced through Gate CH and now select Gate CI.
+Older Gate-CD, Gate-CH, source-pack, confidence, and product-polish
+checkpoints remain useful history, but they are not the current
+selected-next state. The living documents have advanced through Gate ET
+and now select Gate EU.
 
 Current validation posture:
 
@@ -42,27 +43,63 @@ the user answer when the selected path is `needs_input` or
 `unsupported`.
 
 The current gate keeps the answer-engine contract included in
-`pnpm calculator:gate:current`. The shared resolver surface currently
-has 43 declared candidates and 40 active runtime-basis mappings.
+`pnpm calculator:gate:current`. The latest focused Gate
+EM/EN/EO/EP/EQ/ER/ES/ET chain is green when run by targeted Vitest
+files. Gate ET resolves the previous independent reinforced-concrete
+visible-derived missing-input expectation drift.
 
 The selected post-V1 plan is
 [POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md).
-Gate CH is the latest landed runtime scope/correctness slice:
-`post_v1_next_numeric_coverage_gap_gate_ch_plan`.
-Complete visible heavy-floating reinforced-concrete upper-treatment
-stacks with explicit direct/flanking impact context and explicit
-`impactFieldContext.ci50_2500Db` keep the published upper-treatment
-`Ln,w 50` anchor and calculate `L'n,w 57.5`, `L'nT,w 55.1`, and
-`L'nT,50 59.1` through the
-`source_absent_field_building_adapter_error_budget` field adapter.
-Missing `impactFieldContext.ci50_2500Db` still stops only `L'nT,50` as
-`needs_input`; ASTM `IIC` / `AIIC` remain unsupported unless an ASTM
-E492/E1007 owner exists. Gate CH selected the next action label:
-`post_v1_next_numeric_coverage_gap_gate_ci_plan`. The selected Gate CI
-contract file is not present yet, so Gate CI is the next implementation
-to scaffold.
+Gate ET is the latest no-runtime boundary slice:
+`post_v1_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et_plan`
+with status
+`post_v1_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et_landed_no_runtime_selected_next_numeric_coverage_gap_gate_eu`.
+Boundary id:
+`floor.reinforced_concrete.visible_derived_lower_assembly_from_layers_missing_dynamic_stiffness_and_load`.
+It pins the reinforced-concrete visible-derived missing-input boundary:
+visible layer roles already define the lower assembly, so `Ln,w` /
+`DeltaLw` remain `needs_input` for exactly
+`resilientLayerDynamicStiffnessMNm3` and `loadBasisKgM2`; explicit
+partial predictor input still requires `loadBasisKgM2` and
+`ceilingOrLowerAssembly`. Gate ET counters include
+`currentGateFailuresCleared 6`, `runtimeValuesMoved 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 1`.
+Gate ET selects `post_v1_next_numeric_coverage_gap_gate_eu_plan` in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-eu-contract.test.ts`.
+Gate ES is the latest no-runtime numeric coverage/accuracy rerank:
+`post_v1_next_numeric_coverage_gap_gate_es_plan` with status
+`post_v1_next_numeric_coverage_gap_gate_es_landed_no_runtime_selected_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et`.
+It selected
+`floor.reinforced_concrete_visible_derived_missing_input_boundary_refresh`
+after two ROI iterations (`roiAnalysisIterations: 2`) and selected
+Gate ET in
+`packages/engine/src/post-v1-floor-reinforced-concrete-visible-derived-missing-input-boundary-gate-et-contract.test.ts`.
+Gate ES estimated the selected Gate ET boundary-surface touch as
+`estimatedNextFrontendImplementationFilesTouched 1`.
+Gate ES counters include `runtimeValuesMoved 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+Gate ER is the latest value-moving runtime scope/accuracy slice:
+`post_v1_wall_direct_fixed_double_leaf_field_building_adapter_runtime_gate_er_plan`
+with status
+`post_v1_wall_direct_fixed_double_leaf_field_building_adapter_runtime_gate_er_landed_runtime_selected_next_numeric_coverage_gap_gate_es`.
+It routes complete direct-fixed `field_between_rooms` requests through
+`gate_i_airborne_field_apparent_context_adapter_runtime` and complete
+direct-fixed `building_prediction` requests through
+`gate_ar_airborne_building_prediction_all_owner_runtime_corridor` over
+the Gate EO direct separating-element curve. The representative direct
+fixed stack now calculates `R'w 23 / Dn,w 24 / DnT,w 27` in both
+contexts, while lab output remains `Rw 31 / STC 31 / C -1.2 / Ctr -5.9`
+and missing `receivingRoomRt60S` / `supportSpacingMm` remain
+`needs_input`. Gate ER counters include `runtimeValuesMoved 6`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+Gate EQ is the latest no-runtime adapter owner proof:
+`post_v1_wall_direct_fixed_double_leaf_field_building_adapter_owner_gate_eq_plan`.
+It accepted `wall.direct_fixed_double_leaf.field_between_rooms_adapter_owner`
+and `wall.direct_fixed_double_leaf.building_prediction_adapter_owner`
+with `acceptedAdapterOwnerLedgers 2`, `runtimeValuesMoved 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
 
-Gate CI and every later gate must be selected by calculator ROI:
+Gate EU and every later gate must be selected by calculator ROI:
 increase calculable layer-combination scope, improve numeric
 correctness/calibration, or tighten a boundary that protects correct
 calculation. Validation for the next gate must prove any new answer

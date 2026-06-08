@@ -23,38 +23,82 @@ Project status:
   coverage.
 - No code should be copied from `Acoustic2` until the import policy in [`docs/foundation/SOURCE_REPO_POLICY.md`](./docs/foundation/SOURCE_REPO_POLICY.md) is followed.
 
-Primary documents (agent resume triangle):
+Primary calculator documents:
 
-- [`docs/calculator/CURRENT_STATE.md`](./docs/calculator/CURRENT_STATE.md) — current snapshot
-- [`docs/calculator/MASTER_PLAN.md`](./docs/calculator/MASTER_PLAN.md) — strategic roadmap + next ten moves
-- [`docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`](./docs/calculator/NEXT_IMPLEMENTATION_PLAN.md) — tactical slice detail
+- [`docs/calculator/CALCULATOR_SOURCE_OF_TRUTH.md`](./docs/calculator/CALCULATOR_SOURCE_OF_TRUTH.md) — first authority for product goal, anti-drift rules, and next-slice selection
+- [`docs/calculator/USABLE_V1_EXECUTION_PLAN.md`](./docs/calculator/USABLE_V1_EXECUTION_PLAN.md) — closed company-internal usable V1 acceptance contract
+- [`docs/calculator/CURRENT_STATE.md`](./docs/calculator/CURRENT_STATE.md) — current implementation snapshot
+- [`docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`](./docs/calculator/NEXT_IMPLEMENTATION_PLAN.md) — active tactical slice
+- [`docs/calculator/POST_V1_GATE_ES_ET_REINFORCED_CONCRETE_VISIBLE_DERIVED_BOUNDARY_PLAN_2026-06-08.md`](./docs/calculator/POST_V1_GATE_ES_ET_REINFORCED_CONCRETE_VISIBLE_DERIVED_BOUNDARY_PLAN_2026-06-08.md) — landed Gate ES/ET boundary plan
+- [`docs/calculator/POST_V1_GATE_EQ_ER_WALL_DIRECT_FIXED_DOUBLE_LEAF_FIELD_BUILDING_ADAPTER_RUNTIME_PLAN_2026-06-08.md`](./docs/calculator/POST_V1_GATE_EQ_ER_WALL_DIRECT_FIXED_DOUBLE_LEAF_FIELD_BUILDING_ADAPTER_RUNTIME_PLAN_2026-06-08.md) — landed Gate ER runtime plan
+- [`docs/calculator/CHECKPOINT_2026-06-08_GATE_ET_BOUNDARY_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-06-08_GATE_ET_BOUNDARY_HANDOFF.md) — latest docs/implementation reconciliation
 
-Supporting documents:
+Latest calculator boundary closeout:
 
-- [`docs/calculator/CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md) — latest calculator checkpoint
-- [`docs/calculator/SLICE_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_PLAN.md`](./docs/calculator/SLICE_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_PLAN.md) — active timber double-board source research slice plan
-- [`docs/calculator/CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_C_CLOSEOUT_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_C_CLOSEOUT_HANDOFF.md) — prior wall source catalog checkpoint
-- [`docs/calculator/SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md`](./docs/calculator/SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md) — closed wall source catalog acquisition slice plan
-- [`docs/calculator/CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_B_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_B_HANDOFF.md) — prior wall source catalog checkpoint
-- [`docs/calculator/CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_A_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_A_HANDOFF.md) — prior wall source catalog checkpoint
-- [`docs/calculator/CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md) — prior broad revalidation checkpoint
-- [`docs/calculator/CHECKPOINT_2026-04-23_TEAM_ACCESS_MODEL_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-23_TEAM_ACCESS_MODEL_HANDOFF.md) — team-access model checkpoint
-- [`docs/calculator/CHECKPOINT_2026-04-23_AUTH_SESSION_HARDENING_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-23_AUTH_SESSION_HARDENING_HANDOFF.md) — auth-session hardening checkpoint
-- [`docs/calculator/CHECKPOINT_2026-04-23_PROJECT_ACCESS_AUTHORIZATION_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-23_PROJECT_ACCESS_AUTHORIZATION_HANDOFF.md) — project-access authorization checkpoint
-- [`docs/calculator/CHECKPOINT_2026-04-23_SERVER_BACKED_PROJECT_STORAGE_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-23_SERVER_BACKED_PROJECT_STORAGE_HANDOFF.md) — server-backed project storage checkpoint
-- [`docs/calculator/CHECKPOINT_2026-04-23_FINAL_AUDIT_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-23_FINAL_AUDIT_HANDOFF.md) — prior final-audit checkpoint
-- [`docs/calculator/POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md`](./docs/calculator/POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md) — active productization roadmap
-- [`docs/calculator/SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md`](./docs/calculator/SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md) — closed wall formula-family widening slice plan
-- [`docs/calculator/SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md`](./docs/calculator/SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md) — deferred project-access policy route integration slice plan
-- [`docs/calculator/SLICE_TEAM_ACCESS_MODEL_PLAN.md`](./docs/calculator/SLICE_TEAM_ACCESS_MODEL_PLAN.md) — closed team-access model slice plan
-- [`docs/calculator/SLICE_AUTH_SESSION_HARDENING_PLAN.md`](./docs/calculator/SLICE_AUTH_SESSION_HARDENING_PLAN.md) — closed auth-session hardening slice plan
-- [`docs/calculator/SLICE_PROJECT_ACCESS_AUTHORIZATION_PLAN.md`](./docs/calculator/SLICE_PROJECT_ACCESS_AUTHORIZATION_PLAN.md) — closed project-access slice plan
-- [`docs/calculator/SLICE_SERVER_BACKED_PROJECT_STORAGE_PLAN.md`](./docs/calculator/SLICE_SERVER_BACKED_PROJECT_STORAGE_PLAN.md) — closed project-storage slice plan
+- `post_v1_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et_plan`
+  landed with status
+  `post_v1_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et_landed_no_runtime_selected_next_numeric_coverage_gap_gate_eu`.
+- Boundary id:
+  `floor.reinforced_concrete.visible_derived_lower_assembly_from_layers_missing_dynamic_stiffness_and_load`.
+- Visible-derived reinforced-concrete combined upper/lower impact now
+  parks `Ln,w` / `DeltaLw` as `needs_input` with exactly
+  `resilientLayerDynamicStiffnessMNm3` and `loadBasisKgM2`; explicit
+  partial predictor input still requires `loadBasisKgM2` and
+  `ceilingOrLowerAssembly`.
+- Counters: `currentGateFailuresCleared 6`, `runtimeValuesMoved 0`,
+  `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 1`.
+- Current selected next action:
+  Gate EU, `post_v1_next_numeric_coverage_gap_gate_eu_plan`, in
+  `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-eu-contract.test.ts`.
+
+Latest calculator rerank:
+
+- `post_v1_next_numeric_coverage_gap_gate_es_plan` landed with status
+  `post_v1_next_numeric_coverage_gap_gate_es_landed_no_runtime_selected_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et`.
+- Selected candidate:
+  `floor.reinforced_concrete_visible_derived_missing_input_boundary_refresh`.
+- Gate ES ran two ROI iterations (`roiAnalysisIterations: 2`) and
+  selected Gate ET, the reinforced-concrete visible-derived missing-input boundary;
+  estimated Gate ET boundary-surface touch
+  `estimatedNextFrontendImplementationFilesTouched 1`;
+  `runtimeValuesMoved 0`,
+  `sourceRowsImported: 0`, and
+  `frontendImplementationFilesTouched: 0`.
+- Gate ES selected next file:
+  `packages/engine/src/post-v1-floor-reinforced-concrete-visible-derived-missing-input-boundary-gate-et-contract.test.ts`.
+
+Latest calculator runtime closeout:
+
+- `post_v1_wall_direct_fixed_double_leaf_field_building_adapter_runtime_gate_er_plan`
+  landed with status
+  `post_v1_wall_direct_fixed_double_leaf_field_building_adapter_runtime_gate_er_landed_runtime_selected_next_numeric_coverage_gap_gate_es`.
+- Readable label: direct-fixed double-leaf field/building adapter runtime.
+- Complete direct-fixed double-leaf `field_between_rooms` requests now
+  select `gate_i_airborne_field_apparent_context_adapter_runtime`, and
+  complete `building_prediction` requests now select
+  `gate_ar_airborne_building_prediction_all_owner_runtime_corridor`.
+- The representative stack calculates `R'w 23 / Dn,w 24 / DnT,w 27`;
+  `runtimeValuesMoved 6`, `sourceRowsImported: 0`, and
+  `frontendImplementationFilesTouched: 0`.
+- Gate ER selected Gate ES file:
+  `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-es-contract.test.ts`.
+
+Calculator reference documents:
+
 - [`docs/calculator/SYSTEM_MAP.md`](./docs/calculator/SYSTEM_MAP.md) — runtime and test-surface map
 - [`docs/calculator/CALCULATION_MODEL_AND_VALIDATION.md`](./docs/calculator/CALCULATION_MODEL_AND_VALIDATION.md) — answer-origin semantics
+- [`docs/calculator/POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md`](./docs/calculator/POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md) — selected post-V1 capability chain
+- [`docs/calculator/POST_V1_GATE_EP_EQ_WALL_DIRECT_FIXED_DOUBLE_LEAF_FIELD_BUILDING_ADAPTER_PLAN_2026-06-07.md`](./docs/calculator/POST_V1_GATE_EP_EQ_WALL_DIRECT_FIXED_DOUBLE_LEAF_FIELD_BUILDING_ADAPTER_PLAN_2026-06-07.md) — landed Gate EQ owner-proof plan
+- [`docs/calculator/POST_V1_HIGH_ROI_SCOPE_ACCURACY_GATES_AFTER_GATE_CD_PLAN_2026-06-02.md`](./docs/calculator/POST_V1_HIGH_ROI_SCOPE_ACCURACY_GATES_AFTER_GATE_CD_PLAN_2026-06-02.md) — high-ROI planning framework
 - [`docs/README.md`](./docs/README.md) — docs hierarchy entry point
-- [`docs/foundation/PROJECT_PLAN.md`](./docs/foundation/PROJECT_PLAN.md)
-- [`docs/foundation/SOURCE_REPO_POLICY.md`](./docs/foundation/SOURCE_REPO_POLICY.md)
+- [`docs/foundation/SOURCE_REPO_POLICY.md`](./docs/foundation/SOURCE_REPO_POLICY.md) — read-only upstream/import policy
+
+Historical `CHECKPOINT_*`, `SLICE_*`, source-pack, confidence, report,
+auth, storage, and productization docs are useful for what landed, but
+they do not select calculator work. Do not reopen source crawling,
+finite scenario-library building, confidence wording, report polish, or
+auth/storage slices unless the user explicitly asks for that work
+outside calculator behavior.
 
 Working principles:
 
@@ -118,7 +162,7 @@ Agent workflow:
   before older roadmap or handoff files
 - use [`docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`](./docs/calculator/NEXT_IMPLEMENTATION_PLAN.md)
   as the current next-step authority
-- run `pnpm calculator:gate:current` for the focused current-slice confidence
+- run `pnpm calculator:gate:current` for the focused current-slice validation
   gate
 
 Read-only upstream tooling:

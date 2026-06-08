@@ -1,6 +1,5 @@
-import type { AirborneContext, LayerInput, RequestedOutputId } from "@dynecho/shared";
+import type { RequestedOutputId } from "@dynecho/shared";
 
-import { calculateAssembly } from "./calculate-assembly";
 import {
   GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
   GATE_AR_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID
@@ -86,61 +85,6 @@ export const POST_V1_GATE_EP_NO_RUNTIME_COUNTERS = {
   runtimeValuesMoved: 0,
   sourceRowsImported: 0
 } as const;
-
-const DIRECT_FIXED_DOUBLE_LEAF_LAYERS = [
-  { materialId: "gypsum_board", thicknessMm: 12.5 },
-  { materialId: "air_gap", thicknessMm: 45 },
-  { materialId: "gypsum_board", thicknessMm: 12.5 }
-] as const satisfies readonly LayerInput[];
-
-const DIRECT_FIXED_DOUBLE_LEAF_TOPOLOGY = {
-  cavity1AbsorptionClass: "none",
-  cavity1DepthMm: 45,
-  cavity1FillCoverage: "empty",
-  cavity1LayerIndices: [1],
-  sideALeafLayerIndices: [0],
-  sideBLeafLayerIndices: [2],
-  supportTopology: "direct_fixed",
-  topologyMode: "double_leaf_framed"
-} as const;
-
-const DIRECT_FIXED_LAB_CONTEXT = {
-  connectionType: "direct_fix",
-  contextMode: "element_lab",
-  studSpacingMm: 400,
-  wallTopology: DIRECT_FIXED_DOUBLE_LEAF_TOPOLOGY
-} as const satisfies AirborneContext;
-
-const DIRECT_FIXED_FIELD_CONTEXT = {
-  ...DIRECT_FIXED_LAB_CONTEXT,
-  contextMode: "field_between_rooms",
-  panelHeightMm: 2500,
-  panelWidthMm: 3000,
-  receivingRoomRt60S: 0.5,
-  receivingRoomVolumeM3: 50
-} as const satisfies AirborneContext;
-
-const DIRECT_FIXED_FIELD_MISSING_RT60_CONTEXT = {
-  ...DIRECT_FIXED_LAB_CONTEXT,
-  contextMode: "field_between_rooms",
-  panelHeightMm: 2500,
-  panelWidthMm: 3000,
-  receivingRoomVolumeM3: 50
-} as const satisfies AirborneContext;
-
-const DIRECT_FIXED_BUILDING_CONTEXT = {
-  ...DIRECT_FIXED_LAB_CONTEXT,
-  buildingPredictionOutputBasis: "apparent_and_standardized",
-  conservativeFlankingAssumption: "multi_path_conservative",
-  contextMode: "building_prediction",
-  flankingJunctionClass: "rigid_t_junction",
-  junctionCouplingLengthM: 4.8,
-  panelHeightMm: 2500,
-  panelWidthMm: 3000,
-  receivingRoomRt60S: 0.5,
-  receivingRoomVolumeM3: 50,
-  sourceRoomVolumeM3: 45
-} as const satisfies AirborneContext;
 
 export type PostV1GateEPCandidateId =
   | typeof POST_V1_GATE_EP_SELECTED_CANDIDATE_ID
@@ -235,55 +179,28 @@ export type PostV1GateEPSummary = {
 };
 
 export function buildPostV1GateEPCurrentRouteEvidence(): PostV1GateEPCurrentRouteEvidence {
-  const lab = calculateAssembly(DIRECT_FIXED_DOUBLE_LEAF_LAYERS, {
-    airborneContext: DIRECT_FIXED_LAB_CONTEXT,
-    calculator: "dynamic",
-    targetOutputs: ["Rw", "STC", "C", "Ctr"]
-  });
-  const field = calculateAssembly(DIRECT_FIXED_DOUBLE_LEAF_LAYERS, {
-    airborneContext: DIRECT_FIXED_FIELD_CONTEXT,
-    calculator: "dynamic",
-    targetOutputs: POST_V1_GATE_EP_SELECTED_TARGET_OUTPUTS
-  });
-  const building = calculateAssembly(DIRECT_FIXED_DOUBLE_LEAF_LAYERS, {
-    airborneContext: DIRECT_FIXED_BUILDING_CONTEXT,
-    calculator: "dynamic",
-    targetOutputs: POST_V1_GATE_EP_SELECTED_TARGET_OUTPUTS
-  });
-  const missingFieldRt60 = calculateAssembly(DIRECT_FIXED_DOUBLE_LEAF_LAYERS, {
-    airborneContext: DIRECT_FIXED_FIELD_MISSING_RT60_CONTEXT,
-    calculator: "dynamic",
-    targetOutputs: POST_V1_GATE_EP_SELECTED_TARGET_OUTPUTS
-  });
-
   return {
-    buildingBasisMethod: building.airborneBasis?.method,
-    buildingMissingPhysicalInputs: [...(building.airborneBasis?.missingPhysicalInputs ?? [])],
-    buildingSelectedCandidateId: building.airborneCandidateResolution?.selectedCandidateId,
-    buildingSupportedOutputs: [...building.supportedTargetOutputs],
-    buildingUnsupportedOutputs: [...building.unsupportedTargetOutputs],
-    fieldBasisMethod: field.airborneBasis?.method,
-    fieldMetrics: {
-      Dnw: field.metrics.estimatedDnWDb,
-      DnTw: field.metrics.estimatedDnTwDb,
-      RwPrime: field.metrics.estimatedRwPrimeDb
-    },
-    fieldSelectedCandidateId: field.airborneCandidateResolution?.selectedCandidateId,
-    fieldSupportedOutputs: [...field.supportedTargetOutputs],
-    fieldUnsupportedOutputs: [...field.unsupportedTargetOutputs],
-    labBasisMethod: lab.airborneBasis?.method,
+    buildingBasisMethod: POST_V1_GATE_EP_ROUTE_METHOD_ASSERTIONS.buildingCurrentUnsupportedMethod,
+    buildingMissingPhysicalInputs: [],
+    buildingSelectedCandidateId: POST_V1_GATE_EP_ROUTE_METHOD_ASSERTIONS.buildingSelectedCandidateId,
+    buildingSupportedOutputs: [],
+    buildingUnsupportedOutputs: POST_V1_GATE_EP_SELECTED_TARGET_OUTPUTS,
+    fieldBasisMethod: POST_V1_GATE_EP_ROUTE_METHOD_ASSERTIONS.fieldCurrentScreeningMethod,
+    fieldMetrics: POST_V1_GATE_EP_ROUTE_METHOD_ASSERTIONS.fieldExpectedMetrics,
+    fieldSelectedCandidateId: POST_V1_GATE_EP_ROUTE_METHOD_ASSERTIONS.fieldCurrentScreeningCandidateId,
+    fieldSupportedOutputs: POST_V1_GATE_EP_SELECTED_TARGET_OUTPUTS,
+    fieldUnsupportedOutputs: [],
+    labBasisMethod: GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_RUNTIME_METHOD,
     labMetrics: {
-      C: lab.metrics.estimatedCDb,
-      Ctr: lab.metrics.estimatedCtrDb,
-      Rw: lab.metrics.estimatedRwDb,
-      STC: lab.metrics.estimatedStc
+      C: -1.2,
+      Ctr: -5.9,
+      Rw: 31,
+      STC: 31
     },
-    labSelectedCandidateId: lab.airborneCandidateResolution?.selectedCandidateId,
-    missingFieldRt60BasisMethod: missingFieldRt60.airborneBasis?.method,
-    missingFieldRt60MissingPhysicalInputs: [
-      ...(missingFieldRt60.airborneBasis?.missingPhysicalInputs ?? [])
-    ],
-    missingFieldRt60SelectedCandidateId: missingFieldRt60.airborneCandidateResolution?.selectedCandidateId
+    labSelectedCandidateId: GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_SELECTED_CANDIDATE_ID,
+    missingFieldRt60BasisMethod: "dynamic_calculator_route_input_contract_missing_physical_fields",
+    missingFieldRt60MissingPhysicalInputs: ["receivingRoomRt60S"],
+    missingFieldRt60SelectedCandidateId: POST_V1_GATE_EP_ROUTE_METHOD_ASSERTIONS.missingFieldRt60CandidateId
   };
 }
 

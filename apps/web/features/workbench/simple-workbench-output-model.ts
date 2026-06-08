@@ -189,6 +189,42 @@ function hasHeavyConcreteCombinedPhysicalInputPrompt(result: AssemblyCalculation
   );
 }
 
+function getHeavyConcreteCombinedPhysicalInputPromptFields(
+  result: AssemblyCalculation | null | undefined
+): readonly string[] {
+  const boundaryInputs = result?.acousticAnswerBoundary?.missingPhysicalInputs ?? [];
+  if (boundaryInputs.length > 0) {
+    return boundaryInputs;
+  }
+
+  const warning = result?.warnings?.find((entry: string) =>
+    /reinforced-concrete combined upper\/lower impact runtime is waiting/i.test(entry)
+  );
+  const warningInputs = warning?.match(/waiting for (.+?) before promoting/i)?.[1];
+  if (warningInputs) {
+    return warningInputs
+      .replace(/,\s*and\s+/g, ", ")
+      .replace(/\s+and\s+/g, ", ")
+      .split(",")
+      .map((field: string) => field.trim())
+      .filter((field: string) => field.length > 0);
+  }
+
+  return [];
+}
+
+function formatInputList(fields: readonly string[]): string {
+  if (fields.length <= 1) {
+    return fields[0] ?? "";
+  }
+
+  if (fields.length === 2) {
+    return `${fields[0]} and ${fields[1]}`;
+  }
+
+  return `${fields.slice(0, -1).join(", ")}, and ${fields[fields.length - 1]}`;
+}
+
 function isExplicitlyUnsupportedOutput(
   result: AssemblyCalculation | null | undefined,
   output: RequestedOutputId
@@ -434,7 +470,13 @@ export function buildUnavailableOutputDetail(input: {
     (output === "Ln,w" || output === "DeltaLw") &&
     hasHeavyConcreteCombinedPhysicalInputPrompt(result)
   ) {
-    return "Enter resilientLayerDynamicStiffnessMNm3, loadBasisKgM2, and ceilingOrLowerAssembly before treating the reinforced-concrete combined upper/lower impact lane as calculated.";
+    const missingInputs = getHeavyConcreteCombinedPhysicalInputPromptFields(result);
+    const inputPrompt =
+      missingInputs.length > 0
+        ? formatInputList(missingInputs)
+        : "the route-required physical inputs";
+
+    return `Enter ${inputPrompt} before treating the reinforced-concrete combined upper/lower impact lane as calculated.`;
   }
 
   if (output === "Ln,w+CI" || output === "CI" || output === "CI,50-2500") {

@@ -31,11 +31,13 @@ import {
   type GateRDoubleLeafFramedBridgeSolverContract
 } from "./dynamic-calculator-double-leaf-framed-bridge-solver-contract";
 import {
+  GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
   GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING,
   maybeBuildGateIAirborneFieldContextBasisFromBase
 } from "./dynamic-airborne-gate-i-airborne-field-context";
 import {
   GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
+  GATE_AR_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID,
   GATE_AR_AIRBORNE_BUILDING_PREDICTION_WARNING,
   hasCompleteGateARBuildingPredictionContext
 } from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
@@ -65,6 +67,9 @@ export const GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_SELECTED_CANDIDATE_ID 
 
 export const GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_WARNING =
   "Gate EO direct-fixed double-leaf bridge-loss runtime is active only for complete element-lab direct-fixed wall stacks. Values use an equivalent coupled-mass bridge-loss formula owner; field/building outputs and measured-source calibration remain separate owners." as const;
+
+export const GATE_ER_DIRECT_FIXED_DOUBLE_LEAF_FIELD_BUILDING_ADAPTER_WARNING =
+  "Gate ER direct-fixed double-leaf field/building adapter runtime is active only for complete direct-fixed field_between_rooms or building_prediction contexts. It uses the Gate EO direct separating-element curve plus the owned Gate I/AR adapters; it is not measured field or building evidence." as const;
 
 function buildGateSCurve(input: {
   benchmark: GateRDoubleLeafFramedBridgeBenchmarkRange;
@@ -225,6 +230,40 @@ type GateSAirborneCandidateSeed = Omit<AirborneCandidate, "rejectionReasons" | "
 
 const GATE_S_WALL_OUTPUTS = ["Rw", "STC", "C", "Ctr"] as const satisfies readonly RequestedOutputId[];
 const GATE_S_WALL_OUTPUT_SET = new Set<RequestedOutputId>(GATE_S_WALL_OUTPUTS);
+const GATE_ER_FIELD_BUILDING_OUTPUTS = ["R'w", "Dn,w", "DnT,w"] as const satisfies readonly RequestedOutputId[];
+const GATE_ER_FIELD_BUILDING_OUTPUT_SET = new Set<RequestedOutputId>(GATE_ER_FIELD_BUILDING_OUTPUTS);
+
+function requestedGateERFieldBuildingOutputs(
+  requestedOutputs: readonly RequestedOutputId[]
+): readonly RequestedOutputId[] {
+  if (requestedOutputs.length === 0) {
+    return [...GATE_ER_FIELD_BUILDING_OUTPUTS];
+  }
+
+  return requestedOutputs.filter((output) => GATE_ER_FIELD_BUILDING_OUTPUT_SET.has(output));
+}
+
+function buildGateERDirectFixedAdapterBaseBasis(input: {
+  benchmark: GateRDoubleLeafFramedBridgeBenchmarkRange;
+  curve: TransmissionLossCurve;
+  physicalInputs: GateRDoubleLeafFramedBridgePhysicalInputs;
+}): AirborneResultBasis {
+  const basis = buildGateEODirectFixedBasis(input);
+
+  return {
+    ...basis,
+    assumptions: [
+      ...basis.assumptions.filter(
+        (assumption) => !/Field\/building outputs require separate field\/building adapters/i.test(assumption)
+      ),
+      "Gate ER uses this Gate EO direct separating-element curve only as the owned base curve for explicit field/building adapters."
+    ],
+    requiredInputs: [
+      ...basis.requiredInputs,
+      "GateER_direct_fixed_field_building_adapter_owner"
+    ]
+  };
+}
 
 function maybeBuildGateSDoubleLeafBuildingPredictionBasis(input: {
   baseBasis: AirborneResultBasis;
@@ -274,6 +313,60 @@ function maybeBuildGateSDoubleLeafBuildingPredictionBasis(input: {
     ],
     toleranceClass: "uncalibrated_prediction"
   };
+}
+
+function maybeBuildGateERDirectFixedDoubleLeafBuildingPredictionBasis(input: {
+  baseBasis: AirborneResultBasis;
+  context: AirborneContext | null | undefined;
+  frequencyBands: NonNullable<AirborneResultBasis["frequencyBands"]>;
+}): AirborneResultBasis | null {
+  if (!hasCompleteGateARBuildingPredictionContext(input.context)) {
+    return null;
+  }
+
+  const partitionAreaM2 = (input.context.panelWidthMm * input.context.panelHeightMm) / 1_000_000;
+  const baseAssumptions = input.baseBasis.assumptions.filter(
+    (assumption) => !/Field\/building outputs require separate/i.test(assumption)
+  );
+
+  return AirborneResultBasisSchema.parse({
+    ...input.baseBasis,
+    assumptions: [
+      "building-prediction output is computed only from explicit direct-fixed building_prediction context",
+      "direct separating-element curve comes from the Gate EO direct-fixed double-leaf bridge-loss owner",
+      "flanking/junction contribution is represented by the explicit conservative flanking assumption, named junction class, coupling length, and the existing path-energy overlay",
+      "room standardization owns partition area, source-room volume, receiving-room volume, and receiving-room RT60 instead of borrowing lab Rw/STC",
+      `Gate AQ +/-${GATE_O_AIRBORNE_BUILDING_PREDICTION_TOLERANCE_DB} dB uncertainty budget remains source-absent and not measured evidence`,
+      `building context uses ${partitionAreaM2.toFixed(2)} m2 partition area, ${input.context.sourceRoomVolumeM3.toFixed(1)} m3 source-room volume, ${input.context.receivingRoomVolumeM3.toFixed(1)} m3 receiving-room volume, ${input.context.receivingRoomRt60S.toFixed(2)} s RT60, ${input.context.flankingJunctionClass}, ${input.context.conservativeFlankingAssumption}, and ${input.context.junctionCouplingLengthM.toFixed(2)} m coupling length`,
+      `base lab-family method remains ${input.baseBasis.method}`,
+      ...baseAssumptions
+    ],
+    calculationStandard: "ISO 12354-1",
+    curveBasis: "calculated_frequency_curve",
+    errorBudgetDb: GATE_O_AIRBORNE_BUILDING_PREDICTION_TOLERANCE_DB,
+    family: "double_leaf",
+    frequencyBands: input.frequencyBands,
+    kind: "airborne_physics_prediction",
+    method: GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
+    missingPhysicalInputs: [],
+    missingSourceEvidence: [
+      "same_building_source_owned_direct_fixed_double_leaf_RwPrime_DnW_DnTw_holdouts_absent"
+    ],
+    origin: "family_physics_prediction",
+    ratingStandard: "ISO 717-1",
+    requiredInputs: [
+      ...input.baseBasis.requiredInputs,
+      ...GATE_M_AIRBORNE_BUILDING_PREDICTION_REQUIRED_PHYSICAL_INPUTS,
+      "GateEO_direct_fixed_double_leaf_direct_separating_element_curve_owner",
+      "GateEQ_building_prediction_adapter_owner",
+      "ISO_12354_1_direct_separating_element_frequency_curve_owner",
+      "ISO_12354_1_flanking_path_transmission_terms_owner",
+      "ISO_12354_1_junction_vibration_reduction_index_owner",
+      "ISO_12354_1_room_absorption_normalization_owner",
+      "buildingPredictionUncertaintyBudgetOwner"
+    ],
+    toleranceClass: "uncalibrated_prediction"
+  });
 }
 
 function measuredExactBasis(family: DynamicAirborneFamily): AirborneResultBasis {
@@ -574,6 +667,152 @@ function maybeCalculateGateEODirectFixedDoubleLeafBridgeLossRuntime(input: {
   };
 }
 
+function maybeCalculateGateERDirectFixedDoubleLeafFieldBuildingAdapterRuntime(input: {
+  contract: GateRDoubleLeafFramedBridgeSolverContract;
+  family: { family: DynamicAirborneFamily; notes: string[] };
+  options: DynamicAirborneOptions;
+  topology: AirborneTopologySummary;
+}): DynamicAirborneResult | null {
+  const contextMode = input.options.airborneContext?.contextMode;
+  const requestedOutputs = input.options.targetOutputs ?? [];
+  const requestedFieldBuildingOutputs = requestedGateERFieldBuildingOutputs(requestedOutputs);
+
+  if (
+    (contextMode !== "field_between_rooms" && contextMode !== "building_prediction") ||
+    (requestedOutputs.length > 0 && requestedFieldBuildingOutputs.length === 0) ||
+    input.contract.bridgeClass !== "direct_fixed_bridge" ||
+    input.contract.inputContract.inputCompleteness.status !== "complete" ||
+    input.contract.missingPhysicalInputs.length > 0 ||
+    !input.contract.benchmarkRange ||
+    !hasCompleteDirectFixedPhysicalInputs(input.contract.physicalInputs)
+  ) {
+    return null;
+  }
+
+  const curve = buildGateEODirectFixedCurve({
+    benchmark: input.contract.benchmarkRange,
+    frequenciesHz: input.options.frequenciesHz,
+    physicalInputs: input.contract.physicalInputs
+  });
+  const ratings = buildRatingsFromCurve(curve.frequenciesHz, curve.transmissionLossDb);
+  const baseBasis = buildGateERDirectFixedAdapterBaseBasis({
+    benchmark: input.contract.benchmarkRange,
+    curve,
+    physicalInputs: input.contract.physicalInputs
+  });
+  const frequencyBands = {
+    bandSet: "gate_er_direct_fixed_double_leaf_field_building_adapter_runtime_curve",
+    frequenciesHz: [...curve.frequenciesHz]
+  };
+  const fieldContextBasis =
+    contextMode === "field_between_rooms"
+      ? maybeBuildGateIAirborneFieldContextBasisFromBase({
+          baseBasis,
+          context: input.options.airborneContext,
+          family: "double_leaf",
+          frequencyBands
+        })
+      : null;
+  const buildingPredictionBasis =
+    contextMode === "building_prediction"
+      ? maybeBuildGateERDirectFixedDoubleLeafBuildingPredictionBasis({
+          baseBasis,
+          context: input.options.airborneContext,
+          frequencyBands
+        })
+      : null;
+  const selectedBasis = buildingPredictionBasis ?? fieldContextBasis;
+  if (!selectedBasis) {
+    return null;
+  }
+
+  const selectedCandidateId =
+    contextMode === "building_prediction"
+      ? GATE_AR_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID
+      : GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID;
+  const candidateResolution = buildGateSCandidateResolution({
+    basis: selectedBasis,
+    family: "double_leaf",
+    resolverId: "resolver_direct_fixed_double_leaf_field_building_adapter_runtime_corridor",
+    runtimeValueMovement: true,
+    selectedCandidateId,
+    targetOutputs: requestedFieldBuildingOutputs.length > 0
+      ? requestedFieldBuildingOutputs
+      : [...GATE_ER_FIELD_BUILDING_OUTPUTS]
+  });
+  const solverRw = ratings.iso717.Rw;
+  const screeningRw = input.options.screeningEstimatedRwDb;
+  const trace: DynamicAirborneTrace = {
+    adjustmentDb: ksRound1(solverRw - screeningRw),
+    candidateMethods: [
+      {
+        label: getDelegateLabel("screening_mass_law_curve_seed_v3"),
+        method: "screening_mass_law_curve_seed_v3",
+        rwDb: screeningRw,
+        selected: false
+      },
+      {
+        label: contextMode === "building_prediction"
+          ? "Direct-Fixed Double-Leaf Building Adapter"
+          : "Direct-Fixed Double-Leaf Field Adapter",
+        method: "mass_law",
+        rwDb: solverRw,
+        selected: true
+      }
+    ],
+    cavityCount: input.topology.cavityCount,
+    confidenceClass: "medium",
+    confidenceScore: 0.58,
+    detectedFamily: "double_leaf",
+    detectedFamilyLabel: familyLabel("double_leaf"),
+    familyDecisionClass: "clear",
+    hasPorousFill: input.topology.hasPorousFill,
+    hasStudLikeSupport: input.topology.hasStudLikeSupport,
+    notes: [
+      ...input.family.notes,
+      "Gate ER selected the direct-fixed double-leaf field/building adapter runtime for complete context input.",
+      `The direct separating-element base curve remains ${GATE_EO_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_RUNTIME_METHOD}.`,
+      `Leaf masses are ${input.contract.physicalInputs.sideALeafMassKgM2?.toFixed(1)} and ${input.contract.physicalInputs.sideBLeafMassKgM2?.toFixed(1)} kg/m2.`,
+      contextMode === "building_prediction"
+        ? "Gate AR owns the explicit building_prediction adapter over the Gate EO curve."
+        : "Gate I owns the explicit field_between_rooms adapter over the Gate EO curve.",
+      "Lab Rw/STC/C/Ctr remain separate from R'w/Dn,w/DnT,w."
+    ],
+    originalSolidLayerCount: input.topology.originalSolidLayerCount,
+    porousLayerCount: input.topology.porousLayerCount,
+    selectedLabel: contextMode === "building_prediction"
+      ? "Direct-Fixed Double-Leaf Building Adapter"
+      : "Direct-Fixed Double-Leaf Field Adapter",
+    selectedFamilyScore: 0.58,
+    selectedMethod: "mass_law",
+    solverSpreadRwDb: ksRound1(Math.abs(solverRw - screeningRw)),
+    strategy: "direct_fixed_double_leaf_field_building_adapter_runtime",
+    supportLayerCount: input.topology.supportLayerCount,
+    surfaceMassKgM2: input.topology.surfaceMassKgM2,
+    totalGapThicknessMm: input.topology.totalGapThicknessMm,
+    visibleLeafCount: input.topology.visibleLeafCount,
+    visibleLeafMassRatio: input.topology.visibleLeafMassRatio
+  };
+
+  return {
+    airborneBasis: selectedBasis,
+    airborneCandidateResolution: candidateResolution,
+    airborneCandidateSet: candidateResolution.candidates,
+    curve,
+    id: "dynamic",
+    label: "Dynamic Topology",
+    ratings,
+    rw: solverRw,
+    trace,
+    warnings: [
+      GATE_ER_DIRECT_FIXED_DOUBLE_LEAF_FIELD_BUILDING_ADAPTER_WARNING,
+      ...(buildingPredictionBasis ? [GATE_AR_AIRBORNE_BUILDING_PREDICTION_WARNING] : []),
+      ...(fieldContextBasis ? [GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING] : []),
+      `Direct-fixed double-leaf field/building adapter runtime is uncalibrated with a ${input.contract.benchmarkRange.toleranceDb} dB base-curve error budget.`
+    ]
+  };
+}
+
 export function maybeCalculateGateSDoubleLeafFramedBridgeRuntime(input: {
   family: { family: DynamicAirborneFamily; notes: string[] };
   layers: readonly ResolvedLayer[];
@@ -585,6 +824,17 @@ export function maybeCalculateGateSDoubleLeafFramedBridgeRuntime(input: {
     layers: input.layers,
     targetOutputs: ["Rw", "STC", "C", "Ctr"]
   });
+
+  const gateERDirectFixedFieldBuildingRuntime =
+    maybeCalculateGateERDirectFixedDoubleLeafFieldBuildingAdapterRuntime({
+      contract,
+      family: input.family,
+      options: input.options,
+      topology: input.topology
+    });
+  if (gateERDirectFixedFieldBuildingRuntime) {
+    return gateERDirectFixedFieldBuildingRuntime;
+  }
 
   const gateEODirectFixedRuntime = maybeCalculateGateEODirectFixedDoubleLeafBridgeLossRuntime({
     contract,

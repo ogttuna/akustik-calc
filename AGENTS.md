@@ -65,10 +65,10 @@ Current selected post-V1 plan:
 `docs/calculator/POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md`.
 
 Current reconciliation checkpoint:
-`docs/calculator/CHECKPOINT_2026-06-07_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_EP.md`.
+`docs/calculator/CHECKPOINT_2026-06-08_GATE_ET_BOUNDARY_HANDOFF.md`.
 
 Current selected next action label:
-`post_v1_wall_direct_fixed_double_leaf_field_building_adapter_owner_gate_eq_plan`.
+`post_v1_next_numeric_coverage_gap_gate_eu_plan`.
 
 Gate EM/EN plan:
 `docs/calculator/POST_V1_GATE_EM_EN_WALL_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_OWNER_PLAN_2026-06-07.md`.
@@ -76,7 +76,114 @@ Gate EM/EN plan:
 Gate EP/EQ plan:
 `docs/calculator/POST_V1_GATE_EP_EQ_WALL_DIRECT_FIXED_DOUBLE_LEAF_FIELD_BUILDING_ADAPTER_PLAN_2026-06-07.md`.
 
+Gate EQ/ER runtime plan:
+`docs/calculator/POST_V1_GATE_EQ_ER_WALL_DIRECT_FIXED_DOUBLE_LEAF_FIELD_BUILDING_ADAPTER_RUNTIME_PLAN_2026-06-08.md`.
+
+Gate ES/ET boundary plan:
+`docs/calculator/POST_V1_GATE_ES_ET_REINFORCED_CONCRETE_VISIBLE_DERIVED_BOUNDARY_PLAN_2026-06-08.md`.
+
+Latest landed no-runtime boundary action:
+`post_v1_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et_plan`
+with status
+`post_v1_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et_landed_no_runtime_selected_next_numeric_coverage_gap_gate_eu`.
+Gate ET pins the reinforced-concrete visible-derived missing-input boundary
+after Gate ES selected it. Visible-derived combined
+upper/lower reinforced-concrete floor stacks now keep `Ln,w` /
+`DeltaLw` parked as `needs_input` with exactly
+`resilientLayerDynamicStiffnessMNm3` and `loadBasisKgM2` missing;
+`ceilingOrLowerAssembly` is not requested because the lower assembly is
+already represented by visible layer roles. Explicit partial predictor
+input still requires `loadBasisKgM2` and `ceilingOrLowerAssembly`, and
+complete explicit input still calculates `Ln,w 58.1` / `DeltaLw 13.7`
+through the heavy-concrete combined formula corridor. Boundary id:
+`floor.reinforced_concrete.visible_derived_lower_assembly_from_layers_missing_dynamic_stiffness_and_load`.
+Counters: `boundaryLedgersPinned 1`,
+`staleExpectationRowsCorrected 6`, `currentGateFailuresCleared 6`,
+`newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+`runtimeBasisPromotions 0`, `runtimeFormulaRetunes 0`,
+`runtimeValuesMoved 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 1`. Gate ET selects Gate EU:
+`post_v1_next_numeric_coverage_gap_gate_eu_plan` in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-eu-contract.test.ts`.
+
 Latest landed no-runtime numeric coverage/accuracy rerank:
+`post_v1_next_numeric_coverage_gap_gate_es_plan`
+with status
+`post_v1_next_numeric_coverage_gap_gate_es_landed_no_runtime_selected_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et`.
+Gate ES selects
+`floor.reinforced_concrete_visible_derived_missing_input_boundary_refresh`
+after two ROI plan iterations (`roiAnalysisIterations: 2`). Gate ES
+subtracts the now-closed Gate ER direct-fixed field/building runtime,
+closed direct-fixed owner/lab repeats, already-live reinforced-concrete
+complete formula input, explicit partial boundaries that still need
+`ceilingOrLowerAssembly`, closed ASTM/wall repeats, unsafe cross-family
+`DeltaLw` subtraction, source crawling, confidence wording, and
+frontend polish. Counters: `candidateCount 10`,
+`estimatedNextBoundaryLedgers 1`,
+`estimatedNextCurrentGateFailuresCleared 6`,
+`estimatedNextStaleExpectationRowsCorrected 6`,
+`estimatedNextFrontendImplementationFilesTouched 1`,
+`newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+`runtimeBasisPromotions 0`, `runtimeFormulaRetunes 0`,
+`runtimeValuesMoved 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. Gate ES selects Gate ET:
+`post_v1_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et_plan`
+in
+`packages/engine/src/post-v1-floor-reinforced-concrete-visible-derived-missing-input-boundary-gate-et-contract.test.ts`.
+
+Latest landed value-moving runtime action:
+`post_v1_wall_direct_fixed_double_leaf_field_building_adapter_runtime_gate_er_plan`
+with status
+`post_v1_wall_direct_fixed_double_leaf_field_building_adapter_runtime_gate_er_landed_runtime_selected_next_numeric_coverage_gap_gate_es`.
+Gate ER connects the Gate EO direct separating-element curve for the
+bounded direct-fixed empty-cavity wall to the owned field/building
+adapters. Complete `field_between_rooms` requests now select
+`gate_i_airborne_field_apparent_context_adapter_runtime` and complete
+`building_prediction` requests now select
+`gate_ar_airborne_building_prediction_all_owner_runtime_corridor`; both
+calculate `R'w 23 / Dn,w 24 / DnT,w 27` for the representative
+`gypsum_board 12.5 / air_gap 45 / gypsum_board 12.5` stack with complete
+route-required context. Lab output remains Gate EO at
+`Rw 31 / STC 31 / C -1.2 / Ctr -5.9`, missing `receivingRoomRt60S` and
+missing `supportSpacingMm` remain `needs_input`, and no source rows or
+frontend implementation are touched. Counters:
+`fieldBuildingRequestShapesWidened 3`, `newCalculableLayerTemplates 1`,
+`newCalculableRequestShapes 3`, `runtimeBasisPromotions 2`,
+`runtimeCorrectedLayerTemplates 1`, `runtimeCorrectedRequestShapes 3`,
+`runtimeFormulaRetunes 0`, `runtimeValuesMoved 6`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+Gate ER selects Gate ES:
+`post_v1_next_numeric_coverage_gap_gate_es_plan` in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-es-contract.test.ts`.
+
+Latest landed no-runtime adapter owner proof:
+`post_v1_wall_direct_fixed_double_leaf_field_building_adapter_owner_gate_eq_plan`
+with status
+`post_v1_wall_direct_fixed_double_leaf_field_building_adapter_owner_gate_eq_landed_no_runtime_selected_wall_direct_fixed_double_leaf_field_building_adapter_runtime_gate_er`.
+Gate EQ accepts owners
+`wall.direct_fixed_double_leaf.field_between_rooms_adapter_owner` and
+`wall.direct_fixed_double_leaf.building_prediction_adapter_owner`. It
+proves that the Gate EO direct separating-element curve can be used as
+the base for bounded direct-fixed double-leaf field/building adapters
+when the field/building route-required physical inputs are present. It
+keeps lab `Rw`/STC/`C`/`Ctr` separate from `R'w`/`Dn,w`/`DnT,w`,
+keeps missing support spacing, room RT60, and building/flanking context
+as `needs_input`, and moves no runtime values. Counters:
+`acceptedAdapterOwnerLedgers 2`, `boundaryLedgersPinned 8`,
+`estimatedNextNewCalculableLayerTemplates 1`,
+`estimatedNextNewCalculableRequestShapes 3`,
+`estimatedNextRuntimeCorrectedLayerTemplates 1`,
+`estimatedNextRuntimeCorrectedRequestShapes 3`,
+`newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+`runtimeBasisPromotions 0`, `runtimeFormulaRetunes 0`,
+`runtimeValuesMoved 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. Gate EQ selects Gate ER, the
+direct-fixed double-leaf field/building adapter runtime:
+`post_v1_wall_direct_fixed_double_leaf_field_building_adapter_runtime_gate_er_plan`
+in
+`packages/engine/src/post-v1-wall-direct-fixed-double-leaf-field-building-adapter-runtime-gate-er-contract.test.ts`.
+
+Latest landed no-runtime numeric coverage/accuracy rerank before Gate EQ:
 `post_v1_next_numeric_coverage_gap_gate_ep_plan`
 with status
 `post_v1_next_numeric_coverage_gap_gate_ep_landed_no_runtime_selected_wall_direct_fixed_double_leaf_field_building_adapter_owner_gate_eq`.

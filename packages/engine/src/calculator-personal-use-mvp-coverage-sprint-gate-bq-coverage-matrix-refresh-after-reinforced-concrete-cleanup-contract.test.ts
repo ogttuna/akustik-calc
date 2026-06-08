@@ -204,8 +204,7 @@ describe("Personal-Use MVP Coverage Sprint Gate BQ coverage matrix refresh after
         errorBudgetDb: null,
         missingPhysicalInputs: [
           "resilientLayerDynamicStiffnessMNm3",
-          "loadBasisKgM2",
-          "ceilingOrLowerAssembly"
+          "loadBasisKgM2"
         ],
         origin: "needs_input",
         supportedTargetOutputs: ["Rw", "Ctr"],

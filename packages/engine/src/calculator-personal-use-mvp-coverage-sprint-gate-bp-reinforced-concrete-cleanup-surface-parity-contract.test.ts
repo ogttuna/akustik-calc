@@ -123,8 +123,7 @@ describe("Personal-Use MVP Coverage Sprint Gate BP reinforced-concrete cleanup s
         impactBasis: null,
         missingPhysicalInputs: [
           "resilientLayerDynamicStiffnessMNm3",
-          "loadBasisKgM2",
-          "ceilingOrLowerAssembly"
+          "loadBasisKgM2"
         ],
         origin: "needs_input",
         supportedTargetOutputs: ["Rw", "Ctr"],
@@ -137,7 +136,7 @@ describe("Personal-Use MVP Coverage Sprint Gate BP reinforced-concrete cleanup s
     });
     expect(visibleRuntime.impact).toBeNull();
     expect(visibleRuntime.warnings.join("\n")).toContain(
-      "resilientLayerDynamicStiffnessMNm3, loadBasisKgM2, ceilingOrLowerAssembly"
+      "resilientLayerDynamicStiffnessMNm3, loadBasisKgM2"
     );
   });
 

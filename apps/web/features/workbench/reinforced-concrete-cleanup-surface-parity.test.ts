@@ -174,7 +174,7 @@ describe("reinforced-concrete cleanup surface parity", () => {
       "resilientLayerDynamicStiffnessMNm3"
     );
     expect(`${lnwCard.detail} ${deltaCard.detail}`).toContain("loadBasisKgM2");
-    expect(`${lnwCard.detail} ${deltaCard.detail}`).toContain("ceilingOrLowerAssembly");
+    expect(`${lnwCard.detail} ${deltaCard.detail}`).not.toContain("ceilingOrLowerAssembly");
 
     vi.stubGlobal("React", React);
     const traceHtml = renderToStaticMarkup(React.createElement(ImpactTracePanel, { result }));
@@ -184,7 +184,8 @@ describe("reinforced-concrete cleanup surface parity", () => {
 
     const report = buildReport(scenario);
     expect(report).toContain("- Predictor input mode: derived_from_visible_layers");
-    expect(report).toContain("resilientLayerDynamicStiffnessMNm3, loadBasisKgM2, ceilingOrLowerAssembly");
+    expect(report).toContain("resilientLayerDynamicStiffnessMNm3, loadBasisKgM2");
+    expect(report).not.toContain("resilientLayerDynamicStiffnessMNm3, loadBasisKgM2, ceilingOrLowerAssembly");
     expect(report).not.toContain("- Low-confidence fallback family: reinforced concrete");
     expect(report).not.toContain("- Impact error budget Ln,w:");
   });

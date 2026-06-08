@@ -505,9 +505,9 @@ function buildGateBQReinforcedConcreteRows(): readonly PersonalUseMvpCoverageSce
       requestedMetrics: GATE_BO_REINFORCED_CONCRETE_TARGET_OUTPUTS,
       route: "floor",
       runtime: visibleDerivedNeedsInputRuntime,
-      toleranceOrErrorBudget: "blocked_no_budget_until_user_owns_s_prime_load_and_lower_assembly",
+      toleranceOrErrorBudget: "blocked_no_budget_until_user_owns_s_prime_and_load",
       valueOrBlockedReason:
-        "Visible stack asks for resilientLayerDynamicStiffnessMNm3, loadBasisKgM2, and ceilingOrLowerAssembly",
+        "Visible stack derives lower assembly from layer roles and asks for resilientLayerDynamicStiffnessMNm3 and loadBasisKgM2",
       visibleSurfaceParityTarget: IMPACT_VISIBLE_SURFACES
     }),
     row({

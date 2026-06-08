@@ -10,10 +10,60 @@ selection rules, read
 This file remains the closed V1 acceptance contract and answer-order
 gate.
 
-The selected post-V1 plan is
+The selected post-V1 capability chain is
 [POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md).
-It does not reopen usable V1; it starts post-V1 formula coverage with a
-no-runtime wall multileaf input-owner gate.
+It does not reopen usable V1. That plan started post-V1 formula
+coverage with a no-runtime wall multileaf input-owner gate, but the
+current selected post-V1 action must be read from
+[CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md) and the
+landed Gate ES/ET plan. As of 2026-06-08, Gate ET has landed and the
+current selected action is Gate EU:
+`post_v1_next_numeric_coverage_gap_gate_eu_plan`.
+Selected Gate EU file:
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-eu-contract.test.ts`.
+
+Gate ET landed as
+`post_v1_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et_plan`
+with status
+`post_v1_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et_landed_no_runtime_selected_next_numeric_coverage_gap_gate_eu`.
+Boundary id:
+`floor.reinforced_concrete.visible_derived_lower_assembly_from_layers_missing_dynamic_stiffness_and_load`.
+It pins the reinforced-concrete visible-derived missing-input boundary:
+visible layer roles already define the lower assembly, so `Ln,w` /
+`DeltaLw` stay parked as `needs_input` for
+`resilientLayerDynamicStiffnessMNm3` and `loadBasisKgM2`; explicit
+partial predictor input still requires `loadBasisKgM2` and
+`ceilingOrLowerAssembly`. Gate ET counters include
+`currentGateFailuresCleared 6`, `runtimeValuesMoved 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 1`.
+
+Gate ES landed as
+`post_v1_next_numeric_coverage_gap_gate_es_plan` with status
+`post_v1_next_numeric_coverage_gap_gate_es_landed_no_runtime_selected_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et`.
+It selected
+`floor.reinforced_concrete_visible_derived_missing_input_boundary_refresh`
+after two ROI iterations (`roiAnalysisIterations: 2`) and selected
+Gate ET in
+`packages/engine/src/post-v1-floor-reinforced-concrete-visible-derived-missing-input-boundary-gate-et-contract.test.ts`.
+Gate ES estimated the selected Gate ET boundary-surface touch as
+`estimatedNextFrontendImplementationFilesTouched 1`.
+Gate ES counters include `runtimeValuesMoved 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Gate ER landed as
+`post_v1_wall_direct_fixed_double_leaf_field_building_adapter_runtime_gate_er_plan`
+with status
+`post_v1_wall_direct_fixed_double_leaf_field_building_adapter_runtime_gate_er_landed_runtime_selected_next_numeric_coverage_gap_gate_es`.
+Readable label: direct-fixed double-leaf field/building adapter runtime.
+It routes complete direct-fixed double-leaf `field_between_rooms`
+requests through `gate_i_airborne_field_apparent_context_adapter_runtime`
+and complete `building_prediction` requests through
+`gate_ar_airborne_building_prediction_all_owner_runtime_corridor`,
+calculating `R'w 23 / Dn,w 24 / DnT,w 27`. It moved
+`runtimeValuesMoved 6`, imported `sourceRowsImported: 0`, and touched
+`frontendImplementationFilesTouched: 0`.
+Gate ER selected Gate ES file:
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-es-contract.test.ts`.
 
 DynEcho is usable V1 only when a company-internal user can choose wall or
 floor, enter layers plus the required physical inputs, and receive a
