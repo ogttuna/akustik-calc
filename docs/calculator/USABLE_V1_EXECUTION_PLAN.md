@@ -22,6 +22,18 @@ current selected action is Gate EU:
 Selected Gate EU file:
 `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-eu-contract.test.ts`.
 
+Post-Gate-ET checkpoint:
+[CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md](./CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md).
+Commit `fb0ea67 Fix double-leaf route input boundary` preserves
+answer-engine V1 behavior for flat `leaf / porous absorber / leaf` wall
+stacks: missing double-leaf topology/support inputs remain
+`needs_input`, while complete topology still calculates through the
+owned double-leaf/framed formula route. It moves no formula values and
+does not reopen usable V1. Gate EU remains the selected post-V1 next
+action; the selected Gate EU contract file named above is not present
+yet in the implementation tree and must be created or explicitly
+reselected by the next Gate EU turn.
+
 Gate ET landed as
 `post_v1_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et_plan`
 with status

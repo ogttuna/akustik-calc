@@ -29,6 +29,22 @@ Selected Gate EU file:
 
 `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-eu-contract.test.ts`
 
+Current reconciliation checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md`
+
+Post-Gate-ET boundary-preservation note: commit `fb0ea67 Fix
+double-leaf route input boundary` keeps flat `leaf / porous absorber /
+leaf` wall stacks without complete double-leaf topology/support inputs
+parked as `needs_input` instead of publishing a screening fallback.
+Complete topology still calculates through the owned double-leaf/framed
+formula route. This checkpoint moves `runtimeValuesMoved 0`, imports
+`sourceRowsImported: 0`, and does not change the selected next action.
+Gate EU remains selected, but the selected Gate EU contract file named
+above is not present yet in the current implementation tree; the next
+Gate EU turn must create it or explicitly reselect the next action after
+a fresh source-of-truth review.
+
 Gate ES/ET boundary plan:
 
 `docs/calculator/POST_V1_GATE_ES_ET_REINFORCED_CONCRETE_VISIBLE_DERIVED_BOUNDARY_PLAN_2026-06-08.md`
@@ -2658,7 +2674,7 @@ in
 
 Current reconciliation checkpoint:
 
-[CHECKPOINT_2026-06-07_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_EP.md](./CHECKPOINT_2026-06-07_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_EP.md)
+[CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md](./CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md)
 
 Historical Gate BT reconciliation checkpoint:
 

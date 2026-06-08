@@ -65,7 +65,7 @@ Current selected post-V1 plan:
 `docs/calculator/POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md`.
 
 Current reconciliation checkpoint:
-`docs/calculator/CHECKPOINT_2026-06-08_GATE_ET_BOUNDARY_HANDOFF.md`.
+`docs/calculator/CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md`.
 
 Current selected next action label:
 `post_v1_next_numeric_coverage_gap_gate_eu_plan`.
@@ -105,6 +105,22 @@ Counters: `boundaryLedgersPinned 1`,
 `frontendImplementationFilesTouched: 1`. Gate ET selects Gate EU:
 `post_v1_next_numeric_coverage_gap_gate_eu_plan` in
 `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-eu-contract.test.ts`.
+
+Latest boundary-preservation checkpoint:
+`fb0ea67 Fix double-leaf route input boundary` after Gate ET. Flat
+`leaf / porous absorber / leaf` wall stacks without complete double-leaf
+topology/support inputs now remain parked as `needs_input` instead of
+publishing a screening fallback; complete topology still calculates
+through the owned double-leaf/framed route. The fix is documented in
+`docs/calculator/CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md`.
+It moves no formula values, imports no source rows, and does not change
+the selected next action: Gate EU remains
+`post_v1_next_numeric_coverage_gap_gate_eu_plan`. The selected Gate EU
+contract file named by the docs,
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-eu-contract.test.ts`,
+is not present yet in the current implementation tree; the next Gate EU
+turn must create it or explicitly update the selected-next docs after a
+fresh source-of-truth review.
 
 Latest landed no-runtime numeric coverage/accuracy rerank:
 `post_v1_next_numeric_coverage_gap_gate_es_plan`

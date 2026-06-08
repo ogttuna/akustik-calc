@@ -22,15 +22,16 @@ measured/reference residual bar.
 The active broad-accuracy slice plan is
 [SLICE_BROAD_ACCURACY_REFERENCE_BENCHMARK_AND_SIMILARITY_SOLVER_PLAN.md](./SLICE_BROAD_ACCURACY_REFERENCE_BENCHMARK_AND_SIMILARITY_SOLVER_PLAN.md).
 The latest checkpoint is
-[CHECKPOINT_2026-06-08_GATE_ET_BOUNDARY_HANDOFF.md](./CHECKPOINT_2026-06-08_GATE_ET_BOUNDARY_HANDOFF.md).
+[CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md](./CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md).
 It records the Gate ES rerank, the Gate ET boundary closeout, the Gate
-EU selected next action, and the focused Gate EM/EN/EO/EP/EQ/ER/ES/ET
-green validation. Gate CX/CY/CZ/DA/DB/DC/DD/DE/DF/DG/DH/DI/DJ/DK/DL/DM/DN/DO/DP/DQ/DR/DS/DT/DU/DV/DW/DX/DY/DZ/EA have landed. The latest full documented
-passing gate remains the Gate DG run:
-`NEXT_DIST_DIR=.next-gate-dg pnpm calculator:gate:current` on
-2026-06-06 passed with engine 624 files / 3428 tests, web 113 files /
-438 passed and 18 skipped, repo build 5 / 5, and whitespace guard
-passed. Gate DD/DE/DF/DG/DH/DI/DJ/DK/DL/DM/DN/DO/DP/DQ/DR/DS/DT/DU/DV/DW/DX/DY/DZ/EA/EB/EC/ED/EE/EF/EG/EH/EI/EJ/EK/EL/EM/EN/EO/EP/EQ/ER/ES/ET are closed; Gate ET is
+EU selected next action, the post-Gate-ET double-leaf route-input
+boundary preservation fix, and the current validation evidence. Gate
+CX/CY/CZ/DA/DB/DC/DD/DE/DF/DG/DH/DI/DJ/DK/DL/DM/DN/DO/DP/DQ/DR/DS/DT/DU/DV/DW/DX/DY/DZ/EA have landed. The latest full documented
+passing gate is the 2026-06-08 run after the double-leaf route-input
+boundary fix: `pnpm calculator:gate:current` passed with engine 663 test
+files / 3629 tests, web 114 test files / 443 passed and 18 skipped,
+repo build 5 / 5, and whitespace guard passed. Gate
+DD/DE/DF/DG/DH/DI/DJ/DK/DL/DM/DN/DO/DP/DQ/DR/DS/DT/DU/DV/DW/DX/DY/DZ/EA/EB/EC/ED/EE/EF/EG/EH/EI/EJ/EK/EL/EM/EN/EO/EP/EQ/ER/ES/ET are closed; Gate ET is
 the latest no-runtime boundary action, Gate ES is the latest no-runtime
 numeric coverage/accuracy rerank, Gate ER is the latest value-moving
 runtime scope/accuracy action, Gate EO is the previous
@@ -64,6 +65,15 @@ Gate ET selects Gate EU:
 `post_v1_next_numeric_coverage_gap_gate_eu_plan`
 in
 `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-eu-contract.test.ts`.
+Post-Gate-ET boundary-preservation checkpoint:
+`fb0ea67 Fix double-leaf route input boundary`. Flat
+`leaf / porous absorber / leaf` wall stacks without complete
+double-leaf topology/support inputs now remain parked as `needs_input`
+instead of publishing a screening fallback. Complete topology still
+calculates through the owned double-leaf/framed route. The selected Gate
+EU contract file named above is not present yet in the implementation
+tree; the next Gate EU turn must create it or explicitly reselect the
+next action after a fresh source-of-truth review.
 Latest landed no-runtime numeric coverage/accuracy rerank:
 `post_v1_next_numeric_coverage_gap_gate_es_plan`
 with status

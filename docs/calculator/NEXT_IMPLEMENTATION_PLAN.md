@@ -40,6 +40,25 @@ Selected Gate EU file:
 
 `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-eu-contract.test.ts`
 
+Current checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md`
+
+The latest post-Gate-ET implementation checkpoint is commit
+`fb0ea67 Fix double-leaf route input boundary`. It keeps flat
+`leaf / porous absorber / leaf` wall stacks without complete
+double-leaf topology/support inputs parked as `needs_input` instead of
+publishing a screening fallback. Complete topology still calculates
+through the owned double-leaf/framed route. This is a calculator
+boundary-preservation fix, not a source crawl, confidence wording pass,
+or finite scenario-library expansion.
+
+Gate EU remains the selected next tactical action, but the selected Gate
+EU contract file named above is not present in the current implementation
+tree. The next Gate EU turn must create that selected contract file as
+part of the rerank, or explicitly update this selected-next plan if a
+fresh source-of-truth review changes the highest-ROI calculator slice.
+
 Gate ES/ET boundary plan:
 
 `docs/calculator/POST_V1_GATE_ES_ET_REINFORCED_CONCRETE_VISIBLE_DERIVED_BOUNDARY_PLAN_2026-06-08.md`
@@ -2608,7 +2627,7 @@ in
 
 Current reconciliation checkpoint:
 
-[CHECKPOINT_2026-06-07_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_EP.md](./CHECKPOINT_2026-06-07_DOCS_IMPLEMENTATION_SYNC_AFTER_GATE_EP.md)
+[CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md](./CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md)
 
 The shared resolver surface now has 45 active runtime-basis mappings after Gate DX added the exact-source family field-context basis owner.
 

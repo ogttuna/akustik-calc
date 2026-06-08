@@ -31,7 +31,7 @@ chain under `docs/calculator/`: `CALCULATOR_SOURCE_OF_TRUTH.md`,
 `USABLE_V1_EXECUTION_PLAN.md`, `CURRENT_STATE.md`,
 `NEXT_IMPLEMENTATION_PLAN.md`,
 `POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md`,
-`CHECKPOINT_2026-06-08_GATE_ET_BOUNDARY_HANDOFF.md`,
+`CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md`,
 the active Gate ES/ET boundary plan
 `POST_V1_GATE_ES_ET_REINFORCED_CONCRETE_VISIBLE_DERIVED_BOUNDARY_PLAN_2026-06-08.md`,
 the active Gate EQ/ER runtime plan
@@ -48,6 +48,14 @@ company-internal envelope. The post-V1 calculator chain has advanced
 through Gate ET. The current selected next action is Gate EU:
 `post_v1_next_numeric_coverage_gap_gate_eu_plan` in
 `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-eu-contract.test.ts`.
+The latest checkpoint is
+`CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md`.
+It records commit `fb0ea67 Fix double-leaf route input boundary`: flat
+`leaf / porous absorber / leaf` wall stacks without complete
+double-leaf topology/support inputs remain parked as `needs_input`, and
+complete topology still calculates. The selected Gate EU contract file
+named above is not present yet in the implementation tree; the next Gate
+EU turn must create it or explicitly reselect the next action.
 
 The latest no-runtime boundary slice is
 `post_v1_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et_plan`

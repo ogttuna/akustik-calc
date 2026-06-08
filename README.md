@@ -31,7 +31,7 @@ Primary calculator documents:
 - [`docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`](./docs/calculator/NEXT_IMPLEMENTATION_PLAN.md) — active tactical slice
 - [`docs/calculator/POST_V1_GATE_ES_ET_REINFORCED_CONCRETE_VISIBLE_DERIVED_BOUNDARY_PLAN_2026-06-08.md`](./docs/calculator/POST_V1_GATE_ES_ET_REINFORCED_CONCRETE_VISIBLE_DERIVED_BOUNDARY_PLAN_2026-06-08.md) — landed Gate ES/ET boundary plan
 - [`docs/calculator/POST_V1_GATE_EQ_ER_WALL_DIRECT_FIXED_DOUBLE_LEAF_FIELD_BUILDING_ADAPTER_RUNTIME_PLAN_2026-06-08.md`](./docs/calculator/POST_V1_GATE_EQ_ER_WALL_DIRECT_FIXED_DOUBLE_LEAF_FIELD_BUILDING_ADAPTER_RUNTIME_PLAN_2026-06-08.md) — landed Gate ER runtime plan
-- [`docs/calculator/CHECKPOINT_2026-06-08_GATE_ET_BOUNDARY_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-06-08_GATE_ET_BOUNDARY_HANDOFF.md) — latest docs/implementation reconciliation
+- [`docs/calculator/CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md`](./docs/calculator/CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md) — latest docs/implementation reconciliation
 
 Latest calculator boundary closeout:
 
@@ -50,6 +50,13 @@ Latest calculator boundary closeout:
 - Current selected next action:
   Gate EU, `post_v1_next_numeric_coverage_gap_gate_eu_plan`, in
   `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-eu-contract.test.ts`.
+- Post-Gate-ET checkpoint:
+  `fb0ea67 Fix double-leaf route input boundary` keeps flat
+  `leaf / porous absorber / leaf` wall stacks without complete
+  double-leaf topology/support inputs parked as `needs_input`; complete
+  topology still calculates. The selected Gate EU file named above is
+  not present yet and must be created or reselected by the next Gate EU
+  turn.
 
 Latest calculator rerank:
 

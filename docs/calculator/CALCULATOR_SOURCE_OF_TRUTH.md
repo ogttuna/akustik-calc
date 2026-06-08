@@ -111,10 +111,11 @@ Current implementation facts:
 - cards, answer charts, API payloads, Markdown reports, saved replay,
   server snapshot replay, and resolver traces are expected to show the
   same selected answer basis and stopped-output state;
-- the latest documented full gate, after Gate DG on 2026-06-06, passed
-  `NEXT_DIST_DIR=.next-gate-dg pnpm calculator:gate:current` with
-  engine 624 files / 3428 tests, web 113 files / 438 passed + 18
-  skipped, repo build 5 / 5, and whitespace guard passed.
+- the latest documented full gate, after the double-leaf route-input
+  boundary checkpoint on 2026-06-08, passed
+  `pnpm calculator:gate:current` with engine 663 test files / 3629
+  tests passing, web 114 test files / 443 tests passing + 18 skipped,
+  repo build 5 / 5, and whitespace guard passing.
 - after Gate ET, focused Gate EM/EN/EO/EP/EQ/ER/ES/ET validation is
   green when run by targeted Vitest files. Gate ET resolves the previous
   reinforced-concrete visible-derived missing-input expectation drift by
@@ -140,6 +141,22 @@ Current implementation facts:
   Gate ET selects Gate EU:
   `post_v1_next_numeric_coverage_gap_gate_eu_plan` in
   `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-eu-contract.test.ts`.
+- the latest boundary-preservation checkpoint after Gate ET is
+  [CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md](./CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md).
+  Commit `fb0ea67 Fix double-leaf route input boundary` keeps flat
+  `leaf / porous absorber / leaf` wall stacks without complete
+  double-leaf topology/support inputs parked as `needs_input` instead
+  of publishing a screening fallback. Complete topology still calculates
+  through the owned double-leaf/framed route. Validation includes the
+  answer-engine contract, adjacent wall/double-leaf focused tests, a
+  5929-combination engine matrix with `suspicious: 0`, Playwright
+  desktop/mobile route-input checks, `pnpm calculator:gate:current`, and
+  `pnpm build`. This checkpoint moves no formula values, imports no
+  source rows, and does not change the selected next action. Gate EU
+  remains `post_v1_next_numeric_coverage_gap_gate_eu_plan`; the selected
+  Gate EU contract file named above is not present yet in the current
+  implementation tree and must be created or explicitly reselected in
+  the next Gate EU turn.
 - the latest landed no-runtime numeric coverage/accuracy rerank is Gate
   ES: `post_v1_next_numeric_coverage_gap_gate_es_plan` with status
   `post_v1_next_numeric_coverage_gap_gate_es_landed_no_runtime_selected_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et`.
@@ -2067,17 +2084,18 @@ Current selected post-V1 plan:
 [POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md).
 
 Current reconciliation checkpoint:
-[CHECKPOINT_2026-06-08_GATE_ER_RUNTIME_HANDOFF.md](./CHECKPOINT_2026-06-08_GATE_ER_RUNTIME_HANDOFF.md).
+[CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md](./CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md).
 
 Historical Gate BS/BT checkpoint:
 [CHECKPOINT_2026-06-01_POST_V1_GATE_BT_STATE_RECONCILIATION.md](./CHECKPOINT_2026-06-01_POST_V1_GATE_BT_STATE_RECONCILIATION.md).
 Gate BS and Gate BT are closed history. Gate BT selected Gate BU, and
-that chain has since advanced through Gate ER. Do not treat Gate BS,
-Gate BT, Gate BW, Gate DU, Gate DY, Gate DZ, Gate EA, Gate EB, Gate EC,
-Gate ED, Gate EE, Gate EF, Gate EG, Gate EH, Gate EI, Gate EJ, Gate EK,
-Gate EL, Gate EM, Gate EN, Gate EO, Gate EP, or Gate EQ as the current
-selected next action; the current selected next action is
-`post_v1_next_numeric_coverage_gap_gate_es_plan`.
+that chain has since advanced through Gate ET plus the double-leaf
+route-input boundary checkpoint. Do not treat Gate BS, Gate BT, Gate BW,
+Gate DU, Gate DY, Gate DZ, Gate EA, Gate EB, Gate EC, Gate ED, Gate EE,
+Gate EF, Gate EG, Gate EH, Gate EI, Gate EJ, Gate EK, Gate EL, Gate EM,
+Gate EN, Gate EO, Gate EP, Gate EQ, Gate ER, Gate ES, or Gate ET as the
+current selected next action; the current selected next action is
+`post_v1_next_numeric_coverage_gap_gate_eu_plan`.
 
 Latest landed post-V1 value-moving coverage action:
 

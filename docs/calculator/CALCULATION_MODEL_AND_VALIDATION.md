@@ -43,7 +43,10 @@ the user answer when the selected path is `needs_input` or
 `unsupported`.
 
 The current gate keeps the answer-engine contract included in
-`pnpm calculator:gate:current`. The latest focused Gate
+`pnpm calculator:gate:current`. The 2026-06-08 current-gate run after
+the double-leaf route-input boundary checkpoint passed with engine 663
+test files / 3629 tests, web 114 test files / 443 passed + 18 skipped,
+repo build 5 / 5, and whitespace guard passing. The latest focused Gate
 EM/EN/EO/EP/EQ/ER/ES/ET chain is green when run by targeted Vitest
 files. Gate ET resolves the previous independent reinforced-concrete
 visible-derived missing-input expectation drift.
@@ -66,6 +69,16 @@ partial predictor input still requires `loadBasisKgM2` and
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 1`.
 Gate ET selects `post_v1_next_numeric_coverage_gap_gate_eu_plan` in
 `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-eu-contract.test.ts`.
+Post-Gate-ET checkpoint
+[CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md](./CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md)
+records commit `fb0ea67 Fix double-leaf route input boundary`: flat
+`leaf / porous absorber / leaf` wall stacks without complete
+double-leaf topology/support inputs stay parked as `needs_input` instead
+of publishing a screening fallback. Complete topology still calculates
+through the owned double-leaf/framed route. The selected Gate EU
+contract file named above is not present yet in the implementation tree;
+the next Gate EU turn must create it or explicitly reselect the next
+action after a fresh source-of-truth review.
 Gate ES is the latest no-runtime numeric coverage/accuracy rerank:
 `post_v1_next_numeric_coverage_gap_gate_es_plan` with status
 `post_v1_next_numeric_coverage_gap_gate_es_landed_no_runtime_selected_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et`.

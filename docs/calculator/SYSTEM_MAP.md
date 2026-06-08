@@ -19,9 +19,13 @@ Use this together with the calculator source-of-truth chain:
   authority order
 - [USABLE_V1_EXECUTION_PLAN.md](./USABLE_V1_EXECUTION_PLAN.md)
   — closed company-internal usable V1 acceptance contract
+- [CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md](./CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md)
+  — latest docs/implementation/test reconciliation after the
+  post-Gate-ET double-leaf route-input boundary fix; Gate EU remains
+  selected
 - [CHECKPOINT_2026-06-08_GATE_ET_BOUNDARY_HANDOFF.md](./CHECKPOINT_2026-06-08_GATE_ET_BOUNDARY_HANDOFF.md)
-  — latest docs/implementation/test reconciliation after Gate ET; Gate
-  EM/EN/EO/EP/EQ/ER/ES/ET evidence is focused-green and Gate EU is selected
+  — Gate ET boundary closeout; Gate EM/EN/EO/EP/EQ/ER/ES/ET evidence is
+  focused-green and Gate EU is selected
 - [POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md)
   — selected post-V1 capability plan; the chain has advanced through
   Gate ET and now selects Gate EU
@@ -71,6 +75,15 @@ partial predictor input still asks for `loadBasisKgM2` and
 touched `frontendImplementationFilesTouched: 1`. Gate ET selects
 `post_v1_next_numeric_coverage_gap_gate_eu_plan` in
 `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-eu-contract.test.ts`.
+
+Latest boundary-preservation checkpoint: commit `fb0ea67 Fix
+double-leaf route input boundary` keeps flat `leaf / porous absorber /
+leaf` wall stacks without complete double-leaf topology/support inputs
+parked as `needs_input`; complete topology still calculates through the
+owned double-leaf/framed route. This is not a value-moving slice and it
+does not import source rows. The selected Gate EU contract file named
+above is not present yet in the implementation tree; the next Gate EU
+turn must create it or explicitly reselect the next action.
 
 Latest no-runtime rerank: Gate ES landed
 `post_v1_next_numeric_coverage_gap_gate_es_plan` with status

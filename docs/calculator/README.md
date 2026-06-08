@@ -25,7 +25,7 @@ numeric/correctness gate explicitly selects them.
 
 Latest reconciliation checkpoint:
 
-[CHECKPOINT_2026-06-08_GATE_ET_BOUNDARY_HANDOFF.md](./CHECKPOINT_2026-06-08_GATE_ET_BOUNDARY_HANDOFF.md)
+[CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md](./CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md)
 
 Active post-V1 plan:
 
@@ -55,6 +55,16 @@ The active next action is Gate EU:
 `post_v1_next_numeric_coverage_gap_gate_eu_plan`.
 The selected file is:
 `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-eu-contract.test.ts`.
+The selected Gate EU contract file is not present yet in the current
+implementation tree; the next Gate EU turn must create it or explicitly
+reselect the next action after a fresh source-of-truth review.
+
+Post-Gate-ET boundary-preservation checkpoint: commit `fb0ea67 Fix
+double-leaf route input boundary` keeps flat `leaf / porous absorber /
+leaf` wall stacks without complete double-leaf topology/support inputs
+parked as `needs_input` instead of publishing a screening fallback.
+Complete topology still calculates through the owned double-leaf/framed
+route.
 
 Gate ES is the latest no-runtime numeric coverage/accuracy rerank:
 `post_v1_next_numeric_coverage_gap_gate_es_plan`, with status
@@ -112,6 +122,7 @@ Current authority for calculator implementation:
 - [POST_V1_GATE_ES_ET_REINFORCED_CONCRETE_VISIBLE_DERIVED_BOUNDARY_PLAN_2026-06-08.md](./POST_V1_GATE_ES_ET_REINFORCED_CONCRETE_VISIBLE_DERIVED_BOUNDARY_PLAN_2026-06-08.md)
 - [POST_V1_GATE_EQ_ER_WALL_DIRECT_FIXED_DOUBLE_LEAF_FIELD_BUILDING_ADAPTER_RUNTIME_PLAN_2026-06-08.md](./POST_V1_GATE_EQ_ER_WALL_DIRECT_FIXED_DOUBLE_LEAF_FIELD_BUILDING_ADAPTER_RUNTIME_PLAN_2026-06-08.md)
 - [POST_V1_GATE_EP_EQ_WALL_DIRECT_FIXED_DOUBLE_LEAF_FIELD_BUILDING_ADAPTER_PLAN_2026-06-07.md](./POST_V1_GATE_EP_EQ_WALL_DIRECT_FIXED_DOUBLE_LEAF_FIELD_BUILDING_ADAPTER_PLAN_2026-06-07.md)
+- [CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md](./CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md)
 - [CHECKPOINT_2026-06-08_GATE_ET_BOUNDARY_HANDOFF.md](./CHECKPOINT_2026-06-08_GATE_ET_BOUNDARY_HANDOFF.md)
 - [CHECKPOINT_2026-06-08_GATE_ER_RUNTIME_HANDOFF.md](./CHECKPOINT_2026-06-08_GATE_ER_RUNTIME_HANDOFF.md)
 - [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
