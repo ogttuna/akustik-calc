@@ -16,11 +16,62 @@ It does not reopen usable V1. That plan started post-V1 formula
 coverage with a no-runtime wall multileaf input-owner gate, but the
 current selected post-V1 action must be read from
 [CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md) and the
-landed Gate ES/ET plan. As of 2026-06-08, Gate ET has landed and the
-current selected action is Gate EU:
-`post_v1_next_numeric_coverage_gap_gate_eu_plan`.
-Selected Gate EU file:
-`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-eu-contract.test.ts`.
+landed Gate EV/EW plan. As of 2026-06-09, Gate EW has landed and the
+current selected action is Gate EX:
+`post_v1_next_numeric_coverage_gap_gate_ex_plan`.
+Selected Gate EX file:
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ex-contract.test.ts`.
+
+Gate EW landed as
+`post_v1_wall_heavy_core_lined_massive_calibration_owner_gate_ew_plan`
+with status
+`post_v1_wall_heavy_core_lined_massive_calibration_owner_gate_ew_landed_no_runtime_owner_rejected_selected_next_numeric_coverage_gap_gate_ex`.
+Gate EW owner rejected:
+`wall.heavy_core_lined_massive.calibration_owner_rejected_missing_wall_specific_source_or_bounded_rule`.
+The current evidence still lacks a wall-specific lined concrete or
+heavy-masonry source row and lacks a named bounded wall lining rule with
+coefficient scope, local tolerance, holdouts, and protected negative
+boundaries. Gate EW keeps bounded_prediction values frozen and selected
+Gate EX. Counters: `acceptedOwnerLedgers 0`,
+`calibrationOwnerRejectedLedgers 1`, `evidenceBoundaryLedgersPinned 8`,
+`metricBasisBoundariesPinned 4`, `wallSpecificPositiveRowsAccepted 0`,
+`newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+`runtimeBasisPromotions 0`, `runtimeFormulaRetunes 0`,
+`runtimeValuesMoved 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+
+Gate EV landed as
+`post_v1_current_coverage_accuracy_gap_ledger_gate_ev_plan`
+with status
+`post_v1_current_coverage_accuracy_gap_ledger_gate_ev_landed_no_runtime_selected_wall_heavy_core_lined_massive_calibration_owner_gate_ew`.
+It selected
+`wall.heavy_core_lined_massive_calibration_owner_gap_after_bounded_basis`
+and selected the heavy-core / lined-massive calibration owner Gate EW:
+`post_v1_wall_heavy_core_lined_massive_calibration_owner_gate_ew_plan`
+in
+`packages/engine/src/post-v1-wall-heavy-core-lined-massive-calibration-owner-gate-ew-contract.test.ts`.
+Counters: `ledgerRows 10`, `currentEvidenceSurfaces 10`,
+`ownerGapRows 1`, `runtimeCandidateRowsHeldBehindOwner 1`,
+`estimatedNextOwnerLedgers 1`,
+`estimatedNextRuntimeCandidateFamiliesAfterOwner 1`,
+`runtimeValuesMoved 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+
+Gate EU landed as
+`post_v1_next_numeric_coverage_gap_gate_eu_plan`
+with status
+`post_v1_next_numeric_coverage_gap_gate_eu_landed_no_runtime_selected_current_coverage_accuracy_gap_ledger_gate_ev`.
+It selected
+`calculator.current_coverage_accuracy_gap_ledger_after_gate_et_and_thick_board`
+after two ROI iterations (`roiAnalysisIterations: 2`) and selected the
+current coverage/accuracy gap ledger. Counters:
+`candidateCount 10`, `estimatedNextGapLedgers 1`,
+`estimatedNextBoundaryLedgers 2`,
+`estimatedNextRuntimeCandidateFamiliesToEvaluate 6`,
+`runtimeValuesMoved 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+Gate EU selected Gate EV in
+`packages/engine/src/post-v1-current-coverage-accuracy-gap-ledger-gate-ev-contract.test.ts`.
 
 Post-Gate-ET checkpoint:
 [CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md](./CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md).
@@ -29,10 +80,8 @@ answer-engine V1 behavior for flat `leaf / porous absorber / leaf` wall
 stacks: missing double-leaf topology/support inputs remain
 `needs_input`, while complete topology still calculates through the
 owned double-leaf/framed formula route. It moves no formula values and
-does not reopen usable V1. Gate EU remains the selected post-V1 next
-action; the selected Gate EU contract file named above is not present
-yet in the implementation tree and must be created or explicitly
-reselected by the next Gate EU turn.
+does not reopen usable V1. Gate EV and Gate EW have since landed; Gate
+EW landed owner rejected and selected Gate EX.
 
 Gate ET landed as
 `post_v1_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et_plan`
@@ -48,6 +97,10 @@ partial predictor input still requires `loadBasisKgM2` and
 `ceilingOrLowerAssembly`. Gate ET counters include
 `currentGateFailuresCleared 6`, `runtimeValuesMoved 0`,
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 1`.
+Gate ET selected Gate EU in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-eu-contract.test.ts`;
+Gate EV and Gate EW have since landed; Gate EW landed owner rejected and
+selected Gate EX.
 
 Gate ES landed as
 `post_v1_next_numeric_coverage_gap_gate_es_plan` with status

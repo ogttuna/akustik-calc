@@ -1,10 +1,10 @@
 # Post-V1 Thick Board Auto Family Boundary Safety Plan - 2026-06-09
 
-Status: implemented and validated in the local worktree. The focused
-safety contract, narrow runtime classifier guard, split-refactor line
-pin update, and documentation sync are complete. Gate EU remains the
-selected next numeric coverage/accuracy rerank; this is a bounded
-route-family safety follow-up, not a replacement for Gate EU.
+Status: implemented, validated, and registered in the current-gate
+runner. The focused safety contract, narrow runtime classifier guard,
+split-refactor line pin update, and documentation sync are complete.
+Gate EU remains the selected next numeric coverage/accuracy rerank; this
+is a landed route-family safety record, not a replacement for Gate EU.
 
 Related authority:
 
@@ -14,6 +14,11 @@ Related authority:
   [CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md](./CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md)
 - Tactical selected-next plan:
   [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md)
+
+Use this file when changing wall Auto family detection or debugging the
+thick-board ambiguity. Do not use it to select the next calculator slice;
+the active selected-next chain remains in
+[NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md).
 
 ## Purpose
 
@@ -273,15 +278,15 @@ returns true when the selected answer or answer boundary reports one of
 the wall topology fields that makes the workbench show the ownership
 inputs.
 
-The engine contract has 47 tests grouped around the most likely breakage
+The engine contract has 62 tests grouped around the most likely breakage
 surfaces:
 
 | Coverage group | Exact representative | Required signal | Breakage caught immediately |
 | --- | --- | --- | --- |
 | Threshold edge | `gypsum_board 12.5 / rockwool 50 / gypsum_board 82.29` and `82.30` | both stay `double_leaf` / `needs_input`, no supported outputs, wall topology inputs visible | the original 82.30 mm mass-threshold flip reappears |
 | User-reported gypsum thickness sweep | right gypsum leaf `8`, `12.5`, `50`, `75`, `82.29`, `82.30`, `90`, `100`, `140`, and `150` mm | every Auto state stays `double_leaf` / `needs_input`, no screening fallback, wall topology inputs visible | the input panel disappears again at a new or old thickness threshold |
-| Board/panel/membrane Auto family | `gypsum_board 100`, `acoustic_gypsum_board 75`, `silentboard 50`, `security_board 100`, `diamond_board 75`, `cement_board 50`, `mlv 50`, `plywood 150` | `candidate_dynamic_needs_input`, method `acoustic_calculator_answer_engine_v1_flat_double_leaf_missing_topology`, missing `sideALeafGroup`, `cavity1DepthMm`, `sideBLeafGroup`, `frameBridgeClass`, `supportTopology`, `supportSpacingMm` | the fix overfits only `gypsum_board`, or another dense board-like material still publishes screening without route inputs |
-| User-reported last-layer substitutions | high-mass `gypsum_board`, `acoustic_gypsum_board`, `silentboard`, `cement_board`, and `plywood` right leaves | Auto stays parked with the same missing topology field surface | swapping the last layer makes the panel disappear by selecting another board-like screening route |
+| Board/panel/membrane Auto family | `gypsum_board 100`, `acoustic_gypsum_board 75`, `silentboard 50`, `security_board 100`, `diamond_board 75`, `fire_board 100`, `cement_board 50`, `mlv 50`, `bitumen_membrane 50`, `osb 150`, `plywood 150` | `candidate_dynamic_needs_input`, method `acoustic_calculator_answer_engine_v1_flat_double_leaf_missing_topology`, missing `sideALeafGroup`, `cavity1DepthMm`, `sideBLeafGroup`, `frameBridgeClass`, `supportTopology`, `supportSpacingMm` | the fix overfits only `gypsum_board`, or another dense board-like material still publishes screening without route inputs |
+| User-reported last-layer substitutions | high-mass `gypsum_board`, `acoustic_gypsum_board`, `silentboard`, `security_board`, `diamond_board`, `cement_board`, `mlv`, `bitumen_membrane`, `osb`, and `plywood` right leaves | Auto stays parked with the same missing topology field surface | swapping the last layer makes the panel disappear by selecting another board-like screening route |
 | Mirrored high-mass board order | the same high-mass board-like leaves on side A instead of side B | Auto stays parked with the same missing topology field surface | the guard depends on leaf order instead of dominant board/panel semantics |
 | Cavity-entry intermediate states | topology mode only, cavity-depth-only, cavity-depth plus absorption/fill | `dynamic_calculator_route_input_contract_missing_physical_fields`; completed fields disappear from the missing list, remaining wall topology fields stay visible | typing into the cavity field collapses the input panel or publishes a guessed answer |
 | Partial double-leaf topology | same generic board stack with side/cavity ownership but without support/bridge ownership | `needs_input` with exactly `frameBridgeClass`, `supportTopology`, `supportSpacingMm` | partial user intent starts publishing a guessed answer or loses the remaining prompts |
@@ -289,7 +294,7 @@ surfaces:
 | Acoustic gypsum plus typed cavity | `acoustic_gypsum_board 100` with cavity depth, absorption, and fill set | still asks for side groups and support/bridge fields; no screening fallback | the exact user-reported substitution reopens the disappearing-input route |
 | Typed-cavity field/building requests | `R'w`, `Dn,w`, and `DnT,w` for field/building contexts with cavity already typed | no supported field/building outputs, no screening fallback, wall topology plus field/building route inputs remain missing | the fix accidentally promotes field/building basis or hides remaining wall ownership fields |
 | Auto field/building requests | `R'w`, `Dn,w`, and `DnT,w` for field/building contexts without topology ownership | no supported field/building outputs and no screening fallback | generic thick board Auto starts publishing apparent/standardized answers without adapter ownership |
-| Complete independent double-leaf topology | same generic board stack with independent-frame support inputs complete | `family_physics_prediction`, method `layer_combination_resolver_double_leaf_framed_wall_banded_source_absent_formula_corridor`, all wall outputs supported | owned double-leaf/framed calculation is accidentally parked or rerouted |
+| Complete independent double-leaf topology | complete independent support inputs for `gypsum_board`, `acoustic_gypsum_board`, and `plywood` representatives | `family_physics_prediction`, method `layer_combination_resolver_double_leaf_framed_wall_banded_source_absent_formula_corridor`, all wall outputs supported | owned double-leaf/framed calculation is accidentally parked or rerouted |
 | Explicit lined-massive topology | same generic board stack with explicit `topologyMode: lined_massive_wall` and direct-fixed support | existing explicit-intent lined-massive posture remains available | the Auto-only guard becomes too broad and breaks user-selected topology intent |
 | True massive-core Auto controls | concrete, AAC/Ytong, Porotherm, and current CLT posture | existing detected family, origin, method, supported outputs, and missing-input state are unchanged | a broad board guard parks legitimate massive-core lined-wall routes |
 
@@ -321,8 +326,9 @@ the screening fallback or breaking the owned double-leaf formula route.
 
 The test is not a finite scenario library. Each representative is there
 because it maps to a material-semantics class that can cross the same
-surface-mass threshold: generic gypsum, enhanced gypsum, dense acoustic
-board, cement board, limp-mass membrane, and wood panel.
+surface-mass threshold: generic gypsum, enhanced gypsum, fire/security/
+diamond board, cement board, limp-mass or bitumen membrane, OSB, and
+plywood panel.
 
 ### Gate 2 - Narrow Runtime Guard, Only If Gate 1 Is Green
 
@@ -481,6 +487,13 @@ Post-implementation validation passed:
   - 1 file / 47 tests passed.
   `pnpm --dir apps/web exec vitest run --maxWorkers=1 features/workbench/thick-board-wall-topology-input-visibility.test.ts`
   - 1 file / 4 tests passed.
+- Final board/panel/membrane representative expansion after OSB,
+  bitumen membrane, fire/security/diamond board, MLV, and complete
+  independent representative checks:
+  `pnpm --dir packages/engine exec vitest run --maxWorkers=1 src/post-v1-thick-board-auto-family-boundary-safety-contract.test.ts`
+  - 1 file / 62 tests passed.
+  `pnpm --dir apps/web exec vitest run --maxWorkers=1 features/workbench/thick-board-wall-topology-input-visibility.test.ts`
+  - 1 file / 4 tests passed.
 - Expanded focused regression after the user-repro-specific cases:
   `pnpm --dir packages/engine exec vitest run --maxWorkers=1 src/post-v1-thick-board-auto-family-boundary-safety-contract.test.ts src/dynamic-airborne-split-v2-gate-b-eleventh-carve-contract.test.ts src/acoustic-calculator-answer-engine-v1-contract.test.ts src/dynamic-airborne-family-boundary.test.ts src/wall-heavy-core-concrete-gate-b-audit-contract.test.ts src/post-v1-wall-heavy-core-lined-massive-bounded-rule-gate-df-contract.test.ts src/post-v1-wall-heavy-core-lined-massive-bounded-runtime-basis-gate-dg-contract.test.ts src/calculator-personal-use-mvp-coverage-sprint-gate-h-lined-masonry-clt-wall-upgrade-contract.test.ts`
   - 8 files / 92 tests passed.
@@ -499,14 +512,16 @@ Post-implementation validation passed:
   - passed.
 - `git diff --check`
   - passed.
-- `pnpm calculator:gate:current`
+- `pnpm calculator:gate:current` before the two dedicated safety files
+  were registered in `tools/dev/run-calculator-current-gate.ts`
   - engine focused gate: 663 files / 3629 tests passed;
   - web focused gate: 114 files / 443 tests passed, 18 skipped;
   - repo build: 5 tasks successful;
   - whitespace guard: passed.
 
 The full `pnpm calculator:gate:current` command was rerun after the
-user-repro-specific expansion and passed with the same counts:
+user-repro-specific expansion and passed with the same then-current-gate
+counts:
 
 - engine focused gate: 663 files / 3629 tests passed;
 - web focused gate: 114 files / 443 tests passed, 18 skipped;
@@ -514,10 +529,20 @@ user-repro-specific expansion and passed with the same counts:
 - whitespace guard: passed.
 
 It was rerun again after the mirrored/field/building and web payload
-confidence expansion and passed with the same current-gate counts:
+confidence expansion and passed with the same then-current-gate counts:
 
 - engine focused gate: 663 files / 3629 tests passed;
 - web focused gate: 114 files / 443 tests passed, 18 skipped;
+- repo build: 5 tasks successful;
+- whitespace guard: passed.
+
+It was rerun again after the final board/panel/membrane representative
+expansion and after registering both safety contracts in
+`tools/dev/run-calculator-current-gate.ts`. The synchronized
+current-gate runner passed with:
+
+- engine focused gate: 664 files / 3691 tests passed;
+- web focused gate: 115 files / 447 tests passed, 18 skipped;
 - repo build: 5 tasks successful;
 - whitespace guard: passed.
 

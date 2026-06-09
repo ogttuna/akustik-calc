@@ -32,10 +32,16 @@ chain under `docs/calculator/`: `CALCULATOR_SOURCE_OF_TRUTH.md`,
 `NEXT_IMPLEMENTATION_PLAN.md`,
 `POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md`,
 `CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md`,
-the active Gate ES/ET boundary plan
+the landed Gate ES/ET boundary plan
 `POST_V1_GATE_ES_ET_REINFORCED_CONCRETE_VISIBLE_DERIVED_BOUNDARY_PLAN_2026-06-08.md`,
-the active Gate EQ/ER runtime plan
+the landed Gate EU/EV current coverage/accuracy gap ledger plan
+`POST_V1_GATE_EU_EV_CURRENT_COVERAGE_ACCURACY_GAP_LEDGER_PLAN_2026-06-09.md`,
+the landed Gate EV/EW heavy-core lined-massive calibration owner plan
+`POST_V1_GATE_EV_EW_HEAVY_CORE_LINED_MASSIVE_CALIBRATION_OWNER_PLAN_2026-06-09.md`,
+the landed Gate EQ/ER runtime plan
 `POST_V1_GATE_EQ_ER_WALL_DIRECT_FIXED_DOUBLE_LEAF_FIELD_BUILDING_ADAPTER_RUNTIME_PLAN_2026-06-08.md`,
+the landed thick-board family-boundary safety plan
+`POST_V1_THICK_BOARD_AUTO_FAMILY_BOUNDARY_SAFETY_PLAN_2026-06-09.md`,
 `CALCULATION_MODEL_AND_VALIDATION.md`, and `SYSTEM_MAP.md`. Older
 `CHECKPOINT_*`, `SLICE_*`, roadmap, source-ledger, pilot, and
 productization files are historical or secondary context unless the
@@ -43,19 +49,74 @@ source-of-truth chain explicitly reselects them.
 
 ## Current Implementation Snapshot
 
-As of 2026-06-08, usable V1 Steps 0-5 are closed for the current
+As of 2026-06-09, usable V1 Steps 0-5 are closed for the current
 company-internal envelope. The post-V1 calculator chain has advanced
-through Gate ET. The current selected next action is Gate EU:
-`post_v1_next_numeric_coverage_gap_gate_eu_plan` in
-`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-eu-contract.test.ts`.
+through Gate EW. The current selected next action is Gate EX:
+`post_v1_next_numeric_coverage_gap_gate_ex_plan`
+in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ex-contract.test.ts`.
+Gate EW landed with status
+`post_v1_wall_heavy_core_lined_massive_calibration_owner_gate_ew_landed_no_runtime_owner_rejected_selected_next_numeric_coverage_gap_gate_ex`.
+Gate EW owner rejected:
+`wall.heavy_core_lined_massive.calibration_owner_rejected_missing_wall_specific_source_or_bounded_rule`.
+The current evidence still lacks a wall-specific lined concrete or
+heavy-masonry source row and lacks a bounded wall lining rule with
+tolerance and negative-boundary ownership. Gate EW keeps
+bounded_prediction values frozen. Counters:
+`acceptedOwnerLedgers 0`, `calibrationOwnerRejectedLedgers 1`,
+`evidenceBoundaryLedgersPinned 8`, `metricBasisBoundariesPinned 4`,
+`wallSpecificPositiveRowsAccepted 0`, `runtimeValuesMoved 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+Gate EV landed with status
+`post_v1_current_coverage_accuracy_gap_ledger_gate_ev_landed_no_runtime_selected_wall_heavy_core_lined_massive_calibration_owner_gate_ew`.
+Selected Gate EV gap:
+`wall.heavy_core_lined_massive_calibration_owner_gap_after_bounded_basis`.
+Gate EV selected the heavy-core / lined-massive calibration owner after
+classifying the current coverage/accuracy gap ledger:
+`post_v1_wall_heavy_core_lined_massive_calibration_owner_gate_ew_plan`
+in
+`packages/engine/src/post-v1-wall-heavy-core-lined-massive-calibration-owner-gate-ew-contract.test.ts`.
+Counters:
+`ledgerRows 10`, `currentEvidenceSurfaces 10`, `ownerGapRows 1`,
+`runtimeCandidateRowsHeldBehindOwner 1`, `estimatedNextOwnerLedgers 1`,
+`estimatedNextRuntimeCandidateFamiliesAfterOwner 1`,
+`runtimeValuesMoved 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+Gate EU landed with status
+`post_v1_next_numeric_coverage_gap_gate_eu_landed_no_runtime_selected_current_coverage_accuracy_gap_ledger_gate_ev`.
+Selected candidate:
+`calculator.current_coverage_accuracy_gap_ledger_after_gate_et_and_thick_board`.
+Gate EU selected the current coverage/accuracy gap ledger after two ROI
+iterations (`roiAnalysisIterations: 2`). Counters:
+`candidateCount 10`, `estimatedNextGapLedgers 1`,
+`estimatedNextBoundaryLedgers 2`,
+`estimatedNextRuntimeCandidateFamiliesToEvaluate 6`,
+`runtimeValuesMoved 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+Gate EU selected Gate EV in
+`post_v1_current_coverage_accuracy_gap_ledger_gate_ev_plan`,
+`packages/engine/src/post-v1-current-coverage-accuracy-gap-ledger-gate-ev-contract.test.ts`.
 The latest checkpoint is
 `CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md`.
 It records commit `fb0ea67 Fix double-leaf route input boundary`: flat
 `leaf / porous absorber / leaf` wall stacks without complete
 double-leaf topology/support inputs remain parked as `needs_input`, and
-complete topology still calculates. The selected Gate EU contract file
-named above is not present yet in the implementation tree; the next Gate
-EU turn must create it or explicitly reselect the next action.
+complete topology still calculates. Gate EW has since landed owner
+rejected and selected Gate EX.
+
+The latest landed route-family safety follow-up is
+`POST_V1_THICK_BOARD_AUTO_FAMILY_BOUNDARY_SAFETY_PLAN_2026-06-09.md`.
+It keeps generic board/panel/membrane Auto wall stacks, including thick
+gypsum-like leaves, from promoting into `lined_massive_wall` by surface
+mass alone while preserving true concrete/AAC/brick/CLT massive-core
+lanes. The focused engine safety contract has 62 tests, the web payload
+contract has 4 tests, both are registered in the current-gate runner,
+and this follow-up does not replace Gate EX.
+
+Latest full documented gate: `pnpm calculator:gate:current` passed after
+Gate EW current-gate registration with engine 667 files / 3706 tests,
+web 115 files / 447 passed and 18 skipped, repo build 5 / 5, and
+whitespace guard passed.
 
 The latest no-runtime boundary slice is
 `post_v1_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et_plan`
@@ -70,6 +131,10 @@ visible layer roles already define the lower assembly, so
 `loadBasisKgM2` and `ceilingOrLowerAssembly`. Counters:
 `currentGateFailuresCleared 6`, `runtimeValuesMoved 0`,
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 1`.
+Gate ET selected Gate EU in
+`post_v1_next_numeric_coverage_gap_gate_eu_plan`,
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-eu-contract.test.ts`;
+Gate EU has since landed and selected Gate EV.
 
 The latest no-runtime numeric coverage/accuracy rerank is
 `post_v1_next_numeric_coverage_gap_gate_es_plan` with status
