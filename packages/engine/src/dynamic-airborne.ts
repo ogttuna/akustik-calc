@@ -24,7 +24,13 @@ import {
   type DynamicAirborneOptions,
   type DynamicAirborneResult
 } from "./dynamic-airborne-helpers";
-import { isMasonryCoreLayer, normalizeFramingHint, type DynamicFramingHint } from "./dynamic-airborne-family-detection";
+import {
+  findDominantVisibleLeaf,
+  isMasonryCoreLayer,
+  isMassiveSubstrateLikeVisibleLeaf,
+  normalizeFramingHint,
+  type DynamicFramingHint
+} from "./dynamic-airborne-family-detection";
 import { applyFlatListMultileafFamilyGuard } from "./dynamic-airborne-flat-list-multileaf-guard";
 import { applyMasonryDavyConservativeCap } from "./dynamic-airborne-davy-masonry";
 import {
@@ -638,7 +644,10 @@ function applyAmbiguousFamilyBoundaryHold(
 
 function detectDynamicFamily(
   layers: readonly ResolvedLayer[],
-  framingHint: DynamicFramingHint
+  framingHint: DynamicFramingHint,
+  options?: {
+    explicitLinedMassiveIntent?: boolean;
+  }
 ): {
   family: DynamicAirborneFamily;
   notes: string[];
@@ -648,6 +657,9 @@ function detectDynamicFamily(
   const dominantLeafMassKgM2 = Math.max(...topology.visibleLeafMassesKgM2, 0);
   const lightestLeafMassKgM2 = Math.min(...topology.visibleLeafMassesKgM2.filter((value) => value > 0));
   const asymmetry = topology.visibleLeafMassRatio ?? 1;
+  const dominantVisibleLeaf = findDominantVisibleLeaf(layers);
+  const dominantVisibleLeafIsMassiveSubstrate =
+    dominantVisibleLeaf ? isMassiveSubstrateLikeVisibleLeaf(dominantVisibleLeaf) : false;
   const masonryProfile = summarizeSingleLeafMasonryProfile(layers);
   const framingEvidence = summarizeFramingEvidence(layers, topology, framingHint);
   const notes: string[] = [];
@@ -719,10 +731,28 @@ function detectDynamicFamily(
     Number.isFinite(lightestLeafMassKgM2) &&
     lightestLeafMassKgM2 <= 20 &&
     asymmetry >= 4 &&
+    (dominantVisibleLeafIsMassiveSubstrate || options?.explicitLinedMassiveIntent === true) &&
     !framingEvidence.studEligible
   ) {
-    notes.push("A dominant heavy leaf plus a very light lining leaf indicates a lined massive-wall topology.");
+    notes.push(
+      options?.explicitLinedMassiveIntent === true && !dominantVisibleLeafIsMassiveSubstrate
+        ? "Explicit lined massive-wall topology intent allows the dominant heavy board-like leaf to stay on the lined massive-wall lane."
+        : "A dominant heavy leaf plus a very light lining leaf indicates a lined massive-wall topology."
+    );
     return { family: "lined_massive_wall", notes };
+  }
+
+  if (
+    dominantLeafMassKgM2 >= 70 &&
+    Number.isFinite(lightestLeafMassKgM2) &&
+    lightestLeafMassKgM2 <= 20 &&
+    asymmetry >= 4 &&
+    !dominantVisibleLeafIsMassiveSubstrate &&
+    !framingEvidence.studEligible
+  ) {
+    notes.push(
+      "A high-mass board, panel, or membrane leaf crossed the lined-massive surface-mass threshold, but its material semantics do not establish a massive substrate, so the selector keeps the wall on the double-leaf input boundary."
+    );
   }
 
   notes.push("Two visible leaves around one compliant core were detected, so the selector uses the double-leaf family.");
@@ -1049,7 +1079,9 @@ export function calculateDynamicAirborneResult(
   const family =
     options.forcedFamily
       ? { family: options.forcedFamily, notes: [] as string[] }
-      : detectDynamicFamily(analysisLayers, framingHint);
+      : detectDynamicFamily(analysisLayers, framingHint, {
+          explicitLinedMassiveIntent: options.airborneContext?.wallTopology?.topologyMode === "lined_massive_wall"
+        });
 
   const gateAYAdvancedWallRuntime = maybeCalculateGateAYAdvancedWallRuntime({
     layers: analysisLayers,

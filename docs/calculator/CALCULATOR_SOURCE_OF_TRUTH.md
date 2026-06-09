@@ -1,6 +1,6 @@
 # Calculator Source Of Truth
 
-Last reviewed: 2026-06-08
+Last reviewed: 2026-06-09
 
 Document role: this is the first document to read before any acoustic
 calculator implementation, planning, or handoff work. It defines the
@@ -97,23 +97,26 @@ must distinguish:
   AAC, masonry, brick, CLT/mass-timber, or another owned massive-core
   family where the current lined-massive route is intentionally live.
 
-The current 2026-06-08 follow-up analysis found that
-`gypsum_board 12.5 / rockwool 50 / gypsum_board 100` can flip from the
-post-boundary double-leaf `needs_input` lane into
-`lined_massive_wall` / `screening_mass_law_curve_seed_v3` because the
-right leaf exceeds the dominant-mass threshold. That behavior might be
-physically defensible only if the user intended a massive gypsum
-substrate, but it is not safe as an automatic inference from the generic
-`gypsum_board` material alone. Any future fix must preserve existing
-concrete/AAC/brick/CLT lined-massive and heavy-core pins while preventing
-board-like double-leaf inputs from losing required route inputs.
+The 2026-06-09 thick-board boundary fix closed the observed
+`gypsum_board 12.5 / rockwool 50 / gypsum_board 100` Auto flip from the
+post-boundary double-leaf `needs_input` lane into `lined_massive_wall` /
+`screening_mass_law_curve_seed_v3`. A thick or high-surface-mass generic
+board is not enough evidence that the user intended a massive gypsum
+substrate. Future changes must preserve existing concrete/AAC/brick/CLT
+lined-massive and heavy-core pins while preventing board-like double-leaf
+inputs from losing required route inputs.
 
-Implementation planning for this ambiguity lives in
+The bounded implementation and validation record for this ambiguity
+lives in
 [POST_V1_THICK_BOARD_AUTO_FAMILY_BOUNDARY_SAFETY_PLAN_2026-06-09.md](./POST_V1_THICK_BOARD_AUTO_FAMILY_BOUNDARY_SAFETY_PLAN_2026-06-09.md).
-That plan is not a runtime change and does not supersede the current
-selected Gate EU action; it defines the no-runtime snapshot, contract,
-validation, and stop conditions required before changing wall family
-classification.
+The local guard preserves existing concrete/AAC/brick/CLT
+lined-massive and heavy-core pins while preventing generic
+board/panel/membrane Auto stacks from losing required route inputs by
+mass threshold alone. Its safety contract is
+`packages/engine/src/post-v1-thick-board-auto-family-boundary-safety-contract.test.ts`;
+keep that contract green when touching wall family detection. It does
+not supersede the current selected Gate EU numeric coverage/accuracy
+rerank.
 
 ## Metric And Basis Boundaries
 

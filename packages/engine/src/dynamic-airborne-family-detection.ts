@@ -17,7 +17,7 @@
 
 import type { AirborneContext, ResolvedLayer } from "@dynecho/shared";
 
-import { classifyLayerRole, materialText } from "./airborne-topology";
+import { classifyLayerRole, detectLeafCoreLayout, materialText } from "./airborne-topology";
 
 export type DynamicFramingHint = {
   connectionType: AirborneContext["connectionType"];
@@ -81,6 +81,61 @@ export function isBoardLikeLayer(layer: ResolvedLayer): boolean {
 // leaf.
 export function isEnhancedBoardLayer(layer: ResolvedLayer): boolean {
   return /firestop|impactstop|acoustic|security|soundbloc|diamond|diamant|silentboard|silent[_ ]board/i.test(materialText(layer));
+}
+
+export function findDominantVisibleLeaf(layers: readonly ResolvedLayer[]): ResolvedLayer | null {
+  const layout = detectLeafCoreLayout(layers);
+  let dominantLeaf: ResolvedLayer | null = null;
+  let dominantLeafMassKgM2 = -Infinity;
+
+  for (const index of layout.solidLeafIndexes) {
+    const leaf = layout.collapsedLayers[index];
+    if (!leaf) {
+      continue;
+    }
+    if (leaf.surfaceMassKgM2 > dominantLeafMassKgM2) {
+      dominantLeaf = leaf;
+      dominantLeafMassKgM2 = leaf.surfaceMassKgM2;
+    }
+  }
+
+  return dominantLeaf;
+}
+
+export function isBoardPanelOrMembraneLikeVisibleLeaf(layer: ResolvedLayer): boolean {
+  const behavior = layer.material.acoustic?.behavior;
+  const text = materialText(layer);
+
+  return (
+    behavior === "panel_leaf" ||
+    behavior === "limp_mass_membrane" ||
+    /board|plasterboard|gypsum|plywood|osb|lining|membrane|mlv|silentboard|soundbloc|diamond|security|sheetrock|cement[-_ ]?board/.test(
+      text
+    )
+  );
+}
+
+export function isMassiveSubstrateLikeVisibleLeaf(layer: ResolvedLayer): boolean {
+  const behavior = layer.material.acoustic?.behavior;
+  const text = materialText(layer);
+
+  if (
+    /concrete|aac|gazbeton|ytong|aircrete|porotherm|wienerberger|brick|block|masonry|stone|silicate|pumice|bims|clt|cross[-_ ]?laminated|mass[-_ ]?timber|heavy-base|dense-mineral/.test(
+      text
+    )
+  ) {
+    return true;
+  }
+
+  if (behavior === "mass_timber") {
+    return true;
+  }
+
+  if (isBoardPanelOrMembraneLikeVisibleLeaf(layer)) {
+    return false;
+  }
+
+  return layer.material.category === "mass" && behavior === "rigid_mass";
 }
 
 export function isMasonryLikeLayer(layer: ResolvedLayer): boolean {

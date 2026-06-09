@@ -1,6 +1,10 @@
 # Post-V1 Thick Board Auto Family Boundary Safety Plan - 2026-06-09
 
-Status: plan-only. No runtime behavior is changed by this document.
+Status: implemented and validated in the local worktree. The focused
+safety contract, narrow runtime classifier guard, split-refactor line
+pin update, and documentation sync are complete. Gate EU remains the
+selected next numeric coverage/accuracy rerank; this is a bounded
+route-family safety follow-up, not a replacement for Gate EU.
 
 Related authority:
 
@@ -30,6 +34,30 @@ semantics or the user supplies explicit topology/material intent.
 Any implementation must improve calculator correctness without turning
 the project into a finite scenario catalog, confidence wording pass, or
 source-row crawl.
+
+## Runtime Implementation Summary
+
+The accepted local implementation is intentionally narrow:
+
+- `packages/engine/src/dynamic-airborne.ts` keeps the existing
+  dominant-mass threshold but now requires the dominant visible leaf to
+  have massive-substrate semantics before Auto can promote to
+  `lined_massive_wall`;
+- `packages/engine/src/dynamic-airborne-family-detection.ts` owns the
+  dominant visible-leaf and material-semantics helpers so the main
+  dynamic composer does not absorb another predicate block;
+- explicit `topologyMode: lined_massive_wall` remains an explicit user
+  intent path and is not broken by the Auto guard;
+- no curve math, calibration coefficients, candidate precedence,
+  field/building adapters, source rows, confidence wording, or frontend
+  visibility conditions were changed.
+
+The only intended runtime movement is for ambiguous generic
+board/panel/membrane Auto stacks that previously crossed the
+lined-massive mass threshold and silently published
+`screening_mass_law_curve_seed_v3`. Those stacks now stay on the
+double-leaf `needs_input` boundary until route-required physical inputs
+are supplied.
 
 ## Implementation Reading
 
@@ -132,15 +160,15 @@ Therefore the safe product rule is:
 
 ## Expected Outcome Matrix
 
-If this plan is later selected for implementation, the expected behavior
-must be explicit before the code changes.
+The expected behavior must stay explicit before and after the code
+changes.
 
 | Scenario | Expected after a safe guard | Why |
 | --- | --- | --- |
 | `gypsum_board 12.5 / rockwool 50 / gypsum_board 100`, Auto | `needs_input` or an explicit ambiguity/input-surface stop, not silent supported screening | Generic gypsum board has board/panel semantics; support/cavity inputs may matter |
 | Same stack with partial topology | `needs_input` for remaining route-required fields | Partial user intent should not publish a guessed answer |
 | Same stack with complete independent double-leaf topology | owned double-leaf/framed calculation | User supplied the required physical route inputs |
-| Same stack with explicit lined-massive topology | allowed only if the lined-massive route-input contract is satisfied | Massive gypsum intent must be explicit, not inferred from generic board thickness alone |
+| Same stack with explicit lined-massive topology | existing explicit-intent behavior is preserved; this gate must not use Auto safety to break a user-selected topology | Massive gypsum intent must be explicit, not inferred from generic board thickness alone |
 | `gypsum_board / rockwool / air_gap / concrete`, Auto | unchanged `lined_massive_wall` / Gate H posture | Concrete is a true massive-core substrate |
 | AAC/Ytong, brick/masonry, CLT/mass-timber lined-heavy controls | unchanged family, origin, method, supported outputs, and pins | Existing intended lanes must not be broken |
 | Field/building contexts | no output movement unless the same selected owner already supports that basis | Avoid accidental field/building basis promotion |
@@ -189,7 +217,7 @@ Gate 0 deliverable should be an assertion-backed contract or snapshot,
 not only an ad hoc console table. At minimum it must assert:
 
 - 82.29 mm gypsum stays `double_leaf` / `needs_input`;
-- 82.30 mm gypsum currently flips to `lined_massive_wall` /
+- pre-guard 82.30 mm gypsum flipped to `lined_massive_wall` /
   `screening_fallback`;
 - partial topology asks for the remaining support/bridge inputs;
 - complete independent topology reaches the owned double-leaf/framed
@@ -233,6 +261,69 @@ Recommended contract location:
 Do not add broad fixture catalogs or scrape external layer combinations
 for this gate.
 
+#### Gate 1 Contract Added In This Implementation Turn
+
+The focused contract now exists at:
+
+`packages/engine/src/post-v1-thick-board-auto-family-boundary-safety-contract.test.ts`
+
+It is intentionally engine-first. It does not render the workbench. The
+engine-side workbench visibility risk is represented by a helper that
+returns true when the selected answer or answer boundary reports one of
+the wall topology fields that makes the workbench show the ownership
+inputs.
+
+The engine contract has 47 tests grouped around the most likely breakage
+surfaces:
+
+| Coverage group | Exact representative | Required signal | Breakage caught immediately |
+| --- | --- | --- | --- |
+| Threshold edge | `gypsum_board 12.5 / rockwool 50 / gypsum_board 82.29` and `82.30` | both stay `double_leaf` / `needs_input`, no supported outputs, wall topology inputs visible | the original 82.30 mm mass-threshold flip reappears |
+| User-reported gypsum thickness sweep | right gypsum leaf `8`, `12.5`, `50`, `75`, `82.29`, `82.30`, `90`, `100`, `140`, and `150` mm | every Auto state stays `double_leaf` / `needs_input`, no screening fallback, wall topology inputs visible | the input panel disappears again at a new or old thickness threshold |
+| Board/panel/membrane Auto family | `gypsum_board 100`, `acoustic_gypsum_board 75`, `silentboard 50`, `security_board 100`, `diamond_board 75`, `cement_board 50`, `mlv 50`, `plywood 150` | `candidate_dynamic_needs_input`, method `acoustic_calculator_answer_engine_v1_flat_double_leaf_missing_topology`, missing `sideALeafGroup`, `cavity1DepthMm`, `sideBLeafGroup`, `frameBridgeClass`, `supportTopology`, `supportSpacingMm` | the fix overfits only `gypsum_board`, or another dense board-like material still publishes screening without route inputs |
+| User-reported last-layer substitutions | high-mass `gypsum_board`, `acoustic_gypsum_board`, `silentboard`, `cement_board`, and `plywood` right leaves | Auto stays parked with the same missing topology field surface | swapping the last layer makes the panel disappear by selecting another board-like screening route |
+| Mirrored high-mass board order | the same high-mass board-like leaves on side A instead of side B | Auto stays parked with the same missing topology field surface | the guard depends on leaf order instead of dominant board/panel semantics |
+| Cavity-entry intermediate states | topology mode only, cavity-depth-only, cavity-depth plus absorption/fill | `dynamic_calculator_route_input_contract_missing_physical_fields`; completed fields disappear from the missing list, remaining wall topology fields stay visible | typing into the cavity field collapses the input panel or publishes a guessed answer |
+| Partial double-leaf topology | same generic board stack with side/cavity ownership but without support/bridge ownership | `needs_input` with exactly `frameBridgeClass`, `supportTopology`, `supportSpacingMm` | partial user intent starts publishing a guessed answer or loses the remaining prompts |
+| Role-owned high-thickness variants | right gypsum leaf `82.30`, `100`, and `150` mm with layer groups and cavity owned | still parked only on `frameBridgeClass`, `supportTopology`, and `supportSpacingMm` | role assignment is bypassed by high surface mass |
+| Acoustic gypsum plus typed cavity | `acoustic_gypsum_board 100` with cavity depth, absorption, and fill set | still asks for side groups and support/bridge fields; no screening fallback | the exact user-reported substitution reopens the disappearing-input route |
+| Typed-cavity field/building requests | `R'w`, `Dn,w`, and `DnT,w` for field/building contexts with cavity already typed | no supported field/building outputs, no screening fallback, wall topology plus field/building route inputs remain missing | the fix accidentally promotes field/building basis or hides remaining wall ownership fields |
+| Auto field/building requests | `R'w`, `Dn,w`, and `DnT,w` for field/building contexts without topology ownership | no supported field/building outputs and no screening fallback | generic thick board Auto starts publishing apparent/standardized answers without adapter ownership |
+| Complete independent double-leaf topology | same generic board stack with independent-frame support inputs complete | `family_physics_prediction`, method `layer_combination_resolver_double_leaf_framed_wall_banded_source_absent_formula_corridor`, all wall outputs supported | owned double-leaf/framed calculation is accidentally parked or rerouted |
+| Explicit lined-massive topology | same generic board stack with explicit `topologyMode: lined_massive_wall` and direct-fixed support | existing explicit-intent lined-massive posture remains available | the Auto-only guard becomes too broad and breaks user-selected topology intent |
+| True massive-core Auto controls | concrete, AAC/Ytong, Porotherm, and current CLT posture | existing detected family, origin, method, supported outputs, and missing-input state are unchanged | a broad board guard parks legitimate massive-core lined-wall routes |
+
+The test is deliberately strict about `supportedTargetOutputs` and
+`unsupportedTargetOutputs`. A future change that still returns the right
+family but publishes the wrong output set should fail immediately.
+
+The test is also deliberately strict about `missingPhysicalInputs`. A
+future change that returns `needs_input` but drops one of the route
+ownership fields should fail immediately, because that is how the
+frontend input disappearance bug would come back under a different
+route.
+
+The user-reported cavity-entry cases are intentionally pinned as engine
+contracts rather than browser-only assertions. The workbench visibility
+condition is derived from the result's missing physical inputs, so the
+calculator must keep publishing the remaining route-required wall
+topology fields after a user types cavity depth, absorption, or fill.
+
+The workbench payload surface is also pinned by:
+
+`apps/web/features/workbench/thick-board-wall-topology-input-visibility.test.ts`
+
+That 4-test web contract does not render the full UI. It verifies that
+the workbench wall-topology draft builder carries typed cavity fields,
+layer-role ownership, acoustic gypsum substitution, and complete
+independent topology into the engine request surface without reopening
+the screening fallback or breaking the owned double-leaf formula route.
+
+The test is not a finite scenario library. Each representative is there
+because it maps to a material-semantics class that can cross the same
+surface-mass threshold: generic gypsum, enhanced gypsum, dense acoustic
+board, cement board, limp-mass membrane, and wood panel.
+
 ### Gate 2 - Narrow Runtime Guard, Only If Gate 1 Is Green
 
 If the product decision is to stop generic board/panel materials from
@@ -260,6 +351,28 @@ Preferred implementation shape:
   user chooses a lined-massive topology or a future
   `massive_gypsum_panel` / `gypsum_block` material, that route can be
   owned independently without weakening generic board safety.
+
+Implementation shape used in this turn:
+
+- `packages/engine/src/dynamic-airborne.ts` now identifies the dominant
+  visible leaf with `detectLeafCoreLayout`;
+- automatic `lined_massive_wall` promotion now requires the dominant
+  visible leaf to be massive-substrate-like, or the user to have
+  explicitly selected `topologyMode: lined_massive_wall`;
+- board/panel/membrane-like leaves are recognized from catalog acoustic
+  behavior (`panel_leaf`, `limp_mass_membrane`) and material text
+  (`gypsum`, `board`, `plywood`, `osb`, `membrane`, `mlv`, and known
+  enhanced board terms);
+- massive-substrate-like leaves are recognized from massive-core text
+  (`concrete`, AAC/Ytong, aircrete, Porotherm/Wienerberger,
+  brick/block/masonry/stone/silicate, pumice/bims, CLT/mass-timber,
+  heavy-base, dense-mineral) or acoustic behavior `mass_timber`;
+- category `mass` plus behavior `rigid_mass` remains a fallback only
+  after board/panel/membrane semantics are excluded.
+
+The guard intentionally does not touch curve math, candidate precedence,
+field/building adapters, exact catalog matching, or the workbench
+visibility condition.
 
 Do not change curve math, calibration coefficients, field/building
 adapters, metric aliases, or confidence labels in this gate.
@@ -352,6 +465,82 @@ Minimum acceptance criteria for a runtime guard:
 - any user-visible input-surface change is explainable only by
   `needs_input` reappearing for ambiguous generic board/panel Auto
   stacks.
+
+### Runtime Validation Completed On 2026-06-09
+
+Post-implementation validation passed:
+
+- `pnpm --dir packages/engine exec vitest run --maxWorkers=1 src/post-v1-thick-board-auto-family-boundary-safety-contract.test.ts src/dynamic-airborne-split-v2-gate-b-eleventh-carve-contract.test.ts`
+  - 2 files / 21 tests passed.
+- Additional user-repro-specific expansion:
+  `pnpm --dir packages/engine exec vitest run --maxWorkers=1 src/post-v1-thick-board-auto-family-boundary-safety-contract.test.ts`
+  - 1 file / 38 tests passed.
+- Additional confidence expansion after mirrored/field/building and
+  workbench payload tests:
+  `pnpm --dir packages/engine exec vitest run --maxWorkers=1 src/post-v1-thick-board-auto-family-boundary-safety-contract.test.ts`
+  - 1 file / 47 tests passed.
+  `pnpm --dir apps/web exec vitest run --maxWorkers=1 features/workbench/thick-board-wall-topology-input-visibility.test.ts`
+  - 1 file / 4 tests passed.
+- Expanded focused regression after the user-repro-specific cases:
+  `pnpm --dir packages/engine exec vitest run --maxWorkers=1 src/post-v1-thick-board-auto-family-boundary-safety-contract.test.ts src/dynamic-airborne-split-v2-gate-b-eleventh-carve-contract.test.ts src/acoustic-calculator-answer-engine-v1-contract.test.ts src/dynamic-airborne-family-boundary.test.ts src/wall-heavy-core-concrete-gate-b-audit-contract.test.ts src/post-v1-wall-heavy-core-lined-massive-bounded-rule-gate-df-contract.test.ts src/post-v1-wall-heavy-core-lined-massive-bounded-runtime-basis-gate-dg-contract.test.ts src/calculator-personal-use-mvp-coverage-sprint-gate-h-lined-masonry-clt-wall-upgrade-contract.test.ts`
+  - 8 files / 92 tests passed.
+- Expanded focused regression after the mirrored/field/building
+  confidence expansion:
+  `pnpm --dir packages/engine exec vitest run --maxWorkers=1 src/post-v1-thick-board-auto-family-boundary-safety-contract.test.ts src/dynamic-airborne-split-v2-gate-b-eleventh-carve-contract.test.ts src/acoustic-calculator-answer-engine-v1-contract.test.ts src/dynamic-airborne-family-boundary.test.ts src/wall-heavy-core-concrete-gate-b-audit-contract.test.ts src/post-v1-wall-heavy-core-lined-massive-bounded-rule-gate-df-contract.test.ts src/post-v1-wall-heavy-core-lined-massive-bounded-runtime-basis-gate-dg-contract.test.ts src/calculator-personal-use-mvp-coverage-sprint-gate-h-lined-masonry-clt-wall-upgrade-contract.test.ts`
+  - 8 files / 101 tests passed.
+- Web payload/route-card focused regression:
+  `pnpm --dir apps/web exec vitest run --maxWorkers=1 features/workbench/thick-board-wall-topology-input-visibility.test.ts features/workbench/wall-double-leaf-framed-bridge-runtime-route-card-matrix.test.ts features/workbench/layer-combination-resolver-candidate-surface-parity.test.ts`
+  - 3 files / 20 tests passed.
+- `pnpm --dir packages/engine exec vitest run --maxWorkers=1 src/acoustic-calculator-answer-engine-v1-contract.test.ts src/dynamic-airborne-family-boundary.test.ts src/wall-heavy-core-concrete-gate-b-audit-contract.test.ts src/post-v1-wall-heavy-core-lined-massive-bounded-rule-gate-df-contract.test.ts src/post-v1-wall-heavy-core-lined-massive-bounded-runtime-basis-gate-dg-contract.test.ts src/calculator-personal-use-mvp-coverage-sprint-gate-h-lined-masonry-clt-wall-upgrade-contract.test.ts`
+  - 6 files / 49 tests passed.
+- `pnpm --dir packages/engine exec vitest run --maxWorkers=1 src/dynamic-airborne-family-boundary-scan.test.ts src/realistic-layer-combination-coverage-cartography.test.ts src/layer-combination-resolver-double-leaf-framed-wall-banded-runtime-corridor-contract.test.ts`
+  - 3 files / 15 tests passed.
+- `pnpm --dir packages/engine typecheck`
+  - passed.
+- `git diff --check`
+  - passed.
+- `pnpm calculator:gate:current`
+  - engine focused gate: 663 files / 3629 tests passed;
+  - web focused gate: 114 files / 443 tests passed, 18 skipped;
+  - repo build: 5 tasks successful;
+  - whitespace guard: passed.
+
+The full `pnpm calculator:gate:current` command was rerun after the
+user-repro-specific expansion and passed with the same counts:
+
+- engine focused gate: 663 files / 3629 tests passed;
+- web focused gate: 114 files / 443 tests passed, 18 skipped;
+- repo build: 5 tasks successful;
+- whitespace guard: passed.
+
+It was rerun again after the mirrored/field/building and web payload
+confidence expansion and passed with the same current-gate counts:
+
+- engine focused gate: 663 files / 3629 tests passed;
+- web focused gate: 114 files / 443 tests passed, 18 skipped;
+- repo build: 5 tasks successful;
+- whitespace guard: passed.
+
+Note: `pnpm --dir apps/web typecheck` was also attempted as a
+non-current-gate check and failed in existing test files unrelated to
+this slice (`layer-combination-resolver-candidate-surface-parity`,
+`post-v1-floor-explicit-ci*`, `post-v1-floor-field-a-weighted`, and
+`report-assistant-patch`). The new thick-board web payload test produced
+no typecheck errors, and the current-gate web build typecheck passed.
+
+Known non-fatal output remains unchanged:
+
+- `zustand persist middleware` storage-unavailable warnings in web
+  tests;
+- optional `sharp/@img` module warnings during the Next build through
+  the proposal DOCX/PDF dependency path.
+
+The first full current-gate attempt failed only on the split-refactor
+physical line-count pin after the classifier guard grew
+`dynamic-airborne.ts`. The helper predicate body was moved to
+`dynamic-airborne-family-detection.ts`, the split contract was updated
+to the new 2085-line composer count, and the full current gate then
+passed.
 
 ## Stop Conditions
 
@@ -530,8 +719,8 @@ owned/pinned routes.
 
 ## Selected Next Status
 
-This safety plan does not supersede the current selected Gate EU
-numeric coverage/accuracy rerank. It is a bounded follow-up plan for the
-thick-board route-family ambiguity. A future implementation turn must
-explicitly select this work, or keep it as a documented guard while
-continuing the active selected-next chain.
+This safety implementation does not supersede the current selected Gate
+EU numeric coverage/accuracy rerank. It is a bounded follow-up fix for
+the thick-board route-family ambiguity. Future work can continue the
+active selected-next chain unless another source-of-truth review selects
+a new calculator slice.

@@ -58,15 +58,15 @@ Latest calculator boundary closeout:
   not present yet and must be created or reselected by the next Gate EU
   turn.
 - Follow-up thick-board ambiguity:
-  generic `gypsum_board 12.5 / rockwool 50 / gypsum_board 100` can
-  currently flip into `lined_massive_wall` by surface mass alone. Do not
-  blanket-park all lined-massive fallback routes; future work must
-  distinguish board/panel double-leaf intent from true concrete, AAC,
-  brick, or CLT massive substrate intent.
+  generic `gypsum_board 12.5 / rockwool 50 / gypsum_board 100` is now
+  guarded from Auto-promoting into `lined_massive_wall` by surface mass
+  alone. Do not blanket-park all lined-massive fallback routes; the
+  guard distinguishes board/panel double-leaf intent from true concrete,
+  AAC, brick, or CLT massive substrate intent.
 - Safety plan for that follow-up:
   `docs/calculator/POST_V1_THICK_BOARD_AUTO_FAMILY_BOUNDARY_SAFETY_PLAN_2026-06-09.md`.
-  It is documentation only until explicitly selected and requires a
-  no-runtime snapshot matrix before any classifier change.
+  It now contains the implemented guard, safety contract, validation
+  results, and rollback conditions.
 
 Latest calculator rerank:
 

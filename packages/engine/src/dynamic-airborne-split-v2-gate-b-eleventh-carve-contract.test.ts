@@ -73,7 +73,10 @@ describe("dynamic-airborne split v2 Gate B eleventh carve contract", () => {
   const sections = extractFunctionSections(source);
 
   it("pins the eleventh correction-guard carve and reduced composer file size", () => {
-    expect(countPhysicalLines(source)).toBe(2053);
+    // The post-V1 thick-board family-boundary guard adds a narrow
+    // classifier call-site while keeping the material predicates carved
+    // into `dynamic-airborne-family-detection.ts`.
+    expect(countPhysicalLines(source)).toBe(2085);
     expect(countPhysicalLines(guardModule)).toBe(1422);
     expect([...sections.keys()]).toEqual(REMAINING_GUARD_ORDER);
   });

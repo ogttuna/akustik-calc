@@ -76,24 +76,23 @@ tree; the next Gate EU turn must create it or explicitly reselect the
 next action after a fresh source-of-truth review.
 
 Post-checkpoint follow-up on thick board ambiguity:
+pre-guard analysis showed
 `gypsum_board 12.5 / rockwool 50 / gypsum_board 100` with no explicit
-wall topology currently flips to `lined_massive_wall` /
+wall topology could flip to `lined_massive_wall` /
 `screening_mass_law_curve_seed_v3` because the 100 mm gypsum leaf has
-roughly 85 kg/m2 surface mass. This is not automatically proof of a
-frontend bug or proof that the current result is physically correct. A
-thick board-like leaf can make a lined-massive interpretation plausible
-only if the user intended a massive substrate. Future work must separate
-board/panel double-leaf intent from true concrete/AAC/masonry/CLT
-massive-core intent before changing runtime behavior. Do not apply a
-blanket guard that parks every `lined_massive_wall` screening fallback:
-existing concrete/AAC/brick/CLT lined-massive and heavy-core lanes are
-intentionally live and pinned.
+roughly 85 kg/m2 surface mass. That was not automatically proof of a
+frontend bug or proof that the result was physically correct. The
+2026-06-09 bounded follow-up guard now separates generic board/panel
+double-leaf Auto intent from true concrete/AAC/masonry/CLT massive-core
+intent without applying a blanket guard to every `lined_massive_wall`
+screening fallback: existing concrete/AAC/brick/CLT lined-massive and
+heavy-core lanes remain intentionally live and pinned.
 Dedicated safety plan:
 `docs/calculator/POST_V1_THICK_BOARD_AUTO_FAMILY_BOUNDARY_SAFETY_PLAN_2026-06-09.md`.
-That plan is not a runtime change and does not replace Gate EU. It
-requires a no-runtime snapshot matrix, intended-lane preservation
-contracts, a narrow classifier guard only if selected, and explicit stop
-conditions before any implementation.
+That record is now implemented and locally validated. It does not
+replace Gate EU; it documents the safety contract, narrow classifier
+guard, validation commands, and rollback conditions for this route-family
+boundary.
 Latest landed no-runtime numeric coverage/accuracy rerank:
 `post_v1_next_numeric_coverage_gap_gate_es_plan`
 with status
