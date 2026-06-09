@@ -371,6 +371,131 @@ Stop and do not land the runtime guard if any of the following happen:
 In those cases, keep runtime unchanged and move the issue to an explicit
 material/topology input-surface plan instead.
 
+## Rollback-To-Commit Conditions
+
+Initial documentation checkpoint:
+
+`264ab7a Document thick-board auto family boundary plan`
+
+This commit is the safe documentation checkpoint before the rollback
+criteria were added. After this section is committed, the default
+runtime rollback target is the latest committed documentation checkpoint
+that contains these rollback conditions. If a future implementation
+cannot satisfy the conditions below, stop the implementation and return
+to that documentation checkpoint. On a shared branch, prefer reverting
+the implementation commits after that checkpoint. On a disposable
+implementation branch, resetting the branch back to that checkpoint is
+acceptable only with explicit user approval.
+
+### Tests That Must Exist Before Runtime Implementation
+
+Add a focused contract before changing the classifier, for example:
+
+`packages/engine/src/post-v1-thick-board-auto-family-boundary-safety-contract.test.ts`
+
+The contract must cover:
+
+- threshold repro:
+  `gypsum_board 12.5 / rockwool 50 / gypsum_board 82.29` remains the
+  pre-existing `double_leaf` / `needs_input` control;
+- threshold flip evidence:
+  the current 82.30 mm / 100 mm generic gypsum Auto behavior is
+  documented before the guard changes it;
+- post-guard expected behavior:
+  generic thick `gypsum_board` Auto does not publish supported
+  `Rw` / `STC` / `C` / `Ctr` via
+  `screening_mass_law_curve_seed_v3` without route-required physical
+  inputs;
+- nearby board/panel/membrane representatives:
+  acoustic gypsum, silent/security/diamond board, cement board, MLV, and
+  plywood/OSB-like panels where present in the catalog;
+- partial topology:
+  missing `frameBridgeClass`, `supportTopology`, and
+  `supportSpacingMm` stay visible as `needs_input`;
+- complete independent double-leaf topology:
+  routes through the owned double-leaf/framed formula corridor;
+- explicit lined-massive topology:
+  remains available as a separate explicit-intent route if its route
+  input contract is satisfied;
+- true massive-core controls:
+  concrete, AAC/Ytong, Porotherm/brick/masonry, and CLT/mass-timber keep
+  their existing family/origin/method/support posture;
+- exact/verified catalog controls:
+  exact measured or verified catalog matches still win before
+  source-absent formulas or screening helpers.
+
+The new test must assert at least:
+
+- `dynamicAirborneTrace.detectedFamily`;
+- `airborneCandidateResolution.selectedCandidateId`;
+- `airborneCandidateResolution.selectedOrigin`;
+- `airborneBasis.origin`;
+- `airborneBasis.method`;
+- `supportedTargetOutputs`;
+- `unsupportedTargetOutputs`;
+- `airborneBasis.missingPhysicalInputs` or
+  `acousticAnswerBoundary.missingPhysicalInputs`;
+- a helper-derived `wouldWorkbenchShowWallTopologyInputs` boolean based
+  on missing wall topology fields.
+
+### Required Test Commands Before Accepting Runtime Changes
+
+Run these after the implementation:
+
+- `pnpm --dir packages/engine exec vitest run --maxWorkers=1 src/post-v1-thick-board-auto-family-boundary-safety-contract.test.ts`
+- `pnpm --dir packages/engine exec vitest run --maxWorkers=1 src/acoustic-calculator-answer-engine-v1-contract.test.ts src/dynamic-airborne-family-boundary.test.ts src/wall-heavy-core-concrete-gate-b-audit-contract.test.ts src/post-v1-wall-heavy-core-lined-massive-bounded-rule-gate-df-contract.test.ts src/post-v1-wall-heavy-core-lined-massive-bounded-runtime-basis-gate-dg-contract.test.ts`
+- `pnpm --dir packages/engine exec vitest run --maxWorkers=1 src/dynamic-airborne-family-boundary-scan.test.ts src/realistic-layer-combination-coverage-cartography.test.ts src/layer-combination-resolver-double-leaf-framed-wall-banded-runtime-corridor-contract.test.ts`
+- `pnpm --dir packages/engine typecheck`
+- `git diff --check`
+
+Run `pnpm calculator:gate:current` before finalizing if any runtime
+behavior changed outside the focused generic board/panel Auto surface or
+if field/building behavior moved.
+
+### Roll Back If Any Of These Fail
+
+Return to the baseline checkpoint if any of the following occur:
+
+- any required test command fails and the failure is not an obviously
+  unrelated pre-existing environmental issue;
+- concrete, AAC/Ytong, Porotherm/brick/masonry, CLT/mass-timber, or
+  `wall-screening-concrete` changes family, origin, method, supported
+  outputs, or pinned values unexpectedly;
+- exact measured or verified catalog precedence changes;
+- a field/building output moves without a selected adapter owner and
+  explicit test coverage;
+- complete independent double-leaf topology stops calculating through
+  the owned double-leaf/framed corridor;
+- partial topology stops exposing the missing support/bridge fields;
+- generic board/panel Auto stacks still publish supported screening
+  answers without route-required physical inputs after the guard;
+- the implementation requires formula retuning, confidence wording,
+  source-row imports, or broad UI changes to make the result acceptable;
+- the implementation becomes a product-id blacklist instead of a
+  defensible material-semantics predicate;
+- a broad `screening_fallback` guard parks legitimate massive-core
+  lined-massive or heavy-core routes.
+
+### How To Recognize A Bad Direction Early
+
+Stop before finishing the implementation if the before/after matrix
+shows any of these patterns:
+
+- more than the generic board/panel/membrane Auto ambiguity surface
+  changes;
+- massive-core controls change from `bounded_prediction` or their
+  currently pinned screening posture to `needs_input`;
+- support fields disappear for partial topology;
+- UI-visible behavior would need a frontend workaround while the API
+  still returns a supported screening result;
+- the only way to preserve existing tests is to loosen metric/basis
+  assertions or remove missing-input assertions.
+
+If the guard fails these checks, the next safe path is not another
+classifier patch. Keep runtime at the baseline checkpoint and write an
+explicit material/topology input-surface plan for massive gypsum intent
+instead.
+
 ## Risk Register
 
 | Risk | How it could happen | Mitigation |
