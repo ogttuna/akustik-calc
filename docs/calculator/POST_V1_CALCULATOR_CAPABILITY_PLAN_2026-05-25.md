@@ -45,6 +45,14 @@ above is not present yet in the current implementation tree; the next
 Gate EU turn must create it or explicitly reselect the next action after
 a fresh source-of-truth review.
 
+The same checkpoint carries a follow-up warning for thick generic board
+leaves: `gypsum_board 12.5 / rockwool 50 / gypsum_board 100` can
+currently flip into `lined_massive_wall` /
+`screening_mass_law_curve_seed_v3` by surface mass alone. This does not
+authorize a broad lined-massive shutdown. Future implementation must
+preserve concrete/AAC/brick/CLT massive-core pins while distinguishing
+board/panel double-leaf intent from true massive-substrate intent.
+
 Gate ES/ET boundary plan:
 
 `docs/calculator/POST_V1_GATE_ES_ET_REINFORCED_CONCRETE_VISIBLE_DERIVED_BOUNDARY_PLAN_2026-06-08.md`

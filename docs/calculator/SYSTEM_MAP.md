@@ -21,8 +21,9 @@ Use this together with the calculator source-of-truth chain:
   — closed company-internal usable V1 acceptance contract
 - [CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md](./CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md)
   — latest docs/implementation/test reconciliation after the
-  post-Gate-ET double-leaf route-input boundary fix; Gate EU remains
-  selected
+  post-Gate-ET double-leaf route-input boundary fix; also records the
+  thick `gypsum_board` vs `lined_massive_wall` ambiguity; Gate EU
+  remains selected
 - [CHECKPOINT_2026-06-08_GATE_ET_BOUNDARY_HANDOFF.md](./CHECKPOINT_2026-06-08_GATE_ET_BOUNDARY_HANDOFF.md)
   — Gate ET boundary closeout; Gate EM/EN/EO/EP/EQ/ER/ES/ET evidence is
   focused-green and Gate EU is selected
@@ -84,6 +85,14 @@ owned double-leaf/framed route. This is not a value-moving slice and it
 does not import source rows. The selected Gate EU contract file named
 above is not present yet in the implementation tree; the next Gate EU
 turn must create it or explicitly reselect the next action.
+
+Route-family ambiguity to preserve: generic
+`gypsum_board 12.5 / rockwool 50 / gypsum_board 100` can currently flip
+to `lined_massive_wall` by surface mass alone. Treat this as a
+classification/boundary issue, not a mandate to park all lined-massive
+fallback routes. Existing concrete/AAC/brick/CLT massive-core lanes are
+separate and must stay pinned unless a selected calculator slice changes
+them with tests.
 
 Latest no-runtime rerank: Gate ES landed
 `post_v1_next_numeric_coverage_gap_gate_es_plan` with status

@@ -53,6 +53,23 @@ through the owned double-leaf/framed route. This is a calculator
 boundary-preservation fix, not a source crawl, confidence wording pass,
 or finite scenario-library expansion.
 
+Related route-family semantics note: the checkpoint also records the
+post-fix thick-board ambiguity for
+`gypsum_board 12.5 / rockwool 50 / gypsum_board 100`. That stack can
+currently flip into `lined_massive_wall` by surface mass alone. Gate EU
+or any later wall-family work must read the source-of-truth
+"Route-Family Semantics Guard" before changing it: do not blanket-park
+all lined-massive fallbacks, and do not let board/panel double-leaf
+intent silently become a concrete/AAC/brick/CLT massive-substrate route.
+The bounded safety plan for that follow-up is:
+
+`docs/calculator/POST_V1_THICK_BOARD_AUTO_FAMILY_BOUNDARY_SAFETY_PLAN_2026-06-09.md`
+
+That plan is currently documentation only. It does not replace Gate EU,
+but it defines the snapshot matrix, contract tests, narrow runtime guard,
+validation commands, and stop conditions required before any thick-board
+Auto family-classification change.
+
 Gate EU remains the selected next tactical action, but the selected Gate
 EU contract file named above is not present in the current implementation
 tree. The next Gate EU turn must create that selected contract file as

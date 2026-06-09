@@ -64,6 +64,72 @@ Pinned examples:
 - `gypsum_board / rockwool / firestop_board` missing topology stays
   `needs_input`.
 
+## Follow-Up Analysis - Thick Board Vs Lined Massive Ambiguity
+
+After the checkpoint, a workbench probe found a related route-family
+ambiguity:
+
+`gypsum_board 12.5 / rockwool 50 / gypsum_board 100`
+
+With no explicit wall topology, thin and moderate right-leaf gypsum
+variants stay in the post-checkpoint double-leaf `needs_input` lane.
+Once the right gypsum leaf reaches about 82.4 mm, the engine can select
+`lined_massive_wall` with basis `screening_mass_law_curve_seed_v3`
+instead. The immediate reason is surface mass: the catalog density for
+`gypsum_board` is 850 kg/m3, so 100 mm is about 85 kg/m2 and crosses the
+dominant-leaf signal used by the lined-massive selector.
+
+This is not a simple "the current behavior is always wrong" finding. If
+the user intended a massive gypsum substrate with a light lining, the
+lined-massive family can be physically plausible and some double-leaf
+support inputs may matter less. But the generic `gypsum_board` material
+still has board/panel semantics. A flat board / porous absorber / board
+stack can still depend on cavity depth, absorber state, support
+topology, bridge class, and support spacing through mass-air-mass and
+stud/support coupling behavior. Therefore, a thickness threshold alone
+is not a safe reason to hide route inputs or publish a screening answer.
+
+Blast-radius probe:
+
+- a broad "park every flat leaf / absorber / leaf screening fallback"
+  guard is too aggressive;
+- it would affect legitimate or historically pinned lined-massive /
+  heavy-core paths such as concrete, AAC, brick, CLT/mass-timber, or
+  membrane-on-massive-substrate stacks;
+- the safer future fix is to refine family classification or the
+  boundary so board-like panel leaves do not become massive substrates
+  from surface mass alone, while true massive-core substrates keep their
+  current lined-massive behavior.
+
+Any implementation of this follow-up must pin at least:
+
+- thick `gypsum_board` / rockwool / `gypsum_board` without explicit
+  topology does not silently lose required route-input visibility;
+- concrete/AAC/brick/CLT lined-massive or heavy-core rows stay on their
+  existing owned or pinned runtime/boundary posture;
+- explicit double-leaf topology still calculates or asks only for the
+  remaining route-required support fields.
+
+Dedicated implementation-safety plan:
+[POST_V1_THICK_BOARD_AUTO_FAMILY_BOUNDARY_SAFETY_PLAN_2026-06-09.md](./POST_V1_THICK_BOARD_AUTO_FAMILY_BOUNDARY_SAFETY_PLAN_2026-06-09.md).
+That plan must be read before any runtime or UI change for this
+ambiguity. It keeps the first step no-runtime, requires a before/after
+matrix, preserves concrete/AAC/brick/CLT massive-core pins, and defines
+stop conditions if the blast radius is broader than generic board/panel
+Auto classification.
+
+References used during the follow-up review:
+
+- NRC, "The transmission loss of double stud walls with layers of
+  gypsum board installed inside the wall cavity":
+  https://nrc-publications.canada.ca/eng/view/object/?id=768bf32f-8313-435f-ab85-8680efba61b2
+- "Airborne sound insulation performance of lightweight double leaf
+  walls with different stud types":
+  https://pmc.ncbi.nlm.nih.gov/articles/PMC11666719/
+- "Analysis of the transmission loss of double-leaf panels with an
+  equivalent spring-mass model for studs":
+  https://academic.oup.com/jom/article/doi/10.1093/jom/ufaa020/6042103
+
 ## Validation Evidence
 
 Focused validation after the fix:

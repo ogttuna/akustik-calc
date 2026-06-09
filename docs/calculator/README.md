@@ -27,6 +27,20 @@ Latest reconciliation checkpoint:
 
 [CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md](./CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md)
 
+This checkpoint also records the thick-board route-family ambiguity:
+generic `gypsum_board 12.5 / rockwool 50 / gypsum_board 100` can flip
+into `lined_massive_wall` by surface mass alone. The source-of-truth
+Route-Family Semantics Guard is the authoritative rule for that issue:
+separate board/panel double-leaf intent from true concrete/AAC/brick/CLT
+massive-substrate intent before changing runtime behavior.
+The step-by-step safety plan for any future implementation is:
+
+[POST_V1_THICK_BOARD_AUTO_FAMILY_BOUNDARY_SAFETY_PLAN_2026-06-09.md](./POST_V1_THICK_BOARD_AUTO_FAMILY_BOUNDARY_SAFETY_PLAN_2026-06-09.md)
+
+That plan is documentation only until explicitly selected. It requires a
+no-runtime snapshot matrix and preservation pins before touching wall
+family classification.
+
 Active post-V1 plan:
 
 [POST_V1_GATE_ES_ET_REINFORCED_CONCRETE_VISIBLE_DERIVED_BOUNDARY_PLAN_2026-06-08.md](./POST_V1_GATE_ES_ET_REINFORCED_CONCRETE_VISIBLE_DERIVED_BOUNDARY_PLAN_2026-06-08.md)
@@ -65,6 +79,8 @@ leaf` wall stacks without complete double-leaf topology/support inputs
 parked as `needs_input` instead of publishing a screening fallback.
 Complete topology still calculates through the owned double-leaf/framed
 route.
+The same checkpoint is the place to read the thick-board ambiguity note
+before touching wall family classification.
 
 Gate ES is the latest no-runtime numeric coverage/accuracy rerank:
 `post_v1_next_numeric_coverage_gap_gate_es_plan`, with status

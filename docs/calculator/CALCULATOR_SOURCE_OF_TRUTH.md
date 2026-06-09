@@ -76,6 +76,45 @@ exist internally. They are not user-facing answers unless the selected
 candidate owns the route, basis, metric set, required inputs, support
 bucket, origin, and value pins.
 
+## Route-Family Semantics Guard
+
+Do not select an acoustic family from mass thresholds alone when the
+layer semantics say something more specific. A very thick board-like
+panel can have high surface mass, but `gypsum_board`, acoustic gypsum,
+silentboard, cement board, OSB, plywood, membranes, and similar
+board/panel leaves are not automatically structural massive substrates.
+
+For a flat `leaf / porous absorber / leaf` wall, thickness changes may
+make a `lined_massive_wall` interpretation plausible, but the route must
+not silently publish a screening value only because one board-like leaf
+crossed a surface-mass threshold. The classifier or route-input boundary
+must distinguish:
+
+- board/panel double-leaf intent, where cavity depth, cavity fill,
+  support topology, bridge class, and support spacing can still be
+  route-required physical inputs; from
+- true lined-massive or heavy-core substrate intent, such as concrete,
+  AAC, masonry, brick, CLT/mass-timber, or another owned massive-core
+  family where the current lined-massive route is intentionally live.
+
+The current 2026-06-08 follow-up analysis found that
+`gypsum_board 12.5 / rockwool 50 / gypsum_board 100` can flip from the
+post-boundary double-leaf `needs_input` lane into
+`lined_massive_wall` / `screening_mass_law_curve_seed_v3` because the
+right leaf exceeds the dominant-mass threshold. That behavior might be
+physically defensible only if the user intended a massive gypsum
+substrate, but it is not safe as an automatic inference from the generic
+`gypsum_board` material alone. Any future fix must preserve existing
+concrete/AAC/brick/CLT lined-massive and heavy-core pins while preventing
+board-like double-leaf inputs from losing required route inputs.
+
+Implementation planning for this ambiguity lives in
+[POST_V1_THICK_BOARD_AUTO_FAMILY_BOUNDARY_SAFETY_PLAN_2026-06-09.md](./POST_V1_THICK_BOARD_AUTO_FAMILY_BOUNDARY_SAFETY_PLAN_2026-06-09.md).
+That plan is not a runtime change and does not supersede the current
+selected Gate EU action; it defines the no-runtime snapshot, contract,
+validation, and stop conditions required before changing wall family
+classification.
+
 ## Metric And Basis Boundaries
 
 Do not casually alias metrics or bases:

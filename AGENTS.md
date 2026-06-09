@@ -82,6 +82,14 @@ Gate EQ/ER runtime plan:
 Gate ES/ET boundary plan:
 `docs/calculator/POST_V1_GATE_ES_ET_REINFORCED_CONCRETE_VISIBLE_DERIVED_BOUNDARY_PLAN_2026-06-08.md`.
 
+Thick-board Auto family-boundary safety plan:
+`docs/calculator/POST_V1_THICK_BOARD_AUTO_FAMILY_BOUNDARY_SAFETY_PLAN_2026-06-09.md`.
+This is documentation only until explicitly selected. It must be read
+before changing the `gypsum_board 12.5 / rockwool 50 / gypsum_board 100`
+ambiguity or any related board/panel-to-`lined_massive_wall` Auto
+classification. Do not blanket-park existing concrete/AAC/brick/CLT
+lined-massive or heavy-core routes.
+
 Latest landed no-runtime boundary action:
 `post_v1_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et_plan`
 with status
@@ -113,6 +121,14 @@ topology/support inputs now remain parked as `needs_input` instead of
 publishing a screening fallback; complete topology still calculates
 through the owned double-leaf/framed route. The fix is documented in
 `docs/calculator/CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md`.
+Follow-up analysis in that checkpoint warns that thick generic
+`gypsum_board` leaves can currently flip the same flat stack into
+`lined_massive_wall` / `screening_mass_law_curve_seed_v3` by surface
+mass alone. Do not treat that as proof that every lined-massive fallback
+should be parked: concrete/AAC/brick/CLT massive-core lanes are
+intentionally live. Future work must distinguish board/panel double-leaf
+intent from true massive substrate intent before changing runtime
+behavior.
 It moves no formula values, imports no source rows, and does not change
 the selected next action: Gate EU remains
 `post_v1_next_numeric_coverage_gap_gate_eu_plan`. The selected Gate EU
