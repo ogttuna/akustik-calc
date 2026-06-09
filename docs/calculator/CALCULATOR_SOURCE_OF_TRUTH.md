@@ -29,15 +29,245 @@ For a new calculator-engine turn, read the living docs in this order:
    for the landed Gate EU rerank and Gate EV work order;
 7. [POST_V1_GATE_EV_EW_HEAVY_CORE_LINED_MASSIVE_CALIBRATION_OWNER_PLAN_2026-06-09.md](./POST_V1_GATE_EV_EW_HEAVY_CORE_LINED_MASSIVE_CALIBRATION_OWNER_PLAN_2026-06-09.md)
    for the landed Gate EV ledger, landed Gate EW owner proof, and
-   selected Gate EX rerank.
+   selected Gate EX rerank;
+8. [POST_V1_GATE_EX_EY_HEAVY_CORE_LINED_MASSIVE_TARGETED_EVIDENCE_PLAN_2026-06-09.md](./POST_V1_GATE_EX_EY_HEAVY_CORE_LINED_MASSIVE_TARGETED_EVIDENCE_PLAN_2026-06-09.md)
+   for the landed Gate EX rerank and selected Gate EY targeted evidence
+   action;
+9. [POST_V1_GATE_EY_EZ_HEAVY_CORE_LINED_MASSIVE_TARGETED_EVIDENCE_CLOSEOUT_PLAN_2026-06-09.md](./POST_V1_GATE_EY_EZ_HEAVY_CORE_LINED_MASSIVE_TARGETED_EVIDENCE_CLOSEOUT_PLAN_2026-06-09.md)
+   for the landed Gate EY targeted evidence closeout and selected Gate
+   EZ rerank;
+10. [POST_V1_GATE_EZ_FA_CURRENT_COVERAGE_ACCURACY_GAP_LEDGER_PLAN_2026-06-09.md](./POST_V1_GATE_EZ_FA_CURRENT_COVERAGE_ACCURACY_GAP_LEDGER_PLAN_2026-06-09.md)
+   for the landed Gate EZ rerank and selected Gate FA current ledger.
+11. [POST_V1_GATE_FA_FB_OPENING_LEAK_COMMON_WALL_RESIDUAL_OWNER_PLAN_2026-06-09.md](./POST_V1_GATE_FA_FB_OPENING_LEAK_COMMON_WALL_RESIDUAL_OWNER_PLAN_2026-06-09.md)
+   for the landed Gate FA ledger and selected Gate FB owner proof.
+12. [POST_V1_GATE_FB_FC_OPENING_LEAK_COMMON_WALL_OWNER_CLOSEOUT_AND_NEXT_NUMERIC_GAP_PLAN_2026-06-09.md](./POST_V1_GATE_FB_FC_OPENING_LEAK_COMMON_WALL_OWNER_CLOSEOUT_AND_NEXT_NUMERIC_GAP_PLAN_2026-06-09.md)
+   for the landed Gate FB owner rejection and selected Gate FC rerank.
+13. [POST_V1_GATE_FC_FD_FLOOR_RAW_BARE_FLOATING_HOLDOUT_PLAN_2026-06-09.md](./POST_V1_GATE_FC_FD_FLOOR_RAW_BARE_FLOATING_HOLDOUT_PLAN_2026-06-09.md)
+   for the landed Gate FC rerank and selected Gate FD floor holdout
+   prerequisite.
+14. [POST_V1_GATE_FD_FE_FLOOR_RAW_BARE_FLOATING_HOLDOUT_CLOSEOUT_PLAN_2026-06-09.md](./POST_V1_GATE_FD_FE_FLOOR_RAW_BARE_FLOATING_HOLDOUT_CLOSEOUT_PLAN_2026-06-09.md)
+   for the landed Gate FD owner rejection and selected Gate FE rerank.
+15. [POST_V1_GATE_FE_FF_CURRENT_FORMULA_SCOPE_ACCURACY_LEDGER_PLAN_2026-06-09.md](./POST_V1_GATE_FE_FF_CURRENT_FORMULA_SCOPE_ACCURACY_LEDGER_PLAN_2026-06-09.md)
+   for the landed Gate FE rerank, landed Gate FF formula scope ledger,
+   and selected post double-leaf/framed coverage revalidation.
 
-Current selected next action is Gate EX:
-`post_v1_next_numeric_coverage_gap_gate_ex_plan`.
-The selected Gate EX contract file is
-`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ex-contract.test.ts`.
-Gate EW has landed as the latest no-runtime calibration owner proof;
-Gate EV, Gate EU, the double-leaf checkpoint, and the thick-board safety
-plan are landed records, not active replacements for Gate EX.
+Current selected next action is the post double-leaf/framed coverage
+revalidation:
+`layer_combination_resolver_post_double_leaf_framed_wall_banded_coverage_revalidation_plan`.
+The selected next contract file is
+`packages/engine/src/layer-combination-resolver-post-double-leaf-framed-wall-banded-coverage-revalidation-contract.test.ts`.
+That selected next file is intentionally still open at this checkpoint;
+creating its contract is the next implementation step, not a missing
+landed Gate FF artifact.
+Gate FF has landed as the latest no-runtime formula scope/accuracy
+ledger; Gate FE, Gate FD, Gate FC, Gate FB, Gate FA, Gate EZ, Gate EY,
+Gate EX, Gate EW, Gate EV, Gate EU, the double-leaf checkpoint, and the
+thick-board safety plan are landed records, not active replacements for
+the selected post double-leaf revalidation.
+
+Latest landed no-runtime formula scope/accuracy ledger:
+`post_v1_current_formula_scope_accuracy_gap_ledger_gate_ff_plan`
+with status
+`post_v1_current_formula_scope_accuracy_gap_ledger_gate_ff_landed_no_runtime_selected_post_double_leaf_framed_wall_banded_coverage_revalidation`.
+Gate FF selected
+`wall.double_leaf_framed_post_runtime_coverage_revalidation_after_direct_fixed_gate_er`
+after two ROI plan iterations (`roiAnalysisIterations: 2`). Gate FF
+subtracts already-live single-leaf mass-law, non-direct-fixed
+double-leaf/framed, direct-fixed double-leaf field/building, historical
+candidate-matrix/company-internal rehearsal, Gate FD floor holdout, Gate
+FB opening/leak common-wall residual, Gate EY heavy-core / lined-massive,
+and broad-source-crawl lanes. It is not a broad source crawl and moves no
+runtime values. Gate FF selects:
+`layer_combination_resolver_post_double_leaf_framed_wall_banded_coverage_revalidation_plan`
+in
+`packages/engine/src/layer-combination-resolver-post-double-leaf-framed-wall-banded-coverage-revalidation-contract.test.ts`.
+The selected file remains intentionally unimplemented until the next
+slice starts.
+Counters: `candidateCount 10`, `roiAnalysisIterations: 2`,
+`estimatedNextPostDoubleLeafRevalidationRows 1`,
+`estimatedNextRuntimeCandidateFamiliesToRerank 4`,
+`closedRuntimeRowsRechecked 5`, `blockedOwnerOrHoldoutRows 3`,
+`openHistoricalSelectedNextFilesStillMissing 1`,
+`immediateRuntimeCandidatesSelected 0`, `newCalculableLayerTemplates 0`,
+`newCalculableRequestShapes 0`, `runtimeBasisPromotions 0`,
+`runtimeFormulaRetunes 0`, `runtimeValuesMoved 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Previous landed no-runtime numeric coverage/accuracy rerank:
+`post_v1_next_numeric_coverage_gap_gate_fe_plan`
+with status
+`post_v1_next_numeric_coverage_gap_gate_fe_landed_no_runtime_selected_current_formula_scope_accuracy_gap_ledger_gate_ff`.
+Gate FE selected
+`calculator.current_formula_scope_accuracy_gap_ledger_after_gate_fd_closeout`
+after two ROI plan iterations (`roiAnalysisIterations: 2`). Gate FE
+subtracts the Gate FD floor holdout rejection, Gate FB opening/leak and
+common-wall owner rejection, Gate EY heavy-core / lined-massive owner
+rejection, stale cartography `runtime_widening` labels for heavy-core,
+timber stud, CLT, and steel fallback, and the blocked Rockwool source
+packet lane. It is not a broad source crawl and moves no runtime values.
+Gate FE selects Gate FF:
+`post_v1_current_formula_scope_accuracy_gap_ledger_gate_ff_plan`
+in
+`packages/engine/src/post-v1-current-formula-scope-accuracy-gap-ledger-gate-ff-contract.test.ts`.
+Counters: `candidateCount 10`, `roiAnalysisIterations: 2`,
+`estimatedNextFormulaScopeLedgerRows 1`,
+`estimatedNextRuntimeCandidateFamiliesToEvaluate 6`,
+`staleCartographyRuntimeWideningRows 4`,
+`blockedOwnerOrHoldoutRows 3`,
+`sourcePacketRowsRejectedAsCurrentRuntime 1`,
+`immediateRuntimeCandidatesSelected 0`,
+`newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+`runtimeBasisPromotions 0`, `runtimeFormulaRetunes 0`,
+`runtimeValuesMoved 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+
+Previous landed no-runtime floor raw-bare/floating holdout closeout:
+`post_v1_floor_raw_bare_and_floating_same_basis_holdout_gate_fd_plan`
+with status
+`post_v1_floor_raw_bare_and_floating_same_basis_holdout_gate_fd_landed_no_runtime_owner_rejected_selected_next_numeric_coverage_gap_gate_fe`.
+Gate FD owner rejected:
+`floor.raw_bare_and_floating.same_basis_holdout_owner_rejected_missing_admissible_holdouts`.
+Gate FD evaluated only the three Gate CL floor residual ledgers selected
+by Gate FC. Open-box/open-web raw-bare formula outputs remain
+source-absent, packaged/finished/supported-band rows are not raw-bare
+same-basis holdouts, and the Gate CH published `Ln,w` anchor plus field
+adapter outputs are not measured direct+flanking field holdouts. Runtime
+values and budgets remain frozen. Gate FD selects Gate FE:
+`post_v1_next_numeric_coverage_gap_gate_fe_plan`
+in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-fe-contract.test.ts`.
+Counters: `ownerLedgersRejected 3`, `admissibleHoldoutLedgers 0`,
+`evaluatedGateCLResidualLedgers 3`,
+`rejectedCandidateEvidenceLedgers 6`, `boundaryLedgersPinned 7`,
+`runtimeBudgetTighteningAdmitted 0`, `broadSourceCrawlSelected false`,
+`newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+`runtimeBasisPromotions 0`, `runtimeFormulaRetunes 0`,
+`runtimeValuesMoved 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+
+Previous landed no-runtime numeric coverage/accuracy rerank:
+`post_v1_next_numeric_coverage_gap_gate_fc_plan`
+with status
+`post_v1_next_numeric_coverage_gap_gate_fc_landed_no_runtime_selected_floor_raw_bare_and_floating_same_basis_holdout_gate_fd`.
+Gate FC selected
+`floor.raw_bare_and_floating_same_basis_holdout_prerequisite_after_gate_fb`
+after two ROI plan iterations (`roiAnalysisIterations: 2`). Gate FC
+subtracts Gate FB-rejected opening/leak/common-wall budget tightening,
+Gate EY/EW-rejected heavy-core retune, and already-closed direct-fixed,
+reinforced-concrete visible-derived, thick-board safety, ASTM
+exact-band, and steel visible input-surface repeats. No safe immediate
+value-moving runtime candidate remains from current evidence; Gate FC
+therefore selects Gate FD, a bounded targeted same-basis holdout
+prerequisite for floor raw-bare/floating residual accuracy. It is not a
+broad source crawl. Gate FC selects
+`post_v1_floor_raw_bare_and_floating_same_basis_holdout_gate_fd_plan`
+in
+`packages/engine/src/post-v1-floor-raw-bare-and-floating-same-basis-holdout-gate-fd-contract.test.ts`.
+Counters: `candidateCount 10`, `roiAnalysisIterations: 2`,
+`blockedByGateFBOwnerRejectionRows 2`,
+`blockedHeavyCoreOwnerRejectedRows 1`, `closedRepeatRows 5`,
+`estimatedNextTargetedHoldoutLedgers 3`,
+`floorResidualLedgersSelected 3`, `immediateRuntimeCandidatesSelected
+0`, `broadSourceCrawlSelected false`, `newCalculableLayerTemplates 0`,
+`newCalculableRequestShapes 0`, `runtimeBasisPromotions 0`,
+`runtimeFormulaRetunes 0`, `runtimeValuesMoved 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Latest landed no-runtime opening/leak common wall owner closeout:
+`post_v1_opening_leak_common_wall_same_basis_residual_owner_gate_fb_plan`
+with status
+`post_v1_opening_leak_common_wall_same_basis_residual_owner_gate_fb_landed_no_runtime_owner_rejected_selected_next_numeric_coverage_gap_gate_fc`.
+Gate FB owner rejected:
+`wall.opening_leak_common_wall.same_basis_residual_owner_rejected_missing_holdouts`.
+Gate FB rejected runtime budget tightening for
+`wall.opening_leak_common_wall_same_basis_residual_owner_gap_after_gate_ey_owner_rejection_closeout`
+because source-owned same-basis holdouts are absent for opening/leak
+field, opening/leak building, opening/leak A-weighted, and common wall
+building residuals. Field/building/A-weighted values and budgets remain
+frozen: field `8`, building `10`, A-weighted field `9`, and A-weighted
+building `11`. Gate FB selected Gate FC:
+`post_v1_next_numeric_coverage_gap_gate_fc_plan`
+in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-fc-contract.test.ts`.
+Counters: `ownerLedgersRejected 5`, `sameBasisHoldoutLedgersMissing 5`,
+`boundaryLedgersPinned 7`, `runtimeBudgetTighteningAdmitted 0`,
+`newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+`runtimeBasisPromotions 0`, `runtimeFormulaRetunes 0`,
+`runtimeValuesMoved 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+
+Latest landed no-runtime current coverage/accuracy gap ledger:
+`post_v1_current_coverage_accuracy_gap_ledger_gate_fa_plan`
+with status
+`post_v1_current_coverage_accuracy_gap_ledger_gate_fa_landed_no_runtime_selected_opening_leak_common_wall_same_basis_residual_owner_gate_fb`.
+Gate FA selected
+`wall.opening_leak_common_wall_same_basis_residual_owner_gap_after_gate_ey_owner_rejection_closeout`.
+Gate FA re-read current implementation after Gate EY/EZ: opening/leak
+field/building and A-weighted runtime rows are live, but they remain
+source-absent with wide budgets; Gate CL also left the common wall
+building residual and opening/leak residuals without same-basis
+holdouts. Gate FA selected Gate FB, a no-runtime same-basis residual
+owner proof:
+`post_v1_opening_leak_common_wall_same_basis_residual_owner_gate_fb_plan`
+in
+`packages/engine/src/post-v1-opening-leak-common-wall-same-basis-residual-owner-gate-fb-contract.test.ts`.
+Counters: `ledgerRows 11`, `candidateCount 11`, `ownerGapRows 1`,
+`runtimeCandidateRowsHeldBehindOwner 2`, `closedRepeatRows 5`,
+`blockedHeavyCoreOwnerRejectedRows 1`, `blockedNonGoalRows 1`,
+`estimatedNextOwnerLedgers 1`,
+`estimatedNextRuntimeCandidateFamiliesAfterOwner 2`,
+`estimatedNextBoundaryLedgers 3`, `newCalculableLayerTemplates 0`,
+`newCalculableRequestShapes 0`, `runtimeBasisPromotions 0`,
+`runtimeFormulaRetunes 0`, `runtimeValuesMoved 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+Gate FA/FB plan:
+`docs/calculator/POST_V1_GATE_FA_FB_OPENING_LEAK_COMMON_WALL_RESIDUAL_OWNER_PLAN_2026-06-09.md`.
+
+Previous landed no-runtime numeric coverage/accuracy rerank:
+`post_v1_next_numeric_coverage_gap_gate_ez_plan`
+with status
+`post_v1_next_numeric_coverage_gap_gate_ez_landed_no_runtime_selected_current_coverage_accuracy_gap_ledger_gate_fa`.
+Gate EZ selected
+`calculator.current_coverage_accuracy_gap_ledger_after_gate_ey_owner_rejection_closeout`.
+Gate EY left the heavy-core / lined-massive owner rejected: MWI.2A and
+B226010 remain targeted evidence context only, not runtime owners. Gate
+EZ selected Gate FA, a fresh current coverage/accuracy gap ledger:
+`post_v1_current_coverage_accuracy_gap_ledger_gate_fa_plan`
+in
+`packages/engine/src/post-v1-current-coverage-accuracy-gap-ledger-gate-fa-contract.test.ts`.
+Counters: `candidateCount 10`, `roiAnalysisIterations: 2`,
+`estimatedNextGapLedgers 1`, `estimatedNextBoundaryLedgers 2`,
+`estimatedNextRuntimeCandidateFamiliesToEvaluate 6`,
+`heavyCoreLinedMassiveRuntimeStillBlocked true`,
+`broadSourceCrawlSelected false`, `newCalculableLayerTemplates 0`,
+`newCalculableRequestShapes 0`, `runtimeBasisPromotions 0`,
+`runtimeFormulaRetunes 0`, `runtimeValuesMoved 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Previous landed no-runtime targeted evidence action:
+`post_v1_wall_heavy_core_lined_massive_targeted_evidence_acquisition_gate_ey_plan`
+with status
+`post_v1_wall_heavy_core_lined_massive_targeted_evidence_acquisition_gate_ey_landed_no_runtime_owner_remains_rejected_selected_next_numeric_coverage_gap_gate_ez`.
+Gate EY decision:
+`wall.heavy_core_lined_massive.targeted_evidence_acquired_owner_still_rejected_no_runtime_admissible_row_or_rule`.
+Gate EY accepted MWI.2A and B226010 only as targeted wall-specific
+evidence contexts. The owner remains rejected because neither context is
+runtime-admissible for the live generic heavy-core / lined-massive route
+and no bounded wall lining rule was accepted. This is not a broad source
+crawl. Current Gate DG `bounded_prediction` values remain frozen. Gate
+EY selected Gate EZ:
+`post_v1_next_numeric_coverage_gap_gate_ez_plan`
+in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ez-contract.test.ts`.
+Counters: `targetedEvidenceLedgers 6`,
+`acceptedTargetedEvidenceLedgers 2`,
+`runtimeAdmissibleEvidenceLedgers 0`,
+`acceptedBoundedWallLiningRules 0`,
+`calibrationOwnerRemainsRejected true`,
+`broadSourceCrawlSelected false`, `newCalculableLayerTemplates 0`,
+`newCalculableRequestShapes 0`, `runtimeBasisPromotions 0`,
+`runtimeFormulaRetunes 0`, `runtimeValuesMoved 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
 
 ## Product Goal
 
@@ -182,17 +412,36 @@ Current implementation facts:
 - cards, answer charts, API payloads, Markdown reports, saved replay,
   server snapshot replay, and resolver traces are expected to show the
   same selected answer basis and stopped-output state;
-- the latest documented full gate, after the Gate EW no-runtime
-  calibration owner proof and current-gate registration, passed
-  `pnpm calculator:gate:current` with engine 667 test files / 3706 tests
-  passing, web 115 test files / 447 tests passing + 18 skipped, repo
-  build 5 / 5, and whitespace guard passing.
+- the latest documented full gate, after Gate FF current-gate
+  registration and post double-leaf/framed revalidation selection,
+  passed `pnpm calculator:gate:current` with engine 676 test files /
+  3755 tests passing, web 115 test files / 447 tests passing + 18
+  skipped, repo build 5 / 5, and whitespace guard passing.
 - after Gate ET, focused Gate EM/EN/EO/EP/EQ/ER/ES/ET validation is
   green when run by targeted Vitest files. Gate ET resolves the previous
   reinforced-concrete visible-derived missing-input expectation drift by
   pinning the runtime boundary to `resilientLayerDynamicStiffnessMNm3`
   and `loadBasisKgM2`.
-- the latest landed no-runtime calibration owner proof is Gate EW:
+- the latest landed no-runtime numeric coverage/accuracy rerank is Gate
+  EX: `post_v1_next_numeric_coverage_gap_gate_ex_plan` with status
+  `post_v1_next_numeric_coverage_gap_gate_ex_landed_no_runtime_selected_wall_heavy_core_lined_massive_targeted_evidence_acquisition_gate_ey`.
+  Gate EX selected
+  `wall.heavy_core_lined_massive_targeted_evidence_acquisition_after_owner_rejection`.
+  This is targeted evidence acquisition, not a broad source crawl: Gate
+  EY must look only for a wall-specific lined concrete or heavy-masonry
+  source row, or a bounded wall lining rule with coefficient scope, local
+  tolerance, holdouts, and negative boundaries. Current Gate DG
+  `bounded_prediction` values remain frozen. Gate EX selected Gate EY:
+  `post_v1_wall_heavy_core_lined_massive_targeted_evidence_acquisition_gate_ey_plan`
+  in
+  `packages/engine/src/post-v1-wall-heavy-core-lined-massive-targeted-evidence-acquisition-gate-ey-contract.test.ts`.
+  Counters: `candidateCount 10`, `roiAnalysisIterations 2`,
+  `targetedEvidenceAcquisitionSelected true`,
+  `broadSourceCrawlSelected false`, `newCalculableLayerTemplates 0`,
+  `newCalculableRequestShapes 0`, `runtimeBasisPromotions 0`,
+  `runtimeFormulaRetunes 0`, `runtimeValuesMoved 0`,
+  `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+- the previous landed no-runtime calibration owner proof is Gate EW:
   `post_v1_wall_heavy_core_lined_massive_calibration_owner_gate_ew_plan`
   with status
   `post_v1_wall_heavy_core_lined_massive_calibration_owner_gate_ew_landed_no_runtime_owner_rejected_selected_next_numeric_coverage_gap_gate_ex`.
@@ -289,7 +538,9 @@ Current implementation facts:
   `pnpm build`. This checkpoint moved no formula values, imported no
   source rows, and remains a landed record. Gate EU, Gate EV, and Gate
   EW have since landed; Gate EW landed owner rejected and selected Gate
-  EX.
+  EX. Gate EX has since landed and selected Gate EY targeted evidence
+  acquisition. Gate EY has since landed, owner remains rejected, and Gate
+  EY selected Gate EZ.
 - the latest bounded route-family safety follow-up is
   [POST_V1_THICK_BOARD_AUTO_FAMILY_BOUNDARY_SAFETY_PLAN_2026-06-09.md](./POST_V1_THICK_BOARD_AUTO_FAMILY_BOUNDARY_SAFETY_PLAN_2026-06-09.md).
   Commit `142cc78 Guard thick board auto wall family selection` prevents
@@ -299,8 +550,9 @@ Current implementation facts:
   concrete/AAC/masonry/CLT massive-core lanes. The focused engine
   contract now has 62 tests, the web payload contract has 4 tests, and
   the full current gate passed with the counts listed above. This
-  follow-up is a landed safety record and does not replace Gate EX.
-- the latest landed no-runtime numeric coverage/accuracy rerank is Gate
+  follow-up is a landed safety record and does not replace the current
+  Gate FF formula scope ledger action.
+- the previous landed no-runtime numeric coverage/accuracy rerank is Gate
   ES: `post_v1_next_numeric_coverage_gap_gate_es_plan` with status
   `post_v1_next_numeric_coverage_gap_gate_es_landed_no_runtime_selected_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et`.
   Gate ES selected
@@ -2232,13 +2484,14 @@ Current reconciliation checkpoint:
 Historical Gate BS/BT checkpoint:
 [CHECKPOINT_2026-06-01_POST_V1_GATE_BT_STATE_RECONCILIATION.md](./CHECKPOINT_2026-06-01_POST_V1_GATE_BT_STATE_RECONCILIATION.md).
 Gate BS and Gate BT are closed history. Gate BT selected Gate BU, and
-that chain has since advanced through Gate ET plus the double-leaf
+that chain has since advanced through Gate FD plus the double-leaf
 route-input boundary checkpoint. Do not treat Gate BS, Gate BT, Gate BW,
 Gate DU, Gate DY, Gate DZ, Gate EA, Gate EB, Gate EC, Gate ED, Gate EE,
 Gate EF, Gate EG, Gate EH, Gate EI, Gate EJ, Gate EK, Gate EL, Gate EM,
-Gate EN, Gate EO, Gate EP, Gate EQ, Gate ER, Gate ES, or Gate ET as the
-current selected next action; the current selected next action is
-`post_v1_next_numeric_coverage_gap_gate_eu_plan`.
+Gate EN, Gate EO, Gate EP, Gate EQ, Gate ER, Gate ES, Gate ET, Gate EU,
+Gate EV, Gate EW, Gate EX, Gate EY, Gate EZ, Gate FA, Gate FB, Gate FC,
+or Gate FD as the current selected next action; the current selected
+next action is `post_v1_next_numeric_coverage_gap_gate_fe_plan`.
 
 Latest landed post-V1 value-moving coverage action:
 

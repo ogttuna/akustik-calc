@@ -88,7 +88,10 @@ Current reconciliation checkpoint:
 `docs/calculator/CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md`.
 
 Current selected next action label:
-`post_v1_next_numeric_coverage_gap_gate_ex_plan`.
+`layer_combination_resolver_post_double_leaf_framed_wall_banded_coverage_revalidation_plan`.
+
+Current selected next file:
+`packages/engine/src/layer-combination-resolver-post-double-leaf-framed-wall-banded-coverage-revalidation-contract.test.ts`.
 
 Gate EM/EN plan:
 `docs/calculator/POST_V1_GATE_EM_EN_WALL_DIRECT_FIXED_DOUBLE_LEAF_BRIDGE_LOSS_OWNER_PLAN_2026-06-07.md`.
@@ -119,7 +122,257 @@ Gate EU/EV current coverage accuracy gap ledger plan:
 Gate EV/EW heavy-core lined-massive calibration owner plan:
 `docs/calculator/POST_V1_GATE_EV_EW_HEAVY_CORE_LINED_MASSIVE_CALIBRATION_OWNER_PLAN_2026-06-09.md`.
 
-Latest landed no-runtime calibration owner proof:
+Gate EX/EY heavy-core lined-massive targeted evidence plan:
+`docs/calculator/POST_V1_GATE_EX_EY_HEAVY_CORE_LINED_MASSIVE_TARGETED_EVIDENCE_PLAN_2026-06-09.md`.
+
+Gate EY/EZ heavy-core lined-massive targeted evidence closeout plan:
+`docs/calculator/POST_V1_GATE_EY_EZ_HEAVY_CORE_LINED_MASSIVE_TARGETED_EVIDENCE_CLOSEOUT_PLAN_2026-06-09.md`.
+
+Gate EZ/FA current coverage accuracy gap ledger plan:
+`docs/calculator/POST_V1_GATE_EZ_FA_CURRENT_COVERAGE_ACCURACY_GAP_LEDGER_PLAN_2026-06-09.md`.
+
+Gate FA/FB opening leak common wall residual owner plan:
+`docs/calculator/POST_V1_GATE_FA_FB_OPENING_LEAK_COMMON_WALL_RESIDUAL_OWNER_PLAN_2026-06-09.md`.
+
+Gate FB/FC opening leak common wall owner closeout and next numeric gap plan:
+`docs/calculator/POST_V1_GATE_FB_FC_OPENING_LEAK_COMMON_WALL_OWNER_CLOSEOUT_AND_NEXT_NUMERIC_GAP_PLAN_2026-06-09.md`.
+
+Gate FC/FD floor raw-bare floating holdout plan:
+`docs/calculator/POST_V1_GATE_FC_FD_FLOOR_RAW_BARE_FLOATING_HOLDOUT_PLAN_2026-06-09.md`.
+
+Gate FD/FE floor raw-bare floating holdout closeout plan:
+`docs/calculator/POST_V1_GATE_FD_FE_FLOOR_RAW_BARE_FLOATING_HOLDOUT_CLOSEOUT_PLAN_2026-06-09.md`.
+
+Gate FE/FF current formula scope accuracy ledger plan:
+`docs/calculator/POST_V1_GATE_FE_FF_CURRENT_FORMULA_SCOPE_ACCURACY_LEDGER_PLAN_2026-06-09.md`.
+
+Latest landed no-runtime formula scope/accuracy ledger:
+`post_v1_current_formula_scope_accuracy_gap_ledger_gate_ff_plan`
+with status
+`post_v1_current_formula_scope_accuracy_gap_ledger_gate_ff_landed_no_runtime_selected_post_double_leaf_framed_wall_banded_coverage_revalidation`.
+Gate FF selected
+`wall.double_leaf_framed_post_runtime_coverage_revalidation_after_direct_fixed_gate_er`
+after two ROI plan iterations (`roiAnalysisIterations: 2`). Gate FF
+subtracts already-live single-leaf mass-law, non-direct-fixed
+double-leaf/framed, direct-fixed double-leaf field/building, historical
+candidate-matrix/company-internal rehearsal, Gate FD floor holdout, Gate
+FB opening/leak common-wall residual, Gate EY heavy-core / lined-massive,
+and broad-source-crawl lanes. It moves no runtime values and imports no
+source rows. Gate FF selects:
+`layer_combination_resolver_post_double_leaf_framed_wall_banded_coverage_revalidation_plan`
+in
+`packages/engine/src/layer-combination-resolver-post-double-leaf-framed-wall-banded-coverage-revalidation-contract.test.ts`.
+Counters: `candidateCount 10`, `roiAnalysisIterations: 2`,
+`estimatedNextPostDoubleLeafRevalidationRows 1`,
+`estimatedNextRuntimeCandidateFamiliesToRerank 4`,
+`closedRuntimeRowsRechecked 5`, `blockedOwnerOrHoldoutRows 3`,
+`openHistoricalSelectedNextFilesStillMissing 1`,
+`immediateRuntimeCandidatesSelected 0`, `newCalculableLayerTemplates 0`,
+`newCalculableRequestShapes 0`, `runtimeBasisPromotions 0`,
+`runtimeFormulaRetunes 0`, `runtimeValuesMoved 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Previous landed no-runtime numeric coverage/accuracy rerank:
+`post_v1_next_numeric_coverage_gap_gate_fe_plan`
+with status
+`post_v1_next_numeric_coverage_gap_gate_fe_landed_no_runtime_selected_current_formula_scope_accuracy_gap_ledger_gate_ff`.
+Gate FE selected
+`calculator.current_formula_scope_accuracy_gap_ledger_after_gate_fd_closeout`
+after two ROI plan iterations (`roiAnalysisIterations: 2`). Gate FE
+subtracts the Gate FD floor holdout rejection, Gate FB opening/leak and
+common-wall owner rejection, Gate EY heavy-core / lined-massive owner
+rejection, stale cartography `runtime_widening` labels for heavy-core,
+timber stud, CLT, and steel fallback, and the blocked Rockwool source
+packet lane. Gate FE moves no runtime values and imports no source rows.
+It selects Gate FF:
+`post_v1_current_formula_scope_accuracy_gap_ledger_gate_ff_plan`
+in
+`packages/engine/src/post-v1-current-formula-scope-accuracy-gap-ledger-gate-ff-contract.test.ts`.
+Counters: `candidateCount 10`, `roiAnalysisIterations: 2`,
+`estimatedNextFormulaScopeLedgerRows 1`,
+`estimatedNextRuntimeCandidateFamiliesToEvaluate 6`,
+`staleCartographyRuntimeWideningRows 4`,
+`blockedOwnerOrHoldoutRows 3`,
+`sourcePacketRowsRejectedAsCurrentRuntime 1`,
+`immediateRuntimeCandidatesSelected 0`,
+`newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+`runtimeBasisPromotions 0`, `runtimeFormulaRetunes 0`,
+`runtimeValuesMoved 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+
+Previous landed no-runtime floor raw-bare/floating holdout closeout:
+`post_v1_floor_raw_bare_and_floating_same_basis_holdout_gate_fd_plan`
+with status
+`post_v1_floor_raw_bare_and_floating_same_basis_holdout_gate_fd_landed_no_runtime_owner_rejected_selected_next_numeric_coverage_gap_gate_fe`.
+Gate FD owner rejected:
+`floor.raw_bare_and_floating.same_basis_holdout_owner_rejected_missing_admissible_holdouts`.
+Gate FD evaluated only the three Gate CL floor ledgers selected by Gate
+FC: open-box raw-bare lab impact, open-web raw-bare lab impact, and the
+Gate CH heavy-floating field companion. All three still have no
+admissible same-basis holdout: source-absent formula outputs cannot
+validate themselves, packaged/finished/supported-band rows are not
+raw-bare holdouts, and the Gate CH published `Ln,w` anchor plus field
+adapter outputs are not measured direct+flanking field holdouts. Runtime
+values and budgets remain frozen. Gate FD selects Gate FE:
+`post_v1_next_numeric_coverage_gap_gate_fe_plan`
+in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-fe-contract.test.ts`.
+Counters: `ownerLedgersRejected 3`, `admissibleHoldoutLedgers 0`,
+`evaluatedGateCLResidualLedgers 3`,
+`rejectedCandidateEvidenceLedgers 6`, `boundaryLedgersPinned 7`,
+`runtimeBudgetTighteningAdmitted 0`, `broadSourceCrawlSelected false`,
+`newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+`runtimeBasisPromotions 0`, `runtimeFormulaRetunes 0`,
+`runtimeValuesMoved 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+
+Previous landed no-runtime numeric coverage/accuracy rerank:
+`post_v1_next_numeric_coverage_gap_gate_fc_plan`
+with status
+`post_v1_next_numeric_coverage_gap_gate_fc_landed_no_runtime_selected_floor_raw_bare_and_floating_same_basis_holdout_gate_fd`.
+Gate FC selected
+`floor.raw_bare_and_floating_same_basis_holdout_prerequisite_after_gate_fb`
+after two ROI plan iterations (`roiAnalysisIterations: 2`). Gate FC
+subtracts Gate FB-rejected opening/leak/common-wall budget tightening,
+Gate EY/EW-rejected heavy-core retune, and already-closed direct-fixed,
+reinforced-concrete visible-derived, thick-board safety, ASTM
+exact-band, and steel visible input-surface repeats. No safe immediate
+value-moving runtime candidate remains from current evidence; Gate FC
+therefore selects Gate FD, a bounded targeted same-basis holdout
+prerequisite for floor raw-bare/floating residual accuracy. It is not a
+broad source crawl. Gate FC selects
+`post_v1_floor_raw_bare_and_floating_same_basis_holdout_gate_fd_plan`
+in
+`packages/engine/src/post-v1-floor-raw-bare-and-floating-same-basis-holdout-gate-fd-contract.test.ts`.
+Counters: `candidateCount 10`, `blockedByGateFBOwnerRejectionRows 2`,
+`blockedHeavyCoreOwnerRejectedRows 1`, `closedRepeatRows 5`,
+`estimatedNextTargetedHoldoutLedgers 3`,
+`floorResidualLedgersSelected 3`, `immediateRuntimeCandidatesSelected
+0`, `broadSourceCrawlSelected false`, `newCalculableLayerTemplates 0`,
+`newCalculableRequestShapes 0`, `runtimeBasisPromotions 0`,
+`runtimeFormulaRetunes 0`, `runtimeValuesMoved 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Latest landed no-runtime opening/leak common wall owner closeout:
+`post_v1_opening_leak_common_wall_same_basis_residual_owner_gate_fb_plan`
+with status
+`post_v1_opening_leak_common_wall_same_basis_residual_owner_gate_fb_landed_no_runtime_owner_rejected_selected_next_numeric_coverage_gap_gate_fc`.
+Gate FB owner rejected:
+`wall.opening_leak_common_wall.same_basis_residual_owner_rejected_missing_holdouts`.
+Gate FB rejected runtime budget tightening for
+`wall.opening_leak_common_wall_same_basis_residual_owner_gap_after_gate_ey_owner_rejection_closeout`
+because source-owned same-basis holdouts are absent for opening/leak
+field, opening/leak building, opening/leak A-weighted, and common wall
+building residuals. Field/building/A-weighted values and budgets remain
+frozen: field `8`, building `10`, A-weighted field `9`, and A-weighted
+building `11`. Gate FB selected Gate FC:
+`post_v1_next_numeric_coverage_gap_gate_fc_plan`
+in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-fc-contract.test.ts`.
+Counters: `ownerLedgersRejected 5`, `sameBasisHoldoutLedgersMissing 5`,
+`boundaryLedgersPinned 7`, `runtimeBudgetTighteningAdmitted 0`,
+`newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+`runtimeBasisPromotions 0`, `runtimeFormulaRetunes 0`,
+`runtimeValuesMoved 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+
+Latest landed no-runtime current coverage/accuracy gap ledger:
+`post_v1_current_coverage_accuracy_gap_ledger_gate_fa_plan`
+with status
+`post_v1_current_coverage_accuracy_gap_ledger_gate_fa_landed_no_runtime_selected_opening_leak_common_wall_same_basis_residual_owner_gate_fb`.
+Gate FA selected
+`wall.opening_leak_common_wall_same_basis_residual_owner_gap_after_gate_ey_owner_rejection_closeout`.
+Gate FA re-read current implementation after Gate EY/EZ: opening/leak
+field/building and A-weighted runtime rows are live, but they remain
+source-absent with wide budgets; Gate CL also left the common wall
+building residual and opening/leak residuals without same-basis
+holdouts. Gate FA selected Gate FB, a no-runtime same-basis residual
+owner proof:
+`post_v1_opening_leak_common_wall_same_basis_residual_owner_gate_fb_plan`
+in
+`packages/engine/src/post-v1-opening-leak-common-wall-same-basis-residual-owner-gate-fb-contract.test.ts`.
+Counters: `ledgerRows 11`, `candidateCount 11`, `ownerGapRows 1`,
+`runtimeCandidateRowsHeldBehindOwner 2`, `closedRepeatRows 5`,
+`blockedHeavyCoreOwnerRejectedRows 1`, `blockedNonGoalRows 1`,
+`estimatedNextOwnerLedgers 1`,
+`estimatedNextRuntimeCandidateFamiliesAfterOwner 2`,
+`estimatedNextBoundaryLedgers 3`, `newCalculableLayerTemplates 0`,
+`newCalculableRequestShapes 0`, `runtimeBasisPromotions 0`,
+`runtimeFormulaRetunes 0`, `runtimeValuesMoved 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Latest landed no-runtime numeric coverage/accuracy rerank:
+`post_v1_next_numeric_coverage_gap_gate_ez_plan`
+with status
+`post_v1_next_numeric_coverage_gap_gate_ez_landed_no_runtime_selected_current_coverage_accuracy_gap_ledger_gate_fa`.
+Gate EZ selected
+`calculator.current_coverage_accuracy_gap_ledger_after_gate_ey_owner_rejection_closeout`.
+Gate EY left the heavy-core / lined-massive owner rejected: MWI.2A and
+B226010 remain targeted evidence context only, not runtime owners. Gate
+EZ therefore selects Gate FA, a fresh current coverage/accuracy gap
+ledger, instead of heavy-core retune, opening/leak holdout tightening
+without a current owner ledger, closed repeats, broad source crawling,
+confidence wording, or frontend polish. Gate EZ selects Gate FA:
+`post_v1_current_coverage_accuracy_gap_ledger_gate_fa_plan`
+in
+`packages/engine/src/post-v1-current-coverage-accuracy-gap-ledger-gate-fa-contract.test.ts`.
+Counters: `candidateCount 10`, `roiAnalysisIterations: 2`,
+`estimatedNextGapLedgers 1`, `estimatedNextBoundaryLedgers 2`,
+`estimatedNextRuntimeCandidateFamiliesToEvaluate 6`,
+`heavyCoreLinedMassiveRuntimeStillBlocked true`,
+`broadSourceCrawlSelected false`, `newCalculableLayerTemplates 0`,
+`newCalculableRequestShapes 0`, `runtimeBasisPromotions 0`,
+`runtimeFormulaRetunes 0`, `runtimeValuesMoved 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Previous landed no-runtime targeted evidence action:
+`post_v1_wall_heavy_core_lined_massive_targeted_evidence_acquisition_gate_ey_plan`
+with status
+`post_v1_wall_heavy_core_lined_massive_targeted_evidence_acquisition_gate_ey_landed_no_runtime_owner_remains_rejected_selected_next_numeric_coverage_gap_gate_ez`.
+Gate EY decision:
+`wall.heavy_core_lined_massive.targeted_evidence_acquired_owner_still_rejected_no_runtime_admissible_row_or_rule`.
+Gate EY accepted MWI.2A and B226010 only as targeted wall-specific
+evidence contexts. The owner remains rejected because neither context is
+runtime-admissible for the live generic heavy-core / lined-massive
+route, and no bounded wall lining rule with coefficient scope, local
+tolerance, holdouts, and negative boundaries was accepted. This is not a
+broad source crawl. Gate DG `bounded_prediction` values remain frozen.
+Gate EY selects Gate EZ:
+`post_v1_next_numeric_coverage_gap_gate_ez_plan`
+in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ez-contract.test.ts`.
+Counters: `targetedEvidenceLedgers 6`,
+`acceptedTargetedEvidenceLedgers 2`,
+`runtimeAdmissibleEvidenceLedgers 0`,
+`acceptedBoundedWallLiningRules 0`,
+`calibrationOwnerRemainsRejected true`,
+`broadSourceCrawlSelected false`, `newCalculableLayerTemplates 0`,
+`newCalculableRequestShapes 0`, `runtimeBasisPromotions 0`,
+`runtimeFormulaRetunes 0`, `runtimeValuesMoved 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Previous landed no-runtime numeric coverage/accuracy rerank:
+`post_v1_next_numeric_coverage_gap_gate_ex_plan`
+with status
+`post_v1_next_numeric_coverage_gap_gate_ex_landed_no_runtime_selected_wall_heavy_core_lined_massive_targeted_evidence_acquisition_gate_ey`.
+Gate EX selects
+`wall.heavy_core_lined_massive_targeted_evidence_acquisition_after_owner_rejection`.
+This is targeted evidence acquisition, not a broad source crawl: Gate EY
+must look only for a wall-specific lined concrete or heavy-masonry source
+row, or a bounded wall lining rule with coefficient scope, local
+tolerance, holdouts, and negative boundaries. Current Gate DG
+`bounded_prediction` values remain frozen. Gate EX selects Gate EY:
+`post_v1_wall_heavy_core_lined_massive_targeted_evidence_acquisition_gate_ey_plan`
+in
+`packages/engine/src/post-v1-wall-heavy-core-lined-massive-targeted-evidence-acquisition-gate-ey-contract.test.ts`.
+Counters: `candidateCount 10`, `roiAnalysisIterations 2`,
+`targetedEvidenceAcquisitionSelected true`,
+`broadSourceCrawlSelected false`, `newCalculableLayerTemplates 0`,
+`newCalculableRequestShapes 0`, `runtimeBasisPromotions 0`,
+`runtimeFormulaRetunes 0`, `runtimeValuesMoved 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Previous landed no-runtime calibration owner proof:
 `post_v1_wall_heavy_core_lined_massive_calibration_owner_gate_ew_plan`
 with status
 `post_v1_wall_heavy_core_lined_massive_calibration_owner_gate_ew_landed_no_runtime_owner_rejected_selected_next_numeric_coverage_gap_gate_ex`.
@@ -5876,7 +6129,7 @@ plan.
   steel suspended-ceiling `DeltaLw` from silent unsupported to precise
   `needs_input`, and normalizes the heavy-floating floor matrix origin
   away from hidden `screening_fallback`.
-  Current selected next action:
+  Historical selected next action:
   `company_internal_steel_suspended_ceiling_delta_lw_runtime_corridor_plan`.
   Current selected next file:
   `packages/engine/src/company-internal-steel-suspended-ceiling-delta-lw-runtime-corridor-contract.test.ts`.
@@ -5889,7 +6142,7 @@ plan.
   while missing `toppingOrFloatingLayer` blocks the formula instead of
   fabricating a broad fallback. Selection status:
   `company_internal_steel_suspended_ceiling_delta_lw_runtime_corridor_landed_selected_surface_parity`.
-  Current selected next action:
+  Historical selected next action:
   `company_internal_steel_suspended_ceiling_delta_lw_surface_parity_plan`.
   Current selected next file:
   `packages/engine/src/company-internal-steel-suspended-ceiling-delta-lw-surface-parity-contract.test.ts`.
@@ -5902,7 +6155,7 @@ plan.
   `steel_suspended_ceiling_lower_reference`, and source-absent
   `+/-4.5 dB` / `+/-2.0 dB` budget posture. Selection status:
   `company_internal_steel_suspended_ceiling_delta_lw_surface_parity_landed_selected_matrix_v3_refresh`.
-  Current selected next action:
+  Historical selected next action:
   `company_internal_calculation_grade_mainline_matrix_v3_refresh_after_steel_delta_lw_surface_parity_plan`.
   Current selected next file:
   `packages/engine/src/company-internal-calculation-grade-mainline-matrix-v3-contract.test.ts`.
@@ -5991,7 +6244,7 @@ plan.
   owners return `runtime_owner_missing`, and ASTM/element-lab requests
   stay outside this adapter. Selection status:
   `company_internal_opening_leak_building_adapter_owner_contract_landed_no_runtime_selected_runtime_corridor`.
-  Current selected next action:
+  Historical selected next action:
   `company_internal_opening_leak_building_runtime_corridor_plan`.
   Current selected next file:
   `packages/engine/src/company-internal-opening-leak-building-runtime-corridor-contract.test.ts`.
@@ -6050,7 +6303,7 @@ plan.
   duplicate openings fail closed, and lab context does not set the
   field/building adapter boundary. Selection status:
   `company_internal_opening_leak_building_input_surface_landed_selected_matrix_v5_refresh`.
-  Current selected next action:
+  Historical selected next action:
   `company_internal_calculation_grade_mainline_matrix_v5_refresh_after_opening_leak_building_input_surface_plan`.
   Current selected next file:
   `packages/engine/src/company-internal-calculation-grade-mainline-matrix-v5-contract.test.ts`.
@@ -6104,7 +6357,7 @@ plan.
   unsupported until the runtime corridor lands. Formula corridor
   selection status:
   `company_internal_opening_leak_a_weighted_spectrum_adapter_formula_corridor_landed_no_runtime_selected_runtime_corridor`.
-  Current selected next action:
+  Historical selected next action:
   `company_internal_opening_leak_a_weighted_spectrum_adapter_runtime_corridor_plan`.
   Current selected next file:
   `packages/engine/src/company-internal-opening-leak-a-weighted-spectrum-adapter-runtime-corridor-contract.test.ts`.

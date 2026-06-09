@@ -35,6 +35,7 @@ export * from "./post-v1-next-numeric-coverage-gap-gate-bg";
 export * from "./post-v1-next-numeric-coverage-gap-gate-bm";
 export * from "./post-v1-next-numeric-coverage-gap-gate-ep";
 export * from "./post-v1-next-numeric-coverage-gap-gate-es";
+export * from "./post-v1-current-formula-scope-accuracy-gap-ledger-gate-ff";
 export * from "./post-v1-wall-direct-fixed-double-leaf-field-building-adapter-owner-gate-eq";
 export * from "./post-v1-wall-direct-fixed-double-leaf-field-building-adapter-runtime-gate-er";
 export * from "./post-v1-floor-reinforced-concrete-visible-derived-missing-input-boundary-gate-et";
