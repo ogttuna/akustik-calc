@@ -23,6 +23,13 @@ confidence wording, finite scenarios, report polish, auth/storage, and
 generic UI work are not calculator progress unless an executable
 numeric/correctness gate explicitly selects them.
 
+Practical capability rule: missing measured rows are expected. Use exact
+owned data when available, use proven anchors/similarity only inside
+their owned basis, and otherwise calculate through dynamic formulas with
+route-required physical inputs. If the route lacks required inputs or an
+owned metric basis, stop as `needs_input` or `unsupported` instead of
+inventing a value.
+
 Latest landed checkpoint record:
 
 [CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md](./CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md)

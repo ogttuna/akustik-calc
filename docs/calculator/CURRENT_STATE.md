@@ -5,6 +5,13 @@ the calculator surface. For product goal and next-slice rules, read
 [CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md) first;
 it wins over historical selected-next chains.
 
+Read this snapshot through the calculator capability lens: the goal is
+broader and more accurate dynamic calculation for physically valid layer
+combinations. Exact measured rows and owned anchors are preferred when
+available, but most combinations will be calculated by formula routes
+with route-required physical inputs. Missing measured rows are not, by
+themselves, implementation blockers.
+
 Current read map:
 
 - active tactical slice:

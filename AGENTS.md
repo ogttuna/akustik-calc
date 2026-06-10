@@ -29,6 +29,24 @@ low-confidence wording, UX polish, auth/storage, report polish, or
 other non-calculator work unless the user explicitly asks for that work
 and it is separated from calculator behavior.
 
+Capability means the engine can answer layer combinations the user
+actually builds, not that the repo contains every possible measured
+assembly. The normal answer order is:
+
+1. use an owned exact measured/source row when one exists;
+2. use an owned anchor, similarity, or same-basis measured path only when
+   its metric basis, construction family, and boundaries are proven;
+3. otherwise calculate through the best owned dynamic formula route using
+   the layer stack and route-required physical inputs;
+4. return precise `needs_input` or `unsupported` when the required
+   physical inputs, owner, metric basis, or route boundary is missing.
+
+A missing measured value is expected for most layer combinations; it is
+not a reason to build a source-row catalog or finite scenario library.
+Source research is acceptable only when a selected calculator route names
+the needed evidence, such as an exact row, calibration anchor, bounded
+rule, or holdout set that can improve formula scope or accuracy.
+
 ## Wall Family Classification Guard
 
 Before changing wall Auto family selection, remember the thick-board

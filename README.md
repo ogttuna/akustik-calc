@@ -49,6 +49,13 @@ select the next calculator slice. The checkpoint and thick-board safety
 plan are landed records; they preserve boundaries but do not replace the
 current post double-leaf revalidation selected next action.
 
+Calculator north star: broaden and improve the dynamic acoustic engine.
+Measured rows are preferred when owned, but they will never cover every
+layer combination. New calculator work must either let more physically
+valid layer stacks calculate owned outputs from formulas and required
+inputs, or make an existing route more accurate without weakening metric
+basis, `needs_input`, or `unsupported` boundaries.
+
 Latest calculator formula scope ledger:
 
 - `post_v1_current_formula_scope_accuracy_gap_ledger_gate_ff_plan`

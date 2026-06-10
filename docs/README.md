@@ -20,6 +20,12 @@ better bounded. Do not treat source inventory, confidence wording,
 finite scenarios, report polish, auth/storage, or generic UI work as
 calculator progress unless an executable numeric/correctness gate
 explicitly selects it.
+The expected answer path is exact owned measurement first, then an owned
+anchor or similarity transfer on the same basis, then a dynamic formula
+route with route-required physical inputs, and finally a precise
+`needs_input` / `unsupported` boundary. Missing measured rows are normal
+for an acoustic calculator and should drive formula capability work, not
+source-catalog work.
 
 Then read
 [calculator/USABLE_V1_EXECUTION_PLAN.md](./calculator/USABLE_V1_EXECUTION_PLAN.md)

@@ -11,6 +11,36 @@ If this file conflicts with an older checkpoint, slice plan, roadmap, or
 "selected next" handoff, this file wins. Historical files remain useful
 for facts about what landed, but they do not select the next work.
 
+## Product Mission And Slice Filter
+
+DynEcho is being built to become an industry-grade acoustic calculator.
+The product value is not a large library of measured constructions; it is
+the ability to take arbitrary physically valid wall, floor, and ceiling
+layer combinations, ask for the route-required physical inputs, and
+calculate defensible acoustic outputs.
+
+The engine should answer in this order:
+
+1. exact owned measured/source rows when they exist;
+2. owned anchors, similarity transfers, or same-basis measured paths when
+   their metric basis and boundaries are proven;
+3. dynamic formula routes using the layer stack and route-required
+   physical inputs;
+4. precise `needs_input` or `unsupported` stops when calculation
+   ownership is missing.
+
+A missing measured row is normal. Infinite layer combinations are the
+reason the dynamic calculator exists, so broad source crawling, finite
+scenario packs, confidence wording, report polish, auth/storage, and UI
+polish are not calculator capability work unless a selected numeric or
+boundary gate explicitly makes them necessary.
+
+Before selecting or implementing a slice, state the route family,
+target outputs, required physical inputs, expected scope or accuracy
+movement, and the `needs_input` / `unsupported` / metric-basis boundaries
+that must stay pinned. If that cannot be stated, the slice is not ready
+to move calculator behavior.
+
 ## Current Work Navigation
 
 For a new calculator-engine turn, read the living docs in this order:

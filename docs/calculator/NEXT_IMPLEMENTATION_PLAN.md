@@ -14,6 +14,24 @@ For the binding company-internal usable V1 finish plan read
 following older selected-next handoffs. If this active slice conflicts
 with that file, the usable V1 execution plan wins.
 
+## Active Slice Capability Filter
+
+The active slice must serve the calculator mission: expand the set of
+physically valid layer combinations that can calculate owned acoustic
+outputs, or improve the correctness/bounds of an existing calculable
+route. For every implementation step, keep the answer order explicit:
+exact owned measured row first, then owned anchor/similarity path, then
+dynamic formula route with route-required physical inputs, then
+`needs_input` / `unsupported` when the route is not owned.
+
+Do not interpret missing measured assemblies as a blocker or as a reason
+to collect all possible combinations. The selected work should name a
+bounded route family, target metrics, required physical inputs, expected
+scope/accuracy movement, and the boundaries that must stay unchanged.
+If a candidate cannot name those things, it belongs in a rerank,
+owner-proof, evidence-targeting, or stopped-boundary state rather than a
+runtime value-moving slice.
+
 Active slice status: usable V1 is closed for the current tested
 company-internal envelope. The post-V1 calculator-capability chain has
 advanced through Gate FF. Gate FF is the latest no-runtime formula
