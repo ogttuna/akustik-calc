@@ -93,12 +93,12 @@ describe("post-V1 wall compatible anchor-delta Gate D", () => {
       const result = calculateAssembly(layers, {
         airborneContext: EXACT_LSF_LAB_CONTEXT,
         calculator: "dynamic",
-        targetOutputs: WALL_LAB_OUTPUTS
+        targetOutputs: ["Rw"]
       });
 
       expect(result.metrics.estimatedRwDb).toBe(57);
       expect(result.supportedTargetOutputs).toEqual(["Rw"]);
-      expect(result.unsupportedTargetOutputs).toEqual(["STC", "C", "Ctr"]);
+      expect(result.unsupportedTargetOutputs).toEqual([]);
       expect(result.airborneBasis).toMatchObject({
         anchorSourceId: "knauf_lab_416889_primary_2026",
         errorBudgetDb: 5,
@@ -120,9 +120,6 @@ describe("post-V1 wall compatible anchor-delta Gate D", () => {
         valuePins: [{ metric: "Rw", value: 57 }]
       });
       expect(result.warnings).toContain(POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_WARNING);
-      expect(result.warnings.some((warning: string) =>
-        /kept STC, C, Ctr out of the anchored answer/i.test(warning)
-      )).toBe(true);
     }
   });
 

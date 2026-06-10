@@ -62,8 +62,16 @@ import { calculateDynamicAirborneResult } from "./dynamic-airborne";
 import { PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AY_RUNTIME_METHOD } from "./gate-ay-advanced-wall-runtime-constants";
 import { GATE_L_AIRBORNE_BUILDING_PREDICTION_BOUNDARY_WARNING } from "./dynamic-airborne-gate-l-building-prediction-boundary";
 import { GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING } from "./dynamic-airborne-gate-n-building-prediction-runtime-adapter";
-import { GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD } from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
-import { GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD } from "./dynamic-airborne-gate-i-airborne-field-context";
+import {
+  GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
+  GATE_AR_AIRBORNE_BUILDING_PREDICTION_WARNING,
+  maybeBuildGateARAirborneBuildingPredictionBasisFromBase
+} from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
+import {
+  GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD,
+  GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING,
+  maybeBuildGateIAirborneFieldContextBasisFromBase
+} from "./dynamic-airborne-gate-i-airborne-field-context";
 import { GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_RUNTIME_METHOD } from "./dynamic-airborne-gate-s-double-leaf-framed";
 import { GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD } from "./dynamic-airborne-gate-h-lined-masonry-clt";
 import { COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_RUNTIME_METHOD } from "./dynamic-airborne-company-internal-heavy-composite-wall";
@@ -226,7 +234,14 @@ import {
   maybeBuildBroadAccuracyWallTripleLeafLocalSubstitutionLabSpectrumAdapter
 } from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-lab-spectrum-adapter";
 import {
-  maybeBuildPostV1WallCompatibleAnchorDelta
+  buildPostV1WallCompatibleAnchorDeltaDirectCurveBasis,
+  maybeBuildPostV1WallCompatibleAnchorDeltaLabCompanionBasis,
+  maybeBuildPostV1WallCompatibleAnchorDelta,
+  POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_A_WEIGHTED_FIELD_BUILDING_ADAPTER_WARNING,
+  POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_FIELD_BUILDING_ADAPTER_WARNING,
+  POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_WARNING,
+  POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LSF_SOURCE_ID,
+  POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_WARNING
 } from "./post-v1-wall-compatible-anchor-delta";
 import { inferSafeFlatWallAutoTopology } from "./wall-flat-multicavity-auto-topology";
 
@@ -258,6 +273,88 @@ const GATE_W_FLOOR_IMPACT_OUTPUTS = new Set<RequestedOutputId>([
 const GATE_Z_FIELD_IMPACT_OUTPUTS = new Set<RequestedOutputId>(["L'n,w", "L'nT,w", "L'nT,50"]);
 const GATE_Z_RUNTIME_READY_FIELD_IMPACT_OUTPUTS = new Set<RequestedOutputId>(["L'n,w", "L'nT,w", "L'nT,50"]);
 const GATE_Z_LOW_FREQUENCY_OWNER = "lowFrequencyImpactSpectrumOrCI50_2500Owner";
+const WALL_COMPATIBLE_ANCHOR_DELTA_FIELD_BUILDING_BASE_OUTPUTS = new Set<RequestedOutputId>([
+  "R'w",
+  "Dn,w",
+  "DnT,w"
+]);
+const WALL_COMPATIBLE_ANCHOR_DELTA_FIELD_A_WEIGHTED_OUTPUTS = new Set<RequestedOutputId>(["Dn,A", "DnT,A"]);
+const WALL_COMPATIBLE_ANCHOR_DELTA_BUILDING_A_WEIGHTED_OUTPUTS = new Set<RequestedOutputId>(["Dn,A", "DnT,A"]);
+const WALL_COMPATIBLE_ANCHOR_DELTA_FIELD_BUILDING_REQUEST_OUTPUTS = new Set<RequestedOutputId>([
+  ...WALL_COMPATIBLE_ANCHOR_DELTA_FIELD_BUILDING_BASE_OUTPUTS,
+  ...WALL_COMPATIBLE_ANCHOR_DELTA_FIELD_A_WEIGHTED_OUTPUTS
+]);
+
+function hasWallCompatibleAnchorDeltaFieldBuildingTargetOutput(
+  targetOutputs: readonly RequestedOutputId[]
+): boolean {
+  return targetOutputs.some((output) => WALL_COMPATIBLE_ANCHOR_DELTA_FIELD_BUILDING_REQUEST_OUTPUTS.has(output));
+}
+
+function getWallCompatibleAnchorDeltaFieldBuildingOwnedOutputs(
+  adapterBasis: AirborneResultBasis | null | undefined
+): Set<RequestedOutputId> {
+  if (!adapterBasis) {
+    return new Set();
+  }
+
+  const aWeightedScopeAllowed =
+    adapterBasis.anchorSourceId === POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LSF_SOURCE_ID;
+
+  if (adapterBasis.method === GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD) {
+    return new Set([
+      ...WALL_COMPATIBLE_ANCHOR_DELTA_FIELD_BUILDING_BASE_OUTPUTS,
+      ...(aWeightedScopeAllowed ? WALL_COMPATIBLE_ANCHOR_DELTA_FIELD_A_WEIGHTED_OUTPUTS : [])
+    ]);
+  }
+
+  if (adapterBasis.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD) {
+    return new Set([
+      ...WALL_COMPATIBLE_ANCHOR_DELTA_FIELD_BUILDING_BASE_OUTPUTS,
+      ...(aWeightedScopeAllowed ? WALL_COMPATIBLE_ANCHOR_DELTA_BUILDING_A_WEIGHTED_OUTPUTS : [])
+    ]);
+  }
+
+  return new Set(WALL_COMPATIBLE_ANCHOR_DELTA_FIELD_BUILDING_BASE_OUTPUTS);
+}
+
+function getWallCompatibleAnchorDeltaFieldBuildingUnsupportedOutputs(input: {
+  adapterBasis: AirborneResultBasis | null | undefined;
+  supportedTargetOutputs: readonly RequestedOutputId[];
+}): RequestedOutputId[] {
+  if (!input.adapterBasis) {
+    return [];
+  }
+
+  const ownedOutputs = getWallCompatibleAnchorDeltaFieldBuildingOwnedOutputs(input.adapterBasis);
+  return input.supportedTargetOutputs.filter((output) => !ownedOutputs.has(output));
+}
+
+function getWallCompatibleAnchorDeltaFieldBuildingAWeightedSupportedOutputs(input: {
+  adapterBasis: AirborneResultBasis | null | undefined;
+  supportedTargetOutputs: readonly RequestedOutputId[];
+}): RequestedOutputId[] {
+  if (!input.adapterBasis) {
+    return [];
+  }
+
+  const ownedOutputs = getWallCompatibleAnchorDeltaFieldBuildingOwnedOutputs(input.adapterBasis);
+  return input.supportedTargetOutputs.filter(
+    (output) =>
+      ownedOutputs.has(output) &&
+      (
+        WALL_COMPATIBLE_ANCHOR_DELTA_FIELD_A_WEIGHTED_OUTPUTS.has(output) ||
+        WALL_COMPATIBLE_ANCHOR_DELTA_BUILDING_A_WEIGHTED_OUTPUTS.has(output)
+      )
+  );
+}
+
+function describeWallCompatibleAnchorDeltaFieldBuildingOwnedOutputs(
+  adapterBasis: AirborneResultBasis | null | undefined
+): string {
+  const ownedOutputs = [...getWallCompatibleAnchorDeltaFieldBuildingOwnedOutputs(adapterBasis)];
+  return ownedOutputs.length > 0 ? ownedOutputs.join(", ") : "no field/building outputs";
+}
 const GATE_AR_AIRBORNE_BUILDING_PREDICTION_LAB_ALIAS_OUTPUTS = new Set<RequestedOutputId>([
   "C",
   "Ctr",
@@ -3727,24 +3824,85 @@ export function calculateAssembly(
     airborneContext,
     airborneOverlayResult.overlay?.fieldFlankingPenaltyDb ?? 0
   );
+  const compatibleAnchorDeltaFieldBuildingRequest = Boolean(
+    options.calculator === "dynamic" &&
+      airborneContext?.contextMode &&
+      airborneContext.contextMode !== "element_lab" &&
+      hasWallCompatibleAnchorDeltaFieldBuildingTargetOutput(targetOutputs)
+  );
+  const compatibleAnchorDeltaLookupContext =
+    compatibleAnchorDeltaFieldBuildingRequest && airborneContext
+      ? {
+          ...airborneContext,
+          contextMode: "element_lab" as const
+        }
+      : airborneContext;
+  const compatibleAnchorDeltaDirectCurve = compatibleAnchorDeltaFieldBuildingRequest
+    ? selectedCalculatorCurve
+    : verifiedAirborneAnchorResult.curve;
+  const compatibleAnchorDeltaDirectRatings = compatibleAnchorDeltaFieldBuildingRequest
+    ? buildRatingsFromCurve(
+        compatibleAnchorDeltaDirectCurve.frequenciesHz,
+        compatibleAnchorDeltaDirectCurve.transmissionLossDb,
+        compatibleAnchorDeltaLookupContext
+      )
+    : verifiedAirborneAnchorResult.ratings;
   const compatibleWallAnchorDeltaResult = maybeBuildPostV1WallCompatibleAnchorDelta({
-    context: airborneContext,
-    curve: verifiedAirborneAnchorResult.curve,
+    context: compatibleAnchorDeltaLookupContext,
+    curve: compatibleAnchorDeltaDirectCurve,
     exactFullStackApplied: verifiedAirborneAnchorResult.applied,
     layers: resolvedLayers,
-    ratings: verifiedAirborneAnchorResult.ratings,
+    ratings: compatibleAnchorDeltaDirectRatings,
     targetOutputs
   });
+  const compatibleWallAnchorDeltaFieldBuildingOverlayResult =
+    compatibleAnchorDeltaFieldBuildingRequest && compatibleWallAnchorDeltaResult.applied
+      ? applyAirborneContextOverlay(
+          compatibleWallAnchorDeltaResult.curve,
+          airborneResolvedLayers,
+          airborneContext
+        )
+      : null;
+  const compatibleWallAnchorDeltaDirectCurveBasis =
+    compatibleWallAnchorDeltaResult.applied && compatibleWallAnchorDeltaFieldBuildingOverlayResult
+      ? buildPostV1WallCompatibleAnchorDeltaDirectCurveBasis({
+          family: dynamicAirborneResult?.trace.detectedFamily,
+          result: compatibleWallAnchorDeltaResult
+        })
+      : null;
+  const compatibleWallAnchorDeltaFrequencyBands = compatibleWallAnchorDeltaDirectCurveBasis
+    ? {
+        bandSet: "post_v1_wall_compatible_anchor_delta_field_building_adapter_curve",
+        frequenciesHz: [...compatibleWallAnchorDeltaResult.curve.frequenciesHz]
+      }
+    : undefined;
+  const compatibleWallAnchorDeltaFieldBuildingBasis =
+    compatibleWallAnchorDeltaDirectCurveBasis && airborneContext?.contextMode === "field_between_rooms"
+      ? maybeBuildGateIAirborneFieldContextBasisFromBase({
+          baseBasis: compatibleWallAnchorDeltaDirectCurveBasis,
+          context: airborneContext,
+          family: dynamicAirborneResult?.trace.detectedFamily,
+          frequencyBands: compatibleWallAnchorDeltaFrequencyBands
+        })
+      : compatibleWallAnchorDeltaDirectCurveBasis && airborneContext?.contextMode === "building_prediction"
+        ? maybeBuildGateARAirborneBuildingPredictionBasisFromBase({
+            baseBasis: compatibleWallAnchorDeltaDirectCurveBasis,
+            context: airborneContext,
+            family: dynamicAirborneResult?.trace.detectedFamily,
+            frequencyBands: compatibleWallAnchorDeltaFrequencyBands,
+            sourceDescription: "the compatible measured-anchor delta direct curve"
+          })
+        : null;
   const approximateAirborneFieldCompanionResult = applyApproximateAirborneFieldCompanion(
     verifiedAirborneAnchorResult.ratings,
     airborneResolvedLayers,
     airborneContext
   );
   const curve = compatibleWallAnchorDeltaResult.applied
-    ? compatibleWallAnchorDeltaResult.curve
+    ? compatibleWallAnchorDeltaFieldBuildingOverlayResult?.curve ?? compatibleWallAnchorDeltaResult.curve
     : verifiedAirborneAnchorResult.curve;
   const ratings = compatibleWallAnchorDeltaResult.applied
-    ? compatibleWallAnchorDeltaResult.ratings
+    ? compatibleWallAnchorDeltaFieldBuildingOverlayResult?.ratings ?? compatibleWallAnchorDeltaResult.ratings
     : approximateAirborneFieldCompanionResult.ratings;
   const adjustedEstimatedRwDb = Math.max(
     0,
@@ -4196,7 +4354,13 @@ export function calculateAssembly(
   const ratingsWithFloorAirborneBuildingPredictionRuntime =
     floorAirborneBuildingPredictionRuntime?.ratings ?? ratingsWithOpeningLeakFieldBuildingRuntime;
   const visibleAirborneOverlay =
-    floorAirborneBuildingPredictionRuntime?.overlay ?? airborneOverlayResult.overlay;
+    floorAirborneBuildingPredictionRuntime?.overlay ??
+    compatibleWallAnchorDeltaFieldBuildingOverlayResult?.overlay ??
+    airborneOverlayResult.overlay;
+  const visibleAirborneOverlayWarnings =
+    floorAirborneBuildingPredictionRuntime?.warnings ??
+    compatibleWallAnchorDeltaFieldBuildingOverlayResult?.warnings ??
+    airborneOverlayResult.warnings;
   const visibleEstimatedRwDbWithFieldBuildingRuntime =
     floorAirborneBuildingPredictionRuntime?.directRwDb ??
     visibleEstimatedRwDbWithOpeningLeakFieldBuildingRuntime;
@@ -4309,6 +4473,16 @@ export function calculateAssembly(
           strategy: dynamicAirborneResult?.trace.strategy,
           targetOutputs: targetOutputSupportWithGateYCltCtr.targetOutputs,
           transmissionLossCurve: curve
+        })
+      : null;
+  const compatibleWallAnchorDeltaLabCompanionBasis =
+    options.calculator === "dynamic"
+      ? maybeBuildPostV1WallCompatibleAnchorDeltaLabCompanionBasis({
+          airborneContext,
+          dynamicFamily: dynamicAirborneResult?.trace.detectedFamily,
+          result: compatibleWallAnchorDeltaResult,
+          strategy: dynamicAirborneResult?.trace.strategy,
+          targetOutputs: targetOutputSupportWithGateYCltCtr.targetOutputs
         })
       : null;
   const gateDXExactSourceFamilyFieldContextBasis =
@@ -4446,10 +4620,18 @@ export function calculateAssembly(
           ? {
               airborneBasis: companyInternalOpeningLeakFieldBuildingRuntime.basis,
               detectedFamily: dynamicAirborneResult?.trace.detectedFamily,
-              runtimeValueMovement:
-                companyInternalOpeningLeakFieldBuildingRuntime.status === "runtime_corridor_promoted",
+          runtimeValueMovement:
+            companyInternalOpeningLeakFieldBuildingRuntime.status === "runtime_corridor_promoted",
+          selectedMethod: dynamicAirborneResult?.trace.selectedMethod,
+          strategy: dynamicAirborneResult?.trace.strategy ?? "company_internal_opening_leak_field_building_adapter"
+        }
+          : compatibleWallAnchorDeltaFieldBuildingBasis
+          ? {
+              airborneBasis: compatibleWallAnchorDeltaFieldBuildingBasis,
+              detectedFamily: dynamicAirborneResult?.trace.detectedFamily ?? "stud_wall_system",
+              runtimeValueMovement: true,
               selectedMethod: dynamicAirborneResult?.trace.selectedMethod,
-              strategy: dynamicAirborneResult?.trace.strategy ?? "company_internal_opening_leak_field_building_adapter"
+              strategy: "compatible_anchor_delta_field_building_adapter"
             }
           : dynamicAirborneResult
           ? {
@@ -4458,6 +4640,7 @@ export function calculateAssembly(
                 gateYCltMassTimberCtrSpectrumAdapterBasis ??
                 gateDTMasonryExactRwCompanionBasis ??
                 gateDVLsfExactRwCompanionBasis ??
+                compatibleWallAnchorDeltaLabCompanionBasis ??
                 gateDXExactSourceFamilyFieldContextBasis ??
                 dynamicAirborneResult.airborneBasis,
               detectedFamily: dynamicAirborneResult.trace.detectedFamily,
@@ -4561,6 +4744,16 @@ export function calculateAssembly(
       resolution: dynamicCandidateResolverRuntime?.resolution,
       supportedTargetOutputs: targetOutputSupport.supportedTargetOutputs
     });
+  const compatibleAnchorDeltaFieldBuildingUnsupportedOutputs =
+    getWallCompatibleAnchorDeltaFieldBuildingUnsupportedOutputs({
+      adapterBasis: compatibleWallAnchorDeltaFieldBuildingBasis,
+      supportedTargetOutputs: targetOutputSupport.supportedTargetOutputs
+    });
+  const compatibleAnchorDeltaAWeightedSupportedOutputs =
+    getWallCompatibleAnchorDeltaFieldBuildingAWeightedSupportedOutputs({
+      adapterBasis: compatibleWallAnchorDeltaFieldBuildingBasis,
+      supportedTargetOutputs: targetOutputSupport.supportedTargetOutputs
+    });
   const exactMeasuredFloorMetricUnsupportedOutputs =
     getAnswerEngineV1ExactFloorMetricUnsupportedOutputs({
       floorSystemMatch,
@@ -4633,8 +4826,11 @@ export function calculateAssembly(
   const visibleTargetOutputSupportWithExactMetricScope = moveSupportedOutputsToUnsupported(
     moveSupportedOutputsToUnsupported(
       moveSupportedOutputsToUnsupported(
-        visibleTargetOutputSupport,
-        exactMeasuredSourceMetricUnsupportedOutputs
+        moveSupportedOutputsToUnsupported(
+          visibleTargetOutputSupport,
+          exactMeasuredSourceMetricUnsupportedOutputs
+        ),
+        compatibleAnchorDeltaFieldBuildingUnsupportedOutputs
       ),
       anchoredDeltaMetricUnsupportedOutputs
     ),
@@ -4720,18 +4916,21 @@ export function calculateAssembly(
       runtime: openBoxFinishedPackageFloorAirborneBuildingPredictionRuntime,
       support: visibleTargetOutputSupportWithExactMetricScope
     });
-  const visibleTargetOutputSupportWithPostV1Companions = moveUnsupportedOutputsToSupported(
-    visibleTargetOutputSupportWithExactMetricScope,
-    [
-      ...new Set([
-        ...postV1WallFramedCalibrationLabSpectrumCompanionOutputs,
-        ...postV1WallSourceAbsentBuildingLabSpectrumCompanionOutputs,
-        ...postV1WallHeavyCompositeBuildingLabSpectrumCompanionOutputs,
-        ...postV1GateARBuildingLabSpectrumCompanionOutputs,
-        ...postV1OpenBoxFinishedPackageBuildingLabCompanionOutputs,
-        ...postV1OpenBoxFinishedPackageBuildingImpactCompanionOutputs
-      ])
-    ]
+  const visibleTargetOutputSupportWithPostV1Companions = moveSupportedOutputsToUnsupported(
+    moveUnsupportedOutputsToSupported(
+      visibleTargetOutputSupportWithExactMetricScope,
+      [
+        ...new Set([
+          ...postV1WallFramedCalibrationLabSpectrumCompanionOutputs,
+          ...postV1WallSourceAbsentBuildingLabSpectrumCompanionOutputs,
+          ...postV1WallHeavyCompositeBuildingLabSpectrumCompanionOutputs,
+          ...postV1GateARBuildingLabSpectrumCompanionOutputs,
+          ...postV1OpenBoxFinishedPackageBuildingLabCompanionOutputs,
+          ...postV1OpenBoxFinishedPackageBuildingImpactCompanionOutputs
+        ])
+      ]
+    ),
+    compatibleAnchorDeltaFieldBuildingUnsupportedOutputs
   );
   const hideParkedAirborneBuildingPredictionMetrics =
     parkedAirborneBuildingPredictionOutputs.some((output) =>
@@ -4763,13 +4962,29 @@ export function calculateAssembly(
   if (gateDVLsfExactRwCompanionBasis) {
     warnings.push(GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_WARNING);
   }
+  if (compatibleWallAnchorDeltaLabCompanionBasis) {
+    warnings.push(POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_WARNING);
+  }
   if (gateDXExactSourceFamilyFieldContextBasis) {
     warnings.push(GATE_DX_EXACT_SOURCE_FAMILY_FIELD_CONTEXT_WARNING);
   }
-  if (!suppressParkedBuildingPredictionOverlayWarnings) {
+  if (compatibleWallAnchorDeltaFieldBuildingBasis) {
+    const adapterWarning =
+      compatibleWallAnchorDeltaFieldBuildingBasis.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD
+        ? GATE_AR_AIRBORNE_BUILDING_PREDICTION_WARNING
+        : GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING;
     warnings.push(
-      ...(floorAirborneBuildingPredictionRuntime?.warnings ?? airborneOverlayResult.warnings)
+      POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_FIELD_BUILDING_ADAPTER_WARNING
     );
+    if (!warnings.includes(adapterWarning)) {
+      warnings.push(adapterWarning);
+    }
+    if (compatibleAnchorDeltaAWeightedSupportedOutputs.length > 0) {
+      warnings.push(POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_A_WEIGHTED_FIELD_BUILDING_ADAPTER_WARNING);
+    }
+  }
+  if (!suppressParkedBuildingPredictionOverlayWarnings) {
+    warnings.push(...visibleAirborneOverlayWarnings);
   }
   if (rawBareFloorAirborneBuildingPredictionRuntime) {
     warnings.push(
@@ -4782,7 +4997,13 @@ export function calculateAssembly(
     );
   }
   warnings.push(...verifiedAirborneAnchorResult.warnings);
-  warnings.push(...compatibleWallAnchorDeltaResult.warnings);
+  warnings.push(
+    ...(compatibleWallAnchorDeltaLabCompanionBasis
+      ? compatibleWallAnchorDeltaResult.warnings.filter(
+          (warning) => warning !== POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_WARNING
+        )
+      : compatibleWallAnchorDeltaResult.warnings)
+  );
   warnings.push(...approximateAirborneFieldCompanionResult.warnings);
   if (rockwoolSplitTripleLeafExactOutputWithhold.warning) {
     warnings.push(rockwoolSplitTripleLeafExactOutputWithhold.warning);
@@ -4809,6 +5030,11 @@ export function calculateAssembly(
   if (anchoredDeltaMetricUnsupportedOutputs.length > 0 && compatibleWallAnchorDeltaResult.match) {
     warnings.push(
       `Compatible measured-anchor delta from ${compatibleWallAnchorDeltaResult.match.label} owns ${compatibleWallAnchorDeltaResult.match.metricLabel}; DynEcho kept ${anchoredDeltaMetricUnsupportedOutputs.join(", ")} out of the anchored answer instead of aliasing unowned companion metrics.`
+    );
+  }
+  if (compatibleAnchorDeltaFieldBuildingUnsupportedOutputs.length > 0 && compatibleWallAnchorDeltaResult.match) {
+    warnings.push(
+      `Compatible anchor-delta field/building adapter from ${compatibleWallAnchorDeltaResult.match.label} owns ${describeWallCompatibleAnchorDeltaFieldBuildingOwnedOutputs(compatibleWallAnchorDeltaFieldBuildingBasis)} for this route; DynEcho kept ${compatibleAnchorDeltaFieldBuildingUnsupportedOutputs.join(", ")} out until a separate metric owner lands.`
     );
   }
   if (exactMeasuredFloorMetricUnsupportedOutputs.length > 0 && floorSystemMatch) {

@@ -199,7 +199,11 @@ export function buildSimpleWorkbenchOutputPosture(input: {
       getGateARAirborneBuildingPredictionOutputDetail(output, result) ??
       gateARBuildingSurface.postureDetail;
 
-    if (status === "live" && (output === "R'w" || output === "DnT,w")) {
+    if (
+      status === "live" &&
+      result?.supportedTargetOutputs.includes(output) &&
+      (output === "R'w" || output === "Dn,w" || output === "Dn,A" || output === "DnT,w" || output === "DnT,A")
+    ) {
       return {
         detail,
         label: gateARBuildingSurface.label,

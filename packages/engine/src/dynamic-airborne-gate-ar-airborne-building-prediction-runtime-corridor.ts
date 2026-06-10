@@ -163,6 +163,76 @@ export function hasCompleteGateARBuildingPredictionContext(
   );
 }
 
+function buildGateARBuildingPredictionBasisFromBase(input: {
+  baseBasis: AirborneResultBasis;
+  context: CompleteGateARBuildingPredictionContext;
+  family?: DynamicAirborneFamily;
+  frequencyBands?: AirborneResultBasis["frequencyBands"];
+  sourceDescription: string;
+}): AirborneResultBasis {
+  const partitionAreaM2 = (input.context.panelWidthMm * input.context.panelHeightMm) / 1_000_000;
+  const baseAssumptions = input.baseBasis.assumptions.filter(
+    (assumption) => !/building-prediction|field\/apparent|field\/building/i.test(assumption)
+  );
+
+  return {
+    ...input.baseBasis,
+    assumptions: [
+      "building-prediction output is computed only from explicit building_prediction context",
+      `direct separating-element curve comes from ${input.sourceDescription}`,
+      "flanking/junction contribution is represented by the explicit conservative flanking assumption, named junction class, coupling length, and the existing path-energy overlay",
+      "room standardization owns partition area, source-room volume, receiving-room volume, and receiving-room RT60 instead of borrowing lab Rw/STC",
+      `Gate AQ +/-${GATE_O_AIRBORNE_BUILDING_PREDICTION_TOLERANCE_DB} dB uncertainty budget remains source-absent and not measured evidence`,
+      `building context uses ${partitionAreaM2.toFixed(2)} m2 partition area, ${input.context.sourceRoomVolumeM3.toFixed(1)} m3 source-room volume, ${input.context.receivingRoomVolumeM3.toFixed(1)} m3 receiving-room volume, ${input.context.receivingRoomRt60S.toFixed(2)} s RT60, ${input.context.flankingJunctionClass}, ${input.context.conservativeFlankingAssumption}, and ${input.context.junctionCouplingLengthM.toFixed(2)} m coupling length`,
+      `base direct-curve method remains ${input.baseBasis.method}`,
+      ...baseAssumptions
+    ],
+    calculationStandard: "ISO 12354-1",
+    curveBasis: "calculated_frequency_curve",
+    errorBudgetDb: GATE_O_AIRBORNE_BUILDING_PREDICTION_TOLERANCE_DB,
+    family: input.family ?? input.baseBasis.family,
+    frequencyBands: input.frequencyBands ?? input.baseBasis.frequencyBands,
+    kind: "airborne_physics_prediction",
+    method: GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
+    missingPhysicalInputs: [],
+    missingSourceEvidence: [
+      "same_building_source_owned_RwPrime_DnTw_holdouts_absent"
+    ],
+    origin: "family_physics_prediction",
+    ratingStandard: "ISO 717-1",
+    requiredInputs: [
+      ...input.baseBasis.requiredInputs,
+      ...GATE_M_AIRBORNE_BUILDING_PREDICTION_REQUIRED_PHYSICAL_INPUTS,
+      "ISO_12354_1_direct_separating_element_frequency_curve_owner",
+      "ISO_12354_1_flanking_path_transmission_terms_owner",
+      "ISO_12354_1_junction_vibration_reduction_index_owner",
+      "ISO_12354_1_room_absorption_normalization_owner",
+      "buildingPredictionUncertaintyBudgetOwner"
+    ],
+    toleranceClass: "uncalibrated_prediction"
+  };
+}
+
+export function maybeBuildGateARAirborneBuildingPredictionBasisFromBase(input: {
+  baseBasis: AirborneResultBasis;
+  context: AirborneContext | null | undefined;
+  family?: DynamicAirborneFamily;
+  frequencyBands?: AirborneResultBasis["frequencyBands"];
+  sourceDescription: string;
+}): AirborneResultBasis | null {
+  if (!hasCompleteGateARBuildingPredictionContext(input.context)) {
+    return null;
+  }
+
+  return buildGateARBuildingPredictionBasisFromBase({
+    baseBasis: input.baseBasis,
+    context: input.context,
+    family: input.family,
+    frequencyBands: input.frequencyBands,
+    sourceDescription: input.sourceDescription
+  });
+}
+
 function confidenceNote(confidenceClass: DynamicAirborneConfidenceClass): string {
   if (confidenceClass === "high") {
     return "direct family curve confidence is high, but building flanking still keeps the source-absent Gate AQ budget visible";
@@ -197,46 +267,46 @@ export function maybeBuildGateARAirborneBuildingPredictionRuntimeBasis(input: {
     return null;
   }
 
-  const partitionAreaM2 = (context.panelWidthMm * context.panelHeightMm) / 1_000_000;
-
-  return {
-    assumptions: [
-      "building-prediction output is computed only from explicit building_prediction context",
-      "direct separating-element curve comes from the selected dynamic airborne family solver",
-      "flanking/junction contribution is represented by the explicit conservative flanking assumption, named junction class, coupling length, and the existing path-energy overlay",
-      "room standardization owns partition area, source-room volume, receiving-room volume, and receiving-room RT60 instead of borrowing Gate I field context",
-      `Gate AQ +/-${GATE_O_AIRBORNE_BUILDING_PREDICTION_TOLERANCE_DB} dB uncertainty budget remains source-absent and not measured evidence`,
-      `${confidenceNote(input.confidenceClass)}`,
-      `building context uses ${partitionAreaM2.toFixed(2)} m2 partition area, ${context.sourceRoomVolumeM3.toFixed(1)} m3 source-room volume, ${context.receivingRoomVolumeM3.toFixed(1)} m3 receiving-room volume, ${context.receivingRoomRt60S.toFixed(2)} s RT60, ${context.flankingJunctionClass}, ${context.conservativeFlankingAssumption}, and ${context.junctionCouplingLengthM.toFixed(2)} m coupling length`,
-      `current dynamic strategy remains ${input.strategy}`
-    ],
-    calculationStandard: "ISO 12354-1",
-    curveBasis: "calculated_frequency_curve",
-    errorBudgetDb: GATE_O_AIRBORNE_BUILDING_PREDICTION_TOLERANCE_DB,
+  const basis = buildGateARBuildingPredictionBasisFromBase({
+    baseBasis: {
+      assumptions: [
+        `${confidenceNote(input.confidenceClass)}`,
+        `current dynamic strategy remains ${input.strategy}`
+      ],
+      calculationStandard: "engine_bounded_estimate",
+      curveBasis: "calculated_frequency_curve",
+      errorBudgetDb: GATE_O_AIRBORNE_BUILDING_PREDICTION_TOLERANCE_DB,
+      family: input.family,
+      frequencyBands: {
+        bandSet: "dynamic_airborne_delegate_grid",
+        frequenciesHz: [...input.curve.frequenciesHz]
+      },
+      kind: "airborne_physics_prediction",
+      method: `selected_dynamic_airborne_delegate:${METHOD_LABEL_BY_DELEGATE[input.selectedMethod]}`,
+      missingPhysicalInputs: [],
+      missingSourceEvidence: [],
+      origin: "family_physics_prediction",
+      propertyDefaults: [],
+      ratingStandard: "ISO 717-1",
+      requiredInputs: [
+        `selectedDelegateCurve:${METHOD_LABEL_BY_DELEGATE[input.selectedMethod]}`
+      ],
+      toleranceClass: "uncalibrated_prediction"
+    },
+    context,
     family: input.family,
     frequencyBands: {
       bandSet: "dynamic_airborne_delegate_grid",
       frequenciesHz: [...input.curve.frequenciesHz]
     },
-    kind: "airborne_physics_prediction",
-    method: GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
-    missingPhysicalInputs: [],
-    missingSourceEvidence: [
-      "same_building_source_owned_RwPrime_DnTw_holdouts_absent"
-    ],
-    origin: "family_physics_prediction",
-    propertyDefaults: [],
-    ratingStandard: "ISO 717-1",
+    sourceDescription: "the selected dynamic airborne family solver"
+  });
+
+  return {
+    ...basis,
     requiredInputs: [
-      ...GATE_M_AIRBORNE_BUILDING_PREDICTION_REQUIRED_PHYSICAL_INPUTS,
-      "ISO_12354_1_direct_separating_element_frequency_curve_owner",
-      "ISO_12354_1_flanking_path_transmission_terms_owner",
-      "ISO_12354_1_junction_vibration_reduction_index_owner",
-      "ISO_12354_1_room_absorption_normalization_owner",
-      "buildingPredictionUncertaintyBudgetOwner",
-      `selectedDelegateCurve:${METHOD_LABEL_BY_DELEGATE[input.selectedMethod]}`,
+      ...basis.requiredInputs,
       "ISO717-1 rating adapter"
-    ],
-    toleranceClass: "uncalibrated_prediction"
+    ]
   };
 }

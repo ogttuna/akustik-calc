@@ -283,7 +283,7 @@ describe("layer combination resolver runtime candidate adapter contract", () => 
       selectionStatus: LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_ADAPTER_SELECTION_STATUS
     });
     expect(contract.summary).toEqual({
-      adaptedRuntimeBasisCount: 45,
+      adaptedRuntimeBasisCount: 46,
       boundaryCandidateCount: 3,
       selectedNextAction: LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_ADAPTER_SELECTED_NEXT_ACTION
     });

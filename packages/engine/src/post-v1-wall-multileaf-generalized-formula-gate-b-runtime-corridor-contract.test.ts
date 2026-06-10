@@ -129,8 +129,8 @@ describe("post-V1 wall multileaf generalized formula Gate B runtime corridor", (
     });
 
     expect(registry.summary).toMatchObject({
-      activeRuntimeCandidateCount: 45,
-      candidateCount: 48
+      activeRuntimeCandidateCount: 46,
+      candidateCount: 49
     });
     expect(candidate).toMatchObject({
       basis: "element_lab",

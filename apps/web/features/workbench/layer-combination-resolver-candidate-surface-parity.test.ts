@@ -94,6 +94,7 @@ const TARGET_OUTPUTS = [
 const SINGLE_LEAF_TARGET_OUTPUTS = ["Rw", "STC", "C", "Ctr"] as const satisfies readonly RequestedOutputId[];
 const DOUBLE_LEAF_TARGET_OUTPUTS = ["Rw", "STC", "C", "Ctr"] as const satisfies readonly RequestedOutputId[];
 const EXACT_WALL_TARGET_OUTPUTS = ["Rw", "STC", "C", "Ctr"] as const satisfies readonly RequestedOutputId[];
+const WALL_ANCHOR_DELTA_DIRECT_OUTPUTS = ["Rw"] as const satisfies readonly RequestedOutputId[];
 const WALL_FIELD_TARGET_OUTPUTS = ["R'w", "DnT,w"] as const satisfies readonly RequestedOutputId[];
 const WALL_UNSUPPORTED_BUILDING_TARGET_OUTPUTS = ["Rw", "STC", "R'w", "DnT,w"] as const satisfies readonly RequestedOutputId[];
 const FLOOR_EXACT_MIXED_OUTPUTS = [
@@ -1154,7 +1155,7 @@ describe("layer combination resolver candidate surface parity", () => {
       airborneContext: EXACT_LSF_CONTEXT,
       id: "wall-v1-compatible-anchor-delta-surface",
       rows: EXACT_LSF_PLUS_OUTER_BOARD_ROWS,
-      targetOutputs: EXACT_WALL_TARGET_OUTPUTS
+      targetOutputs: WALL_ANCHOR_DELTA_DIRECT_OUTPUTS
     });
     const trace = getLayerCombinationResolverCandidateSurface(scenario.result);
 
@@ -1169,20 +1170,15 @@ describe("layer combination resolver candidate surface parity", () => {
       valuePins: [{ metric: "Rw", value: 57 }]
     });
     expect(scenario.result.supportedTargetOutputs).toEqual(["Rw"]);
-    expect(scenario.result.unsupportedTargetOutputs).toEqual(["STC", "C", "Ctr"]);
+    expect(scenario.result.unsupportedTargetOutputs).toEqual([]);
     expect(buildOutputCard({ output: "Rw", result: scenario.result, studyMode: "wall" })).toMatchObject({
       label: "Rw",
       status: "live",
       value: "57 dB"
     });
-    expect(buildOutputCard({ output: "STC", result: scenario.result, studyMode: "wall" })).toMatchObject({
-      label: "STC",
-      status: "unsupported",
-      value: "Not ready"
-    });
 
     const report = buildWallReport({
-      requestedOutputs: EXACT_WALL_TARGET_OUTPUTS,
+      requestedOutputs: WALL_ANCHOR_DELTA_DIRECT_OUTPUTS,
       scenario,
       title: "Wall V1 Compatible Anchor Delta Surface"
     });
@@ -1198,7 +1194,7 @@ describe("layer combination resolver candidate surface parity", () => {
         airborneContext: EXACT_LSF_CONTEXT,
         calculator: "dynamic",
         layers: toLayerInputs(EXACT_LSF_PLUS_OUTER_BOARD_ROWS),
-        targetOutputs: EXACT_WALL_TARGET_OUTPUTS
+        targetOutputs: WALL_ANCHOR_DELTA_DIRECT_OUTPUTS
       })
     );
     const estimateBody = (await estimateResponse.json()) as {
@@ -1214,7 +1210,7 @@ describe("layer combination resolver candidate surface parity", () => {
       valuePins: [{ metric: "Rw", value: 57 }]
     });
     expect(estimateBody.result?.supportedTargetOutputs).toEqual(["Rw"]);
-    expect(estimateBody.result?.unsupportedTargetOutputs).toEqual(["STC", "C", "Ctr"]);
+    expect(estimateBody.result?.unsupportedTargetOutputs).toEqual([]);
   });
 
   it("keeps complete wall field-apparent answers on the wall adapter across cards, report, and calculator API", async () => {

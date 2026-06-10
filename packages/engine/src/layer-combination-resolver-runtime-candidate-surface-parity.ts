@@ -53,6 +53,7 @@ import {
   LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_FORMULA_CORRIDOR_BASIS
 } from "./layer-combination-resolver-single-leaf-mass-law-banded-runtime-constants";
 import {
+  POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_RUNTIME_METHOD,
   POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_RUNTIME_METHOD
 } from "./post-v1-wall-compatible-anchor-delta";
 import {
@@ -790,7 +791,8 @@ function withScenarioSpecificAirborneRuntimePins(
     trace.runtimeBasisId === COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_RUNTIME_METHOD ||
     trace.runtimeBasisId === POST_V1_WALL_MULTILEAF_GENERALIZED_RUNTIME_METHOD ||
     trace.runtimeBasisId === GATE_AE_FLAT_MULTICAVITY_RUNTIME_METHOD ||
-    trace.runtimeBasisId === GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD;
+    trace.runtimeBasisId === GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD ||
+    trace.runtimeBasisId === POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_RUNTIME_METHOD;
   const isWallCompatibleAnchorDelta =
     trace.runtimeBasisId === POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_RUNTIME_METHOD;
   const isWallFieldAdapter =
@@ -1059,7 +1061,8 @@ export function buildLayerCombinationResolverTraceForAssembly(
     result.airborneBasis?.method === GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD ||
     result.airborneBasis?.method === COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_RUNTIME_METHOD ||
     result.airborneBasis?.method === POST_V1_WALL_MULTILEAF_GENERALIZED_RUNTIME_METHOD ||
-    result.airborneBasis?.method === GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD;
+    result.airborneBasis?.method === GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD ||
+    result.airborneBasis?.method === POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_RUNTIME_METHOD;
   const hasWallCompatibleAnchorDeltaBasis =
     result.airborneBasis?.method === POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_RUNTIME_METHOD;
   const hasWallFieldAirborneBasis =

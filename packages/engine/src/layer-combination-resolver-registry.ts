@@ -114,6 +114,8 @@ import {
   TIMBER_JOIST_DELTA_LW_FORMULA_BASIS
 } from "./timber-clt-floor-impact-delta-lw-runtime-corridor";
 import {
+  POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_RUNTIME_METHOD,
+  POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_SELECTED_CANDIDATE_ID,
   POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_RUNTIME_METHOD,
   POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_SELECTED_CANDIDATE_ID
 } from "./post-v1-wall-compatible-anchor-delta";
@@ -508,6 +510,73 @@ const CANDIDATE_DECLARATIONS = [
       "publish_only_anchor_owned_rw"
     ],
     supportedMetrics: ["Rw"],
+    surfaceRequirements: ELEMENT_LAB_SURFACES,
+    valuePins: []
+  },
+  {
+    basis: "element_lab",
+    errorBudgetTerms: [
+      { metric: "STC", notMeasuredEvidence: true, toleranceDb: 6 },
+      { metric: "C", notMeasuredEvidence: true, toleranceDb: 3 },
+      { metric: "Ctr", notMeasuredEvidence: true, toleranceDb: 3 }
+    ],
+    exactPrecedenceRules: [
+      "same_stack_sources_reporting_stc_c_ctr_would_win_before_this_companion",
+      "compatible_anchor_delta_direct_rw_stays_rank_one_for_single_output_rw",
+      "mixed_lab_companions_use_shifted_direct_curve_terms_not_source_aliases",
+      "one_side_and_paired_board_delta_shapes_share_candidate_only_when_knauf_reduced_stack_matches",
+      "single_rw_stays_direct_anchor_delta_when_no_companion_requested"
+    ],
+    formulaTerms: [
+      "exact_reduced_stack_source_rw_anchor",
+      "bounded_exterior_board_mass_delta",
+      "one_side_exterior_board_mass_delta",
+      "compatible_shifted_direct_transmission_loss_curve",
+      "astm_e413_stc_from_curve",
+      "iso_717_1_c_from_curve",
+      "iso_717_1_ctr_from_curve"
+    ],
+    hardCompatibilityGates: [
+      "wall_route",
+      "element_lab_metric_basis",
+      "source_id=knauf_lab_416889_primary_2026",
+      "source_metric=Rw",
+      "dynamic_family=stud_wall_system",
+      "compatible_exterior_board_delta_applied",
+      "one_side_compatible_exterior_board_delta_allowed",
+      "no_field_or_building_metric_promotion"
+    ],
+    hostileInputCases: [
+      "stc_c_ctr_are_not_measured_source_metrics",
+      "stc_only_requests_stay_out_until_a_non_companion_owner_lands",
+      "field_request_rejected_without_field_adapter_owner",
+      "building_prediction_rejected_without_flanking_owner",
+      "non_knauf_one_side_rows_require_separate_owner"
+    ],
+    id: POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_SELECTED_CANDIDATE_ID,
+    kind: "source_absent_family_solver",
+    label: "Wall compatible anchor-delta calculated lab spectrum companions",
+    ownedRuntimeBasisId: POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_RUNTIME_METHOD,
+    priorityRank: 3,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      "route=wall",
+      "elementLabMetricBasis",
+      "exactReducedStackSourceRow:Rw",
+      "compatibleExteriorBoardDelta",
+      "oneSideCompatibleExteriorBoardDelta",
+      "calculatedTransmissionLossCurve",
+      "ASTM_E413_STC_curve_rating",
+      "ISO_717_1_C_Ctr_curve_rating"
+    ],
+    route: "wall",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "reduced_stack_rw_anchor_does_not_measure_unreported_companion_metrics",
+      "field_or_building_rows_cannot_anchor_element_lab_spectrum_terms",
+      "non_knauf_or_non_matching_one_side_rows_cannot_anchor_lab_companion_terms"
+    ],
+    supportedMetrics: ["Rw", "STC", "C", "Ctr"],
     surfaceRequirements: ELEMENT_LAB_SURFACES,
     valuePins: []
   },

@@ -61,6 +61,7 @@ import { MIXED_SUPPORT_FLOOR_IMPACT_SELECTED_CANDIDATE_ID } from "./mixed-suppor
 import { HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_ESTIMATE_BASIS } from "./heavy-concrete-published-upper-treatment-estimate";
 import { OPEN_BOX_TIMBER_SIMILARITY_BASIS } from "./open-box-timber-similarity-estimate";
 import { OPEN_WEB_RAW_BARE_FORMULA_BASIS } from "./open-web-raw-bare-estimate";
+import { POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_SELECTED_CANDIDATE_ID } from "./post-v1-wall-compatible-anchor-delta";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
@@ -217,20 +218,20 @@ describe("layer combination resolver candidate coverage matrix refresh contract"
       sourceRowsAreEvidenceNotProduct: true
     });
     expect(contract.summary).toEqual({
-      activeRuntimeCandidateCount: 45,
+      activeRuntimeCandidateCount: 46,
       allCandidateDeclarationsCovered: true,
       boundaryCandidateCount: 3,
-      candidateDeclarationCount: 48,
-      coverageMatrixRowCount: 48,
+      candidateDeclarationCount: 49,
+      coverageMatrixRowCount: 49,
       readinessBucketCount: {
         needs_input: 1,
         ready: 4,
-        ready_with_budget: 41,
+        ready_with_budget: 42,
         research_only: 0,
         unsupported: 2
       },
       selectedNextAction: LAYER_COMBINATION_RESOLVER_CANDIDATE_COVERAGE_MATRIX_REFRESH_SELECTED_NEXT_ACTION,
-      surfaceRowCount: 48
+      surfaceRowCount: 49
     });
 
     for (const path of REQUIRED_SURFACES) {
@@ -271,6 +272,7 @@ describe("layer combination resolver candidate coverage matrix refresh contract"
       {
         candidateIds: [
           MIXED_SUPPORT_FLOOR_IMPACT_SELECTED_CANDIDATE_ID,
+          POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_SELECTED_CANDIDATE_ID,
           "candidate_lsf_exact_rw_calculated_lab_companions",
           BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_SELECTED_CANDIDATE_ID,
           BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_SELECTED_CANDIDATE_ID,

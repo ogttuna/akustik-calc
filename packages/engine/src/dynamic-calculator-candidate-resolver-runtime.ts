@@ -127,6 +127,8 @@ import {
   isFlatListMultileafGuardStrategy
 } from "./dynamic-airborne-flat-list-multileaf-guard";
 import {
+  POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_RUNTIME_METHOD,
+  POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_SELECTED_CANDIDATE_ID,
   POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_RUNTIME_METHOD
 } from "./post-v1-wall-compatible-anchor-delta";
 
@@ -621,7 +623,8 @@ function selectLane(input: {
 
   if (
     input.runtimeSignal?.airborneBasis?.method === GATE_DT_MASONRY_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD ||
-    input.runtimeSignal?.airborneBasis?.method === GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD
+    input.runtimeSignal?.airborneBasis?.method === GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD ||
+    input.runtimeSignal?.airborneBasis?.method === POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_RUNTIME_METHOD
   ) {
     return "family_physics";
   }
@@ -777,6 +780,10 @@ function familyPhysicsCandidateId(runtimeBasis?: AirborneResultBasis): string {
 
   if (runtimeBasis?.method === GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD) {
     return GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_SELECTED_CANDIDATE_ID;
+  }
+
+  if (runtimeBasis?.method === POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_RUNTIME_METHOD) {
+    return POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_SELECTED_CANDIDATE_ID;
   }
 
   if (runtimeBasis?.method === GATE_DX_EXACT_SOURCE_FAMILY_FIELD_CONTEXT_RUNTIME_METHOD) {

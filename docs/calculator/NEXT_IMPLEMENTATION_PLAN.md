@@ -24,6 +24,15 @@ exact owned measured row first, then owned anchor/similarity path, then
 dynamic formula route with route-required physical inputs, then
 `needs_input` / `unsupported` when the route is not owned.
 
+Implementation bias: prefer value-moving calculator work over another
+process artifact. A valid active-slice outcome should normally land one
+of these: a broader formula route, a more accurate formula/budget, a
+route-input surface that lets users provide missing physical fields, a
+measured-anchor delta, a calibration/holdout-backed retune, or a sharper
+owned `needs_input` boundary that prevents wrong numbers while enabling a
+future formula route. Documentation-only or ledger-only work is not the
+default next step.
+
 Do not interpret missing measured assemblies as a blocker or as a reason
 to collect all possible combinations. The selected work should name a
 bounded route family, target metrics, required physical inputs, expected
@@ -58,18 +67,1321 @@ Gate DX is the latest runtime-basis accuracy action, Gate EF is the
 latest runtime-basis route-boundary action, Gate EJ is the latest
 input-surface scope action, Gate EQ is the latest no-runtime adapter
 owner proof, Gate EP is the previous no-runtime numeric coverage/accuracy
-rerank, and the current selected next action is the post double-leaf
-framed wall banded coverage revalidation:
+rerank, and the post double-leaf framed wall banded coverage
+revalidation has now landed no-runtime:
 
 `layer_combination_resolver_post_double_leaf_framed_wall_banded_coverage_revalidation_plan`
 
-Selected next file:
+Revalidation contract file:
 
 `packages/engine/src/layer-combination-resolver-post-double-leaf-framed-wall-banded-coverage-revalidation-contract.test.ts`
 
-That selected next file is intentionally still open at this checkpoint;
-creating its contract is the next implementation step, not a missing
-landed Gate FF artifact.
+Revalidation status:
+`layer_combination_resolver_post_double_leaf_framed_wall_banded_coverage_revalidation_landed_no_runtime_selected_wall_compatible_anchor_delta_scope_expansion`.
+
+The compatible measured-anchor delta scope expansion has now landed
+runtime:
+
+`post_v1_wall_compatible_anchor_delta_scope_expansion_plan`
+
+Scope expansion contract file:
+
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-scope-expansion-contract.test.ts`
+
+Scope expansion status:
+`post_v1_wall_compatible_anchor_delta_scope_expansion_landed_runtime_selected_field_building_adapter_owner`.
+
+The compatible anchor-delta field/building adapter owner has now landed
+runtime:
+
+`post_v1_wall_compatible_anchor_delta_field_building_adapter_owner_plan`
+
+Field/building adapter owner contract file:
+
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-field-building-adapter-owner-contract.test.ts`
+
+Field/building adapter owner status:
+`post_v1_wall_compatible_anchor_delta_field_building_adapter_owner_landed_runtime_selected_surface_parity_input_acceptance`.
+
+The compatible anchor-delta field/building surface parity/input
+acceptance has now landed no-runtime:
+
+`post_v1_wall_compatible_anchor_delta_surface_parity_input_acceptance_plan`
+
+Surface parity contract file:
+
+`apps/web/features/workbench/post-v1-wall-compatible-anchor-delta-field-building-surface-parity.test.ts`
+
+Surface parity status:
+`post_v1_wall_compatible_anchor_delta_surface_parity_input_acceptance_landed_no_runtime_selected_lab_metric_companion_owner`.
+
+Current selected next action:
+
+`post_v1_wall_compatible_anchor_delta_building_dn_a_coverage_refresh_plan`
+
+Selected next file:
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-building-dn-a-coverage-refresh-contract.test.ts`
+
+Selected next label:
+`post-V1 wall compatible anchor-delta building Dn,A coverage refresh`.
+
+Previous selected label:
+`post-V1 next numeric coverage gap after one-side lab companion`.
+
+The next numeric coverage gap after one-side lab companion has now
+landed no-runtime:
+
+`post_v1_next_numeric_coverage_gap_after_one_side_lab_companion_plan`
+
+Rerank contract file:
+
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-one-side-lab-companion-contract.test.ts`
+
+Plan doc:
+
+`docs/calculator/POST_V1_NEXT_NUMERIC_COVERAGE_GAP_AFTER_ONE_SIDE_LAB_COMPANION_PLAN_2026-06-10.md`
+
+Rerank status:
+`post_v1_next_numeric_coverage_gap_after_one_side_lab_companion_landed_no_runtime_selected_compatible_anchor_delta_a_weighted_owner`.
+
+Selected candidate:
+`wall.compatible_anchor_delta.a_weighted_field_building_adapter_owner`.
+
+The rerank subtracts the closed compatible anchor-delta direct `Rw`,
+field/building `R'w`/`Dn,w`/`DnT,w`, paired lab companion, and one-side
+lab companion lanes. It compared formula-scope, route-input, and
+accuracy/holdout candidates and selected the A-weighted owner because,
+at that checkpoint, the engine already calculated compatible
+anchor-delta `Dn,A` / `DnT,A` companions but kept them unsupported until
+metric owners landed. It is
+not a broad source crawl. Counters: `candidateCount: 6`,
+`roiAnalysisIterations: 3`, `estimatedNextRuntimeValuesMoved: 6`,
+`immediateRuntimeValuesMoved: 0`, `runtimeBasisPromotions: 0`,
+`runtimeFormulaRetunes 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+
+### Compatible Anchor-Delta A-Weighted Field/Building Adapter Owner Plan
+
+This selected next slice is value-moving and calculator-goal aligned. It
+should expose already-calculated A-weighted same-route companions for the
+compatible anchor-delta Knauf LSF field/building route while keeping
+metric-basis boundaries explicit.
+
+Plan iteration 1 - current behavior:
+
+- Paired exterior-board Knauf LSF field and building requests currently
+  support `R'w 50 / Dn,w 51 / DnT,w 53`.
+- The engine already computes but withholds paired A-weighted companions
+  `Dn,A 49.5 / DnT,A 51.9`.
+- One-side exterior-board Knauf LSF field and building requests
+  currently support `R'w 49 / Dn,w 49 / DnT,w 51`.
+- The engine already computes but withholds one-side A-weighted
+  companions `Dn,A 48 / DnT,A 50.4`.
+
+Plan iteration 2 - implementation boundaries:
+
+- Add
+  `packages/engine/src/post-v1-wall-compatible-anchor-delta-a-weighted-field-building-adapter-owner-contract.test.ts`.
+- Promote compatible anchor-delta field `Dn,A` and `DnT,A` for paired
+  and one-side exterior-board Knauf LSF stacks.
+- Promote compatible anchor-delta building `DnT,A` for paired and
+  one-side exterior-board Knauf LSF stacks.
+- Keep building `Dn,A` unsupported unless the contract proves a
+  same-route building `Dn,A` metric basis.
+- Keep direct single `Rw`, lab `STC`/`C`/`Ctr`, STC-only,
+  field/building lab aliases, ASTM/IIC/AIIC, and non-Knauf rows outside
+  this owner.
+
+Plan iteration 3 - expected contract shape:
+
+- Runtime movement should be limited to the A-weighted target outputs
+  named above; do not retune the direct curve, Gate I, Gate AR, or lab
+  companion values.
+- Source rows remain evidence only; no source import is needed for this
+  slice.
+- Surface parity should be selected only after the engine owner/runtime
+  contract lands and proves whether existing workbench output surfaces
+  already carry the new supported outputs.
+
+The compatible anchor-delta A-weighted field/building adapter owner has
+now landed runtime:
+
+`post_v1_wall_compatible_anchor_delta_a_weighted_field_building_adapter_owner_plan`
+
+Owner contract file:
+
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-a-weighted-field-building-adapter-owner-contract.test.ts`
+
+Owner status:
+`post_v1_wall_compatible_anchor_delta_a_weighted_field_building_adapter_owner_landed_runtime_selected_surface_parity_input_acceptance`.
+
+Owner label:
+`post-V1 wall compatible anchor-delta A-weighted field/building adapter owner`.
+
+It promotes the Knauf `416889` compatible anchor-delta A-weighted route
+values already computed by Gate I / Gate AR: paired field
+`Dn,A 49.5 / DnT,A 51.9`, one-side field `Dn,A 48 / DnT,A 50.4`,
+paired building `DnT,A 51.9`, and one-side building `DnT,A 50.4`. At
+this owner checkpoint, building `Dn,A` stayed parked until the later
+building `Dn,A` owner below landed. Lab aliases, ASTM/IIC/AIIC, and
+non-`416889` compatible anchors remain unsupported. No source rows were
+imported and no formula was retuned.
+
+Selected next action:
+`post_v1_wall_compatible_anchor_delta_a_weighted_surface_parity_input_acceptance_plan`
+
+Selected next file:
+`apps/web/features/workbench/post-v1-wall-compatible-anchor-delta-a-weighted-field-building-surface-parity.test.ts`
+
+Selected next label:
+`post-V1 wall compatible anchor-delta A-weighted field/building surface parity input acceptance`.
+
+Counters: `newCalculableLayerTemplates 0`, `newCalculableRequestShapes 4`,
+`runtimeBasisPromotions 2`, `runtimeValuesMoved 6`,
+`runtimeFormulaRetunes 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+
+### Compatible Anchor-Delta A-Weighted Field/Building Surface Parity Plan
+
+This selected no-runtime slice is calculator-goal aligned because it
+does not invent new formulas or broaden unsupported metric aliases. It
+ensures the already-landed A-weighted runtime owner is visible and
+honest through the surfaces a user actually sees.
+
+Plan iteration 1 - current behavior:
+
+- The engine owner calculates paired field `Dn,A 49.5 / DnT,A 51.9`
+  and one-side field `Dn,A 48 / DnT,A 50.4`.
+- The engine owner calculates paired building `DnT,A 51.9` and
+  one-side building `DnT,A 50.4`.
+- At this checkpoint, building `Dn,A` was intentionally unsupported even
+  though the metrics object could carry the intermediate A-weighted value.
+  The later building `Dn,A` owner below now promotes it.
+
+Plan iteration 2 - implementation boundaries:
+
+- Add
+  `apps/web/features/workbench/post-v1-wall-compatible-anchor-delta-a-weighted-field-building-surface-parity.test.ts`.
+- Pin workbench live calculation, calculator API payloads, saved replay,
+  server snapshot replay, output cards, target-output status, and report
+  summaries for A-only compatible anchor-delta field/building requests.
+- Keep building `Dn,A` outside this surface until the later dedicated
+  owner lands. Lab aliases, ASTM/IIC/AIIC, and non-Knauf rows stay outside
+  the route.
+- Allow only a narrow web posture fix if a supported Gate AR building
+  A-weighted output is displayed as generic carry-over instead of the
+  building prediction route.
+
+Plan iteration 3 - selected follow-up:
+
+- After surface parity lands, select a coverage refresh rather than a
+  new formula owner. The refresh should freeze the A-weighted owner in
+  resolver/current-gate coverage metadata, subtract the now-closed lane,
+  and only then rerank for the next value-moving calculator slice.
+- This is not a broad source crawl. It should move no runtime values and
+  should not retune Gate I, Gate AR, or the compatible anchor-delta
+  direct curve.
+
+The compatible anchor-delta A-weighted field/building surface parity has
+now landed no-runtime:
+
+`post_v1_wall_compatible_anchor_delta_a_weighted_surface_parity_input_acceptance_plan`
+
+A-weighted surface parity file:
+
+`apps/web/features/workbench/post-v1-wall-compatible-anchor-delta-a-weighted-field-building-surface-parity.test.ts`
+
+Surface parity status:
+`post_v1_wall_compatible_anchor_delta_a_weighted_surface_parity_input_acceptance_landed_no_runtime_selected_coverage_refresh`.
+
+It keeps workbench live calculation, calculator API payloads, saved
+replay, server snapshot replay, output cards, target-output status, and
+report summaries aligned for the Knauf `416889` A-only field/building
+route: paired field `Dn,A 49.5 / DnT,A 51.9`, one-side field
+`Dn,A 48 / DnT,A 50.4`, paired building `DnT,A 51.9`, and one-side
+building `DnT,A 50.4`. At this surface checkpoint, building `Dn,A`
+remained unsupported; the later building `Dn,A` owner below now promotes
+it. The workbench posture labels supported Gate AR building outputs as
+`Airborne building prediction` instead of a generic field-continuation
+carry-over.
+
+Selected next action:
+`post_v1_wall_compatible_anchor_delta_a_weighted_field_building_coverage_refresh_plan`
+
+Selected next file:
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-a-weighted-field-building-coverage-refresh-contract.test.ts`
+
+Selected next label:
+`post-V1 wall compatible anchor-delta A-weighted field/building coverage refresh`.
+
+Counters: `webSurfaceParityContractFilesTouched: 1`,
+`frontendImplementationFilesTouched: 1`, `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes 0`, and `sourceRowsImported: 0`.
+
+### Compatible Anchor-Delta A-Weighted Field/Building Coverage Refresh Plan
+
+This selected no-runtime closeout is calculator-goal aligned because it
+locks the just-landed A-weighted field/building owner into the resolver
+coverage surfaces before selecting another value-moving slice. It does
+not add source rows, retune Gate I / Gate AR, or broaden unsupported
+metric aliases.
+
+Plan iteration 1 - landed runtime and surface behavior:
+
+- Gate I field requests now publish paired `Dn,A 49.5 / DnT,A 51.9`
+  and one-side `Dn,A 48 / DnT,A 50.4` for the Knauf `416889`
+  compatible anchor-delta route.
+- Gate AR building requests now publish paired `DnT,A 51.9` and
+  one-side `DnT,A 50.4` for the same route.
+- At this checkpoint, building `Dn,A`, lab aliases, ASTM/IIC/AIIC,
+  missing-input, and non-`416889` rows were still boundaries, not hidden
+  calculations. The later building `Dn,A` owner below now promotes only
+  the paired and one-side building `Dn,A` values.
+
+Plan iteration 2 - coverage refresh boundaries:
+
+- Add
+  `packages/engine/src/post-v1-wall-compatible-anchor-delta-a-weighted-field-building-coverage-refresh-contract.test.ts`.
+- Freeze `wall.airborne_field_context.field_apparent_adapter` as the
+  `ready_with_budget` / `allowed_with_budget` Gate I owner with runtime
+  basis `gate_i_airborne_field_apparent_context_adapter_runtime`.
+- Freeze
+  `candidate_airborne_building_prediction_all_owner_family_physics_prediction`
+  as the `ready_with_budget` / `allowed_with_budget` Gate AR owner with
+  runtime basis
+  `gate_ar_airborne_building_prediction_all_owner_runtime_corridor`.
+- Re-probe paired/one-side field and building values, plus lab,
+  missing-input, then-parked building `Dn,A`, ASTM, and non-Knauf
+  boundaries.
+
+Plan iteration 3 - selected follow-up:
+
+- Select a short numeric coverage gap rerank after subtracting the
+  now-closed A-weighted field/building lane.
+- The rerank must prefer a bounded formula, input-surface, calibration,
+  or owned-anchor delta slice that increases calculator scope or
+  accuracy.
+- This is not a broad source crawl; the refresh moves no runtime values.
+
+The compatible anchor-delta A-weighted field/building coverage refresh
+has now landed no-runtime:
+
+`post_v1_wall_compatible_anchor_delta_a_weighted_field_building_coverage_refresh_plan`
+
+Coverage refresh contract file:
+
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-a-weighted-field-building-coverage-refresh-contract.test.ts`
+
+Coverage refresh status:
+`post_v1_wall_compatible_anchor_delta_a_weighted_field_building_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap_after_a_weighted_field_building`.
+
+It pins the Knauf `416889` A-weighted route through resolver registry,
+runtime adapter, runtime surface, candidate coverage matrix, and
+company-internal V0. `wall.airborne_field_context.field_apparent_adapter`
+stays `ready_with_budget` / `allowed_with_budget` on
+`gate_i_airborne_field_apparent_context_adapter_runtime`; the Gate AR
+building candidate
+`candidate_airborne_building_prediction_all_owner_family_physics_prediction`
+stays `ready_with_budget` / `allowed_with_budget` on
+`gate_ar_airborne_building_prediction_all_owner_runtime_corridor`.
+The refresh re-probes paired field `Dn,A 49.5 / DnT,A 51.9`, one-side
+field `Dn,A 48 / DnT,A 50.4`, paired building `DnT,A 51.9`, and
+one-side building `DnT,A 50.4`. At that refresh checkpoint, building
+`Dn,A` stayed outside the owner; the later building `Dn,A` owner below
+now promotes it. Lab aliases, ASTM/IIC/AIIC, missing-input, and
+non-`416889` rows stay outside the route.
+
+Selected next action:
+`post_v1_next_numeric_coverage_gap_after_a_weighted_field_building_plan`
+
+Selected next file:
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-a-weighted-field-building-contract.test.ts`
+
+Selected next label:
+`post-V1 next numeric coverage gap after A-weighted field/building`.
+
+Counters: `coverageRefreshContractFilesTouched: 1`,
+`frontendImplementationFilesTouched: 0`, `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes 0`, and `sourceRowsImported: 0`.
+
+### Next Numeric Coverage Gap After A-Weighted Field/Building Plan
+
+This selected next slice is a short no-runtime rerank. It subtracts the
+now-closed compatible anchor-delta A-weighted field/building lane and
+selects the next bounded value-moving calculator improvement. It is not
+a broad source crawl.
+
+Plan iteration 1 - closed-lane subtraction:
+
+- Closed: compatible anchor-delta direct `Rw`, field/building
+  `R'w`/`Dn,w`/`DnT,w`, paired lab companions, one-side lab companions,
+  field `Dn,A`/`DnT,A`, building `DnT,A`, surface parity, and coverage
+  refresh.
+- Reselecting those lanes would not improve calculator scope or
+  accuracy.
+- UI polish, report work, auth/storage, and broad source crawling remain
+  outside the calculator advancement test.
+
+Plan iteration 2 - highest ROI residual:
+
+- Gate AR already computes paired building `Dn,A 49.5` and one-side
+  building `Dn,A 48` on the Knauf `416889` compatible anchor-delta route.
+- Those values were still unsupported because the prior owner
+  intentionally parked building `Dn,A` until a separate metric owner
+  landed.
+- Non-Knauf A-weighted formula widening, route-input work, and budget
+  tightening are lower-ranked because they need new owned evidence,
+  input surfaces, or holdouts before runtime values can safely move.
+
+Plan iteration 3 - selected follow-up:
+
+- Select
+  `packages/engine/src/post-v1-wall-compatible-anchor-delta-building-dn-a-owner-contract.test.ts`.
+- Target exactly paired and one-side building `Dn,A`; expected movement
+  is 2 runtime values and 2 request shapes.
+- Keep field `Dn,A`/`DnT,A` and building `DnT,A` on the already-landed
+  owner.
+- Keep lab aliases, ASTM/IIC/AIIC, missing
+  `buildingPredictionOutputBasis`, and non-`416889` rows outside this
+  owner.
+
+The numeric coverage gap after A-weighted field/building has now landed
+no-runtime:
+
+`post_v1_next_numeric_coverage_gap_after_a_weighted_field_building_plan`
+
+Rerank contract file:
+
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-a-weighted-field-building-contract.test.ts`
+
+Plan doc:
+
+`docs/calculator/POST_V1_NEXT_NUMERIC_COVERAGE_GAP_AFTER_A_WEIGHTED_FIELD_BUILDING_PLAN_2026-06-10.md`
+
+Rerank status:
+`post_v1_next_numeric_coverage_gap_after_a_weighted_field_building_landed_no_runtime_selected_compatible_anchor_delta_building_dn_a_owner`.
+
+Selected candidate:
+`wall.compatible_anchor_delta.building_dn_a_owner`.
+
+Selected next action:
+`post_v1_wall_compatible_anchor_delta_building_dn_a_owner_plan`
+
+Selected next file:
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-building-dn-a-owner-contract.test.ts`
+
+Selected next label:
+`post-V1 wall compatible anchor-delta building Dn,A owner`.
+
+Counters: `candidateCount: 6`, `roiAnalysisIterations: 3`,
+`closedAWeightedRowsRechecked: 4`,
+`buildingDnAUnsupportedRowsRechecked: 2`,
+`estimatedNextCalculableRequestShapes: 2`,
+`estimatedNextRuntimeValuesMoved: 2`, `immediateRuntimeValuesMoved: 0`,
+`frontendImplementationFilesTouched: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes 0`, and
+`sourceRowsImported: 0`.
+
+The compatible anchor-delta building Dn,A owner has now landed runtime:
+
+`post_v1_wall_compatible_anchor_delta_building_dn_a_owner_plan`
+
+Owner contract file:
+
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-building-dn-a-owner-contract.test.ts`
+
+Owner status:
+`post_v1_wall_compatible_anchor_delta_building_dn_a_owner_landed_runtime_selected_coverage_refresh`.
+
+It promotes the already-computed Gate AR compatible anchor-delta building
+`Dn,A` values: paired exterior-board building `Dn,A 49.5` and one-side
+exterior-board building `Dn,A 48`. The implementation keeps the shifted
+Knauf `416889` direct curve, Gate AR building-prediction basis, and ISO
+717 C adapter term; no source rows were imported and no formula was
+retuned. Lab aliases, missing `buildingPredictionOutputBasis`,
+non-selected anchors, and ASTM/IIC/AIIC remain boundary rows.
+
+Selected next action:
+`post_v1_wall_compatible_anchor_delta_building_dn_a_coverage_refresh_plan`
+
+Selected next file:
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-building-dn-a-coverage-refresh-contract.test.ts`
+
+Selected next label:
+`post-V1 wall compatible anchor-delta building Dn,A coverage refresh`.
+
+Counters: `newCalculableRequestShapes: 2`,
+`newCalculableTargetOutputs: 1`, `runtimeBasisPromotions: 1`,
+`runtimeValuesMoved 2`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, `frontendImplementationFilesTouched: 0`, and
+`webSurfaceParityContractFilesTouched: 1`.
+
+### Compatible Anchor-Delta Building Dn,A Coverage Refresh Plan
+
+This selected next slice is a no-runtime closeout. It is still
+calculator-goal aligned because it freezes the just-landed building
+`Dn,A` owner into the resolver/current-gate coverage surfaces before the
+next value-moving slice is selected. It must not add source rows, retune
+Gate I / Gate AR, or broaden unsupported metric aliases.
+
+Plan iteration 1 - landed runtime behavior to freeze:
+
+- Knauf `416889` compatible anchor-delta building requests now publish
+  paired exterior-board building `Dn,A 49.5` and one-side exterior-board
+  building `Dn,A 48`.
+- The same route still publishes paired building `DnT,A 51.9` and
+  one-side building `DnT,A 50.4`.
+- Field `Dn,A` / `DnT,A` remain on the already-landed Gate I owner.
+- Lab aliases, missing `buildingPredictionOutputBasis`, non-selected
+  anchors, and ASTM/IIC/AIIC remain boundaries.
+
+Plan iteration 2 - coverage refresh boundaries:
+
+- Add
+  `packages/engine/src/post-v1-wall-compatible-anchor-delta-building-dn-a-coverage-refresh-contract.test.ts`.
+- Freeze the landed building `Dn,A` owner in the current gate, resolver
+  registry/runtime candidate surface, coverage matrix, and
+  company-internal V0 expectations.
+- Re-probe paired/one-side building `Dn,A`, paired/one-side building
+  `DnT,A`, field A-weighted values, and the preserved boundary rows.
+- Do not change runtime formulas, source evidence, or workbench behavior
+  unless a parity assertion proves the already-supported output is hidden.
+
+Plan iteration 3 - selected follow-up after refresh:
+
+- Select a short numeric coverage/accuracy gap rerank after subtracting
+  the closed compatible anchor-delta direct, field/building base,
+  lab-companion, field A-weighted, building `DnT,A`, and building `Dn,A`
+  lanes.
+- The rerank must pick a bounded formula, route-input, calibration,
+  measured-anchor delta, or holdout-backed calculator improvement.
+- UI polish, report polish, broad source crawling, and process-only
+  ledgers remain outside the next step unless they directly unblock a
+  calculator route.
+
+The compatible anchor-delta one-side lab metric companion coverage
+refresh has now landed no-runtime:
+
+`post_v1_wall_compatible_anchor_delta_one_side_lab_metric_companion_coverage_refresh_plan`
+
+Coverage refresh contract file:
+
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-one-side-lab-metric-companion-coverage-refresh-contract.test.ts`
+
+Coverage refresh status:
+`post_v1_wall_compatible_anchor_delta_one_side_lab_metric_companion_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap_after_one_side_lab_companion`.
+
+The refresh pins
+`wall.compatible_anchor_delta.calculated_lab_companions` and runtime
+basis
+`post_v1_wall_compatible_anchor_delta_calculated_lab_companion_runtime`
+across resolver registry, runtime adapter, runtime surface, candidate
+coverage matrix, and company-internal V0. The candidate is now
+one-side-aware `ready_with_budget` in the matrix and
+`allowed_with_budget` in V0. It re-probes the one-side exterior-board
+Knauf LSF values `Rw 57 / STC 57 / C -0.6 / Ctr -5.5`, while direct
+single `Rw`, STC-only, field/building, A-weighted, ASTM, and non-Knauf
+requests stay outside the lab companion owner. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`frontendImplementationFilesTouched: 0`, `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes 0`, and `sourceRowsImported: 0`. This is not a
+broad source crawl.
+
+### Next Numeric Coverage Gap After One-Side Lab Companion Plan
+
+This selected next slice is a short high-ROI rerank, not a broad audit
+loop. Its job is to subtract the now-closed compatible anchor-delta
+one-side lab companion lane and select the next calculator improvement
+that can plausibly move formula scope, input ownership, or accuracy.
+
+Plan iteration 1 - current subtraction:
+
+- Closed as live or boundary-pinned: exact measured/source precedence,
+  single-leaf mass-law routes, non-direct-fixed double-leaf/framed
+  routes, direct-fixed double-leaf lab/field/building routes, compatible
+  anchor-delta direct `Rw`, compatible anchor-delta field/building
+  adapters, paired lab companion metrics, and one-side lab companion
+  metrics.
+- The new rerank must not reopen the one-side Knauf LSF companion just
+  landed, nor reselect surface parity, reports, auth/storage, confidence
+  copy, or source cataloging as product progress.
+- The first eligible class is a value-moving or input-surface slice with
+  named route family, target outputs, required physical inputs, and
+  exact `needs_input` / `unsupported` boundaries.
+
+Plan iteration 2 - candidate selection rules:
+
+- Prefer a bounded formula/input/accuracy candidate that increases
+  calculable layer combinations or improves a pinned route budget.
+- Source research is allowed only if the candidate names the exact
+  anchor, holdout, or calibration evidence needed before a formula can be
+  implemented; do not start a broad source crawl.
+- If every value-moving candidate is blocked, the contract must make the
+  blocking input/evidence explicit and select the smallest owner-proof or
+  targeted evidence action that can unblock the next runtime slice.
+
+Plan iteration 3 - expected contract:
+
+- Add
+  `packages/engine/src/post-v1-next-numeric-coverage-gap-after-one-side-lab-companion-contract.test.ts`.
+- The contract should compare at least one formula-scope candidate, one
+  route-input candidate, and one accuracy/holdout candidate against the
+  closed compatible anchor-delta lane.
+- The selected next action must be a concrete calculator capability
+  slice, not a generic docs refresh. Runtime values should move only in
+  the follow-up owner/runtime contract after this rerank proves the
+  route, target metrics, inputs, and boundaries.
+
+The compatible anchor-delta lab metric companion owner has now landed:
+the paired exterior-board Knauf LSF lab route supports
+`Rw 59 / STC 59 / C -1.1 / Ctr -6` for complete `element_lab`
+`Rw+STC/C/Ctr` requests. The source row still owns measured `Rw` only;
+`STC`, `C`, and `Ctr` are calculated from the shifted direct curve and
+rating adapters. Single `Rw`, `STC`-only, field/building, A-weighted,
+and ASTM impact aliases remain on their existing owners or boundaries.
+The next high-ROI same-stack closeout is web/API/card/report surface
+parity for this newly promoted lab companion owner.
+
+The compatible anchor-delta lab metric companion surface parity has now
+landed no-runtime:
+
+`post_v1_wall_compatible_anchor_delta_lab_metric_companion_surface_parity_plan`
+
+Lab companion surface parity contract file:
+
+`apps/web/features/workbench/post-v1-wall-compatible-anchor-delta-lab-metric-companion-surface-parity.test.ts`
+
+Lab companion surface parity status:
+`post_v1_wall_compatible_anchor_delta_lab_metric_companion_surface_parity_landed_no_runtime_selected_coverage_refresh`.
+
+Surface parity moved no runtime values. It pins the paired
+exterior-board Knauf LSF lab companion path across workbench live
+calculation, calculator API, saved replay, server snapshot replay, output
+cards, and report summaries with `Rw 59 / STC 59 / C -1.1 / Ctr -6`.
+It also keeps `STC`-only and one-side exterior-board requests off the lab
+companion owner. Counters: `newCalculableLayerTemplates 0`,
+`newCalculableRequestShapes 0`, `runtimeBasisPromotions 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes 0`, `sourceRowsImported: 0`,
+`frontendImplementationFilesTouched: 0`, and
+`webSurfaceParityContractFilesTouched: 1`.
+The landed surface parity selected
+`post_v1_wall_compatible_anchor_delta_lab_metric_companion_coverage_refresh_plan`
+in
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-lab-metric-companion-coverage-refresh-contract.test.ts`
+with label `post-V1 wall compatible anchor-delta lab metric companion coverage refresh`.
+
+The compatible anchor-delta lab metric companion coverage refresh has now
+landed no-runtime:
+
+`post_v1_wall_compatible_anchor_delta_lab_metric_companion_coverage_refresh_plan`
+
+Lab companion coverage refresh contract file:
+
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-lab-metric-companion-coverage-refresh-contract.test.ts`
+
+Lab companion coverage refresh status:
+`post_v1_wall_compatible_anchor_delta_lab_metric_companion_coverage_refresh_landed_no_runtime_selected_one_side_lab_metric_companion_owner`.
+
+The refresh pins
+`wall.compatible_anchor_delta.calculated_lab_companions` with runtime
+basis
+`post_v1_wall_compatible_anchor_delta_calculated_lab_companion_runtime`
+through the resolver registry, runtime candidate adapter, runtime surface
+rows, candidate coverage matrix, and company-internal V0 envelope. The
+candidate is `ready_with_budget` in the matrix and `allowed_with_budget`
+for company-internal V0. It re-probes the paired exterior-board Knauf LSF
+values `Rw 59 / STC 59 / C -1.1 / Ctr -6` while keeping single `Rw`,
+`STC`-only, field/building, and one-side exterior-board mixed requests
+off the paired-board companion owner. Counters:
+`coverageRefreshContractFilesTouched: 1`, `newCalculableLayerTemplates 0`,
+`newCalculableRequestShapes 0`, `runtimeBasisPromotions 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes 0`, `sourceRowsImported: 0`,
+and `frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+The landed refresh selected
+`post_v1_wall_compatible_anchor_delta_one_side_lab_metric_companion_owner_plan`
+in
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-one-side-lab-metric-companion-owner-contract.test.ts`
+with label `post-V1 wall compatible anchor-delta one-side lab metric companion owner`.
+
+The compatible anchor-delta one-side lab metric companion owner has now
+landed runtime:
+
+`post_v1_wall_compatible_anchor_delta_one_side_lab_metric_companion_owner_plan`
+
+One-side lab metric companion owner contract file:
+
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-one-side-lab-metric-companion-owner-contract.test.ts`
+
+One-side lab metric companion owner status:
+`post_v1_wall_compatible_anchor_delta_one_side_lab_metric_companion_owner_landed_runtime_selected_surface_parity`.
+
+The owner reuses
+`wall.compatible_anchor_delta.calculated_lab_companions` with runtime
+basis
+`post_v1_wall_compatible_anchor_delta_calculated_lab_companion_runtime`
+for exactly one exterior-board delta on the Knauf LSF reduced stack.
+One-side `element_lab` mixed `Rw+STC/C/Ctr` requests now calculate
+`Rw 57 / STC 57 / C -0.6 / Ctr -5.5`. Direct single `Rw` still stays on
+the measured-anchor delta owner, STC-only remains unsupported, and
+field/building, A-weighted, ASTM, and non-Knauf rows stay outside this
+owner. Counters: `newCalculableLayerTemplates 0`,
+`newCalculableRequestShapes 1`, `newCalculableTargetOutputs: 3`,
+`runtimeBasisPromotions 1`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+The landed owner selected
+`post_v1_wall_compatible_anchor_delta_one_side_lab_metric_companion_surface_parity_plan`
+in
+`apps/web/features/workbench/post-v1-wall-compatible-anchor-delta-one-side-lab-metric-companion-surface-parity.test.ts`
+with label `post-V1 wall compatible anchor-delta one-side lab metric companion surface parity`.
+
+The compatible anchor-delta one-side lab metric companion surface parity
+has now landed no-runtime:
+
+`post_v1_wall_compatible_anchor_delta_one_side_lab_metric_companion_surface_parity_plan`
+
+One-side lab metric companion surface parity contract file:
+
+`apps/web/features/workbench/post-v1-wall-compatible-anchor-delta-one-side-lab-metric-companion-surface-parity.test.ts`
+
+One-side lab metric companion surface parity status:
+`post_v1_wall_compatible_anchor_delta_one_side_lab_metric_companion_surface_parity_landed_no_runtime_selected_coverage_refresh`.
+
+The surface parity pins one-side workbench live calculation, calculator
+API payloads, saved replay, server snapshot replay, output cards, and
+report summaries to the engine values and trace:
+`wall.compatible_anchor_delta.calculated_lab_companions`,
+`post_v1_wall_compatible_anchor_delta_calculated_lab_companion_runtime`,
+and `Rw 57 / STC 57 / C -0.6 / Ctr -5.5`. It preserves the runtime
+boundaries from the owner: direct single `Rw` remains on the direct
+compatible anchor-delta owner, STC-only stays unsupported,
+field/building remains on Gate I / Gate AR only, A-weighted and ASTM
+aliases remain unsupported, and non-Knauf one-side rows remain outside
+the lab companion owner. Counters: `webSurfaceParityContractFilesTouched: 1`,
+`frontendImplementationFilesTouched: 0`, `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes 0`, and `sourceRowsImported: 0`. This is not a
+broad source crawl.
+
+The landed surface parity selected
+`post_v1_wall_compatible_anchor_delta_one_side_lab_metric_companion_coverage_refresh_plan`
+in
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-one-side-lab-metric-companion-coverage-refresh-contract.test.ts`
+with label `post-V1 wall compatible anchor-delta one-side lab metric companion coverage refresh`.
+
+### Landed Compatible Anchor-Delta One-Side Lab Companion Coverage Refresh Plan
+
+This landed slice is no-runtime and calculator-goal aligned. The runtime
+owner moved the value boundary and surface parity proved the answer is
+visible in the product. The coverage refresh now freezes the
+same one-side calculated lab companion in the registry/matrix/runtime
+surface/company-internal bookkeeping so future slices do not reopen it as
+stale or generic metric companion work.
+
+Plan iteration 1 - current behavior and ROI:
+
+- The engine now supports one-side exterior-board Knauf LSF
+  `element_lab` mixed `Rw+STC/C/Ctr` at
+  `Rw 57 / STC 57 / C -0.6 / Ctr -5.5`.
+- The route depends on the same measured Knauf anchor row, the bounded
+  one-side exterior-board delta, and existing ISO 717-1 / ASTM E413
+  rating adapters. No source import or formula retune is needed.
+- Surface parity is now landed, so the remaining stale-risk is matrix and
+  candidate bookkeeping, not user-visible output.
+- This is higher ROI than broad crawling because it protects a newly
+  calculable real layer combination from being reselected or weakened as
+  unresolved metadata work.
+
+Plan iteration 2 - implementation boundaries:
+
+- Add
+  `packages/engine/src/post-v1-wall-compatible-anchor-delta-one-side-lab-metric-companion-coverage-refresh-contract.test.ts`.
+- Assert the resolver registry, runtime candidate adapter, runtime
+  surface rows, candidate coverage matrix, and company-internal V0 all
+  expose the one-side-compatible use of
+  `wall.compatible_anchor_delta.calculated_lab_companions`,
+  route `wall`, basis `element_lab`, and runtime basis
+  `post_v1_wall_compatible_anchor_delta_calculated_lab_companion_runtime`
+  with no measured companion claim and no runtime value movement.
+- Re-probe one-side start/end values and the boundary set: direct single
+  `Rw`, STC-only, field/building, A-weighted, ASTM, and non-Knauf rows.
+
+Plan iteration 3 - expected contract shape:
+
+- The contract should be a coverage-only closeout: no runtime value
+  movement, no source rows, no formula retune, and no frontend
+  implementation file touch.
+- It should keep the one-side companion marked as source-absent
+  calculated support, not measured evidence, while preserving the direct
+  measured-anchor delta owner for single `Rw`.
+- After it lands, select the next high-ROI calculator capability slice
+  under the source-of-truth rules. If no stale matrix gap remains, rerank
+  bounded formula/input/accuracy candidates rather than selecting broad
+  source crawl.
+
+### Landed Compatible Anchor-Delta Lab Companion Coverage Refresh Plan
+
+This landed slice is intentionally no-runtime. It is still
+calculator-goal aligned because the newly promoted lab companion owner has
+now touched engine runtime, resolver registry, company-internal V0,
+current-gate web surfaces, and reports. The coverage refresh must freeze
+that new candidate in the current matrix so future agents do not reopen it
+as generic "metric companion" work or accidentally route `STC`/`C`/`Ctr`
+through measured-source aliasing.
+
+Plan iteration 1 - current behavior:
+
+- Engine owner is live for only one bounded request shape: paired exterior
+  board Knauf LSF `element_lab` requests that include `Rw` plus at least
+  one of `STC`, `C`, or `Ctr`.
+- Runtime values are `Rw 59 / STC 59 / C -1.1 / Ctr -6`. `Rw` is still
+  anchored to the measured reduced-stack source row; `STC`, `C`, and
+  `Ctr` are calculated from the shifted direct curve and rating adapters.
+- Single `Rw` remains on the direct compatible anchor-delta candidate.
+  `STC`-only, one-side exterior board companion metrics, field/building,
+  A-weighted, and ASTM outputs remain on existing owners or boundaries.
+
+Plan iteration 2 - required refresh outputs:
+
+- Add
+  `packages/engine/src/post-v1-wall-compatible-anchor-delta-lab-metric-companion-coverage-refresh-contract.test.ts`.
+- Assert the resolver registry contains the lab companion candidate as
+  `source_absent_family_solver`, route `wall`, basis `element_lab`, runtime
+  basis
+  `post_v1_wall_compatible_anchor_delta_calculated_lab_companion_runtime`,
+  and selected id
+  `wall.compatible_anchor_delta.calculated_lab_companions`.
+- Assert candidate coverage matrix, company-internal V0 rehearsal, runtime
+  candidate adapter, and runtime candidate surface rows all include the new
+  candidate with `ready_with_budget` / `allowed_with_budget`, no measured
+  companion claim, and no runtime value movement in the refresh itself.
+- Re-probe the live paired-board request and the three boundaries above so
+  the refresh is executable, not just a count update.
+
+Plan iteration 3 - selection rules after refresh:
+
+- Do not broaden this owner during the refresh. Coverage refresh must not
+  import source rows, retune values, or open field/building/A-weighted
+  aliases.
+- If the refresh finds no stale matrix gap, select the next high-ROI
+  calculator slice by comparing bounded formula/input candidates, not by
+  starting broad source crawling.
+- Candidate next work should prefer a new calculable wall/floor route or
+  accuracy retune with named physical inputs. A likely follow-up class is a
+  bounded same-family anchor/formula expansion that converts another
+  existing `needs_input` or unsupported metric request into a calculated
+  answer without weakening the measured-first order.
+
+The revalidation contract should not become another broad planning loop.
+Its job is to compare current double-leaf/framed coverage after the live
+non-direct-fixed and direct-fixed routes, then select the next bounded
+calculator improvement that increases formula coverage or accuracy.
+
+### Post Double-Leaf Revalidation Implementation Plan
+
+Implementation comparison to start from:
+
+- `layer-combination-resolver-double-leaf-framed-wall-banded-coverage-refresh`
+  already pins the non-direct-fixed double-leaf/framed lab runtime rows:
+  independent absorbed `Rw 45`, resilient both-sides `Rw 46`, and
+  resilient one-side `Rw 45`, with `C`, `Ctr`, `STC`, and explicit
+  not-measured budgets.
+- Gate P / Gate CJ / Gate CS already opened safe flat-order common
+  double-leaf paths when enough support metadata exists. Do not reselect
+  those closed auto-topology slices as new work.
+- Gate EO / Gate ER already opened direct-fixed double-leaf lab and
+  field/building runtime paths. Complete direct-fixed field/building
+  requests calculate through the Gate EO curve plus Gate I / Gate AR
+  adapters; missing room, support, or side-count inputs still fail closed
+  as `needs_input`.
+- The resolver runtime already preserves the precedence order: exact
+  measured full-stack row, anchored delta, calibrated family, family
+  physics, bounded/screening, then `needs_input` / `unsupported`.
+- `/workbench-v2` can send `airborneContext.wallTopology`,
+  `studSpacingMm`, `resilientBarSideCount`, and field/building geometry
+  fields. The next engine contract should therefore prove whether the
+  missing behavior is engine formula scope, required-input ownership, or
+  a closed/no-op repeat before touching frontend code.
+
+Create the selected contract file:
+
+`packages/engine/src/layer-combination-resolver-post-double-leaf-framed-wall-banded-coverage-revalidation-contract.test.ts`
+
+Use a small module only if the contract needs reusable constants outside
+the test. If a module is added, export it from `packages/engine/src/index.ts`;
+otherwise keep the revalidation local to the contract test, following the
+existing post-coverage revalidation pattern.
+
+The contract must include executable probes for these rows:
+
+- explicit non-direct-fixed double-leaf/framed lab rows stay live with the
+  current basis, candidate id, values, budgets, and target outputs;
+- safe flat double-leaf rows with support metadata stay live through the
+  already-landed auto-topology path, and are marked closed evidence rather
+  than new scope;
+- complete direct-fixed lab, field, and building rows stay live through
+  Gate EO / Gate ER, including `R'w`, `Dn,w`, and `DnT,w`;
+- missing support topology, missing `studSpacingMm`, missing
+  `resilientBarSideCount`, incomplete side/cavity layer groups, or
+  overlapping groups remain `needs_input`, not screening fallback;
+- exact same-stack rows and any future measured anchor rows remain ahead
+  of source-absent formula candidates;
+- grouped triple-leaf, flat multicavity, thick-board ambiguous walls,
+  floor-impact outputs, and ASTM/IIC outputs stay on their separate
+  owners or unsupported boundaries.
+
+The rerank portion must classify remaining candidates into exactly these
+postures:
+
+- `closed_runtime_route`: live routes that must not be selected again;
+- `runtime_scope_candidate`: a bounded formula/input route that can move
+  calculator coverage now without new source crawling;
+- `accuracy_candidate_blocked`: a retune or tighter budget that needs
+  same-basis holdouts or accepted owner evidence first;
+- `needs_input_surface_candidate`: an owned calculator route that only
+  needs a user/default physical input surface before runtime can widen;
+- `blocked_non_goal`: frontend polish, confidence wording, broad source
+  crawl, or catalog expansion without a named formula owner.
+
+The selected next action coming out of the revalidation must name:
+
+- route family and layer-template shape;
+- target outputs and metric basis (`Rw` / `STC` / `C` / `Ctr`,
+  `R'w` / `Dn,w` / `DnT,w`, floor `Ln,w` / `DeltaLw`, ASTM `IIC` /
+  `AIIC`, etc.);
+- required physical inputs and which ones may use an engineering default;
+- exact precedence / anchor / formula / `needs_input` ordering;
+- runtime counters: new calculable layer templates, new calculable
+  request shapes, runtime basis promotions, runtime values moved,
+  source rows imported, frontend files touched;
+- stop conditions that prevent false numbers.
+
+The preferred outcome is a value-moving calculator slice. If the
+revalidation proves that no safe runtime movement is available, it must
+select a narrow owner, holdout, or required-input targeting action with a
+named route and metric basis. It must not select another broad ledger or
+source crawl.
+
+Validation for the detailed slice:
+
+- focused contract:
+  `pnpm -C packages/engine exec vitest run src/layer-combination-resolver-post-double-leaf-framed-wall-banded-coverage-revalidation-contract.test.ts --maxWorkers=1`;
+- previous double-leaf chain plus revalidation:
+  `pnpm -C packages/engine exec vitest run src/layer-combination-resolver-double-leaf-framed-wall-banded-coverage-refresh-contract.test.ts src/post-v1-wall-direct-fixed-double-leaf-field-building-adapter-runtime-gate-er-contract.test.ts src/post-v1-current-formula-scope-accuracy-gap-ledger-gate-ff-contract.test.ts src/layer-combination-resolver-post-double-leaf-framed-wall-banded-coverage-revalidation-contract.test.ts --maxWorkers=1`;
+- current calculator gate after the new test is registered:
+  `pnpm calculator:gate:current`;
+- whitespace:
+  `git diff --check`.
+
+### Post Double-Leaf Revalidation Closeout And Selected Next
+
+Revalidation landed as
+`layer_combination_resolver_post_double_leaf_framed_wall_banded_coverage_revalidation_plan`
+in
+`packages/engine/src/layer-combination-resolver-post-double-leaf-framed-wall-banded-coverage-revalidation-contract.test.ts`
+with status
+`layer_combination_resolver_post_double_leaf_framed_wall_banded_coverage_revalidation_landed_no_runtime_selected_wall_compatible_anchor_delta_scope_expansion`.
+
+What the revalidation proved:
+
+- explicit non-direct-fixed double-leaf/framed lab rows are closed live
+  routes through
+  `layer_combination_resolver_double_leaf_framed_wall_banded_formula_corridor_v1`;
+- safe flat double-leaf rows with support metadata are closed live
+  routes through the already-landed Gate S auto-topology path, then
+  Gate I / Gate AR for complete field/building contexts;
+- direct-fixed double-leaf lab, field, and building rows are closed live
+  routes through Gate EO / Gate ER;
+- missing support topology, missing `studSpacingMm`, missing
+  `resilientBarSideCount`, and unsafe field/building context gaps remain
+  `needs_input` / basis boundaries rather than screening fallbacks;
+- floor-impact `Ln,w` / `CI` and ASTM `IIC` / `AIIC` requests remain on
+  their separate owners or unsupported boundaries;
+- exact measured rows and the existing compatible-anchor delta route
+  remain ahead of source-absent double-leaf formulas.
+
+Counters: `roiAnalysisIterations: 3`, `closedRuntimeRouteRowsRevalidated 3`,
+`runtimeScopeCandidates 1`, `needsInputSurfaceCandidates 1`,
+`accuracyCandidatesBlocked 1`, `blockedNonGoalRows 1`,
+`newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+`runtimeBasisPromotions 0`, `runtimeValuesMoved 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Selected next, now landed:
+
+`post_v1_wall_compatible_anchor_delta_scope_expansion_plan`
+
+Selected next file, now landed:
+
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-scope-expansion-contract.test.ts`
+
+Selected next label, now landed:
+
+`post-V1 wall compatible measured-anchor delta scope expansion`
+
+Route family and layer-template shape:
+
+- wall airborne, element-lab first;
+- compatible measured-anchor delta for bounded exterior board changes on
+  a reduced stack that already has an owned exact measured/source row;
+- start from the existing exact LSF anchor lane, then generalize only
+  where the reduced stack, added/removed exterior board, side ownership,
+  and metric basis are explicit.
+
+Target outputs and basis:
+
+- initial value-moving target is `Rw` on the lab `element_lab` basis;
+- `STC`, `C`, and `Ctr` stay unsupported unless a separate owned
+  spectrum/curve companion is proven;
+- field/building outputs stay blocked unless an explicit Gate I / Gate AR
+  adapter owns the basis from the anchored direct curve.
+
+Required physical inputs and defaults:
+
+- exact reduced-stack source row or owned source id;
+- added/removed exterior board material behavior `panel_leaf` / `board`;
+- board side (`input_start` or `input_end`), thickness, and surface mass;
+- same construction family and compatible lab context as the source row;
+- no implicit source row, no implicit board mass, and no arbitrary support
+  default. If surface mass, side, source row, or context basis is missing,
+  return `needs_input` / unsupported rather than guessing.
+
+Precedence:
+
+1. exact full-stack source row;
+2. compatible measured-anchor delta for bounded exterior board changes;
+3. calibrated family / owned family physics route;
+4. bounded or screening route only when its metric basis is owned;
+5. `needs_input` / unsupported.
+
+Stop conditions:
+
+- do not promote `STC`, `C`, `Ctr`, field, or building metrics from a
+  single `Rw` anchor without an owned basis;
+- do not use interior/cavity board changes as same-side exterior deltas;
+- do not infer a measured anchor from a merely similar catalog row;
+- do not import broad source rows unless the selected delta owner names
+  a specific anchor/holdout need;
+- do not touch frontend files unless the engine proves a missing input
+  cannot be supplied by the current workbench payload.
+
+### Compatible Anchor-Delta Scope Expansion Closeout And Selected Next
+
+Scope expansion landed as
+`post_v1_wall_compatible_anchor_delta_scope_expansion_plan`
+in
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-scope-expansion-contract.test.ts`
+with status
+`post_v1_wall_compatible_anchor_delta_scope_expansion_landed_runtime_selected_field_building_adapter_owner`.
+
+What moved:
+
+- existing one-side exterior board anchor-delta remains pinned at
+  `Rw 57` from the exact `knauf_lab_416889_primary_2026` `Rw 55`
+  source row;
+- paired exterior board additions on both faces of the same exact LSF
+  reduced stack now calculate as a bounded compatible anchor delta at
+  `Rw 59`;
+- `STC`, `C`, and `Ctr` stay unsupported for this anchor-delta lane
+  unless a separate spectrum/curve owner lands;
+- interior/cavity board changes still fail closed as `needs_input`
+  rather than being treated as exterior board deltas;
+- field/building target outputs do not use
+  `exact_subassembly_source_plus_calculated_delta` yet. That is now the
+  explicitly selected next owner question.
+
+Counters: `newCalculableLayerTemplates 1`, `newCalculableRequestShapes 1`,
+`runtimeBasisPromotions 1`, `runtimeValuesMoved 1`,
+`runtimeFormulaRetunes 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+
+Selected next:
+
+`post_v1_wall_compatible_anchor_delta_field_building_adapter_owner_plan`
+
+Selected next file:
+
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-field-building-adapter-owner-contract.test.ts`
+
+Selected next label:
+
+`post-V1 wall compatible anchor-delta field/building adapter owner`
+
+Route family and layer-template shape:
+
+- wall airborne compatible anchor-delta reduced-stack route;
+- start from exact lab `Rw` anchor plus bounded exterior board delta;
+- evaluate only complete field/building contexts with explicit room,
+  area, flanking, junction, and output-basis fields.
+
+Target outputs and basis:
+
+- candidate outputs are `R'w`, `Dn,w`, and `DnT,w`;
+- the basis must be Gate I / Gate AR adapter ownership from an anchored
+  direct curve, not relabelled lab `Rw`;
+- `STC`, `C`, `Ctr`, `Dn,A`, `DnT,A`, and ASTM outputs remain out of
+  scope unless a separate metric owner is named.
+
+Required physical inputs and defaults:
+
+- exact reduced-stack source row or owned source id;
+- compatible exterior board delta details from the landed scope
+  expansion;
+- `field_between_rooms`: partition area, receiving volume, and receiving
+  RT60;
+- `building_prediction`: partition area, source and receiving volumes,
+  receiving RT60, flanking assumption, junction class, coupling length,
+  and building output basis;
+- no arbitrary field/building defaults. Missing room, junction, flanking,
+  or output-basis inputs must stay `needs_input`.
+
+Precedence:
+
+1. exact full-stack field/building source row if one exists;
+2. exact lab reduced-stack anchor plus compatible board delta, then owned
+   Gate I / Gate AR adapter if the context is complete;
+3. owned family physics route;
+4. `needs_input` / unsupported.
+
+Stop conditions:
+
+- do not publish `R'w`, `Dn,w`, or `DnT,w` from lab `Rw` without the
+  field/building adapter owning the basis;
+- do not open building prediction for partial room/flanking/junction
+  context;
+- do not bypass exact measured full-stack precedence;
+- do not import broad sources or touch frontend files unless the owner
+  proof shows a named missing field that the current workbench cannot
+  already send.
+
+### Compatible Anchor-Delta Field/Building Adapter Owner Closeout And Selected Next
+
+Field/building adapter owner landed as
+`post_v1_wall_compatible_anchor_delta_field_building_adapter_owner_plan`
+in
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-field-building-adapter-owner-contract.test.ts`
+with status
+`post_v1_wall_compatible_anchor_delta_field_building_adapter_owner_landed_runtime_selected_surface_parity_input_acceptance`.
+
+What moved:
+
+- complete `field_between_rooms` requests for the paired exterior-board
+  Knauf LSF compatible anchor-delta stack now use the `Rw 59`
+  direct curve plus Gate I and publish `R'w 50 / Dn,w 51 / DnT,w 53`;
+- complete `building_prediction` requests for the same stack now use the
+  `Rw 59` direct curve plus Gate AR and publish
+  `R'w 50 / Dn,w 51 / DnT,w 53`;
+- the selected runtime basis is Gate I / Gate AR
+  (`family_physics_prediction`) with
+  `anchorSourceId=knauf_lab_416889_primary_2026`; the lab anchor-delta
+  method remains the direct-curve owner and is not relabelled as field
+  output;
+- missing `receivingRoomRt60S` or `buildingPredictionOutputBasis` stays
+  `needs_input` with no supported field/building outputs;
+- `STC`, `C`, `Ctr`, `Dn,A`, `DnT,A`, and ASTM outputs remain outside
+  this owner unless a later metric-specific owner lands.
+
+Counters: `newCalculableLayerTemplates 0`, `newCalculableRequestShapes 2`,
+`runtimeBasisPromotions 2`, `runtimeValuesMoved 6`,
+`runtimeFormulaRetunes 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+
+Selected next:
+
+`post_v1_wall_compatible_anchor_delta_surface_parity_input_acceptance_plan`
+
+Selected next file:
+
+`apps/web/features/workbench/post-v1-wall-compatible-anchor-delta-field-building-surface-parity.test.ts`
+
+Selected next label:
+
+`post-V1 wall compatible anchor-delta field/building surface parity input acceptance`
+
+Route family and layer-template shape:
+
+- wall airborne compatible anchor-delta paired exterior-board LSF stack;
+- no new formula or source import; prove the landed engine values are
+  visible consistently across workbench live calculation, saved replay,
+  server snapshot/API payloads, cards, and report summaries;
+- use existing workbench field/building context inputs first. Only touch
+  frontend implementation if the parity test proves a required field is
+  not currently sent.
+
+Target outputs and basis:
+
+- `R'w`, `Dn,w`, and `DnT,w` only;
+- selected basis must remain Gate I for `field_between_rooms` and Gate AR
+  for `building_prediction` over the compatible anchor-delta direct
+  curve;
+- lab `Rw`, `STC`, `C`, `Ctr`, `Dn,A`, `DnT,A`, and ASTM outputs remain
+  separate.
+
+Stop conditions:
+
+- do not add new formulas, retune the anchor-delta, or import new source
+  rows in this surface parity slice;
+- do not create defaults for missing RT60, building output basis,
+  flanking, junction, or room geometry;
+- do not show `STC`, `C`, `Ctr`, `Dn,A`, or `DnT,A` as supported for
+  this owner;
+- if the web surface already carries all required inputs and outputs,
+  land the parity proof no-runtime and select the next calculator-value
+  gap rather than doing UI polish.
+
+### Compatible Anchor-Delta Surface Parity Closeout And Selected Next
+
+Surface parity/input acceptance landed as
+`post_v1_wall_compatible_anchor_delta_surface_parity_input_acceptance_plan`
+in
+`apps/web/features/workbench/post-v1-wall-compatible-anchor-delta-field-building-surface-parity.test.ts`
+with status
+`post_v1_wall_compatible_anchor_delta_surface_parity_input_acceptance_landed_no_runtime_selected_lab_metric_companion_owner`.
+
+What moved:
+
+- workbench live calculation now routes the paired exterior-board Knauf
+  LSF compatible anchor-delta field request through the existing
+  field/building input surface and publishes `R'w 50 / Dn,w 51 /
+  DnT,w 53`;
+- calculator API payloads built from that same surface preserve the
+  compatible anchor-delta Gate I basis with
+  `anchorSourceId=knauf_lab_416889_primary_2026`;
+- building prediction live, saved replay, and server snapshot replay all
+  preserve `connectionType=line_connection`, `studType=light_steel_stud`,
+  `studSpacingMm=600`, room geometry, RT60, source-room volume,
+  flanking/junction class, conservative assumption, junction coupling
+  length, and `buildingPredictionOutputBasis`, then publish
+  `R'w 50 / Dn,w 51 / DnT,w 53` through Gate AR;
+- cards and report summaries show the same values and basis labels;
+- missing `receivingRoomRt60S` remains `needs_input`, and mixed unowned
+  requests keep `STC`, `Dn,A`, and `DnT,A` unsupported.
+
+Counters: `newCalculableLayerTemplates 0`, `newCalculableRequestShapes 0`,
+`runtimeBasisPromotions 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes 0`, `sourceRowsImported: 0`,
+`frontendImplementationFilesTouched: 0`, and
+`webSurfaceParityContractFilesTouched: 1`.
+
+Selected next:
+
+`post_v1_wall_compatible_anchor_delta_lab_metric_companion_owner_plan`
+
+Selected next file:
+
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-lab-metric-companion-owner-contract.test.ts`
+
+Selected next label:
+
+`post-V1 wall compatible anchor-delta lab metric companion owner`
+
+Plan iterations recorded before implementation:
+
+1. Surface parity proved no UI implementation blocker. The next useful
+   work should not polish copy or re-run a broad web pass; the remaining
+   same-stack calculator gap is unsupported lab companion metrics on a
+   route that already owns a shifted frequency curve.
+2. Gate DV already owns the exact Knauf LSF source-row mixed request
+   policy: `Rw` remains exact-source anchored while `STC`, `C`, and
+   `Ctr` are calculated companions from the selected curve/rating
+   adapters. The compatible anchor-delta route must not reuse measured
+   `Rw` as measured companion evidence, but it can evaluate whether the
+   shifted compatible direct curve can own calculated companions under a
+   distinct basis.
+3. `Dn,A` and `DnT,A` should stay blocked in the selected owner unless
+   the lab companion owner first provides a defensible `C` term and a
+   later field/building A-weighted owner explicitly admits it. The next
+   contract therefore owns lab `STC/C/Ctr` only and preserves field
+   A-weighted aliases as a separate future lane.
+
+Route family and layer-template shape:
+
+- wall airborne compatible anchor-delta paired exterior-board LSF stack;
+- existing exact reduced Knauf source row remains `Rw`-only measured
+  evidence;
+- existing compatible anchor-delta shifted direct curve is the only
+  candidate source for calculated `STC`, `C`, and `Ctr` companions;
+- no source import, retune, field/building adapter change, or UI change
+  belongs in this next owner.
+
+Target outputs and stop conditions:
+
+- consider `Rw`, `STC`, `C`, and `Ctr` in `element_lab` context only;
+- keep single-output `Rw` on the current compatible anchor-delta direct
+  owner;
+- if `STC/C/Ctr` promote, label them calculated companions with their own
+  basis and error budget, not measured exact source metrics;
+- keep `R'w`, `Dn,w`, `DnT,w`, `Dn,A`, `DnT,A`, and ASTM outputs outside
+  this lab metric companion owner;
+- if the shifted curve or rating adapters cannot defend stable companion
+  values, land the contract as owner-rejected and select a source/holdout
+  acquisition step instead of guessing.
+
+### Compatible Anchor-Delta Lab Metric Companion Closeout And Selected Next
+
+Lab metric companion owner landed as
+`post_v1_wall_compatible_anchor_delta_lab_metric_companion_owner_plan`
+in
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-lab-metric-companion-owner-contract.test.ts`
+with status
+`post_v1_wall_compatible_anchor_delta_lab_metric_companion_owner_landed_runtime_selected_surface_parity`.
+
+What moved:
+
+- complete paired exterior-board Knauf LSF `element_lab`
+  `Rw+STC/C/Ctr` requests now publish
+  `Rw 59 / STC 59 / C -1.1 / Ctr -6`;
+- the selected basis is
+  `post_v1_wall_compatible_anchor_delta_calculated_lab_companion_runtime`
+  with `family_physics_prediction` origin, not measured companion
+  evidence;
+- the reduced Knauf source row still owns measured `Rw` only, while
+  `STC`, `C`, and `Ctr` are rated from the shifted direct curve and
+  rating adapters;
+- single-output `Rw` stays on the compatible anchor-delta direct owner,
+  `STC`-only stays unsupported, exact reduced-stack mixed requests stay
+  on Gate DV, and field/building plus A-weighted outputs remain separate
+  owners.
+
+Counters: `newCalculableLayerTemplates 0`, `newCalculableRequestShapes 1`,
+`newCalculableTargetOutputs: 3`, `runtimeBasisPromotions 1`,
+`runtimeValuesMoved: 0`, `runtimeFormulaRetunes 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Selected next:
+
+`post_v1_wall_compatible_anchor_delta_lab_metric_companion_surface_parity_plan`
+
+Selected next file:
+
+`apps/web/features/workbench/post-v1-wall-compatible-anchor-delta-lab-metric-companion-surface-parity.test.ts`
+
+Selected next label:
+
+`post-V1 wall compatible anchor-delta lab metric companion surface parity`
+
+Plan iterations before implementation:
+
+1. Engine owner has moved values into supported target outputs but the
+   web surface has not yet pinned cards, API, saved/server replay, and
+   report posture for the new `STC/C/Ctr` basis.
+2. The previous field/building surface parity proved the workbench input
+   surface is already carrying the relevant LSF context; this next slice
+   should be a no-runtime parity/input acceptance closeout, not UI polish.
+3. Surface parity must preserve the same boundaries as the engine owner:
+   no `STC`-only promotion, no field/building alias, no A-weighted route,
+   and no measured-source relabelling.
 
 Current checkpoint:
 

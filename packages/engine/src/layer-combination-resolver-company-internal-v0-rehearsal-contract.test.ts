@@ -55,6 +55,7 @@ import {
 import { LIGHTWEIGHT_CONCRETE_FAMILY_SELECTED_CANDIDATE_ID } from "./lightweight-concrete-family-runtime-constants";
 import { MIXED_SUPPORT_FLOOR_IMPACT_SELECTED_CANDIDATE_ID } from "./mixed-support-floor-impact-runtime-corridor";
 import {
+  POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_SELECTED_CANDIDATE_ID,
   POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_SELECTED_CANDIDATE_ID
 } from "./post-v1-wall-compatible-anchor-delta";
 import { TUAS_C11C_GUARDED_ISO_WEIGHTED_IMPACT_SELECTED_CANDIDATE_ID } from "./tuas-c11c-exact-import-readiness";
@@ -124,16 +125,16 @@ describe("layer combination resolver company-internal V0 rehearsal contract", ()
     });
     expect(contract.summary).toEqual({
       allowedExactRowCount: 4,
-      allowedWithBudgetRowCount: 41,
+      allowedWithBudgetRowCount: 42,
       blockedActionCount: 4,
       blockedRowCount: 2,
-      coverageMatrixRowCount: 48,
-      companyInternalV0AllowedRowCount: 45,
+      coverageMatrixRowCount: 49,
+      companyInternalV0AllowedRowCount: 46,
       needsUserInputRowCount: 1,
       readinessBucketCount: {
         needs_input: 1,
         ready: 4,
-        ready_with_budget: 41,
+        ready_with_budget: 42,
         research_only: 0,
         unsupported: 2
       },
@@ -154,6 +155,7 @@ describe("layer combination resolver company-internal V0 rehearsal contract", ()
       [MIXED_SUPPORT_FLOOR_IMPACT_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
       ["floor.exact_measured_floor_system.same_topology_metric_basis", "allowed_exact"],
       [POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
+      [POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
       ["candidate_lsf_exact_rw_calculated_lab_companions", "allowed_with_budget"],
       ["wall.exact_verified_airborne.same_leaf_schedule", "allowed_exact"],
       ["floor.exact_impact_band_source.metric_basis", "allowed_exact"],

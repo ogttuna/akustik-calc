@@ -17,45 +17,61 @@ Current read map:
 - active tactical slice:
   [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md);
 - latest landed checkpoint record:
+  [CHECKPOINT_2026-06-10_COMPATIBLE_ANCHOR_DELTA_BUILDING_DN_A_OWNER.md](./CHECKPOINT_2026-06-10_COMPATIBLE_ANCHOR_DELTA_BUILDING_DN_A_OWNER.md);
+- selected-next source plan:
+  [POST_V1_NEXT_NUMERIC_COVERAGE_GAP_AFTER_A_WEIGHTED_FIELD_BUILDING_PLAN_2026-06-10.md](./POST_V1_NEXT_NUMERIC_COVERAGE_GAP_AFTER_A_WEIGHTED_FIELD_BUILDING_PLAN_2026-06-10.md);
+- previous checkpoint record:
   [CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md](./CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md);
-- latest landed route-family safety record:
+- previous route-family safety record:
   [POST_V1_THICK_BOARD_AUTO_FAMILY_BOUNDARY_SAFETY_PLAN_2026-06-09.md](./POST_V1_THICK_BOARD_AUTO_FAMILY_BOUNDARY_SAFETY_PLAN_2026-06-09.md);
-- latest landed current coverage/accuracy gap ledger:
-  [POST_V1_GATE_EV_EW_HEAVY_CORE_LINED_MASSIVE_CALIBRATION_OWNER_PLAN_2026-06-09.md](./POST_V1_GATE_EV_EW_HEAVY_CORE_LINED_MASSIVE_CALIBRATION_OWNER_PLAN_2026-06-09.md);
-- latest landed numeric rerank and selected targeted evidence action:
-  [POST_V1_GATE_EX_EY_HEAVY_CORE_LINED_MASSIVE_TARGETED_EVIDENCE_PLAN_2026-06-09.md](./POST_V1_GATE_EX_EY_HEAVY_CORE_LINED_MASSIVE_TARGETED_EVIDENCE_PLAN_2026-06-09.md);
-- latest landed targeted evidence closeout and selected rerank:
-  [POST_V1_GATE_EY_EZ_HEAVY_CORE_LINED_MASSIVE_TARGETED_EVIDENCE_CLOSEOUT_PLAN_2026-06-09.md](./POST_V1_GATE_EY_EZ_HEAVY_CORE_LINED_MASSIVE_TARGETED_EVIDENCE_CLOSEOUT_PLAN_2026-06-09.md);
-- latest landed numeric rerank and selected current ledger:
-  [POST_V1_GATE_EZ_FA_CURRENT_COVERAGE_ACCURACY_GAP_LEDGER_PLAN_2026-06-09.md](./POST_V1_GATE_EZ_FA_CURRENT_COVERAGE_ACCURACY_GAP_LEDGER_PLAN_2026-06-09.md);
-- latest landed current ledger and selected residual owner proof:
-  [POST_V1_GATE_FA_FB_OPENING_LEAK_COMMON_WALL_RESIDUAL_OWNER_PLAN_2026-06-09.md](./POST_V1_GATE_FA_FB_OPENING_LEAK_COMMON_WALL_RESIDUAL_OWNER_PLAN_2026-06-09.md);
-- latest landed residual owner closeout and selected rerank:
-  [POST_V1_GATE_FB_FC_OPENING_LEAK_COMMON_WALL_OWNER_CLOSEOUT_AND_NEXT_NUMERIC_GAP_PLAN_2026-06-09.md](./POST_V1_GATE_FB_FC_OPENING_LEAK_COMMON_WALL_OWNER_CLOSEOUT_AND_NEXT_NUMERIC_GAP_PLAN_2026-06-09.md);
-- latest landed rerank and selected floor holdout prerequisite:
-  [POST_V1_GATE_FC_FD_FLOOR_RAW_BARE_FLOATING_HOLDOUT_PLAN_2026-06-09.md](./POST_V1_GATE_FC_FD_FLOOR_RAW_BARE_FLOATING_HOLDOUT_PLAN_2026-06-09.md);
-- latest landed floor holdout closeout and selected rerank:
-  [POST_V1_GATE_FD_FE_FLOOR_RAW_BARE_FLOATING_HOLDOUT_CLOSEOUT_PLAN_2026-06-09.md](./POST_V1_GATE_FD_FE_FLOOR_RAW_BARE_FLOATING_HOLDOUT_CLOSEOUT_PLAN_2026-06-09.md);
-- latest landed rerank and selected formula scope ledger:
+- previous Gate FF formula-scope ledger:
   [POST_V1_GATE_FE_FF_CURRENT_FORMULA_SCOPE_ACCURACY_LEDGER_PLAN_2026-06-09.md](./POST_V1_GATE_FE_FF_CURRENT_FORMULA_SCOPE_ACCURACY_LEDGER_PLAN_2026-06-09.md);
 - binding usable V1 finish plan:
   [USABLE_V1_EXECUTION_PLAN.md](./USABLE_V1_EXECUTION_PLAN.md);
 - strategic plan:
   [MASTER_PLAN.md](./MASTER_PLAN.md).
 
-The current selected next action is the post double-leaf/framed coverage
-revalidation:
-`layer_combination_resolver_post_double_leaf_framed_wall_banded_coverage_revalidation_plan`.
+The current selected next action is the compatible anchor-delta building
+`Dn,A` coverage refresh:
+`post_v1_wall_compatible_anchor_delta_building_dn_a_coverage_refresh_plan`.
 The selected next contract file is
-`packages/engine/src/layer-combination-resolver-post-double-leaf-framed-wall-banded-coverage-revalidation-contract.test.ts`.
-That selected next file is intentionally still open at this checkpoint;
-creating its contract is the next implementation step, not a missing
-landed Gate FF artifact.
-Gate FF has landed as the latest no-runtime formula scope/accuracy
-ledger; Gate FE, Gate FD, Gate FC, Gate FB, Gate FA, Gate EZ, Gate EY,
-Gate EX, Gate EW, Gate EV, Gate EU, the double-leaf checkpoint, and the
-thick-board safety plan are landed records, not active replacements for
-the selected post double-leaf revalidation.
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-building-dn-a-coverage-refresh-contract.test.ts`.
+Selected next label:
+`post-V1 wall compatible anchor-delta building Dn,A coverage refresh`.
+That selected next file is intentionally still open at this checkpoint.
+The compatible anchor-delta building `Dn,A` owner has landed runtime and
+selected this no-runtime coverage refresh as the next implementation step.
+Gate FF, post double-leaf/framed revalidation, compatible anchor-delta
+scope expansion, field/building adapter ownership, lab companion
+ownership, A-weighted field/building ownership, and the building `Dn,A`
+owner are landed records, not active replacements for the selected
+coverage refresh.
+
+Latest landed runtime compatible anchor-delta building `Dn,A` owner:
+`post_v1_wall_compatible_anchor_delta_building_dn_a_owner_plan`
+with status
+`post_v1_wall_compatible_anchor_delta_building_dn_a_owner_landed_runtime_selected_coverage_refresh`.
+Previous numeric gap action:
+`post_v1_next_numeric_coverage_gap_after_a_weighted_field_building_plan`
+in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-a-weighted-field-building-contract.test.ts`
+with status
+`post_v1_next_numeric_coverage_gap_after_a_weighted_field_building_landed_no_runtime_selected_compatible_anchor_delta_building_dn_a_owner`.
+Owner contract:
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-building-dn-a-owner-contract.test.ts`.
+The owner promotes the already-computed Gate AR compatible anchor-delta
+building values for the Knauf `416889` reduced-stack lane: paired
+exterior-board building `Dn,A 49.5` and one-side exterior-board building
+`Dn,A 48`. It keeps the same shifted direct curve, Gate AR
+building-prediction basis, and ISO 717 C adapter term; no source rows were
+imported and no formula was retuned. Lab aliases, missing
+`buildingPredictionOutputBasis`, non-selected anchors, and ASTM/IIC/AIIC
+remain boundary rows.
+Counters: `newCalculableRequestShapes: 2`,
+`newCalculableTargetOutputs: 1`, `runtimeBasisPromotions: 1`,
+`runtimeValuesMoved 2`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, `frontendImplementationFilesTouched: 0`, and
+`webSurfaceParityContractFilesTouched: 1`.
 
 Latest landed no-runtime formula scope/accuracy ledger:
 `post_v1_current_formula_scope_accuracy_gap_ledger_gate_ff_plan`
@@ -188,22 +204,19 @@ Counters: `ownerLedgersRejected 5`, `sameBasisHoldoutLedgersMissing 5`,
 `runtimeValuesMoved 0`, `sourceRowsImported: 0`, and
 `frontendImplementationFilesTouched: 0`.
 
-Latest full documented passing gate: after Gate FF current-gate
-registration and post double-leaf/framed revalidation selection,
-`pnpm calculator:gate:current` passed with engine 676 test files / 3755
-tests, web 115 test files / 447 passed and 18 skipped, repo build 5 / 5,
-and whitespace guard passed. Known non-fatal warnings
-remain the test-environment Zustand persist storage warning and optional
-`sharp/@img` build warnings.
+Latest full documented passing gate: after the compatible anchor-delta
+building `Dn,A` owner landed and selected coverage refresh,
+`pnpm calculator:gate:current` passed with engine 688 test files / 3810
+tests, web 119 test files / 464 passed and 18 skipped, repo build 5 / 5,
+and whitespace guard passed. Known non-fatal warnings remain the
+test-environment Zustand persist storage warning and optional `sharp/@img`
+build warnings.
 
-Gate FD is the latest no-runtime floor holdout closeout, Gate FC is the
-latest no-runtime numeric coverage/accuracy rerank, Gate FB is the latest
-no-runtime owner closeout, Gate FA is the latest no-runtime current
-coverage/accuracy gap ledger, Gate EY is the latest no-runtime targeted
-evidence action, Gate EW is the latest no-runtime calibration owner
-proof, Gate ET is the latest no-runtime boundary action, Gate ER is the
-latest value-moving runtime scope/accuracy action, and Gate EQ is the
-latest no-runtime adapter owner proof.
+The compatible anchor-delta building `Dn,A` owner is the latest
+value-moving runtime scope action. The selected next action is a
+no-runtime coverage refresh for that owner. Gate FF, Gate FE, Gate FD,
+Gate FC, Gate FB, Gate FA, Gate EY, Gate EW, Gate ET, Gate ER, and Gate EQ
+remain historical landed records.
 
 The executable broad-accuracy refocus contract remains
 `packages/engine/src/broad-accuracy-calculator-readiness-contract.test.ts`;
@@ -422,8 +435,8 @@ heavy-core lanes remain intentionally live and pinned.
 Dedicated safety plan:
 `docs/calculator/POST_V1_THICK_BOARD_AUTO_FAMILY_BOUNDARY_SAFETY_PLAN_2026-06-09.md`.
 That record is now implemented and locally validated. It does not
-replace the current post double-leaf/framed coverage revalidation
-selected next action; it
+replace the current compatible anchor-delta building `Dn,A` coverage
+refresh selected next action; it
 documents the safety contract, narrow classifier guard, validation
 commands, and rollback conditions for this route-family boundary. The focused engine safety contract now has 62 tests, the web
 payload contract has 4 tests, both are registered in the current-gate
