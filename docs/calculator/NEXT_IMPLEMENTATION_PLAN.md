@@ -6,6 +6,8 @@ focused, agent-resume friendly. For the strategic picture read
 [CURRENT_STATE.md](./CURRENT_STATE.md). For the private-use readiness
 chain read
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
+For the fastest new-agent handoff read
+[NEXT_AGENT_BRIEF.md](./NEXT_AGENT_BRIEF.md) first.
 For the product goal and next-slice selection rules read
 [CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md) first.
 That file wins over historical selected-next chains.
@@ -15,6 +17,14 @@ following older selected-next handoffs. If this active slice conflicts
 with that file, the usable V1 execution plan wins.
 
 ## Active Slice Capability Filter
+
+New-agent short version: the current selected next action is
+`post_v1_wall_compatible_anchor_delta_building_dn_a_coverage_refresh_plan`
+in
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-building-dn-a-coverage-refresh-contract.test.ts`.
+It is a no-runtime coverage refresh for the landed compatible
+anchor-delta building `Dn,A` owner, not an invitation to retune formulas
+or crawl sources.
 
 The active slice must serve the calculator mission: expand the set of
 physically valid layer combinations that can calculate owned acoustic

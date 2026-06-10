@@ -2,6 +2,11 @@
 
 Start here before changing calculator behavior.
 
+Fast handoff for a new agent:
+`docs/calculator/NEXT_AGENT_BRIEF.md`. Read it first for the current
+mission, latest checkpoint, selected next action, and validation status;
+then use the source-of-truth and current/next plan files for full detail.
+
 ## Product North Star And Drift Guard
 
 DynEcho's purpose is to become an industry-grade acoustic calculator,

@@ -25,6 +25,7 @@ Project status:
 
 Primary calculator documents:
 
+- [`docs/calculator/NEXT_AGENT_BRIEF.md`](./docs/calculator/NEXT_AGENT_BRIEF.md) — fastest current handoff for a new calculator agent
 - [`docs/calculator/CALCULATOR_SOURCE_OF_TRUTH.md`](./docs/calculator/CALCULATOR_SOURCE_OF_TRUTH.md) — first authority for product goal, anti-drift rules, and next-slice selection
 - [`docs/calculator/USABLE_V1_EXECUTION_PLAN.md`](./docs/calculator/USABLE_V1_EXECUTION_PLAN.md) — closed company-internal usable V1 acceptance contract
 - [`docs/calculator/CURRENT_STATE.md`](./docs/calculator/CURRENT_STATE.md) — current implementation snapshot

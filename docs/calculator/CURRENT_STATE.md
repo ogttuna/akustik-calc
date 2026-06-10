@@ -5,6 +5,10 @@ the calculator surface. For product goal and next-slice rules, read
 [CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md) first;
 it wins over historical selected-next chains.
 
+Fast handoff for new agents:
+[NEXT_AGENT_BRIEF.md](./NEXT_AGENT_BRIEF.md) summarizes the current
+mission, latest checkpoint, selected next action, and validation status.
+
 Read this snapshot through the calculator capability lens: the goal is
 broader and more accurate dynamic calculation for physically valid layer
 combinations. Exact measured rows and owned anchors are preferred when
@@ -14,6 +18,8 @@ themselves, implementation blockers.
 
 Current read map:
 
+- fastest agent handoff:
+  [NEXT_AGENT_BRIEF.md](./NEXT_AGENT_BRIEF.md);
 - active tactical slice:
   [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md);
 - latest landed checkpoint record:

@@ -151,6 +151,7 @@ const REQUIRED_DOCS = [
   "AGENTS.md",
   "README.md",
   "docs/calculator/CALCULATOR_SOURCE_OF_TRUTH.md",
+  "docs/calculator/NEXT_AGENT_BRIEF.md",
   "docs/calculator/CURRENT_STATE.md",
   "docs/calculator/CHECKPOINT_2026-06-10_COMPATIBLE_ANCHOR_DELTA_BUILDING_DN_A_OWNER.md",
   "docs/calculator/NEXT_IMPLEMENTATION_PLAN.md",

@@ -12,6 +12,9 @@ Document role:
 
 Use this together with the calculator source-of-truth chain:
 
+- [NEXT_AGENT_BRIEF.md](./NEXT_AGENT_BRIEF.md)
+  — fastest current handoff for mission, checkpoint, selected next action,
+  and validation status
 - [CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md)
   — first authority for product goal, current status, and next-slice
   selection
