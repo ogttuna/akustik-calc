@@ -16,6 +16,39 @@ For the binding company-internal usable V1 finish plan read
 following older selected-next handoffs. If this active slice conflicts
 with that file, the usable V1 execution plan wins.
 
+Documentation map:
+[DOCUMENTATION_MAP.md](./DOCUMENTATION_MAP.md). Use it to distinguish
+current authority docs from historical slice evidence.
+
+Historical sections guard: this file has accumulated older sections
+whose headings or prose may say `Active Slice`, `current`, or
+`selected next`. Read those labels as relative to the checkpoint date of
+that section. The only current implementation action is the one named
+immediately below, cross-checked with the documentation map and
+next-agent brief.
+
+Current selected implementation action:
+`post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_coverage_refresh_plan`.
+
+Current selected implementation file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-a-weighted-field-building-coverage-refresh-contract.test.ts`.
+
+That selected file is intentionally still absent at the current
+checkpoint. Do not pick a new high-ROI candidate until this no-runtime
+coverage refresh is implemented and validated.
+
+Implementation scope for that next file:
+
+- re-probe empty, full absorptive, and partial absorptive direct-fixed
+  A-weighted field/building values;
+- pin Gate I / Gate AR basis IDs and the Gate EO direct curve owner;
+- keep missing-input, Gate AY panelized, non-direct-fixed, lab, ASTM,
+  and impact boundary rows outside the owner;
+- register the new contract in `tools/dev/run-calculator-current-gate.ts`.
+
+Out of scope for this next file: runtime value movement, source-row
+imports, formula retuning, and frontend implementation changes.
+
 ## Active Slice - 2026-06-11 Direct-Fixed A-Weighted Field/Building Surface Parity Landed
 
 `post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_surface_parity_plan`
@@ -42,7 +75,7 @@ This is not a broad source crawl. Counters:
 `frontendImplementationFilesTouched: 0`, `runtimeValuesMoved 0`,
 `runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_coverage_refresh_plan`.
 Selected next file:
 `packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-a-weighted-field-building-coverage-refresh-contract.test.ts`.
@@ -76,7 +109,7 @@ Counters: `newCalculableRequestShapes: 4`,
 `runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
 `frontendImplementationFilesTouched: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_surface_parity_plan`.
 Selected next file:
 `apps/web/features/workbench/post-v1-wall-double-leaf-framed-direct-fixed-a-weighted-field-building-surface-parity.test.ts`.
@@ -109,7 +142,7 @@ path. This is not a broad source crawl. Counters: `candidateCount 7`,
 `runtimeFormulaRetunes: 0`, `runtimeValuesMoved 0`,
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_owner_plan`.
 Selected next file:
 `packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-a-weighted-field-building-owner-contract.test.ts`.
@@ -150,7 +183,7 @@ source crawl. Counters: `coverageRefreshContractFilesTouched: 1`,
 `frontendImplementationFilesTouched: 0`, `runtimeValuesMoved 0`,
 `runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_next_numeric_coverage_gap_after_direct_fixed_context_absorptive_cavity_field_building_adapter_plan`.
 Selected next file:
 `packages/engine/src/post-v1-next-numeric-coverage-gap-after-direct-fixed-context-absorptive-cavity-field-building-adapter-contract.test.ts`.
@@ -186,7 +219,7 @@ Values remain full absorptive field/building `R'w 29`, `Dn,w 30`,
 `frontendImplementationFilesTouched: 0`, `runtimeValuesMoved 0`,
 `runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_field_building_adapter_coverage_refresh_plan`.
 Selected next file:
 `packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-field-building-adapter-coverage-refresh-contract.test.ts`.
@@ -223,7 +256,7 @@ Values: full absorptive field/building `R'w 29`, `Dn,w 30`,
 `runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`,
 `frontendImplementationFilesTouched: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_field_building_adapter_surface_parity_plan`.
 Selected next file:
 `apps/web/features/workbench/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-field-building-adapter-surface-parity.test.ts`.
@@ -265,7 +298,7 @@ broad source crawl. Counters: `coverageRefreshContractFilesTouched: 1`,
 `estimatedNextRuntimeValuesMoved: 12`, and
 `broadSourceCrawlSelected false`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_field_building_adapter_owner_plan`.
 Selected next file:
 `packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-field-building-adapter-owner-contract.test.ts`.
@@ -301,7 +334,7 @@ source crawl. Counters: `webSurfaceParityContractFilesTouched: 1`,
 `frontendImplementationFilesTouched: 1`, `runtimeValuesMoved 0`,
 `runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_owner_coverage_refresh_plan`.
 Selected next file:
 `packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-owner-coverage-refresh-contract.test.ts`.
@@ -376,7 +409,7 @@ absorptive cavity is `Rw 46`, `STC 46`, `C -1`, `Ctr -6.1`; partial is
 `estimatedNextNewCalculableTargetOutputs: 4`, and
 `estimatedNextRuntimeBasisPromotions: 1`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_owner_plan`.
 Selected next file:
 `packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-owner-contract.test.ts`.
@@ -425,13 +458,13 @@ AY. This is not a broad source crawl. Counters:
 `frontendImplementationFilesTouched: 1`, `runtimeValuesMoved 0`,
 `runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_context_absorptive_cavity_input_owner_coverage_refresh_plan`.
-Current selected next file:
+Historical selected next file:
 `packages/engine/src/post-v1-wall-double-leaf-framed-context-absorptive-cavity-input-owner-coverage-refresh-contract.test.ts`.
-Current selected next plan doc:
+Historical selected next plan doc:
 `docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_CONTEXT_ABSORPTIVE_CAVITY_INPUT_OWNER_COVERAGE_REFRESH_PLAN_2026-06-11.md`.
-Current selected next label:
+Historical selected next label:
 `post-V1 wall double-leaf/framed context absorptive cavity input owner coverage refresh`.
 
 ## Active Slice - 2026-06-11
@@ -460,13 +493,13 @@ This is not a broad source crawl. Counters:
 `runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_context_absorptive_cavity_input_owner_surface_parity_plan`.
-Current selected next file:
+Historical selected next file:
 `apps/web/features/workbench/post-v1-wall-double-leaf-framed-context-absorptive-cavity-input-owner-surface-parity.test.ts`.
-Current selected next plan doc:
+Historical selected next plan doc:
 `docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_CONTEXT_ABSORPTIVE_CAVITY_INPUT_OWNER_SURFACE_PARITY_PLAN_2026-06-11.md`.
-Current selected next label:
+Historical selected next label:
 `post-V1 wall double-leaf/framed context absorptive cavity input owner surface parity`.
 
 The active selected next action is
@@ -577,31 +610,32 @@ If a candidate cannot name those things, it belongs in a rerank,
 owner-proof, evidence-targeting, or stopped-boundary state rather than a
 runtime value-moving slice.
 
-Active slice status: usable V1 is closed for the current tested
-company-internal envelope. The post-V1 calculator-capability chain has
-advanced through Gate FF. Gate FF is the latest no-runtime formula
-scope/accuracy ledger, Gate FE is the latest no-runtime numeric
-coverage/accuracy rerank, Gate FD is the latest no-runtime floor
-holdout closeout, Gate FC is the previous no-runtime numeric
-coverage/accuracy rerank, Gate FB is the latest no-runtime owner
-closeout, Gate FA is the latest no-runtime current coverage/accuracy
-gap ledger, Gate EZ is the previous no-runtime numeric
-coverage/accuracy rerank, Gate EY is the latest no-runtime targeted
-evidence action, Gate EW is the latest no-runtime calibration
-owner proof, Gate EV is the latest no-runtime current coverage/accuracy
-gap ledger, Gate EU is the latest no-runtime numeric coverage/accuracy
-rerank, Gate ET is the latest no-runtime boundary action, Gate ER is the
-latest value-moving runtime scope/accuracy slice, Gate EO is the previous value-moving runtime
+Historical chain status at an older checkpoint: usable V1 was closed for
+the tested company-internal envelope, and the post-V1
+calculator-capability chain had advanced through Gate FF. At that point,
+Gate FF was the then-latest no-runtime formula scope/accuracy ledger,
+Gate FE was the then-latest no-runtime numeric coverage/accuracy rerank,
+Gate FD was the then-latest no-runtime floor holdout closeout, Gate FC
+was the previous no-runtime numeric coverage/accuracy rerank, Gate FB
+was the then-latest no-runtime owner closeout, Gate FA was the
+then-latest no-runtime current coverage/accuracy gap ledger, Gate EZ was
+the previous no-runtime numeric coverage/accuracy rerank, Gate EY was
+the then-latest no-runtime targeted evidence action, Gate EW was the
+then-latest no-runtime calibration owner proof, Gate EV was the
+then-latest no-runtime current coverage/accuracy gap ledger, Gate EU was
+the then-latest no-runtime numeric coverage/accuracy rerank, Gate ET was
+the then-latest no-runtime boundary action, Gate ER was the then-latest
+value-moving runtime scope/accuracy slice, Gate EO is the previous value-moving runtime
 accuracy slice, Gate ED is the previous value-moving runtime scope
-slice, Gate DK is the latest calculator surface parity action, Gate EL
-is the latest no-runtime wall route reconciliation, Gate EM is the
-latest no-runtime numeric coverage/accuracy rerank, Gate EN is the
-latest no-runtime owner proof, Gate EH is the
-latest no-runtime input-owner proof, Gate EC is the previous no-runtime
+slice, Gate DK was the then-latest calculator surface parity action,
+Gate EL was the then-latest no-runtime wall route reconciliation, Gate EM
+was the then-latest no-runtime numeric coverage/accuracy rerank, Gate EN
+was the then-latest no-runtime owner proof, Gate EH was the then-latest
+no-runtime input-owner proof, Gate EC is the previous no-runtime
 owner proof, Gate DT is the previous mixed-lab runtime-basis action,
-Gate DX is the latest runtime-basis accuracy action, Gate EF is the
-latest runtime-basis route-boundary action, Gate EJ is the latest
-input-surface scope action, Gate EQ is the latest no-runtime adapter
+Gate DX was the then-latest runtime-basis accuracy action, Gate EF was
+the then-latest runtime-basis route-boundary action, Gate EJ was the
+then-latest input-surface scope action, Gate EQ was the then-latest no-runtime adapter
 owner proof, Gate EP is the previous no-runtime numeric coverage/accuracy
 rerank, and the post double-leaf framed wall banded coverage
 revalidation has now landed no-runtime:
@@ -651,7 +685,7 @@ Surface parity contract file:
 Surface parity status:
 `post_v1_wall_compatible_anchor_delta_surface_parity_input_acceptance_landed_no_runtime_selected_lab_metric_companion_owner`.
 
-Current selected next action:
+Historical selected next action:
 
 `post_v1_wall_compatible_anchor_delta_c_ctr_only_lab_companion_coverage_refresh_plan`
 
@@ -8759,11 +8793,11 @@ Previously selected next action, now landed:
 
 `broad_accuracy_floor_open_web_raw_bare_coverage_refresh_plan`
 
-Current selected next file:
+Historical selected next file:
 
 `packages/engine/src/broad-accuracy-floor-open-web-raw-bare-coverage-refresh-contract.test.ts`
 
-Current selected next label:
+Historical selected next label:
 
 floor open-web raw-bare coverage refresh.
 
@@ -8786,11 +8820,11 @@ Previously selected next action, now landed:
 
 `broad_accuracy_post_raw_bare_open_web_coverage_revalidation_plan`
 
-Current selected next file:
+Historical selected next file:
 
 `packages/engine/src/broad-accuracy-post-raw-bare-open-web-coverage-revalidation-contract.test.ts`
 
-Current selected next label:
+Historical selected next label:
 
 post raw-bare open-web coverage revalidation.
 
@@ -8866,11 +8900,11 @@ Historical selected next action:
 
 `broad_accuracy_floor_open_web_field_building_post_input_surface_revalidation_plan`
 
-Current selected next file:
+Historical selected next file:
 
 `packages/engine/src/broad-accuracy-floor-open-web-field-building-post-input-surface-revalidation-contract.test.ts`
 
-Current selected next label:
+Historical selected next label:
 
 floor open-web field/building post-input-surface revalidation. This is
 not a broad source crawl.
@@ -9642,9 +9676,9 @@ Latest landed A-weighted surface parity:
   payloads, Markdown report, and workbench inputs.
 - Historical selected next action:
   `company_internal_calculation_grade_mainline_matrix_v6_refresh_after_opening_leak_a_weighted_surface_parity_plan`.
-- Current selected next file:
+- Historical selected next file:
   `packages/engine/src/company-internal-calculation-grade-mainline-matrix-v6-contract.test.ts`.
-- Current selected next label:
+- Historical selected next label:
   company-internal matrix v6 refresh after opening/leak Dn,A / DnT,A surface parity.
 
 Latest landed company-internal Matrix V6 refresh:
@@ -9662,9 +9696,9 @@ Latest landed company-internal Matrix V6 refresh:
   remain explicit boundary rows.
 - Historical selected next action:
   `company_internal_building_astm_boundary_revalidation_after_a_weighted_matrix_plan`.
-- Current selected next file:
+- Historical selected next file:
   `packages/engine/src/company-internal-building-astm-boundary-revalidation-contract.test.ts`.
-- Current selected next label:
+- Historical selected next label:
   building partial-context and ASTM parked-boundary revalidation.
 
 Latest landed building/ASTM boundary revalidation:
@@ -9681,9 +9715,9 @@ Latest landed building/ASTM boundary revalidation:
   or budgets.
 - Historical selected next action:
   `company_internal_final_internal_use_rehearsal_after_boundary_revalidation_plan`.
-- Current selected next file:
+- Historical selected next file:
   `packages/engine/src/company-internal-final-internal-use-rehearsal-contract.test.ts`.
-- Current selected next label:
+- Historical selected next label:
   final internal-use rehearsal and operating envelope.
 
 Final rehearsal implementation order:
@@ -19238,7 +19272,7 @@ The adjacent Rockwool value stays defended at
 screening-only/source-blocked live path (`Rw 41`), not exact,
 not source-validated, and not design-grade.
 
-Current selected next file:
+Historical selected next file:
 
 `packages/engine/src/post-rockwool-split-triple-leaf-numeric-source-closure-v1-next-slice-selection-contract.test.ts`
 

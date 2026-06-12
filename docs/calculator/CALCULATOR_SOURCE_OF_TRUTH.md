@@ -1,6 +1,54 @@
 # Calculator Source Of Truth
 
-Last reviewed: 2026-06-11
+Last reviewed: 2026-06-12
+
+## Documentation Map
+
+The live documentation map is:
+
+`docs/calculator/DOCUMENTATION_MAP.md`
+
+Use it to understand document roles and implementation sync points. This
+source-of-truth file still owns the product goal and next-slice decision
+rules; the map only explains where the active evidence and handoff files
+live.
+
+## Calculator North Star
+
+DynEcho is an acoustic calculator, not a source catalog, document
+collection, confidence-label system, or productization backlog. The user
+enters wall/floor layers and any route-required physical inputs; the
+engine must produce defensible acoustic outputs or explain the exact
+missing/unsupported boundary.
+
+Answer order:
+
+1. use an owned exact measured/source row when it truly matches;
+2. use a same-basis compatible anchor or bounded delta only when the
+   family, metric basis, and construction boundary are proven;
+3. otherwise calculate through the best owned dynamic formula route;
+4. return precise `needs_input` or `unsupported` when required physical
+   inputs, metric owner, or route boundaries are missing.
+
+Every implementation slice must improve calculator scope or accuracy,
+or preserve a boundary that protects calculation correctness. Work that
+does not move those properties is not calculator progress unless the
+user explicitly asks for it as separate work.
+
+Current selected work is deliberately narrow: close the no-runtime
+coverage refresh for the landed direct-fixed double-leaf/framed
+A-weighted field/building route before reranking a new candidate.
+
+## Historical Language Guard
+
+This file intentionally keeps dated checkpoint history so past owner,
+boundary, calibration, and rejection decisions remain auditable. Older
+sections below may say `latest`, `current`, or `selected next` relative
+to the checkpoint date of that section. Those local historical labels do
+not override the current checkpoint and selected next action above. When
+in doubt, use the `Current Checkpoint`, `Latest ...`, and
+`Current selected next action` sections at the top of this file, then
+cross-check the documentation map and next-agent brief.
 
 ## Current Checkpoint - 2026-06-11
 
@@ -76,7 +124,7 @@ This is not a broad source crawl. Counters:
 `runtimeValuesMoved 12`, `runtimeFormulaRetunes: 0`,
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_surface_parity_plan`.
 Selected next file:
 `apps/web/features/workbench/post-v1-wall-double-leaf-framed-direct-fixed-a-weighted-field-building-surface-parity.test.ts`.
@@ -108,7 +156,7 @@ Counters: `candidateCount 7`, `roiAnalysisIterations: 3`,
 `runtimeFormulaRetunes: 0`, `runtimeValuesMoved 0`,
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_owner_plan`.
 Selected next file:
 `packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-a-weighted-field-building-owner-contract.test.ts`.
@@ -152,7 +200,7 @@ source crawl. Counters: `coverageRefreshContractFilesTouched: 1`,
 `frontendImplementationFilesTouched: 0`, `runtimeValuesMoved 0`,
 `runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_next_numeric_coverage_gap_after_direct_fixed_context_absorptive_cavity_field_building_adapter_plan`.
 Selected next file:
 `packages/engine/src/post-v1-next-numeric-coverage-gap-after-direct-fixed-context-absorptive-cavity-field-building-adapter-contract.test.ts`.
@@ -187,7 +235,7 @@ not a broad source crawl. Counters:
 `frontendImplementationFilesTouched: 0`, `runtimeValuesMoved 0`,
 `runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_field_building_adapter_coverage_refresh_plan`.
 Selected next file:
 `packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-field-building-adapter-coverage-refresh-contract.test.ts`.
@@ -227,7 +275,7 @@ Counters: `newCalculableRequestShapes: 4`,
 `runtimeValuesMoved 12`, `runtimeFormulaRetunes: 0`,
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_field_building_adapter_surface_parity_plan`.
 Selected next file:
 `apps/web/features/workbench/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-field-building-adapter-surface-parity.test.ts`.
@@ -270,7 +318,7 @@ Counters: `coverageRefreshContractFilesTouched: 1`,
 `estimatedNextRuntimeValuesMoved: 12`, and
 `broadSourceCrawlSelected false`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_field_building_adapter_owner_plan`.
 Selected next file:
 `packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-field-building-adapter-owner-contract.test.ts`.
@@ -306,7 +354,7 @@ Full direct-fixed context-owned absorptive cavity remains `Rw 35`,
 `frontendImplementationFilesTouched: 1`, `runtimeValuesMoved 0`,
 `runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_owner_coverage_refresh_plan`.
 Selected next file:
 `packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-owner-coverage-refresh-contract.test.ts`.
@@ -1300,12 +1348,12 @@ Counters: `webSurfaceParityContractFilesTouched: 1`,
 `frontendImplementationFilesTouched: 0`, `runtimeValuesMoved 0`,
 `runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
 
-Gate FF has landed as the latest no-runtime formula scope/accuracy
-ledger; Gate FE, Gate FD, Gate FC, Gate FB, Gate FA, Gate EZ, Gate EY,
-Gate EX, Gate EW, Gate EV, Gate EU, the double-leaf checkpoint, and the
-thick-board safety plan are landed records, not active replacements for
-the selected compatible anchor-delta C/Ctr-only lab companion coverage
-refresh.
+At this historical compatible-anchor checkpoint, Gate FF had landed as
+the then-latest no-runtime formula scope/accuracy ledger; Gate FE, Gate FD,
+Gate FC, Gate FB, Gate FA, Gate EZ, Gate EY, Gate EX, Gate EW, Gate EV,
+Gate EU, the double-leaf checkpoint, and the thick-board safety plan
+were landed records, not active replacements for the then-selected
+compatible anchor-delta C/Ctr-only lab companion coverage refresh.
 
 Latest landed no-runtime formula scope/accuracy ledger:
 `post_v1_current_formula_scope_accuracy_gap_ledger_gate_ff_plan`

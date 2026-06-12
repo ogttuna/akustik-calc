@@ -1,18 +1,20 @@
 # Calculator Master Plan
 
-Last reviewed: 2026-06-05
+Last reviewed: 2026-06-12
 
-Current-state override, 2026-06-05: this is a strategic historical
+Current-state override, 2026-06-12: this is a strategic historical
 roadmap, not the current next-slice selector. Read
+[DOCUMENTATION_MAP.md](./DOCUMENTATION_MAP.md),
 [CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md),
-[CURRENT_STATE.md](./CURRENT_STATE.md), and
-[POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md)
-for current authority. The latest landed value-moving runtime slice is
-Gate CH field/building direct+flanking correction, and the selected next
-action label is `post_v1_next_numeric_coverage_gap_gate_ci_plan`.
+[NEXT_AGENT_BRIEF.md](./NEXT_AGENT_BRIEF.md), and
+[NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md) for current
+authority. The current reconciliation checkpoint is
+[CHECKPOINT_2026-06-11_DIRECT_FIXED_A_WEIGHTED_SURFACE_PARITY.md](./CHECKPOINT_2026-06-11_DIRECT_FIXED_A_WEIGHTED_SURFACE_PARITY.md).
+The current selected next action is
+`post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_coverage_refresh_plan`.
 Older selected-slice language below is historical and must not reopen
-source-pack, productization, UI, report polish, or low-confidence work
-as calculator progress.
+source-pack, productization, UI, report polish, low-confidence wording,
+or broad catalog work as calculator progress.
 
 Historical selected-next chains and old checkpoint summaries remain in
 the body below only as background. Do not use them to choose current

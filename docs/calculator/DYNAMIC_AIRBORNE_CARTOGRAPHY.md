@@ -1,13 +1,16 @@
 # Dynamic Airborne Cartography
 
-Last reviewed: 2026-06-05
+Last reviewed: 2026-06-12
 
 Current-state override: this is architecture cartography for the
 dynamic-airborne module, not the current calculator slice selector. Read
-[CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md) and
+[DOCUMENTATION_MAP.md](./DOCUMENTATION_MAP.md),
+[CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md), and
 [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md) for the
-current post-Gate-CH / Gate-CI post-V1 calculator state. Optional module
-carves must not replace calculator scope/accuracy work.
+current post-V1 calculator state. Optional module carves must not
+replace calculator scope/accuracy work. The current selected next action
+is
+`post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_coverage_refresh_plan`.
 
 Status: split v1 landed 15 atomic commits that moved the first bounded
 modules out of the original 6630-line monolith. The v2 slice is now

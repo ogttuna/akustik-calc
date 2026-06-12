@@ -1,6 +1,25 @@
 # Next Agent Brief
 
-Last reviewed: 2026-06-11
+Last reviewed: 2026-06-12
+
+## Documentation Map
+
+Use `docs/calculator/DOCUMENTATION_MAP.md` first when you need to know
+which document owns which part of the handoff. It confirms that the
+source-of-truth, current state, active plan, checkpoint, system map,
+current gate runner, and direct-fixed A-weighted implementation files
+are synchronized at the current checkpoint.
+
+Fast path:
+
+- checkpoint: `docs/calculator/CHECKPOINT_2026-06-11_DIRECT_FIXED_A_WEIGHTED_SURFACE_PARITY.md`;
+- next plan: `docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_DIRECT_FIXED_A_WEIGHTED_FIELD_BUILDING_COVERAGE_REFRESH_PLAN_2026-06-11.md`;
+- next file: `packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-a-weighted-field-building-coverage-refresh-contract.test.ts`;
+- next status: selected but not implemented;
+- constraint: no runtime values, source rows, formula retunes, or frontend implementation changes in the coverage refresh.
+
+Historical entries later in this brief keep older selected-next chains
+for traceability. Use the fast path above as the current handoff.
 
 ## Checkpoint - 2026-06-11
 
@@ -184,7 +203,7 @@ Counters: `webSurfaceParityContractFilesTouched: 1`,
 `frontendImplementationFilesTouched: 0`, `runtimeValuesMoved 0`,
 `runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_field_building_adapter_coverage_refresh_plan`.
 Selected next file:
 `packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-field-building-adapter-coverage-refresh-contract.test.ts`.
@@ -221,7 +240,7 @@ crawl. Counters: `newCalculableRequestShapes: 4`,
 `runtimeValuesMoved 12`, `runtimeFormulaRetunes: 0`,
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_field_building_adapter_surface_parity_plan`.
 Selected next file:
 `apps/web/features/workbench/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-field-building-adapter-surface-parity.test.ts`.
@@ -264,7 +283,7 @@ This is not a broad source crawl. Counters:
 `estimatedNextRuntimeValuesMoved: 12`, and
 `broadSourceCrawlSelected false`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_field_building_adapter_owner_plan`.
 Selected next file:
 `packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-field-building-adapter-owner-contract.test.ts`.
@@ -302,7 +321,7 @@ Counters: `webSurfaceParityContractFilesTouched: 1`,
 `frontendImplementationFilesTouched: 1`, `runtimeValuesMoved 0`,
 `runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_owner_coverage_refresh_plan`.
 Selected next file:
 `packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-owner-coverage-refresh-contract.test.ts`.
@@ -380,7 +399,7 @@ crawl. Counters: `coverageRefreshContractFilesTouched: 1`,
 `estimatedNextNewCalculableTargetOutputs: 4`, and
 `estimatedNextRuntimeBasisPromotions: 1`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_owner_plan`.
 Selected next file:
 `packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-owner-contract.test.ts`.

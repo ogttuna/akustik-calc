@@ -2,6 +2,18 @@
 
 This repository is the new product track for DynEcho.
 
+Calculator docs start here:
+`docs/calculator/DOCUMENTATION_MAP.md`.
+
+Current source of truth:
+`docs/calculator/CALCULATOR_SOURCE_OF_TRUTH.md`.
+
+Current operational handoff:
+`docs/calculator/NEXT_AGENT_BRIEF.md`.
+
+Older selected-next notes in long docs are historical unless the
+documentation map and next-agent brief name them as current.
+
 Latest direct-fixed A-weighted field/building surface parity 2026-06-11:
 `post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_surface_parity_plan`
 landed in
@@ -437,7 +449,7 @@ not a broad source crawl. Counters: `coverageRefreshContractFilesTouched: 1`,
 `runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`, and
 `sourceRowsImported: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_context_absorptive_cavity_input_owner_plan`;
 file:
 `packages/engine/src/post-v1-wall-double-leaf-framed-context-absorptive-cavity-input-owner-contract.test.ts`;

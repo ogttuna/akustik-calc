@@ -2,14 +2,15 @@
 
 Status: OPEN (authored 2026-04-23)
 
-Current-state override, 2026-06-05: this is a productization backlog,
+Current-state override, 2026-06-12: this is a productization backlog,
 not the active calculator implementation plan. It must not select the
 next calculator slice. For current calculator scope/accuracy work, read
-[CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md) and
-[POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md).
-The current selected next action label is
-`post_v1_next_numeric_coverage_gap_gate_ci_plan` after Gate CH. Auth,
-storage, collaboration, billing, and report polish remain outside
+[DOCUMENTATION_MAP.md](./DOCUMENTATION_MAP.md),
+[CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md), and
+[NEXT_AGENT_BRIEF.md](./NEXT_AGENT_BRIEF.md). The current selected
+calculator action is
+`post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_coverage_refresh_plan`.
+Auth, storage, collaboration, billing, and report polish remain outside
 calculator progress unless explicitly requested as separate
 productization work.
 

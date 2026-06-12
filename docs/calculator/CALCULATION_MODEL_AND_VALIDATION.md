@@ -1,6 +1,6 @@
 # Calculation Model And Validation
 
-Last reviewed: 2026-06-08
+Last reviewed: 2026-06-12
 
 Document role:
 
@@ -15,6 +15,9 @@ answer it actually measures; it does not make the whole acoustic domain complete
 Read [CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md)
 first for product goal and next-slice selection. This file explains how
 to validate a selected calculator answer once the slice is chosen.
+Use [DOCUMENTATION_MAP.md](./DOCUMENTATION_MAP.md) to find the current
+checkpoint, active route file set, and selected next implementation
+file.
 
 Current authority:
 
@@ -26,8 +29,11 @@ Current authority:
 
 Older Gate-CD, Gate-CH, source-pack, confidence, and product-polish
 checkpoints remain useful history, but they are not the current
-selected-next state. The living documents have advanced through Gate ET
-and now select Gate EU.
+selected-next state. The current living handoff is the direct-fixed
+double-leaf/framed A-weighted field/building route: surface parity has
+landed, and the selected next action is the no-runtime coverage refresh
+contract
+`packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-a-weighted-field-building-coverage-refresh-contract.test.ts`.
 
 Current validation posture:
 
@@ -43,17 +49,19 @@ the user answer when the selected path is `needs_input` or
 `unsupported`.
 
 The current gate keeps the answer-engine contract included in
-`pnpm calculator:gate:current`. The 2026-06-08 current-gate run after
-the double-leaf route-input boundary checkpoint passed with engine 663
-test files / 3629 tests, web 114 test files / 443 passed + 18 skipped,
-repo build 5 / 5, and whitespace guard passing. The latest focused Gate
-EM/EN/EO/EP/EQ/ER/ES/ET chain is green when run by targeted Vitest
-files. Gate ET resolves the previous independent reinforced-concrete
-visible-derived missing-input expectation drift.
+`pnpm calculator:gate:current`. The 2026-06-11 checkpoint run passed
+with engine 703 test files / 3885 tests, web 126 test files / 492 passed
++ 18 skipped, repo build 5 / 5, and whitespace guard passing. Known
+non-fatal noise remains optional `sharp` / `@img` build warnings through
+`@turbodocx/html-to-docx` and `zustand persist middleware`
+storage-unavailable stderr in saved-replay web tests.
 
 The selected post-V1 plan is
 [POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md](./POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md).
-Gate ET is the latest no-runtime boundary slice:
+
+Historical Gate ET boundary checkpoint, superseded as the active
+selected-next handoff by the 2026-06-11 direct-fixed A-weighted
+coverage-refresh action above:
 `post_v1_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et_plan`
 with status
 `post_v1_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et_landed_no_runtime_selected_next_numeric_coverage_gap_gate_eu`.
@@ -79,7 +87,7 @@ through the owned double-leaf/framed route. The selected Gate EU
 contract file named above is not present yet in the implementation tree;
 the next Gate EU turn must create it or explicitly reselect the next
 action after a fresh source-of-truth review.
-Gate ES is the latest no-runtime numeric coverage/accuracy rerank:
+Historical Gate ES no-runtime numeric coverage/accuracy rerank:
 `post_v1_next_numeric_coverage_gap_gate_es_plan` with status
 `post_v1_next_numeric_coverage_gap_gate_es_landed_no_runtime_selected_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et`.
 It selected
@@ -91,7 +99,7 @@ Gate ES estimated the selected Gate ET boundary-surface touch as
 `estimatedNextFrontendImplementationFilesTouched 1`.
 Gate ES counters include `runtimeValuesMoved 0`,
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
-Gate ER is the latest value-moving runtime scope/accuracy slice:
+Historical Gate ER value-moving runtime scope/accuracy slice:
 `post_v1_wall_direct_fixed_double_leaf_field_building_adapter_runtime_gate_er_plan`
 with status
 `post_v1_wall_direct_fixed_double_leaf_field_building_adapter_runtime_gate_er_landed_runtime_selected_next_numeric_coverage_gap_gate_es`.
@@ -105,7 +113,7 @@ contexts, while lab output remains `Rw 31 / STC 31 / C -1.2 / Ctr -5.9`
 and missing `receivingRoomRt60S` / `supportSpacingMm` remain
 `needs_input`. Gate ER counters include `runtimeValuesMoved 6`,
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
-Gate EQ is the latest no-runtime adapter owner proof:
+Historical Gate EQ no-runtime adapter owner proof:
 `post_v1_wall_direct_fixed_double_leaf_field_building_adapter_owner_gate_eq_plan`.
 It accepted `wall.direct_fixed_double_leaf.field_between_rooms_adapter_owner`
 and `wall.direct_fixed_double_leaf.building_prediction_adapter_owner`

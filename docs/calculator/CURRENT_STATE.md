@@ -5,6 +5,30 @@ the calculator surface. For product goal and next-slice rules, read
 [CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md) first;
 it wins over historical selected-next chains.
 
+Documentation map:
+[DOCUMENTATION_MAP.md](./DOCUMENTATION_MAP.md).
+
+Current reconciliation checkpoint:
+[CHECKPOINT_2026-06-11_DIRECT_FIXED_A_WEIGHTED_SURFACE_PARITY.md](./CHECKPOINT_2026-06-11_DIRECT_FIXED_A_WEIGHTED_SURFACE_PARITY.md).
+
+Current selected next implementation file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-a-weighted-field-building-coverage-refresh-contract.test.ts`.
+
+Historical sections guard: older entries below may still quote the
+`selected next` action from the checkpoint where that entry was written.
+Those entries are retained for traceability. They do not override the
+current reconciliation checkpoint or selected next implementation file
+above.
+
+Current stable direct-fixed A-weighted values:
+
+- empty direct-fixed: `Dn,A 24.9` / `DnT,A 27`;
+- full context-owned absorptive cavity: `Dn,A 28.9` / `DnT,A 31`;
+- partial context-owned absorptive cavity: `Dn,A 26.9` / `DnT,A 29`.
+
+The current selected next file is a no-runtime coverage refresh. It
+should freeze the route posture, not change these values.
+
 Latest direct-fixed A-weighted field/building surface parity:
 `post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_surface_parity_plan`
 landed in
@@ -155,7 +179,7 @@ partial `R'w 27`, `Dn,w 28`, `DnT,w 30`. Counters:
 `webSurfaceParityContractFilesTouched: 1`,
 `frontendImplementationFilesTouched: 0`, `runtimeValuesMoved 0`,
 `runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_field_building_adapter_coverage_refresh_plan`
 in
 `packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-field-building-adapter-coverage-refresh-contract.test.ts`.
@@ -189,7 +213,7 @@ Counters: `newCalculableRequestShapes: 4`,
 `newCalculableTargetOutputs: 3`, `runtimeBasisPromotions: 2`,
 `runtimeValuesMoved 12`, `runtimeFormulaRetunes: 0`,
 `sourceRowsImported: 0`, `frontendImplementationFilesTouched: 0`.
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_field_building_adapter_surface_parity_plan`
 in
 `apps/web/features/workbench/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-field-building-adapter-surface-parity.test.ts`.
@@ -229,7 +253,7 @@ requests. This is not a broad source crawl. Counters:
 `runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`,
 `estimatedNextRuntimeValuesMoved: 12`, and
 `broadSourceCrawlSelected false`.
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_field_building_adapter_owner_plan`
 in
 `packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-field-building-adapter-owner-contract.test.ts`.
@@ -262,7 +286,7 @@ full `Rw 35`, `STC 35`, `C -1.2`, `Ctr -5.9`; partial `Rw 33`,
 Counters: `webSurfaceParityContractFilesTouched: 1`,
 `frontendImplementationFilesTouched: 1`, `runtimeValuesMoved 0`,
 `runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_owner_coverage_refresh_plan`
 in
 `packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-owner-coverage-refresh-contract.test.ts`.
@@ -379,13 +403,13 @@ This is not a broad source crawl. Counters:
 `frontendImplementationFilesTouched: 1`, `runtimeValuesMoved 0`,
 `runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_context_absorptive_cavity_input_owner_coverage_refresh_plan`.
-Current selected next file:
+Historical selected next file:
 `packages/engine/src/post-v1-wall-double-leaf-framed-context-absorptive-cavity-input-owner-coverage-refresh-contract.test.ts`.
-Current selected next plan doc:
+Historical selected next plan doc:
 `docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_CONTEXT_ABSORPTIVE_CAVITY_INPUT_OWNER_COVERAGE_REFRESH_PLAN_2026-06-11.md`.
-Current selected next label:
+Historical selected next label:
 `post-V1 wall double-leaf/framed context absorptive cavity input owner coverage refresh`.
 
 Latest runtime owner:
@@ -413,13 +437,13 @@ This is not a broad source crawl. Counters:
 `runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_context_absorptive_cavity_input_owner_surface_parity_plan`.
-Current selected next file:
+Historical selected next file:
 `apps/web/features/workbench/post-v1-wall-double-leaf-framed-context-absorptive-cavity-input-owner-surface-parity.test.ts`.
-Current selected next plan doc:
+Historical selected next plan doc:
 `docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_CONTEXT_ABSORPTIVE_CAVITY_INPUT_OWNER_SURFACE_PARITY_PLAN_2026-06-11.md`.
-Current selected next label:
+Historical selected next label:
 `post-V1 wall double-leaf/framed context absorptive cavity input owner surface parity`.
 
 Latest closeout:
@@ -909,11 +933,12 @@ and whitespace guard passed. Known non-fatal warnings remain the
 test-environment Zustand persist storage warning and optional `sharp/@img`
 build warnings.
 
-The compatible anchor-delta building `Dn,A` owner is the latest
-value-moving runtime scope action. The selected next action is a
-no-runtime coverage refresh for that owner. Gate FF, Gate FE, Gate FD,
-Gate FC, Gate FB, Gate FA, Gate EY, Gate EW, Gate ET, Gate ER, and Gate EQ
-remain historical landed records.
+At that historical compatible-anchor checkpoint, the compatible
+anchor-delta building `Dn,A` owner was the then-latest value-moving
+runtime scope action, and the selected next action was its no-runtime
+coverage refresh. Gate FF, Gate FE, Gate FD, Gate FC, Gate FB, Gate FA,
+Gate EY, Gate EW, Gate ET, Gate ER, and Gate EQ remain historical landed
+records.
 
 The executable broad-accuracy refocus contract remains
 `packages/engine/src/broad-accuracy-calculator-readiness-contract.test.ts`;
@@ -2148,7 +2173,7 @@ Gate CG selected
 `post_v1_floor_common_floating_covering_expansion_gate_cg2_plan`.
 Gate CG selected next file:
 `packages/engine/src/post-v1-floor-common-floating-covering-expansion-gate-cg2-contract.test.ts`.
-Gate CO has now landed as the latest runtime scope/correctness slice:
+Historical Gate CO runtime scope/correctness slice:
 `post_v1_floor_visible_layer_upper_package_delta_lw_gate_co_plan`
 with status
 `post_v1_floor_visible_layer_upper_package_delta_lw_gate_co_landed_runtime_selected_next_numeric_coverage_gap_gate_cp`.
@@ -2167,8 +2192,7 @@ L'nT,50 52.6`. Missing `loadBasisKgM2` or
 `post_v1_next_numeric_coverage_gap_gate_cp_plan`.
 Gate CO selected next file:
 `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-cp-contract.test.ts`.
-Gate CP has now landed as the latest no-runtime numeric coverage
-selection:
+Historical Gate CP no-runtime numeric coverage selection:
 `post_v1_next_numeric_coverage_gap_gate_cp_plan`
 with status
 `post_v1_next_numeric_coverage_gap_gate_cp_landed_no_runtime_selected_floor_common_floating_lower_treatment_anchor_gate_cq`.
@@ -2194,7 +2218,7 @@ action:
 `post_v1_floor_common_floating_lower_treatment_anchor_gate_cq_plan`.
 Gate CP selected next file:
 `packages/engine/src/post-v1-floor-common-floating-lower-treatment-anchor-gate-cq-contract.test.ts`.
-Gate CQ has now landed as the latest runtime scope/correctness slice:
+Historical Gate CQ runtime scope/correctness slice:
 `post_v1_floor_common_floating_lower_treatment_anchor_gate_cq_plan`
 with status
 `post_v1_floor_common_floating_lower_treatment_anchor_gate_cq_landed_runtime_selected_next_numeric_coverage_gap_gate_cr`.
@@ -2214,8 +2238,7 @@ inputs stay on the heavy combined upper/lower formula corridor, and ASTM
 `post_v1_next_numeric_coverage_gap_gate_cr_plan`.
 Gate CQ selected next file:
 `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-cr-contract.test.ts`.
-Gate CR has now landed as the latest no-runtime numeric coverage
-selection:
+Historical Gate CR no-runtime numeric coverage selection:
 `post_v1_next_numeric_coverage_gap_gate_cr_plan`
 with status
 `post_v1_next_numeric_coverage_gap_gate_cr_landed_no_runtime_selected_wall_common_auto_topology_second_pass_gate_cs`.
@@ -2270,8 +2293,7 @@ alias into field/building metrics. Counters:
 `post_v1_next_numeric_coverage_gap_gate_ct_plan`.
 Gate CS selected next file:
 `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-ct-contract.test.ts`.
-Gate CT has now landed as the latest no-runtime numeric coverage
-selection:
+Historical Gate CT no-runtime numeric coverage selection:
 `post_v1_next_numeric_coverage_gap_gate_ct_plan`
 with status
 `post_v1_next_numeric_coverage_gap_gate_ct_landed_no_runtime_selected_wall_flat_layer_order_multicavity_gate_cu`.
@@ -2311,8 +2333,7 @@ and `runtimeCorrectedRequestShapes 14`. Gate CU selected next action:
 `post_v1_next_numeric_coverage_gap_gate_cv_plan`.
 Gate CU selected next file:
 `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-cv-contract.test.ts`.
-Gate CV has now landed as the latest no-runtime numeric coverage
-selection:
+Historical Gate CV no-runtime numeric coverage selection:
 `post_v1_next_numeric_coverage_gap_gate_cv_plan`
 with status
 `post_v1_next_numeric_coverage_gap_gate_cv_landed_no_runtime_selected_wall_local_substitution_building_adapter_gate_cw`.
@@ -2326,7 +2347,7 @@ action:
 `post_v1_wall_local_substitution_building_adapter_gate_cw_plan`.
 Gate CV selected next file:
 `packages/engine/src/post-v1-wall-local-substitution-building-adapter-gate-cw-contract.test.ts`.
-Gate CW has now landed as the latest runtime scope/correctness slice:
+Historical Gate CW runtime scope/correctness slice:
 `post_v1_wall_local_substitution_building_adapter_gate_cw_plan`
 with status
 `post_v1_wall_local_substitution_building_adapter_gate_cw_landed_runtime_selected_next_numeric_coverage_gap_gate_cx`.
@@ -2345,8 +2366,7 @@ plus field `R'w/DnT,w` remain separate owners. Counters:
 `post_v1_next_numeric_coverage_gap_gate_cx_plan`.
 Gate CW selected next file:
 `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-cx-contract.test.ts`.
-Gate CX has now landed as the latest no-runtime numeric coverage
-selection:
+Historical Gate CX no-runtime numeric coverage selection:
 `post_v1_next_numeric_coverage_gap_gate_cx_plan`
 with status
 `post_v1_next_numeric_coverage_gap_gate_cx_landed_no_runtime_selected_floor_composite_panel_delta_lw_owner_gate_cy`.
@@ -2368,7 +2388,7 @@ action:
 `post_v1_floor_composite_panel_delta_lw_owner_gate_cy_plan`.
 Gate CX selected next file:
 `packages/engine/src/post-v1-floor-composite-panel-delta-lw-owner-gate-cy-contract.test.ts`.
-Gate CY has now landed as the latest runtime scope/correctness slice:
+Historical Gate CY runtime scope/correctness slice:
 `post_v1_floor_composite_panel_delta_lw_owner_gate_cy_plan`
 with status
 `post_v1_floor_composite_panel_delta_lw_owner_gate_cy_landed_runtime_selected_next_numeric_coverage_gap_gate_cz`.
@@ -2388,8 +2408,7 @@ and ASTM `IIC` / `AIIC` remain unsupported. Counters:
 `post_v1_next_numeric_coverage_gap_gate_cz_plan`.
 Gate CY selected next file:
 `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-cz-contract.test.ts`.
-Gate CZ has now landed as the latest no-runtime numeric coverage
-selection:
+Historical Gate CZ no-runtime numeric coverage selection:
 `post_v1_next_numeric_coverage_gap_gate_cz_plan`
 with status
 `post_v1_next_numeric_coverage_gap_gate_cz_landed_no_runtime_selected_floor_lightweight_concrete_delta_lw_owner_contract_gate_da`.
@@ -2417,8 +2436,7 @@ action:
 `post_v1_floor_lightweight_concrete_delta_lw_owner_contract_gate_da_plan`.
 Gate CZ selected next file:
 `packages/engine/src/post-v1-floor-lightweight-concrete-delta-lw-owner-contract-gate-da-contract.test.ts`.
-Gate DA has now landed as the latest lightweight-concrete `DeltaLw`
-owner-boundary action:
+Historical Gate DA lightweight-concrete `DeltaLw` owner-boundary action:
 `post_v1_floor_lightweight_concrete_delta_lw_owner_contract_gate_da_plan`
 with status
 `post_v1_floor_lightweight_concrete_delta_lw_owner_contract_gate_da_landed_runtime_boundary_selected_delta_lw_runtime_corridor_gate_db`.
@@ -2518,7 +2536,7 @@ do not alias into field/building outputs. Counters:
 `post_v1_next_numeric_coverage_gap_gate_cl_plan`.
 Gate CK selected next file:
 `packages/engine/src/post-v1-next-numeric-coverage-gap-gate-cl-contract.test.ts`.
-Gate CL has now landed as the latest no-runtime accuracy/rerank slice:
+Historical Gate CL no-runtime accuracy/rerank slice:
 `post_v1_next_numeric_coverage_gap_gate_cl_plan`
 with status
 `post_v1_next_numeric_coverage_gap_gate_cl_landed_no_runtime_selected_required_physical_input_surface_parity_gate_cm`.
@@ -2537,7 +2555,7 @@ pins remain frozen. Gate CL selected next action:
 `post_v1_required_physical_input_surface_parity_gate_cm_plan`.
 Gate CL selected next file:
 `packages/engine/src/post-v1-required-physical-input-surface-parity-gate-cm-contract.test.ts`.
-Gate CM has now landed as the latest no-runtime input-surface guard:
+Historical Gate CM no-runtime input-surface guard:
 `post_v1_required_physical_input_surface_parity_gate_cm_plan`
 with status
 `post_v1_required_physical_input_surface_parity_gate_cm_landed_no_runtime_selected_next_numeric_coverage_gap_gate_cn`.
@@ -5489,7 +5507,7 @@ from hidden `screening_fallback`.
 Historical selected next action:
 `company_internal_calculation_grade_mainline_matrix_v3_refresh_after_steel_delta_lw_surface_parity_plan`.
 
-Current selected next file:
+Historical selected next file:
 `packages/engine/src/company-internal-calculation-grade-mainline-matrix-v3-contract.test.ts`.
 
 The selected steel suspended-ceiling `DeltaLw` runtime corridor has now
@@ -5507,7 +5525,7 @@ fabricating a broad fallback. Selection status:
 Historical selected next action:
 `company_internal_steel_suspended_ceiling_delta_lw_surface_parity_plan`.
 
-Current selected next file:
+Historical selected next file:
 `packages/engine/src/company-internal-steel-suspended-ceiling-delta-lw-surface-parity-contract.test.ts`.
 
 The steel suspended-ceiling `DeltaLw` surface parity gate has now landed
@@ -5523,7 +5541,7 @@ show the same lab `Ln,w 51.6` / `DeltaLw 22.4`,
 Historical selected next action:
 `company_internal_calculation_grade_mainline_matrix_v3_refresh_after_steel_delta_lw_surface_parity_plan`.
 
-Current selected next file:
+Historical selected next file:
 `packages/engine/src/company-internal-calculation-grade-mainline-matrix-v3-contract.test.ts`.
 
 The company-internal Matrix V3 refresh has now landed as
@@ -5623,10 +5641,10 @@ Selection status:
 Historical selected next action:
 `company_internal_opening_leak_building_runtime_corridor_plan`.
 
-Current selected next file:
+Historical selected next file:
 `packages/engine/src/company-internal-opening-leak-building-runtime-corridor-contract.test.ts`.
 
-Current selected next label:
+Historical selected next label:
 opening/leak field/building runtime corridor.
 
 Latest landed opening/leak field/building runtime corridor:
@@ -5826,9 +5844,9 @@ Latest landed company-internal Matrix V6 refresh:
   aliases, and exact-source precedence stay explicit boundary rows.
 - Historical selected next action:
   `company_internal_building_astm_boundary_revalidation_after_a_weighted_matrix_plan`.
-- Current selected next file:
+- Historical selected next file:
   `packages/engine/src/company-internal-building-astm-boundary-revalidation-contract.test.ts`.
-- Current selected next label:
+- Historical selected next label:
   building partial-context and ASTM parked-boundary revalidation.
 
 Latest landed building/ASTM boundary revalidation:
@@ -5844,9 +5862,9 @@ Latest landed building/ASTM boundary revalidation:
   alias row remain unsupported without ISO alias values or budgets.
 - Historical selected next action:
   `company_internal_final_internal_use_rehearsal_after_boundary_revalidation_plan`.
-- Current selected next file:
+- Historical selected next file:
   `packages/engine/src/company-internal-final-internal-use-rehearsal-contract.test.ts`.
-- Current selected next label:
+- Historical selected next label:
   final internal-use rehearsal and operating envelope.
 
 Latest roadmap sharpening:

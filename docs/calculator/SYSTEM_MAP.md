@@ -1,6 +1,28 @@
 # System Map
 
-Last reviewed: 2026-06-10
+Last reviewed: 2026-06-12
+
+Documentation map:
+[DOCUMENTATION_MAP.md](./DOCUMENTATION_MAP.md). Use that file for the
+read order and sync rules; use this file for route-level implementation
+orientation after the current handoff is understood.
+
+Historical route notes below may preserve the `current` or `selected
+next` wording from the checkpoint that created them. The current active
+route summary immediately below is the route-level handoff for this
+checkpoint.
+
+Current active route summary:
+
+- route family: direct-fixed double-leaf/framed wall;
+- direct curve owner:
+  `wall.direct_fixed_double_leaf.equivalent_coupled_mass_bridge_loss_owner`;
+- field adapter:
+  `gate_i_airborne_field_apparent_context_adapter_runtime`;
+- building adapter:
+  `gate_ar_airborne_building_prediction_all_owner_runtime_corridor`;
+- selected next route file:
+  `packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-a-weighted-field-building-coverage-refresh-contract.test.ts`.
 
 Latest direct-fixed A-weighted field/building surface parity 2026-06-11:
 `post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_surface_parity_plan`
@@ -410,13 +432,13 @@ This is not a broad source crawl. Counters:
 `runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_context_absorptive_cavity_input_owner_surface_parity_plan`.
-Current selected next file:
+Historical selected next file:
 `apps/web/features/workbench/post-v1-wall-double-leaf-framed-context-absorptive-cavity-input-owner-surface-parity.test.ts`.
-Current selected next plan doc:
+Historical selected next plan doc:
 `docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_CONTEXT_ABSORPTIVE_CAVITY_INPUT_OWNER_SURFACE_PARITY_PLAN_2026-06-11.md`.
-Current selected next label:
+Historical selected next label:
 `post-V1 wall double-leaf/framed context absorptive cavity input owner surface parity`.
 
 Latest calculator closeout 2026-06-11:

@@ -2,6 +2,14 @@
 
 Start here before changing calculator behavior.
 
+Current calculator documentation map:
+`docs/calculator/DOCUMENTATION_MAP.md`. Use it to see which live docs
+are authority, which files are historical evidence, and which
+implementation files must stay synchronized with the active handoff.
+Older selected-next notes later in this file are historical unless the
+documentation map, source of truth, and next-agent brief name them as
+current.
+
 ## Latest Direct-Fixed A-Weighted Field/Building Surface Parity - 2026-06-11
 
 Latest landed surface parity:
@@ -68,13 +76,13 @@ source crawl. Counters: `newCalculableRequestShapes: 4`,
 `runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
 `frontendImplementationFilesTouched: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_surface_parity_plan`.
-Current selected next file:
+Historical selected next file:
 `apps/web/features/workbench/post-v1-wall-double-leaf-framed-direct-fixed-a-weighted-field-building-surface-parity.test.ts`.
-Current selected next plan doc:
+Historical selected next plan doc:
 `docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_DIRECT_FIXED_A_WEIGHTED_FIELD_BUILDING_SURFACE_PARITY_PLAN_2026-06-11.md`.
-Current selected next label:
+Historical selected next label:
 `post-V1 wall double-leaf/framed direct-fixed A-weighted field/building surface parity`.
 
 ## Latest Numeric Gap After Direct-Fixed Context Absorptive Cavity Field/Building Adapter - 2026-06-11
@@ -107,13 +115,13 @@ source crawl. Counters: `candidateCount 7`,
 `runtimeFormulaRetunes: 0`, `runtimeValuesMoved 0`,
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_owner_plan`.
-Current selected next file:
+Historical selected next file:
 `packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-a-weighted-field-building-owner-contract.test.ts`.
-Current selected next plan doc:
+Historical selected next plan doc:
 `docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_DIRECT_FIXED_A_WEIGHTED_FIELD_BUILDING_OWNER_PLAN_2026-06-11.md`.
-Current selected next label:
+Historical selected next label:
 `post-V1 wall double-leaf/framed direct-fixed A-weighted field/building owner`.
 
 ## Latest Direct-Fixed Context Absorptive Cavity Field/Building Adapter Coverage Refresh - 2026-06-11
@@ -153,13 +161,13 @@ crawl. Counters: `coverageRefreshContractFilesTouched: 1`,
 `frontendImplementationFilesTouched: 0`, `runtimeValuesMoved 0`,
 `runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_next_numeric_coverage_gap_after_direct_fixed_context_absorptive_cavity_field_building_adapter_plan`.
-Current selected next file:
+Historical selected next file:
 `packages/engine/src/post-v1-next-numeric-coverage-gap-after-direct-fixed-context-absorptive-cavity-field-building-adapter-contract.test.ts`.
-Current selected next plan doc:
+Historical selected next plan doc:
 `docs/calculator/POST_V1_NEXT_NUMERIC_COVERAGE_GAP_AFTER_DIRECT_FIXED_CONTEXT_ABSORPTIVE_CAVITY_FIELD_BUILDING_ADAPTER_PLAN_2026-06-11.md`.
-Current selected next label:
+Historical selected next label:
 `post-V1 next numeric coverage gap after direct-fixed context absorptive cavity field/building adapter`.
 
 ## Latest Direct-Fixed Context Absorptive Cavity Field/Building Adapter Surface Parity - 2026-06-11
@@ -194,13 +202,13 @@ This is not a broad source crawl. Counters:
 `frontendImplementationFilesTouched: 0`, `runtimeValuesMoved 0`,
 `runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_field_building_adapter_coverage_refresh_plan`.
-Current selected next file:
+Historical selected next file:
 `packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-field-building-adapter-coverage-refresh-contract.test.ts`.
-Current selected next plan doc:
+Historical selected next plan doc:
 `docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_DIRECT_FIXED_CONTEXT_ABSORPTIVE_CAVITY_FIELD_BUILDING_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-11.md`.
-Current selected next label:
+Historical selected next label:
 `post-V1 wall double-leaf/framed direct-fixed context absorptive cavity field/building adapter coverage refresh`.
 
 ## Latest Direct-Fixed Context Absorptive Cavity Field/Building Adapter Owner - 2026-06-11
@@ -238,13 +246,13 @@ Counters: `newCalculableRequestShapes: 4`,
 `runtimeValuesMoved 12`, `runtimeFormulaRetunes: 0`,
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_field_building_adapter_surface_parity_plan`.
-Current selected next file:
+Historical selected next file:
 `apps/web/features/workbench/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-field-building-adapter-surface-parity.test.ts`.
-Current selected next plan doc:
+Historical selected next plan doc:
 `docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_DIRECT_FIXED_CONTEXT_ABSORPTIVE_CAVITY_FIELD_BUILDING_ADAPTER_SURFACE_PARITY_PLAN_2026-06-11.md`.
-Current selected next label:
+Historical selected next label:
 `post-V1 wall double-leaf/framed direct-fixed context absorptive cavity field/building adapter surface parity`.
 
 ## Latest Direct-Fixed Context Absorptive Cavity Coverage Refresh - 2026-06-11
@@ -282,13 +290,13 @@ broad source crawl. Counters: `coverageRefreshContractFilesTouched: 1`,
 `estimatedNextRuntimeValuesMoved: 12`, and
 `broadSourceCrawlSelected false`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_field_building_adapter_owner_plan`.
-Current selected next file:
+Historical selected next file:
 `packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-field-building-adapter-owner-contract.test.ts`.
-Current selected next plan doc:
+Historical selected next plan doc:
 `docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_DIRECT_FIXED_CONTEXT_ABSORPTIVE_CAVITY_FIELD_BUILDING_ADAPTER_OWNER_PLAN_2026-06-11.md`.
-Current selected next label:
+Historical selected next label:
 `post-V1 wall double-leaf/framed direct-fixed context absorptive cavity field/building adapter owner`.
 
 ## Latest Direct-Fixed Context Absorptive Cavity Surface Parity - 2026-06-11
@@ -319,13 +327,13 @@ Full direct-fixed context-owned absorptive cavity remains `Rw 35`,
 `frontendImplementationFilesTouched: 1`, `runtimeValuesMoved 0`,
 `runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_owner_coverage_refresh_plan`.
-Current selected next file:
+Historical selected next file:
 `packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-owner-coverage-refresh-contract.test.ts`.
-Current selected next plan doc:
+Historical selected next plan doc:
 `docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_DIRECT_FIXED_CONTEXT_ABSORPTIVE_CAVITY_OWNER_COVERAGE_REFRESH_PLAN_2026-06-11.md`.
-Current selected next label:
+Historical selected next label:
 `post-V1 wall double-leaf/framed direct-fixed context absorptive cavity owner coverage refresh`.
 
 ## Latest Direct-Fixed Context Absorptive Cavity Owner - 2026-06-11
@@ -403,13 +411,13 @@ this owner. This is not a broad source crawl. Counters:
 `estimatedNextNewCalculableTargetOutputs: 4`, and
 `estimatedNextRuntimeBasisPromotions: 1`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_owner_plan`.
-Current selected next file:
+Historical selected next file:
 `packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-owner-contract.test.ts`.
-Current selected next plan doc:
+Historical selected next plan doc:
 `docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_DIRECT_FIXED_CONTEXT_ABSORPTIVE_CAVITY_OWNER_PLAN_2026-06-11.md`.
-Current selected next label:
+Historical selected next label:
 `post-V1 wall double-leaf/framed direct-fixed context absorptive cavity owner`.
 Route family: `wall.double_leaf_framed`. Target outputs: `Rw`, `STC`,
 `C`, and `Ctr`. Required physical inputs: side leaf groups, side leaf
@@ -457,13 +465,13 @@ Counters: `webSurfaceParityContractFilesTouched: 1`,
 `frontendImplementationFilesTouched: 1`, `runtimeValuesMoved 0`,
 `runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_context_absorptive_cavity_input_owner_coverage_refresh_plan`.
-Current selected next file:
+Historical selected next file:
 `packages/engine/src/post-v1-wall-double-leaf-framed-context-absorptive-cavity-input-owner-coverage-refresh-contract.test.ts`.
-Current selected next plan doc:
+Historical selected next plan doc:
 `docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_CONTEXT_ABSORPTIVE_CAVITY_INPUT_OWNER_COVERAGE_REFRESH_PLAN_2026-06-11.md`.
-Current selected next label:
+Historical selected next label:
 `post-V1 wall double-leaf/framed context absorptive cavity input owner coverage refresh`.
 
 ## Latest Context Absorptive Cavity Owner - 2026-06-11
@@ -495,13 +503,13 @@ This is not a broad source crawl. Counters:
 `runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_context_absorptive_cavity_input_owner_surface_parity_plan`.
-Current selected next file:
+Historical selected next file:
 `apps/web/features/workbench/post-v1-wall-double-leaf-framed-context-absorptive-cavity-input-owner-surface-parity.test.ts`.
-Current selected next plan doc:
+Historical selected next plan doc:
 `docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_CONTEXT_ABSORPTIVE_CAVITY_INPUT_OWNER_SURFACE_PARITY_PLAN_2026-06-11.md`.
-Current selected next label:
+Historical selected next label:
 `post-V1 wall double-leaf/framed context absorptive cavity input owner surface parity`.
 
 ## Latest Route-Input Coverage Refresh Closeout - 2026-06-11
@@ -526,13 +534,13 @@ crawl. Counters: `coverageRefreshContractFilesTouched: 1`,
 `frontendImplementationFilesTouched: 0`, `runtimeValuesMoved 0`,
 `runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_context_absorptive_cavity_input_owner_plan`.
-Current selected next file:
+Historical selected next file:
 `packages/engine/src/post-v1-wall-double-leaf-framed-context-absorptive-cavity-input-owner-contract.test.ts`.
-Current selected next plan doc:
+Historical selected next plan doc:
 `docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_CONTEXT_ABSORPTIVE_CAVITY_INPUT_OWNER_PLAN_2026-06-11.md`.
-Current selected next label:
+Historical selected next label:
 `post-V1 wall double-leaf/framed context absorptive cavity input owner`.
 This selected next is value-moving: route family `wall.double_leaf_framed`,
 target outputs `Rw`, `STC`, `C`, and `Ctr`, required physical inputs are
@@ -681,10 +689,10 @@ Current reconciliation checkpoint:
 Current selected next action label:
 `post_v1_wall_double_leaf_framed_route_input_runtime_widening_surface_parity_plan`.
 
-Current selected next file:
+Historical selected next file:
 `apps/web/features/workbench/post-v1-wall-double-leaf-framed-route-input-runtime-widening-surface-parity.test.ts`.
 
-Current selected next plan doc:
+Historical selected next plan doc:
 `docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_ROUTE_INPUT_RUNTIME_WIDENING_SURFACE_PARITY_PLAN_2026-06-11.md`.
 
 Latest landed compatible anchor-delta field/building surface parity:
@@ -7314,7 +7322,7 @@ plan.
   away from hidden `screening_fallback`.
   Historical selected next action:
   `company_internal_steel_suspended_ceiling_delta_lw_runtime_corridor_plan`.
-  Current selected next file:
+  Historical selected next file:
   `packages/engine/src/company-internal-steel-suspended-ceiling-delta-lw-runtime-corridor-contract.test.ts`.
   That steel suspended-ceiling `DeltaLw` runtime corridor has now landed
   as
@@ -7327,7 +7335,7 @@ plan.
   `company_internal_steel_suspended_ceiling_delta_lw_runtime_corridor_landed_selected_surface_parity`.
   Historical selected next action:
   `company_internal_steel_suspended_ceiling_delta_lw_surface_parity_plan`.
-  Current selected next file:
+  Historical selected next file:
   `packages/engine/src/company-internal-steel-suspended-ceiling-delta-lw-surface-parity-contract.test.ts`.
   That steel suspended-ceiling `DeltaLw` surface parity gate has now
   landed as
@@ -7340,7 +7348,7 @@ plan.
   `company_internal_steel_suspended_ceiling_delta_lw_surface_parity_landed_selected_matrix_v3_refresh`.
   Historical selected next action:
   `company_internal_calculation_grade_mainline_matrix_v3_refresh_after_steel_delta_lw_surface_parity_plan`.
-  Current selected next file:
+  Historical selected next file:
   `packages/engine/src/company-internal-calculation-grade-mainline-matrix-v3-contract.test.ts`.
   That Matrix V3 refresh has now landed as
   `company_internal_calculation_grade_mainline_matrix_v3_refresh_after_steel_delta_lw_surface_parity_plan`.
@@ -7429,9 +7437,9 @@ plan.
   `company_internal_opening_leak_building_adapter_owner_contract_landed_no_runtime_selected_runtime_corridor`.
   Historical selected next action:
   `company_internal_opening_leak_building_runtime_corridor_plan`.
-  Current selected next file:
+  Historical selected next file:
   `packages/engine/src/company-internal-opening-leak-building-runtime-corridor-contract.test.ts`.
-  Current selected next label:
+  Historical selected next label:
   opening/leak field/building runtime corridor.
   The opening/leak field/building runtime corridor has now landed as
   `company_internal_opening_leak_building_runtime_corridor_plan`.
@@ -7488,9 +7496,9 @@ plan.
   `company_internal_opening_leak_building_input_surface_landed_selected_matrix_v5_refresh`.
   Historical selected next action:
   `company_internal_calculation_grade_mainline_matrix_v5_refresh_after_opening_leak_building_input_surface_plan`.
-  Current selected next file:
+  Historical selected next file:
   `packages/engine/src/company-internal-calculation-grade-mainline-matrix-v5-contract.test.ts`.
-  Current selected next label:
+  Historical selected next label:
   company-internal matrix v5 refresh after opening/leak field/building
   input surface.
   Matrix V5 has now landed:
@@ -7542,9 +7550,9 @@ plan.
   `company_internal_opening_leak_a_weighted_spectrum_adapter_formula_corridor_landed_no_runtime_selected_runtime_corridor`.
   Historical selected next action:
   `company_internal_opening_leak_a_weighted_spectrum_adapter_runtime_corridor_plan`.
-  Current selected next file:
+  Historical selected next file:
   `packages/engine/src/company-internal-opening-leak-a-weighted-spectrum-adapter-runtime-corridor-contract.test.ts`.
-  Current selected next label:
+  Historical selected next label:
   opening/leak Dn,A / DnT,A spectrum-adapter runtime corridor.
   The A-weighted runtime corridor has now landed:
   `company_internal_opening_leak_a_weighted_spectrum_adapter_runtime_corridor_plan`.

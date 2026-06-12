@@ -4,6 +4,24 @@ Living reference docs for the DynEcho acoustic calculator. Read these
 before anything under `docs/archive/` and before older dated
 checkpoints in this folder.
 
+## Start Here
+
+Current documentation map:
+`docs/calculator/DOCUMENTATION_MAP.md`.
+
+Use that file to decide which docs are authority, which are historical
+evidence, and which implementation files must stay synchronized with
+the active handoff.
+
+Current source of truth:
+`docs/calculator/CALCULATOR_SOURCE_OF_TRUTH.md`.
+
+Current operational handoff:
+`docs/calculator/NEXT_AGENT_BRIEF.md`.
+
+Older selected-next notes in long docs are historical unless the
+documentation map and next-agent brief name them as current.
+
 ## Latest Direct-Fixed A-Weighted Field/Building Surface Parity
 
 `post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_surface_parity_plan`
@@ -489,7 +507,7 @@ route-required physical inputs. If the route lacks required inputs or an
 owned metric basis, stop as `needs_input` or `unsupported` instead of
 inventing a value.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_route_input_runtime_widening_coverage_refresh_plan`
 in
 `packages/engine/src/post-v1-wall-double-leaf-framed-route-input-runtime-widening-coverage-refresh-contract.test.ts`.
@@ -535,7 +553,7 @@ ASTM/IIC/AIIC remain outside this owner. Counters:
 `runtimeBasisPromotions: 0`, `runtimeValuesMoved 0`,
 `runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_route_input_runtime_widening_coverage_refresh_plan`
 in
 `packages/engine/src/post-v1-wall-double-leaf-framed-route-input-runtime-widening-coverage-refresh-contract.test.ts`.
@@ -753,8 +771,8 @@ Counters: `ownerLedgersRejected 5`, `sameBasisHoldoutLedgersMissing 5`,
 `runtimeValuesMoved 0`, `sourceRowsImported: 0`, and
 `frontendImplementationFilesTouched: 0`.
 
-Previous landed no-runtime current coverage/accuracy gap ledger:
-Gate FA is the latest landed no-runtime current coverage/accuracy gap ledger:
+Historical landed no-runtime current coverage/accuracy gap ledger:
+Gate FA was the then-latest landed no-runtime current coverage/accuracy gap ledger:
 `post_v1_current_coverage_accuracy_gap_ledger_gate_fa_plan`,
 with status
 `post_v1_current_coverage_accuracy_gap_ledger_gate_fa_landed_no_runtime_selected_opening_leak_common_wall_same_basis_residual_owner_gate_fb`.
@@ -899,7 +917,7 @@ Counters: `candidateCount 10`, `estimatedNextGapLedgers 1`,
 `runtimeValuesMoved 0`, `sourceRowsImported: 0`, and
 `frontendImplementationFilesTouched: 0`.
 
-Gate ET is the latest no-runtime calculator boundary slice:
+Historical Gate ET no-runtime calculator boundary slice:
 `post_v1_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et_plan`,
 with status
 `post_v1_floor_reinforced_concrete_visible_derived_missing_input_boundary_gate_et_landed_no_runtime_selected_next_numeric_coverage_gap_gate_eu`.
@@ -952,7 +970,7 @@ Estimated Gate ET boundary-surface touch:
 Gate ES counters include `runtimeValuesMoved 0`,
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
 
-Gate ER remains the latest value-moving runtime scope/accuracy slice:
+Historical Gate ER value-moving runtime scope/accuracy slice:
 `post_v1_wall_direct_fixed_double_leaf_field_building_adapter_runtime_gate_er_plan`,
 with status
 `post_v1_wall_direct_fixed_double_leaf_field_building_adapter_runtime_gate_er_landed_runtime_selected_next_numeric_coverage_gap_gate_es`.
@@ -1109,9 +1127,9 @@ support already-owned single-output asks. Dry pins include `Rw 66`,
 Missing `impactFieldContext` still leaves the field impact outputs
 unsupported. `Ctr`, ASTM `IIC`, and ASTM `AIIC` remain unsupported
 because their metric-basis owners are separate.
-Gate CD status is
+Gate CD status was
 `post_v1_floor_open_box_target_output_independence_gate_cd_landed_selected_next_numeric_coverage_gap_gate_ce`;
-the latest no-runtime selection is
+the then-latest no-runtime selection was
 `post_v1_next_numeric_coverage_gap_gate_ce_plan` with status
 `post_v1_next_numeric_coverage_gap_gate_ce_landed_no_runtime_selected_target_output_independence_sweep_gate_cf`.
 Gate CE selected `target_output_independence_sweep`, now closed by Gate
@@ -3383,10 +3401,10 @@ of this adapter. Selection status:
 Historical selected next action:
 `company_internal_opening_leak_building_runtime_corridor_plan`.
 
-Current selected next file:
+Historical selected next file:
 `packages/engine/src/company-internal-opening-leak-building-runtime-corridor-contract.test.ts`.
 
-Current selected next label:
+Historical selected next label:
 opening/leak field/building runtime corridor.
 
 Latest landed opening/leak field/building runtime corridor:
@@ -3455,10 +3473,10 @@ Selection status:
 Historical selected next action:
 `company_internal_calculation_grade_mainline_matrix_v5_refresh_after_opening_leak_building_input_surface_plan`.
 
-Current selected next file:
+Historical selected next file:
 `packages/engine/src/company-internal-calculation-grade-mainline-matrix-v5-contract.test.ts`.
 
-Current selected next label:
+Historical selected next label:
 company-internal matrix v5 refresh after opening/leak field/building
 input surface.
 

@@ -1,12 +1,15 @@
 # Broad Accuracy Calculator Plan
 
-Historical status, 2026-06-05: this remains a broad-accuracy reference,
+Historical status, 2026-06-12: this remains a broad-accuracy reference,
 not the source of truth for the next implementation slice. Read
+[DOCUMENTATION_MAP.md](./DOCUMENTATION_MAP.md) and
 [CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md) first.
-Usable V1 Steps 0-5 are closed; Gate CH is the latest landed
-value-moving runtime slice; `post_v1_next_numeric_coverage_gap_gate_ci_plan`
-is the selected next numeric coverage-gap label. Older "selected next"
-entries below are historical handoffs.
+Usable V1 Steps 0-5 are closed for the current company-internal
+envelope. The current checkpoint is
+[CHECKPOINT_2026-06-11_DIRECT_FIXED_A_WEIGHTED_SURFACE_PARITY.md](./CHECKPOINT_2026-06-11_DIRECT_FIXED_A_WEIGHTED_SURFACE_PARITY.md);
+the current selected next label is
+`post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_coverage_refresh_plan`.
+Older "selected next" entries below are historical handoffs.
 
 Status: historical refocus plan, created 2026-05-15.
 
@@ -546,21 +549,25 @@ Company-internal readiness is achieved only when:
   cases honestly, but the supported set is broad enough for real daily
   use.
 
-## Active Next Step
+## Historical Active Next Step
 
-Detailed active slice plan:
+This section records the active slice from the original broad-accuracy
+plan period. It is superseded by the current selected next action named
+at the top of this file.
+
+Historical detailed slice plan:
 
 [SLICE_BROAD_ACCURACY_REFERENCE_BENCHMARK_AND_SIMILARITY_SOLVER_PLAN.md](./SLICE_BROAD_ACCURACY_REFERENCE_BENCHMARK_AND_SIMILARITY_SOLVER_PLAN.md)
 
-Current active selected next action:
+Historical selected next action:
 
 `broad_accuracy_post_open_web_field_building_input_surface_matrix_refresh_plan`
 
-Current active selected next file:
+Historical selected next file:
 
 `packages/engine/src/broad-accuracy-post-open-web-field-building-input-surface-matrix-refresh-contract.test.ts`
 
-Current active selected next label:
+Historical selected next label:
 
 post open-web field/building input-surface matrix refresh.
 
@@ -710,11 +717,11 @@ Previously selected next action, now landed:
 
 `broad_accuracy_floor_open_web_raw_bare_coverage_refresh_plan`
 
-Current selected next file:
+Historical selected next file:
 
 `packages/engine/src/broad-accuracy-floor-open-web-raw-bare-coverage-refresh-contract.test.ts`
 
-Current selected next label:
+Historical selected next label:
 
 floor open-web raw-bare coverage refresh.
 
@@ -737,11 +744,11 @@ Previously selected next action, now landed:
 
 `broad_accuracy_post_raw_bare_open_web_coverage_revalidation_plan`
 
-Current selected next file:
+Historical selected next file:
 
 `packages/engine/src/broad-accuracy-post-raw-bare-open-web-coverage-revalidation-contract.test.ts`
 
-Current selected next label:
+Historical selected next label:
 
 post raw-bare open-web coverage revalidation.
 
