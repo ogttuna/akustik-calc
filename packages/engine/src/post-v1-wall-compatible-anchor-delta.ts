@@ -19,7 +19,7 @@ export const POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_SELECTED_CANDIDATE_ID =
   "wall.compatible_anchor_delta.extra_board_on_verified_lsf";
 
 export const POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_WARNING =
-  "Compatible measured-anchor delta active: DynEcho used the exact Rw source row as the base assembly and applied a bounded exterior added-board mass delta. STC, C, and Ctr stay unsupported unless a separate owner exists.";
+  "Compatible measured-anchor delta active: DynEcho used the exact Rw source row as the base assembly and applied a bounded exterior added-board mass delta. Lab companion metrics stay unsupported unless a separate owner exists.";
 
 export const POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_FIELD_BUILDING_ADAPTER_WARNING =
   "Compatible anchor-delta field/building adapter active: DynEcho used the measured-anchor direct curve plus bounded exterior board delta before applying the owned Gate I / Gate AR field-building adapter. Lab Rw is not relabelled as R'w, Dn,w, or DnT,w.";
@@ -83,6 +83,20 @@ function isRwPlusCalculatedLabCompanionRequest(targetOutputs: readonly Requested
   }
 
   return targetOutputs.every((output) => MIXED_LAB_COMPANION_OUTPUTS.has(output));
+}
+
+function isStcOnlyCalculatedLabCompanionRequest(targetOutputs: readonly RequestedOutputId[]): boolean {
+  return targetOutputs.length === 1 && targetOutputs[0] === "STC";
+}
+
+function isCOrCtrOnlyCalculatedLabCompanionRequest(targetOutputs: readonly RequestedOutputId[]): boolean {
+  return targetOutputs.length === 1 && (targetOutputs[0] === "C" || targetOutputs[0] === "Ctr");
+}
+
+function isCalculatedLabCompanionRequest(targetOutputs: readonly RequestedOutputId[]): boolean {
+  return isRwPlusCalculatedLabCompanionRequest(targetOutputs) ||
+    isStcOnlyCalculatedLabCompanionRequest(targetOutputs) ||
+    isCOrCtrOnlyCalculatedLabCompanionRequest(targetOutputs);
 }
 
 function wallFieldBuildingOutputsRequested(targetOutputs: readonly RequestedOutputId[]): boolean {
@@ -333,7 +347,7 @@ export function maybeBuildPostV1WallCompatibleAnchorDeltaLabCompanionBasis(input
     !input.result.applied ||
     (!hasOneSideExteriorBoardDelta && !hasPairedExteriorBoardDelta) ||
     !isElementLabContext(input.airborneContext) ||
-    !isRwPlusCalculatedLabCompanionRequest(input.targetOutputs) ||
+    !isCalculatedLabCompanionRequest(input.targetOutputs) ||
     match?.id !== POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LSF_SOURCE_ID ||
     match.sourceMode !== "lab" ||
     match.metricLabel !== "Rw" ||

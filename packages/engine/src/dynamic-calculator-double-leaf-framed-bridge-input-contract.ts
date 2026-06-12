@@ -87,7 +87,8 @@ const REQUIRED_BEFORE_RUNTIME_PROMOTION = [
 
 const CONDITIONAL_BEFORE_RUNTIME_PROMOTION = [
   "resilientBarSideCount",
-  "cavity1FillCoverage"
+  "cavity1FillCoverage",
+  "absorberClass"
 ] as const satisfies readonly AcousticInputFieldId[];
 
 const OPTIONAL_PRECISION_FIELDS = [
@@ -139,6 +140,30 @@ function hasCavityOrPorousLayer(
   catalog: readonly MaterialDefinition[]
 ): boolean {
   return layers.some((layer) => isCavityLayer(layer, catalog) || isPorousFillLayer(layer, catalog));
+}
+
+function hasPositiveCavityDepth(topology: AirborneContext["wallTopology"] | undefined): boolean {
+  return Boolean(
+    typeof topology?.cavity1DepthMm === "number" &&
+      Number.isFinite(topology.cavity1DepthMm) &&
+      topology.cavity1DepthMm > 0
+  );
+}
+
+function hasExplicitEmptyCavity(topology: AirborneContext["wallTopology"] | undefined): boolean {
+  return topology?.cavity1FillCoverage === "empty" && topology.cavity1AbsorptionClass === "none";
+}
+
+function hasContextOwnedPorousCavityInput(context: AirborneContext | undefined): boolean {
+  const topology = context?.wallTopology;
+  const primaryCavity = context?.advancedWall?.cavities?.[0];
+  return Boolean(
+    topology?.cavity1AbsorptionClass === "porous_absorptive" &&
+      (topology.cavity1FillCoverage === "full" || topology.cavity1FillCoverage === "partial") &&
+      typeof primaryCavity?.absorberFlowResistivityPaSM2 === "number" &&
+      Number.isFinite(primaryCavity.absorberFlowResistivityPaSM2) &&
+      primaryCavity.absorberFlowResistivityPaSM2 > 0
+  );
 }
 
 function hasEngineeringFlowDefault(
@@ -249,6 +274,9 @@ export function buildGateQDoubleLeafFramedBridgeInputContract(input: {
   const missing: AcousticInputFieldId[] = [];
   const requiresResilientSideCount = bridgeClass === "resilient_bridge";
   const hasPorousCavityFill = hasPorousFill(input.layers, catalog);
+  const hasVisibleCavityOrPorousLayer = hasCavityOrPorousLayer(input.layers, catalog);
+  const hasExplicitCavityDepth = hasPositiveCavityDepth(topology);
+  const hasContextOwnedPorousCavity = hasContextOwnedPorousCavityInput(input.airborneContext);
   const usesEngineeringFlowDefault = hasEngineeringFlowDefault(input.layers, catalog);
   const requirements: RequirementSpec[] = [
     {
@@ -262,11 +290,7 @@ export function buildGateQDoubleLeafFramedBridgeInputContract(input: {
     {
       detail: "Enter the cavity depth in millimetres between the two leaves.",
       fieldId: "cavity1DepthMm",
-      isMissing:
-        typeof topology?.cavity1DepthMm !== "number" ||
-        !Number.isFinite(topology.cavity1DepthMm) ||
-        topology.cavity1DepthMm <= 0 ||
-        !hasCavityOrPorousLayer(input.layers, catalog),
+      isMissing: !hasExplicitCavityDepth,
       label: "Cavity depth",
       requirementType: "required_physical_input",
       source: "wall_topology"
@@ -315,6 +339,32 @@ export function buildGateQDoubleLeafFramedBridgeInputContract(input: {
         (!input.airborneContext?.resilientBarSideCount ||
           input.airborneContext.resilientBarSideCount === "auto"),
       label: "Resilient side count",
+      requirementType: "conditional_physical_input",
+      source: "wall_topology"
+    },
+    {
+      detail:
+        "When no visible cavity or porous-fill layer is present, classify the context-only cavity as empty before the solver can treat the typed depth as physical.",
+      fieldId: "cavity1FillCoverage",
+      isMissing:
+        hasExplicitCavityDepth &&
+        !hasVisibleCavityOrPorousLayer &&
+        !hasExplicitEmptyCavity(topology) &&
+        !hasContextOwnedPorousCavity,
+      label: "Cavity fill coverage",
+      requirementType: "conditional_physical_input",
+      source: "wall_topology"
+    },
+    {
+      detail:
+        "When no visible cavity or porous-fill layer is present, classify the context-only cavity absorption as none before the solver can apply zero porous damping.",
+      fieldId: "absorberClass",
+      isMissing:
+        hasExplicitCavityDepth &&
+        !hasVisibleCavityOrPorousLayer &&
+        !hasExplicitEmptyCavity(topology) &&
+        !hasContextOwnedPorousCavity,
+      label: "Cavity absorption class",
       requirementType: "conditional_physical_input",
       source: "wall_topology"
     }

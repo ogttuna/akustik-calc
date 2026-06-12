@@ -2,6 +2,456 @@
 
 Last reviewed: 2026-06-10
 
+Latest direct-fixed A-weighted field/building surface parity 2026-06-11:
+`post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_surface_parity_plan`
+landed in
+`apps/web/features/workbench/post-v1-wall-double-leaf-framed-direct-fixed-a-weighted-field-building-surface-parity.test.ts`
+with status
+`post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_surface_parity_landed_no_runtime_selected_coverage_refresh`.
+It follows
+`post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_owner_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-a-weighted-field-building-owner-contract.test.ts`
+/
+`post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_owner_landed_runtime_selected_surface_parity`.
+System route: workbench/API/replay/card/status/report surfaces now keep
+empty `Dn,A 24.9` / `DnT,A 27`, full absorptive `Dn,A 28.9` /
+`DnT,A 31`, and partial absorptive `Dn,A 26.9` / `DnT,A 29` on Gate
+EO + Gate I / Gate AR. Field uses
+`gate_i_airborne_field_apparent_context_adapter_runtime`; building uses
+`gate_ar_airborne_building_prediction_all_owner_runtime_corridor`; both
+use `wall.direct_fixed_double_leaf.equivalent_coupled_mass_bridge_loss_owner`.
+This is not a broad source crawl. Counters:
+`webSurfaceParityContractFilesTouched: 1`,
+`frontendImplementationFilesTouched: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
+Selected next:
+`post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-a-weighted-field-building-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_DIRECT_FIXED_A_WEIGHTED_FIELD_BUILDING_COVERAGE_REFRESH_PLAN_2026-06-11.md`
+/
+`post-V1 wall double-leaf/framed direct-fixed A-weighted field/building coverage refresh`.
+
+Latest direct-fixed A-weighted field/building owner 2026-06-11:
+`post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_owner_plan`
+landed in
+`packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-a-weighted-field-building-owner-contract.test.ts`
+with status
+`post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_owner_landed_runtime_selected_surface_parity`.
+Selected candidate:
+`wall.direct_fixed_double_leaf.a_weighted_field_building_owner`.
+It follows
+`post_v1_next_numeric_coverage_gap_after_direct_fixed_context_absorptive_cavity_field_building_adapter_plan`
+/
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-direct-fixed-context-absorptive-cavity-field-building-adapter-contract.test.ts`
+/
+`post_v1_next_numeric_coverage_gap_after_direct_fixed_context_absorptive_cavity_field_building_adapter_landed_no_runtime_selected_direct_fixed_a_weighted_field_building_owner`.
+System route: A-only direct-fixed field/building requests now use Gate
+EO + Gate I / Gate AR, with empty `Dn,A 24.9` / `DnT,A 27`, full
+absorptive `Dn,A 28.9` / `DnT,A 31`, and partial absorptive
+`Dn,A 26.9` / `DnT,A 29`. This is not a broad source crawl. Counters:
+`newCalculableRequestShapes: 4`, `correctedRequestShapes: 2`,
+`newCalculableTargetOutputs: 2`, `runtimeBasisPromotions: 2`,
+`runtimeValuesMoved 12`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+Selected next:
+`post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_surface_parity_plan`
+/
+`apps/web/features/workbench/post-v1-wall-double-leaf-framed-direct-fixed-a-weighted-field-building-surface-parity.test.ts`
+/
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_DIRECT_FIXED_A_WEIGHTED_FIELD_BUILDING_SURFACE_PARITY_PLAN_2026-06-11.md`
+/
+`post-V1 wall double-leaf/framed direct-fixed A-weighted field/building surface parity`.
+
+Latest numeric gap after direct-fixed context absorptive cavity field/building adapter 2026-06-11:
+`post_v1_next_numeric_coverage_gap_after_direct_fixed_context_absorptive_cavity_field_building_adapter_plan`
+landed in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-direct-fixed-context-absorptive-cavity-field-building-adapter-contract.test.ts`
+with status
+`post_v1_next_numeric_coverage_gap_after_direct_fixed_context_absorptive_cavity_field_building_adapter_landed_no_runtime_selected_direct_fixed_a_weighted_field_building_owner`.
+Selected candidate:
+`wall.direct_fixed_double_leaf.a_weighted_field_building_owner`.
+The rerank ran `roiAnalysisIterations: 3` and selected
+`post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_owner_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-a-weighted-field-building-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_DIRECT_FIXED_A_WEIGHTED_FIELD_BUILDING_OWNER_PLAN_2026-06-11.md`
+/
+`post-V1 wall double-leaf/framed direct-fixed A-weighted field/building owner`.
+System reason: Gate ER mixed base+A direct-fixed requests already
+calculate `Dn,A` / `DnT,A`, but A-only full/partial absorptive rows stay
+unsupported and empty direct-fixed A-only rows can miss the Gate ER base
+curve. This is not a broad source crawl. Counters: `candidateCount 7`,
+`aWeightedOnlyUnsupportedRowsRechecked 4`,
+`aWeightedOnlyMisroutedRowsRechecked 2`,
+`estimatedNextRuntimeValuesMoved: 12`,
+`immediateRuntimeValuesMoved: 0`, `runtimeBasisPromotions: 0`,
+`runtimeFormulaRetunes: 0`, `runtimeValuesMoved 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Latest direct-fixed context absorptive cavity field/building adapter coverage refresh 2026-06-11:
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_field_building_adapter_coverage_refresh_plan`
+landed in
+`packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-field-building-adapter-coverage-refresh-contract.test.ts`
+with status
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_field_building_adapter_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`.
+It follows
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_field_building_adapter_owner_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-field-building-adapter-owner-contract.test.ts`
+/
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_field_building_adapter_owner_landed_runtime_selected_surface_parity`
+and closes
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_field_building_adapter_surface_parity_plan`
+/
+`apps/web/features/workbench/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-field-building-adapter-surface-parity.test.ts`
+/
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_field_building_adapter_surface_parity_landed_no_runtime_selected_coverage_refresh`.
+System posture: field `gate_i_airborne_field_apparent_context_adapter_runtime`,
+building `gate_ar_airborne_building_prediction_all_owner_runtime_corridor`,
+Gate EO base
+`wall.direct_fixed_double_leaf.equivalent_coupled_mass_bridge_loss_owner`.
+Pinned values: full `R'w 29`, `Dn,w 30`, `DnT,w 32`; partial
+`R'w 27`, `Dn,w 28`, `DnT,w 30`. Coverage and company-internal V0 stay
+`ready_with_budget` / `allowed_with_budget`. This is not a broad source
+crawl. Counters: `coverageRefreshContractFilesTouched: 1`,
+`webSurfaceParityContractFilesTouched: 1`,
+`frontendImplementationFilesTouched: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
+Selected next:
+`post_v1_next_numeric_coverage_gap_after_direct_fixed_context_absorptive_cavity_field_building_adapter_plan`
+/
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-direct-fixed-context-absorptive-cavity-field-building-adapter-contract.test.ts`
+/
+`docs/calculator/POST_V1_NEXT_NUMERIC_COVERAGE_GAP_AFTER_DIRECT_FIXED_CONTEXT_ABSORPTIVE_CAVITY_FIELD_BUILDING_ADAPTER_PLAN_2026-06-11.md`
+/
+`post-V1 next numeric coverage gap after direct-fixed context absorptive cavity field/building adapter`.
+
+Latest direct-fixed context absorptive cavity field/building adapter surface parity 2026-06-11:
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_field_building_adapter_surface_parity_plan`
+landed in
+`apps/web/features/workbench/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-field-building-adapter-surface-parity.test.ts`
+with status
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_field_building_adapter_surface_parity_landed_no_runtime_selected_coverage_refresh`.
+It follows
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_field_building_adapter_owner_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-field-building-adapter-owner-contract.test.ts`
+/
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_field_building_adapter_owner_landed_runtime_selected_surface_parity`.
+Surface route map: workbench live calculation, API payloads, saved
+replay, server snapshot replay, cards, target-output status, and report
+summaries expose the same field/building bases:
+`gate_i_airborne_field_apparent_context_adapter_runtime`,
+`gate_ar_airborne_building_prediction_all_owner_runtime_corridor`, and
+`wall.direct_fixed_double_leaf.equivalent_coupled_mass_bridge_loss_owner`.
+Full values are `R'w 29`, `Dn,w 30`, `DnT,w 32`; partial values are
+`R'w 27`, `Dn,w 28`, `DnT,w 30`. Counters:
+`webSurfaceParityContractFilesTouched: 1`,
+`frontendImplementationFilesTouched: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`.
+Current selected next:
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_field_building_adapter_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-field-building-adapter-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_DIRECT_FIXED_CONTEXT_ABSORPTIVE_CAVITY_FIELD_BUILDING_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-11.md`
+/
+`post-V1 wall double-leaf/framed direct-fixed context absorptive cavity field/building adapter coverage refresh`.
+
+Latest direct-fixed context absorptive cavity field/building adapter owner 2026-06-11:
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_field_building_adapter_owner_plan`
+landed in
+`packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-field-building-adapter-owner-contract.test.ts`
+with status
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_field_building_adapter_owner_landed_runtime_selected_surface_parity`.
+It follows
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_owner_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-owner-coverage-refresh-contract.test.ts`
+/
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_owner_coverage_refresh_landed_no_runtime_selected_direct_fixed_context_absorptive_cavity_field_building_adapter_owner`.
+Runtime route map: direct-fixed context-owned absorptive field requests
+use `gate_i_airborne_field_apparent_context_adapter_runtime`; direct-
+fixed context-owned absorptive building requests use
+`gate_ar_airborne_building_prediction_all_owner_runtime_corridor`; both
+use `wall.direct_fixed_double_leaf.equivalent_coupled_mass_bridge_loss_owner`
+as the Gate EO direct curve. Full values are `R'w 29`, `Dn,w 30`,
+`DnT,w 32`; partial values are `R'w 27`, `Dn,w 28`, `DnT,w 30`.
+Lab pins remain `Rw 35`, `STC 35`, `C -1.2`, `Ctr -5.9`; `Rw 33`,
+`STC 33`, `C -1.2`, `Ctr -5.9`; and `Rw 31`, `STC 31`, `C -1.2`,
+`Ctr -5.9`. This is not a broad source crawl. Counters:
+`newCalculableRequestShapes: 4`, `newCalculableTargetOutputs: 3`,
+`runtimeBasisPromotions: 2`, `runtimeValuesMoved 12`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`,
+`frontendImplementationFilesTouched: 0`.
+Current selected next:
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_field_building_adapter_surface_parity_plan`
+/
+`apps/web/features/workbench/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-field-building-adapter-surface-parity.test.ts`
+/
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_DIRECT_FIXED_CONTEXT_ABSORPTIVE_CAVITY_FIELD_BUILDING_ADAPTER_SURFACE_PARITY_PLAN_2026-06-11.md`
+/
+`post-V1 wall double-leaf/framed direct-fixed context absorptive cavity field/building adapter surface parity`.
+
+Latest direct-fixed context absorptive cavity coverage refresh 2026-06-11:
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_owner_coverage_refresh_plan`
+landed in
+`packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-owner-coverage-refresh-contract.test.ts`
+with status
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_owner_coverage_refresh_landed_no_runtime_selected_direct_fixed_context_absorptive_cavity_field_building_adapter_owner`.
+It closes
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_owner_surface_parity_plan`
+/
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_owner_surface_parity_landed_no_runtime_selected_coverage_refresh`
+and follows
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_owner_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-owner-contract.test.ts`
+/
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_owner_landed_runtime_selected_surface_parity`.
+The engine path stays
+`wall.direct_fixed_double_leaf.equivalent_coupled_mass_bridge_loss_owner`
+with selected candidate
+`candidate_wall_direct_fixed_double_leaf_bridge_loss_equivalent_coupled_mass`.
+Full direct-fixed context-owned absorptive cavity pins `Rw 35`,
+`STC 35`, `C -1.2`, `Ctr -5.9`; partial pins `Rw 33`, `STC 33`,
+`C -1.2`, `Ctr -5.9`; empty pins `Rw 31`, `STC 31`, `C -1.2`,
+`Ctr -5.9`. The open high-ROI field/building gap is now explicit:
+full/partial direct-fixed context-owned absorptive cavity
+field/building requests still fall to the Gate AY unsupported boundary.
+This is not a broad source crawl. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`webSurfaceParityContractFilesTouched: 1`,
+`frontendImplementationFilesTouched: 1`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`,
+`estimatedNextRuntimeValuesMoved: 12`, and
+`broadSourceCrawlSelected false`.
+Current selected next:
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_field_building_adapter_owner_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-field-building-adapter-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_DIRECT_FIXED_CONTEXT_ABSORPTIVE_CAVITY_FIELD_BUILDING_ADAPTER_OWNER_PLAN_2026-06-11.md`
+/
+`post-V1 wall double-leaf/framed direct-fixed context absorptive cavity field/building adapter owner`.
+
+Latest direct-fixed context absorptive cavity surface parity 2026-06-11:
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_owner_surface_parity_plan`
+landed in
+`apps/web/features/workbench/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-owner-surface-parity.test.ts`
+with status
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_owner_surface_parity_landed_no_runtime_selected_coverage_refresh`.
+It follows
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_owner_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-owner-contract.test.ts`
+/
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_owner_landed_runtime_selected_surface_parity`.
+The workbench and report surface now expose
+`wall.direct_fixed_double_leaf.equivalent_coupled_mass_bridge_loss_owner`
+with selected candidate
+`candidate_wall_direct_fixed_double_leaf_bridge_loss_equivalent_coupled_mass`.
+Full direct-fixed context-owned absorptive cavity pins `Rw 35`,
+`STC 35`, `C -1.2`, `Ctr -5.9`; partial pins `Rw 33`, `STC 33`,
+`C -1.2`, `Ctr -5.9`; empty remains `Rw 31`, `STC 31`, `C -1.2`,
+`Ctr -5.9`. This is not a broad source crawl. Counters:
+`webSurfaceParityContractFilesTouched: 1`,
+`frontendImplementationFilesTouched: 1`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
+Current selected next:
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_owner_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-owner-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_DIRECT_FIXED_CONTEXT_ABSORPTIVE_CAVITY_OWNER_COVERAGE_REFRESH_PLAN_2026-06-11.md`
+/
+`post-V1 wall double-leaf/framed direct-fixed context absorptive cavity owner coverage refresh`.
+
+Latest direct-fixed context absorptive cavity owner 2026-06-11:
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_owner_plan`
+landed in
+`packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-owner-contract.test.ts`
+with status
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_owner_landed_runtime_selected_surface_parity`.
+It follows
+`post_v1_wall_double_leaf_framed_context_absorptive_cavity_input_owner_coverage_refresh_plan`
+/
+`post_v1_wall_double_leaf_framed_context_absorptive_cavity_input_owner_coverage_refresh_landed_no_runtime_selected_direct_fixed_context_absorptive_cavity_owner`.
+The runtime path is
+`wall.direct_fixed_double_leaf.equivalent_coupled_mass_bridge_loss_owner`
+with selected candidate
+`candidate_wall_direct_fixed_double_leaf_bridge_loss_equivalent_coupled_mass`.
+Full direct-fixed context-owned absorptive cavity now pins `Rw 35`,
+`STC 35`, `C -1.2`, `Ctr -5.9`; partial pins `Rw 33`, `STC 33`,
+`C -1.2`, `Ctr -5.9`; empty remains `Rw 31`, `STC 31`, `C -1.2`,
+`Ctr -5.9`. This is not a broad source crawl. Counters:
+`newCalculableRequestShapes: 1`, `newCalculableTargetOutputs: 4`,
+`runtimeBasisPromotions: 1`, `runtimeValuesMoved 4`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`,
+`frontendImplementationFilesTouched: 0`.
+Historical selected surface-parity follow-up:
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_owner_surface_parity_plan`
+/
+`apps/web/features/workbench/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-owner-surface-parity.test.ts`
+/
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_DIRECT_FIXED_CONTEXT_ABSORPTIVE_CAVITY_OWNER_SURFACE_PARITY_PLAN_2026-06-11.md`
+/
+`post-V1 wall double-leaf/framed direct-fixed context absorptive cavity owner surface parity`.
+
+Latest coverage refresh 2026-06-11:
+`post_v1_wall_double_leaf_framed_context_absorptive_cavity_input_owner_coverage_refresh_plan`
+landed in
+`packages/engine/src/post-v1-wall-double-leaf-framed-context-absorptive-cavity-input-owner-coverage-refresh-contract.test.ts`
+with status
+`post_v1_wall_double_leaf_framed_context_absorptive_cavity_input_owner_coverage_refresh_landed_no_runtime_selected_direct_fixed_context_absorptive_cavity_owner`.
+It closes
+`post_v1_wall_double_leaf_framed_context_absorptive_cavity_input_owner_surface_parity_plan`
+/
+`post_v1_wall_double_leaf_framed_context_absorptive_cavity_input_owner_surface_parity_landed_no_runtime_selected_coverage_refresh`
+and follows
+`post_v1_wall_double_leaf_framed_context_absorptive_cavity_input_owner_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-context-absorptive-cavity-input-owner-contract.test.ts`
+/
+`post_v1_wall_double_leaf_framed_context_absorptive_cavity_input_owner_landed_runtime_selected_surface_parity`.
+The active source-absent route remains
+`layer_combination_resolver_double_leaf_framed_wall_banded_source_absent_formula_corridor`
+with candidate
+`candidate_layer_combination_resolver_double_leaf_framed_wall_banded_source_absent_family_solver`
+as `ready_with_budget` and `allowed_with_budget`. Full context-owned
+absorptive cavity stays `Rw 46`, `STC 46`, `C -1`, `Ctr -6.1`;
+partial stays `Rw 44`, `STC 44`, `C -1`, `Ctr -6.1`; empty stays
+`Rw 42`, `STC 42`, `C -1`, `Ctr -6.1`. This is not a broad source
+crawl. Counters: `coverageRefreshContractFilesTouched: 1`,
+`webSurfaceParityContractFilesTouched: 1`,
+`frontendImplementationFilesTouched: 1`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`,
+`estimatedNextNewCalculableRequestShapes: 1`,
+`estimatedNextNewCalculableTargetOutputs: 4`, and
+`estimatedNextRuntimeBasisPromotions: 1`.
+Current selected next:
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_owner_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_DIRECT_FIXED_CONTEXT_ABSORPTIVE_CAVITY_OWNER_PLAN_2026-06-11.md`
+/
+`post-V1 wall double-leaf/framed direct-fixed context absorptive cavity owner`.
+Route family: `wall.double_leaf_framed`; target outputs: `Rw`, `STC`,
+`C`, `Ctr`; required physical inputs: side leaf groups, side leaf masses,
+cavity depth, direct-fixed support topology, support spacing, absorptive
+cavity coverage/class, and context-level absorber flow-resistivity
+ownership. Expected scope: direct-fixed context-owned absorptive cavity
+assemblies calculate through an owned direct-fixed bridge-loss formula
+path instead of Gate AY `needs_input`.
+
+Latest surface parity 2026-06-11:
+`post_v1_wall_double_leaf_framed_context_absorptive_cavity_input_owner_surface_parity_plan`
+landed in
+`apps/web/features/workbench/post-v1-wall-double-leaf-framed-context-absorptive-cavity-input-owner-surface-parity.test.ts`
+with status
+`post_v1_wall_double_leaf_framed_context_absorptive_cavity_input_owner_surface_parity_landed_no_runtime_selected_coverage_refresh`.
+It follows
+`post_v1_wall_double_leaf_framed_context_absorptive_cavity_input_owner_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-context-absorptive-cavity-input-owner-contract.test.ts`
+/
+`post_v1_wall_double_leaf_framed_context_absorptive_cavity_input_owner_landed_runtime_selected_surface_parity`
+and
+`post_v1_wall_double_leaf_framed_route_input_runtime_widening_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-route-input-runtime-widening-coverage-refresh-contract.test.ts`
+/
+`post_v1_wall_double_leaf_framed_route_input_runtime_widening_coverage_refresh_landed_no_runtime_selected_context_absorptive_cavity_input_owner`.
+Workbench live calculation, API payloads, saved replay, server snapshot
+replay, cards, target status, and reports now expose the same `Rw 46`,
+`STC 46`, `C -1`, and `Ctr -6.1` answer on runtime basis
+`layer_combination_resolver_double_leaf_framed_wall_banded_source_absent_formula_corridor`
+with selected candidate
+`candidate_layer_combination_resolver_double_leaf_framed_wall_banded_source_absent_family_solver`.
+This is not a broad source crawl. Counters:
+`webSurfaceParityContractFilesTouched: 1`,
+`frontendImplementationFilesTouched: 1`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
+Current selected next:
+`post_v1_wall_double_leaf_framed_context_absorptive_cavity_input_owner_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-context-absorptive-cavity-input-owner-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_CONTEXT_ABSORPTIVE_CAVITY_INPUT_OWNER_COVERAGE_REFRESH_PLAN_2026-06-11.md`
+/
+`post-V1 wall double-leaf/framed context absorptive cavity input owner coverage refresh`.
+
+Latest runtime owner 2026-06-11:
+`post_v1_wall_double_leaf_framed_context_absorptive_cavity_input_owner_plan`
+landed in
+`packages/engine/src/post-v1-wall-double-leaf-framed-context-absorptive-cavity-input-owner-contract.test.ts`
+with status
+`post_v1_wall_double_leaf_framed_context_absorptive_cavity_input_owner_landed_runtime_selected_surface_parity`.
+It follows
+`post_v1_wall_double_leaf_framed_route_input_runtime_widening_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-route-input-runtime-widening-coverage-refresh-contract.test.ts`
+/
+`post_v1_wall_double_leaf_framed_route_input_runtime_widening_coverage_refresh_landed_no_runtime_selected_context_absorptive_cavity_input_owner`.
+The context-owned full absorptive cavity owner maps explicit absorber
+input to `flowResistivitySource=user_supplied` and calculates `Rw 46`,
+`STC 46`, `C -1`, and `Ctr -6.1` through
+`layer_combination_resolver_double_leaf_framed_wall_banded_source_absent_formula_corridor`
+with selected candidate
+`candidate_layer_combination_resolver_double_leaf_framed_wall_banded_source_absent_family_solver`.
+This is not a broad source crawl. Counters:
+`newCalculableLayerTemplates: 1`, `newCalculableRequestShapes: 1`,
+`newCalculableTargetOutputs: 4`, `runtimeBasisPromotions: 1`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Current selected next action:
+`post_v1_wall_double_leaf_framed_context_absorptive_cavity_input_owner_surface_parity_plan`.
+Current selected next file:
+`apps/web/features/workbench/post-v1-wall-double-leaf-framed-context-absorptive-cavity-input-owner-surface-parity.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_CONTEXT_ABSORPTIVE_CAVITY_INPUT_OWNER_SURFACE_PARITY_PLAN_2026-06-11.md`.
+Current selected next label:
+`post-V1 wall double-leaf/framed context absorptive cavity input owner surface parity`.
+
+Latest calculator closeout 2026-06-11:
+`post_v1_wall_double_leaf_framed_route_input_runtime_widening_coverage_refresh_plan`
+landed in
+`packages/engine/src/post-v1-wall-double-leaf-framed-route-input-runtime-widening-coverage-refresh-contract.test.ts`
+with status
+`post_v1_wall_double_leaf_framed_route_input_runtime_widening_coverage_refresh_landed_no_runtime_selected_context_absorptive_cavity_input_owner`.
+It follows
+`post_v1_wall_double_leaf_framed_route_input_runtime_widening_surface_parity_plan`
+/
+`post_v1_wall_double_leaf_framed_route_input_runtime_widening_surface_parity_landed_no_runtime_selected_coverage_refresh`,
+freezes `Rw 42`, `STC 42`, `C -1`, and `Ctr -6.1` through
+`layer_combination_resolver_double_leaf_framed_wall_banded_source_absent_formula_corridor`
+and
+`candidate_layer_combination_resolver_double_leaf_framed_wall_banded_source_absent_family_solver`,
+and keeps the route `ready_with_budget` / `allowed_with_budget`. This is
+not a broad source crawl. Counters: `coverageRefreshContractFilesTouched: 1`,
+`frontendImplementationFilesTouched: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
+
+Current selected next:
+`post_v1_wall_double_leaf_framed_context_absorptive_cavity_input_owner_plan`
+in
+`packages/engine/src/post-v1-wall-double-leaf-framed-context-absorptive-cavity-input-owner-contract.test.ts`
+with plan
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_CONTEXT_ABSORPTIVE_CAVITY_INPUT_OWNER_PLAN_2026-06-11.md`
+and label `post-V1 wall double-leaf/framed context absorptive cavity input
+owner`. Route family `wall.double_leaf_framed`; target outputs `Rw`,
+`STC`, `C`, `Ctr`; required physical inputs include side leaf groups,
+cavity depth, non-direct-fixed support topology, support spacing,
+absorptive cavity coverage/class, and context-level absorber
+flow-resistivity ownership. Expected scope: absorptive cavity assemblies
+calculate without requiring a visible porous layer.
+
 Document role:
 
 - explain what the acoustic calculator product actually is today
@@ -545,6 +995,276 @@ Counters: `newCalculableRequestShapes: 2`,
 `runtimeValuesMoved 2`, `runtimeFormulaRetunes: 0`,
 `sourceRowsImported: 0`, `frontendImplementationFilesTouched: 0`, and
 `webSurfaceParityContractFilesTouched: 1`.
+
+Latest compatible anchor-delta building Dn,A coverage refresh landed as
+`post_v1_wall_compatible_anchor_delta_building_dn_a_coverage_refresh_plan`
+in
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-building-dn-a-coverage-refresh-contract.test.ts`
+with status
+`post_v1_wall_compatible_anchor_delta_building_dn_a_coverage_refresh_landed_no_runtime_selected_stc_only_lab_companion_owner`.
+It freezes paired exterior-board building `Dn,A 49.5` and one-side
+exterior-board building `Dn,A 48`, moves no runtime values, imports no
+source rows, and retunes no formula. STC-only remains pinned as a
+boundary here and is selected as the next value-moving owner. Counters:
+`coverageRefreshContractFilesTouched: 1`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+Selected next action:
+`post_v1_wall_compatible_anchor_delta_stc_only_lab_companion_owner_plan`.
+Selected next file:
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-stc-only-lab-companion-owner-contract.test.ts`.
+Selected next plan doc:
+`docs/calculator/POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_STC_ONLY_LAB_COMPANION_OWNER_PLAN_2026-06-11.md`.
+Selected next label:
+`post-V1 wall compatible anchor-delta STC-only lab companion owner`.
+
+Latest compatible anchor-delta STC-only lab companion owner landed as
+`post_v1_wall_compatible_anchor_delta_stc_only_lab_companion_owner_plan`
+in
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-stc-only-lab-companion-owner-contract.test.ts`
+with status
+`post_v1_wall_compatible_anchor_delta_stc_only_lab_companion_owner_landed_runtime_selected_surface_parity`.
+It promotes the bounded calculated lab companion route for paired
+exterior-board `STC 59` and one-side exterior-board `STC 57` Knauf
+`416889` compatible anchor-delta element-lab requests. The owner uses
+`wall.compatible_anchor_delta.calculated_lab_companions` with runtime
+basis
+`post_v1_wall_compatible_anchor_delta_calculated_lab_companion_runtime`;
+it does not import source rows, claim measured STC evidence, or retune
+formulas. Direct `Rw`, mixed `Rw+STC/C/Ctr`, field/building,
+A-weighted, C/Ctr-only, ASTM/IIC/AIIC, missing-input, and non-Knauf
+boundaries remain pinned. This is value-moving. Counters:
+`newCalculableRequestShapes: 2`, `newCalculableTargetOutputs: 1`,
+`runtimeBasisPromotions: 1`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+Selected next action:
+`post_v1_wall_compatible_anchor_delta_stc_only_lab_companion_surface_parity_plan`.
+Selected next file:
+`apps/web/features/workbench/post-v1-wall-compatible-anchor-delta-stc-only-lab-companion-surface-parity.test.ts`.
+Selected next plan doc:
+`docs/calculator/POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_STC_ONLY_LAB_COMPANION_SURFACE_PARITY_PLAN_2026-06-11.md`.
+Selected next label:
+`post-V1 wall compatible anchor-delta STC-only lab companion surface parity`.
+
+Latest landed compatible anchor-delta STC-only lab companion surface
+parity:
+`post_v1_wall_compatible_anchor_delta_stc_only_lab_companion_surface_parity_plan`.
+Surface parity file:
+`apps/web/features/workbench/post-v1-wall-compatible-anchor-delta-stc-only-lab-companion-surface-parity.test.ts`.
+Status:
+`post_v1_wall_compatible_anchor_delta_stc_only_lab_companion_surface_parity_landed_no_runtime_selected_coverage_refresh`.
+Workbench live calculation, calculator API payloads, saved replay, server
+snapshot replay, output cards, target-output status, and report summaries
+now keep paired exterior-board `STC 59` and one-side exterior-board
+`STC 57` aligned through
+`wall.compatible_anchor_delta.calculated_lab_companions` with runtime
+basis
+`post_v1_wall_compatible_anchor_delta_calculated_lab_companion_runtime`.
+Direct `Rw`, mixed `Rw+STC/C/Ctr`, C/Ctr-only, field/building,
+A-weighted, ASTM/IIC/AIIC, missing-input, and non-Knauf rows remain
+pinned. This is not a broad source crawl. Counters:
+`webSurfaceParityContractFilesTouched: 1`,
+`frontendImplementationFilesTouched: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
+Selected next action:
+`post_v1_wall_compatible_anchor_delta_stc_only_lab_companion_coverage_refresh_plan`.
+Selected next file:
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-stc-only-lab-companion-coverage-refresh-contract.test.ts`.
+Selected next plan doc:
+`docs/calculator/POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_STC_ONLY_LAB_COMPANION_COVERAGE_REFRESH_PLAN_2026-06-11.md`.
+Selected next label:
+`post-V1 wall compatible anchor-delta STC-only lab companion coverage refresh`.
+
+Latest compatible anchor-delta STC-only lab companion coverage refresh
+landed as
+`post_v1_wall_compatible_anchor_delta_stc_only_lab_companion_coverage_refresh_plan`
+in
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-stc-only-lab-companion-coverage-refresh-contract.test.ts`
+with status
+`post_v1_wall_compatible_anchor_delta_stc_only_lab_companion_coverage_refresh_landed_no_runtime_selected_c_ctr_only_lab_companion_owner`.
+It freezes paired exterior-board `STC 59` and one-side exterior-board
+`STC 57` for Knauf `416889` compatible anchor-delta STC-only element-lab
+requests through
+`wall.compatible_anchor_delta.calculated_lab_companions` with runtime
+basis
+`post_v1_wall_compatible_anchor_delta_calculated_lab_companion_runtime`.
+The resolver registry, runtime adapter, runtime surface, coverage
+matrix, and company-internal V0 expose the candidate as
+`ready_with_budget` / `allowed_with_budget`; this is not a broad source
+crawl. Direct `Rw`, mixed `Rw+STC/C/Ctr`, C/Ctr-only, field/building,
+A-weighted, ASTM/IIC/AIIC, missing-input, and non-Knauf boundaries
+remain pinned. Counters: `coverageRefreshContractFilesTouched: 1`,
+`webSurfaceParityContractFilesTouched: 1`,
+`frontendImplementationFilesTouched: 0`, `newCalculableRequestShapes: 0`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`,
+`estimatedNextCalculableRequestShapes: 4`, and
+`estimatedNextRuntimeBasisPromotions: 1`.
+Selected next action:
+`post_v1_wall_compatible_anchor_delta_c_ctr_only_lab_companion_owner_plan`.
+Selected next file:
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-c-ctr-only-lab-companion-owner-contract.test.ts`.
+Selected next plan doc:
+`docs/calculator/POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_C_CTR_ONLY_LAB_COMPANION_OWNER_PLAN_2026-06-11.md`.
+Selected next label:
+`post-V1 wall compatible anchor-delta C/Ctr-only lab companion owner`.
+The selected next was value-moving because standalone C-only and
+Ctr-only requests were unsupported at the closeout checkpoint while the
+mixed lab companion already calculated those values from the owned
+shifted curve. The owner below now lands that support.
+
+Latest compatible anchor-delta C/Ctr-only lab companion owner landed as
+`post_v1_wall_compatible_anchor_delta_c_ctr_only_lab_companion_owner_plan`
+in
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-c-ctr-only-lab-companion-owner-contract.test.ts`
+with status
+`post_v1_wall_compatible_anchor_delta_c_ctr_only_lab_companion_owner_landed_runtime_selected_surface_parity`.
+It opens standalone element-lab C-only and Ctr-only requests through
+`wall.compatible_anchor_delta.calculated_lab_companions` with runtime
+basis
+`post_v1_wall_compatible_anchor_delta_calculated_lab_companion_runtime`:
+paired `C -1.1`, paired `Ctr -6`, one-side `C -0.6`, and one-side
+`Ctr -5.5`. These are calculated companion values, not measured source
+evidence. Direct `Rw`, STC-only, mixed `Rw+STC/C/Ctr`, C+Ctr without
+`Rw`/`STC`, field/building, A-weighted, ASTM/IIC/AIIC, missing-input,
+and non-Knauf boundaries remain pinned. This is not a broad source crawl.
+Counters: `newCalculableRequestShapes: 4`,
+`newCalculableTargetOutputs: 2`, `runtimeBasisPromotions: 1`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+Selected next action:
+`post_v1_wall_compatible_anchor_delta_c_ctr_only_lab_companion_surface_parity_plan`.
+Selected next file:
+`apps/web/features/workbench/post-v1-wall-compatible-anchor-delta-c-ctr-only-lab-companion-surface-parity.test.ts`.
+Selected next plan doc:
+`docs/calculator/POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_C_CTR_ONLY_LAB_COMPANION_SURFACE_PARITY_PLAN_2026-06-11.md`.
+Selected next label:
+`post-V1 wall compatible anchor-delta C/Ctr-only lab companion surface parity`.
+
+Latest compatible anchor-delta C/Ctr-only lab companion surface parity
+landed as
+`post_v1_wall_compatible_anchor_delta_c_ctr_only_lab_companion_surface_parity_plan`
+in
+`apps/web/features/workbench/post-v1-wall-compatible-anchor-delta-c-ctr-only-lab-companion-surface-parity.test.ts`
+with status
+`post_v1_wall_compatible_anchor_delta_c_ctr_only_lab_companion_surface_parity_landed_no_runtime_selected_coverage_refresh`.
+Workbench live calculation, calculator API payloads, saved replay, server
+snapshot replay, output cards, target-output status, and report summaries
+now keep paired `C -1.1`, paired `Ctr -6`, one-side `C -0.6`, and
+one-side `Ctr -5.5` aligned through
+`wall.compatible_anchor_delta.calculated_lab_companions` with runtime
+basis
+`post_v1_wall_compatible_anchor_delta_calculated_lab_companion_runtime`.
+Direct `Rw`, STC-only, mixed `Rw+STC/C/Ctr`, C+Ctr without `Rw`/`STC`,
+field/building, A-weighted, ASTM/IIC/AIIC, missing-input, and non-Knauf
+boundaries remain pinned. This is not a broad source crawl.
+Counters: `webSurfaceParityContractFilesTouched: 1`,
+`frontendImplementationFilesTouched: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
+Selected next action:
+`post_v1_wall_compatible_anchor_delta_c_ctr_only_lab_companion_coverage_refresh_plan`.
+Selected next file:
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-c-ctr-only-lab-companion-coverage-refresh-contract.test.ts`.
+Selected next plan doc:
+`docs/calculator/POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_C_CTR_ONLY_LAB_COMPANION_COVERAGE_REFRESH_PLAN_2026-06-11.md`.
+Selected next label:
+`post-V1 wall compatible anchor-delta C/Ctr-only lab companion coverage refresh`.
+
+Latest landed compatible anchor-delta C/Ctr-only lab companion coverage
+refresh:
+`post_v1_wall_compatible_anchor_delta_c_ctr_only_lab_companion_coverage_refresh_plan`.
+Coverage refresh file:
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-c-ctr-only-lab-companion-coverage-refresh-contract.test.ts`.
+Status:
+`post_v1_wall_compatible_anchor_delta_c_ctr_only_lab_companion_coverage_refresh_landed_no_runtime_selected_wall_double_leaf_framed_route_input_runtime_widening`.
+It freezes paired `C -1.1`, paired `Ctr -6`, one-side `C -0.6`, and
+one-side `Ctr -5.5` through
+`wall.compatible_anchor_delta.calculated_lab_companions` with runtime
+basis
+`post_v1_wall_compatible_anchor_delta_calculated_lab_companion_runtime`.
+The route remains `ready_with_budget` in coverage and
+`allowed_with_budget` in company-internal V0. This is not a broad source
+crawl. Counters: `coverageRefreshContractFilesTouched: 1`,
+`webSurfaceParityContractFilesTouched: 1`,
+`frontendImplementationFilesTouched: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
+Selected next action:
+`post_v1_wall_double_leaf_framed_route_input_runtime_widening_plan`.
+Selected next file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-route-input-runtime-widening-contract.test.ts`.
+Selected next plan doc:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_ROUTE_INPUT_RUNTIME_WIDENING_PLAN_2026-06-11.md`.
+Selected next label:
+`post-V1 wall double-leaf/framed route-input runtime widening`.
+High-ROI declaration: route family `wall.double_leaf_framed`; target
+outputs `Rw`, `STC`, `C`, and `Ctr`; required physical inputs include
+side leaf groups, side leaf masses, cavity depth, absorber class/fill
+and flow resistivity, support topology, stud/support spacing, resilient
+side count when needed, and bridge class. The expected scope movement is
+more board/panel/cavity/porous-fill double-leaf/framed walls calculating
+through the owned formula route while exact-source precedence, the
+thick-board Auto boundary, field/building aliases, ASTM/IIC/AIIC,
+direct-fixed, grouped triple-leaf/multicavity, and floor-impact
+boundaries stay pinned.
+
+Latest landed wall double-leaf/framed route-input runtime widening:
+`post_v1_wall_double_leaf_framed_route_input_runtime_widening_plan`.
+Runtime owner file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-route-input-runtime-widening-contract.test.ts`.
+Status:
+`post_v1_wall_double_leaf_framed_route_input_runtime_widening_landed_runtime_selected_surface_parity`.
+It opens context-only empty-cavity double-leaf/framed walls: two visible
+board leaves plus explicit `cavity1DepthMm`, `cavity1FillCoverage empty`,
+`cavity1AbsorptionClass none`, side leaf groups, support topology, and
+support spacing calculate `Rw 42`, `STC 42`, `C -1`, and `Ctr -6.1`
+through
+`layer_combination_resolver_double_leaf_framed_wall_banded_source_absent_formula_corridor`.
+Context-only absorptive cavities without a visible porous-fill layer stay
+`needs_input` for `cavity1FillCoverage` and `absorberClass`; direct-fixed,
+exact/anchor, thick-board Auto, field/building alias, ASTM/IIC/AIIC,
+grouped triple-leaf, and floor-impact boundaries stay pinned. Counters:
+`newCalculableLayerTemplates: 1`, `newCalculableRequestShapes: 1`,
+`newCalculableTargetOutputs: 4`, `runtimeBasisPromotions: 1`,
+`frontendImplementationFilesTouched: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
+Selected next action:
+`post_v1_wall_double_leaf_framed_route_input_runtime_widening_surface_parity_plan`.
+Selected next file:
+`apps/web/features/workbench/post-v1-wall-double-leaf-framed-route-input-runtime-widening-surface-parity.test.ts`.
+Selected next plan doc:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_ROUTE_INPUT_RUNTIME_WIDENING_SURFACE_PARITY_PLAN_2026-06-11.md`.
+Selected next label:
+`post-V1 wall double-leaf/framed route-input runtime widening surface parity`.
+
+Latest landed wall double-leaf/framed route-input runtime widening surface
+parity:
+`post_v1_wall_double_leaf_framed_route_input_runtime_widening_surface_parity_plan`.
+Surface parity file:
+`apps/web/features/workbench/post-v1-wall-double-leaf-framed-route-input-runtime-widening-surface-parity.test.ts`.
+Status:
+`post_v1_wall_double_leaf_framed_route_input_runtime_widening_surface_parity_landed_no_runtime_selected_coverage_refresh`.
+The surface parity preserves live workbench calculation, calculator API,
+saved replay, server snapshot replay, output cards, target-output status,
+and report summaries for `Rw 42`, `STC 42`, `C -1`, and `Ctr -6.1` on
+runtime basis
+`layer_combination_resolver_double_leaf_framed_wall_banded_source_absent_formula_corridor`.
+Missing cavity classification stays `needs_input` for
+`cavity1FillCoverage` and `absorberClass`; field/building aliases plus
+ASTM/IIC/AIIC remain outside this owner. Counters:
+`webSurfaceParityContractFilesTouched: 1`,
+`frontendImplementationFilesTouched: 0`, `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
+Selected next action:
+`post_v1_wall_double_leaf_framed_route_input_runtime_widening_coverage_refresh_plan`.
+Selected next file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-route-input-runtime-widening-coverage-refresh-contract.test.ts`.
+Selected next plan doc:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_ROUTE_INPUT_RUNTIME_WIDENING_COVERAGE_REFRESH_PLAN_2026-06-11.md`.
+Selected next label:
+`post-V1 wall double-leaf/framed route-input runtime widening coverage refresh`.
 
 Previous no-runtime numeric coverage/accuracy rerank: Gate FE landed
 `post_v1_next_numeric_coverage_gap_gate_fe_plan`

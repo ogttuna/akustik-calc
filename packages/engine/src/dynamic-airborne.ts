@@ -1065,6 +1065,56 @@ function buildConfidenceScore(
   return ksRound1(clamp(score, 0.35, 0.92));
 }
 
+const DIRECT_FIXED_FIELD_BUILDING_TARGET_OUTPUTS = new Set(["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A"]);
+
+function requestsDirectFixedFieldBuildingTargets(
+  targetOutputs: DynamicAirborneOptions["targetOutputs"]
+): boolean {
+  if (!targetOutputs || targetOutputs.length === 0) {
+    return true;
+  }
+
+  return targetOutputs.some((output) => DIRECT_FIXED_FIELD_BUILDING_TARGET_OUTPUTS.has(output));
+}
+
+function hasCavityOnlyAdvancedWallDoubleLeafFramedContext(options: DynamicAirborneOptions): boolean {
+  const advancedWall = options.airborneContext?.advancedWall;
+  const topology = options.airborneContext?.wallTopology;
+  const primaryCavity = advancedWall?.cavities?.[0];
+  const isDirectFixedContext = topology?.supportTopology === "direct_fixed" || options.airborneContext?.connectionType === "direct_fix";
+  const contextMode = options.airborneContext?.contextMode;
+  const directFixedContextModeOwned =
+    !isDirectFixedContext ||
+    contextMode === "element_lab" ||
+    ((contextMode === "field_between_rooms" || contextMode === "building_prediction") &&
+      requestsDirectFixedFieldBuildingTargets(options.targetOutputs));
+
+  return Boolean(
+    topology?.topologyMode === "double_leaf_framed" &&
+      directFixedContextModeOwned &&
+      typeof topology.cavity1DepthMm === "number" &&
+      Number.isFinite(topology.cavity1DepthMm) &&
+      topology.cavity1DepthMm > 0 &&
+      typeof options.airborneContext?.studSpacingMm === "number" &&
+      Number.isFinite(options.airborneContext.studSpacingMm) &&
+      options.airborneContext.studSpacingMm > 0 &&
+      Array.isArray(topology.sideALeafLayerIndices) &&
+      topology.sideALeafLayerIndices.length > 0 &&
+      Array.isArray(topology.sideBLeafLayerIndices) &&
+      topology.sideBLeafLayerIndices.length > 0 &&
+      advancedWall &&
+      !advancedWall.wallSolverIntent &&
+      !(Array.isArray(advancedWall.panels) && advancedWall.panels.length > 0) &&
+      !advancedWall.openingIntent &&
+      !advancedWall.frameCoupling &&
+      Array.isArray(advancedWall.cavities) &&
+      advancedWall.cavities.length === 1 &&
+      typeof primaryCavity?.absorberFlowResistivityPaSM2 === "number" &&
+      Number.isFinite(primaryCavity.absorberFlowResistivityPaSM2) &&
+      primaryCavity.absorberFlowResistivityPaSM2 > 0
+  );
+}
+
 export function calculateDynamicAirborneResult(
   layers: readonly ResolvedLayer[],
   options: DynamicAirborneOptions
@@ -1083,12 +1133,28 @@ export function calculateDynamicAirborneResult(
           explicitLinedMassiveIntent: options.airborneContext?.wallTopology?.topologyMode === "lined_massive_wall"
         });
 
-  const gateAYAdvancedWallRuntime = maybeCalculateGateAYAdvancedWallRuntime({
-    layers: analysisLayers,
-    options
-  });
-  if (gateAYAdvancedWallRuntime) {
-    return gateAYAdvancedWallRuntime;
+  const cavityOnlyAdvancedWallDoubleLeafContext =
+    hasCavityOnlyAdvancedWallDoubleLeafFramedContext(options);
+  if (cavityOnlyAdvancedWallDoubleLeafContext) {
+    const gateSDoubleLeafFramedBridgeRuntime = maybeCalculateGateSDoubleLeafFramedBridgeRuntime({
+      family,
+      layers: analysisLayers,
+      options,
+      topology
+    });
+    if (gateSDoubleLeafFramedBridgeRuntime) {
+      return gateSDoubleLeafFramedBridgeRuntime;
+    }
+  }
+
+  if (!cavityOnlyAdvancedWallDoubleLeafContext) {
+    const gateAYAdvancedWallRuntime = maybeCalculateGateAYAdvancedWallRuntime({
+      layers: analysisLayers,
+      options
+    });
+    if (gateAYAdvancedWallRuntime) {
+      return gateAYAdvancedWallRuntime;
+    }
   }
 
   const guardedFlatList = applyFlatListMultileafFamilyGuard({ calculate: calculateDynamicAirborneResult, estimateScreeningRw: estimateRwDb, family: family.family, framingHint, layers: analysisLayers, options });

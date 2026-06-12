@@ -280,6 +280,33 @@ function expectOneSideLabCompanionSurface(result: AssemblyCalculation | null | u
   expect(result?.warnings).not.toEqual(expect.arrayContaining([expect.stringContaining(DIRECT_ANCHOR_DELTA_WARNING_PREFIX)]));
 }
 
+function expectStcOnlyLabCompanionSurface(
+  result: AssemblyCalculation | null | undefined,
+  expectedStc: number
+): asserts result is AssemblyCalculation {
+  expect(result?.supportedTargetOutputs).toEqual([...STC_ONLY_OUTPUT]);
+  expect(result?.unsupportedTargetOutputs).toEqual([]);
+  expect(result?.metrics).toMatchObject({ estimatedStc: expectedStc });
+  expect(result?.airborneBasis).toMatchObject({
+    anchorSourceId: "knauf_lab_416889_primary_2026",
+    method: LAB_COMPANION_RUNTIME_BASIS,
+    origin: "family_physics_prediction"
+  });
+  expect(getLayerCombinationResolverCandidateSurface(result)).toMatchObject({
+    candidateKind: "source_absent_family_solver",
+    noRuntimeValueMovement: true,
+    requestedBasis: "element_lab",
+    route: "wall",
+    runtimeBasisId: LAB_COMPANION_RUNTIME_BASIS,
+    selectedCandidateId: LAB_COMPANION_SELECTED_CANDIDATE_ID,
+    supportBucket: "source_absent_estimate",
+    supportedMetrics: [...STC_ONLY_OUTPUT],
+    valuePins: [{ metric: "STC", value: expectedStc }]
+  });
+  expect(result?.warnings).toEqual(expect.arrayContaining([expect.stringContaining(LAB_COMPANION_WARNING_PREFIX)]));
+  expect(result?.warnings).not.toEqual(expect.arrayContaining([expect.stringContaining(DIRECT_ANCHOR_DELTA_WARNING_PREFIX)]));
+}
+
 async function estimateViaApi(input: {
   rows?: readonly LayerDraft[];
   targetOutputs?: readonly RequestedOutputId[];
@@ -403,16 +430,16 @@ describe("post-V1 wall compatible anchor-delta lab metric companion surface pari
     );
   });
 
-  it("keeps STC-only off while one-side exterior-board requests use the lab companion surface", async () => {
+  it("keeps STC-only and one-side exterior-board requests on the lab companion surface", async () => {
     const stcOnly = buildScenario({
       id: "compatible-anchor-lab-companion-stc-only",
       targetOutputs: STC_ONLY_OUTPUT
     });
-    expect(stcOnly.result.supportedTargetOutputs).toEqual([]);
-    expect(stcOnly.result.unsupportedTargetOutputs).toEqual(["STC"]);
-    expect(getLayerCombinationResolverCandidateSurface(stcOnly.result)?.selectedCandidateId).not.toBe(
-      LAB_COMPANION_SELECTED_CANDIDATE_ID
-    );
+    expectStcOnlyLabCompanionSurface(stcOnly.result, 59);
+    expect(addOutputCardPosture(buildOutputCard({ output: "STC", result: stcOnly.result, studyMode: "wall" }), {
+      result: stcOnly.result,
+      studyMode: "wall"
+    })).toMatchObject({ status: "live", value: "59 dB" });
 
     const oneSideMixed = buildScenario({
       id: "compatible-anchor-lab-companion-one-side",
@@ -421,11 +448,7 @@ describe("post-V1 wall compatible anchor-delta lab metric companion surface pari
     expectOneSideLabCompanionSurface(oneSideMixed.result);
 
     const stcOnlyApiResult = await estimateViaApi({ targetOutputs: STC_ONLY_OUTPUT });
-    expect(stcOnlyApiResult.supportedTargetOutputs).toEqual([]);
-    expect(stcOnlyApiResult.unsupportedTargetOutputs).toEqual(["STC"]);
-    expect(getLayerCombinationResolverCandidateSurface(stcOnlyApiResult)?.selectedCandidateId).not.toBe(
-      LAB_COMPANION_SELECTED_CANDIDATE_ID
-    );
+    expectStcOnlyLabCompanionSurface(stcOnlyApiResult, 59);
 
     expectOneSideLabCompanionSurface(await estimateViaApi({ rows: ONE_SIDE_EXTERIOR_BOARD_LSF_ROWS }));
   });

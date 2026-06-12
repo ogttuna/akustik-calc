@@ -181,11 +181,30 @@ function buildGateEODirectFixedBasis(input: {
   curve: TransmissionLossCurve;
   physicalInputs: GateRDoubleLeafFramedBridgePhysicalInputs;
 }): AirborneResultBasis {
+  const hasContextOwnedAbsorptiveCavity =
+    input.physicalInputs.flowResistivitySource !== "none";
+  const absorptiveCavityAssumptions = hasContextOwnedAbsorptiveCavity
+    ? [
+        "Context-owned absorptive cavity input provides explicit flow resistivity ownership for the direct-fixed bridge-loss formula.",
+        "Porous cavity damping is admitted only from full or partial absorptive cavity coverage with an owned flow-resistivity value."
+      ]
+    : [];
+  const absorptiveCavityRequiredInputs = hasContextOwnedAbsorptiveCavity
+    ? [
+        "cavity1FillCoverage",
+        "cavity1AbsorptionClass=porous_absorptive",
+        "absorberFlowResistivityPaSM2",
+        "directFixedContextAbsorptiveCavityOwner",
+        "porousCavityDampingOwner"
+      ]
+    : [];
+
   return AirborneResultBasisSchema.parse({
     assumptions: [
       "Gate EO owns this complete direct-fixed double-leaf element-lab wall route as a formula-backed calculator result.",
       "The direct-fixed leaves are treated as an equivalent mechanically coupled mass with explicit bridge-loss penalty, not as an independent mass-air-mass boosted double leaf.",
       "Side A and side B leaf masses, cavity depth, direct-fixed support topology, connection type, and support spacing are explicit physical inputs.",
+      ...absorptiveCavityAssumptions,
       "Rw, STC, C, and Ctr are rating-adapter outputs over the calculated frequency curve; STC is not an alias of Rw.",
       "Field/building outputs require separate field/building adapters and are not published from this lab-only owner."
     ],
@@ -213,6 +232,7 @@ function buildGateEODirectFixedBasis(input: {
       "supportTopology=direct_fixed",
       "connectionType=direct_fix",
       "supportSpacingMm",
+      ...absorptiveCavityRequiredInputs,
       "directFixedEquivalentCoupledMassOwner",
       "directFixedBridgeLossOwner",
       "directFixedNoMassAirMassBoostBoundary",
@@ -230,14 +250,19 @@ type GateSAirborneCandidateSeed = Omit<AirborneCandidate, "rejectionReasons" | "
 
 const GATE_S_WALL_OUTPUTS = ["Rw", "STC", "C", "Ctr"] as const satisfies readonly RequestedOutputId[];
 const GATE_S_WALL_OUTPUT_SET = new Set<RequestedOutputId>(GATE_S_WALL_OUTPUTS);
-const GATE_ER_FIELD_BUILDING_OUTPUTS = ["R'w", "Dn,w", "DnT,w"] as const satisfies readonly RequestedOutputId[];
+const GATE_ER_FIELD_BUILDING_BASE_OUTPUTS = ["R'w", "Dn,w", "DnT,w"] as const satisfies readonly RequestedOutputId[];
+const GATE_ER_FIELD_BUILDING_A_WEIGHTED_OUTPUTS = ["Dn,A", "DnT,A"] as const satisfies readonly RequestedOutputId[];
+const GATE_ER_FIELD_BUILDING_OUTPUTS = [
+  ...GATE_ER_FIELD_BUILDING_BASE_OUTPUTS,
+  ...GATE_ER_FIELD_BUILDING_A_WEIGHTED_OUTPUTS
+] as const satisfies readonly RequestedOutputId[];
 const GATE_ER_FIELD_BUILDING_OUTPUT_SET = new Set<RequestedOutputId>(GATE_ER_FIELD_BUILDING_OUTPUTS);
 
 function requestedGateERFieldBuildingOutputs(
   requestedOutputs: readonly RequestedOutputId[]
 ): readonly RequestedOutputId[] {
   if (requestedOutputs.length === 0) {
-    return [...GATE_ER_FIELD_BUILDING_OUTPUTS];
+    return [...GATE_ER_FIELD_BUILDING_BASE_OUTPUTS];
   }
 
   return requestedOutputs.filter((output) => GATE_ER_FIELD_BUILDING_OUTPUT_SET.has(output));
@@ -738,7 +763,7 @@ function maybeCalculateGateERDirectFixedDoubleLeafFieldBuildingAdapterRuntime(in
     selectedCandidateId,
     targetOutputs: requestedFieldBuildingOutputs.length > 0
       ? requestedFieldBuildingOutputs
-      : [...GATE_ER_FIELD_BUILDING_OUTPUTS]
+      : [...GATE_ER_FIELD_BUILDING_BASE_OUTPUTS]
   });
   const solverRw = ratings.iso717.Rw;
   const screeningRw = input.options.screeningEstimatedRwDb;

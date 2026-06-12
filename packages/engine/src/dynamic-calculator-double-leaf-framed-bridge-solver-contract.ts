@@ -159,7 +159,8 @@ function sumSurfaceMass(
 
 function flowResistivitySource(
   layers: readonly LayerInput[],
-  catalog: readonly MaterialDefinition[]
+  catalog: readonly MaterialDefinition[],
+  airborneContext?: AirborneContext
 ): GateRDoubleLeafFramedBridgePhysicalInputs["flowResistivitySource"] {
   for (const layer of layers) {
     const material = materialFor(layer.materialId, catalog);
@@ -185,6 +186,18 @@ function flowResistivitySource(
     return "unknown";
   }
 
+  const topology = airborneContext?.wallTopology;
+  const primaryCavity = airborneContext?.advancedWall?.cavities?.[0];
+  if (
+    topology?.cavity1AbsorptionClass === "porous_absorptive" &&
+    (topology.cavity1FillCoverage === "full" || topology.cavity1FillCoverage === "partial") &&
+    typeof primaryCavity?.absorberFlowResistivityPaSM2 === "number" &&
+    Number.isFinite(primaryCavity.absorberFlowResistivityPaSM2) &&
+    primaryCavity.absorberFlowResistivityPaSM2 > 0
+  ) {
+    return "user_supplied";
+  }
+
   return "none";
 }
 
@@ -203,7 +216,7 @@ function buildPhysicalInputs(input: {
   return {
     bridgeClass: input.bridgeClass,
     cavityDepthMm: typeof topology?.cavity1DepthMm === "number" ? topology.cavity1DepthMm : null,
-    flowResistivitySource: flowResistivitySource(input.layers, input.catalog),
+    flowResistivitySource: flowResistivitySource(input.layers, input.catalog, input.airborneContext),
     leafMassRatio,
     sideALeafMassKgM2: sideAMass,
     sideBLeafMassKgM2: sideBMass,

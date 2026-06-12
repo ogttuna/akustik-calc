@@ -206,6 +206,33 @@ function buildScopedAirborneReportLines(result: AssemblyResult): string[] {
   return lines;
 }
 
+function buildScopedAirborneRuntimeTraceReportLines(result: AssemblyResult): string[] {
+  if (!hasSupportedAirborneAnswer(result) || result.layerCombinationResolverTrace) {
+    return [];
+  }
+
+  const lines: string[] = [];
+  const method = result.airborneBasis?.method;
+  const candidateId = result.airborneCandidateResolution?.selectedCandidateId;
+  const selectedOrigin = result.airborneCandidateResolution?.selectedOrigin;
+  const errorBudgetDb = result.airborneBasis?.errorBudgetDb;
+
+  if (method) {
+    lines.push(`- Airborne runtime basis: ${method}`);
+  }
+  if (candidateId) {
+    lines.push(`- Airborne selected candidate: ${candidateId}`);
+  }
+  if (selectedOrigin) {
+    lines.push(`- Airborne selected origin: ${selectedOrigin}`);
+  }
+  if (typeof errorBudgetDb === "number") {
+    lines.push(`- Airborne not-measured budget: +/- ${formatMetric(errorBudgetDb)} dB`);
+  }
+
+  return lines;
+}
+
 function buildFloorSystemCompanionLines(
   prefix: "Exact" | "Estimated",
   ratings: { Rw: number; RwCtr?: number; RwCtrSemantic?: "ctr_term" | "rw_plus_c" | "rw_plus_ctr" }
@@ -582,6 +609,7 @@ export function composeWorkbenchReport({
           targetRwDb
         }).join(", ")}`,
         ...buildScopedAirborneReportLines(currentScenario.result),
+        ...buildScopedAirborneRuntimeTraceReportLines(currentScenario.result),
         ...(dnTAkReportLine && isSupportedAnswerOutput(currentScenario.result, "DnT,A,k") ? [dnTAkReportLine] : []),
         ...(currentHasAirborneAnswer ? getFieldAirborneReportLines(currentScenario.result) : []),
         ...getGateACFlatMulticavityTopologyReportLines(currentScenario),

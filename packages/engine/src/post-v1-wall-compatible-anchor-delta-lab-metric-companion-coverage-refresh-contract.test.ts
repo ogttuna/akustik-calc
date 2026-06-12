@@ -390,11 +390,18 @@ describe("post-V1 wall compatible anchor-delta lab metric companion coverage ref
       POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_SELECTED_CANDIDATE_ID
     );
 
-    expect(stcOnly.supportedTargetOutputs).toEqual([]);
-    expect(stcOnly.unsupportedTargetOutputs).toEqual(["STC"]);
-    expect(stcOnly.airborneCandidateResolution?.selectedCandidateId).not.toBe(
-      POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_SELECTED_CANDIDATE_ID
-    );
+    expect(stcOnly.supportedTargetOutputs).toEqual(["STC"]);
+    expect(stcOnly.unsupportedTargetOutputs).toEqual([]);
+    expect(stcOnly.airborneCandidateResolution).toMatchObject({
+      selectedCandidateId: POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_SELECTED_CANDIDATE_ID,
+      selectedOrigin: "family_physics_prediction"
+    });
+    expect(stcOnly.layerCombinationResolverTrace).toMatchObject({
+      runtimeBasisId: POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_RUNTIME_METHOD,
+      selectedCandidateId: POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_SELECTED_CANDIDATE_ID,
+      supportedMetrics: ["STC"],
+      valuePins: [{ metric: "STC", value: 59 }]
+    });
 
     expect(buildingMixed.supportedTargetOutputs).toEqual(["R'w", "Dn,w", "DnT,w"]);
     expect(buildingMixed.unsupportedTargetOutputs).toEqual(["STC", "C", "Ctr"]);

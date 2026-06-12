@@ -220,7 +220,7 @@ describe("post-V1 wall compatible anchor-delta lab metric companion owner", () =
     expect(result.warnings).not.toContain(POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_WARNING);
   });
 
-  it("keeps single Rw, STC-only, exact-stack, and field/building aliases on their existing owners", () => {
+  it("keeps single Rw, exact-stack, and field/building aliases pinned while opening STC-only companion ownership", () => {
     const rwOnly = calculateAssembly(EXACT_LSF_PLUS_OUTER_BOARD_BOTH_SIDES, {
       airborneContext: EXACT_LSF_LAB_CONTEXT,
       calculator: "dynamic",
@@ -249,11 +249,17 @@ describe("post-V1 wall compatible anchor-delta lab metric companion owner", () =
       origin: "measured_exact_subassembly_plus_calculated_delta"
     });
 
-    expect(stcOnly.supportedTargetOutputs).toEqual([]);
-    expect(stcOnly.unsupportedTargetOutputs).toEqual(["STC"]);
+    expect(stcOnly.supportedTargetOutputs).toEqual(["STC"]);
+    expect(stcOnly.unsupportedTargetOutputs).toEqual([]);
     expect(stcOnly.airborneBasis).toMatchObject({
-      method: POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_RUNTIME_METHOD,
-      origin: "measured_exact_subassembly_plus_calculated_delta"
+      method: POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_RUNTIME_METHOD,
+      origin: "family_physics_prediction"
+    });
+    expect(stcOnly.layerCombinationResolverTrace).toMatchObject({
+      runtimeBasisId: POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_RUNTIME_METHOD,
+      selectedCandidateId: POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_SELECTED_CANDIDATE_ID,
+      supportedMetrics: ["STC"],
+      valuePins: [{ metric: "STC", value: 59 }]
     });
 
     expect(exactStackMixed.supportedTargetOutputs).toEqual(WALL_LAB_OUTPUTS);

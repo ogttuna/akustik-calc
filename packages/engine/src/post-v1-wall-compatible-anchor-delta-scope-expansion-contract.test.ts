@@ -233,14 +233,16 @@ describe("post-V1 wall compatible anchor-delta scope expansion", () => {
     });
 
     expect(stcOnly.airborneCandidateResolution).toMatchObject({
-      selectedOrigin: "measured_exact_subassembly_plus_calculated_delta"
+      selectedCandidateId: POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_SELECTED_CANDIDATE_ID,
+      selectedOrigin: "family_physics_prediction"
     });
-    expect(stcOnly.supportedTargetOutputs).toEqual([]);
-    expect(stcOnly.unsupportedTargetOutputs).toEqual(["STC"]);
+    expect(stcOnly.supportedTargetOutputs).toEqual(["STC"]);
+    expect(stcOnly.unsupportedTargetOutputs).toEqual([]);
     expect(stcOnly.layerCombinationResolverTrace).toMatchObject({
-      selectedCandidateId: POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_SELECTED_CANDIDATE_ID,
-      supportedMetrics: [],
-      valuePins: []
+      runtimeBasisId: POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_RUNTIME_METHOD,
+      selectedCandidateId: POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_SELECTED_CANDIDATE_ID,
+      supportedMetrics: ["STC"],
+      valuePins: [{ metric: "STC", value: 59 }]
     });
 
     expect(field.airborneBasis?.method).not.toBe(POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_RUNTIME_METHOD);

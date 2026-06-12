@@ -235,7 +235,7 @@ describe("post-V1 wall compatible anchor-delta one-side lab metric companion own
     expectOneSideLabCompanionResult(endSide);
   });
 
-  it("keeps direct Rw, STC-only, field/building, A-weighted, ASTM, and non-Knauf rows outside this owner", () => {
+  it("keeps direct Rw, field/building, A-weighted, ASTM, and non-Knauf rows pinned while opening STC-only", () => {
     const rwOnly = calculateAssembly(EXACT_LSF_PLUS_OUTER_BOARD_START, {
       airborneContext: EXACT_LSF_LAB_CONTEXT,
       calculator: "dynamic",
@@ -280,11 +280,14 @@ describe("post-V1 wall compatible anchor-delta one-side lab metric companion own
       valuePins: [{ metric: "Rw", value: 57 }]
     });
 
-    expect(stcOnly.supportedTargetOutputs).toEqual([]);
-    expect(stcOnly.unsupportedTargetOutputs).toEqual(["STC"]);
-    expect(stcOnly.layerCombinationResolverTrace?.selectedCandidateId).not.toBe(
-      POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_SELECTED_CANDIDATE_ID
-    );
+    expect(stcOnly.supportedTargetOutputs).toEqual(["STC"]);
+    expect(stcOnly.unsupportedTargetOutputs).toEqual([]);
+    expect(stcOnly.layerCombinationResolverTrace).toMatchObject({
+      runtimeBasisId: POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_RUNTIME_METHOD,
+      selectedCandidateId: POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_SELECTED_CANDIDATE_ID,
+      supportedMetrics: ["STC"],
+      valuePins: [{ metric: "STC", value: 57 }]
+    });
 
     expect(buildingMixed.supportedTargetOutputs).toEqual(FIELD_BUILDING_OUTPUTS);
     expect(buildingMixed.unsupportedTargetOutputs).toEqual(["STC", "C", "Ctr"]);

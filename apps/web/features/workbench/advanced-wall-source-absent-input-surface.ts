@@ -223,6 +223,18 @@ function hasCavityInput(cavity: WorkbenchAdvancedWallCavityDraft): boolean {
   ].some((value) => value.trim().length > 0) || cavity.sealState.length > 0;
 }
 
+function hasFrameCouplingInput(frame: WorkbenchAdvancedWallFrameCouplingDraft): boolean {
+  return [
+    frame.depthMm,
+    frame.lineCouplingStiffnessMNPerM3,
+    frame.mechanicalBridgeAreaRatio,
+    frame.resilientConnectionStiffnessMNPerM3,
+    frame.spacingMm
+  ].some((value) => value.trim().length > 0) ||
+    frame.frameMaterialClass.length > 0 ||
+    frame.resilientConnectionType.length > 0;
+}
+
 function hasOpeningInput(opening: WorkbenchAdvancedWallOpeningDraft): boolean {
   return [
     opening.areaM2,
@@ -237,6 +249,34 @@ function hasOpeningInput(opening: WorkbenchAdvancedWallOpeningDraft): boolean {
 function positiveIntegerFromDraft(value: string): number | undefined {
   const parsed = parsePositiveWorkbenchNumber(value);
   return typeof parsed === "number" && Number.isInteger(parsed) ? parsed : undefined;
+}
+
+function isContextOwnedCavityOnlySurface(surface: WorkbenchAdvancedWallInputSurfaceDraft): boolean {
+  return surface.wallSolverIntent.length === 0 &&
+    surface.outputBasis.length === 0 &&
+    surface.frequencyBandSet.length === 0 &&
+    surface.openingIntent.length === 0 &&
+    surface.hostWallAreaM2.trim().length === 0 &&
+    !hasFrameCouplingInput(surface.frameCoupling) &&
+    !surface.panels.some(hasPanelInput) &&
+    surface.cavities.some(hasCavityInput) &&
+    !surface.openings.some(hasOpeningInput);
+}
+
+function normalizeContextOwnedCavityOnlyInput(
+  surface: WorkbenchAdvancedWallInputSurfaceDraft
+): Pick<AirborneAdvancedWallInput, "cavities"> {
+  const cavities = surface.cavities.filter(hasCavityInput).map((cavity) => ({
+    absorberCoverageRatio: parsePositiveWorkbenchNumber(cavity.absorberCoverageRatio),
+    absorberFlowResistivityPaSM2: parsePositiveWorkbenchNumber(cavity.absorberFlowResistivityPaSM2),
+    absorberThicknessMm: parsePositiveWorkbenchNumber(cavity.absorberThicknessMm),
+    depthMm: parsePositiveWorkbenchNumber(cavity.depthMm),
+    id: cavity.id.trim().length > 0 ? cavity.id.trim() : undefined,
+    sealState: cavity.sealState || undefined,
+    sequence: parsePositiveWorkbenchNumber(cavity.sequence)
+  }));
+
+  return { cavities };
 }
 
 function normalizeAdvancedWallInput(
@@ -407,6 +447,18 @@ export function buildWorkbenchAdvancedWallInputSurface(input: {
       id: WORKBENCH_ADVANCED_WALL_SOURCE_ABSENT_INPUT_SURFACE_ID,
       missingPhysicalInputs: [],
       status: "inactive"
+    };
+  }
+
+  if (isContextOwnedCavityOnlySurface(input.surface)) {
+    return {
+      airborneContextPatch: {
+        advancedWall: normalizeContextOwnedCavityOnlyInput(input.surface)
+      },
+      hostileInputBoundaries: [],
+      id: WORKBENCH_ADVANCED_WALL_SOURCE_ABSENT_INPUT_SURFACE_ID,
+      missingPhysicalInputs: [],
+      status: "complete"
     };
   }
 
