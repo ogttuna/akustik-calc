@@ -1880,78 +1880,114 @@ textarea.ui-field {
 }
 
 .rebuild-layer-block {
-  --layer-fill: color-mix(in oklch, var(--text-muted) 12%, var(--surface-control));
-  --layer-side: color-mix(in oklch, var(--text-muted) 20%, var(--surface-control));
-  --layer-stroke: color-mix(in oklch, var(--text-muted) 74%, var(--border-default));
-  --layer-pattern: color-mix(in oklch, var(--text-muted) 54%, transparent);
+  --layer-fill: #d6d8db;
+  --layer-side: #bec5cb;
+  --layer-stroke: #7f8b95;
+  --layer-pattern: #88939d;
 }
 
 .rebuild-layer-block[data-cue="board"],
 .rebuild-layer-schedule-row[data-cue="board"],
 .rebuild-layer-block[data-cue="plaster"],
 .rebuild-layer-schedule-row[data-cue="plaster"] {
-  --layer-fill: color-mix(in oklch, var(--warning) 11%, var(--surface-control));
-  --layer-side: color-mix(in oklch, var(--warning) 20%, var(--surface-control));
-  --layer-stroke: color-mix(in oklch, var(--warning) 44%, var(--border-strong));
-  --layer-pattern: color-mix(in oklch, var(--warning) 54%, var(--text-muted));
+  --layer-fill: #ddd8cf;
+  --layer-side: #c6baab;
+  --layer-stroke: #938779;
+  --layer-pattern: #8f8477;
+}
+
+.rebuild-layer-block[data-cue="plaster"],
+.rebuild-layer-schedule-row[data-cue="plaster"] {
+  --layer-fill: #ebdecd;
+  --layer-side: #cfbca6;
+  --layer-stroke: #8f7e6b;
+  --layer-pattern: #9f8d79;
 }
 
 .rebuild-layer-block[data-cue="fiber"],
 .rebuild-layer-schedule-row[data-cue="fiber"] {
-  --layer-fill: color-mix(in oklch, var(--warning) 22%, var(--surface-control));
-  --layer-side: color-mix(in oklch, var(--warning) 34%, var(--surface-control));
-  --layer-stroke: color-mix(in oklch, var(--warning) 58%, var(--border-strong));
-  --layer-pattern: color-mix(in oklch, var(--warning) 72%, var(--text-muted));
+  --layer-fill: #d5bf78;
+  --layer-side: #b59a58;
+  --layer-stroke: #806638;
+  --layer-pattern: #8e7440;
 }
 
 .rebuild-layer-block[data-cue="cavity"],
 .rebuild-layer-schedule-row[data-cue="cavity"] {
-  --layer-fill: color-mix(in oklch, var(--text-muted) 7%, var(--surface-control));
-  --layer-side: color-mix(in oklch, var(--text-muted) 14%, var(--surface-control));
-  --layer-stroke: color-mix(in oklch, var(--text-muted) 58%, var(--border-default));
-  --layer-pattern: color-mix(in oklch, var(--text-muted) 50%, transparent);
+  --layer-fill: #eceeed;
+  --layer-side: #d4d8d7;
+  --layer-stroke: #87908e;
+  --layer-pattern: #8e9694;
 }
 
 .rebuild-layer-block[data-cue="concrete"],
 .rebuild-layer-schedule-row[data-cue="concrete"],
 .rebuild-layer-block[data-cue="mass"],
 .rebuild-layer-schedule-row[data-cue="mass"] {
-  --layer-fill: color-mix(in oklch, var(--text-muted) 13%, var(--surface-control));
-  --layer-side: color-mix(in oklch, var(--text-muted) 23%, var(--surface-control));
-  --layer-stroke: color-mix(in oklch, var(--text-muted) 74%, var(--border-strong));
-  --layer-pattern: color-mix(in oklch, var(--text-muted) 64%, transparent);
+  --layer-fill: #d6d8db;
+  --layer-side: #bec5cb;
+  --layer-stroke: #7f8b95;
+  --layer-pattern: #88939d;
+}
+
+.rebuild-layer-block[data-cue="concrete"],
+.rebuild-layer-schedule-row[data-cue="concrete"] {
+  --layer-fill: #ced1d0;
+  --layer-side: #b5bbbd;
+  --layer-stroke: #747d82;
+  --layer-pattern: #7f878a;
 }
 
 .rebuild-layer-block[data-cue="masonry"],
-.rebuild-layer-schedule-row[data-cue="masonry"],
+.rebuild-layer-schedule-row[data-cue="masonry"] {
+  --layer-fill: #d4b79b;
+  --layer-side: #ba9a7a;
+  --layer-stroke: #7f6048;
+  --layer-pattern: #8e7258;
+}
+
 .rebuild-layer-block[data-cue="timber"],
 .rebuild-layer-schedule-row[data-cue="timber"],
 .rebuild-layer-block[data-cue="timber_support"],
-.rebuild-layer-schedule-row[data-cue="timber_support"],
-.rebuild-layer-block[data-cue="support"],
-.rebuild-layer-schedule-row[data-cue="support"] {
-  --layer-fill: color-mix(in oklch, var(--warning) 18%, var(--surface-control));
-  --layer-side: color-mix(in oklch, var(--warning) 30%, var(--surface-control));
-  --layer-stroke: color-mix(in oklch, var(--warning) 62%, var(--border-strong));
-  --layer-pattern: color-mix(in oklch, var(--warning) 64%, var(--text-muted));
+.rebuild-layer-schedule-row[data-cue="timber_support"] {
+  --layer-fill: #cfac84;
+  --layer-side: #aa845c;
+  --layer-stroke: #745536;
+  --layer-pattern: #846141;
+}
+
+.rebuild-layer-block[data-cue="timber_support"],
+.rebuild-layer-schedule-row[data-cue="timber_support"] {
+  --layer-fill: #c79f72;
+  --layer-side: #9f774e;
+  --layer-stroke: #6f5032;
+  --layer-pattern: #7c5d3b;
 }
 
 .rebuild-layer-block[data-cue="resilient"],
 .rebuild-layer-schedule-row[data-cue="resilient"] {
-  --layer-fill: color-mix(in oklch, var(--success) 18%, var(--surface-control));
-  --layer-side: color-mix(in oklch, var(--success) 30%, var(--surface-control));
-  --layer-stroke: color-mix(in oklch, var(--success) 58%, var(--border-strong));
-  --layer-pattern: color-mix(in oklch, var(--success) 68%, var(--text-muted));
+  --layer-fill: #97c2b6;
+  --layer-side: #79a493;
+  --layer-stroke: #4f7669;
+  --layer-pattern: #5a8578;
 }
 
 .rebuild-layer-block[data-cue="steel_support"],
 .rebuild-layer-schedule-row[data-cue="steel_support"],
+.rebuild-layer-block[data-cue="support"],
+.rebuild-layer-schedule-row[data-cue="support"] {
+  --layer-fill: #c6ccd0;
+  --layer-side: #a7afb5;
+  --layer-stroke: #66737c;
+  --layer-pattern: #747f87;
+}
+
 .rebuild-layer-block[data-cue="surface"],
 .rebuild-layer-schedule-row[data-cue="surface"] {
-  --layer-fill: color-mix(in oklch, var(--accent) 12%, var(--surface-control));
-  --layer-side: color-mix(in oklch, var(--accent) 21%, var(--surface-control));
-  --layer-stroke: color-mix(in oklch, var(--accent) 52%, var(--border-strong));
-  --layer-pattern: color-mix(in oklch, var(--accent) 56%, var(--text-muted));
+  --layer-fill: #d8d6cf;
+  --layer-side: #c0bdb4;
+  --layer-stroke: #74766f;
+  --layer-pattern: #85857d;
 }
 
 .rebuild-layer-face {

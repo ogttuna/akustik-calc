@@ -9,34 +9,62 @@ import { getIllustrationMaterialCue, type LayerVisualMaterial } from "./simple-w
 // ---------------------------------------------------------------------------
 
 export function layerFillClass(material: MaterialDefinition): string {
-  switch (material.category) {
-    case "finish":
-      return "bg-[color:color-mix(in_oklab,var(--accent)_12%,var(--paper))]";
-    case "insulation":
-      return "bg-[color:color-mix(in_oklab,var(--success)_12%,var(--paper))]";
-    case "gap":
-      return "bg-[color:color-mix(in_oklab,var(--ink)_4%,var(--paper))]";
+  switch (getIllustrationMaterialCue(material)) {
+    case "board":
+      return "bg-[#ddd8cf]";
+    case "plaster":
+      return "bg-[#ebdecd]";
+    case "fiber":
+      return "bg-[#d5bf78]";
+    case "cavity":
+      return "bg-[#eceeed]";
+    case "concrete":
+      return "bg-[#ced1d0]";
+    case "masonry":
+      return "bg-[#d4b79b]";
+    case "resilient":
+      return "bg-[#97c2b6]";
+    case "steel_support":
     case "support":
-      return "bg-[color:color-mix(in_oklab,var(--warning)_16%,var(--paper))]";
+      return "bg-[#c6ccd0]";
+    case "surface":
+      return "bg-[#d8d6cf]";
+    case "timber":
+    case "timber_support":
+      return "bg-[#cfac84]";
     case "mass":
     default:
-      return "bg-[color:color-mix(in_oklab,var(--ink)_10%,var(--paper))]";
+      return "bg-[#d6d8db]";
   }
 }
 
 export function layerStrokeClass(material: MaterialDefinition): string {
-  switch (material.category) {
-    case "finish":
-      return "border-[color:color-mix(in_oklab,var(--accent)_50%,var(--line))]";
-    case "insulation":
-      return "border-[color:color-mix(in_oklab,var(--success)_50%,var(--line))]";
-    case "gap":
-      return "border-[color:color-mix(in_oklab,var(--ink)_22%,var(--line))]";
+  switch (getIllustrationMaterialCue(material)) {
+    case "board":
+      return "border-[#938779]";
+    case "plaster":
+      return "border-[#8f7e6b]";
+    case "fiber":
+      return "border-[#806638]";
+    case "cavity":
+      return "border-[#87908e]";
+    case "concrete":
+      return "border-[#747d82]";
+    case "masonry":
+      return "border-[#7f6048]";
+    case "resilient":
+      return "border-[#4f7669]";
+    case "steel_support":
     case "support":
-      return "border-[color:color-mix(in_oklab,var(--warning)_50%,var(--line))]";
+      return "border-[#66737c]";
+    case "surface":
+      return "border-[#74766f]";
+    case "timber":
+    case "timber_support":
+      return "border-[#745536]";
     case "mass":
     default:
-      return "border-[color:color-mix(in_oklab,var(--ink)_35%,var(--line))]";
+      return "border-[#7f8b95]";
   }
 }
 
@@ -158,17 +186,17 @@ export function getLayerVisualSurface(material: MaterialDefinition | LayerVisual
     case "board":
       return {
         badgeStyle: buildLabelStyle({
-          backgroundColor: "rgba(253, 254, 255, 0.94)",
-          borderColor: "rgba(88, 126, 159, 0.2)",
+          backgroundColor: "rgba(247, 246, 242, 0.94)",
+          borderColor: "rgba(147, 135, 121, 0.24)",
           color: "var(--ink)"
         }),
         dimensionStyle: buildLabelStyle({
-          backgroundColor: "rgba(255, 255, 255, 0.92)",
-          borderColor: "rgba(88, 126, 159, 0.22)",
+          backgroundColor: "rgba(255, 253, 248, 0.92)",
+          borderColor: "rgba(147, 135, 121, 0.24)",
           color: "var(--ink-soft)"
         }),
         frontStyle: buildLayerFaceStyle({
-          backgroundColor: "color-mix(in oklch,var(--accent) 20%, var(--paper))",
+          backgroundColor: "#ddd8cf",
           backgroundImage:
             "linear-gradient(90deg, rgba(255,255,255,0.48), rgba(255,255,255,0.1) 22%, rgba(0,0,0,0.06) 100%), repeating-linear-gradient(180deg, rgba(255,255,255,0.16) 0 2px, transparent 2px 16px), linear-gradient(180deg, rgba(255,255,255,0.12), rgba(0,0,0,0.05))",
           backgroundRepeat: "no-repeat, repeat, no-repeat",
@@ -176,11 +204,11 @@ export function getLayerVisualSurface(material: MaterialDefinition | LayerVisual
         }),
         labelToneClass: "text-[color:var(--ink)]",
         sideStyle: buildLayerFaceStyle({
-          backgroundColor: "color-mix(in oklch,var(--accent-ink) 28%, var(--paper))",
+          backgroundColor: "#c6baab",
           backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.18), rgba(0,0,0,0.12))"
         }),
         topStyle: buildLayerFaceStyle({
-          backgroundColor: "color-mix(in oklch,var(--accent) 14%, var(--paper))",
+          backgroundColor: "#ece7de",
           backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.32), rgba(0,0,0,0.05))"
         })
       };
@@ -257,7 +285,7 @@ export function getLayerVisualSurface(material: MaterialDefinition | LayerVisual
           color: "var(--ink-soft)"
         }),
         frontStyle: buildLayerFaceStyle({
-          backgroundColor: "color-mix(in oklch,var(--warning) 20%, var(--paper))",
+          backgroundColor: "#c6ccd0",
           backgroundImage:
             "linear-gradient(180deg, rgba(255,255,255,0.26), rgba(0,0,0,0.12)), repeating-linear-gradient(90deg, rgba(255,255,255,0.22) 0 3px, rgba(79,94,117,0.12) 3px 12px)",
           backgroundRepeat: "no-repeat, repeat",
@@ -265,11 +293,11 @@ export function getLayerVisualSurface(material: MaterialDefinition | LayerVisual
         }),
         labelToneClass: "text-[color:var(--ink)]",
         sideStyle: buildLayerFaceStyle({
-          backgroundColor: "color-mix(in oklch,var(--warning-ink) 24%, var(--paper))",
+          backgroundColor: "#a7afb5",
           backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.16), rgba(0,0,0,0.14))"
         }),
         topStyle: buildLayerFaceStyle({
-          backgroundColor: "color-mix(in oklch,var(--warning) 12%, var(--paper))",
+          backgroundColor: "#dfe2e4",
           backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.28), rgba(0,0,0,0.06))"
         })
       };
@@ -286,7 +314,7 @@ export function getLayerVisualSurface(material: MaterialDefinition | LayerVisual
           color: "var(--ink-soft)"
         }),
         frontStyle: buildLayerFaceStyle({
-          backgroundColor: "color-mix(in oklch,var(--success) 28%, var(--paper))",
+          backgroundColor: "#97c2b6",
           backgroundImage:
             "linear-gradient(180deg, rgba(255,255,255,0.18), rgba(0,0,0,0.05)), radial-gradient(circle at 10px 10px, rgba(255,255,255,0.18) 0 2px, transparent 2.2px), radial-gradient(circle at 24px 20px, rgba(0,0,0,0.08) 0 2px, transparent 2.2px)",
           backgroundRepeat: "no-repeat, repeat, repeat",
@@ -294,28 +322,28 @@ export function getLayerVisualSurface(material: MaterialDefinition | LayerVisual
         }),
         labelToneClass: "text-[color:var(--ink)]",
         sideStyle: buildLayerFaceStyle({
-          backgroundColor: "color-mix(in oklch,var(--success-ink) 32%, var(--paper))",
+          backgroundColor: "#79a493",
           backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.14), rgba(0,0,0,0.12))"
         }),
         topStyle: buildLayerFaceStyle({
-          backgroundColor: "color-mix(in oklch,var(--success) 16%, var(--paper))",
+          backgroundColor: "#c6ddd6",
           backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.24), rgba(0,0,0,0.04))"
         })
       };
     case "fiber":
       return {
         badgeStyle: buildLabelStyle({
-          backgroundColor: "rgba(244, 252, 249, 0.94)",
-          borderColor: "rgba(78, 148, 117, 0.22)",
+          backgroundColor: "rgba(255, 248, 232, 0.94)",
+          borderColor: "rgba(128, 102, 56, 0.24)",
           color: "var(--ink)"
         }),
         dimensionStyle: buildLabelStyle({
-          backgroundColor: "rgba(248, 253, 250, 0.92)",
-          borderColor: "rgba(78, 148, 117, 0.24)",
+          backgroundColor: "rgba(255, 251, 241, 0.92)",
+          borderColor: "rgba(128, 102, 56, 0.24)",
           color: "var(--ink-soft)"
         }),
         frontStyle: buildLayerFaceStyle({
-          backgroundColor: "color-mix(in oklch,var(--success) 34%, var(--paper))",
+          backgroundColor: "#d5bf78",
           backgroundImage:
             "linear-gradient(180deg, rgba(255,255,255,0.18), rgba(0,0,0,0.06)), repeating-linear-gradient(135deg, rgba(255,255,255,0.24) 0 2px, transparent 2px 12px), repeating-linear-gradient(45deg, rgba(18,77,57,0.08) 0 1px, transparent 1px 10px)",
           backgroundRepeat: "no-repeat, repeat, repeat",
@@ -323,11 +351,11 @@ export function getLayerVisualSurface(material: MaterialDefinition | LayerVisual
         }),
         labelToneClass: "text-[color:var(--ink)]",
         sideStyle: buildLayerFaceStyle({
-          backgroundColor: "color-mix(in oklch,var(--success-ink) 38%, var(--paper))",
+          backgroundColor: "#b59a58",
           backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.14), rgba(0,0,0,0.12))"
         }),
         topStyle: buildLayerFaceStyle({
-          backgroundColor: "color-mix(in oklch,var(--success) 22%, var(--paper))",
+          backgroundColor: "#e9d89e",
           backgroundImage:
             "repeating-linear-gradient(135deg, rgba(255,255,255,0.18) 0 2px, transparent 2px 12px)"
         })
@@ -367,27 +395,27 @@ export function getLayerVisualSurface(material: MaterialDefinition | LayerVisual
     case "surface":
       return {
         badgeStyle: buildLabelStyle({
-          backgroundColor: "rgba(244, 249, 255, 0.94)",
-          borderColor: "rgba(86, 138, 190, 0.22)",
+          backgroundColor: "rgba(247, 249, 248, 0.94)",
+          borderColor: "rgba(111, 124, 118, 0.24)",
           color: "var(--ink)"
         }),
         dimensionStyle: buildLabelStyle({
-          backgroundColor: "rgba(250, 252, 255, 0.92)",
-          borderColor: "rgba(86, 138, 190, 0.22)",
+          backgroundColor: "rgba(252, 253, 251, 0.92)",
+          borderColor: "rgba(111, 124, 118, 0.24)",
           color: "var(--ink-soft)"
         }),
         frontStyle: buildLayerFaceStyle({
-          backgroundColor: "color-mix(in oklch,var(--accent) 40%, var(--paper))",
+          backgroundColor: "#d8d6cf",
           backgroundImage:
             "linear-gradient(180deg, rgba(255,255,255,0.24), rgba(0,0,0,0.08)), linear-gradient(90deg, rgba(255,255,255,0.18), transparent 38%, rgba(255,255,255,0.08) 66%, rgba(0,0,0,0.06) 100%)"
         }),
         labelToneClass: "text-[color:var(--ink)]",
         sideStyle: buildLayerFaceStyle({
-          backgroundColor: "color-mix(in oklch,var(--accent-ink) 40%, var(--paper))",
+          backgroundColor: "#c0bdb4",
           backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.16), rgba(0,0,0,0.12))"
         }),
         topStyle: buildLayerFaceStyle({
-          backgroundColor: "color-mix(in oklch,var(--accent) 22%, var(--paper))",
+          backgroundColor: "#ebe8de",
           backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.28), rgba(0,0,0,0.05))"
         })
       };

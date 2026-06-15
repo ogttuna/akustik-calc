@@ -62,15 +62,15 @@ const CUE_APPEARANCES: Record<ReturnType<typeof getIllustrationMaterialCue>, Cue
     top: "#ece7de"
   },
   cavity: {
-    badgeFill: "#f4f5f6",
-    badgeText: "#485560",
+    badgeFill: "#f6f7f5",
+    badgeText: "#4d5653",
     detail: "air_gap",
-    front: "#d8dde2",
+    front: "#eceeed",
     pattern: "cavity",
-    patternOpacity: 0.42,
-    side: "#bcc4cc",
-    stroke: "#86929f",
-    top: "#eef1f4"
+    patternOpacity: 0.36,
+    side: "#d4d8d7",
+    stroke: "#87908e",
+    top: "#f4f5f3"
   },
   concrete: {
     badgeFill: "#f8f9fa",
@@ -139,37 +139,37 @@ const CUE_APPEARANCES: Record<ReturnType<typeof getIllustrationMaterialCue>, Cue
     top: "#c6ddd6"
   },
   steel_support: {
-    badgeFill: "#f8fafc",
-    badgeText: "#45505e",
+    badgeFill: "#f6f7f7",
+    badgeText: "#444d52",
     detail: "steel_frame",
-    front: "#ccd4dd",
+    front: "#c6ccd0",
     pattern: "steel",
-    patternOpacity: 0.34,
-    side: "#aeb8c2",
-    stroke: "#798796",
-    top: "#e2e7ed"
+    patternOpacity: 0.32,
+    side: "#a7afb5",
+    stroke: "#66737c",
+    top: "#dfe2e4"
   },
   support: {
-    badgeFill: "#fff9f3",
-    badgeText: "#624f3e",
-    detail: "timber_grain",
-    front: "#d7c2aa",
-    pattern: "timber",
+    badgeFill: "#f6f7f5",
+    badgeText: "#4b5451",
+    detail: "steel_frame",
+    front: "#c2c8c7",
+    pattern: "steel",
     patternOpacity: 0.24,
-    side: "#b79d81",
-    stroke: "#8d755d",
-    top: "#e7d6c5"
+    side: "#a8b0ae",
+    stroke: "#6c7775",
+    top: "#dde1df"
   },
   surface: {
-    badgeFill: "#f4f8fb",
-    badgeText: "#345266",
+    badgeFill: "#faf8f2",
+    badgeText: "#57564d",
     detail: "surface_sheet",
-    front: "#bfd0de",
+    front: "#d8d6cf",
     pattern: "board",
-    patternOpacity: 0.18,
-    side: "#9aaebd",
-    stroke: "#6f8395",
-    top: "#dde7ee"
+    patternOpacity: 0.16,
+    side: "#c0bdb4",
+    stroke: "#74766f",
+    top: "#ebe8de"
   },
   timber: {
     badgeFill: "#fff8f1",

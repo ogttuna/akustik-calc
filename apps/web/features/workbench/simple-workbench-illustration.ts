@@ -1,6 +1,7 @@
 import type { MaterialCategory, MaterialDefinition } from "@dynecho/shared";
 
-export type LayerVisualMaterial = Pick<MaterialDefinition, "category" | "id" | "name" | "tags">;
+export type LayerVisualMaterial = Pick<MaterialDefinition, "category" | "id" | "name" | "tags"> &
+  Partial<Pick<MaterialDefinition, "acoustic" | "densityKgM3" | "impact">>;
 
 export type IllustrationAxis = "floor" | "wall" | "proposalFloor" | "proposalWall";
 export type IllustrationMaterialCue =
@@ -34,6 +35,7 @@ export type IllustrationAllocation = {
 };
 
 const DEFAULT_FALLBACK_THICKNESS_MM = 10;
+const PERCEPTUAL_THICKNESS_EXPONENT = 0.65;
 
 const ILLUSTRATION_PRESETS: Record<IllustrationAxis, IllustrationThresholds> = {
   floor: {
@@ -76,16 +78,18 @@ function normalizeThickness(thicknessMm: number | null | undefined) {
     : DEFAULT_FALLBACK_THICKNESS_MM;
 }
 
+function getPerceptualThicknessWeight(thicknessMm: number) {
+  return Math.pow(thicknessMm, PERCEPTUAL_THICKNESS_EXPONENT);
+}
+
 function solveBoundedAxis(input: readonly number[], preset: IllustrationThresholds): number[] {
   const normalized = input.map((value) => normalizeThickness(value));
   const desiredTotal = normalized.reduce((sum, value) => sum + value, 0) * preset.basePxPerMm;
   const feasibleMinimum = normalized.length * preset.minLayerPx;
   const feasibleMaximum = normalized.length * preset.maxLayerPx;
-  const targetTotal = clamp(
-    desiredTotal,
-    Math.max(preset.minTotalPx, feasibleMinimum),
-    Math.min(preset.maxTotalPx, feasibleMaximum)
-  );
+  const minimumTotal = Math.max(preset.minTotalPx, feasibleMinimum);
+  const maximumTotal = Math.min(preset.maxTotalPx, feasibleMaximum);
+  const targetTotal = minimumTotal > maximumTotal ? feasibleMinimum : clamp(desiredTotal, minimumTotal, maximumTotal);
 
   const sizes = new Array<number>(normalized.length).fill(0);
   const locked = new Array<boolean>(normalized.length).fill(false);
@@ -98,9 +102,9 @@ function solveBoundedAxis(input: readonly number[], preset: IllustrationThreshol
       break;
     }
 
-    const remainingThickness = openIndexes.reduce((sum, entry) => sum + entry.value, 0);
+    const remainingWeight = openIndexes.reduce((sum, entry) => sum + getPerceptualThicknessWeight(entry.value), 0);
 
-    if (remainingThickness <= 0 || remainingTarget <= 0) {
+    if (remainingWeight <= 0 || remainingTarget <= 0) {
       const evenSize = remainingTarget > 0 ? remainingTarget / openIndexes.length : preset.minLayerPx;
       for (const entry of openIndexes) {
         sizes[entry.index] = clamp(evenSize, preset.minLayerPx, preset.maxLayerPx);
@@ -109,26 +113,29 @@ function solveBoundedAxis(input: readonly number[], preset: IllustrationThreshol
     }
 
     let constrainedThisPass = false;
+    const constraints: Array<{ index: number; sizePx: number }> = [];
 
     for (const entry of openIndexes) {
-      const proposed = (entry.value / remainingThickness) * remainingTarget;
+      const proposed = (getPerceptualThicknessWeight(entry.value) / remainingWeight) * remainingTarget;
 
       if (proposed < preset.minLayerPx) {
-        sizes[entry.index] = preset.minLayerPx;
-        locked[entry.index] = true;
-        remainingTarget -= preset.minLayerPx;
+        constraints.push({ index: entry.index, sizePx: preset.minLayerPx });
         constrainedThisPass = true;
       } else if (proposed > preset.maxLayerPx) {
-        sizes[entry.index] = preset.maxLayerPx;
-        locked[entry.index] = true;
-        remainingTarget -= preset.maxLayerPx;
+        constraints.push({ index: entry.index, sizePx: preset.maxLayerPx });
         constrainedThisPass = true;
       }
     }
 
+    for (const constraint of constraints) {
+      sizes[constraint.index] = constraint.sizePx;
+      locked[constraint.index] = true;
+      remainingTarget -= constraint.sizePx;
+    }
+
     if (!constrainedThisPass) {
       for (const entry of openIndexes) {
-        sizes[entry.index] = (entry.value / remainingThickness) * remainingTarget;
+        sizes[entry.index] = (getPerceptualThicknessWeight(entry.value) / remainingWeight) * remainingTarget;
       }
       break;
     }
@@ -213,18 +220,36 @@ export function createIllustrationMaterial(input: {
 }
 
 export function getIllustrationMaterialCue(material: LayerVisualMaterial): IllustrationMaterialCue {
-  const text = [material.id, material.name, ...material.tags].join(" ").toLowerCase();
+  const text = [material.id, material.name, material.acoustic?.behavior, material.acoustic?.absorberClass, ...material.tags]
+    .join(" ")
+    .toLowerCase();
 
-  if (material.category === "gap") return "cavity";
-  if (/(concrete|cement(?!\s*board)|screed)/u.test(text)) return "concrete";
-  if (/(aac|aircrete|ytong|celcon|masonry|brick|block|porotherm|he?luz)/u.test(text)) return "masonry";
-  if (/(gypsum|sheetrock|board|plasterboard|silentboard|diamond|akv)/u.test(text)) return "board";
+  if (material.category === "gap" || material.acoustic?.behavior === "air_cavity") return "cavity";
+  if (material.acoustic?.behavior === "mass_timber" || /(timber|wood|plywood|osb|clt|joist|batten|particleboard|chipboard|laminate)/u.test(text)) {
+    return material.category === "support" ? "timber_support" : "timber";
+  }
+  if (/(steel|metal|stud|track|channel|rail|furring|hanger)/u.test(text)) return "steel_support";
+  if (
+    material.acoustic?.behavior === "resilient_layer" ||
+    material.impact?.dynamicStiffnessMNm3 ||
+    /(resilient|underlay|mat|rubber|foam|felt|afm|regupol|geniemat|eps|cork|carpet|vinyl|membrane|barrier|bitumen)/u.test(text)
+  ) {
+    return "resilient";
+  }
+  if (
+    material.acoustic?.behavior === "porous_absorber" ||
+    material.acoustic?.absorberClass === "porous_absorptive" ||
+    /(mineral\s*wool|rock\s*wool|rockwool|glass\s*wool|glasswool|cavity-fill|porous)/u.test(text)
+  ) {
+    return "fiber";
+  }
   if (/(plaster|render|skim|coat)/u.test(text)) return "plaster";
-  if (/(timber|wood|plywood|osb|clt|joist|batten)/u.test(text)) return material.category === "support" ? "timber_support" : "timber";
-  if (/(steel|metal|stud|track|channel|rail)/u.test(text)) return "steel_support";
-  if (material.category === "insulation" && /(foam|rubber|resilient|underlay|mat|felt)/u.test(text)) return "resilient";
-  if (material.category === "insulation") return "fiber";
+  if (/(gypsum|sheetrock|board|plasterboard|fiberboard|silentboard|diamond|akv|inex|cement[_\s-]*board|firestop|impactstop)/u.test(text)) return "board";
+  if (/(aac|aircrete|ytong|celcon|masonry|brick|block|porotherm|he?luz|silka|silicate|pumice|bims|tile|porcelain|ceramic|stone|marble|granite)/u.test(text)) return "masonry";
+  if (/(concrete|cement|screed|anhydrite|mineral|aggregate|chipping|gravel|fill)/u.test(text)) return "concrete";
+  if (typeof material.densityKgM3 === "number" && material.densityKgM3 >= 1600 && material.category === "mass") return "concrete";
   if (material.category === "support") return "support";
+  if (material.category === "insulation") return "fiber";
   if (material.category === "finish") return "surface";
   return "mass";
 }
