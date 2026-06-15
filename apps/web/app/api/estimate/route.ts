@@ -1,5 +1,5 @@
 import { MATERIAL_CATALOG_SEED } from "@dynecho/catalogs";
-import { calculateAssembly } from "@dynecho/engine";
+import { calculateAssembly } from "@dynecho/engine/runtime";
 import { EstimateRequestSchema } from "@dynecho/shared";
 import { NextResponse } from "next/server";
 

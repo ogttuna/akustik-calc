@@ -252,5 +252,77 @@ Optional broader validation:
 
 ## Status
 
-Read-only analysis complete. No implementation files were changed by this
-document.
+Implementation first pass complete on 2026-06-15.
+
+Implemented changes:
+
+- `tools/dev/managed-child-process.ts` now provides shared child lifecycle
+  handling for the Playwright wrappers.
+- `tools/dev/run-playwright.ts` now launches the Playwright CLI through the
+  managed helper so interrupted top-level runs terminate the Playwright process
+  group instead of only letting port probing move to the next port.
+- `tools/dev/run-playwright-web-server.ts` now:
+  - caps the Next dev child `NODE_OPTIONS` at `--max-old-space-size=4096` by
+    default, with `PLAYWRIGHT_NEXT_NODE_OPTIONS` as the explicit override;
+  - keeps the Next dev child in the Playwright web-server process group so
+    normal Playwright shutdown can clean it up;
+  - writes a per-run ignored `.next-playwright-tsconfig-<port>.json` in the web
+    app root and points Next at it with `NEXT_PLAYWRIGHT_TSCONFIG_PATH`, so Next
+    no longer appends active port type paths to tracked
+    `tsconfig.playwright.json`.
+- `apps/web/next.config.ts` now honors `NEXT_PLAYWRIGHT_TSCONFIG_PATH` for
+  Playwright dist dirs.
+- `packages/engine/src/runtime.ts` and the `@dynecho/engine/runtime` package
+  export now expose the same `calculateAssembly` and `calculateImpactOnly`
+  functions used by the package root.
+- `/api/estimate` and `/api/impact-only` now import from
+  `@dynecho/engine/runtime` instead of the broad `@dynecho/engine` root barrel.
+- `apps/web/tsconfig.playwright.json` has had historical explicit
+  `.next-playwright-PORT` include entries removed.
+
+Validation completed:
+
+- `pnpm --filter @dynecho/web build` passed. The only warnings observed were
+  the known optional `sharp/@img` warnings from the proposal DOCX path.
+- `pnpm exec tsc --noEmit --pretty false --moduleResolution Bundler --module
+  ESNext --target ES2022 --types node tools/dev/managed-child-process.ts
+  tools/dev/run-playwright.ts tools/dev/run-playwright-web-server.ts` passed.
+- `PLAYWRIGHT_PORT=3193 pnpm exec playwright test
+  e2e/workbench-v2-material-editor.spec.ts -g "proposal saves a local report to
+  a selected project"` passed and exited cleanly.
+- A direct high-heap server test with
+  `NODE_OPTIONS='--max-old-space-size=15896 --enable-source-maps'
+  PLAYWRIGHT_PORT=3194 tsx tools/dev/run-playwright-web-server.ts` showed the
+  Next dev child receiving `NODE_OPTIONS=--max-old-space-size=4096` and
+  `NEXT_PLAYWRIGHT_TSCONFIG_PATH=./.next-playwright-tsconfig-3194.json`.
+- Ctrl-C on that direct web-server run exited with code 130 and left no
+  `next dev --port 3194` process or listener behind.
+- The tracked `apps/web/tsconfig.playwright.json` did not receive new 3193/3194
+  port entries after the generated-tsconfig change.
+- Runtime export identity check passed:
+  `@dynecho/engine/runtime` returns the same `calculateAssembly` and
+  `calculateImpactOnly` function objects as `@dynecho/engine`.
+- Playwright dev estimate route bundle spot check on port 3193:
+  `server/app/api/estimate/route.js` was `15,917,874` bytes, down from the
+  earlier observed roughly `21.5 MB`; engine source references dropped from the
+  earlier `3659` observation to `2205`, and test references dropped from `802`
+  to `579`. Contract references are still present because the current
+  calculator runtime directly imports some `contract`-named modules; removing
+  those would be a separate calculator-runtime factoring task and was not part
+  of this process-safety fix.
+
+Validation caveat:
+
+- `pnpm --filter @dynecho/engine typecheck` was attempted and failed on existing
+  contract-test type errors outside this implementation slice:
+  `post-v1-floor-raw-bare-and-floating-same-basis-holdout-gate-fd`,
+  `post-v1-next-numeric-coverage-gap-gate-fc`, and several
+  `post-v1-wall-compatible-anchor-delta-*` contract tests. No calculator
+  formula files were changed by this implementation.
+
+Not done:
+
+- Stale `.next-playwright-*`, `.next-dev-*`, and `.next-codex-*` directories
+  were not deleted because other agents may still be using them.
+- The remaining calculator-runtime dependency graph was not refactored beyond
+  the narrow public runtime export and web API import migration.

@@ -1,4 +1,4 @@
-import { calculateImpactOnly } from "@dynecho/engine";
+import { calculateImpactOnly } from "@dynecho/engine/runtime";
 import { ImpactOnlyRequestSchema } from "@dynecho/shared";
 import { NextResponse } from "next/server";
 
