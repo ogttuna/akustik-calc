@@ -17,12 +17,14 @@ export type ProjectWorkspaceReportsProps = {
   onDeleteReport: () => Promise<void> | void;
   onDuplicateReport: () => Promise<void> | void;
   onOpenReport: () => Promise<void> | void;
+  onReportDescriptionDraftChange: (value: string) => void;
   onRenameReport: () => Promise<void> | void;
   onReportRenameDraftChange: (value: string) => void;
   onSelectReport: (reportId: string) => void;
   onSetReportArchived: (archived: boolean) => Promise<void> | void;
   projectSelected: boolean;
   reportRenameDraft: string;
+  reportDescriptionDraft: string;
   reports: readonly ProjectWorkspaceReportSummary[];
   selectedReport: ProjectWorkspaceReportSummary | null;
   selectedReportId: string;
@@ -82,6 +84,7 @@ export function ProjectWorkspaceReports(props: ProjectWorkspaceReportsProps) {
                       {formatProjectWorkspaceReportStatus(report.status)} - {formatProjectWorkspaceReportRevisionCount(report)} -{" "}
                       {formatProjectWorkspaceUpdatedDateLabel(report.updatedAtIso)}
                     </span>
+                    {report.description ? <small>{report.description}</small> : null}
                   </span>
                   <span className="calc-project-row-result">{getProjectWorkspaceReportAssemblyLabel(report, props.assemblies)}</span>
                 </button>
@@ -95,6 +98,15 @@ export function ProjectWorkspaceReports(props: ProjectWorkspaceReportsProps) {
                       onChange={(event) => props.onReportRenameDraftChange(event.target.value)}
                       placeholder="Selected report name"
                       value={props.reportRenameDraft}
+                    />
+                    <input
+                      aria-label="Selected report description"
+                      className="focus-ring ui-field calc-project-snapshot-select"
+                      disabled={props.busy}
+                      maxLength={320}
+                      onChange={(event) => props.onReportDescriptionDraftChange(event.target.value)}
+                      placeholder="Selected report description"
+                      value={props.reportDescriptionDraft}
                     />
                     <div className="calc-project-row-actions">
                       <button

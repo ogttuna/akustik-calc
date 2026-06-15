@@ -22,6 +22,7 @@ import {
   ArrowUp,
   Copy,
   FileText,
+  FolderOpen,
   GripVertical,
   Palette,
   Plus,
@@ -132,6 +133,7 @@ type ServerProjectAssemblySummaryPayload = {
     selectedOutputs: string[];
     status: "error" | "needs_input" | "ready" | "unsupported";
   };
+  description?: string;
   displayCode?: string;
   id: string;
   kind: StudyMode;
@@ -147,6 +149,7 @@ type ServerProjectAssemblyRecordPayload = ServerProjectAssemblySummaryPayload & 
 type ServerProjectReportSummaryPayload = {
   assemblyId: string;
   currentRevisionId: string;
+  description?: string;
   displayCode?: string;
   id: string;
   name: string;
@@ -1559,6 +1562,7 @@ function parseAssemblySummary(value: unknown): ServerProjectAssemblySummaryPaylo
 
   return {
     calculationSummary: parseAssemblyCalculationSummary(value.calculationSummary),
+    description: typeof value.description === "string" ? value.description : undefined,
     displayCode: typeof value.displayCode === "string" ? value.displayCode : undefined,
     id: value.id,
     kind: value.kind,
@@ -1629,6 +1633,7 @@ function parseReportSummary(value: unknown): ServerProjectReportSummaryPayload |
   return {
     assemblyId: value.assemblyId,
     currentRevisionId: value.currentRevisionId,
+    description: typeof value.description === "string" ? value.description : undefined,
     displayCode: typeof value.displayCode === "string" ? value.displayCode : undefined,
     id: value.id,
     name: value.name,
@@ -1735,14 +1740,21 @@ export function CalculatorWorkbench() {
   const [selectedServerAssemblyId, setSelectedServerAssemblyId] = useState("");
   const [serverAssemblyNameDraft, setServerAssemblyNameDraft] = useState("");
   const serverAssemblyNameDraftRef = useRef(serverAssemblyNameDraft);
+  const [serverAssemblyDescriptionDraft, setServerAssemblyDescriptionDraft] = useState("");
+  const serverAssemblyDescriptionDraftRef = useRef(serverAssemblyDescriptionDraft);
   const [serverAssemblyRenameDraft, setServerAssemblyRenameDraft] = useState("");
   const serverAssemblyRenameDraftRef = useRef(serverAssemblyRenameDraft);
+  const [serverAssemblyRenameDescriptionDraft, setServerAssemblyRenameDescriptionDraft] = useState("");
+  const serverAssemblyRenameDescriptionDraftRef = useRef(serverAssemblyRenameDescriptionDraft);
   const [serverProjectReports, setServerProjectReports] = useState<ServerProjectReportSummaryPayload[]>([]);
   const [selectedServerReportId, setSelectedServerReportId] = useState("");
   const [serverReportRenameDraft, setServerReportRenameDraft] = useState("");
   const serverReportRenameDraftRef = useRef(serverReportRenameDraft);
+  const [serverReportDescriptionDraft, setServerReportDescriptionDraft] = useState("");
+  const serverReportDescriptionDraftRef = useRef(serverReportDescriptionDraft);
   const [serverProjectStatus, setServerProjectStatus] = useState<ServerProjectStatus>("idle");
   const [serverProjectMessage, setServerProjectMessage] = useState("Browser-local draft");
+  const [projectWorkspaceOpen, setProjectWorkspaceOpen] = useState(false);
   const serverProjectMutationInFlightRef = useRef(false);
 
   const materials = useMemo(() => buildResolvedMaterialCatalog(customMaterials), [customMaterials]);
@@ -1793,6 +1805,7 @@ export function CalculatorWorkbench() {
   const canCreateServerProject = !serverProjectBusy;
   const canRenameServerAssembly = Boolean(selectedServerProjectId && selectedServerAssembly) && !serverProjectBusy;
   const canRenameServerReport = Boolean(selectedServerProjectId && selectedServerReport) && !serverProjectBusy;
+  const projectWorkspaceTriggerStatus = selectedServerProject?.name ?? "No project";
 
   useEffect(() => {
     const restored = readStoredMaterialEditorState();
@@ -1823,15 +1836,21 @@ export function CalculatorWorkbench() {
 
   useEffect(() => {
     const nextName = selectedServerAssembly?.name ?? "";
+    const nextDescription = selectedServerAssembly?.description ?? "";
     serverAssemblyRenameDraftRef.current = nextName;
+    serverAssemblyRenameDescriptionDraftRef.current = nextDescription;
     setServerAssemblyRenameDraft(nextName);
-  }, [selectedServerAssembly?.id, selectedServerAssembly?.name]);
+    setServerAssemblyRenameDescriptionDraft(nextDescription);
+  }, [selectedServerAssembly?.description, selectedServerAssembly?.id, selectedServerAssembly?.name]);
 
   useEffect(() => {
     const nextName = selectedServerReport?.name ?? "";
+    const nextDescription = selectedServerReport?.description ?? "";
     serverReportRenameDraftRef.current = nextName;
+    serverReportDescriptionDraftRef.current = nextDescription;
     setServerReportRenameDraft(nextName);
-  }, [selectedServerReport?.id, selectedServerReport?.name]);
+    setServerReportDescriptionDraft(nextDescription);
+  }, [selectedServerReport?.description, selectedServerReport?.id, selectedServerReport?.name]);
 
   useEffect(() => {
     if (!selectedServerProjectId) {
@@ -1840,7 +1859,13 @@ export function CalculatorWorkbench() {
       setServerProjectReports([]);
       setSelectedServerReportId("");
       serverAssemblyRenameDraftRef.current = "";
+      serverAssemblyRenameDescriptionDraftRef.current = "";
       serverReportRenameDraftRef.current = "";
+      serverReportDescriptionDraftRef.current = "";
+      setServerAssemblyRenameDraft("");
+      setServerAssemblyRenameDescriptionDraft("");
+      setServerReportRenameDraft("");
+      setServerReportDescriptionDraft("");
       return;
     }
 
@@ -2016,6 +2041,14 @@ export function CalculatorWorkbench() {
         setSelectedServerAssemblyId("");
         setServerProjectReports([]);
         setSelectedServerReportId("");
+        serverAssemblyRenameDraftRef.current = "";
+        serverAssemblyRenameDescriptionDraftRef.current = "";
+        serverReportRenameDraftRef.current = "";
+        serverReportDescriptionDraftRef.current = "";
+        setServerAssemblyRenameDraft("");
+        setServerAssemblyRenameDescriptionDraft("");
+        setServerReportRenameDraft("");
+        setServerReportDescriptionDraft("");
       }
 
       if (!options?.preserveMessage) {
@@ -2210,6 +2243,7 @@ export function CalculatorWorkbench() {
     }
 
     const assemblyName = serverAssemblyNameDraftRef.current.trim() || `${mode === "wall" ? "Wall" : "Floor"} saved combination`;
+    const assemblyDescription = serverAssemblyDescriptionDraftRef.current.trim();
     const snapshot = buildCurrentWorkbenchV2ServerSnapshot(assemblyName);
     if (!beginServerProjectMutation()) {
       return;
@@ -2221,6 +2255,7 @@ export function CalculatorWorkbench() {
       const response = await fetch(`/api/projects/${encodeURIComponent(selectedServerProjectId)}/assemblies`, {
         body: JSON.stringify({
           calculationSummary: buildAssemblyCalculationSummary(),
+          description: assemblyDescription || undefined,
           kind: mode,
           name: assemblyName,
           snapshot
@@ -2244,6 +2279,8 @@ export function CalculatorWorkbench() {
       setSelectedServerAssemblyId(assembly.id);
       serverAssemblyNameDraftRef.current = "";
       setServerAssemblyNameDraft("");
+      serverAssemblyDescriptionDraftRef.current = "";
+      setServerAssemblyDescriptionDraft("");
       await refreshServerProjectAssemblies(selectedServerProjectId, { preserveMessage: true, silent: true });
       await refreshServerProjects({ preserveMessage: true, silent: true });
       setServerProjectStatus("idle");
@@ -2267,8 +2304,10 @@ export function CalculatorWorkbench() {
       setServerProjectMessage("Enter a combination name first");
       return;
     }
-    if (nextName === selectedServerAssembly.name) {
-      setServerProjectMessage("Combination name unchanged");
+    const nextDescription = serverAssemblyRenameDescriptionDraftRef.current.trim();
+    const currentDescription = selectedServerAssembly.description ?? "";
+    if (nextName === selectedServerAssembly.name && nextDescription === currentDescription) {
+      setServerProjectMessage("Combination details unchanged");
       return;
     }
     if (!beginServerProjectMutation()) {
@@ -2283,6 +2322,7 @@ export function CalculatorWorkbench() {
         `/api/projects/${encodeURIComponent(selectedServerProjectId)}/assemblies/${encodeURIComponent(selectedServerAssembly.id)}`,
         {
           body: JSON.stringify({
+            description: nextDescription || undefined,
             name: nextName
           }),
           headers: {
@@ -2303,10 +2343,12 @@ export function CalculatorWorkbench() {
       }
 
       setSelectedServerAssemblyId(assembly.id);
+      serverAssemblyRenameDescriptionDraftRef.current = assembly.description ?? "";
+      setServerAssemblyRenameDescriptionDraft(assembly.description ?? "");
       await refreshServerProjectAssemblies(selectedServerProjectId, { preserveMessage: true, silent: true });
       await refreshServerProjects({ preserveMessage: true, silent: true });
       setServerProjectStatus("idle");
-      setServerProjectMessage("Renamed combination");
+      setServerProjectMessage("Updated combination");
     } catch (error) {
       setServerProjectStatus("error");
       setServerProjectMessage(error instanceof Error ? error.message : "Combination rename failed");
@@ -2389,7 +2431,9 @@ export function CalculatorWorkbench() {
 
       setSelectedServerAssemblyId("");
       serverAssemblyRenameDraftRef.current = "";
+      serverAssemblyRenameDescriptionDraftRef.current = "";
       setServerAssemblyRenameDraft("");
+      setServerAssemblyRenameDescriptionDraft("");
       await refreshServerProjectAssemblies(selectedServerProjectId, { preserveMessage: true, silent: true });
       await refreshServerProjects({ preserveMessage: true, silent: true });
       setServerProjectStatus("idle");
@@ -2509,13 +2553,15 @@ export function CalculatorWorkbench() {
     }
 
     const nextName = serverReportRenameDraftRef.current.trim();
+    const nextDescription = serverReportDescriptionDraftRef.current.trim();
+    const currentDescription = selectedServerReport.description ?? "";
     if (!nextName) {
       setServerProjectStatus("error");
       setServerProjectMessage("Enter a report name first");
       return;
     }
-    if (nextName === selectedServerReport.name) {
-      setServerProjectMessage("Report name unchanged");
+    if (nextName === selectedServerReport.name && nextDescription === currentDescription) {
+      setServerProjectMessage("Report details unchanged");
       return;
     }
     if (!beginServerProjectMutation()) {
@@ -2530,6 +2576,7 @@ export function CalculatorWorkbench() {
         `/api/projects/${encodeURIComponent(selectedServerProjectId)}/reports/${encodeURIComponent(selectedServerReport.id)}`,
         {
           body: JSON.stringify({
+            description: nextDescription || undefined,
             expectedReportUpdatedAtIso: selectedServerReport.updatedAtIso,
             name: nextName
           }),
@@ -2551,10 +2598,12 @@ export function CalculatorWorkbench() {
       }
 
       setSelectedServerReportId(report.id);
+      serverReportDescriptionDraftRef.current = report.description ?? "";
+      setServerReportDescriptionDraft(report.description ?? "");
       await refreshServerProjectReports(selectedServerProjectId, { preserveMessage: true, silent: true });
       await refreshServerProjects({ preserveMessage: true, silent: true });
       setServerProjectStatus("idle");
-      setServerProjectMessage("Renamed report");
+      setServerProjectMessage("Updated report");
     } catch (error) {
       setServerProjectStatus("error");
       setServerProjectMessage(error instanceof Error ? error.message : "Report rename failed");
@@ -2686,7 +2735,9 @@ export function CalculatorWorkbench() {
 
       setSelectedServerReportId("");
       serverReportRenameDraftRef.current = "";
+      serverReportDescriptionDraftRef.current = "";
       setServerReportRenameDraft("");
+      setServerReportDescriptionDraft("");
       await refreshServerProjectReports(selectedServerProjectId, { preserveMessage: true, silent: true });
       await refreshServerProjects({ preserveMessage: true, silent: true });
       setServerProjectStatus("idle");
@@ -3071,31 +3122,21 @@ export function CalculatorWorkbench() {
     const projectName = selectedServerProject?.name;
     const serverProjectId = selectedServerProjectId || undefined;
     const serverProjectAssemblyId = selectedServerAssemblyId || undefined;
-    const sourceAssemblySnapshot =
-      serverProjectId && serverProjectAssemblyId
-        ? buildCurrentWorkbenchV2ServerSnapshot(selectedServerAssembly?.name)
-        : undefined;
-    const projectContext: SimpleWorkbenchProposalPreviewProjectContext | undefined =
-      serverProjectId && serverProjectAssemblyId && sourceAssemblySnapshot
-        ? {
-            serverProjectAssemblyId,
-            serverProjectId,
-            sourceAssemblySnapshot,
-            sourceCalculationOutput: {
-              calculationSummary: buildAssemblyCalculationSummary(),
-              outputRows,
-              responseFigures
-            },
-            sourceMaterialSnapshot: {
-              customMaterials: [...customMaterials],
-              materialVisualOverrides: [...materialVisualOverrides]
-            }
-          }
-        : serverProjectId
-          ? {
-              serverProjectId
-            }
-          : undefined;
+    const sourceAssemblySnapshot = buildCurrentWorkbenchV2ServerSnapshot(selectedServerAssembly?.name);
+    const projectContext: SimpleWorkbenchProposalPreviewProjectContext = {
+      serverProjectAssemblyId,
+      serverProjectId,
+      sourceAssemblySnapshot,
+      sourceCalculationOutput: {
+        calculationSummary: buildAssemblyCalculationSummary(),
+        outputRows,
+        responseFigures
+      },
+      sourceMaterialSnapshot: {
+        customMaterials: [...customMaterials],
+        materialVisualOverrides: [...materialVisualOverrides]
+      }
+    };
 
     const reportDocument = buildReportSnapshot({
       layers,
@@ -3121,6 +3162,18 @@ export function CalculatorWorkbench() {
             <h1>Acoustic workbench</h1>
           </div>
           <div className="calc-header-meta">
+            <button
+              aria-controls="workbench-project-workspace"
+              aria-expanded={projectWorkspaceOpen}
+              aria-label={projectWorkspaceOpen ? "Hide project workspace" : "Show project workspace"}
+              className={projectWorkspaceOpen ? "focus-ring ui-button ui-button-primary calc-project-trigger" : "focus-ring ui-button ui-button-ghost calc-project-trigger"}
+              onClick={() => setProjectWorkspaceOpen((current) => !current)}
+              type="button"
+            >
+              <FolderOpen className="h-4 w-4" />
+              <span>Project</span>
+              <small>{projectWorkspaceTriggerStatus}</small>
+            </button>
             <span className="ui-badge">{mode === "wall" ? "Wall" : "Floor"}</span>
             <span className="ui-badge">{layers.length} layers</span>
             <span className="ui-badge">{formatThickness(totalThickness)}</span>
@@ -3130,88 +3183,117 @@ export function CalculatorWorkbench() {
 
         <section className="calc-grid" aria-label="Calculator workspace">
           <div className="calc-main">
-            <ProjectWorkspacePanel
-              busy={serverProjectBusy}
-              combinations={{
-                assemblies: serverProjectAssemblies,
-                assemblyNameDraft: serverAssemblyNameDraft,
-                assemblyRenameDraft: serverAssemblyRenameDraft,
-                canRenameAssembly: canRenameServerAssembly,
-                onAssemblyNameDraftChange: (value) => {
-                  serverAssemblyNameDraftRef.current = value;
-                  setServerAssemblyNameDraft(value);
-                },
-                onAssemblyRenameDraftChange: (value) => {
-                  serverAssemblyRenameDraftRef.current = value;
-                  setServerAssemblyRenameDraft(value);
-                },
-                onDeleteAssembly: deleteSelectedProjectAssembly,
-                onDuplicateAssembly: duplicateSelectedProjectAssembly,
-                onLoadAssembly: loadSelectedProjectAssembly,
-                onRenameAssembly: renameSelectedProjectAssembly,
-                onSaveAssembly: saveCurrentAssemblyToServerProject,
-                onSelectAssembly: (nextAssemblyId) => {
-                  const nextAssembly = serverProjectAssemblies.find((assembly) => assembly.id === nextAssemblyId);
-                  const nextName = nextAssembly?.name ?? "";
-                  setSelectedServerAssemblyId(nextAssemblyId);
-                  serverAssemblyRenameDraftRef.current = nextName;
-                  setServerAssemblyRenameDraft(nextName);
-                },
-                projectSelected: Boolean(selectedServerProjectId),
-                selectedAssembly: selectedServerAssembly,
-                selectedAssemblyId: selectedServerAssemblyId,
-                selectedProjectName: selectedServerProject?.name
-              }}
-              identity={{
-                canCreateProject: canCreateServerProject,
-                onCreateProject: createServerProject,
-                onProjectNameDraftChange: (value) => {
-                  serverProjectNameDraftRef.current = value;
-                  setServerProjectNameDraft(value);
-                },
-                onRefreshProjects: () => refreshServerProjects(),
-                onSelectProject: (nextProjectId) => {
-                  setSelectedServerProjectId(nextProjectId);
-                  setSelectedServerAssemblyId("");
-                  setSelectedServerReportId("");
-                  serverAssemblyRenameDraftRef.current = "";
-                  serverReportRenameDraftRef.current = "";
-                  setServerAssemblyRenameDraft("");
-                  setServerReportRenameDraft("");
-                },
-                projectNameDraft: serverProjectNameDraft,
-                projects: serverProjects,
-                selectedProject: selectedServerProject,
-                selectedProjectId: selectedServerProjectId
-              }}
-              message={serverProjectMessage}
-              reports={{
-                assemblies: serverProjectAssemblies,
-                canRenameReport: canRenameServerReport,
-                onDeleteReport: deleteSelectedProjectReport,
-                onDuplicateReport: duplicateSelectedProjectReport,
-                onOpenReport: openSelectedProjectReport,
-                onRenameReport: renameSelectedProjectReport,
-                onReportRenameDraftChange: (value) => {
-                  serverReportRenameDraftRef.current = value;
-                  setServerReportRenameDraft(value);
-                },
-                onSelectReport: (nextReportId) => {
-                  const nextReport = serverProjectReports.find((report) => report.id === nextReportId);
-                  const nextName = nextReport?.name ?? "";
-                  setSelectedServerReportId(nextReportId);
-                  serverReportRenameDraftRef.current = nextName;
-                  setServerReportRenameDraft(nextName);
-                },
-                onSetReportArchived: setSelectedProjectReportArchived,
-                projectSelected: Boolean(selectedServerProjectId),
-                reportRenameDraft: serverReportRenameDraft,
-                reports: serverProjectReports,
-                selectedReport: selectedServerReport,
-                selectedReportId: selectedServerReportId
-              }}
-              status={serverProjectStatus}
-            />
+            {projectWorkspaceOpen ? (
+              <ProjectWorkspacePanel
+                busy={serverProjectBusy}
+                combinations={{
+                  assemblies: serverProjectAssemblies,
+                  assemblyDescriptionDraft: serverAssemblyDescriptionDraft,
+                  assemblyNameDraft: serverAssemblyNameDraft,
+                  assemblyRenameDescriptionDraft: serverAssemblyRenameDescriptionDraft,
+                  assemblyRenameDraft: serverAssemblyRenameDraft,
+                  canRenameAssembly: canRenameServerAssembly,
+                  onAssemblyDescriptionDraftChange: (value) => {
+                    serverAssemblyDescriptionDraftRef.current = value;
+                    setServerAssemblyDescriptionDraft(value);
+                  },
+                  onAssemblyNameDraftChange: (value) => {
+                    serverAssemblyNameDraftRef.current = value;
+                    setServerAssemblyNameDraft(value);
+                  },
+                  onAssemblyRenameDescriptionDraftChange: (value) => {
+                    serverAssemblyRenameDescriptionDraftRef.current = value;
+                    setServerAssemblyRenameDescriptionDraft(value);
+                  },
+                  onAssemblyRenameDraftChange: (value) => {
+                    serverAssemblyRenameDraftRef.current = value;
+                    setServerAssemblyRenameDraft(value);
+                  },
+                  onDeleteAssembly: deleteSelectedProjectAssembly,
+                  onDuplicateAssembly: duplicateSelectedProjectAssembly,
+                  onLoadAssembly: loadSelectedProjectAssembly,
+                  onRenameAssembly: renameSelectedProjectAssembly,
+                  onSaveAssembly: saveCurrentAssemblyToServerProject,
+                  onSelectAssembly: (nextAssemblyId) => {
+                    const nextAssembly = serverProjectAssemblies.find((assembly) => assembly.id === nextAssemblyId);
+                    const nextName = nextAssembly?.name ?? "";
+                    const nextDescription = nextAssembly?.description ?? "";
+                    setSelectedServerAssemblyId(nextAssemblyId);
+                    serverAssemblyRenameDraftRef.current = nextName;
+                    serverAssemblyRenameDescriptionDraftRef.current = nextDescription;
+                    setServerAssemblyRenameDraft(nextName);
+                    setServerAssemblyRenameDescriptionDraft(nextDescription);
+                  },
+                  projectSelected: Boolean(selectedServerProjectId),
+                  selectedAssembly: selectedServerAssembly,
+                  selectedAssemblyId: selectedServerAssemblyId,
+                  selectedProjectName: selectedServerProject?.name
+                }}
+                id="workbench-project-workspace"
+                identity={{
+                  canCreateProject: canCreateServerProject,
+                  onCreateProject: createServerProject,
+                  onProjectNameDraftChange: (value) => {
+                    serverProjectNameDraftRef.current = value;
+                    setServerProjectNameDraft(value);
+                  },
+                  onRefreshProjects: () => refreshServerProjects(),
+                  onSelectProject: (nextProjectId) => {
+                    setSelectedServerProjectId(nextProjectId);
+                    setSelectedServerAssemblyId("");
+                    setSelectedServerReportId("");
+                    serverAssemblyRenameDraftRef.current = "";
+                    serverAssemblyRenameDescriptionDraftRef.current = "";
+                    serverReportRenameDraftRef.current = "";
+                    serverReportDescriptionDraftRef.current = "";
+                    setServerAssemblyRenameDraft("");
+                    setServerAssemblyRenameDescriptionDraft("");
+                    setServerReportRenameDraft("");
+                    setServerReportDescriptionDraft("");
+                  },
+                  projectNameDraft: serverProjectNameDraft,
+                  projects: serverProjects,
+                  selectedProject: selectedServerProject,
+                  selectedProjectId: selectedServerProjectId
+                }}
+                message={serverProjectMessage}
+                onClose={() => setProjectWorkspaceOpen(false)}
+                reports={{
+                  assemblies: serverProjectAssemblies,
+                  canRenameReport: canRenameServerReport,
+                  onDeleteReport: deleteSelectedProjectReport,
+                  onDuplicateReport: duplicateSelectedProjectReport,
+                  onOpenReport: openSelectedProjectReport,
+                  onRenameReport: renameSelectedProjectReport,
+                  onReportRenameDraftChange: (value) => {
+                    serverReportRenameDraftRef.current = value;
+                    setServerReportRenameDraft(value);
+                  },
+                  onReportDescriptionDraftChange: (value) => {
+                    serverReportDescriptionDraftRef.current = value;
+                    setServerReportDescriptionDraft(value);
+                  },
+                  onSelectReport: (nextReportId) => {
+                    const nextReport = serverProjectReports.find((report) => report.id === nextReportId);
+                    const nextName = nextReport?.name ?? "";
+                    const nextDescription = nextReport?.description ?? "";
+                    setSelectedServerReportId(nextReportId);
+                    serverReportRenameDraftRef.current = nextName;
+                    serverReportDescriptionDraftRef.current = nextDescription;
+                    setServerReportRenameDraft(nextName);
+                    setServerReportDescriptionDraft(nextDescription);
+                  },
+                  onSetReportArchived: setSelectedProjectReportArchived,
+                  projectSelected: Boolean(selectedServerProjectId),
+                  reportRenameDraft: serverReportRenameDraft,
+                  reportDescriptionDraft: serverReportDescriptionDraft,
+                  reports: serverProjectReports,
+                  selectedReport: selectedServerReport,
+                  selectedReportId: selectedServerReportId
+                }}
+                status={serverProjectStatus}
+              />
+            ) : null}
 
             <section className="calc-section calc-setup-section">
               <div className="calc-section-head">

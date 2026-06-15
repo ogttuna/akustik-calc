@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus, RotateCcw } from "lucide-react";
+import { ChevronDown, Plus, RotateCcw } from "lucide-react";
 
 import {
   PROJECT_WORKSPACE_NAME_MAX_LENGTH,
@@ -30,6 +30,7 @@ export function ProjectWorkspaceIdentity(props: ProjectWorkspaceIdentityProps) {
   const createButtonClassName = props.selectedProject
     ? "focus-ring ui-button ui-button-ghost"
     : "focus-ring ui-button ui-button-primary";
+  const detailSummaryLabel = props.selectedProject ? "Project details" : "Local draft details";
 
   return (
     <div className="calc-project-identity" data-state={props.selectedProject ? "active" : "local"}>
@@ -39,27 +40,36 @@ export function ProjectWorkspaceIdentity(props: ProjectWorkspaceIdentityProps) {
           <strong className="calc-project-identity-title" title={props.selectedProject?.name ?? "No project selected"}>
             {props.selectedProject?.name ?? "No project selected"}
           </strong>
-          <span className="calc-project-identity-detail">
-            {props.selectedProject?.ownerLabel ?? "Workbench changes are not attached to a saved project."}
-          </span>
-        </div>
-        <div className="calc-project-identity-stats" aria-label={props.selectedProject ? "Active project summary" : "Project workspace summary"}>
-          {props.selectedProject ? (
-            <>
-              <span className="calc-project-identity-stat">
-                {formatProjectWorkspaceCount(props.selectedProject.assemblyCount, "combination")}
-              </span>
-              <span className="calc-project-identity-stat">{formatProjectWorkspaceCount(props.selectedProject.reportCount, "report")}</span>
-              <span className="calc-project-identity-stat">{formatProjectWorkspaceUpdatedDateLabel(props.selectedProject.updatedAtIso)}</span>
-            </>
-          ) : (
-            <>
-              <span className="calc-project-identity-stat">Local only</span>
-              <span className="calc-project-identity-stat">{formatProjectWorkspaceCount(props.projects.length, "saved project")}</span>
-            </>
-          )}
         </div>
       </div>
+
+      <details className="calc-project-identity-details">
+        <summary>
+          <span>{detailSummaryLabel}</span>
+          <ChevronDown aria-hidden="true" className="h-4 w-4" />
+        </summary>
+        <div className="calc-project-identity-detail-grid">
+          <p className="calc-project-identity-detail">
+            {props.selectedProject?.ownerLabel ?? "Workbench changes are not attached to a saved project."}
+          </p>
+          <div className="calc-project-identity-stats" aria-label={props.selectedProject ? "Active project summary" : "Project workspace summary"}>
+            {props.selectedProject ? (
+              <>
+                <span className="calc-project-identity-stat">
+                  {formatProjectWorkspaceCount(props.selectedProject.assemblyCount, "combination")}
+                </span>
+                <span className="calc-project-identity-stat">{formatProjectWorkspaceCount(props.selectedProject.reportCount, "report")}</span>
+                <span className="calc-project-identity-stat">{formatProjectWorkspaceUpdatedDateLabel(props.selectedProject.updatedAtIso)}</span>
+              </>
+            ) : (
+              <>
+                <span className="calc-project-identity-stat">Local only</span>
+                <span className="calc-project-identity-stat">{formatProjectWorkspaceCount(props.projects.length, "saved project")}</span>
+              </>
+            )}
+          </div>
+        </div>
+      </details>
 
       <div className="calc-project-snapshot-controls calc-project-identity-controls">
         <input

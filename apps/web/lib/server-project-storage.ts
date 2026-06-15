@@ -416,6 +416,7 @@ export class FileServerProjectRepository {
       assemblyId: sourceAssembly.id,
       createdAtIso: nowIso,
       currentRevisionId: revisionId,
+      description: input.description,
       displayCode: formatDisplayCode("RPT", project.reports.length + 1),
       id: reportId,
       name: input.name,
@@ -463,6 +464,7 @@ export class FileServerProjectRepository {
     const nowIso = this.now().toISOString();
     const updatedReport: ServerProjectReportRecord = {
       ...report,
+      description: input.description === undefined ? report.description : input.description,
       name: input.name ?? report.name,
       status: input.status ?? report.status,
       updatedAtIso: nowIso

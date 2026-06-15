@@ -10,12 +10,16 @@ import {
 } from "./project-workspace-types";
 
 export type ProjectWorkspaceCombinationsProps = {
+  assemblyDescriptionDraft: string;
   assemblyNameDraft: string;
+  assemblyRenameDescriptionDraft: string;
   assemblyRenameDraft: string;
   assemblies: readonly ProjectWorkspaceAssemblySummary[];
   busy: boolean;
   canRenameAssembly: boolean;
+  onAssemblyDescriptionDraftChange: (value: string) => void;
   onAssemblyNameDraftChange: (value: string) => void;
+  onAssemblyRenameDescriptionDraftChange: (value: string) => void;
   onAssemblyRenameDraftChange: (value: string) => void;
   onDeleteAssembly: () => Promise<void> | void;
   onDuplicateAssembly: () => Promise<void> | void;
@@ -49,11 +53,20 @@ export function ProjectWorkspaceCombinations(props: ProjectWorkspaceCombinations
         <input
           aria-label="Saved combination name"
           className="focus-ring ui-field calc-project-snapshot-select"
-          disabled={!props.projectSelected}
+          disabled={!props.projectSelected || props.busy}
           maxLength={PROJECT_WORKSPACE_NAME_MAX_LENGTH}
           onChange={(event) => props.onAssemblyNameDraftChange(event.target.value)}
           placeholder={props.selectedProjectName ? `${props.selectedProjectName} combination name` : "Select a project first"}
           value={props.assemblyNameDraft}
+        />
+        <input
+          aria-label="Saved combination description"
+          className="focus-ring ui-field calc-project-snapshot-select"
+          disabled={!props.projectSelected || props.busy}
+          maxLength={320}
+          onChange={(event) => props.onAssemblyDescriptionDraftChange(event.target.value)}
+          placeholder="Optional combination description"
+          value={props.assemblyDescriptionDraft}
         />
         <button
           className="focus-ring ui-button ui-button-primary"
@@ -86,6 +99,7 @@ export function ProjectWorkspaceCombinations(props: ProjectWorkspaceCombinations
                       {getProjectWorkspaceAssemblyKindLabel(assembly.kind)} - v{assembly.version} -{" "}
                       {formatProjectWorkspaceUpdatedDateLabel(assembly.updatedAtIso)}
                     </span>
+                    {assembly.description ? <small>{assembly.description}</small> : null}
                   </span>
                   <span className="calc-project-row-result">{getProjectWorkspaceAssemblyResultLabel(assembly)}</span>
                 </button>
@@ -99,6 +113,15 @@ export function ProjectWorkspaceCombinations(props: ProjectWorkspaceCombinations
                       onChange={(event) => props.onAssemblyRenameDraftChange(event.target.value)}
                       placeholder="Selected combination name"
                       value={props.assemblyRenameDraft}
+                    />
+                    <input
+                      aria-label="Selected combination description"
+                      className="focus-ring ui-field calc-project-snapshot-select"
+                      disabled={props.busy}
+                      maxLength={320}
+                      onChange={(event) => props.onAssemblyRenameDescriptionDraftChange(event.target.value)}
+                      placeholder="Selected combination description"
+                      value={props.assemblyRenameDescriptionDraft}
                     />
                     <div className="calc-project-row-actions">
                       <button

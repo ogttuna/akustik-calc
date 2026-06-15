@@ -188,6 +188,17 @@ async function selectSavedReportById(page: Page, reportId: string) {
   return row;
 }
 
+async function openProjectWorkspace(page: Page) {
+  const workspace = page.getByRole("region", { name: "Project workspace" });
+
+  if ((await workspace.count()) === 0) {
+    await page.getByRole("button", { name: "Show project workspace" }).click();
+  }
+
+  await expect(workspace).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
+  return workspace;
+}
+
 test.beforeEach(async ({ page }) => {
   await page.context().clearCookies();
   await page.goto("/login");
@@ -223,11 +234,10 @@ test("workbench v2 material editor save/load keeps custom material and appearanc
   await expect(editor.getByLabel("Fill")).toHaveValue(CUSTOM_VISUAL_STYLE.fill);
   await expectLayerVisualStyle(page);
 
+  await openProjectWorkspace(page);
   await page.getByLabel("New project name", { exact: true }).fill(projectName);
   await page.getByRole("button", { name: "Create project" }).click();
-  await expect(page.getByLabel("Project", { exact: true })).toContainText(`${projectName} - 0 combinations, 0 reports`, {
-    timeout: E2E_OPERATION_TIMEOUT
-  });
+  await expect(page.getByLabel("Project", { exact: true })).toContainText(projectName, { timeout: E2E_OPERATION_TIMEOUT });
   await page.getByLabel("Saved combination name", { exact: true }).fill("Browser QA wall");
   await page.getByRole("button", { name: "Save combination" }).click();
   await expect(savedCombinationRow(page, "Browser QA wall")).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
@@ -240,10 +250,9 @@ test("workbench v2 material editor save/load keeps custom material and appearanc
   await expect(page.getByRole("heading", { name: "Acoustic workbench" })).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
   await expect(page.getByRole("button", { name: /Rock Wool 45 kg\/m3 \/ insulation/u })).toBeVisible();
 
+  await openProjectWorkspace(page);
   const serverProjectSelect = page.getByLabel("Project", { exact: true });
-  await expect(serverProjectSelect).toContainText(`${projectName} - 1 combination, 0 reports`, {
-    timeout: E2E_OPERATION_TIMEOUT
-  });
+  await expect(serverProjectSelect).toContainText(projectName, { timeout: E2E_OPERATION_TIMEOUT });
   const serverProjectOption = serverProjectSelect.locator("option", { hasText: projectName }).first();
   const serverProjectId = await serverProjectOption.getAttribute("value");
   expect(serverProjectId).toBeTruthy();
@@ -298,11 +307,10 @@ test("workbench v2 saves report drafts and revisions under the selected project"
   await expect(page.getByRole("heading", { name: "Acoustic workbench" })).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
   await expect(page.getByRole("button", { name: "Open report" })).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
 
+  await openProjectWorkspace(page);
   await page.getByLabel("New project name", { exact: true }).fill(projectName);
   await page.getByRole("button", { name: "Create project" }).click();
-  await expect(page.getByLabel("Project", { exact: true })).toContainText(`${projectName} - 0 combinations, 0 reports`, {
-    timeout: E2E_OPERATION_TIMEOUT
-  });
+  await expect(page.getByLabel("Project", { exact: true })).toContainText(projectName, { timeout: E2E_OPERATION_TIMEOUT });
 
   const serverProjectId = await page.getByLabel("Project", { exact: true }).inputValue();
   expect(serverProjectId).toBeTruthy();
@@ -325,6 +333,12 @@ test("workbench v2 saves report drafts and revisions under the selected project"
   const saveReportToProjectButton = page.getByRole("button", { name: "Save to project" });
 
   await saveReportToProjectButton.click();
+  const saveTargetPanel = page.getByRole("region", { name: "Save report to project" });
+  await expect(saveTargetPanel).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
+  await saveTargetPanel.getByLabel("Report name").fill("Report source wall draft");
+  await saveTargetPanel.getByLabel("Report description").fill("Report saved from the proposal editor.");
+  await expect(saveTargetPanel.getByText("Source combination already saved", { exact: true })).toBeVisible();
+  await saveTargetPanel.getByRole("button", { name: "Save report" }).click();
   const saveRevisionButton = page.getByRole("button", { name: "Save revision" });
   await expect(saveRevisionButton).toBeVisible();
   await expect(page.getByText("Project report linked", { exact: true })).toBeVisible();
@@ -336,7 +350,9 @@ test("workbench v2 saves report drafts and revisions under the selected project"
   const reportsBody = (await reportsResponse.json()) as {
     reports?: Array<{
       assemblyId?: string;
+      description?: string;
       id?: string;
+      name?: string;
       revisionCount?: number;
     }>;
   };
@@ -344,11 +360,15 @@ test("workbench v2 saves report drafts and revisions under the selected project"
   expect(reportsBody.reports).toEqual([
     expect.objectContaining({
       assemblyId: serverAssemblyId,
+      description: "Report saved from the proposal editor.",
+      name: "Report source wall draft",
       revisionCount: 1
     })
   ]);
   expect(reportId).toBeTruthy();
 
+  const originalSubject = await page.getByLabel("Subject", { exact: true }).inputValue();
+  expect(originalSubject.length).toBeGreaterThan(0);
   await page.getByLabel("Subject", { exact: true }).fill(`${projectName} revised report`);
   await saveRevisionButton.click();
   await expect(page.getByText("Project report revision saved")).toBeVisible();
@@ -368,11 +388,37 @@ test("workbench v2 saves report drafts and revisions under the selected project"
   expect(reportDetailBody.report?.revisions).toHaveLength(2);
   expect(reportDetailBody.report?.reportDocument?.proposalSubject).toBe(`${projectName} revised report`);
 
+  await page.getByRole("button", { name: "Revision history" }).click();
+  const revisionHistory = page.getByRole("region", { name: "Report revision history" });
+  await expect(revisionHistory).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
+  await revisionHistory.getByRole("button", { name: /Preview REV-0001/u }).click();
+  await expect(revisionHistory.getByLabel("Read-only revision preview")).toContainText(originalSubject);
+  await expect(page.getByLabel("Subject", { exact: true })).toHaveValue(`${projectName} revised report`);
+  await revisionHistory.getByRole("button", { name: "Restore as new revision" }).click();
+  await expect(page.getByText("Report revision restored")).toBeVisible();
+  await expect(page.getByLabel("Subject", { exact: true })).toHaveValue(originalSubject, { timeout: E2E_OPERATION_TIMEOUT });
+  await expect(revisionHistory.getByRole("button", { name: /Preview REV-0003/u })).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
+
+  const restoredReportDetailResponse = await page.request.get(`/api/projects/${serverProjectId}/reports/${reportId}`);
+  expect(restoredReportDetailResponse.ok()).toBeTruthy();
+  const restoredReportDetailBody = (await restoredReportDetailResponse.json()) as {
+    report?: {
+      reportDocument?: {
+        proposalSubject?: string;
+      };
+      revisions?: unknown[];
+    };
+  };
+
+  expect(restoredReportDetailBody.report?.revisions).toHaveLength(3);
+  expect(restoredReportDetailBody.report?.reportDocument?.proposalSubject).toBe(originalSubject);
+
   await page.getByRole("link", { name: "Calculator" }).click();
   await expect(page.getByRole("heading", { name: "Acoustic workbench" })).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
 
+  await openProjectWorkspace(page);
   const projectSelect = page.getByLabel("Project", { exact: true });
-  await expect(projectSelect).toContainText(`${projectName} - 1 combination, 1 report`, { timeout: E2E_OPERATION_TIMEOUT });
+  await expect(projectSelect).toContainText(projectName, { timeout: E2E_OPERATION_TIMEOUT });
   const projectOption = projectSelect.locator("option", { hasText: projectName }).first();
   const reopenedProjectId = await projectOption.getAttribute("value");
   expect(reopenedProjectId).toBe(serverProjectId);
@@ -396,7 +442,7 @@ test("workbench v2 saves report drafts and revisions under the selected project"
   await page.getByRole("button", { name: "Delete combination" }).click();
   await expect(duplicateAssemblyRow).toBeHidden({ timeout: E2E_OPERATION_TIMEOUT });
 
-  const initialSavedReportRow = savedReportRow(page, "Wall acoustic analysis report");
+  const initialSavedReportRow = savedReportRow(page, "Report source wall draft");
   await expect(initialSavedReportRow).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
   const savedReportId = await initialSavedReportRow.getAttribute("data-report-id");
   expect(savedReportId).toBe(reportId);
@@ -421,14 +467,89 @@ test("workbench v2 saves report drafts and revisions under the selected project"
 
   await selectSavedReportById(page, reportId!);
   await page.getByRole("button", { name: "Archive report" }).click();
-  await expect(savedReportRowById(page, reportId!)).toContainText("Archived - 2 revisions", { timeout: E2E_OPERATION_TIMEOUT });
+  await expect(savedReportRowById(page, reportId!)).toContainText("Archived - 3 revisions", { timeout: E2E_OPERATION_TIMEOUT });
   await page.getByRole("button", { name: "Restore report" }).click();
-  await expect(savedReportRowById(page, reportId!)).toContainText("Draft - 2 revisions", { timeout: E2E_OPERATION_TIMEOUT });
+  await expect(savedReportRowById(page, reportId!)).toContainText("Draft - 3 revisions", { timeout: E2E_OPERATION_TIMEOUT });
 
   await page.getByRole("button", { name: "Open saved report" }).click();
   await expect(page).toHaveURL(/\/workbench\/proposal/u);
   await expect(page.getByText("Project report linked", { exact: true })).toBeVisible();
-  await expect(page.getByLabel("Subject", { exact: true })).toHaveValue(`${projectName} revised report`);
+  await expect(page.getByLabel("Subject", { exact: true })).toHaveValue(originalSubject);
+});
+
+test("workbench v2 proposal saves a local report to a selected project", async ({ page }) => {
+  test.setTimeout(60_000);
+
+  const projectName = `Workbench v2 local report target ${Date.now()}`;
+  const projectResponse = await page.request.post("/api/projects", {
+    data: {
+      name: projectName
+    }
+  });
+  expect(projectResponse.ok()).toBeTruthy();
+  const projectBody = (await projectResponse.json()) as {
+    project?: {
+      id?: string;
+    };
+  };
+  const projectId = projectBody.project?.id;
+  expect(projectId).toBeTruthy();
+
+  await page.goto("/workbench-v2");
+  await expect(page.getByRole("heading", { name: "Acoustic workbench" })).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
+  await page.getByRole("button", { name: "Open report" }).click();
+  await expect(page).toHaveURL(/\/workbench\/proposal/u);
+
+  await page.getByRole("button", { name: "Save to project" }).click();
+  const saveTargetPanel = page.getByRole("region", { name: "Save report to project" });
+  await expect(saveTargetPanel).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
+  await expect(saveTargetPanel.getByLabel("Project")).toContainText(projectName, { timeout: E2E_OPERATION_TIMEOUT });
+  await saveTargetPanel.getByLabel("Project").selectOption(projectId!);
+  await saveTargetPanel.getByLabel("Layer combination name").fill("Local draft wall option");
+  await saveTargetPanel.getByLabel("Layer combination description").fill("Layer stack named from proposal save target.");
+  await saveTargetPanel.getByLabel("Report name").fill("Local draft report");
+  await saveTargetPanel.getByLabel("Report description").fill("Report saved into an existing project from local mode.");
+  await saveTargetPanel.getByRole("button", { name: "Save report" }).click();
+
+  await expect(page.getByRole("button", { name: "Save revision" })).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
+  await expect(page.getByText("Project report linked", { exact: true })).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
+
+  const assembliesResponse = await page.request.get(`/api/projects/${projectId}/assemblies`);
+  expect(assembliesResponse.ok()).toBeTruthy();
+  const assembliesBody = (await assembliesResponse.json()) as {
+    assemblies?: Array<{
+      description?: string;
+      id?: string;
+      name?: string;
+    }>;
+  };
+  const assemblyId = assembliesBody.assemblies?.[0]?.id;
+  expect(assembliesBody.assemblies).toEqual([
+    expect.objectContaining({
+      description: "Layer stack named from proposal save target.",
+      name: "Local draft wall option"
+    })
+  ]);
+  expect(assemblyId).toBeTruthy();
+
+  const reportsResponse = await page.request.get(`/api/projects/${projectId}/reports`);
+  expect(reportsResponse.ok()).toBeTruthy();
+  const reportsBody = (await reportsResponse.json()) as {
+    reports?: Array<{
+      assemblyId?: string;
+      description?: string;
+      name?: string;
+      revisionCount?: number;
+    }>;
+  };
+  expect(reportsBody.reports).toEqual([
+    expect.objectContaining({
+      assemblyId,
+      description: "Report saved into an existing project from local mode.",
+      name: "Local draft report",
+      revisionCount: 1
+    })
+  ]);
 });
 
 test("workbench v2 material editor keeps responsive editing layout usable", async ({ page }) => {
@@ -460,8 +581,9 @@ test("workbench v2 project workspace and report editor controls stay responsive"
   await page.goto("/workbench-v2");
   await expect(page.getByRole("heading", { name: "Acoustic workbench" })).toBeVisible();
 
-  const projectWorkspace = page.getByRole("region", { name: "Project workspace" });
-  await expect(projectWorkspace).toBeVisible();
+  await expect(page.getByRole("region", { name: "Project workspace" })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Open report" })).toBeVisible();
+  const projectWorkspace = await openProjectWorkspace(page);
   await expectRegionHasNoHorizontalOverflow(projectWorkspace);
 
   const projectName = `Responsive workspace ${Date.now()}`;
@@ -487,9 +609,19 @@ test("workbench v2 project workspace and report editor controls stay responsive"
   await page.setViewportSize({ height: 900, width: 390 });
 
   await page.getByRole("button", { name: "Save to project" }).click();
+  const saveTargetPanel = page.getByRole("region", { name: "Save report to project" });
+  await expect(saveTargetPanel).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
+  await expectRegionHasNoHorizontalOverflow(saveTargetPanel);
+  await saveTargetPanel.getByRole("button", { name: "Save report" }).click();
   await expect(page.getByText("Project report linked", { exact: true })).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
+  await page.getByRole("button", { name: "Revision history" }).click();
+  const revisionHistory = page.getByRole("region", { name: "Report revision history" });
+  await expect(revisionHistory).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
+  await expectRegionHasNoHorizontalOverflow(revisionHistory);
+  await revisionHistory.getByRole("button", { name: "Close" }).click();
   await page.getByRole("link", { name: "Calculator" }).click();
   await expect(page.getByRole("heading", { name: "Acoustic workbench" })).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
+  await openProjectWorkspace(page);
   const reopenedProjectSelect = page.getByLabel("Project", { exact: true });
   await expect(reopenedProjectSelect).toContainText(projectName, { timeout: E2E_OPERATION_TIMEOUT });
   await reopenedProjectSelect.selectOption(serverProjectId);
@@ -506,6 +638,7 @@ test("workbench v2 project workspace guards rapid duplicate submit actions", asy
   await page.goto("/workbench-v2");
   await expect(page.getByRole("heading", { name: "Acoustic workbench" })).toBeVisible();
 
+  await openProjectWorkspace(page);
   const projectName = `Rapid guarded ${Date.now()}`;
   await page.getByLabel("New project name", { exact: true }).fill(projectName);
   const createProjectButton = page.getByRole("button", { name: "Create project" });
@@ -559,9 +692,14 @@ test("workbench v2 project workspace guards rapid duplicate submit actions", asy
   await expect(page.getByText("Project report ready", { exact: true })).toBeVisible();
   const saveReportButton = page.getByRole("button", { name: "Save to project" });
   await expect(saveReportButton).toBeEnabled({ timeout: 30_000 });
-  await saveReportButton.evaluate((button) => {
+  await saveReportButton.click();
+  const saveTargetPanel = page.getByRole("region", { name: "Save report to project" });
+  await expect(saveTargetPanel).toBeVisible({ timeout: 30_000 });
+  const saveProjectReportButton = saveTargetPanel.getByRole("button", { name: "Save report" });
+  await expect(saveProjectReportButton).toBeEnabled({ timeout: 30_000 });
+  await saveProjectReportButton.evaluate((button) => {
     if (!(button instanceof HTMLButtonElement)) {
-      throw new Error("Save to project button was not found.");
+      throw new Error("Save report button was not found.");
     }
 
     button.click();

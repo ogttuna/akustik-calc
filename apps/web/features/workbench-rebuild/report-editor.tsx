@@ -6,7 +6,9 @@ import {
   Check,
   ChevronDown,
   Download,
+  Eye,
   FileText,
+  History,
   Loader2,
   Printer,
   RefreshCcw,
@@ -43,7 +45,6 @@ import {
   resetSimpleWorkbenchProposalPreviewCustomizations,
   storeSimpleWorkbenchProposalPreview,
   storeSimpleWorkbenchProposalPreviewCustomizations,
-  updateSimpleWorkbenchProposalPreviewProjectContext,
   type LoadedSimpleWorkbenchProposalPreview,
   type SimpleWorkbenchProposalPreviewProjectContext
 } from "../workbench/simple-workbench-proposal-preview-storage";
@@ -77,6 +78,28 @@ type ProjectReportSavePayload = {
   };
 };
 
+type ProjectAssemblySavePayload = {
+  assembly?: {
+    id?: unknown;
+    updatedAtIso?: unknown;
+  };
+};
+
+type ProjectSaveProjectSummary = {
+  assemblyCount: number;
+  id: string;
+  name: string;
+  reportCount: number;
+};
+
+type ProjectSaveTarget = {
+  assemblyDescription?: string;
+  assemblyName: string;
+  projectId: string;
+  reportDescription?: string;
+  reportName: string;
+};
+
 type LoadedProjectReportPayload = {
   document: SimpleWorkbenchProposalDocument;
   projectContext: SimpleWorkbenchProposalPreviewProjectContext;
@@ -94,6 +117,7 @@ type AssistantProjectSummary = {
 type AssistantProjectReportSummary = {
   assemblyId: string;
   currentRevisionId: string;
+  description?: string;
   displayCode?: string;
   id: string;
   name: string;
@@ -112,6 +136,11 @@ type AssistantProjectRevisionSummary = {
   displayCode?: string;
   id: string;
   source: "assistant" | "generated" | "import" | "manual";
+};
+
+type AssistantProjectRevisionPreview = {
+  document: SimpleWorkbenchProposalDocument;
+  revision: AssistantProjectRevisionSummary;
 };
 
 type AssistantProjectContextSummary = {
@@ -144,6 +173,7 @@ const DIRECT_TEXT_FIELDS = [
 ] as const satisfies readonly { key: keyof SimpleWorkbenchProposalDocument; label: string }[];
 
 const SERVER_PROJECT_REPORT_NAME_MAX_LENGTH = 160;
+const SERVER_PROJECT_CHILD_DESCRIPTION_MAX_LENGTH = 320;
 
 const SENDER_FIELDS = [
   { key: "consultantCompany", label: "Company" },
@@ -160,6 +190,31 @@ function formatSavedAtLabel(savedAtIso: string): string {
     dateStyle: "medium",
     timeStyle: "short"
   }).format(new Date(savedAtIso));
+}
+
+function formatReportDateTimeLabel(value: string): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return "Date unavailable";
+  }
+
+  return new Intl.DateTimeFormat("en-GB", {
+    dateStyle: "medium",
+    timeStyle: "short"
+  }).format(date);
+}
+
+function formatRevisionSourceLabel(source: AssistantProjectRevisionSummary["source"]): string {
+  switch (source) {
+    case "assistant":
+      return "Assistant";
+    case "generated":
+      return "Generated";
+    case "import":
+      return "Imported";
+    case "manual":
+      return "Manual";
+  }
 }
 
 function getDocumentSignature(document: SimpleWorkbenchProposalDocument | null): string {
@@ -244,6 +299,50 @@ function parseProjectReportSavePayload(payload: unknown): { displayCode?: string
   };
 }
 
+function parseProjectAssemblySavePayload(payload: unknown): { id: string; updatedAtIso?: string } | null {
+  if (!payload || typeof payload !== "object") {
+    return null;
+  }
+
+  const assembly = (payload as ProjectAssemblySavePayload).assembly;
+  if (!assembly || typeof assembly !== "object" || typeof assembly.id !== "string") {
+    return null;
+  }
+
+  return {
+    id: assembly.id,
+    updatedAtIso: typeof assembly.updatedAtIso === "string" ? assembly.updatedAtIso : undefined
+  };
+}
+
+function parseProjectSaveProjectSummaries(payload: unknown): ProjectSaveProjectSummary[] {
+  if (!payload || typeof payload !== "object" || !Array.isArray((payload as { projects?: unknown }).projects)) {
+    return [];
+  }
+
+  return (payload as { projects: unknown[] }).projects.flatMap((entry): ProjectSaveProjectSummary[] => {
+    if (
+      !entry ||
+      typeof entry !== "object" ||
+      typeof (entry as { id?: unknown }).id !== "string" ||
+      typeof (entry as { name?: unknown }).name !== "string" ||
+      typeof (entry as { assemblyCount?: unknown }).assemblyCount !== "number" ||
+      typeof (entry as { reportCount?: unknown }).reportCount !== "number"
+    ) {
+      return [];
+    }
+
+    return [
+      {
+        assemblyCount: (entry as { assemblyCount: number }).assemblyCount,
+        id: (entry as { id: string }).id,
+        name: (entry as { name: string }).name,
+        reportCount: (entry as { reportCount: number }).reportCount
+      }
+    ];
+  });
+}
+
 async function readProjectReportSavePayload(response: Response, fallback: string): Promise<unknown> {
   let payload: unknown = null;
 
@@ -258,6 +357,23 @@ async function readProjectReportSavePayload(response: Response, fallback: string
   }
 
   return payload;
+}
+
+function trimOptionalProjectText(value: string): string | undefined {
+  const trimmed = value.trim();
+  return trimmed.length ? trimmed : undefined;
+}
+
+function truncateProjectText(value: string, maxLength: number): string {
+  const trimmed = value.trim();
+  if (trimmed.length <= maxLength) {
+    return trimmed;
+  }
+
+  const truncated = trimmed.slice(0, maxLength);
+  const lastCharCode = truncated.charCodeAt(truncated.length - 1);
+
+  return lastCharCode >= 0xd800 && lastCharCode <= 0xdbff ? truncated.slice(0, -1) : truncated;
 }
 
 function hasProjectReportCreateContext(
@@ -279,6 +395,37 @@ function hasProjectReportCreateContext(
   );
 }
 
+function hasProjectReportSourceContext(
+  context: SimpleWorkbenchProposalPreviewProjectContext | undefined
+): context is SimpleWorkbenchProposalPreviewProjectContext & {
+  sourceAssemblySnapshot: unknown;
+  sourceMaterialSnapshot: {
+    customMaterials: readonly unknown[];
+    materialVisualOverrides: readonly unknown[];
+  };
+} {
+  return Boolean(context?.sourceAssemblySnapshot !== undefined && context.sourceMaterialSnapshot);
+}
+
+function hasProjectReportHistoryContext(
+  context: SimpleWorkbenchProposalPreviewProjectContext | undefined
+): context is SimpleWorkbenchProposalPreviewProjectContext & {
+  serverProjectId: string;
+  serverProjectReportId: string;
+} {
+  return Boolean(context?.serverProjectId && context.serverProjectReportId);
+}
+
+function hasProjectReportRestoreContext(
+  context: SimpleWorkbenchProposalPreviewProjectContext | undefined
+): context is SimpleWorkbenchProposalPreviewProjectContext & {
+  serverProjectId: string;
+  serverProjectReportId: string;
+  serverProjectReportUpdatedAtIso: string;
+} {
+  return Boolean(context?.serverProjectId && context.serverProjectReportId && context.serverProjectReportUpdatedAtIso);
+}
+
 function formatProjectReportLibraryName(document: SimpleWorkbenchProposalDocument): string {
   const sourceName = (document.proposalSubject || `${document.projectName} report`).trim() || "Project report";
   if (sourceName.length <= SERVER_PROJECT_REPORT_NAME_MAX_LENGTH) {
@@ -289,6 +436,74 @@ function formatProjectReportLibraryName(document: SimpleWorkbenchProposalDocumen
   const lastCharCode = truncatedName.charCodeAt(truncatedName.length - 1);
 
   return lastCharCode >= 0xd800 && lastCharCode <= 0xdbff ? truncatedName.slice(0, -1) : truncatedName;
+}
+
+function formatProjectAssemblyLibraryName(
+  document: SimpleWorkbenchProposalDocument,
+  context: SimpleWorkbenchProposalPreviewProjectContext | undefined
+): string {
+  const snapshotName =
+    context?.sourceAssemblySnapshot && typeof context.sourceAssemblySnapshot === "object"
+      ? (context.sourceAssemblySnapshot as { name?: unknown }).name
+      : undefined;
+  const sourceName =
+    (typeof snapshotName === "string" && snapshotName.trim()) ||
+    document.assemblyHeadline ||
+    `${document.studyModeLabel || "Layer"} combination`;
+
+  return truncateProjectText(sourceName, SERVER_PROJECT_REPORT_NAME_MAX_LENGTH) || "Saved layer combination";
+}
+
+function getProjectAssemblyKind(
+  document: SimpleWorkbenchProposalDocument,
+  context: SimpleWorkbenchProposalPreviewProjectContext | undefined
+): "floor" | "wall" {
+  const snapshotMode =
+    context?.sourceAssemblySnapshot && typeof context.sourceAssemblySnapshot === "object"
+      ? (context.sourceAssemblySnapshot as { mode?: unknown }).mode
+      : undefined;
+
+  if (snapshotMode === "floor" || snapshotMode === "wall") {
+    return snapshotMode;
+  }
+
+  return document.studyModeLabel.toLowerCase().includes("floor") ? "floor" : "wall";
+}
+
+function getProjectAssemblyCalculationSummary(context: SimpleWorkbenchProposalPreviewProjectContext | undefined) {
+  const sourceCalculationOutput = context?.sourceCalculationOutput;
+  if (!sourceCalculationOutput || typeof sourceCalculationOutput !== "object") {
+    return undefined;
+  }
+
+  const calculationSummary = (sourceCalculationOutput as { calculationSummary?: unknown }).calculationSummary;
+  if (
+    !calculationSummary ||
+    typeof calculationSummary !== "object" ||
+    !Array.isArray((calculationSummary as { selectedOutputs?: unknown }).selectedOutputs)
+  ) {
+    return undefined;
+  }
+
+  const status = (calculationSummary as { status?: unknown }).status;
+  if (status !== "ready" && status !== "needs_input" && status !== "unsupported" && status !== "error") {
+    return undefined;
+  }
+
+  return {
+    primaryOutput:
+      typeof (calculationSummary as { primaryOutput?: unknown }).primaryOutput === "string"
+        ? (calculationSummary as { primaryOutput: string }).primaryOutput
+        : undefined,
+    primaryValueLabel:
+      typeof (calculationSummary as { primaryValueLabel?: unknown }).primaryValueLabel === "string"
+        ? (calculationSummary as { primaryValueLabel: string }).primaryValueLabel
+        : undefined,
+    selectedOutputs: (calculationSummary as { selectedOutputs: unknown[] }).selectedOutputs.filter(
+      (entry): entry is string => typeof entry === "string"
+    ),
+    status
+  };
 }
 
 function parseLoadedProjectReportPayload(payload: unknown, fallbackProjectId: string): LoadedProjectReportPayload | null {
@@ -442,6 +657,7 @@ function parseAssistantProjectReportSummaries(payload: unknown): AssistantProjec
       {
         assemblyId: entry.assemblyId,
         currentRevisionId: entry.currentRevisionId,
+        description: typeof entry.description === "string" ? entry.description : undefined,
         displayCode: typeof entry.displayCode === "string" ? entry.displayCode : undefined,
         id: entry.id,
         name: entry.name,
@@ -453,42 +669,90 @@ function parseAssistantProjectReportSummaries(payload: unknown): AssistantProjec
   });
 }
 
+function parseAssistantProjectReportSummaryFromProjectRead(payload: unknown): AssistantProjectReportSummary | null {
+  const result = getProjectReadResult(payload);
+  const report = isRecord(result) ? result.report : undefined;
+  if (
+    !isRecord(report) ||
+    typeof report.assemblyId !== "string" ||
+    typeof report.currentRevisionId !== "string" ||
+    typeof report.id !== "string" ||
+    typeof report.name !== "string" ||
+    typeof report.revisionCount !== "number" ||
+    typeof report.status !== "string" ||
+    !["archived", "draft", "issued"].includes(report.status) ||
+    typeof report.updatedAtIso !== "string"
+  ) {
+    return null;
+  }
+
+  return {
+    assemblyId: report.assemblyId,
+    currentRevisionId: report.currentRevisionId,
+    description: typeof report.description === "string" ? report.description : undefined,
+    displayCode: typeof report.displayCode === "string" ? report.displayCode : undefined,
+    id: report.id,
+    name: report.name,
+    revisionCount: report.revisionCount,
+    status: report.status as AssistantProjectReportSummary["status"],
+    updatedAtIso: report.updatedAtIso
+  };
+}
+
+function parseAssistantProjectRevisionSummaryRecord(entry: unknown): AssistantProjectRevisionSummary | null {
+  if (
+    !isRecord(entry) ||
+    typeof entry.createdAtIso !== "string" ||
+    typeof entry.id !== "string" ||
+    typeof entry.source !== "string" ||
+    !["assistant", "generated", "import", "manual"].includes(entry.source)
+  ) {
+    return null;
+  }
+
+  const assistantPatchSummary = isRecord(entry.assistantPatchSummary) &&
+    typeof entry.assistantPatchSummary.operationCount === "number" &&
+    typeof entry.assistantPatchSummary.validationStatus === "string" &&
+    ["valid", "warning"].includes(entry.assistantPatchSummary.validationStatus)
+    ? {
+        operationCount: entry.assistantPatchSummary.operationCount,
+        validationStatus: entry.assistantPatchSummary.validationStatus as "valid" | "warning"
+      }
+    : undefined;
+
+  return {
+    assistantPatchSummary,
+    changeSummary: typeof entry.changeSummary === "string" ? entry.changeSummary : undefined,
+    createdAtIso: entry.createdAtIso,
+    displayCode: typeof entry.displayCode === "string" ? entry.displayCode : undefined,
+    id: entry.id,
+    source: entry.source as AssistantProjectRevisionSummary["source"]
+  };
+}
+
 function parseAssistantProjectRevisionSummaries(payload: unknown): AssistantProjectRevisionSummary[] {
   const result = getProjectReadResult(payload);
   const revisions = isRecord(result) && Array.isArray(result.revisions) ? result.revisions : [];
 
   return revisions.flatMap((entry): AssistantProjectRevisionSummary[] => {
-    if (
-      !isRecord(entry) ||
-      typeof entry.createdAtIso !== "string" ||
-      typeof entry.id !== "string" ||
-      typeof entry.source !== "string" ||
-      !["assistant", "generated", "import", "manual"].includes(entry.source)
-    ) {
-      return [];
-    }
-
-    const assistantPatchSummary = isRecord(entry.assistantPatchSummary) &&
-      typeof entry.assistantPatchSummary.operationCount === "number" &&
-      typeof entry.assistantPatchSummary.validationStatus === "string" &&
-      ["valid", "warning"].includes(entry.assistantPatchSummary.validationStatus)
-      ? {
-          operationCount: entry.assistantPatchSummary.operationCount,
-          validationStatus: entry.assistantPatchSummary.validationStatus as "valid" | "warning"
-        }
-      : undefined;
-
-    return [
-      {
-        assistantPatchSummary,
-        changeSummary: typeof entry.changeSummary === "string" ? entry.changeSummary : undefined,
-        createdAtIso: entry.createdAtIso,
-        displayCode: typeof entry.displayCode === "string" ? entry.displayCode : undefined,
-        id: entry.id,
-        source: entry.source as AssistantProjectRevisionSummary["source"]
-      }
-    ];
+    const revision = parseAssistantProjectRevisionSummaryRecord(entry);
+    return revision ? [revision] : [];
   });
+}
+
+function parseAssistantProjectRevisionPreview(payload: unknown): AssistantProjectRevisionPreview | null {
+  const result = getProjectReadResult(payload);
+  const document = isRecord(result) ? parseSimpleWorkbenchProposalDocument(result.document) : null;
+  const revision = isRecord(result) ? parseAssistantProjectRevisionSummaryRecord(result.revision) : null;
+
+  if (!document || !revision) {
+    return null;
+  }
+
+  return {
+    document,
+    revision
+  };
 }
 
 function AssistantProjectContextStrip(props: {
@@ -531,6 +795,7 @@ function AssistantProjectContextStrip(props: {
               <small>
                 {state.summary.report.revisionCount} revision{state.summary.report.revisionCount === 1 ? "" : "s"} · {state.summary.report.status}
               </small>
+              {state.summary.report.description ? <small>{state.summary.report.description}</small> : null}
             </div>
           ) : (
             <div>
@@ -566,6 +831,162 @@ function AssistantProjectContextStrip(props: {
         Assistant edits change only this draft until you apply them and save the project report.
       </small>
     </div>
+  );
+}
+
+function ReportRevisionHistoryPanel(props: {
+  currentRevisionId?: string;
+  isLoading: boolean;
+  isPreviewLoading: boolean;
+  isRestoring: boolean;
+  message: string;
+  onClose: () => void;
+  onRefresh: () => void;
+  onRestore: () => void;
+  onSelectRevision: (revisionId: string) => void;
+  preview: AssistantProjectRevisionPreview | null;
+  reportStatus?: AssistantProjectReportSummary["status"];
+  revisions: AssistantProjectRevisionSummary[];
+  selectedRevisionId: string;
+}) {
+  const selectedIsCurrent = Boolean(props.selectedRevisionId && props.selectedRevisionId === props.currentRevisionId);
+  const restoreDisabled =
+    props.isRestoring ||
+    props.isPreviewLoading ||
+    !props.preview ||
+    selectedIsCurrent ||
+    props.reportStatus === "archived";
+  const restoreTitle =
+    props.reportStatus === "archived"
+      ? "Restore the report from archive before creating a new revision."
+      : selectedIsCurrent
+        ? "The selected revision is already current."
+        : "Restore this revision as a new current version.";
+
+  return (
+    <section className="report-revision-panel" aria-label="Report revision history">
+      <div className="report-revision-head">
+        <div>
+          <p className="ui-eyebrow">Project report versions</p>
+          <h2>Revision history</h2>
+          <p>{props.message || "Saved report revisions are loaded from project storage."}</p>
+        </div>
+        <div className="report-revision-actions">
+          <button className="focus-ring ui-button ui-button-ghost" disabled={props.isLoading} onClick={props.onRefresh} type="button">
+            {props.isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCcw className="h-4 w-4" />}
+            Refresh
+          </button>
+          <button className="focus-ring ui-button ui-button-ghost" onClick={props.onClose} type="button">
+            Close
+          </button>
+        </div>
+      </div>
+
+      <div className="report-revision-grid">
+        <div className="report-revision-list" role="list" aria-label="Saved report revisions">
+          {props.revisions.length ? (
+            props.revisions.map((revision) => {
+              const selected = revision.id === props.selectedRevisionId;
+              const current = revision.id === props.currentRevisionId;
+
+              return (
+                <button
+                  aria-label={`Preview ${revision.displayCode ?? "revision"}`}
+                  aria-pressed={selected}
+                  className="focus-ring report-revision-row"
+                  data-selected={selected ? "true" : "false"}
+                  key={revision.id}
+                  onClick={() => props.onSelectRevision(revision.id)}
+                  type="button"
+                >
+                  <span className="report-revision-code">{revision.displayCode ?? "Revision"}</span>
+                  <span className="report-revision-copy">
+                    <strong>{formatRevisionSourceLabel(revision.source)}</strong>
+                    <small>{formatReportDateTimeLabel(revision.createdAtIso)}</small>
+                    {revision.changeSummary ? <small>{revision.changeSummary}</small> : null}
+                  </span>
+                  {current ? <span className="ui-badge ui-badge-success">Current</span> : null}
+                </button>
+              );
+            })
+          ) : (
+            <div className="report-revision-empty">
+              {props.isLoading ? "Loading revisions" : "No saved revisions available"}
+            </div>
+          )}
+        </div>
+
+        <div className="report-revision-preview" aria-label="Read-only revision preview">
+          {props.isPreviewLoading ? (
+            <div className="report-revision-empty">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Loading selected revision
+            </div>
+          ) : props.preview ? (
+            <>
+              <div className="report-revision-preview-head">
+                <div>
+                  <span>Read-only revision preview</span>
+                  <strong>{props.preview.revision.displayCode ?? "Selected revision"}</strong>
+                  <small>
+                    {formatRevisionSourceLabel(props.preview.revision.source)} ·{" "}
+                    {formatReportDateTimeLabel(props.preview.revision.createdAtIso)}
+                  </small>
+                </div>
+                <Eye className="h-4 w-4" />
+              </div>
+              <dl className="report-revision-preview-fields">
+                <div>
+                  <dt>Project</dt>
+                  <dd>{props.preview.document.projectName}</dd>
+                </div>
+                <div>
+                  <dt>Subject</dt>
+                  <dd>{props.preview.document.proposalSubject}</dd>
+                </div>
+                <div>
+                  <dt>Primary result</dt>
+                  <dd>
+                    {props.preview.document.primaryMetricLabel}: {props.preview.document.primaryMetricValue}
+                  </dd>
+                </div>
+                <div>
+                  <dt>Summary</dt>
+                  <dd>{props.preview.document.executiveSummary}</dd>
+                </div>
+                {props.preview.revision.assistantPatchSummary ? (
+                  <div>
+                    <dt>Assistant metadata</dt>
+                    <dd>
+                      {props.preview.revision.assistantPatchSummary.operationCount} operation
+                      {props.preview.revision.assistantPatchSummary.operationCount === 1 ? "" : "s"} ·{" "}
+                      {props.preview.revision.assistantPatchSummary.validationStatus}
+                    </dd>
+                  </div>
+                ) : null}
+              </dl>
+              <div className="report-revision-restore">
+                <button
+                  className="focus-ring ui-button ui-button-primary"
+                  disabled={restoreDisabled}
+                  onClick={props.onRestore}
+                  title={restoreTitle}
+                  type="button"
+                >
+                  {props.isRestoring ? <Loader2 className="h-4 w-4 animate-spin" /> : <RotateCcw className="h-4 w-4" />}
+                  Restore as new revision
+                </button>
+                <small>
+                  Restore creates a new current revision and keeps every previous revision readable.
+                </small>
+              </div>
+            </>
+          ) : (
+            <div className="report-revision-empty">Select a revision to preview it.</div>
+          )}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -644,9 +1065,28 @@ export function ReportEditor() {
   const [isAssistantLoading, setIsAssistantLoading] = useState(false);
   const [isProjectSaving, setIsProjectSaving] = useState(false);
   const projectSaveInFlightRef = useRef(false);
+  const revisionRestoreInFlightRef = useRef(false);
   const [projectContext, setProjectContext] = useState<SimpleWorkbenchProposalPreviewProjectContext | undefined>();
   const [assistantProjectContext, setAssistantProjectContext] = useState<AssistantProjectContextState>({ status: "local" });
   const [projectSaveSource, setProjectSaveSource] = useState<ProjectReportSaveSource>("manual");
+  const [projectSavePanelOpen, setProjectSavePanelOpen] = useState(false);
+  const [projectSaveProjects, setProjectSaveProjects] = useState<ProjectSaveProjectSummary[]>([]);
+  const [projectSaveProjectsLoading, setProjectSaveProjectsLoading] = useState(false);
+  const [projectSaveTargetProjectId, setProjectSaveTargetProjectId] = useState("");
+  const [projectSaveAssemblyName, setProjectSaveAssemblyName] = useState("");
+  const [projectSaveAssemblyDescription, setProjectSaveAssemblyDescription] = useState("");
+  const [projectSaveReportName, setProjectSaveReportName] = useState("");
+  const [projectSaveReportDescription, setProjectSaveReportDescription] = useState("");
+  const [projectSaveTargetMessage, setProjectSaveTargetMessage] = useState("");
+  const [revisionHistoryOpen, setRevisionHistoryOpen] = useState(false);
+  const [revisionHistoryLoading, setRevisionHistoryLoading] = useState(false);
+  const [revisionHistoryMessage, setRevisionHistoryMessage] = useState("");
+  const [revisionPreview, setRevisionPreview] = useState<AssistantProjectRevisionPreview | null>(null);
+  const [revisionPreviewLoading, setRevisionPreviewLoading] = useState(false);
+  const [revisionRestoreLoading, setRevisionRestoreLoading] = useState(false);
+  const [revisionHistoryReport, setRevisionHistoryReport] = useState<AssistantProjectReportSummary | null>(null);
+  const [revisionSummaries, setRevisionSummaries] = useState<AssistantProjectRevisionSummary[]>([]);
+  const [selectedRevisionId, setSelectedRevisionId] = useState("");
 
   const applyLoadedPreview = useCallback((nextPreview: LoadedSimpleWorkbenchProposalPreview | null) => {
     setLoadedPreview(nextPreview);
@@ -662,6 +1102,31 @@ export function ReportEditor() {
     applyLoadedPreview(nextPreview);
     return nextPreview;
   }, [applyLoadedPreview]);
+
+  const loadProjectSaveProjects = useCallback(async (preferredProjectId?: string) => {
+    setProjectSaveProjectsLoading(true);
+    setProjectSaveTargetMessage("Loading projects");
+
+    try {
+      const response = await fetch("/api/projects", {
+        method: "GET"
+      });
+      const payload = await readProjectReportSavePayload(response, "DAC could not load saved projects.");
+      const projects = parseProjectSaveProjectSummaries(payload);
+      const nextProjectId =
+        (preferredProjectId && projects.some((project) => project.id === preferredProjectId) ? preferredProjectId : "") ||
+        projects[0]?.id ||
+        "";
+
+      setProjectSaveProjects(projects);
+      setProjectSaveTargetProjectId(nextProjectId);
+      setProjectSaveTargetMessage(projects.length ? "Choose a project for this report" : "No saved projects available");
+    } catch (error) {
+      setProjectSaveTargetMessage(error instanceof Error ? error.message : "Saved projects could not be loaded.");
+    } finally {
+      setProjectSaveProjectsLoading(false);
+    }
+  }, []);
 
   const loadProjectReportFromUrl = useCallback(async (projectId: string, reportId: string) => {
     const key = `${projectId}:${reportId}`;
@@ -694,6 +1159,97 @@ export function ReportEditor() {
     }
   }, [applyLoadedPreview]);
 
+  const loadReportRevisionPreview = useCallback(async (revisionId: string) => {
+    const historyContext = projectContext;
+    if (!hasProjectReportHistoryContext(historyContext)) {
+      setRevisionHistoryMessage("Open a saved project report before loading revisions.");
+      return;
+    }
+
+    setSelectedRevisionId(revisionId);
+    setRevisionPreviewLoading(true);
+    try {
+      const payload = await postAssistantProjectRead({
+        action: "read_project_report_revision",
+        projectId: historyContext.serverProjectId,
+        reportId: historyContext.serverProjectReportId,
+        revisionId
+      });
+      const preview = parseAssistantProjectRevisionPreview(payload);
+      if (!preview) {
+        throw new Error("Selected revision did not include a readable report document.");
+      }
+
+      setRevisionPreview(preview);
+      setRevisionHistoryMessage(`Previewing ${preview.revision.displayCode ?? "selected revision"}.`);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Selected revision could not be loaded.";
+      setRevisionPreview(null);
+      setRevisionHistoryMessage(message);
+      toast.error("Revision preview failed", {
+        description: message
+      });
+    } finally {
+      setRevisionPreviewLoading(false);
+    }
+  }, [projectContext]);
+
+  const loadReportRevisionHistory = useCallback(async (preferredRevisionId?: string) => {
+    const historyContext = projectContext;
+    if (!hasProjectReportHistoryContext(historyContext)) {
+      setRevisionHistoryMessage("Revision history is available after this report is saved to a project.");
+      setRevisionHistoryReport(null);
+      setRevisionSummaries([]);
+      setRevisionPreview(null);
+      setSelectedRevisionId("");
+      return;
+    }
+
+    setRevisionHistoryLoading(true);
+    setRevisionHistoryMessage("Loading saved revisions");
+    try {
+      const payload = await postAssistantProjectRead({
+        action: "list_project_report_revisions",
+        projectId: historyContext.serverProjectId,
+        reportId: historyContext.serverProjectReportId
+      });
+      const report = parseAssistantProjectReportSummaryFromProjectRead(payload);
+      const revisions = parseAssistantProjectRevisionSummaries(payload);
+      const nextRevisionId =
+        preferredRevisionId ||
+        report?.currentRevisionId ||
+        revisions[revisions.length - 1]?.id ||
+        "";
+
+      setRevisionHistoryReport(report);
+      setRevisionSummaries(revisions);
+      setRevisionHistoryMessage(
+        revisions.length
+          ? `${revisions.length} saved revision${revisions.length === 1 ? "" : "s"} loaded.`
+          : "No saved revisions found for this report."
+      );
+
+      if (nextRevisionId) {
+        await loadReportRevisionPreview(nextRevisionId);
+      } else {
+        setRevisionPreview(null);
+        setSelectedRevisionId("");
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Revision history could not be loaded.";
+      setRevisionHistoryReport(null);
+      setRevisionSummaries([]);
+      setRevisionPreview(null);
+      setSelectedRevisionId("");
+      setRevisionHistoryMessage(message);
+      toast.error("Revision history failed", {
+        description: message
+      });
+    } finally {
+      setRevisionHistoryLoading(false);
+    }
+  }, [loadReportRevisionPreview, projectContext]);
+
   useEffect(() => {
     const nextPreview = readSimpleWorkbenchProposalPreview();
     const urlReportMatchesPreview = reportIdParam && nextPreview?.projectContext?.serverProjectReportId === reportIdParam;
@@ -711,6 +1267,19 @@ export function ReportEditor() {
     applyLoadedPreview(nextPreview);
   }, [applyLoadedPreview, loadProjectReportFromUrl, projectIdParam, reportIdParam]);
 
+  useEffect(() => {
+    setRevisionHistoryOpen(false);
+    setRevisionHistoryLoading(false);
+    setRevisionHistoryMessage("");
+    setRevisionHistoryReport(null);
+    setRevisionPreview(null);
+    setRevisionPreviewLoading(false);
+    setRevisionRestoreLoading(false);
+    setRevisionSummaries([]);
+    setSelectedRevisionId("");
+    revisionRestoreInFlightRef.current = false;
+  }, [projectContext?.serverProjectId, projectContext?.serverProjectReportId]);
+
   const baseSignature = useMemo(
     () => getDocumentSignature(loadedPreview?.document ?? null),
     [loadedPreview?.document]
@@ -719,6 +1288,7 @@ export function ReportEditor() {
   const hasUnsavedChanges = document !== null && loadedPreview !== null && draftSignature !== baseSignature;
   const canSaveProjectReport = hasProjectReportCreateContext(projectContext);
   const projectReportLinked = Boolean(projectContext?.serverProjectReportId && projectContext.serverProjectReportUpdatedAtIso);
+  const canOpenProjectSaveTarget = Boolean(document && !projectReportLinked);
 
   const proposalHtml = useMemo(
     () => (document ? buildSimpleWorkbenchProposalPreviewHtml(document, activePdfStyle) : ""),
@@ -881,6 +1451,134 @@ export function ReportEditor() {
     });
   }
 
+  function openProjectSaveTargetPanel() {
+    if (!document) {
+      toast.error("No report draft");
+      return;
+    }
+
+    setProjectSavePanelOpen(true);
+    setProjectSaveAssemblyName(formatProjectAssemblyLibraryName(document, projectContext));
+    setProjectSaveAssemblyDescription("");
+    setProjectSaveReportName(formatProjectReportLibraryName(document));
+    setProjectSaveReportDescription("");
+    setProjectSaveTargetMessage(
+      hasProjectReportSourceContext(projectContext)
+        ? "Choose a project for this report"
+        : "Open this report from the calculator again so DAC can include the source layer combination."
+    );
+    void loadProjectSaveProjects(projectContext?.serverProjectId);
+  }
+
+  function handleProjectSaveAction() {
+    if (projectReportLinked) {
+      void handleSaveReportToProject();
+      return;
+    }
+
+    openProjectSaveTargetPanel();
+  }
+
+  function openRevisionHistoryPanel() {
+    if (!hasProjectReportHistoryContext(projectContext)) {
+      toast.error("Revision history unavailable", {
+        description: "Save this report to a project before viewing saved versions."
+      });
+      return;
+    }
+
+    setRevisionHistoryOpen(true);
+    void loadReportRevisionHistory(revisionHistoryReport?.currentRevisionId);
+  }
+
+  async function handleRestoreSelectedRevision() {
+    const restoreContext = projectContext;
+    if (!revisionPreview || !hasProjectReportRestoreContext(restoreContext)) {
+      toast.error("Revision restore unavailable", {
+        description: "Open a saved project report revision before restoring."
+      });
+      return;
+    }
+    const currentRevisionId = revisionHistoryReport?.currentRevisionId;
+    if (currentRevisionId && revisionPreview.revision.id === currentRevisionId) {
+      toast.error("Revision already current");
+      return;
+    }
+    if (revisionHistoryReport?.status === "archived") {
+      toast.error("Archived report", {
+        description: "Restore the report from archive before creating a new revision."
+      });
+      return;
+    }
+    if (revisionRestoreInFlightRef.current) {
+      return;
+    }
+
+    const restoredDocument: SimpleWorkbenchProposalDocument = {
+      ...revisionPreview.document,
+      serverProjectId: restoreContext.serverProjectId,
+      serverProjectScenarioId: restoreContext.serverProjectAssemblyId ?? revisionPreview.document.serverProjectScenarioId
+    };
+    const restoredFromLabel = revisionPreview.revision.displayCode ?? "selected revision";
+
+    revisionRestoreInFlightRef.current = true;
+    setRevisionRestoreLoading(true);
+    setRevisionHistoryMessage(`Restoring ${restoredFromLabel}`);
+    try {
+      const response = await fetch(
+        `/api/projects/${encodeURIComponent(restoreContext.serverProjectId)}/reports/${encodeURIComponent(restoreContext.serverProjectReportId)}/revisions`,
+        {
+          body: JSON.stringify({
+            changeSummary: `Restored from ${restoredFromLabel}.`,
+            document: restoredDocument,
+            expectedReportUpdatedAtIso: restoreContext.serverProjectReportUpdatedAtIso,
+            source: "manual"
+          }),
+          headers: {
+            "content-type": "application/json"
+          },
+          method: "POST"
+        }
+      );
+      const payload = await readProjectReportSavePayload(response, "DAC could not restore the selected revision.");
+      const savedReport = parseProjectReportSavePayload(payload);
+      if (!savedReport) {
+        throw new Error("DAC restored the revision but the server response was incomplete.");
+      }
+
+      const restoredRevisionId =
+        isRecord(payload) && isRecord(payload.revision) && typeof payload.revision.id === "string"
+          ? payload.revision.id
+          : undefined;
+      const nextProjectContext: SimpleWorkbenchProposalPreviewProjectContext = {
+        ...restoreContext,
+        serverProjectReportUpdatedAtIso: savedReport.updatedAtIso
+      };
+
+      storeSimpleWorkbenchProposalPreview(restoredDocument, {
+        projectContext: nextProjectContext
+      });
+      const nextPreview = readSimpleWorkbenchProposalPreview();
+      setLoadedPreview(nextPreview);
+      setDocument(nextPreview?.document ?? restoredDocument);
+      setProjectContext(nextPreview?.projectContext ?? nextProjectContext);
+      setProjectSaveSource("manual");
+      toast.success("Report revision restored", {
+        description: `${restoredFromLabel} was saved as a new current revision.`
+      });
+      await loadReportRevisionHistory(restoredRevisionId);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Selected revision could not be restored.";
+      setRevisionHistoryMessage(message);
+      toast.error("Revision restore failed", {
+        description: message
+      });
+    } finally {
+      revisionRestoreInFlightRef.current = false;
+      setRevisionRestoreLoading(false);
+    }
+  }
+
   async function handleSaveReportToProject() {
     if (!document) {
       toast.error("No report draft");
@@ -957,13 +1655,9 @@ export function ReportEditor() {
         serverProjectReportId: savedReport.id,
         serverProjectReportUpdatedAtIso: savedReport.updatedAtIso
       };
-      if (hasUnsavedChanges) {
-        storeSimpleWorkbenchProposalPreviewCustomizations(documentForProject, {
-          projectContext: nextProjectContext
-        });
-      } else {
-        updateSimpleWorkbenchProposalPreviewProjectContext(nextProjectContext);
-      }
+      storeSimpleWorkbenchProposalPreview(documentForProject, {
+        projectContext: nextProjectContext
+      });
 
       const nextPreview = readSimpleWorkbenchProposalPreview();
       setLoadedPreview(nextPreview);
@@ -976,6 +1670,130 @@ export function ReportEditor() {
     } catch (error) {
       toast.error("Project report save failed", {
         description: error instanceof Error ? error.message : "Report could not be stored in the project."
+      });
+    } finally {
+      projectSaveInFlightRef.current = false;
+      setIsProjectSaving(false);
+    }
+  }
+
+  async function handleSaveReportToSelectedProject() {
+    if (!document) {
+      toast.error("No report draft");
+      return;
+    }
+    if (!hasProjectReportSourceContext(projectContext)) {
+      toast.error("Source layer combination unavailable", {
+        description: "Open this report from workbench-v2 again so DAC can package the current layer stack."
+      });
+      return;
+    }
+    if (!projectSaveTargetProjectId) {
+      toast.error("Select a project first");
+      return;
+    }
+    if (projectSaveInFlightRef.current) {
+      return;
+    }
+
+    const target: ProjectSaveTarget = {
+      assemblyDescription: trimOptionalProjectText(projectSaveAssemblyDescription),
+      assemblyName:
+        truncateProjectText(projectSaveAssemblyName, SERVER_PROJECT_REPORT_NAME_MAX_LENGTH) ||
+        formatProjectAssemblyLibraryName(document, projectContext),
+      projectId: projectSaveTargetProjectId,
+      reportDescription: trimOptionalProjectText(projectSaveReportDescription),
+      reportName:
+        truncateProjectText(projectSaveReportName, SERVER_PROJECT_REPORT_NAME_MAX_LENGTH) ||
+        formatProjectReportLibraryName(document)
+    };
+    const useExistingAssembly =
+      projectContext.serverProjectId === target.projectId && Boolean(projectContext.serverProjectAssemblyId);
+
+    projectSaveInFlightRef.current = true;
+    setIsProjectSaving(true);
+    setProjectSaveTargetMessage("Saving report to project");
+
+    try {
+      let assemblyId = useExistingAssembly ? projectContext.serverProjectAssemblyId! : "";
+
+      if (!assemblyId) {
+        const assemblyResponse = await fetch(`/api/projects/${encodeURIComponent(target.projectId)}/assemblies`, {
+          body: JSON.stringify({
+            calculationSummary: getProjectAssemblyCalculationSummary(projectContext),
+            description: target.assemblyDescription,
+            kind: getProjectAssemblyKind(document, projectContext),
+            name: target.assemblyName,
+            snapshot: projectContext.sourceAssemblySnapshot
+          }),
+          headers: {
+            "content-type": "application/json"
+          },
+          method: "POST"
+        });
+        const assemblyPayload = await readProjectReportSavePayload(
+          assemblyResponse,
+          "DAC could not save the layer combination to the selected project."
+        );
+        const savedAssembly = parseProjectAssemblySavePayload(assemblyPayload);
+        if (!savedAssembly) {
+          throw new Error("DAC saved the layer combination but the server response was incomplete.");
+        }
+        assemblyId = savedAssembly.id;
+      }
+
+      const documentForProject: SimpleWorkbenchProposalDocument = {
+        ...document,
+        serverProjectId: target.projectId,
+        serverProjectScenarioId: assemblyId
+      };
+      const reportResponse = await fetch(`/api/projects/${encodeURIComponent(target.projectId)}/reports`, {
+        body: JSON.stringify({
+          assemblyId,
+          description: target.reportDescription,
+          name: target.reportName,
+          reportDocument: documentForProject,
+          sourceAssemblySnapshot: projectContext.sourceAssemblySnapshot,
+          sourceCalculationOutput: projectContext.sourceCalculationOutput,
+          sourceMaterialSnapshot: projectContext.sourceMaterialSnapshot
+        }),
+        headers: {
+          "content-type": "application/json"
+        },
+        method: "POST"
+      });
+      const reportPayload = await readProjectReportSavePayload(reportResponse, "DAC could not save the report to the project.");
+      const savedReport = parseProjectReportSavePayload(reportPayload);
+      if (!savedReport) {
+        throw new Error("DAC saved the report but the server response was incomplete.");
+      }
+
+      const nextProjectContext: SimpleWorkbenchProposalPreviewProjectContext = {
+        ...projectContext,
+        serverProjectAssemblyId: assemblyId,
+        serverProjectId: target.projectId,
+        serverProjectReportId: savedReport.id,
+        serverProjectReportUpdatedAtIso: savedReport.updatedAtIso
+      };
+      storeSimpleWorkbenchProposalPreview(documentForProject, {
+        projectContext: nextProjectContext
+      });
+
+      const nextPreview = readSimpleWorkbenchProposalPreview();
+      setLoadedPreview(nextPreview);
+      setProjectContext(nextPreview?.projectContext ?? nextProjectContext);
+      setDocument(nextPreview?.document ?? documentForProject);
+      setProjectSavePanelOpen(false);
+      setProjectSaveSource("manual");
+      setProjectSaveTargetMessage("Report saved to project");
+      toast.success("Project report saved", {
+        description: `${savedReport.displayCode ?? "Report"} updated ${formatSavedAtLabel(savedReport.updatedAtIso)}.`
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Report could not be stored in the selected project.";
+      setProjectSaveTargetMessage(message);
+      toast.error("Project report save failed", {
+        description: message
       });
     } finally {
       projectSaveInFlightRef.current = false;
@@ -1175,13 +1993,17 @@ export function ReportEditor() {
       ? `Saved edits ${formatSavedAtLabel(loadedPreview.customizedAtIso)}`
       : `Packaged ${formatSavedAtLabel(loadedPreview.savedAtIso)}`
     : "Local report draft";
-  const projectSaveLabel = !projectContext?.serverProjectId
-    ? "Local only"
-    : projectReportLinked
-      ? "Project report linked"
-      : canSaveProjectReport
+  const projectSaveLabel = projectReportLinked
+    ? "Project report linked"
+    : projectContext?.serverProjectId
+      ? canSaveProjectReport
         ? "Project report ready"
-        : "Project selected";
+        : "Project selected"
+      : hasProjectReportSourceContext(projectContext)
+        ? "Choose project"
+        : "Local only";
+  const assistantReportSummary = assistantProjectContext.status === "ready" ? assistantProjectContext.summary.report : undefined;
+  const revisionPanelReport = revisionHistoryReport ?? assistantReportSummary;
 
   return (
     <main className="report-page">
@@ -1206,6 +2028,20 @@ export function ReportEditor() {
               <RefreshCcw className="h-4 w-4" />
             </button>
             <button
+              className="focus-ring ui-button"
+              disabled={!hasProjectReportHistoryContext(projectContext)}
+              onClick={openRevisionHistoryPanel}
+              title={
+                hasProjectReportHistoryContext(projectContext)
+                  ? "Open saved report versions"
+                  : "Save this report to a project before viewing versions"
+              }
+              type="button"
+            >
+              <History className="h-4 w-4" />
+              Revision history
+            </button>
+            <button
               className="focus-ring ui-icon-button"
               disabled={!loadedPreview?.hasCustomizations && !hasUnsavedChanges}
               onClick={handleResetEdits}
@@ -1220,14 +2056,12 @@ export function ReportEditor() {
             </button>
             <button
               className="focus-ring ui-button ui-button-primary"
-              disabled={!canSaveProjectReport || isProjectSaving}
-              onClick={() => void handleSaveReportToProject()}
+              disabled={!document || isProjectSaving || (projectReportLinked && !canSaveProjectReport)}
+              onClick={handleProjectSaveAction}
               title={
-                canSaveProjectReport
-                  ? projectReportLinked
-                    ? "Save a new project report revision"
-                    : "Save this report under the selected project"
-                  : "Save and select a project combination in workbench-v2 first"
+                projectReportLinked
+                  ? "Save a new project report revision"
+                  : "Choose a project and save this report with its source layer combination"
               }
               type="button"
             >
@@ -1236,6 +2070,131 @@ export function ReportEditor() {
             </button>
           </div>
         </header>
+
+        {revisionHistoryOpen && hasProjectReportHistoryContext(projectContext) ? (
+          <ReportRevisionHistoryPanel
+            currentRevisionId={revisionPanelReport?.currentRevisionId}
+            isLoading={revisionHistoryLoading}
+            isPreviewLoading={revisionPreviewLoading}
+            isRestoring={revisionRestoreLoading}
+            message={revisionHistoryMessage}
+            onClose={() => setRevisionHistoryOpen(false)}
+            onRefresh={() => void loadReportRevisionHistory(selectedRevisionId || revisionPanelReport?.currentRevisionId)}
+            onRestore={() => void handleRestoreSelectedRevision()}
+            onSelectRevision={(revisionId) => void loadReportRevisionPreview(revisionId)}
+            preview={revisionPreview}
+            reportStatus={revisionPanelReport?.status}
+            revisions={revisionSummaries}
+            selectedRevisionId={selectedRevisionId}
+          />
+        ) : null}
+
+        {projectSavePanelOpen && canOpenProjectSaveTarget ? (
+          <section className="report-project-save-panel" aria-label="Save report to project">
+            <div className="report-project-save-head">
+              <div>
+                <h2>Save to project</h2>
+                <p>{projectSaveTargetMessage}</p>
+              </div>
+              <button className="focus-ring ui-button ui-button-ghost" onClick={() => setProjectSavePanelOpen(false)} type="button">
+                Close
+              </button>
+            </div>
+
+            <div className="report-project-save-grid">
+              <label className="report-field">
+                <span>Project</span>
+                <select
+                  className="report-input"
+                  disabled={projectSaveProjectsLoading || isProjectSaving || projectSaveProjects.length === 0}
+                  onChange={(event) => setProjectSaveTargetProjectId(event.currentTarget.value)}
+                  value={projectSaveTargetProjectId}
+                >
+                  {projectSaveProjects.length ? null : <option value="">No saved projects</option>}
+                  {projectSaveProjects.map((project) => (
+                    <option key={project.id} value={project.id}>
+                      {project.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label className="report-field">
+                <span>Report name</span>
+                <input
+                  className="report-input"
+                  maxLength={SERVER_PROJECT_REPORT_NAME_MAX_LENGTH}
+                  onChange={(event) => setProjectSaveReportName(event.currentTarget.value)}
+                  value={projectSaveReportName}
+                />
+              </label>
+
+              <label className="report-field report-field-wide">
+                <span>Report description</span>
+                <textarea
+                  className="report-input report-textarea report-textarea-compact"
+                  maxLength={SERVER_PROJECT_CHILD_DESCRIPTION_MAX_LENGTH}
+                  onChange={(event) => setProjectSaveReportDescription(event.currentTarget.value)}
+                  placeholder="Optional note shown with this saved report"
+                  rows={2}
+                  value={projectSaveReportDescription}
+                />
+              </label>
+
+              {projectContext?.serverProjectId === projectSaveTargetProjectId && projectContext.serverProjectAssemblyId ? (
+                <div className="report-project-save-existing report-field-wide">
+                  <strong>Source combination already saved</strong>
+                  <span>The report will be linked to the current project combination.</span>
+                </div>
+              ) : (
+                <>
+                  <label className="report-field">
+                    <span>Layer combination name</span>
+                    <input
+                      className="report-input"
+                      maxLength={SERVER_PROJECT_REPORT_NAME_MAX_LENGTH}
+                      onChange={(event) => setProjectSaveAssemblyName(event.currentTarget.value)}
+                      value={projectSaveAssemblyName}
+                    />
+                  </label>
+
+                  <label className="report-field">
+                    <span>Layer combination description</span>
+                    <textarea
+                      className="report-input report-textarea report-textarea-compact"
+                      maxLength={SERVER_PROJECT_CHILD_DESCRIPTION_MAX_LENGTH}
+                      onChange={(event) => setProjectSaveAssemblyDescription(event.currentTarget.value)}
+                      placeholder="Optional note shown with this saved combination"
+                      rows={2}
+                      value={projectSaveAssemblyDescription}
+                    />
+                  </label>
+                </>
+              )}
+            </div>
+
+            <div className="report-project-save-actions">
+              <button
+                className="focus-ring ui-button ui-button-primary"
+                disabled={!projectSaveTargetProjectId || !hasProjectReportSourceContext(projectContext) || isProjectSaving}
+                onClick={() => void handleSaveReportToSelectedProject()}
+                type="button"
+              >
+                <Save className="h-4 w-4" />
+                {isProjectSaving ? "Saving project..." : "Save report"}
+              </button>
+              <button
+                className="focus-ring ui-button ui-button-ghost"
+                disabled={projectSaveProjectsLoading || isProjectSaving}
+                onClick={() => void loadProjectSaveProjects(projectSaveTargetProjectId || projectContext?.serverProjectId)}
+                type="button"
+              >
+                <RefreshCcw className="h-4 w-4" />
+                Refresh projects
+              </button>
+            </div>
+          </section>
+        ) : null}
 
         <div className="report-grid">
           <section className="report-preview-panel">

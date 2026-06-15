@@ -105,6 +105,7 @@ export type ReportAssistantProjectReportSummary = {
   assemblyId: string;
   createdAtIso: string;
   currentRevisionId: string;
+  description?: string;
   displayCode?: string;
   id: string;
   name: string;
@@ -281,6 +282,7 @@ function summarizeReport(report: ServerProjectReportRecord): ReportAssistantProj
     assemblyId: report.assemblyId,
     createdAtIso: report.createdAtIso,
     currentRevisionId: report.currentRevisionId,
+    description: report.description,
     displayCode: report.displayCode,
     id: report.id,
     name: report.name,

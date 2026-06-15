@@ -164,6 +164,7 @@ export const ServerProjectReportRecordSchema = z
     assemblyId: z.string().uuid(),
     createdAtIso: z.string().datetime(),
     currentRevisionId: z.string().uuid(),
+    description: ProjectOptionalTextSchema,
     displayCode: ProjectDisplayCodeSchema,
     id: z.string().uuid(),
     name: ProjectNameSchema,
@@ -254,6 +255,7 @@ export const ServerProjectDuplicateAssemblyRequestSchema = z
 export const ServerProjectCreateReportRequestSchema = z
   .object({
     assemblyId: z.string().uuid(),
+    description: ProjectOptionalTextSchema,
     name: ProjectNameSchema,
     reportDocument: JsonValueSchema,
     sourceAssemblySnapshot: JsonValueSchema,
@@ -264,12 +266,13 @@ export const ServerProjectCreateReportRequestSchema = z
 
 export const ServerProjectUpdateReportRequestSchema = z
   .object({
+    description: ProjectOptionalTextSchema,
     expectedReportUpdatedAtIso: z.string().datetime().optional(),
     name: ProjectNameSchema.optional(),
     status: ServerProjectReportStatusSchema.optional()
   })
   .strict()
-  .refine((value) => value.name !== undefined || value.status !== undefined, {
+  .refine((value) => value.name !== undefined || value.description !== undefined || value.status !== undefined, {
     message: "At least one report field must be provided."
   });
 

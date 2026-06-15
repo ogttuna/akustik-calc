@@ -13,7 +13,7 @@ describe("ProjectWorkspacePanel", () => {
     vi.stubGlobal("React", React);
   });
 
-  it("renders the existing project workspace controls without changing labels", () => {
+  it("renders the project workspace controls with compact identity details", () => {
     const html = renderToStaticMarkup(
       React.createElement(ProjectWorkspacePanel, {
         busy: false,
@@ -26,6 +26,7 @@ describe("ProjectWorkspacePanel", () => {
                 selectedOutputs: ["Rw"],
                 status: "ready"
               },
+              description: "Guest wall combination note",
               displayCode: "ASM-0001",
               id: "assembly-1",
               kind: "wall",
@@ -34,10 +35,14 @@ describe("ProjectWorkspacePanel", () => {
               version: 1
             }
           ],
+          assemblyDescriptionDraft: "Guest wall combination note",
           assemblyNameDraft: "Layer combination",
+          assemblyRenameDescriptionDraft: "Guest wall combination note",
           assemblyRenameDraft: "Layer combination",
           canRenameAssembly: true,
+          onAssemblyDescriptionDraftChange: noop,
           onAssemblyNameDraftChange: noop,
+          onAssemblyRenameDescriptionDraftChange: noop,
           onAssemblyRenameDraftChange: noop,
           onDeleteAssembly: noop,
           onDuplicateAssembly: noop,
@@ -47,6 +52,7 @@ describe("ProjectWorkspacePanel", () => {
           onSelectAssembly: noop,
           projectSelected: true,
           selectedAssembly: {
+            description: "Guest wall combination note",
             displayCode: "ASM-0001",
             id: "assembly-1",
             kind: "wall",
@@ -104,16 +110,19 @@ describe("ProjectWorkspacePanel", () => {
           onDeleteReport: noop,
           onDuplicateReport: noop,
           onOpenReport: noop,
+          onReportDescriptionDraftChange: noop,
           onRenameReport: noop,
           onReportRenameDraftChange: noop,
           onSelectReport: noop,
           onSetReportArchived: noop,
           projectSelected: true,
+          reportDescriptionDraft: "Report note",
           reportRenameDraft: "Report draft",
           reports: [
             {
               assemblyId: "assembly-1",
               currentRevisionId: "revision-1",
+              description: "Report note",
               displayCode: "REP-0001",
               id: "report-1",
               name: "Report draft",
@@ -126,6 +135,7 @@ describe("ProjectWorkspacePanel", () => {
           selectedReport: {
             assemblyId: "assembly-1",
             currentRevisionId: "revision-1",
+            description: "Report note",
             displayCode: "REP-0001",
             id: "report-1",
             name: "Report draft",
@@ -143,6 +153,8 @@ describe("ProjectWorkspacePanel", () => {
     expect(html).toContain("Project workspace");
     expect(html).toContain("Active project");
     expect(html).toContain("Hotel acoustic upgrade");
+    expect(html).toContain("Project details");
+    expect(html).toContain("Guest wall combination note");
     expect(html).toContain("1 combination");
     expect(html).toContain("1 report");
     expect(html).toContain("New project name");
@@ -153,6 +165,7 @@ describe("ProjectWorkspacePanel", () => {
     expect(html).toContain("Load combination");
     expect(html).toContain("Rename combination");
     expect(html).toContain("Saved reports");
+    expect(html).toContain("Report note");
     expect(html).toContain("REP-0001");
     expect(html).toContain("Open saved report");
     expect(html).toContain("Rename report");

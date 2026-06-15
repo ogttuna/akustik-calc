@@ -20,6 +20,7 @@ export type ProjectWorkspaceAssemblySummary = {
     selectedOutputs: string[];
     status: "error" | "needs_input" | "ready" | "unsupported";
   };
+  description?: string;
   displayCode?: string;
   id: string;
   kind: WorkbenchV2StudyMode;
@@ -31,6 +32,7 @@ export type ProjectWorkspaceAssemblySummary = {
 export type ProjectWorkspaceReportSummary = {
   assemblyId: string;
   currentRevisionId: string;
+  description?: string;
   displayCode?: string;
   id: string;
   name: string;
@@ -43,9 +45,7 @@ export type ProjectWorkspaceReportSummary = {
 export const PROJECT_WORKSPACE_NAME_MAX_LENGTH = 160;
 
 export function formatProjectWorkspaceProjectOptionLabel(project: ProjectWorkspaceProjectSummary): string {
-  const assemblyLabel = `${project.assemblyCount} combination${project.assemblyCount === 1 ? "" : "s"}`;
-  const reportLabel = `${project.reportCount} report${project.reportCount === 1 ? "" : "s"}`;
-  return `${project.name} - ${assemblyLabel}, ${reportLabel}`;
+  return project.name;
 }
 
 export function formatProjectWorkspaceAssemblyOptionLabel(assembly: ProjectWorkspaceAssemblySummary): string {

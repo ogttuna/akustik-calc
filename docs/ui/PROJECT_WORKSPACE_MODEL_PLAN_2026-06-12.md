@@ -90,10 +90,11 @@ Status on 2026-06-12:
   is split into presentational `project-workspace-*` components with existing
   labels, copy, and CSS classes preserved.
 - 2026-06-15 project workspace UI/UX Phase 5 identity redesign is implemented:
-  the workspace now has a compact local/active project identity band that shows
-  selected project name, owner label, saved-combination count, report count, and
-  last-updated date while keeping create/select/refresh route behavior local to
-  `calculator-workbench.tsx`.
+  the workspace now has a compact local/active project identity band that keeps
+  the selected project name as the primary visible signal and keeps owner,
+  saved-combination count, report count, and last-updated date behind a
+  collapsible details row while keeping create/select/refresh route behavior
+  local to `calculator-workbench.tsx`.
 - 2026-06-15 project workspace UI/UX Phase 6 saved-combination row redesign is
   implemented: saved combinations now render as scannable rows with display
   code/version/kind/updated/result metadata, row selection, and selected-row
@@ -108,6 +109,35 @@ Status on 2026-06-12:
   this pass: focused route/storage/assistant/component Vitest, production build,
   full `workbench-v2-material-editor` Playwright coverage, and `git diff
   --check` are green.
+- 2026-06-15 project workspace launcher refinement is implemented for
+  `workbench-v2`: the project workspace is no longer rendered inline by
+  default, the calculator remains fully usable in a browser-local draft with no
+  project, and a compact top-bar `Project` trigger opens/closes the project
+  management panel only when the user wants to create/select a project or save
+  combinations/reports. The top-bar trigger and project select use only the
+  project name; counts and updated metadata stay in the collapsible identity
+  details row. Existing project-scoped combination/report/revision persistence
+  and the assistant read-only project context surface remain the same; the
+  Playwright project-workspace coverage now opens the panel explicitly.
+- 2026-06-15 proposal save-target refinement is implemented: `/workbench/proposal`
+  no longer requires an already-selected project combination before the user can
+  start `Save to project`. For unlinked report drafts, the button opens a
+  compact save-target panel that lists existing projects and collects report
+  name/description plus layer-combination name/description when the source stack
+  needs to be saved into the chosen project. Calculator handoff now preserves
+  the current source layer-combination snapshot even for browser-local drafts,
+  so the proposal editor can create the project assembly first and then create
+  the project report. Linked project reports still use `Save revision`.
+- 2026-06-15 report revision-history first pass is implemented in the report
+  editor: linked saved reports expose a compact `Revision history` panel,
+  revision summaries load through the existing read-only project-read action,
+  selected historical revisions open in a read-only preview without replacing
+  the current editor draft, and `Restore as new revision` appends a new manual
+  revision through the existing project report revision route. Project report
+  saves now also refresh the proposal preview baseline to the saved project
+  document so the editor does not fall back to an older local draft after a
+  successful save. Browser E2E covers `REV-0001` preview, `REV-0003` restore,
+  persisted report document rollback, and reopen from the project report list.
 
 Deferred follow-up, not implemented in this pass:
 
@@ -116,10 +146,211 @@ Deferred follow-up, not implemented in this pass:
   implemented. A standalone MCP wrapper/model tool loop and assistant write
   tools remain out of scope for this first pass; do not add write-capable MCP
   tools without a separate plan and review gate.
-- project workspace UI/UX refactor Phases 4-8 are implemented and validated for
-  this pass. Product-owner acceptance can still request visual polish, but there
-  is no known blocking gap in the planned project identity, saved-combination,
-  saved-report, responsive, or regression coverage scope.
+- project workspace UI/UX refactor Phases 4-8 and the on-demand top-bar
+  launcher refinement are implemented and validated for this pass.
+  Product-owner acceptance can still request visual polish, but there is no
+  known blocking gap in the planned local-draft, project identity,
+  saved-combination, saved-report, responsive, or regression coverage scope.
+- report revision history and restore are implemented for linked saved reports.
+  Full compare/diff, PDF visual diff, and saved layer-combination revision
+  history remain deferred follow-ups.
+
+Revision/versioning analysis on 2026-06-15:
+
+- the backend already supports project report versioning through
+  `reports[].revisions[]`, `currentRevisionId`, `REV-000n` display codes,
+  revision `source` (`generated`, `manual`, `assistant`, `import`),
+  `changeSummary`, optional `assistantPatchSummary`, and full stored revision
+  documents;
+- `/workbench/proposal` already writes a new report revision when a saved
+  project report is linked and the user clicks `Save revision`, so manual edits
+  and assistant-applied edits are persisted as a new version instead of
+  overwriting the previous revision record;
+- the assistant read-only project surface already has
+  `list_project_report_revisions` and `read_project_report_revision`, so an
+  assistant can inspect revision history when given the project/report ids;
+- the first-pass product UX for revision history is now implemented in the
+  report editor: linked saved reports can list old revisions, open one selected
+  revision read-only, and restore it by creating a new revision rather than
+  mutating history. Full compare/diff remains a deferred follow-up;
+- layer-combination versioning is not equivalent yet: saved assemblies have a
+  `version` field, but the current UI treats rename/description changes as
+  metadata updates and duplicate as a new assembly. Full assembly revision
+  history would need a separate plan if users need to inspect old layer stack
+  versions after edits.
+
+Revision-history implementation comparison checkpoint on 2026-06-15:
+
+Current implementation facts:
+
+- schema/storage already have the durable report-versioning shape needed for
+  the next product slice: `ServerProjectReportRecordSchema` stores
+  `reportDocument`, `currentRevisionId`, `description`, and up to 100
+  `revisions`; `ServerProjectReportRevisionRecordSchema` stores the full
+  proposal document, `displayCode`, `source`, `changeSummary`,
+  `assistantPatchSummary`, source assembly id/version, creator label, and
+  creation timestamp;
+- project report creation creates `REV-0001` with `source: "generated"`;
+  `appendReportRevision` creates monotonic `REV-000n` records, updates
+  `reportDocument`, moves `currentRevisionId`, preserves old revision records,
+  enforces the report byte limit, and rejects stale saves through
+  `expectedReportUpdatedAtIso`;
+- `/workbench/proposal` already uses the revision append route for linked saved
+  reports. Manual editor edits save with `source: "manual"`, assistant-applied
+  drafts save with `source: "assistant"` plus compact assistant patch metadata;
+- the assistant-facing read surface already exposes
+  `list_project_report_revisions` and `read_project_report_revision` through
+  `POST /api/report-assistant/project-read`, with `mutates: false` tool
+  definitions and bounded summaries by default;
+- `workbench-v2` saved-report rows intentionally show only report-level
+  metadata and revision count today. The report editor now owns the human
+  revision-history browser, read-only old revision preview, and
+  restore-as-new-revision action. Full compare/diff is still deferred;
+- saved layer combinations are not versioned like reports. Assemblies have a
+  `version` field, but current UI operations are save/load, metadata rename,
+  duplicate, and delete. Report revisions reference the source assembly version,
+  but old assembly-stack revision browsing is not currently a supported product
+  feature.
+
+Strengthened next slice: report revision history and restore.
+
+1. Freeze the route and schema contract before UI work.
+   - Treat the existing append/read implementation as the source of truth; do
+     not add a parallel revision store or a new mutation route unless a concrete
+     missing field is found.
+   - Verify route summaries include the fields the UI needs: revision id,
+     display code, source, created time, change summary, assistant operation
+     count/status, current marker, report updated timestamp, and report status.
+   - Keep display codes human-only. All route calls must continue to use
+     project/report/revision UUIDs.
+
+2. Add a compact revision-history entry point in the saved report context.
+   - Preferred UI location: report editor header/context area for linked saved
+     reports, with a small `Versions` or `Revision history` action. Do not
+     reopen the noisy inline project workspace panel for routine report edits.
+   - `workbench-v2` report rows may keep the revision count only; a selected row
+     can offer `Open saved report`, then revision management happens where the
+     report is being reviewed.
+   - The action is hidden or disabled for browser-local drafts and unlinked
+     reports; the existing `Save to project` panel remains the path for creating
+     the first saved report.
+
+3. Load revision summaries through the existing project-read surface.
+   - Use `POST /api/report-assistant/project-read` with
+     `list_project_report_revisions` for the first UI pass so the human UI and
+     assistant visibility share one bounded read contract.
+   - Do not fetch full revision documents for every row. Fetch the selected
+     revision body only after the user chooses a revision to inspect.
+   - If project-read fails, show a local recoverable error and leave the current
+     draft untouched.
+
+4. Show old revisions in a read-only preview.
+   - Selecting `REV-0001` or another old entry must not replace the current
+     editable report document.
+   - Render the selected revision in a drawer/side panel or clearly separated
+     preview state with labels for report name, revision display code, source,
+     created time, change summary, and assistant metadata when present.
+   - Keep the current editor form and unsaved draft state intact while the
+     preview is open. Closing the preview returns to the same draft.
+
+5. Restore an old revision by appending a new revision.
+   - Restoration must call the existing
+     `POST /api/projects/:projectId/reports/:reportId/revisions` route with the
+     selected old revision document, `source: "manual"`, and a clear
+     `changeSummary` such as `Restored from REV-0001`.
+   - Never mutate or delete the old revision record, and never directly assign
+     `currentRevisionId` to an old revision.
+   - Send the latest `expectedReportUpdatedAtIso` from the linked report context
+     to preserve stale-update protection. On `409`, ask the user to refresh the
+     report context before restoring.
+
+6. Defer full compare/diff unless the restore/browser flow needs it.
+   - First useful comparison can be metadata-only: subject, client/project name,
+     primary metric/value, executive summary text, visible issue count, and
+     assistant operation count.
+   - Do not attempt PDF visual diff or whole-document JSON diff in the first
+     pass. Those can be added after read-only preview and restore are stable.
+
+7. Keep assistant visibility aligned with the UI.
+   - The assistant can already list/read report revisions if it has explicit
+     project/report/revision ids. After the human revision-history UI exists,
+     the assistant panel should show the current revision plus revision count
+     and should be able to reference the selected preview revision without
+     gaining write tools.
+   - A standalone MCP server/tool loop is still not part of this slice. If a
+     real MCP wrapper is added later, it must wrap the same read-only project
+     read actions and keep mutation out of the assistant path.
+
+8. Keep layer-combination versioning separate.
+   - Do not imply saved-combination `version` is equivalent to report revision
+     history.
+   - If users later need old layer stack versions, plan a separate assembly
+     revision model with immutable stack snapshots and explicit restore/duplicate
+     behavior. Do not overload report revision restore to rewrite assemblies.
+
+Revision-history edge cases:
+
+- no project or unlinked report: hide revision history and keep the normal
+  browser-local editor behavior;
+- saved report with malformed or missing current revision: show report metadata
+  and a recoverable "revision unavailable" message instead of crashing the
+  editor;
+- archived report: allow viewing history. Restoring should either be disabled
+  until the report is restored from archive or should explicitly create a new
+  draft revision and move status back to `draft`; do not silently edit an
+  archived report;
+- stale linked report context: show the conflict returned by the append route
+  and provide a refresh/reopen path before retrying;
+- assistant-generated revision: preserve `assistantPatchSummary` on historical
+  reads, but a restore action should be recorded as a manual restore unless the
+  assistant generated the new document in the same reviewed flow;
+- deleted or modified source assembly: old report revisions remain readable
+  because they store a full report document and source assembly metadata. The UI
+  should label source assembly id/version as historical context and not require
+  the assembly to exist before previewing the old report;
+- large reports: keep list calls summary-only and read one selected revision at
+  a time to avoid unnecessary payload growth;
+- rapid clicks: reuse the existing in-flight ref pattern for restore so one
+  button double-click cannot append two restore revisions;
+- mobile layout: revision list, preview, and restore controls must not create
+  horizontal overflow; use the same restrained workbench panel language and
+  avoid nested cards.
+
+Revision-history test plan:
+
+- focused storage/route coverage: create report, append manual revision, append
+  assistant revision, read revision summaries, read one old revision document,
+  reject stale restore with `409`, and reject too many/too large revisions;
+- report editor/component coverage: linked saved report shows revision context,
+  `Versions` opens the summary list, old revision preview is read-only, closing
+  preview preserves unsaved draft edits, restore posts a new revision payload
+  with `Restored from REV-000n`;
+- assistant project-read coverage: `list_project_report_revisions` and
+  `read_project_report_revision` stay `mutates: false`, return summaries first,
+  and do not leak unrelated project/report bodies;
+- E2E happy path: create project, save combination, save report, edit report,
+  save `REV-0002`, open revision history, preview `REV-0001`, restore it as
+  `REV-0003`, verify the report editor and project-read surface now identify
+  `REV-0003` as current while `REV-0001` and `REV-0002` remain readable;
+- E2E safety path: start from an unsaved local report, confirm revision history
+  is unavailable, use `Save to project`, then confirm first revision becomes
+  visible after the report is linked;
+- responsive/browser check: desktop and mobile report editor screenshots should
+  show no text overlap or horizontal overflow in the revision list/preview.
+
+Acceptance criteria for this slice:
+
+- users can see every saved version of a linked project report with clear source
+  and timestamp labels;
+- users can open an old version without changing the current editable draft;
+- users can restore an old version only through an explicit action that creates
+  a new current revision;
+- manual edits and assistant-applied edits remain durable as full report
+  documents, not patch-only metadata;
+- assistant/project-read can inspect the same revision history the user sees,
+  while assistant/MCP write tools remain absent;
+- saved layer combinations continue to behave as saved stack records, with any
+  full assembly revision history deferred to a separate, explicit plan.
 
 ## Planning Analysis Update - 2026-06-15
 

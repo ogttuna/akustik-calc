@@ -2224,6 +2224,24 @@ textarea.ui-field {
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 0.375rem;
+  min-width: 0;
+}
+
+.calc-project-trigger {
+  max-width: min(100%, 24rem);
+}
+
+.calc-project-trigger small {
+  min-width: 0;
+  max-width: 14rem;
+  overflow: hidden;
+  color: inherit;
+  font-size: 0.76rem;
+  font-weight: 620;
+  line-height: 1.2;
+  opacity: 0.78;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .calc-grid {
@@ -2704,6 +2722,15 @@ textarea.ui-field {
   gap: 0.75rem;
 }
 
+.calc-project-panel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
 .calc-project-identity {
   display: grid;
   min-width: 0;
@@ -2714,7 +2741,7 @@ textarea.ui-field {
 
 .calc-project-identity-summary {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, auto);
+  grid-template-columns: minmax(0, 1fr);
   align-items: center;
   gap: 0.75rem;
   min-width: 0;
@@ -2753,10 +2780,58 @@ textarea.ui-field {
 
 .calc-project-identity-detail {
   min-width: 0;
+  margin: 0;
   color: var(--text-muted);
   font-size: 0.8rem;
   line-height: 1.35;
   overflow-wrap: anywhere;
+}
+
+.calc-project-identity-details {
+  min-width: 0;
+}
+
+.calc-project-identity-details > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  width: fit-content;
+  border-radius: var(--radius-control);
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 680;
+  line-height: 1.2;
+  list-style: none;
+}
+
+.calc-project-identity-details > summary:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--surface-app),
+    0 0 0 4px color-mix(in oklch, var(--focus) 74%, transparent);
+}
+
+.calc-project-identity-details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.calc-project-identity-details > summary svg {
+  color: var(--text-muted);
+  transition: transform 160ms ease;
+}
+
+.calc-project-identity-details[open] > summary svg {
+  transform: rotate(180deg);
+}
+
+.calc-project-identity-detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, auto);
+  align-items: start;
+  gap: 0.625rem;
+  min-width: 0;
+  padding-top: 0.5rem;
 }
 
 .calc-project-identity-stats {
@@ -2890,12 +2965,18 @@ textarea.ui-field {
 }
 
 .calc-project-row-copy span,
+.calc-project-row-copy small,
 .calc-project-row-result {
   min-width: 0;
   color: var(--text-muted);
   font-size: 0.78rem;
   line-height: 1.35;
   overflow-wrap: anywhere;
+}
+
+.calc-project-row-copy small {
+  display: block;
+  color: var(--text-secondary);
 }
 
 .calc-project-row-result {
@@ -2907,7 +2988,7 @@ textarea.ui-field {
 
 .calc-project-row-edit {
   display: grid;
-  grid-template-columns: minmax(12rem, 1fr) minmax(0, auto);
+  grid-template-columns: minmax(10rem, 0.8fr) minmax(12rem, 1fr) minmax(0, auto);
   align-items: center;
   gap: 0.5rem;
   min-width: 0;
@@ -3464,11 +3545,246 @@ textarea.ui-field {
 .report-preview-panel,
 .report-editor-panel,
 .report-assistant-panel,
+.report-revision-panel,
+.report-project-save-panel,
 .report-empty {
   border: 1px solid var(--border-default);
   border-radius: var(--radius-panel);
   background: var(--surface-control);
   box-shadow: var(--shadow-xs);
+}
+
+.report-revision-panel,
+.report-project-save-panel {
+  display: grid;
+  gap: 0.875rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+}
+
+.report-revision-head,
+.report-project-save-head,
+.report-project-save-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.report-revision-head h2,
+.report-project-save-head h2 {
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 760;
+  letter-spacing: 0;
+  line-height: 1.15;
+}
+
+.report-revision-head p,
+.report-project-save-head p {
+  margin-top: 0.25rem;
+  color: var(--text-muted);
+  font-size: 0.84rem;
+  line-height: 1.35;
+}
+
+.report-revision-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.report-revision-grid {
+  display: grid;
+  grid-template-columns: minmax(14rem, 0.9fr) minmax(0, 1.35fr);
+  gap: 0.875rem;
+  min-width: 0;
+}
+
+.report-revision-list,
+.report-revision-preview {
+  min-width: 0;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-control);
+  background: var(--surface-inset);
+}
+
+.report-revision-list {
+  display: grid;
+  align-content: start;
+  overflow: clip;
+}
+
+.report-revision-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.7rem;
+  min-width: 0;
+  border: 0;
+  border-bottom: 1px solid var(--border-default);
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.report-revision-row:last-child {
+  border-bottom: 0;
+}
+
+.report-revision-row[data-selected="true"] {
+  background: color-mix(in oklch, var(--state-accent-bg) 64%, transparent);
+}
+
+.report-revision-code {
+  color: var(--text-primary);
+  font-size: 0.78rem;
+  font-weight: 760;
+  line-height: 1;
+}
+
+.report-revision-copy {
+  display: grid;
+  min-width: 0;
+  gap: 0.125rem;
+}
+
+.report-revision-copy strong {
+  color: var(--text-primary);
+  font-size: 0.84rem;
+  font-weight: 740;
+  line-height: 1.2;
+}
+
+.report-revision-copy small {
+  overflow-wrap: anywhere;
+  color: var(--text-secondary);
+  font-size: 0.76rem;
+  line-height: 1.35;
+}
+
+.report-revision-preview {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.875rem;
+}
+
+.report-revision-preview-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.report-revision-preview-head > div {
+  display: grid;
+  min-width: 0;
+  gap: 0.125rem;
+}
+
+.report-revision-preview-head span,
+.report-revision-preview-fields dt {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  font-weight: 760;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.report-revision-preview-head strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-weight: 760;
+  line-height: 1.25;
+}
+
+.report-revision-preview-head small {
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.report-revision-preview-fields {
+  display: grid;
+  gap: 0.625rem;
+  margin: 0;
+}
+
+.report-revision-preview-fields div {
+  display: grid;
+  min-width: 0;
+  gap: 0.15rem;
+}
+
+.report-revision-preview-fields dd {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--text-primary);
+  font-size: 0.84rem;
+  font-weight: 650;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.report-revision-restore {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-top: 1px solid var(--border-default);
+  padding-top: 0.75rem;
+}
+
+.report-revision-restore small,
+.report-revision-empty {
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.report-revision-empty {
+  display: inline-flex;
+  min-height: 4rem;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem;
+}
+
+.report-project-save-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.report-project-save-existing {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.75rem;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-control);
+  background: var(--surface-inset);
+}
+
+.report-project-save-existing strong {
+  color: var(--text-primary);
+  font-size: 0.86rem;
+  font-weight: 740;
+}
+
+.report-project-save-existing span {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  line-height: 1.35;
 }
 
 .report-preview-panel {
@@ -3682,6 +3998,10 @@ textarea.ui-field {
   min-height: 6rem;
   resize: vertical;
   line-height: 1.45;
+}
+
+.report-textarea-compact {
+  min-height: 4.5rem;
 }
 
 .report-assistant-body {
@@ -3939,6 +4259,10 @@ textarea.ui-field {
     grid-template-columns: 1fr;
   }
 
+  .calc-project-identity-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
   .calc-project-identity-stats {
     justify-content: flex-start;
   }
@@ -4141,6 +4465,14 @@ textarea.ui-field {
   .report-actions,
   .report-preview-toolbar {
     justify-content: flex-start;
+  }
+
+  .report-project-save-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .report-revision-grid {
+    grid-template-columns: 1fr;
   }
 
   .report-preview-toolbar {

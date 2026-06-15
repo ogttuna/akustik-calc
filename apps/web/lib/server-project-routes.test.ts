@@ -507,6 +507,7 @@ describe("server project API routes", () => {
     const reportResponse = await createReport(
       jsonRequest(`http://localhost/api/projects/${projectId}/reports`, {
         assemblyId,
+        description: "Issued report draft for the guest room wall.",
         name: "Guest room party wall report",
         reportDocument: baseReportDocument,
         sourceAssemblySnapshot: snapshot,
@@ -543,8 +544,9 @@ describe("server project API routes", () => {
     expect(reportResponse.status).toBe(201);
     expect(reportBody.report).toMatchObject({
       assemblyId,
-      displayCode: "RPT-0001",
-      name: "Guest room party wall report",
+        displayCode: "RPT-0001",
+        description: "Issued report draft for the guest room wall.",
+        name: "Guest room party wall report",
       revisions: [
         expect.objectContaining({
           displayCode: "REV-0001",
@@ -561,6 +563,7 @@ describe("server project API routes", () => {
     });
     const reportListBody = (await reportListResponse.json()) as {
       reports?: Array<{
+        description?: string;
         id: string;
         reportDocument?: unknown;
         revisionCount: number;
@@ -570,6 +573,7 @@ describe("server project API routes", () => {
     expect(reportListResponse.status).toBe(200);
     expect(reportListBody.reports).toEqual([
       expect.objectContaining({
+        description: "Issued report draft for the guest room wall.",
         id: reportId,
         revisionCount: 1
       })
