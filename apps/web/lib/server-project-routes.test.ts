@@ -5,6 +5,11 @@ import path from "node:path";
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { SimpleWorkbenchProposalDocument } from "../features/workbench/simple-workbench-proposal";
+import {
+  WORKBENCH_V2_DEFAULT_CONTEXT,
+  buildWorkbenchV2ProjectSnapshot,
+  parseWorkbenchV2ProjectSnapshot
+} from "../features/workbench-rebuild/workbench-v2-project-snapshot";
 
 const mockAuthState = vi.hoisted(() => ({
   value: {
@@ -52,13 +57,13 @@ async function makeTempStoreDir() {
   return tempDir;
 }
 
-function jsonRequest(url: string, payload: unknown) {
+function jsonRequest(url: string, payload: unknown, method = "POST") {
   return new Request(url, {
     body: JSON.stringify(payload),
     headers: {
       "content-type": "application/json"
     },
-    method: "POST"
+    method
   });
 }
 
@@ -131,6 +136,49 @@ function makeLocalScenarioImportPayload(input?: {
       }
     ]
   };
+}
+
+function makeWorkbenchV2MaterialSnapshot() {
+  const customMaterial = {
+    acoustic: {
+      absorberClass: "porous_absorptive" as const,
+      behavior: "porous_absorber" as const,
+      flowResistivityPaSM2: 12000,
+      notes: [],
+      propertySourceStatus: "user_supplied" as const
+    },
+    category: "insulation" as const,
+    densityKgM3: 45,
+    id: "custom_server_snapshot_wool",
+    name: "Server snapshot wool",
+    tags: ["custom-workbench-material", "insulation", "porous_absorber"]
+  };
+
+  return buildWorkbenchV2ProjectSnapshot({
+    context: {
+      ...WORKBENCH_V2_DEFAULT_CONTEXT,
+      wallCavity1FillCoverage: "full",
+      wallTopologyMode: "double_leaf_framed"
+    },
+    customMaterials: [customMaterial],
+    id: "workbench-v2-server-snapshot",
+    layers: [
+      { id: "layer-1", materialId: "gypsum_board", role: "side_a", thicknessMm: "12.5" },
+      { id: "layer-2", materialId: customMaterial.id, role: "cavity", thicknessMm: "50" }
+    ],
+    materialVisualOverrides: [
+      {
+        fillColor: "#123456",
+        materialId: customMaterial.id,
+        updatedAtIso: "2026-06-12T10:00:00.000Z"
+      }
+    ],
+    mode: "wall",
+    name: "V2 material editor server snapshot",
+    savedAtIso: "2026-06-12T10:00:00.000Z",
+    selectedLayerId: "layer-2",
+    selectedOutputs: ["Rw", "DnT,w"]
+  });
 }
 
 function makeProposalDocument(input?: {
@@ -274,6 +322,642 @@ describe("server project API routes", () => {
     expect(detailBody.project).toMatchObject({
       id: importBody.project!.id,
       ownerLabel: "Preview mode"
+    });
+  });
+
+  it("round-trips workbench v2 material editor snapshots through server project detail", async () => {
+    const { POST: importLocalScenarios } = await import("../app/api/projects/import-local/route");
+    const { GET: readProject } = await import("../app/api/projects/[projectId]/route");
+    const snapshot = makeWorkbenchV2MaterialSnapshot();
+
+    const importResponse = await importLocalScenarios(
+      jsonRequest("http://localhost/api/projects/import-local", {
+        projectName: "Workbench v2 material editor",
+        scenarios: [
+          {
+            inputSnapshot: snapshot,
+            localScenarioId: snapshot.id,
+            name: snapshot.name,
+            outputSnapshot: {
+              resultStatus: "ready"
+            },
+            savedAtIso: snapshot.savedAtIso
+          }
+        ]
+      })
+    );
+    const importBody = (await importResponse.json()) as {
+      project?: {
+        id?: string;
+      };
+    };
+
+    expect(importResponse.status).toBe(201);
+    expect(importBody.project?.id).toMatch(/^[0-9a-f-]{36}$/u);
+
+    const detailResponse = await readProject(new Request(`http://localhost/api/projects/${importBody.project!.id}`), {
+      params: Promise.resolve({
+        projectId: importBody.project!.id!
+      })
+    });
+    const detailBody = (await detailResponse.json()) as {
+      project?: {
+        scenarioSnapshots?: Array<{
+          calculatorInput: {
+            payload: unknown;
+          };
+        }>;
+      };
+    };
+    const parsed = parseWorkbenchV2ProjectSnapshot(detailBody.project?.scenarioSnapshots?.[0]?.calculatorInput.payload);
+
+    expect(detailResponse.status).toBe(200);
+    expect(parsed).toMatchObject({
+      droppedCustomMaterials: 0,
+      droppedVisualOverrides: 0,
+      snapshot: {
+        context: {
+          wallCavity1FillCoverage: "full",
+          wallTopologyMode: "double_leaf_framed"
+        },
+        customMaterials: [
+          {
+            id: "custom_server_snapshot_wool",
+            name: "Server snapshot wool"
+          }
+        ],
+        materialVisualOverrides: [
+          {
+            fillColor: "#123456",
+            materialId: "custom_server_snapshot_wool"
+          }
+        ],
+        mode: "wall",
+        selectedLayerId: "layer-2",
+        selectedOutputs: ["Rw", "DnT,w"]
+      }
+    });
+  });
+
+  it("stores named workbench v2 assemblies, reports, and assistant report revisions under one project", async () => {
+    const { POST: createProject } = await import("../app/api/projects/route");
+    const { GET: listAssemblies, POST: createAssembly } = await import("../app/api/projects/[projectId]/assemblies/route");
+    const { GET: readAssembly } = await import("../app/api/projects/[projectId]/assemblies/[assemblyId]/route");
+    const { GET: listReports, POST: createReport } = await import("../app/api/projects/[projectId]/reports/route");
+    const { GET: readReport } = await import("../app/api/projects/[projectId]/reports/[reportId]/route");
+    const { POST: createReportRevision } = await import("../app/api/projects/[projectId]/reports/[reportId]/revisions/route");
+
+    const snapshot = makeWorkbenchV2MaterialSnapshot();
+    const projectResponse = await createProject(
+      jsonRequest("http://localhost/api/projects", {
+        clientName: "Acme Hotels",
+        name: "Bilmem Ne Oteli"
+      })
+    );
+    const projectBody = (await projectResponse.json()) as {
+      project?: {
+        id?: string;
+      };
+    };
+    const projectId = projectBody.project!.id!;
+
+    const assemblyResponse = await createAssembly(
+      jsonRequest(`http://localhost/api/projects/${projectId}/assemblies`, {
+        calculationSummary: {
+          primaryOutput: "Rw",
+          primaryValueLabel: "46 dB",
+          selectedOutputs: ["Rw", "DnT,w"],
+          status: "ready"
+        },
+        description: "Guest room party wall with project wool.",
+        kind: "wall",
+        name: "Guest room party wall",
+        snapshot
+      }),
+      {
+        params: Promise.resolve({
+          projectId
+        })
+      }
+    );
+    const assemblyBody = (await assemblyResponse.json()) as {
+      assembly?: {
+        displayCode?: string;
+        id?: string;
+        snapshot?: unknown;
+      };
+    };
+    const assemblyId = assemblyBody.assembly!.id!;
+
+    expect(assemblyResponse.status).toBe(201);
+    expect(assemblyBody.assembly).toMatchObject({
+      displayCode: "ASM-0001",
+      name: "Guest room party wall",
+      version: 1
+    });
+
+    const assemblyListResponse = await listAssemblies(new Request(`http://localhost/api/projects/${projectId}/assemblies`), {
+      params: Promise.resolve({
+        projectId
+      })
+    });
+    const assemblyListBody = (await assemblyListResponse.json()) as {
+      assemblies?: Array<{
+        id: string;
+        snapshot?: unknown;
+      }>;
+    };
+
+    expect(assemblyListResponse.status).toBe(200);
+    expect(assemblyListBody.assemblies).toEqual([
+      expect.objectContaining({
+        id: assemblyId,
+        name: "Guest room party wall"
+      })
+    ]);
+    expect(assemblyListBody.assemblies?.[0]).not.toHaveProperty("snapshot");
+
+    const assemblyDetailResponse = await readAssembly(
+      new Request(`http://localhost/api/projects/${projectId}/assemblies/${assemblyId}`),
+      {
+        params: Promise.resolve({
+          assemblyId,
+          projectId
+        })
+      }
+    );
+    const assemblyDetailBody = (await assemblyDetailResponse.json()) as {
+      assembly?: {
+        snapshot?: unknown;
+      };
+    };
+
+    expect(assemblyDetailResponse.status).toBe(200);
+    expect(parseWorkbenchV2ProjectSnapshot(assemblyDetailBody.assembly?.snapshot)).toMatchObject({
+      snapshot: {
+        id: "workbench-v2-server-snapshot",
+        mode: "wall",
+        name: "V2 material editor server snapshot"
+      }
+    });
+
+    const baseReportDocument = makeProposalDocument({
+      serverProjectId: projectId
+    });
+    const reportResponse = await createReport(
+      jsonRequest(`http://localhost/api/projects/${projectId}/reports`, {
+        assemblyId,
+        name: "Guest room party wall report",
+        reportDocument: baseReportDocument,
+        sourceAssemblySnapshot: snapshot,
+        sourceCalculationOutput: {
+          primaryMetric: "Rw 46 dB"
+        },
+        sourceMaterialSnapshot: {
+          customMaterials: snapshot.customMaterials,
+          materialVisualOverrides: snapshot.materialVisualOverrides
+        }
+      }),
+      {
+        params: Promise.resolve({
+          projectId
+        })
+      }
+    );
+    const reportBody = (await reportResponse.json()) as {
+      report?: {
+        currentRevisionId?: string;
+        displayCode?: string;
+        id?: string;
+        reportDocument?: unknown;
+        revisions?: Array<{
+          displayCode?: string;
+          source?: string;
+        }>;
+        updatedAtIso?: string;
+      };
+    };
+    const reportId = reportBody.report!.id!;
+    const firstReportUpdatedAtIso = reportBody.report!.updatedAtIso!;
+
+    expect(reportResponse.status).toBe(201);
+    expect(reportBody.report).toMatchObject({
+      assemblyId,
+      displayCode: "RPT-0001",
+      name: "Guest room party wall report",
+      revisions: [
+        expect.objectContaining({
+          displayCode: "REV-0001",
+          source: "generated"
+        })
+      ],
+      status: "draft"
+    });
+
+    const reportListResponse = await listReports(new Request(`http://localhost/api/projects/${projectId}/reports`), {
+      params: Promise.resolve({
+        projectId
+      })
+    });
+    const reportListBody = (await reportListResponse.json()) as {
+      reports?: Array<{
+        id: string;
+        reportDocument?: unknown;
+        revisionCount: number;
+      }>;
+    };
+
+    expect(reportListResponse.status).toBe(200);
+    expect(reportListBody.reports).toEqual([
+      expect.objectContaining({
+        id: reportId,
+        revisionCount: 1
+      })
+    ]);
+    expect(reportListBody.reports?.[0]).not.toHaveProperty("reportDocument");
+
+    const correctedDocument: SimpleWorkbenchProposalDocument = {
+      ...baseReportDocument,
+      primaryMetricValue: "45 dB",
+      reportAdjustments: [
+        {
+          afterValue: "45 dB",
+          appliedAtIso: "2026-06-12T12:00:00.000Z",
+          beforeValue: "46 dB",
+          engineValuePreserved: true,
+          id: "assistant-adjustment-1",
+          label: "Rw",
+          metricId: "output:Rw",
+          outputId: "Rw",
+          reason: "Assistant-reviewed report correction.",
+          scope: "saved_snapshot",
+          source: "assistant"
+        }
+      ]
+    };
+
+    const revisionResponse = await createReportRevision(
+      jsonRequest(`http://localhost/api/projects/${projectId}/reports/${reportId}/revisions`, {
+        assistantPatchSummary: {
+          appliedAtIso: "2026-06-12T12:00:00.000Z",
+          instruction: "Set Rw to 45 dB in the report",
+          operationCount: 1,
+          validationStatus: "valid"
+        },
+        changeSummary: "Assistant-reviewed Rw display correction.",
+        document: correctedDocument,
+        expectedReportUpdatedAtIso: firstReportUpdatedAtIso,
+        source: "assistant"
+      }),
+      {
+        params: Promise.resolve({
+          projectId,
+          reportId
+        })
+      }
+    );
+    const revisionBody = (await revisionResponse.json()) as {
+      report?: {
+        currentRevisionId?: string;
+        reportDocument?: SimpleWorkbenchProposalDocument;
+        revisions?: Array<{
+          assistantPatchSummary?: {
+            operationCount?: number;
+          };
+          displayCode?: string;
+          source?: string;
+        }>;
+        updatedAtIso?: string;
+      };
+      revision?: {
+        id?: string;
+      };
+    };
+
+    expect(revisionResponse.status).toBe(201);
+    expect(revisionBody.report?.currentRevisionId).toBe(revisionBody.revision?.id);
+    expect(revisionBody.report?.reportDocument).toMatchObject({
+      primaryMetricValue: "45 dB",
+      reportAdjustments: [
+        expect.objectContaining({
+          source: "assistant"
+        })
+      ]
+    });
+    expect(revisionBody.report?.revisions).toEqual([
+      expect.objectContaining({
+        displayCode: "REV-0001",
+        source: "generated"
+      }),
+      expect.objectContaining({
+        assistantPatchSummary: expect.objectContaining({
+          operationCount: 1
+        }),
+        displayCode: "REV-0002",
+        source: "assistant"
+      })
+    ]);
+
+    const reportDetailResponse = await readReport(new Request(`http://localhost/api/projects/${projectId}/reports/${reportId}`), {
+      params: Promise.resolve({
+        projectId,
+        reportId
+      })
+    });
+    const reportDetailBody = (await reportDetailResponse.json()) as {
+      report?: {
+        reportDocument?: SimpleWorkbenchProposalDocument;
+      };
+    };
+
+    expect(reportDetailResponse.status).toBe(200);
+    expect(reportDetailBody.report?.reportDocument).toMatchObject({
+      primaryMetricValue: "45 dB"
+    });
+
+    const staleRevisionResponse = await createReportRevision(
+      jsonRequest(`http://localhost/api/projects/${projectId}/reports/${reportId}/revisions`, {
+        document: correctedDocument,
+        expectedReportUpdatedAtIso: firstReportUpdatedAtIso,
+        source: "manual"
+      }),
+      {
+        params: Promise.resolve({
+          projectId,
+          reportId
+        })
+      }
+    );
+    const staleRevisionBody = (await staleRevisionResponse.json()) as {
+      code?: string;
+      ok?: boolean;
+    };
+
+    expect(staleRevisionResponse.status).toBe(409);
+    expect(staleRevisionBody).toMatchObject({
+      code: "report_revision_conflict",
+      ok: false
+    });
+  });
+
+  it("renames, duplicates, archives, and deletes project child records without orphaning reports", async () => {
+    const { POST: createProject } = await import("../app/api/projects/route");
+    const { GET: listAssemblies, POST: createAssembly } = await import("../app/api/projects/[projectId]/assemblies/route");
+    const {
+      DELETE: deleteAssembly,
+      PATCH: updateAssembly
+    } = await import("../app/api/projects/[projectId]/assemblies/[assemblyId]/route");
+    const { POST: duplicateAssembly } = await import("../app/api/projects/[projectId]/assemblies/[assemblyId]/duplicate/route");
+    const { GET: listReports, POST: createReport } = await import("../app/api/projects/[projectId]/reports/route");
+    const {
+      DELETE: deleteReport,
+      PATCH: updateReport
+    } = await import("../app/api/projects/[projectId]/reports/[reportId]/route");
+    const { POST: duplicateReport } = await import("../app/api/projects/[projectId]/reports/[reportId]/duplicate/route");
+
+    const snapshot = makeWorkbenchV2MaterialSnapshot();
+    const projectResponse = await createProject(
+      jsonRequest("http://localhost/api/projects", {
+        name: "Managed child project"
+      })
+    );
+    const projectBody = (await projectResponse.json()) as {
+      project?: {
+        id?: string;
+      };
+    };
+    const projectId = projectBody.project!.id!;
+
+    const assemblyResponse = await createAssembly(
+      jsonRequest(`http://localhost/api/projects/${projectId}/assemblies`, {
+        calculationSummary: {
+          selectedOutputs: ["Rw"],
+          status: "ready"
+        },
+        kind: "wall",
+        name: "Original wall",
+        snapshot
+      }),
+      {
+        params: Promise.resolve({
+          projectId
+        })
+      }
+    );
+    const assemblyBody = (await assemblyResponse.json()) as {
+      assembly?: {
+        id?: string;
+      };
+    };
+    const assemblyId = assemblyBody.assembly!.id!;
+
+    const updateAssemblyResponse = await updateAssembly(
+      jsonRequest(
+        `http://localhost/api/projects/${projectId}/assemblies/${assemblyId}`,
+        {
+          name: "Renamed wall"
+        },
+        "PATCH"
+      ),
+      {
+        params: Promise.resolve({
+          assemblyId,
+          projectId
+        })
+      }
+    );
+    await expect(updateAssemblyResponse.json()).resolves.toMatchObject({
+      assembly: {
+        id: assemblyId,
+        name: "Renamed wall"
+      },
+      ok: true
+    });
+
+    const duplicateAssemblyResponse = await duplicateAssembly(
+      jsonRequest(`http://localhost/api/projects/${projectId}/assemblies/${assemblyId}/duplicate`, {}),
+      {
+        params: Promise.resolve({
+          assemblyId,
+          projectId
+        })
+      }
+    );
+    const duplicateAssemblyBody = (await duplicateAssemblyResponse.json()) as {
+      assembly?: {
+        displayCode?: string;
+        id?: string;
+        name?: string;
+      };
+    };
+    const duplicateAssemblyId = duplicateAssemblyBody.assembly!.id!;
+
+    expect(duplicateAssemblyResponse.status).toBe(201);
+    expect(duplicateAssemblyBody.assembly).toMatchObject({
+      displayCode: "ASM-0002",
+      name: "Copy of Renamed wall"
+    });
+
+    const deleteDuplicateAssemblyResponse = await deleteAssembly(
+      new Request(`http://localhost/api/projects/${projectId}/assemblies/${duplicateAssemblyId}`, {
+        method: "DELETE"
+      }),
+      {
+        params: Promise.resolve({
+          assemblyId: duplicateAssemblyId,
+          projectId
+        })
+      }
+    );
+    expect(deleteDuplicateAssemblyResponse.status).toBe(200);
+
+    const reportResponse = await createReport(
+      jsonRequest(`http://localhost/api/projects/${projectId}/reports`, {
+        assemblyId,
+        name: "Original report",
+        reportDocument: makeProposalDocument({
+          serverProjectId: projectId,
+          serverProjectScenarioId: assemblyId
+        }),
+        sourceAssemblySnapshot: snapshot,
+        sourceMaterialSnapshot: {
+          customMaterials: snapshot.customMaterials,
+          materialVisualOverrides: snapshot.materialVisualOverrides
+        }
+      }),
+      {
+        params: Promise.resolve({
+          projectId
+        })
+      }
+    );
+    const reportBody = (await reportResponse.json()) as {
+      report?: {
+        id?: string;
+        updatedAtIso?: string;
+      };
+    };
+    const reportId = reportBody.report!.id!;
+    const reportUpdatedAtIso = reportBody.report!.updatedAtIso!;
+
+    const blockedAssemblyDeleteResponse = await deleteAssembly(
+      new Request(`http://localhost/api/projects/${projectId}/assemblies/${assemblyId}`, {
+        method: "DELETE"
+      }),
+      {
+        params: Promise.resolve({
+          assemblyId,
+          projectId
+        })
+      }
+    );
+    await expect(blockedAssemblyDeleteResponse.json()).resolves.toMatchObject({
+      code: "assembly_has_reports",
+      ok: false
+    });
+    expect(blockedAssemblyDeleteResponse.status).toBe(409);
+
+    const archiveReportResponse = await updateReport(
+      jsonRequest(
+        `http://localhost/api/projects/${projectId}/reports/${reportId}`,
+        {
+          expectedReportUpdatedAtIso: reportUpdatedAtIso,
+          name: "Archived acoustic report",
+          status: "archived"
+        },
+        "PATCH"
+      ),
+      {
+        params: Promise.resolve({
+          projectId,
+          reportId
+        })
+      }
+    );
+    const archiveReportBody = (await archiveReportResponse.json()) as {
+      report?: {
+        name?: string;
+        status?: string;
+      };
+    };
+
+    expect(archiveReportResponse.status).toBe(200);
+    expect(archiveReportBody.report).toMatchObject({
+      name: "Archived acoustic report",
+      status: "archived"
+    });
+
+    const duplicateReportResponse = await duplicateReport(
+      jsonRequest(`http://localhost/api/projects/${projectId}/reports/${reportId}/duplicate`, {}),
+      {
+        params: Promise.resolve({
+          projectId,
+          reportId
+        })
+      }
+    );
+    const duplicateReportBody = (await duplicateReportResponse.json()) as {
+      report?: {
+        displayCode?: string;
+        id?: string;
+        name?: string;
+        revisions?: unknown[];
+        status?: string;
+      };
+    };
+    const duplicateReportId = duplicateReportBody.report!.id!;
+
+    expect(duplicateReportResponse.status).toBe(201);
+    expect(duplicateReportBody.report).toMatchObject({
+      displayCode: "RPT-0002",
+      name: "Copy of Archived acoustic report",
+      status: "draft"
+    });
+    expect(duplicateReportBody.report?.revisions).toHaveLength(1);
+
+    const deleteDuplicateReportResponse = await deleteReport(
+      new Request(`http://localhost/api/projects/${projectId}/reports/${duplicateReportId}`, {
+        method: "DELETE"
+      }),
+      {
+        params: Promise.resolve({
+          projectId,
+          reportId: duplicateReportId
+        })
+      }
+    );
+    expect(deleteDuplicateReportResponse.status).toBe(200);
+
+    const assemblyListResponse = await listAssemblies(new Request(`http://localhost/api/projects/${projectId}/assemblies`), {
+      params: Promise.resolve({
+        projectId
+      })
+    });
+    const reportListResponse = await listReports(new Request(`http://localhost/api/projects/${projectId}/reports`), {
+      params: Promise.resolve({
+        projectId
+      })
+    });
+
+    await expect(assemblyListResponse.json()).resolves.toMatchObject({
+      assemblies: [
+        {
+          id: assemblyId,
+          name: "Renamed wall"
+        }
+      ],
+      ok: true
+    });
+    await expect(reportListResponse.json()).resolves.toMatchObject({
+      ok: true,
+      reports: [
+        {
+          id: reportId,
+          name: "Archived acoustic report",
+          revisionCount: 1,
+          status: "archived"
+        }
+      ]
     });
   });
 

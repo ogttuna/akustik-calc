@@ -223,4 +223,51 @@ describe("server project storage", () => {
 
     await expect(repository.readProject(OWNER_A, "../not-a-project")).rejects.toBeInstanceOf(ServerProjectStorageError);
   });
+
+  it("keeps generated duplicate child names inside the project name limit", async () => {
+    const repository = new FileServerProjectRepository({
+      baseDir: await makeTempStoreDir(),
+      now: () => FIXED_NOW
+    });
+    const longName = "A".repeat(160);
+    const project = await repository.createProject(OWNER_A, {
+      name: "Long child names"
+    });
+    const withAssembly = await repository.appendAssembly(OWNER_A, project.id, {
+      kind: "wall",
+      name: longName,
+      snapshot: {
+        schemaId: "test.workbench-v2.snapshot"
+      }
+    });
+    const assembly = withAssembly.assemblies[0]!;
+
+    const withDuplicatedAssembly = await repository.duplicateAssembly(OWNER_A, project.id, assembly.id, {});
+    const duplicatedAssembly = withDuplicatedAssembly.assemblies.at(-1)!;
+
+    expect(duplicatedAssembly.name).toHaveLength(160);
+    expect(duplicatedAssembly.name).toBe(`Copy of ${"A".repeat(152)}`);
+
+    const withReport = await repository.appendReport(OWNER_A, project.id, {
+      assemblyId: assembly.id,
+      name: longName,
+      reportDocument: {
+        projectName: "Long child names report"
+      },
+      sourceAssemblySnapshot: {
+        schemaId: "test.workbench-v2.snapshot"
+      },
+      sourceMaterialSnapshot: {
+        customMaterials: [],
+        materialVisualOverrides: []
+      }
+    });
+    const report = withReport.reports[0]!;
+
+    const withDuplicatedReport = await repository.duplicateReport(OWNER_A, project.id, report.id, {});
+    const duplicatedReport = withDuplicatedReport.reports.at(-1)!;
+
+    expect(duplicatedReport.name).toHaveLength(160);
+    expect(duplicatedReport.name).toBe(`Copy of ${"A".repeat(152)}`);
+  });
 });

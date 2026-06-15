@@ -7,7 +7,8 @@ import {
   type DynamicAirborneFamily,
   type LayerInput,
   type MaterialDefinition,
-  type RequestedOutputId
+  type RequestedOutputId,
+  type ResolvedLayer
 } from "@dynecho/shared";
 
 import {
@@ -121,20 +122,28 @@ function clamp(value: number, min: number, max: number): number {
 }
 
 function materialFor(
-  materialId: string,
+  layer: LayerInput | ResolvedLayer,
   catalog: readonly MaterialDefinition[]
 ): MaterialDefinition | null {
+  if ("material" in layer && layer.material.id === layer.materialId) {
+    return layer.material;
+  }
+
   try {
-    return resolveMaterial(materialId, catalog);
+    return resolveMaterial(layer.materialId, catalog);
   } catch {
     return null;
   }
 }
 
-function surfaceMassForLayer(layer: LayerInput, catalog: readonly MaterialDefinition[]): number {
-  const material = materialFor(layer.materialId, catalog);
+function surfaceMassForLayer(layer: LayerInput | ResolvedLayer, catalog: readonly MaterialDefinition[]): number {
+  const material = materialFor(layer, catalog);
   if (!material || material.category === "gap" || material.category === "insulation") {
     return 0;
+  }
+
+  if ("surfaceMassKgM2" in layer && Number.isFinite(layer.surfaceMassKgM2)) {
+    return layer.surfaceMassKgM2;
   }
 
   return (Math.max(material.densityKgM3, 0) * Math.max(layer.thicknessMm, 0)) / 1000;
@@ -163,7 +172,7 @@ function flowResistivitySource(
   airborneContext?: AirborneContext
 ): GateRDoubleLeafFramedBridgePhysicalInputs["flowResistivitySource"] {
   for (const layer of layers) {
-    const material = materialFor(layer.materialId, catalog);
+    const material = materialFor(layer, catalog);
     if (material?.acoustic?.behavior !== "porous_absorber") {
       continue;
     }

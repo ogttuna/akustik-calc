@@ -40,6 +40,7 @@ type BuildImpactPredictorLayerInput = LayerInput & {
 };
 
 type BuildImpactPredictorAssemblyMeta = {
+  allowContextOwnedHeavyConcreteBase?: boolean;
   contextMode?: string;
 };
 
@@ -1616,7 +1617,11 @@ export function buildImpactPredictorInputFromLayerStack(
   const explicitInput = ImpactPredictorInputSchema.parse(seedInput);
   const resolvedLayers = normalizeImpactPredictorLayerStack(rawLayers, catalog);
 
-  if (hasInvalidExplicitFloorBaseStructure(resolvedLayers)) {
+  if (
+    hasInvalidExplicitFloorBaseStructure(resolvedLayers, {
+      allowContextOwnedHeavyConcreteBase: assemblyMeta?.allowContextOwnedHeavyConcreteBase
+    })
+  ) {
     throw new Error(
       "Visible layer stack cannot be reduced to impact predictor input because the base_structure layer is not a recognized structural floor carrier."
     );
@@ -1711,7 +1716,8 @@ export function buildImpactPredictorInputFromLayerStack(
 
 function canDerivePredictorInputFromLayerStack(
   rawLayers: readonly BuildImpactPredictorLayerInput[],
-  catalog: readonly MaterialDefinition[] = getDefaultMaterialCatalog()
+  catalog: readonly MaterialDefinition[] = getDefaultMaterialCatalog(),
+  assemblyMeta?: BuildImpactPredictorAssemblyMeta
 ): boolean {
   const normalizedLayers = normalizeImpactPredictorLayerStack(rawLayers, catalog);
   if (isRawNonCombinedRoleGatedCarrierTopology(rawLayers, normalizedLayers)) {
@@ -1730,7 +1736,11 @@ function canDerivePredictorInputFromLayerStack(
     return false;
   }
 
-  if (hasInvalidExplicitFloorBaseStructure(normalizedLayers)) {
+  if (
+    hasInvalidExplicitFloorBaseStructure(normalizedLayers, {
+      allowContextOwnedHeavyConcreteBase: assemblyMeta?.allowContextOwnedHeavyConcreteBase
+    })
+  ) {
     return false;
   }
 
@@ -1743,7 +1753,7 @@ export function maybeBuildImpactPredictorInputFromLayerStack(
   assemblyMeta?: BuildImpactPredictorAssemblyMeta,
   catalog: readonly MaterialDefinition[] = getDefaultMaterialCatalog()
 ): ImpactPredictorInput | null {
-  if (!canDerivePredictorInputFromLayerStack(rawLayers, catalog)) {
+  if (!canDerivePredictorInputFromLayerStack(rawLayers, catalog, assemblyMeta)) {
     return null;
   }
 

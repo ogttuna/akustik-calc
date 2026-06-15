@@ -263,6 +263,69 @@ function expectCOrCtrOnlyLabCompanionResult(
   expect(result.warnings).not.toContain(POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_WARNING);
 }
 
+function expectCAndCtrPairLabCompanionResult(
+  result: ReturnType<typeof calculateAssembly>,
+  expectedC: number,
+  expectedCtr: number,
+  expectedScopeInput: "oneSideCompatibleExteriorBoardDelta" | "pairedCompatibleExteriorBoardDelta"
+) {
+  const selectedCandidate = result.airborneCandidateResolution?.candidates.find(
+    (candidate: { id: string; selected?: boolean }) =>
+      candidate.id === POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_SELECTED_CANDIDATE_ID
+  );
+
+  expect(result.supportedTargetOutputs).toEqual(["C", "Ctr"]);
+  expect(result.unsupportedTargetOutputs).toEqual([]);
+  expect(result.metrics).toMatchObject({
+    estimatedCDb: expectedC,
+    estimatedCtrDb: expectedCtr
+  });
+  expect(result.airborneBasis).toMatchObject({
+    anchorSourceId: "knauf_lab_416889_primary_2026",
+    errorBudgetDb: 6,
+    kind: "airborne_physics_prediction",
+    method: POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_RUNTIME_METHOD,
+    origin: "family_physics_prediction",
+    toleranceClass: "uncalibrated_prediction"
+  });
+  expect(result.airborneBasis?.requiredInputs).toEqual(
+    expect.arrayContaining([
+      "exactReducedStackSourceRow:Rw",
+      "compatibleExteriorBoardDelta",
+      expectedScopeInput,
+      "calculatedTransmissionLossCurve",
+      "ISO717-1 C/Ctr rating adapter"
+    ])
+  );
+  expect(result.airborneCandidateResolution).toMatchObject({
+    runtimeValueMovement: false,
+    selectedCandidateId: POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_SELECTED_CANDIDATE_ID,
+    selectedOrigin: "family_physics_prediction"
+  });
+  expect(selectedCandidate).toMatchObject({
+    metricIds: ["C", "Ctr"],
+    origin: "family_physics_prediction",
+    outputIds: ["C", "Ctr"],
+    rejectionReasons: [],
+    selected: true
+  });
+  expect(result.layerCombinationResolverTrace).toMatchObject({
+    candidateKind: "source_absent_family_solver",
+    errorBudgetMetrics: ["STC", "C", "Ctr"],
+    noRuntimeValueMovement: true,
+    runtimeBasisId: POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_RUNTIME_METHOD,
+    selectedCandidateId: POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_SELECTED_CANDIDATE_ID,
+    supportBucket: "source_absent_estimate",
+    supportedMetrics: ["C", "Ctr"],
+    valuePins: [
+      { metric: "C", value: expectedC },
+      { metric: "Ctr", value: expectedCtr }
+    ]
+  });
+  expect(result.warnings).toContain(POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_WARNING);
+  expect(result.warnings).not.toContain(POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_WARNING);
+}
+
 describe("post-V1 wall compatible anchor-delta C/Ctr-only lab companion coverage refresh", () => {
   it("lands no-runtime C/Ctr-only closeout and selects the high-ROI double-leaf/framed route-input runtime widening", () => {
     expect(summarizeCoverageRefresh()).toMatchObject({
@@ -483,6 +546,7 @@ describe("post-V1 wall compatible anchor-delta C/Ctr-only lab companion coverage
     expectCOrCtrOnlyLabCompanionResult(oneSideStartCtr, "Ctr", -5.5, "oneSideCompatibleExteriorBoardDelta");
     expectCOrCtrOnlyLabCompanionResult(oneSideEndC, "C", -0.6, "oneSideCompatibleExteriorBoardDelta");
     expectCOrCtrOnlyLabCompanionResult(oneSideEndCtr, "Ctr", -5.5, "oneSideCompatibleExteriorBoardDelta");
+    expectCAndCtrPairLabCompanionResult(cCtrPair, -1.1, -6, "pairedCompatibleExteriorBoardDelta");
 
     expect(rwOnly.supportedTargetOutputs).toEqual(DIRECT_RW_OUTPUT);
     expect(rwOnly.unsupportedTargetOutputs).toEqual([]);
@@ -512,12 +576,6 @@ describe("post-V1 wall compatible anchor-delta C/Ctr-only lab companion coverage
       estimatedRwDb: 59,
       estimatedStc: 59
     });
-
-    expect(cCtrPair.supportedTargetOutputs).toEqual([]);
-    expect(cCtrPair.unsupportedTargetOutputs).toEqual(["C", "Ctr"]);
-    expect(cCtrPair.layerCombinationResolverTrace?.selectedCandidateId).not.toBe(
-      POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_SELECTED_CANDIDATE_ID
-    );
 
     expect(buildingMixed.supportedTargetOutputs).toEqual(FIELD_BUILDING_OUTPUTS);
     expect(buildingMixed.unsupportedTargetOutputs).toEqual(["STC", "C", "Ctr"]);

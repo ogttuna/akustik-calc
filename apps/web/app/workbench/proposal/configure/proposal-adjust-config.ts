@@ -4,12 +4,12 @@ export type ProposalEditorTabId = "essentials" | "copy" | "issuer" | "details";
 
 export const PROPOSAL_PDF_STYLE_OPTIONS: readonly { description: string; label: string; value: ProposalPdfStyle }[] = [
   {
-    description: "Branded acoustic offer form with cover, sender identity, values, notes, and construction details.",
+    description: "Branded acoustic analysis report with cover, sender identity, values, notes, and construction details.",
     label: "Branded PDF",
     value: "branded"
   },
   {
-    description: "Compact acoustic offer form with simpler document chrome.",
+    description: "Compact acoustic analysis report with simpler document chrome.",
     label: "Simple PDF",
     value: "simple"
   }
@@ -46,14 +46,14 @@ export function getProposalPdfStyleDescriptor(style: ProposalPdfStyle): {
   if (style === "simple") {
     return {
       downloadLabel: "Download simple PDF",
-      note: "Simple uses the edited proposal snapshot with lightweight framing.",
+      note: "Simple uses the edited report snapshot with lightweight framing.",
       shortLabel: "Simple PDF"
     };
   }
 
   return {
     downloadLabel: "Download branded PDF",
-    note: "Branded uses the edited proposal snapshot with cover, sender identity, values, notes, and construction details.",
+    note: "Branded uses the edited report snapshot with cover, sender identity, values, notes, and construction details.",
     shortLabel: "Branded PDF"
   };
 }

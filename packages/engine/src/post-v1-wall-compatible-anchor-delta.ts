@@ -41,6 +41,12 @@ type VerifiedAirborneCatalogMatch = NonNullable<ReturnType<typeof findVerifiedAi
 export const POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LSF_SOURCE_ID = "knauf_lab_416889_primary_2026";
 const MIXED_LAB_COMPANION_OUTPUTS = new Set<RequestedOutputId>(["Rw", "STC", "C", "Ctr"]);
 const MIXED_LAB_SPECTRUM_COMPANIONS = new Set<RequestedOutputId>(["STC", "C", "Ctr"]);
+const UNSUPPORTED_IMPACT_RATING_ALIAS_OUTPUTS = new Set<RequestedOutputId>([
+  "AIIC",
+  "HIIC",
+  "IIC",
+  "LIIC"
+]);
 
 export type PostV1WallCompatibleAnchorDeltaResult = {
   applied: boolean;
@@ -93,10 +99,24 @@ function isCOrCtrOnlyCalculatedLabCompanionRequest(targetOutputs: readonly Reque
   return targetOutputs.length === 1 && (targetOutputs[0] === "C" || targetOutputs[0] === "Ctr");
 }
 
-function isCalculatedLabCompanionRequest(targetOutputs: readonly RequestedOutputId[]): boolean {
+function isCAndCtrPairCalculatedLabCompanionRequest(targetOutputs: readonly RequestedOutputId[]): boolean {
+  return targetOutputs.length === 2 && targetOutputs.includes("C") && targetOutputs.includes("Ctr");
+}
+
+function isCalculatedLabCompanionSubsetRequest(targetOutputs: readonly RequestedOutputId[]): boolean {
   return isRwPlusCalculatedLabCompanionRequest(targetOutputs) ||
     isStcOnlyCalculatedLabCompanionRequest(targetOutputs) ||
-    isCOrCtrOnlyCalculatedLabCompanionRequest(targetOutputs);
+    isCOrCtrOnlyCalculatedLabCompanionRequest(targetOutputs) ||
+    isCAndCtrPairCalculatedLabCompanionRequest(targetOutputs);
+}
+
+function isCalculatedLabCompanionRequest(targetOutputs: readonly RequestedOutputId[]): boolean {
+  const labOutputs = targetOutputs.filter((output) => MIXED_LAB_COMPANION_OUTPUTS.has(output));
+  const hasOnlyLabOutputsOrUnsupportedImpactAliases = targetOutputs.every((output) =>
+    MIXED_LAB_COMPANION_OUTPUTS.has(output) || UNSUPPORTED_IMPACT_RATING_ALIAS_OUTPUTS.has(output)
+  );
+
+  return hasOnlyLabOutputsOrUnsupportedImpactAliases && isCalculatedLabCompanionSubsetRequest(labOutputs);
 }
 
 function wallFieldBuildingOutputsRequested(targetOutputs: readonly RequestedOutputId[]): boolean {

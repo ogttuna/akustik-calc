@@ -152,6 +152,17 @@ function buildFloorImpactPredictorSeed(input: {
   };
 }
 
+function canUseContextOwnedHeavyConcreteBase(input: {
+  floorImpactContext?: DynamicCalculatorFloorImpactContext | null;
+}): boolean {
+  return Boolean(
+    typeof input.floorImpactContext?.loadBasisKgM2 === "number" &&
+      input.floorImpactContext.loadBasisKgM2 > 0 &&
+      typeof input.floorImpactContext?.resilientLayerDynamicStiffnessMNm3 === "number" &&
+      input.floorImpactContext.resilientLayerDynamicStiffnessMNm3 > 0
+  );
+}
+
 function pickFloorCarrier(input: {
   boundFloorSystemEstimate?: FloorSystemBoundEstimateResult | null;
   boundFloorSystemMatch?: FloorSystemBoundMatchResult | null;
@@ -775,7 +786,11 @@ export function calculateImpactOnly(
         buildFloorImpactPredictorSeed({
           floorImpactContext: options.floorImpactContext
         }),
-        undefined,
+        {
+          allowContextOwnedHeavyConcreteBase: canUseContextOwnedHeavyConcreteBase({
+            floorImpactContext: options.floorImpactContext
+          })
+        },
         catalog
       );
 

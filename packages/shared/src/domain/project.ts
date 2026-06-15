@@ -37,6 +37,7 @@ const ProjectNameSchema = z.string().trim().min(1).max(160);
 const ProjectOwnerIdSchema = z.string().trim().min(1).max(128);
 const ProjectOwnerLabelSchema = z.string().trim().min(1).max(160);
 const ProjectOptionalTextSchema = optionalTrimmedString(320);
+const ProjectDisplayCodeSchema = optionalTrimmedString(48);
 
 export const ServerProjectScenarioSourceSchema = z.enum(["browser_local_import", "server_created"]);
 export const ServerProjectProposalOutputFormatSchema = z.enum(["pdf", "docx", "html", "markdown"]);
@@ -47,6 +48,11 @@ export const ServerProjectAccessActionSchema = z.enum([
   "read_project",
   "import_local_scenarios",
   "append_proposal_audit",
+  "save_project_assembly",
+  "delete_project_assembly",
+  "save_project_report",
+  "delete_project_report",
+  "manage_project_materials",
   "manage_members"
 ]);
 
@@ -88,8 +94,94 @@ export const ServerProjectProposalAuditEventSchema = z
   })
   .strict();
 
+export const ServerProjectAssemblyKindSchema = z.enum(["floor", "wall"]);
+export const ServerProjectAssemblySourceSchema = z.enum(["workbench_v2", "legacy_import"]);
+export const ServerProjectChildStatusSchema = z.enum(["ready", "needs_input", "unsupported", "error"]);
+export const ServerProjectReportStatusSchema = z.enum(["draft", "issued", "archived"]);
+export const ServerProjectReportRevisionSourceSchema = z.enum(["generated", "manual", "assistant", "import"]);
+
+export const ServerProjectAssemblyCalculationSummarySchema = z
+  .object({
+    primaryOutput: optionalTrimmedString(80),
+    primaryValueLabel: optionalTrimmedString(80),
+    selectedOutputs: z.array(z.string().trim().min(1).max(80)).max(32),
+    status: ServerProjectChildStatusSchema
+  })
+  .strict();
+
+export const ServerProjectAssemblyRecordSchema = z
+  .object({
+    calculationSummary: ServerProjectAssemblyCalculationSummarySchema.optional(),
+    createdAtIso: z.string().datetime(),
+    description: ProjectOptionalTextSchema,
+    displayCode: ProjectDisplayCodeSchema,
+    id: z.string().uuid(),
+    kind: ServerProjectAssemblyKindSchema,
+    name: ProjectNameSchema,
+    projectId: z.string().uuid(),
+    snapshot: JsonValueSchema,
+    source: ServerProjectAssemblySourceSchema,
+    updatedAtIso: z.string().datetime(),
+    version: z.number().int().positive()
+  })
+  .strict();
+
+export const ServerProjectReportSourceMaterialSnapshotSchema = z
+  .object({
+    customMaterials: z.array(JsonValueSchema).max(256),
+    materialVisualOverrides: z.array(JsonValueSchema).max(256)
+  })
+  .strict();
+
+export const ServerProjectReportAssistantPatchSummarySchema = z
+  .object({
+    appliedAtIso: z.string().datetime(),
+    instruction: optionalTrimmedString(500),
+    operationCount: z.number().int().nonnegative().max(200),
+    validationStatus: z.enum(["valid", "warning"])
+  })
+  .strict();
+
+export const ServerProjectReportRevisionRecordSchema = z
+  .object({
+    assistantPatchSummary: ServerProjectReportAssistantPatchSummarySchema.optional(),
+    changeSummary: optionalTrimmedString(500),
+    createdAtIso: z.string().datetime(),
+    createdByLabel: optionalTrimmedString(160),
+    displayCode: ProjectDisplayCodeSchema,
+    document: JsonValueSchema,
+    id: z.string().uuid(),
+    projectId: z.string().uuid(),
+    reportId: z.string().uuid(),
+    source: ServerProjectReportRevisionSourceSchema,
+    sourceAssemblyId: z.string().uuid(),
+    sourceAssemblyVersion: z.number().int().positive()
+  })
+  .strict();
+
+export const ServerProjectReportRecordSchema = z
+  .object({
+    assemblyId: z.string().uuid(),
+    createdAtIso: z.string().datetime(),
+    currentRevisionId: z.string().uuid(),
+    displayCode: ProjectDisplayCodeSchema,
+    id: z.string().uuid(),
+    name: ProjectNameSchema,
+    projectId: z.string().uuid(),
+    reportDocument: JsonValueSchema,
+    revisions: z.array(ServerProjectReportRevisionRecordSchema).max(100),
+    sourceAssemblySnapshot: JsonValueSchema,
+    sourceAssemblyVersion: z.number().int().positive(),
+    sourceCalculationOutput: JsonValueSchema.optional(),
+    sourceMaterialSnapshot: ServerProjectReportSourceMaterialSnapshotSchema,
+    status: ServerProjectReportStatusSchema,
+    updatedAtIso: z.string().datetime()
+  })
+  .strict();
+
 export const ServerProjectRecordSchema = z
   .object({
+    assemblies: z.array(ServerProjectAssemblyRecordSchema).default([]),
     clientName: optionalTrimmedString(160),
     createdAtIso: z.string().datetime(),
     description: ProjectOptionalTextSchema,
@@ -98,6 +190,7 @@ export const ServerProjectRecordSchema = z
     ownerId: ProjectOwnerIdSchema,
     ownerLabel: ProjectOwnerLabelSchema,
     proposalAuditEvents: z.array(ServerProjectProposalAuditEventSchema),
+    reports: z.array(ServerProjectReportRecordSchema).default([]),
     scenarioSnapshots: z.array(ServerProjectScenarioSnapshotSchema),
     schemaVersion: z.literal(SERVER_PROJECT_SCHEMA_VERSION),
     teamId: optionalTrimmedString(128),
@@ -132,11 +225,85 @@ export const ServerProjectImportLocalRequestSchema = z
   })
   .strict();
 
+export const ServerProjectCreateAssemblyRequestSchema = z
+  .object({
+    calculationSummary: ServerProjectAssemblyCalculationSummarySchema.optional(),
+    description: ProjectOptionalTextSchema,
+    kind: ServerProjectAssemblyKindSchema,
+    name: ProjectNameSchema,
+    snapshot: JsonValueSchema
+  })
+  .strict();
+
+export const ServerProjectUpdateAssemblyRequestSchema = z
+  .object({
+    description: ProjectOptionalTextSchema,
+    name: ProjectNameSchema.optional()
+  })
+  .strict()
+  .refine((value) => value.name !== undefined || value.description !== undefined, {
+    message: "At least one assembly field must be provided."
+  });
+
+export const ServerProjectDuplicateAssemblyRequestSchema = z
+  .object({
+    name: ProjectNameSchema.optional()
+  })
+  .strict();
+
+export const ServerProjectCreateReportRequestSchema = z
+  .object({
+    assemblyId: z.string().uuid(),
+    name: ProjectNameSchema,
+    reportDocument: JsonValueSchema,
+    sourceAssemblySnapshot: JsonValueSchema,
+    sourceCalculationOutput: JsonValueSchema.optional(),
+    sourceMaterialSnapshot: ServerProjectReportSourceMaterialSnapshotSchema
+  })
+  .strict();
+
+export const ServerProjectUpdateReportRequestSchema = z
+  .object({
+    expectedReportUpdatedAtIso: z.string().datetime().optional(),
+    name: ProjectNameSchema.optional(),
+    status: ServerProjectReportStatusSchema.optional()
+  })
+  .strict()
+  .refine((value) => value.name !== undefined || value.status !== undefined, {
+    message: "At least one report field must be provided."
+  });
+
+export const ServerProjectDuplicateReportRequestSchema = z
+  .object({
+    name: ProjectNameSchema.optional()
+  })
+  .strict();
+
+export const ServerProjectCreateReportRevisionRequestSchema = z
+  .object({
+    assistantPatchSummary: ServerProjectReportAssistantPatchSummarySchema.optional(),
+    changeSummary: optionalTrimmedString(500),
+    document: JsonValueSchema,
+    expectedReportUpdatedAtIso: z.string().datetime().optional(),
+    source: ServerProjectReportRevisionSourceSchema
+  })
+  .strict();
+
+export type ServerProjectAssemblyRecord = z.infer<typeof ServerProjectAssemblyRecordSchema>;
+export type ServerProjectCreateAssemblyRequest = z.infer<typeof ServerProjectCreateAssemblyRequestSchema>;
+export type ServerProjectDuplicateAssemblyRequest = z.infer<typeof ServerProjectDuplicateAssemblyRequestSchema>;
+export type ServerProjectUpdateAssemblyRequest = z.infer<typeof ServerProjectUpdateAssemblyRequestSchema>;
 export type ServerProjectCreateRequest = z.infer<typeof ServerProjectCreateRequestSchema>;
 export type ServerProjectAccessAction = z.infer<typeof ServerProjectAccessActionSchema>;
 export type ServerProjectAccessRole = z.infer<typeof ServerProjectAccessRoleSchema>;
+export type ServerProjectDuplicateReportRequest = z.infer<typeof ServerProjectDuplicateReportRequestSchema>;
+export type ServerProjectCreateReportRequest = z.infer<typeof ServerProjectCreateReportRequestSchema>;
+export type ServerProjectCreateReportRevisionRequest = z.infer<typeof ServerProjectCreateReportRevisionRequestSchema>;
 export type ServerProjectImportLocalRequest = z.infer<typeof ServerProjectImportLocalRequestSchema>;
 export type ServerProjectLocalScenarioImport = z.infer<typeof ServerProjectLocalScenarioImportSchema>;
 export type ServerProjectProposalAuditEvent = z.infer<typeof ServerProjectProposalAuditEventSchema>;
 export type ServerProjectRecord = z.infer<typeof ServerProjectRecordSchema>;
+export type ServerProjectReportRecord = z.infer<typeof ServerProjectReportRecordSchema>;
+export type ServerProjectReportRevisionRecord = z.infer<typeof ServerProjectReportRevisionRecordSchema>;
 export type ServerProjectScenarioSnapshot = z.infer<typeof ServerProjectScenarioSnapshotSchema>;
+export type ServerProjectUpdateReportRequest = z.infer<typeof ServerProjectUpdateReportRequestSchema>;

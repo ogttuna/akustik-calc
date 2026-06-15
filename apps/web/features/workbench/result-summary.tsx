@@ -17,7 +17,8 @@ import {
   buildResultAnswerChartLanes,
   hasSupportedAirborneAnswer,
   hasSupportedImpactAnswer,
-  isAirborneAnswerParked
+  isAirborneAnswerParked,
+  isSupportedAnswerOutput
 } from "./result-answer-chart-model";
 import { getAirborneBoundaryPosture } from "./validation-regime";
 
@@ -70,18 +71,53 @@ export function ResultSummary({ result, targetLnwDb, targetRwDb, warnings }: Res
     result?.floorSystemEstimate?.kind === "low_confidence" ? "Low-confidence floor fallback" : "Estimated floor family";
   const floorEstimatePillTone = result?.floorSystemEstimate?.kind === "low_confidence" ? "warning" : "accent";
   const resultChartHasVisibleLane = buildResultAnswerChartLanes({ result, targetLnwDb, targetRwDb }).length > 0;
-  const primaryAirborneValue =
-    result?.airborneOverlay?.contextMode === "building_prediction" && typeof result?.metrics.estimatedDnTwDb === "number"
-      ? result.metrics.estimatedDnTwDb
-      : typeof result?.metrics.estimatedRwPrimeDb === "number" && result?.ratings.iso717.descriptor === "R'w"
-        ? result.metrics.estimatedRwPrimeDb
-        : result?.metrics.estimatedRwDb ?? 0;
-  const primaryAirborneLabel =
-    result?.airborneOverlay?.contextMode === "building_prediction" && typeof result?.metrics.estimatedDnTwDb === "number"
-      ? "DnT,w estimate"
-      : result?.ratings.iso717.descriptor === "R'w"
-        ? "R'w estimate"
-        : "Rw estimate";
+  const rwSupported = Boolean(
+    result && isSupportedAnswerOutput(result, "Rw") && typeof result.metrics.estimatedRwDb === "number"
+  );
+  const rwPrimeSupported = Boolean(
+    result && isSupportedAnswerOutput(result, "R'w") && typeof result.metrics.estimatedRwPrimeDb === "number"
+  );
+  const dnTwSupported = Boolean(
+    result && isSupportedAnswerOutput(result, "DnT,w") && typeof result.metrics.estimatedDnTwDb === "number"
+  );
+  const dnTASupported = Boolean(
+    result && isSupportedAnswerOutput(result, "DnT,A") && typeof result.metrics.estimatedDnTADb === "number"
+  );
+  const dnTAkSupported = Boolean(
+    result && isSupportedAnswerOutput(result, "DnT,A,k") && typeof result.ratings.field?.DnTAk === "number"
+  );
+  const dnWSupported = Boolean(
+    result && isSupportedAnswerOutput(result, "Dn,w") && typeof result.metrics.estimatedDnWDb === "number"
+  );
+  const dnASupported = Boolean(
+    result && isSupportedAnswerOutput(result, "Dn,A") && typeof result.metrics.estimatedDnADb === "number"
+  );
+  const primaryAirborneAnswer = result
+    ? result.airborneOverlay?.contextMode === "building_prediction" && dnTwSupported
+      ? { label: "DnT,w estimate", value: result.metrics.estimatedDnTwDb }
+      : rwPrimeSupported && result.ratings.iso717.descriptor === "R'w"
+        ? { label: "R'w estimate", value: result.metrics.estimatedRwPrimeDb }
+        : rwSupported
+          ? { label: "Rw estimate", value: result.metrics.estimatedRwDb }
+          : null
+    : null;
+  const iso717CompositeSupported = Boolean(rwSupported || rwPrimeSupported);
+  const stcSupported = Boolean(
+    result && isSupportedAnswerOutput(result, "STC") && typeof result.metrics.estimatedStc === "number"
+  );
+  const cSupported = Boolean(
+    result && isSupportedAnswerOutput(result, "C") && typeof result.metrics.estimatedCDb === "number"
+  );
+  const ctrSupported = Boolean(
+    result && isSupportedAnswerOutput(result, "Ctr") && typeof result.metrics.estimatedCtrDb === "number"
+  );
+  const spectrumAdaptationValues = result
+    ? [
+        ...(cSupported ? [formatSignedDb(result.metrics.estimatedCDb)] : []),
+        ...(ctrSupported ? [formatSignedDb(result.metrics.estimatedCtrDb)] : [])
+      ]
+    : [];
+  const spectrumAdaptationLabel = cSupported && ctrSupported ? "C / Ctr" : cSupported ? "C" : ctrSupported ? "Ctr" : "";
 
   return (
     <SurfacePanel className="px-5 py-5">
@@ -136,10 +172,10 @@ export function ResultSummary({ result, targetLnwDb, targetRwDb, warnings }: Res
             </div>
           ) : null}
           <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-            {airborneAnswerVisible || airborneAnswerParked ? (
+            {airborneAnswerParked || primaryAirborneAnswer ? (
               <MetricCard
-                label={airborneAnswerParked ? "Airborne answer" : primaryAirborneLabel}
-                value={airborneAnswerParked ? "Not ready" : `${formatDecimal(primaryAirborneValue)} dB`}
+                label={airborneAnswerParked ? "Airborne answer" : primaryAirborneAnswer?.label ?? "Airborne answer"}
+                value={airborneAnswerParked ? "Not ready" : `${formatDecimal(primaryAirborneAnswer?.value ?? 0)} dB`}
                 detail={
                   <span className="inline-flex items-center gap-2">
                     <Gauge className="h-4 w-4" />
@@ -182,7 +218,7 @@ export function ResultSummary({ result, targetLnwDb, targetRwDb, warnings }: Res
                 detail={visibleFieldAirborneProvenance.detail}
               />
             ) : null}
-            {airborneAnswerVisible ? (
+            {airborneAnswerVisible && iso717CompositeSupported ? (
               <MetricCard
                 label="ISO 717 composite"
                 value={result.ratings.iso717.composite}
@@ -194,42 +230,42 @@ export function ResultSummary({ result, targetLnwDb, targetRwDb, warnings }: Res
                 }
               />
             ) : null}
-            {airborneAnswerVisible && typeof result.metrics.estimatedRwPrimeDb === "number" && result.ratings.iso717.descriptor === "R'w" ? (
+            {airborneAnswerVisible && rwPrimeSupported && result.ratings.iso717.descriptor === "R'w" ? (
               <MetricCard
                 label="R'w"
                 value={`${formatDecimal(result.metrics.estimatedRwPrimeDb)} dB`}
                 detail={getFieldAirborneLiveDetail("R'w", result)}
               />
             ) : null}
-            {airborneAnswerVisible && typeof result.metrics.estimatedDnTwDb === "number" ? (
+            {airborneAnswerVisible && dnTwSupported ? (
               <MetricCard
                 label="DnT,w"
                 value={`${formatDecimal(result.metrics.estimatedDnTwDb)} dB`}
                 detail={getFieldAirborneLiveDetail("DnT,w", result)}
               />
             ) : null}
-            {airborneAnswerVisible && typeof result.metrics.estimatedDnTADb === "number" ? (
+            {airborneAnswerVisible && dnTASupported ? (
               <MetricCard
                 label="DnT,A"
                 value={`${formatDecimal(result.metrics.estimatedDnTADb)} dB`}
                 detail={getFieldAirborneLiveDetail("DnT,A", result)}
               />
             ) : null}
-            {airborneAnswerVisible && typeof result.ratings.field?.DnTAk === "number" ? (
+            {airborneAnswerVisible && dnTAkSupported ? (
               <MetricCard
                 label="DnT,A,k"
                 value={`${formatDecimal(result.ratings.field.DnTAk)} dB`}
                 detail={getFieldAirborneLiveDetail("DnT,A,k", result)}
               />
             ) : null}
-            {airborneAnswerVisible && typeof result.metrics.estimatedDnWDb === "number" ? (
+            {airborneAnswerVisible && dnWSupported ? (
               <MetricCard
                 label="Dn,w"
                 value={`${formatDecimal(result.metrics.estimatedDnWDb)} dB`}
                 detail={getFieldAirborneLiveDetail("Dn,w", result)}
               />
             ) : null}
-            {airborneAnswerVisible && typeof result.metrics.estimatedDnADb === "number" ? (
+            {airborneAnswerVisible && dnASupported ? (
               <MetricCard
                 label="Dn,A"
                 value={`${formatDecimal(result.metrics.estimatedDnADb)} dB`}
@@ -243,18 +279,22 @@ export function ResultSummary({ result, targetLnwDb, targetRwDb, warnings }: Res
                 detail="Dutch NEN 5077 impact companion from exact 125..2000 Hz field octave bands"
               />
             ) : null}
-            {airborneAnswerVisible ? (
+            {airborneAnswerVisible && stcSupported ? (
               <MetricCard
                 label="STC"
                 value={`${formatDecimal(result.metrics.estimatedStc)} dB`}
                 detail="ASTM E413 contour derived from the same screening curve"
               />
             ) : null}
-            {airborneAnswerVisible ? (
+            {airborneAnswerVisible && spectrumAdaptationValues.length > 0 ? (
               <MetricCard
                 label="Spectrum adaptation"
-                value={`${formatSignedDb(result.metrics.estimatedCDb)} / ${formatSignedDb(result.metrics.estimatedCtrDb)}`}
-                detail="C / Ctr for pink-noise and traffic-noise use cases"
+                value={spectrumAdaptationValues.join(" / ")}
+                detail={
+                  spectrumAdaptationLabel === "C / Ctr"
+                    ? "C / Ctr for pink-noise and traffic-noise use cases"
+                    : `${spectrumAdaptationLabel} for the supported airborne lane`
+                }
               />
             ) : null}
             <MetricCard

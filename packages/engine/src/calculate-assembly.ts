@@ -373,7 +373,8 @@ const ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_DOUBLE_LEAF_FRAMED_ROUTE_INPUT_MISSIN
   new Set<string>([
     ...ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLAT_DOUBLE_LEAF_MISSING_INPUTS,
     "cavity1FillCoverage",
-    "absorberClass"
+    "absorberClass",
+    "flowResistivityPaSM2"
   ]);
 const ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLAT_DOUBLE_LEAF_LEAF_BEHAVIORS = new Set([
   "limp_mass_membrane",
@@ -3767,6 +3768,9 @@ export function calculateAssembly(
     gateWImpactPredictorSeed,
     visibleLayerDeltaLwPredictorSeed
   );
+  const layerDerivedImpactPredictorMeta = {
+    allowContextOwnedHeavyConcreteBase: gateWLabRuntimeReady
+  };
   const resolvedLayers = resolveLayers(layers, catalog);
   const hasFullyTaggedFloorStack = layers.length > 0 && layers.every((layer) => Boolean(layer.floorRole));
   const normalizedExplicitImpactLayers = hasFullyTaggedFloorStack
@@ -4004,7 +4008,7 @@ export function calculateAssembly(
       ? maybeBuildImpactPredictorInputFromLayerStack(
           layers,
           layerDerivedImpactPredictorSeed,
-          undefined,
+          layerDerivedImpactPredictorMeta,
           catalog
         )
       : null;
@@ -4135,7 +4139,7 @@ export function calculateAssembly(
     const derivedPredictorInput = maybeBuildImpactPredictorInputFromLayerStack(
       layers,
       layerDerivedImpactPredictorSeed,
-      undefined,
+      layerDerivedImpactPredictorMeta,
       catalog
     );
 
@@ -4614,10 +4618,12 @@ export function calculateAssembly(
   const dynamicCandidateResolverRuntime = options.calculator === "dynamic"
     ? buildDynamicCalculatorCandidateResolverRuntime({
         airborneContext,
+        catalog,
         floorImpactContext,
         layers,
         route: inferDynamicCalculatorRuntimeRoute({
           layers,
+          supportedTargetOutputs: targetOutputSupport.supportedTargetOutputs,
           targetOutputs: targetOutputSupport.targetOutputs
         }),
         runtimeSignal: companyInternalOpeningLeakFieldBuildingRuntime?.basis

@@ -146,7 +146,7 @@ function buildProposalBriefInput(props: SimpleWorkbenchProposalPanelProps) {
     issuedOnIso: props.issuedOnIso,
     primaryMetricLabel: props.metrics[0]?.label ?? "Primary read",
     primaryMetricValue: props.metrics[0]?.value ?? "Waiting for supported output",
-    projectName: props.projectName.trim() || "Untitled acoustic proposal",
+    projectName: props.projectName.trim() || "Untitled acoustic analysis report",
     reportProfileLabel: props.reportProfileLabel,
     studyContextLabel: props.studyContextLabel,
     studyModeLabel: props.studyModeLabel,
@@ -169,7 +169,7 @@ function getStudyModeAwareProposalSubject(projectName: string, studyModeLabel: s
   const projectLabel = projectName.trim() || "Untitled project";
   const modeLabel = studyModeLabel.trim().toLowerCase();
 
-  return modeLabel.length > 0 ? `${projectLabel} ${modeLabel} acoustic proposal` : `${projectLabel} acoustic proposal`;
+  return modeLabel.length > 0 ? `${projectLabel} ${modeLabel} acoustic analysis report` : `${projectLabel} acoustic analysis report`;
 }
 
 const GENERIC_PROPOSAL_IDENTITY = {
@@ -502,7 +502,7 @@ function buildProposalDocument(
     preparedBy: props.preparedBy.trim() || "DAC Operator",
     primaryMetricLabel: primaryMetric.label,
     primaryMetricValue: primaryMetric.value,
-    projectName: props.projectName.trim() || "Untitled acoustic proposal",
+    projectName: props.projectName.trim() || "Untitled acoustic analysis report",
     proposalAttention,
     proposalIssuePurpose,
     proposalRecipient,
@@ -657,12 +657,12 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
   async function handleCopySummary() {
     try {
       await navigator.clipboard.writeText(proposalText);
-      toast.success("Proposal summary copied", {
+      toast.success("Report summary copied", {
         description: "The current client-facing summary is on your clipboard."
       });
     } catch {
       toast.error("Copy failed", {
-        description: "Browser clipboard permission blocked the proposal summary."
+        description: "Browser clipboard permission blocked the report summary."
       });
     }
   }
@@ -688,10 +688,10 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
       toast.success(`${getSimpleWorkbenchProposalExportLabel({ format, style })} downloaded`, {
         description:
           format === "docx"
-            ? "DAC prepared the Word document on the server from the current proposal snapshot."
+            ? "DAC prepared the Word document on the server from the current report snapshot."
             : style === "simple"
               ? "DAC prepared the lightweight calculation-summary PDF on the server."
-              : "DAC prepared the formal proposal PDF on the server."
+              : "DAC prepared the formal analysis report PDF on the server."
       });
     } catch (error) {
       toast.error(`${getSimpleWorkbenchProposalExportLabel({ format, style })} failed`, {
@@ -711,7 +711,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
 
     if (!printWindow) {
       toast.error("Print window blocked", {
-        description: "Allow pop-ups so DAC can open the print-ready proposal view."
+        description: "Allow pop-ups so DAC can open the print-ready report view."
       });
       return;
     }
@@ -732,7 +732,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
     props.onProposalReferenceChange(suggestedIssue.reference);
     props.onProposalRevisionChange(suggestedIssue.revision);
     toast.success("Suggested issue details applied", {
-      description: "The proposal reference and revision now match the generated issue suggestion."
+      description: "The report reference and revision now match the generated issue suggestion."
     });
   }
 
@@ -1067,7 +1067,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
                 value={props.preparedBy}
               />
               <ProposalField
-                label="Proposal reference"
+                label="Report reference"
                 note="Formal issue code."
                 onChange={props.onProposalReferenceChange}
                 placeholder="e.g. MAC-2026-014"
@@ -1583,7 +1583,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
                 value={`${proposalDocument.methodTraceGroups.length} trace group${proposalDocument.methodTraceGroups.length === 1 ? "" : "s"}`}
               />
               <IssueMetaCard
-                detail="Server PDF, browser print view, and proposal summary copy are available from the same package."
+                detail="Server PDF, browser print view, and report summary copy are available from the same package."
                 label="Delivery"
                 value="PDF, print, and summary"
               />
@@ -1954,7 +1954,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
               type="button"
             >
               <Copy className="h-4 w-4" />
-              Copy proposal summary
+              Copy report summary
             </button>
             <button
               className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"

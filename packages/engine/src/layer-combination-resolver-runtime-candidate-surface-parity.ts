@@ -116,7 +116,9 @@ const FLOOR_IMPACT_METRIC_IDS = new Set<string>([
   "CI",
   "CI,50-2500",
   "DeltaLw",
+  "HIIC",
   "IIC",
+  "LIIC",
   "L'n,w",
   "L'nT,w",
   "L'nT,50",
@@ -355,6 +357,23 @@ function hasAstmAlias(outputs: readonly string[]): boolean {
 
 function hasRequestedImpactMetric(outputs: readonly string[]): boolean {
   return outputs.some((output) => FLOOR_IMPACT_METRIC_IDS.has(output));
+}
+
+function isUnsupportedAstmImpactAlias(output: string): boolean {
+  return output === "AIIC" || output === "HIIC" || output === "IIC" || output === "LIIC";
+}
+
+function hasOnlyUnsupportedAstmImpactMetricRequests(input: {
+  readonly requestedOrUnsupportedOutputs: readonly string[];
+  readonly supportedTargetOutputs: readonly RequestedOutputId[];
+}): boolean {
+  const requestedImpactMetrics = input.requestedOrUnsupportedOutputs.filter((output) =>
+    FLOOR_IMPACT_METRIC_IDS.has(output)
+  );
+
+  return requestedImpactMetrics.length > 0 &&
+    requestedImpactMetrics.every(isUnsupportedAstmImpactAlias) &&
+    !input.supportedTargetOutputs.some((output) => FLOOR_IMPACT_METRIC_IDS.has(output));
 }
 
 function hasFieldAdapterBudget(result: ResolverImpactCarrier): boolean {
@@ -1088,7 +1107,13 @@ export function buildLayerCombinationResolverTraceForAssembly(
       hasWallFieldAirborneBasis ||
       hasWallBuildingAirborneBasis
     ) &&
-    !hasRequestedImpactMetric(requestedOrUnsupportedOutputs);
+    (
+      !hasRequestedImpactMetric(requestedOrUnsupportedOutputs) ||
+      hasOnlyUnsupportedAstmImpactMetricRequests({
+        requestedOrUnsupportedOutputs,
+        supportedTargetOutputs: result.supportedTargetOutputs
+      })
+    );
   const hasFloorImpactResult =
     Boolean(result.impact) ||
     Boolean(result.lowerBoundImpact) ||

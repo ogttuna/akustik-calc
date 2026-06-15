@@ -191,8 +191,8 @@ export function ProposalPreviewClientPage() {
 
   async function handleCopySummary() {
     if (!proposalText) {
-      toast.error("No proposal loaded", {
-        description: "Return to the workbench and package a proposal first."
+      toast.error("No report loaded", {
+        description: "Return to the workbench and package a report first."
       });
       return;
     }
@@ -204,7 +204,7 @@ export function ProposalPreviewClientPage() {
 
     try {
       await navigator.clipboard.writeText(proposalText);
-      toast.success("Proposal summary copied", {
+      toast.success("Report summary copied", {
         description: "The current print-view summary is on your clipboard."
       });
     } catch {
@@ -219,8 +219,8 @@ export function ProposalPreviewClientPage() {
     format: SimpleWorkbenchProposalExportFormat = "pdf"
   ) {
     if (!proposalDocument) {
-      toast.error("No proposal loaded", {
-        description: "Return to the workbench and package a proposal first."
+      toast.error("No report loaded", {
+        description: "Return to the workbench and package a report first."
       });
       return;
     }
@@ -248,7 +248,7 @@ export function ProposalPreviewClientPage() {
             ? "DAC prepared the Word document on the server from the active preview snapshot."
             : style === "simple"
               ? "DAC prepared the lightweight calculation-summary PDF on the server."
-              : "DAC prepared the formal proposal PDF on the server."
+              : "DAC prepared the formal analysis report PDF on the server."
       });
     } catch (error) {
       toast.error(`${getSimpleWorkbenchProposalExportLabel({ format, style })} failed`, {
@@ -272,7 +272,7 @@ export function ProposalPreviewClientPage() {
     setFrameReady(false);
     setLoadedPreview(readSimpleWorkbenchProposalPreview());
     toast.success("Report edits cleared", {
-      description: "The packaged proposal snapshot is active again."
+      description: "The packaged report snapshot is active again."
     });
   }
 
@@ -293,7 +293,7 @@ export function ProposalPreviewClientPage() {
       <SurfacePanel className="px-5 py-5 sm:px-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <div className="eyebrow">Proposal Print View</div>
+            <div className="eyebrow">Report Preview</div>
             <h1 className="mt-1 font-display text-[2rem] leading-none tracking-[-0.05em] text-[color:var(--ink)]">
               {activePdfStyle === "simple" ? "Simple PDF preview" : "Official issue preview"}
             </h1>
@@ -658,7 +658,7 @@ export function ProposalPreviewClientPage() {
               onLoad={() => setFrameReady(true)}
               ref={iframeRef}
               srcDoc={proposalHtml}
-              title="Proposal print preview frame"
+              title="Report print preview frame"
             />
           </section>
         </>
@@ -666,10 +666,10 @@ export function ProposalPreviewClientPage() {
         <SurfacePanel className="px-5 py-6 sm:px-6">
           <div className="eyebrow">No Preview Loaded</div>
           <h2 className="mt-1 font-display text-[1.5rem] leading-none tracking-[-0.05em] text-[color:var(--ink)]">
-            Prepare a proposal from the guided workbench first
+            Prepare a report from the guided workbench first
           </h2>
           <p className="mt-3 max-w-2xl text-sm leading-7 text-[color:var(--ink-soft)]">
-            This print route reads the latest packaged proposal snapshot from the workbench. Return to the guided flow, open the proposal tab, then use
+            This print route reads the latest packaged report snapshot from the workbench. Return to the guided flow, open the report tab, then use
             either <span className="font-semibold text-[color:var(--ink)]">Open print view</span> or <span className="font-semibold text-[color:var(--ink)]">Print / save PDF</span>.
           </p>
         </SurfacePanel>

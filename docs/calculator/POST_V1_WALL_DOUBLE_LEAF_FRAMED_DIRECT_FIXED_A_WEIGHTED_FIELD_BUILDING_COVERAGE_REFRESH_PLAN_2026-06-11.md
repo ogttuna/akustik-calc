@@ -83,3 +83,54 @@ Expected counters:
 - `sourceRowsImported: 0`.
 
 This is not a broad source crawl.
+
+## Closeout - 2026-06-12
+
+Landed coverage refresh:
+
+`post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_coverage_refresh_plan`
+
+Coverage refresh file:
+
+`packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-a-weighted-field-building-coverage-refresh-contract.test.ts`
+
+Coverage refresh status:
+
+`post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`
+
+The refresh re-probes empty direct-fixed `Dn,A 24.9` / `DnT,A 27`,
+full context-owned absorptive `Dn,A 28.9` / `DnT,A 31`, and partial
+context-owned absorptive `Dn,A 26.9` / `DnT,A 29`. Field requests use
+`gate_i_airborne_field_apparent_context_adapter_runtime`; building
+requests use
+`gate_ar_airborne_building_prediction_all_owner_runtime_corridor`; both
+keep `wall.direct_fixed_double_leaf.equivalent_coupled_mass_bridge_loss_owner`
+as the Gate EO direct curve. Gate I / Gate AR remain `ready_with_budget`
+in coverage and `allowed_with_budget` in company-internal V0. Missing
+absorber ownership, Gate AY panelized input, non-direct-fixed stacks,
+lab aliases, ASTM/IIC/AIIC, and impact outputs remain boundary rows.
+
+Closeout counters:
+
+- `coverageRefreshContractFilesTouched: 1`;
+- `webSurfaceParityContractFilesTouched: 1`;
+- `frontendImplementationFilesTouched: 0`;
+- `runtimeValuesMoved 0`;
+- `runtimeFormulaRetunes: 0`;
+- `sourceRowsImported: 0`.
+
+Selected next action:
+
+`post_v1_next_numeric_coverage_gap_after_direct_fixed_a_weighted_field_building_plan`
+
+Selected next file:
+
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-direct-fixed-a-weighted-field-building-contract.test.ts`
+
+Selected next plan doc:
+
+`docs/calculator/POST_V1_NEXT_NUMERIC_COVERAGE_GAP_AFTER_DIRECT_FIXED_A_WEIGHTED_FIELD_BUILDING_PLAN_2026-06-12.md`
+
+Selected next label:
+
+`post-V1 next numeric coverage gap after direct-fixed A-weighted field/building`

@@ -153,7 +153,7 @@ const SIMPLE_PDF_SECTION_MAP: readonly ProposalEditorSection[] = [
     tab: "essentials"
   },
   {
-    detail: "Rw, Ln,w, summary, proposal note",
+    detail: "Rw, Ln,w, summary, report note",
     icon: SlidersHorizontal,
     label: "Results",
     tab: "copy"
@@ -182,7 +182,7 @@ const BRANDED_PDF_SECTION_MAP: readonly ProposalEditorSection[] = [
   {
     detail: "Headline values, summary, consultant note",
     icon: SlidersHorizontal,
-    label: "Offer values",
+    label: "Report values",
     tab: "copy"
   },
   {
@@ -2783,7 +2783,7 @@ export function ProposalAdjustClientPage() {
       setLastSavedSignature(currentSignature);
       if (!options?.silent) {
         toast.success("Report edits cleared", {
-          description: "The packaged proposal snapshot is active again."
+          description: "The packaged report snapshot is active again."
         });
       }
       return true;
@@ -2798,7 +2798,7 @@ export function ProposalAdjustClientPage() {
 
     if (!options?.silent) {
       toast.success("Report edits saved", {
-        description: "Only the proposal snapshot was updated. Calculator inputs and engine results stay untouched."
+        description: "Only the report snapshot was updated. Calculator inputs and engine results stay untouched."
       });
     }
 
@@ -2808,7 +2808,7 @@ export function ProposalAdjustClientPage() {
     function handleReloadStoredPreview() {
       loadStoredPreview();
       toast.success("Saved PDF state reloaded", {
-        description: "The PDF editor now matches the latest stored proposal snapshot."
+        description: "The PDF editor now matches the latest stored report snapshot."
       });
   }
 
@@ -2828,8 +2828,8 @@ export function ProposalAdjustClientPage() {
 
   function handleOpenPreview() {
     if (!editableDocument) {
-      toast.error("No proposal loaded", {
-        description: "Return to the workbench and package a proposal first."
+      toast.error("No report loaded", {
+        description: "Return to the workbench and package a report first."
       });
       return;
     }
@@ -2845,8 +2845,8 @@ export function ProposalAdjustClientPage() {
 
   async function handleDownloadExport(style: SimpleWorkbenchProposalExportStyle, format: SimpleWorkbenchProposalExportFormat) {
     if (!editableDocument) {
-      toast.error("No proposal loaded", {
-        description: "Return to the workbench and package a proposal first."
+      toast.error("No report loaded", {
+        description: "Return to the workbench and package a report first."
       });
       return;
     }
@@ -2874,8 +2874,8 @@ export function ProposalAdjustClientPage() {
       toast.success(`${getSimpleWorkbenchProposalExportLabel({ format, style })} downloaded`, {
         description:
           format === "docx"
-            ? "The current export-only proposal snapshot was sent to the Word renderer."
-            : "The current export-only proposal snapshot was sent to the PDF renderer."
+            ? "The current export-only report snapshot was sent to the Word renderer."
+            : "The current export-only report snapshot was sent to the PDF renderer."
       });
     } catch (error) {
       toast.error(`${getSimpleWorkbenchProposalExportLabel({ format, style })} failed`, {
@@ -2893,12 +2893,12 @@ export function ProposalAdjustClientPage() {
     return (
       <main className="flex min-h-screen flex-col gap-6 overflow-x-clip px-[clamp(0.75rem,1.6vw,1.5rem)] pb-10 pt-4">
         <SurfacePanel className="px-5 py-6 sm:px-6">
-          <div className="eyebrow">No Proposal Snapshot</div>
+          <div className="eyebrow">No Report Snapshot</div>
           <h1 className="mt-1 font-display text-[1.7rem] leading-none tracking-[-0.05em] text-[color:var(--ink)]">
-            Package a proposal before opening the PDF editor
+            Package a report before opening the PDF editor
           </h1>
           <p className="mt-3 max-w-2xl text-sm leading-7 text-[color:var(--ink-soft)]">
-            This page only edits the packaged proposal snapshot that feeds the preview, PDF renderer, and DOCX renderer. Return to the workbench proposal tab and
+            This page only edits the packaged report snapshot that feeds the preview, PDF renderer, and DOCX renderer. Return to the workbench report tab and
             package an issue first.
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
@@ -2922,12 +2922,12 @@ export function ProposalAdjustClientPage() {
           <div className="min-w-0">
             <div className="eyebrow">{isSimplePdfMode ? "Simple PDF Editor" : "Branded PDF Editor"}</div>
             <h1 className="mt-1 font-display text-[1.65rem] leading-none tracking-[-0.04em] text-[color:var(--ink)]">
-              {isSimplePdfMode ? "Edit the simple PDF in document order" : "Edit the branded proposal values"}
+              {isSimplePdfMode ? "Edit the simple PDF in document order" : "Edit the branded report values"}
             </h1>
             <p className="mt-2 max-w-4xl text-sm leading-6 text-[color:var(--ink-soft)]">
               {isSimplePdfMode
-                ? "Manual edits change the simple offer PDF snapshot only. The sections below follow the compact form: header, results, layers and charts, then sender details."
-                : "Manual edits change the branded offer PDF snapshot only. The sections below follow the branded proposal: cover and client details, offer values, build-up and curves, then brand and sender details."}{" "}
+                ? "Manual edits change the simple report PDF snapshot only. The sections below follow the compact form: header, results, layers and charts, then sender details."
+                : "Manual edits change the branded report PDF snapshot only. The sections below follow the branded analysis report: cover and client details, values, build-up and curves, then brand and sender details."}{" "}
               Calculator inputs and engine outputs stay untouched.
             </p>
           </div>
@@ -3021,11 +3021,11 @@ export function ProposalAdjustClientPage() {
               <div className="grid gap-4 md:grid-cols-2">
                 <EditorField label="Project name" onChange={(value) => updateField("projectName", value)} value={editableDocument.projectName} />
                 <EditorField label="Client name" onChange={(value) => updateField("clientName", value)} value={editableDocument.clientName} />
-                <EditorField label="Proposal recipient" onChange={(value) => updateField("proposalRecipient", value)} value={editableDocument.proposalRecipient} />
+                <EditorField label="Report recipient" onChange={(value) => updateField("proposalRecipient", value)} value={editableDocument.proposalRecipient} />
                 <EditorField label="Attention line" onChange={(value) => updateField("proposalAttention", value)} value={editableDocument.proposalAttention} />
-                <EditorField label="Proposal reference" onChange={(value) => updateField("proposalReference", value)} value={editableDocument.proposalReference} />
-                <EditorField label="Proposal revision" onChange={(value) => updateField("proposalRevision", value)} value={editableDocument.proposalRevision} />
-                <EditorField label="Proposal subject" onChange={(value) => updateField("proposalSubject", value)} value={editableDocument.proposalSubject} />
+                <EditorField label="Report reference" onChange={(value) => updateField("proposalReference", value)} value={editableDocument.proposalReference} />
+                <EditorField label="Report revision" onChange={(value) => updateField("proposalRevision", value)} value={editableDocument.proposalRevision} />
+                <EditorField label="Report subject" onChange={(value) => updateField("proposalSubject", value)} value={editableDocument.proposalSubject} />
                 <EditorField label="Issue purpose" onChange={(value) => updateField("proposalIssuePurpose", value)} value={editableDocument.proposalIssuePurpose} />
                 <EditorField label="Validity note" onChange={(value) => updateField("proposalValidityNote", value)} value={editableDocument.proposalValidityNote} />
               </div>
@@ -3038,10 +3038,10 @@ export function ProposalAdjustClientPage() {
                   description={
                     isSimplePdfMode
                       ? "This is the first content block after the simple PDF header. Use it for the headline acoustic answer and the visible result table."
-                      : "These fields control the branded proposal headline value, offer summary, review status, and printed consultant note."
+                      : "These fields control the branded report headline value, summary, review status, and printed consultant note."
                   }
-                  eyebrow={isSimplePdfMode ? "Simple PDF results" : "Branded offer values"}
-                  title={isSimplePdfMode ? "Primary answer, Rw / Ln,w, summary" : "Offer values, summary, consultant note"}
+                  eyebrow={isSimplePdfMode ? "Simple PDF results" : "Branded report values"}
+                  title={isSimplePdfMode ? "Primary answer, Rw / Ln,w, summary" : "Report values, summary, consultant note"}
                 >
                 <div className="grid gap-3 md:grid-cols-2">
                   <EditorCheckbox
@@ -3090,8 +3090,8 @@ export function ProposalAdjustClientPage() {
                   value={editableDocument.executiveSummary}
                 />
                   <EditorTextarea
-                    label={isSimplePdfMode ? "Proposal note shown in PDF" : "Consultant note shown in branded PDF"}
-                    note={isSimplePdfMode ? "This is the consultant note printed in the simple offer form." : "This text prints in the branded proposal under Proposal note."}
+                    label={isSimplePdfMode ? "Report note shown in PDF" : "Consultant note shown in branded PDF"}
+                    note={isSimplePdfMode ? "This is the consultant note printed in the simple analysis report." : "This text prints in the branded analysis report under Report note."}
                     onChange={(value) => updateField("briefNote", value)}
                     rows={4}
                     value={editableDocument.briefNote}
@@ -3463,7 +3463,7 @@ export function ProposalAdjustClientPage() {
                   description={
                     isSimplePdfMode
                       ? "Dossier cards, method trace notes, and coverage text stay closed because the simple PDF does not need them for normal offer edits."
-                      : "Internal trace and coverage data is retained for the snapshot but is not printed in the branded offer form."
+                      : "Internal trace and coverage data is retained for the snapshot but is not printed in the branded analysis report."
                   }
                   eyebrow="Optional"
                   summary={`${editableDocument.corridorDossierCards.length + editableDocument.methodDossierCards.length + editableDocument.methodTraceGroups.length + editableDocument.coverageItems.length} packaged blocks`}
@@ -3761,8 +3761,8 @@ export function ProposalAdjustClientPage() {
                 <CollapsibleEditorSection
                   description={
                     isSimplePdfMode
-                      ? "Internal registers and raw warnings stay here. Simple PDF hides raw warnings from the customer-facing offer form."
-                      : "Internal registers and raw warnings stay here for traceability. Branded PDF hides these from the client offer form."
+                      ? "Internal registers and raw warnings stay here. Simple PDF hides raw warnings from the customer-facing analysis report."
+                      : "Internal registers and raw warnings stay here for traceability. Branded PDF hides these from the client analysis report."
                   }
                   eyebrow="Optional"
                   summary={`${editableDocument.issueRegisterItems.length + editableDocument.decisionTrailItems.length + editableDocument.assumptionItems.length + editableDocument.recommendationItems.length + editableDocument.citations.length} rows + warnings`}

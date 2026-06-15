@@ -5,7 +5,8 @@ import {
   readSimpleWorkbenchProposalPreview,
   resetSimpleWorkbenchProposalPreviewCustomizations,
   storeSimpleWorkbenchProposalPreviewCustomizations,
-  storeSimpleWorkbenchProposalPreview
+  storeSimpleWorkbenchProposalPreview,
+  updateSimpleWorkbenchProposalPreviewProjectContext
 } from "./simple-workbench-proposal-preview-storage";
 import type { SimpleWorkbenchProposalDocument } from "./simple-workbench-proposal";
 
@@ -180,6 +181,66 @@ describe("simple workbench proposal preview storage", () => {
     expect(loaded?.savedAtIso).toMatch(/^20/);
   });
 
+  it("preserves project report context across local edits and reset", () => {
+    storeSimpleWorkbenchProposalPreview(DOCUMENT, {
+      projectContext: {
+        serverProjectAssemblyId: "11111111-1111-4111-8111-111111111111",
+        serverProjectId: "22222222-2222-4222-8222-222222222222",
+        sourceAssemblySnapshot: {
+          schemaId: "dynecho.workbench-v2.snapshot.v1"
+        },
+        sourceCalculationOutput: {
+          primaryMetric: "Rw 61 dB"
+        },
+        sourceMaterialSnapshot: {
+          customMaterials: [
+            {
+              id: "custom-board"
+            }
+          ],
+          materialVisualOverrides: [
+            {
+              materialId: "custom-board"
+            }
+          ]
+        }
+      }
+    });
+
+    storeSimpleWorkbenchProposalPreviewCustomizations({
+      ...DOCUMENT,
+      executiveSummary: "Manual report wording is active on this preview."
+    });
+    updateSimpleWorkbenchProposalPreviewProjectContext({
+      serverProjectReportId: "33333333-3333-4333-8333-333333333333",
+      serverProjectReportUpdatedAtIso: "2026-06-12T10:00:00.000Z"
+    });
+
+    const edited = readSimpleWorkbenchProposalPreview();
+
+    expect(edited?.projectContext).toMatchObject({
+      serverProjectAssemblyId: "11111111-1111-4111-8111-111111111111",
+      serverProjectId: "22222222-2222-4222-8222-222222222222",
+      serverProjectReportId: "33333333-3333-4333-8333-333333333333",
+      serverProjectReportUpdatedAtIso: "2026-06-12T10:00:00.000Z"
+    });
+    expect(edited?.projectContext?.sourceMaterialSnapshot?.customMaterials).toEqual([
+      {
+        id: "custom-board"
+      }
+    ]);
+
+    resetSimpleWorkbenchProposalPreviewCustomizations();
+
+    const reset = readSimpleWorkbenchProposalPreview();
+
+    expect(reset?.hasCustomizations).toBe(false);
+    expect(reset?.projectContext).toMatchObject({
+      serverProjectReportId: "33333333-3333-4333-8333-333333333333",
+      serverProjectReportUpdatedAtIso: "2026-06-12T10:00:00.000Z"
+    });
+  });
+
   it("preserves metric visibility flags through stored preview snapshots", () => {
     storeSimpleWorkbenchProposalPreview({
       ...DOCUMENT,
@@ -257,7 +318,7 @@ describe("simple workbench proposal preview storage", () => {
     expect(loaded?.document.proposalIssuePurpose).toBe("Client review and acoustic coordination");
     expect(loaded?.document.proposalRecipient).toBe("Machinity Acoustics");
     expect(loaded?.document.proposalAttention).toBe("Attention line not entered");
-    expect(loaded?.document.proposalSubject).toBe("Riverside Residences acoustic proposal");
+    expect(loaded?.document.proposalSubject).toBe("Riverside Residences acoustic analysis report");
     expect(loaded?.document.proposalValidityNote).toBe("Valid for 30 calendar days unless superseded by a later issue.");
     expect(loaded?.document.reportProfile).toBe("consultant");
   });

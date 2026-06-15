@@ -51,7 +51,7 @@ const DOCUMENT: SimpleWorkbenchProposalDocument = {
   proposalRecipient: "Riverside Development Team",
   proposalReference: "MAC-2026-014",
   proposalRevision: "Rev 01",
-  proposalSubject: "Riverside Residences floor acoustic proposal",
+  proposalSubject: "Riverside Residences floor acoustic analysis report",
   proposalValidityNote: "Valid for 30 calendar days unless superseded by a later issue.",
   recommendationItems: [],
   reportProfile: "consultant",
@@ -67,17 +67,17 @@ describe("simple workbench proposal preview html helper", () => {
     it("builds branded html by default", () => {
       const html = buildSimpleWorkbenchProposalPreviewHtml(DOCUMENT);
 
-      expect(html).toContain("This acoustic proposal summarizes a project estimate");
-      expect(html).toContain("Proposal Summary");
+      expect(html).toContain("This acoustic analysis report summarizes a project estimate");
+      expect(html).toContain("Report Summary");
       expect(html).toContain("Consultant note");
       expect(html).not.toContain("This DAC sheet summarizes a project estimate");
-      expect(html).not.toContain("This offer form summarises the acoustic calculation");
+      expect(html).not.toContain("This analysis report summarises the acoustic calculation");
     });
 
   it("builds the lightweight summary html for the simple preview path", () => {
     const html = buildSimpleWorkbenchProposalPreviewHtml(DOCUMENT, "simple");
 
-    expect(html).toContain("This offer form summarises the acoustic calculation");
+    expect(html).toContain("This analysis report summarises the acoustic calculation");
     expect(html).toContain("Measured / predicted indices");
     expect(html).toMatch(/\.page-grid\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\);/u);
     expect(html).toMatch(/\.curve-grid\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\);/u);

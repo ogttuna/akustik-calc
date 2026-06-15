@@ -74,6 +74,67 @@ describe("calculator API validation guidance", () => {
     expect(body.issues?.map((issue) => issue.path.join("."))).toContain("layers");
   });
 
+  it("allows estimate requests to carry project custom material catalog entries", async () => {
+    const { POST } = await import("../app/api/estimate/route");
+    const response = await POST(
+      jsonRequest("http://localhost/api/estimate", {
+        calculator: "dynamic",
+        layers: [{ materialId: "custom_cork_finish", thicknessMm: 8 }],
+        materialCatalog: [
+          {
+            acoustic: {
+              behavior: "rigid_mass",
+              propertySourceStatus: "user_supplied"
+            },
+            category: "finish",
+            densityKgM3: 720,
+            id: "custom_cork_finish",
+            name: "Custom cork finish",
+            tags: ["custom-workbench-material", "finish"]
+          }
+        ],
+        targetOutputs: ["Rw"]
+      })
+    );
+    const body = (await response.json()) as { ok?: boolean; result?: unknown };
+
+    expect(response.status).toBe(200);
+    expect(body.ok).toBe(true);
+    expect(body.result).toBeTruthy();
+  });
+
+  it("rejects estimate material catalog entries that override built-in material ids", async () => {
+    const { POST } = await import("../app/api/estimate/route");
+    const response = await POST(
+      jsonRequest("http://localhost/api/estimate", {
+        calculator: "dynamic",
+        layers: [{ materialId: "concrete", thicknessMm: 100 }],
+        materialCatalog: [
+          {
+            acoustic: {
+              behavior: "rigid_mass",
+              propertySourceStatus: "user_supplied"
+            },
+            category: "mass",
+            densityKgM3: 1,
+            id: "concrete",
+            name: "Unsafe concrete override",
+            tags: ["custom-workbench-material"]
+          }
+        ],
+        targetOutputs: ["Rw"]
+      })
+    );
+    const body = (await response.json()) as {
+      issues?: Array<{ path: Array<number | string> }>;
+      ok?: boolean;
+    };
+
+    expect(response.status).toBe(400);
+    expect(body.ok).toBe(false);
+    expect(body.issues?.[0]?.path).toEqual(["materialCatalog", 0, "id"]);
+  });
+
   it("returns concrete next-field guidance for source-less impact-only requests", async () => {
     const { POST } = await import("../app/api/impact-only/route");
     const response = await POST(

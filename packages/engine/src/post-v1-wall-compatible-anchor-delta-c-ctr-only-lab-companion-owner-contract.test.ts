@@ -224,6 +224,69 @@ function expectCOrCtrOnlyLabCompanionResult(
   expect(result.warnings).not.toContain(POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_WARNING);
 }
 
+function expectCAndCtrPairLabCompanionResult(
+  result: ReturnType<typeof calculateAssembly>,
+  expectedC: number,
+  expectedCtr: number,
+  expectedScopeInput: "oneSideCompatibleExteriorBoardDelta" | "pairedCompatibleExteriorBoardDelta"
+) {
+  const selectedCandidate = result.airborneCandidateResolution?.candidates.find(
+    (candidate: { id: string; selected?: boolean }) =>
+      candidate.id === POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_SELECTED_CANDIDATE_ID
+  );
+
+  expect(result.supportedTargetOutputs).toEqual(["C", "Ctr"]);
+  expect(result.unsupportedTargetOutputs).toEqual([]);
+  expect(result.metrics).toMatchObject({
+    estimatedCDb: expectedC,
+    estimatedCtrDb: expectedCtr
+  });
+  expect(result.airborneBasis).toMatchObject({
+    anchorSourceId: "knauf_lab_416889_primary_2026",
+    errorBudgetDb: 6,
+    kind: "airborne_physics_prediction",
+    method: POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_RUNTIME_METHOD,
+    origin: "family_physics_prediction",
+    toleranceClass: "uncalibrated_prediction"
+  });
+  expect(result.airborneBasis?.requiredInputs).toEqual(
+    expect.arrayContaining([
+      "exactReducedStackSourceRow:Rw",
+      "compatibleExteriorBoardDelta",
+      expectedScopeInput,
+      "calculatedTransmissionLossCurve",
+      "ISO717-1 C/Ctr rating adapter"
+    ])
+  );
+  expect(result.airborneCandidateResolution).toMatchObject({
+    runtimeValueMovement: false,
+    selectedCandidateId: POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_SELECTED_CANDIDATE_ID,
+    selectedOrigin: "family_physics_prediction"
+  });
+  expect(selectedCandidate).toMatchObject({
+    metricIds: ["C", "Ctr"],
+    origin: "family_physics_prediction",
+    outputIds: ["C", "Ctr"],
+    rejectionReasons: [],
+    selected: true
+  });
+  expect(result.layerCombinationResolverTrace).toMatchObject({
+    candidateKind: "source_absent_family_solver",
+    errorBudgetMetrics: ["STC", "C", "Ctr"],
+    noRuntimeValueMovement: true,
+    runtimeBasisId: POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_RUNTIME_METHOD,
+    selectedCandidateId: POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_SELECTED_CANDIDATE_ID,
+    supportBucket: "source_absent_estimate",
+    supportedMetrics: ["C", "Ctr"],
+    valuePins: [
+      { metric: "C", value: expectedC },
+      { metric: "Ctr", value: expectedCtr }
+    ]
+  });
+  expect(result.warnings).toContain(POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_WARNING);
+  expect(result.warnings).not.toContain(POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_WARNING);
+}
+
 describe("post-V1 wall compatible anchor-delta C/Ctr-only lab companion owner", () => {
   it("lands after STC-only coverage refresh and selects C/Ctr-only surface parity next", () => {
     expect(summarizeCOrCtrOnlyOwner()).toMatchObject({
@@ -257,6 +320,11 @@ describe("post-V1 wall compatible anchor-delta C/Ctr-only lab companion owner", 
       calculator: "dynamic",
       targetOutputs: CTR_ONLY_OUTPUT
     });
+    const pairedCAndCtr = calculateAssembly(EXACT_LSF_PLUS_OUTER_BOARD_BOTH_SIDES, {
+      airborneContext: EXACT_LSF_LAB_CONTEXT,
+      calculator: "dynamic",
+      targetOutputs: C_CTR_PAIR_OUTPUT
+    });
     const oneSideStartC = calculateAssembly(EXACT_LSF_PLUS_OUTER_BOARD_START, {
       airborneContext: EXACT_LSF_LAB_CONTEXT,
       calculator: "dynamic",
@@ -277,16 +345,23 @@ describe("post-V1 wall compatible anchor-delta C/Ctr-only lab companion owner", 
       calculator: "dynamic",
       targetOutputs: CTR_ONLY_OUTPUT
     });
+    const oneSideEndCAndCtr = calculateAssembly(EXACT_LSF_PLUS_OUTER_BOARD_END, {
+      airborneContext: EXACT_LSF_LAB_CONTEXT,
+      calculator: "dynamic",
+      targetOutputs: C_CTR_PAIR_OUTPUT
+    });
 
     expectCOrCtrOnlyLabCompanionResult(pairedC, "C", -1.1, "pairedCompatibleExteriorBoardDelta");
     expectCOrCtrOnlyLabCompanionResult(pairedCtr, "Ctr", -6, "pairedCompatibleExteriorBoardDelta");
+    expectCAndCtrPairLabCompanionResult(pairedCAndCtr, -1.1, -6, "pairedCompatibleExteriorBoardDelta");
     expectCOrCtrOnlyLabCompanionResult(oneSideStartC, "C", -0.6, "oneSideCompatibleExteriorBoardDelta");
     expectCOrCtrOnlyLabCompanionResult(oneSideStartCtr, "Ctr", -5.5, "oneSideCompatibleExteriorBoardDelta");
     expectCOrCtrOnlyLabCompanionResult(oneSideEndC, "C", -0.6, "oneSideCompatibleExteriorBoardDelta");
     expectCOrCtrOnlyLabCompanionResult(oneSideEndCtr, "Ctr", -5.5, "oneSideCompatibleExteriorBoardDelta");
+    expectCAndCtrPairLabCompanionResult(oneSideEndCAndCtr, -0.6, -5.5, "oneSideCompatibleExteriorBoardDelta");
   });
 
-  it("keeps direct Rw, STC-only, mixed lab, C+Ctr pair, field/building, A-weighted, ASTM, and non-Knauf boundaries pinned", () => {
+  it("keeps direct Rw, STC-only, mixed lab, field/building, A-weighted, ASTM, and non-Knauf boundaries pinned", () => {
     const rwOnly = calculateAssembly(EXACT_LSF_PLUS_OUTER_BOARD_BOTH_SIDES, {
       airborneContext: EXACT_LSF_LAB_CONTEXT,
       calculator: "dynamic",
@@ -354,11 +429,7 @@ describe("post-V1 wall compatible anchor-delta C/Ctr-only lab companion owner", 
       estimatedStc: 59
     });
 
-    expect(cCtrPair.supportedTargetOutputs).toEqual([]);
-    expect(cCtrPair.unsupportedTargetOutputs).toEqual(["C", "Ctr"]);
-    expect(cCtrPair.layerCombinationResolverTrace?.selectedCandidateId).not.toBe(
-      POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_SELECTED_CANDIDATE_ID
-    );
+    expectCAndCtrPairLabCompanionResult(cCtrPair, -1.1, -6, "pairedCompatibleExteriorBoardDelta");
 
     expect(buildingMixed.supportedTargetOutputs).toEqual(FIELD_BUILDING_OUTPUTS);
     expect(buildingMixed.unsupportedTargetOutputs).toEqual(["STC", "C", "Ctr"]);

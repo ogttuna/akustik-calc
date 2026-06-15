@@ -66,7 +66,7 @@ export function getSimpleWorkbenchProposalBranding(
 ): SimpleWorkbenchProposalBranding {
   const company = input.consultantCompany.trim() || "DYNECHO Acoustic Consulting";
   const customWordmarkLine = input.consultantWordmarkLine?.trim() ?? "";
-  const project = input.projectName.trim() || "Untitled acoustic proposal";
+  const project = input.projectName.trim() || "Untitled acoustic analysis report";
   const monogram = buildSimpleWorkbenchProposalMonogram(company);
 
   switch (input.reportProfile) {
@@ -75,9 +75,9 @@ export function getSimpleWorkbenchProposalBranding(
         accent: "#40627a",
         accentSoft: "#eaf0f5",
         accentStrong: "#294456",
-        coverKicker: `Commercial acoustic proposal for ${project}. Key acoustic values, construction scope, assumptions, and validity are stated for client review.`,
-        coverLabel: "Developer proposal",
-        coverTitle: "Acoustic Coordination Memo",
+        coverKicker: `Commercial acoustic analysis report for ${project}. Key acoustic values, construction scope, assumptions, and validity are stated for client review.`,
+        coverLabel: "Developer report",
+        coverTitle: "Acoustic Analysis Report",
         heroFrom: "#f4f7fa",
         heroTo: "#e7eef3",
         line: "rgba(64, 98, 122, 0.22)",
@@ -85,15 +85,15 @@ export function getSimpleWorkbenchProposalBranding(
         profileDetail: "Commercial issue prepared for project coordination and client review.",
         templateLabel: input.reportProfileLabel,
         wordmarkPrimary: company,
-        wordmarkSecondary: customWordmarkLine || "Acoustic proposal"
+        wordmarkSecondary: customWordmarkLine || "Acoustic analysis report"
       };
     case "lab_ready":
       return {
         accent: "#2f6453",
         accentSoft: "#e9f3ee",
         accentStrong: "#21493d",
-        coverKicker: `Acoustic verification proposal for ${project}. Key values, construction details, reference standards, and notes are stated for technical review.`,
-        coverLabel: "Verification proposal",
+        coverKicker: `Acoustic verification report for ${project}. Key values, construction details, reference standards, and notes are stated for technical review.`,
+        coverLabel: "Verification report",
         coverTitle: "Laboratory Submission Brief",
         heroFrom: "#f5faf7",
         heroTo: "#e7f0ea",
@@ -102,7 +102,7 @@ export function getSimpleWorkbenchProposalBranding(
         profileDetail: "Technical issue prepared for lab submission and verification review.",
         templateLabel: input.reportProfileLabel,
         wordmarkPrimary: company,
-        wordmarkSecondary: customWordmarkLine || "Acoustic proposal"
+        wordmarkSecondary: customWordmarkLine || "Acoustic analysis report"
       };
     case "consultant":
     default:
@@ -110,9 +110,9 @@ export function getSimpleWorkbenchProposalBranding(
         accent: "#935d42",
         accentSoft: "#f4e7dc",
         accentStrong: "#6f402a",
-        coverKicker: `Acoustic proposal for ${project}. Key values, construction details, assumptions, and validity are stated for client review.`,
-        coverLabel: "Consultant proposal",
-        coverTitle: "Acoustic Proposal",
+        coverKicker: `Acoustic analysis report for ${project}. Key values, construction details, assumptions, and validity are stated for client review.`,
+        coverLabel: "Consultant report",
+        coverTitle: "Acoustic Analysis Report",
         heroFrom: "#fff7ef",
         heroTo: "#f7ecdf",
         line: "rgba(147, 93, 66, 0.2)",
@@ -120,7 +120,7 @@ export function getSimpleWorkbenchProposalBranding(
         profileDetail: "Client issue prepared with consultant contact and revision control.",
         templateLabel: input.reportProfileLabel,
         wordmarkPrimary: company,
-        wordmarkSecondary: customWordmarkLine || "Acoustic proposal"
+        wordmarkSecondary: customWordmarkLine || "Acoustic analysis report"
       };
   }
 }

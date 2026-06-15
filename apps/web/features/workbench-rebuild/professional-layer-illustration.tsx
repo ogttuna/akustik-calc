@@ -1,12 +1,11 @@
 "use client";
 
-import { useId } from "react";
+import { type CSSProperties, useId } from "react";
 
 import {
   createIllustrationMaterial,
-  getIllustrationThresholds,
+  distributeIllustrationSizes,
   getIllustrationMaterialCue,
-  type IllustrationAxis,
   type IllustrationMaterialCue,
   type LayerVisualMaterial
 } from "../workbench/simple-workbench-illustration";
@@ -21,7 +20,11 @@ export type ProfessionalLayerIllustrationLayer = {
   solverLabel?: string;
   thicknessLabel?: string;
   thicknessMm: number | null;
+  visualStyle?: ProfessionalLayerVisualStyle;
 };
+
+export type ProfessionalLayerVisualStyle = CSSProperties &
+  Partial<Record<"--layer-fill" | "--layer-pattern" | "--layer-side" | "--layer-stroke", string>>;
 
 type ProfessionalLayerIllustrationProps = {
   layers: readonly ProfessionalLayerIllustrationLayer[];
@@ -34,8 +37,6 @@ type VisualLayer = ProfessionalLayerIllustrationLayer & {
   material: LayerVisualMaterial;
   resolvedThicknessLabel: string;
 };
-
-const FALLBACK_THICKNESS_MM = 10;
 
 function formatThickness(thicknessMm: number | null, fallback?: string): string {
   if (fallback) {
@@ -77,100 +78,11 @@ function toVisualLayer(layer: ProfessionalLayerIllustrationLayer): VisualLayer {
   };
 }
 
-function normalizeThickness(thicknessMm: number | null | undefined): number {
-  return typeof thicknessMm === "number" && Number.isFinite(thicknessMm) && thicknessMm > 0 ? thicknessMm : FALLBACK_THICKNESS_MM;
-}
-
-function clamp(value: number, minimum: number, maximum: number): number {
-  return Math.min(maximum, Math.max(minimum, value));
-}
-
 function distributeProfessionalLayerSizes(
   thicknessesMm: readonly (number | null | undefined)[],
-  axis: IllustrationAxis
+  axis: "floor" | "wall"
 ): number[] {
-  const preset = getIllustrationThresholds(axis);
-  const normalized = thicknessesMm.map(normalizeThickness);
-  const groups = new Map<string, { count: number; indexes: number[]; thicknessMm: number }>();
-
-  normalized.forEach((thicknessMm, index) => {
-    const key = String(Math.round(thicknessMm * 1000) / 1000);
-    const existing = groups.get(key);
-
-    if (existing) {
-      existing.count += 1;
-      existing.indexes.push(index);
-      return;
-    }
-
-    groups.set(key, { count: 1, indexes: [index], thicknessMm });
-  });
-
-  const grouped = [...groups.values()];
-  const desiredTotal = normalized.reduce((sum, value) => sum + value, 0) * preset.basePxPerMm;
-  const feasibleMinimum = normalized.length * preset.minLayerPx;
-  const feasibleMaximum = normalized.length * preset.maxLayerPx;
-  const targetTotal = clamp(
-    desiredTotal,
-    Math.max(preset.minTotalPx, feasibleMinimum),
-    Math.min(preset.maxTotalPx, feasibleMaximum)
-  );
-  const groupSizes = new Array<number>(grouped.length).fill(0);
-  const locked = new Array<boolean>(grouped.length).fill(false);
-  let remainingTarget = targetTotal;
-
-  while (true) {
-    const openIndexes = grouped.flatMap((group, index) => (locked[index] ? [] : [{ group, index }]));
-
-    if (!openIndexes.length) {
-      break;
-    }
-
-    const remainingWeight = openIndexes.reduce((sum, entry) => sum + entry.group.thicknessMm * entry.group.count, 0);
-
-    if (remainingWeight <= 0 || remainingTarget <= 0) {
-      const evenLayerSize = remainingTarget > 0 ? remainingTarget / openIndexes.reduce((sum, entry) => sum + entry.group.count, 0) : preset.minLayerPx;
-      for (const entry of openIndexes) {
-        groupSizes[entry.index] = clamp(evenLayerSize, preset.minLayerPx, preset.maxLayerPx);
-      }
-      break;
-    }
-
-    let constrainedThisPass = false;
-    for (const entry of openIndexes) {
-      const proposedGroupSize = ((entry.group.thicknessMm * entry.group.count) / remainingWeight) * remainingTarget;
-      const proposedLayerSize = proposedGroupSize / entry.group.count;
-
-      if (proposedLayerSize < preset.minLayerPx) {
-        groupSizes[entry.index] = preset.minLayerPx;
-        locked[entry.index] = true;
-        remainingTarget -= preset.minLayerPx * entry.group.count;
-        constrainedThisPass = true;
-      } else if (proposedLayerSize > preset.maxLayerPx) {
-        groupSizes[entry.index] = preset.maxLayerPx;
-        locked[entry.index] = true;
-        remainingTarget -= preset.maxLayerPx * entry.group.count;
-        constrainedThisPass = true;
-      }
-    }
-
-    if (!constrainedThisPass) {
-      for (const entry of openIndexes) {
-        groupSizes[entry.index] = (((entry.group.thicknessMm * entry.group.count) / remainingWeight) * remainingTarget) / entry.group.count;
-      }
-      break;
-    }
-  }
-
-  const sizes = new Array<number>(normalized.length).fill(preset.minLayerPx);
-  grouped.forEach((group, groupIndex) => {
-    const size = Math.round(groupSizes[groupIndex]! * 10) / 10;
-    group.indexes.forEach((index) => {
-      sizes[index] = size;
-    });
-  });
-
-  return sizes;
+  return distributeIllustrationSizes(thicknessesMm, axis).map((allocation) => allocation.sizePx);
 }
 
 function renderTexture(input: {
@@ -303,10 +215,12 @@ function renderTexture(input: {
   }
 }
 
-function renderLayerIndex(input: { index: number; x: number; y: number }) {
+function renderLayerIndex(input: { index: number; radius?: number; x: number; y: number }) {
+  const radius = input.radius ?? 13;
+
   return (
     <g>
-      <circle className="rebuild-layer-index-badge" cx={input.x} cy={input.y} r="13" />
+      <circle className="rebuild-layer-index-badge" cx={input.x} cy={input.y} r={radius} />
       <text className="rebuild-layer-index-text" dominantBaseline="middle" textAnchor="middle" x={input.x} y={input.y + 0.5}>
         {input.index + 1}
       </text>
@@ -316,7 +230,7 @@ function renderLayerIndex(input: { index: number; x: number; y: number }) {
 
 function renderWallSection(layers: readonly VisualLayer[], idPrefix: string) {
   const allocations = distributeProfessionalLayerSizes(layers.map((layer) => layer.thicknessMm), "wall");
-  const viewWidth = 780;
+  const viewWidth = Math.max(780, 112 + allocations.reduce((sum, width) => sum + width, 0) + 112);
   const viewHeight = 330;
   const sectionX = 112;
   const sectionY = 104;
@@ -358,6 +272,7 @@ function renderWallSection(layers: readonly VisualLayer[], idPrefix: string) {
             data-layer-size-px={width}
             data-layer-thickness-mm={layer.thicknessMm ?? undefined}
             key={layer.id}
+            style={layer.visualStyle}
           >
             <clipPath id={clipId}>
               <rect height={sectionHeight} width={width} x={x} y={sectionY} />
@@ -366,7 +281,7 @@ function renderWallSection(layers: readonly VisualLayer[], idPrefix: string) {
             <rect className="rebuild-layer-face-side" height={sectionHeight} width={Math.min(12, width * 0.18)} x={x} y={sectionY} />
             {renderTexture({ clipId, cue: layer.cue, height: sectionHeight, width, x, y: sectionY })}
             <line className="rebuild-layer-seam" x1={x + width} x2={x + width} y1={sectionY} y2={sectionY + sectionHeight} />
-            {renderLayerIndex({ index, x: x + width / 2, y: sectionY + sectionHeight / 2 })}
+            {renderLayerIndex({ index, radius: Math.min(13, Math.max(8, width / 2 - 2)), x: x + width / 2, y: sectionY + sectionHeight / 2 })}
           </g>
         );
       })}
@@ -383,11 +298,12 @@ function renderWallSection(layers: readonly VisualLayer[], idPrefix: string) {
 function renderFloorSection(layers: readonly VisualLayer[], idPrefix: string) {
   const allocations = distributeProfessionalLayerSizes(layers.map((layer) => layer.thicknessMm), "floor");
   const viewWidth = 780;
-  const viewHeight = 420;
+  const baseViewHeight = 420;
   const sectionX = 180;
   const sectionWidth = 330;
   const totalHeight = allocations.reduce((sum, height) => sum + height, 0);
-  const sectionY = Math.max(54, (viewHeight - totalHeight) / 2);
+  const sectionY = Math.max(54, (baseViewHeight - totalHeight) / 2);
+  const viewHeight = Math.max(baseViewHeight, sectionY + totalHeight + 108);
   const dimensionX = sectionX - 34;
   let currentY = sectionY;
 
@@ -424,6 +340,7 @@ function renderFloorSection(layers: readonly VisualLayer[], idPrefix: string) {
             data-layer-size-px={height}
             data-layer-thickness-mm={layer.thicknessMm ?? undefined}
             key={layer.id}
+            style={layer.visualStyle}
           >
             <clipPath id={clipId}>
               <rect height={height} width={sectionWidth} x={sectionX} y={y} />
@@ -432,7 +349,7 @@ function renderFloorSection(layers: readonly VisualLayer[], idPrefix: string) {
             <rect className="rebuild-layer-face-side" height={height} width="16" x={sectionX} y={y} />
             {renderTexture({ clipId, cue: layer.cue, height, width: sectionWidth, x: sectionX, y })}
             <line className="rebuild-layer-seam" x1={sectionX} x2={sectionX + sectionWidth} y1={y + height} y2={y + height} />
-            {renderLayerIndex({ index, x: sectionX + 24, y: y + height / 2 })}
+            {renderLayerIndex({ index, radius: Math.min(13, Math.max(8, height / 2 - 2)), x: sectionX + 24, y: y + height / 2 })}
             <text className="rebuild-layer-thickness-callout" dominantBaseline="middle" x={sectionX + sectionWidth + 24} y={y + height / 2}>
               {layer.resolvedThicknessLabel}
             </text>
@@ -485,7 +402,13 @@ export function ProfessionalLayerIllustration({ layers, orientation, title }: Pr
           </div>
           <ol className="rebuild-layer-schedule-list">
             {visualLayers.map((layer, index) => (
-              <li className="rebuild-layer-schedule-row" data-active={layer.active ? "true" : "false"} data-cue={layer.cue} key={layer.id}>
+              <li
+                className="rebuild-layer-schedule-row"
+                data-active={layer.active ? "true" : "false"}
+                data-cue={layer.cue}
+                key={layer.id}
+                style={layer.visualStyle}
+              >
                 <span className="rebuild-layer-schedule-index">{index + 1}</span>
                 <span className="rebuild-layer-schedule-main">
                   <strong>{layer.label}</strong>

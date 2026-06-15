@@ -10,6 +10,392 @@ Older selected-next notes later in this file are historical unless the
 documentation map, source of truth, and next-agent brief name them as
 current.
 
+## Latest Floor User-Material Impact Context Dynamic-Stiffness Owner - 2026-06-12
+
+Latest landed runtime owner:
+`post_v1_floor_user_material_impact_context_dynamic_stiffness_owner_plan`.
+Owner file:
+`packages/engine/src/post-v1-floor-user-material-impact-context-dynamic-stiffness-owner-contract.test.ts`.
+Owner status:
+`post_v1_floor_user_material_impact_context_dynamic_stiffness_owner_landed_runtime_selected_coverage_refresh`.
+It follows
+`post_v1_next_numeric_coverage_gap_after_user_material_porous_flow_resistivity_input_plan`
+/
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-user-material-porous-flow-resistivity-input-contract.test.ts`
+/
+`post_v1_next_numeric_coverage_gap_after_user_material_porous_flow_resistivity_input_landed_no_runtime_selected_floor_user_material_impact_context_dynamic_stiffness_owner`.
+Selected candidate:
+`floor.user_material_impact_context_dynamic_stiffness_owner`.
+The owner lets custom visible heavy floating-floor stacks use
+`floorImpactContext.resilientLayerDynamicStiffnessMNm3` and
+`floorImpactContext.loadBasisKgM2`; the pinned custom stack calculates
+`Ln,w 50.3` and `DeltaLw 24.3` through
+`predictor_heavy_floating_floor_iso12354_annexc_estimate`. Missing
+dynamic stiffness/load basis remains `needs_input`, and low-density
+custom concrete remains outside the heavy concrete carrier route.
+Counters: `newCalculableLayerTemplates: 1`,
+`newCalculableRequestShapes: 1`, `newCalculableTargetOutputs: 2`,
+`runtimeBasisPromotions: 1`, `runtimeValuesMoved 2`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Current selected next action:
+`post_v1_floor_user_material_impact_context_dynamic_stiffness_coverage_refresh_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-floor-user-material-impact-context-dynamic-stiffness-coverage-refresh-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_FLOOR_USER_MATERIAL_IMPACT_CONTEXT_DYNAMIC_STIFFNESS_COVERAGE_REFRESH_PLAN_2026-06-12.md`.
+Current selected next label:
+`post-V1 floor user-material impact context dynamic-stiffness coverage refresh`.
+
+## Latest Post-Flow Numeric Coverage Gap Rerank - 2026-06-12
+
+Latest landed no-runtime rerank:
+`post_v1_next_numeric_coverage_gap_after_user_material_porous_flow_resistivity_input_plan`.
+Rerank file:
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-user-material-porous-flow-resistivity-input-contract.test.ts`.
+Rerank status:
+`post_v1_next_numeric_coverage_gap_after_user_material_porous_flow_resistivity_input_landed_no_runtime_selected_floor_user_material_impact_context_dynamic_stiffness_owner`.
+It follows
+`post_v1_wall_double_leaf_framed_user_material_porous_flow_resistivity_input_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-user-material-porous-flow-resistivity-input-coverage-refresh-contract.test.ts`
+/
+`post_v1_wall_double_leaf_framed_user_material_porous_flow_resistivity_input_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`.
+Selected candidate:
+`floor.user_material_impact_context_dynamic_stiffness_owner`.
+The rerank ran `roiAnalysisIterations: 3`, subtracted closed compatible
+anchor-delta, direct-fixed, default-catalog double-leaf/framed,
+explicit user-material, missing-topology, and porous flow-resistivity
+lanes, then selected the custom floor impact context dynamic-stiffness
+owner. Embedded custom resilient-layer `impact.dynamicStiffnessMNm3`
+already calculates; the selected gap is applying
+`floorImpactContext.resilientLayerDynamicStiffnessMNm3` to custom
+visible floor stacks with explicit physical inputs. Counters:
+`candidateCount 11`, `estimatedNextRuntimeValuesMoved: 2`,
+`estimatedNextCalculableRequestShapes: 1`,
+`estimatedNextCalculableTargetOutputs: 2`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Historical selected next action at the post-flow rerank checkpoint:
+`post_v1_floor_user_material_impact_context_dynamic_stiffness_owner_plan`.
+Historical selected next file at the post-flow rerank checkpoint:
+`packages/engine/src/post-v1-floor-user-material-impact-context-dynamic-stiffness-owner-contract.test.ts`.
+Historical selected next plan doc at the post-flow rerank checkpoint:
+`docs/calculator/POST_V1_FLOOR_USER_MATERIAL_IMPACT_CONTEXT_DYNAMIC_STIFFNESS_OWNER_PLAN_2026-06-12.md`.
+Historical selected next label at the post-flow rerank checkpoint:
+`post-V1 floor user-material impact context dynamic-stiffness owner`.
+
+## Latest User-Material Porous Flow-Resistivity Input Coverage Refresh - 2026-06-12
+
+Latest landed no-runtime coverage refresh:
+`post_v1_wall_double_leaf_framed_user_material_porous_flow_resistivity_input_coverage_refresh_plan`.
+Coverage refresh file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-user-material-porous-flow-resistivity-input-coverage-refresh-contract.test.ts`.
+Coverage refresh status:
+`post_v1_wall_double_leaf_framed_user_material_porous_flow_resistivity_input_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`.
+It follows
+`post_v1_wall_double_leaf_framed_user_material_porous_flow_resistivity_input_owner_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-user-material-porous-flow-resistivity-input-owner-contract.test.ts`
+/
+`post_v1_wall_double_leaf_framed_user_material_porous_flow_resistivity_input_owner_landed_runtime_selected_coverage_refresh`
+and the prior rerank
+`post_v1_next_numeric_coverage_gap_after_user_material_missing_topology_input_surface_plan`
+/
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-user-material-missing-topology-input-surface-contract.test.ts`
+/
+`post_v1_next_numeric_coverage_gap_after_user_material_missing_topology_input_surface_landed_no_runtime_selected_user_material_porous_flow_resistivity_input_owner`.
+Selected candidate closed by the owner:
+`wall.double_leaf_framed.user_material_porous_flow_resistivity_input_owner`.
+The refresh re-probes numeric user-supplied porous flow, explicit
+engineering-default flow, context-owned absorber flow, and missing
+user/unknown `flowResistivityPaSM2` for lab, field, and building bases.
+It keeps missing flow at `needs_input`, moves no runtime values, imports
+no source rows, and retunes no formula. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Historical selected next action at the coverage refresh checkpoint:
+`post_v1_next_numeric_coverage_gap_after_user_material_porous_flow_resistivity_input_plan`.
+Historical selected next file at the coverage refresh checkpoint:
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-user-material-porous-flow-resistivity-input-contract.test.ts`.
+Historical selected next plan doc at the coverage refresh checkpoint:
+`docs/calculator/POST_V1_NEXT_NUMERIC_COVERAGE_GAP_AFTER_USER_MATERIAL_POROUS_FLOW_RESISTIVITY_INPUT_PLAN_2026-06-12.md`.
+Historical selected next label at the coverage refresh checkpoint:
+`post-V1 next numeric coverage gap after user-material porous flow-resistivity input`.
+
+## Latest User-Material Porous Flow-Resistivity Input Owner - 2026-06-12
+
+Latest landed runtime boundary owner:
+`post_v1_wall_double_leaf_framed_user_material_porous_flow_resistivity_input_owner_plan`.
+Owner file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-user-material-porous-flow-resistivity-input-owner-contract.test.ts`.
+Owner status:
+`post_v1_wall_double_leaf_framed_user_material_porous_flow_resistivity_input_owner_landed_runtime_selected_coverage_refresh`.
+It follows
+`post_v1_next_numeric_coverage_gap_after_user_material_missing_topology_input_surface_plan`
+/
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-user-material-missing-topology-input-surface-contract.test.ts`
+/
+`post_v1_next_numeric_coverage_gap_after_user_material_missing_topology_input_surface_landed_no_runtime_selected_user_material_porous_flow_resistivity_input_owner`.
+Selected candidate:
+`wall.double_leaf_framed.user_material_porous_flow_resistivity_input_owner`.
+The owner preserves numeric user-supplied porous flow, preserves explicit
+engineering-default flow with wider budget, accepts context-owned
+absorber flow, and parks user-supplied or unknown porous absorbers with
+missing `flowResistivityPaSM2` at `needs_input` for lab, field, and
+building requests. Counters: `accuracyBoundaryRowsMoved: 2`,
+`needsInputBoundaryRowsAdded: 1`, `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Historical selected next action at the owner checkpoint:
+`post_v1_wall_double_leaf_framed_user_material_porous_flow_resistivity_input_coverage_refresh_plan`.
+Historical selected next file at the owner checkpoint:
+`packages/engine/src/post-v1-wall-double-leaf-framed-user-material-porous-flow-resistivity-input-coverage-refresh-contract.test.ts`.
+Historical selected next plan doc at the owner checkpoint:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_USER_MATERIAL_POROUS_FLOW_RESISTIVITY_INPUT_COVERAGE_REFRESH_PLAN_2026-06-12.md`.
+Historical selected next label at the owner checkpoint:
+`post-V1 wall double-leaf/framed user-material porous flow-resistivity input coverage refresh`.
+
+## Latest Post-Missing-Topology Numeric Gap Rerank - 2026-06-12
+
+Latest landed no-runtime rerank:
+`post_v1_next_numeric_coverage_gap_after_user_material_missing_topology_input_surface_plan`.
+Rerank file:
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-user-material-missing-topology-input-surface-contract.test.ts`.
+Rerank status:
+`post_v1_next_numeric_coverage_gap_after_user_material_missing_topology_input_surface_landed_no_runtime_selected_user_material_porous_flow_resistivity_input_owner`.
+It follows
+`post_v1_wall_double_leaf_framed_user_material_missing_topology_input_surface_owner_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-user-material-missing-topology-input-surface-owner-contract.test.ts`
+/
+`post_v1_wall_double_leaf_framed_user_material_missing_topology_input_surface_owner_landed_no_runtime_selected_next_numeric_coverage_gap`.
+Selected candidate:
+`wall.double_leaf_framed.user_material_porous_flow_resistivity_input_owner`.
+The rerank ran `roiAnalysisIterations: 3`, subtracted closed compatible
+anchor-delta, direct-fixed, default-catalog double-leaf/framed,
+explicit user-material, and user-material missing-topology lanes, then
+selected the porous flow-resistivity input owner. Counters:
+`candidateCount 10`, `estimatedNextAccuracyBoundaryRowsMoved: 2`,
+`estimatedNextRuntimeValuesMoved: 0`,
+`estimatedFollowOnRuntimeValuesProtectedAfterInputCapture: 12`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Historical selected next action at that rerank checkpoint:
+`post_v1_wall_double_leaf_framed_user_material_porous_flow_resistivity_input_owner_plan`.
+Historical selected next file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-user-material-porous-flow-resistivity-input-owner-contract.test.ts`.
+Historical selected next plan doc:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_USER_MATERIAL_POROUS_FLOW_RESISTIVITY_INPUT_OWNER_PLAN_2026-06-12.md`.
+Historical selected next label:
+`post-V1 wall double-leaf/framed user-material porous flow-resistivity input owner`.
+
+## Latest User-Material Missing-Topology Input-Surface Owner - 2026-06-12
+
+Latest landed no-runtime owner:
+`post_v1_wall_double_leaf_framed_user_material_missing_topology_input_surface_owner_plan`.
+Owner file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-user-material-missing-topology-input-surface-owner-contract.test.ts`.
+Owner status:
+`post_v1_wall_double_leaf_framed_user_material_missing_topology_input_surface_owner_landed_no_runtime_selected_next_numeric_coverage_gap`.
+Selected candidate:
+`wall.double_leaf_framed.user_material_missing_topology_input_surface_owner`.
+The owner pins the custom user-material
+`panel_leaf / porous_absorber / panel_leaf` input surface: explicit
+double-leaf/framed topology still calculates lab `Rw 46 / STC 46 /
+C -1 / Ctr -6.1` and field/building `R'w 40 / Dn,w 41 / Dn,A 39.5 /
+DnT,w 43 / DnT,A 41.9`, while missing topology remains `needs_input`.
+No-topology stacks stay on
+`acoustic_calculator_answer_engine_v1_flat_double_leaf_missing_topology`;
+partial explicit `double_leaf_framed` topology stays on
+`dynamic_calculator_route_input_contract_missing_physical_fields`. Both
+ask for the route-required fields instead of guessing support topology:
+`sideALeafGroup`, `cavity1DepthMm`, `sideBLeafGroup`,
+`frameBridgeClass`, `supportTopology`, and `supportSpacingMm`.
+Counters: `inputSurfaceOwnerContractFilesTouched: 1`,
+`estimatedFollowOnRuntimeValuesMovedAfterInputCapture: 12`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Historical selected next action at that checkpoint:
+`post_v1_next_numeric_coverage_gap_after_user_material_missing_topology_input_surface_plan`.
+Historical selected next file:
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-user-material-missing-topology-input-surface-contract.test.ts`.
+Historical selected next plan doc:
+`docs/calculator/POST_V1_NEXT_NUMERIC_COVERAGE_GAP_AFTER_USER_MATERIAL_MISSING_TOPOLOGY_INPUT_SURFACE_PLAN_2026-06-12.md`.
+Historical selected next label:
+`post-V1 next numeric coverage gap after user-material missing-topology input surface`.
+
+## Latest Post-User-Material Numeric Gap Rerank - 2026-06-12
+
+Latest landed no-runtime rerank:
+`post_v1_next_numeric_coverage_gap_after_user_material_route_input_plan`.
+Rerank file:
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-user-material-route-input-contract.test.ts`.
+Rerank status:
+`post_v1_next_numeric_coverage_gap_after_user_material_route_input_landed_no_runtime_selected_user_material_missing_topology_input_surface_owner`.
+Selected candidate:
+`wall.double_leaf_framed.user_material_missing_topology_input_surface_owner`.
+The rerank ran `roiAnalysisIterations: 3`, subtracted closed
+compatible anchor-delta, direct-fixed, default-catalog double-leaf/framed,
+and explicit user-material double-leaf/framed lanes, rejected silent
+support-topology defaults and broad source crawling, then selected the
+missing-topology input-surface owner. This preserves the exact
+`needs_input` boundary for user-material `panel_leaf / porous_absorber /
+panel_leaf` stacks while preparing the already-live formula route to
+calculate once `sideALeafGroup`, `cavity1DepthMm`, `sideBLeafGroup`,
+`frameBridgeClass`, `supportTopology`, and `supportSpacingMm` are
+supplied. Counters: `candidateCount 9`, `roiAnalysisIterations: 3`,
+`estimatedNextRuntimeValuesMoved: 0`,
+`estimatedFollowOnRuntimeValuesMovedAfterInputCapture: 12`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Historical selected next action:
+`post_v1_wall_double_leaf_framed_user_material_missing_topology_input_surface_owner_plan`.
+Historical selected next file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-user-material-missing-topology-input-surface-owner-contract.test.ts`.
+Historical selected next plan doc:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_USER_MATERIAL_MISSING_TOPOLOGY_INPUT_SURFACE_OWNER_PLAN_2026-06-12.md`.
+Historical selected next label:
+`post-V1 wall double-leaf/framed user-material missing-topology input-surface owner`.
+
+## Latest User-Material Double-Leaf Route-Input Owner - 2026-06-12
+
+Latest landed no-runtime rerank:
+`post_v1_next_numeric_coverage_gap_after_direct_fixed_a_weighted_field_building_plan`.
+Rerank file:
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-direct-fixed-a-weighted-field-building-contract.test.ts`.
+Rerank status:
+`post_v1_next_numeric_coverage_gap_after_direct_fixed_a_weighted_field_building_landed_no_runtime_selected_user_material_double_leaf_route_input_owner`.
+Selected candidate:
+`wall.double_leaf_framed.user_material_route_input_owner`.
+The rerank ran `roiAnalysisIterations: 3`, subtracted closed
+direct-fixed lab/base/A-weighted lanes and closed default-catalog
+double-leaf/framed lab/field/building lanes, then selected user-material
+route-input ownership because explicit custom `panel_leaf /
+porous_absorber / panel_leaf` stacks carried the physical inputs needed
+for the existing formula route but lost catalog ownership before resolver
+and solver selection. Counters: `candidateCount 8`,
+`estimatedNextRuntimeValuesMoved: 12`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Latest landed runtime owner:
+`post_v1_wall_double_leaf_framed_user_material_route_input_owner_plan`.
+Owner file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-user-material-route-input-owner-contract.test.ts`.
+Owner status:
+`post_v1_wall_double_leaf_framed_user_material_route_input_owner_landed_runtime_selected_coverage_refresh`.
+The owner passes the merged material catalog through `calculateAssembly`,
+dynamic candidate resolver, topology normalization, and route-input
+assessment, and lets Gate Q/Gate R consume already resolved
+`ResolvedLayer.material` / `surfaceMassKgM2`. Custom explicit
+double-leaf/framed user materials now calculate through
+`layer_combination_resolver_double_leaf_framed_wall_banded_source_absent_formula_corridor`
+for lab `Rw 46 / STC 46 / C -1 / Ctr -6.1`, and through Gate I / Gate
+AR for field/building `R'w 40 / Dn,w 41 / Dn,A 39.5 / DnT,w 43 /
+DnT,A 41.9`. Unknown custom materials, ASTM/IIC/AIIC, and impact
+outputs remain outside the owner. Counters:
+`newCalculableLayerTemplates: 1`, `newCalculableRequestShapes: 3`,
+`newCalculableTargetOutputs: 12`, `runtimeBasisPromotions: 3`,
+`runtimeValuesMoved 12`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, `frontendImplementationFilesTouched: 0`, and
+`webSurfaceParityContractFilesTouched: 0`. This is not a broad source
+crawl.
+
+Latest landed no-runtime coverage refresh:
+`post_v1_wall_double_leaf_framed_user_material_route_input_coverage_refresh_plan`.
+Coverage refresh file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-user-material-route-input-coverage-refresh-contract.test.ts`.
+Coverage refresh status:
+`post_v1_wall_double_leaf_framed_user_material_route_input_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`.
+The refresh re-probes lab `Rw 46 / STC 46 / C -1 / Ctr -6.1`,
+field `R'w 40 / Dn,w 41 / Dn,A 39.5 / DnT,w 43 / DnT,A 41.9`,
+and building `R'w 40 / Dn,w 41 / Dn,A 39.5 / DnT,w 43 /
+DnT,A 41.9`. Unknown custom material IDs, missing explicit topology,
+ASTM/IIC/AIIC, and impact outputs remain outside the owner. Counters:
+`coverageRefreshContractFilesTouched: 1`, `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Coverage refresh selected rerank, now landed:
+`post_v1_next_numeric_coverage_gap_after_user_material_route_input_plan`.
+Landed rerank file:
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-user-material-route-input-contract.test.ts`.
+Landed rerank plan doc:
+`docs/calculator/POST_V1_NEXT_NUMERIC_COVERAGE_GAP_AFTER_USER_MATERIAL_ROUTE_INPUT_PLAN_2026-06-12.md`.
+Landed rerank label:
+`post-V1 next numeric coverage gap after user-material route input`.
+
+## Latest Direct-Fixed A-Weighted Field/Building Coverage Refresh - 2026-06-12
+
+Latest landed coverage refresh:
+`post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_coverage_refresh_plan`.
+Coverage refresh file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-a-weighted-field-building-coverage-refresh-contract.test.ts`.
+Coverage refresh status:
+`post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`.
+It closes
+`post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_surface_parity_plan`
+/
+`apps/web/features/workbench/post-v1-wall-double-leaf-framed-direct-fixed-a-weighted-field-building-surface-parity.test.ts`
+/
+`post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_surface_parity_landed_no_runtime_selected_coverage_refresh`
+and follows
+`post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_owner_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-a-weighted-field-building-owner-contract.test.ts`
+/
+`post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_owner_landed_runtime_selected_surface_parity`.
+The refresh re-probes empty direct-fixed `Dn,A 24.9` / `DnT,A 27`,
+full absorptive `Dn,A 28.9` / `DnT,A 31`, and partial absorptive
+`Dn,A 26.9` / `DnT,A 29`. Field uses
+`gate_i_airborne_field_apparent_context_adapter_runtime`; building uses
+`gate_ar_airborne_building_prediction_all_owner_runtime_corridor`; both
+keep `wall.direct_fixed_double_leaf.equivalent_coupled_mass_bridge_loss_owner`
+as the Gate EO base curve. The Gate I / Gate AR rows remain
+`ready_with_budget` in coverage and `allowed_with_budget` in
+company-internal V0. Missing absorber ownership, Gate AY panelized
+input, non-direct-fixed stacks, lab aliases, ASTM/IIC/AIIC, and impact
+outputs remain outside this route. This is not a broad source crawl.
+Counters: `coverageRefreshContractFilesTouched: 1`,
+`webSurfaceParityContractFilesTouched: 1`,
+`frontendImplementationFilesTouched: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
+
+Current selected next action:
+`post_v1_next_numeric_coverage_gap_after_direct_fixed_a_weighted_field_building_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-direct-fixed-a-weighted-field-building-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_NEXT_NUMERIC_COVERAGE_GAP_AFTER_DIRECT_FIXED_A_WEIGHTED_FIELD_BUILDING_PLAN_2026-06-12.md`.
+Current selected next label:
+`post-V1 next numeric coverage gap after direct-fixed A-weighted field/building`.
+
 ## Latest Direct-Fixed A-Weighted Field/Building Surface Parity - 2026-06-11
 
 Latest landed surface parity:
@@ -37,13 +423,13 @@ This is not a broad source crawl. Counters:
 `frontendImplementationFilesTouched: 0`, `runtimeValuesMoved 0`,
 `runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`.
 
-Current selected next action:
+Historical selected next action:
 `post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_coverage_refresh_plan`.
-Current selected next file:
+Historical selected next file:
 `packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-a-weighted-field-building-coverage-refresh-contract.test.ts`.
-Current selected next plan doc:
+Historical selected next plan doc:
 `docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_DIRECT_FIXED_A_WEIGHTED_FIELD_BUILDING_COVERAGE_REFRESH_PLAN_2026-06-11.md`.
-Current selected next label:
+Historical selected next label:
 `post-V1 wall double-leaf/framed direct-fixed A-weighted field/building coverage refresh`.
 Current reconciliation checkpoint:
 `docs/calculator/CHECKPOINT_2026-06-11_DIRECT_FIXED_A_WEIGHTED_SURFACE_PARITY.md`.

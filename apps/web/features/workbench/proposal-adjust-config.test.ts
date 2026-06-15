@@ -12,12 +12,12 @@ describe("proposal adjust config helpers", () => {
     expect(PROPOSAL_PDF_STYLE_OPTIONS.map((option) => option.value)).toEqual(["branded", "simple"]);
     expect(getProposalPdfStyleDescriptor("branded")).toEqual({
       downloadLabel: "Download branded PDF",
-      note: "Branded uses the edited proposal snapshot with cover, sender identity, values, notes, and construction details.",
+      note: "Branded uses the edited report snapshot with cover, sender identity, values, notes, and construction details.",
       shortLabel: "Branded PDF"
     });
     expect(getProposalPdfStyleDescriptor("simple")).toEqual({
       downloadLabel: "Download simple PDF",
-      note: "Simple uses the edited proposal snapshot with lightweight framing.",
+      note: "Simple uses the edited report snapshot with lightweight framing.",
       shortLabel: "Simple PDF"
     });
   });

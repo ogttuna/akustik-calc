@@ -7,18 +7,35 @@ import {
   SERVER_PROJECT_CALCULATOR_SNAPSHOT_SCHEMA_VERSION,
   SERVER_PROJECT_SCHEMA_VERSION,
   ServerProjectRecordSchema,
+  type ServerProjectAssemblyRecord,
+  type ServerProjectCreateAssemblyRequest,
   type ServerProjectCreateRequest,
+  type ServerProjectCreateReportRequest,
+  type ServerProjectCreateReportRevisionRequest,
+  type ServerProjectDuplicateAssemblyRequest,
+  type ServerProjectDuplicateReportRequest,
   type ServerProjectImportLocalRequest,
   type ServerProjectLocalScenarioImport,
   type ServerProjectProposalAuditEvent,
   type ServerProjectRecord,
-  type ServerProjectScenarioSnapshot
+  type ServerProjectReportRecord,
+  type ServerProjectReportRevisionRecord,
+  type ServerProjectScenarioSnapshot,
+  type ServerProjectUpdateAssemblyRequest,
+  type ServerProjectUpdateReportRequest
 } from "@dynecho/shared";
 
 export const DEFAULT_SERVER_PROJECT_STORE_DIR = ".dynecho/project-store";
 export const MAX_IMPORTED_LOCAL_SCENARIOS = 8;
 export const MAX_PROJECT_SCENARIOS = 50;
 export const MAX_SCENARIO_SNAPSHOT_BYTES = 500_000;
+export const MAX_PROJECT_ASSEMBLIES = 120;
+export const MAX_PROJECT_REPORTS = 120;
+export const MAX_PROJECT_REPORT_REVISIONS = 100;
+export const MAX_PROJECT_ASSEMBLY_BYTES = 500_000;
+export const MAX_PROJECT_REPORT_BYTES = 750_000;
+const MAX_PROJECT_CHILD_NAME_LENGTH = 160;
+const COPY_NAME_PREFIX = "Copy of ";
 
 export type ProjectOwnerScope = {
   authMode: "configured" | "preview";
@@ -30,10 +47,14 @@ export type ServerProjectSummary = {
   clientName?: string;
   createdAtIso: string;
   id: string;
+  assemblyCount: number;
+  latestAssemblyUpdatedAtIso: string | null;
+  latestReportUpdatedAtIso: string | null;
   latestScenarioCapturedAtIso: string | null;
   name: string;
   ownerLabel: string;
   proposalAuditEventCount: number;
+  reportCount: number;
   scenarioCount: number;
   updatedAtIso: string;
 };
@@ -71,14 +92,33 @@ export function summarizeServerProject(project: ServerProjectRecord): ServerProj
     return latest;
   }, null);
 
+  const latestAssembly = project.assemblies.reduce<ServerProjectAssemblyRecord | null>((latest, assembly) => {
+    if (!latest || assembly.updatedAtIso > latest.updatedAtIso) {
+      return assembly;
+    }
+
+    return latest;
+  }, null);
+  const latestReport = project.reports.reduce<ServerProjectReportRecord | null>((latest, report) => {
+    if (!latest || report.updatedAtIso > latest.updatedAtIso) {
+      return report;
+    }
+
+    return latest;
+  }, null);
+
   return {
+    assemblyCount: project.assemblies.length,
     clientName: project.clientName,
     createdAtIso: project.createdAtIso,
     id: project.id,
+    latestAssemblyUpdatedAtIso: latestAssembly?.updatedAtIso ?? null,
+    latestReportUpdatedAtIso: latestReport?.updatedAtIso ?? null,
     latestScenarioCapturedAtIso: latestScenario?.capturedAtIso ?? null,
     name: project.name,
     ownerLabel: project.ownerLabel,
     proposalAuditEventCount: project.proposalAuditEvents.length,
+    reportCount: project.reports.length,
     scenarioCount: project.scenarioSnapshots.length,
     updatedAtIso: project.updatedAtIso
   };
@@ -100,6 +140,26 @@ function jsonSizeBytes(value: unknown): number {
 
 function checksumJson(value: unknown): string {
   return createHash("sha256").update(JSON.stringify(value)).digest("hex");
+}
+
+function formatDisplayCode(prefix: "ASM" | "REV" | "RPT", index: number): string {
+  return `${prefix}-${String(index).padStart(4, "0")}`;
+}
+
+function truncateProjectChildName(name: string): string {
+  const trimmedName = name.trim();
+  if (trimmedName.length <= MAX_PROJECT_CHILD_NAME_LENGTH) {
+    return trimmedName;
+  }
+
+  const truncatedName = trimmedName.slice(0, MAX_PROJECT_CHILD_NAME_LENGTH);
+  const lastCharCode = truncatedName.charCodeAt(truncatedName.length - 1);
+
+  return lastCharCode >= 0xd800 && lastCharCode <= 0xdbff ? truncatedName.slice(0, -1) : truncatedName;
+}
+
+function formatDuplicateProjectChildName(name: string): string {
+  return truncateProjectChildName(`${COPY_NAME_PREFIX}${name}`);
 }
 
 function mapNodeReadError(error: unknown): null {
@@ -124,6 +184,7 @@ export class FileServerProjectRepository {
   async createProject(owner: ProjectOwnerScope, input: ServerProjectCreateRequest): Promise<ServerProjectRecord> {
     const nowIso = this.now().toISOString();
     const project: ServerProjectRecord = {
+      assemblies: [],
       clientName: input.clientName,
       createdAtIso: nowIso,
       description: input.description,
@@ -132,6 +193,7 @@ export class FileServerProjectRepository {
       ownerId: owner.ownerId,
       ownerLabel: owner.ownerLabel,
       proposalAuditEvents: [],
+      reports: [],
       scenarioSnapshots: [],
       schemaVersion: SERVER_PROJECT_SCHEMA_VERSION,
       teamId: input.teamId,
@@ -141,6 +203,431 @@ export class FileServerProjectRepository {
     await this.writeProject(project);
 
     return project;
+  }
+
+  async appendAssembly(
+    owner: ProjectOwnerScope,
+    projectId: string,
+    input: ServerProjectCreateAssemblyRequest
+  ): Promise<ServerProjectRecord> {
+    const project = await this.readProject(owner, projectId);
+
+    if (!project) {
+      throw new ServerProjectStorageError("Project not found.", "project_not_found", 404);
+    }
+    if (project.assemblies.length >= MAX_PROJECT_ASSEMBLIES) {
+      throw new ServerProjectStorageError(
+        `Project can store at most ${MAX_PROJECT_ASSEMBLIES} assemblies.`,
+        "too_many_project_assemblies",
+        400
+      );
+    }
+    if (jsonSizeBytes(input.snapshot) > MAX_PROJECT_ASSEMBLY_BYTES) {
+      throw new ServerProjectStorageError(
+        `Project assembly snapshot exceeds ${MAX_PROJECT_ASSEMBLY_BYTES} bytes.`,
+        "project_assembly_too_large",
+        413
+      );
+    }
+
+    const nowIso = this.now().toISOString();
+    const assembly: ServerProjectAssemblyRecord = {
+      calculationSummary: input.calculationSummary,
+      createdAtIso: nowIso,
+      description: input.description,
+      displayCode: formatDisplayCode("ASM", project.assemblies.length + 1),
+      id: this.idFactory(),
+      kind: input.kind,
+      name: input.name,
+      projectId,
+      snapshot: input.snapshot,
+      source: "workbench_v2",
+      updatedAtIso: nowIso,
+      version: 1
+    };
+    const updatedProject: ServerProjectRecord = {
+      ...project,
+      assemblies: [...project.assemblies, assembly],
+      updatedAtIso: nowIso
+    };
+
+    await this.writeProject(updatedProject);
+
+    return updatedProject;
+  }
+
+  async updateAssembly(
+    owner: ProjectOwnerScope,
+    projectId: string,
+    assemblyId: string,
+    input: ServerProjectUpdateAssemblyRequest
+  ): Promise<ServerProjectRecord> {
+    const project = await this.readProject(owner, projectId);
+
+    if (!project) {
+      throw new ServerProjectStorageError("Project not found.", "project_not_found", 404);
+    }
+
+    const assembly = project.assemblies.find((entry) => entry.id === assemblyId);
+    if (!assembly) {
+      throw new ServerProjectStorageError("Assembly not found.", "assembly_not_found", 404);
+    }
+
+    const nowIso = this.now().toISOString();
+    const updatedAssembly: ServerProjectAssemblyRecord = {
+      ...assembly,
+      description: input.description === undefined ? assembly.description : input.description,
+      name: input.name ?? assembly.name,
+      updatedAtIso: nowIso
+    };
+    const updatedProject: ServerProjectRecord = {
+      ...project,
+      assemblies: project.assemblies.map((entry) => (entry.id === assemblyId ? updatedAssembly : entry)),
+      updatedAtIso: nowIso
+    };
+
+    await this.writeProject(updatedProject);
+
+    return updatedProject;
+  }
+
+  async duplicateAssembly(
+    owner: ProjectOwnerScope,
+    projectId: string,
+    assemblyId: string,
+    input: ServerProjectDuplicateAssemblyRequest
+  ): Promise<ServerProjectRecord> {
+    const project = await this.readProject(owner, projectId);
+
+    if (!project) {
+      throw new ServerProjectStorageError("Project not found.", "project_not_found", 404);
+    }
+    if (project.assemblies.length >= MAX_PROJECT_ASSEMBLIES) {
+      throw new ServerProjectStorageError(
+        `Project can store at most ${MAX_PROJECT_ASSEMBLIES} assemblies.`,
+        "too_many_project_assemblies",
+        400
+      );
+    }
+
+    const assembly = project.assemblies.find((entry) => entry.id === assemblyId);
+    if (!assembly) {
+      throw new ServerProjectStorageError("Assembly not found.", "assembly_not_found", 404);
+    }
+
+    const nowIso = this.now().toISOString();
+    const duplicatedAssembly: ServerProjectAssemblyRecord = {
+      ...assembly,
+      createdAtIso: nowIso,
+      displayCode: formatDisplayCode("ASM", project.assemblies.length + 1),
+      id: this.idFactory(),
+      name: input.name ?? formatDuplicateProjectChildName(assembly.name),
+      updatedAtIso: nowIso,
+      version: 1
+    };
+    const updatedProject: ServerProjectRecord = {
+      ...project,
+      assemblies: [...project.assemblies, duplicatedAssembly],
+      updatedAtIso: nowIso
+    };
+
+    await this.writeProject(updatedProject);
+
+    return updatedProject;
+  }
+
+  async deleteAssembly(owner: ProjectOwnerScope, projectId: string, assemblyId: string): Promise<ServerProjectRecord> {
+    const project = await this.readProject(owner, projectId);
+
+    if (!project) {
+      throw new ServerProjectStorageError("Project not found.", "project_not_found", 404);
+    }
+
+    const assembly = project.assemblies.find((entry) => entry.id === assemblyId);
+    if (!assembly) {
+      throw new ServerProjectStorageError("Assembly not found.", "assembly_not_found", 404);
+    }
+    if (project.reports.some((report) => report.assemblyId === assemblyId)) {
+      throw new ServerProjectStorageError(
+        "Assembly has project reports and cannot be deleted.",
+        "assembly_has_reports",
+        409
+      );
+    }
+
+    const nowIso = this.now().toISOString();
+    const updatedProject: ServerProjectRecord = {
+      ...project,
+      assemblies: project.assemblies.filter((entry) => entry.id !== assemblyId),
+      updatedAtIso: nowIso
+    };
+
+    await this.writeProject(updatedProject);
+
+    return updatedProject;
+  }
+
+  async appendReport(
+    owner: ProjectOwnerScope,
+    projectId: string,
+    input: ServerProjectCreateReportRequest
+  ): Promise<ServerProjectRecord> {
+    const project = await this.readProject(owner, projectId);
+
+    if (!project) {
+      throw new ServerProjectStorageError("Project not found.", "project_not_found", 404);
+    }
+    if (project.reports.length >= MAX_PROJECT_REPORTS) {
+      throw new ServerProjectStorageError(
+        `Project can store at most ${MAX_PROJECT_REPORTS} reports.`,
+        "too_many_project_reports",
+        400
+      );
+    }
+    if (jsonSizeBytes(input.reportDocument) > MAX_PROJECT_REPORT_BYTES) {
+      throw new ServerProjectStorageError(
+        `Project report document exceeds ${MAX_PROJECT_REPORT_BYTES} bytes.`,
+        "project_report_too_large",
+        413
+      );
+    }
+
+    const sourceAssembly = project.assemblies.find((assembly) => assembly.id === input.assemblyId);
+    if (!sourceAssembly) {
+      throw new ServerProjectStorageError("Assembly not found.", "assembly_not_found", 404);
+    }
+
+    const nowIso = this.now().toISOString();
+    const reportId = this.idFactory();
+    const revisionId = this.idFactory();
+    const revision: ServerProjectReportRevisionRecord = {
+      createdAtIso: nowIso,
+      createdByLabel: owner.ownerLabel,
+      displayCode: formatDisplayCode("REV", 1),
+      document: input.reportDocument,
+      id: revisionId,
+      projectId,
+      reportId,
+      source: "generated",
+      sourceAssemblyId: sourceAssembly.id,
+      sourceAssemblyVersion: sourceAssembly.version
+    };
+    const report: ServerProjectReportRecord = {
+      assemblyId: sourceAssembly.id,
+      createdAtIso: nowIso,
+      currentRevisionId: revisionId,
+      displayCode: formatDisplayCode("RPT", project.reports.length + 1),
+      id: reportId,
+      name: input.name,
+      projectId,
+      reportDocument: input.reportDocument,
+      revisions: [revision],
+      sourceAssemblySnapshot: input.sourceAssemblySnapshot,
+      sourceAssemblyVersion: sourceAssembly.version,
+      sourceCalculationOutput: input.sourceCalculationOutput,
+      sourceMaterialSnapshot: input.sourceMaterialSnapshot,
+      status: "draft",
+      updatedAtIso: nowIso
+    };
+    const updatedProject: ServerProjectRecord = {
+      ...project,
+      reports: [...project.reports, report],
+      updatedAtIso: nowIso
+    };
+
+    await this.writeProject(updatedProject);
+
+    return updatedProject;
+  }
+
+  async updateReport(
+    owner: ProjectOwnerScope,
+    projectId: string,
+    reportId: string,
+    input: ServerProjectUpdateReportRequest
+  ): Promise<ServerProjectRecord> {
+    const project = await this.readProject(owner, projectId);
+
+    if (!project) {
+      throw new ServerProjectStorageError("Project not found.", "project_not_found", 404);
+    }
+
+    const report = project.reports.find((entry) => entry.id === reportId);
+    if (!report) {
+      throw new ServerProjectStorageError("Report not found.", "report_not_found", 404);
+    }
+    if (input.expectedReportUpdatedAtIso && input.expectedReportUpdatedAtIso !== report.updatedAtIso) {
+      throw new ServerProjectStorageError("Report was updated by another session.", "report_update_conflict", 409);
+    }
+
+    const nowIso = this.now().toISOString();
+    const updatedReport: ServerProjectReportRecord = {
+      ...report,
+      name: input.name ?? report.name,
+      status: input.status ?? report.status,
+      updatedAtIso: nowIso
+    };
+    const updatedProject: ServerProjectRecord = {
+      ...project,
+      reports: project.reports.map((entry) => (entry.id === reportId ? updatedReport : entry)),
+      updatedAtIso: nowIso
+    };
+
+    await this.writeProject(updatedProject);
+
+    return updatedProject;
+  }
+
+  async duplicateReport(
+    owner: ProjectOwnerScope,
+    projectId: string,
+    reportId: string,
+    input: ServerProjectDuplicateReportRequest
+  ): Promise<ServerProjectRecord> {
+    const project = await this.readProject(owner, projectId);
+
+    if (!project) {
+      throw new ServerProjectStorageError("Project not found.", "project_not_found", 404);
+    }
+    if (project.reports.length >= MAX_PROJECT_REPORTS) {
+      throw new ServerProjectStorageError(
+        `Project can store at most ${MAX_PROJECT_REPORTS} reports.`,
+        "too_many_project_reports",
+        400
+      );
+    }
+
+    const report = project.reports.find((entry) => entry.id === reportId);
+    if (!report) {
+      throw new ServerProjectStorageError("Report not found.", "report_not_found", 404);
+    }
+
+    const nowIso = this.now().toISOString();
+    const duplicatedReportId = this.idFactory();
+    const revisionId = this.idFactory();
+    const revision: ServerProjectReportRevisionRecord = {
+      createdAtIso: nowIso,
+      createdByLabel: owner.ownerLabel,
+      displayCode: formatDisplayCode("REV", 1),
+      document: report.reportDocument,
+      id: revisionId,
+      projectId,
+      reportId: duplicatedReportId,
+      source: "import",
+      sourceAssemblyId: report.assemblyId,
+      sourceAssemblyVersion: report.sourceAssemblyVersion
+    };
+    const duplicatedReport: ServerProjectReportRecord = {
+      ...report,
+      createdAtIso: nowIso,
+      currentRevisionId: revisionId,
+      displayCode: formatDisplayCode("RPT", project.reports.length + 1),
+      id: duplicatedReportId,
+      name: input.name ?? formatDuplicateProjectChildName(report.name),
+      revisions: [revision],
+      status: "draft",
+      updatedAtIso: nowIso
+    };
+    const updatedProject: ServerProjectRecord = {
+      ...project,
+      reports: [...project.reports, duplicatedReport],
+      updatedAtIso: nowIso
+    };
+
+    await this.writeProject(updatedProject);
+
+    return updatedProject;
+  }
+
+  async deleteReport(owner: ProjectOwnerScope, projectId: string, reportId: string): Promise<ServerProjectRecord> {
+    const project = await this.readProject(owner, projectId);
+
+    if (!project) {
+      throw new ServerProjectStorageError("Project not found.", "project_not_found", 404);
+    }
+    if (!project.reports.some((entry) => entry.id === reportId)) {
+      throw new ServerProjectStorageError("Report not found.", "report_not_found", 404);
+    }
+
+    const nowIso = this.now().toISOString();
+    const updatedProject: ServerProjectRecord = {
+      ...project,
+      reports: project.reports.filter((entry) => entry.id !== reportId),
+      updatedAtIso: nowIso
+    };
+
+    await this.writeProject(updatedProject);
+
+    return updatedProject;
+  }
+
+  async appendReportRevision(
+    owner: ProjectOwnerScope,
+    projectId: string,
+    reportId: string,
+    input: ServerProjectCreateReportRevisionRequest
+  ): Promise<ServerProjectRecord> {
+    const project = await this.readProject(owner, projectId);
+
+    if (!project) {
+      throw new ServerProjectStorageError("Project not found.", "project_not_found", 404);
+    }
+
+    const report = project.reports.find((entry) => entry.id === reportId);
+    if (!report) {
+      throw new ServerProjectStorageError("Report not found.", "report_not_found", 404);
+    }
+    if (input.expectedReportUpdatedAtIso && input.expectedReportUpdatedAtIso !== report.updatedAtIso) {
+      throw new ServerProjectStorageError("Report was updated by another session.", "report_revision_conflict", 409);
+    }
+    if (report.revisions.length >= MAX_PROJECT_REPORT_REVISIONS) {
+      throw new ServerProjectStorageError(
+        `Project report can store at most ${MAX_PROJECT_REPORT_REVISIONS} revisions.`,
+        "too_many_project_report_revisions",
+        400
+      );
+    }
+    if (jsonSizeBytes(input.document) > MAX_PROJECT_REPORT_BYTES) {
+      throw new ServerProjectStorageError(
+        `Project report document exceeds ${MAX_PROJECT_REPORT_BYTES} bytes.`,
+        "project_report_too_large",
+        413
+      );
+    }
+
+    const nowIso = this.now().toISOString();
+    const revisionId = this.idFactory();
+    const revision: ServerProjectReportRevisionRecord = {
+      assistantPatchSummary: input.assistantPatchSummary,
+      changeSummary: input.changeSummary,
+      createdAtIso: nowIso,
+      createdByLabel: owner.ownerLabel,
+      displayCode: formatDisplayCode("REV", report.revisions.length + 1),
+      document: input.document,
+      id: revisionId,
+      projectId,
+      reportId,
+      source: input.source,
+      sourceAssemblyId: report.assemblyId,
+      sourceAssemblyVersion: report.sourceAssemblyVersion
+    };
+    const updatedReport: ServerProjectReportRecord = {
+      ...report,
+      currentRevisionId: revisionId,
+      reportDocument: input.document,
+      revisions: [...report.revisions, revision],
+      status: report.status === "issued" ? "draft" : report.status,
+      updatedAtIso: nowIso
+    };
+    const updatedProject: ServerProjectRecord = {
+      ...project,
+      reports: project.reports.map((entry) => (entry.id === reportId ? updatedReport : entry)),
+      updatedAtIso: nowIso
+    };
+
+    await this.writeProject(updatedProject);
+
+    return updatedProject;
   }
 
   async importLocalScenarios(owner: ProjectOwnerScope, input: ServerProjectImportLocalRequest): Promise<ServerProjectRecord> {

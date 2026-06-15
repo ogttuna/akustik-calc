@@ -315,6 +315,46 @@ function expectCOrCtrOnlyLabCompanionSurface(
   expect(result?.warnings).not.toEqual(expect.arrayContaining([expect.stringContaining(DIRECT_ANCHOR_DELTA_WARNING_PREFIX)]));
 }
 
+function expectCAndCtrPairLabCompanionSurface(
+  result: AssemblyCalculation | null | undefined,
+  expectedC: number,
+  expectedCtr: number
+): asserts result is AssemblyCalculation {
+  expect(result?.supportedTargetOutputs).toEqual(["C", "Ctr"]);
+  expect(result?.unsupportedTargetOutputs).toEqual([]);
+  expect(result?.metrics).toMatchObject({
+    estimatedCDb: expectedC,
+    estimatedCtrDb: expectedCtr
+  });
+  expect(result?.airborneBasis).toMatchObject({
+    anchorSourceId: "knauf_lab_416889_primary_2026",
+    kind: "airborne_physics_prediction",
+    method: LAB_COMPANION_RUNTIME_BASIS,
+    origin: "family_physics_prediction"
+  });
+  expect(result?.airborneCandidateResolution).toMatchObject({
+    runtimeValueMovement: false,
+    selectedCandidateId: LAB_COMPANION_SELECTED_CANDIDATE_ID,
+    selectedOrigin: "family_physics_prediction"
+  });
+  expect(getLayerCombinationResolverCandidateSurface(result)).toMatchObject({
+    candidateKind: "source_absent_family_solver",
+    noRuntimeValueMovement: true,
+    requestedBasis: "element_lab",
+    route: "wall",
+    runtimeBasisId: LAB_COMPANION_RUNTIME_BASIS,
+    selectedCandidateId: LAB_COMPANION_SELECTED_CANDIDATE_ID,
+    supportBucket: "source_absent_estimate",
+    supportedMetrics: ["C", "Ctr"],
+    valuePins: [
+      { metric: "C", value: expectedC },
+      { metric: "Ctr", value: expectedCtr }
+    ]
+  });
+  expect(result?.warnings).toEqual(expect.arrayContaining([expect.stringContaining(LAB_COMPANION_WARNING_PREFIX)]));
+  expect(result?.warnings).not.toEqual(expect.arrayContaining([expect.stringContaining(DIRECT_ANCHOR_DELTA_WARNING_PREFIX)]));
+}
+
 function expectDirectRwSurface(
   result: AssemblyCalculation | null | undefined,
   expectedRw: number
@@ -449,6 +489,36 @@ describe("post-V1 wall compatible anchor-delta C/Ctr-only lab companion surface 
     expect(buildReport(pairedCtr, CTR_ONLY_OUTPUT)).toContain("- Resolver value pins: Ctr -6");
     expectCOrCtrOnlyLabCompanionSurface(await estimateViaApi({ targetOutputs: CTR_ONLY_OUTPUT }), "Ctr", -6);
 
+    const pairedCAndCtr = buildScenario({
+      id: "compatible-anchor-c-ctr-pair-paired",
+      targetOutputs: C_CTR_PAIR_OUTPUT
+    });
+    expectCAndCtrPairLabCompanionSurface(pairedCAndCtr.result, -1.1, -6);
+    expect(addOutputCardPosture(buildOutputCard({ output: "C", result: pairedCAndCtr.result, studyMode: "wall" }), {
+      result: pairedCAndCtr.result,
+      studyMode: "wall"
+    })).toMatchObject({ status: "live", value: "-1.1 dB" });
+    expect(addOutputCardPosture(buildOutputCard({ output: "Ctr", result: pairedCAndCtr.result, studyMode: "wall" }), {
+      result: pairedCAndCtr.result,
+      studyMode: "wall"
+    })).toMatchObject({ status: "live", value: "-6 dB" });
+    expect(getTargetOutputStatus({ guideResult: null, output: "C", result: pairedCAndCtr.result })).toMatchObject({
+      kind: "engine_live",
+      label: "Live",
+      output: "C",
+      tone: "success"
+    });
+    expect(getTargetOutputStatus({ guideResult: null, output: "Ctr", result: pairedCAndCtr.result })).toMatchObject({
+      kind: "engine_live",
+      label: "Live",
+      output: "Ctr",
+      tone: "success"
+    });
+    const pairReport = buildReport(pairedCAndCtr, C_CTR_PAIR_OUTPUT);
+    expect(pairReport).toContain("- Resolver supported metrics: C, Ctr");
+    expect(pairReport).toContain("- Resolver value pins: C -1.1, Ctr -6");
+    expectCAndCtrPairLabCompanionSurface(await estimateViaApi({ targetOutputs: C_CTR_PAIR_OUTPUT }), -1.1, -6);
+
     const oneSideC = buildScenario({
       id: "compatible-anchor-c-only-one-side",
       rows: ONE_SIDE_EXTERIOR_BOARD_LSF_ROWS
@@ -477,6 +547,18 @@ describe("post-V1 wall compatible anchor-delta C/Ctr-only lab companion surface 
     expectCOrCtrOnlyLabCompanionSurface(
       await estimateViaApi({ rows: ONE_SIDE_EXTERIOR_BOARD_LSF_ROWS, targetOutputs: CTR_ONLY_OUTPUT }),
       "Ctr",
+      -5.5
+    );
+
+    const oneSideCAndCtr = buildScenario({
+      id: "compatible-anchor-c-ctr-pair-one-side",
+      rows: ONE_SIDE_EXTERIOR_BOARD_LSF_ROWS,
+      targetOutputs: C_CTR_PAIR_OUTPUT
+    });
+    expectCAndCtrPairLabCompanionSurface(oneSideCAndCtr.result, -0.6, -5.5);
+    expectCAndCtrPairLabCompanionSurface(
+      await estimateViaApi({ rows: ONE_SIDE_EXTERIOR_BOARD_LSF_ROWS, targetOutputs: C_CTR_PAIR_OUTPUT }),
+      -0.6,
       -5.5
     );
   });
@@ -555,11 +637,7 @@ describe("post-V1 wall compatible anchor-delta C/Ctr-only lab companion surface 
       id: "compatible-anchor-c-ctr-pair",
       targetOutputs: C_CTR_PAIR_OUTPUT
     }).result;
-    expect(cCtrPair.supportedTargetOutputs).toEqual([]);
-    expect(cCtrPair.unsupportedTargetOutputs).toEqual([...C_CTR_PAIR_OUTPUT]);
-    expect(getLayerCombinationResolverCandidateSurface(cCtrPair)?.selectedCandidateId).not.toBe(
-      LAB_COMPANION_SELECTED_CANDIDATE_ID
-    );
+    expectCAndCtrPairLabCompanionSurface(cCtrPair, -1.1, -6);
 
     const buildingMixed = buildScenario({
       airborneContext: BUILDING_CONTEXT,

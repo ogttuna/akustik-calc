@@ -27,7 +27,7 @@ describe("simple workbench proposal branding", () => {
       reportProfileLabel: "Lab-ready brief"
     });
 
-    expect(developerBrand.coverTitle).toBe("Acoustic Coordination Memo");
+    expect(developerBrand.coverTitle).toBe("Acoustic Analysis Report");
     expect(developerBrand.templateLabel).toBe("Developer memo");
     expect(developerBrand.wordmarkSecondary).toBe("Building Acoustics and Vibration Control");
     expect(labBrand.coverTitle).toBe("Laboratory Submission Brief");

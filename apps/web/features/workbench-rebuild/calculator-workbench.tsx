@@ -1,6 +1,5 @@
 "use client";
 
-import { MATERIAL_CATALOG_SEED } from "@dynecho/catalogs";
 import type {
   AirborneBuildingPredictionOutputBasis,
   AirborneConservativeFlankingAssumption,
@@ -17,15 +16,65 @@ import type {
   WallSupportTopology,
   WallTopologyMode
 } from "@dynecho/shared";
-import { ArrowDown, ArrowRight, ArrowUp, Copy, FileText, GripVertical, Plus, Search, Trash2 } from "lucide-react";
-import { type FocusEvent, type KeyboardEvent, type MouseEvent, type PointerEvent, useEffect, useMemo, useState } from "react";
+import {
+  Archive,
+  ArrowDown,
+  ArrowRight,
+  ArrowUp,
+  Copy,
+  FileText,
+  GripVertical,
+  Palette,
+  Pencil,
+  Plus,
+  RotateCcw,
+  Search,
+  Trash2
+} from "lucide-react";
+import { type FocusEvent, type KeyboardEvent, type MouseEvent, type PointerEvent, useEffect, useMemo, useRef, useState } from "react";
+import { toast } from "sonner";
 
 import { buildWorkbenchResponseCurveFigures } from "../workbench/response-curve-model";
-import type { SimpleWorkbenchProposalDocument } from "../workbench/simple-workbench-proposal";
-import { ProfessionalLayerIllustration, type ProfessionalLayerIllustrationLayer } from "./professional-layer-illustration";
+import {
+  parseSimpleWorkbenchProposalDocument,
+  type SimpleWorkbenchProposalDocument
+} from "../workbench/simple-workbench-proposal";
+import {
+  storeSimpleWorkbenchProposalPreview,
+  type SimpleWorkbenchProposalPreviewProjectContext
+} from "../workbench/simple-workbench-proposal-preview-storage";
+import { MaterialEditorPanel } from "./material-editor-panel";
+import {
+  buildResolvedMaterialCatalog,
+  parseMaterialEditorPersistedState,
+  removeCustomMaterial,
+  removeMaterialVisualOverride,
+  serializeMaterialEditorPersistedState,
+  upsertCustomMaterial,
+  upsertMaterialVisualOverride,
+  type MaterialEditorPersistedStateParseResult,
+  type MaterialVisualOverride
+} from "./material-editor-state";
+import {
+  createLayerStackUndoSnapshot,
+  layerStacksEqual,
+  popLayerStackUndoSnapshot,
+  pushLayerStackUndoSnapshot,
+  restoreLayerStackUndoSnapshot,
+  type LayerStackUndoLayer,
+  type LayerStackUndoStack
+} from "./layer-stack-undo";
+import { ProfessionalLayerIllustration, type ProfessionalLayerIllustrationLayer, type ProfessionalLayerVisualStyle } from "./professional-layer-illustration";
 import { ProfessionalResponseCurve } from "./professional-response-curve";
+import {
+  WORKBENCH_V2_DEFAULT_CONTEXT,
+  buildWorkbenchV2ProjectSnapshot,
+  parseWorkbenchV2ProjectSnapshot,
+  type WorkbenchV2ContextDraft,
+  type WorkbenchV2StudyMode
+} from "./workbench-v2-project-snapshot";
 
-type StudyMode = "floor" | "wall";
+type StudyMode = WorkbenchV2StudyMode;
 type EstimateState =
   | { status: "idle" }
   | { reasons: readonly RequiredTask[]; status: "blocked" }
@@ -34,12 +83,7 @@ type EstimateState =
   | { message: string; status: "error" };
 type OutputStatus = "live" | "needs_input" | "unsupported" | "pending";
 
-type DraftLayer = {
-  id: string;
-  materialId: string;
-  role: string;
-  thicknessMm: string;
-};
+type DraftLayer = LayerStackUndoLayer;
 
 type OutputOption = {
   group: "Airborne" | "Impact" | "Spectrum";
@@ -64,39 +108,68 @@ type RequiredTask = {
   targetLayerId?: string;
 };
 
-type ContextDraft = {
-  airborneMode: AirborneContextMode;
-  airborneResilientBarSideCount: AirborneResilientBarSideCount;
-  buildingPredictionOutputBasis: AirborneBuildingPredictionOutputBasis;
-  ci50_2500Db: string;
-  ciDb: string;
-  conservativeFlankingAssumption: AirborneConservativeFlankingAssumption;
-  fieldKDb: string;
-  flankingJunctionClass: AirborneFlankingJunctionClass;
-  impactReceivingRoomVolumeM3: string;
-  junctionCouplingLengthM: string;
-  loadBasisKgM2: string;
-  panelHeightMm: string;
-  panelWidthMm: string;
-  receivingRoomRt60S: string;
-  receivingRoomVolumeM3: string;
-  resilientLayerDynamicStiffnessMNm3: string;
-  sourceRoomVolumeM3: string;
-  supportSpacingMm: string;
-  wallCavity1AbsorptionClass: WallCavityAbsorptionClass;
-  wallCavity1DepthMm: string;
-  wallCavity1FillCoverage: WallCavityFillCoverage;
-  wallCavity1LayerIndices: string;
-  wallSideALeafLayerIndices: string;
-  wallSideBLeafLayerIndices: string;
-  wallSupportTopology: WallSupportTopology;
-  wallTopologyMode: WallTopologyMode;
-};
+type ContextDraft = WorkbenchV2ContextDraft;
 
 type LayerDropTarget = {
   layerId: string;
   position: "after" | "before";
 };
+
+type ServerProjectSummaryPayload = {
+  assemblyCount: number;
+  id: string;
+  latestScenarioCapturedAtIso: string | null;
+  name: string;
+  ownerLabel: string;
+  reportCount: number;
+  scenarioCount: number;
+  updatedAtIso: string;
+};
+
+type ServerProjectAssemblySummaryPayload = {
+  calculationSummary?: {
+    primaryOutput?: string;
+    primaryValueLabel?: string;
+    selectedOutputs: string[];
+    status: "error" | "needs_input" | "ready" | "unsupported";
+  };
+  displayCode?: string;
+  id: string;
+  kind: StudyMode;
+  name: string;
+  updatedAtIso: string;
+  version: number;
+};
+
+type ServerProjectAssemblyRecordPayload = ServerProjectAssemblySummaryPayload & {
+  snapshot: unknown;
+};
+
+type ServerProjectReportSummaryPayload = {
+  assemblyId: string;
+  currentRevisionId: string;
+  displayCode?: string;
+  id: string;
+  name: string;
+  revisionCount: number;
+  sourceAssemblyVersion: number;
+  status: "archived" | "draft" | "issued";
+  updatedAtIso: string;
+};
+
+type ServerProjectReportRecordPayload = ServerProjectReportSummaryPayload & {
+  reportDocument: SimpleWorkbenchProposalDocument;
+  sourceAssemblySnapshot: unknown;
+  sourceCalculationOutput?: unknown;
+  sourceMaterialSnapshot: {
+    customMaterials: readonly unknown[];
+    materialVisualOverrides: readonly unknown[];
+  };
+};
+
+type ServerProjectStatus = "error" | "idle" | "loading" | "restoring" | "syncing";
+
+const SERVER_PROJECT_NAME_MAX_LENGTH = 160;
 
 const OUTPUT_OPTIONS: readonly OutputOption[] = [
   { group: "Airborne", id: "Rw", label: "Rw", modes: ["wall", "floor"] },
@@ -218,34 +291,7 @@ const CONTEXT_INPUT_IDS: Record<keyof ContextDraft, string> = {
   wallTopologyMode: "rebuild-wall-topology-mode"
 };
 
-const INITIAL_CONTEXT: ContextDraft = {
-  airborneMode: "element_lab",
-  airborneResilientBarSideCount: "auto",
-  buildingPredictionOutputBasis: "unknown",
-  ci50_2500Db: "",
-  ciDb: "",
-  conservativeFlankingAssumption: "unknown",
-  fieldKDb: "",
-  flankingJunctionClass: "unknown",
-  impactReceivingRoomVolumeM3: "",
-  junctionCouplingLengthM: "",
-  loadBasisKgM2: "",
-  panelHeightMm: "",
-  panelWidthMm: "",
-  receivingRoomRt60S: "",
-  receivingRoomVolumeM3: "",
-  resilientLayerDynamicStiffnessMNm3: "",
-  sourceRoomVolumeM3: "",
-  supportSpacingMm: "",
-  wallCavity1AbsorptionClass: "unknown",
-  wallCavity1DepthMm: "",
-  wallCavity1FillCoverage: "unknown",
-  wallCavity1LayerIndices: "",
-  wallSideALeafLayerIndices: "",
-  wallSideBLeafLayerIndices: "",
-  wallSupportTopology: "unknown",
-  wallTopologyMode: "auto"
-};
+const INITIAL_CONTEXT: ContextDraft = WORKBENCH_V2_DEFAULT_CONTEXT;
 
 const INITIAL_WALL_LAYERS: readonly DraftLayer[] = [
   { id: "rebuild-layer-1", materialId: "gypsum_board", role: "side_a", thicknessMm: "12.5" },
@@ -261,24 +307,33 @@ const INITIAL_FLOOR_LAYERS: readonly DraftLayer[] = [
 
 const INITIAL_LAYERS = INITIAL_WALL_LAYERS;
 
-const MATERIALS = [...MATERIAL_CATALOG_SEED].sort((left, right) => left.name.localeCompare(right.name));
-const MATERIAL_BY_ID = new Map(MATERIALS.map((material) => [material.id, material]));
-const PROPOSAL_PREVIEW_STORAGE_KEY = "dynecho:proposal-preview:v1";
+const MATERIAL_EDITOR_STORAGE_KEY = "dynecho:workbench-v2:material-editor:v1";
+const UNKNOWN_MATERIAL: MaterialDefinition = {
+  category: "mass",
+  densityKgM3: 0,
+  id: "unknown_material",
+  name: "Unknown material",
+  tags: []
+};
 
 function createLayerId(): string {
   return typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : `layer-${Date.now()}`;
 }
 
-function getMaterial(materialId: string): MaterialDefinition {
-  return MATERIAL_BY_ID.get(materialId) ?? MATERIALS[0]!;
+function getMaterialFromCatalog(materialId: string, materialById: ReadonlyMap<string, MaterialDefinition>): MaterialDefinition {
+  return materialById.get(materialId) ?? {
+    ...UNKNOWN_MATERIAL,
+    id: materialId || UNKNOWN_MATERIAL.id,
+    name: materialId ? `Unknown material (${materialId})` : UNKNOWN_MATERIAL.name
+  };
 }
 
-function getDefaultMaterialId(mode: StudyMode): string {
+function getDefaultMaterialId(mode: StudyMode, materialById: ReadonlyMap<string, MaterialDefinition>, materials: readonly MaterialDefinition[]): string {
   if (mode === "floor") {
-    return MATERIAL_BY_ID.has("concrete") ? "concrete" : MATERIALS[0]!.id;
+    return materialById.has("concrete") ? "concrete" : materials[0]?.id ?? "concrete";
   }
 
-  return MATERIAL_BY_ID.has("gypsum_board") ? "gypsum_board" : MATERIALS[0]!.id;
+  return materialById.has("gypsum_board") ? "gypsum_board" : materials[0]?.id ?? "gypsum_board";
 }
 
 function getRoleOptions(mode: StudyMode): readonly { label: string; value: string }[] {
@@ -305,12 +360,17 @@ function matchesStarterStack(layers: readonly DraftLayer[], starter: readonly Dr
   );
 }
 
-function migrateLayerRoles(layers: readonly DraftLayer[], nextMode: StudyMode): DraftLayer[] {
+function migrateLayerRoles(
+  layers: readonly DraftLayer[],
+  nextMode: StudyMode,
+  materialById: ReadonlyMap<string, MaterialDefinition>,
+  materials: readonly MaterialDefinition[]
+): DraftLayer[] {
   const roles = getRoleOptions(nextMode);
 
   return layers.map((layer, index) => ({
     ...layer,
-    materialId: layer.materialId || getDefaultMaterialId(nextMode),
+    materialId: layer.materialId || getDefaultMaterialId(nextMode, materialById, materials),
     role: roles[Math.min(index, roles.length - 1)]!.value
   }));
 }
@@ -323,15 +383,20 @@ function normalizeSearch(value: string): string {
   return value.trim().toLowerCase();
 }
 
-function getFilteredMaterials(search: string, selectedId: string): MaterialDefinition[] {
+function getFilteredMaterials(
+  search: string,
+  selectedId: string,
+  materials: readonly MaterialDefinition[],
+  materialById: ReadonlyMap<string, MaterialDefinition>
+): MaterialDefinition[] {
   const normalized = normalizeSearch(search);
   const filtered = normalized
-    ? MATERIALS.filter((material) => {
+    ? materials.filter((material) => {
         const haystack = [material.id, material.name, material.category, ...material.tags].join(" ").toLowerCase();
         return haystack.includes(normalized);
       })
-    : MATERIALS;
-  const selected = getMaterial(selectedId);
+    : materials;
+  const selected = getMaterialFromCatalog(selectedId, materialById);
   const limited = filtered.slice(0, 48);
 
   if (normalized) {
@@ -422,7 +487,11 @@ function moveLayerBeforeOrAfter(
   return next;
 }
 
-function buildLocalTasks(layers: readonly DraftLayer[], selectedOutputs: readonly RequestedOutputId[]): readonly RequiredTask[] {
+function buildLocalTasks(
+  layers: readonly DraftLayer[],
+  selectedOutputs: readonly RequestedOutputId[],
+  materialById: ReadonlyMap<string, MaterialDefinition>
+): readonly RequiredTask[] {
   const tasks: RequiredTask[] = [];
 
   if (!layers.length) {
@@ -445,12 +514,24 @@ function buildLocalTasks(layers: readonly DraftLayer[], selectedOutputs: readonl
   }
 
   for (const [index, layer] of layers.entries()) {
+    const material = getMaterialFromCatalog(layer.materialId, materialById);
+
+    if (!materialById.has(layer.materialId)) {
+      tasks.push({
+        actionLabel: "Review",
+        detail: `Layer ${index + 1} references a material that is not in the current catalog.`,
+        id: `missing-material-${layer.id}`,
+        label: "Missing material",
+        targetLayerId: layer.id
+      });
+    }
+
     if (!parsePositiveNumber(layer.thicknessMm)) {
       tasks.push({
         actionLabel: "Edit",
         detail: `Enter thickness for layer ${index + 1}.`,
         id: `missing-thickness-${layer.id}`,
-        label: `${getMaterial(layer.materialId).name} thickness`,
+        label: `${material.name} thickness`,
         targetElementId: getLayerThicknessInputId(layer.id),
         targetLayerId: layer.id
       });
@@ -516,8 +597,12 @@ function isEmptyCavityMaterial(material: MaterialDefinition): boolean {
   return material.category === "gap" || material.acoustic?.behavior === "air_cavity" || /air|gap|cavity|void/u.test(descriptor);
 }
 
-function inferCavityFillCoverage(layers: readonly DraftLayer[], indices: readonly number[]): WallCavityFillCoverage {
-  const materials = indices.map((index) => getMaterial(layers[index]?.materialId ?? ""));
+function inferCavityFillCoverage(
+  layers: readonly DraftLayer[],
+  indices: readonly number[],
+  materialById: ReadonlyMap<string, MaterialDefinition>
+): WallCavityFillCoverage {
+  const materials = indices.map((index) => getMaterialFromCatalog(layers[index]?.materialId ?? "", materialById));
 
   if (materials.some(isPorousCavityMaterial)) {
     return "full";
@@ -530,8 +615,12 @@ function inferCavityFillCoverage(layers: readonly DraftLayer[], indices: readonl
   return "unknown";
 }
 
-function inferCavityAbsorptionClass(layers: readonly DraftLayer[], indices: readonly number[]): WallCavityAbsorptionClass {
-  const materials = indices.map((index) => getMaterial(layers[index]?.materialId ?? ""));
+function inferCavityAbsorptionClass(
+  layers: readonly DraftLayer[],
+  indices: readonly number[],
+  materialById: ReadonlyMap<string, MaterialDefinition>
+): WallCavityAbsorptionClass {
+  const materials = indices.map((index) => getMaterialFromCatalog(layers[index]?.materialId ?? "", materialById));
 
   if (materials.some(isPorousCavityMaterial)) {
     return "porous_absorptive";
@@ -893,11 +982,12 @@ function getMissingPhysicalInputs(result: AssemblyCalculation | null): readonly 
   return boundary.missingPhysicalInputs;
 }
 
-function buildEstimatePayload(
+export function buildEstimatePayload(
   mode: StudyMode,
   layers: readonly DraftLayer[],
   selectedOutputs: readonly RequestedOutputId[],
-  context: ContextDraft
+  context: ContextDraft,
+  customMaterials: readonly MaterialDefinition[]
 ): EstimateRequest | null {
   const requestLayers: EstimateRequest["layers"] = [];
 
@@ -972,6 +1062,7 @@ function buildEstimatePayload(
   if (Object.keys(airborneContext).length) payload.airborneContext = airborneContext;
   if (Object.keys(impactFieldContext).length) payload.impactFieldContext = impactFieldContext;
   if (mode === "floor" && Object.keys(floorImpactContext).length) payload.floorImpactContext = floorImpactContext;
+  if (customMaterials.length) payload.materialCatalog = [...customMaterials];
 
   return payload;
 }
@@ -1050,7 +1141,7 @@ function getOutputDetail(result: AssemblyCalculation, outputId: RequestedOutputI
   return "No value";
 }
 
-function buildOutputRows(result: AssemblyCalculation, selectedOutputs: readonly RequestedOutputId[]): readonly OutputRow[] {
+export function buildOutputRows(result: AssemblyCalculation, selectedOutputs: readonly RequestedOutputId[]): readonly OutputRow[] {
   return selectedOutputs.map((outputId) => {
     const value = readOutputValue(result, outputId);
     const hasDisplayValue = typeof value === "number" && Number.isFinite(value);
@@ -1141,10 +1232,31 @@ function showWallTopologyContext(mode: StudyMode, context: ContextDraft, result:
   return context.wallTopologyMode !== "auto" || getMissingPhysicalInputs(result).some(isWallTopologyInput);
 }
 
-function buildIllustrationLayers(layers: readonly DraftLayer[], mode: StudyMode, selectedLayerId: string | null): ProfessionalLayerIllustrationLayer[] {
+function buildLayerVisualStyle(override: MaterialVisualOverride | undefined): ProfessionalLayerVisualStyle | undefined {
+  if (!override) {
+    return undefined;
+  }
+
+  const style: ProfessionalLayerVisualStyle = {};
+  if (override.fillColor) style["--layer-fill"] = override.fillColor;
+  if (override.sideColor) style["--layer-side"] = override.sideColor;
+  if (override.strokeColor) style["--layer-stroke"] = override.strokeColor;
+  if (override.patternColor) style["--layer-pattern"] = override.patternColor;
+
+  return Object.keys(style).length ? style : undefined;
+}
+
+export function buildIllustrationLayers(
+  layers: readonly DraftLayer[],
+  mode: StudyMode,
+  selectedLayerId: string | null,
+  materialById: ReadonlyMap<string, MaterialDefinition>,
+  visualOverrides: readonly MaterialVisualOverride[]
+): ProfessionalLayerIllustrationLayer[] {
   return layers.map((layer) => {
-    const material = getMaterial(layer.materialId);
+    const material = getMaterialFromCatalog(layer.materialId, materialById);
     const thicknessMm = parsePositiveNumber(layer.thicknessMm);
+    const visualOverride = visualOverrides.find((override) => override.materialId === layer.materialId);
 
     return {
       active: layer.id === selectedLayerId,
@@ -1155,7 +1267,8 @@ function buildIllustrationLayers(layers: readonly DraftLayer[], mode: StudyMode,
       roleLabel: getRoleLabel(mode, layer.role),
       solverLabel: mode === "floor" ? "Floor role" : undefined,
       thicknessLabel: formatThickness(thicknessMm),
-      thicknessMm
+      thicknessMm,
+      visualStyle: buildLayerVisualStyle(visualOverride)
     };
   });
 }
@@ -1166,9 +1279,13 @@ function getPrimaryOutput(rows: readonly OutputRow[]): OutputRow | null {
 
 function buildReportSnapshot(input: {
   layers: readonly DraftLayer[];
+  materialById: ReadonlyMap<string, MaterialDefinition>;
   mode: StudyMode;
   outputRows: readonly OutputRow[];
+  projectName?: string;
   responseFigures: ReturnType<typeof buildWorkbenchResponseCurveFigures>;
+  serverProjectId?: string;
+  serverProjectScenarioId?: string;
 }): SimpleWorkbenchProposalDocument {
   const issuedOn = new Date();
   const issuedOnIso = issuedOn.toISOString();
@@ -1181,7 +1298,7 @@ function buildReportSnapshot(input: {
     value: "Waiting"
   };
   const proposalLayers = input.layers.map((layer, index) => {
-    const material = getMaterial(layer.materialId);
+    const material = getMaterialFromCatalog(layer.materialId, input.materialById);
     const thicknessMm = parsePositiveNumber(layer.thicknessMm);
     const density = material.densityKgM3;
     const surfaceMass = thicknessMm && density ? (density * thicknessMm) / 1000 : null;
@@ -1225,7 +1342,7 @@ function buildReportSnapshot(input: {
     consultantEmail: "Contact email not entered",
     consultantLogoDataUrl: "",
     consultantPhone: "Contact phone not entered",
-    consultantWordmarkLine: "Acoustic proposal",
+    consultantWordmarkLine: "Acoustic analysis report",
     contextLabel: "Calculator route",
     corridorDossierCards: [],
     corridorDossierHeadline: "No validation corridor package was added in this frontend handoff.",
@@ -1262,18 +1379,20 @@ function buildReportSnapshot(input: {
     primaryMetricLabel: primary.label,
     primaryMetricValue: primary.value,
     primaryMetricVisible: true,
-    projectName: "DAC Operator Deck",
+    projectName: input.projectName?.trim() || "DAC Operator Deck",
     proposalAttention: "Design coordination team",
     proposalIssuePurpose: "Client review and acoustic coordination",
     proposalRecipient: "Client delivery team",
     proposalReference: "DEC-2026-001",
     proposalRevision: "Rev 00",
-    proposalSubject: `${input.mode === "floor" ? "Floor" : "Wall"} acoustic proposal`,
+    proposalSubject: `${input.mode === "floor" ? "Floor" : "Wall"} acoustic analysis report`,
     proposalValidityNote: "Valid for 30 calendar days unless superseded by a later issue.",
     recommendationItems: [],
     reportProfile: "consultant",
     reportProfileLabel: "Consultant issue",
     responseCurves: input.responseFigures,
+    serverProjectId: input.serverProjectId,
+    serverProjectScenarioId: input.serverProjectScenarioId,
     studyContextLabel: "Concept",
     studyModeLabel: input.mode === "floor" ? "Floor" : "Wall",
     validationDetail: "Calculation basis is limited to the selected build-up and requested outputs.",
@@ -1282,17 +1401,343 @@ function buildReportSnapshot(input: {
   };
 }
 
-function storeReportSnapshot(document: SimpleWorkbenchProposalDocument): void {
-  window.localStorage.setItem(
-    PROPOSAL_PREVIEW_STORAGE_KEY,
-    JSON.stringify({
-      baseDocument: document,
-      savedAtIso: new Date().toISOString()
-    })
+function storeReportSnapshot(
+  document: SimpleWorkbenchProposalDocument,
+  projectContext?: SimpleWorkbenchProposalPreviewProjectContext
+): void {
+  storeSimpleWorkbenchProposalPreview(document, {
+    projectContext
+  });
+}
+
+function readStoredMaterialEditorState(): MaterialEditorPersistedStateParseResult {
+  if (typeof window === "undefined") {
+    return {
+      droppedCustomMaterials: 0,
+      droppedVisualOverrides: 0,
+      malformed: false,
+      state: {
+        customMaterials: [],
+        materialVisualOverrides: []
+      }
+    };
+  }
+
+  let raw: string | null = null;
+  try {
+    raw = window.localStorage.getItem(MATERIAL_EDITOR_STORAGE_KEY);
+  } catch {
+    return {
+      droppedCustomMaterials: 0,
+      droppedVisualOverrides: 0,
+      malformed: false,
+      state: {
+        customMaterials: [],
+        materialVisualOverrides: []
+      }
+    };
+  }
+
+  if (!raw) {
+    return {
+      droppedCustomMaterials: 0,
+      droppedVisualOverrides: 0,
+      malformed: false,
+      state: {
+        customMaterials: [],
+        materialVisualOverrides: []
+      }
+    };
+  }
+
+  try {
+    return parseMaterialEditorPersistedState(JSON.parse(raw) as unknown);
+  } catch {
+    return {
+      droppedCustomMaterials: 0,
+      droppedVisualOverrides: 0,
+      malformed: true,
+      state: {
+        customMaterials: [],
+        materialVisualOverrides: []
+      }
+    };
+  }
+}
+
+function formatMaterialEditorRestoreWarning(result: MaterialEditorPersistedStateParseResult): string | null {
+  const details: string[] = [];
+
+  if (result.malformed) {
+    details.push("stored data could not be parsed");
+  }
+
+  if (result.droppedCustomMaterials) {
+    details.push(`${result.droppedCustomMaterials} invalid material${result.droppedCustomMaterials === 1 ? "" : "s"} ignored`);
+  }
+
+  if (result.droppedVisualOverrides) {
+    details.push(`${result.droppedVisualOverrides} invalid appearance override${result.droppedVisualOverrides === 1 ? "" : "s"} ignored`);
+  }
+
+  return details.length ? details.join("; ") : null;
+}
+
+function storeMaterialEditorState(input: {
+  customMaterials: readonly MaterialDefinition[];
+  materialVisualOverrides: readonly MaterialVisualOverride[];
+}): void {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  if (!input.customMaterials.length && !input.materialVisualOverrides.length) {
+    try {
+      window.localStorage.removeItem(MATERIAL_EDITOR_STORAGE_KEY);
+    } catch {
+      // Persistence is best-effort; the workbench remains usable without storage.
+    }
+    return;
+  }
+
+  try {
+    window.localStorage.setItem(
+      MATERIAL_EDITOR_STORAGE_KEY,
+      serializeMaterialEditorPersistedState({
+        customMaterials: [...input.customMaterials],
+        materialVisualOverrides: [...input.materialVisualOverrides]
+      })
+    );
+  } catch {
+    // Persistence is best-effort; the workbench remains usable without storage.
+  }
+}
+
+function isObjectRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+async function readServerProjectError(response: Response, fallback: string): Promise<string> {
+  try {
+    const payload = (await response.json()) as unknown;
+    if (isObjectRecord(payload) && typeof payload.error === "string") {
+      return payload.error;
+    }
+  } catch {
+    // Keep the caller's fallback when the response body is not JSON.
+  }
+
+  return fallback;
+}
+
+function parseServerProjectSummaries(value: unknown): ServerProjectSummaryPayload[] {
+  if (!isObjectRecord(value) || !Array.isArray(value.projects)) {
+    return [];
+  }
+
+  return value.projects.filter(
+    (project): project is ServerProjectSummaryPayload =>
+      isObjectRecord(project) &&
+      typeof project.assemblyCount === "number" &&
+      typeof project.id === "string" &&
+      typeof project.name === "string" &&
+      typeof project.ownerLabel === "string" &&
+      typeof project.reportCount === "number" &&
+      typeof project.scenarioCount === "number" &&
+      typeof project.updatedAtIso === "string"
   );
 }
 
+function formatServerProjectOptionLabel(project: ServerProjectSummaryPayload): string {
+  const assemblyLabel = `${project.assemblyCount} combination${project.assemblyCount === 1 ? "" : "s"}`;
+  const reportLabel = `${project.reportCount} report${project.reportCount === 1 ? "" : "s"}`;
+  return `${project.name} - ${assemblyLabel}, ${reportLabel}`;
+}
+
+function parseAssemblySummary(value: unknown): ServerProjectAssemblySummaryPayload | null {
+  if (
+    !isObjectRecord(value) ||
+    typeof value.id !== "string" ||
+    typeof value.name !== "string" ||
+    (value.kind !== "floor" && value.kind !== "wall") ||
+    typeof value.updatedAtIso !== "string" ||
+    typeof value.version !== "number"
+  ) {
+    return null;
+  }
+
+  return {
+    calculationSummary: parseAssemblyCalculationSummary(value.calculationSummary),
+    displayCode: typeof value.displayCode === "string" ? value.displayCode : undefined,
+    id: value.id,
+    kind: value.kind,
+    name: value.name,
+    updatedAtIso: value.updatedAtIso,
+    version: value.version
+  };
+}
+
+function parseAssemblyCalculationSummary(value: unknown): ServerProjectAssemblySummaryPayload["calculationSummary"] {
+  if (
+    !isObjectRecord(value) ||
+    (value.status !== "ready" && value.status !== "needs_input" && value.status !== "unsupported" && value.status !== "error") ||
+    !Array.isArray(value.selectedOutputs)
+  ) {
+    return undefined;
+  }
+
+  return {
+    primaryOutput: typeof value.primaryOutput === "string" ? value.primaryOutput : undefined,
+    primaryValueLabel: typeof value.primaryValueLabel === "string" ? value.primaryValueLabel : undefined,
+    selectedOutputs: value.selectedOutputs.filter((entry): entry is string => typeof entry === "string"),
+    status: value.status
+  };
+}
+
+function parseProjectAssemblySummaries(value: unknown): ServerProjectAssemblySummaryPayload[] {
+  if (!isObjectRecord(value) || !Array.isArray(value.assemblies)) {
+    return [];
+  }
+
+  return value.assemblies
+    .map((assembly) => parseAssemblySummary(assembly))
+    .filter((assembly): assembly is ServerProjectAssemblySummaryPayload => assembly !== null);
+}
+
+function parseProjectAssemblyRecord(value: unknown): ServerProjectAssemblyRecordPayload | null {
+  if (!isObjectRecord(value)) {
+    return null;
+  }
+
+  const summary = parseAssemblySummary(value.assembly);
+  if (!summary || !isObjectRecord(value.assembly) || !("snapshot" in value.assembly)) {
+    return null;
+  }
+
+  return {
+    ...summary,
+    snapshot: value.assembly.snapshot
+  };
+}
+
+function parseReportSummary(value: unknown): ServerProjectReportSummaryPayload | null {
+  if (
+    !isObjectRecord(value) ||
+    typeof value.assemblyId !== "string" ||
+    typeof value.currentRevisionId !== "string" ||
+    typeof value.id !== "string" ||
+    typeof value.name !== "string" ||
+    typeof value.revisionCount !== "number" ||
+    typeof value.sourceAssemblyVersion !== "number" ||
+    (value.status !== "archived" && value.status !== "draft" && value.status !== "issued") ||
+    typeof value.updatedAtIso !== "string"
+  ) {
+    return null;
+  }
+
+  return {
+    assemblyId: value.assemblyId,
+    currentRevisionId: value.currentRevisionId,
+    displayCode: typeof value.displayCode === "string" ? value.displayCode : undefined,
+    id: value.id,
+    name: value.name,
+    revisionCount: value.revisionCount,
+    sourceAssemblyVersion: value.sourceAssemblyVersion,
+    status: value.status,
+    updatedAtIso: value.updatedAtIso
+  };
+}
+
+function parseProjectReportSummaries(value: unknown): ServerProjectReportSummaryPayload[] {
+  if (!isObjectRecord(value) || !Array.isArray(value.reports)) {
+    return [];
+  }
+
+  return value.reports
+    .map((report) => parseReportSummary(report))
+    .filter((report): report is ServerProjectReportSummaryPayload => report !== null);
+}
+
+function parseReportMaterialSnapshot(value: unknown): ServerProjectReportRecordPayload["sourceMaterialSnapshot"] | null {
+  if (!isObjectRecord(value) || !Array.isArray(value.customMaterials) || !Array.isArray(value.materialVisualOverrides)) {
+    return null;
+  }
+
+  return {
+    customMaterials: [...value.customMaterials],
+    materialVisualOverrides: [...value.materialVisualOverrides]
+  };
+}
+
+function parseProjectReportRecord(value: unknown): ServerProjectReportRecordPayload | null {
+  if (!isObjectRecord(value) || !isObjectRecord(value.report)) {
+    return null;
+  }
+
+  const summary = parseReportSummary({
+    assemblyId: value.report.assemblyId,
+    currentRevisionId: value.report.currentRevisionId,
+    displayCode: value.report.displayCode,
+    id: value.report.id,
+    name: value.report.name,
+    revisionCount: Array.isArray(value.report.revisions) ? value.report.revisions.length : undefined,
+    sourceAssemblyVersion: value.report.sourceAssemblyVersion,
+    status: value.report.status,
+    updatedAtIso: value.report.updatedAtIso
+  });
+  const reportDocument = parseSimpleWorkbenchProposalDocument(value.report.reportDocument);
+  const sourceMaterialSnapshot = parseReportMaterialSnapshot(value.report.sourceMaterialSnapshot);
+
+  if (!summary || !reportDocument || !sourceMaterialSnapshot || !("sourceAssemblySnapshot" in value.report)) {
+    return null;
+  }
+
+  return {
+    ...summary,
+    reportDocument,
+    sourceAssemblySnapshot: value.report.sourceAssemblySnapshot,
+    sourceCalculationOutput: Object.hasOwn(value.report, "sourceCalculationOutput") ? value.report.sourceCalculationOutput : undefined,
+    sourceMaterialSnapshot
+  };
+}
+
+function formatAssemblyOptionLabel(assembly: ServerProjectAssemblySummaryPayload): string {
+  const displayCode = assembly.displayCode ? `${assembly.displayCode} - ` : "";
+  const resultLabel = assembly.calculationSummary?.primaryValueLabel
+    ? ` - ${assembly.calculationSummary.primaryOutput ?? "Result"} ${assembly.calculationSummary.primaryValueLabel}`
+    : "";
+  return `${displayCode}${assembly.name}${resultLabel}`;
+}
+
+function formatReportOptionLabel(report: ServerProjectReportSummaryPayload): string {
+  const displayCode = report.displayCode ? `${report.displayCode} - ` : "";
+  const revisionLabel = `${report.revisionCount} revision${report.revisionCount === 1 ? "" : "s"}`;
+  const statusLabel = report.status === "archived" ? " - archived" : report.status === "issued" ? " - issued" : "";
+  return `${displayCode}${report.name} - ${revisionLabel}${statusLabel}`;
+}
+
+function formatWorkbenchV2SnapshotRestoreWarning(input: {
+  droppedCustomMaterials: number;
+  droppedVisualOverrides: number;
+}): string | null {
+  const details: string[] = [];
+
+  if (input.droppedCustomMaterials) {
+    details.push(`${input.droppedCustomMaterials} invalid material${input.droppedCustomMaterials === 1 ? "" : "s"} ignored`);
+  }
+
+  if (input.droppedVisualOverrides) {
+    details.push(`${input.droppedVisualOverrides} invalid appearance override${input.droppedVisualOverrides === 1 ? "" : "s"} ignored`);
+  }
+
+  return details.length ? details.join("; ") : null;
+}
+
 export function CalculatorWorkbench() {
+  const [customMaterials, setCustomMaterials] = useState<readonly MaterialDefinition[]>([]);
+  const [materialVisualOverrides, setMaterialVisualOverrides] = useState<readonly MaterialVisualOverride[]>([]);
+  const [materialEditorStoreLoaded, setMaterialEditorStoreLoaded] = useState(false);
+  const [materialEditorRestoreWarning, setMaterialEditorRestoreWarning] = useState<string | null>(null);
   const [mode, setMode] = useState<StudyMode>("wall");
   const [layers, setLayers] = useState<readonly DraftLayer[]>(INITIAL_LAYERS);
   const [selectedLayerId, setSelectedLayerId] = useState<string | null>(INITIAL_LAYERS[0]!.id);
@@ -1301,15 +1746,37 @@ export function CalculatorWorkbench() {
   const [estimateState, setEstimateState] = useState<EstimateState>({ status: "idle" });
   const [materialSearch, setMaterialSearch] = useState<Record<string, string>>({});
   const [openMaterialLayerId, setOpenMaterialLayerId] = useState<string | null>(null);
+  const [materialEditorOpen, setMaterialEditorOpen] = useState(false);
+  const [materialEditorMaterialId, setMaterialEditorMaterialId] = useState<string | null>(INITIAL_LAYERS[0]?.materialId ?? null);
   const [draggedLayerId, setDraggedLayerId] = useState<string | null>(null);
   const [layerDropTarget, setLayerDropTarget] = useState<LayerDropTarget | null>(null);
+  const [layerUndoStack, setLayerUndoStack] = useState<LayerStackUndoStack>([]);
+  const [serverProjects, setServerProjects] = useState<ServerProjectSummaryPayload[]>([]);
+  const [selectedServerProjectId, setSelectedServerProjectId] = useState("");
+  const [serverProjectNameDraft, setServerProjectNameDraft] = useState("");
+  const serverProjectNameDraftRef = useRef(serverProjectNameDraft);
+  const [serverProjectAssemblies, setServerProjectAssemblies] = useState<ServerProjectAssemblySummaryPayload[]>([]);
+  const [selectedServerAssemblyId, setSelectedServerAssemblyId] = useState("");
+  const [serverAssemblyNameDraft, setServerAssemblyNameDraft] = useState("");
+  const serverAssemblyNameDraftRef = useRef(serverAssemblyNameDraft);
+  const [serverAssemblyRenameDraft, setServerAssemblyRenameDraft] = useState("");
+  const serverAssemblyRenameDraftRef = useRef(serverAssemblyRenameDraft);
+  const [serverProjectReports, setServerProjectReports] = useState<ServerProjectReportSummaryPayload[]>([]);
+  const [selectedServerReportId, setSelectedServerReportId] = useState("");
+  const [serverReportRenameDraft, setServerReportRenameDraft] = useState("");
+  const serverReportRenameDraftRef = useRef(serverReportRenameDraft);
+  const [serverProjectStatus, setServerProjectStatus] = useState<ServerProjectStatus>("idle");
+  const [serverProjectMessage, setServerProjectMessage] = useState("Browser-local draft");
+  const serverProjectMutationInFlightRef = useRef(false);
 
+  const materials = useMemo(() => buildResolvedMaterialCatalog(customMaterials), [customMaterials]);
+  const materialById = useMemo(() => new Map(materials.map((material) => [material.id, material])), [materials]);
   const estimateResult = estimateState.status === "ready" ? estimateState.result : null;
   const availableOutputs = OUTPUT_OPTIONS.filter((output) => output.modes.includes(mode));
   const outputRows = estimateResult ? buildOutputRows(estimateResult, selectedOutputs) : [];
   const primaryOutput = getPrimaryOutput(outputRows);
   const remoteTasks = getRemoteTasks(estimateResult);
-  const localTasks = buildLocalTasks(layers, selectedOutputs);
+  const localTasks = buildLocalTasks(layers, selectedOutputs, materialById);
   const routeInputTaskElementIds = new Set(remoteTasks.map((task) => task.targetElementId).filter((id): id is string => Boolean(id)));
   const requiredTasks = [...localTasks, ...remoteTasks.filter((task) => !task.targetElementId || !routeInputTaskElementIds.has(task.targetElementId))];
   const responseFigures = buildWorkbenchResponseCurveFigures(estimateResult);
@@ -1326,7 +1793,10 @@ export function CalculatorWorkbench() {
     estimateState.status === "ready" && selectedImpactOutputs && !responseFigures.some((figure) => figure.id === "impact");
   const missingSelectedAirborneCurve =
     estimateState.status === "ready" && selectedAirborneCurveOutputs && !responseFigures.some((figure) => figure.id === "airborne");
-  const illustrationLayers = useMemo(() => buildIllustrationLayers(layers, mode, selectedLayerId), [layers, mode, selectedLayerId]);
+  const illustrationLayers = useMemo(
+    () => buildIllustrationLayers(layers, mode, selectedLayerId, materialById, materialVisualOverrides),
+    [layers, materialById, materialVisualOverrides, mode, selectedLayerId]
+  );
   const totalThickness = layers.reduce((sum, layer) => sum + (parsePositiveNumber(layer.thicknessMm) ?? 0), 0);
   const canOpenReport = outputRows.some((row) => row.status === "live");
   const needsAirborne = showAirborneContext(selectedOutputs, estimateResult);
@@ -1335,6 +1805,75 @@ export function CalculatorWorkbench() {
   const needsFloorImpact = mode === "floor" && showFloorImpactContext(selectedOutputs, estimateResult);
   const needsWallTopology = showWallTopologyContext(mode, context, estimateResult);
   const isRouteInputMissing = (inputId: string) => routeInputTaskElementIds.has(inputId);
+  const canUndoLayerStack = layerUndoStack.length > 0;
+  const lastLayerUndoActionLabel = layerUndoStack[layerUndoStack.length - 1]?.actionLabel;
+  const undoLayerStackActionLabel = lastLayerUndoActionLabel ? `Undo ${lastLayerUndoActionLabel}` : "Undo layer change";
+  const undoLayerStackTitle = canUndoLayerStack ? undoLayerStackActionLabel : "No layer changes to undo";
+  const selectedServerProject = serverProjects.find((project) => project.id === selectedServerProjectId) ?? null;
+  const selectedServerAssembly = serverProjectAssemblies.find((assembly) => assembly.id === selectedServerAssemblyId) ?? null;
+  const selectedServerReport = serverProjectReports.find((report) => report.id === selectedServerReportId) ?? null;
+  const serverProjectBusy =
+    serverProjectStatus === "loading" || serverProjectStatus === "syncing" || serverProjectStatus === "restoring";
+  const canCreateServerProject = !serverProjectBusy;
+  const canRenameServerAssembly = Boolean(selectedServerProjectId && selectedServerAssembly) && !serverProjectBusy;
+  const canRenameServerReport = Boolean(selectedServerProjectId && selectedServerReport) && !serverProjectBusy;
+
+  useEffect(() => {
+    const restored = readStoredMaterialEditorState();
+
+    setCustomMaterials(restored.state.customMaterials);
+    setMaterialVisualOverrides(restored.state.materialVisualOverrides);
+    setMaterialEditorRestoreWarning(formatMaterialEditorRestoreWarning(restored));
+    setMaterialEditorStoreLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (!materialEditorStoreLoaded) {
+      return;
+    }
+
+    storeMaterialEditorState({
+      customMaterials,
+      materialVisualOverrides
+    });
+  }, [customMaterials, materialEditorStoreLoaded, materialVisualOverrides]);
+
+  useEffect(() => {
+    void refreshServerProjects({ silent: true });
+    // Server project discovery is a persistence affordance; the initial read
+    // intentionally runs once per mounted workbench.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const nextName = selectedServerAssembly?.name ?? "";
+    serverAssemblyRenameDraftRef.current = nextName;
+    setServerAssemblyRenameDraft(nextName);
+  }, [selectedServerAssembly?.id, selectedServerAssembly?.name]);
+
+  useEffect(() => {
+    const nextName = selectedServerReport?.name ?? "";
+    serverReportRenameDraftRef.current = nextName;
+    setServerReportRenameDraft(nextName);
+  }, [selectedServerReport?.id, selectedServerReport?.name]);
+
+  useEffect(() => {
+    if (!selectedServerProjectId) {
+      setServerProjectAssemblies([]);
+      setSelectedServerAssemblyId("");
+      setServerProjectReports([]);
+      setSelectedServerReportId("");
+      serverAssemblyRenameDraftRef.current = "";
+      serverReportRenameDraftRef.current = "";
+      return;
+    }
+
+    void refreshServerProjectAssemblies(selectedServerProjectId, { silent: true });
+    void refreshServerProjectReports(selectedServerProjectId, { silent: true });
+    // Child record discovery follows the active project; the helpers update
+    // project state and selected record guards internally.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedServerProjectId]);
 
   useEffect(() => {
     if (openMaterialLayerId && !layers.some((layer) => layer.id === openMaterialLayerId)) {
@@ -1371,17 +1910,20 @@ export function CalculatorWorkbench() {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleMouseUp);
     };
+    // Drag listeners intentionally capture the active layer id for the current
+    // drag gesture; recreating them for every layer mutation interrupts drag/drop.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [draggedLayerId]);
 
   useEffect(() => {
-    const tasks = buildLocalTasks(layers, selectedOutputs);
+    const tasks = buildLocalTasks(layers, selectedOutputs, materialById);
 
     if (tasks.length) {
       setEstimateState({ reasons: tasks, status: "blocked" });
       return;
     }
 
-    const payload = buildEstimatePayload(mode, layers, selectedOutputs, context);
+    const payload = buildEstimatePayload(mode, layers, selectedOutputs, context, customMaterials);
 
     if (!payload) {
       setEstimateState({ status: "idle" });
@@ -1434,7 +1976,7 @@ export function CalculatorWorkbench() {
       window.clearTimeout(timeoutId);
       controller.abort();
     };
-  }, [context, layers, mode, selectedOutputs]);
+  }, [context, customMaterials, layers, materialById, mode, selectedOutputs]);
 
   function updateContext(patch: Partial<ContextDraft>) {
     setContext((current) => ({ ...current, ...patch }));
@@ -1456,14 +1998,796 @@ export function CalculatorWorkbench() {
 
     setContext((current) => ({
       ...current,
-      wallCavity1AbsorptionClass: inferCavityAbsorptionClass(layers, cavity),
+      wallCavity1AbsorptionClass: inferCavityAbsorptionClass(layers, cavity, materialById),
       wallCavity1DepthMm: cavityDepthMm ? String(cavityDepthMm) : current.wallCavity1DepthMm,
-      wallCavity1FillCoverage: inferCavityFillCoverage(layers, cavity),
+      wallCavity1FillCoverage: inferCavityFillCoverage(layers, cavity, materialById),
       wallCavity1LayerIndices: formatLayerIndexList(cavity),
       wallSideALeafLayerIndices: formatLayerIndexList(sideA),
       wallSideBLeafLayerIndices: formatLayerIndexList(sideB),
       wallTopologyMode: "double_leaf_framed"
     }));
+  }
+
+  function clearLayerInteractionState() {
+    setOpenMaterialLayerId(null);
+    setMaterialSearch({});
+    setDraggedLayerId(null);
+    setLayerDropTarget(null);
+  }
+
+  async function refreshServerProjects(options?: { preserveMessage?: boolean; silent?: boolean }) {
+    if (!options?.silent) {
+      setServerProjectStatus("loading");
+      setServerProjectMessage("Loading projects");
+    }
+
+    try {
+      const response = await fetch("/api/projects", {
+        method: "GET"
+      });
+
+      if (!response.ok) {
+        throw new Error(await readServerProjectError(response, "DAC could not load server projects."));
+      }
+
+      const payload = (await response.json()) as unknown;
+      const projects = parseServerProjectSummaries(payload);
+      setServerProjects(projects);
+
+      if (selectedServerProjectId && !projects.some((project) => project.id === selectedServerProjectId)) {
+        setSelectedServerProjectId("");
+        setServerProjectAssemblies([]);
+        setSelectedServerAssemblyId("");
+        setServerProjectReports([]);
+        setSelectedServerReportId("");
+      }
+
+      if (!options?.preserveMessage) {
+        setServerProjectStatus("idle");
+        setServerProjectMessage(projects.length ? `${projects.length} project${projects.length === 1 ? "" : "s"}` : "Browser-local draft");
+      }
+    } catch (error) {
+      setServerProjectStatus("error");
+      setServerProjectMessage(error instanceof Error ? error.message : "Server project list failed");
+    }
+  }
+
+  async function refreshServerProjectAssemblies(projectId: string, options?: { preserveMessage?: boolean; silent?: boolean }) {
+    if (!options?.silent) {
+      setServerProjectStatus("loading");
+      setServerProjectMessage("Loading saved combinations");
+    }
+
+    try {
+      const response = await fetch(`/api/projects/${encodeURIComponent(projectId)}/assemblies`, {
+        method: "GET"
+      });
+
+      if (!response.ok) {
+        throw new Error(await readServerProjectError(response, "DAC could not load saved combinations."));
+      }
+
+      const payload = (await response.json()) as unknown;
+      const assemblies = parseProjectAssemblySummaries(payload);
+      setServerProjectAssemblies(assemblies);
+
+      if (selectedServerAssemblyId && !assemblies.some((assembly) => assembly.id === selectedServerAssemblyId)) {
+        setSelectedServerAssemblyId("");
+      }
+
+      if (!options?.preserveMessage && !options?.silent) {
+        setServerProjectStatus("idle");
+        setServerProjectMessage(
+          assemblies.length ? `${assemblies.length} saved combination${assemblies.length === 1 ? "" : "s"}` : "No saved combinations"
+        );
+      }
+    } catch (error) {
+      setServerProjectStatus("error");
+      setServerProjectMessage(error instanceof Error ? error.message : "Saved combination list failed");
+    }
+  }
+
+  async function refreshServerProjectReports(projectId: string, options?: { preserveMessage?: boolean; silent?: boolean }) {
+    if (!options?.silent) {
+      setServerProjectStatus("loading");
+      setServerProjectMessage("Loading saved reports");
+    }
+
+    try {
+      const response = await fetch(`/api/projects/${encodeURIComponent(projectId)}/reports`, {
+        method: "GET"
+      });
+
+      if (!response.ok) {
+        throw new Error(await readServerProjectError(response, "DAC could not load saved reports."));
+      }
+
+      const payload = (await response.json()) as unknown;
+      const reports = parseProjectReportSummaries(payload);
+      setServerProjectReports(reports);
+
+      if (selectedServerReportId && !reports.some((report) => report.id === selectedServerReportId)) {
+        setSelectedServerReportId("");
+      }
+
+      if (!options?.preserveMessage && !options?.silent) {
+        setServerProjectStatus("idle");
+        setServerProjectMessage(reports.length ? `${reports.length} saved report${reports.length === 1 ? "" : "s"}` : "No saved reports");
+      }
+    } catch (error) {
+      setServerProjectStatus("error");
+      setServerProjectMessage(error instanceof Error ? error.message : "Saved report list failed");
+    }
+  }
+
+  function buildCurrentWorkbenchV2ServerSnapshot(name?: string) {
+    const savedAtIso = new Date().toISOString();
+
+    return buildWorkbenchV2ProjectSnapshot({
+      context,
+      customMaterials,
+      id: typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : `workbench-v2-${Date.now()}`,
+      layers,
+      materialVisualOverrides,
+      mode,
+      name: name?.trim() || `${mode === "wall" ? "Wall" : "Floor"} saved combination`,
+      savedAtIso,
+      selectedLayerId,
+      selectedOutputs
+    });
+  }
+
+  function beginServerProjectMutation(): boolean {
+    if (serverProjectMutationInFlightRef.current) {
+      return false;
+    }
+
+    serverProjectMutationInFlightRef.current = true;
+    return true;
+  }
+
+  function finishServerProjectMutation() {
+    serverProjectMutationInFlightRef.current = false;
+  }
+
+  function buildAssemblyCalculationSummary() {
+    const selectedOutputLabels = selectedOutputs.map((output) => output);
+
+    if (estimateState.status === "ready" && primaryOutput) {
+      return {
+        primaryOutput: primaryOutput.label,
+        primaryValueLabel: primaryOutput.value,
+        selectedOutputs: selectedOutputLabels,
+        status: "ready" as const
+      };
+    }
+
+    return {
+      selectedOutputs: selectedOutputLabels,
+      status: estimateState.status === "blocked" ? ("needs_input" as const) : estimateState.status === "error" ? ("error" as const) : ("unsupported" as const)
+    };
+  }
+
+  async function createServerProject() {
+    const projectName = serverProjectNameDraftRef.current.trim();
+    if (!projectName) {
+      setServerProjectStatus("error");
+      setServerProjectMessage("Enter a project name first");
+      return;
+    }
+    if (!beginServerProjectMutation()) {
+      return;
+    }
+
+    setServerProjectStatus("syncing");
+    setServerProjectMessage("Creating project");
+
+    try {
+      const response = await fetch("/api/projects", {
+        body: JSON.stringify({
+          name: projectName
+        }),
+        headers: {
+          "content-type": "application/json"
+        },
+        method: "POST"
+      });
+
+      if (!response.ok) {
+        throw new Error(await readServerProjectError(response, "DAC could not create the project."));
+      }
+
+      const payload = (await response.json()) as unknown;
+      const project = isObjectRecord(payload) && isObjectRecord(payload.project) && typeof payload.project.id === "string"
+        ? {
+            id: payload.project.id
+          }
+        : null;
+
+      if (!project) {
+        throw new Error("DAC created the project but the server response was incomplete.");
+      }
+
+      setSelectedServerProjectId(project.id);
+      setSelectedServerAssemblyId("");
+      setSelectedServerReportId("");
+      setServerProjectAssemblies([]);
+      setServerProjectReports([]);
+      serverProjectNameDraftRef.current = "";
+      setServerProjectNameDraft("");
+      await refreshServerProjects({ preserveMessage: true, silent: true });
+      setServerProjectStatus("idle");
+      setServerProjectMessage("Project created");
+    } catch (error) {
+      setServerProjectStatus("error");
+      setServerProjectMessage(error instanceof Error ? error.message : "Project create failed");
+    } finally {
+      finishServerProjectMutation();
+    }
+  }
+
+  async function saveCurrentAssemblyToServerProject() {
+    if (!selectedServerProjectId) {
+      setServerProjectStatus("error");
+      setServerProjectMessage("Create or select a project first");
+      return;
+    }
+
+    const assemblyName = serverAssemblyNameDraftRef.current.trim() || `${mode === "wall" ? "Wall" : "Floor"} saved combination`;
+    const snapshot = buildCurrentWorkbenchV2ServerSnapshot(assemblyName);
+    if (!beginServerProjectMutation()) {
+      return;
+    }
+    setServerProjectStatus("syncing");
+    setServerProjectMessage("Saving combination");
+
+    try {
+      const response = await fetch(`/api/projects/${encodeURIComponent(selectedServerProjectId)}/assemblies`, {
+        body: JSON.stringify({
+          calculationSummary: buildAssemblyCalculationSummary(),
+          kind: mode,
+          name: assemblyName,
+          snapshot
+        }),
+        headers: {
+          "content-type": "application/json"
+        },
+        method: "POST"
+      });
+
+      if (!response.ok) {
+        throw new Error(await readServerProjectError(response, "DAC could not save the combination."));
+      }
+
+      const payload = (await response.json()) as unknown;
+      const assembly = parseProjectAssemblyRecord(payload);
+      if (!assembly) {
+        throw new Error("DAC saved the combination but the server response was incomplete.");
+      }
+
+      setSelectedServerAssemblyId(assembly.id);
+      serverAssemblyNameDraftRef.current = "";
+      setServerAssemblyNameDraft("");
+      await refreshServerProjectAssemblies(selectedServerProjectId, { preserveMessage: true, silent: true });
+      await refreshServerProjects({ preserveMessage: true, silent: true });
+      setServerProjectStatus("idle");
+      setServerProjectMessage("Saved combination");
+    } catch (error) {
+      setServerProjectStatus("error");
+      setServerProjectMessage(error instanceof Error ? error.message : "Combination save failed");
+    } finally {
+      finishServerProjectMutation();
+    }
+  }
+
+  async function renameSelectedProjectAssembly() {
+    if (!selectedServerProjectId || !selectedServerAssembly) {
+      return;
+    }
+
+    const nextName = serverAssemblyRenameDraftRef.current.trim();
+    if (!nextName) {
+      setServerProjectStatus("error");
+      setServerProjectMessage("Enter a combination name first");
+      return;
+    }
+    if (nextName === selectedServerAssembly.name) {
+      setServerProjectMessage("Combination name unchanged");
+      return;
+    }
+    if (!beginServerProjectMutation()) {
+      return;
+    }
+
+    setServerProjectStatus("syncing");
+    setServerProjectMessage("Renaming combination");
+
+    try {
+      const response = await fetch(
+        `/api/projects/${encodeURIComponent(selectedServerProjectId)}/assemblies/${encodeURIComponent(selectedServerAssembly.id)}`,
+        {
+          body: JSON.stringify({
+            name: nextName
+          }),
+          headers: {
+            "content-type": "application/json"
+          },
+          method: "PATCH"
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(await readServerProjectError(response, "DAC could not rename the combination."));
+      }
+
+      const payload = (await response.json()) as unknown;
+      const assembly = parseProjectAssemblyRecord(payload);
+      if (!assembly) {
+        throw new Error("DAC renamed the combination but the server response was incomplete.");
+      }
+
+      setSelectedServerAssemblyId(assembly.id);
+      await refreshServerProjectAssemblies(selectedServerProjectId, { preserveMessage: true, silent: true });
+      await refreshServerProjects({ preserveMessage: true, silent: true });
+      setServerProjectStatus("idle");
+      setServerProjectMessage("Renamed combination");
+    } catch (error) {
+      setServerProjectStatus("error");
+      setServerProjectMessage(error instanceof Error ? error.message : "Combination rename failed");
+    } finally {
+      finishServerProjectMutation();
+    }
+  }
+
+  async function duplicateSelectedProjectAssembly() {
+    if (!selectedServerProjectId || !selectedServerAssembly) {
+      return;
+    }
+    if (!beginServerProjectMutation()) {
+      return;
+    }
+
+    setServerProjectStatus("syncing");
+    setServerProjectMessage("Duplicating combination");
+
+    try {
+      const response = await fetch(
+        `/api/projects/${encodeURIComponent(selectedServerProjectId)}/assemblies/${encodeURIComponent(selectedServerAssembly.id)}/duplicate`,
+        {
+          body: JSON.stringify({}),
+          headers: {
+            "content-type": "application/json"
+          },
+          method: "POST"
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(await readServerProjectError(response, "DAC could not duplicate the combination."));
+      }
+
+      const payload = (await response.json()) as unknown;
+      const assembly = parseProjectAssemblyRecord(payload);
+      if (!assembly) {
+        throw new Error("DAC duplicated the combination but the server response was incomplete.");
+      }
+
+      setSelectedServerAssemblyId(assembly.id);
+      await refreshServerProjectAssemblies(selectedServerProjectId, { preserveMessage: true, silent: true });
+      await refreshServerProjects({ preserveMessage: true, silent: true });
+      setServerProjectStatus("idle");
+      setServerProjectMessage("Duplicated combination");
+    } catch (error) {
+      setServerProjectStatus("error");
+      setServerProjectMessage(error instanceof Error ? error.message : "Combination duplicate failed");
+    } finally {
+      finishServerProjectMutation();
+    }
+  }
+
+  async function deleteSelectedProjectAssembly() {
+    if (!selectedServerProjectId || !selectedServerAssembly) {
+      return;
+    }
+    if (!window.confirm(`Delete "${selectedServerAssembly.name}" from this project? Reports linked to a combination must be deleted first.`)) {
+      return;
+    }
+    if (!beginServerProjectMutation()) {
+      return;
+    }
+
+    setServerProjectStatus("syncing");
+    setServerProjectMessage("Deleting combination");
+
+    try {
+      const response = await fetch(
+        `/api/projects/${encodeURIComponent(selectedServerProjectId)}/assemblies/${encodeURIComponent(selectedServerAssembly.id)}`,
+        {
+          method: "DELETE"
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(await readServerProjectError(response, "DAC could not delete the combination."));
+      }
+
+      setSelectedServerAssemblyId("");
+      serverAssemblyRenameDraftRef.current = "";
+      setServerAssemblyRenameDraft("");
+      await refreshServerProjectAssemblies(selectedServerProjectId, { preserveMessage: true, silent: true });
+      await refreshServerProjects({ preserveMessage: true, silent: true });
+      setServerProjectStatus("idle");
+      setServerProjectMessage("Deleted combination");
+    } catch (error) {
+      setServerProjectStatus("error");
+      setServerProjectMessage(error instanceof Error ? error.message : "Combination delete failed");
+    } finally {
+      finishServerProjectMutation();
+    }
+  }
+
+  async function loadSelectedProjectAssembly() {
+    if (!selectedServerProjectId || !selectedServerAssemblyId) {
+      return;
+    }
+    if (!beginServerProjectMutation()) {
+      return;
+    }
+
+    setServerProjectStatus("restoring");
+    setServerProjectMessage("Loading saved combination");
+
+    try {
+      const response = await fetch(
+        `/api/projects/${encodeURIComponent(selectedServerProjectId)}/assemblies/${encodeURIComponent(selectedServerAssemblyId)}`,
+        {
+          method: "GET"
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(await readServerProjectError(response, "DAC could not load the selected combination."));
+      }
+
+      const payload = (await response.json()) as unknown;
+      const assembly = parseProjectAssemblyRecord(payload);
+      const parsed = assembly ? parseWorkbenchV2ProjectSnapshot(assembly.snapshot) : null;
+
+      if (!assembly || !parsed?.snapshot) {
+        throw new Error("Selected combination does not contain a restorable workbench v2 snapshot.");
+      }
+
+      restoreWorkbenchV2Snapshot(parsed);
+      setSelectedServerAssemblyId(assembly.id);
+      setServerProjectStatus("idle");
+      setServerProjectMessage("Loaded saved combination");
+    } catch (error) {
+      setServerProjectStatus("error");
+      setServerProjectMessage(error instanceof Error ? error.message : "Saved combination load failed");
+    } finally {
+      finishServerProjectMutation();
+    }
+  }
+
+  async function openSelectedProjectReport() {
+    if (!selectedServerProjectId || !selectedServerReportId) {
+      return;
+    }
+    if (!beginServerProjectMutation()) {
+      return;
+    }
+
+    setServerProjectStatus("restoring");
+    setServerProjectMessage("Opening saved report");
+
+    try {
+      const response = await fetch(
+        `/api/projects/${encodeURIComponent(selectedServerProjectId)}/reports/${encodeURIComponent(selectedServerReportId)}`,
+        {
+          method: "GET"
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(await readServerProjectError(response, "DAC could not open the selected report."));
+      }
+
+      const payload = (await response.json()) as unknown;
+      const report = parseProjectReportRecord(payload);
+      if (!report) {
+        throw new Error("Selected report does not contain a restorable proposal document.");
+      }
+
+      storeReportSnapshot(
+        {
+          ...report.reportDocument,
+          serverProjectId: selectedServerProjectId,
+          serverProjectScenarioId: report.assemblyId
+        },
+        {
+          serverProjectAssemblyId: report.assemblyId,
+          serverProjectId: selectedServerProjectId,
+          serverProjectReportId: report.id,
+          serverProjectReportUpdatedAtIso: report.updatedAtIso,
+          sourceAssemblySnapshot: report.sourceAssemblySnapshot,
+          sourceCalculationOutput: report.sourceCalculationOutput,
+          sourceMaterialSnapshot: report.sourceMaterialSnapshot
+        }
+      );
+
+      setServerProjectStatus("idle");
+      setServerProjectMessage("Opened saved report");
+      window.location.assign(
+        `/workbench/proposal?projectId=${encodeURIComponent(selectedServerProjectId)}&reportId=${encodeURIComponent(report.id)}`
+      );
+    } catch (error) {
+      setServerProjectStatus("error");
+      setServerProjectMessage(error instanceof Error ? error.message : "Saved report open failed");
+      finishServerProjectMutation();
+    }
+  }
+
+  async function renameSelectedProjectReport() {
+    if (!selectedServerProjectId || !selectedServerReport) {
+      return;
+    }
+
+    const nextName = serverReportRenameDraftRef.current.trim();
+    if (!nextName) {
+      setServerProjectStatus("error");
+      setServerProjectMessage("Enter a report name first");
+      return;
+    }
+    if (nextName === selectedServerReport.name) {
+      setServerProjectMessage("Report name unchanged");
+      return;
+    }
+    if (!beginServerProjectMutation()) {
+      return;
+    }
+
+    setServerProjectStatus("syncing");
+    setServerProjectMessage("Renaming report");
+
+    try {
+      const response = await fetch(
+        `/api/projects/${encodeURIComponent(selectedServerProjectId)}/reports/${encodeURIComponent(selectedServerReport.id)}`,
+        {
+          body: JSON.stringify({
+            expectedReportUpdatedAtIso: selectedServerReport.updatedAtIso,
+            name: nextName
+          }),
+          headers: {
+            "content-type": "application/json"
+          },
+          method: "PATCH"
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(await readServerProjectError(response, "DAC could not rename the report."));
+      }
+
+      const payload = (await response.json()) as unknown;
+      const report = parseProjectReportRecord(payload);
+      if (!report) {
+        throw new Error("DAC renamed the report but the server response was incomplete.");
+      }
+
+      setSelectedServerReportId(report.id);
+      await refreshServerProjectReports(selectedServerProjectId, { preserveMessage: true, silent: true });
+      await refreshServerProjects({ preserveMessage: true, silent: true });
+      setServerProjectStatus("idle");
+      setServerProjectMessage("Renamed report");
+    } catch (error) {
+      setServerProjectStatus("error");
+      setServerProjectMessage(error instanceof Error ? error.message : "Report rename failed");
+    } finally {
+      finishServerProjectMutation();
+    }
+  }
+
+  async function duplicateSelectedProjectReport() {
+    if (!selectedServerProjectId || !selectedServerReport) {
+      return;
+    }
+    if (!beginServerProjectMutation()) {
+      return;
+    }
+
+    setServerProjectStatus("syncing");
+    setServerProjectMessage("Duplicating report");
+
+    try {
+      const response = await fetch(
+        `/api/projects/${encodeURIComponent(selectedServerProjectId)}/reports/${encodeURIComponent(selectedServerReport.id)}/duplicate`,
+        {
+          body: JSON.stringify({}),
+          headers: {
+            "content-type": "application/json"
+          },
+          method: "POST"
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(await readServerProjectError(response, "DAC could not duplicate the report."));
+      }
+
+      const payload = (await response.json()) as unknown;
+      const report = parseProjectReportRecord(payload);
+      if (!report) {
+        throw new Error("DAC duplicated the report but the server response was incomplete.");
+      }
+
+      setSelectedServerReportId(report.id);
+      await refreshServerProjectReports(selectedServerProjectId, { preserveMessage: true, silent: true });
+      await refreshServerProjects({ preserveMessage: true, silent: true });
+      setServerProjectStatus("idle");
+      setServerProjectMessage("Duplicated report");
+    } catch (error) {
+      setServerProjectStatus("error");
+      setServerProjectMessage(error instanceof Error ? error.message : "Report duplicate failed");
+    } finally {
+      finishServerProjectMutation();
+    }
+  }
+
+  async function setSelectedProjectReportArchived(archived: boolean) {
+    if (!selectedServerProjectId || !selectedServerReport) {
+      return;
+    }
+    if (!beginServerProjectMutation()) {
+      return;
+    }
+
+    setServerProjectStatus("syncing");
+    setServerProjectMessage(archived ? "Archiving report" : "Restoring report");
+
+    try {
+      const response = await fetch(
+        `/api/projects/${encodeURIComponent(selectedServerProjectId)}/reports/${encodeURIComponent(selectedServerReport.id)}`,
+        {
+          body: JSON.stringify({
+            expectedReportUpdatedAtIso: selectedServerReport.updatedAtIso,
+            status: archived ? "archived" : "draft"
+          }),
+          headers: {
+            "content-type": "application/json"
+          },
+          method: "PATCH"
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(await readServerProjectError(response, archived ? "DAC could not archive the report." : "DAC could not restore the report."));
+      }
+
+      const payload = (await response.json()) as unknown;
+      const report = parseProjectReportRecord(payload);
+      if (!report) {
+        throw new Error("DAC updated the report but the server response was incomplete.");
+      }
+
+      setSelectedServerReportId(report.id);
+      await refreshServerProjectReports(selectedServerProjectId, { preserveMessage: true, silent: true });
+      await refreshServerProjects({ preserveMessage: true, silent: true });
+      setServerProjectStatus("idle");
+      setServerProjectMessage(archived ? "Archived report" : "Restored report");
+    } catch (error) {
+      setServerProjectStatus("error");
+      setServerProjectMessage(error instanceof Error ? error.message : archived ? "Report archive failed" : "Report restore failed");
+    } finally {
+      finishServerProjectMutation();
+    }
+  }
+
+  async function deleteSelectedProjectReport() {
+    if (!selectedServerProjectId || !selectedServerReport) {
+      return;
+    }
+    if (!window.confirm(`Delete "${selectedServerReport.name}" and all of its revisions from this project?`)) {
+      return;
+    }
+    if (!beginServerProjectMutation()) {
+      return;
+    }
+
+    setServerProjectStatus("syncing");
+    setServerProjectMessage("Deleting report");
+
+    try {
+      const response = await fetch(
+        `/api/projects/${encodeURIComponent(selectedServerProjectId)}/reports/${encodeURIComponent(selectedServerReport.id)}`,
+        {
+          method: "DELETE"
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(await readServerProjectError(response, "DAC could not delete the report."));
+      }
+
+      setSelectedServerReportId("");
+      serverReportRenameDraftRef.current = "";
+      setServerReportRenameDraft("");
+      await refreshServerProjectReports(selectedServerProjectId, { preserveMessage: true, silent: true });
+      await refreshServerProjects({ preserveMessage: true, silent: true });
+      setServerProjectStatus("idle");
+      setServerProjectMessage("Deleted report");
+    } catch (error) {
+      setServerProjectStatus("error");
+      setServerProjectMessage(error instanceof Error ? error.message : "Report delete failed");
+    } finally {
+      finishServerProjectMutation();
+    }
+  }
+
+  function restoreWorkbenchV2Snapshot(parsed: ReturnType<typeof parseWorkbenchV2ProjectSnapshot>) {
+    if (!parsed.snapshot) {
+      return;
+    }
+
+    const snapshot = parsed.snapshot;
+    setMode(snapshot.mode);
+    setLayers(snapshot.layers);
+    setSelectedLayerId(snapshot.selectedLayerId);
+    setSelectedOutputs(snapshot.selectedOutputs);
+    setContext(snapshot.context);
+    setCustomMaterials(snapshot.customMaterials);
+    setMaterialVisualOverrides(snapshot.materialVisualOverrides);
+    setMaterialEditorRestoreWarning(formatWorkbenchV2SnapshotRestoreWarning(parsed));
+    setMaterialEditorMaterialId(snapshot.layers.find((layer) => layer.id === snapshot.selectedLayerId)?.materialId ?? snapshot.layers[0]?.materialId ?? null);
+    setMaterialEditorOpen(false);
+    setLayerUndoStack([]);
+    clearLayerInteractionState();
+  }
+
+  function commitLayerStackChange(
+    actionLabel: string,
+    buildChange: (
+      currentLayers: readonly DraftLayer[],
+      currentSelectedLayerId: string | null
+    ) => { layers: readonly DraftLayer[]; selectedLayerId?: string | null } | null
+  ): boolean {
+    const change = buildChange(layers, selectedLayerId);
+
+    if (!change) {
+      return false;
+    }
+
+    const nextSelectedLayerId = change.selectedLayerId === undefined ? selectedLayerId : change.selectedLayerId;
+
+    if (nextSelectedLayerId === selectedLayerId && layerStacksEqual(layers, change.layers)) {
+      return false;
+    }
+
+    setLayerUndoStack((current) => pushLayerStackUndoSnapshot(current, createLayerStackUndoSnapshot(layers, selectedLayerId, actionLabel)));
+    setLayers(change.layers);
+    setSelectedLayerId(nextSelectedLayerId);
+    return true;
+  }
+
+  function undoLayerStackChange() {
+    const popped = popLayerStackUndoSnapshot(layerUndoStack);
+
+    if (!popped) {
+      return;
+    }
+
+    const restored = restoreLayerStackUndoSnapshot(popped.snapshot);
+
+    setLayerUndoStack(popped.stack);
+    setLayers(restored.layers);
+    setSelectedLayerId(restored.selectedLayerId);
+    clearLayerInteractionState();
+
+    if (popped.snapshot.actionLabel) {
+      toast.success("Layer change undone", { description: `Reverted ${popped.snapshot.actionLabel}.` });
+      return;
+    }
+
+    toast.success("Layer change undone");
   }
 
   function setModeWithDefaults(nextMode: StudyMode) {
@@ -1476,21 +2800,26 @@ export function CalculatorWorkbench() {
         ? cloneLayers(INITIAL_FLOOR_LAYERS)
         : nextMode === "wall" && matchesStarterStack(layers, INITIAL_FLOOR_LAYERS)
           ? cloneLayers(INITIAL_WALL_LAYERS)
-          : migrateLayerRoles(layers, nextMode);
+          : migrateLayerRoles(layers, nextMode, materialById, materials);
     const nextSelectedLayerId = nextLayers.some((layer) => layer.id === selectedLayerId) ? selectedLayerId : nextLayers[0]?.id ?? null;
 
     setMode(nextMode);
     setSelectedOutputs(nextMode === "floor" ? ["Ln,w"] : ["Rw"]);
     setLayers(nextLayers);
     setSelectedLayerId(nextSelectedLayerId);
-    setOpenMaterialLayerId(null);
-    setMaterialSearch({});
-    setDraggedLayerId(null);
-    setLayerDropTarget(null);
+    setLayerUndoStack([]);
+    clearLayerInteractionState();
   }
 
   function updateLayer(layerId: string, patch: Partial<DraftLayer>) {
     setLayers((current) => current.map((layer) => (layer.id === layerId ? { ...layer, ...patch } : layer)));
+  }
+
+  function updateLayerWithUndo(actionLabel: string, layerId: string, patch: Partial<DraftLayer>, nextSelectedLayerId?: string | null): boolean {
+    return commitLayerStackChange(actionLabel, (currentLayers, currentSelectedLayerId) => ({
+      layers: currentLayers.map((layer) => (layer.id === layerId ? { ...layer, ...patch } : layer)),
+      selectedLayerId: nextSelectedLayerId === undefined ? currentSelectedLayerId : nextSelectedLayerId
+    }));
   }
 
   function addLayer() {
@@ -1498,58 +2827,90 @@ export function CalculatorWorkbench() {
     const role = getRoleOptions(mode)[Math.min(layers.length, getRoleOptions(mode).length - 1)]!.value;
     const layer: DraftLayer = {
       id,
-      materialId: getDefaultMaterialId(mode),
+      materialId: getDefaultMaterialId(mode, materialById, materials),
       role,
       thicknessMm: ""
     };
 
-    setLayers((current) => [...current, layer]);
-    setSelectedLayerId(id);
+    commitLayerStackChange("adding a layer", (currentLayers) => ({
+      layers: [...currentLayers, layer],
+      selectedLayerId: id
+    }));
   }
 
   function duplicateLayer(layerId: string) {
-    setLayers((current) => {
-      const index = current.findIndex((layer) => layer.id === layerId);
-      const source = current[index];
+    const duplicateId = createLayerId();
+
+    commitLayerStackChange("duplicating a layer", (currentLayers) => {
+      const index = currentLayers.findIndex((layer) => layer.id === layerId);
+      const source = currentLayers[index];
 
       if (!source) {
-        return current;
+        return null;
       }
 
-      const duplicate = { ...source, id: createLayerId() };
-      const next = [...current];
+      const duplicate = { ...source, id: duplicateId };
+      const next = [...currentLayers];
       next.splice(index + 1, 0, duplicate);
-      setSelectedLayerId(duplicate.id);
-      return next;
+
+      return {
+        layers: next,
+        selectedLayerId: duplicate.id
+      };
     });
   }
 
   function removeLayer(layerId: string) {
-    setLayers((current) => current.filter((layer) => layer.id !== layerId));
-    setSelectedLayerId((current) => (current === layerId ? layers.find((layer) => layer.id !== layerId)?.id ?? null : current));
+    commitLayerStackChange("removing a layer", (currentLayers, currentSelectedLayerId) => {
+      if (!currentLayers.some((layer) => layer.id === layerId)) {
+        return null;
+      }
+
+      const nextLayers = currentLayers.filter((layer) => layer.id !== layerId);
+
+      return {
+        layers: nextLayers,
+        selectedLayerId: currentSelectedLayerId === layerId ? nextLayers[0]?.id ?? null : currentSelectedLayerId
+      };
+    });
   }
 
   function moveLayer(layerId: string, direction: "down" | "up") {
-    setLayers((current) => {
-      const index = current.findIndex((layer) => layer.id === layerId);
+    commitLayerStackChange("moving a layer", (currentLayers, currentSelectedLayerId) => {
+      const index = currentLayers.findIndex((layer) => layer.id === layerId);
 
       if (index < 0) {
-        return current;
+        return null;
       }
 
       const nextIndex = direction === "up" ? index - 1 : index + 1;
 
-      if (nextIndex < 0 || nextIndex >= current.length) {
-        return current;
+      if (nextIndex < 0 || nextIndex >= currentLayers.length) {
+        return null;
       }
 
-      return moveItem(current, index, nextIndex);
+      return {
+        layers: moveItem(currentLayers, index, nextIndex),
+        selectedLayerId: currentSelectedLayerId
+      };
     });
   }
 
   function moveLayerToTarget(layerId: string, targetLayerId: string, position: "after" | "before") {
-    setLayers((current) => moveLayerBeforeOrAfter(current, layerId, targetLayerId, position));
-    setSelectedLayerId(layerId);
+    const changed = commitLayerStackChange("reordering a layer", (currentLayers) => {
+      if (!currentLayers.some((layer) => layer.id === layerId)) {
+        return null;
+      }
+
+      return {
+        layers: moveLayerBeforeOrAfter(currentLayers, layerId, targetLayerId, position),
+        selectedLayerId: layerId
+      };
+    });
+
+    if (!changed && layers.some((layer) => layer.id === layerId)) {
+      setSelectedLayerId(layerId);
+    }
   }
 
   function getLayerDropTargetFromPoint(clientX: number, clientY: number, sourceLayerId: string): LayerDropTarget | null {
@@ -1622,7 +2983,8 @@ export function CalculatorWorkbench() {
   }
 
   function selectMaterial(layerId: string, materialId: string) {
-    updateLayer(layerId, { materialId });
+    updateLayerWithUndo("changing a layer material", layerId, { materialId }, layerId);
+    setMaterialEditorMaterialId(materialId);
     setMaterialSearch((current) => {
       const next = { ...current };
       delete next[layerId];
@@ -1630,6 +2992,39 @@ export function CalculatorWorkbench() {
     });
     setOpenMaterialLayerId(null);
     setSelectedLayerId(layerId);
+  }
+
+  function openMaterialEditor(materialId: string | null = null) {
+    const selectedLayerMaterialId = layers.find((layer) => layer.id === selectedLayerId)?.materialId ?? layers[0]?.materialId ?? null;
+    setMaterialEditorMaterialId(materialId ?? selectedLayerMaterialId);
+    setMaterialEditorOpen(true);
+  }
+
+  function saveCustomMaterial(material: MaterialDefinition) {
+    setCustomMaterials((current) => upsertCustomMaterial(current, material));
+    setMaterialEditorMaterialId(material.id);
+  }
+
+  function deleteCustomMaterial(materialId: string) {
+    setCustomMaterials((current) => removeCustomMaterial(current, materialId));
+    setMaterialVisualOverrides((current) => removeMaterialVisualOverride(current, materialId));
+    setMaterialEditorMaterialId((current) => (current === materialId ? materials.find((material) => material.id !== materialId)?.id ?? null : current));
+    setLayerUndoStack([]);
+  }
+
+  function replaceMaterialInLayers(fromMaterialId: string, toMaterialId: string) {
+    commitLayerStackChange("replacing layer materials", (currentLayers, currentSelectedLayerId) => ({
+      layers: currentLayers.map((layer) => (layer.materialId === fromMaterialId ? { ...layer, materialId: toMaterialId } : layer)),
+      selectedLayerId: currentSelectedLayerId
+    }));
+  }
+
+  function saveMaterialVisualOverride(override: MaterialVisualOverride) {
+    setMaterialVisualOverrides((current) => upsertMaterialVisualOverride(current, override));
+  }
+
+  function resetMaterialVisualOverride(materialId: string) {
+    setMaterialVisualOverrides((current) => removeMaterialVisualOverride(current, materialId));
   }
 
   function handleMaterialComboboxBlur(layerId: string, event: FocusEvent<HTMLDivElement>) {
@@ -1651,7 +3046,7 @@ export function CalculatorWorkbench() {
       return;
     }
 
-    const firstMaterial = getFilteredMaterials(materialSearch[layer.id] ?? "", layer.materialId)[0];
+    const firstMaterial = getFilteredMaterials(materialSearch[layer.id] ?? "", layer.materialId, materials, materialById)[0];
     if (!firstMaterial) {
       return;
     }
@@ -1697,14 +3092,47 @@ export function CalculatorWorkbench() {
       return;
     }
 
-    storeReportSnapshot(
-      buildReportSnapshot({
-        layers,
-        mode,
-        outputRows,
-        responseFigures
-      })
-    );
+    const projectName = selectedServerProject?.name;
+    const serverProjectId = selectedServerProjectId || undefined;
+    const serverProjectAssemblyId = selectedServerAssemblyId || undefined;
+    const sourceAssemblySnapshot =
+      serverProjectId && serverProjectAssemblyId
+        ? buildCurrentWorkbenchV2ServerSnapshot(selectedServerAssembly?.name)
+        : undefined;
+    const projectContext: SimpleWorkbenchProposalPreviewProjectContext | undefined =
+      serverProjectId && serverProjectAssemblyId && sourceAssemblySnapshot
+        ? {
+            serverProjectAssemblyId,
+            serverProjectId,
+            sourceAssemblySnapshot,
+            sourceCalculationOutput: {
+              calculationSummary: buildAssemblyCalculationSummary(),
+              outputRows,
+              responseFigures
+            },
+            sourceMaterialSnapshot: {
+              customMaterials: [...customMaterials],
+              materialVisualOverrides: [...materialVisualOverrides]
+            }
+          }
+        : serverProjectId
+          ? {
+              serverProjectId
+            }
+          : undefined;
+
+    const reportDocument = buildReportSnapshot({
+      layers,
+      materialById,
+      mode,
+      outputRows,
+      projectName,
+      responseFigures,
+      serverProjectId,
+      serverProjectScenarioId: serverProjectAssemblyId
+    });
+
+    storeReportSnapshot(reportDocument, projectContext);
     window.location.assign("/workbench/proposal");
   }
 
@@ -1726,6 +3154,245 @@ export function CalculatorWorkbench() {
 
         <section className="calc-grid" aria-label="Calculator workspace">
           <div className="calc-main">
+            <section className="calc-section calc-project-snapshot-section" aria-label="Project workspace">
+              <div className="calc-section-head">
+                <div>
+                  <h2>Project workspace</h2>
+                </div>
+                <span className={serverProjectStatus === "error" ? "ui-badge ui-badge-warning" : "ui-badge"}>{serverProjectMessage}</span>
+              </div>
+              <div className="calc-project-snapshot-controls">
+                <input
+                  aria-label="New project name"
+                  className="focus-ring ui-field calc-project-snapshot-select"
+                  maxLength={SERVER_PROJECT_NAME_MAX_LENGTH}
+                  onChange={(event) => {
+                    serverProjectNameDraftRef.current = event.target.value;
+                    setServerProjectNameDraft(event.target.value);
+                  }}
+                  placeholder="New project name"
+                  value={serverProjectNameDraft}
+                />
+                <button
+                  className="focus-ring ui-button ui-button-primary"
+                  disabled={!canCreateServerProject}
+                  onClick={createServerProject}
+                  type="button"
+                >
+                  <Plus className="h-4 w-4" />
+                  Create project
+                </button>
+                <select
+                  aria-label="Project"
+                  className="focus-ring ui-field calc-project-snapshot-select"
+                  onChange={(event) => {
+                    setSelectedServerProjectId(event.target.value);
+                    setSelectedServerAssemblyId("");
+                    setSelectedServerReportId("");
+                    serverAssemblyRenameDraftRef.current = "";
+                    serverReportRenameDraftRef.current = "";
+                    setServerAssemblyRenameDraft("");
+                    setServerReportRenameDraft("");
+                  }}
+                  value={selectedServerProjectId}
+                >
+                  <option value="">Browser-local draft</option>
+                  {serverProjects.map((project) => (
+                    <option key={project.id} value={project.id}>
+                      {formatServerProjectOptionLabel(project)}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  className="focus-ring ui-button ui-button-ghost"
+                  disabled={serverProjectBusy}
+                  onClick={() => void refreshServerProjects()}
+                  type="button"
+                >
+                  <RotateCcw className="h-4 w-4" />
+                  Refresh
+                </button>
+              </div>
+              <div className="calc-project-snapshot-controls">
+                <input
+                  aria-label="Saved combination name"
+                  className="focus-ring ui-field calc-project-snapshot-select"
+                  disabled={!selectedServerProjectId}
+                  maxLength={SERVER_PROJECT_NAME_MAX_LENGTH}
+                  onChange={(event) => {
+                    serverAssemblyNameDraftRef.current = event.target.value;
+                    setServerAssemblyNameDraft(event.target.value);
+                  }}
+                  placeholder={selectedServerProject ? `${selectedServerProject.name} combination name` : "Select a project first"}
+                  value={serverAssemblyNameDraft}
+                />
+                <button
+                  className="focus-ring ui-button ui-button-primary"
+                  disabled={!selectedServerProjectId || serverProjectStatus === "syncing" || serverProjectStatus === "restoring"}
+                  onClick={saveCurrentAssemblyToServerProject}
+                  type="button"
+                >
+                  <FileText className="h-4 w-4" />
+                  Save combination
+                </button>
+                <select
+                  aria-label="Saved combination"
+                  className="focus-ring ui-field calc-project-snapshot-select"
+                  disabled={!selectedServerProjectId || serverProjectStatus === "loading"}
+                  onChange={(event) => {
+                    const nextAssemblyId = event.target.value;
+                    const nextAssembly = serverProjectAssemblies.find((assembly) => assembly.id === nextAssemblyId);
+                    const nextName = nextAssembly?.name ?? "";
+                    setSelectedServerAssemblyId(nextAssemblyId);
+                    serverAssemblyRenameDraftRef.current = nextName;
+                    setServerAssemblyRenameDraft(nextName);
+                  }}
+                  value={selectedServerAssemblyId}
+                >
+                  <option value="">Select saved combination</option>
+                  {serverProjectAssemblies.map((assembly) => (
+                    <option key={assembly.id} value={assembly.id}>
+                      {formatAssemblyOptionLabel(assembly)}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  className="focus-ring ui-button ui-button-ghost"
+                  disabled={!selectedServerProjectId || !selectedServerAssembly || serverProjectBusy}
+                  onClick={loadSelectedProjectAssembly}
+                  type="button"
+                >
+                  Load combination
+                </button>
+              </div>
+              {selectedServerAssembly ? (
+                <div className="calc-project-snapshot-controls">
+                  <input
+                    aria-label="Selected combination name"
+                    className="focus-ring ui-field calc-project-snapshot-select"
+                    disabled={serverProjectBusy}
+                    maxLength={SERVER_PROJECT_NAME_MAX_LENGTH}
+                    onChange={(event) => {
+                      serverAssemblyRenameDraftRef.current = event.target.value;
+                      setServerAssemblyRenameDraft(event.target.value);
+                    }}
+                    placeholder="Selected combination name"
+                    value={serverAssemblyRenameDraft}
+                  />
+                  <button
+                    className="focus-ring ui-button ui-button-ghost"
+                    disabled={!canRenameServerAssembly}
+                    onClick={renameSelectedProjectAssembly}
+                    type="button"
+                  >
+                    <Pencil className="h-4 w-4" />
+                    Rename combination
+                  </button>
+                  <button
+                    className="focus-ring ui-button ui-button-ghost"
+                    disabled={!selectedServerProjectId || serverProjectBusy}
+                    onClick={duplicateSelectedProjectAssembly}
+                    type="button"
+                  >
+                    <Copy className="h-4 w-4" />
+                    Duplicate combination
+                  </button>
+                  <button
+                    className="focus-ring ui-button ui-button-danger"
+                    disabled={!selectedServerProjectId || serverProjectBusy}
+                    onClick={deleteSelectedProjectAssembly}
+                    type="button"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    Delete combination
+                  </button>
+                </div>
+              ) : null}
+              <div className="calc-project-snapshot-controls">
+                <select
+                  aria-label="Saved report"
+                  className="focus-ring ui-field calc-project-snapshot-select"
+                  disabled={!selectedServerProjectId || serverProjectStatus === "loading"}
+                  onChange={(event) => {
+                    const nextReportId = event.target.value;
+                    const nextReport = serverProjectReports.find((report) => report.id === nextReportId);
+                    const nextName = nextReport?.name ?? "";
+                    setSelectedServerReportId(nextReportId);
+                    serverReportRenameDraftRef.current = nextName;
+                    setServerReportRenameDraft(nextName);
+                  }}
+                  value={selectedServerReportId}
+                >
+                  <option value="">Select saved report</option>
+                  {serverProjectReports.map((report) => (
+                    <option key={report.id} value={report.id}>
+                      {formatReportOptionLabel(report)}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  className="focus-ring ui-button ui-button-ghost"
+                  disabled={!selectedServerProjectId || !selectedServerReport || serverProjectBusy}
+                  onClick={openSelectedProjectReport}
+                  type="button"
+                >
+                  Open saved report
+                </button>
+              </div>
+              {selectedServerReport ? (
+                <div className="calc-project-snapshot-controls">
+                  <input
+                    aria-label="Selected report name"
+                    className="focus-ring ui-field calc-project-snapshot-select"
+                    disabled={serverProjectBusy}
+                    maxLength={SERVER_PROJECT_NAME_MAX_LENGTH}
+                    onChange={(event) => {
+                      serverReportRenameDraftRef.current = event.target.value;
+                      setServerReportRenameDraft(event.target.value);
+                    }}
+                    placeholder="Selected report name"
+                    value={serverReportRenameDraft}
+                  />
+                  <button
+                    className="focus-ring ui-button ui-button-ghost"
+                    disabled={!canRenameServerReport}
+                    onClick={renameSelectedProjectReport}
+                    type="button"
+                  >
+                    <Pencil className="h-4 w-4" />
+                    Rename report
+                  </button>
+                  <button
+                    className="focus-ring ui-button ui-button-ghost"
+                    disabled={!selectedServerProjectId || serverProjectBusy}
+                    onClick={duplicateSelectedProjectReport}
+                    type="button"
+                  >
+                    <Copy className="h-4 w-4" />
+                    Duplicate report
+                  </button>
+                  <button
+                    className="focus-ring ui-button ui-button-warning"
+                    disabled={!selectedServerProjectId || serverProjectBusy}
+                    onClick={() => void setSelectedProjectReportArchived(selectedServerReport.status !== "archived")}
+                    type="button"
+                  >
+                    {selectedServerReport.status === "archived" ? <RotateCcw className="h-4 w-4" /> : <Archive className="h-4 w-4" />}
+                    {selectedServerReport.status === "archived" ? "Restore report" : "Archive report"}
+                  </button>
+                  <button
+                    className="focus-ring ui-button ui-button-danger"
+                    disabled={!selectedServerProjectId || serverProjectBusy}
+                    onClick={deleteSelectedProjectReport}
+                    type="button"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    Delete report
+                  </button>
+                </div>
+              ) : null}
+            </section>
+
             <section className="calc-section calc-setup-section">
               <div className="calc-section-head">
                 <div>
@@ -2102,10 +3769,27 @@ export function CalculatorWorkbench() {
                 <div>
                   <h2>Layer stack</h2>
                 </div>
-                <button className="focus-ring ui-button ui-button-primary" onClick={addLayer} type="button">
-                  <Plus className="h-4 w-4" />
-                  Add layer
-                </button>
+                <div className="calc-section-actions">
+                  <button
+                    aria-label={undoLayerStackActionLabel}
+                    className="focus-ring ui-button ui-button-ghost"
+                    disabled={!canUndoLayerStack}
+                    onClick={undoLayerStackChange}
+                    title={undoLayerStackTitle}
+                    type="button"
+                  >
+                    <RotateCcw className="h-4 w-4" />
+                    Undo layer change
+                  </button>
+                  <button className="focus-ring ui-button ui-button-ghost" onClick={() => openMaterialEditor()} type="button">
+                    <Palette className="h-4 w-4" />
+                    Materials
+                  </button>
+                  <button className="focus-ring ui-button ui-button-primary" onClick={addLayer} type="button">
+                    <Plus className="h-4 w-4" />
+                    Add layer
+                  </button>
+                </div>
               </div>
 
               <div className="calc-layer-list">
@@ -2117,8 +3801,8 @@ export function CalculatorWorkbench() {
                   <span>Actions</span>
                 </div>
                 {layers.map((layer, index) => {
-                  const material = getMaterial(layer.materialId);
-                  const filteredMaterials = getFilteredMaterials(materialSearch[layer.id] ?? "", layer.materialId);
+                  const material = getMaterialFromCatalog(layer.materialId, materialById);
+                  const filteredMaterials = getFilteredMaterials(materialSearch[layer.id] ?? "", layer.materialId, materials, materialById);
 
                   return (
                     <article
@@ -2211,7 +3895,7 @@ export function CalculatorWorkbench() {
                           <select
                             className="focus-ring ui-field"
                             id={getLayerRoleInputId(layer.id)}
-                            onChange={(event) => updateLayer(layer.id, { role: event.target.value })}
+                            onChange={(event) => updateLayerWithUndo("changing a layer role", layer.id, { role: event.target.value })}
                             value={layer.role}
                           >
                             {getRoleOptions(mode).map((role) => (
@@ -2262,6 +3946,27 @@ export function CalculatorWorkbench() {
                 })}
               </div>
             </section>
+
+            {materialEditorOpen ? (
+              <MaterialEditorPanel
+                layers={layers.map((layer, index) => ({
+                  id: layer.id,
+                  label: `Layer ${index + 1}`,
+                  materialId: layer.materialId
+                }))}
+                materials={materials}
+                onClose={() => setMaterialEditorOpen(false)}
+                onDeleteMaterial={deleteCustomMaterial}
+                onReplaceMaterialInLayers={replaceMaterialInLayers}
+                onResetVisualOverride={resetMaterialVisualOverride}
+                onSaveMaterial={saveCustomMaterial}
+                onSaveVisualOverride={saveMaterialVisualOverride}
+                onSelectMaterial={setMaterialEditorMaterialId}
+                restoreWarning={materialEditorRestoreWarning}
+                selectedMaterialId={materialEditorMaterialId}
+                visualOverrides={materialVisualOverrides}
+              />
+            ) : null}
 
             <ProfessionalLayerIllustration
               layers={illustrationLayers}

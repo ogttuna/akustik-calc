@@ -148,34 +148,34 @@ function buildAirborneLane(
     return null;
   }
 
-  const value =
-    result.airborneOverlay?.contextMode === "building_prediction" && typeof result.metrics.estimatedDnTwDb === "number"
-      ? result.metrics.estimatedDnTwDb
-      : typeof result.metrics.estimatedRwPrimeDb === "number" && result.ratings.iso717.descriptor === "R'w"
-        ? result.metrics.estimatedRwPrimeDb
-        : result.metrics.estimatedRwDb;
+  const primary =
+    result.airborneOverlay?.contextMode === "building_prediction" &&
+    isSupportedAnswerOutput(result, "DnT,w") &&
+    typeof result.metrics.estimatedDnTwDb === "number"
+      ? { label: "DnT,w estimate", value: result.metrics.estimatedDnTwDb }
+      : isSupportedAnswerOutput(result, "R'w") &&
+          typeof result.metrics.estimatedRwPrimeDb === "number" &&
+          result.ratings.iso717.descriptor === "R'w"
+        ? { label: "R'w estimate", value: result.metrics.estimatedRwPrimeDb }
+        : isSupportedAnswerOutput(result, "Rw") && typeof result.metrics.estimatedRwDb === "number"
+          ? { label: "Rw estimate", value: result.metrics.estimatedRwDb }
+          : null;
 
-  if (!(typeof value === "number" && Number.isFinite(value))) {
+  if (!primary || !Number.isFinite(primary.value)) {
     return null;
   }
 
-  const label =
-    result.airborneOverlay?.contextMode === "building_prediction" && typeof result.metrics.estimatedDnTwDb === "number"
-      ? "DnT,w estimate"
-      : result.ratings.iso717.descriptor === "R'w"
-        ? "R'w estimate"
-        : "Rw estimate";
   const companions: ResultAnswerChartCompanion[] = [];
 
-  if (isSupportedAnswerOutput(result, "STC")) {
+  if (isSupportedAnswerOutput(result, "STC") && typeof result.metrics.estimatedStc === "number") {
     companions.push({ label: "STC", valueLabel: `${formatDecimal(result.metrics.estimatedStc)} dB` });
   }
 
   const adaptationValues: string[] = [];
-  if (isSupportedAnswerOutput(result, "C")) {
+  if (isSupportedAnswerOutput(result, "C") && typeof result.metrics.estimatedCDb === "number") {
     adaptationValues.push(formatSignedDb(result.metrics.estimatedCDb));
   }
-  if (isSupportedAnswerOutput(result, "Ctr")) {
+  if (isSupportedAnswerOutput(result, "Ctr") && typeof result.metrics.estimatedCtrDb === "number") {
     adaptationValues.push(formatSignedDb(result.metrics.estimatedCtrDb));
   }
   if (adaptationValues.length > 0) {
@@ -194,13 +194,13 @@ function buildAirborneLane(
     detail: "Primary airborne answer from the currently active screening or field-side lane.",
     direction: "higher_better",
     id: "airborne",
-    label,
+    label: primary.label,
     max: 85,
     min: 20,
     target: parseTarget(targetRwDb),
     targetLabel: parseTarget(targetRwDb) !== null ? `Brief minimum ${formatDecimal(parseTarget(targetRwDb)!)} dB` : null,
-    value,
-    valueLabel: `${formatDecimal(value)} dB`
+    value: primary.value,
+    valueLabel: `${formatDecimal(primary.value)} dB`
   };
 }
 

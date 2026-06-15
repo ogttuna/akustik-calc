@@ -35,7 +35,7 @@ describe("proposal adjust layout", () => {
     expect(source).toContain("Choose one area to edit");
     expect(source).toContain("Measured / predicted indices");
     expect(source).toContain("Calculator inputs and engine outputs stay untouched");
-    expect(source).toContain("Proposal note shown in PDF");
+    expect(source).toContain("Report note shown in PDF");
     expect(source).toContain("Download branded DOCX");
     expect(source).toContain("Download simple DOCX");
     expect(source).toContain("PDF and DOCX charts use this packaged snapshot");

@@ -481,7 +481,7 @@ export function parseSimpleWorkbenchProposalDocument(value: unknown): SimpleWork
         ? (issueRegisterItems as SimpleWorkbenchProposalIssueRegisterItem[])
         : [
             {
-              detail: "Legacy proposal snapshot without an explicit issue history register.",
+              detail: "Legacy report snapshot without an explicit issue history register.",
               issuedOnLabel: typeof value.issuedOnLabel === "string" ? value.issuedOnLabel : "",
               label: "Current issue",
               reference: typeof value.proposalReference === "string" ? value.proposalReference : "DEC-PRJ-00000000",
@@ -516,8 +516,8 @@ export function parseSimpleWorkbenchProposalDocument(value: unknown): SimpleWork
       typeof value.proposalSubject === "string"
         ? value.proposalSubject
         : typeof value.projectName === "string"
-          ? `${value.projectName} acoustic proposal`
-          : "Acoustic performance proposal",
+          ? `${value.projectName} acoustic analysis report`
+          : "Acoustic performance analysis report",
     proposalValidityNote:
       typeof value.proposalValidityNote === "string"
         ? value.proposalValidityNote
@@ -565,7 +565,7 @@ const CLIENT_OFFER_HIDDEN_TEXT_PATTERNS = [
 
 function cleanClientProposalText(
   value: string,
-  fallback = "Calculation basis is limited to the listed build-up and proposal scope."
+  fallback = "Calculation basis is limited to the listed build-up and report scope."
 ): string {
   const trimmedValue = value.trim();
 
@@ -1098,7 +1098,7 @@ function renderProposalMetricGraph(document: SimpleWorkbenchProposalDocument): s
         <div class="chart-band-strip">
           <span class="chart-band-pill">Weighted indices</span>
           <span class="chart-band-pill">Shared dB ruler</span>
-          <span class="chart-band-pill">Proposal interpretation</span>
+          <span class="chart-band-pill">Report interpretation</span>
       </div>
       ${renderProposalAdjustmentChartNote(document)}
       <div class="plot-shell">
@@ -1528,7 +1528,7 @@ function buildIssueCodePrefixLabel(document: SimpleWorkbenchProposalDocument): s
 }
 
 export function buildSimpleWorkbenchProposalFilename(projectName: string): string {
-  return `${slugify(projectName) || "dynecho-acoustic-proposal"}-proposal`;
+  return `${slugify(projectName) || "dynecho"}-acoustic-analysis-report`;
 }
 
 export function buildSimpleWorkbenchProposalText(document: SimpleWorkbenchProposalDocument): string {
@@ -1555,7 +1555,7 @@ export function buildSimpleWorkbenchProposalText(document: SimpleWorkbenchPropos
   const adjustmentNote = buildSimpleWorkbenchProposalAdjustmentNote(document);
 
   return [
-    `Acoustic Proposal | ${document.projectName}`,
+    `Acoustic Analysis Report | ${document.projectName}`,
     `Client: ${document.clientName}`,
     `Consultant: ${document.consultantCompany}`,
     `Prepared by: ${document.preparedBy}`,
@@ -1692,7 +1692,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
   const consultantNote =
     document.briefNote.trim().length > 0
       ? escapeHtml(cleanClientProposalText(document.briefNote.trim()))
-      : "No additional proposal note entered.";
+      : "No additional report note entered.";
   const standardReferences = inferProposalStandardReferences(document);
   const stackDensityCount = document.layers.filter((layer) => typeof layer.densityLabel === "string" && layer.densityLabel.trim().length > 0).length;
   const stackSurfaceMassCount = document.layers.filter(
@@ -2750,9 +2750,9 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
                   <small>${escapeHtml(branding.wordmarkSecondary)}</small>
                 </div>
               </div>
-              <div class="template-pill">Acoustic proposal <span>${escapeHtml(document.proposalReference)} · ${escapeHtml(document.proposalRevision)}</span></div>
+              <div class="template-pill">Acoustic analysis report <span>${escapeHtml(document.proposalReference)} · ${escapeHtml(document.proposalRevision)}</span></div>
             </div>
-            <h1 class="cover-title">Acoustic Proposal</h1>
+            <h1 class="cover-title">Acoustic Analysis Report</h1>
             <p class="cover-kicker">${escapeHtml(branding.coverKicker)}</p>
             <div class="cover-standard-strip">
               ${renderProposalStandardPills(standardReferences)}
@@ -2770,7 +2770,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
                   <small>${escapeHtml(document.proposalAttention)}<br />${escapeHtml(document.proposalSubject)}<br />${escapeHtml(document.proposalIssuePurpose)}<br />${escapeHtml(document.proposalValidityNote)}</small>
                 </div>
                 <div class="cover-summary">
-                  <div class="eyebrow">Proposal summary</div>
+                  <div class="eyebrow">Report summary</div>
                   <h3 style="margin: 10px 0 0;">${escapeHtml(document.proposalSubject)}</h3>
                   <p>${escapeHtml(executiveSummary)}</p>
                 </div>
@@ -2857,11 +2857,11 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
 
         <section class="frame page">
           <header class="page-header">
-            <div class="eyebrow">${escapeHtml(document.consultantCompany)} | Acoustic proposal</div>
+            <div class="eyebrow">${escapeHtml(document.consultantCompany)} | Acoustic analysis report</div>
             <div class="page-header-grid">
               <div>
-                <h1 style="margin-top: 8px;">Proposal Summary</h1>
-                <p class="lede">Acoustic indices, construction basis, proposal notes, and client issue details for this offer form.</p>
+                <h1 style="margin-top: 8px;">Report Summary</h1>
+                <p class="lede">Acoustic indices, construction basis, report notes, and client issue details for this analysis report.</p>
               </div>
               <div class="summary-grid" style="margin-top: 0;">
                 <div class="metric">
@@ -2891,7 +2891,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
           <section class="section">
             <div class="eyebrow" style="margin: 18px 0 8px;">Executive Summary</div>
             <div class="method-box">
-              <h3>Offer summary</h3>
+              <h3>Report summary</h3>
               <p>${escapeHtml(executiveSummary)}</p>
             </div>
           </section>
@@ -2957,7 +2957,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
             <div class="eyebrow" style="margin: 18px 0 8px;">Reference Standards</div>
             <div class="method-box">
               <h3>Calculation basis</h3>
-              <p>Calculations and single-number ratings are expressed using the relevant ISO basis for the proposal. This offer form is a design estimate and does not replace accredited laboratory or site measurements.</p>
+              <p>Calculations and single-number ratings are expressed using the relevant ISO basis for the report. This analysis report is a design estimate and does not replace accredited laboratory or site measurements.</p>
             </div>
             <div class="standards-grid" style="padding-top: 12px;">
               ${renderProposalStandardCards(standardReferences)}
@@ -3048,13 +3048,13 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
 
           <section class="detail-grid" style="padding-top: 0;">
             <div class="method-box">
-              <div class="eyebrow" style="margin-bottom: 8px;">Proposal note</div>
+              <div class="eyebrow" style="margin-bottom: 8px;">Report note</div>
               <h3>Consultant note</h3>
               <p>${consultantNote}</p>
             </div>
             <div class="method-box">
               <div class="eyebrow" style="margin-bottom: 8px;">Assumptions</div>
-              <h3>Proposal assumptions</h3>
+              <h3>Report assumptions</h3>
               <ul>${offerAssumptionList}</ul>
             </div>
           </section>
@@ -3082,7 +3082,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
 
           <section class="footer">
             <div class="note-box">
-              <p>This acoustic proposal summarizes a project estimate and should be read together with the stated ISO basis, assumptions, validity note, and any required laboratory or site verification.</p>
+              <p>This acoustic analysis report summarizes a project estimate and should be read together with the stated ISO basis, assumptions, validity note, and any required laboratory or site verification.</p>
               <p style="margin-top: 8px;">
                 ${escapeHtml(document.consultantCompany)} · ${escapeHtml(preparedBy)} · ${escapeHtml(document.approverTitle)} · ${escapeHtml(document.consultantEmail)} · ${escapeHtml(document.consultantPhone)} · ${escapeHtml(document.consultantAddress)}
               </p>

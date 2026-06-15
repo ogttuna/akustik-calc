@@ -7,6 +7,7 @@ import { ExactImpactSourceSchema } from "../domain/exact-impact-source";
 import { ImpactFieldContextSchema } from "../domain/impact-field-context";
 import { ImpactPredictorInputSchema } from "../domain/impact-predictor-input";
 import { LayerInputSchema } from "../domain/layer";
+import { MaterialDefinitionSchema } from "../domain/material";
 import { RequestedOutputSchema } from "../domain/output";
 import { SteelFloorFormulaInputSurfaceSchema } from "../domain/steel-floor-formula-input-surface";
 
@@ -17,6 +18,27 @@ const FloorImpactContextSchema = z
   })
   .partial();
 
+const EstimateMaterialCatalogSchema = z
+  .array(MaterialDefinitionSchema)
+  .max(64)
+  .superRefine((materials, context) => {
+    const seen = new Map<string, number>();
+
+    materials.forEach((material, index) => {
+      const previousIndex = seen.get(material.id);
+      if (previousIndex === undefined) {
+        seen.set(material.id, index);
+        return;
+      }
+
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Duplicate material id "${material.id}" also appears at materialCatalog.${previousIndex}.`,
+        path: [index, "id"]
+      });
+    });
+  });
+
 const EstimateRequestSchemaInternal = z.object({
   airborneContext: AirborneContextSchema.optional(),
   calculator: AirborneCalculatorIdSchema.optional(),
@@ -25,6 +47,7 @@ const EstimateRequestSchemaInternal = z.object({
   impactFieldContext: ImpactFieldContextSchema.optional(),
   impactPredictorInput: ImpactPredictorInputSchema.optional(),
   layers: z.array(LayerInputSchema).min(1),
+  materialCatalog: EstimateMaterialCatalogSchema.optional(),
   steelFloorFormulaSurface: SteelFloorFormulaInputSurfaceSchema.optional(),
   targetOutputs: z.array(RequestedOutputSchema).min(1).optional()
 });

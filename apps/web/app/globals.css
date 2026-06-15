@@ -2286,6 +2286,14 @@ textarea.ui-field {
   line-height: 1.4;
 }
 
+.calc-section-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
 .calc-review-head span {
   color: var(--text-muted);
   font-size: 0.78rem;
@@ -2690,6 +2698,334 @@ textarea.ui-field {
   justify-content: center;
   gap: 0.375rem;
   min-width: var(--calc-layer-actions-width);
+}
+
+.calc-project-snapshot-section {
+  gap: 0.75rem;
+}
+
+.calc-project-snapshot-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.calc-project-snapshot-select {
+  min-width: 0;
+  width: 100%;
+}
+
+.material-editor-panel {
+  display: grid;
+  gap: 0.875rem;
+}
+
+.material-editor-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.material-editor-head h2 {
+  margin: 0.2rem 0 0;
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 760;
+  line-height: 1.2;
+}
+
+.material-editor-layout {
+  display: grid;
+  grid-template-columns: minmax(13rem, 0.42fr) minmax(0, 1fr);
+  gap: 0.875rem;
+  align-items: start;
+}
+
+.material-editor-browser,
+.material-editor-detail,
+.material-editor-form {
+  min-width: 0;
+}
+
+.material-editor-browser {
+  display: grid;
+  gap: 0.625rem;
+}
+
+.material-editor-new-button {
+  justify-content: center;
+}
+
+.material-editor-filter-row {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.material-editor-scope-tabs {
+  display: inline-flex;
+  width: 100%;
+  gap: 0.18rem;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-control);
+  background: var(--surface-inset);
+  padding: 0.18rem;
+}
+
+.material-editor-scope-tabs button {
+  flex: 1 1 0;
+  min-width: 0;
+  border: 0;
+  border-radius: calc(var(--radius-control) - 0.15rem);
+  background: transparent;
+  color: var(--text-secondary);
+  padding: 0.38rem 0.45rem;
+  font-size: 0.76rem;
+  font-weight: 760;
+}
+
+.material-editor-scope-tabs button[aria-pressed="true"] {
+  background: var(--surface-control);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-xs);
+}
+
+.material-editor-category-filter {
+  min-width: 0;
+  width: 100%;
+}
+
+.material-editor-list {
+  display: grid;
+  max-height: 29rem;
+  overflow: auto;
+  border-top: 1px solid var(--border-default);
+  padding-top: 0.4rem;
+}
+
+.material-editor-list-row {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--text-primary);
+  padding: 0.5rem 0.55rem;
+  text-align: left;
+}
+
+.material-editor-list-row:hover,
+.material-editor-list-row[aria-selected="true"] {
+  border-color: var(--state-accent-border);
+  background: var(--state-accent-bg);
+}
+
+.material-editor-list-row span {
+  display: grid;
+  min-width: 0;
+  gap: 0.15rem;
+}
+
+.material-editor-list-row strong,
+.material-editor-list-row small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.material-editor-list-row strong {
+  font-size: 0.84rem;
+  font-weight: 760;
+}
+
+.material-editor-list-row small,
+.material-editor-list-row em {
+  color: var(--text-muted);
+  font-size: 0.74rem;
+  font-style: normal;
+  font-weight: 680;
+}
+
+.material-editor-list-row em {
+  flex: none;
+}
+
+.material-editor-detail {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.material-editor-tabs {
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  gap: 0.2rem;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-control);
+  background: var(--surface-inset);
+  padding: 0.2rem;
+}
+
+.material-editor-tabs button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 0;
+  border-radius: calc(var(--radius-control) - 0.15rem);
+  background: transparent;
+  color: var(--text-secondary);
+  padding: 0.42rem 0.65rem;
+  font-size: 0.82rem;
+  font-weight: 760;
+}
+
+.material-editor-tabs button[aria-selected="true"] {
+  background: var(--surface-control);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-xs);
+}
+
+.material-editor-form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.material-editor-field-grid,
+.material-editor-color-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.625rem;
+}
+
+.material-editor-field,
+.material-editor-color-field {
+  display: grid;
+  min-width: 0;
+  gap: 0.35rem;
+}
+
+.material-editor-field > label,
+.material-editor-color-field > label {
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 760;
+  text-transform: uppercase;
+}
+
+.material-editor-description {
+  color: var(--text-secondary);
+  font-size: 0.74rem;
+  font-weight: 520;
+  line-height: 1.35;
+}
+
+.material-editor-field textarea {
+  min-height: 5.5rem;
+  resize: vertical;
+}
+
+.material-editor-error,
+.material-editor-warning,
+.material-editor-empty {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.material-editor-error {
+  color: var(--danger);
+}
+
+.material-editor-warning {
+  color: var(--warning);
+}
+
+.material-editor-readonly,
+.material-editor-swatch-row {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.65rem;
+  border-block: 1px solid var(--border-default);
+  padding-block: 0.65rem;
+}
+
+.material-editor-readonly {
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.material-editor-restore-warning {
+  border-color: var(--warning-border, var(--border-default));
+}
+
+.material-editor-readonly strong,
+.material-editor-swatch-row strong {
+  color: var(--text-primary);
+  font-size: 0.86rem;
+  font-weight: 760;
+}
+
+.material-editor-readonly span,
+.material-editor-swatch-row small {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
+.material-editor-swatch-row > span {
+  flex: none;
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 2px solid var(--border-strong);
+  border-radius: var(--radius-control);
+}
+
+.material-editor-color-field {
+  grid-template-columns: auto 2.25rem minmax(4.5rem, auto);
+  align-items: center;
+}
+
+.material-editor-color-field > label {
+  text-transform: none;
+}
+
+.material-editor-color-field input {
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-control);
+  background: transparent;
+  padding: 0.1rem;
+}
+
+.material-editor-color-field code {
+  color: var(--text-muted);
+  font-size: 0.76rem;
+}
+
+.material-editor-color-field .material-editor-description {
+  grid-column: 1 / -1;
+}
+
+.material-editor-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 660;
+}
+
+.material-editor-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .calc-result-hero {
@@ -3328,7 +3664,22 @@ textarea.ui-field {
 }
 
 @media (max-width: 63.99rem) {
+  .calc-project-snapshot-controls,
+  .material-editor-layout,
   .rebuild-layer-body {
+    grid-template-columns: 1fr;
+  }
+
+  .material-editor-layout[data-detail-first="true"] .material-editor-browser {
+    order: 2;
+  }
+
+  .material-editor-layout[data-detail-first="true"] .material-editor-detail {
+    order: 1;
+  }
+
+  .material-editor-field-grid,
+  .material-editor-color-grid {
     grid-template-columns: 1fr;
   }
 }

@@ -9,6 +9,7 @@ import {
   type AirborneContext,
   type DynamicAirborneFamily,
   type LayerInput,
+  type MaterialDefinition,
   type RequestedOutputId
 } from "@dynecho/shared";
 
@@ -155,6 +156,7 @@ export type DynamicCalculatorCandidateResolverRuntimeSignal = {
 
 export type DynamicCalculatorCandidateResolverRuntimeInput = {
   airborneContext?: AirborneContext | null;
+  catalog?: readonly MaterialDefinition[];
   floorImpactContext?: DynamicCalculatorFloorImpactContext | null;
   layers: readonly LayerInput[];
   route: DynamicCalculatorRoute;
@@ -261,12 +263,19 @@ function inferOutputBasis(
 
 export function inferDynamicCalculatorRuntimeRoute(input: {
   layers: readonly LayerInput[];
+  supportedTargetOutputs?: readonly RequestedOutputId[];
   targetOutputs: readonly RequestedOutputId[];
 }): DynamicCalculatorRoute {
-  if (
-    input.layers.some((layer) => Boolean(layer.floorRole)) ||
-    input.targetOutputs.some((output) => IMPACT_OR_FLOOR_OUTPUTS.has(output))
-  ) {
+  if (input.layers.some((layer) => Boolean(layer.floorRole))) {
+    return "floor";
+  }
+
+  const routeOutputs =
+    input.supportedTargetOutputs && input.supportedTargetOutputs.length > 0
+      ? input.supportedTargetOutputs
+      : input.targetOutputs;
+
+  if (routeOutputs.some((output) => IMPACT_OR_FLOOR_OUTPUTS.has(output))) {
     return "floor";
   }
 
@@ -1105,6 +1114,7 @@ export function buildDynamicCalculatorCandidateResolverRuntime(
   const targetOutputs = outputIds(input.targetOutputs, input.route);
   const topologyNormalization = normalizeDynamicCalculatorTopologyInput({
     airborneContext: input.airborneContext ?? undefined,
+    catalog: input.catalog,
     floorImpactContext: input.floorImpactContext ?? undefined,
     layers: input.layers,
     route: input.route,
@@ -1112,6 +1122,7 @@ export function buildDynamicCalculatorCandidateResolverRuntime(
   });
   const routeInputAssessment = buildDynamicCalculatorRouteInputTopologyAssessment({
     airborneContext: input.airborneContext ?? undefined,
+    catalog: input.catalog,
     floorImpactContext: input.floorImpactContext ?? undefined,
     layers: topologyNormalization.normalizedLayers,
     route: input.route,

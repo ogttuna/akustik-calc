@@ -48,7 +48,14 @@ export type ProjectAccessDecision =
 
 export const PROJECT_ACCESS_ROLE_ACTIONS = {
   owner: SERVER_PROJECT_ACCESS_ACTIONS,
-  editor: ["list_projects", "read_project", "import_local_scenarios", "append_proposal_audit"],
+  editor: [
+    "list_projects",
+    "read_project",
+    "import_local_scenarios",
+    "append_proposal_audit",
+    "save_project_assembly",
+    "save_project_report"
+  ],
   reviewer: ["list_projects", "read_project"],
   viewer: ["list_projects", "read_project"]
 } satisfies Record<ServerProjectAccessRole, readonly ServerProjectAccessAction[]>;
@@ -57,6 +64,11 @@ const PROJECT_BOUND_ACTIONS = new Set<ServerProjectAccessAction>([
   "read_project",
   "import_local_scenarios",
   "append_proposal_audit",
+  "save_project_assembly",
+  "delete_project_assembly",
+  "save_project_report",
+  "delete_project_report",
+  "manage_project_materials",
   "manage_members"
 ]);
 

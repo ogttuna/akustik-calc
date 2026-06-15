@@ -235,4 +235,59 @@ describe("result answer chart model", () => {
     );
     expect(lanes[0]?.companions).toEqual([]);
   });
+
+  it("does not invent a primary airborne lane for companion-only airborne answers", () => {
+    for (const result of [
+      buildFixture({
+        impact: null,
+        lowerBoundImpact: null,
+        supportedTargetOutputs: ["STC"],
+        targetOutputs: ["STC", "Rw"],
+        unsupportedTargetOutputs: ["Rw"]
+      }),
+      buildFixture({
+        impact: null,
+        lowerBoundImpact: null,
+        supportedTargetOutputs: ["C", "Ctr"],
+        targetOutputs: ["C", "Ctr", "Rw"],
+        unsupportedTargetOutputs: ["Rw"]
+      })
+    ]) {
+      expect(buildResultAnswerChartLanes({ result })).toEqual([]);
+    }
+  });
+
+  it("does not choose unsupported finite field or building helper metrics as the primary airborne lane", () => {
+    const lanes = buildResultAnswerChartLanes({
+      result: buildFixture({
+        airborneOverlay: {
+          contextMode: "building_prediction"
+        },
+        impact: null,
+        lowerBoundImpact: null,
+        metrics: {
+          ...buildFixture().metrics,
+          estimatedDnTwDb: 51,
+          estimatedRwPrimeDb: 52
+        },
+        ratings: {
+          iso717: {
+            composite: "R'w 52 dB",
+            descriptor: "R'w"
+          }
+        },
+        supportedTargetOutputs: ["Rw"],
+        targetOutputs: ["Rw", "R'w", "DnT,w"],
+        unsupportedTargetOutputs: ["R'w", "DnT,w"]
+      })
+    });
+
+    expect(lanes).toEqual([
+      expect.objectContaining({
+        id: "airborne",
+        label: "Rw estimate",
+        value: 58
+      })
+    ]);
+  });
 });

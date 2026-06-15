@@ -7,7 +7,8 @@ import {
   type AirborneContext,
   type LayerInput,
   type MaterialDefinition,
-  type RequestedOutputId
+  type RequestedOutputId,
+  type ResolvedLayer
 } from "@dynecho/shared";
 
 import { getDefaultMaterialCatalog, resolveMaterial } from "./material-catalog";
@@ -104,9 +105,13 @@ function unique<T>(items: readonly T[]): T[] {
 }
 
 function resolveLayerMaterial(
-  layer: LayerInput,
+  layer: LayerInput | ResolvedLayer,
   catalog: readonly MaterialDefinition[]
 ): MaterialDefinition | null {
+  if ("material" in layer && layer.material.id === layer.materialId) {
+    return layer.material;
+  }
+
   try {
     return resolveMaterial(layer.materialId, catalog);
   } catch {
@@ -176,6 +181,45 @@ function hasEngineeringFlowDefault(
       material?.acoustic?.behavior === "porous_absorber" &&
       typeof material.acoustic.flowResistivityPaSM2 === "number" &&
       material.acoustic.propertySourceStatus === "engineering_default"
+    );
+  });
+}
+
+function needsPorousFlowResistivityInput(input: {
+  context: AirborneContext | undefined;
+  layers: readonly LayerInput[];
+  catalog: readonly MaterialDefinition[];
+}): boolean {
+  const topology = input.context?.wallTopology;
+  if (
+    topology?.cavity1AbsorptionClass !== "porous_absorptive" ||
+    (topology.cavity1FillCoverage !== "full" && topology.cavity1FillCoverage !== "partial")
+  ) {
+    return false;
+  }
+
+  if (hasContextOwnedPorousCavityInput(input.context)) {
+    return false;
+  }
+
+  return input.layers.some((layer) => {
+    const material = resolveLayerMaterial(layer, input.catalog);
+    if (material?.acoustic?.behavior !== "porous_absorber") {
+      return false;
+    }
+
+    const hasNumericFlow =
+      typeof material.acoustic.flowResistivityPaSM2 === "number" &&
+      Number.isFinite(material.acoustic.flowResistivityPaSM2) &&
+      material.acoustic.flowResistivityPaSM2 > 0;
+    if (hasNumericFlow) {
+      return false;
+    }
+
+    return (
+      material.acoustic.propertySourceStatus === "user_supplied" ||
+      material.acoustic.propertySourceStatus === "unknown" ||
+      material.acoustic.propertySourceStatus === undefined
     );
   });
 }
@@ -278,6 +322,11 @@ export function buildGateQDoubleLeafFramedBridgeInputContract(input: {
   const hasExplicitCavityDepth = hasPositiveCavityDepth(topology);
   const hasContextOwnedPorousCavity = hasContextOwnedPorousCavityInput(input.airborneContext);
   const usesEngineeringFlowDefault = hasEngineeringFlowDefault(input.layers, catalog);
+  const needsPorousFlowInput = needsPorousFlowResistivityInput({
+    catalog,
+    context: input.airborneContext,
+    layers: input.layers
+  });
   const requirements: RequirementSpec[] = [
     {
       detail: "Group the source-side leaf before a double-leaf/framed solver can own mass-air-mass resonance.",
@@ -367,6 +416,15 @@ export function buildGateQDoubleLeafFramedBridgeInputContract(input: {
       label: "Cavity absorption class",
       requirementType: "conditional_physical_input",
       source: "wall_topology"
+    },
+    {
+      detail:
+        "Enter the porous absorber flow resistivity, or explicitly adopt an engineering-default material value before the solver applies porous damping.",
+      fieldId: "flowResistivityPaSM2",
+      isMissing: needsPorousFlowInput,
+      label: "Porous fill flow resistivity",
+      requirementType: "conditional_physical_input",
+      source: "material_property"
     }
   ];
 
@@ -396,7 +454,7 @@ export function buildGateQDoubleLeafFramedBridgeInputContract(input: {
     missing.length > 0 ? "needs_input" : appliedDefaults.length > 0 ? "complete_with_defaults" : "complete";
   const inputCompleteness = AcousticInputCompletenessSchema.parse({
     appliedDefaults,
-    conditionalFields: [...CONDITIONAL_BEFORE_RUNTIME_PROMOTION],
+    conditionalFields: unique([...CONDITIONAL_BEFORE_RUNTIME_PROMOTION, "flowResistivityPaSM2"]),
     id: "gate_q_double_leaf_framed_bridge_route_inputs",
     missingPhysicalInputs: unique(missing),
     missingSourceEvidence,

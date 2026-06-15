@@ -44,9 +44,21 @@ const ROLE_ACTION_MATRIX: Record<ServerProjectAccessRole, readonly ServerProject
     "read_project",
     "import_local_scenarios",
     "append_proposal_audit",
+    "save_project_assembly",
+    "delete_project_assembly",
+    "save_project_report",
+    "delete_project_report",
+    "manage_project_materials",
     "manage_members"
   ],
-  editor: ["list_projects", "read_project", "import_local_scenarios", "append_proposal_audit"],
+  editor: [
+    "list_projects",
+    "read_project",
+    "import_local_scenarios",
+    "append_proposal_audit",
+    "save_project_assembly",
+    "save_project_report"
+  ],
   reviewer: ["list_projects", "read_project"],
   viewer: ["list_projects", "read_project"]
 };
@@ -55,6 +67,11 @@ const PROJECT_BOUND_ACTIONS: readonly ServerProjectAccessAction[] = [
   "read_project",
   "import_local_scenarios",
   "append_proposal_audit",
+  "save_project_assembly",
+  "delete_project_assembly",
+  "save_project_report",
+  "delete_project_report",
+  "manage_project_materials",
   "manage_members"
 ];
 
@@ -101,7 +118,14 @@ describe("project access policy", () => {
 
   it("keeps editor, reviewer, and viewer team permissions narrower than project ownership", () => {
     const roleExpectations: Record<Exclude<ServerProjectAccessRole, "owner">, readonly ServerProjectAccessAction[]> = {
-      editor: ["list_projects", "read_project", "import_local_scenarios", "append_proposal_audit"],
+      editor: [
+        "list_projects",
+        "read_project",
+        "import_local_scenarios",
+        "append_proposal_audit",
+        "save_project_assembly",
+        "save_project_report"
+      ],
       reviewer: ["list_projects", "read_project"],
       viewer: ["list_projects", "read_project"]
     };

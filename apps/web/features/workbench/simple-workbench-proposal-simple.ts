@@ -28,7 +28,7 @@ const MAX_SIMPLE_CITATIONS = 4;
 const MAX_SIMPLE_LAYER_ROWS = 16;
 const MAX_SIMPLE_ASSUMPTIONS = 5;
 const MAX_SIMPLE_METRICS = 6;
-const SIMPLE_PROPOSAL_FORM_LABEL = "Acoustic proposal";
+const SIMPLE_PROPOSAL_FORM_LABEL = "Acoustic analysis report";
 
 const SIMPLE_CURVE_BANDS = [
   {
@@ -77,7 +77,7 @@ const CLIENT_OFFER_HIDDEN_TEXT_PATTERNS = [
 
 function cleanClientProposalText(
   value: string,
-  fallback = "Calculation basis is limited to the listed build-up and proposal scope."
+  fallback = "Calculation basis is limited to the listed build-up and report scope."
 ): string {
   const trimmedValue = value.trim();
 
@@ -1239,7 +1239,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
           </div>
           <div class="report-title-row">
             <div>
-              <h1>Acoustic Proposal</h1>
+              <h1>Acoustic Analysis Report</h1>
               <p class="report-subject">${escapeHtml(document.projectName)} · ${escapeHtml(document.proposalSubject)}</p>
             </div>
             ${document.consultantLogoDataUrl ? `<img class="report-logo" src="${escapeHtml(document.consultantLogoDataUrl)}" alt="${escapeHtml(document.consultantCompany)} logo" />` : ""}
@@ -1285,7 +1285,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
               : ""
           }
           <article class="result-card">
-            <strong>Proposal scope</strong>
+            <strong>Report scope</strong>
             <span>${escapeHtml(document.studyModeLabel)}</span>
             <small>${escapeHtml(document.proposalIssuePurpose)}</small>
           </article>
@@ -1382,7 +1382,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
         <section class="page">
           <section class="page-grid">
             <section class="notes-panel">
-              <div class="table-title">Proposal basis</div>
+              <div class="table-title">Analysis basis</div>
               <ul>${methodSnapshotHtml}</ul>
             </section>
             <section class="notes-panel">
@@ -1452,7 +1452,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
             ` : ""}
             ${noteAndAssumptionItems ? `
             <section class="notes-panel">
-              <div class="table-title">Proposal notes</div>
+              <div class="table-title">Report notes</div>
               <ul>${noteAndAssumptionItems}</ul>
             </section>
             ` : ""}
@@ -1460,12 +1460,12 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
           ` : ""}
 
           <p class="footnote">
-            This offer form summarises the acoustic calculation for the listed build-up and project scope. It is not an accredited laboratory or field test certificate unless separately stated.
+            This analysis report summarises the acoustic calculation for the listed build-up and project scope. It is not an accredited laboratory or field test certificate unless separately stated.
           </p>
 
           <footer class="page-footer">
             <span>${escapeHtml(document.issueBaseReference)}</span>
-            <span>${escapeHtml(document.consultantCompany)} · Acoustic proposal</span>
+            <span>${escapeHtml(document.consultantCompany)} · Acoustic analysis report</span>
           </footer>
         </section>
       `

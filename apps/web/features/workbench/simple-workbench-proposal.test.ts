@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  buildSimpleWorkbenchProposalFilename,
   buildSimpleWorkbenchProposalHtml,
   buildSimpleWorkbenchProposalText
 } from "./simple-workbench-proposal";
@@ -220,7 +221,7 @@ const BASE_DOCUMENT = {
   proposalRecipient: "Riverside Development Team",
   proposalReference: "MAC-2026-014",
   proposalRevision: "Rev 01",
-  proposalSubject: "Riverside Residences floor acoustic proposal",
+  proposalSubject: "Riverside Residences floor acoustic analysis report",
   proposalValidityNote: "Valid for 30 calendar days unless superseded by a later issue.",
   recommendationItems: [
     {
@@ -294,10 +295,15 @@ const BASE_DOCUMENT = {
 } as const;
 
 describe("simple workbench proposal helpers", () => {
+  it("builds analysis-report filenames without proposal wording", () => {
+    expect(buildSimpleWorkbenchProposalFilename("Riverside Residences")).toBe("riverside-residences-acoustic-analysis-report");
+    expect(buildSimpleWorkbenchProposalFilename("")).toBe("dynecho-acoustic-analysis-report");
+  });
+
   it("builds a copy-ready summary with the live route, metrics, and schedule", () => {
     const text = buildSimpleWorkbenchProposalText(BASE_DOCUMENT);
 
-    expect(text).toContain("Acoustic Proposal | Riverside Residences");
+    expect(text).toContain("Acoustic Analysis Report | Riverside Residences");
     expect(text).toContain("Client: Machinity Acoustics");
     expect(text).toContain("Consultant: Machinity Acoustic Consultants");
     expect(text).toContain("Prepared by: O. Tuna");
@@ -307,13 +313,13 @@ describe("simple workbench proposal helpers", () => {
     expect(text).toContain("Office: Maslak District, Istanbul, Turkiye");
     expect(text).toContain("Issued to: Riverside Development Team");
     expect(text).toContain("Attention: Design Coordination Team");
-    expect(text).toContain("Subject: Riverside Residences floor acoustic proposal");
+    expect(text).toContain("Subject: Riverside Residences floor acoustic analysis report");
     expect(text).toContain("Issue purpose: Client review and acoustic coordination");
     expect(text).toContain("Validity: Valid for 30 calendar days unless superseded by a later issue.");
     expect(text).toContain("Issue: MAC-2026-014 | Rev 01");
     expect(text).toContain("Issue code prefix: MAC");
     expect(text).toContain("Study: Floor | Building prediction | Pre-tender | Consultant issue");
-    expect(text).toContain("Template: Consultant issue | Acoustic Proposal | Machinity Acoustic Consultants");
+    expect(text).toContain("Template: Consultant issue | Acoustic Analysis Report | Machinity Acoustic Consultants");
     expect(text).toContain("Primary read: Rw 61 dB");
     expect(text).toContain("Executive summary");
     expect(text).toContain("Riverside Residences currently reads Rw 61 dB.");
@@ -388,7 +394,7 @@ describe("simple workbench proposal helpers", () => {
   it("escapes consultant free text in the printable html while preserving core sections", () => {
     const html = buildSimpleWorkbenchProposalHtml(BASE_DOCUMENT);
 
-    expect(html).toContain("Acoustic Proposal");
+    expect(html).toContain("Acoustic Analysis Report");
     expect(html).toContain("Riverside Residences");
     expect(html).toContain("Machinity Acoustics");
     expect(html).toContain("Machinity Acoustic Consultants");
@@ -402,8 +408,8 @@ describe("simple workbench proposal helpers", () => {
       expect(html).toContain("Client review and acoustic coordination");
       expect(html).toContain("Valid for 30 calendar days unless superseded by a later issue.");
       expect(html).toContain("Executive Summary");
-      expect(html).toContain("Proposal Summary");
-      expect(html).toContain("Offer summary");
+      expect(html).toContain("Report Summary");
+      expect(html).toContain("Report summary");
       expect(html).toContain("Acoustic Indices");
       expect(html).toContain("Measured / Predicted Indices");
       expect(html).toContain("Construction Section");
@@ -435,14 +441,14 @@ describe("simple workbench proposal helpers", () => {
       expect(html).toContain("Issued to");
       expect(html).toContain("Riverside Development Team");
       expect(html).toContain("Design Coordination Team");
-      expect(html).toContain("Riverside Residences floor acoustic proposal");
+      expect(html).toContain("Riverside Residences floor acoustic analysis report");
       expect(html).toContain("Recipient and subject");
       expect(html).toContain("Transmittal recipient");
       expect(html).toContain("Issue subject line");
       expect(html).toContain("Primary issue contact");
-      expect(html).toContain("Proposal note");
+      expect(html).toContain("Report note");
       expect(html).toContain("Consultant note");
-      expect(html).toContain("Proposal assumptions");
+      expect(html).toContain("Report assumptions");
       expect(html).toContain("Recommended actions");
       expect(html).toContain("Reference lines");
       expect(html).toContain("Exact floor family: Knauf CT30 1C");
@@ -460,7 +466,7 @@ describe("simple workbench proposal helpers", () => {
       expect(html).toContain("432 kg/m²");
       expect(html).toContain("Check flanking &lt;risk&gt; before tender issue.");
       expect(html).not.toContain("Check flanking <risk> before tender issue.");
-      expect(html).toContain("This acoustic proposal summarizes a project estimate");
+      expect(html).toContain("This acoustic analysis report summarizes a project estimate");
       expect(html).not.toContain("Issue Dossier");
       expect(html).not.toContain("Validation Corridor Package");
       expect(html).not.toContain("Solver Rationale Appendix");
@@ -476,19 +482,19 @@ describe("simple workbench proposal helpers", () => {
   it("builds a lightweight summary html for the simple pdf path", () => {
     const html = buildSimpleWorkbenchProposalSimpleHtml(BASE_DOCUMENT);
 
-    expect(html).toContain("Acoustic Proposal");
-    expect(html).toContain("Acoustic proposal");
+    expect(html).toContain("Acoustic Analysis Report");
+    expect(html).toContain("Acoustic analysis report");
     expect(html).toContain("Frequency response curves");
     expect(html).toContain("Airborne response curve");
     expect(html).toContain("Impact response curve");
     expect(html).toContain("Construction section");
     expect(html).toContain("Measured / predicted indices");
-    expect(html).toContain("Proposal basis");
+    expect(html).toContain("Analysis basis");
     expect(html).toContain("Published family estimate");
     expect(html).toContain("Visible layer schedule");
     expect(html).toContain("Reference basis");
     expect(html).toContain("References");
-    expect(html).toContain("Proposal notes");
+    expect(html).toContain("Report notes");
     expect(html).not.toContain("Warnings and issue guardrails");
     expect(html).not.toContain("Output coverage register");
     expect(html).toContain("ISO 717-1");
@@ -503,7 +509,7 @@ describe("simple workbench proposal helpers", () => {
     expect(html).toContain("Ln,w");
     expect(html).toContain("Riverside Development Team");
     expect(html).toContain("Read this as a supported floor estimate");
-    expect(html).toContain("This offer form summarises the acoustic calculation");
+    expect(html).toContain("This analysis report summarises the acoustic calculation");
   });
 
   it("shows report-only override notes beside charts and text export", () => {
