@@ -10,6 +10,24 @@ source-of-truth, current state, active plan, checkpoint, system map,
 current gate runner, and user-material route-input implementation files
 are synchronized at the current checkpoint.
 
+Calculator drift lock:
+
+- DynEcho is an acoustic prediction calculator, not a catalog, UI polish
+  project, generic library, or source-crawl workflow.
+- Work is valid only when it increases calculable layer combinations,
+  improves numeric accuracy, opens or validates a physics/formula route,
+  captures route-required physical inputs, or protects metric/route
+  boundaries.
+- Measured rows and compatible anchors are first-class evidence, but the
+  long-term engine must calculate arbitrary user-entered combinations
+  through owned formulas when no exact source row exists.
+- Do not pick a new slice whose main output is docs, process,
+  refactoring, frontend polish, confidence copy, or broad source
+  gathering unless the user explicitly asks for that separate work.
+- Before selecting or implementing anything, name the layer family,
+  target output(s), formula/anchor route, required inputs, and boundary
+  being improved or protected.
+
 Fast path:
 
 - checkpoint: `docs/calculator/CHECKPOINT_2026-06-11_DIRECT_FIXED_A_WEIGHTED_SURFACE_PARITY.md`;
@@ -23,24 +41,51 @@ Fast path:
 - latest porous flow-resistivity coverage refresh: `packages/engine/src/post-v1-wall-double-leaf-framed-user-material-porous-flow-resistivity-input-coverage-refresh-contract.test.ts`;
 - latest post-flow numeric coverage-gap rerank: `packages/engine/src/post-v1-next-numeric-coverage-gap-after-user-material-porous-flow-resistivity-input-contract.test.ts`;
 - latest floor user-material impact context dynamic-stiffness owner: `packages/engine/src/post-v1-floor-user-material-impact-context-dynamic-stiffness-owner-contract.test.ts`;
+- latest floor user-material impact context dynamic-stiffness coverage refresh: `packages/engine/src/post-v1-floor-user-material-impact-context-dynamic-stiffness-coverage-refresh-contract.test.ts`;
+- latest floor user-material impact context field-only adapter rerank: `packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-impact-context-dynamic-stiffness-contract.test.ts`;
+- latest floor user-material impact context field-only adapter rerank plan: `docs/calculator/POST_V1_NEXT_NUMERIC_COVERAGE_GAP_AFTER_FLOOR_USER_MATERIAL_IMPACT_CONTEXT_DYNAMIC_STIFFNESS_PLAN_2026-06-15.md`;
+- latest floor user-material impact context field-only adapter owner: `packages/engine/src/post-v1-floor-user-material-impact-context-field-only-adapter-owner-contract.test.ts`;
+- latest floor user-material impact context field-only adapter owner plan: `docs/calculator/POST_V1_FLOOR_USER_MATERIAL_IMPACT_CONTEXT_FIELD_ONLY_ADAPTER_OWNER_PLAN_2026-06-15.md`;
+- latest floor user-material impact context field-only adapter coverage refresh: `packages/engine/src/post-v1-floor-user-material-impact-context-field-only-adapter-coverage-refresh-contract.test.ts`;
+- latest floor user-material impact context field-only adapter coverage refresh plan: `docs/calculator/POST_V1_FLOOR_USER_MATERIAL_IMPACT_CONTEXT_FIELD_ONLY_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-15.md`;
+- latest floor user-material low-density rerank: `packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-impact-context-field-only-adapter-contract.test.ts`;
+- latest floor user-material low-density rerank plan: `docs/calculator/POST_V1_NEXT_NUMERIC_COVERAGE_GAP_AFTER_FLOOR_USER_MATERIAL_IMPACT_CONTEXT_FIELD_ONLY_ADAPTER_PLAN_2026-06-15.md`;
+- latest floor user-material low-density owner: `packages/engine/src/post-v1-floor-user-material-low-density-floating-floor-family-owner-contract.test.ts`;
+- latest floor user-material low-density owner plan: `docs/calculator/POST_V1_FLOOR_USER_MATERIAL_LOW_DENSITY_FLOATING_FLOOR_FAMILY_OWNER_PLAN_2026-06-15.md`;
 - latest floor owner action: `post_v1_floor_user_material_impact_context_dynamic_stiffness_owner_plan`;
+- latest floor coverage refresh action: `post_v1_floor_user_material_impact_context_dynamic_stiffness_coverage_refresh_plan`;
+- latest floor field-only rerank action: `post_v1_next_numeric_coverage_gap_after_floor_user_material_impact_context_dynamic_stiffness_plan`;
+- latest floor field-only owner action: `post_v1_floor_user_material_impact_context_field_only_adapter_owner_plan`;
+- latest floor field-only coverage refresh action: `post_v1_floor_user_material_impact_context_field_only_adapter_coverage_refresh_plan`;
+- latest floor low-density rerank action: `post_v1_next_numeric_coverage_gap_after_floor_user_material_impact_context_field_only_adapter_plan`;
+- latest floor low-density owner action: `post_v1_floor_user_material_low_density_floating_floor_family_owner_plan`;
 - latest post-flow rerank status:
   `post_v1_next_numeric_coverage_gap_after_user_material_porous_flow_resistivity_input_landed_no_runtime_selected_floor_user_material_impact_context_dynamic_stiffness_owner`;
 - latest floor owner status:
   `post_v1_floor_user_material_impact_context_dynamic_stiffness_owner_landed_runtime_selected_coverage_refresh`;
-- next action: `post_v1_floor_user_material_impact_context_dynamic_stiffness_coverage_refresh_plan`;
-- next plan: `docs/calculator/POST_V1_FLOOR_USER_MATERIAL_IMPACT_CONTEXT_DYNAMIC_STIFFNESS_COVERAGE_REFRESH_PLAN_2026-06-12.md`;
-- next file: `packages/engine/src/post-v1-floor-user-material-impact-context-dynamic-stiffness-coverage-refresh-contract.test.ts`;
-- next candidate: `floor.user_material_impact_context_dynamic_stiffness_owner`;
-- next status: selected coverage refresh, not implemented;
-- constraint: freeze the bounded floor user-material impact owner so
-  custom visible heavy floating-floor stacks keep `Ln,w 50.3` and
-  `DeltaLw 24.3` on
-  `predictor_heavy_floating_floor_iso12354_annexc_estimate`; keep
-  missing dynamic stiffness/load basis at `needs_input`, keep
-  low-density custom concrete outside the heavy concrete route, and do
-  not import source rows, retune formulas, add material-editor UI, or
-  alias field/building/ASTM impact outputs.
+- latest floor coverage refresh status:
+  `post_v1_floor_user_material_impact_context_dynamic_stiffness_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`;
+- latest floor field-only rerank status:
+  `post_v1_next_numeric_coverage_gap_after_floor_user_material_impact_context_dynamic_stiffness_landed_no_runtime_selected_floor_user_material_impact_context_field_only_adapter_owner`;
+- latest floor field-only owner status:
+  `post_v1_floor_user_material_impact_context_field_only_adapter_owner_landed_runtime_selected_coverage_refresh`;
+- latest floor field-only coverage refresh status:
+  `post_v1_floor_user_material_impact_context_field_only_adapter_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`;
+- latest floor low-density rerank status:
+  `post_v1_next_numeric_coverage_gap_after_floor_user_material_impact_context_field_only_adapter_landed_no_runtime_selected_floor_user_material_low_density_floating_floor_family_owner`;
+- latest floor low-density owner status:
+  `post_v1_floor_user_material_low_density_floating_floor_family_owner_landed_runtime_selected_coverage_refresh`;
+- next action: `post_v1_floor_user_material_low_density_floating_floor_family_coverage_refresh_plan`;
+- next plan: `docs/calculator/POST_V1_FLOOR_USER_MATERIAL_LOW_DENSITY_FLOATING_FLOOR_FAMILY_COVERAGE_REFRESH_PLAN_2026-06-15.md`;
+- next file: `packages/engine/src/post-v1-floor-user-material-low-density-floating-floor-family-coverage-refresh-contract.test.ts`;
+- closed candidate: `floor.user_material_impact_context_dynamic_stiffness_owner`;
+- selected candidate: `floor.user_material_low_density_floating_floor_family_owner`;
+- next status: selected no-runtime coverage refresh, plan ready, not
+  implemented;
+- constraint: re-probe the newly opened custom low-density floor route
+  before choosing the next high-ROI calculator gap. Do not import broad
+  source rows, retune formulas without evidence, add material-editor UI,
+  borrow the heavy-concrete basis, or alias ASTM impact outputs.
 
 The post-flow rerank ran `roiAnalysisIterations: 3` with
 `candidateCount 11`, `estimatedNextRuntimeValuesMoved: 2`,
@@ -52,9 +97,76 @@ are `newCalculableLayerTemplates: 1`,
 `newCalculableRequestShapes: 1`, `newCalculableTargetOutputs: 2`,
 `runtimeBasisPromotions: 1`, `runtimeValuesMoved 2`,
 `runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. The floor coverage refresh
+counters are `coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl. Historical entries later in this
+brief keep older selected-next chains for traceability. Use the fast
+path above as the current handoff.
+
+The field-only rerank ran `roiAnalysisIterations: 4` with
+`candidateCount 12`, `estimatedNextRuntimeValuesMoved: 3`,
+`estimatedNextCalculableRequestShapes: 1`,
+`estimatedNextCalculableTargetOutputs: 3`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. Mixed custom floor requests
+already calculate `Ln,w 50.3`, `DeltaLw 24.3`, `L'n,w 52.3`,
+`L'nT,w 49.9`, and `L'nT,50 52.9`; direct field-only requests are the
+selected runtime gap. This is not a broad source crawl.
+
+The field-only owner moved `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 1`, `newCalculableTargetOutputs: 3`,
+`runtimeBasisPromotions: 1`, `runtimeValuesMoved 3`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. It landed direct field-only
+custom heavy floating-floor values at `L'n,w 52.3`, `L'nT,w 49.9`, and
+`L'nT,50 52.9` from the existing `Ln,w 50.3` / `DeltaLw 24.3` lab
+anchor. This is not a broad source crawl.
+
+The low-density rerank ran `roiAnalysisIterations: 4` with
+`candidateCount 9`, selected
+`floor.user_material_low_density_floating_floor_family_owner`, and
+rejected CI50 defaulting, generic `IIC`/`AIIC` aliasing, broad source
+crawl, and UI work. The owner moved
+`newCalculableLayerTemplates: 1`, `newCalculableRequestShapes: 2`,
+`newCalculableTargetOutputs: 6`, `runtimeBasisPromotions: 2`,
+`runtimeValuesMoved 6`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+It calculates `Rw 53`, `Ln,w 64.3`, `DeltaLw 24.3`, `L'n,w 66.3`,
+`L'nT,w 63.9`, and `L'nT,50 66.9` for a custom visible low-density
+concrete floating-floor stack through the lightweight-concrete family,
+DeltaLw, and field-adapter corridors.
+
+The field-only coverage refresh
+`post_v1_floor_user_material_impact_context_field_only_adapter_coverage_refresh_plan`
+landed in
+`packages/engine/src/post-v1-floor-user-material-impact-context-field-only-adapter-coverage-refresh-contract.test.ts`
+with status
+`post_v1_floor_user_material_impact_context_field_only_adapter_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`.
+It follows
+`post_v1_floor_user_material_impact_context_field_only_adapter_owner_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-impact-context-field-only-adapter-owner-contract.test.ts`
+/
+`post_v1_floor_user_material_impact_context_field_only_adapter_owner_landed_runtime_selected_coverage_refresh`
+and
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_impact_context_dynamic_stiffness_plan`
+/
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-impact-context-dynamic-stiffness-contract.test.ts`
+/
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_impact_context_dynamic_stiffness_landed_no_runtime_selected_floor_user_material_impact_context_field_only_adapter_owner`.
+It re-probes
+`floor.user_material_impact_context_field_only_adapter_owner` without
+moving runtime values. Counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
 `frontendImplementationFilesTouched: 0`. This is not a broad source
-crawl. Historical entries later in this brief keep older selected-next
-chains for traceability. Use the fast path above as the current handoff.
+crawl.
 
 ## Latest User-Material Porous Flow-Resistivity Input Coverage Refresh
 

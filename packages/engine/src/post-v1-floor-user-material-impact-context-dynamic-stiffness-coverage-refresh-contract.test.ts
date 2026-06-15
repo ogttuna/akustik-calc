@@ -6,6 +6,7 @@ import type { LayerInput, MaterialDefinition, RequestedOutputId } from "@dynecho
 import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
+import type { DynamicCalculatorFloorImpactContext } from "./dynamic-calculator-route-input-topology";
 import { HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS } from "./impact-estimate";
 import { LIGHTWEIGHT_CONCRETE_DELTA_LW_RUNTIME_BASIS } from "./lightweight-concrete-delta-lw-runtime-corridor";
 import { LIGHTWEIGHT_CONCRETE_FAMILY_ESTIMATE_BASIS } from "./lightweight-concrete-family-runtime-constants";
@@ -20,33 +21,44 @@ const PREVIOUS_RERANK_FILE =
 const PREVIOUS_RERANK_STATUS =
   "post_v1_next_numeric_coverage_gap_after_user_material_porous_flow_resistivity_input_landed_no_runtime_selected_floor_user_material_impact_context_dynamic_stiffness_owner";
 
-const OWNER_ACTION =
+const PREVIOUS_OWNER_ACTION =
   "post_v1_floor_user_material_impact_context_dynamic_stiffness_owner_plan";
-const OWNER_FILE =
+const PREVIOUS_OWNER_FILE =
   "packages/engine/src/post-v1-floor-user-material-impact-context-dynamic-stiffness-owner-contract.test.ts";
-const OWNER_PLAN_DOC =
-  "docs/calculator/POST_V1_FLOOR_USER_MATERIAL_IMPACT_CONTEXT_DYNAMIC_STIFFNESS_OWNER_PLAN_2026-06-12.md";
-const OWNER_STATUS =
+const PREVIOUS_OWNER_STATUS =
   "post_v1_floor_user_material_impact_context_dynamic_stiffness_owner_landed_runtime_selected_coverage_refresh";
-const SELECTED_NEXT_ACTION =
-  "post_v1_floor_user_material_impact_context_dynamic_stiffness_coverage_refresh_plan";
-const SELECTED_NEXT_FILE =
-  "packages/engine/src/post-v1-floor-user-material-impact-context-dynamic-stiffness-coverage-refresh-contract.test.ts";
-const SELECTED_NEXT_PLAN_DOC =
-  "docs/calculator/POST_V1_FLOOR_USER_MATERIAL_IMPACT_CONTEXT_DYNAMIC_STIFFNESS_COVERAGE_REFRESH_PLAN_2026-06-12.md";
-const SELECTED_NEXT_LABEL =
-  "post-V1 floor user-material impact context dynamic-stiffness coverage refresh";
-const SELECTED_CANDIDATE_ID =
+const PREVIOUS_OWNER_PLAN_DOC =
+  "docs/calculator/POST_V1_FLOOR_USER_MATERIAL_IMPACT_CONTEXT_DYNAMIC_STIFFNESS_OWNER_PLAN_2026-06-12.md";
+const PREVIOUS_OWNER_CANDIDATE_ID =
   "floor.user_material_impact_context_dynamic_stiffness_owner";
 
-const OWNER_COUNTERS = {
+const COVERAGE_REFRESH_ACTION =
+  "post_v1_floor_user_material_impact_context_dynamic_stiffness_coverage_refresh_plan";
+const COVERAGE_REFRESH_FILE =
+  "packages/engine/src/post-v1-floor-user-material-impact-context-dynamic-stiffness-coverage-refresh-contract.test.ts";
+const COVERAGE_REFRESH_STATUS =
+  "post_v1_floor_user_material_impact_context_dynamic_stiffness_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap";
+const COVERAGE_REFRESH_PLAN_DOC =
+  "docs/calculator/POST_V1_FLOOR_USER_MATERIAL_IMPACT_CONTEXT_DYNAMIC_STIFFNESS_COVERAGE_REFRESH_PLAN_2026-06-12.md";
+
+const SELECTED_NEXT_ACTION =
+  "post_v1_next_numeric_coverage_gap_after_floor_user_material_impact_context_dynamic_stiffness_plan";
+const SELECTED_NEXT_FILE =
+  "packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-impact-context-dynamic-stiffness-contract.test.ts";
+const SELECTED_NEXT_LABEL =
+  "post-V1 next numeric coverage gap after floor user-material impact context dynamic stiffness";
+const SELECTED_NEXT_PLAN_DOC =
+  "docs/calculator/POST_V1_NEXT_NUMERIC_COVERAGE_GAP_AFTER_FLOOR_USER_MATERIAL_IMPACT_CONTEXT_DYNAMIC_STIFFNESS_PLAN_2026-06-15.md";
+
+const COVERAGE_REFRESH_COUNTERS = {
+  coverageRefreshContractFilesTouched: 1,
   frontendImplementationFilesTouched: 0,
-  newCalculableLayerTemplates: 1,
-  newCalculableRequestShapes: 1,
-  newCalculableTargetOutputs: 2,
-  runtimeBasisPromotions: 1,
+  newCalculableLayerTemplates: 0,
+  newCalculableRequestShapes: 0,
+  newCalculableTargetOutputs: 0,
+  runtimeBasisPromotions: 0,
   runtimeFormulaRetunes: 0,
-  runtimeValuesMoved: 2,
+  runtimeValuesMoved: 0,
   sourceRowsImported: 0
 } as const;
 
@@ -57,6 +69,13 @@ const CUSTOM_SCREED_ID = "custom_floor_screed";
 const CUSTOM_TILE_ID = "custom_floor_tile";
 
 const IMPACT_LAB_OUTPUTS = ["Ln,w", "DeltaLw"] as const satisfies readonly RequestedOutputId[];
+const ASTM_IMPACT_OUTPUTS = ["IIC", "AIIC"] as const satisfies readonly RequestedOutputId[];
+const FIELD_BUILDING_IMPACT_OUTPUTS = ["L'n,w", "L'nT,w"] as const satisfies readonly RequestedOutputId[];
+
+const FULL_IMPACT_CONTEXT = {
+  loadBasisKgM2: 76,
+  resilientLayerDynamicStiffnessMNm3: 30
+} as const satisfies DynamicCalculatorFloorImpactContext;
 
 const CUSTOM_HEAVY_FLOATING_FLOOR_STACK = [
   { floorRole: "floor_covering", materialId: CUSTOM_TILE_ID, thicknessMm: 8 },
@@ -71,6 +90,21 @@ const CUSTOM_LOW_DENSITY_FLOOR_STACK = CUSTOM_HEAVY_FLOATING_FLOOR_STACK.map((la
     : layer
 ) as readonly LayerInput[];
 
+const REQUIRED_DOCS = [
+  "AGENTS.md",
+  "README.md",
+  "docs/calculator/CALCULATOR_SOURCE_OF_TRUTH.md",
+  "docs/calculator/CURRENT_STATE.md",
+  "docs/calculator/DOCUMENTATION_MAP.md",
+  "docs/calculator/NEXT_AGENT_BRIEF.md",
+  "docs/calculator/NEXT_IMPLEMENTATION_PLAN.md",
+  "docs/calculator/README.md",
+  "docs/calculator/SYSTEM_MAP.md",
+  PREVIOUS_OWNER_PLAN_DOC,
+  COVERAGE_REFRESH_PLAN_DOC,
+  SELECTED_NEXT_PLAN_DOC
+] as const;
+
 function readRepoFile(path: string): string {
   return readFileSync(join(REPO_ROOT, path), "utf8");
 }
@@ -81,7 +115,6 @@ function customMaterial(input: {
   id: string;
   name: string;
   tags: readonly string[];
-  impact?: MaterialDefinition["impact"];
 }): MaterialDefinition {
   return {
     acoustic: {
@@ -92,7 +125,6 @@ function customMaterial(input: {
     category: input.category,
     densityKgM3: input.densityKgM3,
     id: input.id,
-    impact: input.impact,
     name: input.name,
     tags: [...input.tags]
   };
@@ -140,79 +172,82 @@ function buildCustomFloorCatalog(): readonly MaterialDefinition[] {
 }
 
 function calculateCustomFloor(input: {
-  floorImpactContext?: {
-    loadBasisKgM2: number;
-    resilientLayerDynamicStiffnessMNm3: number;
-  };
+  floorImpactContext?: DynamicCalculatorFloorImpactContext | null;
   layers?: readonly LayerInput[];
+  targetOutputs?: readonly RequestedOutputId[];
 }) {
   return calculateAssembly(input.layers ?? CUSTOM_HEAVY_FLOATING_FLOOR_STACK, {
     calculator: "dynamic",
     catalog: buildCustomFloorCatalog(),
     floorImpactContext: input.floorImpactContext,
-    targetOutputs: IMPACT_LAB_OUTPUTS
+    targetOutputs: input.targetOutputs ?? IMPACT_LAB_OUTPUTS
   });
 }
 
-function summarizeOwnerCloseout() {
+function summarizeCoverageRefresh() {
   return {
-    counters: OWNER_COUNTERS,
-    landedGate: OWNER_ACTION,
-    previousRerank: {
-      selectedNextAction: OWNER_ACTION,
-      selectedNextFile: OWNER_FILE,
-      selectionStatus: PREVIOUS_RERANK_STATUS
+    counters: COVERAGE_REFRESH_COUNTERS,
+    landedGate: COVERAGE_REFRESH_ACTION,
+    noFormulaRetune: true,
+    noRuntimeValueMovement: true,
+    previousOwner: {
+      selectedNextAction: COVERAGE_REFRESH_ACTION,
+      selectedNextFile: COVERAGE_REFRESH_FILE,
+      selectionStatus: PREVIOUS_OWNER_STATUS
     },
-    runtimeValueMovement: true,
-    selectedCandidateId: SELECTED_CANDIDATE_ID,
     selectedNextAction: SELECTED_NEXT_ACTION,
     selectedNextFile: SELECTED_NEXT_FILE,
     selectedNextLabel: SELECTED_NEXT_LABEL,
     selectedNextPlanDoc: SELECTED_NEXT_PLAN_DOC,
-    selectionStatus: OWNER_STATUS
+    selectionStatus: COVERAGE_REFRESH_STATUS
   };
 }
 
-const REQUIRED_DOCS = [
-  "AGENTS.md",
-  "README.md",
-  "docs/calculator/CALCULATOR_SOURCE_OF_TRUTH.md",
-  "docs/calculator/CURRENT_STATE.md",
-  "docs/calculator/DOCUMENTATION_MAP.md",
-  "docs/calculator/NEXT_AGENT_BRIEF.md",
-  "docs/calculator/NEXT_IMPLEMENTATION_PLAN.md",
-  "docs/calculator/README.md",
-  "docs/calculator/SYSTEM_MAP.md",
-  OWNER_PLAN_DOC,
-  SELECTED_NEXT_PLAN_DOC
-] as const;
+function expectNeedsInputBoundary(
+  result: ReturnType<typeof calculateCustomFloor>,
+  missingPhysicalInputs: readonly string[]
+) {
+  expect(result.impact).toBeNull();
+  expect(result.supportedTargetOutputs).toEqual([]);
+  expect(result.unsupportedTargetOutputs).toEqual([...IMPACT_LAB_OUTPUTS]);
+  expect(result.acousticAnswerBoundary).toMatchObject({
+    missingPhysicalInputs: [...missingPhysicalInputs],
+    origin: "needs_input",
+    unsupportedOutputs: [...IMPACT_LAB_OUTPUTS]
+  });
+  expect(result.impactPredictorStatus).toMatchObject({
+    active: false,
+    implementedFormulaEstimate: false,
+    readyForPlannedSolver: false
+  });
+}
 
-describe("post-V1 floor user-material impact context dynamic-stiffness owner", () => {
-  it("lands the runtime owner and selects coverage refresh next", () => {
-    expect(summarizeOwnerCloseout()).toMatchObject({
-      counters: OWNER_COUNTERS,
-      landedGate: OWNER_ACTION,
-      runtimeValueMovement: true,
-      selectedCandidateId: SELECTED_CANDIDATE_ID,
+describe("post-V1 floor user-material impact context dynamic-stiffness coverage refresh", () => {
+  it("lands the no-runtime refresh and selects the next numeric coverage gap", () => {
+    expect(summarizeCoverageRefresh()).toMatchObject({
+      counters: COVERAGE_REFRESH_COUNTERS,
+      landedGate: COVERAGE_REFRESH_ACTION,
+      noFormulaRetune: true,
+      noRuntimeValueMovement: true,
       selectedNextAction: SELECTED_NEXT_ACTION,
       selectedNextFile: SELECTED_NEXT_FILE,
       selectedNextLabel: SELECTED_NEXT_LABEL,
       selectedNextPlanDoc: SELECTED_NEXT_PLAN_DOC,
-      selectionStatus: OWNER_STATUS
+      selectionStatus: COVERAGE_REFRESH_STATUS
     });
 
     expect(existsSync(join(REPO_ROOT, PREVIOUS_RERANK_FILE))).toBe(true);
-    expect(existsSync(join(REPO_ROOT, OWNER_FILE))).toBe(true);
-    expect(existsSync(join(REPO_ROOT, OWNER_PLAN_DOC))).toBe(true);
+    expect(existsSync(join(REPO_ROOT, PREVIOUS_OWNER_FILE))).toBe(true);
+    expect(existsSync(join(REPO_ROOT, PREVIOUS_OWNER_PLAN_DOC))).toBe(true);
+    expect(existsSync(join(REPO_ROOT, COVERAGE_REFRESH_FILE))).toBe(true);
+    expect(existsSync(join(REPO_ROOT, COVERAGE_REFRESH_PLAN_DOC))).toBe(true);
     expect(existsSync(join(REPO_ROOT, SELECTED_NEXT_PLAN_DOC))).toBe(true);
+    expect(existsSync(join(REPO_ROOT, SELECTED_NEXT_FILE))).toBe(true);
   });
 
-  it("uses context dynamic stiffness for a custom visible heavy floating-floor stack", () => {
+  it("re-probes the context-owned custom heavy floating-floor stack without moving values", () => {
     const result = calculateCustomFloor({
-      floorImpactContext: {
-        loadBasisKgM2: 76,
-        resilientLayerDynamicStiffnessMNm3: 30
-      }
+      floorImpactContext: FULL_IMPACT_CONTEXT
     });
 
     expect(result.impact).toMatchObject({
@@ -232,34 +267,39 @@ describe("post-V1 floor user-material impact context dynamic-stiffness owner", (
       inputMode: "derived_from_visible_layers",
       readyForPlannedSolver: true
     });
-    expect(result.supportedTargetOutputs).toEqual(["Ln,w", "DeltaLw"]);
+    expect(result.supportedTargetOutputs).toEqual([...IMPACT_LAB_OUTPUTS]);
     expect(result.unsupportedTargetOutputs).toEqual([]);
+  });
+
+  it("keeps missing dynamic stiffness at needs_input without using a substitute estimate", () => {
+    const result = calculateCustomFloor({
+      floorImpactContext: {
+        loadBasisKgM2: 76
+      }
+    });
+
+    expectNeedsInputBoundary(result, ["resilientLayerDynamicStiffnessMNm3"]);
+  });
+
+  it("keeps missing load basis at needs_input without using a substitute estimate", () => {
+    const result = calculateCustomFloor({
+      floorImpactContext: {
+        resilientLayerDynamicStiffnessMNm3: 30
+      }
+    });
+
+    expectNeedsInputBoundary(result, ["loadBasisKgM2"]);
   });
 
   it("keeps missing dynamic stiffness and load basis at needs_input", () => {
     const result = calculateCustomFloor({});
 
-    expect(result.impact).toBeNull();
-    expect(result.supportedTargetOutputs).toEqual([]);
-    expect(result.unsupportedTargetOutputs).toEqual(["Ln,w", "DeltaLw"]);
-    expect(result.acousticAnswerBoundary).toMatchObject({
-      missingPhysicalInputs: ["resilientLayerDynamicStiffnessMNm3", "loadBasisKgM2"],
-      origin: "needs_input",
-      unsupportedOutputs: ["Ln,w", "DeltaLw"]
-    });
-    expect(result.impactPredictorStatus).toMatchObject({
-      active: false,
-      implementedFormulaEstimate: false,
-      readyForPlannedSolver: false
-    });
+    expectNeedsInputBoundary(result, ["resilientLayerDynamicStiffnessMNm3", "loadBasisKgM2"]);
   });
 
   it("routes low-density custom concrete through the lightweight family instead of the heavy concrete carrier", () => {
     const result = calculateCustomFloor({
-      floorImpactContext: {
-        loadBasisKgM2: 76,
-        resilientLayerDynamicStiffnessMNm3: 30
-      },
+      floorImpactContext: FULL_IMPACT_CONTEXT,
       layers: CUSTOM_LOW_DENSITY_FLOOR_STACK
     });
 
@@ -272,11 +312,30 @@ describe("post-V1 floor user-material impact context dynamic-stiffness owner", (
       }
     });
     expect(result.impact?.basis).not.toBe(HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS);
-    expect(result.supportedTargetOutputs).toEqual(["Ln,w", "DeltaLw"]);
+    expect(result.supportedTargetOutputs).toEqual([...IMPACT_LAB_OUTPUTS]);
     expect(result.unsupportedTargetOutputs).toEqual([]);
   });
 
-  it("keeps docs and the current gate runner aligned with the landed owner", () => {
+  it("keeps ASTM and field/building impact outputs outside this owner", () => {
+    const astm = calculateCustomFloor({
+      floorImpactContext: FULL_IMPACT_CONTEXT,
+      targetOutputs: ASTM_IMPACT_OUTPUTS
+    });
+    const fieldBuilding = calculateCustomFloor({
+      floorImpactContext: FULL_IMPACT_CONTEXT,
+      targetOutputs: FIELD_BUILDING_IMPACT_OUTPUTS
+    });
+
+    expect(astm.supportedTargetOutputs).toEqual([]);
+    expect(astm.unsupportedTargetOutputs).toEqual([...ASTM_IMPACT_OUTPUTS]);
+    expect(astm.impact).toBeNull();
+
+    expect(fieldBuilding.supportedTargetOutputs).toEqual([]);
+    expect(fieldBuilding.unsupportedTargetOutputs).toEqual([...FIELD_BUILDING_IMPACT_OUTPUTS]);
+    expect(fieldBuilding.impact).toBeNull();
+  });
+
+  it("keeps docs and current-gate runner aligned with the refresh closeout and next rerank", () => {
     for (const path of REQUIRED_DOCS) {
       expect(existsSync(join(REPO_ROOT, path)), path).toBe(true);
       const content = readRepoFile(path);
@@ -285,17 +344,18 @@ describe("post-V1 floor user-material impact context dynamic-stiffness owner", (
       expect(content, path).toContain(PREVIOUS_RERANK_ACTION);
       expect(content, path).toContain(PREVIOUS_RERANK_FILE);
       expect(content, path).toContain(PREVIOUS_RERANK_STATUS);
-      expect(content, path).toContain(OWNER_ACTION);
-      expect(content, path).toContain(OWNER_FILE);
-      expect(content, path).toContain(OWNER_STATUS);
-      expect(content, path).toContain(SELECTED_CANDIDATE_ID);
+      expect(content, path).toContain(PREVIOUS_OWNER_ACTION);
+      expect(content, path).toContain(PREVIOUS_OWNER_FILE);
+      expect(content, path).toContain(PREVIOUS_OWNER_STATUS);
+      expect(content, path).toContain(PREVIOUS_OWNER_CANDIDATE_ID);
+      expect(content, path).toContain(COVERAGE_REFRESH_ACTION);
+      expect(content, path).toContain(COVERAGE_REFRESH_FILE);
+      expect(content, path).toContain(COVERAGE_REFRESH_STATUS);
       expect(content, path).toContain(SELECTED_NEXT_ACTION);
       expect(content, path).toContain(SELECTED_NEXT_FILE);
-      expect(content, path).toContain("newCalculableLayerTemplates: 1");
-      expect(content, path).toContain("newCalculableRequestShapes: 1");
-      expect(content, path).toContain("newCalculableTargetOutputs: 2");
-      expect(content, path).toContain("runtimeBasisPromotions: 1");
-      expect(content, path).toContain("runtimeValuesMoved 2");
+      expect(content, path).toContain(SELECTED_NEXT_PLAN_DOC);
+      expect(content, path).toContain("coverageRefreshContractFilesTouched: 1");
+      expect(content, path).toContain("runtimeValuesMoved 0");
       expect(content, path).toContain("runtimeFormulaRetunes: 0");
       expect(content, path).toContain("sourceRowsImported: 0");
       expect(content, path).toContain("frontendImplementationFilesTouched: 0");
@@ -303,6 +363,11 @@ describe("post-V1 floor user-material impact context dynamic-stiffness owner", (
     }
 
     const currentGateRunner = readRepoFile("tools/dev/run-calculator-current-gate.ts");
-    expect(currentGateRunner).toContain(OWNER_FILE.replace("packages/engine/", ""));
+    expect(currentGateRunner).toContain(
+      "src/post-v1-floor-user-material-impact-context-dynamic-stiffness-owner-contract.test.ts"
+    );
+    expect(currentGateRunner).toContain(
+      "src/post-v1-floor-user-material-impact-context-dynamic-stiffness-coverage-refresh-contract.test.ts"
+    );
   });
 });

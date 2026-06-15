@@ -26,7 +26,10 @@ import { getImpactConfidenceForBasis } from "./impact-confidence";
 import { buildImpactPredictorInputFromLayerStack } from "./impact-predictor-input";
 import { buildUniformImpactMetricBasis } from "./impact-metric-basis";
 import { hasBoundOnlyUbiqOpenWebCarpetCombinedProfile } from "./bound-only-floor-near-miss";
-import { isResolvedHeavyConcreteCarrierEligible } from "./heavy-concrete-carrier-eligibility";
+import {
+  isLightweightConcreteCarrierMaterial,
+  isResolvedHeavyConcreteCarrierEligible
+} from "./heavy-concrete-carrier-eligibility";
 import { deriveLightweightSteelFl28Estimate } from "./lightweight-steel-fl28-estimate";
 import { LIGHTWEIGHT_CONCRETE_FAMILY_ESTIMATE_BASIS } from "./lightweight-concrete-family-runtime-constants";
 import { round1 } from "./math";
@@ -99,7 +102,7 @@ function getLayerStructuralFamily(layers: readonly ResolvedLayer[]): StructuralF
       continue;
     }
 
-    if (layer.material.id === "lightweight_concrete") {
+    if (isLightweightConcreteCarrierMaterial(layer.material)) {
       return "lightweight_concrete";
     }
 

@@ -4,6 +4,8 @@ import type {
   MaterialDefinition
 } from "@dynecho/shared";
 
+import { isLightweightConcreteCarrierMaterial } from "./heavy-concrete-carrier-eligibility";
+
 function buildSearchText(material: Pick<MaterialDefinition, "id" | "name" | "tags">): string {
   return [material.id, material.name, ...(material.tags ?? [])]
     .filter((value) => value && value.trim().length > 0)
@@ -83,10 +85,14 @@ export function inferStructuralSupportTypeFromMaterial(
 }
 
 export function inferBaseSlabMaterialClassFromMaterial(
-  material: Pick<MaterialDefinition, "id" | "name" | "tags">
+  material: Pick<MaterialDefinition, "densityKgM3" | "id" | "name" | "tags">
 ): NonNullable<ImpactPredictorInput["baseSlab"]>["materialClass"] | undefined {
   const supportType = inferStructuralSupportTypeFromMaterial(material);
   const searchText = buildSearchText(material);
+
+  if (isLightweightConcreteCarrierMaterial(material)) {
+    return "lightweight_concrete";
+  }
 
   switch (supportType) {
     case "reinforced_concrete":

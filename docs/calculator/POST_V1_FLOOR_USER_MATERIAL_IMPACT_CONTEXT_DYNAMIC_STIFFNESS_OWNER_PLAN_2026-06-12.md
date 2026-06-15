@@ -105,6 +105,50 @@ Landed counters: `newCalculableLayerTemplates: 1`,
 `frontendImplementationFilesTouched: 0`. This is not a broad source
 crawl.
 
+## Follow-Up Coverage Refresh Closeout - 2026-06-15
+
+Coverage refresh action:
+
+`post_v1_floor_user_material_impact_context_dynamic_stiffness_coverage_refresh_plan`
+
+Coverage refresh file:
+
+`packages/engine/src/post-v1-floor-user-material-impact-context-dynamic-stiffness-coverage-refresh-contract.test.ts`
+
+Coverage refresh status:
+
+`post_v1_floor_user_material_impact_context_dynamic_stiffness_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`
+
+The refresh re-probes the custom heavy floating-floor stack at
+`Ln,w 50.3` and `DeltaLw 24.3`, preserves
+`predictor_heavy_floating_floor_iso12354_annexc_estimate`, keeps missing
+`resilientLayerDynamicStiffnessMNm3` or `loadBasisKgM2` at
+`needs_input`, keeps low-density custom concrete outside the heavy
+concrete route, and keeps ASTM/IIC/AIIC plus field/building impact
+outputs outside this owner. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Selected next action:
+
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_impact_context_dynamic_stiffness_plan`
+
+Selected next file:
+
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-impact-context-dynamic-stiffness-contract.test.ts`
+
+Selected next plan doc:
+
+`docs/calculator/POST_V1_NEXT_NUMERIC_COVERAGE_GAP_AFTER_FLOOR_USER_MATERIAL_IMPACT_CONTEXT_DYNAMIC_STIFFNESS_PLAN_2026-06-15.md`
+
+Selected next label:
+
+`post-V1 next numeric coverage gap after floor user-material impact context dynamic stiffness`
+
 ## Runtime Rule
 
 The owner should promote only this bounded shape:

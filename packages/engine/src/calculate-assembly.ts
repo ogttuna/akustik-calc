@@ -167,6 +167,7 @@ import {
 } from "./impact-supporting-element-family";
 import { computeLayerSurfaceMassKgM2 } from "./layer-surface-mass";
 import { getDefaultMaterialCatalog, resolveMaterial } from "./material-catalog";
+import { isLightweightConcreteCarrierMaterial } from "./heavy-concrete-carrier-eligibility";
 import {
   buildHeavyConcreteCombinedImpactFormulaFallbackBlockerWarning,
   collectHeavyConcreteCombinedImpactFormulaMissingPhysicalInputs
@@ -2837,7 +2838,7 @@ function hasVisibleLightweightConcreteUpperPackageDeltaLwCandidate(input: {
   }
 
   const baseMaterial = resolveMaterial(baseStructureLayer.materialId, input.catalog);
-  if (baseMaterial.id !== "lightweight_concrete") {
+  if (!isLightweightConcreteCarrierMaterial(baseMaterial)) {
     return false;
   }
 
@@ -3769,7 +3770,7 @@ export function calculateAssembly(
     visibleLayerDeltaLwPredictorSeed
   );
   const layerDerivedImpactPredictorMeta = {
-    allowContextOwnedHeavyConcreteBase: gateWLabRuntimeReady
+    allowContextOwnedHeavyConcreteBase: gateWLabRuntimeReady || gateZFieldImpactRuntimeReady
   };
   const resolvedLayers = resolveLayers(layers, catalog);
   const hasFullyTaggedFloorStack = layers.length > 0 && layers.every((layer) => Boolean(layer.floorRole));

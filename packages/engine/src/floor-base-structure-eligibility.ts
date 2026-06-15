@@ -1,6 +1,9 @@
 import type { MaterialDefinition, ResolvedLayer } from "@dynecho/shared";
 
-import { isHeavyConcreteCarrierDensityEligible } from "./heavy-concrete-carrier-eligibility";
+import {
+  isHeavyConcreteCarrierDensityEligible,
+  isLightweightConcreteCarrierMaterial
+} from "./heavy-concrete-carrier-eligibility";
 import { inferStructuralSupportTypeFromMaterial } from "./structural-material-classification";
 
 const STRUCTURAL_FLOOR_BASE_MATERIAL_IDS = new Set([
@@ -41,6 +44,13 @@ export function isMaterialEligibleFloorBaseStructure(
   }
 
   if (STRUCTURAL_FLOOR_BASE_MATERIAL_IDS.has(material.id) || material.tags.includes("structural")) {
+    return true;
+  }
+
+  if (
+    structuralSupportType === "reinforced_concrete" &&
+    isLightweightConcreteCarrierMaterial(material)
+  ) {
     return true;
   }
 
