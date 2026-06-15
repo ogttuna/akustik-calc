@@ -26,9 +26,9 @@ import {
   GripVertical,
   Palette,
   Plus,
-  RotateCcw,
   Search,
-  Trash2
+  Trash2,
+  Undo2
 } from "lucide-react";
 import { type FocusEvent, type KeyboardEvent, type MouseEvent, type PointerEvent, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -2838,10 +2838,6 @@ export function CalculatorWorkbench() {
     clearLayerInteractionState();
   }
 
-  function updateLayer(layerId: string, patch: Partial<DraftLayer>) {
-    setLayers((current) => current.map((layer) => (layer.id === layerId ? { ...layer, ...patch } : layer)));
-  }
-
   function updateLayerWithUndo(actionLabel: string, layerId: string, patch: Partial<DraftLayer>, nextSelectedLayerId?: string | null): boolean {
     return commitLayerStackChange(actionLabel, (currentLayers, currentSelectedLayerId) => ({
       layers: currentLayers.map((layer) => (layer.id === layerId ? { ...layer, ...patch } : layer)),
@@ -3674,14 +3670,13 @@ export function CalculatorWorkbench() {
                 <div className="calc-section-actions">
                   <button
                     aria-label={undoLayerStackActionLabel}
-                    className="focus-ring ui-button ui-button-ghost"
+                    className="focus-ring ui-icon-button"
                     disabled={!canUndoLayerStack}
                     onClick={undoLayerStackChange}
                     title={undoLayerStackTitle}
                     type="button"
                   >
-                    <RotateCcw className="h-4 w-4" />
-                    Undo layer change
+                    <Undo2 className="h-4 w-4" />
                   </button>
                   <button className="focus-ring ui-button ui-button-ghost" onClick={() => openMaterialEditor()} type="button">
                     <Palette className="h-4 w-4" />
@@ -3811,7 +3806,7 @@ export function CalculatorWorkbench() {
                         <NumberField
                           id={getLayerThicknessInputId(layer.id)}
                           label="Thickness"
-                          onChange={(value) => updateLayer(layer.id, { thicknessMm: value })}
+                          onChange={(value) => updateLayerWithUndo("changing a layer thickness", layer.id, { thicknessMm: value })}
                           suffix="mm"
                           value={layer.thicknessMm}
                         />
