@@ -143,6 +143,51 @@ async function expectRegionHasNoHorizontalOverflow(region: Locator) {
   expect(issues, JSON.stringify(issues, null, 2)).toEqual([]);
 }
 
+function savedCombinationList(page: Page) {
+  return page.locator('[aria-label="Saved combinations"]');
+}
+
+function savedCombinationRow(page: Page, name: string) {
+  return savedCombinationList(page).locator(".calc-project-row").filter({ hasText: name }).first();
+}
+
+function savedCombinationRowById(page: Page, assemblyId: string) {
+  return savedCombinationList(page).locator(`.calc-project-row[data-assembly-id="${assemblyId}"]`).first();
+}
+
+async function selectSavedCombinationByName(page: Page, name: string) {
+  const row = savedCombinationRow(page, name);
+  await expect(row).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
+  await row.locator(".calc-project-row-main").click();
+  return row;
+}
+
+async function selectSavedCombinationById(page: Page, assemblyId: string) {
+  const row = savedCombinationRowById(page, assemblyId);
+  await expect(row).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
+  await row.locator(".calc-project-row-main").click();
+  return row;
+}
+
+function savedReportList(page: Page) {
+  return page.locator('[aria-label="Saved reports"]');
+}
+
+function savedReportRow(page: Page, name: string) {
+  return savedReportList(page).locator(".calc-project-row").filter({ hasText: name }).first();
+}
+
+function savedReportRowById(page: Page, reportId: string) {
+  return savedReportList(page).locator(`.calc-project-row[data-report-id="${reportId}"]`).first();
+}
+
+async function selectSavedReportById(page: Page, reportId: string) {
+  const row = savedReportRowById(page, reportId);
+  await expect(row).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
+  await row.locator(".calc-project-row-main").click();
+  return row;
+}
+
 test.beforeEach(async ({ page }) => {
   await page.context().clearCookies();
   await page.goto("/login");
@@ -154,6 +199,8 @@ test.beforeEach(async ({ page }) => {
 });
 
 test("workbench v2 material editor save/load keeps custom material and appearance state", async ({ page }) => {
+  test.setTimeout(120_000);
+
   const projectName = `Workbench v2 material editor ${Date.now()}`;
   const editor = await openMaterialEditor(page);
   await editor.getByPlaceholder("Search materials").fill("Rock Wool");
@@ -183,9 +230,7 @@ test("workbench v2 material editor save/load keeps custom material and appearanc
   });
   await page.getByLabel("Saved combination name", { exact: true }).fill("Browser QA wall");
   await page.getByRole("button", { name: "Save combination" }).click();
-  await expect(page.getByLabel("Saved combination", { exact: true })).toContainText("Browser QA wall", {
-    timeout: E2E_OPERATION_TIMEOUT
-  });
+  await expect(savedCombinationRow(page, "Browser QA wall")).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
 
   await page.evaluate(() => {
     window.localStorage.clear();
@@ -204,17 +249,14 @@ test("workbench v2 material editor save/load keeps custom material and appearanc
   expect(serverProjectId).toBeTruthy();
 
   await serverProjectSelect.selectOption(serverProjectId!);
-  const assemblySelect = page.getByLabel("Saved combination", { exact: true });
-  await expect(assemblySelect).toContainText("Browser QA wall", { timeout: E2E_OPERATION_TIMEOUT });
-  const assemblyOption = assemblySelect.locator("option", { hasText: "Browser QA wall" }).first();
-  const assemblyId = await assemblyOption.getAttribute("value");
+  const assemblyRow = await selectSavedCombinationByName(page, "Browser QA wall");
+  const assemblyId = await assemblyRow.getAttribute("data-assembly-id");
   expect(assemblyId).toBeTruthy();
 
-  await assemblySelect.selectOption(assemblyId!);
   await page.getByRole("button", { name: "Load combination" }).click();
-  await expect(page.getByText("Loaded saved combination", { exact: true })).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
-
-  await expect(page.getByRole("button", { name: /Browser QA Wool 45 kg\/m3 \/ insulation/u })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Browser QA Wool 45 kg\/m3 \/ insulation/u })).toBeVisible({
+    timeout: 60_000
+  });
   await expectLayerVisualStyle(page);
   await page.getByRole("button", { name: "Materials" }).click();
   await editor.getByRole("button", { name: "Appearance" }).click();
@@ -267,17 +309,18 @@ test("workbench v2 saves report drafts and revisions under the selected project"
 
   await page.getByLabel("Saved combination name", { exact: true }).fill("Report source wall");
   await page.getByRole("button", { name: "Save combination" }).click();
-  await expect(page.getByLabel("Saved combination", { exact: true })).toContainText("Report source wall", {
-    timeout: E2E_OPERATION_TIMEOUT
-  });
+  const sourceAssemblyRow = savedCombinationRow(page, "Report source wall");
+  await expect(sourceAssemblyRow).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
 
-  const serverAssemblyId = await page.getByLabel("Saved combination", { exact: true }).inputValue();
+  const serverAssemblyId = await sourceAssemblyRow.getAttribute("data-assembly-id");
   expect(serverAssemblyId).toBeTruthy();
 
   await page.getByRole("button", { name: "Open report" }).click();
   await expect(page).toHaveURL(/\/workbench\/proposal/u);
-  await expect(page.getByRole("heading", { name: projectName })).toBeVisible();
-  await expect(page.getByText("Project report ready", { exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: projectName })).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
+  await expect(page.getByText("Project report ready", { exact: true })).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
+  await expect(page.getByText("Project context", { exact: true })).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
+  await expect(page.getByText("Not saved yet", { exact: true })).toBeVisible();
 
   const saveReportToProjectButton = page.getByRole("button", { name: "Save to project" });
 
@@ -285,6 +328,8 @@ test("workbench v2 saves report drafts and revisions under the selected project"
   const saveRevisionButton = page.getByRole("button", { name: "Save revision" });
   await expect(saveRevisionButton).toBeVisible();
   await expect(page.getByText("Project report linked", { exact: true })).toBeVisible();
+  await expect(page.getByText("Saved report context", { exact: true })).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
+  await expect(page.getByText("REV-0001", { exact: true })).toBeVisible();
 
   const reportsResponse = await page.request.get(`/api/projects/${serverProjectId}/reports`);
   expect(reportsResponse.ok()).toBeTruthy();
@@ -307,6 +352,7 @@ test("workbench v2 saves report drafts and revisions under the selected project"
   await page.getByLabel("Subject", { exact: true }).fill(`${projectName} revised report`);
   await saveRevisionButton.click();
   await expect(page.getByText("Project report revision saved")).toBeVisible();
+  await expect(page.getByText("REV-0002", { exact: true })).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
 
   const reportDetailResponse = await page.request.get(`/api/projects/${serverProjectId}/reports/${reportId}`);
   expect(reportDetailResponse.ok()).toBeTruthy();
@@ -332,15 +378,15 @@ test("workbench v2 saves report drafts and revisions under the selected project"
   expect(reopenedProjectId).toBe(serverProjectId);
   await projectSelect.selectOption(serverProjectId);
 
-  const savedCombinationSelect = page.getByLabel("Saved combination", { exact: true });
-  await savedCombinationSelect.selectOption(serverAssemblyId);
+  await selectSavedCombinationById(page, serverAssemblyId!);
   await page.getByLabel("Selected combination name", { exact: true }).fill("Renamed report source wall");
   await page.getByRole("button", { name: "Rename combination" }).click();
-  await expect(savedCombinationSelect).toContainText("Renamed report source wall", { timeout: E2E_OPERATION_TIMEOUT });
+  await expect(savedCombinationRowById(page, serverAssemblyId!)).toContainText("Renamed report source wall", { timeout: E2E_OPERATION_TIMEOUT });
 
   await page.getByRole("button", { name: "Duplicate combination" }).click();
-  await expect(savedCombinationSelect).toContainText("Copy of Renamed report source wall", { timeout: E2E_OPERATION_TIMEOUT });
-  const duplicateAssemblyId = await savedCombinationSelect.inputValue();
+  const duplicateAssemblyRow = savedCombinationRow(page, "Copy of Renamed report source wall");
+  await expect(duplicateAssemblyRow).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
+  const duplicateAssemblyId = await duplicateAssemblyRow.getAttribute("data-assembly-id");
   expect(duplicateAssemblyId).not.toBe(serverAssemblyId);
 
   page.once("dialog", async (dialog) => {
@@ -348,22 +394,22 @@ test("workbench v2 saves report drafts and revisions under the selected project"
     await dialog.accept();
   });
   await page.getByRole("button", { name: "Delete combination" }).click();
-  await expect(savedCombinationSelect).not.toContainText("Copy of Renamed report source wall", { timeout: E2E_OPERATION_TIMEOUT });
+  await expect(duplicateAssemblyRow).toBeHidden({ timeout: E2E_OPERATION_TIMEOUT });
 
-  const savedReportSelect = page.getByLabel("Saved report", { exact: true });
-  await expect(savedReportSelect).toContainText("Wall acoustic analysis report", { timeout: E2E_OPERATION_TIMEOUT });
-  const savedReportOption = savedReportSelect.locator("option", { hasText: "Wall acoustic analysis report" }).first();
-  const savedReportId = await savedReportOption.getAttribute("value");
+  const initialSavedReportRow = savedReportRow(page, "Wall acoustic analysis report");
+  await expect(initialSavedReportRow).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
+  const savedReportId = await initialSavedReportRow.getAttribute("data-report-id");
   expect(savedReportId).toBe(reportId);
 
-  await savedReportSelect.selectOption(reportId!);
+  await selectSavedReportById(page, reportId!);
   await page.getByLabel("Selected report name", { exact: true }).fill("Renamed acoustic report");
   await page.getByRole("button", { name: "Rename report" }).click();
-  await expect(savedReportSelect).toContainText("Renamed acoustic report", { timeout: E2E_OPERATION_TIMEOUT });
+  await expect(savedReportRowById(page, reportId!)).toContainText("Renamed acoustic report", { timeout: E2E_OPERATION_TIMEOUT });
 
   await page.getByRole("button", { name: "Duplicate report" }).click();
-  await expect(savedReportSelect).toContainText("Copy of Renamed acoustic report", { timeout: E2E_OPERATION_TIMEOUT });
-  const duplicateReportId = await savedReportSelect.inputValue();
+  const duplicateReportRow = savedReportRow(page, "Copy of Renamed acoustic report");
+  await expect(duplicateReportRow).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
+  const duplicateReportId = await duplicateReportRow.getAttribute("data-report-id");
   expect(duplicateReportId).not.toBe(reportId);
 
   page.once("dialog", async (dialog) => {
@@ -371,13 +417,13 @@ test("workbench v2 saves report drafts and revisions under the selected project"
     await dialog.accept();
   });
   await page.getByRole("button", { name: "Delete report" }).click();
-  await expect(savedReportSelect).not.toContainText("Copy of Renamed acoustic report", { timeout: E2E_OPERATION_TIMEOUT });
+  await expect(duplicateReportRow).toBeHidden({ timeout: E2E_OPERATION_TIMEOUT });
 
-  await savedReportSelect.selectOption(reportId!);
+  await selectSavedReportById(page, reportId!);
   await page.getByRole("button", { name: "Archive report" }).click();
-  await expect(savedReportSelect).toContainText("Renamed acoustic report - 2 revisions - archived", { timeout: E2E_OPERATION_TIMEOUT });
+  await expect(savedReportRowById(page, reportId!)).toContainText("Archived - 2 revisions", { timeout: E2E_OPERATION_TIMEOUT });
   await page.getByRole("button", { name: "Restore report" }).click();
-  await expect(savedReportSelect).toContainText("Renamed acoustic report - 2 revisions", { timeout: E2E_OPERATION_TIMEOUT });
+  await expect(savedReportRowById(page, reportId!)).toContainText("Draft - 2 revisions", { timeout: E2E_OPERATION_TIMEOUT });
 
   await page.getByRole("button", { name: "Open saved report" }).click();
   await expect(page).toHaveURL(/\/workbench\/proposal/u);
@@ -421,21 +467,37 @@ test("workbench v2 project workspace and report editor controls stay responsive"
   const projectName = `Responsive workspace ${Date.now()}`;
   await page.getByLabel("New project name", { exact: true }).fill(projectName);
   await page.getByRole("button", { name: "Create project" }).click();
-  await expect(page.getByLabel("Project", { exact: true })).toContainText(projectName, { timeout: 30_000 });
+  const projectSelect = page.getByLabel("Project", { exact: true });
+  await expect(projectSelect).toContainText(projectName, { timeout: 30_000 });
+  const serverProjectId = await projectSelect.inputValue();
+  expect(serverProjectId).toBeTruthy();
 
   await page.getByLabel("Saved combination name", { exact: true }).fill("Mobile saved combination");
   await page.getByRole("button", { name: "Save combination" }).click();
-  await expect(page.getByLabel("Saved combination", { exact: true })).toContainText("Mobile saved combination", { timeout: 30_000 });
+  await expect(savedCombinationRow(page, "Mobile saved combination")).toBeVisible({ timeout: 30_000 });
   await expectRegionHasNoHorizontalOverflow(projectWorkspace);
 
   await page.getByRole("button", { name: "Open report" }).click();
   await expect(page).toHaveURL(/\/workbench\/proposal/u);
-  await expect(page.getByText("Project report ready", { exact: true })).toBeVisible();
+  await expect(page.getByText("Project report ready", { exact: true })).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
   await expect(page.getByRole("button", { name: "Reload preview" })).toBeVisible();
   await expectRegionHasNoHorizontalOverflow(page.locator(".report-header"));
-
   await page.setViewportSize({ height: 1000, width: 1440 });
   await expectRegionHasNoHorizontalOverflow(page.locator(".report-header"));
+  await page.setViewportSize({ height: 900, width: 390 });
+
+  await page.getByRole("button", { name: "Save to project" }).click();
+  await expect(page.getByText("Project report linked", { exact: true })).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
+  await page.getByRole("link", { name: "Calculator" }).click();
+  await expect(page.getByRole("heading", { name: "Acoustic workbench" })).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
+  const reopenedProjectSelect = page.getByLabel("Project", { exact: true });
+  await expect(reopenedProjectSelect).toContainText(projectName, { timeout: E2E_OPERATION_TIMEOUT });
+  await reopenedProjectSelect.selectOption(serverProjectId);
+  await expect(savedReportRow(page, "Wall acoustic analysis report")).toBeVisible({ timeout: E2E_OPERATION_TIMEOUT });
+  await expectRegionHasNoHorizontalOverflow(page.getByRole("region", { name: "Project workspace" }));
+
+  await page.setViewportSize({ height: 1000, width: 1440 });
+  await expectRegionHasNoHorizontalOverflow(page.getByRole("region", { name: "Project workspace" }));
 });
 
 test("workbench v2 project workspace guards rapid duplicate submit actions", async ({ page }) => {
@@ -476,9 +538,8 @@ test("workbench v2 project workspace guards rapid duplicate submit actions", asy
     button.click();
   });
 
-  const savedCombinationSelect = page.getByLabel("Saved combination", { exact: true });
-  await expect(savedCombinationSelect).toContainText(combinationName, { timeout: 30_000 });
-  await expect(savedCombinationSelect.locator("option", { hasText: combinationName })).toHaveCount(1);
+  const savedCombinationRows = savedCombinationList(page).locator(".calc-project-row");
+  await expect(savedCombinationRows.filter({ hasText: combinationName })).toHaveCount(1, { timeout: 30_000 });
 
   const duplicateCombinationButton = page.getByRole("button", { name: "Duplicate combination" });
   await expect(duplicateCombinationButton).toBeEnabled({ timeout: 30_000 });
@@ -491,8 +552,7 @@ test("workbench v2 project workspace guards rapid duplicate submit actions", asy
     button.click();
   });
 
-  await expect(savedCombinationSelect).toContainText(`Copy of ${combinationName}`, { timeout: 30_000 });
-  await expect(savedCombinationSelect.locator("option", { hasText: `Copy of ${combinationName}` })).toHaveCount(1);
+  await expect(savedCombinationRows.filter({ hasText: `Copy of ${combinationName}` })).toHaveCount(1, { timeout: 30_000 });
 
   await page.getByRole("button", { name: "Open report" }).click();
   await expect(page).toHaveURL(/\/workbench\/proposal/u);

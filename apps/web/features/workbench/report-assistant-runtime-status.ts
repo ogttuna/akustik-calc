@@ -1,6 +1,7 @@
 import { REPORT_ASSISTANT_FINDINGS_RELATIVE_PATH } from "./report-assistant-finding";
 import { getReportAssistantModelSettings, type ReportAssistantModelProvider } from "./report-assistant-model";
 import { getReportAssistantPlausibilityResearchSettings } from "./report-assistant-plausibility-research";
+import { REPORT_ASSISTANT_PROJECT_READ_TOOL_DEFINITIONS } from "./report-assistant-project-tools";
 import { REPORT_ASSISTANT_MCP_TOOL_DEFINITIONS } from "./report-assistant-tools";
 
 export type ReportAssistantProviderRuntimeStatus = {
@@ -99,7 +100,7 @@ export function getReportAssistantRuntimeStatus(input?: {
     modelProvider: providerStatus(modelSettings),
     mutatingToolsExposed: false,
     researchProvider: providerStatus(researchSettings ? { ...researchSettings, provider: "research_provider" } : null),
-    tools: REPORT_ASSISTANT_MCP_TOOL_DEFINITIONS.map((tool) => ({
+    tools: [...REPORT_ASSISTANT_MCP_TOOL_DEFINITIONS, ...REPORT_ASSISTANT_PROJECT_READ_TOOL_DEFINITIONS].map((tool) => ({
       description: tool.description,
       mutates: false,
       name: tool.name,

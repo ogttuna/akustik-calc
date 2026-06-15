@@ -17,7 +17,6 @@ import type {
   WallTopologyMode
 } from "@dynecho/shared";
 import {
-  Archive,
   ArrowDown,
   ArrowRight,
   ArrowUp,
@@ -25,7 +24,6 @@ import {
   FileText,
   GripVertical,
   Palette,
-  Pencil,
   Plus,
   RotateCcw,
   Search,
@@ -66,6 +64,7 @@ import {
 } from "./layer-stack-undo";
 import { ProfessionalLayerIllustration, type ProfessionalLayerIllustrationLayer, type ProfessionalLayerVisualStyle } from "./professional-layer-illustration";
 import { ProfessionalResponseCurve } from "./professional-response-curve";
+import { ProjectWorkspacePanel } from "./project-workspace-panel";
 import {
   WORKBENCH_V2_DEFAULT_CONTEXT,
   buildWorkbenchV2ProjectSnapshot,
@@ -168,8 +167,6 @@ type ServerProjectReportRecordPayload = ServerProjectReportSummaryPayload & {
 };
 
 type ServerProjectStatus = "error" | "idle" | "loading" | "restoring" | "syncing";
-
-const SERVER_PROJECT_NAME_MAX_LENGTH = 160;
 
 const OUTPUT_OPTIONS: readonly OutputOption[] = [
   { group: "Airborne", id: "Rw", label: "Rw", modes: ["wall", "floor"] },
@@ -1548,12 +1545,6 @@ function parseServerProjectSummaries(value: unknown): ServerProjectSummaryPayloa
   );
 }
 
-function formatServerProjectOptionLabel(project: ServerProjectSummaryPayload): string {
-  const assemblyLabel = `${project.assemblyCount} combination${project.assemblyCount === 1 ? "" : "s"}`;
-  const reportLabel = `${project.reportCount} report${project.reportCount === 1 ? "" : "s"}`;
-  return `${project.name} - ${assemblyLabel}, ${reportLabel}`;
-}
-
 function parseAssemblySummary(value: unknown): ServerProjectAssemblySummaryPayload | null {
   if (
     !isObjectRecord(value) ||
@@ -1699,21 +1690,6 @@ function parseProjectReportRecord(value: unknown): ServerProjectReportRecordPayl
     sourceCalculationOutput: Object.hasOwn(value.report, "sourceCalculationOutput") ? value.report.sourceCalculationOutput : undefined,
     sourceMaterialSnapshot
   };
-}
-
-function formatAssemblyOptionLabel(assembly: ServerProjectAssemblySummaryPayload): string {
-  const displayCode = assembly.displayCode ? `${assembly.displayCode} - ` : "";
-  const resultLabel = assembly.calculationSummary?.primaryValueLabel
-    ? ` - ${assembly.calculationSummary.primaryOutput ?? "Result"} ${assembly.calculationSummary.primaryValueLabel}`
-    : "";
-  return `${displayCode}${assembly.name}${resultLabel}`;
-}
-
-function formatReportOptionLabel(report: ServerProjectReportSummaryPayload): string {
-  const displayCode = report.displayCode ? `${report.displayCode} - ` : "";
-  const revisionLabel = `${report.revisionCount} revision${report.revisionCount === 1 ? "" : "s"}`;
-  const statusLabel = report.status === "archived" ? " - archived" : report.status === "issued" ? " - issued" : "";
-  return `${displayCode}${report.name} - ${revisionLabel}${statusLabel}`;
 }
 
 function formatWorkbenchV2SnapshotRestoreWarning(input: {
@@ -3154,244 +3130,88 @@ export function CalculatorWorkbench() {
 
         <section className="calc-grid" aria-label="Calculator workspace">
           <div className="calc-main">
-            <section className="calc-section calc-project-snapshot-section" aria-label="Project workspace">
-              <div className="calc-section-head">
-                <div>
-                  <h2>Project workspace</h2>
-                </div>
-                <span className={serverProjectStatus === "error" ? "ui-badge ui-badge-warning" : "ui-badge"}>{serverProjectMessage}</span>
-              </div>
-              <div className="calc-project-snapshot-controls">
-                <input
-                  aria-label="New project name"
-                  className="focus-ring ui-field calc-project-snapshot-select"
-                  maxLength={SERVER_PROJECT_NAME_MAX_LENGTH}
-                  onChange={(event) => {
-                    serverProjectNameDraftRef.current = event.target.value;
-                    setServerProjectNameDraft(event.target.value);
-                  }}
-                  placeholder="New project name"
-                  value={serverProjectNameDraft}
-                />
-                <button
-                  className="focus-ring ui-button ui-button-primary"
-                  disabled={!canCreateServerProject}
-                  onClick={createServerProject}
-                  type="button"
-                >
-                  <Plus className="h-4 w-4" />
-                  Create project
-                </button>
-                <select
-                  aria-label="Project"
-                  className="focus-ring ui-field calc-project-snapshot-select"
-                  onChange={(event) => {
-                    setSelectedServerProjectId(event.target.value);
-                    setSelectedServerAssemblyId("");
-                    setSelectedServerReportId("");
-                    serverAssemblyRenameDraftRef.current = "";
-                    serverReportRenameDraftRef.current = "";
-                    setServerAssemblyRenameDraft("");
-                    setServerReportRenameDraft("");
-                  }}
-                  value={selectedServerProjectId}
-                >
-                  <option value="">Browser-local draft</option>
-                  {serverProjects.map((project) => (
-                    <option key={project.id} value={project.id}>
-                      {formatServerProjectOptionLabel(project)}
-                    </option>
-                  ))}
-                </select>
-                <button
-                  className="focus-ring ui-button ui-button-ghost"
-                  disabled={serverProjectBusy}
-                  onClick={() => void refreshServerProjects()}
-                  type="button"
-                >
-                  <RotateCcw className="h-4 w-4" />
-                  Refresh
-                </button>
-              </div>
-              <div className="calc-project-snapshot-controls">
-                <input
-                  aria-label="Saved combination name"
-                  className="focus-ring ui-field calc-project-snapshot-select"
-                  disabled={!selectedServerProjectId}
-                  maxLength={SERVER_PROJECT_NAME_MAX_LENGTH}
-                  onChange={(event) => {
-                    serverAssemblyNameDraftRef.current = event.target.value;
-                    setServerAssemblyNameDraft(event.target.value);
-                  }}
-                  placeholder={selectedServerProject ? `${selectedServerProject.name} combination name` : "Select a project first"}
-                  value={serverAssemblyNameDraft}
-                />
-                <button
-                  className="focus-ring ui-button ui-button-primary"
-                  disabled={!selectedServerProjectId || serverProjectStatus === "syncing" || serverProjectStatus === "restoring"}
-                  onClick={saveCurrentAssemblyToServerProject}
-                  type="button"
-                >
-                  <FileText className="h-4 w-4" />
-                  Save combination
-                </button>
-                <select
-                  aria-label="Saved combination"
-                  className="focus-ring ui-field calc-project-snapshot-select"
-                  disabled={!selectedServerProjectId || serverProjectStatus === "loading"}
-                  onChange={(event) => {
-                    const nextAssemblyId = event.target.value;
-                    const nextAssembly = serverProjectAssemblies.find((assembly) => assembly.id === nextAssemblyId);
-                    const nextName = nextAssembly?.name ?? "";
-                    setSelectedServerAssemblyId(nextAssemblyId);
-                    serverAssemblyRenameDraftRef.current = nextName;
-                    setServerAssemblyRenameDraft(nextName);
-                  }}
-                  value={selectedServerAssemblyId}
-                >
-                  <option value="">Select saved combination</option>
-                  {serverProjectAssemblies.map((assembly) => (
-                    <option key={assembly.id} value={assembly.id}>
-                      {formatAssemblyOptionLabel(assembly)}
-                    </option>
-                  ))}
-                </select>
-                <button
-                  className="focus-ring ui-button ui-button-ghost"
-                  disabled={!selectedServerProjectId || !selectedServerAssembly || serverProjectBusy}
-                  onClick={loadSelectedProjectAssembly}
-                  type="button"
-                >
-                  Load combination
-                </button>
-              </div>
-              {selectedServerAssembly ? (
-                <div className="calc-project-snapshot-controls">
-                  <input
-                    aria-label="Selected combination name"
-                    className="focus-ring ui-field calc-project-snapshot-select"
-                    disabled={serverProjectBusy}
-                    maxLength={SERVER_PROJECT_NAME_MAX_LENGTH}
-                    onChange={(event) => {
-                      serverAssemblyRenameDraftRef.current = event.target.value;
-                      setServerAssemblyRenameDraft(event.target.value);
-                    }}
-                    placeholder="Selected combination name"
-                    value={serverAssemblyRenameDraft}
-                  />
-                  <button
-                    className="focus-ring ui-button ui-button-ghost"
-                    disabled={!canRenameServerAssembly}
-                    onClick={renameSelectedProjectAssembly}
-                    type="button"
-                  >
-                    <Pencil className="h-4 w-4" />
-                    Rename combination
-                  </button>
-                  <button
-                    className="focus-ring ui-button ui-button-ghost"
-                    disabled={!selectedServerProjectId || serverProjectBusy}
-                    onClick={duplicateSelectedProjectAssembly}
-                    type="button"
-                  >
-                    <Copy className="h-4 w-4" />
-                    Duplicate combination
-                  </button>
-                  <button
-                    className="focus-ring ui-button ui-button-danger"
-                    disabled={!selectedServerProjectId || serverProjectBusy}
-                    onClick={deleteSelectedProjectAssembly}
-                    type="button"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                    Delete combination
-                  </button>
-                </div>
-              ) : null}
-              <div className="calc-project-snapshot-controls">
-                <select
-                  aria-label="Saved report"
-                  className="focus-ring ui-field calc-project-snapshot-select"
-                  disabled={!selectedServerProjectId || serverProjectStatus === "loading"}
-                  onChange={(event) => {
-                    const nextReportId = event.target.value;
-                    const nextReport = serverProjectReports.find((report) => report.id === nextReportId);
-                    const nextName = nextReport?.name ?? "";
-                    setSelectedServerReportId(nextReportId);
-                    serverReportRenameDraftRef.current = nextName;
-                    setServerReportRenameDraft(nextName);
-                  }}
-                  value={selectedServerReportId}
-                >
-                  <option value="">Select saved report</option>
-                  {serverProjectReports.map((report) => (
-                    <option key={report.id} value={report.id}>
-                      {formatReportOptionLabel(report)}
-                    </option>
-                  ))}
-                </select>
-                <button
-                  className="focus-ring ui-button ui-button-ghost"
-                  disabled={!selectedServerProjectId || !selectedServerReport || serverProjectBusy}
-                  onClick={openSelectedProjectReport}
-                  type="button"
-                >
-                  Open saved report
-                </button>
-              </div>
-              {selectedServerReport ? (
-                <div className="calc-project-snapshot-controls">
-                  <input
-                    aria-label="Selected report name"
-                    className="focus-ring ui-field calc-project-snapshot-select"
-                    disabled={serverProjectBusy}
-                    maxLength={SERVER_PROJECT_NAME_MAX_LENGTH}
-                    onChange={(event) => {
-                      serverReportRenameDraftRef.current = event.target.value;
-                      setServerReportRenameDraft(event.target.value);
-                    }}
-                    placeholder="Selected report name"
-                    value={serverReportRenameDraft}
-                  />
-                  <button
-                    className="focus-ring ui-button ui-button-ghost"
-                    disabled={!canRenameServerReport}
-                    onClick={renameSelectedProjectReport}
-                    type="button"
-                  >
-                    <Pencil className="h-4 w-4" />
-                    Rename report
-                  </button>
-                  <button
-                    className="focus-ring ui-button ui-button-ghost"
-                    disabled={!selectedServerProjectId || serverProjectBusy}
-                    onClick={duplicateSelectedProjectReport}
-                    type="button"
-                  >
-                    <Copy className="h-4 w-4" />
-                    Duplicate report
-                  </button>
-                  <button
-                    className="focus-ring ui-button ui-button-warning"
-                    disabled={!selectedServerProjectId || serverProjectBusy}
-                    onClick={() => void setSelectedProjectReportArchived(selectedServerReport.status !== "archived")}
-                    type="button"
-                  >
-                    {selectedServerReport.status === "archived" ? <RotateCcw className="h-4 w-4" /> : <Archive className="h-4 w-4" />}
-                    {selectedServerReport.status === "archived" ? "Restore report" : "Archive report"}
-                  </button>
-                  <button
-                    className="focus-ring ui-button ui-button-danger"
-                    disabled={!selectedServerProjectId || serverProjectBusy}
-                    onClick={deleteSelectedProjectReport}
-                    type="button"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                    Delete report
-                  </button>
-                </div>
-              ) : null}
-            </section>
+            <ProjectWorkspacePanel
+              busy={serverProjectBusy}
+              combinations={{
+                assemblies: serverProjectAssemblies,
+                assemblyNameDraft: serverAssemblyNameDraft,
+                assemblyRenameDraft: serverAssemblyRenameDraft,
+                canRenameAssembly: canRenameServerAssembly,
+                onAssemblyNameDraftChange: (value) => {
+                  serverAssemblyNameDraftRef.current = value;
+                  setServerAssemblyNameDraft(value);
+                },
+                onAssemblyRenameDraftChange: (value) => {
+                  serverAssemblyRenameDraftRef.current = value;
+                  setServerAssemblyRenameDraft(value);
+                },
+                onDeleteAssembly: deleteSelectedProjectAssembly,
+                onDuplicateAssembly: duplicateSelectedProjectAssembly,
+                onLoadAssembly: loadSelectedProjectAssembly,
+                onRenameAssembly: renameSelectedProjectAssembly,
+                onSaveAssembly: saveCurrentAssemblyToServerProject,
+                onSelectAssembly: (nextAssemblyId) => {
+                  const nextAssembly = serverProjectAssemblies.find((assembly) => assembly.id === nextAssemblyId);
+                  const nextName = nextAssembly?.name ?? "";
+                  setSelectedServerAssemblyId(nextAssemblyId);
+                  serverAssemblyRenameDraftRef.current = nextName;
+                  setServerAssemblyRenameDraft(nextName);
+                },
+                projectSelected: Boolean(selectedServerProjectId),
+                selectedAssembly: selectedServerAssembly,
+                selectedAssemblyId: selectedServerAssemblyId,
+                selectedProjectName: selectedServerProject?.name
+              }}
+              identity={{
+                canCreateProject: canCreateServerProject,
+                onCreateProject: createServerProject,
+                onProjectNameDraftChange: (value) => {
+                  serverProjectNameDraftRef.current = value;
+                  setServerProjectNameDraft(value);
+                },
+                onRefreshProjects: () => refreshServerProjects(),
+                onSelectProject: (nextProjectId) => {
+                  setSelectedServerProjectId(nextProjectId);
+                  setSelectedServerAssemblyId("");
+                  setSelectedServerReportId("");
+                  serverAssemblyRenameDraftRef.current = "";
+                  serverReportRenameDraftRef.current = "";
+                  setServerAssemblyRenameDraft("");
+                  setServerReportRenameDraft("");
+                },
+                projectNameDraft: serverProjectNameDraft,
+                projects: serverProjects,
+                selectedProject: selectedServerProject,
+                selectedProjectId: selectedServerProjectId
+              }}
+              message={serverProjectMessage}
+              reports={{
+                assemblies: serverProjectAssemblies,
+                canRenameReport: canRenameServerReport,
+                onDeleteReport: deleteSelectedProjectReport,
+                onDuplicateReport: duplicateSelectedProjectReport,
+                onOpenReport: openSelectedProjectReport,
+                onRenameReport: renameSelectedProjectReport,
+                onReportRenameDraftChange: (value) => {
+                  serverReportRenameDraftRef.current = value;
+                  setServerReportRenameDraft(value);
+                },
+                onSelectReport: (nextReportId) => {
+                  const nextReport = serverProjectReports.find((report) => report.id === nextReportId);
+                  const nextName = nextReport?.name ?? "";
+                  setSelectedServerReportId(nextReportId);
+                  serverReportRenameDraftRef.current = nextName;
+                  setServerReportRenameDraft(nextName);
+                },
+                onSetReportArchived: setSelectedProjectReportArchived,
+                projectSelected: Boolean(selectedServerProjectId),
+                reportRenameDraft: serverReportRenameDraft,
+                reports: serverProjectReports,
+                selectedReport: selectedServerReport,
+                selectedReportId: selectedServerReportId
+              }}
+              status={serverProjectStatus}
+            />
 
             <section className="calc-section calc-setup-section">
               <div className="calc-section-head">

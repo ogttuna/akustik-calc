@@ -72,21 +72,54 @@ Status on 2026-06-12:
   create project, save combination, duplicate combination, and save report in
   the same event turn and verifies only one corresponding server record is
   created.
+- 2026-06-15 assistant project visibility Phase 1-2 is implemented: read-only
+  helper `apps/web/features/workbench/report-assistant-project-tools.ts`, route
+  `POST /api/report-assistant/project-read`, runtime-status metadata, and tests
+  now cover owner-scoped summaries, explicit saved assembly/report/revision
+  reads, missing-id validation, configured-auth `401`, unsupported action `400`,
+  and `mutates: false` tool posture.
+- 2026-06-15 assistant project visibility Phase 3 is implemented in the report
+  editor: the assistant panel shows current-draft, project, saved-report, and
+  current-revision context using summary-only project-read actions; patch
+  proposal requests still send only the current report assistant context,
+  document, and instruction; Apply still changes only the draft until the user
+  saves the project report/revision.
+- 2026-06-15 project workspace UI/UX Phase 4 component extraction is
+  implemented: `calculator-workbench.tsx` still owns project state, route
+  mutations, refs, and rapid-submit guards, while the visible workspace markup
+  is split into presentational `project-workspace-*` components with existing
+  labels, copy, and CSS classes preserved.
+- 2026-06-15 project workspace UI/UX Phase 5 identity redesign is implemented:
+  the workspace now has a compact local/active project identity band that shows
+  selected project name, owner label, saved-combination count, report count, and
+  last-updated date while keeping create/select/refresh route behavior local to
+  `calculator-workbench.tsx`.
+- 2026-06-15 project workspace UI/UX Phase 6 saved-combination row redesign is
+  implemented: saved combinations now render as scannable rows with display
+  code/version/kind/updated/result metadata, row selection, and selected-row
+  load/rename/duplicate/delete actions while existing route handlers and
+  rapid-submit guards remain owned by `calculator-workbench.tsx`.
+- 2026-06-15 project workspace UI/UX Phase 7 saved-report row redesign is
+  implemented: saved reports now render as rows with display code, report name,
+  status, revision count, updated date, linked assembly label, selected-row
+  open/rename/duplicate/archive/restore/delete actions, and archived-row
+  de-emphasis.
+- 2026-06-15 project workspace UI/UX Phase 8 final hardening is complete for
+  this pass: focused route/storage/assistant/component Vitest, production build,
+  full `workbench-v2-material-editor` Playwright coverage, and `git diff
+  --check` are green.
 
 Deferred follow-up, not implemented in this pass:
 
-- assistant/MCP project visibility is still planned work. The Report Assistant
-  exists and can operate on the current report context, but it does not yet have
-  read-only project tools for listing accessible projects, reading saved
-  assemblies, reading saved reports, or inspecting report revisions from project
-  storage. Do not treat Slice E as complete until those tools and their owner-
-  scoped tests are implemented.
-- project workspace UI/UX refactor is still planned work. The current
-  create/select project, saved-combination, and saved-report controls are a
-  functional first pass, but the interaction model and visual organization are
-  not considered accepted product UX. Do not treat the project workspace UI as
-  final until it is refactored into a clearer, more deliberate management
-  surface and rechecked on desktop and mobile.
+- assistant/MCP project visibility has the first read-only app surface in place:
+  helper, route, runtime status, and report-editor context affordance are
+  implemented. A standalone MCP wrapper/model tool loop and assistant write
+  tools remain out of scope for this first pass; do not add write-capable MCP
+  tools without a separate plan and review gate.
+- project workspace UI/UX refactor Phases 4-8 are implemented and validated for
+  this pass. Product-owner acceptance can still request visual polish, but there
+  is no known blocking gap in the planned project identity, saved-combination,
+  saved-report, responsive, or regression coverage scope.
 
 ## Planning Analysis Update - 2026-06-15
 
@@ -1007,6 +1040,18 @@ Exit criteria:
 - all assistant project read definitions are `mutates: false`;
 - saved report and revision reads identify the exact report/revision being read.
 
+Landed status 2026-06-15:
+
+- implemented in `apps/web/features/workbench/report-assistant-project-tools.ts`;
+- covered by
+  `apps/web/features/workbench/report-assistant-project-tools.test.ts`;
+- read actions are `list_projects`, `read_project_summary`,
+  `list_project_assemblies`, `read_project_assembly_snapshot`,
+  `list_project_reports`, `read_project_report_document`,
+  `list_project_report_revisions`, and `read_project_report_revision`;
+- list actions return summaries only; explicit child read actions return the
+  saved document or assembly snapshot.
+
 #### Phase 2 - Assistant read route and status
 
 Purpose: make project visibility callable by UI/assistant code without mixing it
@@ -1037,6 +1082,17 @@ Exit criteria:
 - route tests cover configured unauthenticated `401`, bad action `400`,
   wrong-owner behavior, summary output, and explicit full read;
 - status route lists the tools and still reports `mutatingToolsExposed: false`.
+
+Landed status 2026-06-15:
+
+- route shape is `POST /api/report-assistant/project-read` with body
+  `{ action, projectId?, assemblyId?, reportId?, revisionId? }`;
+- the route uses an explicit switch over known read actions and calls only
+  `runReportAssistantProjectReadTool`;
+- `/api/report-assistant/status` lists both the existing report-context tools and
+  the project read tools while keeping `mutatingToolsExposed: false`;
+- covered by
+  `apps/web/features/workbench/report-assistant-project-read-route.test.ts`.
 
 #### Phase 3 - Assistant UX integration
 
@@ -1073,6 +1129,21 @@ Exit criteria:
 - applying a patch still dirties only the draft until Save to project creates a
   revision.
 
+Landed status 2026-06-15:
+
+- implemented in `apps/web/features/workbench-rebuild/report-editor.tsx` with a
+  compact assistant project-context band;
+- the UI fetches `read_project_summary`, `list_project_reports`, and
+  `list_project_report_revisions` through
+  `POST /api/report-assistant/project-read`; it does not fetch full report
+  documents or assembly snapshots for this context strip;
+- assistant patch proposal payloads remain unchanged and are still sent to
+  `/api/report-assistant/patch` as `{ context, document, instruction }`;
+- covered by
+  `apps/web/features/workbench-rebuild/report-editor-project-context.test.ts`
+  and the report-save/revision path in
+  `e2e/workbench-v2-material-editor.spec.ts`.
+
 #### Phase 4 - UI component extraction
 
 Purpose: reduce `calculator-workbench.tsx` complexity without behavior changes.
@@ -1107,6 +1178,26 @@ Exit criteria:
 - `calculator-workbench.tsx` becomes smaller or at least has a clear project
   workspace boundary.
 
+Landed status 2026-06-15:
+
+- extracted presentational workspace files:
+  `apps/web/features/workbench-rebuild/project-workspace-panel.tsx`,
+  `project-workspace-identity.tsx`, `project-workspace-combinations.tsx`,
+  `project-workspace-reports.tsx`, and `project-workspace-types.ts`;
+- `apps/web/features/workbench-rebuild/calculator-workbench.tsx` still owns
+  project ids, selected records, draft refs, fetch/mutation handlers,
+  `serverProjectStatus`, and rapid-submit guards;
+- existing accessible labels and action copy are preserved: `New project name`,
+  `Project`, `Saved combination name`, `Saved combination`, `Saved report`,
+  `Create project`, `Save combination`, `Open saved report`, and the rename /
+  duplicate / archive / delete actions;
+- component boundary coverage is in
+  `apps/web/features/workbench-rebuild/project-workspace-panel.test.ts`, which
+  renders the preserved controls and verifies the presentational files do not
+  call `fetch` or own `/api/projects` route strings;
+- validated by targeted Vitest, production build, and Playwright coverage for
+  project workspace responsiveness plus rapid duplicate submit guards.
+
 #### Phase 5 - Project identity redesign
 
 Purpose: make the selected project state understandable before changing child
@@ -1133,6 +1224,25 @@ Exit criteria:
   management;
 - mobile and desktop no-overflow checks pass for long project names;
 - existing save/load/report flows still work.
+
+Landed status 2026-06-15:
+
+- implemented in
+  `apps/web/features/workbench-rebuild/project-workspace-identity.tsx` and
+  `apps/web/app/globals.css`;
+- the no-project state shows `Browser-local draft`, `No project selected`,
+  local-only status, and available saved-project count;
+- the active-project state shows `Active project`, selected project name,
+  owner label, saved-combination count, saved-report count, and updated date;
+- `Create project` remains the primary action only in the no-project state and
+  becomes a secondary ghost action once a project is active; `Project` selector
+  and `Refresh` remain secondary controls;
+- long project names and owner labels use `min-width: 0` plus
+  `overflow-wrap: anywhere`; mobile layout collapses identity stats below the
+  title before the existing control grid;
+- validated by `project-workspace-panel.test.ts`, `pnpm --filter @dynecho/web
+  build`, and Playwright project workspace responsiveness plus rapid-submit
+  guard tests.
 
 #### Phase 6 - Saved combinations row redesign
 
@@ -1161,6 +1271,28 @@ Exit criteria:
 - row actions are keyboard/focus accessible;
 - mobile row layout does not clip actions or labels.
 
+Landed status 2026-06-15:
+
+- implemented in
+  `apps/web/features/workbench-rebuild/project-workspace-combinations.tsx` and
+  `apps/web/app/globals.css`;
+- the saved-combination dropdown was replaced with
+  `aria-label="Saved combinations"` row markup; each row carries
+  `data-assembly-id` for stable E2E/API correlation and renders display code,
+  name, wall/floor kind, version, updated date, and primary result/status;
+- clicking a row updates the selected assembly id through the existing parent
+  callback; selected-row controls preserve `Selected combination name`, `Load
+  combination`, `Rename combination`, `Duplicate combination`, and `Delete
+  combination` labels;
+- mutation ownership did not move: save/load/rename/duplicate/delete still call
+  the existing `calculator-workbench.tsx` handlers with their in-flight guards;
+- `e2e/workbench-v2-material-editor.spec.ts` now uses row helpers instead of the
+  removed saved-combination select while still proving material persistence,
+  report save/revision, responsive layout, and rapid duplicate-submit guards;
+- validated by `project-workspace-panel.test.ts`, `pnpm --filter @dynecho/web
+  build`, `pnpm exec playwright test e2e/workbench-v2-material-editor.spec.ts`,
+  and `git diff --check`.
+
 #### Phase 7 - Saved reports row redesign
 
 Purpose: make report records understandable and distinct from report document
@@ -1188,6 +1320,27 @@ Exit criteria:
 - report name management is not confused with editing report subject/title;
 - saved report open still hydrates the report editor from project storage.
 
+Landed status 2026-06-15:
+
+- implemented in
+  `apps/web/features/workbench-rebuild/project-workspace-reports.tsx` and
+  `apps/web/app/globals.css`;
+- the saved-report dropdown was replaced with `aria-label="Saved reports"` row
+  markup; each row carries `data-report-id` for stable E2E/API correlation and
+  renders display code, report name, draft/issued/archived status, revision
+  count, updated date, and linked assembly label;
+- selected-row controls preserve `Selected report name`, `Open saved report`,
+  `Rename report`, `Duplicate report`, `Archive report` / `Restore report`, and
+  `Delete report` labels;
+- archive/restore remains a report status mutation through the existing parent
+  handler, and archived rows are visually de-emphasized without being hidden;
+- `e2e/workbench-v2-material-editor.spec.ts` now uses saved-report row helpers
+  instead of the removed saved-report select while still proving saved report
+  rename, duplicate, delete, archive/restore, and reopen behavior;
+- validated by `project-workspace-panel.test.ts`, `pnpm --filter @dynecho/web
+  build`, and `pnpm exec playwright test
+  e2e/workbench-v2-material-editor.spec.ts`.
+
 #### Phase 8 - Final responsive and regression hardening
 
 Purpose: prove the feature is usable and stable after both workstreams land.
@@ -1209,6 +1362,35 @@ Exit criteria:
   save/reopen, assistant-adjusted report save, or material editor persistence;
 - no horizontal overflow at tested desktop/mobile widths;
 - remaining gaps are explicitly documented as follow-ups.
+
+Landed status 2026-06-15:
+
+- focused Vitest hardening passed:
+  `pnpm --filter @dynecho/web exec vitest run
+  features/workbench-rebuild/project-workspace-panel.test.ts
+  features/workbench-rebuild/report-editor-project-context.test.ts
+  features/workbench/report-assistant-project-tools.test.ts
+  features/workbench/report-assistant-project-read-route.test.ts
+  features/workbench/report-assistant-runtime-status.test.ts
+  lib/server-project-routes.test.ts lib/server-project-storage.test.ts
+  --maxWorkers=1` with 7 files / 38 tests passing;
+- production build passed with the known optional `sharp/@img` warnings from the
+  proposal DOCX/PDF dependency path:
+  `pnpm --filter @dynecho/web build`;
+- browser regression passed:
+  `pnpm exec playwright test e2e/workbench-v2-material-editor.spec.ts` with 6
+  tests passing across material persistence, manual material editing, project
+  report save/revision, responsive layout, workspace/report responsiveness,
+  mobile saved-combination and saved-report row no-overflow checks, and rapid
+  duplicate-submit guards;
+- the Playwright flow now waits on durable UI outcomes for project replay
+  instead of transient status copy: saved-combination load is proven by the
+  custom project material reappearing, and report navigation waits use the
+  shared E2E operation timeout;
+- `git diff --check` passed;
+- generated local artifacts from build/Playwright remain outside the source
+  patch: `apps/web/tsconfig.next.json`, tsbuildinfo files, output folders, and
+  PDFs should not be staged with this feature unless explicitly requested.
 
 ### Stop conditions
 

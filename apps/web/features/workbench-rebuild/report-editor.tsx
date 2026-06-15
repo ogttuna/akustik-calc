@@ -82,6 +82,50 @@ type LoadedProjectReportPayload = {
   projectContext: SimpleWorkbenchProposalPreviewProjectContext;
 };
 
+type AssistantProjectSummary = {
+  assemblyCount: number;
+  clientName?: string;
+  id: string;
+  name: string;
+  reportCount: number;
+  updatedAtIso: string;
+};
+
+type AssistantProjectReportSummary = {
+  assemblyId: string;
+  currentRevisionId: string;
+  displayCode?: string;
+  id: string;
+  name: string;
+  revisionCount: number;
+  status: "archived" | "draft" | "issued";
+  updatedAtIso: string;
+};
+
+type AssistantProjectRevisionSummary = {
+  assistantPatchSummary?: {
+    operationCount: number;
+    validationStatus: "valid" | "warning";
+  };
+  changeSummary?: string;
+  createdAtIso: string;
+  displayCode?: string;
+  id: string;
+  source: "assistant" | "generated" | "import" | "manual";
+};
+
+type AssistantProjectContextSummary = {
+  project: AssistantProjectSummary;
+  report?: AssistantProjectReportSummary;
+  revision?: AssistantProjectRevisionSummary;
+};
+
+type AssistantProjectContextState =
+  | { status: "error"; message: string }
+  | { status: "loading" }
+  | { status: "local" }
+  | { status: "ready"; summary: AssistantProjectContextSummary };
+
 const STYLE_OPTIONS: readonly { label: string; value: ProposalPdfStyle }[] = [
   { label: "Branded", value: "branded" },
   { label: "Simple", value: "simple" }
@@ -331,6 +375,200 @@ function isPatchValidation(value: unknown): value is ReportAssistantPatchValidat
   );
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+async function postAssistantProjectRead(payload: Record<string, string | undefined>): Promise<unknown> {
+  const response = await fetch("/api/report-assistant/project-read", {
+    body: JSON.stringify(payload),
+    headers: {
+      "content-type": "application/json"
+    },
+    method: "POST"
+  });
+
+  return readProjectReportSavePayload(response, "DAC could not read the project context for the assistant.");
+}
+
+function getProjectReadResult(payload: unknown): unknown {
+  return isRecord(payload) && payload.ok === true ? payload.result : undefined;
+}
+
+function parseAssistantProjectSummary(payload: unknown): AssistantProjectSummary | null {
+  const result = getProjectReadResult(payload);
+  const project = isRecord(result) ? result.project : undefined;
+  if (
+    !isRecord(project) ||
+    typeof project.id !== "string" ||
+    typeof project.name !== "string" ||
+    typeof project.updatedAtIso !== "string" ||
+    typeof project.assemblyCount !== "number" ||
+    typeof project.reportCount !== "number"
+  ) {
+    return null;
+  }
+
+  return {
+    assemblyCount: project.assemblyCount,
+    clientName: typeof project.clientName === "string" ? project.clientName : undefined,
+    id: project.id,
+    name: project.name,
+    reportCount: project.reportCount,
+    updatedAtIso: project.updatedAtIso
+  };
+}
+
+function parseAssistantProjectReportSummaries(payload: unknown): AssistantProjectReportSummary[] {
+  const result = getProjectReadResult(payload);
+  const reports = isRecord(result) && Array.isArray(result.reports) ? result.reports : [];
+
+  return reports.flatMap((entry): AssistantProjectReportSummary[] => {
+    if (
+      !isRecord(entry) ||
+      typeof entry.assemblyId !== "string" ||
+      typeof entry.currentRevisionId !== "string" ||
+      typeof entry.id !== "string" ||
+      typeof entry.name !== "string" ||
+      typeof entry.revisionCount !== "number" ||
+      typeof entry.status !== "string" ||
+      !["archived", "draft", "issued"].includes(entry.status) ||
+      typeof entry.updatedAtIso !== "string"
+    ) {
+      return [];
+    }
+
+    return [
+      {
+        assemblyId: entry.assemblyId,
+        currentRevisionId: entry.currentRevisionId,
+        displayCode: typeof entry.displayCode === "string" ? entry.displayCode : undefined,
+        id: entry.id,
+        name: entry.name,
+        revisionCount: entry.revisionCount,
+        status: entry.status as AssistantProjectReportSummary["status"],
+        updatedAtIso: entry.updatedAtIso
+      }
+    ];
+  });
+}
+
+function parseAssistantProjectRevisionSummaries(payload: unknown): AssistantProjectRevisionSummary[] {
+  const result = getProjectReadResult(payload);
+  const revisions = isRecord(result) && Array.isArray(result.revisions) ? result.revisions : [];
+
+  return revisions.flatMap((entry): AssistantProjectRevisionSummary[] => {
+    if (
+      !isRecord(entry) ||
+      typeof entry.createdAtIso !== "string" ||
+      typeof entry.id !== "string" ||
+      typeof entry.source !== "string" ||
+      !["assistant", "generated", "import", "manual"].includes(entry.source)
+    ) {
+      return [];
+    }
+
+    const assistantPatchSummary = isRecord(entry.assistantPatchSummary) &&
+      typeof entry.assistantPatchSummary.operationCount === "number" &&
+      typeof entry.assistantPatchSummary.validationStatus === "string" &&
+      ["valid", "warning"].includes(entry.assistantPatchSummary.validationStatus)
+      ? {
+          operationCount: entry.assistantPatchSummary.operationCount,
+          validationStatus: entry.assistantPatchSummary.validationStatus as "valid" | "warning"
+        }
+      : undefined;
+
+    return [
+      {
+        assistantPatchSummary,
+        changeSummary: typeof entry.changeSummary === "string" ? entry.changeSummary : undefined,
+        createdAtIso: entry.createdAtIso,
+        displayCode: typeof entry.displayCode === "string" ? entry.displayCode : undefined,
+        id: entry.id,
+        source: entry.source as AssistantProjectRevisionSummary["source"]
+      }
+    ];
+  });
+}
+
+function AssistantProjectContextStrip(props: {
+  hasUnsavedChanges: boolean;
+  projectReportLinked: boolean;
+  state: AssistantProjectContextState;
+}) {
+  const { hasUnsavedChanges, projectReportLinked, state } = props;
+  const badgeLabel =
+    state.status === "ready" && state.summary.report
+      ? "Saved report context"
+      : state.status === "ready"
+        ? "Project context"
+        : state.status === "loading"
+          ? "Loading context"
+          : state.status === "error"
+            ? "Context unavailable"
+            : "Current draft";
+
+  return (
+    <div className="report-assistant-context" data-status={state.status}>
+      <div className="report-assistant-context-head">
+        <strong>{badgeLabel}</strong>
+        <span className={state.status === "error" ? "ui-badge ui-badge-warning" : "ui-badge"}>
+          {projectReportLinked ? "Project saved" : hasUnsavedChanges ? "Unsaved draft" : "Draft"}
+        </span>
+      </div>
+
+      {state.status === "ready" ? (
+        <div className="report-assistant-context-grid">
+          <div>
+            <span>Project</span>
+            <strong>{state.summary.project.name}</strong>
+            {state.summary.project.clientName ? <small>{state.summary.project.clientName}</small> : null}
+          </div>
+          {state.summary.report ? (
+            <div>
+              <span>Report</span>
+              <strong>{state.summary.report.displayCode ? `${state.summary.report.displayCode} - ${state.summary.report.name}` : state.summary.report.name}</strong>
+              <small>
+                {state.summary.report.revisionCount} revision{state.summary.report.revisionCount === 1 ? "" : "s"} · {state.summary.report.status}
+              </small>
+            </div>
+          ) : (
+            <div>
+              <span>Report</span>
+              <strong>Not saved yet</strong>
+              <small>Save to project creates the first report record.</small>
+            </div>
+          )}
+          {state.summary.revision ? (
+            <div>
+              <span>Revision</span>
+              <strong>{state.summary.revision.displayCode ?? "Current revision"}</strong>
+              <small>
+                {state.summary.revision.source}
+                {state.summary.revision.assistantPatchSummary
+                  ? ` · ${state.summary.revision.assistantPatchSummary.operationCount} assistant operation${
+                      state.summary.revision.assistantPatchSummary.operationCount === 1 ? "" : "s"
+                    }`
+                  : ""}
+              </small>
+            </div>
+          ) : null}
+        </div>
+      ) : state.status === "loading" ? (
+        <p>Loading saved project context for this assistant panel.</p>
+      ) : state.status === "error" ? (
+        <p>{state.message}</p>
+      ) : (
+        <p>The assistant is reviewing the current browser report draft.</p>
+      )}
+
+      <small className="report-assistant-context-note">
+        Assistant edits change only this draft until you apply them and save the project report.
+      </small>
+    </div>
+  );
+}
+
 function ReportTextField(props: {
   label: string;
   onChange: (value: string) => void;
@@ -407,6 +645,7 @@ export function ReportEditor() {
   const [isProjectSaving, setIsProjectSaving] = useState(false);
   const projectSaveInFlightRef = useRef(false);
   const [projectContext, setProjectContext] = useState<SimpleWorkbenchProposalPreviewProjectContext | undefined>();
+  const [assistantProjectContext, setAssistantProjectContext] = useState<AssistantProjectContextState>({ status: "local" });
   const [projectSaveSource, setProjectSaveSource] = useState<ProjectReportSaveSource>("manual");
 
   const applyLoadedPreview = useCallback((nextPreview: LoadedSimpleWorkbenchProposalPreview | null) => {
@@ -489,6 +728,93 @@ export function ReportEditor() {
   useEffect(() => {
     setFrameReady(false);
   }, [proposalHtml]);
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadAssistantProjectContext(currentProjectContext: SimpleWorkbenchProposalPreviewProjectContext) {
+      const projectId = currentProjectContext.serverProjectId;
+      if (!projectId) {
+        setAssistantProjectContext({ status: "local" });
+        return;
+      }
+
+      setAssistantProjectContext({ status: "loading" });
+      try {
+        const projectPayload = await postAssistantProjectRead({
+          action: "read_project_summary",
+          projectId
+        });
+        const project = parseAssistantProjectSummary(projectPayload);
+        if (!project) {
+          throw new Error("Project summary was not available.");
+        }
+
+        if (!currentProjectContext.serverProjectReportId) {
+          if (active) {
+            setAssistantProjectContext({
+              status: "ready",
+              summary: {
+                project
+              }
+            });
+          }
+          return;
+        }
+
+        const [reportsPayload, revisionsPayload] = await Promise.all([
+          postAssistantProjectRead({
+            action: "list_project_reports",
+            projectId
+          }),
+          postAssistantProjectRead({
+            action: "list_project_report_revisions",
+            projectId,
+            reportId: currentProjectContext.serverProjectReportId
+          })
+        ]);
+        const reports = parseAssistantProjectReportSummaries(reportsPayload);
+        const report = reports.find((entry) => entry.id === currentProjectContext.serverProjectReportId);
+        if (!report) {
+          throw new Error("Saved report summary was not available.");
+        }
+
+        const revisions = parseAssistantProjectRevisionSummaries(revisionsPayload);
+        const revision = revisions.find((entry) => entry.id === report.currentRevisionId);
+
+        if (active) {
+          setAssistantProjectContext({
+            status: "ready",
+            summary: {
+              project,
+              report,
+              revision
+            }
+          });
+        }
+      } catch (error) {
+        if (active) {
+          setAssistantProjectContext({
+            message: error instanceof Error ? error.message : "Project context could not be loaded.",
+            status: "error"
+          });
+        }
+      }
+    }
+
+    if (!projectContext?.serverProjectId) {
+      setAssistantProjectContext({ status: "local" });
+      return () => {
+        active = false;
+      };
+    }
+
+    void loadAssistantProjectContext(projectContext);
+
+    return () => {
+      active = false;
+    };
+  }, [projectContext?.serverProjectId, projectContext?.serverProjectReportId, projectContext?.serverProjectReportUpdatedAtIso]);
 
   const assistantContext = useMemo(
     () =>
@@ -1068,6 +1394,11 @@ export function ReportEditor() {
                   {isAssistantLoading ? "Working" : assistantValidation ? "Review" : "Ready"}
                 </span>
               </div>
+              <AssistantProjectContextStrip
+                hasUnsavedChanges={hasUnsavedChanges}
+                projectReportLinked={projectReportLinked}
+                state={assistantProjectContext}
+              />
               <div className="report-assistant-body">
                 <ReportTextArea
                   label="Instruction"
