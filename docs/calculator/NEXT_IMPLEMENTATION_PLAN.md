@@ -73,6 +73,13 @@ frontend implementation changes, material editor UI, broad source
 crawling, formula retuning without evidence, building-prediction impact
 promotion without owned inputs, and ASTM aliasing.
 
+Analysis-only pause checkpoint:
+`docs/calculator/CALCULATOR_EXCELLENCE_AND_CLEANUP_REVIEW_2026-06-15.md`.
+That review records the market bar, current strategic gaps, and local
+cleanup guardrails after pushed implementation checkpoint
+`2637679 feat(engine): support low-density floating floor calculations`.
+It does not replace this selected coverage refresh.
+
 ## Active Slice - 2026-06-15 Floor User-Material Low-Density Floating-Floor Family Owner Landed
 
 `post_v1_floor_user_material_low_density_floating_floor_family_owner_plan`
@@ -226,8 +233,9 @@ The refresh re-probes the custom heavy floating-floor stack at
 `Ln,w 50.3` and `DeltaLw 24.3`, preserves
 `predictor_heavy_floating_floor_iso12354_annexc_estimate`, keeps missing
 `resilientLayerDynamicStiffnessMNm3` or `loadBasisKgM2` at
-`needs_input`, keeps low-density custom concrete unsupported, and keeps
-ASTM/IIC/AIIC plus field/building impact outputs outside this owner.
+`needs_input`, keeps low-density custom concrete outside this
+historical heavy-concrete owner, and keeps ASTM/IIC/AIIC plus
+field/building impact outputs outside this owner.
 Counters: `coverageRefreshContractFilesTouched: 1`,
 `newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
 `newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,

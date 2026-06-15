@@ -1,11 +1,14 @@
 # System Map
 
-Last reviewed: 2026-06-12
+Last reviewed: 2026-06-15
 
 Documentation map:
 [DOCUMENTATION_MAP.md](./DOCUMENTATION_MAP.md). Use that file for the
 read order and sync rules; use this file for route-level implementation
 orientation after the current handoff is understood.
+
+Latest calculator excellence and cleanup review:
+[CALCULATOR_EXCELLENCE_AND_CLEANUP_REVIEW_2026-06-15.md](./CALCULATOR_EXCELLENCE_AND_CLEANUP_REVIEW_2026-06-15.md).
 
 Historical route notes below may preserve the `current` or `selected
 next` wording from the checkpoint that created them. The current active
@@ -27,9 +30,9 @@ Current active route summary:
 - latest closed refresh before this owner:
   `post_v1_floor_user_material_impact_context_field_only_adapter_coverage_refresh_plan`;
 - latest runtime owner:
-  `packages/engine/src/post-v1-wall-double-leaf-framed-user-material-route-input-owner-contract.test.ts`;
-- latest coverage refresh:
-  `packages/engine/src/post-v1-wall-double-leaf-framed-user-material-route-input-coverage-refresh-contract.test.ts`.
+  `packages/engine/src/post-v1-floor-user-material-low-density-floating-floor-family-owner-contract.test.ts`;
+- latest closed coverage refresh before this owner:
+  `packages/engine/src/post-v1-floor-user-material-impact-context-field-only-adapter-coverage-refresh-contract.test.ts`;
 - latest no-runtime rerank:
   `packages/engine/src/post-v1-next-numeric-coverage-gap-after-user-material-route-input-contract.test.ts`.
 - latest input-surface owner:

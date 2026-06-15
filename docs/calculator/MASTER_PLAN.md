@@ -1,17 +1,17 @@
 # Calculator Master Plan
 
-Last reviewed: 2026-06-12
+Last reviewed: 2026-06-15
 
-Current-state override, 2026-06-12: this is a strategic historical
+Current-state override, 2026-06-15: this is a strategic historical
 roadmap, not the current next-slice selector. Read
 [DOCUMENTATION_MAP.md](./DOCUMENTATION_MAP.md),
 [CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md),
 [NEXT_AGENT_BRIEF.md](./NEXT_AGENT_BRIEF.md), and
 [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md) for current
 authority. The current reconciliation checkpoint is
-[CHECKPOINT_2026-06-11_DIRECT_FIXED_A_WEIGHTED_SURFACE_PARITY.md](./CHECKPOINT_2026-06-11_DIRECT_FIXED_A_WEIGHTED_SURFACE_PARITY.md).
+[CALCULATOR_EXCELLENCE_AND_CLEANUP_REVIEW_2026-06-15.md](./CALCULATOR_EXCELLENCE_AND_CLEANUP_REVIEW_2026-06-15.md).
 The current selected next action is
-`post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_coverage_refresh_plan`.
+`post_v1_floor_user_material_low_density_floating_floor_family_coverage_refresh_plan`.
 Older selected-slice language below is historical and must not reopen
 source-pack, productization, UI, report polish, low-confidence wording,
 or broad catalog work as calculator progress.

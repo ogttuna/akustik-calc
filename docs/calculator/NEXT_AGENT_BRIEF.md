@@ -1,6 +1,6 @@
 # Next Agent Brief
 
-Last reviewed: 2026-06-12
+Last reviewed: 2026-06-15
 
 ## Documentation Map
 
@@ -30,10 +30,14 @@ Calculator drift lock:
 
 Fast path:
 
-- checkpoint: `docs/calculator/CHECKPOINT_2026-06-11_DIRECT_FIXED_A_WEIGHTED_SURFACE_PARITY.md`;
-- latest rerank: `packages/engine/src/post-v1-next-numeric-coverage-gap-after-direct-fixed-a-weighted-field-building-contract.test.ts`;
-- latest runtime owner: `packages/engine/src/post-v1-wall-double-leaf-framed-user-material-route-input-owner-contract.test.ts`;
-- latest coverage refresh: `packages/engine/src/post-v1-wall-double-leaf-framed-user-material-route-input-coverage-refresh-contract.test.ts`;
+- latest pushed calculator implementation checkpoint:
+  `2637679 feat(engine): support low-density floating floor calculations`;
+- latest analysis-only calculator excellence and cleanup review:
+  `docs/calculator/CALCULATOR_EXCELLENCE_AND_CLEANUP_REVIEW_2026-06-15.md`;
+- previous surface-parity checkpoint: `docs/calculator/CHECKPOINT_2026-06-11_DIRECT_FIXED_A_WEIGHTED_SURFACE_PARITY.md`;
+- historical direct-fixed rerank: `packages/engine/src/post-v1-next-numeric-coverage-gap-after-direct-fixed-a-weighted-field-building-contract.test.ts`;
+- historical user-material route-input runtime owner: `packages/engine/src/post-v1-wall-double-leaf-framed-user-material-route-input-owner-contract.test.ts`;
+- historical user-material route-input coverage refresh: `packages/engine/src/post-v1-wall-double-leaf-framed-user-material-route-input-coverage-refresh-contract.test.ts`;
 - latest post-user-material rerank: `packages/engine/src/post-v1-next-numeric-coverage-gap-after-user-material-route-input-contract.test.ts`;
 - latest user-material missing-topology owner: `packages/engine/src/post-v1-wall-double-leaf-framed-user-material-missing-topology-input-surface-owner-contract.test.ts`;
 - latest post-missing-topology rerank: `packages/engine/src/post-v1-next-numeric-coverage-gap-after-user-material-missing-topology-input-surface-contract.test.ts`;
@@ -86,6 +90,13 @@ Fast path:
   before choosing the next high-ROI calculator gap. Do not import broad
   source rows, retune formulas without evidence, add material-editor UI,
   borrow the heavy-concrete basis, or alias ASTM impact outputs.
+- temporary cleanup pause: local Playwright cleanup, Playwright env
+  caps, narrow engine runtime export plus web route import migration,
+  tsconfig cleanup, and stale generated `.next-*` cleanup may happen
+  before the next runtime slice. Treat them as tooling hygiene only.
+  Stop if they alter calculator API output shape, metric IDs, basis
+  IDs, route selection, saved replay/report behavior, current-gate
+  registration, or calculator coverage.
 
 The post-flow rerank ran `roiAnalysisIterations: 3` with
 `candidateCount 11`, `estimatedNextRuntimeValuesMoved: 2`,

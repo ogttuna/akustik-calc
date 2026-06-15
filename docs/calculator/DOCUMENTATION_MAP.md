@@ -1,6 +1,6 @@
 # Calculator Documentation Map
 
-Last reviewed: 2026-06-12
+Last reviewed: 2026-06-15
 
 ## Purpose
 
@@ -18,6 +18,12 @@ Long-range calculator direction:
 `docs/calculator/INDUSTRY_GRADE_CALCULATOR_DIRECTION.md`. This file is
 the strategic gap map for becoming an industry-grade calculator. It does
 not replace the source of truth or selected-next implementation plan.
+
+Latest calculator excellence and cleanup review:
+`docs/calculator/CALCULATOR_EXCELLENCE_AND_CLEANUP_REVIEW_2026-06-15.md`.
+This is the analysis-only checkpoint for market-bar research, current
+calculator gaps, and the temporary cleanup guardrails. It does not
+replace the selected next implementation action.
 
 ## Operating Principles
 
@@ -40,13 +46,13 @@ not replace the source of truth or selected-next implementation plan.
 
 ## Current Canonical State
 
-Latest committed calculator checkpoint:
+Latest pushed calculator implementation checkpoint:
 
-`fbd006f feat: checkpoint workbench projects and calculator coverage`
+`2637679 feat(engine): support low-density floating floor calculations`
 
-Current reconciliation checkpoint:
+Current calculator reconciliation checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-06-11_DIRECT_FIXED_A_WEIGHTED_SURFACE_PARITY.md`
+`docs/calculator/CALCULATOR_EXCELLENCE_AND_CLEANUP_REVIEW_2026-06-15.md`
 
 Latest landed runtime/surface/coverage chain:
 

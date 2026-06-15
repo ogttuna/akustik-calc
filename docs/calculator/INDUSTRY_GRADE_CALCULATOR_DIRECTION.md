@@ -1,6 +1,6 @@
 # Industry-Grade Calculator Direction
 
-Last reviewed: 2026-06-12
+Last reviewed: 2026-06-15
 
 ## Purpose
 
@@ -15,6 +15,11 @@ Current selected implementation work remains owned by
 `docs/calculator/CALCULATOR_SOURCE_OF_TRUTH.md`,
 `docs/calculator/CURRENT_STATE.md`, and
 `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`.
+
+Latest market-bar and cleanup reconciliation:
+`docs/calculator/CALCULATOR_EXCELLENCE_AND_CLEANUP_REVIEW_2026-06-15.md`.
+It records external calculator references and temporary cleanup
+guardrails, without selecting a new runtime slice.
 
 ## Product Bar
 
@@ -34,6 +39,16 @@ End-state outputs should include, where physically owned, airborne,
 impact, field, and building metrics such as `Rw`, `STC`, `OITC`, `C`,
 `Ctr`, `R'w`, `Dn,w`, `DnT,w`, `Dn,A`, `DnT,A`, `Ln,w`, `IIC`,
 `L'n,w`, and `L'nT,w`.
+
+The competitive bar is higher than a scalar metric table. Element-level
+tools such as INSUL normalize one-third-octave prediction for walls,
+floors, ceilings, and impact questions. Building-level tools such as
+SONarchitect/BASTIAN-style ISO 12354 workflows normalize room,
+junction, facade, flanking, and building prediction context. DynEcho's
+strategy should therefore favor frequency-band ownership, route-
+required physical input capture, strict lab/field/building and ISO/ASTM
+basis separation, and measured rows as evidence rather than the whole
+product.
 
 ## Strategic Capability Map
 

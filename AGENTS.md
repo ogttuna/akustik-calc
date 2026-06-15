@@ -134,7 +134,9 @@ The refresh keeps custom heavy floating-floor field-only impact values
 at `L'n,w 52.3`, `L'nT,w 49.9`, and `L'nT,50 52.9`; mixed lab+field
 requests still publish `Ln,w 50.3` and `DeltaLw 24.3`. Missing field
 context, missing dynamic stiffness/load basis, missing `ci50_2500Db`,
-low-density custom concrete, and generic `IIC`/`AIIC` remain parked.
+generic `IIC`/`AIIC`, and low-density custom concrete for this
+historical heavy-route owner remain parked. Low-density custom concrete
+is opened by the later low-density floating-floor family owner above.
 Counters: `coverageRefreshContractFilesTouched: 1`,
 `newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
 `newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
@@ -173,8 +175,10 @@ existing `floor.impact_field_context.field_building_adapter`: `L'n,w
 52.3`, `L'nT,w 49.9`, and `L'nT,50 52.9` from `Ln,w 50.3`,
 `DeltaLw 24.3`, explicit field K, receiving-room volume, and
 `ci50_2500Db`. Missing field context, missing dynamic stiffness/load
-basis, missing low-frequency input, low-density custom concrete, and
-generic `IIC`/`AIIC` remain parked. Counters:
+basis, missing low-frequency input, generic `IIC`/`AIIC`, and
+low-density custom concrete for this historical heavy-route owner remain
+parked. Low-density custom concrete is opened by the later low-density
+floating-floor family owner above. Counters:
 `newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 1`,
 `newCalculableTargetOutputs: 3`, `runtimeBasisPromotions: 1`,
 `runtimeValuesMoved 3`, `runtimeFormulaRetunes: 0`,

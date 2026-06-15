@@ -1,14 +1,14 @@
 # Dynamic Calculator Source Gap Ledger
 
-Last reviewed: 2026-06-12
+Last reviewed: 2026-06-15
 
 Current-state override: this is a historical/source-risk ledger, not the
 current next-slice selector. Use it for source-readiness background only
 after reading [DOCUMENTATION_MAP.md](./DOCUMENTATION_MAP.md) and
 [CALCULATOR_SOURCE_OF_TRUTH.md](./CALCULATOR_SOURCE_OF_TRUTH.md). The
-current post-V1 handoff is the direct-fixed double-leaf/framed
-A-weighted field/building route, and the selected next action is
-`post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_coverage_refresh_plan`.
+current post-V1 handoff is the low-density floating-floor user-material
+coverage refresh, and the selected next action is
+`post_v1_floor_user_material_low_density_floating_floor_family_coverage_refresh_plan`.
 Older selected-next source-gap entries below are consumed handoffs unless
 the current plan explicitly reselects them.
 (`calculator_source_gap_revalidation_v2` Gate A landed no-runtime and

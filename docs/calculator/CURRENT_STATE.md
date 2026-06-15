@@ -9,6 +9,9 @@ Documentation map:
 [DOCUMENTATION_MAP.md](./DOCUMENTATION_MAP.md).
 
 Current reconciliation checkpoint:
+[CALCULATOR_EXCELLENCE_AND_CLEANUP_REVIEW_2026-06-15.md](./CALCULATOR_EXCELLENCE_AND_CLEANUP_REVIEW_2026-06-15.md).
+
+Previous surface-parity checkpoint:
 [CHECKPOINT_2026-06-11_DIRECT_FIXED_A_WEIGHTED_SURFACE_PARITY.md](./CHECKPOINT_2026-06-11_DIRECT_FIXED_A_WEIGHTED_SURFACE_PARITY.md).
 
 Current selected next implementation file:
@@ -119,8 +122,10 @@ The owner makes direct field-only custom heavy floating-floor impact
 requests calculate `L'n,w 52.3`, `L'nT,w 49.9`, and `L'nT,50 52.9`
 from the already-owned context lab anchor (`Ln,w 50.3`, `DeltaLw
 24.3`) plus explicit field inputs. Missing field context, missing
-dynamic stiffness/load basis, missing `ci50_2500Db`, low-density custom
-concrete, and generic `IIC`/`AIIC` remain parked. Counters:
+dynamic stiffness/load basis, missing `ci50_2500Db`, generic
+`IIC`/`AIIC`, and low-density custom concrete for this historical
+heavy-route owner remain parked. Low-density custom concrete is opened
+by the later low-density floating-floor family owner above. Counters:
 `newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 1`,
 `newCalculableTargetOutputs: 3`, `runtimeBasisPromotions: 1`,
 `runtimeValuesMoved 3`, `runtimeFormulaRetunes: 0`,

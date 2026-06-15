@@ -1,6 +1,6 @@
 # Calculation Model And Validation
 
-Last reviewed: 2026-06-12
+Last reviewed: 2026-06-15
 
 Document role:
 
@@ -22,18 +22,17 @@ file.
 Current authority:
 
 - `docs/calculator/CALCULATOR_SOURCE_OF_TRUTH.md`
+- `docs/calculator/CALCULATOR_EXCELLENCE_AND_CLEANUP_REVIEW_2026-06-15.md`
 - `docs/calculator/USABLE_V1_EXECUTION_PLAN.md`
 - `docs/calculator/POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md`
 - `docs/calculator/CURRENT_STATE.md`
 - `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
 
-Older Gate-CD, Gate-CH, source-pack, confidence, and product-polish
-checkpoints remain useful history, but they are not the current
-selected-next state. The current living handoff is the direct-fixed
-double-leaf/framed A-weighted field/building route: surface parity has
-landed, and the selected next action is the no-runtime coverage refresh
-contract
-`packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-a-weighted-field-building-coverage-refresh-contract.test.ts`.
+Older Gate-CD, Gate-CH, source-pack, confidence, direct-fixed, and
+product-polish checkpoints remain useful history, but they are not the
+current selected-next state. The current living handoff is the
+low-density floating-floor user-material coverage refresh:
+`packages/engine/src/post-v1-floor-user-material-low-density-floating-floor-family-coverage-refresh-contract.test.ts`.
 
 Current validation posture:
 
@@ -49,10 +48,11 @@ the user answer when the selected path is `needs_input` or
 `unsupported`.
 
 The current gate keeps the answer-engine contract included in
-`pnpm calculator:gate:current`. The 2026-06-11 checkpoint run passed
-with engine 703 test files / 3885 tests, web 126 test files / 492 passed
-+ 18 skipped, repo build 5 / 5, and whitespace guard passing. Known
-non-fatal noise remains optional `sharp` / `@img` build warnings through
+`pnpm calculator:gate:current`. The latest pre-review runtime checkpoint
+for pushed implementation `2637679` passed with engine 721 test files /
+3978 tests, web 127 test files / 505 passed + 18 skipped, repo build
+5 / 5, and whitespace guard passing. Known non-fatal noise remains
+optional `sharp` / `@img` build warnings through
 `@turbodocx/html-to-docx` and `zustand persist middleware`
 storage-unavailable stderr in saved-replay web tests.
 

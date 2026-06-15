@@ -1,6 +1,6 @@
 # Calculator Source Of Truth
 
-Last reviewed: 2026-06-12
+Last reviewed: 2026-06-15
 
 ## Documentation Map
 
@@ -24,6 +24,16 @@ integrity, companion metric completeness, and
 explainability/sensitivity. It also names the highest-ROI work streams
 that future reranks should compare after the current selected next
 closes. It is a direction guard, not a selected-next override.
+
+Latest analysis-only calculator excellence and cleanup review:
+
+`docs/calculator/CALCULATOR_EXCELLENCE_AND_CLEANUP_REVIEW_2026-06-15.md`
+
+That review records the researched market bar, current strategic gaps,
+and cleanup guardrails after the pushed calculator implementation
+checkpoint `2637679 feat(engine): support low-density floating floor
+calculations`. It does not override the selected low-density
+floating-floor coverage refresh.
 
 ## Calculator North Star
 

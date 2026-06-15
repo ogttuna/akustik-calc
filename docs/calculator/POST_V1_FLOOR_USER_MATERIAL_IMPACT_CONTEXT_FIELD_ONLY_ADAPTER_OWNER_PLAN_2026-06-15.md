@@ -227,8 +227,9 @@ visible heavy floating-floor requests now calculate `L'n,w 52.3`,
 `L'nT,w 49.9`, and `L'nT,50 52.9` from the existing context-owned
 `Ln,w 50.3` / `DeltaLw 24.3` anchor and explicit field inputs. Missing
 field context, missing dynamic stiffness/load basis, missing
-`ci50_2500Db`, low-density custom concrete, and generic `IIC`/`AIIC`
-remain parked.
+`ci50_2500Db`, generic `IIC`/`AIIC`, and low-density custom concrete
+for this historical heavy-route owner remain parked. Low-density custom
+concrete is opened by the later low-density floating-floor family owner.
 
 Landed counters:
 

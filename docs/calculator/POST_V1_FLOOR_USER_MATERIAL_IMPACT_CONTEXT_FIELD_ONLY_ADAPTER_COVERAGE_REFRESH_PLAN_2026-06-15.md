@@ -164,8 +164,10 @@ The refresh re-probes field-only custom heavy floating-floor impact
 values at `L'n,w 52.3`, `L'nT,w 49.9`, and `L'nT,50 52.9`; mixed
 lab+field requests still publish `Ln,w 50.3` and `DeltaLw 24.3`.
 Missing field context, missing dynamic stiffness/load basis, missing
-`ci50_2500Db`, low-density custom concrete, and generic `IIC`/`AIIC`
-remain parked. This is not a broad source crawl.
+`ci50_2500Db`, generic `IIC`/`AIIC`, and low-density custom concrete
+for this historical heavy-route owner remain parked. Low-density custom
+concrete is opened by the later low-density floating-floor family owner.
+This is not a broad source crawl.
 
 Closeout counters: `coverageRefreshContractFilesTouched: 1`,
 `newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,

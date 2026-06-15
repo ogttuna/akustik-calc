@@ -86,7 +86,8 @@ The coverage refresh should re-probe and freeze:
   keep `needs_input` and do not use a published-family estimate as a
   substitute for `DeltaLw`;
 - low-density custom concrete with concrete tags:
-  keep unsupported, because it is not an eligible heavy concrete carrier;
+  keep outside this heavy-concrete owner, because it is not an eligible
+  heavy concrete carrier;
 - ASTM `IIC` / `AIIC`, field `L'n,w` / `L'nT,w`, and building impact
   outputs:
   keep outside this owner.
@@ -173,8 +174,9 @@ The refresh re-probes the context-owned custom visible heavy
 floating-floor stack at `Ln,w 50.3` and `DeltaLw 24.3`, preserves the
 `predictor_heavy_floating_floor_iso12354_annexc_estimate` basis, keeps
 missing `resilientLayerDynamicStiffnessMNm3` or `loadBasisKgM2` at
-`needs_input`, keeps low-density custom concrete unsupported, and keeps
-ASTM/IIC/AIIC plus field/building impact outputs outside this owner.
+`needs_input`, keeps low-density custom concrete outside this
+historical heavy-concrete owner, and keeps ASTM/IIC/AIIC plus
+field/building impact outputs outside this owner.
 Counters: `coverageRefreshContractFilesTouched: 1`,
 `newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
 `newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
@@ -290,7 +292,8 @@ boundaries:
      `resilientLayerDynamicStiffnessMNm3` and `loadBasisKgM2`.
 
 5. Low-density custom concrete carrier:
-   - even with full impact context, keep the route unsupported.
+   - even with full impact context, keep this historical heavy-concrete
+     route unsupported.
    - do not silently treat low-density custom concrete as a heavy base.
 
 6. Out-of-scope output families:
