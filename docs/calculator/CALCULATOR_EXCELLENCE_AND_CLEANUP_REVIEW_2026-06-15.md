@@ -149,6 +149,14 @@ refresh. That refresh should:
 5. Stale `.next-*` cleanup is safe only for confirmed generated Next or
    Playwright build output.
 
+Observed cleanup risk after this review: the local working tree changed
+`apps/web/next-env.d.ts` from `./.next/types/routes.d.ts` to a
+Playwright-specific generated path,
+`./.next-playwright-3189/types/routes.d.ts`. Do not commit that state.
+`next-env.d.ts` is generated project-wide Next typing glue and should
+not be pinned to a transient Playwright dist. Restore or regenerate it
+before committing tsconfig/Playwright cleanup.
+
 Minimum validation after cleanup before calculator runtime work resumes:
 
 - `git diff --check`;

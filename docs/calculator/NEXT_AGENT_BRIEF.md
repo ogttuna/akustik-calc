@@ -96,7 +96,10 @@ Fast path:
   before the next runtime slice. Treat them as tooling hygiene only.
   Stop if they alter calculator API output shape, metric IDs, basis
   IDs, route selection, saved replay/report behavior, current-gate
-  registration, or calculator coverage.
+  registration, calculator coverage, or project-wide Next type glue.
+  In particular, do not commit `apps/web/next-env.d.ts` while it points
+  at a transient `.next-playwright-*` routes file instead of the normal
+  generated Next route types.
 
 The post-flow rerank ran `roiAnalysisIterations: 3` with
 `candidateCount 11`, `estimatedNextRuntimeValuesMoved: 2`,
