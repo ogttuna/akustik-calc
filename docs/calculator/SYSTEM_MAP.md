@@ -59,8 +59,53 @@ Current active route summary:
   `packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-impact-context-field-only-adapter-contract.test.ts`;
 - latest floor user-material low-density owner:
   `packages/engine/src/post-v1-floor-user-material-low-density-floating-floor-family-owner-contract.test.ts`;
+- latest floor user-material low-density coverage refresh:
+  `packages/engine/src/post-v1-floor-user-material-low-density-floating-floor-family-coverage-refresh-contract.test.ts`;
+- latest floor user-material visible floating load-basis owner:
+  `packages/engine/src/post-v1-floor-user-material-visible-floating-load-basis-owner-contract.test.ts`;
 - selected next route file:
-  `packages/engine/src/post-v1-floor-user-material-low-density-floating-floor-family-coverage-refresh-contract.test.ts`.
+  `packages/engine/src/post-v1-floor-user-material-visible-floating-load-basis-coverage-refresh-contract.test.ts`.
+
+Latest floor user-material low-density floating-floor family coverage
+refresh 2026-06-15:
+`post_v1_floor_user_material_low_density_floating_floor_family_coverage_refresh_plan`
+landed in
+`packages/engine/src/post-v1-floor-user-material-low-density-floating-floor-family-coverage-refresh-contract.test.ts`
+with status
+`post_v1_floor_user_material_low_density_floating_floor_family_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`.
+It follows
+`post_v1_floor_user_material_low_density_floating_floor_family_owner_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-low-density-floating-floor-family-owner-contract.test.ts`
+/
+`post_v1_floor_user_material_low_density_floating_floor_family_owner_landed_runtime_selected_coverage_refresh`
+and
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_impact_context_field_only_adapter_plan`
+/
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-impact-context-field-only-adapter-contract.test.ts`
+/
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_impact_context_field_only_adapter_landed_no_runtime_selected_floor_user_material_low_density_floating_floor_family_owner`.
+Selected candidate re-probed:
+`floor.user_material_low_density_floating_floor_family_owner`.
+The refresh keeps custom low-density values at `Rw 53`, `Ln,w 64.3`,
+`DeltaLw 24.3`, `L'n,w 66.3`, `L'nT,w 63.9`, and `L'nT,50 66.9`;
+heavy custom concrete remains on the heavy floating-floor basis and
+generic `IIC` / `AIIC` remains unsupported. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next:
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_floating_floor_family_plan`
+/
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-low-density-floating-floor-family-contract.test.ts`
+/
+`docs/calculator/POST_V1_NEXT_NUMERIC_COVERAGE_GAP_AFTER_FLOOR_USER_MATERIAL_LOW_DENSITY_FLOATING_FLOOR_FAMILY_PLAN_2026-06-15.md`
+/
+`post-V1 next numeric coverage gap after floor user-material low-density floating-floor family`.
 
 Latest floor user-material low-density floating-floor family owner
 2026-06-15:
@@ -87,7 +132,7 @@ floating-floor basis. Counters: `newCalculableLayerTemplates: 1`,
 `runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
 `frontendImplementationFilesTouched: 0`.
 
-Current selected next:
+Historical selected next at the owner checkpoint:
 `post_v1_floor_user_material_low_density_floating_floor_family_coverage_refresh_plan`
 /
 `packages/engine/src/post-v1-floor-user-material-low-density-floating-floor-family-coverage-refresh-contract.test.ts`

@@ -17,6 +17,7 @@ import {
   type PersonalUseMvpCoverageSprintGateAXPhysicalFieldId
 } from "./calculator-personal-use-mvp-coverage-sprint-gate-ax";
 import { calculateGateAYAdvancedWallRuntimeCorridor } from "./calculator-personal-use-mvp-coverage-sprint-gate-ay";
+import { resolveVisibleFloatingFloorLoadBasisKgM2 } from "./floor-impact-visible-load-basis";
 
 export type DynamicCalculatorRoute = "wall" | "floor";
 export type DynamicCalculatorOutputBasis = "element_lab" | "field_apparent" | "building_prediction";
@@ -1234,8 +1235,16 @@ function resilientLayerHasDynamicStiffness(
     });
 }
 
-function hasPositiveLoadBasis(floorImpactContext: DynamicCalculatorFloorImpactContext | undefined): boolean {
-  return typeof floorImpactContext?.loadBasisKgM2 === "number" && floorImpactContext.loadBasisKgM2 > 0;
+function hasPositiveLoadBasis(input: {
+  catalog: readonly MaterialDefinition[];
+  floorImpactContext: DynamicCalculatorFloorImpactContext | undefined;
+  layers: readonly LayerInput[];
+}): boolean {
+  if (typeof input.floorImpactContext?.loadBasisKgM2 === "number") {
+    return input.floorImpactContext.loadBasisKgM2 > 0;
+  }
+
+  return typeof resolveVisibleFloatingFloorLoadBasisKgM2(input) === "number";
 }
 
 function addFloatingFloorContract(input: {
@@ -1282,7 +1291,11 @@ function addFloatingFloorContract(input: {
     {
       detail: "Enter the load basis for the floating layer before high-accuracy impact prediction.",
       fieldId: "loadBasisKgM2",
-      isMissing: !hasPositiveLoadBasis(input.floorImpactContext),
+      isMissing: !hasPositiveLoadBasis({
+        catalog: input.catalog,
+        floorImpactContext: input.floorImpactContext,
+        layers: input.layers
+      }),
       label: "Floating-floor load basis",
       source: "floor_role"
     }

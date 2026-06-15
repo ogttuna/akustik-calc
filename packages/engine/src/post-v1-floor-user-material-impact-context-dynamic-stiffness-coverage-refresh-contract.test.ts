@@ -281,20 +281,26 @@ describe("post-V1 floor user-material impact context dynamic-stiffness coverage 
     expectNeedsInputBoundary(result, ["resilientLayerDynamicStiffnessMNm3"]);
   });
 
-  it("keeps missing load basis at needs_input without using a substitute estimate", () => {
+  it("derives missing load basis from the visible custom floating package", () => {
     const result = calculateCustomFloor({
       floorImpactContext: {
         resilientLayerDynamicStiffnessMNm3: 30
       }
     });
 
-    expectNeedsInputBoundary(result, ["loadBasisKgM2"]);
+    expect(result.supportedTargetOutputs).toEqual([...IMPACT_LAB_OUTPUTS]);
+    expect(result.unsupportedTargetOutputs).toEqual([]);
+    expect(result.impact).toMatchObject({
+      DeltaLw: 24.4,
+      LnW: 50.1,
+      floatingLoadSurfaceMassKgM2: 77.6
+    });
   });
 
-  it("keeps missing dynamic stiffness and load basis at needs_input", () => {
+  it("keeps missing dynamic stiffness at needs_input while visible load basis is derivable", () => {
     const result = calculateCustomFloor({});
 
-    expectNeedsInputBoundary(result, ["resilientLayerDynamicStiffnessMNm3", "loadBasisKgM2"]);
+    expectNeedsInputBoundary(result, ["resilientLayerDynamicStiffnessMNm3"]);
   });
 
   it("routes low-density custom concrete through the lightweight family instead of the heavy concrete carrier", () => {

@@ -119,6 +119,7 @@ import {
   buildGateYFloorImpactFieldContextAssessment,
   type GateYFloorImpactFieldContextAssessment
 } from "./dynamic-calculator-floor-impact-field-context-contract";
+import { resolveVisibleFloatingFloorLoadBasisKgM2 } from "./floor-impact-visible-load-basis";
 import { clamp, round1 } from "./math";
 import { buildEstimateWarnings, estimateRwDb } from "./estimate-rw";
 import { hasBoundOnlyUbiqOpenWebCarpetCombinedProfile } from "./bound-only-floor-near-miss";
@@ -842,6 +843,7 @@ function hasPostV1GateNImpactCiOwner(input: {
 }
 
 function hasPostV1LowerTreatmentFieldCompanionPredictorSeed(input: {
+  catalog: readonly MaterialDefinition[];
   floorImpactContext: DynamicCalculatorFloorImpactContext | null;
   impactFieldContext: ImpactFieldContext | null;
   layers: readonly LayerInput[];
@@ -858,11 +860,24 @@ function hasPostV1LowerTreatmentFieldCompanionPredictorSeed(input: {
       layer.floorRole === "ceiling_cavity" ||
       layer.floorRole === "ceiling_fill"
   );
-  const hasFloorImpactAnchorInputs =
+  const loadBasisKgM2 =
     typeof input.floorImpactContext?.loadBasisKgM2 === "number" &&
-    input.floorImpactContext.loadBasisKgM2 > 0 &&
-    typeof input.floorImpactContext?.resilientLayerDynamicStiffnessMNm3 === "number" &&
-    input.floorImpactContext.resilientLayerDynamicStiffnessMNm3 > 0;
+    input.floorImpactContext.loadBasisKgM2 > 0
+      ? input.floorImpactContext.loadBasisKgM2
+      : resolveVisibleFloatingFloorLoadBasisKgM2({
+          catalog: input.catalog,
+          layers: input.layers
+        });
+  const dynamicStiffnessMNm3 = resolveFloorImpactDynamicStiffness({
+    catalog: input.catalog,
+    floorImpactContext: input.floorImpactContext,
+    layers: input.layers
+  });
+  const hasFloorImpactAnchorInputs =
+    typeof loadBasisKgM2 === "number" &&
+    loadBasisKgM2 > 0 &&
+    typeof dynamicStiffnessMNm3 === "number" &&
+    dynamicStiffnessMNm3 > 0;
 
   return Boolean(
     requestedFieldOutputs.length > 0 &&
@@ -2782,7 +2797,11 @@ function buildGateWImpactPredictorSeed(input: {
   layers: readonly LayerInput[];
 }): ImpactPredictorInput {
   const dynamicStiffnessMNm3 = resolveFloorImpactDynamicStiffness(input);
-  const loadBasisKgM2 = input.floorImpactContext?.loadBasisKgM2;
+  const explicitLoadBasisKgM2 = input.floorImpactContext?.loadBasisKgM2;
+  const loadBasisKgM2 =
+    typeof explicitLoadBasisKgM2 === "number" && explicitLoadBasisKgM2 > 0
+      ? explicitLoadBasisKgM2
+      : resolveVisibleFloatingFloorLoadBasisKgM2(input);
 
   return {
     ...(typeof loadBasisKgM2 === "number" && loadBasisKgM2 > 0 ? { loadBasisKgM2 } : {}),
@@ -3724,6 +3743,7 @@ export function calculateAssembly(
   const lowerTreatmentFieldCompanionPredictorSeedReady =
     options.calculator === "dynamic" &&
     hasPostV1LowerTreatmentFieldCompanionPredictorSeed({
+      catalog: baseCatalog,
       floorImpactContext,
       impactFieldContext,
       layers,

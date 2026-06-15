@@ -33,7 +33,8 @@ That review records the researched market bar, current strategic gaps,
 and cleanup guardrails after the pushed calculator implementation
 checkpoint `2637679 feat(engine): support low-density floating floor
 calculations`. It does not override the selected low-density
-floating-floor coverage refresh.
+floating-floor coverage refresh or the later visible floating load-basis
+runtime owner.
 
 ## Calculator North Star
 
@@ -86,12 +87,98 @@ refresh, post-flow numeric coverage-gap rerank, floor user-material
 impact context dynamic-stiffness owner, its no-runtime coverage refresh,
 the post-refresh numeric coverage-gap rerank, the floor user-material
 impact context field-only adapter owner, its no-runtime coverage
-refresh, the post-field-only numeric rerank, and the floor user-material
-low-density floating-floor family owner are closed. The selected next
-step is
-`post_v1_floor_user_material_low_density_floating_floor_family_coverage_refresh_plan`,
-a no-runtime refresh that must re-probe the new custom low-density floor
-route before choosing the next high-ROI calculator gap.
+refresh, the post-field-only numeric rerank, the floor user-material
+low-density floating-floor family owner, its no-runtime coverage
+refresh, and the visible floating load-basis runtime owner are closed.
+The selected next step is
+`post_v1_floor_user_material_visible_floating_load_basis_coverage_refresh_plan`,
+a narrow coverage refresh for the runtime owner that just moved visible
+floating-floor requests without manual `loadBasisKgM2`.
+
+## Latest Floor User-Material Visible Floating Load-Basis Owner - 2026-06-15
+
+`post_v1_floor_user_material_visible_floating_load_basis_owner_plan`
+landed in
+`packages/engine/src/post-v1-floor-user-material-visible-floating-load-basis-owner-contract.test.ts`
+with status
+`post_v1_floor_user_material_visible_floating_load_basis_owner_landed_runtime_selected_coverage_refresh`.
+It follows the prior selected plan
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_floating_floor_family_plan`
+and closes candidate
+`floor.user_material_visible_floating_load_basis_owner`.
+
+The owner derives visible floating-floor `loadBasisKgM2` from upper
+package surface mass when the layer stack contains role-tagged
+`floor_covering`, `floating_screed`, optional `upper_fill`, and a
+`resilient_layer`. The pinned stack derives `77.6 kg/m2`. Low-density
+custom concrete now calculates without manual `loadBasisKgM2`: `Ln,w
+64.3`, `DeltaLw 24.4`, `L'n,w 66.3`, `L'nT,w 63.9`, and `L'nT,50
+66.9`. Heavy custom concrete now calculates without manual
+`loadBasisKgM2`: `Ln,w 50.1`, `DeltaLw 24.4`, `L'n,w 52.1`, `L'nT,w
+49.7`, and `L'nT,50 52.7`. Explicit `loadBasisKgM2` still overrides the
+derived value, preserving prior `76 kg/m2` pins. Missing dynamic
+stiffness, missing floating layer, non-derivable load basis, and generic
+`IIC` / `AIIC` remain outside the owner.
+
+Counters: `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 2`, `newCalculableTargetOutputs: 10`,
+`runtimeBasisPromotions: 2`, `runtimeValuesMoved 10`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Current selected next action:
+`post_v1_floor_user_material_visible_floating_load_basis_coverage_refresh_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-floor-user-material-visible-floating-load-basis-coverage-refresh-contract.test.ts`.
+Current selected next plan:
+`docs/calculator/POST_V1_FLOOR_USER_MATERIAL_VISIBLE_FLOATING_LOAD_BASIS_COVERAGE_REFRESH_PLAN_2026-06-15.md`.
+Current selected next label:
+`post-V1 floor user-material visible floating load-basis coverage refresh`.
+
+## Latest Floor User-Material Low-Density Floating-Floor Family Coverage Refresh - 2026-06-15
+
+`post_v1_floor_user_material_low_density_floating_floor_family_coverage_refresh_plan`
+landed in
+`packages/engine/src/post-v1-floor-user-material-low-density-floating-floor-family-coverage-refresh-contract.test.ts`
+with status
+`post_v1_floor_user_material_low_density_floating_floor_family_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`.
+It follows
+`post_v1_floor_user_material_low_density_floating_floor_family_owner_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-low-density-floating-floor-family-owner-contract.test.ts`
+/
+`post_v1_floor_user_material_low_density_floating_floor_family_owner_landed_runtime_selected_coverage_refresh`
+and
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_impact_context_field_only_adapter_plan`
+/
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-impact-context-field-only-adapter-contract.test.ts`
+/
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_impact_context_field_only_adapter_landed_no_runtime_selected_floor_user_material_low_density_floating_floor_family_owner`.
+Selected candidate re-probed:
+`floor.user_material_low_density_floating_floor_family_owner`.
+The refresh keeps `Rw 53`, `Ln,w 64.3`, `DeltaLw 24.3`, `L'n,w
+66.3`, `L'nT,w 63.9`, and `L'nT,50 66.9`; missing dynamic
+stiffness/load basis remains `needs_input`, missing explicit
+`ci50_2500Db` can still use the owned lightweight-family `CI50_2500 5`
+estimate while explicit `ci50_2500Db: 3` still wins when supplied,
+heavy custom concrete remains on the heavy floating-floor basis, and
+generic `IIC` / `AIIC` remains unsupported. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Historical selected next action at the coverage refresh checkpoint:
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_floating_floor_family_plan`.
+Historical selected next file at the coverage refresh checkpoint:
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-low-density-floating-floor-family-contract.test.ts`.
+Historical selected next plan at the coverage refresh checkpoint:
+`docs/calculator/POST_V1_NEXT_NUMERIC_COVERAGE_GAP_AFTER_FLOOR_USER_MATERIAL_LOW_DENSITY_FLOATING_FLOOR_FAMILY_PLAN_2026-06-15.md`.
+Historical selected next label at the coverage refresh checkpoint:
+`post-V1 next numeric coverage gap after floor user-material low-density floating-floor family`.
 
 ## Latest Floor User-Material Low-Density Floating-Floor Family Owner - 2026-06-15
 
@@ -120,13 +207,13 @@ concrete remains on the heavy floating-floor basis. Counters:
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
 This is not a broad source crawl.
 
-Current selected next action:
+Historical selected next action at the owner checkpoint:
 `post_v1_floor_user_material_low_density_floating_floor_family_coverage_refresh_plan`.
-Current selected next file:
+Historical selected next file at the owner checkpoint:
 `packages/engine/src/post-v1-floor-user-material-low-density-floating-floor-family-coverage-refresh-contract.test.ts`.
-Current selected next plan:
+Historical selected next plan at the owner checkpoint:
 `docs/calculator/POST_V1_FLOOR_USER_MATERIAL_LOW_DENSITY_FLOATING_FLOOR_FAMILY_COVERAGE_REFRESH_PLAN_2026-06-15.md`.
-Current selected next label:
+Historical selected next label at the owner checkpoint:
 `post-V1 floor user-material low-density floating-floor family coverage refresh`.
 
 ## Latest Floor User-Material Low-Density Floating-Floor Family Rerank - 2026-06-15

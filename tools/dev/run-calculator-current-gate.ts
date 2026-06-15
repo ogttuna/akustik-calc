@@ -701,6 +701,8 @@ async function main() {
         "src/post-v1-floor-user-material-impact-context-field-only-adapter-coverage-refresh-contract.test.ts",
         "src/post-v1-next-numeric-coverage-gap-after-floor-user-material-impact-context-field-only-adapter-contract.test.ts",
         "src/post-v1-floor-user-material-low-density-floating-floor-family-owner-contract.test.ts",
+        "src/post-v1-floor-user-material-low-density-floating-floor-family-coverage-refresh-contract.test.ts",
+        "src/post-v1-floor-user-material-visible-floating-load-basis-owner-contract.test.ts",
         "src/acoustic-calculator-answer-engine-v1-contract.test.ts",
         "src/acoustic-calculator-company-internal-usable-v1-acceptance-gate-contract.test.ts",
         "src/broad-accuracy-floor-open-box-timber-similarity-transfer-owner-contract.test.ts",

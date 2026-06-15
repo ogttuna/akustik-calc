@@ -56,6 +56,14 @@ Fast path:
 - latest floor user-material low-density rerank plan: `docs/calculator/POST_V1_NEXT_NUMERIC_COVERAGE_GAP_AFTER_FLOOR_USER_MATERIAL_IMPACT_CONTEXT_FIELD_ONLY_ADAPTER_PLAN_2026-06-15.md`;
 - latest floor user-material low-density owner: `packages/engine/src/post-v1-floor-user-material-low-density-floating-floor-family-owner-contract.test.ts`;
 - latest floor user-material low-density owner plan: `docs/calculator/POST_V1_FLOOR_USER_MATERIAL_LOW_DENSITY_FLOATING_FLOOR_FAMILY_OWNER_PLAN_2026-06-15.md`;
+- latest floor user-material low-density coverage refresh: `packages/engine/src/post-v1-floor-user-material-low-density-floating-floor-family-coverage-refresh-contract.test.ts`;
+- latest floor user-material low-density coverage refresh plan: `docs/calculator/POST_V1_FLOOR_USER_MATERIAL_LOW_DENSITY_FLOATING_FLOOR_FAMILY_COVERAGE_REFRESH_PLAN_2026-06-15.md`;
+- latest floor user-material low-density post-refresh rerank action: `post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_floating_floor_family_plan`;
+- latest floor user-material low-density post-refresh rerank file: `packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-low-density-floating-floor-family-contract.test.ts`;
+- latest floor user-material low-density post-refresh rerank plan: `docs/calculator/POST_V1_NEXT_NUMERIC_COVERAGE_GAP_AFTER_FLOOR_USER_MATERIAL_LOW_DENSITY_FLOATING_FLOOR_FAMILY_PLAN_2026-06-15.md`;
+- latest floor user-material visible floating load-basis owner: `packages/engine/src/post-v1-floor-user-material-visible-floating-load-basis-owner-contract.test.ts`;
+- latest floor user-material visible floating load-basis owner plan: `docs/calculator/POST_V1_FLOOR_USER_MATERIAL_VISIBLE_FLOATING_LOAD_BASIS_OWNER_PLAN_2026-06-15.md`;
+- latest floor user-material visible floating load-basis coverage refresh plan: `docs/calculator/POST_V1_FLOOR_USER_MATERIAL_VISIBLE_FLOATING_LOAD_BASIS_COVERAGE_REFRESH_PLAN_2026-06-15.md`;
 - latest floor owner action: `post_v1_floor_user_material_impact_context_dynamic_stiffness_owner_plan`;
 - latest floor coverage refresh action: `post_v1_floor_user_material_impact_context_dynamic_stiffness_coverage_refresh_plan`;
 - latest floor field-only rerank action: `post_v1_next_numeric_coverage_gap_after_floor_user_material_impact_context_dynamic_stiffness_plan`;
@@ -63,6 +71,8 @@ Fast path:
 - latest floor field-only coverage refresh action: `post_v1_floor_user_material_impact_context_field_only_adapter_coverage_refresh_plan`;
 - latest floor low-density rerank action: `post_v1_next_numeric_coverage_gap_after_floor_user_material_impact_context_field_only_adapter_plan`;
 - latest floor low-density owner action: `post_v1_floor_user_material_low_density_floating_floor_family_owner_plan`;
+- latest floor low-density coverage refresh action: `post_v1_floor_user_material_low_density_floating_floor_family_coverage_refresh_plan`;
+- latest floor visible floating load-basis owner action: `post_v1_floor_user_material_visible_floating_load_basis_owner_plan`;
 - latest post-flow rerank status:
   `post_v1_next_numeric_coverage_gap_after_user_material_porous_flow_resistivity_input_landed_no_runtime_selected_floor_user_material_impact_context_dynamic_stiffness_owner`;
 - latest floor owner status:
@@ -79,17 +89,21 @@ Fast path:
   `post_v1_next_numeric_coverage_gap_after_floor_user_material_impact_context_field_only_adapter_landed_no_runtime_selected_floor_user_material_low_density_floating_floor_family_owner`;
 - latest floor low-density owner status:
   `post_v1_floor_user_material_low_density_floating_floor_family_owner_landed_runtime_selected_coverage_refresh`;
-- next action: `post_v1_floor_user_material_low_density_floating_floor_family_coverage_refresh_plan`;
-- next plan: `docs/calculator/POST_V1_FLOOR_USER_MATERIAL_LOW_DENSITY_FLOATING_FLOOR_FAMILY_COVERAGE_REFRESH_PLAN_2026-06-15.md`;
-- next file: `packages/engine/src/post-v1-floor-user-material-low-density-floating-floor-family-coverage-refresh-contract.test.ts`;
+- latest floor low-density coverage refresh status:
+  `post_v1_floor_user_material_low_density_floating_floor_family_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`;
+- latest floor visible floating load-basis owner status:
+  `post_v1_floor_user_material_visible_floating_load_basis_owner_landed_runtime_selected_coverage_refresh`;
+- next action: `post_v1_floor_user_material_visible_floating_load_basis_coverage_refresh_plan`;
+- next plan: `docs/calculator/POST_V1_FLOOR_USER_MATERIAL_VISIBLE_FLOATING_LOAD_BASIS_COVERAGE_REFRESH_PLAN_2026-06-15.md`;
+- next file: `packages/engine/src/post-v1-floor-user-material-visible-floating-load-basis-coverage-refresh-contract.test.ts`;
 - closed candidate: `floor.user_material_impact_context_dynamic_stiffness_owner`;
-- selected candidate: `floor.user_material_low_density_floating_floor_family_owner`;
-- next status: selected no-runtime coverage refresh, plan ready, not
-  implemented;
-- constraint: re-probe the newly opened custom low-density floor route
-  before choosing the next high-ROI calculator gap. Do not import broad
-  source rows, retune formulas without evidence, add material-editor UI,
-  borrow the heavy-concrete basis, or alias ASTM impact outputs.
+- selected candidate: `floor.user_material_visible_floating_load_basis_owner`;
+- next status: selected narrow coverage refresh after runtime owner;
+- constraint: re-probe derived visible floating `loadBasisKgM2` before
+  selecting another gap. Do not import broad source rows, retune
+  formulas without evidence, add material-editor UI, borrow the
+  heavy-concrete basis for low-density concrete, or alias ASTM impact
+  outputs.
 - temporary cleanup pause: local Playwright cleanup, Playwright env
   caps, narrow engine runtime export plus web route import migration,
   tsconfig cleanup, and stale generated `.next-*` cleanup may happen
@@ -153,6 +167,34 @@ It calculates `Rw 53`, `Ln,w 64.3`, `DeltaLw 24.3`, `L'n,w 66.3`,
 `L'nT,w 63.9`, and `L'nT,50 66.9` for a custom visible low-density
 concrete floating-floor stack through the lightweight-concrete family,
 DeltaLw, and field-adapter corridors.
+
+The low-density coverage refresh
+`post_v1_floor_user_material_low_density_floating_floor_family_coverage_refresh_plan`
+landed in
+`packages/engine/src/post-v1-floor-user-material-low-density-floating-floor-family-coverage-refresh-contract.test.ts`
+with status
+`post_v1_floor_user_material_low_density_floating_floor_family_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`.
+It follows
+`post_v1_floor_user_material_low_density_floating_floor_family_owner_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-low-density-floating-floor-family-owner-contract.test.ts`
+/
+`post_v1_floor_user_material_low_density_floating_floor_family_owner_landed_runtime_selected_coverage_refresh`
+and
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_impact_context_field_only_adapter_plan`
+/
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-impact-context-field-only-adapter-contract.test.ts`
+/
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_impact_context_field_only_adapter_landed_no_runtime_selected_floor_user_material_low_density_floating_floor_family_owner`.
+It re-probes
+`floor.user_material_low_density_floating_floor_family_owner` without
+moving runtime values. Counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
 
 The field-only coverage refresh
 `post_v1_floor_user_material_impact_context_field_only_adapter_coverage_refresh_plan`

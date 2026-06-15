@@ -642,7 +642,7 @@ describe("post-V1 next numeric coverage gap after user-material porous flow-resi
     expect(missingDynamic.supportedTargetOutputs).toEqual([]);
     expect(missingDynamic.unsupportedTargetOutputs).toEqual(["Ln,w", "DeltaLw"]);
     expect(missingDynamic.acousticAnswerBoundary).toMatchObject({
-      missingPhysicalInputs: ["resilientLayerDynamicStiffnessMNm3", "loadBasisKgM2"],
+      missingPhysicalInputs: ["resilientLayerDynamicStiffnessMNm3"],
       origin: "needs_input",
       unsupportedOutputs: ["Ln,w", "DeltaLw"]
     });

@@ -236,14 +236,14 @@ describe("post-V1 floor user-material impact context dynamic-stiffness owner", (
     expect(result.unsupportedTargetOutputs).toEqual([]);
   });
 
-  it("keeps missing dynamic stiffness and load basis at needs_input", () => {
+  it("keeps missing dynamic stiffness at needs_input while visible load basis is derivable", () => {
     const result = calculateCustomFloor({});
 
     expect(result.impact).toBeNull();
     expect(result.supportedTargetOutputs).toEqual([]);
     expect(result.unsupportedTargetOutputs).toEqual(["Ln,w", "DeltaLw"]);
     expect(result.acousticAnswerBoundary).toMatchObject({
-      missingPhysicalInputs: ["resilientLayerDynamicStiffnessMNm3", "loadBasisKgM2"],
+      missingPhysicalInputs: ["resilientLayerDynamicStiffnessMNm3"],
       origin: "needs_input",
       unsupportedOutputs: ["Ln,w", "DeltaLw"]
     });

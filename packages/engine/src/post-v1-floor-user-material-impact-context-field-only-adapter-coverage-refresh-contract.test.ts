@@ -364,7 +364,7 @@ describe("post-V1 floor user-material impact context field-only adapter coverage
     expect(missingLabAnchor.unsupportedTargetOutputs).toEqual([...FIELD_IMPACT_OUTPUTS]);
     expect(missingLabAnchor.impact).toBeNull();
     expect(missingLabAnchor.acousticAnswerBoundary).toMatchObject({
-      missingPhysicalInputs: ["resilientLayerDynamicStiffnessMNm3", "loadBasisKgM2"],
+      missingPhysicalInputs: ["resilientLayerDynamicStiffnessMNm3"],
       origin: "needs_input",
       route: "floor"
     });

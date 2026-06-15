@@ -100,3 +100,37 @@ Selected next plan:
 Selected next label:
 
 `post-V1 floor user-material low-density floating-floor family coverage refresh`
+
+## Follow-On Coverage Refresh Landed
+
+Coverage refresh action:
+
+`post_v1_floor_user_material_low_density_floating_floor_family_coverage_refresh_plan`
+
+Coverage refresh file:
+
+`packages/engine/src/post-v1-floor-user-material-low-density-floating-floor-family-coverage-refresh-contract.test.ts`
+
+Coverage refresh status:
+
+`post_v1_floor_user_material_low_density_floating_floor_family_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`
+
+The refresh re-probes the owner without moving runtime values. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Follow-on selected next action:
+
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_floating_floor_family_plan`
+
+Follow-on selected next file:
+
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-low-density-floating-floor-family-contract.test.ts`
+
+Follow-on selected next plan:
+
+`docs/calculator/POST_V1_NEXT_NUMERIC_COVERAGE_GAP_AFTER_FLOOR_USER_MATERIAL_LOW_DENSITY_FLOATING_FLOOR_FAMILY_PLAN_2026-06-15.md`
