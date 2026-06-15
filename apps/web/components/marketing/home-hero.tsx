@@ -38,7 +38,7 @@ export function HomeHero() {
           <div className="flex flex-wrap gap-3">
             <Link
               className="focus-ring ink-button-solid touch-target inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition hover:translate-y-[-1px]"
-              href="/workbench"
+              href="/workbench-v2"
             >
               Open workbench
               <ArrowRight className="h-4 w-4" />

@@ -30,7 +30,7 @@ export function HomeWorkbenchPreview() {
           />
           <Link
             className="focus-ring ink-button-solid touch-target inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold"
-            href="/workbench"
+            href="/workbench-v2"
           >
             Enter the workbench
             <ArrowRight className="h-4 w-4" />

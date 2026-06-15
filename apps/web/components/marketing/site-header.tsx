@@ -21,7 +21,7 @@ export function SiteHeader() {
           <Link className="focus-ring surface-subtle-hover touch-target rounded-full px-3 py-2" href="/">
             Overview
           </Link>
-          <Link className="focus-ring surface-subtle-hover touch-target rounded-full px-3 py-2" href="/workbench">
+          <Link className="focus-ring surface-subtle-hover touch-target rounded-full px-3 py-2" href="/workbench-v2">
             Workbench
           </Link>
           <Link className="focus-ring surface-subtle-hover touch-target rounded-full px-3 py-2" href="/#source-policy">
