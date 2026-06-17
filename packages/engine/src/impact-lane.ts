@@ -42,12 +42,19 @@ import {
   resolveExactFloorSystemById,
   resolveExactFloorSystemImpactSource
 } from "./floor-system-match";
-import { buildOwnedImpactFromExactSource } from "./impact-astm-e989";
+import {
+  ASTM_E989_IMPACT_RATING_BASIS,
+  buildOwnedImpactFromExactSource
+} from "./impact-astm-e989";
 import {
   applyImpactFieldContextToBoundImpact,
   applyImpactFieldContextToImpact
 } from "./impact-field-context";
-import { estimateImpactFromLayers, estimateImpactFromPredictorInput } from "./impact-estimate";
+import {
+  HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS,
+  estimateImpactFromLayers,
+  estimateImpactFromPredictorInput
+} from "./impact-estimate";
 import { buildImpactPredictorStatus } from "./impact-predictor-status";
 import { shouldBlockHeavyConcreteCombinedImpactFormulaFallback } from "./heavy-concrete-combined-impact-formula-corridor";
 import { isPredictorHeavyConcreteCarrierEligible } from "./heavy-concrete-carrier-eligibility";
@@ -58,6 +65,7 @@ import {
 } from "./impact-product-catalog";
 import { deriveHeavyReferenceImpactFromDeltaLw } from "./impact-reference";
 import { mergeImpactCalculations, mergePublishedUpperTreatmentDeltaCompanion } from "./impact-merge";
+import { mergeImpactMetricBasis } from "./impact-metric-basis";
 import { buildImpactSupport } from "./impact-support";
 import { attachImpactTraceFromExactSource } from "./impact-trace";
 import { buildDynamicImpactTrace } from "./dynamic-impact";
@@ -68,9 +76,13 @@ import {
   mergeTimberCltDeltaLwFormulaCompanion
 } from "./timber-clt-floor-impact-delta-lw-runtime-corridor";
 import {
+  LIGHTWEIGHT_CONCRETE_DELTA_LW_RUNTIME_BASIS,
   estimateLightweightConcreteDeltaLwFromPredictorInput,
   mergeLightweightConcreteDeltaLwCompanion
 } from "./lightweight-concrete-delta-lw-runtime-corridor";
+import {
+  LIGHTWEIGHT_CONCRETE_FAMILY_ESTIMATE_BASIS
+} from "./lightweight-concrete-family-runtime-constants";
 import { mergeMassTimberCltUpperPackageDeltaLwCompanion } from "./mass-timber-clt-upper-package-delta-lw-runtime";
 import {
   inferImpactSupportingElementFamilyFromExactFloorSystem,
@@ -171,6 +183,106 @@ export type ResolvedImpactArtifacts = {
 };
 
 const FLOOR_SYSTEM_VISIBLE_RECOMMENDATION_LIMIT = 8;
+const EXACT_ASTM_ISO_COMPANION_NOTE =
+  "Ln,w and DeltaLw were carried from the same-stack ISO impact companion while the exact ASTM impact rating stayed on its ASTM E989 basis.";
+const LOW_DENSITY_EXACT_ASTM_COMPANION_INTERNAL_OUTPUTS = new Set<RequestedOutputId>([
+  "AIIC",
+  "C",
+  "DeltaLw",
+  "Dn,A",
+  "Dn,w",
+  "DnT,A",
+  "DnT,w",
+  "L'n,w",
+  "L'nT,50",
+  "L'nT,w",
+  "Ln,w",
+  "R'w",
+  "Rw"
+]);
+
+function hasLowDensityExactAstmCompanionInternalRequest(
+  targetOutputs: readonly RequestedOutputId[] | undefined
+): boolean {
+  return Boolean(
+    targetOutputs?.some((output) =>
+      LOW_DENSITY_EXACT_ASTM_COMPANION_INTERNAL_OUTPUTS.has(output)
+    )
+  );
+}
+
+function hasExactAstmIsoImpactCompanion(
+  impact: ImpactCalculation | null | undefined
+): impact is ImpactCalculation {
+  const metricBasis = impact?.metricBasis;
+
+  return Boolean(
+    impact &&
+      (
+        impact.basis === HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS ||
+        impact.basis === LIGHTWEIGHT_CONCRETE_FAMILY_ESTIMATE_BASIS ||
+        impact.basis === LIGHTWEIGHT_CONCRETE_DELTA_LW_RUNTIME_BASIS ||
+        metricBasis?.LnW === HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS ||
+        metricBasis?.DeltaLw === HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS ||
+        metricBasis?.LnW === LIGHTWEIGHT_CONCRETE_FAMILY_ESTIMATE_BASIS ||
+        metricBasis?.DeltaLw === LIGHTWEIGHT_CONCRETE_DELTA_LW_RUNTIME_BASIS
+      ) &&
+      (
+        typeof impact.LnW === "number" ||
+        typeof impact.DeltaLw === "number"
+      )
+  );
+}
+
+function pickExactAstmIsoImpactCompanion(
+  ...candidates: Array<ImpactCalculation | null | undefined>
+): ImpactCalculation | null {
+  return candidates.find(hasExactAstmIsoImpactCompanion) ?? null;
+}
+
+function mergeAvailableOutput(
+  outputs: ImpactCalculation["availableOutputs"],
+  output: RequestedOutputId
+): ImpactCalculation["availableOutputs"] {
+  return outputs.includes(output) ? outputs : [...outputs, output];
+}
+
+function mergeExactAstmImpactWithIsoCompanion(
+  exactImpact: ImpactCalculation | null,
+  companionImpact: ImpactCalculation | null
+): ImpactCalculation | null {
+  if (!exactImpact) {
+    return null;
+  }
+
+  if (
+    exactImpact.basis !== ASTM_E989_IMPACT_RATING_BASIS ||
+    !hasExactAstmIsoImpactCompanion(companionImpact)
+  ) {
+    return exactImpact;
+  }
+
+  const merged: ImpactCalculation = {
+    ...exactImpact,
+    availableOutputs: [...exactImpact.availableOutputs],
+    metricBasis: mergeImpactMetricBasis(companionImpact.metricBasis, exactImpact.metricBasis),
+    notes: exactImpact.notes.includes(EXACT_ASTM_ISO_COMPANION_NOTE)
+      ? [...exactImpact.notes]
+      : [...exactImpact.notes, EXACT_ASTM_ISO_COMPANION_NOTE]
+  };
+
+  if (typeof merged.LnW !== "number" && typeof companionImpact.LnW === "number") {
+    merged.LnW = companionImpact.LnW;
+    merged.availableOutputs = mergeAvailableOutput(merged.availableOutputs, "Ln,w");
+  }
+
+  if (typeof merged.DeltaLw !== "number" && typeof companionImpact.DeltaLw === "number") {
+    merged.DeltaLw = companionImpact.DeltaLw;
+    merged.availableOutputs = mergeAvailableOutput(merged.availableOutputs, "DeltaLw");
+  }
+
+  return merged;
+}
 
 export function shouldHideLowConfidenceProxyAirborne(
   floorSystemEstimate: FloorSystemEstimateResult | null | undefined
@@ -383,7 +495,13 @@ export function resolveLayerBasedImpactLane(
       : null;
   const lightweightConcreteDeltaLwCompanion =
     input.predictorInput &&
-    input.targetOutputs?.includes("DeltaLw") &&
+    (
+      input.targetOutputs?.includes("DeltaLw") ||
+      (
+        input.exactImpact?.basis === ASTM_E989_IMPACT_RATING_BASIS &&
+        hasLowDensityExactAstmCompanionInternalRequest(input.targetOutputs)
+      )
+    ) &&
     !input.officialFloorSystemId &&
     !impactCatalogMatch &&
     !explicitDeltaImpact
@@ -510,10 +628,14 @@ export function resolveLayerBasedImpactLane(
     !blockMixedSupportFormulaFallback
       ? deriveBoundFloorSystemEstimate(input.resolvedLayers)
       : null;
+  const allowFloorSystemEstimateWithExactAstmLightweightCompanion = Boolean(
+    input.exactImpact?.basis === ASTM_E989_IMPACT_RATING_BASIS &&
+      predictorDeltaLwCompanion?.basis === LIGHTWEIGHT_CONCRETE_DELTA_LW_RUNTIME_BASIS
+  );
   const rawFloorSystemEstimate =
     explicitDeltaImpact || predictorSpecificFloorSystemEstimate
       ? null
-      : !input.exactImpact &&
+      : (!input.exactImpact || allowFloorSystemEstimateWithExactAstmLightweightCompanion) &&
           !floorSystemMatch &&
           !boundFloorSystemMatch &&
           !boundFloorSystemEstimate &&
@@ -586,8 +708,19 @@ export function finalizeResolvedImpactLane(
     floorEstimateImpactWithTimberCltCompanion,
     floorEstimateImpactWithTimberCltCompanion ? input.predictorDeltaLwCompanion ?? null : null
   );
+  const exactAstmImpactWithSupplementaryImpact = mergeImpactCalculations(exactImpact, exactSupplementaryImpact);
+  const exactAstmIsoImpactCompanion = pickExactAstmIsoImpactCompanion(
+    floorEstimateImpactWithDeltaLwCompanion,
+    input.preferredSupplementaryImpact ?? null,
+    input.fallbackSupplementaryImpact ?? null,
+    input.narrowImpact ?? null,
+    input.predictorDeltaLwCompanion ?? null
+  );
   const baseImpact = exactImpact
-    ? mergeImpactCalculations(exactImpact, exactSupplementaryImpact)
+    ? mergeExactAstmImpactWithIsoCompanion(
+        exactAstmImpactWithSupplementaryImpact,
+        exactAstmIsoImpactCompanion
+      )
     : (
         floorSystemMatchImpact ??
         input.impactCatalogMatch?.impact ??

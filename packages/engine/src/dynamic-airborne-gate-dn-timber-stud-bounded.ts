@@ -100,10 +100,87 @@ function isPlainGypsumBoardLayer(layer: ResolvedLayer): boolean {
   );
 }
 
-function hasOnlyPlainGypsumBoardLeaves(layers: readonly ResolvedLayer[]): boolean {
-  const boardLayers = layers.filter((layer) => classifyLayerRole(layer).isSolidLeaf && isBoardLikeLayer(layer));
+function countPlainGypsumBoardUnits(leafLayers: readonly ResolvedLayer[]): number | null {
+  let count = 0;
+  let splitBoardThicknessMm = 0;
 
-  return boardLayers.length === 4 && boardLayers.every(isPlainGypsumBoardLayer);
+  for (const layer of leafLayers) {
+    if (!isPlainGypsumBoardLayer(layer)) {
+      return null;
+    }
+
+    const thicknessMm = layer.thicknessMm;
+    if (!Number.isFinite(thicknessMm) || thicknessMm <= 0) {
+      return null;
+    }
+
+    if (thicknessMm >= 10 && thicknessMm <= 16) {
+      if (splitBoardThicknessMm > 0) {
+        return null;
+      }
+      count += 1;
+      continue;
+    }
+
+    if (thicknessMm > 0 && thicknessMm < 10) {
+      splitBoardThicknessMm += thicknessMm;
+      if (splitBoardThicknessMm >= 10 && splitBoardThicknessMm <= 16) {
+        count += 1;
+        splitBoardThicknessMm = 0;
+      } else if (splitBoardThicknessMm > 16) {
+        return null;
+      }
+      continue;
+    }
+
+    return null;
+  }
+
+  return splitBoardThicknessMm === 0 ? count : null;
+}
+
+function summarizePlainGypsumBoardUnitLayout(layers: readonly ResolvedLayer[]): {
+  leftLeafBoardUnits: number;
+  rightLeafBoardUnits: number;
+} | null {
+  const leftLeafLayers: ResolvedLayer[] = [];
+  const rightLeafLayers: ResolvedLayer[] = [];
+  let cavityStarted = false;
+
+  for (const layer of layers) {
+    const role = classifyLayerRole(layer);
+
+    if ((role.isGap || role.isPorous) && (leftLeafLayers.length > 0 || cavityStarted)) {
+      cavityStarted = true;
+      continue;
+    }
+
+    if (!role.isSolidLeaf) {
+      continue;
+    }
+
+    if (!isBoardLikeLayer(layer)) {
+      return null;
+    }
+
+    if (cavityStarted) {
+      rightLeafLayers.push(layer);
+    } else {
+      leftLeafLayers.push(layer);
+    }
+  }
+
+  const leftLeafBoardUnits = countPlainGypsumBoardUnits(leftLeafLayers);
+  const rightLeafBoardUnits = countPlainGypsumBoardUnits(rightLeafLayers);
+
+  if (leftLeafBoardUnits === null || rightLeafBoardUnits === null) {
+    return null;
+  }
+
+  return {
+    leftLeafBoardUnits,
+    rightLeafBoardUnits
+  };
 }
 
 function hasDirectWoodStudOwnerInput(options: DynamicAirborneOptions): boolean {
@@ -143,14 +220,14 @@ function isEligibleDirectWoodStudDoubleBoard(input: {
   }
 
   const boardSystem = summarizeFramedBoardSystem(input.layers);
+  const plainGypsumBoardLayout = summarizePlainGypsumBoardUnitLayout(input.layers);
   const cavity = describePrimaryCavity(input.layers);
   const framingHint = normalizeFramingHint(input.options.airborneContext);
   const framingEvidence = summarizeFramingEvidence(input.layers, input.topology, framingHint);
 
   return (
-    boardSystem.boardTier === "double_board" &&
-    boardSystem.leftLeafBoardCount === 2 &&
-    boardSystem.rightLeafBoardCount === 2 &&
+    plainGypsumBoardLayout?.leftLeafBoardUnits === 2 &&
+    plainGypsumBoardLayout.rightLeafBoardUnits === 2 &&
     boardSystem.acousticBoardFraction < 0.25 &&
     boardSystem.primaryGapLayerCount === 1 &&
     cavity.coreThicknessMm === 100 &&
@@ -158,7 +235,6 @@ function isEligibleDirectWoodStudDoubleBoard(input: {
     cavity.porousThicknessMm === 50 &&
     framingEvidence.boardDominantFramedMorphology &&
     framingEvidence.studEligible &&
-    hasOnlyPlainGypsumBoardLeaves(input.layers) &&
     hasCompleteMassInputs(input.layers)
   );
 }

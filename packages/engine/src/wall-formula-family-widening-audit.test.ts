@@ -375,15 +375,15 @@ describe("wall formula family widening audit", () => {
     });
 
     expect(dynamicBuilding).toMatchObject({
-      c: 0.4,
-      ctr: -4.3,
+      c: 0.5,
+      ctr: -4.2,
       dnA: 41.4,
       dnTA: 43.9,
       dnTw: 43,
       dnW: 41,
-      rw: 42,
+      rw: 50,
       rwPrime: 42,
-      stc: 42,
+      stc: 50,
       supported: ["Rw", "R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"],
       unsupported: []
     });

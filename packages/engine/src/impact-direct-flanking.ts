@@ -11,6 +11,7 @@ import { getImpactConfidenceForBasis } from "./impact-confidence";
 import {
   mergeFloorImpactFieldBuildingAdapterErrorBudgets
 } from "./impact-field-adapter-error-budget";
+import { ASTM_E989_IMPACT_RATING_BASIS } from "./impact-astm-e989";
 import { computeImpactSpectrumAdaptationTerms, computeImpactWeightedRating } from "./impact-iso717";
 import { createImpactMetricBasis, mergeImpactMetricBasis } from "./impact-metric-basis";
 import { inferImpactSupportingElementFamilyFromLayers } from "./impact-supporting-element-family";
@@ -366,6 +367,13 @@ function resolveMixedBasis(baseImpact: ImpactCalculation, standardizedField: boo
     : "mixed_predicted_plus_estimated_direct_flanking_energy_sum";
 }
 
+function hasAstmE989Rating(baseImpact: ImpactCalculation): boolean {
+  return (
+    baseImpact.basis === ASTM_E989_IMPACT_RATING_BASIS &&
+    (typeof baseImpact.IIC === "number" || typeof baseImpact.AIIC === "number")
+  );
+}
+
 function buildCurveDerivedFieldMetrics(
   exactImpactSource: ExactImpactSource,
   fieldCurveDb: readonly number[],
@@ -427,7 +435,12 @@ export function applyDirectFlankingFieldEstimate(
     return null;
   }
 
-  if (input.impact.labOrField === "field") {
+  const fieldAstmRatingWithIsoCompanion =
+    input.impact.labOrField === "field" &&
+    hasAstmE989Rating(input.impact) &&
+    typeof input.impact.LnW === "number";
+
+  if (input.impact.labOrField === "field" && !fieldAstmRatingWithIsoCompanion) {
     return null;
   }
 
@@ -465,16 +478,18 @@ export function applyDirectFlankingFieldEstimate(
       ? ksRound1(10 * log10Safe(31.3 / input.fieldContext.receivingRoomVolumeM3))
       : undefined;
 
-  const exactCurve = input.exactImpactSource
+  const exactImpactSourceForDirectFlanking =
+    input.exactImpactSource?.labOrField === "field" ? null : input.exactImpactSource;
+  const exactCurve = exactImpactSourceForDirectFlanking
     ? buildShiftedCurve(
-        input.exactImpactSource.levelsDb,
+        exactImpactSourceForDirectFlanking.levelsDb,
         directOffsetDb - (lowerTreatmentReductionDb ?? 0)
       )
     : null;
-  const flankingCurves = input.exactImpactSource
+  const flankingCurves = exactImpactSourceForDirectFlanking
     ? computedPaths.map((entry) =>
         buildShiftedCurve(
-          input.exactImpactSource!.levelsDb,
+          exactImpactSourceForDirectFlanking.levelsDb,
           (entry.path.levelOffsetDb ?? 0) + entry.countOffsetDb + entry.pathModifierDb
         )
       )
@@ -502,8 +517,8 @@ export function applyDirectFlankingFieldEstimate(
       : undefined;
 
   const derivedCurveMetrics =
-    input.exactImpactSource && exactFieldCurve
-      ? buildCurveDerivedFieldMetrics(input.exactImpactSource, exactFieldCurve, standardizedCurve)
+    exactImpactSourceForDirectFlanking && exactFieldCurve
+      ? buildCurveDerivedFieldMetrics(exactImpactSourceForDirectFlanking, exactFieldCurve, standardizedCurve)
       : null;
 
   const lPrimeNW =
@@ -540,7 +555,10 @@ export function applyDirectFlankingFieldEstimate(
     (typeof lPrimeNTw === "number" && typeof ci50_2500 === "number"
       ? ksRound1(lPrimeNTw + ci50_2500)
       : undefined);
-  const basis = resolveMixedBasis(input.impact, standardizedField && typeof lPrimeNTw === "number");
+  const preserveAstmRatingBasis = hasAstmE989Rating(input.impact);
+  const basis = preserveAstmRatingBasis
+    ? input.impact.basis
+    : resolveMixedBasis(input.impact, standardizedField && typeof lPrimeNTw === "number");
 
   const impact: ImpactCalculation = {
     ...input.impact,
@@ -555,7 +573,7 @@ export function applyDirectFlankingFieldEstimate(
       typeof lPrimeNT50 === "number"
     ),
     basis,
-    confidence: getImpactConfidenceForBasis(basis),
+    confidence: preserveAstmRatingBasis ? input.impact.confidence : getImpactConfidenceForBasis(basis),
     errorBudgets: mergeFloorImpactFieldBuildingAdapterErrorBudgets({
       impact: input.impact,
       lPrimeNTw,
@@ -590,15 +608,17 @@ export function applyDirectFlankingFieldEstimate(
       ...input.impact.notes,
       exactCurve
         ? `Direct+flanking field estimate re-rated the supplied impact curve with ${flankingPaths.length} active flanking path(s).`
+        : fieldAstmRatingWithIsoCompanion
+          ? `Direct+flanking field estimate used the same-stack ISO weighted impact companion with ${flankingPaths.length} active flanking path(s) while the ASTM field bands stayed dedicated to AIIC.`
         : `Direct+flanking field estimate used a weighted-impact energy sum with ${flankingPaths.length} active flanking path(s) because no exact impact curve was available.`,
       ...(familyModels.length > 0
         ? [`Family-aware flanking path models stayed active for: ${familyModels.join(", ")}.`]
         : [])
     ],
     trace:
-      input.exactImpactSource && exactFieldCurve
+      exactImpactSourceForDirectFlanking && exactFieldCurve
         ? buildImpactTraceFromDerivedCurves({
-            exactImpactSource: input.exactImpactSource,
+            exactImpactSource: exactImpactSourceForDirectFlanking,
             fieldCurveDb: exactFieldCurve,
             standardizedCurveDb: standardizedCurve
           })
@@ -618,6 +638,8 @@ export function applyDirectFlankingFieldEstimate(
   const warnings = [
     exactCurve
       ? "Field-side L'n,w was estimated from a direct+flanking path energy sum using band-by-band impact curves and then re-rated with ISO 717-2."
+      : fieldAstmRatingWithIsoCompanion
+        ? "Field-side L'n,w was estimated from the same-stack ISO weighted impact companion and direct+flanking path energy sum; ASTM field bands stayed dedicated to AIIC."
       : "Field-side L'n,w was estimated from a direct+flanking energy sum on the available weighted impact rating. This remains a single-number approximation because no exact impact band curve was available.",
     ...(typeof lPrimeNTw === "number"
       ? [

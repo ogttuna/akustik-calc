@@ -58,15 +58,15 @@ export const POST_V1_GATE_AX_WALL_FRAMED_VALUE_PINS = [
   {
     caseId: "wall-timber-stud",
     values: {
-      "C": 0.4,
-      "Ctr": -4.3,
+      "C": 0.5,
+      "Ctr": -4.2,
       "Dn,A": 42.4,
       "Dn,w": 42,
       "DnT,A": 43.9,
       "DnT,w": 43,
       "R'w": 42,
-      "Rw": 42,
-      "STC": 42
+      "Rw": 50,
+      "STC": 50
     }
   }
 ] as const;

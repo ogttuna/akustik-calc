@@ -147,12 +147,15 @@ const TIMBER_FIELD_WARNINGS = [
 
 const TIMBER_SPLIT_LAB_WARNINGS = [
   ...COMMON_FRAMED_WARNINGS,
+  TIMBER_STUD_BOUNDED_WARNING,
   UNSUPPORTED_LAB_WARNING,
   NO_EXACT_FLOOR_WARNING
 ] as const;
 
 const TIMBER_SPLIT_FIELD_WARNINGS = [
   ...COMMON_FRAMED_WARNINGS,
+  TIMBER_STUD_BOUNDED_WARNING,
+  TIMBER_STUD_FIELD_CONTEXT_WARNING,
   TIMBER_FIELD_OVERLAY_WARNING,
   NO_EXACT_FLOOR_WARNING
 ] as const;
@@ -379,15 +382,15 @@ describe("wall framed facing split warning stability Gate A contract", () => {
       supported: ["Rw", "R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"],
       unsupported: [],
       values: {
-        c: 0.4,
-        ctr: -4.3,
+        c: 0.5,
+        ctr: -4.2,
         dnA: 42.4,
         dnTA: 43.9,
         dnTw: 43,
         dnW: 42,
-        rw: 42,
+        rw: 50,
         rwPrime: 42,
-        stc: 42
+        stc: 50
       },
       warnings: TIMBER_FIELD_WARNINGS
     });

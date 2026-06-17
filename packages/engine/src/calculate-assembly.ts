@@ -72,8 +72,12 @@ import {
   GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING,
   maybeBuildGateIAirborneFieldContextBasisFromBase
 } from "./dynamic-airborne-gate-i-airborne-field-context";
+import { GATE_DN_TIMBER_STUD_BOUNDED_RUNTIME_METHOD } from "./dynamic-airborne-gate-dn-timber-stud-bounded";
 import { GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_RUNTIME_METHOD } from "./dynamic-airborne-gate-s-double-leaf-framed";
-import { GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD } from "./dynamic-airborne-gate-h-lined-masonry-clt";
+import {
+  GATE_H_CLT_MASS_TIMBER_WALL_RUNTIME_METHOD,
+  GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD
+} from "./dynamic-airborne-gate-h-lined-masonry-clt";
 import { COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_RUNTIME_METHOD } from "./dynamic-airborne-company-internal-heavy-composite-wall";
 import { GATE_AE_FLAT_MULTICAVITY_RUNTIME_METHOD } from "./dynamic-airborne-gate-ae-flat-multicavity";
 import {
@@ -119,7 +123,10 @@ import {
   buildGateYFloorImpactFieldContextAssessment,
   type GateYFloorImpactFieldContextAssessment
 } from "./dynamic-calculator-floor-impact-field-context-contract";
-import { resolveVisibleFloatingFloorLoadBasisKgM2 } from "./floor-impact-visible-load-basis";
+import {
+  hasUserMaterialSignal,
+  resolveVisibleFloatingFloorLoadBasisKgM2
+} from "./floor-impact-visible-load-basis";
 import { clamp, round1 } from "./math";
 import { buildEstimateWarnings, estimateRwDb } from "./estimate-rw";
 import { hasBoundOnlyUbiqOpenWebCarpetCombinedProfile } from "./bound-only-floor-near-miss";
@@ -129,9 +136,13 @@ import {
   ASTM_E989_IMPACT_RATING_BASIS,
   buildOwnedImpactFromExactSource
 } from "./impact-astm-e989";
-import { HEAVY_BARE_FLOOR_IMPACT_FORMULA_BASIS } from "./impact-estimate";
+import {
+  HEAVY_BARE_FLOOR_IMPACT_FORMULA_BASIS,
+  HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS
+} from "./impact-estimate";
 import { OPEN_WEB_DIRECT_FIXED_LINING_BASIS } from "./lightweight-steel-open-web-direct-fixed-lining-estimate";
 import { OPEN_WEB_SUPPORTED_BAND_SIMILARITY_BASIS } from "./lightweight-steel-open-web-supported-band-estimate";
+import { LIGHTWEIGHT_CONCRETE_FAMILY_ESTIMATE_BASIS } from "./lightweight-concrete-family-runtime-constants";
 import { OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS } from "./open-box-timber-eps-screed-hybrid-package-estimate";
 import { OPEN_BOX_TIMBER_SIMILARITY_BASIS } from "./open-box-timber-similarity-estimate";
 import { OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS } from "./open-box-timber-raw-bare-estimate";
@@ -431,6 +442,10 @@ const POST_V1_MIXED_WALL_FIELD_LAB_COMPANION_FIELD_METHODS = new Set<string>([
   BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD,
   GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD
 ]);
+const POST_V1_WALL_TIMBER_STUD_CLT_FIELD_LAB_COMPANION_BASE_METHODS = new Set<string>([
+  GATE_DN_TIMBER_STUD_BOUNDED_RUNTIME_METHOD,
+  GATE_H_CLT_MASS_TIMBER_WALL_RUNTIME_METHOD
+]);
 const POST_V1_WALL_SCREENING_FIELD_LAB_COMPANION_METHOD = "screening_mass_law_curve_seed_v3";
 const POST_V1_WALL_SCREENING_FIELD_LAB_COMPANION_FAMILIES = new Set([
   "laminated_single_leaf",
@@ -457,12 +472,32 @@ const POST_V1_OPEN_BOX_FINISHED_PACKAGE_FLOOR_IMPACT_COMPANION_OUTPUTS = [
   "L'nT,w",
   "L'nT,50"
 ] as const satisfies readonly RequestedOutputId[];
+const POST_V1_LOW_DENSITY_EXACT_ASTM_COMPANION_SEED_OUTPUTS = new Set<RequestedOutputId>([
+  "AIIC",
+  "C",
+  "DeltaLw",
+  "Dn,A",
+  "Dn,w",
+  "DnT,A",
+  "DnT,w",
+  "L'n,w",
+  "L'nT,50",
+  "L'nT,w",
+  "Ln,w",
+  "R'w",
+  "Rw"
+]);
 const POST_V1_GATE_CG_BARE_HEAVY_FLOOR_PARTIAL_OUTPUTS = new Set<RequestedOutputId>([
   "CI,50-2500",
   "L'n,w",
   "L'nT,50",
   "L'nT,w",
   "Ln,w"
+]);
+const POST_V1_VISIBLE_FLOATING_LAB_COMPANION_PARTIAL_OUTPUTS = new Set<RequestedOutputId>([
+  "CI",
+  "CI,50-2500",
+  "Ln,w+CI"
 ]);
 const POST_V1_GATE_CG_FLOOR_COVERING_DELTA_LW_MISSING_INPUTS = [
   "toppingOrFloatingLayer",
@@ -494,6 +529,18 @@ function hasGateZFloorImpactFieldRequest(targetOutputs: readonly RequestedOutput
   return targetOutputs.some((output) => GATE_Z_FIELD_IMPACT_OUTPUTS.has(output));
 }
 
+function hasPostV1LowDensityExactAstmCompanionSeedRequest(input: {
+  exactImpact: ImpactCalculation | null;
+  targetOutputs: readonly RequestedOutputId[];
+}): boolean {
+  return Boolean(
+    input.exactImpact?.basis === ASTM_E989_IMPACT_RATING_BASIS &&
+      input.targetOutputs.some((output) =>
+        POST_V1_LOW_DENSITY_EXACT_ASTM_COMPANION_SEED_OUTPUTS.has(output)
+      )
+  );
+}
+
 function hasPostV1GateCgBareHeavyFloorPartialImpactCandidate(input: {
   directNarrowImpact: ImpactCalculation | null;
   layers: readonly ResolvedLayer[];
@@ -518,6 +565,18 @@ function hasPostV1GateCg2PublishedUpperTreatmentPartialImpactCandidate(input: {
         isPostV1GateCqVisibleHeavyFloatingLowerTreatmentStack(input.layers)
       ) &&
       input.targetOutputs.some((output) => POST_V1_GATE_CG_BARE_HEAVY_FLOOR_PARTIAL_OUTPUTS.has(output))
+  );
+}
+
+function hasPostV1VisibleFloatingLabCompanionPartialImpactCandidate(input: {
+  fullyTaggedFloorStack: boolean;
+  narrowImpact: ImpactCalculation | null;
+  targetOutputs: readonly RequestedOutputId[];
+}): boolean {
+  return Boolean(
+    input.fullyTaggedFloorStack &&
+      input.narrowImpact?.basis === HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS &&
+      input.targetOutputs.some((output) => POST_V1_VISIBLE_FLOATING_LAB_COMPANION_PARTIAL_OUTPUTS.has(output))
   );
 }
 
@@ -578,6 +637,27 @@ function isOpenBoxFinishedPackageFloorAirborneBasis(
   basis: string | null | undefined
 ): basis is typeof OPEN_BOX_TIMBER_SIMILARITY_BASIS | typeof OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS {
   return basis === OPEN_BOX_TIMBER_SIMILARITY_BASIS || basis === OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS;
+}
+
+function isFloorLabAirborneCompanionBasis(input: {
+  allowHeavyConcreteCompanion: boolean;
+  basis: string | null | undefined;
+}): boolean {
+  return (
+    isOpenBoxFinishedPackageFloorAirborneBasis(input.basis) ||
+    (input.allowHeavyConcreteCompanion &&
+      input.basis === "predictor_heavy_concrete_floor_airborne_companion_estimate")
+  );
+}
+
+function isLowDensityExactAstmLabAirborneCompanionBasis(input: {
+  basis: string | null | undefined;
+  impact: ImpactCalculation | null | undefined;
+}): boolean {
+  return (
+    input.basis === LIGHTWEIGHT_CONCRETE_FAMILY_ESTIMATE_BASIS &&
+    input.impact?.basis === ASTM_E989_IMPACT_RATING_BASIS
+  );
 }
 
 function hasCompleteFloorAirborneBuildingPredictionContext(
@@ -1122,6 +1202,48 @@ function getFiniteRequestedUnsupportedLabSpectrumOutputs(input: {
   return companionOutputs;
 }
 
+function getFiniteRequestedLabSpectrumOutputs(input: {
+  readonly estimatedCDb: number | null | undefined;
+  readonly estimatedCtrDb: number | null | undefined;
+  readonly estimatedRwDb: number | null | undefined;
+  readonly estimatedStcDb: number | null | undefined;
+  readonly support: TargetOutputSupportLike;
+}): RequestedOutputId[] {
+  const targetOutputSet = new Set(input.support.targetOutputs);
+  const companionOutputs: RequestedOutputId[] = [];
+
+  if (
+    targetOutputSet.has("Rw") &&
+    typeof input.estimatedRwDb === "number" &&
+    Number.isFinite(input.estimatedRwDb)
+  ) {
+    companionOutputs.push("Rw");
+  }
+  if (
+    targetOutputSet.has("STC") &&
+    typeof input.estimatedStcDb === "number" &&
+    Number.isFinite(input.estimatedStcDb)
+  ) {
+    companionOutputs.push("STC");
+  }
+  if (
+    targetOutputSet.has("C") &&
+    typeof input.estimatedCDb === "number" &&
+    Number.isFinite(input.estimatedCDb)
+  ) {
+    companionOutputs.push("C");
+  }
+  if (
+    targetOutputSet.has("Ctr") &&
+    typeof input.estimatedCtrDb === "number" &&
+    Number.isFinite(input.estimatedCtrDb)
+  ) {
+    companionOutputs.push("Ctr");
+  }
+
+  return companionOutputs;
+}
+
 function getPostV1OpenBoxFinishedPackageBuildingLabCompanionOutputs(input: {
   readonly floorSystemRatings: (FloorSystemAirborneRatings & { readonly basis?: string }) | null;
   readonly runtime: PostV1OpenBoxFinishedPackageFloorAirborneBuildingPredictionRuntime | null;
@@ -1166,6 +1288,48 @@ function getPostV1OpenBoxFinishedPackageBuildingLabCompanionOutputs(input: {
     Number.isFinite(ctrDb)
   ) {
     outputs.push("Ctr");
+  }
+
+  return outputs;
+}
+
+function getPostV1LowDensityExactAstmLabAirborneCompanionOutputs(input: {
+  readonly floorSystemRatings: (FloorSystemAirborneRatings & { readonly basis?: string }) | null;
+  readonly impact: ImpactCalculation | null | undefined;
+  readonly support: TargetOutputSupportLike;
+}): RequestedOutputId[] {
+  const ratings = input.floorSystemRatings;
+
+  if (
+    !ratings ||
+    !isLowDensityExactAstmLabAirborneCompanionBasis({
+      basis: ratings.basis,
+      impact: input.impact
+    })
+  ) {
+    return [];
+  }
+
+  const targetOutputSet = new Set(input.support.targetOutputs);
+  const unsupportedOutputSet = new Set(input.support.unsupportedTargetOutputs);
+  const outputs: RequestedOutputId[] = [];
+  const cDb = getFloorSystemC(ratings);
+
+  if (
+    targetOutputSet.has("Rw") &&
+    unsupportedOutputSet.has("Rw") &&
+    typeof ratings.Rw === "number" &&
+    Number.isFinite(ratings.Rw)
+  ) {
+    outputs.push("Rw");
+  }
+  if (
+    targetOutputSet.has("C") &&
+    unsupportedOutputSet.has("C") &&
+    typeof cDb === "number" &&
+    Number.isFinite(cDb)
+  ) {
+    outputs.push("C");
   }
 
   return outputs;
@@ -1392,6 +1556,182 @@ function getPostV1GateARBuildingLabSpectrumCompanionOutputs(input: {
   }
 
   return getFiniteRequestedUnsupportedLabSpectrumOutputs(input);
+}
+
+function hasPostV1WallUserMaterialFormulaLabTrace(
+  airborneTrace: DynamicAirborneTrace | null | undefined
+): boolean {
+  return Boolean(
+    airborneTrace?.detectedFamily === "double_stud_system" &&
+      airborneTrace.strategy === "double_leaf_framed_bridge_mass_air_mass_runtime" &&
+      airborneTrace.selectedMethod === "mass_law" &&
+      airborneTrace.visibleLeafCount === 2 &&
+      airborneTrace.cavityCount === 1 &&
+      airborneTrace.hasPorousFill
+  );
+}
+
+function getPostV1WallUserMaterialFormulaBuildingLabCompanionOutputs(input: {
+  readonly airborneBasis: AirborneResultBasis | null | undefined;
+  readonly airborneContext: AirborneContext | null | undefined;
+  readonly airborneTrace: DynamicAirborneTrace | null | undefined;
+  readonly catalogLabFallbackApplied: boolean;
+  readonly estimatedCDb: number | null | undefined;
+  readonly estimatedCtrDb: number | null | undefined;
+  readonly estimatedRwDb: number | null | undefined;
+  readonly estimatedStcDb: number | null | undefined;
+  readonly hasUserSuppliedMaterial: boolean;
+  readonly sourceAnchorCandidatePresent: boolean;
+  readonly support: TargetOutputSupportLike;
+}): RequestedOutputId[] {
+  const hasRequestedBuildingOutput = input.support.targetOutputs.some((output) =>
+    ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLOOR_FIELD_CONTINUATION_OUTPUTS.has(output)
+  );
+  const hasGateARBuildingBasis =
+    input.airborneBasis?.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD &&
+    input.airborneBasis.origin === "family_physics_prediction" &&
+    input.airborneBasis.missingPhysicalInputs.length === 0;
+
+  if (
+    input.airborneContext?.contextMode !== "building_prediction" ||
+    !input.hasUserSuppliedMaterial ||
+    !hasRequestedBuildingOutput ||
+    !hasGateARBuildingBasis ||
+    !hasPostV1WallUserMaterialFormulaLabTrace(input.airborneTrace) ||
+    input.catalogLabFallbackApplied ||
+    input.sourceAnchorCandidatePresent ||
+    hasOpeningLeakRouteRequest(input.airborneContext)
+  ) {
+    return [];
+  }
+
+  return getFiniteRequestedUnsupportedLabSpectrumOutputs(input);
+}
+
+function getPostV1WallUserMaterialFormulaFieldLabCompanionOutputs(input: {
+  readonly airborneBasis: AirborneResultBasis | null | undefined;
+  readonly airborneContext: AirborneContext | null | undefined;
+  readonly airborneTrace: DynamicAirborneTrace | null | undefined;
+  readonly catalogLabFallbackApplied: boolean;
+  readonly estimatedCDb: number | null | undefined;
+  readonly estimatedCtrDb: number | null | undefined;
+  readonly estimatedRwDb: number | null | undefined;
+  readonly estimatedStcDb: number | null | undefined;
+  readonly hasUserSuppliedMaterial: boolean;
+  readonly sourceAnchorCandidatePresent: boolean;
+  readonly support: TargetOutputSupportLike;
+}): RequestedOutputId[] {
+  const hasGateIFieldBasis =
+    input.airborneBasis?.method === GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD &&
+    input.airborneBasis.origin === "family_physics_prediction" &&
+    input.airborneBasis.missingPhysicalInputs.length === 0;
+
+  if (
+    input.airborneContext?.contextMode !== "field_between_rooms" ||
+    !input.hasUserSuppliedMaterial ||
+    !hasGateIFieldBasis ||
+    !hasPostV1WallUserMaterialFormulaLabTrace(input.airborneTrace) ||
+    input.catalogLabFallbackApplied ||
+    input.sourceAnchorCandidatePresent ||
+    hasOpeningLeakRouteRequest(input.airborneContext)
+  ) {
+    return [];
+  }
+
+  return getFiniteRequestedLabSpectrumOutputs(input);
+}
+
+function getPostV1WallTimberStudCltFormulaFieldLabCompanionOutputs(input: {
+  readonly airborneBasis: AirborneResultBasis | null | undefined;
+  readonly airborneContext: AirborneContext | null | undefined;
+  readonly airborneTrace: DynamicAirborneTrace | null | undefined;
+  readonly catalogLabFallbackApplied: boolean;
+  readonly estimatedCDb: number | null | undefined;
+  readonly estimatedCtrDb: number | null | undefined;
+  readonly estimatedRwDb: number | null | undefined;
+  readonly estimatedStcDb: number | null | undefined;
+  readonly sourceAnchorCandidatePresent: boolean;
+  readonly support: TargetOutputSupportLike;
+}): RequestedOutputId[] {
+  const hasGateIFieldBasis =
+    input.airborneBasis?.method === GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD &&
+    input.airborneBasis.origin === "family_physics_prediction" &&
+    input.airborneBasis.missingPhysicalInputs.length === 0;
+  const ownedBaseLabMethods = input.airborneBasis?.assumptions.filter((assumption) =>
+    [...POST_V1_WALL_TIMBER_STUD_CLT_FIELD_LAB_COMPANION_BASE_METHODS].some((method) =>
+      assumption === `base lab-family method remains ${method}`
+    )
+  ) ?? [];
+  const hasTimberStudFormulaTrace =
+    ownedBaseLabMethods.includes(`base lab-family method remains ${GATE_DN_TIMBER_STUD_BOUNDED_RUNTIME_METHOD}`) &&
+    input.airborneTrace?.detectedFamily === "stud_wall_system" &&
+    input.airborneTrace.strategy === "stud_surrogate_blend+framed_wall_calibration" &&
+    input.airborneContext?.studType === "wood_stud" &&
+    input.airborneContext.connectionType === "line_connection" &&
+    input.airborneContext.studSpacingMm === 600;
+  const hasCltFormulaTrace =
+    ownedBaseLabMethods.includes(`base lab-family method remains ${GATE_H_CLT_MASS_TIMBER_WALL_RUNTIME_METHOD}`) &&
+    (
+      input.airborneTrace?.detectedFamily === "laminated_single_leaf" ||
+      input.airborneTrace?.detectedFamily === "single_leaf_panel"
+    ) &&
+    input.airborneTrace.strategy === "laminated_leaf_sharp_delegate";
+
+  if (
+    input.airborneContext?.contextMode !== "field_between_rooms" ||
+    !hasGateIFieldBasis ||
+    (!hasTimberStudFormulaTrace && !hasCltFormulaTrace) ||
+    input.catalogLabFallbackApplied ||
+    input.sourceAnchorCandidatePresent ||
+    hasOpeningLeakRouteRequest(input.airborneContext)
+  ) {
+    return [];
+  }
+
+  return getFiniteRequestedLabSpectrumOutputs(input);
+}
+
+function getPostV1WallTimberStudCltFormulaBuildingLabCompanionOutputs(input: {
+  readonly airborneBasis: AirborneResultBasis | null | undefined;
+  readonly airborneContext: AirborneContext | null | undefined;
+  readonly airborneTrace: DynamicAirborneTrace | null | undefined;
+  readonly catalogLabFallbackApplied: boolean;
+  readonly estimatedCDb: number | null | undefined;
+  readonly estimatedCtrDb: number | null | undefined;
+  readonly estimatedRwDb: number | null | undefined;
+  readonly estimatedStcDb: number | null | undefined;
+  readonly sourceAnchorCandidatePresent: boolean;
+  readonly support: TargetOutputSupportLike;
+}): RequestedOutputId[] {
+  const hasGateARBuildingBasis =
+    input.airborneBasis?.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD &&
+    input.airborneBasis.origin === "family_physics_prediction" &&
+    input.airborneBasis.missingPhysicalInputs.length === 0;
+  const hasTimberStudFormulaTrace =
+    input.airborneTrace?.detectedFamily === "stud_wall_system" &&
+    input.airborneTrace.strategy === "stud_surrogate_blend+framed_wall_calibration" &&
+    input.airborneContext?.studType === "wood_stud" &&
+    input.airborneContext.connectionType === "line_connection" &&
+    input.airborneContext.studSpacingMm === 600;
+  const hasCltFormulaTrace =
+    (
+      input.airborneTrace?.detectedFamily === "laminated_single_leaf" ||
+      input.airborneTrace?.detectedFamily === "single_leaf_panel"
+    ) &&
+    input.airborneTrace.strategy === "laminated_leaf_sharp_delegate";
+
+  if (
+    input.airborneContext?.contextMode !== "building_prediction" ||
+    !hasGateARBuildingBasis ||
+    (!hasTimberStudFormulaTrace && !hasCltFormulaTrace) ||
+    input.catalogLabFallbackApplied ||
+    input.sourceAnchorCandidatePresent ||
+    hasOpeningLeakRouteRequest(input.airborneContext)
+  ) {
+    return [];
+  }
+
+  return getFiniteRequestedLabSpectrumOutputs(input);
 }
 
 function outputsForExactMeasuredAirborneMetric(metricLabel: string | null | undefined): RequestedOutputId[] {
@@ -3694,6 +4034,7 @@ export function calculateAssembly(
   const baseCatalog = mergePredictorCatalog(getDefaultMaterialCatalog(), options.catalog ?? []);
   let catalog = mergePredictorCatalog(baseCatalog, predictorAdaptation?.catalogAdditions ?? []);
   const exactImpactSource = options.exactImpactSource ? ExactImpactSourceSchema.parse(options.exactImpactSource) : null;
+  const exactImpact = exactImpactSource ? buildOwnedImpactFromExactSource(exactImpactSource) : null;
   const impactFieldContext = options.impactFieldContext ? ImpactFieldContextSchema.parse(options.impactFieldContext) : null;
   const parsedAirborneContext = options.airborneContext ? AirborneContextSchema.parse(options.airborneContext) : null;
   const targetOutputs = options.targetOutputs ?? [];
@@ -3766,7 +4107,13 @@ export function calculateAssembly(
     });
   const visibleLightweightConcreteDeltaLwLayerStackReady =
     !explicitPredictorInput &&
-    targetOutputs.includes("DeltaLw") &&
+    (
+      targetOutputs.includes("DeltaLw") ||
+      hasPostV1LowDensityExactAstmCompanionSeedRequest({
+        exactImpact,
+        targetOutputs
+      })
+    ) &&
     hasVisibleLightweightConcreteUpperPackageDeltaLwCandidate({
       catalog: baseCatalog,
       layers
@@ -3975,6 +4322,16 @@ export function calculateAssembly(
     : null;
   const visibleEstimatedStcDb =
     gateAHOpeningLeakStcSpectrumAdapter?.runtimeStcDb ?? ratings.astmE413.STC;
+  const wallDirectLabRatings = dynamicAirborneResult
+    ? buildRatingsFromCurve(dynamicAirborneResult.curve.frequenciesHz, dynamicAirborneResult.curve.transmissionLossDb)
+    : null;
+  const wallDirectLabRwDb =
+    typeof dynamicAirborneResult?.rw === "number" && Number.isFinite(dynamicAirborneResult.rw)
+      ? dynamicAirborneResult.rw
+      : wallDirectLabRatings?.iso717.Rw;
+  const hasUserSuppliedAirborneMaterial = airborneResolvedLayers.some(
+    (layer) => layer.material.acoustic?.propertySourceStatus === "user_supplied"
+  );
   const companyInternalOpeningLeakFieldBuildingRuntime = options.calculator === "dynamic"
     ? maybeBuildCompanyInternalOpeningLeakFieldBuildingRuntimeCorridor({
         airborneContext,
@@ -4015,7 +4372,6 @@ export function calculateAssembly(
       : gateSOpeningLeakCompositeRuntime?.blockedOutputs.filter(
           (output) => !(companyInternalOpeningLeakFieldBuildingRuntime?.supportedOutputs.includes(output) ?? false)
         ) ?? [];
-  const exactImpact = exactImpactSource ? buildOwnedImpactFromExactSource(exactImpactSource) : null;
   const impactLaneTargetOutputs =
     hasRawBareFloorAirborneBuildingPredictionSeedRequest({
       airborneContext,
@@ -4251,6 +4607,12 @@ export function calculateAssembly(
         typeof narrowImpact?.LnW === "number"
       )
   );
+  const postV1VisibleFloatingLabCompanionPartialImpactCandidate =
+    hasPostV1VisibleFloatingLabCompanionPartialImpactCandidate({
+      fullyTaggedFloorStack: hasFullyTaggedFloorStack,
+      narrowImpact,
+      targetOutputs
+    });
   const mixedSupportRuntimeReady = narrowImpact?.basis === MIXED_SUPPORT_FLOOR_IMPACT_FORMULA_BASIS;
 
   const shouldWithholdUnreadyDynamicFloorImpactRuntime = Boolean(
@@ -4265,6 +4627,7 @@ export function calculateAssembly(
       floorSystemEstimate?.impact.basis !== OPEN_WEB_RAW_BARE_FORMULA_BASIS &&
       floorSystemEstimate?.impact.basis !== HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS &&
       !postV1GateNFloorFieldImpactLabAnchorAvailable &&
+      !postV1VisibleFloatingLabCompanionPartialImpactCandidate &&
       !hasPostV1GateCgBareHeavyFloorPartialImpactCandidate({
         directNarrowImpact,
         layers: impactResolvedLayers,
@@ -4349,6 +4712,12 @@ export function calculateAssembly(
   const floorSystemRatings = hideLowConfidenceProxyAirborne
     ? null
     : buildFloorSystemRatings({
+        allowHeavyReferenceCompanionFromScreening:
+          hasFullyTaggedFloorStack &&
+          hasUserMaterialSignal({
+            catalog,
+            layers
+          }),
         boundFloorSystemEstimate,
         boundFloorSystemMatch,
         floorSystemEstimate,
@@ -4393,16 +4762,27 @@ export function calculateAssembly(
   const visibleEstimatedRwDbWithFieldBuildingRuntime =
     floorAirborneBuildingPredictionRuntime?.directRwDb ??
     visibleEstimatedRwDbWithOpeningLeakFieldBuildingRuntime;
+  const canUseFloorLabAirborneCompanion = Boolean(
+    floorSystemRatings &&
+      (isFloorLabAirborneCompanionBasis({
+        allowHeavyConcreteCompanion: !explicitPredictorInput,
+        basis: floorSystemRatings.basis
+      }) ||
+        isLowDensityExactAstmLabAirborneCompanionBasis({
+          basis: floorSystemRatings.basis,
+          impact
+        }))
+  );
   const openBoxFinishedPackageLabRwDb =
-    floorSystemRatings && isOpenBoxFinishedPackageFloorAirborneBasis(floorSystemRatings.basis)
+    floorSystemRatings && canUseFloorLabAirborneCompanion
       ? floorSystemRatings.Rw
       : undefined;
   const openBoxFinishedPackageLabCDb =
-    floorSystemRatings && isOpenBoxFinishedPackageFloorAirborneBasis(floorSystemRatings.basis)
+    floorSystemRatings && canUseFloorLabAirborneCompanion
       ? getFloorSystemC(floorSystemRatings)
       : undefined;
   const openBoxFinishedPackageLabCtrDb =
-    floorSystemRatings && isOpenBoxFinishedPackageFloorAirborneBasis(floorSystemRatings.basis)
+    floorSystemRatings && canUseFloorLabAirborneCompanion
       ? getFloorSystemCtr(floorSystemRatings)
       : undefined;
   const visibleEstimatedRwDbWithFloorPackageLabCompanion =
@@ -4935,10 +5315,98 @@ export function calculateAssembly(
           ),
           support: visibleTargetOutputSupportWithExactMetricScope
         });
+  const postV1WallUserMaterialFormulaBuildingLabCompanionOutputs =
+    hasVisibleFloorCarrier
+      ? []
+      : getPostV1WallUserMaterialFormulaBuildingLabCompanionOutputs({
+          airborneBasis:
+            dynamicCandidateResolverRuntime?.resolution.selectedBasis ?? dynamicAirborneResult?.airborneBasis,
+          airborneContext,
+          airborneTrace: dynamicAirborneResult?.trace,
+          catalogLabFallbackApplied: verifiedAirborneAnchorResult.warnings.some((warning) =>
+            /Curated airborne lab fallback/i.test(warning)
+          ),
+          estimatedCDb: wallDirectLabRatings?.iso717.C,
+          estimatedCtrDb: wallDirectLabRatings?.iso717.Ctr,
+          estimatedRwDb: wallDirectLabRwDb,
+          estimatedStcDb: wallDirectLabRatings?.astmE413.STC,
+          hasUserSuppliedMaterial: hasUserSuppliedAirborneMaterial,
+          sourceAnchorCandidatePresent: Boolean(
+            compatibleWallAnchorDeltaResult.match || verifiedAirborneAnchorResult.match
+          ),
+          support: visibleTargetOutputSupportWithExactMetricScope
+        });
+  const postV1WallUserMaterialFormulaFieldLabCompanionOutputs =
+    hasVisibleFloorCarrier
+      ? []
+      : getPostV1WallUserMaterialFormulaFieldLabCompanionOutputs({
+          airborneBasis:
+            dynamicCandidateResolverRuntime?.resolution.selectedBasis ?? dynamicAirborneResult?.airborneBasis,
+          airborneContext,
+          airborneTrace: dynamicAirborneResult?.trace,
+          catalogLabFallbackApplied: verifiedAirborneAnchorResult.warnings.some((warning) =>
+            /Curated airborne lab fallback/i.test(warning)
+          ),
+          estimatedCDb: wallDirectLabRatings?.iso717.C,
+          estimatedCtrDb: wallDirectLabRatings?.iso717.Ctr,
+          estimatedRwDb: wallDirectLabRwDb,
+          estimatedStcDb: wallDirectLabRatings?.astmE413.STC,
+          hasUserSuppliedMaterial: hasUserSuppliedAirborneMaterial,
+          sourceAnchorCandidatePresent: Boolean(
+            compatibleWallAnchorDeltaResult.match || verifiedAirborneAnchorResult.match
+          ),
+          support: visibleTargetOutputSupportWithExactMetricScope
+        });
+  const postV1WallTimberStudCltFormulaFieldLabCompanionOutputs =
+    hasVisibleFloorCarrier
+      ? []
+      : getPostV1WallTimberStudCltFormulaFieldLabCompanionOutputs({
+          airborneBasis:
+            dynamicCandidateResolverRuntime?.resolution.selectedBasis ?? dynamicAirborneResult?.airborneBasis,
+          airborneContext,
+          airborneTrace: dynamicAirborneResult?.trace,
+          catalogLabFallbackApplied: verifiedAirborneAnchorResult.warnings.some((warning) =>
+            /Curated airborne lab fallback/i.test(warning)
+          ),
+          estimatedCDb: wallDirectLabRatings?.iso717.C,
+          estimatedCtrDb: wallDirectLabRatings?.iso717.Ctr,
+          estimatedRwDb: wallDirectLabRwDb,
+          estimatedStcDb: wallDirectLabRatings?.astmE413.STC,
+          sourceAnchorCandidatePresent: Boolean(
+            compatibleWallAnchorDeltaResult.match || verifiedAirborneAnchorResult.match
+          ),
+          support: visibleTargetOutputSupportWithExactMetricScope
+        });
+  const postV1WallTimberStudCltFormulaBuildingLabCompanionOutputs =
+    hasVisibleFloorCarrier
+      ? []
+      : getPostV1WallTimberStudCltFormulaBuildingLabCompanionOutputs({
+          airborneBasis:
+            dynamicCandidateResolverRuntime?.resolution.selectedBasis ?? dynamicAirborneResult?.airborneBasis,
+          airborneContext,
+          airborneTrace: dynamicAirborneResult?.trace,
+          catalogLabFallbackApplied: verifiedAirborneAnchorResult.warnings.some((warning) =>
+            /Curated airborne lab fallback/i.test(warning)
+          ),
+          estimatedCDb: wallDirectLabRatings?.iso717.C,
+          estimatedCtrDb: wallDirectLabRatings?.iso717.Ctr,
+          estimatedRwDb: wallDirectLabRwDb,
+          estimatedStcDb: wallDirectLabRatings?.astmE413.STC,
+          sourceAnchorCandidatePresent: Boolean(
+            compatibleWallAnchorDeltaResult.match || verifiedAirborneAnchorResult.match
+          ),
+          support: visibleTargetOutputSupportWithExactMetricScope
+        });
   const postV1OpenBoxFinishedPackageBuildingLabCompanionOutputs =
     getPostV1OpenBoxFinishedPackageBuildingLabCompanionOutputs({
       floorSystemRatings,
       runtime: openBoxFinishedPackageFloorAirborneBuildingPredictionRuntime,
+      support: visibleTargetOutputSupportWithExactMetricScope
+    });
+  const postV1LowDensityExactAstmLabAirborneCompanionOutputs =
+    getPostV1LowDensityExactAstmLabAirborneCompanionOutputs({
+      floorSystemRatings,
+      impact,
       support: visibleTargetOutputSupportWithExactMetricScope
     });
   const postV1OpenBoxFinishedPackageBuildingImpactCompanionOutputs =
@@ -4956,13 +5424,48 @@ export function calculateAssembly(
           ...postV1WallSourceAbsentBuildingLabSpectrumCompanionOutputs,
           ...postV1WallHeavyCompositeBuildingLabSpectrumCompanionOutputs,
           ...postV1GateARBuildingLabSpectrumCompanionOutputs,
+          ...postV1WallUserMaterialFormulaBuildingLabCompanionOutputs,
+          ...postV1WallUserMaterialFormulaFieldLabCompanionOutputs,
+          ...postV1WallTimberStudCltFormulaFieldLabCompanionOutputs,
+          ...postV1WallTimberStudCltFormulaBuildingLabCompanionOutputs,
           ...postV1OpenBoxFinishedPackageBuildingLabCompanionOutputs,
+          ...postV1LowDensityExactAstmLabAirborneCompanionOutputs,
           ...postV1OpenBoxFinishedPackageBuildingImpactCompanionOutputs
         ])
       ]
     ),
     compatibleAnchorDeltaFieldBuildingUnsupportedOutputs
   );
+  const postV1WallDirectFormulaLabCompanionOutputSet = new Set([
+    ...postV1WallUserMaterialFormulaBuildingLabCompanionOutputs,
+    ...postV1WallUserMaterialFormulaFieldLabCompanionOutputs,
+    ...postV1WallTimberStudCltFormulaFieldLabCompanionOutputs,
+    ...postV1WallTimberStudCltFormulaBuildingLabCompanionOutputs
+  ]);
+  const visibleEstimatedRwDbWithPostV1WallLabCompanion =
+    postV1WallDirectFormulaLabCompanionOutputSet.has("Rw") &&
+    typeof wallDirectLabRwDb === "number" &&
+    Number.isFinite(wallDirectLabRwDb)
+      ? round1(wallDirectLabRwDb)
+      : visibleEstimatedRwDbWithFloorPackageLabCompanion;
+  const visibleEstimatedCDbWithPostV1WallLabCompanion =
+    postV1WallDirectFormulaLabCompanionOutputSet.has("C") &&
+    typeof wallDirectLabRatings?.iso717.C === "number" &&
+    Number.isFinite(wallDirectLabRatings.iso717.C)
+      ? round1(wallDirectLabRatings.iso717.C)
+      : visibleEstimatedCDbWithFloorPackageLabCompanion;
+  const visibleEstimatedCtrDbWithPostV1WallLabCompanion =
+    postV1WallDirectFormulaLabCompanionOutputSet.has("Ctr") &&
+    typeof wallDirectLabRatings?.iso717.Ctr === "number" &&
+    Number.isFinite(wallDirectLabRatings.iso717.Ctr)
+      ? round1(wallDirectLabRatings.iso717.Ctr)
+      : visibleEstimatedCtrDbWithFloorPackageLabCompanion;
+  const visibleEstimatedStcDbWithPostV1WallLabCompanion =
+    postV1WallDirectFormulaLabCompanionOutputSet.has("STC") &&
+    typeof wallDirectLabRatings?.astmE413.STC === "number" &&
+    Number.isFinite(wallDirectLabRatings.astmE413.STC)
+      ? round1(wallDirectLabRatings.astmE413.STC)
+      : visibleEstimatedStcDb;
   const hideParkedAirborneBuildingPredictionMetrics =
     parkedAirborneBuildingPredictionOutputs.some((output) =>
       hasAnswerEngineV1FieldOrBuildingAirborneOutput([output])
@@ -5309,18 +5812,18 @@ export function calculateAssembly(
       airborneIsoDescriptor: visibleRatings.iso717.descriptor,
       totalThicknessMm,
       surfaceMassKgM2,
-      estimatedRwDb: visibleEstimatedRwDbWithFloorPackageLabCompanion,
+      estimatedRwDb: visibleEstimatedRwDbWithPostV1WallLabCompanion,
       estimatedRwPrimeDb: hideParkedAirborneBuildingPredictionMetrics
         ? undefined
         : visibleRatings.field?.RwPrime ?? visibleRatings.iso717.RwPrime,
-      estimatedCDb: visibleEstimatedCDbWithFloorPackageLabCompanion,
-      estimatedCtrDb: visibleEstimatedCtrDbWithFloorPackageLabCompanion,
+      estimatedCDb: visibleEstimatedCDbWithPostV1WallLabCompanion,
+      estimatedCtrDb: visibleEstimatedCtrDbWithPostV1WallLabCompanion,
       estimatedDnTwDb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatings.field?.DnTw,
       estimatedDnTADb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatings.field?.DnTA,
       estimatedDnTAkDb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatings.field?.DnTAk,
       estimatedDnWDb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatings.field?.DnW,
       estimatedDnADb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatings.field?.DnA,
-      estimatedStc: visibleEstimatedStcDb,
+      estimatedStc: visibleEstimatedStcDbWithPostV1WallLabCompanion,
       airGapCount: resolvedLayers.filter((layer) => layer.material.category === "gap").length,
       insulationCount: resolvedLayers.filter((layer) => layer.material.category === "insulation").length,
       method: dynamicAirborneResult?.id ?? importedCalculatorResult?.id ?? "screening_mass_law_curve_seed_v3"

@@ -9,19 +9,1405 @@ Documentation map:
 [DOCUMENTATION_MAP.md](./DOCUMENTATION_MAP.md).
 
 Current reconciliation checkpoint:
+[CHECKPOINT_2026-06-18_WALL_TIMBER_STUD_CLT_BUILDING_LAB_COMPANION_RERANK_READY.md](./CHECKPOINT_2026-06-18_WALL_TIMBER_STUD_CLT_BUILDING_LAB_COMPANION_RERANK_READY.md).
+
+Previous calculator excellence and cleanup review:
 [CALCULATOR_EXCELLENCE_AND_CLEANUP_REVIEW_2026-06-15.md](./CALCULATOR_EXCELLENCE_AND_CLEANUP_REVIEW_2026-06-15.md).
 
 Previous surface-parity checkpoint:
 [CHECKPOINT_2026-06-11_DIRECT_FIXED_A_WEIGHTED_SURFACE_PARITY.md](./CHECKPOINT_2026-06-11_DIRECT_FIXED_A_WEIGHTED_SURFACE_PARITY.md).
 
 Current selected next implementation file:
-`packages/engine/src/post-v1-floor-user-material-visible-floating-load-basis-coverage-refresh-contract.test.ts`.
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-timber-stud-clt-formula-building-lab-companion-basis-integrity-contract.test.ts`.
 
 Historical sections guard: older entries below may still quote the
 `selected next` action from the checkpoint where that entry was written.
 Those entries are retained for traceability. They do not override the
 current reconciliation checkpoint or selected next implementation file
 above.
+
+Latest wall timber-stud + CLT formula building lab-companion basis
+integrity coverage refresh:
+`post_v1_wall_timber_stud_clt_formula_building_lab_companion_basis_integrity_coverage_refresh_plan`
+landed in
+`packages/engine/src/post-v1-wall-timber-stud-clt-formula-building-lab-companion-basis-integrity-coverage-refresh-contract.test.ts`
+with status
+`post_v1_wall_timber_stud_clt_formula_building_lab_companion_basis_integrity_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`.
+Coverage refresh plan:
+`docs/calculator/POST_V1_WALL_TIMBER_STUD_CLT_FORMULA_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_COVERAGE_REFRESH_PLAN_2026-06-17.md`.
+It follows owner
+`post_v1_wall_timber_stud_clt_formula_building_lab_companion_basis_integrity_owner_plan`
+/
+`packages/engine/src/post-v1-wall-timber-stud-clt-formula-building-lab-companion-basis-integrity-owner-contract.test.ts`
+/
+`post_v1_wall_timber_stud_clt_formula_building_lab_companion_basis_integrity_owner_landed_runtime_selected_coverage_refresh`
+and rerank
+`post_v1_runtime_first_route_family_rerank_after_wall_timber_stud_clt_formula_field_lab_companion_target_output_independence_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-timber-stud-clt-formula-field-lab-companion-target-output-independence-contract.test.ts`
+/
+`post_v1_runtime_first_route_family_rerank_after_wall_timber_stud_clt_formula_field_lab_companion_target_output_independence_landed_no_runtime_selected_wall_timber_stud_clt_formula_building_lab_companion_basis_integrity_owner`.
+Selected candidate re-probed:
+`wall.timber_stud_clt_formula_building_lab_companion_basis_integrity_owner`.
+Coverage counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl. It freezes timber-stud building lab
+companions `Rw 50`, `STC 50`, `C 0.5`, and `Ctr -4.2`; CLT building
+lab companions `Rw 42`, `STC 43`, `C -1.1`, and `Ctr -7.1`; Gate AR
+building outputs; exact/source LSF boundaries; missing building input;
+ASTM unsupported; and impact `needs_input` boundaries.
+
+Current selected next:
+`post_v1_runtime_first_route_family_rerank_after_wall_timber_stud_clt_formula_building_lab_companion_basis_integrity_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-timber-stud-clt-formula-building-lab-companion-basis-integrity-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_WALL_TIMBER_STUD_CLT_FORMULA_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_PLAN_2026-06-18.md`
+/
+`post-V1 runtime-first route-family rerank after wall timber-stud + CLT formula building lab-companion basis integrity`.
+
+Latest wall timber-stud + CLT formula building lab-companion basis
+integrity owner:
+`post_v1_wall_timber_stud_clt_formula_building_lab_companion_basis_integrity_owner_plan`
+landed in
+`packages/engine/src/post-v1-wall-timber-stud-clt-formula-building-lab-companion-basis-integrity-owner-contract.test.ts`
+with status
+`post_v1_wall_timber_stud_clt_formula_building_lab_companion_basis_integrity_owner_landed_runtime_selected_coverage_refresh`.
+Owner plan:
+`docs/calculator/POST_V1_WALL_TIMBER_STUD_CLT_FORMULA_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_OWNER_PLAN_2026-06-17.md`.
+It follows rerank
+`post_v1_runtime_first_route_family_rerank_after_wall_timber_stud_clt_formula_field_lab_companion_target_output_independence_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-timber-stud-clt-formula-field-lab-companion-target-output-independence-contract.test.ts`
+/
+`post_v1_runtime_first_route_family_rerank_after_wall_timber_stud_clt_formula_field_lab_companion_target_output_independence_landed_no_runtime_selected_wall_timber_stud_clt_formula_building_lab_companion_basis_integrity_owner`.
+Selected candidate:
+`wall.timber_stud_clt_formula_building_lab_companion_basis_integrity_owner`.
+The owner keeps complete timber-stud building outputs on Gate AR at
+`R'w 42`, `Dn,w 42`, `Dn,A 42.4`, `DnT,w 43`, and `DnT,A 43.9`,
+with lab companions `Rw 50`, `STC 50`, `C 0.5`, and `Ctr -4.2`.
+It keeps complete CLT building outputs on Gate AR at `R'w 41`,
+`Dn,w 41`, `Dn,A 39.2`, `DnT,w 42`, and `DnT,A 40.7`, with lab
+companions `Rw 42`, `STC 43`, `C -1.1`, and `Ctr -7.1`. Counters:
+`accuracyPromotedRequestShapes: 4`, `accuracyPromotedTargetOutputs: 8`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 4`,
+`newCalculableTargetOutputs: 8`, `runtimeBasisPromotions: 2`,
+`runtimeValuesMoved 16`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next:
+`post_v1_wall_timber_stud_clt_formula_building_lab_companion_basis_integrity_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-timber-stud-clt-formula-building-lab-companion-basis-integrity-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_TIMBER_STUD_CLT_FORMULA_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_COVERAGE_REFRESH_PLAN_2026-06-17.md`
+/
+`post-V1 wall timber-stud + CLT formula building lab-companion basis integrity coverage refresh`.
+
+Latest runtime-first rerank after wall timber-stud + CLT formula field
+lab-companion target-output independence:
+`post_v1_runtime_first_route_family_rerank_after_wall_timber_stud_clt_formula_field_lab_companion_target_output_independence_plan`
+landed in
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-timber-stud-clt-formula-field-lab-companion-target-output-independence-contract.test.ts`
+with status
+`post_v1_runtime_first_route_family_rerank_after_wall_timber_stud_clt_formula_field_lab_companion_target_output_independence_landed_no_runtime_selected_wall_timber_stud_clt_formula_building_lab_companion_basis_integrity_owner`.
+Rerank plan:
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_WALL_TIMBER_STUD_CLT_FORMULA_FIELD_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_PLAN_2026-06-17.md`.
+It follows
+`post_v1_wall_timber_stud_clt_formula_field_lab_companion_target_output_independence_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-timber-stud-clt-formula-field-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`
+/
+`post_v1_wall_timber_stud_clt_formula_field_lab_companion_target_output_independence_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`.
+Selected candidate:
+`wall.timber_stud_clt_formula_building_lab_companion_basis_integrity_owner`.
+Rerank counters: `candidateCount: 9`, `roiAnalysisIterations: 4`,
+`estimatedNextAccuracyPromotedRequestShapes: 4`,
+`estimatedNextAccuracyPromotedTargetOutputs: 8`,
+`estimatedNextNewCalculableRequestShapes: 2`,
+`estimatedNextNewCalculableTargetOutputs: 8`,
+`estimatedNextRuntimeBasisPromotions: 2`,
+`estimatedNextRuntimeValuesMoved: 16`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Current selected next:
+`post_v1_wall_timber_stud_clt_formula_building_lab_companion_basis_integrity_owner_plan`
+/
+`packages/engine/src/post-v1-wall-timber-stud-clt-formula-building-lab-companion-basis-integrity-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_TIMBER_STUD_CLT_FORMULA_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_OWNER_PLAN_2026-06-17.md`
+/
+`post-V1 wall timber-stud + CLT formula building lab-companion basis integrity owner`.
+
+Latest wall timber-stud + CLT formula field lab-companion target-output
+independence coverage refresh:
+`post_v1_wall_timber_stud_clt_formula_field_lab_companion_target_output_independence_coverage_refresh_plan`
+landed in
+`packages/engine/src/post-v1-wall-timber-stud-clt-formula-field-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`
+with status
+`post_v1_wall_timber_stud_clt_formula_field_lab_companion_target_output_independence_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`.
+Coverage refresh plan:
+`docs/calculator/POST_V1_WALL_TIMBER_STUD_CLT_FORMULA_FIELD_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_COVERAGE_REFRESH_PLAN_2026-06-17.md`.
+It follows runtime owner
+`post_v1_wall_timber_stud_clt_formula_field_lab_companion_target_output_independence_owner_plan`
+/
+`packages/engine/src/post-v1-wall-timber-stud-clt-formula-field-lab-companion-target-output-independence-owner-contract.test.ts`
+/
+`post_v1_wall_timber_stud_clt_formula_field_lab_companion_target_output_independence_owner_landed_runtime_selected_coverage_refresh`,
+which followed previous coverage refresh
+`post_v1_wall_user_material_formula_field_lab_companion_target_output_independence_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-user-material-formula-field-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`
+/
+`post_v1_wall_user_material_formula_field_lab_companion_target_output_independence_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`
+and rerank
+`post_v1_runtime_first_route_family_rerank_after_wall_user_material_formula_field_lab_companion_target_output_independence_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-user-material-formula-field-lab-companion-target-output-independence-contract.test.ts`
+/
+`post_v1_runtime_first_route_family_rerank_after_wall_user_material_formula_field_lab_companion_target_output_independence_landed_no_runtime_selected_wall_timber_stud_clt_formula_field_lab_companion_target_output_independence_owner`.
+Selected candidate re-probed:
+`wall.timber_stud_clt_formula_field_lab_companion_target_output_independence_owner`.
+Coverage counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl. Values remain timber-stud lab
+companions `Rw 50`, `STC 50`, `C 0.5`, `Ctr -4.2`, field outputs
+`R'w 42`, `Dn,w 42`, `DnT,w 43`, `DnT,A 43.9`, CLT lab companions
+`Rw 42`, `STC 43`, `C -1.1`, `Ctr -7.1`, and CLT field outputs
+`R'w 41`, `Dn,w 41`, `DnT,w 42`, `DnT,A 40.7`.
+
+Current selected next:
+`post_v1_runtime_first_route_family_rerank_after_wall_timber_stud_clt_formula_field_lab_companion_target_output_independence_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-timber-stud-clt-formula-field-lab-companion-target-output-independence-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_WALL_TIMBER_STUD_CLT_FORMULA_FIELD_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_PLAN_2026-06-17.md`
+/
+`post-V1 runtime-first route-family rerank after wall timber-stud + CLT formula field lab-companion target-output independence`.
+
+Latest wall timber-stud + CLT formula field lab-companion target-output
+independence owner:
+`post_v1_wall_timber_stud_clt_formula_field_lab_companion_target_output_independence_owner_plan`
+landed in
+`packages/engine/src/post-v1-wall-timber-stud-clt-formula-field-lab-companion-target-output-independence-owner-contract.test.ts`
+with status
+`post_v1_wall_timber_stud_clt_formula_field_lab_companion_target_output_independence_owner_landed_runtime_selected_coverage_refresh`.
+Owner plan:
+`docs/calculator/POST_V1_WALL_TIMBER_STUD_CLT_FORMULA_FIELD_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_OWNER_PLAN_2026-06-17.md`.
+It follows rerank
+`post_v1_runtime_first_route_family_rerank_after_wall_user_material_formula_field_lab_companion_target_output_independence_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-user-material-formula-field-lab-companion-target-output-independence-contract.test.ts`
+/
+`post_v1_runtime_first_route_family_rerank_after_wall_user_material_formula_field_lab_companion_target_output_independence_landed_no_runtime_selected_wall_timber_stud_clt_formula_field_lab_companion_target_output_independence_owner`.
+Selected candidate:
+`wall.timber_stud_clt_formula_field_lab_companion_target_output_independence_owner`.
+The owner makes generated timber-stud and CLT formula field requests
+target-output independent for lab companions. Timber-stud lab
+companions are `Rw 50`, `STC 50`, `C 0.5`, and `Ctr -4.2`, while
+field outputs remain `R'w 42`, `Dn,w 42`, `DnT,w 43`, and
+`DnT,A 43.9`. CLT lab companions are `Rw 42`, `STC 43`, `C -1.1`,
+and `Ctr -7.1`, while field outputs remain `R'w 41`, `Dn,w 41`,
+`DnT,w 42`, and `DnT,A 40.7`. Counters:
+`accuracyPromotedRequestShapes: 4`, `accuracyPromotedTargetOutputs: 8`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 3`,
+`newCalculableTargetOutputs: 3`, `runtimeBasisPromotions: 2`,
+`runtimeValuesMoved 6`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next:
+`post_v1_wall_timber_stud_clt_formula_field_lab_companion_target_output_independence_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-timber-stud-clt-formula-field-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_TIMBER_STUD_CLT_FORMULA_FIELD_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_COVERAGE_REFRESH_PLAN_2026-06-17.md`
+/
+`post-V1 wall timber-stud + CLT formula field lab-companion target-output independence coverage refresh`.
+
+Latest wall user-material formula field lab-companion target-output
+independence coverage refresh:
+`post_v1_wall_user_material_formula_field_lab_companion_target_output_independence_coverage_refresh_plan`
+landed in
+`packages/engine/src/post-v1-wall-user-material-formula-field-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`
+with status
+`post_v1_wall_user_material_formula_field_lab_companion_target_output_independence_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`.
+Coverage refresh plan:
+`docs/calculator/POST_V1_WALL_USER_MATERIAL_FORMULA_FIELD_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_COVERAGE_REFRESH_PLAN_2026-06-17.md`.
+It follows
+`post_v1_wall_user_material_formula_field_lab_companion_target_output_independence_owner_plan`
+/
+`packages/engine/src/post-v1-wall-user-material-formula-field-lab-companion-target-output-independence-owner-contract.test.ts`
+/
+`post_v1_wall_user_material_formula_field_lab_companion_target_output_independence_owner_landed_runtime_selected_coverage_refresh`.
+Selected candidate re-probed:
+`wall.user_material_formula_field_lab_companion_target_output_independence_owner`.
+Coverage refresh counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl. It protects `Rw 46`, `STC 46`,
+`C -1`, `Ctr -6.1`, `R'w 40`, `Dn,w 41`, `Dn,A 39.5`,
+`DnT,w 43`, and `DnT,A 41.9`.
+
+Current selected next:
+`post_v1_runtime_first_route_family_rerank_after_wall_user_material_formula_field_lab_companion_target_output_independence_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-user-material-formula-field-lab-companion-target-output-independence-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_WALL_USER_MATERIAL_FORMULA_FIELD_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_PLAN_2026-06-17.md`
+/
+`post-V1 runtime-first route-family rerank after wall user-material formula field lab-companion target-output independence`.
+
+Latest wall user-material formula field lab-companion target-output
+independence owner:
+`post_v1_wall_user_material_formula_field_lab_companion_target_output_independence_owner_plan`
+landed in
+`packages/engine/src/post-v1-wall-user-material-formula-field-lab-companion-target-output-independence-owner-contract.test.ts`
+with status
+`post_v1_wall_user_material_formula_field_lab_companion_target_output_independence_owner_landed_runtime_selected_coverage_refresh`.
+Owner plan:
+`docs/calculator/POST_V1_WALL_USER_MATERIAL_FORMULA_FIELD_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_OWNER_PLAN_2026-06-17.md`.
+It follows
+`post_v1_wall_user_material_formula_field_lab_companion_basis_integrity_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-user-material-formula-field-lab-companion-basis-integrity-coverage-refresh-contract.test.ts`
+/
+`post_v1_wall_user_material_formula_field_lab_companion_basis_integrity_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`
+and rerank
+`post_v1_runtime_first_route_family_rerank_after_wall_user_material_formula_field_lab_companion_basis_integrity_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-user-material-formula-field-lab-companion-basis-integrity-contract.test.ts`
+/
+`post_v1_runtime_first_route_family_rerank_after_wall_user_material_formula_field_lab_companion_basis_integrity_landed_no_runtime_selected_wall_user_material_formula_field_lab_companion_target_output_independence_owner`.
+Selected candidate:
+`wall.user_material_formula_field_lab_companion_target_output_independence_owner`.
+Rerank counters: `candidateCount: 8`, `roiAnalysisIterations: 4`,
+`estimatedNextAccuracyPromotedRequestShapes: 2`,
+`estimatedNextAccuracyPromotedTargetOutputs: 4`,
+`estimatedNextRuntimeBasisPromotions: 1`,
+`estimatedNextRuntimeValuesMoved: 3`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+Runtime counters: `accuracyPromotedRequestShapes: 2`,
+`accuracyPromotedTargetOutputs: 4`, `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 1`, `runtimeValuesMoved 3`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl. Lab-only field requests now publish `Rw 46`, `STC 46`, `C -1`,
+and `Ctr -6.1`; field outputs remain `R'w 40`, `Dn,w 41`,
+`Dn,A 39.5`, `DnT,w 43`, and `DnT,A 41.9`.
+
+Current selected next:
+`post_v1_wall_user_material_formula_field_lab_companion_target_output_independence_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-user-material-formula-field-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_USER_MATERIAL_FORMULA_FIELD_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_COVERAGE_REFRESH_PLAN_2026-06-17.md`
+/
+`post-V1 wall user-material formula field lab-companion target-output independence coverage refresh`.
+
+Latest wall user-material formula field lab-companion basis integrity
+coverage refresh:
+`post_v1_wall_user_material_formula_field_lab_companion_basis_integrity_coverage_refresh_plan`
+landed in
+`packages/engine/src/post-v1-wall-user-material-formula-field-lab-companion-basis-integrity-coverage-refresh-contract.test.ts`
+with status
+`post_v1_wall_user_material_formula_field_lab_companion_basis_integrity_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`.
+Coverage refresh plan:
+`docs/calculator/POST_V1_WALL_USER_MATERIAL_FORMULA_FIELD_LAB_COMPANION_BASIS_INTEGRITY_COVERAGE_REFRESH_PLAN_2026-06-17.md`.
+It follows
+`post_v1_wall_user_material_formula_companion_completeness_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-user-material-formula-companion-completeness-coverage-refresh-contract.test.ts`
+/
+`post_v1_wall_user_material_formula_companion_completeness_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`,
+rerank
+`post_v1_runtime_first_route_family_rerank_after_wall_user_material_formula_companion_completeness_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-user-material-formula-companion-completeness-contract.test.ts`
+/
+`post_v1_runtime_first_route_family_rerank_after_wall_user_material_formula_companion_completeness_landed_no_runtime_selected_wall_user_material_formula_field_lab_companion_basis_integrity_owner`,
+and owner
+`post_v1_wall_user_material_formula_field_lab_companion_basis_integrity_owner_plan`
+/
+`packages/engine/src/post-v1-wall-user-material-formula-field-lab-companion-basis-integrity-owner-contract.test.ts`
+/
+`post_v1_wall_user_material_formula_field_lab_companion_basis_integrity_owner_landed_runtime_selected_coverage_refresh`.
+Selected candidate:
+`wall.user_material_formula_field_lab_companion_basis_integrity_owner`.
+Rerank counters: `candidateCount: 8`, `roiAnalysisIterations: 4`,
+`estimatedNextAccuracyPromotedTargetOutputs: 4`,
+`estimatedNextRuntimeValuesMoved: 3`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+Runtime counters: `accuracyPromotedRequestShapes: 2`,
+`accuracyPromotedTargetOutputs: 4`, `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 1`, `runtimeValuesMoved 3`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+Coverage refresh counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl. The refresh protects `Rw 46`,
+`STC 46`, `C -1`, `Ctr -6.1`, `R'w 40`, `Dn,w 41`,
+`Dn,A 39.5`, `DnT,w 43`, and `DnT,A 41.9`.
+
+Current selected next:
+`post_v1_runtime_first_route_family_rerank_after_wall_user_material_formula_field_lab_companion_basis_integrity_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-user-material-formula-field-lab-companion-basis-integrity-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_WALL_USER_MATERIAL_FORMULA_FIELD_LAB_COMPANION_BASIS_INTEGRITY_PLAN_2026-06-17.md`
+/
+`post-V1 runtime-first route-family rerank after wall user-material formula field lab-companion basis integrity`.
+
+Latest wall user-material formula field lab-companion basis integrity
+owner:
+`post_v1_wall_user_material_formula_field_lab_companion_basis_integrity_owner_plan`
+landed in
+`packages/engine/src/post-v1-wall-user-material-formula-field-lab-companion-basis-integrity-owner-contract.test.ts`
+with status
+`post_v1_wall_user_material_formula_field_lab_companion_basis_integrity_owner_landed_runtime_selected_coverage_refresh`.
+Owner plan:
+`docs/calculator/POST_V1_WALL_USER_MATERIAL_FORMULA_FIELD_LAB_COMPANION_BASIS_INTEGRITY_OWNER_PLAN_2026-06-17.md`.
+It follows
+`post_v1_wall_user_material_formula_companion_completeness_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-user-material-formula-companion-completeness-coverage-refresh-contract.test.ts`
+/
+`post_v1_wall_user_material_formula_companion_completeness_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`
+and rerank
+`post_v1_runtime_first_route_family_rerank_after_wall_user_material_formula_companion_completeness_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-user-material-formula-companion-completeness-contract.test.ts`
+/
+`post_v1_runtime_first_route_family_rerank_after_wall_user_material_formula_companion_completeness_landed_no_runtime_selected_wall_user_material_formula_field_lab_companion_basis_integrity_owner`.
+Selected candidate:
+`wall.user_material_formula_field_lab_companion_basis_integrity_owner`.
+Rerank counters: `candidateCount: 8`, `roiAnalysisIterations: 4`,
+`estimatedNextAccuracyPromotedTargetOutputs: 4`,
+`estimatedNextRuntimeValuesMoved: 3`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+Runtime counters: `accuracyPromotedRequestShapes: 2`,
+`accuracyPromotedTargetOutputs: 4`, `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 1`, `runtimeValuesMoved 3`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl. The owner publishes `Rw 46`, `STC 46`, `C -1`, `Ctr -6.1`,
+`R'w 40`, `Dn,w 41`, `Dn,A 39.5`, `DnT,w 43`, and `DnT,A 41.9`.
+
+Current selected next:
+`post_v1_wall_user_material_formula_field_lab_companion_basis_integrity_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-user-material-formula-field-lab-companion-basis-integrity-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_USER_MATERIAL_FORMULA_FIELD_LAB_COMPANION_BASIS_INTEGRITY_COVERAGE_REFRESH_PLAN_2026-06-17.md`
+/
+`post-V1 wall user-material formula field lab-companion basis integrity coverage refresh`.
+
+Latest wall user-material formula companion completeness coverage
+refresh:
+`post_v1_wall_user_material_formula_companion_completeness_coverage_refresh_plan`
+landed in
+`packages/engine/src/post-v1-wall-user-material-formula-companion-completeness-coverage-refresh-contract.test.ts`
+with status
+`post_v1_wall_user_material_formula_companion_completeness_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`.
+Coverage refresh plan:
+`docs/calculator/POST_V1_WALL_USER_MATERIAL_FORMULA_COMPANION_COMPLETENESS_COVERAGE_REFRESH_PLAN_2026-06-17.md`.
+It follows
+`post_v1_runtime_first_route_family_rerank_after_floor_user_material_low_density_exact_astm_lab_airborne_impact_target_output_independence_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-floor-user-material-low-density-exact-astm-lab-airborne-impact-target-output-independence-contract.test.ts`
+/
+`post_v1_runtime_first_route_family_rerank_after_floor_user_material_low_density_exact_astm_lab_airborne_impact_target_output_independence_landed_no_runtime_selected_wall_user_material_formula_companion_completeness_owner`
+and previous owner
+`post_v1_wall_user_material_formula_companion_completeness_owner_plan`
+/
+`packages/engine/src/post-v1-wall-user-material-formula-companion-completeness-owner-contract.test.ts`
+/
+`post_v1_wall_user_material_formula_companion_completeness_owner_landed_runtime_selected_coverage_refresh`.
+Selected candidate re-probed:
+`wall.user_material_formula_companion_completeness_owner`.
+Coverage counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl. The refresh protects `Rw 46`,
+`STC 46`, `C -1`, `Ctr -6.1`, `R'w 40`, `Dn,w 41`, `Dn,A 39.5`,
+`DnT,w 43`, and `DnT,A 41.9`.
+
+Current selected next:
+`post_v1_runtime_first_route_family_rerank_after_wall_user_material_formula_companion_completeness_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-user-material-formula-companion-completeness-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_WALL_USER_MATERIAL_FORMULA_COMPANION_COMPLETENESS_PLAN_2026-06-17.md`
+/
+`post-V1 runtime-first route-family rerank after wall user-material formula companion completeness`.
+
+Latest wall user-material formula companion completeness owner:
+`post_v1_wall_user_material_formula_companion_completeness_owner_plan`
+landed in
+`packages/engine/src/post-v1-wall-user-material-formula-companion-completeness-owner-contract.test.ts`
+with status
+`post_v1_wall_user_material_formula_companion_completeness_owner_landed_runtime_selected_coverage_refresh`.
+Owner plan:
+`docs/calculator/POST_V1_WALL_USER_MATERIAL_FORMULA_COMPANION_COMPLETENESS_OWNER_PLAN_2026-06-17.md`.
+It follows
+`post_v1_runtime_first_route_family_rerank_after_floor_user_material_low_density_exact_astm_lab_airborne_impact_target_output_independence_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-floor-user-material-low-density-exact-astm-lab-airborne-impact-target-output-independence-contract.test.ts`
+/
+`post_v1_runtime_first_route_family_rerank_after_floor_user_material_low_density_exact_astm_lab_airborne_impact_target_output_independence_landed_no_runtime_selected_wall_user_material_formula_companion_completeness_owner`.
+That rerank followed
+`post_v1_floor_user_material_low_density_exact_astm_lab_airborne_impact_target_output_independence_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-lab-airborne-impact-target-output-independence-coverage-refresh-contract.test.ts`
+/
+`post_v1_floor_user_material_low_density_exact_astm_lab_airborne_impact_target_output_independence_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`.
+Selected candidate:
+`wall.user_material_formula_companion_completeness_owner`.
+Rerank counters: `candidateCount: 9`, `roiAnalysisIterations: 4`,
+`estimatedNextRuntimeValuesMoved: 8`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+Runtime counters: `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 2`, `newCalculableTargetOutputs: 8`,
+`runtimeBasisPromotions: 2`, `runtimeValuesMoved 8`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl. The owner publishes `Rw 46`, `STC 46`, `C -1`, `Ctr -6.1`,
+`R'w 40`, `Dn,w 41`, `Dn,A 39.5`, `DnT,w 43`, and `DnT,A 41.9` for
+custom complete double-leaf/framed wall user-material mixed building
+requests.
+
+Current selected next:
+`post_v1_wall_user_material_formula_companion_completeness_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-user-material-formula-companion-completeness-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_USER_MATERIAL_FORMULA_COMPANION_COMPLETENESS_COVERAGE_REFRESH_PLAN_2026-06-17.md`
+/
+`post-V1 wall user-material formula companion completeness coverage refresh`.
+
+Latest floor user-material low-density exact ASTM lab-airborne impact
+target-output independence coverage refresh:
+`post_v1_floor_user_material_low_density_exact_astm_lab_airborne_impact_target_output_independence_coverage_refresh_plan`
+landed in
+`packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-lab-airborne-impact-target-output-independence-coverage-refresh-contract.test.ts`
+with status
+`post_v1_floor_user_material_low_density_exact_astm_lab_airborne_impact_target_output_independence_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`.
+It follows
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_exact_astm_lab_airborne_companion_basis_integrity_plan`
+/
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-low-density-exact-astm-lab-airborne-companion-basis-integrity-contract.test.ts`
+/
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_exact_astm_lab_airborne_companion_basis_integrity_landed_no_runtime_selected_floor_user_material_low_density_exact_astm_lab_airborne_impact_target_output_independence_owner`
+and previous owner
+`post_v1_floor_user_material_low_density_exact_astm_lab_airborne_impact_target_output_independence_owner_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-lab-airborne-impact-target-output-independence-owner-contract.test.ts`
+/
+`post_v1_floor_user_material_low_density_exact_astm_lab_airborne_impact_target_output_independence_owner_landed_runtime_selected_coverage_refresh`.
+Selected candidate re-probed:
+`floor.user_material_low_density_exact_astm_lab_airborne_impact_target_output_independence_owner`.
+Counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next:
+`post_v1_runtime_first_route_family_rerank_after_floor_user_material_low_density_exact_astm_lab_airborne_impact_target_output_independence_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-floor-user-material-low-density-exact-astm-lab-airborne-impact-target-output-independence-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_FLOOR_USER_MATERIAL_LOW_DENSITY_EXACT_ASTM_LAB_AIRBORNE_IMPACT_TARGET_OUTPUT_INDEPENDENCE_PLAN_2026-06-17.md`
+/
+`post-V1 runtime-first route-family rerank after floor user-material low-density exact ASTM lab-airborne impact target-output independence`.
+
+Latest floor user-material low-density exact ASTM lab-airborne impact
+target-output independence owner:
+`post_v1_floor_user_material_low_density_exact_astm_lab_airborne_impact_target_output_independence_owner_plan`
+landed in
+`packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-lab-airborne-impact-target-output-independence-owner-contract.test.ts`
+with status
+`post_v1_floor_user_material_low_density_exact_astm_lab_airborne_impact_target_output_independence_owner_landed_runtime_selected_coverage_refresh`.
+It follows
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_exact_astm_lab_airborne_companion_basis_integrity_plan`
+/
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-low-density-exact-astm-lab-airborne-companion-basis-integrity-contract.test.ts`
+/
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_exact_astm_lab_airborne_companion_basis_integrity_landed_no_runtime_selected_floor_user_material_low_density_exact_astm_lab_airborne_impact_target_output_independence_owner`.
+Selected candidate:
+`floor.user_material_low_density_exact_astm_lab_airborne_impact_target_output_independence_owner`.
+The rerank followed
+`post_v1_floor_user_material_low_density_exact_astm_lab_airborne_companion_basis_integrity_owner_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-lab-airborne-companion-basis-integrity-owner-contract.test.ts`
+/
+`post_v1_floor_user_material_low_density_exact_astm_lab_airborne_companion_basis_integrity_owner_landed_runtime_selected_coverage_refresh`
+and
+`post_v1_floor_user_material_low_density_exact_astm_lab_airborne_companion_basis_integrity_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-lab-airborne-companion-basis-integrity-coverage-refresh-contract.test.ts`
+/
+`post_v1_floor_user_material_low_density_exact_astm_lab_airborne_companion_basis_integrity_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`.
+The rerank action
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_exact_astm_lab_airborne_companion_basis_integrity_plan`
+closed with
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_exact_astm_lab_airborne_companion_basis_integrity_landed_no_runtime_selected_floor_user_material_low_density_exact_astm_lab_airborne_impact_target_output_independence_owner`,
+`candidateCount: 8`, `estimatedNextRuntimeValuesMoved: 7`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+Runtime counters: `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 4`, `newCalculableTargetOutputs: 7`,
+`runtimeBasisPromotions: 4`, `runtimeValuesMoved 7`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Historical selected next at the owner checkpoint:
+`post_v1_floor_user_material_low_density_exact_astm_lab_airborne_impact_target_output_independence_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-lab-airborne-impact-target-output-independence-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_FLOOR_USER_MATERIAL_LOW_DENSITY_EXACT_ASTM_LAB_AIRBORNE_IMPACT_TARGET_OUTPUT_INDEPENDENCE_COVERAGE_REFRESH_PLAN_2026-06-16.md`.
+Owner plan:
+`docs/calculator/POST_V1_FLOOR_USER_MATERIAL_LOW_DENSITY_EXACT_ASTM_LAB_AIRBORNE_IMPACT_TARGET_OUTPUT_INDEPENDENCE_OWNER_PLAN_2026-06-16.md`.
+
+Latest floor user-material low-density exact ASTM lab-airborne companion
+basis-integrity coverage refresh:
+`post_v1_floor_user_material_low_density_exact_astm_lab_airborne_companion_basis_integrity_coverage_refresh_plan`
+landed in
+`packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-lab-airborne-companion-basis-integrity-coverage-refresh-contract.test.ts`
+with status
+`post_v1_floor_user_material_low_density_exact_astm_lab_airborne_companion_basis_integrity_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`.
+It follows
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_exact_astm_field_direct_flanking_companion_plan`
+/
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-low-density-exact-astm-field-direct-flanking-companion-contract.test.ts`
+/
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_exact_astm_field_direct_flanking_companion_landed_no_runtime_selected_floor_user_material_low_density_exact_astm_lab_airborne_companion_basis_integrity_owner`
+and previous owner
+`post_v1_floor_user_material_low_density_exact_astm_lab_airborne_companion_basis_integrity_owner_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-lab-airborne-companion-basis-integrity-owner-contract.test.ts`
+/
+`post_v1_floor_user_material_low_density_exact_astm_lab_airborne_companion_basis_integrity_owner_landed_runtime_selected_coverage_refresh`.
+Selected candidate re-probed:
+`floor.user_material_low_density_exact_astm_lab_airborne_companion_basis_integrity_owner`.
+Counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next:
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_exact_astm_lab_airborne_companion_basis_integrity_plan`
+/
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-low-density-exact-astm-lab-airborne-companion-basis-integrity-contract.test.ts`
+/
+`docs/calculator/POST_V1_NEXT_NUMERIC_COVERAGE_GAP_AFTER_FLOOR_USER_MATERIAL_LOW_DENSITY_EXACT_ASTM_LAB_AIRBORNE_COMPANION_BASIS_INTEGRITY_PLAN_2026-06-16.md`
+/
+`post-V1 next numeric coverage gap after floor user-material low-density exact ASTM lab-airborne companion basis-integrity`.
+
+Latest floor user-material low-density exact ASTM lab-airborne companion
+basis-integrity owner:
+`post_v1_floor_user_material_low_density_exact_astm_lab_airborne_companion_basis_integrity_owner_plan`
+landed in
+`packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-lab-airborne-companion-basis-integrity-owner-contract.test.ts`
+with status
+`post_v1_floor_user_material_low_density_exact_astm_lab_airborne_companion_basis_integrity_owner_landed_runtime_selected_coverage_refresh`.
+It follows
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_exact_astm_field_direct_flanking_companion_plan`
+/
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-low-density-exact-astm-field-direct-flanking-companion-contract.test.ts`
+/
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_exact_astm_field_direct_flanking_companion_landed_no_runtime_selected_floor_user_material_low_density_exact_astm_lab_airborne_companion_basis_integrity_owner`.
+Selected candidate:
+`floor.user_material_low_density_exact_astm_lab_airborne_companion_basis_integrity_owner`.
+Counters: `runtimeValuesMoved 4`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next:
+`post_v1_floor_user_material_low_density_exact_astm_lab_airborne_companion_basis_integrity_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-lab-airborne-companion-basis-integrity-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_FLOOR_USER_MATERIAL_LOW_DENSITY_EXACT_ASTM_LAB_AIRBORNE_COMPANION_BASIS_INTEGRITY_COVERAGE_REFRESH_PLAN_2026-06-16.md`
+/
+`post-V1 floor user-material low-density exact ASTM lab-airborne companion basis-integrity coverage refresh`.
+
+Latest floor user-material low-density exact ASTM lab-airborne companion
+basis-integrity rerank:
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_exact_astm_field_direct_flanking_companion_plan`
+landed in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-low-density-exact-astm-field-direct-flanking-companion-contract.test.ts`
+with status
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_exact_astm_field_direct_flanking_companion_landed_no_runtime_selected_floor_user_material_low_density_exact_astm_lab_airborne_companion_basis_integrity_owner`.
+It follows
+`post_v1_floor_user_material_low_density_exact_astm_field_direct_flanking_companion_owner_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-field-direct-flanking-companion-owner-contract.test.ts`
+/
+`post_v1_floor_user_material_low_density_exact_astm_field_direct_flanking_companion_owner_landed_runtime_selected_coverage_refresh`
+and
+`post_v1_floor_user_material_low_density_exact_astm_field_direct_flanking_companion_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-field-direct-flanking-companion-coverage-refresh-contract.test.ts`
+/
+`post_v1_floor_user_material_low_density_exact_astm_field_direct_flanking_companion_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`.
+Selected candidate:
+`floor.user_material_low_density_exact_astm_lab_airborne_companion_basis_integrity_owner`.
+The rerank ran `candidateCount: 9`, estimated
+`estimatedNextRuntimeValuesMoved: 4`, and closed with
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next:
+`post_v1_floor_user_material_low_density_exact_astm_lab_airborne_companion_basis_integrity_owner_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-lab-airborne-companion-basis-integrity-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_FLOOR_USER_MATERIAL_LOW_DENSITY_EXACT_ASTM_LAB_AIRBORNE_COMPANION_BASIS_INTEGRITY_OWNER_PLAN_2026-06-16.md`
+/
+`post-V1 floor user-material low-density exact ASTM lab-airborne companion basis-integrity owner`.
+
+Latest floor user-material low-density exact ASTM field direct-flanking
+companion coverage refresh:
+`post_v1_floor_user_material_low_density_exact_astm_field_direct_flanking_companion_coverage_refresh_plan`
+landed in
+`packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-field-direct-flanking-companion-coverage-refresh-contract.test.ts`
+with status
+`post_v1_floor_user_material_low_density_exact_astm_field_direct_flanking_companion_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`.
+It follows
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_exact_astm_direct_flanking_companion_plan`
+/
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-low-density-exact-astm-direct-flanking-companion-contract.test.ts`
+/
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_exact_astm_direct_flanking_companion_landed_no_runtime_selected_floor_user_material_low_density_exact_astm_field_direct_flanking_companion_owner`
+and
+`post_v1_floor_user_material_low_density_exact_astm_field_direct_flanking_companion_owner_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-field-direct-flanking-companion-owner-contract.test.ts`
+/
+`post_v1_floor_user_material_low_density_exact_astm_field_direct_flanking_companion_owner_landed_runtime_selected_coverage_refresh`.
+Selected candidate:
+`floor.user_material_low_density_exact_astm_field_direct_flanking_companion_owner`.
+The refresh protects exact field ASTM `AIIC 50`, `Ln,w 64.3`,
+`DeltaLw 24.3`, `L'n,w 66.1`, `L'nT,w 63.7`, `L'nT,50 66.7`,
+and complete building companions `R'w 51`, `Dn,w 51`, `Dn,A 50.2`,
+`DnT,w 54`, and `DnT,A 52.6`. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next:
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_exact_astm_field_direct_flanking_companion_plan`
+/
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-low-density-exact-astm-field-direct-flanking-companion-contract.test.ts`
+/
+`docs/calculator/POST_V1_NEXT_NUMERIC_COVERAGE_GAP_AFTER_FLOOR_USER_MATERIAL_LOW_DENSITY_EXACT_ASTM_FIELD_DIRECT_FLANKING_COMPANION_PLAN_2026-06-16.md`
+/
+`post-V1 next numeric coverage gap after floor user-material low-density exact ASTM field direct-flanking companion`.
+
+Latest floor user-material low-density exact ASTM field direct-flanking
+companion owner:
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_exact_astm_direct_flanking_companion_plan`
+landed in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-low-density-exact-astm-direct-flanking-companion-contract.test.ts`
+with status
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_exact_astm_direct_flanking_companion_landed_no_runtime_selected_floor_user_material_low_density_exact_astm_field_direct_flanking_companion_owner`.
+It follows
+`post_v1_floor_user_material_low_density_exact_astm_direct_flanking_companion_owner_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-direct-flanking-companion-owner-contract.test.ts`
+/
+`post_v1_floor_user_material_low_density_exact_astm_direct_flanking_companion_owner_landed_runtime_selected_coverage_refresh`
+and
+`post_v1_floor_user_material_low_density_exact_astm_direct_flanking_companion_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-direct-flanking-companion-coverage-refresh-contract.test.ts`
+/
+`post_v1_floor_user_material_low_density_exact_astm_direct_flanking_companion_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`.
+Selected candidate:
+`floor.user_material_low_density_exact_astm_field_direct_flanking_companion_owner`.
+The rerank ran `candidateCount: 8`, estimated
+`estimatedNextRuntimeValuesMoved: 6`, and closed with
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Runtime owner:
+`post_v1_floor_user_material_low_density_exact_astm_field_direct_flanking_companion_owner_plan`
+landed in
+`packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-field-direct-flanking-companion-owner-contract.test.ts`
+with plan
+`docs/calculator/POST_V1_FLOOR_USER_MATERIAL_LOW_DENSITY_EXACT_ASTM_FIELD_DIRECT_FLANKING_COMPANION_OWNER_PLAN_2026-06-16.md`
+and status
+`post_v1_floor_user_material_low_density_exact_astm_field_direct_flanking_companion_owner_landed_runtime_selected_coverage_refresh`.
+It keeps exact field ASTM `AIIC 50` while calculating `L'n,w 66.1`,
+`L'nT,w 63.7`, and `L'nT,50 66.7`. Counters:
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 2`,
+`newCalculableTargetOutputs: 6`, `runtimeBasisPromotions: 2`,
+`runtimeValuesMoved 6`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next:
+`post_v1_floor_user_material_low_density_exact_astm_field_direct_flanking_companion_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-field-direct-flanking-companion-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_FLOOR_USER_MATERIAL_LOW_DENSITY_EXACT_ASTM_FIELD_DIRECT_FLANKING_COMPANION_COVERAGE_REFRESH_PLAN_2026-06-16.md`
+/
+`post-V1 floor user-material low-density exact ASTM field direct-flanking companion coverage refresh`.
+
+Latest floor user-material low-density exact ASTM direct-flanking
+companion coverage refresh:
+`post_v1_floor_user_material_low_density_exact_astm_direct_flanking_companion_coverage_refresh_plan`
+landed in
+`packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-direct-flanking-companion-coverage-refresh-contract.test.ts`
+with status
+`post_v1_floor_user_material_low_density_exact_astm_direct_flanking_companion_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`.
+It follows
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_exact_astm_companion_plan`
+/
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-low-density-exact-astm-companion-contract.test.ts`
+/
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_exact_astm_companion_landed_no_runtime_selected_floor_user_material_low_density_exact_astm_direct_flanking_companion_owner`
+and
+`post_v1_floor_user_material_low_density_exact_astm_direct_flanking_companion_owner_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-direct-flanking-companion-owner-contract.test.ts`
+/
+`post_v1_floor_user_material_low_density_exact_astm_direct_flanking_companion_owner_landed_runtime_selected_coverage_refresh`.
+Selected candidate re-probed:
+`floor.user_material_low_density_exact_astm_direct_flanking_companion_owner`.
+The refresh protects exact ASTM `IIC 50`, direct+flanking
+`L'n,w 62`, `L'nT,w 60`, `L'nT,50 63`, and complete field/building
+companions `R'w 51`, `Dn,w 51`, `Dn,A 50.2`, `DnT,w 54`, and
+`DnT,A 52.6`. Counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next:
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_exact_astm_direct_flanking_companion_plan`
+/
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-low-density-exact-astm-direct-flanking-companion-contract.test.ts`
+/
+`docs/calculator/POST_V1_NEXT_NUMERIC_COVERAGE_GAP_AFTER_FLOOR_USER_MATERIAL_LOW_DENSITY_EXACT_ASTM_DIRECT_FLANKING_COMPANION_PLAN_2026-06-16.md`
+/
+`post-V1 next numeric coverage gap after floor user-material low-density exact ASTM direct-flanking companion`.
+
+Latest floor user-material low-density exact ASTM direct-flanking
+companion owner:
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_exact_astm_companion_plan`
+landed in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-low-density-exact-astm-companion-contract.test.ts`
+with status
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_exact_astm_companion_landed_no_runtime_selected_floor_user_material_low_density_exact_astm_direct_flanking_companion_owner`.
+It follows
+`post_v1_floor_user_material_low_density_exact_astm_companion_owner_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-companion-owner-contract.test.ts`
+/
+`post_v1_floor_user_material_low_density_exact_astm_companion_owner_landed_runtime_selected_coverage_refresh`
+and
+`post_v1_floor_user_material_low_density_exact_astm_companion_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-companion-coverage-refresh-contract.test.ts`
+/
+`post_v1_floor_user_material_low_density_exact_astm_companion_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`.
+Selected candidate:
+`floor.user_material_low_density_exact_astm_direct_flanking_companion_owner`.
+The rerank ran `candidateCount: 8` and estimated
+`estimatedNextRuntimeValuesMoved: 17`; closeout counters are
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Runtime owner:
+`post_v1_floor_user_material_low_density_exact_astm_direct_flanking_companion_owner_plan`
+landed in
+`packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-direct-flanking-companion-owner-contract.test.ts`
+with plan doc
+`docs/calculator/POST_V1_FLOOR_USER_MATERIAL_LOW_DENSITY_EXACT_ASTM_DIRECT_FLANKING_COMPANION_OWNER_PLAN_2026-06-16.md`
+and status
+`post_v1_floor_user_material_low_density_exact_astm_direct_flanking_companion_owner_landed_runtime_selected_coverage_refresh`.
+It preserves exact ASTM `IIC 50` and adds direct+flanking companions
+`L'n,w 62`, `L'nT,w 60`, and `L'nT,50 63`. Counters:
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 2`,
+`newCalculableTargetOutputs: 17`, `runtimeBasisPromotions: 2`,
+`runtimeValuesMoved 17`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next:
+`post_v1_floor_user_material_low_density_exact_astm_direct_flanking_companion_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-direct-flanking-companion-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_FLOOR_USER_MATERIAL_LOW_DENSITY_EXACT_ASTM_DIRECT_FLANKING_COMPANION_COVERAGE_REFRESH_PLAN_2026-06-16.md`
+/
+`post-V1 floor user-material low-density exact ASTM direct-flanking companion coverage refresh`.
+
+Latest floor user-material low-density exact ASTM companion coverage
+refresh:
+`post_v1_floor_user_material_low_density_exact_astm_companion_coverage_refresh_plan`
+landed in
+`packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-companion-coverage-refresh-contract.test.ts`
+with status
+`post_v1_floor_user_material_low_density_exact_astm_companion_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`.
+It follows
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_visible_floating_astm_exact_band_field_impact_companion_plan`
+/
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-visible-floating-astm-exact-band-field-impact-companion-contract.test.ts`
+/
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_visible_floating_astm_exact_band_field_impact_companion_landed_no_runtime_selected_floor_user_material_low_density_exact_astm_companion_owner`
+and
+`post_v1_floor_user_material_low_density_exact_astm_companion_owner_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-companion-owner-contract.test.ts`
+/
+`post_v1_floor_user_material_low_density_exact_astm_companion_owner_landed_runtime_selected_coverage_refresh`.
+Selected candidate re-probed:
+`floor.user_material_low_density_exact_astm_companion_owner`.
+The refresh protects `Rw 53`, `Ln,w 64.3`, `DeltaLw 24.3`,
+`L'n,w 66.3`, `L'nT,w 63.9`, `L'nT,50 66.9`, and exact ASTM
+`IIC 50` / `AIIC 50`. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next:
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_exact_astm_companion_plan`
+/
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-low-density-exact-astm-companion-contract.test.ts`
+/
+`docs/calculator/POST_V1_NEXT_NUMERIC_COVERAGE_GAP_AFTER_FLOOR_USER_MATERIAL_LOW_DENSITY_EXACT_ASTM_COMPANION_PLAN_2026-06-16.md`
+/
+`post-V1 next numeric coverage gap after floor user-material low-density exact ASTM companion`.
+
+Latest floor user-material low-density exact ASTM companion owner:
+`post_v1_floor_user_material_low_density_exact_astm_companion_owner_plan`
+landed in
+`packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-companion-owner-contract.test.ts`
+with plan doc
+`docs/calculator/POST_V1_FLOOR_USER_MATERIAL_LOW_DENSITY_EXACT_ASTM_COMPANION_OWNER_PLAN_2026-06-16.md`
+with status
+`post_v1_floor_user_material_low_density_exact_astm_companion_owner_landed_runtime_selected_coverage_refresh`.
+It follows
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_visible_floating_astm_exact_band_field_impact_companion_plan`
+/
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-visible-floating-astm-exact-band-field-impact-companion-contract.test.ts`
+/
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_visible_floating_astm_exact_band_field_impact_companion_landed_no_runtime_selected_floor_user_material_low_density_exact_astm_companion_owner`.
+The rerank followed
+`post_v1_floor_user_material_visible_floating_astm_exact_band_field_impact_companion_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-visible-floating-astm-exact-band-field-impact-companion-coverage-refresh-contract.test.ts`
+/
+`post_v1_floor_user_material_visible_floating_astm_exact_band_field_impact_companion_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`,
+ran `candidateCount: 11`, and estimated
+`estimatedNextRuntimeValuesMoved: 12` with `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+Selected candidate:
+`floor.user_material_low_density_exact_astm_companion_owner`.
+The owner calculates `Rw 53`, `Ln,w 64.3`, `DeltaLw 24.3`,
+`L'n,w 66.3`, `L'nT,w 63.9`, `L'nT,50 66.9`, and exact ASTM
+`IIC 50` / `AIIC 50` for custom low-density visible floating-floor
+requests. Counters: `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 2`, `newCalculableTargetOutputs: 10`,
+`runtimeBasisPromotions: 4`, `runtimeValuesMoved 12`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Current selected next action:
+`post_v1_floor_user_material_low_density_exact_astm_companion_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-companion-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_FLOOR_USER_MATERIAL_LOW_DENSITY_EXACT_ASTM_COMPANION_COVERAGE_REFRESH_PLAN_2026-06-16.md`
+/
+`post-V1 floor user-material low-density exact ASTM companion coverage refresh`.
+
+Latest floor user-material visible floating ASTM exact-band field impact
+companion coverage refresh:
+`post_v1_floor_user_material_visible_floating_astm_exact_band_field_impact_companion_coverage_refresh_plan`
+landed in
+`packages/engine/src/post-v1-floor-user-material-visible-floating-astm-exact-band-field-impact-companion-coverage-refresh-contract.test.ts`
+with status
+`post_v1_floor_user_material_visible_floating_astm_exact_band_field_impact_companion_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`.
+It follows
+`post_v1_floor_user_material_visible_floating_astm_exact_band_field_impact_companion_owner_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-visible-floating-astm-exact-band-field-impact-companion-owner-contract.test.ts`
+/
+`post_v1_floor_user_material_visible_floating_astm_exact_band_field_impact_companion_owner_landed_runtime_selected_coverage_refresh`.
+Selected candidate re-probed:
+`floor.user_material_visible_floating_astm_exact_band_field_impact_companion_owner`.
+The refresh protects exact lab ASTM `IIC 50`, field ASTM `AIIC 50`,
+same-stack ISO `Ln,w 50.1` / `DeltaLw 24.4`, field companions
+`L'n,w 52.1`, `L'nT,w 49.7`, `L'nT,50 52.7`, and airborne companions
+`Rw 58`, `STC 57`, `C -1.8`, and `Ctr -7.3`. Generic aliases,
+missing field inputs, source crawling, and formula retuning remain
+outside. Counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next action:
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_visible_floating_astm_exact_band_field_impact_companion_plan`
+/
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-visible-floating-astm-exact-band-field-impact-companion-contract.test.ts`
+/
+`docs/calculator/POST_V1_NEXT_NUMERIC_COVERAGE_GAP_AFTER_FLOOR_USER_MATERIAL_VISIBLE_FLOATING_ASTM_EXACT_BAND_FIELD_IMPACT_COMPANION_PLAN_2026-06-16.md`
+/
+`post-V1 next numeric coverage gap after floor user-material visible floating ASTM exact-band field impact companion`.
+
+Latest floor user-material visible floating ASTM exact-band field impact
+companion owner:
+`post_v1_floor_user_material_visible_floating_astm_exact_band_field_impact_companion_owner_plan`
+landed in
+`packages/engine/src/post-v1-floor-user-material-visible-floating-astm-exact-band-field-impact-companion-owner-contract.test.ts`
+with status
+`post_v1_floor_user_material_visible_floating_astm_exact_band_field_impact_companion_owner_landed_runtime_selected_coverage_refresh`.
+It follows
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_visible_floating_astm_exact_band_mixed_iso_companion_plan`
+/
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-visible-floating-astm-exact-band-mixed-iso-companion-contract.test.ts`
+/
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_visible_floating_astm_exact_band_mixed_iso_companion_landed_no_runtime_selected_floor_user_material_visible_floating_astm_exact_band_field_impact_companion_owner`.
+Selected candidate:
+`floor.user_material_visible_floating_astm_exact_band_field_impact_companion_owner`.
+The owner keeps exact ASTM `IIC 50` / `AIIC 50`, ISO `Ln,w 50.1` /
+`DeltaLw 24.4`, field companions `L'n,w 52.1`, `L'nT,w 49.7`, and
+`L'nT,50 52.7`, plus airborne companions `Rw 58`, `STC 57`, `C -1.8`,
+and `Ctr -7.3`. Generic aliases, missing field inputs, source crawling,
+and formula retuning remain outside. Counters:
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 2`,
+`newCalculableTargetOutputs: 6`, `runtimeBasisPromotions: 2`,
+`runtimeValuesMoved 6`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next action:
+`post_v1_floor_user_material_visible_floating_astm_exact_band_field_impact_companion_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-visible-floating-astm-exact-band-field-impact-companion-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_FLOOR_USER_MATERIAL_VISIBLE_FLOATING_ASTM_EXACT_BAND_FIELD_IMPACT_COMPANION_COVERAGE_REFRESH_PLAN_2026-06-16.md`
+/
+`post-V1 floor user-material visible floating ASTM exact-band field impact companion coverage refresh`.
+
+Latest floor user-material visible floating ASTM exact-band field impact
+companion rerank:
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_visible_floating_astm_exact_band_mixed_iso_companion_plan`
+landed in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-visible-floating-astm-exact-band-mixed-iso-companion-contract.test.ts`
+with status
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_visible_floating_astm_exact_band_mixed_iso_companion_landed_no_runtime_selected_floor_user_material_visible_floating_astm_exact_band_field_impact_companion_owner`.
+It follows
+`post_v1_floor_user_material_visible_floating_astm_exact_band_mixed_iso_companion_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-visible-floating-astm-exact-band-mixed-iso-companion-coverage-refresh-contract.test.ts`
+/
+`post_v1_floor_user_material_visible_floating_astm_exact_band_mixed_iso_companion_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`.
+Previous owner:
+`post_v1_floor_user_material_visible_floating_astm_exact_band_mixed_iso_companion_owner_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-visible-floating-astm-exact-band-mixed-iso-companion-owner-contract.test.ts`
+/
+`post_v1_floor_user_material_visible_floating_astm_exact_band_mixed_iso_companion_owner_landed_runtime_selected_coverage_refresh`.
+Selected candidate:
+`floor.user_material_visible_floating_astm_exact_band_field_impact_companion_owner`.
+The rerank selects a runtime owner for exact ASTM mixed requests with
+complete field impact context. It targets six field companion values and
+keeps generic ASTM aliases, non-ASTM exact methods, missing field
+inputs, source crawling, and formula retuning outside the next owner.
+Counters: `candidateCount: 10`, `estimatedNextRuntimeBasisPromotions: 2`,
+`estimatedNextRuntimeValuesMoved: 6`,
+`estimatedNextCalculableRequestShapes: 2`,
+`estimatedNextCalculableTargetOutputs: 6`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Current selected next action:
+`post_v1_floor_user_material_visible_floating_astm_exact_band_field_impact_companion_owner_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-visible-floating-astm-exact-band-field-impact-companion-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_FLOOR_USER_MATERIAL_VISIBLE_FLOATING_ASTM_EXACT_BAND_FIELD_IMPACT_COMPANION_OWNER_PLAN_2026-06-16.md`
+/
+`post-V1 floor user-material visible floating ASTM exact-band field impact companion owner`.
+
+Latest floor user-material visible floating ASTM exact-band mixed ISO
+companion coverage refresh:
+`post_v1_floor_user_material_visible_floating_astm_exact_band_mixed_iso_companion_coverage_refresh_plan`
+landed in
+`packages/engine/src/post-v1-floor-user-material-visible-floating-astm-exact-band-mixed-iso-companion-coverage-refresh-contract.test.ts`
+with status
+`post_v1_floor_user_material_visible_floating_astm_exact_band_mixed_iso_companion_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`.
+It follows
+`post_v1_floor_user_material_visible_floating_astm_exact_band_mixed_iso_companion_owner_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-visible-floating-astm-exact-band-mixed-iso-companion-owner-contract.test.ts`
+/
+`post_v1_floor_user_material_visible_floating_astm_exact_band_mixed_iso_companion_owner_landed_runtime_selected_coverage_refresh`.
+Selected candidate re-probed:
+`floor.user_material_visible_floating_astm_exact_band_mixed_iso_companion_owner`.
+The refresh keeps exact lab ASTM `IIC 50`, field ASTM `AIIC 50`,
+same-stack ISO `Ln,w 50.1`, `DeltaLw 24.4`, and heavy airborne
+companions `Rw 58`, `STC 57`, `C -1.8`, and `Ctr -7.3`. Generic ASTM
+aliases, non-ASTM exact methods, missing dynamic stiffness, and missing
+load basis remain outside the mixed owner. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next action:
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_visible_floating_astm_exact_band_mixed_iso_companion_plan`
+/
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-visible-floating-astm-exact-band-mixed-iso-companion-contract.test.ts`
+/
+`docs/calculator/POST_V1_NEXT_NUMERIC_COVERAGE_GAP_AFTER_FLOOR_USER_MATERIAL_VISIBLE_FLOATING_ASTM_EXACT_BAND_MIXED_ISO_COMPANION_PLAN_2026-06-16.md`
+/
+`post-V1 next numeric coverage gap after floor user-material visible floating ASTM exact-band mixed ISO companion`.
+
+Latest floor user-material visible floating ASTM exact-band mixed ISO
+companion owner:
+`post_v1_floor_user_material_visible_floating_astm_exact_band_mixed_iso_companion_owner_plan`
+landed in
+`packages/engine/src/post-v1-floor-user-material-visible-floating-astm-exact-band-mixed-iso-companion-owner-contract.test.ts`
+with status
+`post_v1_floor_user_material_visible_floating_astm_exact_band_mixed_iso_companion_owner_landed_runtime_selected_coverage_refresh`.
+It follows
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_visible_floating_heavy_airborne_companion_plan`
+/
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-visible-floating-heavy-airborne-companion-contract.test.ts`
+/
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_visible_floating_heavy_airborne_companion_landed_no_runtime_selected_floor_user_material_visible_floating_astm_exact_band_mixed_iso_companion_owner`.
+Selected candidate:
+`floor.user_material_visible_floating_astm_exact_band_mixed_iso_companion_owner`.
+The owner keeps exact lab ASTM `IIC 50` and field ASTM `AIIC 50`,
+restores same-stack ISO `Ln,w 50.1` and `DeltaLw 24.4`, and keeps
+heavy airborne companions `Rw 58`, `STC 57`, `C -1.8`, and `Ctr -7.3`
+without aliasing ASTM and ISO metrics. Missing dynamic stiffness/load
+basis and generic `IIC` / `AIIC` remain outside the owner. Counters:
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 2`,
+`newCalculableTargetOutputs: 12`, `runtimeBasisPromotions: 2`,
+`runtimeValuesMoved 12`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next action:
+`post_v1_floor_user_material_visible_floating_astm_exact_band_mixed_iso_companion_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-visible-floating-astm-exact-band-mixed-iso-companion-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_FLOOR_USER_MATERIAL_VISIBLE_FLOATING_ASTM_EXACT_BAND_MIXED_ISO_COMPANION_COVERAGE_REFRESH_PLAN_2026-06-16.md`
+/
+`post-V1 floor user-material visible floating ASTM exact-band mixed ISO companion coverage refresh`.
+
+Latest floor user-material visible floating ASTM exact-band mixed ISO
+rerank:
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_visible_floating_heavy_airborne_companion_plan`
+landed in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-visible-floating-heavy-airborne-companion-contract.test.ts`
+with status
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_visible_floating_heavy_airborne_companion_landed_no_runtime_selected_floor_user_material_visible_floating_astm_exact_band_mixed_iso_companion_owner`.
+It follows
+`post_v1_floor_user_material_visible_floating_heavy_airborne_companion_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-visible-floating-heavy-airborne-companion-coverage-refresh-contract.test.ts`
+/
+`post_v1_floor_user_material_visible_floating_heavy_airborne_companion_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`.
+Previous owner:
+`post_v1_floor_user_material_visible_floating_heavy_airborne_companion_owner_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-visible-floating-heavy-airborne-companion-owner-contract.test.ts`
+/
+`post_v1_floor_user_material_visible_floating_heavy_airborne_companion_owner_landed_runtime_selected_coverage_refresh`.
+Selected candidate:
+`floor.user_material_visible_floating_astm_exact_band_mixed_iso_companion_owner`.
+The rerank selects the mixed runtime owner because exact ASTM
+`IIC`/`AIIC` requests currently keep the ASTM rating but suppress owned
+ISO `Ln,w`/`DeltaLw` and downgrade heavy airborne companions to
+screening. Counters: `candidateCount 9`, `roiAnalysisIterations: 4`,
+`estimatedNextRuntimeBasisPromotions: 2`,
+`estimatedNextRuntimeValuesMoved: 12`,
+`estimatedNextCalculableRequestShapes: 2`,
+`estimatedNextCalculableTargetOutputs: 12`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Current selected next action:
+`post_v1_floor_user_material_visible_floating_astm_exact_band_mixed_iso_companion_owner_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-visible-floating-astm-exact-band-mixed-iso-companion-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_FLOOR_USER_MATERIAL_VISIBLE_FLOATING_ASTM_EXACT_BAND_MIXED_ISO_COMPANION_OWNER_PLAN_2026-06-16.md`
+/
+`post-V1 floor user-material visible floating ASTM exact-band mixed ISO companion owner`.
+
+Historical floor user-material visible floating heavy airborne companion
+coverage refresh:
+`post_v1_floor_user_material_visible_floating_heavy_airborne_companion_coverage_refresh_plan`
+landed in
+`packages/engine/src/post-v1-floor-user-material-visible-floating-heavy-airborne-companion-coverage-refresh-contract.test.ts`
+with status
+`post_v1_floor_user_material_visible_floating_heavy_airborne_companion_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`.
+It follows
+`post_v1_floor_user_material_visible_floating_heavy_airborne_companion_owner_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-visible-floating-heavy-airborne-companion-owner-contract.test.ts`
+/
+`post_v1_floor_user_material_visible_floating_heavy_airborne_companion_owner_landed_runtime_selected_coverage_refresh`.
+Selected candidate re-probed:
+`floor.user_material_visible_floating_heavy_airborne_companion_owner`.
+The refresh protects custom visible heavy floating-floor airborne
+companions at `Rw 58` and `Ctr -7.3`, impact `Ln,w 50.1` and
+`DeltaLw 24.4`, complete field context `L'n,w 52.1`, `L'nT,w 49.7`,
+and `L'nT,50 52.7`, while leaving low-density, missing dynamic
+stiffness, default-catalog laminate airborne companions, and generic
+`IIC` / `AIIC` outside the owner. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next action:
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_visible_floating_heavy_airborne_companion_plan`
+/
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-visible-floating-heavy-airborne-companion-contract.test.ts`
+/
+`docs/calculator/POST_V1_NEXT_NUMERIC_COVERAGE_GAP_AFTER_FLOOR_USER_MATERIAL_VISIBLE_FLOATING_HEAVY_AIRBORNE_COMPANION_PLAN_2026-06-16.md`
+/
+`post-V1 next numeric coverage gap after floor user-material visible floating heavy airborne companion`.
+
+Historical floor user-material visible floating heavy airborne companion
+owner:
+`post_v1_floor_user_material_visible_floating_heavy_airborne_companion_owner_plan`
+landed in
+`packages/engine/src/post-v1-floor-user-material-visible-floating-heavy-airborne-companion-owner-contract.test.ts`
+with status
+`post_v1_floor_user_material_visible_floating_heavy_airborne_companion_owner_landed_runtime_selected_coverage_refresh`.
+It follows
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_visible_floating_mixed_lab_companion_plan`
+/
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-visible-floating-mixed-lab-companion-contract.test.ts`
+/
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_visible_floating_mixed_lab_companion_landed_no_runtime_selected_floor_user_material_visible_floating_heavy_airborne_companion_owner`.
+Selected candidate:
+`floor.user_material_visible_floating_heavy_airborne_companion_owner`.
+The owner promotes custom visible heavy floating-floor lab airborne
+companions to `predictor_heavy_concrete_floor_airborne_companion_estimate`:
+`Rw 58` and `Ctr -7.3`, with `Ln,w 50.1` and `DeltaLw 24.4`
+preserved. Counters: `accuracyPromotedRequestShapes: 1`,
+`accuracyPromotedTargetOutputs: 4`, `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 1`, `runtimeValuesMoved 2`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Historical selected next action at the heavy airborne companion owner checkpoint:
+`post_v1_floor_user_material_visible_floating_heavy_airborne_companion_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-visible-floating-heavy-airborne-companion-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_FLOOR_USER_MATERIAL_VISIBLE_FLOATING_HEAVY_AIRBORNE_COMPANION_COVERAGE_REFRESH_PLAN_2026-06-16.md`
+/
+`post-V1 floor user-material visible floating heavy airborne companion coverage refresh`.
+
+Historical floor user-material visible floating heavy airborne companion
+rerank:
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_visible_floating_mixed_lab_companion_plan`
+landed in
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-visible-floating-mixed-lab-companion-contract.test.ts`
+with status
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_visible_floating_mixed_lab_companion_landed_no_runtime_selected_floor_user_material_visible_floating_heavy_airborne_companion_owner`.
+It follows
+`post_v1_floor_user_material_visible_floating_mixed_lab_companion_owner_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-visible-floating-mixed-lab-companion-owner-contract.test.ts`
+/
+`post_v1_floor_user_material_visible_floating_mixed_lab_companion_owner_landed_runtime_selected_coverage_refresh`
+and
+`post_v1_floor_user_material_visible_floating_mixed_lab_companion_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-visible-floating-mixed-lab-companion-coverage-refresh-contract.test.ts`
+/
+`post_v1_floor_user_material_visible_floating_mixed_lab_companion_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`.
+Selected candidate:
+`floor.user_material_visible_floating_heavy_airborne_companion_owner`.
+The rerank ran `roiAnalysisIterations: 4` and `candidateCount 8`.
+It found custom visible heavy floating floors already calculate
+`Ln,w 50.1` and `DeltaLw 24.4` through
+`predictor_heavy_floating_floor_iso12354_annexc_estimate`, while
+`Rw`, `STC`, `C`, and `Ctr` remain on
+`screening_mass_law_curve_seed_v3`. Counters:
+`estimatedNextRuntimeBasisPromotions: 1`,
+`estimatedNextRuntimeValuesMoved: 2`,
+`estimatedNextCalculableRequestShapes: 1`,
+`estimatedNextCalculableTargetOutputs: 4`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Historical selected next action at the heavy airborne companion rerank checkpoint:
+`post_v1_floor_user_material_visible_floating_heavy_airborne_companion_owner_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-visible-floating-heavy-airborne-companion-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_FLOOR_USER_MATERIAL_VISIBLE_FLOATING_HEAVY_AIRBORNE_COMPANION_OWNER_PLAN_2026-06-16.md`
+/
+`post-V1 floor user-material visible floating heavy airborne companion owner`.
+
+Historical floor user-material visible floating mixed lab-companion
+coverage refresh:
+`post_v1_floor_user_material_visible_floating_mixed_lab_companion_coverage_refresh_plan`
+landed in
+`packages/engine/src/post-v1-floor-user-material-visible-floating-mixed-lab-companion-coverage-refresh-contract.test.ts`
+with status
+`post_v1_floor_user_material_visible_floating_mixed_lab_companion_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`.
+It follows
+`post_v1_floor_user_material_visible_floating_mixed_lab_companion_owner_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-visible-floating-mixed-lab-companion-owner-contract.test.ts`
+/
+`post_v1_floor_user_material_visible_floating_mixed_lab_companion_owner_landed_runtime_selected_coverage_refresh`.
+It re-probes selected candidate
+`floor.user_material_visible_floating_mixed_lab_companion_owner` without
+moving runtime values. Explicit lab companions stay supported in mixed
+custom visible heavy floating-floor requests: `CI -1`, `CI,50-2500 3`,
+and `Ln,w+CI 49.1`. Incomplete field output `L'nT,50` remains
+unsupported until field context is complete; complete field context
+still supports `L'n,w 52.1`, `L'nT,w 49.7`, and `L'nT,50 52.7`.
+Missing explicit CI inputs and generic `IIC`/`AIIC` remain parked.
+Counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Historical selected next action at the mixed lab-companion coverage refresh checkpoint:
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_visible_floating_mixed_lab_companion_plan`
+/
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-visible-floating-mixed-lab-companion-contract.test.ts`
+/
+`docs/calculator/POST_V1_NEXT_NUMERIC_COVERAGE_GAP_AFTER_FLOOR_USER_MATERIAL_VISIBLE_FLOATING_MIXED_LAB_COMPANION_PLAN_2026-06-16.md`
+/
+`post-V1 next numeric coverage gap after floor user-material visible floating mixed lab-companion`.
+
+Latest floor user-material visible floating mixed lab-companion owner:
+`post_v1_floor_user_material_visible_floating_mixed_lab_companion_owner_plan`
+landed in
+`packages/engine/src/post-v1-floor-user-material-visible-floating-mixed-lab-companion-owner-contract.test.ts`
+with status
+`post_v1_floor_user_material_visible_floating_mixed_lab_companion_owner_landed_runtime_selected_coverage_refresh`.
+It follows
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_visible_floating_load_basis_plan`
+/
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-visible-floating-load-basis-contract.test.ts`
+/
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_visible_floating_load_basis_landed_no_runtime_selected_floor_user_material_visible_floating_mixed_lab_companion_owner`.
+It keeps custom visible heavy floating-floor explicit lab companions
+supported in mixed requests: `CI -1`, `CI,50-2500 3`, and `Ln,w+CI
+49.1`. Incomplete `L'nT,50` field context remains unsupported; complete
+field context still supports `L'n,w 52.1`, `L'nT,w 49.7`, and
+`L'nT,50 52.7`. Missing explicit CI inputs and generic `IIC`/`AIIC`
+remain parked. Counters: `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 2`, `newCalculableTargetOutputs: 3`,
+`runtimeBasisPromotions: 1`, `runtimeValuesMoved 3`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+
+Historical selected next action at the mixed lab-companion owner checkpoint:
+`post_v1_floor_user_material_visible_floating_mixed_lab_companion_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-visible-floating-mixed-lab-companion-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_FLOOR_USER_MATERIAL_VISIBLE_FLOATING_MIXED_LAB_COMPANION_COVERAGE_REFRESH_PLAN_2026-06-16.md`
+/
+`post-V1 floor user-material visible floating mixed lab-companion coverage refresh`.
+
+Latest floor user-material visible floating load-basis coverage refresh:
+`post_v1_floor_user_material_visible_floating_load_basis_coverage_refresh_plan`
+landed in
+`packages/engine/src/post-v1-floor-user-material-visible-floating-load-basis-coverage-refresh-contract.test.ts`
+with status
+`post_v1_floor_user_material_visible_floating_load_basis_coverage_refresh_landed_no_runtime_selected_next_numeric_coverage_gap`.
+It follows
+`post_v1_floor_user_material_visible_floating_load_basis_owner_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-visible-floating-load-basis-owner-contract.test.ts`
+/
+`post_v1_floor_user_material_visible_floating_load_basis_owner_landed_runtime_selected_coverage_refresh`
+and the previous selected action
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_floating_floor_family_plan`.
+It re-probes
+`floor.user_material_visible_floating_load_basis_owner` without moving
+runtime values. Counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Historical selected next action at the load-basis coverage refresh checkpoint:
+`post_v1_next_numeric_coverage_gap_after_floor_user_material_visible_floating_load_basis_plan`
+/
+`packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-visible-floating-load-basis-contract.test.ts`
+/
+`docs/calculator/POST_V1_NEXT_NUMERIC_COVERAGE_GAP_AFTER_FLOOR_USER_MATERIAL_VISIBLE_FLOATING_LOAD_BASIS_PLAN_2026-06-16.md`
+/
+`post-V1 next numeric coverage gap after floor user-material visible floating load-basis`.
 
 Latest floor user-material visible floating load-basis runtime owner:
 `post_v1_floor_user_material_visible_floating_load_basis_owner_plan`
@@ -42,7 +1428,7 @@ Heavy custom concrete now calculates without manual load basis:
 `runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
 `frontendImplementationFilesTouched: 0`.
 
-Current selected next action:
+Historical selected next action at the owner checkpoint:
 `post_v1_floor_user_material_visible_floating_load_basis_coverage_refresh_plan`
 /
 `packages/engine/src/post-v1-floor-user-material-visible-floating-load-basis-coverage-refresh-contract.test.ts`

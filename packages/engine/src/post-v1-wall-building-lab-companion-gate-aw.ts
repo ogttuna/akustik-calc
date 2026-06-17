@@ -86,15 +86,15 @@ export const POST_V1_GATE_AW_WALL_BUILDING_LAB_COMPANION_VALUE_PINS = [
   {
     caseId: "wall-clt-local",
     values: {
-      "C": -1.8,
-      "Ctr": -7.6,
+      "C": -1.1,
+      "Ctr": -7.1,
       "Dn,A": 39.2,
       "Dn,w": 41,
       "DnT,A": 40.7,
       "DnT,w": 42,
       "R'w": 41,
-      "Rw": 41,
-      "STC": 41
+      "Rw": 42,
+      "STC": 43
     }
   },
   {

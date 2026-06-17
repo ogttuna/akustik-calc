@@ -36,17 +36,6 @@ const WALL_FIELD_OUTPUTS = [
   "DnT,A"
 ] as const satisfies readonly RequestedOutputId[];
 
-const CLT_FIELD_OUTPUTS_AFTER_GATE_DP = [
-  "STC",
-  "C",
-  "Ctr",
-  "R'w",
-  "Dn,w",
-  "Dn,A",
-  "DnT,w",
-  "DnT,A"
-] as const satisfies readonly RequestedOutputId[];
-
 function generatedCase(id: string) {
   const testCase = ENGINE_MIXED_GENERATED_CASES.find((entry) => entry.id === id);
 
@@ -89,7 +78,7 @@ describe("post-V1 wall screening Rw field companion Gate AB", () => {
     expect(result.warnings.join("\n")).not.toContain("Unsupported target outputs: Rw");
   });
 
-  it("keeps laminated CLT field companions live without relabelling lab Rw", () => {
+  it("keeps laminated CLT field companions live while lab companions stay on direct formula values", () => {
     const testCase = generatedCase("wall-clt-local");
     const result = calculateAssembly(testCase.rows, {
       ...testCase.fieldOptions,
@@ -97,25 +86,21 @@ describe("post-V1 wall screening Rw field companion Gate AB", () => {
     });
 
     expect(result.metrics).toMatchObject({
-      estimatedCDb: -1.8,
-      estimatedCtrDb: -7.6,
+      estimatedCDb: -1.1,
+      estimatedCtrDb: -7.1,
       estimatedDnADb: 39.2,
       estimatedDnTADb: 40.7,
       estimatedDnTwDb: 42,
       estimatedDnWDb: 41,
-      estimatedRwDb: 41,
+      estimatedRwDb: 42,
       estimatedRwPrimeDb: 41,
-      estimatedStc: 41
+      estimatedStc: 43
     });
-    expect(result.supportedTargetOutputs).toEqual([...CLT_FIELD_OUTPUTS_AFTER_GATE_DP]);
-    expect(result.unsupportedTargetOutputs).toEqual(["Rw"]);
+    expect(result.supportedTargetOutputs).toEqual([...WALL_FIELD_OUTPUTS]);
+    expect(result.unsupportedTargetOutputs).toEqual([]);
     for (const pin of POST_V1_GATE_AB_WALL_SCREENING_RW_VALUE_PINS) {
       if (pin.caseId === testCase.id) {
-        if (pin.metric === "Rw") {
-          expect(result.unsupportedTargetOutputs).toContain(pin.metric);
-        } else {
-          expect(result.supportedTargetOutputs).toContain(pin.metric);
-        }
+        expect(result.supportedTargetOutputs).toContain(pin.metric);
       }
     }
   });

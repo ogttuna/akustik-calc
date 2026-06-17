@@ -73,7 +73,7 @@ describe("post-V1 wall framed metadata Rw companion Gate AD", () => {
     );
   });
 
-  it("keeps explicit timber-stud framed metadata Rw live without moving defended field values", () => {
+  it("keeps explicit timber-stud framed metadata Rw live while lab companions stay on direct formula values", () => {
     const testCase = generatedCase("wall-timber-stud");
     const result = calculateAssembly(testCase.rows, {
       ...testCase.fieldOptions,
@@ -81,15 +81,15 @@ describe("post-V1 wall framed metadata Rw companion Gate AD", () => {
     });
 
     expect(result.metrics).toMatchObject({
-      estimatedCDb: 0.4,
-      estimatedCtrDb: -4.3,
+      estimatedCDb: 0.5,
+      estimatedCtrDb: -4.2,
       estimatedDnADb: 42.4,
       estimatedDnTADb: 43.9,
       estimatedDnTwDb: 43,
       estimatedDnWDb: 42,
-      estimatedRwDb: 42,
+      estimatedRwDb: 50,
       estimatedRwPrimeDb: 42,
-      estimatedStc: 42
+      estimatedStc: 50
     });
     expect(result.supportedTargetOutputs).toEqual([...WALL_FRAMED_FIELD_OUTPUTS]);
     expect(result.unsupportedTargetOutputs).toEqual([]);

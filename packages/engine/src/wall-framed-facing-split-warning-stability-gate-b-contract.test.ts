@@ -82,6 +82,10 @@ const LSF_FIELD_OVERLAY_WARNING =
   "Airborne field-side overlay active. The current field between rooms context is carrying a conservative flanking penalty of 7.4 dB.";
 const TIMBER_FIELD_OVERLAY_WARNING =
   "Airborne field-side overlay active. The current field between rooms context is carrying a conservative flanking penalty of 6.6 dB.";
+const TIMBER_STUD_BOUNDED_WARNING =
+  "Timber-stud bounded prediction is active for the direct wood-stud double-board corridor. It uses the existing framed-wall calibration curve without retuning numeric values, and exact source rows can still override it when eligible.";
+const TIMBER_STUD_FIELD_CONTEXT_WARNING =
+  "Airborne field/apparent context family prediction is active from an owned lab-family route plus explicit receiving-room context. It is not a measured field row and must keep its field uncertainty separate from lab Rw/STC.";
 const MONOTONIC_FLOOR_WARNING =
   "A framed reinforcement monotonic floor was applied because one-face board reinforcement unexpectedly scored below its lighter sibling variant.";
 const UNSUPPORTED_LAB_WARNING =
@@ -104,6 +108,8 @@ const LSF_FIELD_WARNINGS = [
 
 const TIMBER_FIELD_WARNINGS = [
   ...COMMON_FRAMED_WARNINGS,
+  TIMBER_STUD_BOUNDED_WARNING,
+  TIMBER_STUD_FIELD_CONTEXT_WARNING,
   TIMBER_FIELD_OVERLAY_WARNING,
   NO_EXACT_FLOOR_WARNING
 ] as const;
@@ -255,7 +261,7 @@ describe("wall framed facing split warning stability Gate B contract", () => {
     }
   });
 
-  it("preserves the LSF lab exact anchor and timber field behavior while changing only the split drift lane", () => {
+  it("preserves the LSF lab exact anchor and keeps timber split field values on the owned lab-companion route", () => {
     const lsf = resolveCase("wall-lsf-knauf");
     const timber = resolveCase("wall-timber-stud");
 
@@ -291,15 +297,15 @@ describe("wall framed facing split warning stability Gate B contract", () => {
         supported: ["Rw", "R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"],
         unsupported: [],
         values: {
-          c: 0.4,
-          ctr: -4.3,
+          c: 0.5,
+          ctr: -4.2,
           dnA: 42.4,
           dnTA: 43.9,
           dnTw: 43,
           dnW: 42,
-          rw: 42,
+          rw: 50,
           rwPrime: 42,
-          stc: 42
+          stc: 50
         },
         warnings: TIMBER_FIELD_WARNINGS
       });

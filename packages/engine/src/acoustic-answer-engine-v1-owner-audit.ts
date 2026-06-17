@@ -10,6 +10,11 @@ import {
   hasPostV1FloorFamilyAirborneSpectrumCompanionBasis,
   hasPostV1FloorScreeningAirborneSpectrumCompanionBasis
 } from "./floor-airborne-spectrum-companion";
+import {
+  ASTM_E989_AIIC_METRIC_BASIS,
+  ASTM_E989_IIC_METRIC_BASIS,
+  ASTM_E989_IMPACT_RATING_BASIS
+} from "./impact-astm-e989";
 
 export const ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_OWNER_AUDIT_WARNING_PREFIX =
   "Acoustic Calculator Answer Engine V1 owner audit parked ownerless supported outputs";
@@ -37,12 +42,16 @@ type FloorLabCompanionCarrier = {
     | "CI"
     | "CI50_2500"
     | "DeltaLw"
+    | "AIIC"
+    | "basis"
+    | "IIC"
     | "LPrimeNT50"
     | "LPrimeNTw"
     | "LPrimeNW"
     | "LnTA"
     | "LnW"
     | "LnWPlusCI"
+    | "metricBasis"
   > | null;
   readonly layerCombinationResolverTrace: LayerCombinationResolverTrace | undefined;
   readonly metrics?: Partial<
@@ -134,6 +143,18 @@ function hasOwnedFloorLabCompanionValue(
       return isFiniteNumber(impact?.LPrimeNT50);
     case "LnT,A":
       return isFiniteNumber(impact?.LnTA);
+    case "IIC":
+      return Boolean(
+        isFiniteNumber(impact?.IIC) &&
+          impact?.basis === ASTM_E989_IMPACT_RATING_BASIS &&
+          impact.metricBasis?.IIC === ASTM_E989_IIC_METRIC_BASIS
+      );
+    case "AIIC":
+      return Boolean(
+        isFiniteNumber(impact?.AIIC) &&
+          impact?.basis === ASTM_E989_IMPACT_RATING_BASIS &&
+          impact.metricBasis?.AIIC === ASTM_E989_AIIC_METRIC_BASIS
+      );
     default:
       return false;
   }

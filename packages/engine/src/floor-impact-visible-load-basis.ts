@@ -9,7 +9,7 @@ const FLOATING_FLOOR_LOAD_BASIS_ROLES = new Set<LayerInput["floorRole"]>([
   "upper_fill"
 ]);
 
-function hasUserMaterialSignal(input: {
+export function hasUserMaterialSignal(input: {
   catalog: readonly MaterialDefinition[];
   layers: readonly LayerInput[];
 }): boolean {

@@ -9,6 +9,7 @@ import type {
 
 import { getImpactConfidenceForBasis } from "./impact-confidence";
 import { applyDirectFlankingFieldEstimate } from "./impact-direct-flanking";
+import { ASTM_E989_IMPACT_RATING_BASIS } from "./impact-astm-e989";
 import {
   mergeFloorImpactFieldBuildingAdapterErrorBudgets
 } from "./impact-field-adapter-error-budget";
@@ -200,6 +201,16 @@ function buildDerivedMetricBasis(guide: ReturnType<typeof deriveImpactGuideMetri
   });
 }
 
+function hasAstmE989Rating(impact: ImpactCalculation): boolean {
+  return (
+    impact.basis === ASTM_E989_IMPACT_RATING_BASIS &&
+    (
+      typeof impact.IIC === "number" ||
+      typeof impact.AIIC === "number"
+    )
+  );
+}
+
 export function applyImpactFieldContextToImpact(
   impact: ImpactCalculation | null,
   fieldContext?: ImpactFieldContext | null,
@@ -213,7 +224,7 @@ export function applyImpactFieldContextToImpact(
     skipDirectFlanking?: boolean;
   }
 ): ImpactCalculation | null {
-  if (!impact || impact.labOrField === "field") {
+  if (!impact || (impact.labOrField === "field" && !hasAstmE989Rating(impact))) {
     return impact;
   }
 
@@ -317,7 +328,8 @@ export function applyImpactFieldContextToImpact(
     typeof guide.LPrimeNW === "number" ||
     typeof guide.LPrimeNTw === "number" ||
     typeof guide.LPrimeNT50 === "number";
-  const basis = hasFieldGuideOutput
+  const preserveAstmRatingBasis = hasFieldGuideOutput && hasAstmE989Rating(impact);
+  const basis = hasFieldGuideOutput && !preserveAstmRatingBasis
     ? resolveMixedImpactBasis(
         impact.basis,
         guide.standardizedFieldEstimateActive,
@@ -325,7 +337,9 @@ export function applyImpactFieldContextToImpact(
         guide.guideProfile
       )
     : impact.basis;
-  const confidence = hasFieldGuideOutput ? getImpactConfidenceForBasis(basis) : impact.confidence;
+  const confidence = hasFieldGuideOutput && !preserveAstmRatingBasis
+    ? getImpactConfidenceForBasis(basis)
+    : impact.confidence;
   const explicitCiInputActive =
     typeof fieldContext?.ciDb === "number" &&
     typeof impact.CI !== "number" &&

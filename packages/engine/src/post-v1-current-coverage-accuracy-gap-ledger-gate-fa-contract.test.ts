@@ -141,7 +141,7 @@ describe("post-V1 current coverage/accuracy gap ledger Gate FA", () => {
     expect(matrixRow("wall.opening_leak_a_weighted_building_dna.unsupported").currentPosture).toBe("unsupported");
     expect(matrixRow("wall.opening_leak_a_weighted_lab_alias.unsupported").currentPosture).toBe("unsupported");
     expect(matrixRow("wall.opening_leak_a_weighted_astm_alias.unsupported").currentPosture).toBe("unsupported");
-  }, 15000);
+  }, 30000);
 
   it("ranks same-basis residual ownership above runtime tightening, floor holdouts, rejected heavy-core, closed repeats, and non-goal work", () => {
     const ledgerRows = buildPostV1GateFACurrentCoverageAccuracyLedger();

@@ -16,6 +16,7 @@ import { estimateRwDb } from "./estimate-rw";
 import { round1 } from "./math";
 
 type BuildFloorSystemRatingsInput = {
+  allowHeavyReferenceCompanionFromScreening?: boolean;
   boundFloorSystemEstimate?: FloorSystemBoundEstimateResult | null;
   boundFloorSystemMatch?: FloorSystemBoundMatchResult | null;
   floorCarrier?: FloorSystemAirborneRatings | null;
@@ -42,6 +43,9 @@ const HEAVY_REFERENCE_COMPANION_RATINGS: FloorSystemAirborneRatings = {
   RwCtr: -7.3,
   RwCtrSemantic: "ctr_term"
 };
+
+const HEAVY_FLOATING_FLOOR_IMPACT_BASIS =
+  "predictor_heavy_floating_floor_iso12354_annexc_estimate";
 
 function pickCompanionBasis(
   impact: ImpactCalculation | null | undefined,
@@ -91,6 +95,25 @@ function attachBasis(
   };
 }
 
+function shouldUseHeavyReferenceCompanionRatings(input: BuildFloorSystemRatingsInput): boolean {
+  if (input.impact?.basis === "predictor_explicit_delta_heavy_reference_derived") {
+    return true;
+  }
+
+  const hasHeavyFloatingFloorImpactOrigin =
+    input.impact?.basis === HEAVY_FLOATING_FLOOR_IMPACT_BASIS ||
+    input.impact?.metricBasis?.LnW === HEAVY_FLOATING_FLOOR_IMPACT_BASIS ||
+    input.impact?.metricBasis?.DeltaLw === HEAVY_FLOATING_FLOOR_IMPACT_BASIS;
+
+  return (
+    input.allowHeavyReferenceCompanionFromScreening === true &&
+    hasHeavyFloatingFloorImpactOrigin &&
+    typeof input.screeningRwDb === "number" &&
+    Number.isFinite(input.screeningRwDb) &&
+    input.screeningBasis === "screening_mass_law_curve_seed_v3"
+  );
+}
+
 export function buildFloorSystemRatings(input: BuildFloorSystemRatingsInput): FloorSystemRatings | null {
   if (input.floorSystemMatch) {
     return attachBasis(input.floorSystemMatch.system.airborneRatings, input.floorSystemMatch.impact.basis);
@@ -112,7 +135,7 @@ export function buildFloorSystemRatings(input: BuildFloorSystemRatingsInput): Fl
     return attachBasis(input.floorCarrier, pickCompanionBasis(input.impact, input.lowerBoundImpact));
   }
 
-  if (input.impact?.basis === "predictor_explicit_delta_heavy_reference_derived") {
+  if (shouldUseHeavyReferenceCompanionRatings(input)) {
     return attachBasis(HEAVY_REFERENCE_COMPANION_RATINGS, "predictor_heavy_concrete_floor_airborne_companion_estimate");
   }
 
