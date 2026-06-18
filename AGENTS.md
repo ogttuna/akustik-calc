@@ -46,6 +46,473 @@ It confirms the post-refresh docs/implementation/gate alignment before
 the current selected runtime-first rerank. It does not replace the
 documentation map or selected next plan.
 
+## Latest Project/User Measured Wall Airborne Frequency Exact Curve Bridge Owner - 2026-06-18
+
+Latest landed runtime owner:
+`post_v1_project_user_measured_wall_airborne_frequency_exact_curve_bridge_owner_plan`.
+Owner file:
+`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-exact-curve-bridge-owner-contract.test.ts`.
+Owner plan doc:
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_EXACT_CURVE_BRIDGE_OWNER_PLAN_2026-06-18.md`.
+Owner status:
+`post_v1_project_user_measured_wall_airborne_frequency_exact_curve_bridge_owner_landed_runtime_selected_coverage_refresh`.
+Runtime method:
+`post_v1_project_user_measured_wall_airborne_frequency_exact_curve_bridge`.
+It follows
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_anchor_schema_fingerprint_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-airborne-frequency-anchor-schema-fingerprint-contract.test.ts`
+/
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_anchor_schema_fingerprint_landed_no_runtime_selected_project_user_measured_wall_airborne_frequency_exact_curve_bridge_owner`.
+Selected candidate:
+`project_user_measured_wall_airborne_frequency_exact_curve_bridge_owner`.
+The owner adds active `airborneMeasuredFrequencySourceAnchors` request
+intake and exact measured wall lab airborne frequency-curve runtime
+matching for element-lab wall requests only. Matching active canonical
+fingerprints now publish curve-rated lab `Rw`, `STC`, `C`, and `Ctr`
+only when requested and when the anchor declares the required rating
+standard. Scalar `Rw` aliases, field/building outputs, impact outputs,
+compatible deltas, UI/storage, source imports, and formula retunes
+remain outside. Counters: `sharedApiFilesTouched: 1`,
+`apiRouteBridgeFilesTouched: 1`, `engineRuntimeFilesTouched: 4`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 4`,
+`newCalculableTargetOutputs: 4`, `runtimeBasisPromotions: 1`,
+`runtimeValuesMoved 4`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next action:
+`post_v1_project_user_measured_wall_airborne_frequency_exact_curve_bridge_coverage_refresh_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-exact-curve-bridge-coverage-refresh-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_EXACT_CURVE_BRIDGE_COVERAGE_REFRESH_PLAN_2026-06-18.md`.
+Current selected next label:
+`post-V1 project/user measured wall airborne frequency exact curve bridge coverage refresh`.
+
+## Latest Runtime-First Rerank After Project/User Measured Wall Airborne Frequency Anchor Schema + Fingerprint - 2026-06-18
+
+Latest landed no-runtime rerank:
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_anchor_schema_fingerprint_plan`.
+Rerank file:
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-airborne-frequency-anchor-schema-fingerprint-contract.test.ts`.
+Rerank plan doc:
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_ANCHOR_SCHEMA_FINGERPRINT_PLAN_2026-06-18.md`.
+Rerank status:
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_anchor_schema_fingerprint_landed_no_runtime_selected_project_user_measured_wall_airborne_frequency_exact_curve_bridge_owner`.
+It follows
+`post_v1_project_user_measured_wall_airborne_frequency_anchor_schema_fingerprint_plan`
+/
+`packages/shared/src/domain/project-user-measured-source-anchor.test.ts`
+/
+`post_v1_project_user_measured_wall_airborne_frequency_anchor_schema_fingerprint_landed_no_runtime_selected_runtime_first_route_family_rerank`.
+Implemented previous candidate:
+`project_user_measured_wall_lab_airborne_frequency_curve_anchor_schema_fingerprint`.
+Selected candidate:
+`project_user_measured_wall_airborne_frequency_exact_curve_bridge_owner`.
+The rerank selected an exact measured wall lab airborne frequency curve
+bridge owner because schema/fingerprint and curve-rating infrastructure
+exist while request/runtime exact matching is still missing. Counters:
+`candidateCount: 8`, `roiAnalysisIterations: 4`,
+`activeMeasuredFrequencyAnchorCandidateSchemas: 1`,
+`estimatedNextSharedApiFilesTouched: 1`,
+`estimatedNextExactMeasuredCurveRuntimeFamilies: 1`,
+`estimatedNextCalculableRequestShapes: 4`,
+`estimatedNextTargetOutputsMoved: 4`,
+`estimatedNextRuntimeBasisPromotions: 1`,
+`estimatedNextRuntimeValuesMoved: 4`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Current selected next action:
+`post_v1_project_user_measured_wall_airborne_frequency_exact_curve_bridge_owner_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-exact-curve-bridge-owner-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_EXACT_CURVE_BRIDGE_OWNER_PLAN_2026-06-18.md`.
+Current selected next label:
+`post-V1 project/user measured wall airborne frequency exact curve bridge owner`.
+
+## Latest Project/User Measured Wall Airborne Frequency Anchor Schema + Fingerprint - 2026-06-18
+
+Latest landed shared-domain prerequisite:
+`post_v1_project_user_measured_wall_airborne_frequency_anchor_schema_fingerprint_plan`.
+Implementation file:
+`packages/shared/src/domain/project-user-measured-source-anchor.test.ts`.
+Plan doc:
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_ANCHOR_SCHEMA_FINGERPRINT_PLAN_2026-06-18.md`.
+Status:
+`post_v1_project_user_measured_wall_airborne_frequency_anchor_schema_fingerprint_landed_no_runtime_selected_runtime_first_route_family_rerank`.
+It follows
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_rw_exact_bridge_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-rw-exact-bridge-coverage-refresh-contract.test.ts`
+/
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_rw_exact_bridge_coverage_refresh_landed_no_runtime_selected_project_user_measured_wall_airborne_frequency_anchor_schema_fingerprint`.
+Implemented candidate:
+`project_user_measured_wall_lab_airborne_frequency_curve_anchor_schema_fingerprint`.
+The slice adds measured wall lab airborne transmission-loss curve anchor
+schema, active-candidate guards, duplicate band/rating rejection, and a
+canonical fingerprint builder. It keeps scalar `Rw` anchors separate
+from curve anchors and moves no runtime values. Counters:
+`sharedDomainFilesTouched: 2`,
+`newExactMeasuredFrequencyAnchorInputFamilies: 1`,
+`activeMeasuredFrequencyAnchorCandidateSchemas: 1`,
+`canonicalFingerprintBuilders: 1`, `estimateRequestSchemaChanged: 0`,
+`engineRuntimeFilesTouched: 0`, `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Current selected next action:
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_anchor_schema_fingerprint_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-airborne-frequency-anchor-schema-fingerprint-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_ANCHOR_SCHEMA_FINGERPRINT_PLAN_2026-06-18.md`.
+Current selected next label:
+`post-V1 runtime-first route-family rerank after project/user measured wall airborne frequency anchor schema + fingerprint`.
+
+## Latest Runtime-First Rerank After Project/User Measured Wall Rw Exact Bridge Coverage Refresh - 2026-06-18
+
+Latest landed no-runtime rerank:
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_rw_exact_bridge_coverage_refresh_plan`.
+Rerank file:
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-rw-exact-bridge-coverage-refresh-contract.test.ts`.
+Rerank plan doc:
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_PROJECT_USER_MEASURED_WALL_RW_EXACT_BRIDGE_COVERAGE_REFRESH_PLAN_2026-06-18.md`.
+Rerank status:
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_rw_exact_bridge_coverage_refresh_landed_no_runtime_selected_project_user_measured_wall_airborne_frequency_anchor_schema_fingerprint`.
+It follows
+`post_v1_project_user_measured_wall_rw_exact_bridge_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-project-user-measured-wall-rw-exact-bridge-coverage-refresh-contract.test.ts`
+/
+`post_v1_project_user_measured_wall_rw_exact_bridge_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`.
+Runtime method protected by the previous refresh:
+`post_v1_project_user_measured_wall_rw_exact_bridge`.
+Selected candidate:
+`project_user_measured_wall_lab_airborne_frequency_curve_anchor_schema_fingerprint`.
+The rerank selected a shared-domain measured wall lab airborne
+frequency-curve anchor schema + fingerprint prerequisite. This keeps
+the landed scalar `Rw` exact bridge scalar-only and prevents unowned
+`STC`/`C`/`Ctr`/`OITC` aliasing until a source-owned curve and rating
+adapter basis exist. Counters: `candidateCount: 8`,
+`roiAnalysisIterations: 4`,
+`estimatedNextSharedDomainFilesTouched: 1`,
+`estimatedNextFrequencyCurveAnchorSchemas: 1`,
+`estimatedNextMeasuredCurveMetricFamilies: 1`,
+`estimatedNextCompanionTargetOutputsUnlockedAfterBridge: 4`,
+`estimatedNextRuntimeBasisPromotionsAfterBridge: 1`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next action:
+`post_v1_project_user_measured_wall_airborne_frequency_anchor_schema_fingerprint_plan`.
+Current selected next file:
+`packages/shared/src/domain/project-user-measured-source-anchor.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_ANCHOR_SCHEMA_FINGERPRINT_PLAN_2026-06-18.md`.
+Current selected next label:
+`post-V1 project/user measured wall airborne frequency anchor schema + fingerprint`.
+
+## Latest Project/User Measured Wall Rw Exact Bridge Coverage Refresh - 2026-06-18
+
+Latest landed no-runtime coverage refresh:
+`post_v1_project_user_measured_wall_rw_exact_bridge_coverage_refresh_plan`.
+Coverage refresh file:
+`packages/engine/src/post-v1-project-user-measured-wall-rw-exact-bridge-coverage-refresh-contract.test.ts`.
+Coverage refresh plan doc:
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_RW_EXACT_BRIDGE_COVERAGE_REFRESH_PLAN_2026-06-18.md`.
+Coverage refresh status:
+`post_v1_project_user_measured_wall_rw_exact_bridge_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`.
+It follows
+`post_v1_project_user_measured_wall_rw_exact_bridge_owner_plan`
+/
+`packages/engine/src/post-v1-project-user-measured-wall-rw-exact-bridge-owner-contract.test.ts`
+/
+`post_v1_project_user_measured_wall_rw_exact_bridge_owner_landed_runtime_selected_coverage_refresh`.
+Runtime method protected:
+`post_v1_project_user_measured_wall_rw_exact_bridge`.
+The refresh freezes exact active project/user/team measured wall lab
+`Rw` request intake, exact fingerprint runtime selection,
+layer-combination resolver trace ownership, duplicate/stale/inactive
+schema guards, no-match fallback, ambiguous direct-runtime rejection,
+and the `STC` / `C` / `Ctr` / field/building / impact /
+compatible-delta outside boundaries. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next action:
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_rw_exact_bridge_coverage_refresh_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-rw-exact-bridge-coverage-refresh-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_PROJECT_USER_MEASURED_WALL_RW_EXACT_BRIDGE_COVERAGE_REFRESH_PLAN_2026-06-18.md`.
+Current selected next label:
+`post-V1 runtime-first route-family rerank after project/user measured wall Rw exact bridge coverage refresh`.
+
+## Latest Project/User Measured Wall Rw Exact Bridge Owner - 2026-06-18
+
+Latest landed runtime owner:
+`post_v1_project_user_measured_wall_rw_exact_bridge_owner_plan`.
+Owner file:
+`packages/engine/src/post-v1-project-user-measured-wall-rw-exact-bridge-owner-contract.test.ts`.
+Owner plan doc:
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_RW_EXACT_BRIDGE_OWNER_PLAN_2026-06-18.md`.
+Owner status:
+`post_v1_project_user_measured_wall_rw_exact_bridge_owner_landed_runtime_selected_coverage_refresh`.
+Runtime method:
+`post_v1_project_user_measured_wall_rw_exact_bridge`.
+It follows
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_rw_anchor_schema_fingerprint_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-rw-anchor-schema-fingerprint-contract.test.ts`
+/
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_rw_anchor_schema_fingerprint_landed_no_runtime_selected_project_user_measured_wall_rw_exact_bridge_owner`.
+Selected candidate:
+`project_user_measured_wall_rw_exact_bridge_owner`.
+The owner adds active `airborneMeasuredSourceAnchors` request intake
+and exact project/user/team measured wall lab `Rw` runtime matching for
+element-lab requests only. Matching active canonical fingerprints now
+publish the measured `Rw` value; `STC`, `C`, `Ctr`, field/building
+outputs, impact outputs, compatible deltas, UI/storage, source imports,
+and formula retunes remain outside. Counters:
+`sharedApiFilesTouched: 1`, `apiRouteBridgeFilesTouched: 1`,
+`engineRuntimeFilesTouched: 3`, `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 1`, `newCalculableTargetOutputs: 1`,
+`runtimeBasisPromotions: 1`, `runtimeValuesMoved 1`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Current selected next action:
+`post_v1_project_user_measured_wall_rw_exact_bridge_coverage_refresh_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-project-user-measured-wall-rw-exact-bridge-coverage-refresh-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_RW_EXACT_BRIDGE_COVERAGE_REFRESH_PLAN_2026-06-18.md`.
+Current selected next label:
+`post-V1 project/user measured wall Rw exact bridge coverage refresh`.
+
+## Latest Runtime-First Rerank After Project/User Measured Wall Rw Anchor Schema + Fingerprint - 2026-06-18
+
+Latest landed no-runtime rerank:
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_rw_anchor_schema_fingerprint_plan`.
+Rerank file:
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-rw-anchor-schema-fingerprint-contract.test.ts`.
+Rerank plan doc:
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_PROJECT_USER_MEASURED_WALL_RW_ANCHOR_SCHEMA_FINGERPRINT_PLAN_2026-06-18.md`.
+Rerank status:
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_rw_anchor_schema_fingerprint_landed_no_runtime_selected_project_user_measured_wall_rw_exact_bridge_owner`.
+It follows
+`post_v1_project_user_measured_wall_rw_anchor_schema_fingerprint_plan`
+/
+`packages/shared/src/domain/project-user-measured-source-anchor.test.ts`
+/
+`post_v1_project_user_measured_wall_rw_anchor_schema_fingerprint_landed_no_runtime_selected_runtime_first_route_family_rerank`.
+Selected candidate:
+`project_user_measured_wall_rw_exact_bridge_owner`.
+The rerank selected the runtime owner because the shared active wall lab
+`Rw` anchor schema and canonical fingerprint now exist, while request
+intake and resolver matching are still intentionally absent. Adjacent
+compatible-delta, UI/storage, opening/leak retune, broad source crawl,
+and frequency-backbone candidates were rejected or deferred. Counters:
+`candidateCount: 6`, `roiAnalysisIterations: 4`,
+`activeMeasuredAnchorCandidateSchemas: 1`,
+`estimatedNextExactMeasuredAnchorRuntimeFamilies: 1`,
+`estimatedNextCalculableRequestShapes: 1`,
+`estimatedNextTargetOutputsMoved: 1`,
+`estimatedNextRuntimeBasisPromotions: 1`,
+`estimatedNextRuntimeValuesMoved: 1`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+
+Current selected next action:
+`post_v1_project_user_measured_wall_rw_exact_bridge_owner_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-project-user-measured-wall-rw-exact-bridge-owner-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_RW_EXACT_BRIDGE_OWNER_PLAN_2026-06-18.md`.
+Current selected next label:
+`post-V1 project/user measured wall Rw exact bridge owner`.
+
+## Latest Project/User Measured Wall Rw Anchor Schema + Fingerprint - 2026-06-18
+
+Latest landed no-runtime shared-domain slice:
+`post_v1_project_user_measured_wall_rw_anchor_schema_fingerprint_plan`.
+Implementation file:
+`packages/shared/src/domain/project-user-measured-source-anchor.test.ts`.
+Plan doc:
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_RW_ANCHOR_SCHEMA_FINGERPRINT_PLAN_2026-06-18.md`.
+Status:
+`post_v1_project_user_measured_wall_rw_anchor_schema_fingerprint_landed_no_runtime_selected_runtime_first_route_family_rerank`.
+It follows rerank
+`post_v1_runtime_first_route_family_rerank_after_wall_opening_leak_common_wall_same_basis_holdout_packet_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-opening-leak-common-wall-same-basis-holdout-packet-contract.test.ts`
+/
+`post_v1_runtime_first_route_family_rerank_after_wall_opening_leak_common_wall_same_basis_holdout_packet_landed_no_runtime_selected_project_user_measured_wall_rw_anchor_schema_fingerprint`
+and packet
+`post_v1_wall_opening_leak_common_wall_same_basis_holdout_packet_plan`
+/
+`packages/engine/src/post-v1-wall-opening-leak-common-wall-same-basis-holdout-packet-contract.test.ts`
+/
+`post_v1_wall_opening_leak_common_wall_same_basis_holdout_packet_landed_no_runtime_selected_runtime_first_route_family_rerank`.
+Previous packet selected candidate:
+`wall.opening_leak_common_wall_same_basis_holdout_packet`.
+Implemented candidate:
+`project_user_measured_wall_rw_anchor_schema_fingerprint`.
+The slice added
+`packages/shared/src/domain/project-user-measured-source-anchor.ts`,
+`packages/shared/src/domain/project-user-measured-source-anchor.test.ts`,
+and the shared export. It owns active measured wall lab `Rw` anchor
+schema validation and canonical fingerprints while leaving engine
+runtime and estimate request intake unchanged. Counters:
+`sharedDomainFilesTouched: 3`,
+`newExactMeasuredAnchorInputFamilies: 1`,
+`activeMeasuredAnchorCandidateSchemas: 1`,
+`canonicalFingerprintBuilders: 1`, `estimateRequestSchemaChanged: 0`,
+`engineRuntimeFilesTouched: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+
+Current selected next action:
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_rw_anchor_schema_fingerprint_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-rw-anchor-schema-fingerprint-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_PROJECT_USER_MEASURED_WALL_RW_ANCHOR_SCHEMA_FINGERPRINT_PLAN_2026-06-18.md`.
+Current selected next label:
+`post-V1 runtime-first route-family rerank after project/user measured wall Rw anchor schema + fingerprint`.
+
+## Latest Runtime-First Rerank After Wall Opening/Leak Common-Wall Same-Basis Holdout Packet - 2026-06-18
+
+Latest landed no-runtime rerank:
+`post_v1_runtime_first_route_family_rerank_after_wall_opening_leak_common_wall_same_basis_holdout_packet_plan`.
+Rerank file:
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-opening-leak-common-wall-same-basis-holdout-packet-contract.test.ts`.
+Rerank plan doc:
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_WALL_OPENING_LEAK_COMMON_WALL_SAME_BASIS_HOLDOUT_PACKET_PLAN_2026-06-18.md`.
+Rerank status:
+`post_v1_runtime_first_route_family_rerank_after_wall_opening_leak_common_wall_same_basis_holdout_packet_landed_no_runtime_selected_project_user_measured_wall_rw_anchor_schema_fingerprint`.
+It follows
+`post_v1_wall_opening_leak_common_wall_same_basis_holdout_packet_plan`
+/
+`packages/engine/src/post-v1-wall-opening-leak-common-wall-same-basis-holdout-packet-contract.test.ts`
+/
+`post_v1_wall_opening_leak_common_wall_same_basis_holdout_packet_landed_no_runtime_selected_runtime_first_route_family_rerank`.
+Previous selected candidate:
+`wall.opening_leak_common_wall_same_basis_holdout_packet`.
+Selected candidate:
+`project_user_measured_wall_rw_anchor_schema_fingerprint`.
+The rerank rejected opening/leak or common-wall runtime retuning because
+the previous packet found `acceptedSameBasisHoldoutRows: 0`. It
+subtracted closed framed-wall, steel/open-web, and double-leaf
+revalidation chains; rejected UI-first and broad source-crawl work; and
+selected the project/user measured wall `Rw` anchor schema + fingerprint
+prerequisite. Counters: `candidateCount: 9`,
+`roiAnalysisIterations: 4`,
+`estimatedNextExactMeasuredAnchorInputFamilies: 1`,
+`estimatedNextSharedDomainFilesTouched: 1`,
+`estimatedNextRuntimeValuesMovedAfterBridge: 1`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl and moves no runtime values.
+
+Current selected next action:
+`post_v1_project_user_measured_wall_rw_anchor_schema_fingerprint_plan`.
+Current selected next file:
+`packages/shared/src/domain/project-user-measured-source-anchor.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_RW_ANCHOR_SCHEMA_FINGERPRINT_PLAN_2026-06-18.md`.
+Current selected next label:
+`post-V1 project/user measured wall Rw anchor schema + fingerprint`.
+
+## Latest Wall Opening/Leak Common-Wall Same-Basis Holdout Packet - 2026-06-18
+
+Latest landed no-runtime evidence packet:
+`post_v1_wall_opening_leak_common_wall_same_basis_holdout_packet_plan`.
+Packet file:
+`packages/engine/src/post-v1-wall-opening-leak-common-wall-same-basis-holdout-packet-contract.test.ts`.
+Packet plan doc:
+`docs/calculator/POST_V1_WALL_OPENING_LEAK_COMMON_WALL_SAME_BASIS_HOLDOUT_PACKET_PLAN_2026-06-18.md`.
+Packet status:
+`post_v1_wall_opening_leak_common_wall_same_basis_holdout_packet_landed_no_runtime_selected_runtime_first_route_family_rerank`.
+It follows
+`post_v1_runtime_first_route_family_rerank_after_wall_timber_stud_clt_formula_building_lab_companion_basis_integrity_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-timber-stud-clt-formula-building-lab-companion-basis-integrity-contract.test.ts`
+/
+`post_v1_runtime_first_route_family_rerank_after_wall_timber_stud_clt_formula_building_lab_companion_basis_integrity_landed_no_runtime_selected_wall_opening_leak_common_wall_same_basis_holdout_packet`.
+Selected candidate:
+`wall.opening_leak_common_wall_same_basis_holdout_packet`.
+The packet reviewed the current local opening/leak and common-wall
+evidence and found `acceptedSameBasisHoldoutRows: 0`. Existing
+opening/leak field/building/A-weighted and common-wall building values
+remain benchmark-only source-absent runtime pins, not measured
+same-basis holdouts. Counters: `evidencePacketsReviewed: 1`,
+`localCandidateRowsReviewed: 7`, `benchmarkOnlyRows: 4`,
+`rejectedCandidateRows: 3`, `acceptedSameBasisHoldoutRows: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next action:
+`post_v1_runtime_first_route_family_rerank_after_wall_opening_leak_common_wall_same_basis_holdout_packet_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-opening-leak-common-wall-same-basis-holdout-packet-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_WALL_OPENING_LEAK_COMMON_WALL_SAME_BASIS_HOLDOUT_PACKET_PLAN_2026-06-18.md`.
+Current selected next label:
+`post-V1 runtime-first route-family rerank after wall opening/leak common-wall same-basis holdout packet`.
+
+## Latest Runtime-First Rerank After Wall Timber-Stud + CLT Formula Building Lab-Companion Basis Integrity - 2026-06-18
+
+Latest landed no-runtime rerank:
+`post_v1_runtime_first_route_family_rerank_after_wall_timber_stud_clt_formula_building_lab_companion_basis_integrity_plan`.
+Rerank file:
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-timber-stud-clt-formula-building-lab-companion-basis-integrity-contract.test.ts`.
+Rerank plan doc:
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_WALL_TIMBER_STUD_CLT_FORMULA_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_PLAN_2026-06-18.md`.
+Rerank status:
+`post_v1_runtime_first_route_family_rerank_after_wall_timber_stud_clt_formula_building_lab_companion_basis_integrity_landed_no_runtime_selected_wall_opening_leak_common_wall_same_basis_holdout_packet`.
+It follows
+`post_v1_wall_timber_stud_clt_formula_building_lab_companion_basis_integrity_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-timber-stud-clt-formula-building-lab-companion-basis-integrity-coverage-refresh-contract.test.ts`
+/
+`post_v1_wall_timber_stud_clt_formula_building_lab_companion_basis_integrity_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`.
+Selected candidate:
+`wall.opening_leak_common_wall_same_basis_holdout_packet`.
+The rerank applied the high-ROI readiness gates and selected a
+no-runtime same-basis holdout packet for opening/leak common-wall
+building prediction residuals. It moved no runtime values, retuned no
+formulas, imported no source rows, and touched no frontend implementation
+files. Counters: `candidateCount: 6`, `roiAnalysisIterations: 4`,
+`estimatedNextEvidencePackets: 1`,
+`estimatedNextRuntimeValuesMovedAfterEvidence: 5`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next action:
+`post_v1_wall_opening_leak_common_wall_same_basis_holdout_packet_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-wall-opening-leak-common-wall-same-basis-holdout-packet-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_WALL_OPENING_LEAK_COMMON_WALL_SAME_BASIS_HOLDOUT_PACKET_PLAN_2026-06-18.md`.
+Current selected next label:
+`post-V1 wall opening/leak common-wall same-basis holdout packet`.
+
 ## Latest Wall Timber-Stud + CLT Formula Building Lab-Companion Basis Integrity Coverage Refresh - 2026-06-18
 
 Latest landed no-runtime coverage refresh:

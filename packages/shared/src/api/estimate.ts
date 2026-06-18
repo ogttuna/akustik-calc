@@ -9,6 +9,10 @@ import { ImpactPredictorInputSchema } from "../domain/impact-predictor-input";
 import { LayerInputSchema } from "../domain/layer";
 import { MaterialDefinitionSchema } from "../domain/material";
 import { RequestedOutputSchema } from "../domain/output";
+import {
+  ActiveProjectUserMeasuredWallAirborneFrequencyAnchorSchema,
+  ActiveProjectUserMeasuredWallRwAnchorSchema
+} from "../domain/project-user-measured-source-anchor";
 import { SteelFloorFormulaInputSurfaceSchema } from "../domain/steel-floor-formula-input-surface";
 
 const FloorImpactContextSchema = z
@@ -39,8 +43,74 @@ const EstimateMaterialCatalogSchema = z
     });
   });
 
+const EstimateAirborneMeasuredSourceAnchorsSchema = z
+  .array(ActiveProjectUserMeasuredWallRwAnchorSchema)
+  .max(32)
+  .superRefine((anchors, context) => {
+    const seenIds = new Map<string, number>();
+    const seenFingerprints = new Map<string, number>();
+
+    anchors.forEach((anchor, index) => {
+      const previousIdIndex = seenIds.get(anchor.id);
+      if (previousIdIndex === undefined) {
+        seenIds.set(anchor.id, index);
+      } else {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Duplicate measured wall Rw anchor id "${anchor.id}" also appears at airborneMeasuredSourceAnchors.${previousIdIndex}.`,
+          path: [index, "id"]
+        });
+      }
+
+      const previousFingerprintIndex = seenFingerprints.get(anchor.fingerprint);
+      if (previousFingerprintIndex === undefined) {
+        seenFingerprints.set(anchor.fingerprint, index);
+      } else {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Duplicate measured wall Rw anchor fingerprint "${anchor.fingerprint}" also appears at airborneMeasuredSourceAnchors.${previousFingerprintIndex}.`,
+          path: [index, "fingerprint"]
+        });
+      }
+    });
+  });
+
+const EstimateAirborneMeasuredFrequencySourceAnchorsSchema = z
+  .array(ActiveProjectUserMeasuredWallAirborneFrequencyAnchorSchema)
+  .max(32)
+  .superRefine((anchors, context) => {
+    const seenIds = new Map<string, number>();
+    const seenFingerprints = new Map<string, number>();
+
+    anchors.forEach((anchor, index) => {
+      const previousIdIndex = seenIds.get(anchor.id);
+      if (previousIdIndex === undefined) {
+        seenIds.set(anchor.id, index);
+      } else {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Duplicate measured wall airborne frequency anchor id "${anchor.id}" also appears at airborneMeasuredFrequencySourceAnchors.${previousIdIndex}.`,
+          path: [index, "id"]
+        });
+      }
+
+      const previousFingerprintIndex = seenFingerprints.get(anchor.fingerprint);
+      if (previousFingerprintIndex === undefined) {
+        seenFingerprints.set(anchor.fingerprint, index);
+      } else {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Duplicate measured wall airborne frequency anchor fingerprint "${anchor.fingerprint}" also appears at airborneMeasuredFrequencySourceAnchors.${previousFingerprintIndex}.`,
+          path: [index, "fingerprint"]
+        });
+      }
+    });
+  });
+
 const EstimateRequestSchemaInternal = z.object({
   airborneContext: AirborneContextSchema.optional(),
+  airborneMeasuredFrequencySourceAnchors: EstimateAirborneMeasuredFrequencySourceAnchorsSchema.optional(),
+  airborneMeasuredSourceAnchors: EstimateAirborneMeasuredSourceAnchorsSchema.optional(),
   calculator: AirborneCalculatorIdSchema.optional(),
   exactImpactSource: ExactImpactSourceSchema.optional(),
   floorImpactContext: FloorImpactContextSchema.optional(),

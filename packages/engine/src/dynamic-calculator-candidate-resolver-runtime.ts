@@ -132,10 +132,12 @@ import {
   POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_SELECTED_CANDIDATE_ID,
   POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_RUNTIME_METHOD
 } from "./post-v1-wall-compatible-anchor-delta";
+import { PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_EXACT_CURVE_METRIC_LABEL } from "./project-user-measured-wall-airborne-frequency-exact-curve-bridge";
 
 export type DynamicCalculatorCandidateResolverSourceAnchor = {
   anchorKind?: "compatible_delta" | "exact_full_stack";
   applied: boolean;
+  basis?: AirborneResultBasis;
   match: {
     id: string;
     label: string;
@@ -551,6 +553,8 @@ function sourceMetricMatchesRequestedOutput(
 
 function outputsCoveredByExactSourceMetric(metricLabel: string): RequestedOutputId[] {
   switch (metricLabel) {
+    case PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_EXACT_CURVE_METRIC_LABEL:
+      return ["Rw", "STC", "C", "Ctr"];
     case "C":
       return ["C"];
     case "Ctr":
@@ -983,12 +987,14 @@ function buildSeeds(input: {
 
   return [
     {
-      basis: exactBasis({
-        exactSourceId,
-        family: input.family,
-        missingSourceEvidence: exactEligible ? [] : ["rights_safe_exact_full_stack_source_absent"],
-        outputBasis: input.outputBasis
-      }),
+      basis: exactEligible && input.sourceAnchor?.basis
+        ? input.sourceAnchor.basis
+        : exactBasis({
+            exactSourceId,
+            family: input.family,
+            missingSourceEvidence: exactEligible ? [] : ["rights_safe_exact_full_stack_source_absent"],
+            outputBasis: input.outputBasis
+          }),
       id: "candidate_blocked_rockwool_exact_source",
       metricIds: metric,
       origin: "measured_exact_full_stack",

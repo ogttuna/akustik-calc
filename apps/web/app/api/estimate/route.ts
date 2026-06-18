@@ -54,6 +54,8 @@ export async function POST(request: Request) {
 
     const result = calculateAssembly(payload.layers, {
       airborneContext: payload.airborneContext ?? null,
+      airborneMeasuredFrequencySourceAnchors: payload.airborneMeasuredFrequencySourceAnchors ?? null,
+      airborneMeasuredSourceAnchors: payload.airborneMeasuredSourceAnchors ?? null,
       calculator: payload.calculator ?? undefined,
       catalog: payload.materialCatalog ?? [],
       exactImpactSource: payload.exactImpactSource ?? null,

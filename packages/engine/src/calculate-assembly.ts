@@ -28,6 +28,8 @@ import {
   type ImpactPredictorInput,
   type LayerInput,
   type MaterialDefinition,
+  type ProjectUserMeasuredWallAirborneFrequencyAnchor,
+  type ProjectUserMeasuredWallRwAnchor,
   type RequestedOutputId,
   type ResolvedLayer,
   type AssemblyRatings,
@@ -256,10 +258,19 @@ import {
   POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LSF_SOURCE_ID,
   POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_WARNING
 } from "./post-v1-wall-compatible-anchor-delta";
+import {
+  maybeBuildProjectUserMeasuredWallRwExactBridge
+} from "./project-user-measured-wall-rw-exact-bridge";
+import {
+  PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_EXACT_CURVE_METRIC_LABEL,
+  maybeBuildProjectUserMeasuredWallAirborneFrequencyExactCurveBridge
+} from "./project-user-measured-wall-airborne-frequency-exact-curve-bridge";
 import { inferSafeFlatWallAutoTopology } from "./wall-flat-multicavity-auto-topology";
 
 export type CalculateAssemblyOptions = {
   airborneContext?: AirborneContext | null;
+  airborneMeasuredFrequencySourceAnchors?: readonly ProjectUserMeasuredWallAirborneFrequencyAnchor[] | null;
+  airborneMeasuredSourceAnchors?: readonly ProjectUserMeasuredWallRwAnchor[] | null;
   calculator?: AirborneCalculatorId | null;
   catalog?: readonly MaterialDefinition[];
   exactImpactSource?: ExactImpactSource | null;
@@ -1736,6 +1747,8 @@ function getPostV1WallTimberStudCltFormulaBuildingLabCompanionOutputs(input: {
 
 function outputsForExactMeasuredAirborneMetric(metricLabel: string | null | undefined): RequestedOutputId[] {
   switch (metricLabel) {
+    case PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_EXACT_CURVE_METRIC_LABEL:
+      return ["Rw", "STC", "C", "Ctr"];
     case "C":
       return ["C"];
     case "Ctr":
@@ -4231,6 +4244,25 @@ export function calculateAssembly(
     ratings: compatibleAnchorDeltaDirectRatings,
     targetOutputs
   });
+  const projectUserMeasuredWallAirborneFrequencyExactCurveBridge =
+    maybeBuildProjectUserMeasuredWallAirborneFrequencyExactCurveBridge({
+      airborneContext,
+      anchors: options.calculator === "dynamic" ? options.airborneMeasuredFrequencySourceAnchors : null,
+      compatibleAnchorDeltaAlreadyApplied: compatibleWallAnchorDeltaResult.applied,
+      exactFullStackAlreadyApplied: verifiedAirborneAnchorResult.applied,
+      resolvedLayers,
+      targetOutputs
+    });
+  const projectUserMeasuredWallRwExactBridge = maybeBuildProjectUserMeasuredWallRwExactBridge({
+    airborneContext,
+    anchors: options.calculator === "dynamic" ? options.airborneMeasuredSourceAnchors : null,
+    compatibleAnchorDeltaAlreadyApplied: compatibleWallAnchorDeltaResult.applied,
+    exactFullStackAlreadyApplied:
+      verifiedAirborneAnchorResult.applied ||
+      projectUserMeasuredWallAirborneFrequencyExactCurveBridge.applied,
+    resolvedLayers,
+    targetOutputs
+  });
   const compatibleWallAnchorDeltaFieldBuildingOverlayResult =
     compatibleAnchorDeltaFieldBuildingRequest && compatibleWallAnchorDeltaResult.applied
       ? applyAirborneContextOverlay(
@@ -4966,7 +4998,7 @@ export function calculateAssembly(
       estimatedRwDb: visibleEstimatedRwDbWithFloorPackageLabCompanion,
       support: rockwoolSplitTripleLeafExactOutputWithhold.targetOutputSupport
     });
-  const targetOutputSupport = moveUnsupportedOutputsToSupported(
+  const targetOutputSupportBeforeProjectUserMeasuredFrequencyCurve = moveUnsupportedOutputsToSupported(
     rockwoolSplitTripleLeafExactOutputWithhold.targetOutputSupport,
     [
       ...new Set([
@@ -4974,6 +5006,10 @@ export function calculateAssembly(
         ...postV1WallScreeningFieldLabCompanionOutputs
       ])
     ]
+  );
+  const targetOutputSupport = moveSupportedOutputsToUnsupported(
+    targetOutputSupportBeforeProjectUserMeasuredFrequencyCurve,
+    projectUserMeasuredWallAirborneFrequencyExactCurveBridge.unsupportedOutputs
   );
   const floorFamilySourceGuard =
     getFloorFamilySourceGuard(impactResolvedLayers) ?? getFloorFamilySourceGuard(resolvedLayers);
@@ -5011,11 +5047,19 @@ export function calculateAssembly(
   });
   const zeroDeltaVerifiedAirborneExactSourceApplied =
     canPromoteZeroDeltaVerifiedAirborneExactSource({
-      sourceAnchorAlreadyApplied: compatibleWallAnchorDeltaResult.applied || verifiedAirborneAnchorResult.applied,
+      sourceAnchorAlreadyApplied:
+        compatibleWallAnchorDeltaResult.applied ||
+        verifiedAirborneAnchorResult.applied ||
+        projectUserMeasuredWallAirborneFrequencyExactCurveBridge.applied ||
+        projectUserMeasuredWallRwExactBridge.applied,
       sourceMetricLabel: verifiedAirborneAnchorResult.match?.metricLabel,
       targetOutputs: targetOutputSupport.targetOutputs
     });
-  const sourceAnchorMatch = compatibleWallAnchorDeltaResult.match ?? verifiedAirborneAnchorResult.match;
+  const sourceAnchorMatch =
+    compatibleWallAnchorDeltaResult.match ??
+    verifiedAirborneAnchorResult.match ??
+    projectUserMeasuredWallAirborneFrequencyExactCurveBridge.match ??
+    projectUserMeasuredWallRwExactBridge.match;
   const dynamicCandidateResolverRuntime = options.calculator === "dynamic"
     ? buildDynamicCalculatorCandidateResolverRuntime({
         airborneContext,
@@ -5070,7 +5114,12 @@ export function calculateAssembly(
           applied:
             compatibleWallAnchorDeltaResult.applied ||
             verifiedAirborneAnchorResult.applied ||
+            projectUserMeasuredWallAirborneFrequencyExactCurveBridge.applied ||
+            projectUserMeasuredWallRwExactBridge.applied ||
             zeroDeltaVerifiedAirborneExactSourceApplied,
+          basis:
+            projectUserMeasuredWallAirborneFrequencyExactCurveBridge.basis ??
+            projectUserMeasuredWallRwExactBridge.basis,
           match: sourceAnchorMatch
             ? {
                 id: sourceAnchorMatch.id,
@@ -5080,7 +5129,11 @@ export function calculateAssembly(
                 sourceMode: sourceAnchorMatch.sourceMode
               }
             : null,
-          numericValueMoved: compatibleWallAnchorDeltaResult.applied || verifiedAirborneAnchorResult.applied
+          numericValueMoved:
+            compatibleWallAnchorDeltaResult.applied ||
+            verifiedAirborneAnchorResult.applied ||
+            projectUserMeasuredWallAirborneFrequencyExactCurveBridge.applied ||
+            projectUserMeasuredWallRwExactBridge.applied
         },
         targetOutputs: targetOutputSupport.targetOutputs
       })
@@ -5145,7 +5198,7 @@ export function calculateAssembly(
   const exactMeasuredSourceMetricUnsupportedOutputs =
     getAnswerEngineV1ExactMeasuredMetricUnsupportedOutputs({
       resolution: dynamicCandidateResolverRuntime?.resolution,
-      sourceMetricLabel: verifiedAirborneAnchorResult.match?.metricLabel,
+      sourceMetricLabel: sourceAnchorMatch?.metricLabel,
       supportedTargetOutputs: targetOutputSupport.supportedTargetOutputs
     });
   const anchoredDeltaMetricUnsupportedOutputs =
@@ -5436,6 +5489,10 @@ export function calculateAssembly(
     ),
     compatibleAnchorDeltaFieldBuildingUnsupportedOutputs
   );
+  const visibleTargetOutputSupportWithProjectUserMeasuredFrequencyBoundary = moveSupportedOutputsToUnsupported(
+    visibleTargetOutputSupportWithPostV1Companions,
+    projectUserMeasuredWallAirborneFrequencyExactCurveBridge.unsupportedOutputs
+  );
   const postV1WallDirectFormulaLabCompanionOutputSet = new Set([
     ...postV1WallUserMaterialFormulaBuildingLabCompanionOutputs,
     ...postV1WallUserMaterialFormulaFieldLabCompanionOutputs,
@@ -5448,24 +5505,45 @@ export function calculateAssembly(
     Number.isFinite(wallDirectLabRwDb)
       ? round1(wallDirectLabRwDb)
       : visibleEstimatedRwDbWithFloorPackageLabCompanion;
+  const visibleEstimatedRwDbWithProjectUserMeasuredAnchor =
+    projectUserMeasuredWallRwExactBridge.applied &&
+    typeof projectUserMeasuredWallRwExactBridge.anchor?.valueDb === "number"
+      ? round1(projectUserMeasuredWallRwExactBridge.anchor.valueDb)
+      : visibleEstimatedRwDbWithPostV1WallLabCompanion;
+  const visibleEstimatedRwDbWithProjectUserMeasuredFrequencyCurve =
+    typeof projectUserMeasuredWallAirborneFrequencyExactCurveBridge.values.Rw === "number"
+      ? projectUserMeasuredWallAirborneFrequencyExactCurveBridge.values.Rw
+      : visibleEstimatedRwDbWithProjectUserMeasuredAnchor;
   const visibleEstimatedCDbWithPostV1WallLabCompanion =
     postV1WallDirectFormulaLabCompanionOutputSet.has("C") &&
     typeof wallDirectLabRatings?.iso717.C === "number" &&
     Number.isFinite(wallDirectLabRatings.iso717.C)
       ? round1(wallDirectLabRatings.iso717.C)
       : visibleEstimatedCDbWithFloorPackageLabCompanion;
+  const visibleEstimatedCDbWithProjectUserMeasuredFrequencyCurve =
+    typeof projectUserMeasuredWallAirborneFrequencyExactCurveBridge.values.C === "number"
+      ? projectUserMeasuredWallAirborneFrequencyExactCurveBridge.values.C
+      : visibleEstimatedCDbWithPostV1WallLabCompanion;
   const visibleEstimatedCtrDbWithPostV1WallLabCompanion =
     postV1WallDirectFormulaLabCompanionOutputSet.has("Ctr") &&
     typeof wallDirectLabRatings?.iso717.Ctr === "number" &&
     Number.isFinite(wallDirectLabRatings.iso717.Ctr)
       ? round1(wallDirectLabRatings.iso717.Ctr)
       : visibleEstimatedCtrDbWithFloorPackageLabCompanion;
+  const visibleEstimatedCtrDbWithProjectUserMeasuredFrequencyCurve =
+    typeof projectUserMeasuredWallAirborneFrequencyExactCurveBridge.values.Ctr === "number"
+      ? projectUserMeasuredWallAirborneFrequencyExactCurveBridge.values.Ctr
+      : visibleEstimatedCtrDbWithPostV1WallLabCompanion;
   const visibleEstimatedStcDbWithPostV1WallLabCompanion =
     postV1WallDirectFormulaLabCompanionOutputSet.has("STC") &&
     typeof wallDirectLabRatings?.astmE413.STC === "number" &&
     Number.isFinite(wallDirectLabRatings.astmE413.STC)
       ? round1(wallDirectLabRatings.astmE413.STC)
       : visibleEstimatedStcDb;
+  const visibleEstimatedStcDbWithProjectUserMeasuredFrequencyCurve =
+    typeof projectUserMeasuredWallAirborneFrequencyExactCurveBridge.values.STC === "number"
+      ? projectUserMeasuredWallAirborneFrequencyExactCurveBridge.values.STC
+      : visibleEstimatedStcDbWithPostV1WallLabCompanion;
   const hideParkedAirborneBuildingPredictionMetrics =
     parkedAirborneBuildingPredictionOutputs.some((output) =>
       hasAnswerEngineV1FieldOrBuildingAirborneOutput([output])
@@ -5531,6 +5609,8 @@ export function calculateAssembly(
     );
   }
   warnings.push(...verifiedAirborneAnchorResult.warnings);
+  warnings.push(...projectUserMeasuredWallAirborneFrequencyExactCurveBridge.warnings);
+  warnings.push(...projectUserMeasuredWallRwExactBridge.warnings);
   warnings.push(
     ...(compatibleWallAnchorDeltaLabCompanionBasis
       ? compatibleWallAnchorDeltaResult.warnings.filter(
@@ -5556,9 +5636,9 @@ export function calculateAssembly(
     warnings.push(BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_WARNING);
   }
   warnings.push(...buildTargetOutputWarnings(visibleTargetOutputSupportWithPostV1Companions));
-  if (exactMeasuredSourceMetricUnsupportedOutputs.length > 0 && verifiedAirborneAnchorResult.match) {
+  if (exactMeasuredSourceMetricUnsupportedOutputs.length > 0 && sourceAnchorMatch) {
     warnings.push(
-      `Exact measured airborne source ${verifiedAirborneAnchorResult.match.label} reports ${verifiedAirborneAnchorResult.match.metricLabel}; DynEcho kept ${exactMeasuredSourceMetricUnsupportedOutputs.join(", ")} out of the exact answer instead of aliasing measured and calculated metrics.`
+      `Exact measured airborne source ${sourceAnchorMatch.label} reports ${sourceAnchorMatch.metricLabel}; DynEcho kept ${exactMeasuredSourceMetricUnsupportedOutputs.join(", ")} out of the exact answer instead of aliasing measured and calculated metrics.`
     );
   }
   if (anchoredDeltaMetricUnsupportedOutputs.length > 0 && compatibleWallAnchorDeltaResult.match) {
@@ -5812,29 +5892,29 @@ export function calculateAssembly(
       airborneIsoDescriptor: visibleRatings.iso717.descriptor,
       totalThicknessMm,
       surfaceMassKgM2,
-      estimatedRwDb: visibleEstimatedRwDbWithPostV1WallLabCompanion,
+      estimatedRwDb: visibleEstimatedRwDbWithProjectUserMeasuredFrequencyCurve,
       estimatedRwPrimeDb: hideParkedAirborneBuildingPredictionMetrics
         ? undefined
         : visibleRatings.field?.RwPrime ?? visibleRatings.iso717.RwPrime,
-      estimatedCDb: visibleEstimatedCDbWithPostV1WallLabCompanion,
-      estimatedCtrDb: visibleEstimatedCtrDbWithPostV1WallLabCompanion,
+      estimatedCDb: visibleEstimatedCDbWithProjectUserMeasuredFrequencyCurve,
+      estimatedCtrDb: visibleEstimatedCtrDbWithProjectUserMeasuredFrequencyCurve,
       estimatedDnTwDb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatings.field?.DnTw,
       estimatedDnTADb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatings.field?.DnTA,
       estimatedDnTAkDb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatings.field?.DnTAk,
       estimatedDnWDb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatings.field?.DnW,
       estimatedDnADb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatings.field?.DnA,
-      estimatedStc: visibleEstimatedStcDbWithPostV1WallLabCompanion,
+      estimatedStc: visibleEstimatedStcDbWithProjectUserMeasuredFrequencyCurve,
       airGapCount: resolvedLayers.filter((layer) => layer.material.category === "gap").length,
       insulationCount: resolvedLayers.filter((layer) => layer.material.category === "insulation").length,
       method: dynamicAirborneResult?.id ?? importedCalculatorResult?.id ?? "screening_mass_law_curve_seed_v3"
     },
     ratings: visibleRatings,
     ratingAdapterBasisSet: ratingAdapterBasisSet.length > 0 ? ratingAdapterBasisSet : undefined,
-    supportedImpactOutputs: visibleTargetOutputSupportWithPostV1Companions.supportedImpactOutputs,
-    supportedTargetOutputs: visibleTargetOutputSupportWithPostV1Companions.supportedTargetOutputs,
-    targetOutputs: visibleTargetOutputSupportWithPostV1Companions.targetOutputs,
-    unsupportedImpactOutputs: visibleTargetOutputSupportWithPostV1Companions.unsupportedImpactOutputs,
-    unsupportedTargetOutputs: visibleTargetOutputSupportWithPostV1Companions.unsupportedTargetOutputs,
+    supportedImpactOutputs: visibleTargetOutputSupportWithProjectUserMeasuredFrequencyBoundary.supportedImpactOutputs,
+    supportedTargetOutputs: visibleTargetOutputSupportWithProjectUserMeasuredFrequencyBoundary.supportedTargetOutputs,
+    targetOutputs: visibleTargetOutputSupportWithProjectUserMeasuredFrequencyBoundary.targetOutputs,
+    unsupportedImpactOutputs: visibleTargetOutputSupportWithProjectUserMeasuredFrequencyBoundary.unsupportedImpactOutputs,
+    unsupportedTargetOutputs: visibleTargetOutputSupportWithProjectUserMeasuredFrequencyBoundary.unsupportedTargetOutputs,
     warnings
   };
 
@@ -5905,7 +5985,9 @@ export function calculateAssembly(
       companyInternalOpeningLeakFieldBuildingRuntime?.basis ||
       localSubstitutionLabSpectrumAdapter?.basis ||
       gateYCltMassTimberCtrSpectrumAdapterBasis ||
-      gateDXExactSourceFamilyFieldContextBasis
+      gateDXExactSourceFamilyFieldContextBasis ||
+      projectUserMeasuredWallAirborneFrequencyExactCurveBridge.basis ||
+      projectUserMeasuredWallRwExactBridge.basis
     ),
     result
   });
