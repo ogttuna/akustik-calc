@@ -9,12 +9,22 @@ import type {
   SimpleWorkbenchProposalCoverageStatus,
   SimpleWorkbenchProposalDocument,
   SimpleWorkbenchProposalMetricBasis,
-  SimpleWorkbenchProposalMetricDirection
+  SimpleWorkbenchProposalMetricDirection,
+  SimpleWorkbenchProposalReportAdjustment
 } from "./simple-workbench-proposal";
 import {
   buildSimpleWorkbenchAssistantTraceSnapshot,
   type SimpleWorkbenchAssistantTraceSnapshot
 } from "./simple-workbench-assistant-trace-snapshot";
+import {
+  REPORT_ASSISTANT_PROJECT_READ_TOOL_DEFINITIONS,
+  type ReportAssistantProjectReadToolDefinition
+} from "./report-assistant-project-read-contract";
+import {
+  getDefaultReportAssistantPresetLibrarySummary,
+  type ReportAssistantPresetLibrarySummary,
+  type ReportAssistantPresetSummary
+} from "./report-assistant-preset-library";
 
 export type ReportAssistantMetricLocation =
   | { kind: "primaryMetric" }
@@ -77,15 +87,182 @@ export type ReportAssistantOutputFact = {
   warnings: readonly string[];
 };
 
+export type ReportAssistantReportAdjustmentSummary = {
+  afterValue: string;
+  appliedAtIso: string;
+  beforeValue: string;
+  engineValuePreserved: true;
+  label: string;
+  metricId: string;
+  reason: string;
+  scope: SimpleWorkbenchProposalReportAdjustment["scope"];
+  source: SimpleWorkbenchProposalReportAdjustment["source"];
+};
+
+export type ReportAssistantProjectWorkspaceProject = {
+  assemblyCount?: number;
+  clientName?: string;
+  id: string;
+  latestAssemblyUpdatedAtIso?: string | null;
+  latestReportUpdatedAtIso?: string | null;
+  name: string;
+  ownerLabel?: string;
+  reportCount?: number;
+  updatedAtIso?: string;
+};
+
+export type ReportAssistantProjectWorkspaceReport = {
+  assemblyId?: string;
+  currentRevisionId?: string;
+  description?: string;
+  displayCode?: string;
+  id: string;
+  name: string;
+  revisionCount?: number;
+  status?: "archived" | "draft" | "issued";
+  updatedAtIso?: string;
+};
+
+export type ReportAssistantProjectWorkspaceAssembly = {
+  calculationPrimaryOutput?: string;
+  calculationPrimaryValueLabel?: string;
+  calculationStatus?: "error" | "needs_input" | "ready" | "unsupported";
+  displayCode?: string;
+  id: string;
+  kind: "floor" | "wall";
+  name: string;
+  updatedAtIso?: string;
+  version: number;
+};
+
+export type ReportAssistantProjectWorkspaceRevision = {
+  assistantPatchSummary?: {
+    operationCount: number;
+    validationStatus: "valid" | "warning";
+  };
+  changeSummary?: string;
+  createdAtIso: string;
+  displayCode?: string;
+  id: string;
+  source: "assistant" | "generated" | "import" | "manual";
+};
+
+export type ReportAssistantProjectWorkspaceActiveDraftState = {
+  assemblyId?: string;
+  assemblyName?: string;
+  assemblyVersion?: number;
+  dirty: boolean;
+  kind:
+    | "combination_clean"
+    | "combination_dirty"
+    | "local_draft"
+    | "project_draft"
+    | "project_report_draft"
+    | "template_draft";
+  projectId?: string;
+  projectName?: string;
+  reportId?: string;
+  reportUpdatedAtIso?: string;
+};
+
+export type ReportAssistantProjectWorkspaceSnapshot = {
+  activeDraftState?: ReportAssistantProjectWorkspaceActiveDraftState;
+  availableReadTools: readonly Pick<ReportAssistantProjectReadToolDefinition, "mutates" | "name" | "requiredInputs">[];
+  currentRevision?: ReportAssistantProjectWorkspaceRevision;
+  linkedAssembly?: ReportAssistantProjectWorkspaceAssembly;
+  project?: ReportAssistantProjectWorkspaceProject;
+  report?: ReportAssistantProjectWorkspaceReport;
+  revisionSummaries: readonly ReportAssistantProjectWorkspaceRevision[];
+  scope: "browser_local" | "project" | "project_report";
+};
+
+export type ReportAssistantDocumentComparisonReferenceKind =
+  | "current_browser_draft"
+  | "current_revision"
+  | "generated_baseline"
+  | "previous_revision"
+  | "saved_current_report";
+
+export type ReportAssistantDocumentComparisonReference = {
+  documentSignature?: string;
+  issuedOnIso?: string;
+  kind: ReportAssistantDocumentComparisonReferenceKind;
+  projectId?: string;
+  proposalReference?: string;
+  proposalRevision?: string;
+  reportId?: string;
+  revisionId?: string;
+  updatedAtIso?: string;
+};
+
+export type ReportAssistantDocumentComparisonMetricChange = {
+  afterValue?: string;
+  beforeValue?: string;
+  label: string;
+  metricId: string;
+  outputId?: RequestedOutputId;
+  surface: "coverage" | "metric" | "primary";
+};
+
+export type ReportAssistantDocumentComparisonCountChange = {
+  afterCount: number;
+  beforeCount: number;
+  field:
+    | "assumptions"
+    | "citations"
+    | "decisionTrail"
+    | "issueRegister"
+    | "recommendations"
+    | "warnings";
+};
+
+export type ReportAssistantDocumentComparisonTextFieldSummary = {
+  afterLength: number;
+  beforeLength: number;
+  field:
+    | "briefNote"
+    | "dynamicBranchDetail"
+    | "executiveSummary"
+    | "validationDetail";
+};
+
+export type ReportAssistantDocumentComparisonAdjustmentSummary = {
+  assistantAdjustmentCount: number;
+  latestAppliedAtIso?: string;
+  totalAdjustmentCount: number;
+};
+
+export type ReportAssistantDocumentComparisonSummary = {
+  adjustmentSummary?: ReportAssistantDocumentComparisonAdjustmentSummary;
+  comparisonId: string;
+  countChanges: readonly ReportAssistantDocumentComparisonCountChange[];
+  from: ReportAssistantDocumentComparisonReference;
+  kind:
+    | "current_draft_vs_generated_baseline"
+    | "current_draft_vs_saved_report"
+    | "current_revision_vs_previous_revision";
+  metricDisplayValueChanges: readonly ReportAssistantDocumentComparisonMetricChange[];
+  omittedMetricDisplayValueChangeCount: number;
+  status: "available" | "stale" | "unavailable";
+  statusReason?: string;
+  textFieldSummaries: readonly ReportAssistantDocumentComparisonTextFieldSummary[];
+  to: ReportAssistantDocumentComparisonReference;
+  topLevelFieldChanges: readonly string[];
+};
+
 export type ReportAssistantContext = {
   assistantContextSignature: string;
+  documentComparisonSummaries: readonly ReportAssistantDocumentComparisonSummary[];
   assistantOutputFacts: readonly ReportAssistantOutputFact[];
   assistantTraceSnapshot?: SimpleWorkbenchAssistantTraceSnapshot;
   createdAtIso: string;
   documentSignature: string;
   layersSummary: readonly string[];
   metrics: readonly ReportAssistantMetric[];
+  presetLibrarySummary?: ReportAssistantPresetLibrarySummary;
   projectId?: string;
+  projectWorkspace?: ReportAssistantProjectWorkspaceSnapshot;
+  reportAdjustments: readonly ReportAssistantReportAdjustmentSummary[];
   reportId: string;
   scenarioId?: string;
   traceSummary: ReportAssistantTraceSummary;
@@ -249,11 +426,450 @@ export function createReportAssistantDocumentSignature(document: SimpleWorkbench
   );
 }
 
+const REPORT_ASSISTANT_PROJECT_WORKSPACE_READ_TOOLS: ReportAssistantProjectWorkspaceSnapshot["availableReadTools"] =
+  REPORT_ASSISTANT_PROJECT_READ_TOOL_DEFINITIONS.map((tool) => ({
+    mutates: tool.mutates,
+    name: tool.name,
+    requiredInputs: [...tool.requiredInputs]
+  }));
+
+function summarizeReportAdjustments(
+  adjustments: readonly SimpleWorkbenchProposalReportAdjustment[] | undefined
+): ReportAssistantReportAdjustmentSummary[] {
+  return (adjustments ?? []).slice(-12).map((adjustment) => ({
+    afterValue: adjustment.afterValue,
+    appliedAtIso: adjustment.appliedAtIso,
+    beforeValue: adjustment.beforeValue,
+    engineValuePreserved: adjustment.engineValuePreserved,
+    label: adjustment.label,
+    metricId: adjustment.metricId,
+    reason: adjustment.reason,
+    scope: adjustment.scope,
+    source: adjustment.source
+  }));
+}
+
+function latestIso(values: readonly (string | undefined)[]): string | undefined {
+  return values
+    .filter((value): value is string => typeof value === "string" && value.length > 0)
+    .sort()
+    .at(-1);
+}
+
+function buildAdjustmentSummary(
+  adjustments: readonly SimpleWorkbenchProposalReportAdjustment[] | undefined
+): ReportAssistantDocumentComparisonAdjustmentSummary | undefined {
+  if (!adjustments || adjustments.length === 0) {
+    return undefined;
+  }
+
+  return {
+    assistantAdjustmentCount: adjustments.filter((adjustment) => adjustment.source === "assistant").length,
+    latestAppliedAtIso: latestIso(adjustments.map((adjustment) => adjustment.appliedAtIso)),
+    totalAdjustmentCount: adjustments.length
+  };
+}
+
+function buildDocumentComparisonReference(
+  document: SimpleWorkbenchProposalDocument,
+  kind: ReportAssistantDocumentComparisonReferenceKind,
+  input?: {
+    projectWorkspace?: ReportAssistantProjectWorkspaceSnapshot;
+  }
+): ReportAssistantDocumentComparisonReference {
+  return {
+    documentSignature: createReportAssistantDocumentSignature(document),
+    issuedOnIso: document.issuedOnIso,
+    kind,
+    projectId: document.serverProjectId ?? input?.projectWorkspace?.project?.id,
+    proposalReference: document.proposalReference,
+    proposalRevision: document.proposalRevision,
+    reportId: input?.projectWorkspace?.report?.id,
+    revisionId:
+      kind === "current_revision"
+        ? input?.projectWorkspace?.currentRevision?.id
+        : undefined,
+    updatedAtIso:
+      kind === "current_revision" || kind === "saved_current_report"
+        ? input?.projectWorkspace?.report?.updatedAtIso ?? input?.projectWorkspace?.currentRevision?.createdAtIso
+        : undefined
+  };
+}
+
+function reportComparisonMetricKey(input: {
+  label: string;
+  outputId?: RequestedOutputId;
+  reportMetricId?: string;
+  surface: "coverage" | "metric" | "primary";
+}): string {
+  return input.reportMetricId ??
+    (input.outputId ? getReportAssistantMetricId(input.outputId) : `${input.surface}:${normalizeReportAssistantMetricLabel(input.label)}`);
+}
+
+function collectReportComparisonMetricValues(
+  document: SimpleWorkbenchProposalDocument
+): Map<string, ReportAssistantDocumentComparisonMetricChange> {
+  const values = new Map<string, ReportAssistantDocumentComparisonMetricChange>();
+  const primaryOutputId = inferReportAssistantOutputId({
+    label: document.primaryMetricLabel
+  });
+
+  values.set(
+    reportComparisonMetricKey({
+      label: document.primaryMetricLabel,
+      outputId: primaryOutputId,
+      surface: "primary"
+    }),
+    {
+      afterValue: document.primaryMetricValue,
+      label: document.primaryMetricLabel,
+      metricId: primaryOutputId ? getReportAssistantMetricId(primaryOutputId) : `primary:${normalizeReportAssistantMetricLabel(document.primaryMetricLabel)}`,
+      outputId: primaryOutputId,
+      surface: "primary"
+    }
+  );
+
+  for (const metric of document.metrics) {
+    const outputId = inferReportAssistantOutputId({
+      label: metric.label,
+      outputId: metric.outputId
+    });
+    const key = reportComparisonMetricKey({
+      label: metric.label,
+      outputId,
+      reportMetricId: metric.reportMetricId,
+      surface: "metric"
+    });
+    values.set(key, {
+      afterValue: metric.value,
+      label: metric.label,
+      metricId: metric.reportMetricId ?? (outputId ? getReportAssistantMetricId(outputId) : `metric:${normalizeReportAssistantMetricLabel(metric.label)}`),
+      outputId,
+      surface: "metric"
+    });
+  }
+
+  for (const item of document.coverageItems) {
+    const outputId = inferReportAssistantOutputId({
+      label: item.label,
+      outputId: item.outputId
+    });
+    const key = reportComparisonMetricKey({
+      label: item.label,
+      outputId,
+      reportMetricId: item.reportMetricId,
+      surface: "coverage"
+    });
+    values.set(key, {
+      afterValue: item.value,
+      label: item.label,
+      metricId: item.reportMetricId ?? (outputId ? getReportAssistantMetricId(outputId) : `coverage:${normalizeReportAssistantMetricLabel(item.label)}`),
+      outputId,
+      surface: "coverage"
+    });
+  }
+
+  return values;
+}
+
+function buildMetricDisplayValueChanges(input: {
+  afterDocument: SimpleWorkbenchProposalDocument;
+  beforeDocument: SimpleWorkbenchProposalDocument;
+}): {
+  changes: ReportAssistantDocumentComparisonMetricChange[];
+  omittedCount: number;
+} {
+  const beforeValues = collectReportComparisonMetricValues(input.beforeDocument);
+  const afterValues = collectReportComparisonMetricValues(input.afterDocument);
+  const keys = [...new Set([...beforeValues.keys(), ...afterValues.keys()])];
+  const changes = keys.flatMap((key): ReportAssistantDocumentComparisonMetricChange[] => {
+    const before = beforeValues.get(key);
+    const after = afterValues.get(key);
+    const beforeValue = before?.afterValue;
+    const afterValue = after?.afterValue;
+
+    if (beforeValue === afterValue) {
+      return [];
+    }
+
+    return [
+      {
+        afterValue,
+        beforeValue,
+        label: after?.label ?? before?.label ?? key,
+        metricId: after?.metricId ?? before?.metricId ?? key,
+        outputId: after?.outputId ?? before?.outputId,
+        surface: after?.surface ?? before?.surface ?? "metric"
+      }
+    ];
+  });
+  const maxChanges = 12;
+
+  return {
+    changes: changes.slice(0, maxChanges),
+    omittedCount: Math.max(0, changes.length - maxChanges)
+  };
+}
+
+function buildCountChanges(input: {
+  afterDocument: SimpleWorkbenchProposalDocument;
+  beforeDocument: SimpleWorkbenchProposalDocument;
+}): ReportAssistantDocumentComparisonCountChange[] {
+  const fields: readonly {
+    afterCount: number;
+    beforeCount: number;
+    field: ReportAssistantDocumentComparisonCountChange["field"];
+  }[] = [
+    {
+      afterCount: input.afterDocument.assumptionItems.length,
+      beforeCount: input.beforeDocument.assumptionItems.length,
+      field: "assumptions"
+    },
+    {
+      afterCount: input.afterDocument.citations.length,
+      beforeCount: input.beforeDocument.citations.length,
+      field: "citations"
+    },
+    {
+      afterCount: input.afterDocument.decisionTrailItems.length,
+      beforeCount: input.beforeDocument.decisionTrailItems.length,
+      field: "decisionTrail"
+    },
+    {
+      afterCount: input.afterDocument.issueRegisterItems.length,
+      beforeCount: input.beforeDocument.issueRegisterItems.length,
+      field: "issueRegister"
+    },
+    {
+      afterCount: input.afterDocument.recommendationItems.length,
+      beforeCount: input.beforeDocument.recommendationItems.length,
+      field: "recommendations"
+    },
+    {
+      afterCount: input.afterDocument.warnings.length,
+      beforeCount: input.beforeDocument.warnings.length,
+      field: "warnings"
+    }
+  ];
+
+  return fields.filter((entry) => entry.beforeCount !== entry.afterCount);
+}
+
+function buildTextFieldSummaries(input: {
+  afterDocument: SimpleWorkbenchProposalDocument;
+  beforeDocument: SimpleWorkbenchProposalDocument;
+}): ReportAssistantDocumentComparisonTextFieldSummary[] {
+  const fields: readonly ReportAssistantDocumentComparisonTextFieldSummary["field"][] = [
+    "briefNote",
+    "dynamicBranchDetail",
+    "executiveSummary",
+    "validationDetail"
+  ];
+
+  return fields.flatMap((field): ReportAssistantDocumentComparisonTextFieldSummary[] => {
+    const beforeLength = input.beforeDocument[field].length;
+    const afterLength = input.afterDocument[field].length;
+    if (input.beforeDocument[field] === input.afterDocument[field]) {
+      return [];
+    }
+
+    return [
+      {
+        afterLength,
+        beforeLength,
+        field
+      }
+    ];
+  });
+}
+
+function buildTopLevelFieldChanges(input: {
+  afterDocument: SimpleWorkbenchProposalDocument;
+  beforeDocument: SimpleWorkbenchProposalDocument;
+}): string[] {
+  const fields: readonly (keyof SimpleWorkbenchProposalDocument)[] = [
+    "assemblyHeadline",
+    "clientName",
+    "consultantCompany",
+    "contextLabel",
+    "dynamicBranchLabel",
+    "issuedOnIso",
+    "issuedOnLabel",
+    "issueBaseReference",
+    "issueNextReference",
+    "preparedBy",
+    "primaryMetricLabel",
+    "projectName",
+    "proposalAttention",
+    "proposalIssuePurpose",
+    "proposalRecipient",
+    "proposalReference",
+    "proposalRevision",
+    "proposalSubject",
+    "proposalValidityNote",
+    "reportProfileLabel",
+    "studyContextLabel",
+    "studyModeLabel",
+    "validationLabel"
+  ];
+
+  return fields.filter((field) => input.beforeDocument[field] !== input.afterDocument[field]);
+}
+
+export function buildReportAssistantDocumentComparisonSummary(input: {
+  afterDocument: SimpleWorkbenchProposalDocument;
+  beforeDocument: SimpleWorkbenchProposalDocument;
+  fromKind: ReportAssistantDocumentComparisonReferenceKind;
+  kind: ReportAssistantDocumentComparisonSummary["kind"];
+  projectWorkspace?: ReportAssistantProjectWorkspaceSnapshot;
+  status?: ReportAssistantDocumentComparisonSummary["status"];
+  statusReason?: string;
+  toKind: ReportAssistantDocumentComparisonReferenceKind;
+}): ReportAssistantDocumentComparisonSummary {
+  const metricChanges = buildMetricDisplayValueChanges(input);
+  const from = buildDocumentComparisonReference(input.beforeDocument, input.fromKind, {
+    projectWorkspace: input.projectWorkspace
+  });
+  const to = buildDocumentComparisonReference(input.afterDocument, input.toKind, {
+    projectWorkspace: input.projectWorkspace
+  });
+
+  return {
+    adjustmentSummary: buildAdjustmentSummary(input.afterDocument.reportAdjustments),
+    comparisonId: `${input.kind}:${from.documentSignature ?? "unknown"}:${to.documentSignature ?? "unknown"}`,
+    countChanges: buildCountChanges(input),
+    from,
+    kind: input.kind,
+    metricDisplayValueChanges: metricChanges.changes,
+    omittedMetricDisplayValueChangeCount: metricChanges.omittedCount,
+    status: input.status ?? "available",
+    statusReason: input.statusReason,
+    textFieldSummaries: buildTextFieldSummaries(input),
+    to,
+    topLevelFieldChanges: buildTopLevelFieldChanges(input)
+  };
+}
+
+function buildReportAssistantDocumentComparisonSummaries(input: {
+  baseDocument?: SimpleWorkbenchProposalDocument;
+  document: SimpleWorkbenchProposalDocument;
+  projectWorkspace?: ReportAssistantProjectWorkspaceSnapshot;
+}): ReportAssistantDocumentComparisonSummary[] {
+  if (!input.baseDocument) {
+    return [];
+  }
+
+  return [
+    buildReportAssistantDocumentComparisonSummary({
+      afterDocument: input.document,
+      beforeDocument: input.baseDocument,
+      fromKind: "generated_baseline",
+      kind: "current_draft_vs_generated_baseline",
+      projectWorkspace: input.projectWorkspace,
+      toKind: "current_browser_draft"
+    })
+  ];
+}
+
+function normalizePresetSummary(preset: ReportAssistantPresetSummary): ReportAssistantPresetSummary {
+  return {
+    description: preset.description,
+    hasCustomMaterials: preset.hasCustomMaterials,
+    hasVisualOverrides: preset.hasVisualOverrides,
+    id: preset.id,
+    kind: preset.kind,
+    layerCount: preset.layerCount,
+    name: preset.name,
+    presetRoute: preset.presetRoute,
+    selectedOutputCount: preset.selectedOutputCount,
+    sourceLabel: preset.sourceLabel,
+    sourceMetric: preset.sourceMetric,
+    sourceTargetValueDb: preset.sourceTargetValueDb,
+    tags: preset.tags?.slice(0, 8),
+    updatedAtIso: preset.updatedAtIso
+  };
+}
+
+function normalizePresetLibrarySummary(
+  summary: ReportAssistantPresetLibrarySummary | undefined
+): ReportAssistantPresetLibrarySummary | undefined {
+  const source = summary ?? getDefaultReportAssistantPresetLibrarySummary();
+
+  return {
+    commonPresetCount: source.commonPresetCount,
+    commonPresets: source.commonPresets.slice(0, 8).map(normalizePresetSummary),
+    recentUserPresets: source.recentUserPresets.slice(0, 8).map(normalizePresetSummary),
+    userPresetCount: source.userPresetCount
+  };
+}
+
+function uniqueRecentRevisions(
+  revisions: readonly ReportAssistantProjectWorkspaceRevision[],
+  currentRevision?: ReportAssistantProjectWorkspaceRevision
+): ReportAssistantProjectWorkspaceRevision[] {
+  const ordered = [
+    ...(currentRevision ? [currentRevision] : []),
+    ...revisions.slice().reverse()
+  ];
+  const seen = new Set<string>();
+  const result: ReportAssistantProjectWorkspaceRevision[] = [];
+
+  for (const revision of ordered) {
+    if (seen.has(revision.id)) {
+      continue;
+    }
+
+    seen.add(revision.id);
+    result.push(revision);
+    if (result.length >= 8) {
+      break;
+    }
+  }
+
+  return result;
+}
+
+function normalizeProjectWorkspaceSnapshot(
+  snapshot: ReportAssistantProjectWorkspaceSnapshot | undefined
+): ReportAssistantProjectWorkspaceSnapshot | undefined {
+  if (!snapshot) {
+    return undefined;
+  }
+
+  const currentRevision =
+    snapshot.currentRevision ??
+    (snapshot.report?.currentRevisionId
+      ? snapshot.revisionSummaries.find((revision) => revision.id === snapshot.report?.currentRevisionId)
+      : undefined);
+  const scope =
+    snapshot.scope === "project_report" && snapshot.report
+      ? "project_report"
+      : snapshot.scope === "project" && snapshot.project
+        ? "project"
+        : snapshot.project
+          ? "project"
+          : "browser_local";
+
+  return {
+    activeDraftState: snapshot.activeDraftState,
+    availableReadTools: REPORT_ASSISTANT_PROJECT_WORKSPACE_READ_TOOLS,
+    currentRevision,
+    linkedAssembly: snapshot.linkedAssembly,
+    project: snapshot.project,
+    report: snapshot.report,
+    revisionSummaries: uniqueRecentRevisions(snapshot.revisionSummaries, currentRevision),
+    scope
+  };
+}
+
 export function createReportAssistantContextSignature(input: {
   assistantTraceSnapshot?: SimpleWorkbenchAssistantTraceSnapshot;
   document: SimpleWorkbenchProposalDocument;
+  documentComparisonSummaries?: readonly ReportAssistantDocumentComparisonSummary[];
+  presetLibrarySummary?: ReportAssistantPresetLibrarySummary;
+  projectWorkspace?: ReportAssistantProjectWorkspaceSnapshot;
 }): string {
-  const { assistantTraceSnapshot, document } = input;
+  const { assistantTraceSnapshot, document, documentComparisonSummaries, presetLibrarySummary, projectWorkspace } = input;
 
   return hashSignature(
     stableStringify({
@@ -268,6 +884,7 @@ export function createReportAssistantContextSignature(input: {
         status: item.status,
         value: item.value
       })),
+      documentComparisonSummaries,
       dynamicBranchLabel: document.dynamicBranchLabel,
       layers: document.layers.map((layer) => ({
         categoryLabel: layer.categoryLabel,
@@ -284,6 +901,7 @@ export function createReportAssistantContextSignature(input: {
         notes: group.notes,
         value: group.value
       })),
+      presetLibrarySummary,
       metrics: document.metrics.map((metric) => ({
         label: metric.label,
         outputId: metric.outputId,
@@ -293,6 +911,8 @@ export function createReportAssistantContextSignature(input: {
       })),
       primaryMetricLabel: document.primaryMetricLabel,
       primaryMetricValue: document.primaryMetricValue,
+      projectWorkspace,
+      reportAdjustments: summarizeReportAdjustments(document.reportAdjustments),
       reportProfile: document.reportProfile,
       reportProfileLabel: document.reportProfileLabel,
       studyContextLabel: document.studyContextLabel,
@@ -708,9 +1328,12 @@ export function buildReportAssistantTraceSummary(input: {
 }
 
 export function buildReportAssistantContext(input: {
+  activeDraftState?: ReportAssistantProjectWorkspaceActiveDraftState;
   baseDocument?: SimpleWorkbenchProposalDocument;
   createdAtIso?: string;
   document: SimpleWorkbenchProposalDocument;
+  presetLibrarySummary?: ReportAssistantPresetLibrarySummary;
+  projectWorkspace?: ReportAssistantProjectWorkspaceSnapshot;
   reportId?: string;
   result?: AssemblyCalculation | null;
 }): ReportAssistantContext {
@@ -762,12 +1385,37 @@ export function buildReportAssistantContext(input: {
     result: input.result
   });
   const metrics = [...metricsById.values()];
+  const projectWorkspace = normalizeProjectWorkspaceSnapshot(
+    input.projectWorkspace
+      ? {
+          ...input.projectWorkspace,
+          activeDraftState: input.activeDraftState ?? input.projectWorkspace.activeDraftState
+        }
+      : input.activeDraftState
+        ? {
+            activeDraftState: input.activeDraftState,
+            availableReadTools: [],
+            revisionSummaries: [],
+            scope: "browser_local"
+          }
+        : undefined
+  );
+  const documentComparisonSummaries = buildReportAssistantDocumentComparisonSummaries({
+    baseDocument,
+    document,
+    projectWorkspace
+  });
+  const presetLibrarySummary = normalizePresetLibrarySummary(input.presetLibrarySummary);
 
   return {
     assistantContextSignature: createReportAssistantContextSignature({
       assistantTraceSnapshot,
-      document
+      document,
+      documentComparisonSummaries,
+      presetLibrarySummary,
+      projectWorkspace
     }),
+    documentComparisonSummaries,
     assistantOutputFacts: buildReportAssistantOutputFacts({
       document,
       metrics,
@@ -779,7 +1427,10 @@ export function buildReportAssistantContext(input: {
     documentSignature: createReportAssistantDocumentSignature(document),
     layersSummary: summarizeLayers(document),
     metrics,
-    projectId: document.serverProjectId,
+    presetLibrarySummary,
+    projectId: document.serverProjectId ?? projectWorkspace?.project?.id,
+    projectWorkspace,
+    reportAdjustments: summarizeReportAdjustments(document.reportAdjustments),
     reportId: input.reportId ?? document.proposalReference,
     scenarioId: document.serverProjectScenarioId,
     traceSummary,

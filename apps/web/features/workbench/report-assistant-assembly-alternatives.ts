@@ -579,7 +579,11 @@ function buildAssemblyAlternativeResearchRequestBody(input: {
       documentSignature: input.context.documentSignature,
       layersSummary: input.context.layersSummary,
       metrics: input.context.metrics,
+      projectId: input.context.projectId,
+      projectWorkspace: input.context.projectWorkspace,
+      reportAdjustments: input.context.reportAdjustments,
       reportId: input.context.reportId,
+      scenarioId: input.context.scenarioId,
       traceSummary: input.context.traceSummary,
       warnings: input.context.warnings
     },

@@ -12,6 +12,7 @@ import {
   extractReportAssistantPlausibilityReviewFromResearchResponse,
   getReportAssistantPlausibilityResearchSettings
 } from "./report-assistant-plausibility-research";
+import { plausibilityReviewToAssistantResult } from "./report-assistant-plausibility-result";
 import type { SimpleWorkbenchProposalDocument } from "./simple-workbench-proposal";
 
 const RW_METRIC_ID = getReportAssistantMetricId("Rw");
@@ -335,6 +336,53 @@ describe("report assistant source-bounded plausibility research", () => {
       },
       source: "research_provider"
     });
+    if (result.ok) {
+      const envelope = plausibilityReviewToAssistantResult({
+        review: result.review,
+        source: result.source,
+        warnings: result.warnings
+      });
+
+      expect(envelope).toMatchObject({
+        authority: "provider_review",
+        basis: [],
+        capabilityName: "report_assistant_plausibility_route",
+        mutates: false,
+        previewOnly: true,
+        rendererKind: "research_review_card",
+        requiresConfirmation: false,
+        resultKind: "plausibility_review",
+        routeStatus: "ready",
+        sourceTrace: [
+          {
+            detail: "Research provider output was normalized into the plausibility review contract.",
+            kind: "provider_review",
+            label: "report_assistant_plausibility_route"
+          }
+        ],
+        stalePolicy: "assistant_context_and_document_signature"
+      });
+      expect(envelope.evidence).toEqual(expect.arrayContaining([
+        {
+          detail: RW_METRIC_ID,
+          label: "Metric reviewed"
+        },
+        {
+          detail: "suspicious",
+          label: "Review verdict"
+        },
+        {
+          detail: "1",
+          label: "Citation count"
+        },
+        {
+          detail: "research_provider",
+          label: "Review source"
+        }
+      ]));
+      expect(JSON.stringify(envelope)).not.toContain("I found comparable acoustic references");
+      expect(JSON.stringify(envelope)).not.toContain("Comparable heavyweight concrete floors");
+    }
   });
 
   it("retries source research once with a strict JSON contract when the provider shape is invalid", async () => {

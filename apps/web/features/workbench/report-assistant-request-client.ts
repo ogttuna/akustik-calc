@@ -1,8 +1,10 @@
 export type ReportAssistantRequestKind =
+  | "action_proposal"
   | "assembly_alternatives_research"
   | "finding_log"
   | "patch_proposal"
-  | "plausibility_research";
+  | "plausibility_research"
+  | "read_only_query";
 
 export type ReportAssistantRequestSource = "abort" | "http" | "network" | "parse" | "timeout";
 

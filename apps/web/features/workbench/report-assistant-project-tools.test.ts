@@ -56,7 +56,7 @@ const ASSEMBLY_SNAPSHOT: JsonValue = {
   privateMarker: "PRIVATE_ASSEMBLY_SNAPSHOT"
 };
 
-const REPORT_DOCUMENT: JsonValue = {
+const REPORT_DOCUMENT = {
   executiveSummary: "PRIVATE_REPORT_DOCUMENT_BODY",
   metrics: [
     {
@@ -65,7 +65,7 @@ const REPORT_DOCUMENT: JsonValue = {
     }
   ],
   projectName: "Assistant visible project"
-};
+} satisfies JsonValue;
 
 async function seedProject(repository: FileServerProjectRepository, owner: ProjectOwnerScope, name = "Assistant visible project") {
   const project = await repository.createProject(owner, {

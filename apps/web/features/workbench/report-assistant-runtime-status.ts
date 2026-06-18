@@ -1,8 +1,12 @@
 import { REPORT_ASSISTANT_FINDINGS_RELATIVE_PATH } from "./report-assistant-finding";
 import { getReportAssistantModelSettings, type ReportAssistantModelProvider } from "./report-assistant-model";
 import { getReportAssistantPlausibilityResearchSettings } from "./report-assistant-plausibility-research";
-import { REPORT_ASSISTANT_PROJECT_READ_TOOL_DEFINITIONS } from "./report-assistant-project-tools";
-import { REPORT_ASSISTANT_MCP_TOOL_DEFINITIONS } from "./report-assistant-tools";
+import {
+  getReportAssistantActionProposalCapabilities,
+  getReportAssistantRouteCapabilities,
+  getReportAssistantRuntimeToolCapabilities,
+  hasReportAssistantMutatingModelTool
+} from "./report-assistant-capabilities";
 
 export type ReportAssistantProviderRuntimeStatus = {
   apiKeyConfigured: boolean;
@@ -19,11 +23,30 @@ export type ReportAssistantProviderRuntimeStatus = {
 };
 
 export type ReportAssistantRuntimeStatus = {
+  actionProposals: readonly {
+    description: string;
+    mutates: false;
+    name: string;
+    previewOnly: boolean;
+    requiresConfirmation: boolean;
+  }[];
   findingsQueuePath: string;
   generatedAtIso: string;
   modelProvider: ReportAssistantProviderRuntimeStatus;
-  mutatingToolsExposed: false;
+  mutatingToolsExposed: boolean;
   researchProvider: ReportAssistantProviderRuntimeStatus;
+  routes: readonly {
+    authPolicy: string;
+    description: string;
+    method: "GET" | "POST";
+    mutates: boolean;
+    name: string;
+    pathname: string;
+    previewOnly: boolean;
+    requiresConfirmation: boolean;
+    resultKind: string;
+    stalePolicy: string;
+  }[];
   tools: readonly {
     description: string;
     mutates: false;
@@ -95,12 +118,31 @@ export function getReportAssistantRuntimeStatus(input?: {
   const researchSettings = getReportAssistantPlausibilityResearchSettings(env);
 
   return {
+    actionProposals: getReportAssistantActionProposalCapabilities().map((action) => ({
+      description: action.description,
+      mutates: false,
+      name: action.name,
+      previewOnly: action.previewOnly,
+      requiresConfirmation: action.requiresConfirmation
+    })),
     findingsQueuePath: REPORT_ASSISTANT_FINDINGS_RELATIVE_PATH,
     generatedAtIso: now().toISOString(),
     modelProvider: providerStatus(modelSettings),
-    mutatingToolsExposed: false,
+    mutatingToolsExposed: hasReportAssistantMutatingModelTool(),
     researchProvider: providerStatus(researchSettings ? { ...researchSettings, provider: "research_provider" } : null),
-    tools: [...REPORT_ASSISTANT_MCP_TOOL_DEFINITIONS, ...REPORT_ASSISTANT_PROJECT_READ_TOOL_DEFINITIONS].map((tool) => ({
+    routes: getReportAssistantRouteCapabilities().map((capability) => ({
+      authPolicy: capability.authPolicy,
+      description: capability.description,
+      method: capability.route?.method ?? "POST",
+      mutates: capability.mutates,
+      name: capability.name,
+      pathname: capability.route?.pathname ?? "/api/report-assistant/unknown",
+      previewOnly: capability.previewOnly,
+      requiresConfirmation: capability.requiresConfirmation,
+      resultKind: capability.resultKind,
+      stalePolicy: capability.stalePolicy
+    })),
+    tools: getReportAssistantRuntimeToolCapabilities().map((tool) => ({
       description: tool.description,
       mutates: false,
       name: tool.name,

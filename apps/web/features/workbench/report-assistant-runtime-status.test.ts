@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
+import type { ReportAssistantResultEnvelope } from "./report-assistant-result-contract";
 import { getReportAssistantRuntimeStatus } from "./report-assistant-runtime-status";
 
 const mockAuthState = vi.hoisted(() => ({
@@ -53,6 +54,48 @@ describe("report assistant runtime status", () => {
     });
     expect(status.tools.every((tool) => tool.mutates === false)).toBe(true);
     expect(status.tools.map((tool) => tool.name)).not.toContain("apply_report_patch");
+    expect(status.tools.map((tool) => tool.name)).toContain("list_common_preset_summaries");
+    expect(status.tools.map((tool) => tool.name)).toContain("preview_workbench_v2_calculator_snapshot");
+    expect(status.tools.map((tool) => tool.name)).toContain("preview_described_layer_configuration");
+    expect(status.routes.map((route) => route.pathname)).toContain("/api/report-assistant/calculator-preview");
+    expect(status.routes).toContainEqual(expect.objectContaining({
+      mutates: true,
+      pathname: "/api/report-assistant/findings",
+      requiresConfirmation: true
+    }));
+    expect(status.actionProposals).toHaveLength(5);
+    expect(status.actionProposals).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        mutates: false,
+        name: "create_project_report_from_current_draft",
+        previewOnly: true,
+        requiresConfirmation: true
+      }),
+      expect.objectContaining({
+        mutates: false,
+        name: "create_user_preset_from_current_stack",
+        previewOnly: true,
+        requiresConfirmation: true
+      }),
+      expect.objectContaining({
+        mutates: false,
+        name: "restore_report_revision_as_new_draft",
+        previewOnly: true,
+        requiresConfirmation: true
+      }),
+      expect.objectContaining({
+        mutates: false,
+        name: "save_current_stack_as_project_assembly",
+        previewOnly: true,
+        requiresConfirmation: true
+      }),
+      expect.objectContaining({
+        mutates: false,
+        name: "save_project_report_revision_from_current_draft",
+        previewOnly: true,
+        requiresConfirmation: true
+      })
+    ]));
   });
 
   it("summarizes configured endpoints without exposing query strings or API keys", () => {
@@ -144,7 +187,22 @@ describe("report assistant runtime status", () => {
       session: null
     };
     const rejected = await GET();
+    const rejectedPayload = (await rejected.json()) as {
+      assistantResults?: ReportAssistantResultEnvelope[];
+      ok: boolean;
+    };
     expect(rejected.status).toBe(401);
+    expect(rejectedPayload.assistantResults?.[0]).toMatchObject({
+      authority: "error",
+      capabilityName: "report_assistant_status_route",
+      routeStatus: "auth_failed",
+      tasks: [
+        {
+          code: "assistant_auth_required",
+          severity: "error"
+        }
+      ]
+    });
 
     mockAuthState.value = {
       configured: false,
@@ -156,9 +214,19 @@ describe("report assistant runtime status", () => {
     };
     const accepted = await GET();
     const payload = (await accepted.json()) as {
+      assistantResults?: ReportAssistantResultEnvelope[];
       ok: boolean;
       status: {
+        actionProposals: readonly {
+          name: string;
+          previewOnly: boolean;
+        }[];
         mutatingToolsExposed: boolean;
+        routes: readonly {
+          mutates: boolean;
+          pathname: string;
+          requiresConfirmation: boolean;
+        }[];
         tools: readonly {
           name: string;
         }[];
@@ -172,6 +240,26 @@ describe("report assistant runtime status", () => {
         mutatingToolsExposed: false
       }
     });
+    expect(payload.assistantResults?.[0]).toMatchObject({
+      authority: "deterministic_read",
+      capabilityName: "report_assistant_status_route",
+      routeStatus: "ready",
+      sourceTrace: [
+        {
+          kind: "deterministic",
+          label: "report_assistant_runtime_status"
+        }
+      ]
+    });
     expect(payload.status.tools.map((tool) => tool.name)).toContain("preview_report_patch");
+    expect(payload.status.tools.map((tool) => tool.name)).toContain("list_user_preset_summaries");
+    expect(payload.status.routes).toContainEqual(expect.objectContaining({
+      mutates: true,
+      pathname: "/api/report-assistant/findings",
+      requiresConfirmation: true
+    }));
+    expect(payload.status.actionProposals.map((action) => action.name)).toContain(
+      "save_project_report_revision_from_current_draft"
+    );
   });
 });

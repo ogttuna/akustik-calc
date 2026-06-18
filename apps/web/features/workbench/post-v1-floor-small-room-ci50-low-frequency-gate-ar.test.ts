@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 
 import { composeWorkbenchReport } from "./compose-workbench-report";
 import { CRITERIA_PACKS } from "./criteria-packs";
-import { getPresetById } from "./preset-definitions";
+import { getPresetById, type PresetId } from "./preset-definitions";
 import { buildResultAnswerChartLanes } from "./result-answer-chart-model";
 import { evaluateScenario, type EvaluatedScenario } from "./scenario-analysis";
 import { buildOutputCard } from "./simple-workbench-output-model";
@@ -97,7 +97,7 @@ function evaluateBoundScenario(): EvaluatedScenario {
 }
 
 function buildReport(input: {
-  presetId: string;
+  presetId: PresetId;
   projectName: string;
   requestedOutputs: readonly RequestedOutputId[];
   scenario: EvaluatedScenario;

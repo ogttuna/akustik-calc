@@ -5,7 +5,11 @@ import { getPresetById, type PresetId } from "./preset-definitions";
 import { evaluateScenario } from "./scenario-analysis";
 import { FLOOR_OUTPUT_PRESET_BUILDING, FLOOR_OUTPUT_PRESET_FIELD } from "./simple-workbench-constants";
 import { pickPrimaryOutputCard } from "./simple-workbench-output-cards";
-import { buildOutputCard, type OutputCardModel } from "./simple-workbench-output-model";
+import {
+  addOutputCardPosture,
+  buildOutputCard,
+  type OutputCardModel
+} from "./simple-workbench-output-model";
 
 const BUILDING_CONTEXT: AirborneContext = {
   contextMode: "building_prediction",
@@ -54,11 +58,14 @@ function evaluateFloorPreset(
     cards: new Map(
       outputs.map((output) => [
         output,
-        buildOutputCard({
-          output,
-          result,
-          studyMode: "floor"
-        })
+        addOutputCardPosture(
+          buildOutputCard({
+            output,
+            result,
+            studyMode: "floor"
+          }),
+          { result, studyMode: "floor" }
+        )
       ])
     ),
     result

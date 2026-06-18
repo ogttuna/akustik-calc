@@ -183,6 +183,7 @@ function buildModelRequestBody(input: {
     context: {
       assistantTraceSnapshot: input.context.assistantTraceSnapshot,
       createdAtIso: input.context.createdAtIso,
+      documentComparisonSummaries: input.context.documentComparisonSummaries,
       documentSignature: input.context.documentSignature,
       layersSummary: input.context.layersSummary,
       metrics: input.context.metrics.map((metric) => ({
@@ -194,7 +195,12 @@ function buildModelRequestBody(input: {
         reportDisplayValue: metric.reportDisplayValue,
         status: metric.status
       })),
+      presetLibrarySummary: input.context.presetLibrarySummary,
+      projectId: input.context.projectId,
+      projectWorkspace: input.context.projectWorkspace,
+      reportAdjustments: input.context.reportAdjustments,
       reportId: input.context.reportId,
+      scenarioId: input.context.scenarioId,
       traceSummary: input.context.traceSummary,
       warnings: input.context.warnings
     },
@@ -206,6 +212,8 @@ function buildModelRequestBody(input: {
         "Do not turn needs_input or unsupported outputs into numeric values.",
         "For adjust_metric_db, the numeric movement field must be named deltaDb; never use value, amount, or db.",
         "Numeric movement above 10 dB will be rejected by the app validator.",
+        "Project workspace and revision data are read-only context; do not claim that you saved, restored, or updated a project.",
+        "Listed project read tools are a read-only manifest for the host app; this patch route is not a tool-calling loop.",
         "The app validator and user confirmation layer own all mutations."
       ],
       schema: {

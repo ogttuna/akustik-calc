@@ -171,6 +171,16 @@ describe("report assistant request lifecycle", () => {
       kind: "patch_proposal",
       registry
     });
+    const queryRequest = startReportAssistantRequest({
+      documentSignature: "doc-a",
+      kind: "read_only_query",
+      registry
+    });
+    const actionRequest = startReportAssistantRequest({
+      documentSignature: "doc-a",
+      kind: "action_proposal",
+      registry
+    });
 
     expect(
       isReportAssistantRequestResultActive({
@@ -191,6 +201,20 @@ describe("report assistant request lifecycle", () => {
         currentDocumentSignature: "doc-a",
         registry,
         result: buildResult("patch_proposal", patchRequest.requestId, "doc-a")
+      })
+    ).toBe(true);
+    expect(
+      isReportAssistantRequestResultActive({
+        currentDocumentSignature: "doc-a",
+        registry,
+        result: buildResult("read_only_query", queryRequest.requestId, "doc-a")
+      })
+    ).toBe(true);
+    expect(
+      isReportAssistantRequestResultActive({
+        currentDocumentSignature: "doc-a",
+        registry,
+        result: buildResult("action_proposal", actionRequest.requestId, "doc-a")
       })
     ).toBe(true);
   });

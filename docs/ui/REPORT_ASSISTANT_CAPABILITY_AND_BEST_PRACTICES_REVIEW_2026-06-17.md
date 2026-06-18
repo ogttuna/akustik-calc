@@ -125,10 +125,88 @@ platform. Its remaining major gaps are:
 - observability, evals, route edge abuse controls, and production telemetry are
   still thin.
 
-The correct next direction is still not direct write tools. The next direction
-is to finish the contract layer above the new registry: one result envelope
-vocabulary, one renderer/apply/stale policy surface, then a layer-stack draft
-loop that uses the existing calculator without touching engine truth.
+The correct next direction is still not direct write tools. The result envelope
+contract vocabulary has now landed locally; the next direction is to make route
+responses and renderer/apply/stale policy consume that contract, then add a
+layer-stack draft loop that uses the existing calculator without touching engine
+truth.
+
+## Assistant Accuracy And Effective-System-Use North Star - 2026-06-18
+
+The assistant target is not just "more features." The target is a high-integrity
+calculator copilot that can use DynEcho's existing system surfaces correctly,
+efficiently, and visibly.
+
+Every next assistant slice must satisfy these product constraints:
+
+1. **Application-owned truth**
+   - Calculator outputs, project reads, saved reports, preset reads, and finding
+     records must come from typed application routes or local deterministic
+     helpers, not from model memory.
+   - The model may summarize, plan, draft, or ask clarifying questions, but it
+     must not invent calculator values, route basis, source rows, saved ids, or
+     project state.
+
+2. **Calculator-first answer path**
+   - If a user asks for an acoustic result, the assistant must first try to
+     normalize the request into a calculator-ready draft or Workbench snapshot.
+   - If required physical inputs are missing, the assistant must return the
+     smallest useful `needs_input` question set instead of guessing.
+   - If the calculator route returns `unsupported`, the assistant must preserve
+     that status and explain the blocking boundary, not substitute a nearby
+     metric or family.
+
+3. **Effective system use**
+   - The assistant should use existing Workbench/project/report/preset/read
+     routes before asking the user for information that is already available in
+     current browser or saved project state.
+   - It should produce compact tool/read traces that show what it used: current
+     snapshot, parsed stack, selected outputs, project ids, preset ids, route
+     tasks, and evidence.
+   - It should avoid forcing users to rebuild a stack manually when the system
+     already has enough structured state to preview it.
+
+4. **Visible authority and uncertainty**
+   - Every assistant result must display whether it is calculator-backed,
+     provider-backed, deterministic, draft-only, preview-only, or user-confirmed.
+   - Numeric acoustic answers must carry metric id, basis, route status, and
+     task/warning state. A number without basis is not an acceptable answer.
+   - Research/source review must stay advisory unless a separate calculator
+     source-ingestion slice explicitly owns the source row and basis.
+
+5. **Confirmation before mutation**
+   - Direct autonomous writes remain out of scope.
+   - Any report, project, preset, finding, or future Workbench-state mutation
+     must be represented as a proposal/card first, with stale guards and explicit
+     user confirmation.
+
+6. **Evaluation before expansion**
+   - New assistant capabilities must ship with deterministic contract tests and
+     a small golden prompt matrix covering Turkish, English, mixed wording,
+     missing inputs, ambiguous materials, stale context, and prompt-injection
+     attempts.
+   - Expanding parser coverage without a draft/clarification state is not
+     acceptable; parser intelligence must attach to a typed draft boundary.
+
+This raises the bar for the current roadmap:
+
+- `report_assistant_result_card_contract_v1` must make authority, basis,
+  mutation posture, evidence, warnings, and stale policy visible for every
+  result type.
+- `report_assistant_layer_stack_draft_v1` must make the assistant capable of
+  building and refining a calculator-ready draft, not just parsing one-shot
+  wall strings.
+- `report_assistant_planner_decision_contract_v1` must make selected
+  capabilities auditable, so route selection can be evaluated and improved
+  without hidden regex drift.
+
+Active implementation plan:
+
+`docs/ui/REPORT_ASSISTANT_HIGH_ACCURACY_COPILOT_IMPLEMENTATION_PLAN_2026-06-18.md`
+
+Use that file for gate order, primary files, acceptance criteria, validation
+commands, stop conditions, and commit slicing. This review remains the reasoning
+and gap-analysis source.
 
 ## Remaining Work Implementation Gap Review - 2026-06-17
 
@@ -155,7 +233,7 @@ The current implementation should be treated as this baseline:
 | --- | --- | --- | --- |
 | Capability registry | `REPORT_ASSISTANT_CAPABILITY_REGISTRY` covers current routes, read tools, preset reads, calculator preview tools, MCP-style tools, and action proposals. Runtime status now derives from it. | The registry is not yet used as the route response envelope, renderer map, planner target contract, or apply controller source. | Feature drift risk is lower, but UI/result/planner drift can still happen unless the next layers consume the registry. |
 | Intent routing | `report-assistant-editor-workflow.ts` routes editor requests to query/action/patch. `report-assistant-intent.ts` classifies research/patch/explain/finding-style requests. Query has its own deterministic detectors. | No shared planner decision object such as `mode`, `targetCapability`, `confidence`, `requiresClarification`, and `allowedTools`. | The assistant can misroute edge cases, and each new surface must duplicate regex policy. |
-| Result envelopes | Query returns text/evidence/used reads and optionally calculator preview. Action and patch routes return bespoke shapes. Research routes return review objects. | No common result envelope with `capabilityName`, `resultKind`, `rendererKind`, `mutates`, `previewOnly`, `requiresConfirmation`, `evidence`, `warnings`, and `stalePolicy`. | UI cards and tests must special-case every result type. |
+| Result envelopes | `report-assistant-result-contract.ts` now defines the common envelope and validator. Query returns text/evidence/used reads and optionally calculator preview. Action and patch routes return bespoke shapes. Research routes return review objects. | Route responses do not yet wrap their existing payloads in the common envelope, and the editor still renders most result kinds through bespoke handling. | UI cards and tests must special-case every result type until Gate 2/Gate 3 consume the envelope. |
 | Assistant thread UI | Report editor has plain messages plus a structured calculator preview block. Action proposal and patch proposal have separate panels/flows. | No typed card system for query answer, calculator preview, patch proposal, action proposal, research review, project read, finding log, and error states. | Users cannot reliably see what is preview-only, what changes a draft, and what writes project state. |
 | Layer composition | Described wall parser can parse common wall phrases and run preview. Snapshot preview can run complete Workbench stacks including custom materials. | No `AssistantLayerStackDraft` schema, multi-turn clarification state, candidate stack comparison, topology role editor, custom material capture, or apply-to-Workbench confirmation flow. | The assistant can answer simple wall preview requests, but cannot yet "diz" arbitrary requested layer combinations like a real calculator copilot. |
 | Floor/ceiling/impact composition | Snapshot preview supports calculator execution when Workbench already owns the needed inputs. Described floor parser intentionally returns `needs_input`. | No natural-language floor/ceiling composer that captures impact roles, resilient layer properties, dynamic stiffness, load basis, field K/CI, room volume, or route-required physical inputs. | Floor/impact requests are common and easy to get wrong if guessed. |
@@ -181,15 +259,22 @@ P0: `report_assistant_capability_registry_core_v1` - landed locally
 - Kept behavior mostly unchanged; this was a contract/architecture slice, not a
   calculator or UI redesign.
 
-P1: `report_assistant_result_card_contract_v1`
+P1: `report_assistant_result_card_contract_v1` - core contract landed locally
 
-- Define a common assistant result envelope and renderer map that consumes the
+- Defined a common assistant result envelope and validator that consumes the
   capability registry.
+- Still remaining: route envelope adapters and a registry-driven renderer map.
 - Convert calculator preview from a special-case message block to the first
   registry-selected card.
 - Add registered cards for patch proposal summary, action proposal summary,
   query answer, research review, finding preparation/log, and errors.
 - Preserve explicit confirmation for every mutating/draft-changing path.
+- Every card must expose authority and uncertainty: `calculator_backed`,
+  `deterministic_read`, `provider_review`, `draft_only`, `preview_only`,
+  `needs_input`, or `unsupported`.
+- Numeric result cards must show metric id, basis, route status, stale policy,
+  evidence, warnings, and pending tasks without requiring users to inspect raw
+  JSON.
 
 P2: `report_assistant_planner_decision_contract_v1`
 
@@ -198,6 +283,11 @@ P2: `report_assistant_planner_decision_contract_v1`
 - Route editor query/action/patch/calculator/research/finding decisions through
   the capability registry instead of parallel regex-only branches.
 - Keep mutation intent and explicit confirmation precedence intact.
+- Planner output must record why it chose calculator preview, project read,
+  patch proposal, action proposal, research, finding, or clarification.
+- Planner tests must cover Turkish/English mixed calculator requests, research
+  requests, mutation attempts, prompt-injection wording, and ambiguous
+  layer/material instructions.
 
 P3: `report_assistant_layer_stack_draft_v1`
 
@@ -206,6 +296,12 @@ P3: `report_assistant_layer_stack_draft_v1`
   requested outputs, missing physical inputs, and clarification questions.
 - Use existing calculator preview for every ready draft.
 - Do not apply to Workbench until a separate confirmation flow exists.
+- The draft must preserve original user phrases beside normalized material ids
+  so errors can be corrected and explained.
+- The draft must support iterative refinement: user answers should update the
+  same draft, not start a disconnected one-shot parse.
+- A ready draft must be calculator-ready by construction; if it is not ready,
+  it must return `needs_input` tasks instead of producing acoustic values.
 
 P4: `report_assistant_layer_stack_apply_preview_v1`
 
@@ -227,6 +323,11 @@ P6: `report_assistant_eval_observability_v1`
 - Add a fixture-based assistant eval suite and a redacted event log.
 - Cover English/Turkish mixed intent, prompt-injection inputs, stale-result
   races, malformed provider outputs, and layer-draft clarification paths.
+- Track route decision, selected capability, used reads/tools, calculator route
+  status, missing inputs, provider status, user confirmation, and rejection
+  reason without storing secrets or full report bodies.
+- Add high-accuracy regression cases where the correct answer is `needs_input`
+  or `unsupported`, not a numeric estimate.
 
 P7: `report_assistant_route_hardening_v1`
 
@@ -254,9 +355,11 @@ Why this should come before more parser work:
 
 Acceptance criteria:
 
-- define a shared assistant result envelope with `capabilityName`, `resultKind`,
+- done locally: define a shared assistant result envelope with `capabilityName`, `resultKind`,
   `rendererKind`, `mutates`, `previewOnly`, `requiresConfirmation`, `evidence`,
   `warnings`, and `stalePolicy`;
+- done locally: include `authority`, `basis`, `routeStatus`, `tasks`, `sourceTrace`, and
+  `confidenceReason` fields where applicable;
 - calculator preview responses and editor messages can be rendered through that
   envelope without inspecting ad hoc payload fields;
 - patch proposal, action proposal, query answer, research review, project-read,
@@ -265,6 +368,10 @@ Acceptance criteria:
 - renderer tests prove preview-only calculator cards cannot show apply buttons
   and mutating/confirmed paths cannot appear as direct model tools;
 - route/status tests prove every envelope references a known capability;
+- numeric assistant answers without calculator/project/source authority are
+  rejected by tests;
+- result cards distinguish `needs_input`, `unsupported`, provider failures,
+  validation failures, and stale results;
 - no engine package files are touched.
 
 ### Layer-Stack Draft Follow-Up Criteria
@@ -1068,24 +1175,28 @@ Even then, delete/archive/export tools should require a separate design review.
 The best next assistant slice is:
 
 ```text
-report_assistant_result_card_contract_v1
+report_assistant_route_envelope_adapters_v1
 ```
 
 Reason:
 
 - calculator preview productization already landed;
 - the central capability registry core now landed;
+- the result envelope contract core now landed;
 - assistant capability is now spread across enough routes that result rendering,
-  envelope shape, and confirmation labels are the next drift risk;
-- a result-card contract is prerequisite for safe layer-stack drafting, research
-  routing, planner decisions, and future apply-to-Workbench actions;
+  route payload wrapping, and confirmation labels are the next drift risk;
+- route envelope adapters are prerequisite for registry-driven cards, safe
+  layer-stack drafting, research routing, planner decisions, and future
+  apply-to-Workbench actions;
 - it does not require calculator runtime changes;
 - it keeps direct write tools parked.
 
-Use the "Recommended Next Slice" and "Acceptance criteria" sections in this
-review as the implementation plan. Keep
+Use the active high-accuracy copilot plan as the implementation plan. Keep
 `docs/ui/REPORT_ASSISTANT_CALCULATOR_PREVIEW_PRODUCTIZATION_PLAN_2026-06-17.md`
 as historical evidence for the landed calculator-preview slice.
+
+For actual execution order, use
+`docs/ui/REPORT_ASSISTANT_HIGH_ACCURACY_COPILOT_IMPLEMENTATION_PLAN_2026-06-18.md`.
 
 ## Non-Goals For The Next Slice
 

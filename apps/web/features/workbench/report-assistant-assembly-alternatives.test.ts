@@ -12,6 +12,8 @@ import {
   extractReportAssistantAssemblyAlternativeReviewFromResearchResponse,
   parseReportAssistantAssemblyAlternativeRequest
 } from "./report-assistant-assembly-alternatives";
+import { assemblyAlternativeReviewToAssistantResult } from "./report-assistant-assembly-alternatives-result";
+import type { ReportAssistantResultEnvelope } from "./report-assistant-result-contract";
 import type { SimpleWorkbenchProposalDocument } from "./simple-workbench-proposal";
 
 const mockAuthState = vi.hoisted(() => ({
@@ -330,6 +332,48 @@ describe("report assistant assembly alternative research", () => {
       source: "research_provider"
     });
     expect(JSON.stringify(result)).not.toContain("suggestedReportPatch");
+    if (result.ok) {
+      const envelope = assemblyAlternativeReviewToAssistantResult({
+        review: result.review,
+        source: result.source,
+        warnings: result.warnings
+      });
+
+      expect(envelope).toMatchObject({
+        authority: "provider_review",
+        basis: [],
+        capabilityName: "report_assistant_assembly_alternatives_route",
+        mutates: false,
+        previewOnly: true,
+        rendererKind: "research_review_card",
+        requiresConfirmation: false,
+        resultKind: "assembly_alternatives_review",
+        routeStatus: "ready",
+        sourceTrace: [
+          {
+            kind: "provider_review",
+            label: "report_assistant_assembly_alternatives_route"
+          }
+        ],
+        stalePolicy: "assistant_context_and_document_signature"
+      });
+      expect(envelope.evidence).toEqual(expect.arrayContaining([
+        {
+          detail: "research_provider",
+          label: "Review source"
+        },
+        {
+          detail: "1",
+          label: "Suggested alternative count"
+        },
+        {
+          detail: "1",
+          label: "Citation count"
+        }
+      ]));
+      expect(JSON.stringify(envelope)).not.toContain("For this build-up");
+      expect(JSON.stringify(envelope)).not.toContain("Source-backed only");
+    }
   });
 
   it("retries provider responses once with a stricter JSON contract", async () => {
@@ -442,6 +486,7 @@ describe("report assistant assembly alternative research", () => {
       )
     );
     const payload = (await response.json()) as {
+      assistantResults?: ReportAssistantResultEnvelope[];
       ok: boolean;
       review: {
         answerText: string;
@@ -461,7 +506,62 @@ describe("report assistant assembly alternative research", () => {
       source: "context"
     });
     expect(payload.review.answerText).toContain("No report value was changed");
+    expect(payload.assistantResults).toHaveLength(1);
+    expect(payload.assistantResults?.[0]).toMatchObject({
+      authority: "deterministic_read",
+      basis: [],
+      capabilityName: "report_assistant_assembly_alternatives_route",
+      mutates: false,
+      previewOnly: true,
+      rendererKind: "research_review_card",
+      requiresConfirmation: false,
+      resultKind: "assembly_alternatives_review",
+      routeStatus: "ready",
+      sourceTrace: [
+        {
+          kind: "deterministic",
+          label: "report_assistant_assembly_alternatives_route"
+        }
+      ],
+      stalePolicy: "assistant_context_and_document_signature"
+    });
+    expect(payload.assistantResults?.[0]?.evidence).toEqual(expect.arrayContaining([
+      {
+        detail: "context",
+        label: "Review source"
+      },
+      {
+        detail: "0",
+        label: "Suggested alternative count"
+      },
+      {
+        detail: "0",
+        label: "Citation count"
+      }
+    ]));
     expect(DOCUMENT.primaryMetricValue).toBe("54 dB");
+  });
+
+  it("returns typed failure envelopes for invalid route payloads", async () => {
+    const { POST } = await import("../../app/api/report-assistant/assembly-alternatives/route");
+    const response = await POST(jsonRequest(null));
+    const payload = (await response.json()) as {
+      assistantResults?: ReportAssistantResultEnvelope[];
+      ok: boolean;
+    };
+
+    expect(response.status).toBe(400);
+    expect(payload.assistantResults?.[0]).toMatchObject({
+      authority: "needs_input",
+      capabilityName: "report_assistant_assembly_alternatives_route",
+      routeStatus: "needs_input",
+      tasks: [
+        {
+          code: "invalid_assembly_alternatives_payload",
+          severity: "warning"
+        }
+      ]
+    });
   });
 
   it("parses request and Gemini wrapped review shapes", () => {

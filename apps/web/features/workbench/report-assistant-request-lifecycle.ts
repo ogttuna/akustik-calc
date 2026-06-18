@@ -13,10 +13,12 @@ export type ReportAssistantActiveRequestRegistry = Record<ReportAssistantRequest
 
 export function createReportAssistantActiveRequestRegistry(): ReportAssistantActiveRequestRegistry {
   return {
+    action_proposal: null,
     assembly_alternatives_research: null,
     finding_log: null,
     patch_proposal: null,
-    plausibility_research: null
+    plausibility_research: null,
+    read_only_query: null
   };
 }
 

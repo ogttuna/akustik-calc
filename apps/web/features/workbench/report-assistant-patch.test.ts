@@ -520,7 +520,8 @@ describe("report assistant Phase A patch core", () => {
         {
           detail: "Comparable source reports Rw 61 dB for a related assembly.",
           href: "https://example.com/rw-61",
-          label: "Source Rw 61 dB"
+          label: "Source Rw 61 dB",
+          tone: "neutral"
         }
       ],
       coverageItems: BASE_DOCUMENT.coverageItems.map((item) =>
@@ -828,7 +829,8 @@ describe("report assistant Phase A patch core", () => {
         {
           detail: "Published comparable source reports Rw 61 dB.",
           href: "https://example.com/source",
-          label: "Comparable source"
+          label: "Comparable source",
+          tone: "neutral"
         }
       ]
     };
@@ -868,7 +870,8 @@ describe("report assistant Phase A patch core", () => {
         {
           detail: "Comparable source says this family can pass its target.",
           href: "https://example.com/source",
-          label: "Comparable source"
+          label: "Comparable source",
+          tone: "neutral"
         }
       ],
       executiveSummary: "Riverside Residences Rw comfortably exceeds the target and passes by 2 dB.",

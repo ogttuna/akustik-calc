@@ -11,6 +11,7 @@ import {
   reviewReportAssistantMetricPlausibility
 } from "./report-assistant-plausibility";
 import { validateReportAssistantPatch } from "./report-assistant-patch";
+import type { ReportAssistantResultEnvelope } from "./report-assistant-result-contract";
 import type { SimpleWorkbenchProposalDocument } from "./simple-workbench-proposal";
 
 const mockAuthState = vi.hoisted(() => ({
@@ -304,6 +305,28 @@ describe("report assistant plausibility review", () => {
     ]);
   });
 
+  it("returns typed failure envelopes for invalid route payloads", async () => {
+    const { POST } = await import("../../app/api/report-assistant/plausibility/route");
+    const response = await POST(jsonRequest(null));
+    const payload = (await response.json()) as {
+      assistantResults?: ReportAssistantResultEnvelope[];
+      ok: boolean;
+    };
+
+    expect(response.status).toBe(400);
+    expect(payload.assistantResults?.[0]).toMatchObject({
+      authority: "needs_input",
+      capabilityName: "report_assistant_plausibility_route",
+      routeStatus: "needs_input",
+      tasks: [
+        {
+          code: "invalid_plausibility_payload",
+          severity: "warning"
+        }
+      ]
+    });
+  }, 15000);
+
   it("returns route reviews without mutating report or calculator state", async () => {
     const { POST } = await import("../../app/api/report-assistant/plausibility/route");
     const boundedDocument = documentWithRwReportValue("54 dB");
@@ -320,6 +343,7 @@ describe("report assistant plausibility review", () => {
       })
     );
     const payload = (await response.json()) as {
+      assistantResults?: ReportAssistantResultEnvelope[];
       ok: boolean;
       patchValidation?: {
         status: string;
@@ -342,6 +366,40 @@ describe("report assistant plausibility review", () => {
         verdict: "suspicious"
       }
     });
+    expect(payload.assistantResults).toHaveLength(1);
+    expect(payload.assistantResults?.[0]).toMatchObject({
+      authority: "deterministic_read",
+      basis: [],
+      capabilityName: "report_assistant_plausibility_route",
+      mutates: false,
+      previewOnly: true,
+      rendererKind: "research_review_card",
+      requiresConfirmation: false,
+      resultKind: "plausibility_review",
+      routeStatus: "ready",
+      sourceTrace: [
+        {
+          detail: "Local report context produced the plausibility review.",
+          kind: "deterministic",
+          label: "report_assistant_plausibility_route"
+        }
+      ],
+      stalePolicy: "assistant_context_and_document_signature"
+    });
+    expect(payload.assistantResults?.[0]?.evidence).toEqual(expect.arrayContaining([
+      {
+        detail: RW_METRIC_ID,
+        label: "Metric reviewed"
+      },
+      {
+        detail: "suspicious",
+        label: "Review verdict"
+      },
+      {
+        detail: "requires_confirmation",
+        label: "Patch validation status"
+      }
+    ]));
     expect(boundedDocument.primaryMetricValue).toBe("54 dB");
   }, 15000);
 });

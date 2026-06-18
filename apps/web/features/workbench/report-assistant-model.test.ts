@@ -367,6 +367,190 @@ describe("report assistant model patch provider", () => {
     expect(JSON.stringify(payload)).not.toContain("executiveSummary");
   });
 
+  it("includes read-only project workspace and report adjustment summaries in model context", () => {
+    const longAssistantDraftSummary = `Client-facing summary ${"must stay summarized ".repeat(180)}`;
+    const currentContext = buildReportAssistantContext({
+      activeDraftState: {
+        assemblyId: "assembly-1",
+        assemblyName: "Lobby slab",
+        assemblyVersion: 3,
+        dirty: true,
+        kind: "project_report_draft",
+        projectId: "project-1",
+        projectName: "Hotel acoustic package",
+        reportId: "report-1",
+        reportUpdatedAtIso: "2026-06-15T10:00:00.000Z"
+      },
+      baseDocument: DOCUMENT,
+      createdAtIso: "2026-06-15T10:00:00.000Z",
+      document: {
+        ...DOCUMENT,
+        coverageItems: DOCUMENT.coverageItems.map((item) => ({ ...item, value: "59 dB" })),
+        executiveSummary: longAssistantDraftSummary,
+        metrics: DOCUMENT.metrics.map((metric) => ({ ...metric, value: "59 dB" })),
+        primaryMetricValue: "59 dB",
+        reportAdjustments: [
+          {
+            afterValue: "59 dB",
+            appliedAtIso: "2026-06-15T09:59:00.000Z",
+            beforeValue: "61 dB",
+            engineValuePreserved: true,
+            id: "adjustment-1",
+            label: "Rw",
+            metricId: RW_METRIC_ID,
+            reason: "Assistant-adjusted project report revision.",
+            scope: "saved_snapshot",
+            source: "assistant"
+          }
+        ]
+      },
+      projectWorkspace: {
+        availableReadTools: [],
+        currentRevision: {
+          assistantPatchSummary: {
+            operationCount: 1,
+            validationStatus: "valid"
+          },
+          changeSummary: "Assistant-adjusted report editor draft.",
+          createdAtIso: "2026-06-15T09:59:00.000Z",
+          displayCode: "REV-0002",
+          id: "revision-2",
+          source: "assistant"
+        },
+        project: {
+          id: "project-1",
+          name: "Hotel acoustic package"
+        },
+        linkedAssembly: {
+          calculationPrimaryOutput: "Rw",
+          calculationPrimaryValueLabel: "58 dB",
+          calculationStatus: "ready",
+          displayCode: "ASM-0001",
+          id: "assembly-1",
+          kind: "floor",
+          name: "Lobby slab",
+          updatedAtIso: "2026-06-15T09:45:00.000Z",
+          version: 3
+        },
+        report: {
+          currentRevisionId: "revision-2",
+          displayCode: "RPT-0001",
+          id: "report-1",
+          name: "Lobby slab report",
+          revisionCount: 2,
+          status: "draft"
+        },
+        revisionSummaries: [],
+        scope: "project_report"
+      },
+      reportId: "model-test"
+    });
+    const request = buildSystemLlmGeminiProxyRequest({
+      context: currentContext,
+      instruction: "Rw değerini kontrol et",
+      settings: {
+        endpoint: "http://system_llm:4000/gemini-proxy",
+        model: "gemini-3-flash-preview",
+        provider: "system_llm_gemini_proxy",
+        timeoutMs: 12000
+      }
+    });
+    const userText = request.body.contents[0]?.parts[0]?.text ?? "";
+    const payload = JSON.parse(userText) as {
+      context: {
+        projectWorkspace?: {
+          availableReadTools: readonly { mutates: boolean; name: string }[];
+          activeDraftState?: { dirty: boolean; kind: string; reportId?: string };
+          currentRevision?: { displayCode?: string; source?: string };
+          linkedAssembly?: { displayCode?: string; name: string; version: number };
+          project?: { name: string };
+          report?: { displayCode?: string; revisionCount?: number };
+          scope: string;
+        };
+        documentComparisonSummaries: readonly {
+          kind: string;
+          metricDisplayValueChanges: readonly { afterValue?: string; beforeValue?: string; metricId: string }[];
+          textFieldSummaries: readonly { afterLength: number; beforeLength: number; field: string }[];
+        }[];
+        presetLibrarySummary?: {
+          commonPresetCount: number;
+          commonPresets: readonly {
+            kind: string;
+            name: string;
+            presetRoute: string;
+          }[];
+        };
+        reportAdjustments: readonly { afterValue: string; beforeValue: string; metricId: string; source: string }[];
+      };
+    };
+
+    expect(payload.context.projectWorkspace).toMatchObject({
+      activeDraftState: {
+        dirty: true,
+        kind: "project_report_draft",
+        reportId: "report-1"
+      },
+      currentRevision: {
+        displayCode: "REV-0002",
+        source: "assistant"
+      },
+      linkedAssembly: {
+        displayCode: "ASM-0001",
+        name: "Lobby slab",
+        version: 3
+      },
+      project: {
+        name: "Hotel acoustic package"
+      },
+      report: {
+        displayCode: "RPT-0001",
+        revisionCount: 2
+      },
+      scope: "project_report"
+    });
+    expect(payload.context.projectWorkspace?.availableReadTools.every((tool) => tool.mutates === false)).toBe(true);
+    expect(payload.context.projectWorkspace?.availableReadTools.map((tool) => tool.name)).toContain("read_project_report_revision");
+    expect(payload.context.documentComparisonSummaries).toEqual([
+      expect.objectContaining({
+        kind: "current_draft_vs_generated_baseline",
+        metricDisplayValueChanges: expect.arrayContaining([
+          expect.objectContaining({
+            afterValue: "59 dB",
+            beforeValue: "61 dB",
+            metricId: RW_METRIC_ID
+          })
+        ]),
+        textFieldSummaries: expect.arrayContaining([
+          expect.objectContaining({
+            afterLength: longAssistantDraftSummary.length,
+            field: "executiveSummary"
+          })
+        ])
+      })
+    ]);
+    expect(payload.context.presetLibrarySummary).toMatchObject({
+      commonPresetCount: expect.any(Number),
+      commonPresets: expect.arrayContaining([
+        expect.objectContaining({
+          kind: "common",
+          presetRoute: "wall"
+        })
+      ])
+    });
+    expect(payload.context.reportAdjustments).toEqual([
+      expect.objectContaining({
+        afterValue: "59 dB",
+        beforeValue: "61 dB",
+        metricId: RW_METRIC_ID,
+        source: "assistant"
+      })
+    ]);
+    expect(userText).not.toContain("Manual issue snapshot.");
+    expect(userText).not.toContain(DOCUMENT.executiveSummary);
+    expect(userText).not.toContain(longAssistantDraftSummary);
+    expect(userText).not.toContain("sourceUrl");
+  });
+
   it("calls system_llm Gemini proxy and parses candidate patch text", async () => {
     const fetchMock = vi.fn(async (url: string | URL | Request, init?: RequestInit) => {
       expect(String(url)).toBe("http://system_llm:4000/gemini-proxy/v1beta/models/gemini-3-flash-preview:generateContent");

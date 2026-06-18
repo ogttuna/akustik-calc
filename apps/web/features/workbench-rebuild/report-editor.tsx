@@ -2,6 +2,7 @@
 
 import {
   ArrowLeft,
+  Bookmark,
   Bot,
   Check,
   ChevronDown,
@@ -21,13 +22,45 @@ import { useSearchParams } from "next/navigation";
 import { type ChangeEvent, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
-import { buildReportAssistantContext } from "../workbench/report-assistant-context";
+import {
+  buildReportAssistantContext,
+  type ReportAssistantContext,
+  type ReportAssistantProjectWorkspaceSnapshot
+} from "../workbench/report-assistant-context";
+import { REPORT_ASSISTANT_PROJECT_READ_TOOL_DEFINITIONS } from "../workbench/report-assistant-project-read-contract";
 import {
   applyValidatedReportAssistantPatch,
   validateReportAssistantPatch,
   type ReportAssistantPatchValidationResult
 } from "../workbench/report-assistant-patch";
-import { sendReportAssistantRequest } from "../workbench/report-assistant-request-client";
+import {
+  classifyReportAssistantEditorRequest,
+  type ReportAssistantEditorRequestMode
+} from "../workbench/report-assistant-editor-workflow";
+import {
+  isReportAssistantActionProposalName,
+  type ReportAssistantActionProposal,
+  type ReportAssistantActionProposalName
+} from "../workbench/report-assistant-action-proposal";
+import {
+  AssistantCalculatorPreviewBlock,
+  AssistantResultCard
+} from "../workbench/report-assistant-result-card";
+import { sendReportAssistantRequest, type ReportAssistantRequestKind, type ReportAssistantRequestResult } from "../workbench/report-assistant-request-client";
+import {
+  createReportAssistantActiveRequestRegistry,
+  finishReportAssistantRequest,
+  isReportAssistantRequestResultActive,
+  startReportAssistantRequest
+} from "../workbench/report-assistant-request-lifecycle";
+import {
+  validateReportAssistantResultEnvelope,
+  type ReportAssistantResultEnvelope
+} from "../workbench/report-assistant-result-contract";
+import {
+  planReportAssistantRequest,
+  type ReportAssistantPlannerDecision
+} from "../workbench/report-assistant-planner";
 import {
   parseSimpleWorkbenchProposalDocument,
   type SimpleWorkbenchProposalDocument
@@ -48,10 +81,12 @@ import {
   type LoadedSimpleWorkbenchProposalPreview,
   type SimpleWorkbenchProposalPreviewProjectContext
 } from "../workbench/simple-workbench-proposal-preview-storage";
+import type { WorkbenchV2CalculatorAssistantPreview } from "./workbench-v2-calculator-assistant";
 
 type ProposalPdfStyle = "branded" | "simple";
 
 type AssistantPatchPayload = {
+  assistantResults?: unknown;
   error?: unknown;
   errors?: unknown;
   ok?: unknown;
@@ -61,7 +96,31 @@ type AssistantPatchPayload = {
   warnings?: unknown;
 };
 
+type AssistantQueryPayload = {
+  answer?: unknown;
+  assistantResults?: unknown;
+  calculatorPreview?: unknown;
+  errors?: unknown;
+  ok?: unknown;
+  warnings?: unknown;
+};
+
+type AssistantActionProposalPayload = {
+  assistantResults?: unknown;
+  errors?: unknown;
+  ok?: unknown;
+  proposal?: unknown;
+  warnings?: unknown;
+};
+
+type AssistantSelectedRevisionPayload = {
+  displayCode?: string;
+  id: string;
+};
+
 type AssistantMessage = {
+  assistantResults?: readonly ReportAssistantResultEnvelope[];
+  calculatorPreview?: WorkbenchV2CalculatorAssistantPreview;
   detail: string;
   id: string;
   tone: "error" | "neutral" | "success" | "warning";
@@ -126,6 +185,18 @@ type AssistantProjectReportSummary = {
   updatedAtIso: string;
 };
 
+type AssistantProjectAssemblySummary = {
+  calculationPrimaryOutput?: string;
+  calculationPrimaryValueLabel?: string;
+  calculationStatus?: "error" | "needs_input" | "ready" | "unsupported";
+  displayCode?: string;
+  id: string;
+  kind: "floor" | "wall";
+  name: string;
+  updatedAtIso?: string;
+  version: number;
+};
+
 type AssistantProjectRevisionSummary = {
   assistantPatchSummary?: {
     operationCount: number;
@@ -144,9 +215,11 @@ type AssistantProjectRevisionPreview = {
 };
 
 type AssistantProjectContextSummary = {
+  linkedAssembly?: AssistantProjectAssemblySummary;
   project: AssistantProjectSummary;
   report?: AssistantProjectReportSummary;
   revision?: AssistantProjectRevisionSummary;
+  revisionSummaries?: AssistantProjectRevisionSummary[];
 };
 
 type AssistantProjectContextState =
@@ -159,6 +232,13 @@ const STYLE_OPTIONS: readonly { label: string; value: ProposalPdfStyle }[] = [
   { label: "Branded", value: "branded" },
   { label: "Simple", value: "simple" }
 ];
+
+const ASSISTANT_PROJECT_READ_TOOLS: ReportAssistantProjectWorkspaceSnapshot["availableReadTools"] =
+  REPORT_ASSISTANT_PROJECT_READ_TOOL_DEFINITIONS.map((tool) => ({
+    mutates: tool.mutates,
+    name: tool.name,
+    requiredInputs: [...tool.requiredInputs]
+  }));
 
 const DIRECT_TEXT_FIELDS = [
   { key: "projectName", label: "Project" },
@@ -280,6 +360,265 @@ function getPayloadMessages(payload: unknown): string[] {
 function getPayloadError(payload: unknown, fallback: string): string {
   const messages = getPayloadMessages(payload);
   return messages.length > 0 ? messages.join(" ") : fallback;
+}
+
+function getAssistantQueryAnswer(payload: AssistantQueryPayload | undefined): string | null {
+  return typeof payload?.answer === "string" && payload.answer.trim().length > 0 ? payload.answer : null;
+}
+
+function isAssistantResultEnvelopeCandidate(value: unknown): value is ReportAssistantResultEnvelope {
+  if (!value || typeof value !== "object") {
+    return false;
+  }
+
+  const envelope = value as Partial<ReportAssistantResultEnvelope>;
+  return (
+    typeof envelope.authority === "string" &&
+    Array.isArray(envelope.basis) &&
+    typeof envelope.capabilityName === "string" &&
+    Array.isArray(envelope.evidence) &&
+    typeof envelope.mutates === "boolean" &&
+    typeof envelope.previewOnly === "boolean" &&
+    typeof envelope.rendererKind === "string" &&
+    typeof envelope.requiresConfirmation === "boolean" &&
+    typeof envelope.resultKind === "string" &&
+    typeof envelope.routeStatus === "string" &&
+    Array.isArray(envelope.sourceTrace) &&
+    typeof envelope.stalePolicy === "string" &&
+    Array.isArray(envelope.tasks) &&
+    Array.isArray(envelope.warnings)
+  );
+}
+
+function getAssistantResultEnvelopes(payload: { assistantResults?: unknown } | undefined): ReportAssistantResultEnvelope[] {
+  if (!payload || !Array.isArray(payload.assistantResults)) {
+    return [];
+  }
+
+  return payload.assistantResults.filter((entry): entry is ReportAssistantResultEnvelope => {
+    if (!isAssistantResultEnvelopeCandidate(entry)) {
+      return false;
+    }
+
+    return validateReportAssistantResultEnvelope(entry).ok;
+  });
+}
+
+function getAssistantQueryCalculatorPreview(payload: AssistantQueryPayload | undefined): WorkbenchV2CalculatorAssistantPreview | null {
+  if (!payload || typeof payload.calculatorPreview !== "object" || payload.calculatorPreview === null) {
+    return null;
+  }
+
+  const envelope = payload.calculatorPreview as {
+    mutates?: unknown;
+    name?: unknown;
+    preview?: unknown;
+    previewOnly?: unknown;
+  };
+  if (
+    envelope.mutates !== false ||
+    envelope.name !== "preview_described_layer_configuration" ||
+    envelope.previewOnly !== true ||
+    typeof envelope.preview !== "object" ||
+    envelope.preview === null
+  ) {
+    return null;
+  }
+
+  const preview = envelope.preview as Partial<WorkbenchV2CalculatorAssistantPreview>;
+  if (
+    !preview.calculationSummary ||
+    !preview.requestedSnapshot ||
+    !Array.isArray(preview.outputRows) ||
+    !Array.isArray(preview.tasks)
+  ) {
+    return null;
+  }
+
+  return envelope.preview as WorkbenchV2CalculatorAssistantPreview;
+}
+
+function getAssistantPlannerSelectedOutputs(context: ReportAssistantContext): string[] {
+  return context.assistantOutputFacts
+    .map((fact) => fact.outputId ?? fact.label)
+    .filter((outputId): outputId is string => typeof outputId === "string" && outputId.trim().length > 0);
+}
+
+function getAssistantPlannerEditorRequestMode(
+  decision: ReportAssistantPlannerDecision,
+  fallbackInstruction: string
+): ReportAssistantEditorRequestMode {
+  if (decision.mode === "action_proposal") {
+    return "action_proposal";
+  }
+  if (decision.mode === "patch_proposal") {
+    return "patch_proposal";
+  }
+  if (
+    decision.mode === "calculator_preview" ||
+    decision.mode === "project_read" ||
+    decision.mode === "research_review"
+  ) {
+    return "read_only_query";
+  }
+
+  return classifyReportAssistantEditorRequest(fallbackInstruction);
+}
+
+function getAssistantPlannerActionProposalName(
+  decision: ReportAssistantPlannerDecision
+): ReportAssistantActionProposalName | undefined {
+  if (decision.mode !== "action_proposal" || !decision.targetCapability) {
+    return undefined;
+  }
+
+  return isReportAssistantActionProposalName(decision.targetCapability) ? decision.targetCapability : undefined;
+}
+
+function getAssistantPlannerPreflightMessage(decision: ReportAssistantPlannerDecision): AssistantMessage | null {
+  if (decision.usedSignals.includes("prompt_injection_signal")) {
+    return {
+      detail: decision.rejectionReason ?? "Assistant policy override wording was rejected before any tool route ran.",
+      id: `assistant-planner-rejected-${Date.now()}`,
+      title: "Request rejected",
+      tone: "error"
+    };
+  }
+
+  if (decision.mode === "unsupported" && decision.rejectionReason) {
+    return {
+      detail: decision.rejectionReason,
+      id: `assistant-planner-unsupported-${Date.now()}`,
+      title: "Request unsupported",
+      tone: "error"
+    };
+  }
+
+  if (decision.requiresClarification && decision.clarifyingQuestions.length > 0) {
+    return {
+      detail: decision.clarifyingQuestions.join(" "),
+      id: `assistant-planner-needs-input-${Date.now()}`,
+      title: "More input needed",
+      tone: "warning"
+    };
+  }
+
+  return null;
+}
+
+function getAssistantActionProposalMessage(payload: AssistantActionProposalPayload | undefined): {
+  detail: string;
+  title: string;
+} | null {
+  const proposal = parseAssistantActionProposal(payload);
+  if (!proposal) {
+    return null;
+  }
+
+  return {
+    detail: proposal.summary.trim().length > 0
+      ? proposal.summary
+      : "Preview generated. Confirming this action must use the existing project route.",
+    title: proposal.title
+  };
+}
+
+function parseAssistantActionProposal(payload: AssistantActionProposalPayload | undefined): ReportAssistantActionProposal | null {
+  if (!payload || typeof payload.proposal !== "object" || payload.proposal === null) {
+    return null;
+  }
+
+  const proposal = payload.proposal as Partial<ReportAssistantActionProposal>;
+  const target = proposal.target as Partial<ReportAssistantActionProposal["target"]> | undefined;
+  const applyRoute = proposal.applyRoute as Partial<ReportAssistantActionProposal["applyRoute"]> | undefined;
+  const bodyPreview = applyRoute?.bodyPreview as Partial<ReportAssistantActionProposal["applyRoute"]["bodyPreview"]> | undefined;
+  const actionIsCreate = proposal.action === "create_project_report_from_current_draft";
+  const actionIsCreatePreset = proposal.action === "create_user_preset_from_current_stack";
+  const actionIsSaveAssembly = proposal.action === "save_current_stack_as_project_assembly";
+  const actionIsRestore = proposal.action === "restore_report_revision_as_new_draft";
+  const actionIsSave = proposal.action === "save_project_report_revision_from_current_draft";
+  const unsupportedAction =
+    !actionIsCreate &&
+    !actionIsCreatePreset &&
+    !actionIsSaveAssembly &&
+    !actionIsRestore &&
+    !actionIsSave;
+  const commonInvalid =
+    unsupportedAction ||
+    typeof proposal.assistantContextSignature !== "string" ||
+    typeof proposal.documentSignature !== "string" ||
+    proposal.mutates !== false ||
+    proposal.requiresConfirmation !== true ||
+    typeof proposal.summary !== "string" ||
+    typeof proposal.title !== "string" ||
+    !target ||
+    !applyRoute ||
+    applyRoute.method !== "POST" ||
+    typeof applyRoute.pathname !== "string" ||
+    !bodyPreview;
+  const actionShapeInvalid = actionIsCreatePreset
+    ? bodyPreview?.document !== "current_report_document" ||
+      bodyPreview.source !== "assistant" ||
+      bodyPreview.name !== "current_assembly_library_name" ||
+      bodyPreview.snapshot !== "current_source_assembly_snapshot"
+    : typeof target?.projectId !== "string" ||
+      (
+        actionIsSaveAssembly
+          ? bodyPreview?.document !== "current_report_document" ||
+            bodyPreview.source !== "assistant" ||
+            bodyPreview.calculationSummary !== "current_project_calculation_summary_if_present" ||
+            bodyPreview.kind !== "current_stack_kind" ||
+            bodyPreview.name !== "current_assembly_library_name" ||
+            bodyPreview.snapshot !== "current_source_assembly_snapshot"
+          : actionIsCreate
+            ? bodyPreview?.document !== "current_report_document" ||
+              bodyPreview.source !== "assistant" ||
+              bodyPreview.assemblyId !== "selected_project_assembly" ||
+              bodyPreview.name !== "current_report_library_name" ||
+              bodyPreview.sourceAssemblySnapshot !== "selected_project_assembly_snapshot" ||
+              bodyPreview.sourceMaterialSnapshot !== "selected_project_material_snapshot" ||
+              typeof target.assemblyId !== "string"
+            : typeof target?.reportId !== "string" ||
+              typeof target.expectedReportUpdatedAtIso !== "string" ||
+              bodyPreview?.expectedReportUpdatedAtIso !== target.expectedReportUpdatedAtIso ||
+              (
+                actionIsSave
+                  ? bodyPreview.document !== "current_report_document" || bodyPreview.source !== "assistant"
+                  : bodyPreview.document !== "selected_revision_document" ||
+                    bodyPreview.source !== "manual" ||
+                    typeof target.restoreRevisionId !== "string"
+              )
+      );
+  if (commonInvalid || actionShapeInvalid) {
+    return null;
+  }
+
+  return proposal as ReportAssistantActionProposal;
+}
+
+function normalizeAssistantSelectedRevisionInstruction(value: string): string {
+  return value
+    .replace(/[İIı]/gu, "i")
+    .normalize("NFKD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLowerCase()
+    .replace(/\s+/gu, " ")
+    .trim();
+}
+
+function getAssistantSelectedRevisionPayload(input: {
+  instruction: string;
+  preview: AssistantProjectRevisionPreview | null;
+}): AssistantSelectedRevisionPayload | undefined {
+  const normalizedInstruction = normalizeAssistantSelectedRevisionInstruction(input.instruction);
+  if (!input.preview || !/\b(?:restore|restored|rollback|geri yukle|geri al)\b/u.test(normalizedInstruction)) {
+    return undefined;
+  }
+
+  return {
+    displayCode: input.preview.revision.displayCode,
+    id: input.preview.revision.id
+  };
 }
 
 function parseProjectReportSavePayload(payload: unknown): { displayCode?: string; id: string; updatedAtIso: string } | null {
@@ -699,6 +1038,49 @@ function parseAssistantProjectReportSummaryFromProjectRead(payload: unknown): As
   };
 }
 
+function parseAssistantProjectAssemblySummaries(payload: unknown): AssistantProjectAssemblySummary[] {
+  const result = getProjectReadResult(payload);
+  const assemblies = isRecord(result) && Array.isArray(result.assemblies) ? result.assemblies : [];
+
+  return assemblies.flatMap((entry): AssistantProjectAssemblySummary[] => {
+    if (
+      !isRecord(entry) ||
+      typeof entry.id !== "string" ||
+      (entry.kind !== "floor" && entry.kind !== "wall") ||
+      typeof entry.name !== "string" ||
+      typeof entry.version !== "number" ||
+      !Number.isFinite(entry.version)
+    ) {
+      return [];
+    }
+
+    const calculationSummary = isRecord(entry.calculationSummary) ? entry.calculationSummary : undefined;
+    const calculationStatus =
+      calculationSummary?.status === "error" ||
+      calculationSummary?.status === "needs_input" ||
+      calculationSummary?.status === "ready" ||
+      calculationSummary?.status === "unsupported"
+        ? calculationSummary.status
+        : undefined;
+
+    return [
+      {
+        calculationPrimaryOutput:
+          typeof calculationSummary?.primaryOutput === "string" ? calculationSummary.primaryOutput : undefined,
+        calculationPrimaryValueLabel:
+          typeof calculationSummary?.primaryValueLabel === "string" ? calculationSummary.primaryValueLabel : undefined,
+        calculationStatus,
+        displayCode: typeof entry.displayCode === "string" ? entry.displayCode : undefined,
+        id: entry.id,
+        kind: entry.kind,
+        name: entry.name,
+        updatedAtIso: typeof entry.updatedAtIso === "string" ? entry.updatedAtIso : undefined,
+        version: entry.version
+      }
+    ];
+  });
+}
+
 function parseAssistantProjectRevisionSummaryRecord(entry: unknown): AssistantProjectRevisionSummary | null {
   if (
     !isRecord(entry) ||
@@ -756,11 +1138,12 @@ function parseAssistantProjectRevisionPreview(payload: unknown): AssistantProjec
 }
 
 function AssistantProjectContextStrip(props: {
+  hasProjectReportDraftTarget: boolean;
   hasUnsavedChanges: boolean;
   projectReportLinked: boolean;
   state: AssistantProjectContextState;
 }) {
-  const { hasUnsavedChanges, projectReportLinked, state } = props;
+  const { hasProjectReportDraftTarget, hasUnsavedChanges, projectReportLinked, state } = props;
   const badgeLabel =
     state.status === "ready" && state.summary.report
       ? "Saved report context"
@@ -771,14 +1154,21 @@ function AssistantProjectContextStrip(props: {
           : state.status === "error"
             ? "Context unavailable"
             : "Current draft";
+  const draftBadgeLabel = projectReportLinked
+    ? "Project report saved"
+    : hasProjectReportDraftTarget
+      ? hasUnsavedChanges
+        ? "Unsaved project draft"
+        : "Project report draft"
+      : hasUnsavedChanges
+        ? "Unsaved local draft"
+        : "Local draft";
 
   return (
     <div className="report-assistant-context" data-status={state.status}>
       <div className="report-assistant-context-head">
         <strong>{badgeLabel}</strong>
-        <span className={state.status === "error" ? "ui-badge ui-badge-warning" : "ui-badge"}>
-          {projectReportLinked ? "Project saved" : hasUnsavedChanges ? "Unsaved draft" : "Draft"}
-        </span>
+        <span className={state.status === "error" ? "ui-badge ui-badge-warning" : "ui-badge"}>{draftBadgeLabel}</span>
       </div>
 
       {state.status === "ready" ? (
@@ -801,7 +1191,7 @@ function AssistantProjectContextStrip(props: {
             <div>
               <span>Report</span>
               <strong>Not saved yet</strong>
-              <small>Save to project creates the first report record.</small>
+              <small>Save project report creates the first project record.</small>
             </div>
           )}
           {state.summary.revision ? (
@@ -1062,9 +1452,12 @@ export function ReportEditor() {
   const [assistantInstruction, setAssistantInstruction] = useState("");
   const [assistantMessages, setAssistantMessages] = useState<AssistantMessage[]>([]);
   const [assistantValidation, setAssistantValidation] = useState<ReportAssistantPatchValidationResult | null>(null);
+  const [assistantActionProposal, setAssistantActionProposal] = useState<ReportAssistantActionProposal | null>(null);
   const [isAssistantLoading, setIsAssistantLoading] = useState(false);
   const [isProjectSaving, setIsProjectSaving] = useState(false);
+  const [isTemplateSaving, setIsTemplateSaving] = useState(false);
   const projectSaveInFlightRef = useRef(false);
+  const templateSaveInFlightRef = useRef(false);
   const revisionRestoreInFlightRef = useRef(false);
   const [projectContext, setProjectContext] = useState<SimpleWorkbenchProposalPreviewProjectContext | undefined>();
   const [assistantProjectContext, setAssistantProjectContext] = useState<AssistantProjectContextState>({ status: "local" });
@@ -1087,12 +1480,15 @@ export function ReportEditor() {
   const [revisionHistoryReport, setRevisionHistoryReport] = useState<AssistantProjectReportSummary | null>(null);
   const [revisionSummaries, setRevisionSummaries] = useState<AssistantProjectRevisionSummary[]>([]);
   const [selectedRevisionId, setSelectedRevisionId] = useState("");
+  const assistantActiveRequestsRef = useRef(createReportAssistantActiveRequestRegistry());
+  const assistantContextSignatureRef = useRef("no-assistant-context");
 
   const applyLoadedPreview = useCallback((nextPreview: LoadedSimpleWorkbenchProposalPreview | null) => {
     setLoadedPreview(nextPreview);
     setDocument(nextPreview?.document ?? null);
     setProjectContext(nextPreview?.projectContext);
     setAssistantValidation(null);
+    setAssistantActionProposal(null);
     setFrameReady(false);
     setProjectSaveSource("manual");
   }, []);
@@ -1120,7 +1516,7 @@ export function ReportEditor() {
 
       setProjectSaveProjects(projects);
       setProjectSaveTargetProjectId(nextProjectId);
-      setProjectSaveTargetMessage(projects.length ? "Choose a project for this report" : "No saved projects available");
+      setProjectSaveTargetMessage(projects.length ? "Choose where to save this project report" : "No saved projects available");
     } catch (error) {
       setProjectSaveTargetMessage(error instanceof Error ? error.message : "Saved projects could not be loaded.");
     } finally {
@@ -1332,7 +1728,11 @@ export function ReportEditor() {
           return;
         }
 
-        const [reportsPayload, revisionsPayload] = await Promise.all([
+        const [assembliesPayload, reportsPayload, revisionsPayload] = await Promise.all([
+          postAssistantProjectRead({
+            action: "list_project_assemblies",
+            projectId
+          }),
           postAssistantProjectRead({
             action: "list_project_reports",
             projectId
@@ -1349,6 +1749,8 @@ export function ReportEditor() {
           throw new Error("Saved report summary was not available.");
         }
 
+        const assemblies = parseAssistantProjectAssemblySummaries(assembliesPayload);
+        const linkedAssembly = assemblies.find((entry) => entry.id === report.assemblyId);
         const revisions = parseAssistantProjectRevisionSummaries(revisionsPayload);
         const revision = revisions.find((entry) => entry.id === report.currentRevisionId);
 
@@ -1356,9 +1758,11 @@ export function ReportEditor() {
           setAssistantProjectContext({
             status: "ready",
             summary: {
+              linkedAssembly,
               project,
               report,
-              revision
+              revision,
+              revisionSummaries: revisions
             }
           });
         }
@@ -1384,18 +1788,109 @@ export function ReportEditor() {
     return () => {
       active = false;
     };
-  }, [projectContext?.serverProjectId, projectContext?.serverProjectReportId, projectContext?.serverProjectReportUpdatedAtIso]);
+  }, [projectContext]);
+
+  const assistantActiveDraftState = useMemo<ReportAssistantProjectWorkspaceSnapshot["activeDraftState"]>(() => {
+    if (!projectContext?.serverProjectId) {
+      return {
+        dirty: hasUnsavedChanges,
+        kind: "local_draft"
+      };
+    }
+
+    const readySummary = assistantProjectContext.status === "ready" ? assistantProjectContext.summary : undefined;
+    const linkedAssembly = readySummary?.linkedAssembly;
+
+    return {
+      assemblyId: projectContext.serverProjectAssemblyId ?? readySummary?.report?.assemblyId,
+      assemblyName: linkedAssembly?.name,
+      assemblyVersion: linkedAssembly?.version,
+      dirty: projectReportLinked ? hasUnsavedChanges : true,
+      kind: projectReportLinked ? "project_report_draft" : "project_draft",
+      projectId: projectContext.serverProjectId,
+      projectName: readySummary?.project.name,
+      reportId: projectContext.serverProjectReportId,
+      reportUpdatedAtIso: projectContext.serverProjectReportUpdatedAtIso
+    };
+  }, [assistantProjectContext, hasUnsavedChanges, projectContext, projectReportLinked]);
+
+  const assistantProjectWorkspace = useMemo<ReportAssistantProjectWorkspaceSnapshot | undefined>(() => {
+    if (assistantProjectContext.status !== "ready") {
+      return undefined;
+    }
+
+    return {
+      activeDraftState: assistantActiveDraftState,
+      availableReadTools: ASSISTANT_PROJECT_READ_TOOLS,
+      currentRevision: assistantProjectContext.summary.revision,
+      linkedAssembly: assistantProjectContext.summary.linkedAssembly,
+      project: assistantProjectContext.summary.project,
+      report: assistantProjectContext.summary.report,
+      revisionSummaries: assistantProjectContext.summary.revisionSummaries ?? (
+        assistantProjectContext.summary.revision ? [assistantProjectContext.summary.revision] : []
+      ),
+      scope: assistantProjectContext.summary.report ? "project_report" : "project"
+    };
+  }, [assistantActiveDraftState, assistantProjectContext]);
 
   const assistantContext = useMemo(
     () =>
       document
         ? buildReportAssistantContext({
+            activeDraftState: assistantActiveDraftState,
             baseDocument: loadedPreview?.baseDocument,
-            document
+            document,
+            projectWorkspace: assistantProjectWorkspace
           })
         : null,
-    [document, loadedPreview?.baseDocument]
+    [assistantActiveDraftState, assistantProjectWorkspace, document, loadedPreview?.baseDocument]
   );
+
+  useEffect(() => {
+    assistantContextSignatureRef.current = assistantContext?.assistantContextSignature ?? "no-assistant-context";
+  }, [assistantContext?.assistantContextSignature]);
+
+  useEffect(() => {
+    if (
+      assistantActionProposal &&
+      assistantContext &&
+      (
+        assistantActionProposal.documentSignature !== assistantContext.documentSignature ||
+        assistantActionProposal.assistantContextSignature !== assistantContext.assistantContextSignature
+      )
+    ) {
+      setAssistantActionProposal(null);
+    }
+  }, [assistantActionProposal, assistantContext]);
+
+  function startEditorAssistantRequest(kind: ReportAssistantRequestKind, documentSignature: string) {
+    assistantActiveRequestsRef.current = createReportAssistantActiveRequestRegistry();
+    return startReportAssistantRequest({
+      documentSignature,
+      kind,
+      registry: assistantActiveRequestsRef.current
+    });
+  }
+
+  function finishEditorAssistantRequest(result: ReportAssistantRequestResult): boolean {
+    const resultIsActive = isReportAssistantRequestResultActive({
+      currentDocumentSignature: assistantContextSignatureRef.current,
+      registry: assistantActiveRequestsRef.current,
+      result
+    });
+
+    finishReportAssistantRequest({
+      kind: result.meta.kind,
+      registry: assistantActiveRequestsRef.current,
+      requestId: result.meta.requestId
+    });
+
+    if (resultIsActive) {
+      setIsAssistantLoading(false);
+    }
+
+    return resultIsActive;
+  }
 
   function updateDocumentField<K extends keyof SimpleWorkbenchProposalDocument>(
     key: K,
@@ -1446,7 +1941,7 @@ export function ReportEditor() {
     const nextPreview = readSimpleWorkbenchProposalPreview();
     setLoadedPreview(nextPreview);
     setDocument(nextPreview?.document ?? document);
-    toast.success("Report edits saved", {
+    toast.success("Local report draft saved", {
       description: customizedAtIso ? formatSavedAtLabel(customizedAtIso) : "Local report draft updated."
     });
   }
@@ -1464,7 +1959,7 @@ export function ReportEditor() {
     setProjectSaveReportDescription("");
     setProjectSaveTargetMessage(
       hasProjectReportSourceContext(projectContext)
-        ? "Choose a project for this report"
+        ? "Choose where to save this project report"
         : "Open this report from the calculator again so DAC can include the source layer combination."
     );
     void loadProjectSaveProjects(projectContext?.serverProjectId);
@@ -1477,6 +1972,55 @@ export function ReportEditor() {
     }
 
     openProjectSaveTargetPanel();
+  }
+
+  async function handleSaveSourceAsTemplate() {
+    if (!document) {
+      toast.error("No report draft");
+      return;
+    }
+    if (!hasProjectReportSourceContext(projectContext)) {
+      toast.error("Source layer combination unavailable", {
+        description: "Open this report from workbench-v2 again so DAC can save the source stack as a template."
+      });
+      return;
+    }
+    if (templateSaveInFlightRef.current) {
+      return;
+    }
+
+    const templateName = formatProjectAssemblyLibraryName(document, projectContext);
+    templateSaveInFlightRef.current = true;
+    setIsTemplateSaving(true);
+    try {
+      const response = await fetch("/api/workbench-v2/presets", {
+        body: JSON.stringify({
+          description: `Saved from report: ${formatProjectReportLibraryName(document)}`,
+          name: templateName,
+          snapshot: projectContext.sourceAssemblySnapshot
+        }),
+        headers: {
+          "content-type": "application/json"
+        },
+        method: "POST"
+      });
+      const payload = await readProjectReportSavePayload(response, "DAC could not save the template.");
+      const presetName =
+        isRecord(payload) && isRecord(payload.preset) && typeof payload.preset.name === "string"
+          ? payload.preset.name
+          : templateName;
+
+      toast.success("Template saved", {
+        description: presetName
+      });
+    } catch (error) {
+      toast.error("Template save failed", {
+        description: error instanceof Error ? error.message : "Source layer combination could not be saved as a template."
+      });
+    } finally {
+      templateSaveInFlightRef.current = false;
+      setIsTemplateSaving(false);
+    }
   }
 
   function openRevisionHistoryPanel() {
@@ -1858,8 +2402,136 @@ export function ReportEditor() {
 
     setIsAssistantLoading(true);
     setAssistantValidation(null);
+    setAssistantActionProposal(null);
     const instruction = assistantInstruction.trim();
+    const plannerDecision = planReportAssistantRequest({
+      documentSignature: assistantContext.documentSignature,
+      hasProjectContext: Boolean(projectContext?.serverProjectId),
+      hasReportContext: Boolean(projectContext?.serverProjectReportId),
+      instruction,
+      selectedOutputs: getAssistantPlannerSelectedOutputs(assistantContext),
+      sourceStackAvailable: hasProjectReportSourceContext(projectContext)
+    });
+    const plannerPreflightMessage = getAssistantPlannerPreflightMessage(plannerDecision);
+    if (plannerPreflightMessage) {
+      setIsAssistantLoading(false);
+      setAssistantMessages((current) => [
+        plannerPreflightMessage,
+        ...current
+      ]);
+      return;
+    }
+    const requestMode = getAssistantPlannerEditorRequestMode(plannerDecision, instruction);
 
+    if (requestMode === "read_only_query") {
+      const activeRequest = startEditorAssistantRequest("read_only_query", assistantContext.assistantContextSignature);
+      const result = await sendReportAssistantRequest<AssistantQueryPayload>({
+        body: {
+          context: assistantContext,
+          document,
+          instruction
+        },
+        documentSignature: assistantContext.assistantContextSignature,
+        kind: "read_only_query",
+        requestId: activeRequest.requestId,
+        url: "/api/report-assistant/query"
+      });
+
+      if (!finishEditorAssistantRequest(result)) {
+        return;
+      }
+
+      if (!result.ok) {
+        const messages = result.errors.length > 0 ? result.errors : getPayloadMessages(result.payload);
+        const assistantResults = getAssistantResultEnvelopes(result.payload);
+        setAssistantMessages((current) => [
+          {
+            ...(assistantResults.length > 0 ? { assistantResults } : {}),
+            detail: messages.join(" ") || "Assistant query failed.",
+            id: `assistant-query-error-${Date.now()}`,
+            title: "Query failed",
+            tone: "error"
+          },
+          ...current
+        ]);
+        return;
+      }
+
+      const answer = getAssistantQueryAnswer(result.payload);
+      const assistantResults = getAssistantResultEnvelopes(result.payload);
+      const calculatorPreview = getAssistantQueryCalculatorPreview(result.payload);
+      setAssistantMessages((current) => [
+        {
+          ...(assistantResults.length > 0 ? { assistantResults } : {}),
+          ...(calculatorPreview ? { calculatorPreview } : {}),
+          detail: answer ?? "The assistant query route returned no answer.",
+          id: `assistant-query-${Date.now()}`,
+          title: answer ? "Query answered" : "Query unavailable",
+          tone: answer ? "neutral" : "warning"
+        },
+        ...current
+      ]);
+      return;
+    }
+
+    if (requestMode === "action_proposal") {
+      const activeRequest = startEditorAssistantRequest("action_proposal", assistantContext.assistantContextSignature);
+      const result = await sendReportAssistantRequest<AssistantActionProposalPayload>({
+        body: {
+          action: getAssistantPlannerActionProposalName(plannerDecision),
+          context: assistantContext,
+          document,
+          instruction,
+          selectedRevision: getAssistantSelectedRevisionPayload({
+            instruction,
+            preview: revisionPreview
+          }),
+          sourceStackAvailable: hasProjectReportSourceContext(projectContext)
+        },
+        documentSignature: assistantContext.assistantContextSignature,
+        kind: "action_proposal",
+        requestId: activeRequest.requestId,
+        url: "/api/report-assistant/action-proposal"
+      });
+
+      if (!finishEditorAssistantRequest(result)) {
+        return;
+      }
+
+      if (!result.ok) {
+        const messages = result.errors.length > 0 ? result.errors : getPayloadMessages(result.payload);
+        const assistantResults = getAssistantResultEnvelopes(result.payload);
+        setAssistantMessages((current) => [
+          {
+            ...(assistantResults.length > 0 ? { assistantResults } : {}),
+            detail: messages.join(" ") || "Assistant action proposal failed.",
+            id: `assistant-action-error-${Date.now()}`,
+            title: "Action preview unavailable",
+            tone: "error"
+          },
+          ...current
+        ]);
+        return;
+      }
+
+      const proposal = parseAssistantActionProposal(result.payload);
+      const proposalMessage = getAssistantActionProposalMessage(result.payload);
+      const assistantResults = getAssistantResultEnvelopes(result.payload);
+      setAssistantActionProposal(proposal);
+      setAssistantMessages((current) => [
+        {
+          ...(assistantResults.length > 0 ? { assistantResults } : {}),
+          detail: proposalMessage?.detail ?? "The assistant action proposal route returned no preview.",
+          id: `assistant-action-${Date.now()}`,
+          title: proposalMessage?.title ?? "Action preview unavailable",
+          tone: proposalMessage ? "warning" : "error"
+        },
+        ...current
+      ]);
+      return;
+    }
+
+    const activeRequest = startEditorAssistantRequest("patch_proposal", assistantContext.assistantContextSignature);
     const result = await sendReportAssistantRequest<AssistantPatchPayload>({
       body: {
         context: assistantContext,
@@ -1868,15 +2540,20 @@ export function ReportEditor() {
       },
       documentSignature: assistantContext.assistantContextSignature,
       kind: "patch_proposal",
+      requestId: activeRequest.requestId,
       url: "/api/report-assistant/patch"
     });
 
-    setIsAssistantLoading(false);
+    if (!finishEditorAssistantRequest(result)) {
+      return;
+    }
 
     if (!result.ok) {
       const messages = result.errors.length > 0 ? result.errors : getPayloadMessages(result.payload);
+      const assistantResults = getAssistantResultEnvelopes(result.payload);
       setAssistantMessages((current) => [
         {
+          ...(assistantResults.length > 0 ? { assistantResults } : {}),
           detail: messages.join(" ") || "Assistant request failed.",
           id: `assistant-error-${Date.now()}`,
           title: "Assistant request failed",
@@ -1895,9 +2572,11 @@ export function ReportEditor() {
           patch: result.payload?.patch
         });
 
+    const assistantResults = getAssistantResultEnvelopes(result.payload);
     if (validation.status === "rejected") {
       setAssistantMessages((current) => [
         {
+          ...(assistantResults.length > 0 ? { assistantResults } : {}),
           detail: validation.errors.join(" ") || "The proposed patch was rejected.",
           id: `assistant-rejected-${Date.now()}`,
           title: "Patch rejected",
@@ -1911,10 +2590,305 @@ export function ReportEditor() {
     setAssistantValidation(validation);
     setAssistantMessages((current) => [
       {
+        ...(assistantResults.length > 0 ? { assistantResults } : {}),
         detail: validation.patchSummary || `${validation.operations.length} operation proposed.`,
         id: `assistant-valid-${Date.now()}`,
         title: validation.requiresUserConfirmation ? "Review required" : "Patch ready",
         tone: validation.requiresUserConfirmation ? "warning" : "success"
+      },
+      ...current
+    ]);
+  }
+
+  async function handleConfirmAssistantActionProposal() {
+    if (!document || !assistantContext || !assistantActionProposal) {
+      return;
+    }
+    const actionIsCreate = assistantActionProposal.action === "create_project_report_from_current_draft";
+    const actionIsCreatePreset = assistantActionProposal.action === "create_user_preset_from_current_stack";
+    const actionIsSaveAssembly = assistantActionProposal.action === "save_current_stack_as_project_assembly";
+    const actionIsRestore = assistantActionProposal.action === "restore_report_revision_as_new_draft";
+    const actionIsSave = assistantActionProposal.action === "save_project_report_revision_from_current_draft";
+    if (
+      !actionIsCreate &&
+      !actionIsCreatePreset &&
+      !actionIsSaveAssembly &&
+      !actionIsRestore &&
+      !actionIsSave
+    ) {
+      toast.error("Unsupported assistant action");
+      return;
+    }
+    if (assistantActionProposal.documentSignature !== assistantContext.documentSignature) {
+      toast.error("Assistant action preview is stale", {
+        description: "Ask the assistant for a fresh action preview before saving."
+      });
+      setAssistantActionProposal(null);
+      return;
+    }
+
+    if (actionIsCreatePreset) {
+      if (!hasProjectReportSourceContext(projectContext)) {
+        toast.error("Preset source stack unavailable", {
+          description: "Open a report draft with a source stack before confirming this action."
+        });
+        setAssistantActionProposal(null);
+        return;
+      }
+    } else if (actionIsSaveAssembly) {
+      if (!hasProjectReportSourceContext(projectContext) || !projectContext.serverProjectId || projectContext.serverProjectReportId) {
+        toast.error("Project assembly target unavailable", {
+          description: "Select a project source stack without an existing report before confirming this action."
+        });
+        setAssistantActionProposal(null);
+        return;
+      }
+      if (projectContext.serverProjectId !== assistantActionProposal.target.projectId) {
+        toast.error("Assistant action target is stale", {
+          description: "The selected project changed after the preview was created."
+        });
+        setAssistantActionProposal(null);
+        return;
+      }
+    } else if (actionIsCreate) {
+      if (!hasProjectReportCreateContext(projectContext) || projectContext.serverProjectReportId) {
+        toast.error("Project report create target unavailable", {
+          description: "Select a saved project layer combination without an existing report before confirming this action."
+        });
+        setAssistantActionProposal(null);
+        return;
+      }
+      if (
+        projectContext.serverProjectId !== assistantActionProposal.target.projectId ||
+        projectContext.serverProjectAssemblyId !== assistantActionProposal.target.assemblyId
+      ) {
+        toast.error("Assistant action target is stale", {
+          description: "The selected project or layer combination changed after the preview was created."
+        });
+        setAssistantActionProposal(null);
+        return;
+      }
+    } else {
+      if (!hasProjectReportRestoreContext(projectContext)) {
+        toast.error("Project report target unavailable", {
+          description: "Open a saved project report before confirming this assistant action."
+        });
+        setAssistantActionProposal(null);
+        return;
+      }
+      if (
+        projectContext.serverProjectId !== assistantActionProposal.target.projectId ||
+        projectContext.serverProjectReportId !== assistantActionProposal.target.reportId ||
+        projectContext.serverProjectReportUpdatedAtIso !== assistantActionProposal.target.expectedReportUpdatedAtIso
+      ) {
+        toast.error("Assistant action target is stale", {
+          description: "The selected project report changed after the preview was created."
+        });
+        setAssistantActionProposal(null);
+        return;
+      }
+    }
+    if (actionIsRestore && (!revisionPreview || revisionPreview.revision.id !== assistantActionProposal.target.restoreRevisionId)) {
+      toast.error("Assistant restore preview is stale", {
+        description: "Preview the saved revision again before confirming restore."
+      });
+      setAssistantActionProposal(null);
+      return;
+    }
+    if (projectSaveInFlightRef.current) {
+      return;
+    }
+
+    const sourceDocument = actionIsRestore ? revisionPreview?.document : document;
+    if (!sourceDocument) {
+      toast.error("Assistant action document unavailable");
+      setAssistantActionProposal(null);
+      return;
+    }
+    const documentForProject: SimpleWorkbenchProposalDocument = {
+      ...sourceDocument,
+      serverProjectId: projectContext.serverProjectId,
+      serverProjectScenarioId: projectContext.serverProjectAssemblyId
+    };
+    const revisionSource: ProjectReportSaveSource =
+      assistantActionProposal.applyRoute.bodyPreview.source === "assistant" ? "assistant" : "manual";
+
+    projectSaveInFlightRef.current = true;
+    setIsProjectSaving(true);
+    try {
+      if (actionIsCreatePreset) {
+        const presetName = formatProjectAssemblyLibraryName(documentForProject, projectContext);
+        const response = await fetch(assistantActionProposal.applyRoute.pathname, {
+          body: JSON.stringify({
+            description: `Saved from report: ${formatProjectReportLibraryName(documentForProject)}`,
+            name: presetName,
+            snapshot: projectContext.sourceAssemblySnapshot
+          }),
+          headers: {
+            "content-type": "application/json"
+          },
+          method: "POST"
+        });
+        const payload = await readProjectReportSavePayload(response, "DAC could not confirm the assistant action.");
+        const savedPresetName =
+          isRecord(payload) && isRecord(payload.preset) && typeof payload.preset.name === "string"
+            ? payload.preset.name
+            : presetName;
+
+        setAssistantActionProposal(null);
+        setProjectSaveSource("manual");
+        setAssistantMessages((current) => [
+          {
+            detail: `${savedPresetName} saved as a reusable preset.`,
+            id: `assistant-action-confirmed-${Date.now()}`,
+            title: "Action confirmed",
+            tone: "success"
+          },
+          ...current
+        ]);
+        toast.success("Assistant action confirmed", {
+          description: savedPresetName
+        });
+        return;
+      }
+
+      if (actionIsSaveAssembly) {
+        const response = await fetch(assistantActionProposal.applyRoute.pathname, {
+          body: JSON.stringify({
+            calculationSummary: getProjectAssemblyCalculationSummary(projectContext),
+            description: `Saved from report draft: ${formatProjectReportLibraryName(documentForProject)}`,
+            kind: getProjectAssemblyKind(documentForProject, projectContext),
+            name: formatProjectAssemblyLibraryName(documentForProject, projectContext),
+            snapshot: projectContext.sourceAssemblySnapshot
+          }),
+          headers: {
+            "content-type": "application/json"
+          },
+          method: "POST"
+        });
+        const payload = await readProjectReportSavePayload(response, "DAC could not confirm the assistant action.");
+        const savedAssembly = parseProjectAssemblySavePayload(payload);
+        if (!savedAssembly) {
+          throw new Error("DAC confirmed the assistant action but the server response was incomplete.");
+        }
+
+        const assemblyDocumentForProject: SimpleWorkbenchProposalDocument = {
+          ...documentForProject,
+          serverProjectScenarioId: savedAssembly.id
+        };
+        const nextProjectContext: SimpleWorkbenchProposalPreviewProjectContext = {
+          ...projectContext,
+          serverProjectAssemblyId: savedAssembly.id
+        };
+        storeSimpleWorkbenchProposalPreview(assemblyDocumentForProject, {
+          projectContext: nextProjectContext
+        });
+
+        const nextPreview = readSimpleWorkbenchProposalPreview();
+        setLoadedPreview(nextPreview);
+        setProjectContext(nextPreview?.projectContext ?? nextProjectContext);
+        setDocument(nextPreview?.document ?? assemblyDocumentForProject);
+        setAssistantActionProposal(null);
+        setProjectSaveSource("manual");
+        setAssistantMessages((current) => [
+          {
+            detail: "Current source stack saved as a new project assembly.",
+            id: `assistant-action-confirmed-${Date.now()}`,
+            title: "Action confirmed",
+            tone: "success"
+          },
+          ...current
+        ]);
+        toast.success("Assistant action confirmed", {
+          description: "Project assembly saved."
+        });
+        return;
+      }
+
+      const response = actionIsCreate
+        ? await fetch(assistantActionProposal.applyRoute.pathname, {
+            body: JSON.stringify({
+              assemblyId: projectContext.serverProjectAssemblyId,
+              name: formatProjectReportLibraryName(documentForProject),
+              reportDocument: documentForProject,
+              sourceAssemblySnapshot: projectContext.sourceAssemblySnapshot,
+              sourceCalculationOutput: projectContext.sourceCalculationOutput,
+              sourceMaterialSnapshot: projectContext.sourceMaterialSnapshot
+            }),
+            headers: {
+              "content-type": "application/json"
+            },
+            method: "POST"
+          })
+        : await fetch(assistantActionProposal.applyRoute.pathname, {
+            body: JSON.stringify({
+              assistantPatchSummary:
+                revisionSource === "assistant" ? getLatestAssistantPatchSummary(documentForProject) : undefined,
+              changeSummary: assistantActionProposal.applyRoute.bodyPreview.changeSummary,
+              document: documentForProject,
+              expectedReportUpdatedAtIso: assistantActionProposal.target.expectedReportUpdatedAtIso,
+              source: revisionSource
+            }),
+            headers: {
+              "content-type": "application/json"
+            },
+            method: "POST"
+          });
+      const payload = await readProjectReportSavePayload(response, "DAC could not confirm the assistant action.");
+      const savedReport = parseProjectReportSavePayload(payload);
+      if (!savedReport) {
+        throw new Error("DAC confirmed the assistant action but the server response was incomplete.");
+      }
+
+      const nextProjectContext: SimpleWorkbenchProposalPreviewProjectContext = {
+        ...projectContext,
+        serverProjectReportId: savedReport.id,
+        serverProjectReportUpdatedAtIso: savedReport.updatedAtIso
+      };
+      storeSimpleWorkbenchProposalPreview(documentForProject, {
+        projectContext: nextProjectContext
+      });
+
+      const nextPreview = readSimpleWorkbenchProposalPreview();
+      setLoadedPreview(nextPreview);
+      setProjectContext(nextPreview?.projectContext ?? nextProjectContext);
+      setDocument(nextPreview?.document ?? documentForProject);
+      setAssistantActionProposal(null);
+      setProjectSaveSource("manual");
+      setAssistantMessages((current) => [
+        {
+          detail: actionIsCreate
+            ? `${savedReport.displayCode ?? "Project report"} created from the current draft.`
+            : actionIsRestore
+              ? `${savedReport.displayCode ?? "Project report"} restored ${assistantActionProposal.target.restoreRevisionDisplayCode ?? "the selected revision"} as a new current revision.`
+              : `${savedReport.displayCode ?? "Project report"} saved a new assistant-confirmed revision.`,
+          id: `assistant-action-confirmed-${Date.now()}`,
+          title: "Action confirmed",
+          tone: "success"
+        },
+        ...current
+      ]);
+      toast.success("Assistant action confirmed", {
+        description: `${savedReport.displayCode ?? "Report"} updated ${formatSavedAtLabel(savedReport.updatedAtIso)}.`
+      });
+    } catch (error) {
+      toast.error("Assistant action failed", {
+        description: error instanceof Error ? error.message : "Action could not be confirmed."
+      });
+    } finally {
+      projectSaveInFlightRef.current = false;
+      setIsProjectSaving(false);
+    }
+  }
+
+  function handleDismissAssistantActionProposal() {
+    setAssistantActionProposal(null);
+    setAssistantMessages((current) => [
+      {
+        detail: "Assistant action preview left unapplied.",
+        id: `assistant-action-dismissed-${Date.now()}`,
+        title: "Action dismissed",
+        tone: "neutral"
       },
       ...current
     ]);
@@ -1990,18 +2964,27 @@ export function ReportEditor() {
 
   const savedLabel = loadedPreview
     ? loadedPreview.hasCustomizations && loadedPreview.customizedAtIso
-      ? `Saved edits ${formatSavedAtLabel(loadedPreview.customizedAtIso)}`
+      ? `Local draft saved ${formatSavedAtLabel(loadedPreview.customizedAtIso)}`
       : `Packaged ${formatSavedAtLabel(loadedPreview.savedAtIso)}`
     : "Local report draft";
   const projectSaveLabel = projectReportLinked
     ? "Project report linked"
     : projectContext?.serverProjectId
       ? canSaveProjectReport
-        ? "Project report ready"
-        : "Project selected"
+        ? "Project report target ready"
+        : "Project source selected"
       : hasProjectReportSourceContext(projectContext)
-        ? "Choose project"
+        ? "Project target needed"
         : "Local only";
+  const reportDraftStatusLabel = hasUnsavedChanges
+    ? canSaveProjectReport
+      ? "Unsaved project draft"
+      : "Unsaved local draft"
+    : projectReportLinked
+      ? "Project report saved"
+      : canSaveProjectReport
+        ? "Project draft saved locally"
+        : "Local draft saved";
   const assistantReportSummary = assistantProjectContext.status === "ready" ? assistantProjectContext.summary.report : undefined;
   const revisionPanelReport = revisionHistoryReport ?? assistantReportSummary;
 
@@ -2014,7 +2997,7 @@ export function ReportEditor() {
             <h1>{document.projectName}</h1>
             <div className="report-statusline">
               <span className="ui-badge">{savedLabel}</span>
-              <span className="ui-badge">{hasUnsavedChanges ? "Unsaved draft" : "Draft saved"}</span>
+              <span className="ui-badge">{reportDraftStatusLabel}</span>
               <span className="ui-badge">{frameReady ? "Preview ready" : "Preview loading"}</span>
               <span className={canSaveProjectReport ? "ui-badge ui-badge-success" : "ui-badge"}>{projectSaveLabel}</span>
             </div>
@@ -2052,7 +3035,21 @@ export function ReportEditor() {
             </button>
             <button className="focus-ring ui-button ui-button-primary" disabled={!hasUnsavedChanges} onClick={handleSaveEdits} type="button">
               <Save className="h-4 w-4" />
-              Save edits
+              Save local draft
+            </button>
+            <button
+              className="focus-ring ui-button"
+              disabled={!hasProjectReportSourceContext(projectContext) || isTemplateSaving}
+              onClick={() => void handleSaveSourceAsTemplate()}
+              title={
+                hasProjectReportSourceContext(projectContext)
+                  ? "Save the source layer combination as a reusable template"
+                  : "Open this report from workbench-v2 to include the source layer combination"
+              }
+              type="button"
+            >
+              <Bookmark className="h-4 w-4" />
+              {isTemplateSaving ? "Saving template..." : "Save as template"}
             </button>
             <button
               className="focus-ring ui-button ui-button-primary"
@@ -2066,7 +3063,7 @@ export function ReportEditor() {
               type="button"
             >
               <Save className="h-4 w-4" />
-              {isProjectSaving ? "Saving project..." : projectReportLinked ? "Save revision" : "Save to project"}
+              {isProjectSaving ? "Saving project..." : projectReportLinked ? "Save revision" : "Save project report"}
             </button>
           </div>
         </header>
@@ -2090,10 +3087,10 @@ export function ReportEditor() {
         ) : null}
 
         {projectSavePanelOpen && canOpenProjectSaveTarget ? (
-          <section className="report-project-save-panel" aria-label="Save report to project">
+          <section className="report-project-save-panel" aria-label="Save report in project">
             <div className="report-project-save-head">
               <div>
-                <h2>Save to project</h2>
+                <h2>Save report in project</h2>
                 <p>{projectSaveTargetMessage}</p>
               </div>
               <button className="focus-ring ui-button ui-button-ghost" onClick={() => setProjectSavePanelOpen(false)} type="button">
@@ -2354,6 +3351,7 @@ export function ReportEditor() {
                 </span>
               </div>
               <AssistantProjectContextStrip
+                hasProjectReportDraftTarget={canSaveProjectReport}
                 hasUnsavedChanges={hasUnsavedChanges}
                 projectReportLinked={projectReportLinked}
                 state={assistantProjectContext}
@@ -2372,7 +3370,7 @@ export function ReportEditor() {
                   type="button"
                 >
                   {isAssistantLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-                  Propose edit
+                  Ask assistant
                 </button>
 
                 {assistantValidation ? (
@@ -2405,6 +3403,77 @@ export function ReportEditor() {
                   </div>
                 ) : null}
 
+                {assistantActionProposal ? (
+                  <div className="report-assistant-proposal" data-kind="action">
+                    <div>
+                      <strong>{assistantActionProposal.title}</strong>
+                      <small>{assistantActionProposal.summary}</small>
+                    </div>
+                    <ul>
+                      {assistantActionProposal.target.projectId ? (
+                        <li>
+                          <span>Project</span>
+                          <small>{assistantActionProposal.target.projectName ?? assistantActionProposal.target.projectId}</small>
+                        </li>
+                      ) : null}
+                      {assistantActionProposal.target.reportId ? (
+                        <li>
+                          <span>{assistantActionProposal.target.reportDisplayCode ?? "Project report"}</span>
+                          <small>{assistantActionProposal.target.reportName ?? assistantActionProposal.target.reportId}</small>
+                        </li>
+                      ) : null}
+                      {assistantActionProposal.target.assemblyId ? (
+                        <li>
+                          <span>{assistantActionProposal.target.assemblyDisplayCode ?? "Project assembly"}</span>
+                          <small>{assistantActionProposal.target.assemblyName ?? assistantActionProposal.target.assemblyId}</small>
+                        </li>
+                      ) : null}
+                      {assistantActionProposal.target.restoreRevisionId ? (
+                        <li>
+                          <span>Restore source</span>
+                          <small>
+                            {assistantActionProposal.target.restoreRevisionDisplayCode ??
+                              assistantActionProposal.target.restoreRevisionId}
+                          </small>
+                        </li>
+                      ) : null}
+                      {assistantActionProposal.target.expectedReportUpdatedAtIso ? (
+                        <li>
+                          <span>Stale guard</span>
+                          <small>{assistantActionProposal.target.expectedReportUpdatedAtIso}</small>
+                        </li>
+                      ) : null}
+                    </ul>
+                    <button
+                      className="focus-ring ui-button ui-button-primary report-wide-action"
+                      disabled={isProjectSaving}
+                      onClick={() => void handleConfirmAssistantActionProposal()}
+                      type="button"
+                    >
+                      <Save className="h-4 w-4" />
+                      {isProjectSaving
+                        ? "Confirming action..."
+                        : assistantActionProposal.action === "create_project_report_from_current_draft"
+                          ? "Confirm create report"
+                          : assistantActionProposal.action === "create_user_preset_from_current_stack"
+                            ? "Confirm create template"
+                          : assistantActionProposal.action === "save_current_stack_as_project_assembly"
+                            ? "Confirm save assembly"
+                          : assistantActionProposal.action === "restore_report_revision_as_new_draft"
+                          ? "Confirm restore revision"
+                          : "Confirm save revision"}
+                    </button>
+                    <button
+                      className="focus-ring ui-button report-wide-action"
+                      disabled={isProjectSaving}
+                      onClick={handleDismissAssistantActionProposal}
+                      type="button"
+                    >
+                      Dismiss preview
+                    </button>
+                  </div>
+                ) : null}
+
                 <div className="report-assistant-thread" aria-live="polite">
                   <div className="report-assistant-thread-head">
                     <span>Responses</span>
@@ -2414,15 +3483,34 @@ export function ReportEditor() {
                     {assistantMessages.length === 0 ? (
                       <div className="report-assistant-message" data-tone="neutral">
                         <strong>Ready for a focused edit</strong>
-                        <span>Assistant results and apply/reject status appear here.</span>
+                        <span>Assistant answers, previews, and apply/reject status appear here.</span>
                       </div>
                     ) : (
-                      assistantMessages.slice(0, 4).map((message) => (
-                        <div className="report-assistant-message" data-tone={message.tone} key={message.id}>
-                          <strong>{message.title}</strong>
-                          <span>{message.detail}</span>
-                        </div>
-                      ))
+                      assistantMessages.slice(0, 4).map((message) => {
+                        const rendersCalculatorResult =
+                          message.assistantResults?.some((result) => result.rendererKind === "calculator_preview_card") ?? false;
+
+                        return (
+                          <div className="report-assistant-message" data-tone={message.tone} key={message.id}>
+                            <strong>{message.title}</strong>
+                            <span>{message.detail}</span>
+                            {message.assistantResults?.length ? (
+                              <div className="report-assistant-result-cards">
+                                {message.assistantResults.map((result, index) => (
+                                  <AssistantResultCard
+                                    calculatorPreview={message.calculatorPreview}
+                                    key={`${result.capabilityName}-${result.routeStatus}-${index}`}
+                                    result={result}
+                                  />
+                                ))}
+                              </div>
+                            ) : null}
+                            {message.calculatorPreview && !rendersCalculatorResult ? (
+                              <AssistantCalculatorPreviewBlock preview={message.calculatorPreview} />
+                            ) : null}
+                          </div>
+                        );
+                      })
                     )}
                   </div>
                 </div>

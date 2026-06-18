@@ -46,9 +46,11 @@ function context(metricIds: readonly ("Ln,w" | "Rw")[] = ["Rw", "Ln,w"]): Report
       warnings: []
     })),
     createdAtIso: "2026-06-03T09:00:00.000Z",
+    documentComparisonSummaries: [],
     documentSignature: "report:intent-test",
     layersSummary: ["1. Concrete slab, 200 mm"],
     metrics,
+    reportAdjustments: [],
     reportId: "intent-test",
     traceSummary: {
       missingPhysicalInputs: [],

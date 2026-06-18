@@ -27,6 +27,20 @@ import { addOutputCardPosture, buildOutputCard } from "./simple-workbench-output
 import { buildWorkbenchWallTopology } from "./simple-workbench-wall-topology";
 import type { LayerDraft, ScenarioSnapshot } from "./workbench-store";
 
+type ResolverCandidateSurfaceCase = {
+  cards: readonly {
+    output: RequestedOutputId;
+    status: "bound" | "live" | "needs_input" | "unsupported";
+    value: string;
+  }[];
+  exactImpactSource?: ExactImpactSource | null;
+  expectedTrace: Record<string, unknown>;
+  id: string;
+  reportRuntimeBasis: string;
+  rows: readonly LayerDraft[];
+  targetOutputs: readonly RequestedOutputId[];
+};
+
 const AUTH_ENV_KEYS = ["DYNECHO_AUTH_USERNAME", "DYNECHO_AUTH_PASSWORD", "DYNECHO_AUTH_SECRET"] as const;
 const HELPER_ONLY_BASIS =
   "broad_accuracy_floor_helper_only_timber_open_web_impact_stack_source_absent_formula_corridor";
@@ -1535,7 +1549,7 @@ describe("layer combination resolver candidate surface parity", () => {
   });
 
   it("keeps Step 3 floor exact, anchor, and source-absent formula candidates aligned across cards, report, and calculator API", async () => {
-    const cases = [
+    const cases: readonly ResolverCandidateSurfaceCase[] = [
       {
         cards: [
           { output: "Rw", status: "live", value: "75 dB" },
@@ -1941,11 +1955,17 @@ describe("layer combination resolver candidate surface parity", () => {
 
     expect(labScenario.result.impact).toMatchObject({
       IIC: 50,
-      availableOutputs: ["IIC"],
       basis: ASTM_E989_RUNTIME_BASIS,
       labOrField: "lab",
-      metricBasis: { IIC: ASTM_E989_IIC_METRIC_BASIS }
+      metricBasis: {
+        DeltaLw: HEAVY_FLOATING_RUNTIME_BASIS,
+        IIC: ASTM_E989_IIC_METRIC_BASIS,
+        LnW: HEAVY_FLOATING_RUNTIME_BASIS
+      }
     });
+    expect(labScenario.result.impact?.availableOutputs).toEqual(
+      expect.arrayContaining(["IIC", "Ln,w", "DeltaLw"])
+    );
     expect(labScenario.result.supportedTargetOutputs).toEqual(["IIC"]);
     expect(labScenario.result.unsupportedTargetOutputs).toEqual([]);
     expect(labTrace).toMatchObject({
@@ -1982,12 +2002,22 @@ describe("layer combination resolver candidate surface parity", () => {
       })
     ]);
 
-    expect(getActiveImpactMetricBasisRows(labScenario.result.impact)).toEqual([
-      expect.objectContaining({
-        basis: ASTM_E989_IIC_METRIC_BASIS,
-        label: "IIC"
-      })
-    ]);
+    expect(getActiveImpactMetricBasisRows(labScenario.result.impact)).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          basis: ASTM_E989_IIC_METRIC_BASIS,
+          label: "IIC"
+        }),
+        expect.objectContaining({
+          basis: HEAVY_FLOATING_RUNTIME_BASIS,
+          label: "Ln,w"
+        }),
+        expect.objectContaining({
+          basis: HEAVY_FLOATING_RUNTIME_BASIS,
+          label: "DeltaLw"
+        })
+      ])
+    );
 
     const labReport = buildFloorReport({
       requestedOutputs: ["IIC"],
@@ -2040,11 +2070,17 @@ describe("layer combination resolver candidate surface parity", () => {
     });
     expect(fieldScenario.result.impact).toMatchObject({
       AIIC: 50,
-      availableOutputs: ["AIIC"],
       basis: ASTM_E989_RUNTIME_BASIS,
       labOrField: "field",
-      metricBasis: { AIIC: ASTM_E989_AIIC_METRIC_BASIS }
+      metricBasis: {
+        AIIC: ASTM_E989_AIIC_METRIC_BASIS,
+        DeltaLw: HEAVY_FLOATING_RUNTIME_BASIS,
+        LnW: HEAVY_FLOATING_RUNTIME_BASIS
+      }
     });
+    expect(fieldScenario.result.impact?.availableOutputs).toEqual(
+      expect.arrayContaining(["AIIC", "Ln,w", "DeltaLw"])
+    );
     expect(getLayerCombinationResolverCandidateSurface(fieldScenario.result)).toMatchObject({
       requestedBasis: "astm_rating_boundary",
       selectedCandidateId: ASTM_E989_SELECTED_CANDIDATE_ID,

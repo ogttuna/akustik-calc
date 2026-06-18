@@ -20,6 +20,19 @@ The desired capability is not "assistant edits engine code." It is:
 6. only mutate browser/workbench state after an explicit future confirmation
    flow.
 
+The quality bar is higher than "it returns an answer." The assistant should
+make the system easier to use while preserving calculator accuracy:
+
+- use current Workbench/project/preset state before asking the user to repeat
+  available information;
+- produce a calculator-ready draft only when layer roles, material identity,
+  target outputs, topology, and route-required physical inputs are known enough;
+- show exactly which assumptions were made and which inputs are still missing;
+- never turn a vague material phrase, floor impact request, or unsupported
+  metric basis into a confident numeric answer;
+- keep every generated number traceable to calculator preview, saved project
+  state, or a clearly labeled advisory research review.
+
 ## Executive Conclusion
 
 The assistant already has the first calculator-use foundation, but it is not yet
@@ -63,6 +76,28 @@ Near-term priority:
 3. add an iterative missing-input loop;
 4. broaden wall composer coverage inside that draft boundary;
 5. only then add floor/ceiling composition and optional apply-to-Workbench.
+
+Readiness ladder:
+
+| Level | Capability | Exit criteria |
+| --- | --- | --- |
+| L0 - Preview-only calculator access | Existing Workbench snapshot and bounded described wall preview | Current state; calculator values are visible and non-mutating |
+| L1 - Result authority contract | All assistant results render through registry-backed cards | User can see authority, basis, stale policy, warnings, tasks, and mutation posture |
+| L2 - Drafted wall stack | Assistant maintains a typed wall stack draft across turns | Missing/ambiguous materials and topology become questions, not guesses |
+| L3 - Calculator-backed alternatives | Assistant can compare a small bounded set of wall candidates | Every candidate either has calculator output or explicit `needs_input`/`unsupported` |
+| L4 - Floor/ceiling/impact input capture | Assistant captures route-required physical inputs | Impact/floor answers avoid metric aliasing and show route basis |
+| L5 - Confirmed Workbench apply | Assistant proposes applying a validated draft to Workbench | Explicit confirmation, stale snapshot guard, no engine/report mutation |
+
+Do not skip from L0 to broad parser intelligence. High accuracy comes from
+typed drafts, explicit missing-input tasks, and calculator-backed outputs, not
+from broader natural-language guessing.
+
+Active gate-by-gate execution plan:
+
+`docs/ui/REPORT_ASSISTANT_HIGH_ACCURACY_COPILOT_IMPLEMENTATION_PLAN_2026-06-18.md`
+
+Use that plan for exact implementation order. This review defines the layer
+composer quality bar and calculator-use boundaries.
 
 ## Scope Guard
 
@@ -244,8 +279,9 @@ registry metadata:
 
 Current limitation:
 
-- the registry is not yet a shared result envelope or renderer map, so the
-  report editor still handles calculator preview as a special structured block.
+- the registry now has a shared result envelope contract, but route payloads are
+  not yet wrapped in it and the report editor still handles calculator preview
+  as a special structured block.
 - the registry is not yet the planner target for layer-composer routing.
 
 ## Current Capability Matrix
@@ -694,7 +730,31 @@ Only a separate action can mutate Workbench browser state:
 - it must not change engine code;
 - it must not edit report values unless the user explicitly asks.
 
-## Recommended Implementation Roadmap
+## Historical Layer-Composer Roadmap
+
+This section records the layer-composer roadmap that existed before the
+assistant-wide result-card and capability-contract gates were made explicit.
+Do not execute these phases by number. Use the active gate-by-gate execution
+plan instead:
+
+`docs/ui/REPORT_ASSISTANT_HIGH_ACCURACY_COPILOT_IMPLEMENTATION_PLAN_2026-06-18.md`
+
+Current mapping:
+
+| Historical phase | Active gate |
+| --- | --- |
+| Phase -1 / Phase 0 query and calculator-preview productization | Gate 0 checkpoint stabilization |
+| Result-card/envelope work not present in the original layer-composer roadmap | Gate 1, Gate 2, Gate 3 |
+| Planner decision work not present in the original layer-composer roadmap | Gate 4 |
+| Phase 1 layer-stack draft | Gate 5 |
+| Phase 4 clarification loop | Gate 6 |
+| Phase 5 multi-candidate preview | Gate 7 |
+| Phase 7 floor/ceiling composer | Gate 8 |
+| Phase 8 apply-to-Workbench | Gate 9 |
+| Eval/observability/hardening | Gate 10 |
+
+The historical details below remain useful for layer-composer acceptance
+criteria, but the active gate plan controls implementation order.
 
 ### Phase -1 - Stabilize Query Route Preflight
 
@@ -938,6 +998,14 @@ Minimum acceptable behavior:
 8. The assistant can rerun the preview after the user supplies missing inputs.
 9. Existing Workbench snapshot preview still works with custom materials.
 10. Engine formulas and source rows are untouched.
+11. Every numeric answer states its authority: calculator preview, saved project
+    state, or advisory research.
+12. Every calculator-backed answer shows target output, basis, route status,
+    stale state, warnings, and tasks.
+13. Ambiguous material/topology/floor-impact requests produce minimal
+    clarification questions.
+14. The assistant reuses current Workbench/project/preset context when available
+    instead of asking the user to re-enter known state.
 
 Higher-quality behavior:
 
@@ -949,6 +1017,10 @@ Higher-quality behavior:
 5. User can describe a custom material with required properties and get a
    validation task or preview.
 6. User can later confirm applying a valid parsed stack to Workbench.
+7. User can continue a previous stack-draft conversation without the assistant
+   losing unresolved inputs or assumptions.
+8. User can ask "why" and see which route, inputs, and guardrails controlled the
+   answer.
 
 ## Test Plan
 
@@ -982,7 +1054,11 @@ pnpm --filter @dynecho/web exec vitest run \
 
 Expected new test groups:
 
+- `assistant result card rejects numeric answer without authority`;
+- `assistant result card shows basis, route status, tasks, and stale policy`;
 - `assistant layer stack draft validates before calculator preview`;
+- `assistant layer stack draft preserves original user phrases`;
+- `assistant layer stack draft updates after clarification instead of reparsing from scratch`;
 - `assistant wall parser supports repeated layer notation`;
 - `assistant wall parser supports comma-separated Turkish stacks`;
 - `assistant wall parser rejects ambiguous material phrases`;
@@ -990,6 +1066,8 @@ Expected new test groups:
 - `assistant described floor composer returns route-required input tasks`;
 - `assistant multi-candidate preview caps candidate count`;
 - `assistant calculator preview does not mutate report, Workbench, or engine`.
+- `assistant planner uses current Workbench/project/preset state before asking for duplicate input`;
+- `assistant planner preserves unsupported/needs_input instead of substituting nearby metrics`.
 
 ## Current Verification - 2026-06-17
 
@@ -1031,7 +1109,8 @@ Broad assistant checkpoint suite:
   patch parsing, request lifecycle, registry, calculator preview, and report
   editor project context passed after stabilizing the action-proposal route test
   harness.
-- Result: 26 test files passed, 194 tests passed.
+- Result after adding the result envelope contract: 27 test files passed, 200
+  tests passed.
 
 Interpretation:
 
@@ -1043,6 +1122,8 @@ Interpretation:
   capability slice should start from `report_assistant_result_card_contract_v1`;
   the next layer-composer slice remains `report_assistant_layer_stack_draft_v1`.
   Neither should change engine formulas or source rows.
+- Execute those slices through the gate order in
+  `REPORT_ASSISTANT_HIGH_ACCURACY_COPILOT_IMPLEMENTATION_PLAN_2026-06-18.md`.
 
 ## Current Risk Register
 
@@ -1056,6 +1137,9 @@ Interpretation:
 | Apply-to-Workbench mutates wrong draft | Data loss | confirmation plus stale signature guard |
 | LLM proposes unvalidated stack | Wrong input | host validation before calculator call |
 | Custom material missing acoustic properties | Wrong route | material draft validation and tasks |
+| Assistant asks for state the system already has | Slow, frustrating workflow | planner reads current Workbench/project/preset context first |
+| Numeric answer lacks authority or basis | High-confidence wrong answer | result card rejects numbers without authority, basis, route status, and tasks |
+| Multi-turn clarification loses previous assumptions | Wrong rebuilt stack | persistent stack-draft state with original phrases and unresolved inputs |
 
 ## Definition Of Done For This Capability Family
 
@@ -1067,6 +1151,14 @@ The assistant should be considered "calculator-capable" only when:
 - it can ask for missing route-required inputs;
 - it can support at least common wall stack phrasing in Turkish and English;
 - it never fabricates unsupported calculator outputs;
+- it displays authority, basis, route status, warnings, stale state, and tasks
+  for every numeric answer;
+- it can reuse current Workbench/project/preset state before asking duplicate
+  questions;
+- it can continue a draft through at least one clarification turn without losing
+  assumptions or unresolved inputs;
+- it has golden prompt tests where the correct high-accuracy answer is
+  `needs_input` or `unsupported`;
 - it keeps engine code and calculation truth unchanged;
 - it has tests proving the no-mutation and no-guessing boundaries.
 

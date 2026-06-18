@@ -5,9 +5,14 @@ import {
   runReportAssistantProjectReadTool,
   type ReportAssistantProjectReadToolName
 } from "@/features/workbench/report-assistant-project-tools";
+import {
+  projectReadFailureToAssistantResult,
+  projectReadRouteFailureToAssistantResult,
+  projectReadToAssistantResult
+} from "@/features/workbench/report-assistant-project-read-result";
+import { routeFailureToAssistantResult } from "@/features/workbench/report-assistant-route-failure-result";
 import { getAuthState } from "@/lib/auth";
 import {
-  projectOwnerScopeErrorResponse,
   resolveProjectRouteOwner
 } from "@/lib/project-route-auth";
 
@@ -46,6 +51,13 @@ function routeFailure(input: {
   return NextResponse.json(
     {
       action: input.action,
+      assistantResults: [
+        projectReadRouteFailureToAssistantResult({
+          action: input.action,
+          code: input.code,
+          errors: input.errors
+        })
+      ],
       code: input.code,
       errors: input.errors,
       mutates: false,
@@ -61,7 +73,23 @@ export async function POST(request: Request) {
   const owner = resolveProjectRouteOwner(await getAuthState());
 
   if (!owner.ok) {
-    return projectOwnerScopeErrorResponse(owner);
+    return NextResponse.json(
+      {
+        assistantResults: [
+          routeFailureToAssistantResult({
+            capabilityName: "report_assistant_project_read_route",
+            code: owner.status === 401 ? "assistant_auth_required" : "assistant_owner_scope_required",
+            errors: [owner.error],
+            routeStatus: owner.status === 401 ? "auth_failed" : "error"
+          })
+        ],
+        error: owner.error,
+        ok: false
+      },
+      {
+        status: owner.status
+      }
+    );
   }
 
   const payload = await readRequestJson(request);
@@ -136,6 +164,13 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         action: result.name,
+        assistantResults: [
+          projectReadFailureToAssistantResult({
+            action: result.name,
+            code: result.code,
+            errors: result.errors
+          })
+        ],
         code: result.code,
         errors: result.errors,
         mutates: false,
@@ -149,6 +184,12 @@ export async function POST(request: Request) {
 
   return NextResponse.json({
     action: result.name,
+    assistantResults: [
+      projectReadToAssistantResult({
+        action: result.name,
+        result: result.result
+      })
+    ],
     mutates: false,
     ok: true,
     result: result.result

@@ -5,6 +5,12 @@ import {
 } from "@/features/workbench/report-assistant-instruction";
 import { createReportAssistantPatchProposal } from "@/features/workbench/report-assistant-model";
 import { validateReportAssistantPatch } from "@/features/workbench/report-assistant-patch";
+import {
+  patchProposalGenerationFailureToAssistantResult,
+  patchProposalToAssistantResult,
+  patchProposalValidationFailureToAssistantResult
+} from "@/features/workbench/report-assistant-patch-result";
+import { routeFailureToAssistantResult } from "@/features/workbench/report-assistant-route-failure-result";
 import { parseSimpleWorkbenchProposalDocument } from "@/features/workbench/simple-workbench-proposal";
 import { getAuthState } from "@/lib/auth";
 
@@ -28,6 +34,14 @@ export async function POST(request: Request) {
   if (authState.configured && !authState.session) {
     return NextResponse.json(
       {
+        assistantResults: [
+          routeFailureToAssistantResult({
+            capabilityName: "report_assistant_patch_route",
+            code: "assistant_auth_required",
+            errors: ["Authentication required."],
+            routeStatus: "auth_failed"
+          })
+        ],
         error: "Authentication required.",
         ok: false
       },
@@ -41,6 +55,14 @@ export async function POST(request: Request) {
   if (!isObjectRecord(payload) || typeof payload.instruction !== "string") {
     return NextResponse.json(
       {
+        assistantResults: [
+          routeFailureToAssistantResult({
+            capabilityName: "report_assistant_patch_route",
+            code: "invalid_patch_payload",
+            errors: ["Invalid report assistant request."],
+            routeStatus: "needs_input"
+          })
+        ],
         error: "Invalid report assistant request.",
         ok: false
       },
@@ -56,6 +78,14 @@ export async function POST(request: Request) {
   if (!context || !document) {
     return NextResponse.json(
       {
+        assistantResults: [
+          routeFailureToAssistantResult({
+            capabilityName: "report_assistant_patch_route",
+            code: "missing_patch_context",
+            errors: ["Report assistant request must include a current report context and proposal document."],
+            routeStatus: "needs_input"
+          })
+        ],
         error: "Report assistant request must include a current report context and proposal document.",
         ok: false
       },
@@ -73,6 +103,13 @@ export async function POST(request: Request) {
   if (!generated.ok) {
     return NextResponse.json(
       {
+        assistantResults: [
+          patchProposalGenerationFailureToAssistantResult({
+            errors: generated.errors,
+            source: generated.source,
+            warnings: generated.warnings
+          })
+        ],
         errors: generated.errors,
         ok: false,
         source: generated.source,
@@ -93,6 +130,15 @@ export async function POST(request: Request) {
   if (validation.status === "rejected") {
     return NextResponse.json(
       {
+        assistantResults: [
+          patchProposalValidationFailureToAssistantResult({
+            errors: validation.errors,
+            patch: generated.patch,
+            source: generated.source,
+            validation,
+            warnings: [...generated.warnings, ...validation.warnings]
+          })
+        ],
         errors: validation.errors,
         ok: false,
         patch: generated.patch,
@@ -107,6 +153,14 @@ export async function POST(request: Request) {
   }
 
   return NextResponse.json({
+    assistantResults: [
+      patchProposalToAssistantResult({
+        patch: generated.patch,
+        source: generated.source,
+        validation,
+        warnings: generated.warnings
+      })
+    ],
     ok: true,
     patch: generated.patch,
     source: generated.source,

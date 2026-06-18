@@ -16,6 +16,7 @@ import {
   getReportAssistantMetricId
 } from "./report-assistant-context";
 import type { ReportAssistantContext } from "./report-assistant-context";
+import type { ReportAssistantResultEnvelope } from "./report-assistant-result-contract";
 import type { SimpleWorkbenchProposalDocument } from "./simple-workbench-proposal";
 
 const mockAuthState = vi.hoisted(() => ({
@@ -271,12 +272,65 @@ describe("report assistant review findings", () => {
       verdict: "suspicious"
     };
 
+    mockAuthState.value = {
+      configured: true,
+      session: null
+    };
+    const authRejected = await POST(jsonRequest({ confirmed: true, context, finding }));
+    const authRejectedPayload = (await authRejected.json()) as {
+      assistantResults?: ReportAssistantResultEnvelope[];
+      ok: boolean;
+    };
+    expect(authRejected.status).toBe(401);
+    expect(authRejectedPayload.assistantResults?.[0]).toMatchObject({
+      authority: "error",
+      capabilityName: "report_assistant_findings_route",
+      routeStatus: "auth_failed",
+      tasks: [
+        {
+          code: "assistant_auth_required",
+          severity: "error"
+        }
+      ]
+    });
+    expect(await readReportAssistantFindingRecords()).toEqual([]);
+
+    mockAuthState.value = {
+      configured: false,
+      missingKeys: [],
+      session: {
+        expiresAt: Number.MAX_SAFE_INTEGER,
+        username: "Preview mode"
+      }
+    };
+
     const rejected = await POST(jsonRequest({ context, finding }));
+    const rejectedPayload = (await rejected.json()) as {
+      assistantResults?: ReportAssistantResultEnvelope[];
+      ok: boolean;
+    };
     expect(rejected.status).toBe(400);
+    expect(rejectedPayload.assistantResults?.[0]).toMatchObject({
+      authority: "needs_input",
+      capabilityName: "report_assistant_findings_route",
+      mutates: true,
+      previewOnly: false,
+      rendererKind: "finding_log_card",
+      requiresConfirmation: true,
+      resultKind: "finding_log",
+      routeStatus: "needs_input",
+      tasks: [
+        {
+          code: "finding_confirmation_required",
+          severity: "warning"
+        }
+      ]
+    });
     expect(await readReportAssistantFindingRecords()).toEqual([]);
 
     const accepted = await POST(jsonRequest({ confirmed: true, context, finding }));
     const payload = (await accepted.json()) as {
+      assistantResults?: ReportAssistantResultEnvelope[];
       ok: boolean;
       queuePath: string;
       record: {
@@ -300,6 +354,37 @@ describe("report assistant review findings", () => {
         }
       }
     });
+    expect(payload.assistantResults?.[0]).toMatchObject({
+      authority: "user_confirmed",
+      capabilityName: "report_assistant_findings_route",
+      mutates: true,
+      previewOnly: false,
+      rendererKind: "finding_log_card",
+      requiresConfirmation: true,
+      resultKind: "finding_log",
+      routeStatus: "ready",
+      sourceTrace: [
+        {
+          kind: "user_confirmation",
+          label: "report_assistant_findings_route"
+        }
+      ],
+      stalePolicy: "assistant_context_signature"
+    });
+    expect(payload.assistantResults?.[0]?.evidence).toEqual(expect.arrayContaining([
+      {
+        detail: RW_METRIC_ID,
+        label: "Metric id"
+      },
+      {
+        detail: "suspicious",
+        label: "Finding verdict"
+      },
+      {
+        detail: ".dynecho/calculator-review-queue/report-assistant-findings.jsonl",
+        label: "Finding queue"
+      }
+    ]));
     expect((await readReportAssistantFindingRecords())[0]).toMatchObject({
       metricId: RW_METRIC_ID,
       reportDisplayValue: "59 dB"

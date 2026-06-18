@@ -7,6 +7,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { buildProjectOwnerId } from "../../lib/project-storage-auth";
 import { FileServerProjectRepository, type ProjectOwnerScope } from "../../lib/server-project-storage";
+import type { ReportAssistantResultEnvelope } from "./report-assistant-result-contract";
 
 const mockAuthState = vi.hoisted(() => ({
   value: {
@@ -155,14 +156,26 @@ describe("report assistant project-read route", () => {
 
     const response = await POST(routeRequest({ action: "list_projects" }));
     const body = (await response.json()) as {
+      assistantResults?: ReportAssistantResultEnvelope[];
       error?: string;
       ok: boolean;
     };
 
     expect(response.status).toBe(401);
-    expect(body).toEqual({
+    expect(body).toMatchObject({
       error: "Authentication required.",
       ok: false
+    });
+    expect(body.assistantResults?.[0]).toMatchObject({
+      authority: "error",
+      capabilityName: "report_assistant_project_read_route",
+      routeStatus: "auth_failed",
+      tasks: [
+        {
+          code: "assistant_auth_required",
+          severity: "error"
+        }
+      ]
     });
   });
 
@@ -171,6 +184,7 @@ describe("report assistant project-read route", () => {
 
     const response = await POST(routeRequest({ action: "save_report" }));
     const body = (await response.json()) as {
+      assistantResults?: ReportAssistantResultEnvelope[];
       code?: string;
       errors?: string[];
       mutates?: boolean;
@@ -184,6 +198,82 @@ describe("report assistant project-read route", () => {
       mutates: false,
       ok: false
     });
+    expect(body.assistantResults).toHaveLength(1);
+    expect(body.assistantResults?.[0]).toMatchObject({
+      authority: "unsupported",
+      basis: [],
+      capabilityName: "report_assistant_project_read_route",
+      mutates: false,
+      previewOnly: false,
+      rendererKind: "project_read_card",
+      requiresConfirmation: false,
+      resultKind: "project_read",
+      routeStatus: "unsupported",
+      sourceTrace: [
+        {
+          detail: "unsupported_project_read_action",
+          kind: "project_read",
+          label: "report_assistant_project_read_route"
+        }
+      ],
+      stalePolicy: "none",
+      tasks: [
+        {
+          code: "unsupported_project_read_action",
+          message: "Unsupported assistant project read action.",
+          severity: "error"
+        }
+      ]
+    });
+  });
+
+  it("returns needs-input envelopes for read tools missing required ids", async () => {
+    const { POST } = await import("../../app/api/report-assistant/project-read/route");
+
+    const response = await POST(routeRequest({ action: "read_project_summary" }));
+    const body = (await response.json()) as {
+      assistantResults?: ReportAssistantResultEnvelope[];
+      code?: string;
+      errors?: string[];
+      mutates?: boolean;
+      ok: boolean;
+    };
+
+    expect(response.status).toBe(400);
+    expect(body).toMatchObject({
+      action: "read_project_summary",
+      code: "missing_project_id",
+      errors: ["Project id is required."],
+      mutates: false,
+      ok: false
+    });
+    expect(body.assistantResults).toHaveLength(1);
+    expect(body.assistantResults?.[0]).toMatchObject({
+      authority: "needs_input",
+      basis: [],
+      capabilityName: "read_project_summary",
+      mutates: false,
+      previewOnly: false,
+      rendererKind: "project_read_card",
+      requiresConfirmation: false,
+      resultKind: "project_read",
+      routeStatus: "needs_input",
+      sourceTrace: [
+        {
+          detail: "missing_project_id",
+          kind: "project_read",
+          label: "read_project_summary"
+        }
+      ],
+      stalePolicy: "none",
+      tasks: [
+        {
+          code: "missing_project_id",
+          message: "Project id is required.",
+          severity: "warning"
+        }
+      ]
+    });
   });
 
   it("returns read-only summary payloads without full saved report or assembly bodies", async () => {
@@ -193,6 +283,7 @@ describe("report assistant project-read route", () => {
     const response = await POST(routeRequest({ action: "read_project_summary", projectId: seeded.project.id }));
     const body = (await response.json()) as {
       action?: string;
+      assistantResults?: ReportAssistantResultEnvelope[];
       mutates?: boolean;
       ok: boolean;
       result?: {
@@ -217,6 +308,36 @@ describe("report assistant project-read route", () => {
         }
       }
     });
+    expect(body.assistantResults).toHaveLength(1);
+    expect(body.assistantResults?.[0]).toMatchObject({
+      authority: "saved_project_state",
+      basis: [],
+      capabilityName: "read_project_summary",
+      mutates: false,
+      previewOnly: false,
+      rendererKind: "project_read_card",
+      requiresConfirmation: false,
+      resultKind: "project_read",
+      routeStatus: "ready",
+      sourceTrace: [
+        {
+          detail: "Owner-scoped project read route returned a typed local payload.",
+          kind: "project_read",
+          label: "read_project_summary"
+        }
+      ],
+      stalePolicy: "none"
+    });
+    expect(body.assistantResults?.[0]?.evidence).toEqual(expect.arrayContaining([
+      {
+        detail: "read_project_summary",
+        label: "Project read action"
+      },
+      {
+        detail: seeded.project.id,
+        label: "Project id"
+      }
+    ]));
     expect(JSON.stringify(body)).not.toContain("ROUTE_PRIVATE_REPORT_DOCUMENT_BODY");
     expect(JSON.stringify(body)).not.toContain("ROUTE_PRIVATE_ASSEMBLY_SNAPSHOT");
   });
@@ -241,7 +362,13 @@ describe("report assistant project-read route", () => {
     );
 
     expect(reportResponse.status).toBe(200);
-    expect(await reportResponse.json()).toMatchObject({
+    const reportBody = (await reportResponse.json()) as {
+      assistantResults?: ReportAssistantResultEnvelope[];
+      result?: {
+        document?: JsonValue;
+      };
+    };
+    expect(reportBody).toMatchObject({
       action: "read_project_report_document",
       mutates: false,
       ok: true,
@@ -251,6 +378,19 @@ describe("report assistant project-read route", () => {
         }
       }
     });
+    expect(reportBody.assistantResults?.[0]).toMatchObject({
+      authority: "saved_project_state",
+      capabilityName: "read_project_report_document",
+      rendererKind: "project_read_card",
+      resultKind: "project_read",
+      sourceTrace: [
+        {
+          kind: "project_read",
+          label: "read_project_report_document"
+        }
+      ]
+    });
+    expect(JSON.stringify(reportBody.assistantResults)).not.toContain("ROUTE_PRIVATE_REPORT_DOCUMENT_BODY");
     expect(assemblyResponse.status).toBe(200);
     expect(await assemblyResponse.json()).toMatchObject({
       action: "read_project_assembly_snapshot",

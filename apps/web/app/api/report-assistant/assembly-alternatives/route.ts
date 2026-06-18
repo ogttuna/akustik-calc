@@ -4,7 +4,9 @@ import {
   createReportAssistantAssemblyAlternativeReview,
   parseReportAssistantAssemblyAlternativeRequest
 } from "@/features/workbench/report-assistant-assembly-alternatives";
+import { assemblyAlternativeReviewToAssistantResult } from "@/features/workbench/report-assistant-assembly-alternatives-result";
 import { parseReportAssistantContextPayload } from "@/features/workbench/report-assistant-instruction";
+import { routeFailureToAssistantResult } from "@/features/workbench/report-assistant-route-failure-result";
 import { parseSimpleWorkbenchProposalDocument } from "@/features/workbench/simple-workbench-proposal";
 import { getAuthState } from "@/lib/auth";
 
@@ -28,6 +30,14 @@ export async function POST(request: Request) {
   if (authState.configured && !authState.session) {
     return NextResponse.json(
       {
+        assistantResults: [
+          routeFailureToAssistantResult({
+            capabilityName: "report_assistant_assembly_alternatives_route",
+            code: "assistant_auth_required",
+            errors: ["Authentication required."],
+            routeStatus: "auth_failed"
+          })
+        ],
         error: "Authentication required.",
         ok: false
       },
@@ -41,6 +51,14 @@ export async function POST(request: Request) {
   if (!isObjectRecord(payload)) {
     return NextResponse.json(
       {
+        assistantResults: [
+          routeFailureToAssistantResult({
+            capabilityName: "report_assistant_assembly_alternatives_route",
+            code: "invalid_assembly_alternatives_payload",
+            errors: ["Invalid assembly alternative research request."],
+            routeStatus: "needs_input"
+          })
+        ],
         error: "Invalid assembly alternative research request.",
         ok: false
       },
@@ -57,6 +75,14 @@ export async function POST(request: Request) {
   if (!context || !document || !assemblyRequest) {
     return NextResponse.json(
       {
+        assistantResults: [
+          routeFailureToAssistantResult({
+            capabilityName: "report_assistant_assembly_alternatives_route",
+            code: "missing_assembly_alternatives_context",
+            errors: ["Assembly alternative research requires a current report context, proposal document, and user instruction."],
+            routeStatus: "needs_input"
+          })
+        ],
         error: "Assembly alternative research requires a current report context, proposal document, and user instruction.",
         ok: false
       },
@@ -74,6 +100,16 @@ export async function POST(request: Request) {
   if (!result.ok) {
     return NextResponse.json(
       {
+        assistantResults: [
+          routeFailureToAssistantResult({
+            capabilityName: "report_assistant_assembly_alternatives_route",
+            code: "assembly_alternatives_review_failed",
+            errors: result.errors,
+            routeStatus: result.source === "research_provider" ? "provider_failed" : "error",
+            sourceTraceKind: result.source === "research_provider" ? "provider_review" : "deterministic",
+            warnings: result.warnings
+          })
+        ],
         errors: result.errors,
         ok: false,
         source: result.source,
@@ -86,6 +122,13 @@ export async function POST(request: Request) {
   }
 
   return NextResponse.json({
+    assistantResults: [
+      assemblyAlternativeReviewToAssistantResult({
+        review: result.review,
+        source: result.source,
+        warnings: result.warnings
+      })
+    ],
     ok: true,
     review: result.review,
     source: result.source,

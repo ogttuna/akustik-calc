@@ -130,9 +130,11 @@ const BASE_CONTEXT: ReportAssistantContext = {
     }
   },
   createdAtIso: "2026-06-03T09:00:00.000Z",
+  documentComparisonSummaries: [],
   documentSignature: "report:trace-test",
   layersSummary: ["Concrete slab"],
   metrics: [],
+  reportAdjustments: [],
   reportId: "trace-test",
   traceSummary: {
     basis: "building_prediction",
