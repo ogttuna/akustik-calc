@@ -57,6 +57,15 @@ import {
   POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_RUNTIME_METHOD
 } from "./post-v1-wall-compatible-anchor-delta";
 import {
+  POST_V1_PROJECT_USER_MEASURED_WALL_RW_EXACT_BRIDGE_RUNTIME_METHOD
+} from "./project-user-measured-wall-rw-exact-bridge";
+import {
+  POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_EXACT_CURVE_BRIDGE_RUNTIME_METHOD
+} from "./project-user-measured-wall-airborne-frequency-exact-curve-bridge";
+import {
+  POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_COMPATIBLE_DELTA_RUNTIME_METHOD
+} from "./project-user-measured-wall-airborne-frequency-compatible-delta";
+import {
   GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD
 } from "./dynamic-airborne-gate-dv-lsf-exact-source-mixed-companion";
 import {
@@ -813,7 +822,8 @@ function withScenarioSpecificAirborneRuntimePins(
     trace.runtimeBasisId === GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD ||
     trace.runtimeBasisId === POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_RUNTIME_METHOD;
   const isWallCompatibleAnchorDelta =
-    trace.runtimeBasisId === POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_RUNTIME_METHOD;
+    trace.runtimeBasisId === POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_RUNTIME_METHOD ||
+    trace.runtimeBasisId === POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_COMPATIBLE_DELTA_RUNTIME_METHOD;
   const isWallFieldAdapter =
     trace.runtimeBasisId === GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD ||
     trace.runtimeBasisId === COMPANY_INTERNAL_OPENING_LEAK_FIELD_RUNTIME_METHOD ||
@@ -1049,7 +1059,12 @@ function getTimberCltDeltaLwRuntimeBasisId(input: {
 function runtimeBasisIdForWallResult(result: AssemblyCalculation): string | null {
   if (
     result.airborneBasis?.origin === "measured_exact_full_stack" &&
-    result.airborneBasis.method === "verified_airborne_catalog_exact_match"
+    (
+      result.airborneBasis.method === "verified_airborne_catalog_exact_match" ||
+      result.airborneBasis.method === POST_V1_PROJECT_USER_MEASURED_WALL_RW_EXACT_BRIDGE_RUNTIME_METHOD ||
+      result.airborneBasis.method ===
+        POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_EXACT_CURVE_BRIDGE_RUNTIME_METHOD
+    )
   ) {
     return WALL_VERIFIED_AIRBORNE_EXACT_SOURCE_BASIS;
   }
@@ -1083,7 +1098,8 @@ export function buildLayerCombinationResolverTraceForAssembly(
     result.airborneBasis?.method === GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD ||
     result.airborneBasis?.method === POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_RUNTIME_METHOD;
   const hasWallCompatibleAnchorDeltaBasis =
-    result.airborneBasis?.method === POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_RUNTIME_METHOD;
+    result.airborneBasis?.method === POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_RUNTIME_METHOD ||
+    result.airborneBasis?.method === POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_COMPATIBLE_DELTA_RUNTIME_METHOD;
   const hasWallFieldAirborneBasis =
     result.airborneBasis?.method === GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD ||
     result.airborneBasis?.method === COMPANY_INTERNAL_OPENING_LEAK_FIELD_RUNTIME_METHOD ||

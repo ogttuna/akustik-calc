@@ -120,6 +120,10 @@ import {
   POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_SELECTED_CANDIDATE_ID
 } from "./post-v1-wall-compatible-anchor-delta";
 import {
+  POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_COMPATIBLE_DELTA_RUNTIME_METHOD,
+  POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_COMPATIBLE_DELTA_SELECTED_CANDIDATE_ID
+} from "./project-user-measured-wall-airborne-frequency-compatible-delta";
+import {
   GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD,
   GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_SELECTED_CANDIDATE_ID
 } from "./dynamic-airborne-gate-dv-lsf-exact-source-mixed-companion";
@@ -510,6 +514,68 @@ const CANDIDATE_DECLARATIONS = [
       "publish_only_anchor_owned_rw"
     ],
     supportedMetrics: ["Rw"],
+    surfaceRequirements: ELEMENT_LAB_SURFACES,
+    valuePins: []
+  },
+  {
+    basis: "element_lab",
+    errorBudgetTerms: [
+      { metric: "Rw", notMeasuredEvidence: true, toleranceDb: 6 },
+      { metric: "STC", notMeasuredEvidence: true, toleranceDb: 6 },
+      { metric: "C", notMeasuredEvidence: true, toleranceDb: 3 },
+      { metric: "Ctr", notMeasuredEvidence: true, toleranceDb: 3 }
+    ],
+    exactPrecedenceRules: [
+      "exact_full_stack_measured_frequency_curve_wins_before_project_user_compatible_delta",
+      "reduced_stack_measured_frequency_anchor_must_match_after_only_exterior_board_removal",
+      "rating_standard_must_be_declared_for_each_requested_lab_metric",
+      "field_building_impact_and_oitc_requests_do_not_alias_from_this_lab_delta"
+    ],
+    formulaTerms: [
+      "project_user_measured_reduced_stack_frequency_curve_anchor",
+      "bounded_exterior_board_surface_mass_delta",
+      "compatible_shifted_transmission_loss_curve",
+      "iso_717_1_rw_c_ctr_from_shifted_curve",
+      "astm_e413_stc_from_shifted_curve"
+    ],
+    hardCompatibilityGates: [
+      "wall_route",
+      "element_lab_basis",
+      "active_project_user_measured_frequency_anchor",
+      "canonical_reduced_stack_frequency_fingerprint_match",
+      "one_or_paired_exterior_board_delta_only",
+      "explicit_wall_topology_layer_indices"
+    ],
+    hostileInputCases: [
+      "multiple_reduced_stack_frequency_anchors_rejected",
+      "missing_rating_standard_outputs_unsupported",
+      "non_board_added_layers_rejected",
+      "middle_inserted_layers_rejected",
+      "field_building_impact_outputs_rejected"
+    ],
+    id: POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_COMPATIBLE_DELTA_SELECTED_CANDIDATE_ID,
+    kind: "similarity_anchor",
+    label: "Project/user measured wall frequency compatible exterior-board delta",
+    ownedRuntimeBasisId: POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_COMPATIBLE_DELTA_RUNTIME_METHOD,
+    priorityRank: 1,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      "route=wall",
+      "elementLabBasis",
+      "airborneMeasuredFrequencySourceAnchors",
+      "canonicalReducedWallAirborneFrequencyFingerprint",
+      "compatibleExteriorBoardDelta",
+      "boundedAddedBoardMassDelta",
+      "explicitWallTopologyLayerIndices"
+    ],
+    route: "wall",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "remove_one_or_paired_exterior_board_layers_then_match_project_user_measured_frequency_anchor",
+      "calculate_delta_from_added_board_mass_not_from_source_family_borrowing",
+      "derive_only_declared_lab_curve_rating_outputs"
+    ],
+    supportedMetrics: ["Rw", "STC", "C", "Ctr"],
     surfaceRequirements: ELEMENT_LAB_SURFACES,
     valuePins: []
   },

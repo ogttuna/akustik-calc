@@ -89,6 +89,15 @@ Selected next label:
 
 `post-V1 runtime-first route-family rerank after wall timber-stud + CLT formula building lab-companion basis integrity`
 
+High-ROI implementation selection supplement:
+
+`docs/calculator/HIGH_ROI_CALCULATOR_IMPLEMENTATION_SELECTION_PLAN_2026-06-18.md`
+
+That supplement translates the strategic ROI streams into readiness
+gates and a candidate matrix for this rerank. It does not replace this
+selected next action, and it does not authorize a runtime owner before
+the rerank contract compares candidates.
+
 ## Rerank Iterations
 
 Iteration 1 - subtract closed chains:
@@ -135,6 +144,11 @@ Iteration 4 - expected owner selection:
 - prefer a candidate with `newCalculableRequestShapes >= 2`,
   `newCalculableTargetOutputs >= 5`, `runtimeBasisPromotions >= 2`, or
   a reproduced wrong-answer / wrong-basis fix for a common construction;
+- apply the readiness gates in
+  `docs/calculator/HIGH_ROI_CALCULATOR_IMPLEMENTATION_SELECTION_PLAN_2026-06-18.md`
+  before naming the owner: route basis, physical inputs, target
+  movement, metric/basis integrity, bounded blast radius, and evidence
+  confidence;
 - if no candidate satisfies this bar locally, the rerank must name the
   missing physical input, measured source, compatible anchor, or formula
   evidence before any runtime owner is selected;
@@ -156,6 +170,45 @@ The rerank contract must name:
 - estimated runtime movement;
 - why rejected candidates are lower ROI or physically unsafe;
 - the next owner action, file, plan doc, and label.
+
+## Rerank Landing - 2026-06-18
+
+Landed rerank action:
+
+`post_v1_runtime_first_route_family_rerank_after_wall_timber_stud_clt_formula_building_lab_companion_basis_integrity_plan`
+
+Landed rerank file:
+
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-timber-stud-clt-formula-building-lab-companion-basis-integrity-contract.test.ts`
+
+Landed rerank status:
+
+`post_v1_runtime_first_route_family_rerank_after_wall_timber_stud_clt_formula_building_lab_companion_basis_integrity_landed_no_runtime_selected_wall_opening_leak_common_wall_same_basis_holdout_packet`
+
+Selected candidate:
+
+`wall.opening_leak_common_wall_same_basis_holdout_packet`
+
+The rerank selected a no-runtime same-basis holdout packet for
+opening/leak common-wall building prediction residuals. It did not move
+runtime values, retune formulas, import source rows, or touch frontend
+implementation files. This is not a broad source crawl.
+
+Selected next action:
+
+`post_v1_wall_opening_leak_common_wall_same_basis_holdout_packet_plan`
+
+Selected next file:
+
+`packages/engine/src/post-v1-wall-opening-leak-common-wall-same-basis-holdout-packet-contract.test.ts`
+
+Selected next plan:
+
+`docs/calculator/POST_V1_WALL_OPENING_LEAK_COMMON_WALL_SAME_BASIS_HOLDOUT_PACKET_PLAN_2026-06-18.md`
+
+Selected next label:
+
+`post-V1 wall opening/leak common-wall same-basis holdout packet`
 
 ## Validation
 

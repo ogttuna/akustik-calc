@@ -58,6 +58,9 @@ import {
   POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_SELECTED_CANDIDATE_ID,
   POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_SELECTED_CANDIDATE_ID
 } from "./post-v1-wall-compatible-anchor-delta";
+import {
+  POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_COMPATIBLE_DELTA_SELECTED_CANDIDATE_ID
+} from "./project-user-measured-wall-airborne-frequency-compatible-delta";
 import { TUAS_C11C_GUARDED_ISO_WEIGHTED_IMPACT_SELECTED_CANDIDATE_ID } from "./tuas-c11c-exact-import-readiness";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
@@ -125,16 +128,16 @@ describe("layer combination resolver company-internal V0 rehearsal contract", ()
     });
     expect(contract.summary).toEqual({
       allowedExactRowCount: 4,
-      allowedWithBudgetRowCount: 42,
+      allowedWithBudgetRowCount: 43,
       blockedActionCount: 4,
       blockedRowCount: 2,
-      coverageMatrixRowCount: 49,
-      companyInternalV0AllowedRowCount: 46,
+      coverageMatrixRowCount: 50,
+      companyInternalV0AllowedRowCount: 47,
       needsUserInputRowCount: 1,
       readinessBucketCount: {
         needs_input: 1,
         ready: 4,
-        ready_with_budget: 42,
+        ready_with_budget: 43,
         research_only: 0,
         unsupported: 2
       },
@@ -155,6 +158,10 @@ describe("layer combination resolver company-internal V0 rehearsal contract", ()
       [MIXED_SUPPORT_FLOOR_IMPACT_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
       ["floor.exact_measured_floor_system.same_topology_metric_basis", "allowed_exact"],
       [POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
+      [
+        POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_COMPATIBLE_DELTA_SELECTED_CANDIDATE_ID,
+        "allowed_with_budget"
+      ],
       [POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
       ["candidate_lsf_exact_rw_calculated_lab_companions", "allowed_with_budget"],
       ["wall.exact_verified_airborne.same_leaf_schedule", "allowed_exact"],

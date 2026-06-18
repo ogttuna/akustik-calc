@@ -1,55 +1,5 @@
 # Calculator Documentation Map
 
-
-## Current Measured-Frequency Checkpoint - 2026-06-18
-
-Latest checkpoint reconciliation:
-`docs/calculator/CHECKPOINT_2026-06-18_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_TARGET_OUTPUT_COVERAGE.md`.
-This confirms the measured-frequency field/building lab-companion
-target-output independence coverage refresh, targeted green tests, and
-known unrelated resolver/candidate-surface current-gate failures in the
-dirty worktree. It does not replace the selected next plan.
-
-Latest landed no-runtime coverage refresh:
-`post_v1_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_coverage_refresh_plan`.
-Coverage refresh file:
-`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-field-building-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`.
-Coverage refresh plan doc:
-`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_COVERAGE_REFRESH_PLAN_2026-06-18.md`.
-Coverage refresh status:
-`post_v1_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`.
-
-Previous rerank:
-`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_field_building_lab_companion_basis_integrity_coverage_refresh_plan`.
-Previous rerank status:
-`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_field_building_lab_companion_basis_integrity_coverage_refresh_landed_no_runtime_selected_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_owner`.
-
-Previous owner:
-`post_v1_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_owner_plan`.
-Previous owner file:
-`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-field-building-lab-companion-target-output-independence-owner-contract.test.ts`.
-Previous owner plan doc:
-`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_OWNER_PLAN_2026-06-18.md`.
-Previous owner status:
-`post_v1_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_owner_landed_runtime_selected_coverage_refresh`.
-Selected candidate:
-`project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_owner`.
-
-Coverage counters: `coverageRefreshContractFilesTouched: 1`,
-`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
-`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
-`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
-`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
-
-Current selected next action:
-`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_coverage_refresh_plan`.
-Current selected next file:
-`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-airborne-frequency-field-building-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`.
-Current selected next plan doc:
-`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_COVERAGE_REFRESH_PLAN_2026-06-18.md`.
-Current selected next label:
-`post-V1 runtime-first route-family rerank after project/user measured wall airborne frequency field/building lab-companion target-output independence coverage refresh`.
-
 Last reviewed: 2026-06-18
 
 ## Purpose
@@ -91,10 +41,1057 @@ plan but does not replace it or authorize a runtime owner before the
 rerank contract lands.
 
 Latest checkpoint reconciliation:
-`docs/calculator/CHECKPOINT_2026-06-18_WALL_TIMBER_STUD_CLT_BUILDING_LAB_COMPANION_RERANK_READY.md`.
-This confirms that docs, runtime implementation, current gate coverage,
-and the selected rerank plan are aligned before committing the
-calculator checkpoint. It does not replace the selected next plan.
+`docs/calculator/CHECKPOINT_2026-06-18_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_TARGET_OUTPUT_COVERAGE.md`.
+This confirms the measured-frequency field/building lab-companion
+target-output independence coverage refresh, the resolver/candidate
+surface alignment fix for the new measured-frequency compatible-delta
+candidate, and green current-gate component validation. It does not
+replace the selected next plan.
+
+## Latest Project/User Measured Wall Airborne Frequency Field/Building Lab-Companion Target-Output Independence Coverage Refresh
+
+Coverage refresh action:
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_coverage_refresh_plan`
+
+Coverage refresh file:
+`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-field-building-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`
+
+Coverage refresh plan:
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+
+Coverage refresh status:
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`
+
+Previous rerank:
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_field_building_lab_companion_basis_integrity_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-airborne-frequency-field-building-lab-companion-basis-integrity-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+/
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_field_building_lab_companion_basis_integrity_coverage_refresh_landed_no_runtime_selected_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_owner`
+
+Previous owner:
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_owner_plan`
+/
+`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-field-building-lab-companion-target-output-independence-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_OWNER_PLAN_2026-06-18.md`
+/
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_owner_landed_runtime_selected_coverage_refresh`
+
+Selected candidate re-probed:
+`project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_owner`
+
+The refresh protects exact and compatible measured-frequency field and
+building lab-only `Rw`, `STC`, `C`, and `Ctr` companions and the mixed
+field/building values without runtime movement. Counters:
+`coverageRefreshContractFilesTouched: 1`, `newCalculableLayerTemplates:
+0`, `newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+
+Current selected next:
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-airborne-frequency-field-building-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+/
+`post-V1 runtime-first route-family rerank after project/user measured wall airborne frequency field/building lab-companion target-output independence coverage refresh`
+
+## Latest Project/User Measured Wall Airborne Frequency Field/Building Lab-Companion Target-Output Independence Owner
+
+Owner action:
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_owner_plan`
+
+Owner file:
+`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-field-building-lab-companion-target-output-independence-owner-contract.test.ts`
+
+Owner plan:
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_OWNER_PLAN_2026-06-18.md`
+
+Owner status:
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_owner_landed_runtime_selected_coverage_refresh`
+
+Previous rerank:
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_field_building_lab_companion_basis_integrity_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-airborne-frequency-field-building-lab-companion-basis-integrity-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+/
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_field_building_lab_companion_basis_integrity_coverage_refresh_landed_no_runtime_selected_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_owner`
+
+Selected candidate:
+`project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_owner`
+
+The owner makes exact and compatible measured-frequency field/building
+lab-only requests publish `Rw`, `STC`, `C`, and `Ctr` from the owned
+measured-frequency lab basis. It preserves mixed field/building values
+and missing-context/impact boundaries. Counters:
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 4`,
+`newCalculableTargetOutputs: 16`, `runtimeBasisPromotions: 4`,
+`runtimeValuesMoved 16`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, `frontendImplementationFilesTouched: 0`, and
+`unsupportedBoundariesProtected: 8`.
+
+Current selected next:
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-field-building-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+/
+`post-V1 project/user measured wall airborne frequency field/building lab-companion target-output independence coverage refresh`
+
+## Latest Runtime-First Rerank After Project/User Measured Wall Airborne Frequency Field/Building Lab-Companion Basis Integrity Coverage Refresh
+
+Rerank action:
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_field_building_lab_companion_basis_integrity_coverage_refresh_plan`
+
+Rerank file:
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-airborne-frequency-field-building-lab-companion-basis-integrity-coverage-refresh-contract.test.ts`
+
+Rerank plan:
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+
+Rerank status:
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_field_building_lab_companion_basis_integrity_coverage_refresh_landed_no_runtime_selected_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_owner`
+
+Previous coverage refresh:
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_lab_companion_basis_integrity_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-field-building-lab-companion-basis-integrity-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+/
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_lab_companion_basis_integrity_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`
+
+Selected candidate:
+`project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_owner`
+
+The rerank selected measured-frequency field/building lab-companion
+target-output independence because lab-only field/building target sets
+still park lab `Rw`, `STC`, `C`, and `Ctr` even though exact and
+compatible measured-frequency curves own those lab ratings and the
+field/building context has already been proven by the adapter chain.
+Counters: `candidateCount: 8`, `roiAnalysisIterations: 4`,
+`estimatedNextCalculableRequestShapes: 4`,
+`estimatedNextCalculableTargetOutputs: 16`,
+`estimatedNextLabCompanionTargetOutputs: 16`,
+`estimatedNextRuntimeBasisPromotions: 4`,
+`estimatedNextRuntimeValuesMoved: 16`,
+`estimatedNextUnsupportedBoundariesProtected: 8`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Current selected next:
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_owner_plan`
+/
+`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-field-building-lab-companion-target-output-independence-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_OWNER_PLAN_2026-06-18.md`
+/
+`post-V1 project/user measured wall airborne frequency field/building lab-companion target-output independence owner`
+
+## Latest Project/User Measured Wall Airborne Frequency Field/Building Lab-Companion Basis Integrity Coverage Refresh
+
+Coverage refresh action:
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_lab_companion_basis_integrity_coverage_refresh_plan`
+
+Coverage refresh file:
+`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-field-building-lab-companion-basis-integrity-coverage-refresh-contract.test.ts`
+
+Coverage refresh plan:
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+
+Coverage refresh status:
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_lab_companion_basis_integrity_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`
+
+Previous owner:
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_lab_companion_basis_integrity_owner_plan`
+/
+`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-field-building-lab-companion-basis-integrity-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_OWNER_PLAN_2026-06-18.md`
+/
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_lab_companion_basis_integrity_owner_landed_runtime_selected_coverage_refresh`
+
+Selected candidate re-probed:
+`project_user_measured_wall_airborne_frequency_field_building_lab_companion_basis_integrity_owner`
+
+The refresh protects exact and compatible measured-frequency mixed
+field/building lab companions and keeps lab-only field/building,
+missing-context, and impact boundaries unsupported. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Current selected next:
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_field_building_lab_companion_basis_integrity_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-airborne-frequency-field-building-lab-companion-basis-integrity-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+/
+`post-V1 runtime-first route-family rerank after project/user measured wall airborne frequency field/building lab-companion basis integrity coverage refresh`
+
+## Latest Project/User Measured Wall Airborne Frequency Field/Building Lab-Companion Basis Integrity Owner
+
+Owner action:
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_lab_companion_basis_integrity_owner_plan`
+
+Owner file:
+`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-field-building-lab-companion-basis-integrity-owner-contract.test.ts`
+
+Owner plan:
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_OWNER_PLAN_2026-06-18.md`
+
+Owner status:
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_lab_companion_basis_integrity_owner_landed_runtime_selected_coverage_refresh`
+
+Previous rerank:
+`post_v1_runtime_first_route_family_rerank_after_wall_advanced_wall_source_absent_field_building_lab_companion_target_output_independence_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-advanced-wall-source-absent-field-building-lab-companion-target-output-independence-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_PLAN_2026-06-18.md`
+/
+`post_v1_runtime_first_route_family_rerank_after_wall_advanced_wall_source_absent_field_building_lab_companion_target_output_independence_landed_no_runtime_selected_project_user_measured_wall_airborne_frequency_field_building_lab_companion_basis_integrity_owner`
+
+Selected candidate:
+`project_user_measured_wall_airborne_frequency_field_building_lab_companion_basis_integrity_owner`
+
+The owner publishes lab `Rw` beside field/building mixed outputs for
+exact and compatible project/user measured wall airborne frequency
+curves while preserving field/building values and existing `STC`, `C`,
+and `Ctr` companions. Counters: `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 4`, `newCalculableTargetOutputs: 4`,
+`runtimeBasisPromotions: 4`, `runtimeValuesMoved 4`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`,
+`frontendImplementationFilesTouched: 0`, and
+`unsupportedBoundariesProtected: 8`.
+
+Current selected next:
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_lab_companion_basis_integrity_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-field-building-lab-companion-basis-integrity-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+/
+`post-V1 project/user measured wall airborne frequency field/building lab-companion basis integrity coverage refresh`
+
+## Latest Runtime-First Rerank After Wall Advanced-Wall Source-Absent Field/Building Lab-Companion Target-Output Independence
+
+Rerank action:
+`post_v1_runtime_first_route_family_rerank_after_wall_advanced_wall_source_absent_field_building_lab_companion_target_output_independence_plan`
+
+Rerank file:
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-advanced-wall-source-absent-field-building-lab-companion-target-output-independence-contract.test.ts`
+
+Rerank plan:
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_PLAN_2026-06-18.md`
+
+Rerank status:
+`post_v1_runtime_first_route_family_rerank_after_wall_advanced_wall_source_absent_field_building_lab_companion_target_output_independence_landed_no_runtime_selected_project_user_measured_wall_airborne_frequency_field_building_lab_companion_basis_integrity_owner`
+
+Previous coverage refresh:
+`post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_target_output_independence_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-advanced-wall-source-absent-field-building-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+/
+`post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_target_output_independence_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`
+
+Previous owner:
+`post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_target_output_independence_owner_plan`
+/
+`packages/engine/src/post-v1-wall-advanced-wall-source-absent-field-building-lab-companion-target-output-independence-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_OWNER_PLAN_2026-06-18.md`
+/
+`post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_target_output_independence_owner_landed_runtime_selected_coverage_refresh`
+
+Selected candidate:
+`project_user_measured_wall_airborne_frequency_field_building_lab_companion_basis_integrity_owner`
+
+The rerank selected measured-frequency field/building lab-companion
+basis integrity because exact and compatible project/user measured wall
+airborne frequency curves already own lab `Rw`, `STC`, `C`, and `Ctr`,
+and the field/building adapter already owns `R'w`, `Dn,w`, `Dn,A`,
+`DnT,w`, and `DnT,A`. Mixed field/building requests already publish
+`STC`, `C`, and `Ctr`, but still park lab `Rw`. Counters:
+`candidateCount: 8`,
+`roiAnalysisIterations: 4`, `estimatedNextCalculableRequestShapes: 4`,
+`estimatedNextCalculableTargetOutputs: 4`,
+`estimatedNextLabCompanionTargetOutputs: 4`,
+`estimatedNextRuntimeBasisPromotions: 4`,
+`estimatedNextRuntimeValuesMoved: 4`,
+`estimatedNextUnsupportedBoundariesProtected: 8`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Current selected next:
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_lab_companion_basis_integrity_owner_plan`
+/
+`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-field-building-lab-companion-basis-integrity-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_OWNER_PLAN_2026-06-18.md`
+/
+`post-V1 project/user measured wall airborne frequency field/building lab-companion basis integrity owner`
+
+## Latest Wall Advanced-Wall Source-Absent Field/Building Lab-Companion Target-Output Independence Coverage Refresh
+
+Coverage refresh action:
+`post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_target_output_independence_coverage_refresh_plan`
+
+Coverage refresh file:
+`packages/engine/src/post-v1-wall-advanced-wall-source-absent-field-building-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`
+
+Coverage refresh plan:
+`docs/calculator/POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+
+Coverage refresh status:
+`post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_target_output_independence_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`
+
+Previous owner:
+`post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_target_output_independence_owner_plan`
+/
+`packages/engine/src/post-v1-wall-advanced-wall-source-absent-field-building-lab-companion-target-output-independence-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_OWNER_PLAN_2026-06-18.md`
+/
+`post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_target_output_independence_owner_landed_runtime_selected_coverage_refresh`
+
+Selected candidate re-probed:
+`wall.advanced_wall_source_absent_field_building_lab_companion_target_output_independence_owner`
+
+The refresh protects target-output independent advanced-wall lab
+companions, mixed field/building values, and unsupported boundaries
+without runtime movement. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Current selected next:
+`post_v1_runtime_first_route_family_rerank_after_wall_advanced_wall_source_absent_field_building_lab_companion_target_output_independence_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-advanced-wall-source-absent-field-building-lab-companion-target-output-independence-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_PLAN_2026-06-18.md`
+/
+`post-V1 runtime-first route-family rerank after wall advanced-wall source-absent field/building lab-companion target-output independence`
+
+## Latest Wall Advanced-Wall Source-Absent Field/Building Lab-Companion Target-Output Independence Owner
+
+Owner action:
+`post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_target_output_independence_owner_plan`
+
+Owner file:
+`packages/engine/src/post-v1-wall-advanced-wall-source-absent-field-building-lab-companion-target-output-independence-owner-contract.test.ts`
+
+Owner plan:
+`docs/calculator/POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_OWNER_PLAN_2026-06-18.md`
+
+Owner status:
+`post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_target_output_independence_owner_landed_runtime_selected_coverage_refresh`
+
+Previous rerank:
+`post_v1_runtime_first_route_family_rerank_after_wall_advanced_wall_source_absent_field_building_lab_companion_basis_integrity_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-advanced-wall-source-absent-field-building-lab-companion-basis-integrity-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_PLAN_2026-06-18.md`
+/
+`post_v1_runtime_first_route_family_rerank_after_wall_advanced_wall_source_absent_field_building_lab_companion_basis_integrity_landed_no_runtime_selected_wall_advanced_wall_source_absent_field_building_lab_companion_target_output_independence_owner`
+
+Selected candidate:
+`wall.advanced_wall_source_absent_field_building_lab_companion_target_output_independence_owner`
+
+The owner supports field lab-only and building lab-only advanced-wall
+requests with Gate AY lab `Rw 65`, `STC 65`, `C -1.1`, and `Ctr -6.4`.
+Mixed field `R'w 63` and building `DnT,w 66` remain unchanged.
+Counters: `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 2`, `newCalculableTargetOutputs: 8`,
+`runtimeBasisPromotions: 2`, `runtimeValuesMoved 8`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`,
+`frontendImplementationFilesTouched: 0`, and
+`unsupportedBoundariesProtected: 7`.
+
+Current selected next:
+`post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_target_output_independence_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-advanced-wall-source-absent-field-building-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+/
+`post-V1 wall advanced-wall source-absent field/building lab-companion target-output independence coverage refresh`
+
+## Latest Runtime-First Rerank After Wall Advanced-Wall Source-Absent Field/Building Lab-Companion Basis Integrity
+
+Rerank action:
+`post_v1_runtime_first_route_family_rerank_after_wall_advanced_wall_source_absent_field_building_lab_companion_basis_integrity_plan`
+
+Rerank file:
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-advanced-wall-source-absent-field-building-lab-companion-basis-integrity-contract.test.ts`
+
+Rerank plan:
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_PLAN_2026-06-18.md`
+
+Rerank status:
+`post_v1_runtime_first_route_family_rerank_after_wall_advanced_wall_source_absent_field_building_lab_companion_basis_integrity_landed_no_runtime_selected_wall_advanced_wall_source_absent_field_building_lab_companion_target_output_independence_owner`
+
+Previous coverage refresh:
+`post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_basis_integrity_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-advanced-wall-source-absent-field-building-lab-companion-basis-integrity-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+/
+`post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_basis_integrity_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`
+
+Previous owner:
+`post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_basis_integrity_owner_plan`
+/
+`packages/engine/src/post-v1-wall-advanced-wall-source-absent-field-building-lab-companion-basis-integrity-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_OWNER_PLAN_2026-06-18.md`
+/
+`post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_basis_integrity_owner_landed_runtime_selected_coverage_refresh`
+
+Selected candidate:
+`wall.advanced_wall_source_absent_field_building_lab_companion_target_output_independence_owner`
+
+The rerank selected target-output independence because complete
+field/building contexts already own the Gate AY lab companions in mixed
+requests, but lab-only target sets still return unsupported. Counters:
+`candidateCount: 8`, `roiAnalysisIterations: 4`,
+`estimatedNextCalculableRequestShapes: 2`,
+`estimatedNextCalculableTargetOutputs: 8`,
+`estimatedNextLabCompanionTargetOutputs: 8`,
+`estimatedNextRuntimeBasisPromotions: 2`,
+`estimatedNextRuntimeValuesMoved: 8`,
+`estimatedNextUnsupportedBoundariesProtected: 7`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Current selected next:
+`post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_target_output_independence_owner_plan`
+/
+`packages/engine/src/post-v1-wall-advanced-wall-source-absent-field-building-lab-companion-target-output-independence-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_OWNER_PLAN_2026-06-18.md`
+/
+`post-V1 wall advanced-wall source-absent field/building lab-companion target-output independence owner`
+
+## Latest Wall Advanced-Wall Source-Absent Field/Building Lab-Companion Basis Integrity Coverage Refresh
+
+Coverage refresh action:
+`post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_basis_integrity_coverage_refresh_plan`
+
+Coverage refresh file:
+`packages/engine/src/post-v1-wall-advanced-wall-source-absent-field-building-lab-companion-basis-integrity-coverage-refresh-contract.test.ts`
+
+Coverage refresh plan:
+`docs/calculator/POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+
+Coverage refresh status:
+`post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_basis_integrity_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`
+
+Previous owner:
+`post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_basis_integrity_owner_plan`
+/
+`packages/engine/src/post-v1-wall-advanced-wall-source-absent-field-building-lab-companion-basis-integrity-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_OWNER_PLAN_2026-06-18.md`
+/
+`post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_basis_integrity_owner_landed_runtime_selected_coverage_refresh`
+
+Selected candidate re-probed:
+`wall.advanced_wall_source_absent_field_building_lab_companion_basis_integrity_owner`
+
+The refresh protects mixed advanced-wall field/building plus Gate AY lab
+companions without runtime movement. Field mixed requests remain
+`R'w 63`, `Rw 65`, `STC 65`, `C -1.1`, `Ctr -6.4`; building mixed
+requests remain `DnT,w 66`, `Rw 65`, `STC 65`, `C -1.1`, `Ctr -6.4`.
+Lab-only field/building requests, missing context, and Gate AY
+field/building publishing remain unsupported. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Current selected next:
+`post_v1_runtime_first_route_family_rerank_after_wall_advanced_wall_source_absent_field_building_lab_companion_basis_integrity_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-advanced-wall-source-absent-field-building-lab-companion-basis-integrity-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_PLAN_2026-06-18.md`
+/
+`post-V1 runtime-first route-family rerank after wall advanced-wall source-absent field/building lab-companion basis integrity`
+
+## Latest Wall Advanced-Wall Source-Absent Field/Building Lab-Companion Basis Integrity Owner
+
+Owner action:
+`post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_basis_integrity_owner_plan`
+
+Owner file:
+`packages/engine/src/post-v1-wall-advanced-wall-source-absent-field-building-lab-companion-basis-integrity-owner-contract.test.ts`
+
+Owner plan:
+`docs/calculator/POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_OWNER_PLAN_2026-06-18.md`
+
+Owner status:
+`post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_basis_integrity_owner_landed_runtime_selected_coverage_refresh`
+
+Previous rerank:
+`post_v1_runtime_first_route_family_rerank_after_wall_advanced_wall_source_absent_field_building_adapter_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-advanced-wall-source-absent-field-building-adapter-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+/
+`post_v1_runtime_first_route_family_rerank_after_wall_advanced_wall_source_absent_field_building_adapter_coverage_refresh_landed_no_runtime_selected_wall_advanced_wall_source_absent_field_building_lab_companion_basis_integrity_owner`
+
+Selected candidate:
+`wall.advanced_wall_source_absent_field_building_lab_companion_basis_integrity_owner`
+
+The owner publishes Gate AY lab companions with field/building
+advanced-wall outputs in mixed requests. Field requests support
+`R'w 63`, `Rw 65`, `STC 65`, `C -1.1`, and `Ctr -6.4`; building
+requests support `DnT,w 66`, `Rw 65`, `STC 65`, `C -1.1`, and
+`Ctr -6.4`. Counters: `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 2`, `newCalculableTargetOutputs: 8`,
+`runtimeBasisPromotions: 2`, `runtimeValuesMoved 8`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`,
+`frontendImplementationFilesTouched: 0`, and
+`unsupportedBoundariesProtected: 7`.
+
+Current selected next:
+`post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_basis_integrity_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-advanced-wall-source-absent-field-building-lab-companion-basis-integrity-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+/
+`post-V1 wall advanced-wall source-absent field/building lab-companion basis integrity coverage refresh`
+
+## Latest Runtime-First Rerank After Wall Advanced-Wall Source-Absent Field/Building Adapter Coverage Refresh
+
+Rerank action:
+`post_v1_runtime_first_route_family_rerank_after_wall_advanced_wall_source_absent_field_building_adapter_coverage_refresh_plan`
+
+Rerank file:
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-advanced-wall-source-absent-field-building-adapter-coverage-refresh-contract.test.ts`
+
+Rerank plan:
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+
+Rerank status:
+`post_v1_runtime_first_route_family_rerank_after_wall_advanced_wall_source_absent_field_building_adapter_coverage_refresh_landed_no_runtime_selected_wall_advanced_wall_source_absent_field_building_lab_companion_basis_integrity_owner`
+
+Previous coverage refresh:
+`post_v1_wall_advanced_wall_source_absent_field_building_adapter_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-advanced-wall-source-absent-field-building-adapter-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+/
+`post_v1_wall_advanced_wall_source_absent_field_building_adapter_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`
+
+Previous owner:
+`post_v1_wall_advanced_wall_source_absent_field_building_adapter_owner_plan`
+/
+`packages/engine/src/post-v1-wall-advanced-wall-source-absent-field-building-adapter-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_ADAPTER_OWNER_PLAN_2026-06-18.md`
+/
+`post_v1_wall_advanced_wall_source_absent_field_building_adapter_owner_landed_runtime_selected_coverage_refresh`
+
+Selected candidate:
+`wall.advanced_wall_source_absent_field_building_lab_companion_basis_integrity_owner`
+
+Selected next:
+`post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_basis_integrity_owner_plan`
+/
+`packages/engine/src/post-v1-wall-advanced-wall-source-absent-field-building-lab-companion-basis-integrity-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_OWNER_PLAN_2026-06-18.md`
+/
+`post-V1 wall advanced-wall source-absent field/building lab-companion basis integrity owner`
+
+The rerank moved no runtime values. It selected the lab-companion owner
+because Gate AY already owns `Rw 65`, `STC 65`, `C -1.1`, and
+`Ctr -6.4`, while mixed field/building requests currently leave those
+lab companions unsupported. The owner must keep field/building outputs
+on Gate I / Gate AR and lab companions on Gate AY. Counters:
+`candidateCount: 8`, `roiAnalysisIterations: 4`,
+`estimatedNextCalculableRequestShapes: 2`,
+`estimatedNextCalculableTargetOutputs: 8`,
+`estimatedNextLabCompanionTargetOutputs: 8`,
+`estimatedNextRuntimeBasisPromotions: 2`,
+`estimatedNextRuntimeValuesMoved: 8`,
+`estimatedNextUnsupportedBoundariesProtected: 7`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+## Latest Wall Advanced-Wall Source-Absent Field/Building Adapter Coverage Refresh
+
+Coverage refresh action:
+`post_v1_wall_advanced_wall_source_absent_field_building_adapter_coverage_refresh_plan`
+
+Coverage refresh file:
+`packages/engine/src/post-v1-wall-advanced-wall-source-absent-field-building-adapter-coverage-refresh-contract.test.ts`
+
+Coverage refresh plan:
+`docs/calculator/POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+
+Coverage refresh status:
+`post_v1_wall_advanced_wall_source_absent_field_building_adapter_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`
+
+Previous owner:
+`post_v1_wall_advanced_wall_source_absent_field_building_adapter_owner_plan`
+/
+`packages/engine/src/post-v1-wall-advanced-wall-source-absent-field-building-adapter-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_ADAPTER_OWNER_PLAN_2026-06-18.md`
+/
+`post_v1_wall_advanced_wall_source_absent_field_building_adapter_owner_landed_runtime_selected_coverage_refresh`
+
+Selected candidate re-probed:
+`wall.advanced_wall_source_absent_field_building_adapter_owner`
+
+The refresh protects the landed advanced-wall field/building adapter
+without runtime movement. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Current selected next:
+`post_v1_runtime_first_route_family_rerank_after_wall_advanced_wall_source_absent_field_building_adapter_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-advanced-wall-source-absent-field-building-adapter-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+/
+`post-V1 runtime-first route-family rerank after wall advanced-wall source-absent field/building adapter coverage refresh`
+
+## Latest Wall Advanced-Wall Source-Absent Field/Building Adapter Owner
+
+Owner action:
+`post_v1_wall_advanced_wall_source_absent_field_building_adapter_owner_plan`
+
+Owner file:
+`packages/engine/src/post-v1-wall-advanced-wall-source-absent-field-building-adapter-owner-contract.test.ts`
+
+Owner plan:
+`docs/calculator/POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_ADAPTER_OWNER_PLAN_2026-06-18.md`
+
+Owner status:
+`post_v1_wall_advanced_wall_source_absent_field_building_adapter_owner_landed_runtime_selected_coverage_refresh`
+
+Previous rerank:
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_field_building_adapter_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-airborne-frequency-field-building-adapter-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+/
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_field_building_adapter_coverage_refresh_landed_no_runtime_selected_advanced_wall_source_absent_field_building_adapter_owner`
+
+Selected candidate:
+`wall.advanced_wall_source_absent_field_building_adapter_owner`
+
+The owner moves complete Gate AY advanced-wall source-absent direct
+curves through Gate I / Gate AR for `R'w`, `Dn,w`, `Dn,A`, `DnT,w`,
+and `DnT,A` only when field/building context is explicit. Values are
+`R'w 63`, `Dn,w 64`, `Dn,A 62.6`, `DnT,w 66`, and `DnT,A 65`.
+Gate AY lab values remain `Rw 65`, `STC 65`, `C -1.1`, and
+`Ctr -6.4`. Counters: `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 2`, `newCalculableTargetOutputs: 10`,
+`runtimeBasisPromotions: 2`, `runtimeValuesMoved 10`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`,
+`frontendImplementationFilesTouched: 0`, and
+`unsupportedBoundariesProtected: 6`.
+
+Current selected next:
+`post_v1_wall_advanced_wall_source_absent_field_building_adapter_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-advanced-wall-source-absent-field-building-adapter-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+/
+`post-V1 wall advanced-wall source-absent field/building adapter coverage refresh`
+
+## Latest Runtime-First Rerank After Project/User Measured Wall Airborne Frequency Field/Building Adapter Coverage Refresh
+
+Rerank action:
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_field_building_adapter_coverage_refresh_plan`
+
+Rerank file:
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-airborne-frequency-field-building-adapter-coverage-refresh-contract.test.ts`
+
+Rerank plan:
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+
+Rerank status:
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_field_building_adapter_coverage_refresh_landed_no_runtime_selected_advanced_wall_source_absent_field_building_adapter_owner`
+
+Previous coverage refresh:
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_adapter_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-field-building-adapter-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+/
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_adapter_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`
+
+Selected candidate:
+`wall.advanced_wall_source_absent_field_building_adapter_owner`
+
+Current selected next:
+`post_v1_wall_advanced_wall_source_absent_field_building_adapter_owner_plan`
+/
+`packages/engine/src/post-v1-wall-advanced-wall-source-absent-field-building-adapter-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_ADAPTER_OWNER_PLAN_2026-06-18.md`
+/
+`post-V1 wall advanced-wall source-absent field/building adapter owner`
+
+Counters: `candidateCount: 8`, `roiAnalysisIterations: 4`,
+`estimatedNextCalculableRequestShapes: 2`,
+`estimatedNextCalculableTargetOutputs: 10`,
+`estimatedNextRequiredPhysicalInputsCaptured: 10`,
+`estimatedNextRuntimeBasisPromotions: 2`,
+`estimatedNextRuntimeValuesMoved: 10`,
+`estimatedNextUnsupportedBoundariesProtected: 6`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+## Latest Project/User Measured Wall Airborne Frequency Field/Building Adapter Coverage Refresh
+
+Coverage refresh action:
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_adapter_coverage_refresh_plan`
+
+Coverage refresh file:
+`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-field-building-adapter-coverage-refresh-contract.test.ts`
+
+Coverage refresh plan:
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+
+Coverage refresh status:
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_adapter_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`
+
+Previous owner:
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_adapter_owner_plan`
+/
+`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-field-building-adapter-owner-contract.test.ts`
+/
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_adapter_owner_landed_runtime_selected_coverage_refresh`
+
+Selected candidate re-probed:
+`project_user_measured_wall_airborne_frequency_field_building_adapter_owner`
+
+The refresh protects the landed measured-frequency field/building
+adapter route without moving runtime values. It freezes exact full-stack
+and compatible exterior-board measured-frequency field/building values,
+missing-context stops, scalar `Rw` anchor separation, impact boundaries,
+and non-board compatible-delta rejection. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Current selected next:
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_field_building_adapter_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-airborne-frequency-field-building-adapter-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+/
+`post-V1 runtime-first route-family rerank after project/user measured wall airborne frequency field/building adapter coverage refresh`.
+
+## Latest Project/User Measured Wall Airborne Frequency Field/Building Adapter Owner
+
+Owner action:
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_adapter_owner_plan`
+
+Owner file:
+`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-field-building-adapter-owner-contract.test.ts`
+
+Owner plan:
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_ADAPTER_OWNER_PLAN_2026-06-18.md`
+
+Owner status:
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_adapter_owner_landed_runtime_selected_coverage_refresh`
+
+Previous rerank:
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_compatible_delta_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-airborne-frequency-compatible-delta-coverage-refresh-contract.test.ts`
+/
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_compatible_delta_coverage_refresh_landed_no_runtime_selected_project_user_measured_wall_airborne_frequency_field_building_adapter_owner`
+
+Selected candidate:
+`project_user_measured_wall_airborne_frequency_field_building_adapter_owner`
+
+The owner promotes exact full-stack and compatible exterior-board
+project/user measured wall airborne frequency curves into Gate I /
+Gate AR field-building adapters. It opens `R'w`, `Dn,w`, `Dn,A`,
+`DnT,w`, and `DnT,A` for explicit field/building context without
+aliasing lab `Rw`, `STC`, `C`, or `Ctr`. Counters:
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 4`,
+`newCalculableTargetOutputs: 20`, `runtimeBasisPromotions: 4`,
+`runtimeValuesMoved 20`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, `frontendImplementationFilesTouched: 0`, and
+`unsupportedBoundariesProtected: 7`.
+
+Current selected next:
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_adapter_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-field-building-adapter-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+/
+`post-V1 project/user measured wall airborne frequency field/building adapter coverage refresh`.
+
+## Latest Project/User Measured Wall Airborne Frequency Compatible-Delta Coverage Refresh
+
+Coverage refresh action:
+`post_v1_project_user_measured_wall_airborne_frequency_compatible_delta_coverage_refresh_plan`
+
+Coverage refresh file:
+`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-compatible-delta-coverage-refresh-contract.test.ts`
+
+Coverage refresh plan:
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_COMPATIBLE_DELTA_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+
+Coverage refresh status:
+`post_v1_project_user_measured_wall_airborne_frequency_compatible_delta_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`
+
+Previous owner:
+`post_v1_project_user_measured_wall_airborne_frequency_compatible_delta_owner_plan`
+/
+`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-compatible-delta-owner-contract.test.ts`
+/
+`post_v1_project_user_measured_wall_airborne_frequency_compatible_delta_owner_landed_runtime_selected_coverage_refresh`
+
+Runtime method protected:
+`post_v1_project_user_measured_wall_airborne_frequency_compatible_delta`
+
+The refresh protects the compatible-delta runtime without moving new
+values. It freezes one-side/paired exterior-board deltas, lab
+`Rw`/`STC`/`C`/`Ctr` target-output independence, exact precedence,
+scalar `Rw` separation, missing standard and ambiguous-anchor
+boundaries, field/building/impact outside boundaries, and resolver
+trace provenance. Counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Current selected next:
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_compatible_delta_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-airborne-frequency-compatible-delta-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_COMPATIBLE_DELTA_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+/
+`post-V1 runtime-first route-family rerank after project/user measured wall airborne frequency compatible-delta coverage refresh`.
+
+## Latest Runtime-First Rerank After Project/User Measured Wall Airborne Frequency Compatible-Delta Coverage Refresh
+
+Rerank action:
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_compatible_delta_coverage_refresh_plan`
+
+Rerank file:
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-airborne-frequency-compatible-delta-coverage-refresh-contract.test.ts`
+
+Rerank plan:
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_COMPATIBLE_DELTA_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+
+Rerank status:
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_compatible_delta_coverage_refresh_landed_no_runtime_selected_project_user_measured_wall_airborne_frequency_field_building_adapter_owner`
+
+Previous coverage refresh:
+`post_v1_project_user_measured_wall_airborne_frequency_compatible_delta_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-compatible-delta-coverage-refresh-contract.test.ts`
+/
+`post_v1_project_user_measured_wall_airborne_frequency_compatible_delta_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`
+
+Selected candidate:
+`project_user_measured_wall_airborne_frequency_field_building_adapter_owner`
+
+The rerank selects the bounded field/building adapter owner for exact
+and compatible project/user measured wall airborne frequency curves. It
+is the current active implementation target because it applies the
+already-owned direct TL curve to `R'w`, `Dn,w`, `Dn,A`, `DnT,w`, and
+`DnT,A` through Gate I / Gate AR with explicit room, area, and flanking
+context. Counters: `candidateCount: 8`, `roiAnalysisIterations: 4`,
+`estimatedNextCalculableRequestShapes: 4`,
+`estimatedNextCalculableTargetOutputs: 20`,
+`estimatedNextRequiredPhysicalInputsCaptured: 9`,
+`estimatedNextRuntimeBasisPromotions: 4`,
+`estimatedNextRuntimeValuesMoved: 20`,
+`estimatedNextUnsupportedBoundariesProtected: 7`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Current selected next:
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_adapter_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-field-building-adapter-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+/
+`post-V1 project/user measured wall airborne frequency field/building adapter coverage refresh`.
+
+## Latest Project/User Measured Wall Airborne Frequency Compatible-Delta Owner
+
+Owner action:
+`post_v1_project_user_measured_wall_airborne_frequency_compatible_delta_owner_plan`
+
+Owner file:
+`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-compatible-delta-owner-contract.test.ts`
+
+Owner plan:
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_COMPATIBLE_DELTA_OWNER_PLAN_2026-06-18.md`
+
+Owner status:
+`post_v1_project_user_measured_wall_airborne_frequency_compatible_delta_owner_landed_runtime_selected_coverage_refresh`
+
+Previous rerank:
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_exact_curve_bridge_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-airborne-frequency-exact-curve-bridge-coverage-refresh-contract.test.ts`
+/
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_exact_curve_bridge_coverage_refresh_landed_no_runtime_selected_project_user_measured_wall_airborne_frequency_compatible_delta_owner`
+
+Runtime method:
+`post_v1_project_user_measured_wall_airborne_frequency_compatible_delta`
+
+The owner lets an active project/user measured wall airborne frequency
+curve anchor a bounded compatible exterior-board delta calculation for
+element-lab wall `Rw`, `STC`, `C`, and `Ctr`. It is a calculated
+compatible-delta route, not an exact measured override. Counters:
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 4`,
+`newCalculableTargetOutputs: 4`, `runtimeBasisPromotions: 1`,
+`runtimeValuesMoved 4`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, `frontendImplementationFilesTouched: 0`, and
+`unsupportedBoundariesProtected: 7`.
+
+Current selected next:
+`post_v1_project_user_measured_wall_airborne_frequency_compatible_delta_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-compatible-delta-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_COMPATIBLE_DELTA_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+/
+`post-V1 project/user measured wall airborne frequency compatible-delta coverage refresh`.
+
+## Latest Runtime-First Rerank After Project/User Measured Wall Airborne Frequency Exact Curve Bridge Coverage Refresh
+
+Rerank action:
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_exact_curve_bridge_coverage_refresh_plan`
+
+Rerank file:
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-airborne-frequency-exact-curve-bridge-coverage-refresh-contract.test.ts`
+
+Rerank plan:
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_EXACT_CURVE_BRIDGE_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+
+Rerank status:
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_exact_curve_bridge_coverage_refresh_landed_no_runtime_selected_project_user_measured_wall_airborne_frequency_compatible_delta_owner`
+
+Previous coverage refresh:
+`post_v1_project_user_measured_wall_airborne_frequency_exact_curve_bridge_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-exact-curve-bridge-coverage-refresh-contract.test.ts`
+/
+`post_v1_project_user_measured_wall_airborne_frequency_exact_curve_bridge_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`
+
+Selected candidate:
+`project_user_measured_wall_airborne_frequency_compatible_delta_owner`
+
+The rerank selected the bounded project/user measured wall airborne
+frequency compatible-delta owner. This is the current active
+implementation target because it turns exact measured curve evidence
+into calculated near-measured layer-combination support for one-side or
+paired exterior board additions while preserving exact-vs-compatible
+basis separation. Counters: `candidateCount: 8`,
+`roiAnalysisIterations: 4`, `estimatedNextCalculableRequestShapes: 4`,
+`estimatedNextCalculableTargetOutputs: 4`,
+`estimatedNextRequiredPhysicalInputsCaptured: 6`,
+`estimatedNextRuntimeBasisPromotions: 1`,
+`estimatedNextRuntimeValuesMoved: 4`,
+`estimatedNextUnsupportedBoundariesProtected: 7`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Current selected next:
+`post_v1_project_user_measured_wall_airborne_frequency_compatible_delta_owner_plan`
+/
+`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-compatible-delta-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_COMPATIBLE_DELTA_OWNER_PLAN_2026-06-18.md`
+/
+`post-V1 project/user measured wall airborne frequency compatible-delta owner`.
+
+## Latest Project/User Measured Wall Airborne Frequency Exact Curve Bridge Coverage Refresh
+
+Coverage refresh action:
+`post_v1_project_user_measured_wall_airborne_frequency_exact_curve_bridge_coverage_refresh_plan`
+
+Coverage refresh file:
+`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-exact-curve-bridge-coverage-refresh-contract.test.ts`
+
+Coverage refresh plan:
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_EXACT_CURVE_BRIDGE_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+
+Coverage refresh status:
+`post_v1_project_user_measured_wall_airborne_frequency_exact_curve_bridge_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`
+
+Previous owner:
+`post_v1_project_user_measured_wall_airborne_frequency_exact_curve_bridge_owner_plan`
+/
+`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-exact-curve-bridge-owner-contract.test.ts`
+/
+`post_v1_project_user_measured_wall_airborne_frequency_exact_curve_bridge_owner_landed_runtime_selected_coverage_refresh`
+
+Runtime method protected:
+`post_v1_project_user_measured_wall_airborne_frequency_exact_curve_bridge`
+
+The refresh freezes active `airborneMeasuredFrequencySourceAnchors`,
+exact element-lab wall fingerprint matching, measured curve-rated
+`Rw`, `STC`, `C`, and `Ctr`, scalar `Rw` anchor separation, missing
+rating-standard and ambiguous exact-row boundaries, field/building/
+impact outside boundaries, and exact measured resolver trace. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Current selected next:
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_exact_curve_bridge_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-airborne-frequency-exact-curve-bridge-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_EXACT_CURVE_BRIDGE_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+/
+`post-V1 runtime-first route-family rerank after project/user measured wall airborne frequency exact curve bridge coverage refresh`.
 
 ## Latest Project/User Measured Wall Airborne Frequency Exact Curve Bridge Owner
 

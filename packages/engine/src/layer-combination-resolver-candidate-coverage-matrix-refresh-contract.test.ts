@@ -218,20 +218,20 @@ describe("layer combination resolver candidate coverage matrix refresh contract"
       sourceRowsAreEvidenceNotProduct: true
     });
     expect(contract.summary).toEqual({
-      activeRuntimeCandidateCount: 46,
+      activeRuntimeCandidateCount: 47,
       allCandidateDeclarationsCovered: true,
       boundaryCandidateCount: 3,
-      candidateDeclarationCount: 49,
-      coverageMatrixRowCount: 49,
+      candidateDeclarationCount: 50,
+      coverageMatrixRowCount: 50,
       readinessBucketCount: {
         needs_input: 1,
         ready: 4,
-        ready_with_budget: 42,
+        ready_with_budget: 43,
         research_only: 0,
         unsupported: 2
       },
       selectedNextAction: LAYER_COMBINATION_RESOLVER_CANDIDATE_COVERAGE_MATRIX_REFRESH_SELECTED_NEXT_ACTION,
-      surfaceRowCount: 49
+      surfaceRowCount: 50
     });
 
     for (const path of REQUIRED_SURFACES) {
@@ -256,6 +256,7 @@ describe("layer combination resolver candidate coverage matrix refresh contract"
       {
         candidateIds: [
           "wall.compatible_anchor_delta.extra_board_on_verified_lsf",
+          "project_user_measured_wall_airborne_frequency_compatible_delta_owner",
           "floor.tuas_c11c.visible_iso_weighted_impact_tuple_guarded",
           "floor.open_box_timber.package_transfer_similarity",
           "floor.open_web.supported_band_similarity",

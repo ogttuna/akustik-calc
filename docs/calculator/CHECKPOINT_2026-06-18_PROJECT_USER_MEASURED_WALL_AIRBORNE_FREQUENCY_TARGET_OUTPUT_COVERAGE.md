@@ -121,37 +121,57 @@ Full current gate:
 pnpm calculator:gate:current
 ```
 
-Result: failed before completion of a green checkpoint because of
-separate dirty resolver/candidate-surface changes outside this slice.
-The failing groups were around:
+Result after resolver/candidate-surface reconciliation:
 
-- `layer-combination-resolver-registry-contract.test.ts`
-- `layer-combination-resolver-post-single-leaf-mass-law-banded-matrix-refresh-contract.test.ts`
-- `layer-combination-resolver-company-internal-v0-rehearsal-contract.test.ts`
-- several `post-v1-floor-* family solver owner` resolver mapping
-  contracts
-- `post-v1-calculator-capability-roi-confirmation-gate-0-contract.test.ts`
+- shared project/user measured anchor schema gate: 2 files / 19 tests
+  passed;
+- engine calculator final-audit focused gate: 775 files / 4246 tests
+  passed;
+- web calculator final-audit focused gate: 127 files / 505 tests passed,
+  18 skipped;
+- repo build initially exposed a TypeScript DTS issue in the dirty
+  advanced-wall source-absent field/building adapter path, where
+  `advancedWall.targetOutputs` was readonly. The follow-up type-only
+  fix made the lookup context use a mutable `RequestedOutputId[]`.
 
-Those failures correlate with unrelated dirty files such as
-`packages/engine/src/layer-combination-resolver-registry.ts`,
-`packages/engine/src/layer-combination-resolver-runtime-candidate-surface-parity.ts`,
-`packages/engine/src/dynamic-calculator-candidate-resolver-runtime.ts`,
-`packages/engine/src/layer-combination-resolver-candidate-coverage-matrix-refresh-contract.test.ts`,
-and `tools/dev/run-calculator-current-gate.ts`. They should be resolved
-or committed by the owner of that resolver slice before treating the
-whole worktree as gate-green.
+Additional validation after the type-only fix:
+
+```bash
+pnpm build
+```
+
+Result: 5 packages built successfully. The only warnings were the known
+optional `sharp/@img` package warnings from the DOCX/PDF dependency
+chain.
+
+Resolver reconciliation detail:
+
+- `project_user_measured_wall_airborne_frequency_compatible_delta_owner`
+  is now counted as a first-class active runtime candidate;
+- resolver totals are now `candidateCount: 50` and
+  `activeRuntimeCandidateCount: 47`;
+- `element_lab`, `similarity_anchor`, and `wall` registry buckets each
+  moved by +1;
+- company-internal V0 classifies the compatible-delta candidate as
+  `allowed_with_budget`;
+- no runtime formula retune or source crawl was introduced by the
+  alignment fix.
 
 ## Stop/Commit Posture
 
 This checkpoint is a good bounded stopping point for the measured
-frequency calculator chain because:
+frequency calculator chain and resolver-surface reconciliation because:
 
 - runtime movement is covered by owner tests;
 - no-runtime coverage refresh is landed;
+- resolver registry, candidate surface, company-internal V0, and older
+  resolver snapshot contracts now agree on the 50/47 candidate surface;
+- tests and build are green after the type-only advanced-wall DTS fix;
 - docs point to a no-runtime rerank, not another implicit runtime owner;
 - the next work is selected by ROI rerank rather than by re-opening the
   closed target-output slice.
 
-Commit only the measured-frequency chain and live calculator docs. Do
-not include parallel web, resolver registry, candidate-surface, PDF,
-or generated-output changes in the checkpoint commit.
+Commit only coherent calculator engine/shared/docs/current-gate files
+from this reconciliation. Do not include parallel report-assistant,
+Workbench V2 preset-library, PDF, generated-output, or unrelated UI
+changes in the checkpoint commit.

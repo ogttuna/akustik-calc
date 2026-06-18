@@ -41,6 +41,20 @@ function runStep(step: Step): Promise<void> {
 async function main() {
   const steps: Step[] = [
     {
+      label: "shared project/user measured anchor schema gate",
+      args: [
+        "pnpm",
+        "--filter",
+        "@dynecho/shared",
+        "exec",
+        "vitest",
+        "run",
+        "src/api/estimate.test.ts",
+        "src/domain/project-user-measured-source-anchor.test.ts",
+        "--maxWorkers=1"
+      ]
+    },
+    {
       label: "engine calculator final-audit focused gate",
       args: [
         "pnpm",
@@ -746,6 +760,15 @@ async function main() {
         "src/post-v1-runtime-first-route-family-rerank-after-wall-timber-stud-clt-formula-field-lab-companion-target-output-independence-contract.test.ts",
         "src/post-v1-wall-timber-stud-clt-formula-building-lab-companion-basis-integrity-owner-contract.test.ts",
         "src/post-v1-wall-timber-stud-clt-formula-building-lab-companion-basis-integrity-coverage-refresh-contract.test.ts",
+        "src/post-v1-runtime-first-route-family-rerank-after-wall-timber-stud-clt-formula-building-lab-companion-basis-integrity-contract.test.ts",
+        "src/post-v1-wall-opening-leak-common-wall-same-basis-holdout-packet-contract.test.ts",
+        "src/post-v1-runtime-first-route-family-rerank-after-wall-opening-leak-common-wall-same-basis-holdout-packet-contract.test.ts",
+        "src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-rw-anchor-schema-fingerprint-contract.test.ts",
+        "src/post-v1-project-user-measured-wall-rw-exact-bridge-owner-contract.test.ts",
+        "src/post-v1-project-user-measured-wall-rw-exact-bridge-coverage-refresh-contract.test.ts",
+        "src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-rw-exact-bridge-coverage-refresh-contract.test.ts",
+        "src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-airborne-frequency-anchor-schema-fingerprint-contract.test.ts",
+        "src/post-v1-project-user-measured-wall-airborne-frequency-exact-curve-bridge-owner-contract.test.ts",
         "src/acoustic-calculator-answer-engine-v1-contract.test.ts",
         "src/acoustic-calculator-company-internal-usable-v1-acceptance-gate-contract.test.ts",
         "src/broad-accuracy-floor-open-box-timber-similarity-transfer-owner-contract.test.ts",

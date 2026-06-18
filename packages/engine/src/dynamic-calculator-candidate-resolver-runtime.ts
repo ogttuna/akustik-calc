@@ -133,6 +133,9 @@ import {
   POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_RUNTIME_METHOD
 } from "./post-v1-wall-compatible-anchor-delta";
 import { PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_EXACT_CURVE_METRIC_LABEL } from "./project-user-measured-wall-airborne-frequency-exact-curve-bridge";
+import {
+  POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_COMPATIBLE_DELTA_SELECTED_CANDIDATE_ID
+} from "./project-user-measured-wall-airborne-frequency-compatible-delta";
 
 export type DynamicCalculatorCandidateResolverSourceAnchor = {
   anchorKind?: "compatible_delta" | "exact_full_stack";
@@ -834,11 +837,14 @@ function runtimeModelCandidateId(runtimeBasis?: AirborneResultBasis): string {
 
 function candidateIdForLane(
   lane: GateMSelectedLane,
-  runtimeBasis?: AirborneResultBasis
+  runtimeBasis?: AirborneResultBasis,
+  sourceAnchor?: DynamicCalculatorCandidateResolverSourceAnchor | null
 ): string {
   switch (lane) {
     case "anchored_delta":
-      return "candidate_dynamic_exact_subassembly_plus_calculated_delta";
+      return sourceAnchor?.basis
+        ? POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_COMPATIBLE_DELTA_SELECTED_CANDIDATE_ID
+        : "candidate_dynamic_exact_subassembly_plus_calculated_delta";
     case "bounded":
       return runtimeBasis ? familyPhysicsCandidateId(runtimeBasis) : "candidate_dynamic_bounded_prediction";
     case "exact_full_stack":
@@ -1001,13 +1007,17 @@ function buildSeeds(input: {
       outputIds: outputs
     },
     {
-      basis: anchoredDeltaBasis({
-        anchorSourceId,
-        family: input.family,
-        missingSourceEvidence: anchoredEligible ? [] : ["exact_subassembly_anchor_absent"],
-        outputBasis: input.outputBasis
-      }),
-      id: "candidate_dynamic_exact_subassembly_plus_calculated_delta",
+      basis: anchoredEligible && input.sourceAnchor?.basis
+        ? input.sourceAnchor.basis
+        : anchoredDeltaBasis({
+            anchorSourceId,
+            family: input.family,
+            missingSourceEvidence: anchoredEligible ? [] : ["exact_subassembly_anchor_absent"],
+            outputBasis: input.outputBasis
+          }),
+      id: anchoredEligible && input.sourceAnchor?.basis
+        ? POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_COMPATIBLE_DELTA_SELECTED_CANDIDATE_ID
+        : "candidate_dynamic_exact_subassembly_plus_calculated_delta",
       metricIds: metric,
       origin: "measured_exact_subassembly_plus_calculated_delta",
       outputIds: outputs
@@ -1159,7 +1169,7 @@ export function buildDynamicCalculatorCandidateResolverRuntime(
     targetOutputs,
     topologyNormalization
   });
-  const selectedCandidateId = candidateIdForLane(lane, runtimeSignal?.airborneBasis);
+  const selectedCandidateId = candidateIdForLane(lane, runtimeSignal?.airborneBasis, input.sourceAnchor);
   const exactEligible = exactSourceEligible({
     assessment: routeInputAssessment,
     sourceAnchor: input.sourceAnchor,

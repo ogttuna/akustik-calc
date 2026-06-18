@@ -1,0 +1,324 @@
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+import type { AirborneContext, RequestedOutputId } from "@dynecho/shared";
+import { describe, expect, it } from "vitest";
+
+import { calculateAssembly } from "./calculate-assembly";
+import {
+  GATE_AY_COMPLETE_ADVANCED_WALL_RUNTIME_INPUT,
+  PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AY_RUNTIME_METHOD,
+  calculateGateAYAdvancedWallRuntimeCorridor
+} from "./calculator-personal-use-mvp-coverage-sprint-gate-ay";
+import {
+  GATE_AZ_COMPLETE_ADVANCED_WALL_AIRBORNE_CONTEXT,
+  GATE_AZ_VISIBLE_ADVANCED_WALL_LAYER_STACK
+} from "./calculator-personal-use-mvp-coverage-sprint-gate-az";
+import { GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD } from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
+import { GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD } from "./dynamic-airborne-gate-i-airborne-field-context";
+import {
+  POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_ADAPTER_WARNING,
+  POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_LAB_COMPANION_WARNING
+} from "./advanced-wall-source-absent-field-building-adapter";
+
+const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
+
+const PREVIOUS_RERANK_ACTION =
+  "post_v1_runtime_first_route_family_rerank_after_wall_advanced_wall_source_absent_field_building_lab_companion_basis_integrity_plan";
+const PREVIOUS_RERANK_FILE =
+  "packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-advanced-wall-source-absent-field-building-lab-companion-basis-integrity-contract.test.ts";
+const PREVIOUS_RERANK_PLAN_DOC =
+  "docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_PLAN_2026-06-18.md";
+const PREVIOUS_RERANK_STATUS =
+  "post_v1_runtime_first_route_family_rerank_after_wall_advanced_wall_source_absent_field_building_lab_companion_basis_integrity_landed_no_runtime_selected_wall_advanced_wall_source_absent_field_building_lab_companion_target_output_independence_owner";
+
+const OWNER_ACTION =
+  "post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_target_output_independence_owner_plan";
+const OWNER_FILE =
+  "packages/engine/src/post-v1-wall-advanced-wall-source-absent-field-building-lab-companion-target-output-independence-owner-contract.test.ts";
+const OWNER_PLAN_DOC =
+  "docs/calculator/POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_OWNER_PLAN_2026-06-18.md";
+const OWNER_STATUS =
+  "post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_target_output_independence_owner_landed_runtime_selected_coverage_refresh";
+const SELECTED_CANDIDATE_ID =
+  "wall.advanced_wall_source_absent_field_building_lab_companion_target_output_independence_owner";
+
+const COVERAGE_ACTION =
+  "post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_target_output_independence_coverage_refresh_plan";
+const COVERAGE_FILE =
+  "packages/engine/src/post-v1-wall-advanced-wall-source-absent-field-building-lab-companion-target-output-independence-coverage-refresh-contract.test.ts";
+const COVERAGE_PLAN_DOC =
+  "docs/calculator/POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_COVERAGE_REFRESH_PLAN_2026-06-18.md";
+const COVERAGE_STATUS =
+  "post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_target_output_independence_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank";
+
+const SELECTED_NEXT_ACTION =
+  "post_v1_runtime_first_route_family_rerank_after_wall_advanced_wall_source_absent_field_building_lab_companion_target_output_independence_plan";
+const SELECTED_NEXT_FILE =
+  "packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-advanced-wall-source-absent-field-building-lab-companion-target-output-independence-contract.test.ts";
+const SELECTED_NEXT_PLAN_DOC =
+  "docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_PLAN_2026-06-18.md";
+const SELECTED_NEXT_LABEL =
+  "post-V1 runtime-first route-family rerank after wall advanced-wall source-absent field/building lab-companion target-output independence";
+
+const COVERAGE_COUNTERS = {
+  coverageRefreshContractFilesTouched: 1,
+  frontendImplementationFilesTouched: 0,
+  newCalculableLayerTemplates: 0,
+  newCalculableRequestShapes: 0,
+  newCalculableTargetOutputs: 0,
+  runtimeBasisPromotions: 0,
+  runtimeFormulaRetunes: 0,
+  runtimeValuesMoved: 0,
+  sourceRowsImported: 0
+} as const;
+
+const LAB_OUTPUTS = ["Rw", "STC", "C", "Ctr"] as const satisfies readonly RequestedOutputId[];
+const FIELD_MIXED_OUTPUTS = [
+  "R'w",
+  "Rw",
+  "STC",
+  "C",
+  "Ctr"
+] as const satisfies readonly RequestedOutputId[];
+const BUILDING_MIXED_OUTPUTS = [
+  "DnT,w",
+  "Rw",
+  "STC",
+  "C",
+  "Ctr"
+] as const satisfies readonly RequestedOutputId[];
+const FIELD_BUILDING_OUTPUTS = [
+  "R'w",
+  "Dn,w",
+  "Dn,A",
+  "DnT,w",
+  "DnT,A"
+] as const satisfies readonly RequestedOutputId[];
+
+const REQUIRED_DOCS = [
+  "AGENTS.md",
+  "docs/calculator/CALCULATOR_SOURCE_OF_TRUTH.md",
+  "docs/calculator/CURRENT_STATE.md",
+  "docs/calculator/DOCUMENTATION_MAP.md",
+  "docs/calculator/NEXT_AGENT_BRIEF.md",
+  "docs/calculator/NEXT_IMPLEMENTATION_PLAN.md",
+  "docs/calculator/HIGH_ROI_CALCULATOR_IMPLEMENTATION_SELECTION_PLAN_2026-06-18.md",
+  OWNER_PLAN_DOC,
+  COVERAGE_PLAN_DOC,
+  SELECTED_NEXT_PLAN_DOC
+] as const;
+
+function readRepoFile(path: string): string {
+  return readFileSync(join(REPO_ROOT, path), "utf8");
+}
+
+function cloneGateAYAdvancedWallInput(): NonNullable<AirborneContext["advancedWall"]> {
+  return {
+    ...GATE_AY_COMPLETE_ADVANCED_WALL_RUNTIME_INPUT,
+    cavities: GATE_AY_COMPLETE_ADVANCED_WALL_RUNTIME_INPUT.cavities.map((cavity) => ({ ...cavity })),
+    frameCoupling: { ...GATE_AY_COMPLETE_ADVANCED_WALL_RUNTIME_INPUT.frameCoupling },
+    panels: GATE_AY_COMPLETE_ADVANCED_WALL_RUNTIME_INPUT.panels.map((panel) => ({
+      ...panel,
+      layerIds: [...(panel.layerIds ?? [])]
+    })),
+    targetOutputs: [...GATE_AY_COMPLETE_ADVANCED_WALL_RUNTIME_INPUT.targetOutputs]
+  };
+}
+
+function buildFieldContext(): AirborneContext {
+  return {
+    advancedWall: {
+      ...cloneGateAYAdvancedWallInput(),
+      outputBasis: "field_between_rooms",
+      targetOutputs: [...FIELD_BUILDING_OUTPUTS]
+    },
+    contextMode: "field_between_rooms",
+    panelHeightMm: 2800,
+    panelWidthMm: 3200,
+    receivingRoomRt60S: 0.6,
+    receivingRoomVolumeM3: 55
+  };
+}
+
+function buildBuildingContext(): AirborneContext {
+  return {
+    advancedWall: {
+      ...cloneGateAYAdvancedWallInput(),
+      outputBasis: "building_prediction",
+      targetOutputs: [...FIELD_BUILDING_OUTPUTS]
+    },
+    buildingPredictionOutputBasis: "apparent_and_standardized",
+    conservativeFlankingAssumption: "multi_path_conservative",
+    contextMode: "building_prediction",
+    flankingJunctionClass: "rigid_t_junction",
+    junctionCouplingLengthM: 4.8,
+    panelHeightMm: 2800,
+    panelWidthMm: 3200,
+    receivingRoomRt60S: 0.6,
+    receivingRoomVolumeM3: 55,
+    sourceRoomVolumeM3: 42
+  };
+}
+
+function calculateAdvancedWall(
+  context: AirborneContext,
+  targetOutputs: readonly RequestedOutputId[]
+) {
+  return calculateAssembly(GATE_AZ_VISIBLE_ADVANCED_WALL_LAYER_STACK, {
+    airborneContext: context,
+    calculator: "dynamic",
+    targetOutputs
+  });
+}
+
+function expectLabCompanionValues(result: ReturnType<typeof calculateAssembly>) {
+  expect(result.metrics).toMatchObject({
+    estimatedCDb: -1.1,
+    estimatedCtrDb: -6.4,
+    estimatedRwDb: 65,
+    estimatedStc: 65
+  });
+  expect(result.warnings).toContain(
+    POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_ADAPTER_WARNING
+  );
+  expect(result.warnings).toContain(
+    POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_LAB_COMPANION_WARNING
+  );
+}
+
+function coverageSummary() {
+  return {
+    counters: COVERAGE_COUNTERS,
+    landedGate: COVERAGE_ACTION,
+    previousOwner: {
+      implementationFile: OWNER_FILE,
+      planDoc: OWNER_PLAN_DOC,
+      selectedGate: OWNER_ACTION,
+      status: OWNER_STATUS
+    },
+    previousRerank: {
+      implementationFile: PREVIOUS_RERANK_FILE,
+      planDoc: PREVIOUS_RERANK_PLAN_DOC,
+      selectedGate: PREVIOUS_RERANK_ACTION,
+      status: PREVIOUS_RERANK_STATUS
+    },
+    runtimeValueMovement: false,
+    selectedCandidateId: SELECTED_CANDIDATE_ID,
+    selectedNextAction: SELECTED_NEXT_ACTION,
+    selectedNextFile: SELECTED_NEXT_FILE,
+    selectedNextLabel: SELECTED_NEXT_LABEL,
+    selectedNextPlanDoc: SELECTED_NEXT_PLAN_DOC,
+    selectionStatus: COVERAGE_STATUS
+  };
+}
+
+describe("post-V1 wall advanced-wall source-absent field/building lab-companion target-output independence coverage refresh", () => {
+  it("lands a no-runtime refresh over the target-output independence owner", () => {
+    expect(coverageSummary()).toMatchObject({
+      counters: COVERAGE_COUNTERS,
+      landedGate: COVERAGE_ACTION,
+      runtimeValueMovement: false,
+      selectedCandidateId: SELECTED_CANDIDATE_ID,
+      selectedNextAction: SELECTED_NEXT_ACTION,
+      selectedNextFile: SELECTED_NEXT_FILE,
+      selectedNextLabel: SELECTED_NEXT_LABEL,
+      selectedNextPlanDoc: SELECTED_NEXT_PLAN_DOC,
+      selectionStatus: COVERAGE_STATUS
+    });
+
+    for (const path of [
+      PREVIOUS_RERANK_FILE,
+      PREVIOUS_RERANK_PLAN_DOC,
+      OWNER_FILE,
+      OWNER_PLAN_DOC,
+      COVERAGE_FILE,
+      COVERAGE_PLAN_DOC,
+      SELECTED_NEXT_PLAN_DOC
+    ]) {
+      expect(existsSync(join(REPO_ROOT, path)), path).toBe(true);
+    }
+  });
+
+  it("re-probes lab-only and mixed field/building values without moving runtime", () => {
+    const fieldLabOnly = calculateAdvancedWall(buildFieldContext(), LAB_OUTPUTS);
+    const buildingLabOnly = calculateAdvancedWall(buildBuildingContext(), LAB_OUTPUTS);
+    const fieldMixed = calculateAdvancedWall(buildFieldContext(), FIELD_MIXED_OUTPUTS);
+    const buildingMixed = calculateAdvancedWall(buildBuildingContext(), BUILDING_MIXED_OUTPUTS);
+
+    expect(fieldLabOnly.airborneBasis?.method).toBe(GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD);
+    expect(fieldLabOnly.supportedTargetOutputs).toEqual([...LAB_OUTPUTS]);
+    expect(fieldLabOnly.unsupportedTargetOutputs).toEqual([]);
+    expectLabCompanionValues(fieldLabOnly);
+
+    expect(buildingLabOnly.airborneBasis?.method).toBe(GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD);
+    expect(buildingLabOnly.supportedTargetOutputs).toEqual([...LAB_OUTPUTS]);
+    expect(buildingLabOnly.unsupportedTargetOutputs).toEqual([]);
+    expectLabCompanionValues(buildingLabOnly);
+
+    expect(fieldMixed.airborneBasis?.method).toBe(GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD);
+    expect(fieldMixed.metrics.estimatedRwPrimeDb).toBe(63);
+    expectLabCompanionValues(fieldMixed);
+
+    expect(buildingMixed.airborneBasis?.method).toBe(GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD);
+    expect(buildingMixed.metrics.estimatedDnTwDb).toBe(66);
+    expectLabCompanionValues(buildingMixed);
+  }, 30000);
+
+  it("keeps missing context and Gate AY field/building publishing boundaries protected", () => {
+    const incompleteField = calculateAdvancedWall(
+      {
+        advancedWall: {
+          ...cloneGateAYAdvancedWallInput(),
+          outputBasis: "field_between_rooms",
+          targetOutputs: [...LAB_OUTPUTS]
+        },
+        contextMode: "field_between_rooms",
+        panelHeightMm: 2800,
+        panelWidthMm: 3200,
+        receivingRoomVolumeM3: 55
+      },
+      LAB_OUTPUTS
+    );
+    const elementLab = calculateAdvancedWall(GATE_AZ_COMPLETE_ADVANCED_WALL_AIRBORNE_CONTEXT, LAB_OUTPUTS);
+    const gateAYBoundary = calculateGateAYAdvancedWallRuntimeCorridor({
+      ...cloneGateAYAdvancedWallInput(),
+      outputBasis: "building_prediction",
+      targetOutputs: [...FIELD_BUILDING_OUTPUTS]
+    });
+
+    expect(incompleteField.supportedTargetOutputs).toEqual([]);
+    expect(incompleteField.unsupportedTargetOutputs).toEqual([...LAB_OUTPUTS]);
+    expect(elementLab.airborneBasis?.method).toBe(PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AY_RUNTIME_METHOD);
+    expect(elementLab.supportedTargetOutputs).toEqual([...LAB_OUTPUTS]);
+    expect(gateAYBoundary.status).toBe("unsupported_boundary");
+    expect(gateAYBoundary.supportedTargetOutputs).toEqual([]);
+    expect(gateAYBoundary.unsupportedTargetOutputs).toEqual([...FIELD_BUILDING_OUTPUTS]);
+  }, 30000);
+
+  it("keeps active docs aligned with the coverage refresh and next rerank handoff", () => {
+    for (const path of REQUIRED_DOCS) {
+      const contents = readRepoFile(path);
+
+      expect(contents, path).toContain(OWNER_ACTION);
+      expect(contents, path).toContain(OWNER_STATUS);
+      expect(contents, path).toContain(OWNER_FILE);
+      expect(contents, path).toContain(OWNER_PLAN_DOC);
+      expect(contents, path).toContain(SELECTED_CANDIDATE_ID);
+      expect(contents, path).toContain(COVERAGE_ACTION);
+      expect(contents, path).toContain(COVERAGE_STATUS);
+      expect(contents, path).toContain(COVERAGE_FILE);
+      expect(contents, path).toContain(COVERAGE_PLAN_DOC);
+      expect(contents, path).toContain(SELECTED_NEXT_ACTION);
+      expect(contents, path).toContain(SELECTED_NEXT_FILE);
+      expect(contents, path).toContain(SELECTED_NEXT_PLAN_DOC);
+      expect(contents, path).toContain(SELECTED_NEXT_LABEL);
+      expect(contents, path).toContain("coverageRefreshContractFilesTouched: 1");
+      expect(contents, path).toContain("runtimeValuesMoved 0");
+      expect(contents, path).toContain("runtimeFormulaRetunes: 0");
+      expect(contents, path).toContain("sourceRowsImported: 0");
+      expect(contents, path).toContain("frontendImplementationFilesTouched: 0");
+    }
+  });
+});
