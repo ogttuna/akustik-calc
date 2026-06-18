@@ -1,5 +1,55 @@
 # High-ROI Calculator Implementation Selection Plan - 2026-06-18
 
+
+## Current Measured-Frequency Checkpoint - 2026-06-18
+
+Latest checkpoint reconciliation:
+`docs/calculator/CHECKPOINT_2026-06-18_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_TARGET_OUTPUT_COVERAGE.md`.
+This confirms the measured-frequency field/building lab-companion
+target-output independence coverage refresh, targeted green tests, and
+known unrelated resolver/candidate-surface current-gate failures in the
+dirty worktree. It does not replace the selected next plan.
+
+Latest landed no-runtime coverage refresh:
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_coverage_refresh_plan`.
+Coverage refresh file:
+`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-field-building-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`.
+Coverage refresh plan doc:
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_COVERAGE_REFRESH_PLAN_2026-06-18.md`.
+Coverage refresh status:
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`.
+
+Previous rerank:
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_field_building_lab_companion_basis_integrity_coverage_refresh_plan`.
+Previous rerank status:
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_field_building_lab_companion_basis_integrity_coverage_refresh_landed_no_runtime_selected_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_owner`.
+
+Previous owner:
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_owner_plan`.
+Previous owner file:
+`packages/engine/src/post-v1-project-user-measured-wall-airborne-frequency-field-building-lab-companion-target-output-independence-owner-contract.test.ts`.
+Previous owner plan doc:
+`docs/calculator/POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_OWNER_PLAN_2026-06-18.md`.
+Previous owner status:
+`post_v1_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_owner_landed_runtime_selected_coverage_refresh`.
+Selected candidate:
+`project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_owner`.
+
+Coverage counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Current selected next action:
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_coverage_refresh_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-airborne-frequency-field-building-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_COVERAGE_REFRESH_PLAN_2026-06-18.md`.
+Current selected next label:
+`post-V1 runtime-first route-family rerank after project/user measured wall airborne frequency field/building lab-companion target-output independence coverage refresh`.
+
 ## Role
 
 This document turns the highest-ROI calculator work streams into an

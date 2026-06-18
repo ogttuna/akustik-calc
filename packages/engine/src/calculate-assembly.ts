@@ -262,9 +262,18 @@ import {
   maybeBuildProjectUserMeasuredWallRwExactBridge
 } from "./project-user-measured-wall-rw-exact-bridge";
 import {
+  POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_EXACT_CURVE_BRIDGE_RUNTIME_METHOD,
   PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_EXACT_CURVE_METRIC_LABEL,
   maybeBuildProjectUserMeasuredWallAirborneFrequencyExactCurveBridge
 } from "./project-user-measured-wall-airborne-frequency-exact-curve-bridge";
+import {
+  POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_COMPATIBLE_DELTA_RUNTIME_METHOD,
+  maybeBuildProjectUserMeasuredWallAirborneFrequencyCompatibleDelta
+} from "./project-user-measured-wall-airborne-frequency-compatible-delta";
+import {
+  POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_ADAPTER_WARNING,
+  buildProjectUserMeasuredWallAirborneFrequencyFieldBuildingDirectCurveBasis
+} from "./project-user-measured-wall-airborne-frequency-field-building-adapter";
 import { inferSafeFlatWallAutoTopology } from "./wall-flat-multicavity-auto-topology";
 
 export type CalculateAssemblyOptions = {
@@ -313,6 +322,16 @@ function hasWallCompatibleAnchorDeltaFieldBuildingTargetOutput(
   targetOutputs: readonly RequestedOutputId[]
 ): boolean {
   return targetOutputs.some((output) => WALL_COMPATIBLE_ANCHOR_DELTA_FIELD_BUILDING_REQUEST_OUTPUTS.has(output));
+}
+
+function hasWallCompatibleAnchorDeltaFieldBuildingOrLabCompanionTargetOutput(
+  targetOutputs: readonly RequestedOutputId[]
+): boolean {
+  return targetOutputs.some(
+    (output) =>
+      WALL_COMPATIBLE_ANCHOR_DELTA_FIELD_BUILDING_REQUEST_OUTPUTS.has(output) ||
+      GATE_AR_AIRBORNE_BUILDING_PREDICTION_LAB_ALIAS_OUTPUTS.has(output)
+  );
 }
 
 function getWallCompatibleAnchorDeltaFieldBuildingOwnedOutputs(
@@ -378,6 +397,22 @@ function describeWallCompatibleAnchorDeltaFieldBuildingOwnedOutputs(
 ): string {
   const ownedOutputs = [...getWallCompatibleAnchorDeltaFieldBuildingOwnedOutputs(adapterBasis)];
   return ownedOutputs.length > 0 ? ownedOutputs.join(", ") : "no field/building outputs";
+}
+
+function getProjectUserMeasuredWallAirborneFrequencyFieldBuildingSupportedOutputs(input: {
+  adapterBasis: AirborneResultBasis | null | undefined;
+  targetOutputs: readonly RequestedOutputId[];
+}): RequestedOutputId[] {
+  if (
+    input.adapterBasis?.method !== GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD &&
+    input.adapterBasis?.method !== GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD
+  ) {
+    return [];
+  }
+
+  return input.targetOutputs.filter((output) =>
+    WALL_COMPATIBLE_ANCHOR_DELTA_FIELD_BUILDING_REQUEST_OUTPUTS.has(output)
+  );
 }
 const GATE_AR_AIRBORNE_BUILDING_PREDICTION_LAB_ALIAS_OUTPUTS = new Set<RequestedOutputId>([
   "C",
@@ -1650,6 +1685,50 @@ function getPostV1WallUserMaterialFormulaFieldLabCompanionOutputs(input: {
   }
 
   return getFiniteRequestedLabSpectrumOutputs(input);
+}
+
+function getPostV1ProjectUserMeasuredWallAirborneFrequencyFieldBuildingLabCompanionOutputs(input: {
+  readonly airborneBasis: AirborneResultBasis | null | undefined;
+  readonly airborneContext: AirborneContext | null | undefined;
+  readonly estimatedCDb: number | null | undefined;
+  readonly estimatedCtrDb: number | null | undefined;
+  readonly estimatedRwDb: number | null | undefined;
+  readonly estimatedStcDb: number | null | undefined;
+  readonly labSourceBasis: AirborneResultBasis | null | undefined;
+  readonly support: TargetOutputSupportLike;
+}): RequestedOutputId[] {
+  const hasFieldOrBuildingBasis =
+    (
+      input.airborneBasis?.method === GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD ||
+      input.airborneBasis?.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD
+    ) &&
+    input.airborneBasis.origin === "family_physics_prediction" &&
+    input.airborneBasis.missingPhysicalInputs.length === 0;
+  const hasMeasuredFrequencyLabSource =
+    (
+      input.labSourceBasis?.method ===
+        POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_EXACT_CURVE_BRIDGE_RUNTIME_METHOD ||
+      input.labSourceBasis?.method ===
+        POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_COMPATIBLE_DELTA_RUNTIME_METHOD
+    ) &&
+    input.labSourceBasis.missingPhysicalInputs.length === 0;
+  const contextMode = input.airborneContext?.contextMode;
+
+  if (
+    (contextMode !== "field_between_rooms" && contextMode !== "building_prediction") ||
+    !hasFieldOrBuildingBasis ||
+    !hasMeasuredFrequencyLabSource
+  ) {
+    return [];
+  }
+
+  const targetSetIsLabOnly = input.support.targetOutputs.every((output) =>
+    GATE_AR_AIRBORNE_BUILDING_PREDICTION_LAB_ALIAS_OUTPUTS.has(output)
+  );
+
+  return targetSetIsLabOnly
+    ? getFiniteRequestedLabSpectrumOutputs(input)
+    : getFiniteRequestedUnsupportedLabSpectrumOutputs(input);
 }
 
 function getPostV1WallTimberStudCltFormulaFieldLabCompanionOutputs(input: {
@@ -4253,13 +4332,86 @@ export function calculateAssembly(
       resolvedLayers,
       targetOutputs
     });
+  const projectUserMeasuredWallAirborneFrequencyCompatibleDelta =
+    maybeBuildProjectUserMeasuredWallAirborneFrequencyCompatibleDelta({
+      airborneContext,
+      anchors: options.calculator === "dynamic" ? options.airborneMeasuredFrequencySourceAnchors : null,
+      compatibleAnchorDeltaAlreadyApplied: compatibleWallAnchorDeltaResult.applied,
+      exactFullStackAlreadyApplied:
+        verifiedAirborneAnchorResult.applied ||
+        projectUserMeasuredWallAirborneFrequencyExactCurveBridge.applied,
+      resolvedLayers,
+      targetOutputs
+    });
+  const projectUserMeasuredWallAirborneFrequencyFieldBuildingRequest = Boolean(
+    options.calculator === "dynamic" &&
+      airborneContext?.contextMode &&
+      airborneContext.contextMode !== "element_lab" &&
+      hasWallCompatibleAnchorDeltaFieldBuildingOrLabCompanionTargetOutput(targetOutputs)
+  );
+  const projectUserMeasuredWallAirborneFrequencyFieldBuildingLabTargetOutputs = targetOutputs.filter((output) =>
+    GATE_AR_AIRBORNE_BUILDING_PREDICTION_LAB_ALIAS_OUTPUTS.has(output)
+  );
+  const projectUserMeasuredWallAirborneFrequencyFieldBuildingSourceTargetOutputs:
+    readonly RequestedOutputId[] =
+      projectUserMeasuredWallAirborneFrequencyFieldBuildingLabTargetOutputs.length > 0
+        ? projectUserMeasuredWallAirborneFrequencyFieldBuildingLabTargetOutputs
+        : ["Rw"];
+  const projectUserMeasuredWallAirborneFrequencyFieldBuildingLookupContext =
+    projectUserMeasuredWallAirborneFrequencyFieldBuildingRequest && airborneContext
+      ? {
+          ...airborneContext,
+          contextMode: "element_lab" as const
+        }
+      : airborneContext;
+  const projectUserMeasuredWallAirborneFrequencyFieldBuildingExactCurveBridge =
+    projectUserMeasuredWallAirborneFrequencyFieldBuildingRequest
+      ? maybeBuildProjectUserMeasuredWallAirborneFrequencyExactCurveBridge({
+          airborneContext: projectUserMeasuredWallAirborneFrequencyFieldBuildingLookupContext,
+          anchors: options.calculator === "dynamic" ? options.airborneMeasuredFrequencySourceAnchors : null,
+          compatibleAnchorDeltaAlreadyApplied: compatibleWallAnchorDeltaResult.applied,
+          exactFullStackAlreadyApplied: verifiedAirborneAnchorResult.applied,
+          resolvedLayers,
+          targetOutputs: projectUserMeasuredWallAirborneFrequencyFieldBuildingSourceTargetOutputs
+        })
+      : null;
+  const projectUserMeasuredWallAirborneFrequencyFieldBuildingCompatibleDelta =
+    projectUserMeasuredWallAirborneFrequencyFieldBuildingRequest
+      ? maybeBuildProjectUserMeasuredWallAirborneFrequencyCompatibleDelta({
+          airborneContext: projectUserMeasuredWallAirborneFrequencyFieldBuildingLookupContext,
+          anchors: options.calculator === "dynamic" ? options.airborneMeasuredFrequencySourceAnchors : null,
+          compatibleAnchorDeltaAlreadyApplied: compatibleWallAnchorDeltaResult.applied,
+          exactFullStackAlreadyApplied:
+            verifiedAirborneAnchorResult.applied ||
+            Boolean(projectUserMeasuredWallAirborneFrequencyFieldBuildingExactCurveBridge?.applied),
+          resolvedLayers,
+          targetOutputs: projectUserMeasuredWallAirborneFrequencyFieldBuildingSourceTargetOutputs
+        })
+      : null;
+  const projectUserMeasuredWallAirborneFrequencyFieldBuildingSource =
+    projectUserMeasuredWallAirborneFrequencyFieldBuildingExactCurveBridge?.applied
+      ? {
+          kind: "exact_full_stack" as const,
+          result: projectUserMeasuredWallAirborneFrequencyFieldBuildingExactCurveBridge
+        }
+      : projectUserMeasuredWallAirborneFrequencyFieldBuildingCompatibleDelta?.applied
+        ? {
+            kind: "compatible_delta" as const,
+            result: projectUserMeasuredWallAirborneFrequencyFieldBuildingCompatibleDelta
+          }
+        : null;
   const projectUserMeasuredWallRwExactBridge = maybeBuildProjectUserMeasuredWallRwExactBridge({
     airborneContext,
     anchors: options.calculator === "dynamic" ? options.airborneMeasuredSourceAnchors : null,
-    compatibleAnchorDeltaAlreadyApplied: compatibleWallAnchorDeltaResult.applied,
+    compatibleAnchorDeltaAlreadyApplied:
+      compatibleWallAnchorDeltaResult.applied ||
+      projectUserMeasuredWallAirborneFrequencyCompatibleDelta.applied ||
+      Boolean(projectUserMeasuredWallAirborneFrequencyFieldBuildingSource),
     exactFullStackAlreadyApplied:
       verifiedAirborneAnchorResult.applied ||
-      projectUserMeasuredWallAirborneFrequencyExactCurveBridge.applied,
+      projectUserMeasuredWallAirborneFrequencyExactCurveBridge.applied ||
+      projectUserMeasuredWallAirborneFrequencyCompatibleDelta.applied ||
+      Boolean(projectUserMeasuredWallAirborneFrequencyFieldBuildingSource),
     resolvedLayers,
     targetOutputs
   });
@@ -4301,15 +4453,72 @@ export function calculateAssembly(
             sourceDescription: "the compatible measured-anchor delta direct curve"
           })
         : null;
+  const projectUserMeasuredWallAirborneFrequencyFieldBuildingOverlayResult =
+    projectUserMeasuredWallAirborneFrequencyFieldBuildingSource?.result.curve
+      ? applyAirborneContextOverlay(
+          projectUserMeasuredWallAirborneFrequencyFieldBuildingSource.result.curve,
+          airborneResolvedLayers,
+          airborneContext
+        )
+      : null;
+  const projectUserMeasuredWallAirborneFrequencyFieldBuildingDirectCurveBasis =
+    projectUserMeasuredWallAirborneFrequencyFieldBuildingSource?.result.basis &&
+    projectUserMeasuredWallAirborneFrequencyFieldBuildingSource.result.curve
+      ? buildProjectUserMeasuredWallAirborneFrequencyFieldBuildingDirectCurveBasis({
+          family: dynamicAirborneResult?.trace.detectedFamily,
+          sourceBasis: projectUserMeasuredWallAirborneFrequencyFieldBuildingSource.result.basis,
+          sourceKind: projectUserMeasuredWallAirborneFrequencyFieldBuildingSource.kind,
+          sourceLabel: projectUserMeasuredWallAirborneFrequencyFieldBuildingSource.result.match?.label,
+          transmissionLossCurve: projectUserMeasuredWallAirborneFrequencyFieldBuildingSource.result.curve
+        })
+      : null;
+  const projectUserMeasuredWallAirborneFrequencyFieldBuildingFrequencyBands =
+    projectUserMeasuredWallAirborneFrequencyFieldBuildingDirectCurveBasis
+      ? {
+          bandSet: "post_v1_project_user_measured_wall_airborne_frequency_field_building_adapter_curve",
+          frequenciesHz: [
+            ...(projectUserMeasuredWallAirborneFrequencyFieldBuildingSource?.result.curve?.frequenciesHz ?? [])
+          ]
+        }
+      : undefined;
+  const projectUserMeasuredWallAirborneFrequencyFieldBuildingBasis =
+    projectUserMeasuredWallAirborneFrequencyFieldBuildingDirectCurveBasis &&
+    airborneContext?.contextMode === "field_between_rooms"
+      ? maybeBuildGateIAirborneFieldContextBasisFromBase({
+          baseBasis: projectUserMeasuredWallAirborneFrequencyFieldBuildingDirectCurveBasis,
+          context: airborneContext,
+          family: dynamicAirborneResult?.trace.detectedFamily,
+          frequencyBands: projectUserMeasuredWallAirborneFrequencyFieldBuildingFrequencyBands
+        })
+      : projectUserMeasuredWallAirborneFrequencyFieldBuildingDirectCurveBasis &&
+        airborneContext?.contextMode === "building_prediction"
+        ? maybeBuildGateARAirborneBuildingPredictionBasisFromBase({
+            baseBasis: projectUserMeasuredWallAirborneFrequencyFieldBuildingDirectCurveBasis,
+            context: airborneContext,
+            family: dynamicAirborneResult?.trace.detectedFamily,
+            frequencyBands: projectUserMeasuredWallAirborneFrequencyFieldBuildingFrequencyBands,
+            sourceDescription: "the project/user measured wall airborne frequency direct curve"
+          })
+        : null;
   const approximateAirborneFieldCompanionResult = applyApproximateAirborneFieldCompanion(
     verifiedAirborneAnchorResult.ratings,
     airborneResolvedLayers,
     airborneContext
   );
-  const curve = compatibleWallAnchorDeltaResult.applied
+  const curve = projectUserMeasuredWallAirborneFrequencyFieldBuildingSource?.result.curve
+    ? projectUserMeasuredWallAirborneFrequencyFieldBuildingOverlayResult?.curve ??
+      projectUserMeasuredWallAirborneFrequencyFieldBuildingSource.result.curve
+    : compatibleWallAnchorDeltaResult.applied
     ? compatibleWallAnchorDeltaFieldBuildingOverlayResult?.curve ?? compatibleWallAnchorDeltaResult.curve
     : verifiedAirborneAnchorResult.curve;
-  const ratings = compatibleWallAnchorDeltaResult.applied
+  const ratings = projectUserMeasuredWallAirborneFrequencyFieldBuildingSource?.result.curve
+    ? projectUserMeasuredWallAirborneFrequencyFieldBuildingOverlayResult?.ratings ??
+      buildRatingsFromCurve(
+        projectUserMeasuredWallAirborneFrequencyFieldBuildingSource.result.curve.frequenciesHz,
+        projectUserMeasuredWallAirborneFrequencyFieldBuildingSource.result.curve.transmissionLossDb,
+        airborneContext
+      )
+    : compatibleWallAnchorDeltaResult.applied
     ? compatibleWallAnchorDeltaFieldBuildingOverlayResult?.ratings ?? compatibleWallAnchorDeltaResult.ratings
     : approximateAirborneFieldCompanionResult.ratings;
   const adjustedEstimatedRwDb = Math.max(
@@ -4317,6 +4526,8 @@ export function calculateAssembly(
     round1(
       compatibleWallAnchorDeltaResult.applied && typeof compatibleWallAnchorDeltaResult.predictedRwDb === "number"
         ? compatibleWallAnchorDeltaResult.predictedRwDb
+        : projectUserMeasuredWallAirborneFrequencyFieldBuildingSource?.result.curve
+        ? ratings.iso717.Rw
         : verifiedAirborneAnchorResult.applied && verifiedAirborneAnchorResult.match?.sourceMode === "lab"
         ? ratings.iso717.Rw
         : (dynamicAirborneResult?.rw ?? importedCalculatorResult?.rw ?? screeningEstimatedRwDb) -
@@ -4361,6 +4572,26 @@ export function calculateAssembly(
     typeof dynamicAirborneResult?.rw === "number" && Number.isFinite(dynamicAirborneResult.rw)
       ? dynamicAirborneResult.rw
       : wallDirectLabRatings?.iso717.Rw;
+  const projectUserMeasuredWallAirborneFrequencyFieldBuildingLabRwDb =
+    typeof projectUserMeasuredWallAirborneFrequencyFieldBuildingSource?.result.values.Rw === "number" &&
+    Number.isFinite(projectUserMeasuredWallAirborneFrequencyFieldBuildingSource.result.values.Rw)
+      ? projectUserMeasuredWallAirborneFrequencyFieldBuildingSource.result.values.Rw
+      : undefined;
+  const projectUserMeasuredWallAirborneFrequencyFieldBuildingLabCDb =
+    typeof projectUserMeasuredWallAirborneFrequencyFieldBuildingSource?.result.values.C === "number" &&
+    Number.isFinite(projectUserMeasuredWallAirborneFrequencyFieldBuildingSource.result.values.C)
+      ? projectUserMeasuredWallAirborneFrequencyFieldBuildingSource.result.values.C
+      : undefined;
+  const projectUserMeasuredWallAirborneFrequencyFieldBuildingLabCtrDb =
+    typeof projectUserMeasuredWallAirborneFrequencyFieldBuildingSource?.result.values.Ctr === "number" &&
+    Number.isFinite(projectUserMeasuredWallAirborneFrequencyFieldBuildingSource.result.values.Ctr)
+      ? projectUserMeasuredWallAirborneFrequencyFieldBuildingSource.result.values.Ctr
+      : undefined;
+  const projectUserMeasuredWallAirborneFrequencyFieldBuildingLabStcDb =
+    typeof projectUserMeasuredWallAirborneFrequencyFieldBuildingSource?.result.values.STC === "number" &&
+    Number.isFinite(projectUserMeasuredWallAirborneFrequencyFieldBuildingSource.result.values.STC)
+      ? projectUserMeasuredWallAirborneFrequencyFieldBuildingSource.result.values.STC
+      : undefined;
   const hasUserSuppliedAirborneMaterial = airborneResolvedLayers.some(
     (layer) => layer.material.acoustic?.propertySourceStatus === "user_supplied"
   );
@@ -4395,8 +4626,9 @@ export function calculateAssembly(
       : ratings;
   const visibleEstimatedRwDbWithOpeningLeakFieldBuildingRuntime =
     companyInternalOpeningLeakFieldBuildingRuntime?.labCompositeRwDb ?? visibleEstimatedRwDb;
-  const gateSOpeningLeakBlockedOutputs =
-    gateAHOpeningLeakStcSpectrumAdapter
+  const gateSOpeningLeakBlockedOutputs = projectUserMeasuredWallAirborneFrequencyFieldBuildingBasis
+    ? []
+    : gateAHOpeningLeakStcSpectrumAdapter
       ? gateSOpeningLeakCompositeRuntime?.blockedOutputs.filter((output) =>
           output !== "STC" &&
           !(companyInternalOpeningLeakFieldBuildingRuntime?.supportedOutputs.includes(output) ?? false)
@@ -4785,10 +5017,12 @@ export function calculateAssembly(
     floorAirborneBuildingPredictionRuntime?.ratings ?? ratingsWithOpeningLeakFieldBuildingRuntime;
   const visibleAirborneOverlay =
     floorAirborneBuildingPredictionRuntime?.overlay ??
+    projectUserMeasuredWallAirborneFrequencyFieldBuildingOverlayResult?.overlay ??
     compatibleWallAnchorDeltaFieldBuildingOverlayResult?.overlay ??
     airborneOverlayResult.overlay;
   const visibleAirborneOverlayWarnings =
     floorAirborneBuildingPredictionRuntime?.warnings ??
+    projectUserMeasuredWallAirborneFrequencyFieldBuildingOverlayResult?.warnings ??
     compatibleWallAnchorDeltaFieldBuildingOverlayResult?.warnings ??
     airborneOverlayResult.warnings;
   const visibleEstimatedRwDbWithFieldBuildingRuntime =
@@ -4998,18 +5232,27 @@ export function calculateAssembly(
       estimatedRwDb: visibleEstimatedRwDbWithFloorPackageLabCompanion,
       support: rockwoolSplitTripleLeafExactOutputWithhold.targetOutputSupport
     });
+  const projectUserMeasuredWallAirborneFrequencyFieldBuildingSupportedOutputs =
+    getProjectUserMeasuredWallAirborneFrequencyFieldBuildingSupportedOutputs({
+      adapterBasis: projectUserMeasuredWallAirborneFrequencyFieldBuildingBasis,
+      targetOutputs: rockwoolSplitTripleLeafExactOutputWithhold.targetOutputSupport.targetOutputs
+    });
   const targetOutputSupportBeforeProjectUserMeasuredFrequencyCurve = moveUnsupportedOutputsToSupported(
     rockwoolSplitTripleLeafExactOutputWithhold.targetOutputSupport,
     [
       ...new Set([
         ...postV1MixedWallLabFieldCompanionOutputs,
-        ...postV1WallScreeningFieldLabCompanionOutputs
+        ...postV1WallScreeningFieldLabCompanionOutputs,
+        ...projectUserMeasuredWallAirborneFrequencyFieldBuildingSupportedOutputs
       ])
     ]
   );
   const targetOutputSupport = moveSupportedOutputsToUnsupported(
     targetOutputSupportBeforeProjectUserMeasuredFrequencyCurve,
-    projectUserMeasuredWallAirborneFrequencyExactCurveBridge.unsupportedOutputs
+    [
+      ...projectUserMeasuredWallAirborneFrequencyExactCurveBridge.unsupportedOutputs,
+      ...projectUserMeasuredWallAirborneFrequencyCompatibleDelta.unsupportedOutputs
+    ]
   );
   const floorFamilySourceGuard =
     getFloorFamilySourceGuard(impactResolvedLayers) ?? getFloorFamilySourceGuard(resolvedLayers);
@@ -5051,6 +5294,7 @@ export function calculateAssembly(
         compatibleWallAnchorDeltaResult.applied ||
         verifiedAirborneAnchorResult.applied ||
         projectUserMeasuredWallAirborneFrequencyExactCurveBridge.applied ||
+        projectUserMeasuredWallAirborneFrequencyCompatibleDelta.applied ||
         projectUserMeasuredWallRwExactBridge.applied,
       sourceMetricLabel: verifiedAirborneAnchorResult.match?.metricLabel,
       targetOutputs: targetOutputSupport.targetOutputs
@@ -5059,6 +5303,7 @@ export function calculateAssembly(
     compatibleWallAnchorDeltaResult.match ??
     verifiedAirborneAnchorResult.match ??
     projectUserMeasuredWallAirborneFrequencyExactCurveBridge.match ??
+    projectUserMeasuredWallAirborneFrequencyCompatibleDelta.match ??
     projectUserMeasuredWallRwExactBridge.match;
   const dynamicCandidateResolverRuntime = options.calculator === "dynamic"
     ? buildDynamicCalculatorCandidateResolverRuntime({
@@ -5071,7 +5316,15 @@ export function calculateAssembly(
           supportedTargetOutputs: targetOutputSupport.supportedTargetOutputs,
           targetOutputs: targetOutputSupport.targetOutputs
         }),
-        runtimeSignal: companyInternalOpeningLeakFieldBuildingRuntime?.basis
+        runtimeSignal: projectUserMeasuredWallAirborneFrequencyFieldBuildingBasis
+          ? {
+              airborneBasis: projectUserMeasuredWallAirborneFrequencyFieldBuildingBasis,
+              detectedFamily: dynamicAirborneResult?.trace.detectedFamily ?? "stud_wall_system",
+              runtimeValueMovement: true,
+              selectedMethod: dynamicAirborneResult?.trace.selectedMethod,
+              strategy: "project_user_measured_wall_airborne_frequency_field_building_adapter"
+            }
+          : companyInternalOpeningLeakFieldBuildingRuntime?.basis
           ? {
               airborneBasis: companyInternalOpeningLeakFieldBuildingRuntime.basis,
               detectedFamily: dynamicAirborneResult?.trace.detectedFamily,
@@ -5110,15 +5363,21 @@ export function calculateAssembly(
             }
           : null,
         sourceAnchor: {
-          anchorKind: compatibleWallAnchorDeltaResult.applied ? "compatible_delta" : "exact_full_stack",
+          anchorKind:
+            compatibleWallAnchorDeltaResult.applied ||
+            projectUserMeasuredWallAirborneFrequencyCompatibleDelta.applied
+              ? "compatible_delta"
+              : "exact_full_stack",
           applied:
             compatibleWallAnchorDeltaResult.applied ||
             verifiedAirborneAnchorResult.applied ||
             projectUserMeasuredWallAirborneFrequencyExactCurveBridge.applied ||
+            projectUserMeasuredWallAirborneFrequencyCompatibleDelta.applied ||
             projectUserMeasuredWallRwExactBridge.applied ||
             zeroDeltaVerifiedAirborneExactSourceApplied,
           basis:
             projectUserMeasuredWallAirborneFrequencyExactCurveBridge.basis ??
+            projectUserMeasuredWallAirborneFrequencyCompatibleDelta.basis ??
             projectUserMeasuredWallRwExactBridge.basis,
           match: sourceAnchorMatch
             ? {
@@ -5133,18 +5392,21 @@ export function calculateAssembly(
             compatibleWallAnchorDeltaResult.applied ||
             verifiedAirborneAnchorResult.applied ||
             projectUserMeasuredWallAirborneFrequencyExactCurveBridge.applied ||
+            projectUserMeasuredWallAirborneFrequencyCompatibleDelta.applied ||
             projectUserMeasuredWallRwExactBridge.applied
         },
         targetOutputs: targetOutputSupport.targetOutputs
       })
     : null;
   const shouldParkAirborneBuildingPredictionRuntime =
+    !projectUserMeasuredWallAirborneFrequencyFieldBuildingBasis &&
     dynamicCandidateResolverRuntime?.routeInputAssessment.outputBasis === "building_prediction" &&
     (
       dynamicCandidateResolverRuntime.resolution.selectedOrigin === "needs_input" ||
       dynamicCandidateResolverRuntime.resolution.selectedOrigin === "unsupported"
     );
   const suppressParkedBuildingPredictionOverlayWarnings =
+    Boolean(projectUserMeasuredWallAirborneFrequencyFieldBuildingBasis) ||
     dynamicCandidateResolverRuntime?.routeInputAssessment.outputBasis === "building_prediction" &&
     (
       dynamicCandidateResolverRuntime.resolution.selectedOrigin === "needs_input" ||
@@ -5244,6 +5506,7 @@ export function calculateAssembly(
         })
       : false;
   const shouldParkAnswerEngineV1Outputs =
+    !projectUserMeasuredWallAirborneFrequencyFieldBuildingBasis &&
     dynamicCandidateResolverRuntime &&
     dynamicCandidateResolverRuntime.resolution.selectedOrigin === "needs_input" &&
     dynamicCandidateResolverRuntime.routeInputAssessment.route === "wall" &&
@@ -5491,28 +5754,63 @@ export function calculateAssembly(
   );
   const visibleTargetOutputSupportWithProjectUserMeasuredFrequencyBoundary = moveSupportedOutputsToUnsupported(
     visibleTargetOutputSupportWithPostV1Companions,
-    projectUserMeasuredWallAirborneFrequencyExactCurveBridge.unsupportedOutputs
+    [
+      ...projectUserMeasuredWallAirborneFrequencyExactCurveBridge.unsupportedOutputs,
+      ...projectUserMeasuredWallAirborneFrequencyCompatibleDelta.unsupportedOutputs
+    ]
   );
+  const postV1ProjectUserMeasuredWallAirborneFrequencyFieldBuildingLabCompanionOutputs =
+    hasVisibleFloorCarrier
+      ? []
+      : getPostV1ProjectUserMeasuredWallAirborneFrequencyFieldBuildingLabCompanionOutputs({
+          airborneBasis:
+            projectUserMeasuredWallAirborneFrequencyFieldBuildingBasis ??
+            dynamicCandidateResolverRuntime?.resolution.selectedBasis ??
+            dynamicAirborneResult?.airborneBasis,
+          airborneContext,
+          estimatedCDb: projectUserMeasuredWallAirborneFrequencyFieldBuildingLabCDb,
+          estimatedCtrDb: projectUserMeasuredWallAirborneFrequencyFieldBuildingLabCtrDb,
+          estimatedRwDb: projectUserMeasuredWallAirborneFrequencyFieldBuildingLabRwDb,
+          estimatedStcDb: projectUserMeasuredWallAirborneFrequencyFieldBuildingLabStcDb,
+          labSourceBasis: projectUserMeasuredWallAirborneFrequencyFieldBuildingSource?.result.basis,
+          support: visibleTargetOutputSupportWithProjectUserMeasuredFrequencyBoundary
+        });
+  const visibleTargetOutputSupportWithProjectUserMeasuredFrequencyCompanions =
+    moveUnsupportedOutputsToSupported(
+      visibleTargetOutputSupportWithProjectUserMeasuredFrequencyBoundary,
+      postV1ProjectUserMeasuredWallAirborneFrequencyFieldBuildingLabCompanionOutputs
+    );
   const postV1WallDirectFormulaLabCompanionOutputSet = new Set([
     ...postV1WallUserMaterialFormulaBuildingLabCompanionOutputs,
     ...postV1WallUserMaterialFormulaFieldLabCompanionOutputs,
     ...postV1WallTimberStudCltFormulaFieldLabCompanionOutputs,
     ...postV1WallTimberStudCltFormulaBuildingLabCompanionOutputs
   ]);
+  const postV1ProjectUserMeasuredFrequencyFieldBuildingLabCompanionOutputSet = new Set(
+    postV1ProjectUserMeasuredWallAirborneFrequencyFieldBuildingLabCompanionOutputs
+  );
   const visibleEstimatedRwDbWithPostV1WallLabCompanion =
     postV1WallDirectFormulaLabCompanionOutputSet.has("Rw") &&
     typeof wallDirectLabRwDb === "number" &&
     Number.isFinite(wallDirectLabRwDb)
       ? round1(wallDirectLabRwDb)
       : visibleEstimatedRwDbWithFloorPackageLabCompanion;
+  const visibleEstimatedRwDbWithProjectUserMeasuredFrequencyFieldBuildingLabCompanion =
+    postV1ProjectUserMeasuredFrequencyFieldBuildingLabCompanionOutputSet.has("Rw") &&
+    typeof projectUserMeasuredWallAirborneFrequencyFieldBuildingLabRwDb === "number" &&
+    Number.isFinite(projectUserMeasuredWallAirborneFrequencyFieldBuildingLabRwDb)
+      ? round1(projectUserMeasuredWallAirborneFrequencyFieldBuildingLabRwDb)
+      : visibleEstimatedRwDbWithPostV1WallLabCompanion;
   const visibleEstimatedRwDbWithProjectUserMeasuredAnchor =
     projectUserMeasuredWallRwExactBridge.applied &&
     typeof projectUserMeasuredWallRwExactBridge.anchor?.valueDb === "number"
       ? round1(projectUserMeasuredWallRwExactBridge.anchor.valueDb)
-      : visibleEstimatedRwDbWithPostV1WallLabCompanion;
+      : visibleEstimatedRwDbWithProjectUserMeasuredFrequencyFieldBuildingLabCompanion;
   const visibleEstimatedRwDbWithProjectUserMeasuredFrequencyCurve =
     typeof projectUserMeasuredWallAirborneFrequencyExactCurveBridge.values.Rw === "number"
       ? projectUserMeasuredWallAirborneFrequencyExactCurveBridge.values.Rw
+      : typeof projectUserMeasuredWallAirborneFrequencyCompatibleDelta.values.Rw === "number"
+        ? projectUserMeasuredWallAirborneFrequencyCompatibleDelta.values.Rw
       : visibleEstimatedRwDbWithProjectUserMeasuredAnchor;
   const visibleEstimatedCDbWithPostV1WallLabCompanion =
     postV1WallDirectFormulaLabCompanionOutputSet.has("C") &&
@@ -5520,30 +5818,54 @@ export function calculateAssembly(
     Number.isFinite(wallDirectLabRatings.iso717.C)
       ? round1(wallDirectLabRatings.iso717.C)
       : visibleEstimatedCDbWithFloorPackageLabCompanion;
+  const visibleEstimatedCDbWithProjectUserMeasuredFrequencyFieldBuildingLabCompanion =
+    postV1ProjectUserMeasuredFrequencyFieldBuildingLabCompanionOutputSet.has("C") &&
+    typeof projectUserMeasuredWallAirborneFrequencyFieldBuildingLabCDb === "number" &&
+    Number.isFinite(projectUserMeasuredWallAirborneFrequencyFieldBuildingLabCDb)
+      ? round1(projectUserMeasuredWallAirborneFrequencyFieldBuildingLabCDb)
+      : visibleEstimatedCDbWithPostV1WallLabCompanion;
   const visibleEstimatedCDbWithProjectUserMeasuredFrequencyCurve =
     typeof projectUserMeasuredWallAirborneFrequencyExactCurveBridge.values.C === "number"
       ? projectUserMeasuredWallAirborneFrequencyExactCurveBridge.values.C
-      : visibleEstimatedCDbWithPostV1WallLabCompanion;
+      : typeof projectUserMeasuredWallAirborneFrequencyCompatibleDelta.values.C === "number"
+        ? projectUserMeasuredWallAirborneFrequencyCompatibleDelta.values.C
+      : visibleEstimatedCDbWithProjectUserMeasuredFrequencyFieldBuildingLabCompanion;
   const visibleEstimatedCtrDbWithPostV1WallLabCompanion =
     postV1WallDirectFormulaLabCompanionOutputSet.has("Ctr") &&
     typeof wallDirectLabRatings?.iso717.Ctr === "number" &&
     Number.isFinite(wallDirectLabRatings.iso717.Ctr)
       ? round1(wallDirectLabRatings.iso717.Ctr)
       : visibleEstimatedCtrDbWithFloorPackageLabCompanion;
+  const visibleEstimatedCtrDbWithProjectUserMeasuredFrequencyFieldBuildingLabCompanion =
+    postV1ProjectUserMeasuredFrequencyFieldBuildingLabCompanionOutputSet.has("Ctr") &&
+    typeof projectUserMeasuredWallAirborneFrequencyFieldBuildingLabCtrDb === "number" &&
+    Number.isFinite(projectUserMeasuredWallAirborneFrequencyFieldBuildingLabCtrDb)
+      ? round1(projectUserMeasuredWallAirborneFrequencyFieldBuildingLabCtrDb)
+      : visibleEstimatedCtrDbWithPostV1WallLabCompanion;
   const visibleEstimatedCtrDbWithProjectUserMeasuredFrequencyCurve =
     typeof projectUserMeasuredWallAirborneFrequencyExactCurveBridge.values.Ctr === "number"
       ? projectUserMeasuredWallAirborneFrequencyExactCurveBridge.values.Ctr
-      : visibleEstimatedCtrDbWithPostV1WallLabCompanion;
+      : typeof projectUserMeasuredWallAirborneFrequencyCompatibleDelta.values.Ctr === "number"
+        ? projectUserMeasuredWallAirborneFrequencyCompatibleDelta.values.Ctr
+      : visibleEstimatedCtrDbWithProjectUserMeasuredFrequencyFieldBuildingLabCompanion;
   const visibleEstimatedStcDbWithPostV1WallLabCompanion =
     postV1WallDirectFormulaLabCompanionOutputSet.has("STC") &&
     typeof wallDirectLabRatings?.astmE413.STC === "number" &&
     Number.isFinite(wallDirectLabRatings.astmE413.STC)
       ? round1(wallDirectLabRatings.astmE413.STC)
       : visibleEstimatedStcDb;
+  const visibleEstimatedStcDbWithProjectUserMeasuredFrequencyFieldBuildingLabCompanion =
+    postV1ProjectUserMeasuredFrequencyFieldBuildingLabCompanionOutputSet.has("STC") &&
+    typeof projectUserMeasuredWallAirborneFrequencyFieldBuildingLabStcDb === "number" &&
+    Number.isFinite(projectUserMeasuredWallAirborneFrequencyFieldBuildingLabStcDb)
+      ? round1(projectUserMeasuredWallAirborneFrequencyFieldBuildingLabStcDb)
+      : visibleEstimatedStcDbWithPostV1WallLabCompanion;
   const visibleEstimatedStcDbWithProjectUserMeasuredFrequencyCurve =
     typeof projectUserMeasuredWallAirborneFrequencyExactCurveBridge.values.STC === "number"
       ? projectUserMeasuredWallAirborneFrequencyExactCurveBridge.values.STC
-      : visibleEstimatedStcDbWithPostV1WallLabCompanion;
+      : typeof projectUserMeasuredWallAirborneFrequencyCompatibleDelta.values.STC === "number"
+        ? projectUserMeasuredWallAirborneFrequencyCompatibleDelta.values.STC
+      : visibleEstimatedStcDbWithProjectUserMeasuredFrequencyFieldBuildingLabCompanion;
   const hideParkedAirborneBuildingPredictionMetrics =
     parkedAirborneBuildingPredictionOutputs.some((output) =>
       hasAnswerEngineV1FieldOrBuildingAirborneOutput([output])
@@ -5559,14 +5881,22 @@ export function calculateAssembly(
       }
     : ratingsWithFloorAirborneBuildingPredictionRuntime;
   const warnings = buildEstimateWarnings(resolvedLayers, selectedCalculatorLabel);
+  const dynamicAirborneWarningsForResult = (dynamicAirborneResult?.warnings ?? []).filter(
+    (warning) =>
+      !(
+        projectUserMeasuredWallAirborneFrequencyFieldBuildingBasis?.method ===
+          GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD &&
+        warning === GATE_L_AIRBORNE_BUILDING_PREDICTION_BOUNDARY_WARNING
+      )
+  );
   warnings.push(
     ...(localSubstitutionLabSpectrumAdapter
-      ? (dynamicAirborneResult?.warnings ?? []).filter(
+      ? dynamicAirborneWarningsForResult.filter(
           (warning) =>
             !/STC, C, Ctr, field, and building adapters remain blocked/i.test(warning) &&
             !/source-absent error budget for Rw only/i.test(warning)
         )
-      : (dynamicAirborneResult?.warnings ?? []))
+      : dynamicAirborneWarningsForResult)
   );
   if (gateDTMasonryExactRwCompanionBasis) {
     warnings.push(GATE_DT_MASONRY_EXACT_RW_CALCULATED_COMPANION_WARNING);
@@ -5579,6 +5909,18 @@ export function calculateAssembly(
   }
   if (gateDXExactSourceFamilyFieldContextBasis) {
     warnings.push(GATE_DX_EXACT_SOURCE_FAMILY_FIELD_CONTEXT_WARNING);
+  }
+  if (projectUserMeasuredWallAirborneFrequencyFieldBuildingBasis) {
+    const adapterWarning =
+      projectUserMeasuredWallAirborneFrequencyFieldBuildingBasis.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD
+        ? GATE_AR_AIRBORNE_BUILDING_PREDICTION_WARNING
+        : GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING;
+    warnings.push(
+      POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_ADAPTER_WARNING
+    );
+    if (!warnings.includes(adapterWarning)) {
+      warnings.push(adapterWarning);
+    }
   }
   if (compatibleWallAnchorDeltaFieldBuildingBasis) {
     const adapterWarning =
@@ -5610,6 +5952,7 @@ export function calculateAssembly(
   }
   warnings.push(...verifiedAirborneAnchorResult.warnings);
   warnings.push(...projectUserMeasuredWallAirborneFrequencyExactCurveBridge.warnings);
+  warnings.push(...projectUserMeasuredWallAirborneFrequencyCompatibleDelta.warnings);
   warnings.push(...projectUserMeasuredWallRwExactBridge.warnings);
   warnings.push(
     ...(compatibleWallAnchorDeltaLabCompanionBasis
@@ -5626,7 +5969,7 @@ export function calculateAssembly(
     warnings.push(gateAHOpeningLeakStcSpectrumAdapter.warning);
   } else if (companyInternalOpeningLeakFieldBuildingRuntime?.warnings.length) {
     warnings.push(...companyInternalOpeningLeakFieldBuildingRuntime.warnings);
-  } else if (gateSOpeningLeakCompositeRuntime?.warning) {
+  } else if (!projectUserMeasuredWallAirborneFrequencyFieldBuildingBasis && gateSOpeningLeakCompositeRuntime?.warning) {
     warnings.push(gateSOpeningLeakCompositeRuntime.warning);
   }
   if (gateYCltMassTimberCtrSpectrumAdapterBasis) {
@@ -5635,7 +5978,7 @@ export function calculateAssembly(
   if (localSubstitutionLabSpectrumAdapter) {
     warnings.push(BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_WARNING);
   }
-  warnings.push(...buildTargetOutputWarnings(visibleTargetOutputSupportWithPostV1Companions));
+  warnings.push(...buildTargetOutputWarnings(visibleTargetOutputSupportWithProjectUserMeasuredFrequencyCompanions));
   if (exactMeasuredSourceMetricUnsupportedOutputs.length > 0 && sourceAnchorMatch) {
     warnings.push(
       `Exact measured airborne source ${sourceAnchorMatch.label} reports ${sourceAnchorMatch.metricLabel}; DynEcho kept ${exactMeasuredSourceMetricUnsupportedOutputs.join(", ")} out of the exact answer instead of aliasing measured and calculated metrics.`
@@ -5668,6 +6011,7 @@ export function calculateAssembly(
     warnings.push(steelFloorFormulaFallbackBlockerWarning);
   }
   if (
+    !projectUserMeasuredWallAirborneFrequencyFieldBuildingBasis &&
     dynamicCandidateResolverRuntime?.routeInputAssessment.outputBasis === "building_prediction" &&
     dynamicCandidateResolverRuntime.resolution.selectedOrigin === "needs_input"
   ) {
@@ -5910,11 +6254,11 @@ export function calculateAssembly(
     },
     ratings: visibleRatings,
     ratingAdapterBasisSet: ratingAdapterBasisSet.length > 0 ? ratingAdapterBasisSet : undefined,
-    supportedImpactOutputs: visibleTargetOutputSupportWithProjectUserMeasuredFrequencyBoundary.supportedImpactOutputs,
-    supportedTargetOutputs: visibleTargetOutputSupportWithProjectUserMeasuredFrequencyBoundary.supportedTargetOutputs,
-    targetOutputs: visibleTargetOutputSupportWithProjectUserMeasuredFrequencyBoundary.targetOutputs,
-    unsupportedImpactOutputs: visibleTargetOutputSupportWithProjectUserMeasuredFrequencyBoundary.unsupportedImpactOutputs,
-    unsupportedTargetOutputs: visibleTargetOutputSupportWithProjectUserMeasuredFrequencyBoundary.unsupportedTargetOutputs,
+    supportedImpactOutputs: visibleTargetOutputSupportWithProjectUserMeasuredFrequencyCompanions.supportedImpactOutputs,
+    supportedTargetOutputs: visibleTargetOutputSupportWithProjectUserMeasuredFrequencyCompanions.supportedTargetOutputs,
+    targetOutputs: visibleTargetOutputSupportWithProjectUserMeasuredFrequencyCompanions.targetOutputs,
+    unsupportedImpactOutputs: visibleTargetOutputSupportWithProjectUserMeasuredFrequencyCompanions.unsupportedImpactOutputs,
+    unsupportedTargetOutputs: visibleTargetOutputSupportWithProjectUserMeasuredFrequencyCompanions.unsupportedTargetOutputs,
     warnings
   };
 
@@ -5962,6 +6306,9 @@ export function calculateAssembly(
   if (companyInternalOpeningLeakFieldBuildingRuntime?.basis) {
     result.airborneBasis = companyInternalOpeningLeakFieldBuildingRuntime.basis;
   }
+  if (projectUserMeasuredWallAirborneFrequencyFieldBuildingBasis) {
+    result.airborneBasis = projectUserMeasuredWallAirborneFrequencyFieldBuildingBasis;
+  }
   if (
     rawBareFloorAirborneBuildingPredictionRuntime &&
     ownedFloorBuildingPredictionAirborneOutputs.size > 0
@@ -5987,6 +6334,7 @@ export function calculateAssembly(
       gateYCltMassTimberCtrSpectrumAdapterBasis ||
       gateDXExactSourceFamilyFieldContextBasis ||
       projectUserMeasuredWallAirborneFrequencyExactCurveBridge.basis ||
+      projectUserMeasuredWallAirborneFrequencyCompatibleDelta.basis ||
       projectUserMeasuredWallRwExactBridge.basis
     ),
     result
