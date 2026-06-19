@@ -61,6 +61,49 @@ const explicitDoubleLeafContext = {
   wallTopologyMode: "double_leaf_framed" as const
 };
 
+const seededBuildingLayerStack = [
+  { id: "surface-building-layer-1", materialId: "gypsum_board", role: "side_a", thicknessMm: "12.5" },
+  { id: "surface-building-layer-2", materialId: "rockwool", role: "cavity", thicknessMm: "50" },
+  { id: "surface-building-layer-3", materialId: "gypsum_board", role: "side_b", thicknessMm: "12.5" }
+] as const;
+
+const explicitBuildingContext = {
+  ...WORKBENCH_V2_DEFAULT_CONTEXT,
+  airborneMode: "building_prediction" as const,
+  buildingPredictionOutputBasis: "apparent_and_standardized" as const,
+  conservativeFlankingAssumption: "single_conservative_path" as const,
+  flankingJunctionClass: "rigid_cross_junction" as const,
+  junctionCouplingLengthM: "12",
+  panelHeightMm: "2600",
+  panelWidthMm: "3000",
+  receivingRoomRt60S: "0.5",
+  receivingRoomVolumeM3: "50",
+  sourceRoomVolumeM3: "55",
+  supportSpacingMm: "600",
+  wallCavity1AbsorptionClass: "porous_absorptive" as const,
+  wallCavity1DepthMm: "50",
+  wallCavity1FillCoverage: "full" as const,
+  wallCavity1LayerIndices: "2",
+  wallSideALeafLayerIndices: "1",
+  wallSideBLeafLayerIndices: "3",
+  wallSupportTopology: "independent_frames" as const,
+  wallTopologyMode: "double_leaf_framed" as const
+};
+
+const seededSingleLeafFieldLayerStack = [
+  { id: "surface-field-layer-1", materialId: "concrete", role: "side_a", thicknessMm: "150" }
+] as const;
+
+const explicitFieldContext = {
+  ...WORKBENCH_V2_DEFAULT_CONTEXT,
+  airborneMode: "field_between_rooms" as const,
+  fieldKDb: "2",
+  panelHeightMm: "2600",
+  panelWidthMm: "3000",
+  receivingRoomRt60S: "0.5",
+  receivingRoomVolumeM3: "50"
+};
+
 describe("material editor surface parity", () => {
   it("keeps solver-active custom materials live from workbench payload through output rows", () => {
     const payload = buildEstimatePayload("wall", customLayerStack, LAB_OUTPUTS, explicitDoubleLeafContext, customMaterials);
@@ -103,6 +146,83 @@ describe("material editor surface parity", () => {
       { detail: "Calculated", label: "STC", status: "live", value: "46 dB" },
       { detail: "Calculated", label: "C", status: "live", value: "-1 dB" },
       { detail: "Calculated", label: "Ctr", status: "live", value: "-6.1 dB" }
+    ]);
+  });
+
+  it("shows Rw when a complete building-prediction wall computes the direct lab companion", () => {
+    const payload = buildEstimatePayload("wall", seededBuildingLayerStack, ["Rw"], explicitBuildingContext, []);
+
+    expect(payload).toMatchObject({
+      airborneContext: {
+        buildingPredictionOutputBasis: "apparent_and_standardized",
+        conservativeFlankingAssumption: "single_conservative_path",
+        contextMode: "building_prediction",
+        flankingJunctionClass: "rigid_cross_junction",
+        junctionCouplingLengthM: 12,
+        panelHeightMm: 2600,
+        panelWidthMm: 3000,
+        receivingRoomRt60S: 0.5,
+        receivingRoomVolumeM3: 50,
+        sourceRoomVolumeM3: 55,
+        studSpacingMm: 600,
+        wallTopology: {
+          cavity1AbsorptionClass: "porous_absorptive",
+          cavity1DepthMm: 50,
+          cavity1FillCoverage: "full",
+          cavity1LayerIndices: [1],
+          sideALeafLayerIndices: [0],
+          sideBLeafLayerIndices: [2],
+          supportTopology: "independent_frames",
+          topologyMode: "double_leaf_framed"
+        }
+      },
+      calculator: "dynamic",
+      targetOutputs: ["Rw"]
+    });
+
+    const result = calculateAssembly(payload!.layers, {
+      airborneContext: payload!.airborneContext,
+      calculator: payload!.calculator,
+      targetOutputs: payload!.targetOutputs
+    });
+    const rows = buildOutputRows(result, ["Rw"]);
+
+    expect(result.supportedTargetOutputs).toEqual(["Rw"]);
+    expect(result.unsupportedTargetOutputs).toEqual([]);
+    expect(rows).toEqual([
+      { detail: "Calculated", label: "Rw", status: "live", value: "38 dB" }
+    ]);
+  });
+
+  it("shows Rw when a complete field-between-rooms single-leaf wall computes the direct lab companion", () => {
+    const payload = buildEstimatePayload("wall", seededSingleLeafFieldLayerStack, ["Rw"], explicitFieldContext, []);
+
+    expect(payload).toMatchObject({
+      airborneContext: {
+        contextMode: "field_between_rooms",
+        panelHeightMm: 2600,
+        panelWidthMm: 3000,
+        receivingRoomRt60S: 0.5,
+        receivingRoomVolumeM3: 50
+      },
+      calculator: "dynamic",
+      impactFieldContext: {
+        fieldKDb: 2
+      },
+      targetOutputs: ["Rw"]
+    });
+
+    const result = calculateAssembly(payload!.layers, {
+      airborneContext: payload!.airborneContext,
+      calculator: payload!.calculator,
+      targetOutputs: payload!.targetOutputs
+    });
+    const rows = buildOutputRows(result, ["Rw"]);
+
+    expect(result.supportedTargetOutputs).toEqual(["Rw"]);
+    expect(result.unsupportedTargetOutputs).toEqual([]);
+    expect(rows).toEqual([
+      { detail: "Calculated", label: "Rw", status: "live", value: "53 dB" }
     ]);
   });
 

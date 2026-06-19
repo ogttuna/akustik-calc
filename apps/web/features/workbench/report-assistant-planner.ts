@@ -112,8 +112,8 @@ function hasPromptInjectionSignal(normalized: string): boolean {
 }
 
 function hasUnsupportedSideEffectIntent(normalized: string): boolean {
-  return /\b(?:apply|archive|delete|reset)\b/u.test(normalized) ||
-    /\b(?:arsivle|sil|uygula|sifirla)\b/u.test(normalized);
+  return /\b(?:archive|delete|reset)\b/u.test(normalized) ||
+    /\b(?:arsivle|sil|sifirla)\b/u.test(normalized);
 }
 
 function hasExportDownloadIntent(normalized: string): boolean {
@@ -122,7 +122,7 @@ function hasExportDownloadIntent(normalized: string): boolean {
 }
 
 function hasCalculatorIntent(normalized: string): boolean {
-  return /\b(?:aiic|calculator|calculate|dnt|duvar|estimate|hesapla|hesaplat|iic|katman|layer|ln|predict|rw|stack|stc|wall)\b/u
+  return /\b(?:aiic|artir|azalt|calculator|calculate|combination\w*|degistir|dnt|duvar\w*|estimate|hesapla|hesaplat|iic|kalinli(?:k|g)\w*|katman\w*|kombinasyon\w*|layer\w*|ln|move|predict|reorder|rw|stack|stc|tasi|thickness(?:es)?|wall|yer\w*)\b/u
     .test(normalized);
 }
 
@@ -138,7 +138,7 @@ function hasWallCandidateComparisonIntent(normalized: string): boolean {
 }
 
 function hasResearchIntent(normalized: string): boolean {
-  return /\b(?:alternatif|alternatives?|ara|arastir|compare|comparison|internet|karsilastir|karsilastirma|kaynak|kiyasla|plausibility|research|source|verify)\b/u
+  return /\b(?:alternatif|alternatives?|ara|arastir|compare|comparison|dogru mu|internet|karsilastir|karsilastirma|kaynak|kiyasla|kontrol|kurcala|plausibility|research|source|verify)\b/u
     .test(normalized);
 }
 
@@ -296,16 +296,6 @@ export function planReportAssistantRequest(input: ReportAssistantPlannerInput): 
     });
   }
 
-  if (hasPatchIntent(normalized)) {
-    return candidateDecision({
-      confidence: "medium",
-      input,
-      mode: "patch_proposal",
-      targetCapability: "report_assistant_patch_route",
-      usedSignals: ["patch_intent", "preview_only"]
-    });
-  }
-
   if (hasCalculatorIntent(normalized)) {
     const questions = missingCalculatorQuestions(input, normalized);
     return candidateDecision({
@@ -319,8 +309,19 @@ export function planReportAssistantRequest(input: ReportAssistantPlannerInput): 
       usedSignals: [
         "calculator_intent",
         ...(hasLayerStackEvidence(normalized) ? ["layer_stack_evidence"] : []),
+        ...(input.sourceStackAvailable ? ["source_stack_available"] : []),
         ...(input.selectedOutputs && input.selectedOutputs.length > 0 ? ["target_outputs_present"] : [])
       ]
+    });
+  }
+
+  if (hasPatchIntent(normalized)) {
+    return candidateDecision({
+      confidence: "medium",
+      input,
+      mode: "patch_proposal",
+      targetCapability: "report_assistant_patch_route",
+      usedSignals: ["patch_intent", "preview_only"]
     });
   }
 

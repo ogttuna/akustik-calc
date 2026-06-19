@@ -23,6 +23,17 @@ function parse(instruction: string) {
   });
 }
 
+function parseWithCurrentLayers(instruction: string, currentLayers: Parameters<typeof parseWorkbenchV2AssistantLayerStackApplyCommand>[0]["currentLayers"]) {
+  return parseWorkbenchV2AssistantLayerStackApplyCommand({
+    currentLayers,
+    currentMode: "wall",
+    currentSelectedOutputs: ["Rw"],
+    idFactory: (index) => `assistant-test-layer-${index + 1}`,
+    instruction,
+    materials
+  });
+}
+
 describe("workbench v2 assistant layer stack command", () => {
   it("applies a simple explicit wall stack command without guessing thicknesses", () => {
     const result = parse("gypsium, rock wool, gypsum diz");
@@ -65,6 +76,20 @@ describe("workbench v2 assistant layer stack command", () => {
     });
     expect(result.ok && result.tasks).toEqual([]);
     expect(result.ok && result.warnings).toEqual([]);
+  });
+
+  it("fills explicit draft thickness assumptions only when the instruction asks for them", () => {
+    const result = parse("gypsium, rock wool, gypsum mantıklı kalınlıklarla diz");
+
+    expect(result.ok).toBe(true);
+    expect(result.ok && result.commandKind).toBe("replace_stack");
+    expect(result.ok && result.layers.map((layer) => layer.thicknessMm)).toEqual(["12.5", "50", "12.5"]);
+    expect(result.ok && result.tasks.map((task) => task.code)).toEqual([
+      "assistant_layer_thickness_assumed",
+      "assistant_layer_thickness_assumed",
+      "assistant_layer_thickness_assumed"
+    ]);
+    expect(result.ok && result.warnings[0]).toContain("engineering-default draft values");
   });
 
   it("does not mutate on layer phrases without explicit apply intent", () => {
@@ -133,6 +158,35 @@ describe("workbench v2 assistant layer stack command", () => {
     expect(result.ok).toBe(true);
     expect(result.ok && result.commandKind).toBe("update_layer");
     expect(result.ok && result.layers.map((layer) => layer.thicknessMm)).toEqual(["15", "50", "15"]);
+  });
+
+  it("updates every visible layer with a relative thickness delta", () => {
+    const result = parse("hepsinin kalınlığını 10 mm artır");
+
+    expect(result.ok).toBe(true);
+    expect(result.ok && result.commandKind).toBe("update_layer");
+    expect(result.ok && result.layers.map((layer) => layer.thicknessMm)).toEqual(["22.5", "60", "22.5"]);
+  });
+
+  it("fills missing visible layer thicknesses with draft defaults when requested", () => {
+    const result = parseWithCurrentLayers("ekrandaki layerların kalınlıklarını mantıklı şekilde gir", [
+      { id: "blank-layer-1", materialId: "gypsum_board", role: "side_a", thicknessMm: "" },
+      { id: "blank-layer-2", materialId: "rockwool", role: "cavity", thicknessMm: "" },
+      { id: "blank-layer-3", materialId: "gypsum_board", role: "side_b", thicknessMm: "" }
+    ]);
+
+    expect(result.ok).toBe(true);
+    expect(result.ok && result.commandKind).toBe("update_layer");
+    expect(result.ok && result.layers.map((layer) => layer.thicknessMm)).toEqual(["12.5", "50", "12.5"]);
+    expect(result.ok && result.contextPatch).toMatchObject({
+      wallCavity1DepthMm: "50",
+      wallCavity1LayerIndices: "2"
+    });
+    expect(result.ok && result.tasks.map((task) => task.code)).toEqual([
+      "assistant_layer_thickness_assumed",
+      "assistant_layer_thickness_assumed",
+      "assistant_layer_thickness_assumed"
+    ]);
   });
 
   it("sets selected calculator outputs without changing layer rows", () => {
@@ -229,11 +283,14 @@ describe("workbench v2 assistant layer stack command", () => {
     expect(result.ok).toBe(true);
     expect(result.ok && result.commandKind).toBe("generate_candidates");
     expect(result.ok && result.layers.map((layer) => layer.id)).toEqual(["existing-layer-1", "existing-layer-2", "existing-layer-3"]);
-    expect(result.ok && result.candidateStacks).toHaveLength(3);
+    expect(result.ok && result.candidateStacks).toHaveLength(6);
     expect(result.ok && result.candidateStacks?.map((candidate) => candidate.label)).toEqual([
       "Current order",
       "Reversed order",
-      "Rotated order"
+      "Rotated order",
+      "Rotated reverse",
+      "Front-middle swap",
+      "Middle-back swap"
     ]);
     expect(result.ok && result.candidateStacks?.[0]?.layers.map((layer) => layer.materialId)).toEqual([
       "gypsum_board",
@@ -249,6 +306,11 @@ describe("workbench v2 assistant layer stack command", () => {
       "rockwool",
       "gypsum_board",
       "gypsum_board"
+    ]);
+    expect(result.ok && result.candidateStacks?.[3]?.layers.map((layer) => layer.materialId)).toEqual([
+      "gypsum_board",
+      "gypsum_board",
+      "rockwool"
     ]);
     expect(result.ok && result.candidateStacks?.[0]?.mode).toBe("wall");
     expect(result.ok && result.candidateStacks?.[0]?.sourceLayerSignature).toBe(
@@ -281,6 +343,33 @@ describe("workbench v2 assistant layer stack command", () => {
       "assistant_layer_thickness_missing",
       "assistant_layer_thickness_missing",
       "assistant_layer_thickness_missing"
+    ]);
+  });
+
+  it("can generate candidate stacks with requested draft thickness assumptions", () => {
+    const result = parseWorkbenchV2AssistantLayerStackApplyCommand({
+      currentLayers: [
+        { id: "existing-layer-1", materialId: "gypsum_board", role: "side_a", thicknessMm: "" },
+        { id: "existing-layer-2", materialId: "rockwool", role: "cavity", thicknessMm: "" },
+        { id: "existing-layer-3", materialId: "gypsum_board", role: "side_b", thicknessMm: "" }
+      ],
+      currentMode: "wall",
+      currentSelectedOutputs: ["Rw"],
+      idFactory: (index) => `assistant-test-layer-${index + 1}`,
+      instruction: "mantıklı kalınlıklarla farklı kombinasyonlar yap",
+      materials
+    });
+
+    expect(result.ok).toBe(true);
+    expect(result.ok && result.candidateStacks?.[0]?.layers.map((layer) => layer.thicknessMm)).toEqual([
+      "12.5",
+      "50",
+      "12.5"
+    ]);
+    expect(result.ok && result.candidateStacks?.[0]?.tasks.map((task) => task.code)).toEqual([
+      "assistant_layer_thickness_assumed",
+      "assistant_layer_thickness_assumed",
+      "assistant_layer_thickness_assumed"
     ]);
   });
 });

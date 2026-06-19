@@ -86,6 +86,7 @@ import {
 import {
   getWorkbenchV2AssistantLayerStackSignature,
   parseWorkbenchV2AssistantLayerStackApplyCommand,
+  type WorkbenchV2AssistantLayerStackApplyResult,
   type WorkbenchV2AssistantLayerStackCandidateStack
 } from "./workbench-v2-assistant-layer-stack-command";
 import type {
@@ -133,6 +134,21 @@ type CalculatorAssistantCommandMessage = {
   title: string;
   tone: "success" | "warning";
 };
+type CalculatorAssistantCommandIntentDecision =
+  | {
+      confidence: "high" | "low" | "medium";
+      explanation: string;
+      normalizedCommand: string;
+      status: "apply";
+      warnings?: readonly string[];
+    }
+  | {
+      confidence: "high" | "low" | "medium";
+      explanation: string;
+      message: string;
+      status: "clarify" | "reject";
+      warnings?: readonly string[];
+    };
 type CalculatorAssistantCandidateComparisonRow = {
   candidateId: string;
   commandTasks: readonly WorkbenchV2AssistantLayerStackCandidateStack["tasks"][number][];
@@ -1293,6 +1309,108 @@ function parseCalculatorAssistantPreviewPayload(payload: unknown): WorkbenchV2Ca
   return preview as WorkbenchV2CalculatorAssistantPreview;
 }
 
+function parseCalculatorAssistantCommandIntentError(payload: unknown): string {
+  if (isObjectRecord(payload)) {
+    if (Array.isArray(payload.errors)) {
+      const errors = payload.errors.filter((entry): entry is string => typeof entry === "string" && entry.trim().length > 0);
+      if (errors.length) {
+        return errors.join("; ");
+      }
+    }
+
+    if (typeof payload.error === "string" && payload.error.trim()) {
+      return payload.error;
+    }
+  }
+
+  return "Natural-language command interpretation failed.";
+}
+
+function parseCalculatorAssistantCommandIntentPayload(payload: unknown): CalculatorAssistantCommandIntentDecision | null {
+  if (!isObjectRecord(payload) || payload.ok !== true || !isObjectRecord(payload.decision)) {
+    return null;
+  }
+
+  const decision = payload.decision;
+  const status = typeof decision.status === "string" ? decision.status : "";
+  const confidence =
+    decision.confidence === "high" || decision.confidence === "low" || decision.confidence === "medium"
+      ? decision.confidence
+      : "medium";
+  const explanation = typeof decision.explanation === "string" && decision.explanation.trim()
+    ? decision.explanation.trim()
+    : "Assistant interpreted the calculator request.";
+  const warnings = Array.isArray(decision.warnings)
+    ? decision.warnings.filter((entry): entry is string => typeof entry === "string" && entry.trim().length > 0)
+    : [];
+
+  if (status === "apply") {
+    return typeof decision.normalizedCommand === "string" && decision.normalizedCommand.trim()
+      ? {
+          confidence,
+          explanation,
+          normalizedCommand: decision.normalizedCommand.trim(),
+          status,
+          warnings
+        }
+      : null;
+  }
+
+  if (status === "clarify" || status === "reject") {
+    return typeof decision.message === "string" && decision.message.trim()
+      ? {
+          confidence,
+          explanation,
+          message: decision.message.trim(),
+          status,
+          warnings
+        }
+      : null;
+  }
+
+  return null;
+}
+
+async function requestCalculatorAssistantCommandInterpretation(input: {
+  currentLayers: readonly DraftLayer[];
+  currentMode: StudyMode;
+  currentSelectedOutputs: readonly RequestedOutputId[];
+  instruction: string;
+  materials: readonly MaterialDefinition[];
+}): Promise<CalculatorAssistantCommandIntentDecision> {
+  const response = await fetch("/api/report-assistant/calculator-command-intent", {
+    body: JSON.stringify({
+      currentLayers: input.currentLayers,
+      currentMode: input.currentMode,
+      currentSelectedOutputs: input.currentSelectedOutputs,
+      instruction: input.instruction,
+      materials: input.materials
+    }),
+    headers: {
+      "Content-Type": "application/json"
+    },
+    method: "POST"
+  });
+  let payload: unknown = null;
+
+  try {
+    payload = await response.json();
+  } catch {
+    payload = null;
+  }
+
+  if (!response.ok) {
+    throw new Error(parseCalculatorAssistantCommandIntentError(payload));
+  }
+
+  const decision = parseCalculatorAssistantCommandIntentPayload(payload);
+  if (!decision) {
+    throw new Error("Natural-language command interpretation response is incomplete.");
+  }
+
+  return decision;
+}
+
 async function requestCalculatorAssistantPreview(input: {
   signal: AbortSignal;
   snapshot: WorkbenchV2ProjectSnapshot;
@@ -1932,6 +2050,7 @@ export function CalculatorWorkbench() {
   const [estimateState, setEstimateState] = useState<EstimateState>({ status: "idle" });
   const [calculatorAssistantState, setCalculatorAssistantState] = useState<CalculatorAssistantPreviewState>({ status: "idle" });
   const [calculatorAssistantCommand, setCalculatorAssistantCommand] = useState("");
+  const [calculatorAssistantCommandPending, setCalculatorAssistantCommandPending] = useState(false);
   const [calculatorAssistantCommandMessage, setCalculatorAssistantCommandMessage] = useState<CalculatorAssistantCommandMessage | null>(null);
   const [calculatorAssistantCandidateStacks, setCalculatorAssistantCandidateStacks] = useState<readonly WorkbenchV2AssistantLayerStackCandidateStack[]>([]);
   const [calculatorAssistantWorkbenchApplyProposal, setCalculatorAssistantWorkbenchApplyProposal] =
@@ -2942,22 +3061,32 @@ export function CalculatorWorkbench() {
     clearLayerInteractionState();
     setCalculatorAssistantCandidateStacks([]);
     setCalculatorAssistantCandidateComparisonState({ status: "idle" });
+    const missingTaskCount = candidate.tasks.filter((task) => task.code === "assistant_layer_thickness_missing").length;
+    const assumedTaskCount = candidate.tasks.filter((task) => task.code === "assistant_layer_thickness_assumed").length;
     setCalculatorAssistantCommandMessage({
-      detail: candidate.tasks.length
-        ? `${candidate.label} applied with ${candidate.tasks.length} missing input${candidate.tasks.length === 1 ? "" : "s"}. Add them before calculation.`
+      detail: missingTaskCount
+        ? `${candidate.label} applied with ${missingTaskCount} missing input${missingTaskCount === 1 ? "" : "s"}. Add them before calculation.`
+        : assumedTaskCount
+          ? `${candidate.label} applied with ${assumedTaskCount} draft thickness assumption${assumedTaskCount === 1 ? "" : "s"}. Verify product data before relying on report values.`
         : `${candidate.label} applied to the visible calculator draft. Run preview to compute values.`,
       title: changed ? "Candidate applied" : "Candidate already matched",
-      tone: candidate.tasks.length ? "warning" : "success"
+      tone: missingTaskCount || assumedTaskCount ? "warning" : "success"
     });
     toast.success(changed ? "Candidate applied" : "Candidate already matched", {
-      description: candidate.tasks.length
+      description: missingTaskCount
         ? "Missing inputs remain blank instead of guessed."
+        : assumedTaskCount
+          ? "Draft thickness assumptions were applied."
         : "Run calculator preview to compute values."
     });
   }
 
-  function applyCalculatorAssistantLayerStackCommand() {
-    const result = parseWorkbenchV2AssistantLayerStackApplyCommand({
+  async function applyCalculatorAssistantLayerStackCommand() {
+    if (calculatorAssistantCommandPending) {
+      return;
+    }
+
+    let result: WorkbenchV2AssistantLayerStackApplyResult = parseWorkbenchV2AssistantLayerStackApplyCommand({
       currentLayers: layers,
       currentMode: mode,
       currentSelectedLayerId: selectedLayerId,
@@ -2966,15 +3095,72 @@ export function CalculatorWorkbench() {
       instruction: calculatorAssistantCommand,
       materials
     });
+    let interpretedCommandDetail = "";
 
     if (result.ok === false) {
+      const deterministicMessage = result.message;
+      setCalculatorAssistantCommandPending(true);
       setCalculatorAssistantCommandMessage({
-        detail: result.message,
-        title: "Stack not applied",
+        detail: "Interpreting the request as a natural-language calculator edit.",
+        title: "Interpreting command",
         tone: "warning"
       });
-      toast.error("Stack not applied", { description: result.message });
-      return;
+
+      try {
+        const decision = await requestCalculatorAssistantCommandInterpretation({
+          currentLayers: layers,
+          currentMode: mode,
+          currentSelectedOutputs: selectedOutputs,
+          instruction: calculatorAssistantCommand,
+          materials
+        });
+
+        if (decision.status !== "apply") {
+          setCalculatorAssistantCommandMessage({
+            detail: `${decision.message} ${decision.explanation}`.trim(),
+            title: decision.status === "clarify" ? "Need one detail" : "Command not applied",
+            tone: "warning"
+          });
+          toast.warning(decision.status === "clarify" ? "Need one detail" : "Command not applied", {
+            description: decision.message
+          });
+          return;
+        }
+
+        result = parseWorkbenchV2AssistantLayerStackApplyCommand({
+          currentLayers: layers,
+          currentMode: mode,
+          currentSelectedLayerId: selectedLayerId,
+          currentSelectedOutputs: selectedOutputs,
+          idFactory: () => createLayerId(),
+          instruction: decision.normalizedCommand,
+          materials
+        });
+        interpretedCommandDetail = `Interpreted as: ${decision.normalizedCommand}.`;
+
+        if (result.ok === false) {
+          setCalculatorAssistantCommandMessage({
+            detail: `I understood the request, but the calculator validator rejected the safe command "${decision.normalizedCommand}". ${result.message}`,
+            title: "Command not applied",
+            tone: "warning"
+          });
+          toast.warning("Command not applied", {
+            description: result.message
+          });
+          return;
+        }
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "Natural-language command interpretation failed.";
+        setCalculatorAssistantCommandMessage({
+          detail: `${deterministicMessage} AI interpretation also failed: ${message}`,
+          title: "Stack not applied",
+          tone: "warning"
+        });
+        toast.error("Stack not applied", { description: message });
+        return;
+      } finally {
+        setCalculatorAssistantCommandPending(false);
+      }
     }
 
     if (result.mode !== mode) {
@@ -2993,7 +3179,7 @@ export function CalculatorWorkbench() {
       setCalculatorAssistantCandidateComparisonState({ status: "idle" });
       setCalculatorAssistantCommand("");
       setCalculatorAssistantCommandMessage({
-        detail: `${result.candidateStacks.length} candidate stacks prepared from the visible calculator layers. Run calculator preview for each candidate before comparing values.`,
+        detail: `${interpretedCommandDetail ? `${interpretedCommandDetail} ` : ""}${result.candidateStacks.length} candidate stacks prepared from the visible calculator layers. Run calculator preview for each candidate before comparing values.`,
         title: "Candidate stacks prepared",
         tone: "success"
       });
@@ -3017,7 +3203,7 @@ export function CalculatorWorkbench() {
 
       if (result.previewRequested) {
         setCalculatorAssistantCommandMessage({
-          detail: "Calculator context updated. Running the patched calculator draft through the preview route.",
+          detail: `${interpretedCommandDetail ? `${interpretedCommandDetail} ` : ""}Calculator context updated. Running the patched calculator draft through the preview route.`,
           title: "Context updated and preview requested",
           tone: "success"
         });
@@ -3042,7 +3228,7 @@ export function CalculatorWorkbench() {
       }
 
       setCalculatorAssistantCommandMessage({
-        detail: result.tasks.map((task) => task.detail).join(" "),
+        detail: `${interpretedCommandDetail ? `${interpretedCommandDetail} ` : ""}${result.tasks.map((task) => task.detail).join(" ")}`,
         title: "Calculator context updated",
         tone: "success"
       });
@@ -3067,7 +3253,7 @@ export function CalculatorWorkbench() {
     setCalculatorAssistantCandidateComparisonState({ status: "idle" });
     if (result.previewRequested) {
       setCalculatorAssistantCommandMessage({
-        detail: "Running the current calculator draft through the preview route.",
+        detail: `${interpretedCommandDetail ? `${interpretedCommandDetail} ` : ""}Running the current calculator draft through the preview route.`,
         title: "Preview requested",
         tone: "success"
       });
@@ -3086,20 +3272,27 @@ export function CalculatorWorkbench() {
             : result.commandKind === "update_layer"
               ? "layer updated"
               : "layer stack updated";
-    setCalculatorAssistantCommandMessage({
-      detail: result.tasks.length
-        ? `${result.layerCount} layers applied. Add positive thicknesses before calculation.`
+    const missingTaskCount = result.tasks.filter((task) => task.code === "assistant_layer_thickness_missing").length;
+    const assumedTaskCount = result.tasks.filter((task) => task.code === "assistant_layer_thickness_assumed").length;
+    const commandDetail = missingTaskCount
+      ? `${result.layerCount} layers applied. Add positive thicknesses before calculation.`
+      : assumedTaskCount
+        ? `${result.layerCount} layers applied with ${assumedTaskCount} draft thickness assumption${assumedTaskCount === 1 ? "" : "s"}. Verify product data before relying on report values.`
         : result.commandKind === "set_outputs" && result.selectedOutputs
           ? `Selected outputs: ${result.selectedOutputs.join(", ")}.`
           : result.materialNames.length
             ? `${result.layerCount} layers applied from ${result.materialNames.join(", ")}.`
-            : `Assistant ${commandLabel}.`,
+            : `Assistant ${commandLabel}.`;
+    setCalculatorAssistantCommandMessage({
+      detail: interpretedCommandDetail ? `${interpretedCommandDetail} ${commandDetail}` : commandDetail,
       title: changed || result.commandKind === "set_outputs" ? "Calculator command applied" : "Calculator already matched",
-      tone: result.tasks.length ? "warning" : "success"
+      tone: missingTaskCount || assumedTaskCount ? "warning" : "success"
     });
     toast.success(changed || result.commandKind === "set_outputs" ? "Calculator command applied" : "Calculator already matched", {
-      description: result.tasks.length
+      description: missingTaskCount
         ? "Assistant left missing thicknesses blank instead of guessing."
+        : assumedTaskCount
+          ? "Draft thickness assumptions were applied."
         : result.commandKind === "set_outputs" && result.selectedOutputs
           ? `Selected ${result.selectedOutputs.join(", ")}.`
           : `${result.layerCount} calculator layer${result.layerCount === 1 ? "" : "s"} applied.`
@@ -5493,27 +5686,28 @@ export function CalculatorWorkbench() {
                 className="calc-assistant-command"
                 onSubmit={(event) => {
                   event.preventDefault();
-                  applyCalculatorAssistantLayerStackCommand();
+                  void applyCalculatorAssistantLayerStackCommand();
                 }}
               >
                 <label className="calc-assistant-command-field" htmlFor="calculator-assistant-stack-command">
                   <span>Stack command</span>
                   <textarea
                     className="report-input report-textarea report-textarea-compact calc-assistant-command-input"
+                    disabled={calculatorAssistantCommandPending}
                     id="calculator-assistant-stack-command"
                     onChange={(event) => setCalculatorAssistantCommand(event.target.value)}
-                    placeholder="gypsum, rock wool, gypsum diz"
+                    placeholder="Ekrandaki katmanların kalınlıklarını mantıklı gir"
                     value={calculatorAssistantCommand}
                   />
                 </label>
                 <div className="calc-assistant-command-actions">
                   <button
                     className="focus-ring ui-button ui-button-primary"
-                    disabled={calculatorAssistantCommand.trim().length === 0}
+                    disabled={calculatorAssistantCommand.trim().length === 0 || calculatorAssistantCommandPending}
                     type="submit"
                   >
                     <Sparkles className="h-4 w-4" />
-                    Run command
+                    {calculatorAssistantCommandPending ? "Interpreting" : "Run"}
                   </button>
                 </div>
               </form>

@@ -25,7 +25,10 @@ describe("workbench v2 calculator assistant ui", () => {
 
   it("lets explicit assistant stack commands update Workbench layer state through the undo path", () => {
     expect(source).toContain("parseWorkbenchV2AssistantLayerStackApplyCommand");
-    expect(source).toContain("function applyCalculatorAssistantLayerStackCommand()");
+    expect(source).toContain("async function applyCalculatorAssistantLayerStackCommand()");
+    expect(source).toContain("requestCalculatorAssistantCommandInterpretation");
+    expect(source).toContain('fetch("/api/report-assistant/calculator-command-intent"');
+    expect(source).toContain("decision.normalizedCommand");
     expect(source).toContain("currentLayers: layers");
     expect(source).toContain("currentSelectedOutputs: selectedOutputs");
     expect(source).toContain('commitLayerStackChange("assistant layer stack command"');
@@ -45,7 +48,7 @@ describe("workbench v2 calculator assistant ui", () => {
     expect(source).toContain("calc-assistant-candidate-comparison");
     expect(source).toContain("setContext((current) => ({");
     expect(source).toContain("calc-assistant-command");
-    expect(source).toContain("Run command");
+    expect(source).toContain("Interpreting");
     expect(source).toContain("Preview");
     expect(source).toContain("Preview all");
     expect(source).toContain("Use");

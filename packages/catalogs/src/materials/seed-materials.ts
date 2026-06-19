@@ -1057,13 +1057,397 @@ const BASE_SEED_MATERIALS: readonly MaterialDefinition[] = [
   }
 ];
 
+const PUBLIC_SOURCE_MATERIALS: readonly MaterialDefinition[] = [
+  {
+    id: "gyproc_wallboard_ten_12_5",
+    name: "Gyproc WallBoard Ten 12.5 mm",
+    category: "finish",
+    densityKgM3: 808,
+    acoustic: {
+      behavior: "panel_leaf",
+      lossFactor: 0.03,
+      notes: [
+        "Density is derived from British Gypsum's public PDS minimum board weight of 10.1 kg/m2 at 12.5 mm.",
+        "Elastic and damping values remain nominal panel-leaf defaults; do not treat this as a measured acoustic curve."
+      ],
+      poissonRatio: 0.25,
+      propertySourceStatus: "catalog_nominal",
+      youngModulusPa: 2500000000
+    },
+    notes: "Public-source seed: https://www.british-gypsum.com/documents/product-data-sheet-pds/british-gypsum-pds-gyproc-wallboard-ten-12-5mm.pdf",
+    tags: ["lining", "board", "gyproc", "wallboard-ten", "plasterboard", "public-source"]
+  },
+  {
+    id: "knauf_pro_hd_12_5",
+    name: "Knauf PRO HD 12.5 mm",
+    category: "finish",
+    densityKgM3: 992,
+    acoustic: {
+      behavior: "panel_leaf",
+      lossFactor: 0.035,
+      notes: [
+        "Density follows Knauf PRO HD public datasheet board-density row for 12.5 mm.",
+        "Elastic and damping values remain nominal high-density gypsum board inputs."
+      ],
+      poissonRatio: 0.25,
+      propertySourceStatus: "catalog_nominal",
+      youngModulusPa: 2800000000
+    },
+    notes: "Public-source seed: https://knauf.com/api/download-center/v1/assets/342853ac-e96a-433a-a0f5-5124dfedbed7?download=true",
+    tags: ["lining", "board", "knauf", "pro-hd", "gypsum", "public-source"]
+  },
+  {
+    id: "knauf_pro_hd_15",
+    name: "Knauf PRO HD 15 mm",
+    category: "finish",
+    densityKgM3: 1013,
+    acoustic: {
+      behavior: "panel_leaf",
+      lossFactor: 0.035,
+      notes: [
+        "Density follows Knauf PRO HD public datasheet board-density row for 15 mm.",
+        "Elastic and damping values remain nominal high-density gypsum board inputs."
+      ],
+      poissonRatio: 0.25,
+      propertySourceStatus: "catalog_nominal",
+      youngModulusPa: 2800000000
+    },
+    notes: "Public-source seed: https://knauf.com/api/download-center/v1/assets/342853ac-e96a-433a-a0f5-5124dfedbed7?download=true",
+    tags: ["lining", "board", "knauf", "pro-hd", "gypsum", "public-source"]
+  },
+  {
+    id: "fermacell_gypsum_fibreboard_1150",
+    name: "fermacell Gypsum Fibreboard",
+    category: "finish",
+    densityKgM3: 1150,
+    acoustic: {
+      behavior: "panel_leaf",
+      lossFactor: 0.035,
+      notes: [
+        "Density is the midpoint of the public fermacell gypsum-fibreboard 1150 +/- 50 kg/m3 range.",
+        "Elastic and damping values remain nominal dense board inputs."
+      ],
+      poissonRatio: 0.25,
+      propertySourceStatus: "catalog_nominal",
+      youngModulusPa: 3500000000
+    },
+    notes: "Public-source seed: https://www.fermacell.co.uk/fermacellapi/downloads/file/en-GB/0690J000004BxHIQA0",
+    tags: ["lining", "board", "gypsum-fibre", "fermacell", "dry-floor", "public-source"]
+  },
+  {
+    id: "fiber_cement_board_1290",
+    name: "Fiber Cement Board 1290",
+    category: "finish",
+    densityKgM3: 1290,
+    acoustic: {
+      behavior: "rigid_mass",
+      lossFactor: 0.02,
+      notes: ["Density follows the FSRI public materials database row for 8.5 mm fiber cement board."],
+      poissonRatio: 0.2,
+      propertySourceStatus: "catalog_nominal",
+      youngModulusPa: 8000000000
+    },
+    notes: "Public-source seed: https://materials.fsri.org/materialdetail/fiber-cement-board",
+    tags: ["lining", "board", "fiber-cement", "cement-board", "public-source"]
+  },
+  {
+    id: "osb_3_640",
+    name: "OSB 3 640",
+    category: "mass",
+    densityKgM3: 640,
+    acoustic: {
+      behavior: "panel_leaf",
+      lossFactor: 0.025,
+      notes: ["Density follows the Canadian Wood Council OSB sizes note basis of 640 kg/m3."],
+      poissonRatio: 0.3,
+      propertySourceStatus: "catalog_nominal",
+      youngModulusPa: 4000000000
+    },
+    notes: "Public-source seed: https://cwc.ca/wp-content/uploads/2019/03/Oriented-Strand-Board-OSB-Sizes.pdf",
+    tags: ["deck", "subfloor", "wood-board", "osb", "structural", "timber", "public-source"]
+  },
+  {
+    id: "rockwool_rwa45",
+    name: "ROCKWOOL RWA45",
+    category: "insulation",
+    densityKgM3: 45,
+    acoustic: {
+      absorberClass: "porous_absorptive",
+      behavior: "porous_absorber",
+      flowResistivityPaSM2: 15000,
+      notes: [
+        "Density follows ROCKWOOL's public RW Slabs NBS specification.",
+        "Flow resistivity is an engineering nominal for wall-cavity readiness and is not a ROCKWOOL-declared value."
+      ],
+      porosity: 0.95,
+      propertySourceStatus: "engineering_default"
+    },
+    notes: "Public-source density seed: https://www.rockwool.com/syssiteassets/rw-uk/downloads/nbs-specifications/rockwool-insulation-slabs--rwa45--rw3-rw4-rw5-rw6---nbs-specification.pdf",
+    tags: ["cavity-fill", "porous", "rockwool", "rwa45", "stone-wool", "public-source"]
+  },
+  {
+    id: "rockwool_rw3",
+    name: "ROCKWOOL RW3",
+    category: "insulation",
+    densityKgM3: 60,
+    acoustic: {
+      absorberClass: "porous_absorptive",
+      behavior: "porous_absorber",
+      flowResistivityPaSM2: 28000,
+      notes: [
+        "Density follows ROCKWOOL's public RW Slabs NBS specification.",
+        "Flow resistivity is a dense-mineral-wool engineering nominal and is not a ROCKWOOL-declared value."
+      ],
+      porosity: 0.94,
+      propertySourceStatus: "engineering_default"
+    },
+    notes: "Public-source density seed: https://www.rockwool.com/syssiteassets/rw-uk/downloads/nbs-specifications/rockwool-insulation-slabs--rwa45--rw3-rw4-rw5-rw6---nbs-specification.pdf",
+    tags: ["cavity-fill", "porous", "rockwool", "rw3", "stone-wool", "public-source"]
+  },
+  {
+    id: "rockwool_rw4",
+    name: "ROCKWOOL RW4",
+    category: "insulation",
+    densityKgM3: 80,
+    acoustic: {
+      absorberClass: "porous_absorptive",
+      behavior: "porous_absorber",
+      flowResistivityPaSM2: 42000,
+      notes: [
+        "Density follows ROCKWOOL's public RW Slabs NBS specification.",
+        "Flow resistivity is a dense-mineral-wool engineering nominal and is not a ROCKWOOL-declared value."
+      ],
+      porosity: 0.93,
+      propertySourceStatus: "engineering_default"
+    },
+    notes: "Public-source density seed: https://www.rockwool.com/syssiteassets/rw-uk/downloads/nbs-specifications/rockwool-insulation-slabs--rwa45--rw3-rw4-rw5-rw6---nbs-specification.pdf",
+    tags: ["cavity-fill", "porous", "rockwool", "rw4", "stone-wool", "public-source"]
+  },
+  {
+    id: "rockwool_rw5",
+    name: "ROCKWOOL RW5",
+    category: "insulation",
+    densityKgM3: 100,
+    acoustic: {
+      absorberClass: "porous_absorptive",
+      behavior: "porous_absorber",
+      flowResistivityPaSM2: 50000,
+      notes: [
+        "Density follows ROCKWOOL's public RW Slabs NBS specification.",
+        "Flow resistivity is a dense-mineral-wool engineering nominal and is not a ROCKWOOL-declared value."
+      ],
+      porosity: 0.92,
+      propertySourceStatus: "engineering_default"
+    },
+    notes: "Public-source density seed: https://www.rockwool.com/syssiteassets/rw-uk/downloads/nbs-specifications/rockwool-insulation-slabs--rwa45--rw3-rw4-rw5-rw6---nbs-specification.pdf",
+    tags: ["cavity-fill", "porous", "rockwool", "rw5", "stone-wool", "public-source"]
+  },
+  {
+    id: "rockwool_rw6",
+    name: "ROCKWOOL RW6",
+    category: "insulation",
+    densityKgM3: 140,
+    acoustic: {
+      absorberClass: "porous_absorptive",
+      behavior: "porous_absorber",
+      flowResistivityPaSM2: 70000,
+      notes: [
+        "Density follows ROCKWOOL's public RW Slabs NBS specification.",
+        "Flow resistivity is a dense-mineral-wool engineering nominal and is not a ROCKWOOL-declared value."
+      ],
+      porosity: 0.9,
+      propertySourceStatus: "engineering_default"
+    },
+    notes: "Public-source density seed: https://www.rockwool.com/syssiteassets/rw-uk/downloads/nbs-specifications/rockwool-insulation-slabs--rwa45--rw3-rw4-rw5-rw6---nbs-specification.pdf",
+    tags: ["cavity-fill", "porous", "rockwool", "rw6", "stone-wool", "public-source"]
+  },
+  {
+    id: "owens_corning_703",
+    name: "Owens Corning 703 Fiberglas Board",
+    category: "insulation",
+    densityKgM3: 48,
+    acoustic: {
+      absorberClass: "porous_absorptive",
+      behavior: "porous_absorber",
+      flowResistivityPaSM2: 17000,
+      notes: [
+        "Density follows the public Owens Corning 700 Series Fiberglas data sheet for Type 703.",
+        "Flow resistivity is an engineering nominal for porous absorber modelling and is not declared in that PDS."
+      ],
+      porosity: 0.95,
+      propertySourceStatus: "engineering_default"
+    },
+    notes: "Public-source density seed: https://images-na.ssl-images-amazon.com/images/I/81DnaCijLgL.pdf",
+    tags: ["cavity-fill", "porous", "glass-fiber", "fiberglass", "oc703", "public-source"]
+  },
+  {
+    id: "owens_corning_705",
+    name: "Owens Corning 705 Fiberglas Board",
+    category: "insulation",
+    densityKgM3: 96,
+    acoustic: {
+      absorberClass: "porous_absorptive",
+      behavior: "porous_absorber",
+      flowResistivityPaSM2: 30000,
+      notes: [
+        "Density follows the public Owens Corning 700 Series Fiberglas data sheet for Type 705.",
+        "Flow resistivity is an engineering nominal for porous absorber modelling and is not declared in that PDS."
+      ],
+      porosity: 0.93,
+      propertySourceStatus: "engineering_default"
+    },
+    notes: "Public-source density seed: https://images-na.ssl-images-amazon.com/images/I/81DnaCijLgL.pdf",
+    tags: ["cavity-fill", "porous", "glass-fiber", "fiberglass", "oc705", "public-source"]
+  },
+  {
+    id: "knauf_acoustic_roll_034",
+    name: "Knauf Acoustic Roll 034",
+    category: "insulation",
+    densityKgM3: 24,
+    acoustic: {
+      absorberClass: "porous_absorptive",
+      behavior: "porous_absorber",
+      flowResistivityPaSM2: 8000,
+      notes: [
+        "Density follows Knauf Acoustic Roll 034 public datasheet sound-absorption table.",
+        "Flow resistivity is a lightweight glass/mineral-wool engineering nominal and is not declared in that datasheet."
+      ],
+      porosity: 0.97,
+      propertySourceStatus: "engineering_default"
+    },
+    notes: "Public-source density seed: https://knauf.com/api/download-center/v1/assets/5175ffea-ad6f-4656-acfd-438c97824556?download=true",
+    tags: ["cavity-fill", "porous", "knauf", "acoustic-roll", "mineral-wool", "public-source"]
+  },
+  {
+    id: "basotect_melamine_foam",
+    name: "Basotect Melamine Foam",
+    category: "insulation",
+    densityKgM3: 9,
+    acoustic: {
+      absorberClass: "porous_absorptive",
+      behavior: "porous_absorber",
+      flowResistivityPaSM2: 10000,
+      notes: [
+        "Density follows BASF's public Basotect melamine-resin foam article.",
+        "Flow resistivity is an engineering nominal because the public article describes flow resistance qualitatively."
+      ],
+      porosity: 0.99,
+      propertySourceStatus: "engineering_default"
+    },
+    notes: "Public-source density seed: https://download.basf.com/p1/8a8081c57fd4b609017fd65cf6376e78/en/Melamine_Resin_Foam_-_Lightweight%252C_Versatile_All-Rounder",
+    tags: ["porous", "foam", "melamine", "basotect", "room-acoustics", "public-source"]
+  },
+  {
+    id: "eps_70_insulation_board",
+    name: "EPS 70 Insulation Board",
+    category: "insulation",
+    densityKgM3: 15,
+    acoustic: {
+      behavior: "resilient_layer",
+      lossFactor: 0.08,
+      notes: ["Density follows the public EPS flooring insulation datasheet EPS 70 nominal-density row."],
+      propertySourceStatus: "catalog_nominal"
+    },
+    notes: "Public-source seed: https://www.engineeredfoamproducts.com/wp-content/uploads/2021/05/EFP-EPS-Technical-Datasheet-Expanded-Polystyrene.pdf",
+    tags: ["eps", "rigid-board", "floor-insulation", "upper-fill", "public-source"]
+  },
+  {
+    id: "eps_100_insulation_board",
+    name: "EPS 100 Insulation Board",
+    category: "insulation",
+    densityKgM3: 20,
+    acoustic: {
+      behavior: "resilient_layer",
+      lossFactor: 0.08,
+      notes: ["Density follows the public EPS flooring insulation datasheet EPS 100 nominal-density row."],
+      propertySourceStatus: "catalog_nominal"
+    },
+    notes: "Public-source seed: https://www.engineeredfoamproducts.com/wp-content/uploads/2021/05/EFP-EPS-Technical-Datasheet-Expanded-Polystyrene.pdf",
+    tags: ["eps", "rigid-board", "floor-insulation", "upper-fill", "public-source"]
+  },
+  {
+    id: "eps_150_insulation_board",
+    name: "EPS 150 Insulation Board",
+    category: "insulation",
+    densityKgM3: 25,
+    acoustic: {
+      behavior: "resilient_layer",
+      lossFactor: 0.08,
+      notes: ["Density follows the public EPS flooring insulation datasheet EPS 150 nominal-density row."],
+      propertySourceStatus: "catalog_nominal"
+    },
+    notes: "Public-source seed: https://www.engineeredfoamproducts.com/wp-content/uploads/2021/05/EFP-EPS-Technical-Datasheet-Expanded-Polystyrene.pdf",
+    tags: ["eps", "rigid-board", "floor-insulation", "upper-fill", "public-source"]
+  },
+  {
+    id: "xps_foam_board_40",
+    name: "XPS Foam Board 40",
+    category: "insulation",
+    densityKgM3: 40,
+    acoustic: {
+      behavior: "resilient_layer",
+      lossFactor: 0.08,
+      notes: ["Density follows the public CTCN XPS foam board 38-40 kg/m3 product row, rounded to 40 kg/m3."],
+      propertySourceStatus: "catalog_nominal"
+    },
+    notes: "Public-source seed: https://www.ctc-n.org/products/xps-foam-board",
+    tags: ["xps", "rigid-board", "floor-insulation", "upper-fill", "public-source"]
+  },
+  {
+    id: "pir_board_30",
+    name: "PIR Board 30",
+    category: "insulation",
+    densityKgM3: 30,
+    acoustic: {
+      behavior: "resilient_layer",
+      lossFactor: 0.08,
+      notes: ["Density follows the public termPIR MAX 19 AL technical-data row."],
+      propertySourceStatus: "catalog_nominal"
+    },
+    notes: "Public-source seed: https://termpir.eu/en_en/produkty/plyty-izolacyjne-termpir/termpirlt-supgt-reg-lt-/supgt-max-19-al",
+    tags: ["pir", "rigid-board", "floor-insulation", "upper-fill", "public-source"]
+  },
+  {
+    id: "cork_underlay_184",
+    name: "Cork Underlay 184",
+    category: "support",
+    densityKgM3: 184,
+    acoustic: {
+      behavior: "resilient_layer",
+      lossFactor: 0.08,
+      notes: ["Density follows Jelinek QuietCORK public underlayment specifications."],
+      propertySourceStatus: "catalog_nominal"
+    },
+    notes: "Public-source seed: https://jelinek.com/quietcork-underlayment-specifications",
+    tags: ["resilient", "underlay", "cork", "floor", "public-source"]
+  },
+  {
+    id: "scanrubber_825_underlay",
+    name: "Scan Underlay 825 5 mm",
+    category: "support",
+    densityKgM3: 165,
+    acoustic: {
+      behavior: "resilient_layer",
+      lossFactor: 0.08,
+      notes: ["Density is derived from the public 0.825 kg/m2, 5 mm Scan Underlay 825 specification."],
+      propertySourceStatus: "catalog_nominal"
+    },
+    impact: {
+      dynamicStiffnessMNm3: 37
+    },
+    notes: "Public-source seed: https://scanunderlay.com/products/underscreed/825",
+    tags: ["resilient", "underlay", "rubber", "impact", "floor", "public-source"]
+  }
+];
+
 export const MATERIAL_CATALOG_SEED: readonly MaterialDefinition[] = [
   ...BASE_SEED_MATERIALS,
+  ...PUBLIC_SOURCE_MATERIALS,
   ...FLOOR_SYSTEM_MATERIALS
 ];
 
 export const MATERIAL_SOURCE_NOTE =
-  "Seed catalog plus a curated exact floor-system slice. Acoustic2 remains read-only; no direct catalog sync is happening from its active working tree.";
+  "Seed catalog plus public-source material rows and a curated exact floor-system slice. Acoustic2 remains read-only; no direct catalog sync is happening from its active working tree.";
 
 export const materialCatalogById = Object.fromEntries(
   MATERIAL_CATALOG_SEED.map((entry) => [entry.id, entry])

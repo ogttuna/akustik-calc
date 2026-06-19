@@ -249,6 +249,9 @@ import {
   maybeBuildBroadAccuracyWallTripleLeafLocalSubstitutionLabSpectrumAdapter
 } from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-lab-spectrum-adapter";
 import {
+  LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_FORMULA_CORRIDOR_BASIS
+} from "./layer-combination-resolver-single-leaf-mass-law-banded-runtime-constants";
+import {
   buildPostV1WallCompatibleAnchorDeltaDirectCurveBasis,
   maybeBuildPostV1WallCompatibleAnchorDeltaLabCompanionBasis,
   maybeBuildPostV1WallCompatibleAnchorDelta,
@@ -1206,6 +1209,32 @@ function getPostV1WallScreeningFieldLabCompanionOutputs(input: {
   return ["Rw"];
 }
 
+function getPostV1SingleLeafMassLawFieldLabCompanionOutputs(input: {
+  readonly airborneBasis: AirborneResultBasis | null | undefined;
+  readonly airborneContext: AirborneContext | null | undefined;
+  readonly estimatedRwDb: number | null | undefined;
+  readonly support: TargetOutputSupportLike;
+}): RequestedOutputId[] {
+  const targetOutputSet = new Set(input.support.targetOutputs);
+  const unsupportedOutputSet = new Set(input.support.unsupportedTargetOutputs);
+
+  if (
+    input.airborneContext?.contextMode !== "field_between_rooms" ||
+    input.airborneBasis?.method !== LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_FORMULA_CORRIDOR_BASIS ||
+    input.airborneBasis.origin !== "family_physics_prediction" ||
+    input.airborneBasis.curveBasis !== "calculated_frequency_curve" ||
+    input.airborneBasis.missingPhysicalInputs.length > 0 ||
+    !targetOutputSet.has("Rw") ||
+    !unsupportedOutputSet.has("Rw") ||
+    typeof input.estimatedRwDb !== "number" ||
+    !Number.isFinite(input.estimatedRwDb)
+  ) {
+    return [];
+  }
+
+  return ["Rw"];
+}
+
 function getFiniteRequestedUnsupportedLabSpectrumOutputs(input: {
   readonly estimatedCDb: number | null | undefined;
   readonly estimatedCtrDb: number | null | undefined;
@@ -1581,10 +1610,17 @@ function getPostV1GateARBuildingLabSpectrumCompanionOutputs(input: {
   const hasRequestedBuildingOutput = input.support.targetOutputs.some((output) =>
     ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLOOR_FIELD_CONTINUATION_OUTPUTS.has(output)
   );
+  const targetSetIsLabOnly = input.support.targetOutputs.length > 0 &&
+    input.support.targetOutputs.every((output) =>
+      GATE_AR_AIRBORNE_BUILDING_PREDICTION_LAB_ALIAS_OUTPUTS.has(output)
+    );
   const hasGateARBuildingBasis =
     input.airborneBasis?.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD &&
     input.airborneBasis.origin === "family_physics_prediction" &&
     input.airborneBasis.missingPhysicalInputs.length === 0;
+  const hasOwnedDirectCurveBasis =
+    hasGateARBuildingBasis &&
+    input.airborneBasis?.curveBasis === "calculated_frequency_curve";
   const hasOwnedDirectCurveTrace = Boolean(
     input.airborneTrace &&
       (
@@ -1596,9 +1632,9 @@ function getPostV1GateARBuildingLabSpectrumCompanionOutputs(input: {
 
   if (
     input.airborneContext?.contextMode !== "building_prediction" ||
-    !hasRequestedBuildingOutput ||
+    (!hasRequestedBuildingOutput && !targetSetIsLabOnly) ||
     !hasGateARBuildingBasis ||
-    !hasOwnedDirectCurveTrace ||
+    (!hasOwnedDirectCurveBasis && !hasOwnedDirectCurveTrace) ||
     input.catalogLabFallbackApplied ||
     input.sourceAnchorCandidatePresent ||
     hasOpeningLeakRouteRequest(input.airborneContext)
@@ -1606,7 +1642,9 @@ function getPostV1GateARBuildingLabSpectrumCompanionOutputs(input: {
     return [];
   }
 
-  return getFiniteRequestedUnsupportedLabSpectrumOutputs(input);
+  return targetSetIsLabOnly
+    ? getFiniteRequestedLabSpectrumOutputs(input)
+    : getFiniteRequestedUnsupportedLabSpectrumOutputs(input);
 }
 
 function hasPostV1WallContextOwnedPorousCavityInput(
@@ -5430,6 +5468,13 @@ export function calculateAssembly(
       estimatedRwDb: visibleEstimatedRwDbWithFloorPackageLabCompanion,
       support: rockwoolSplitTripleLeafExactOutputWithhold.targetOutputSupport
     });
+  const postV1SingleLeafMassLawFieldLabCompanionOutputs =
+    getPostV1SingleLeafMassLawFieldLabCompanionOutputs({
+      airborneBasis: dynamicAirborneResult?.airborneBasis,
+      airborneContext,
+      estimatedRwDb: visibleEstimatedRwDbWithFloorPackageLabCompanion,
+      support: rockwoolSplitTripleLeafExactOutputWithhold.targetOutputSupport
+    });
   const projectUserMeasuredWallAirborneFrequencyFieldBuildingSupportedOutputs =
     getProjectUserMeasuredWallAirborneFrequencyFieldBuildingSupportedOutputs({
       adapterBasis: projectUserMeasuredWallAirborneFrequencyFieldBuildingBasis,
@@ -5443,13 +5488,14 @@ export function calculateAssembly(
   const targetOutputSupportBeforeProjectUserMeasuredFrequencyCurve = moveUnsupportedOutputsToSupported(
     rockwoolSplitTripleLeafExactOutputWithhold.targetOutputSupport,
     [
-      ...new Set([
-        ...postV1MixedWallLabFieldCompanionOutputs,
-        ...postV1WallScreeningFieldLabCompanionOutputs,
-        ...projectUserMeasuredWallAirborneFrequencyFieldBuildingSupportedOutputs,
-        ...advancedWallSourceAbsentFieldBuildingSupportedOutputs
-      ])
-    ]
+        ...new Set([
+          ...postV1MixedWallLabFieldCompanionOutputs,
+          ...postV1WallScreeningFieldLabCompanionOutputs,
+          ...postV1SingleLeafMassLawFieldLabCompanionOutputs,
+          ...projectUserMeasuredWallAirborneFrequencyFieldBuildingSupportedOutputs,
+          ...advancedWallSourceAbsentFieldBuildingSupportedOutputs
+        ])
+      ]
   );
   const targetOutputSupport = moveSupportedOutputsToUnsupported(
     targetOutputSupportBeforeProjectUserMeasuredFrequencyCurve,

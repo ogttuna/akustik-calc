@@ -76,6 +76,46 @@ function wallSnapshot() {
   });
 }
 
+function buildingRwSnapshot() {
+  return buildWorkbenchV2ProjectSnapshot({
+    context: {
+      ...WORKBENCH_V2_DEFAULT_CONTEXT,
+      airborneMode: "building_prediction",
+      buildingPredictionOutputBasis: "apparent_and_standardized",
+      conservativeFlankingAssumption: "single_conservative_path",
+      flankingJunctionClass: "rigid_cross_junction",
+      junctionCouplingLengthM: "12",
+      panelHeightMm: "2600",
+      panelWidthMm: "3000",
+      receivingRoomRt60S: "0.5",
+      receivingRoomVolumeM3: "50",
+      sourceRoomVolumeM3: "55",
+      supportSpacingMm: "600",
+      wallCavity1AbsorptionClass: "porous_absorptive",
+      wallCavity1DepthMm: "50",
+      wallCavity1FillCoverage: "full",
+      wallCavity1LayerIndices: "2",
+      wallSideALeafLayerIndices: "1",
+      wallSideBLeafLayerIndices: "3",
+      wallSupportTopology: "independent_frames",
+      wallTopologyMode: "double_leaf_framed"
+    },
+    customMaterials: [],
+    id: "assistant-calculator-building-rw-snapshot",
+    layers: [
+      { id: "assistant-building-layer-1", materialId: "gypsum_board", role: "side_a", thicknessMm: "12.5" },
+      { id: "assistant-building-layer-2", materialId: "rockwool", role: "cavity", thicknessMm: "50" },
+      { id: "assistant-building-layer-3", materialId: "gypsum_board", role: "side_b", thicknessMm: "12.5" }
+    ],
+    materialVisualOverrides: [],
+    mode: "wall",
+    name: "Assistant calculator building Rw preview",
+    savedAtIso: "2026-06-19T08:00:00.000Z",
+    selectedLayerId: "assistant-building-layer-1",
+    selectedOutputs: ["Rw"]
+  });
+}
+
 function readyFloorImpactDraft(input: {
   floorImpactDraft?: ReportAssistantLayerStackDraft["floorImpactDraft"];
   requestedOutputs: readonly RequestedOutputId[];
@@ -186,6 +226,32 @@ describe("workbench v2 calculator assistant", () => {
       calculator: "dynamic",
       targetOutputs: [...LAB_OUTPUTS]
     });
+  });
+
+  it("shows Rw when a building-prediction preview has already calculated the direct lab companion", () => {
+    const result = previewWorkbenchV2CalculatorSnapshot({
+      snapshot: buildingRwSnapshot()
+    });
+
+    expect(result).toMatchObject({
+      mutates: false,
+      name: "preview_workbench_v2_calculator_snapshot",
+      ok: true,
+      previewOnly: true
+    });
+    expect(result.ok && result.preview.calculationSummary).toEqual({
+      primaryOutput: "Rw",
+      primaryValueLabel: "38 dB",
+      selectedOutputs: ["Rw"],
+      status: "ready"
+    });
+    expect(result.ok && result.preview.engineSummary).toMatchObject({
+      supportedTargetOutputs: ["Rw"],
+      unsupportedTargetOutputs: []
+    });
+    expect(result.ok && result.preview.outputRows).toEqual([
+      { detail: "Calculated", label: "Rw", status: "live", value: "38 dB" }
+    ]);
   });
 
   it("returns needs_input preview instead of calculating incomplete snapshots", () => {

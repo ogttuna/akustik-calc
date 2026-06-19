@@ -49,6 +49,33 @@ describe("report assistant planner", () => {
     ]);
   });
 
+  it("routes visible-stack thickness and reorder requests to calculator planning before report patching", () => {
+    expect(
+      planReportAssistantRequest({
+        instruction: "ekrandaki katmanların yerlerini değiştir ve farklı kombinasyonlar yap",
+        selectedOutputs: ["Rw"],
+        sourceStackAvailable: true
+      })
+    ).toMatchObject({
+      mode: "calculator_preview",
+      requiresClarification: false,
+      targetCapability: "preview_described_layer_configuration",
+      usedSignals: ["calculator_intent", "source_stack_available", "target_outputs_present"]
+    });
+
+    expect(
+      planReportAssistantRequest({
+        instruction: "hepsinin kalınlığını 10 mm artır ve uygula",
+        selectedOutputs: ["Rw"],
+        sourceStackAvailable: true
+      })
+    ).toMatchObject({
+      mode: "calculator_preview",
+      requiresClarification: false,
+      targetCapability: "preview_described_layer_configuration"
+    });
+  });
+
   it("routes explicit Turkish wall comparisons to the comparison preview capability", () => {
     expect(
       planReportAssistantRequest({

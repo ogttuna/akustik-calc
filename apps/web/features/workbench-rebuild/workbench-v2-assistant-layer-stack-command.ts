@@ -82,8 +82,9 @@ type ParsedLayerSeed = {
 };
 
 const ASSISTANT_LAYER_STACK_APPLY_INTENT_PATTERN =
-  /\b(?:add|alternative|alternatives|apply|arrange|build|calculate|combination|combinations|create|delete|insert|make|move|option|options|preview|remove|run|select|set|use|alternatif|alternatifler|ayarla|diz|dizelim|dizilimi|dizilimini|ekle|hesapla|kaldir|kaldır|kombinasyon|kombinasyonlar|kur|olustur|olusturalim|sec|seç|secenek|seçenek|secenekler|seçenekler|sil|tasi|taşı|uygula|yap)\b/iu;
+  /\b(?:add|alternative|alternatives|apply|arrange|build|calculate|combination|combinations|complete|create|decrease|delete|fill|infer|increase|insert|lower|make|move|option|options|preview|raise|reduce|remove|run|select|set|use|alternatif|alternatifler|artir|arttir|ayarla|azalt|diz|dizelim|dizilimi|dizilimini|doldur|dusur|ekle|gir|girelim|girin|hesapla|kaldir|kaldır|kombinasyon|kombinasyonlar|kur|olustur|olusturalim|sec|seç|secenek|seçenek|secenekler|seçenekler|sil|tamamla|tasi|taşı|uygula|yap)\b/iu;
 const THICKNESS_PATTERN = /(\d+(?:[.,]\d+)?)\s*(?:mm|millimeters?|millimetres?|milimetre|milimeter)\b/iu;
+const SIGNED_THICKNESS_PATTERN = /([+-]?\d+(?:[.,]\d+)?)\s*(?:mm|millimeters?|millimetres?|milimetre|milimeter)\b/iu;
 const CONTEXT_NUMBER_PATTERN = /([+-]?\d+(?:[.,]\d+)?)/u;
 const MAX_REPEAT_COUNT = 8;
 const REQUESTED_OUTPUT_ID_SET = new Set<string>(REQUESTED_OUTPUT_IDS);
@@ -319,6 +320,69 @@ function hasExplicitApplyIntent(instruction: string): boolean {
   return ASSISTANT_LAYER_STACK_APPLY_INTENT_PATTERN.test(normalizeCommandText(instruction));
 }
 
+function wantsAssumedThicknesses(instruction: string): boolean {
+  const normalized = normalizeCommandText(instruction);
+  const mentionsThickness = /\b(?:kalinli(?:k|g)\w*|thickness(?:es)?)\b/u.test(normalized);
+
+  return (
+    mentionsThickness &&
+    /\b(?:default|draft|engineering|fill|infer|makul|mantikli|reasonable|sensible|tipik|typical|uygun|varsayilan)\b/u
+      .test(normalized)
+  ) || (
+    /\b(?:eksik|missing)\b/u.test(normalized) &&
+    mentionsThickness
+  ) || (
+    mentionsThickness &&
+    /\b(?:doldur|gir|girelim|girin|set|tamamla)\b/u.test(normalized)
+  ) || (
+    /\b(?:arastir|internet|research)\b/u.test(normalized) &&
+    mentionsThickness
+  );
+}
+
+function wantsAllLayerThicknessUpdate(instruction: string): boolean {
+  const normalized = normalizeCommandText(instruction);
+  return /\b(?:all|current|ekran|ekrandaki|every|hepsi|hepsinin|hepsini|katmanlar|katmanlarin|layers|mevcut|tum|tumunun|visible)\b/u
+    .test(normalized) &&
+    /\b(?:kalinli(?:k|g)\w*|thickness(?:es)?)\b/u.test(normalized);
+}
+
+function wantsCurrentStackThicknessCompletion(instruction: string): boolean {
+  const normalized = normalizeCommandText(instruction);
+  return wantsAssumedThicknesses(instruction) &&
+    (
+      wantsAllLayerThicknessUpdate(instruction) ||
+      /\b(?:current|ekran\w*|eksik|layer\w*|mevcut|missing|visible)\b/u.test(normalized)
+    );
+}
+
+function readThicknessDeltaMm(instruction: string): number | null {
+  const normalized = normalizeCommandText(instruction);
+  const signedMatch = SIGNED_THICKNESS_PATTERN.exec(instruction);
+  if (!signedMatch?.[1]) {
+    return null;
+  }
+
+  const value = Number.parseFloat(signedMatch[1].replace(",", "."));
+  if (!Number.isFinite(value) || value === 0) {
+    return null;
+  }
+
+  if (/^[+-]/u.test(signedMatch[1].trim())) {
+    return value;
+  }
+
+  if (/\b(?:artir|arttir|increase|raise)\b/u.test(normalized)) {
+    return Math.abs(value);
+  }
+
+  if (/\b(?:azalt|decrease|dusur|düşür|lower|reduce)\b/u.test(normalized)) {
+    return -Math.abs(value);
+  }
+
+  return null;
+}
+
 function commandKindFromInstruction(instruction: string): WorkbenchV2AssistantCalculatorControlCommandKind {
   const normalized = normalizeCommandText(instruction);
 
@@ -350,7 +414,11 @@ function commandKindFromInstruction(instruction: string): WorkbenchV2AssistantCa
     return "add_layer";
   }
 
-  if (THICKNESS_PATTERN.test(instruction) && /\b(?:make|set|yap|ayarla)\b/u.test(normalized)) {
+  if (
+    readThicknessDeltaMm(instruction) !== null ||
+    wantsCurrentStackThicknessCompletion(instruction) ||
+    (THICKNESS_PATTERN.test(instruction) && /\b(?:make|set|yap|ayarla)\b/u.test(normalized))
+  ) {
     return "update_layer";
   }
 
@@ -515,6 +583,169 @@ function materialForExistingLayer(
   };
 }
 
+function formatThicknessMm(value: number): string {
+  const rounded = Math.round(value * 1000) / 1000;
+  return Number.isInteger(rounded) ? String(rounded) : String(rounded);
+}
+
+function typicalThicknessMmForLayer(input: {
+  material: MaterialDefinition;
+  mode: WorkbenchV2StudyMode;
+  role: string;
+}): number {
+  const id = input.material.id;
+  const tags = new Set(input.material.tags.map((tag) => normalizeCommandText(tag)));
+
+  if (id === "fire_board") {
+    return 20;
+  }
+
+  if (["acoustic_gypsum_board", "diamond_board", "firestop_board"].includes(id)) {
+    return 15;
+  }
+
+  if (["gypsum_board", "nrc_type_c_gypsum_board", "security_board", "silentboard"].includes(id)) {
+    return 12.5;
+  }
+
+  if (id === "cement_board") {
+    return 12.5;
+  }
+
+  if (["osb", "particleboard_flooring", "plywood"].includes(id)) {
+    return 18;
+  }
+
+  if (id === "mlv" || id === "bitumen_membrane") {
+    return 4;
+  }
+
+  if (id.includes("plaster")) {
+    return 10;
+  }
+
+  if (["rockwool", "high_density_rockwool", "glasswool_board"].includes(id) || input.material.acoustic?.behavior === "porous_absorber") {
+    if (input.mode === "floor") {
+      if (input.role === "resilient_layer") {
+        return 30;
+      }
+
+      if (input.role === "ceiling_fill") {
+        return 100;
+      }
+    }
+
+    return 50;
+  }
+
+  if (id === "screed" || id === "anhydrite_screed") {
+    return 50;
+  }
+
+  if (id.startsWith("geniemat_rst")) {
+    const matMatch = /rst0?(\d+)/u.exec(id);
+    const thickness = matMatch?.[1] ? Number.parseInt(matMatch[1], 10) : NaN;
+    return Number.isFinite(thickness) && thickness > 0 ? thickness : 5;
+  }
+
+  if (id.includes("resilient") || tags.has("resilient")) {
+    return input.role === "resilient_layer" ? 8 : 25;
+  }
+
+  if (id === "ceramic_tile") {
+    return 10;
+  }
+
+  if (id === "vinyl_flooring") {
+    return 3;
+  }
+
+  if (id === "laminate_flooring") {
+    return 8;
+  }
+
+  if (id === "carpet_with_foam_underlay") {
+    return 12;
+  }
+
+  if (id === "air_gap" || id === "air_cavity" || tags.has("air")) {
+    return input.mode === "floor" && input.role === "ceiling_cavity" ? 90 : 50;
+  }
+
+  if (["concrete", "heavy_concrete", "lightweight_concrete"].includes(id)) {
+    return input.mode === "floor" && input.role === "base_structure" ? 150 : 100;
+  }
+
+  if (["aac", "hollow_brick", "solid_brick"].includes(id) || tags.has("block") || tags.has("brick") || tags.has("masonry")) {
+    return 100;
+  }
+
+  if (input.material.category === "insulation") {
+    return input.mode === "floor" && input.role === "ceiling_fill" ? 100 : 50;
+  }
+
+  if (input.material.category === "finish") {
+    return 12.5;
+  }
+
+  if (input.material.category === "support") {
+    return input.mode === "floor" ? 65 : 70;
+  }
+
+  if (input.material.category === "mass") {
+    return input.mode === "floor" && input.role === "base_structure" ? 150 : 100;
+  }
+
+  return 50;
+}
+
+function applyAssumedThicknesses(input: {
+  layers: readonly WorkbenchV2DraftLayer[];
+  materials: readonly MaterialDefinition[];
+  mode: WorkbenchV2StudyMode;
+  targetIndices?: readonly number[];
+}): {
+  layers: WorkbenchV2DraftLayer[];
+  tasks: WorkbenchV2AssistantLayerStackCommandTask[];
+  warnings: string[];
+} {
+  const targetIndexSet = new Set(input.targetIndices ?? input.layers.map((_, index) => index));
+  const byId = materialById(input.materials);
+  const tasks: WorkbenchV2AssistantLayerStackCommandTask[] = [];
+  const layers = input.layers.map((layer, index) => {
+    if (!targetIndexSet.has(index) || layer.thicknessMm.trim()) {
+      return layer;
+    }
+
+    const material = materialForExistingLayer(layer, byId);
+    const thicknessMm = formatThicknessMm(typicalThicknessMmForLayer({
+      material,
+      mode: input.mode,
+      role: layer.role
+    }));
+
+    tasks.push({
+      code: "assistant_layer_thickness_assumed",
+      detail: `Layer ${index + 1} ${material.name} filled with ${thicknessMm} mm draft thickness.`,
+      label: "Draft thickness assumed",
+      layerId: layer.id
+    });
+
+    return {
+      ...layer,
+      thicknessMm
+    };
+  });
+
+  return {
+    layers,
+    tasks,
+    warnings: tasks.length
+      ? ["Assistant filled missing thicknesses with engineering-default draft values; verify product/source data before relying on report values."]
+      : []
+  };
+}
+
 function parsedSeedsFromLayers(
   layers: readonly WorkbenchV2DraftLayer[],
   materials: readonly MaterialDefinition[]
@@ -619,6 +850,7 @@ function cloneCandidateLayers(input: {
 }
 
 function buildCandidateStack(input: {
+  assumeMissingThicknesses: boolean;
   candidateIndex: number;
   label: string;
   layers: readonly WorkbenchV2DraftLayer[];
@@ -626,12 +858,21 @@ function buildCandidateStack(input: {
   mode: WorkbenchV2StudyMode;
   sourceLayerSignature: string;
 }): WorkbenchV2AssistantLayerStackCandidateStack {
-  const layers = cloneCandidateLayers({
+  const clonedLayers = cloneCandidateLayers({
     layers: input.layers,
     materials: input.materials,
     mode: input.mode
   });
-  const tasks = missingThicknessTasksForLayers(layers);
+  const assumed = input.assumeMissingThicknesses
+    ? applyAssumedThicknesses({
+        layers: clonedLayers,
+        materials: input.materials,
+        mode: input.mode
+      })
+    : null;
+  const layers = assumed?.layers ?? clonedLayers;
+  const missingTasks = missingThicknessTasksForLayers(layers);
+  const tasks = [...(assumed?.tasks ?? []), ...missingTasks];
 
   return {
     candidateId: `assistant-candidate-${input.candidateIndex + 1}`,
@@ -643,12 +884,14 @@ function buildCandidateStack(input: {
     sourceLayerSignature: input.sourceLayerSignature,
     tasks,
     warnings: [
+      ...(assumed?.warnings ?? []),
       "Candidate stack reuses current calculator materials and thicknesses; preview values must come from the calculator."
     ]
   };
 }
 
 function generateCandidateStacks(input: {
+  assumeMissingThicknesses: boolean;
   currentLayers: readonly WorkbenchV2DraftLayer[];
   materials: readonly MaterialDefinition[];
   mode: WorkbenchV2StudyMode;
@@ -657,23 +900,47 @@ function generateCandidateStacks(input: {
   const variants: {
     label: string;
     layers: readonly WorkbenchV2DraftLayer[];
-  }[] = [
-    {
-      label: "Current order",
-      layers: input.currentLayers
-    },
-    {
-      label: "Reversed order",
-      layers: [...input.currentLayers].reverse()
-    },
-    {
-      label: "Rotated order",
-      layers: input.currentLayers.length > 1 ? [...input.currentLayers.slice(1), input.currentLayers[0]!] : input.currentLayers
-    }
-  ];
+  }[] = [];
+  const seen = new Set<string>();
 
-  return variants.map((variant, candidateIndex) =>
+  function pushVariant(label: string, layers: readonly WorkbenchV2DraftLayer[]) {
+    const signature = layers.map((layer) => layer.id).join("|");
+    if (seen.has(signature)) {
+      return;
+    }
+
+    seen.add(signature);
+    variants.push({ label, layers });
+  }
+
+  pushVariant("Current order", input.currentLayers);
+  pushVariant("Reversed order", [...input.currentLayers].reverse());
+
+  if (input.currentLayers.length > 1) {
+    pushVariant("Rotated order", [...input.currentLayers.slice(1), input.currentLayers[0]!]);
+    pushVariant("Rotated reverse", [input.currentLayers[input.currentLayers.length - 1]!, ...input.currentLayers.slice(0, -1)]);
+  }
+
+  if (input.currentLayers.length > 2) {
+    pushVariant("Front-middle swap", [input.currentLayers[1]!, input.currentLayers[0]!, ...input.currentLayers.slice(2)]);
+    pushVariant("Middle-back swap", [
+      ...input.currentLayers.slice(0, input.currentLayers.length - 2),
+      input.currentLayers[input.currentLayers.length - 1]!,
+      input.currentLayers[input.currentLayers.length - 2]!
+    ]);
+  }
+
+  if (input.currentLayers.length > 3) {
+    pushVariant("Inner-core reverse", [
+      input.currentLayers[0]!,
+      ...input.currentLayers.slice(1, -1).reverse(),
+      input.currentLayers[input.currentLayers.length - 1]!
+    ]);
+  }
+
+  return variants.slice(0, 6).map((variant, candidateIndex) =>
     buildCandidateStack({
+      assumeMissingThicknesses: input.assumeMissingThicknesses,
       candidateIndex,
       label: variant.label,
       layers: variant.layers,
@@ -1190,6 +1457,7 @@ export function parseWorkbenchV2AssistantLayerStackApplyCommand(input: {
     }
 
     const candidateStacks = generateCandidateStacks({
+      assumeMissingThicknesses: wantsAssumedThicknesses(instruction),
       currentLayers,
       materials: input.materials,
       mode: input.currentMode
@@ -1325,13 +1593,20 @@ export function parseWorkbenchV2AssistantLayerStackApplyCommand(input: {
     }
 
     const thicknessMm = parsePositiveThickness(instruction);
+    const thicknessDeltaMm = readThicknessDeltaMm(instruction);
+    const assumeMissingThicknesses = wantsAssumedThicknesses(instruction);
     const matchingIndices = layerIndicesMatchingMaterial({
       instruction,
       layers: currentLayers,
       materials: input.materials
     });
+    const targetIndices = matchingIndices.length > 0
+      ? matchingIndices
+      : wantsAllLayerThicknessUpdate(instruction) || assumeMissingThicknesses
+        ? currentLayers.map((_, index) => index)
+        : [];
 
-    if (!thicknessMm || !matchingIndices.length) {
+    if ((!thicknessMm && thicknessDeltaMm === null && !assumeMissingThicknesses) || !targetIndices.length) {
       return {
         code: "no_matching_layer",
         message: "No matching calculator layer could be updated from the current stack.",
@@ -1340,14 +1615,66 @@ export function parseWorkbenchV2AssistantLayerStackApplyCommand(input: {
     }
 
     const mode = input.currentMode;
-    const layers = currentLayers.map((layer, index) =>
-      matchingIndices.includes(index)
-        ? {
-            ...layer,
-            thicknessMm
-          }
-        : layer
-    );
+    const targetIndexSet = new Set(targetIndices);
+    const tasks: WorkbenchV2AssistantLayerStackCommandTask[] = [];
+    const warnings: string[] = [];
+    let layers: WorkbenchV2DraftLayer[] = [...currentLayers];
+
+    if (assumeMissingThicknesses) {
+      const assumed = applyAssumedThicknesses({
+        layers,
+        materials: input.materials,
+        mode,
+        targetIndices
+      });
+      layers = assumed.layers;
+      tasks.push(...assumed.tasks);
+      warnings.push(...assumed.warnings);
+    }
+
+    if (thicknessDeltaMm !== null) {
+      layers = layers.map((layer, index) => {
+        if (!targetIndexSet.has(index)) {
+          return layer;
+        }
+
+        const currentThickness = parseFinitePositiveNumber(layer.thicknessMm);
+        if (currentThickness === null) {
+          tasks.push({
+            code: "assistant_layer_thickness_missing",
+            detail: `Layer ${index + 1} needs a positive thickness before a ${formatThicknessMm(thicknessDeltaMm)} mm delta can be applied.`,
+            label: "Missing thickness",
+            layerId: layer.id
+          });
+          return layer;
+        }
+
+        const nextThickness = currentThickness + thicknessDeltaMm;
+        if (nextThickness <= 0) {
+          tasks.push({
+            code: "assistant_layer_thickness_invalid_delta",
+            detail: `Layer ${index + 1} would become ${formatThicknessMm(nextThickness)} mm; thickness must stay positive.`,
+            label: "Invalid thickness delta",
+            layerId: layer.id
+          });
+          return layer;
+        }
+
+        return {
+          ...layer,
+          thicknessMm: formatThicknessMm(nextThickness)
+        };
+      });
+    } else if (thicknessMm) {
+      layers = layers.map((layer, index) =>
+        targetIndexSet.has(index)
+          ? {
+              ...layer,
+              thicknessMm
+            }
+          : layer
+      );
+    }
 
     return {
       commandKind,
@@ -1358,10 +1685,10 @@ export function parseWorkbenchV2AssistantLayerStackApplyCommand(input: {
       mode,
       ok: true,
       previewRequested: false,
-      selectedLayerId: layers[matchingIndices[0] ?? 0]?.id ?? null,
+      selectedLayerId: layers[targetIndices[0] ?? 0]?.id ?? null,
       selectedOutputs: currentSelectedOutputs.length ? [...currentSelectedOutputs] : undefined,
-      tasks: [],
-      warnings: []
+      tasks,
+      warnings
     };
   }
 
@@ -1396,13 +1723,25 @@ export function parseWorkbenchV2AssistantLayerStackApplyCommand(input: {
   const insertionIndex = containsNormalizedAlias(normalized, "alt") || containsNormalizedAlias(normalized, "bottom") || containsNormalizedAlias(normalized, "end")
     ? currentLayers.length
     : 0;
-  const layers = commandKind === "add_layer"
+  let layers = commandKind === "add_layer"
     ? rebuildLayerRoles({
         layers: insertAt(currentLayers, insertionIndex, newLayers[0]!),
         materials: input.materials,
         mode
       })
     : newLayers;
+  const assumedThicknesses = wantsAssumedThicknesses(instruction)
+    ? applyAssumedThicknesses({
+        layers,
+        materials: input.materials,
+        mode
+      })
+    : null;
+
+  if (assumedThicknesses) {
+    layers = assumedThicknesses.layers;
+  }
+
   const missingThicknessTasks = missingThicknessTasksForLayers(layers);
 
   return {
@@ -1416,9 +1755,12 @@ export function parseWorkbenchV2AssistantLayerStackApplyCommand(input: {
     previewRequested: false,
     selectedLayerId: layers[0]?.id ?? null,
     selectedOutputs: currentSelectedOutputs.length ? [...currentSelectedOutputs] : undefined,
-    tasks: missingThicknessTasks,
-    warnings: missingThicknessTasks.length
-      ? ["Assistant arranged the stack but left missing thicknesses blank instead of guessing."]
-      : []
+    tasks: [...(assumedThicknesses?.tasks ?? []), ...missingThicknessTasks],
+    warnings: [
+      ...(assumedThicknesses?.warnings ?? []),
+      ...(missingThicknessTasks.length
+        ? ["Assistant arranged the stack but left missing thicknesses blank instead of guessing."]
+        : [])
+    ]
   };
 }
