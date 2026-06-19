@@ -20,20 +20,32 @@ import {
   ArrowDown,
   ArrowRight,
   ArrowUp,
+  Bookmark,
   Copy,
   FileText,
-  FolderOpen,
   GripVertical,
+  Menu,
   Palette,
   Plus,
+  Save,
   Search,
+  Sparkles,
   Trash2,
-  Undo2
+  Undo2,
+  X
 } from "lucide-react";
 import { type FocusEvent, type KeyboardEvent, type MouseEvent, type PointerEvent, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import { buildWorkbenchResponseCurveFigures } from "../workbench/response-curve-model";
+import {
+  confirmReportAssistantWorkbenchApplyProposal,
+  type ReportAssistantWorkbenchConfirmedApplyPayload
+} from "../workbench/report-assistant-workbench-confirmed-apply";
+import {
+  createReportAssistantWorkbenchApplyTargetSignature,
+  type ReportAssistantWorkbenchApplyProposal
+} from "../workbench/report-assistant-workbench-apply-proposal";
 import {
   parseSimpleWorkbenchProposalDocument,
   type SimpleWorkbenchProposalDocument
@@ -66,20 +78,85 @@ import {
 import { ProfessionalLayerIllustration, type ProfessionalLayerIllustrationLayer, type ProfessionalLayerVisualStyle } from "./professional-layer-illustration";
 import { ProfessionalResponseCurve } from "./professional-response-curve";
 import { ProjectWorkspacePanel } from "./project-workspace-panel";
+import { WorkbenchPresetLibraryPanel } from "./workbench-preset-library-panel";
+import {
+  WORKBENCH_V2_COMMON_PRESETS,
+  findWorkbenchV2CommonPresetById
+} from "./workbench-v2-common-presets";
+import {
+  getWorkbenchV2AssistantLayerStackSignature,
+  parseWorkbenchV2AssistantLayerStackApplyCommand,
+  type WorkbenchV2AssistantLayerStackCandidateStack
+} from "./workbench-v2-assistant-layer-stack-command";
+import type {
+  WorkbenchV2CalculatorAssistantOutputRow,
+  WorkbenchV2CalculatorAssistantPreview,
+  WorkbenchV2CalculatorAssistantTask
+} from "./workbench-v2-calculator-assistant";
+import {
+  formatWorkbenchV2PresetLibraryTriggerStatus,
+  parseWorkbenchV2PresetRecord,
+  parseWorkbenchV2PresetSummaries,
+  workbenchV2SnapshotsRepresentSameDraft,
+  type WorkbenchV2PresetStatus,
+  type WorkbenchV2PresetSummary
+} from "./workbench-v2-presets";
+import {
+  deriveWorkbenchV2PersistenceState,
+  getWorkbenchV2DraftDirtyState
+} from "./workbench-v2-persistence-state";
 import {
   WORKBENCH_V2_DEFAULT_CONTEXT,
   buildWorkbenchV2ProjectSnapshot,
   parseWorkbenchV2ProjectSnapshot,
   type WorkbenchV2ContextDraft,
+  type WorkbenchV2ProjectSnapshot,
   type WorkbenchV2StudyMode
 } from "./workbench-v2-project-snapshot";
 
 type StudyMode = WorkbenchV2StudyMode;
+type WorkbenchDrawerTab = "materials" | "presets" | "projects";
+type ReportSourceDecisionKind = "combinationDirty" | "projectDraft";
 type EstimateState =
   | { status: "idle" }
   | { reasons: readonly RequiredTask[]; status: "blocked" }
   | { status: "loading" }
   | { result: AssemblyCalculation; status: "ready" }
+  | { message: string; status: "error" };
+type CalculatorAssistantPreviewState =
+  | { status: "idle" }
+  | { status: "loading" }
+  | { preview: WorkbenchV2CalculatorAssistantPreview; status: "ready" }
+  | { message: string; status: "error" };
+type CalculatorAssistantCommandMessage = {
+  detail: string;
+  title: string;
+  tone: "success" | "warning";
+};
+type CalculatorAssistantCandidateComparisonRow = {
+  candidateId: string;
+  commandTasks: readonly WorkbenchV2AssistantLayerStackCandidateStack["tasks"][number][];
+  errorMessage?: string;
+  label: string;
+  outputRows: readonly WorkbenchV2CalculatorAssistantOutputRow[];
+  previewTasks: readonly WorkbenchV2CalculatorAssistantTask[];
+  status: WorkbenchV2CalculatorAssistantPreview["calculationSummary"]["status"] | "error";
+};
+type CalculatorAssistantCandidateComparisonRank = {
+  candidateId: string;
+  label: string;
+  metric: RequestedOutputId;
+  rank: number;
+  valueLabel: string;
+};
+type CalculatorAssistantCandidateComparisonState =
+  | { status: "idle" }
+  | { candidateCount: number; status: "loading" }
+  | {
+      ranking: readonly CalculatorAssistantCandidateComparisonRank[];
+      rows: readonly CalculatorAssistantCandidateComparisonRow[];
+      status: "ready";
+    }
   | { message: string; status: "error" };
 type OutputStatus = "live" | "needs_input" | "unsupported" | "pending";
 
@@ -109,6 +186,8 @@ type RequiredTask = {
 };
 
 type ContextDraft = WorkbenchV2ContextDraft;
+
+const WORKBENCH_V2_COMMON_PRESET_COUNT = WORKBENCH_V2_COMMON_PRESETS.length;
 
 type LayerDropTarget = {
   layerId: string;
@@ -1179,6 +1258,132 @@ function parseEstimateError(payload: unknown): string {
   return "Estimate failed.";
 }
 
+function parseCalculatorAssistantPreviewError(payload: unknown): string {
+  if (isObjectRecord(payload)) {
+    if (Array.isArray(payload.errors)) {
+      const errors = payload.errors.filter((entry): entry is string => typeof entry === "string" && entry.trim().length > 0);
+      if (errors.length) {
+        return errors.join("; ");
+      }
+    }
+
+    if (typeof payload.error === "string" && payload.error.trim()) {
+      return payload.error;
+    }
+  }
+
+  return "Assistant calculator preview failed.";
+}
+
+function parseCalculatorAssistantPreviewPayload(payload: unknown): WorkbenchV2CalculatorAssistantPreview | null {
+  if (!isObjectRecord(payload) || payload.ok !== true || !isObjectRecord(payload.preview)) {
+    return null;
+  }
+
+  const preview = payload.preview;
+  if (
+    !isObjectRecord(preview.calculationSummary) ||
+    !isObjectRecord(preview.requestedSnapshot) ||
+    !Array.isArray(preview.outputRows) ||
+    !Array.isArray(preview.tasks)
+  ) {
+    return null;
+  }
+
+  return preview as WorkbenchV2CalculatorAssistantPreview;
+}
+
+async function requestCalculatorAssistantPreview(input: {
+  signal: AbortSignal;
+  snapshot: WorkbenchV2ProjectSnapshot;
+}): Promise<WorkbenchV2CalculatorAssistantPreview> {
+  const response = await fetch("/api/report-assistant/calculator-preview", {
+    body: JSON.stringify({
+      snapshot: input.snapshot,
+      targetOutputs: [...input.snapshot.selectedOutputs]
+    }),
+    headers: {
+      "Content-Type": "application/json"
+    },
+    method: "POST",
+    signal: input.signal
+  });
+  let payload: unknown = null;
+
+  try {
+    payload = await response.json();
+  } catch {
+    payload = null;
+  }
+
+  if (!response.ok) {
+    throw new Error(parseCalculatorAssistantPreviewError(payload));
+  }
+
+  const preview = parseCalculatorAssistantPreviewPayload(payload);
+  if (!preview) {
+    throw new Error("Assistant calculator preview response is incomplete.");
+  }
+
+  return preview;
+}
+
+function parseCalculatorAssistantOutputNumber(value: string): number | null {
+  const match = /-?\d+(?:[.,]\d+)?/u.exec(value);
+  if (!match) {
+    return null;
+  }
+
+  const parsed = Number.parseFloat(match[0].replace(",", "."));
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function calculatorAssistantMetricHigherIsBetter(metric: RequestedOutputId): boolean {
+  return !(metric === "Ln,w" || metric === "Ln,w+CI" || metric === "L'n,w" || metric === "L'nT,w" || metric === "L'nT,50");
+}
+
+function buildCalculatorAssistantCandidateComparisonRanking(input: {
+  rows: readonly CalculatorAssistantCandidateComparisonRow[];
+  selectedOutputs: readonly RequestedOutputId[];
+}): CalculatorAssistantCandidateComparisonRank[] {
+  const metric = input.selectedOutputs[0];
+  if (!metric || !input.rows.length) {
+    return [];
+  }
+
+  const candidates = input.rows.map((row) => {
+    const output = row.outputRows.find((outputRow) => outputRow.label === metric && outputRow.status === "live");
+    const value = output ? parseCalculatorAssistantOutputNumber(output.value) : null;
+
+    return output && value !== null
+      ? {
+          candidateId: row.candidateId,
+          label: row.label,
+          metric,
+          value,
+          valueLabel: output.value
+        }
+      : null;
+  });
+
+  if (candidates.some((candidate) => candidate === null)) {
+    return [];
+  }
+
+  const higherIsBetter = calculatorAssistantMetricHigherIsBetter(metric);
+
+  return candidates
+    .filter((candidate): candidate is NonNullable<typeof candidate> => candidate !== null)
+    .sort((left, right) => higherIsBetter ? right.value - left.value : left.value - right.value)
+    .map((candidate, index) => ({
+      candidateId: candidate.candidateId,
+      label: candidate.label,
+      metric: candidate.metric,
+      rank: index + 1,
+      valueLabel: candidate.valueLabel
+    }));
+}
+
 function outputRequiresAirborneContext(outputId: RequestedOutputId): boolean {
   return outputId === "R'w" || outputId.startsWith("Dn");
 }
@@ -1725,19 +1930,31 @@ export function CalculatorWorkbench() {
   const [selectedOutputs, setSelectedOutputs] = useState<readonly RequestedOutputId[]>(["Rw"]);
   const [context, setContext] = useState<ContextDraft>(INITIAL_CONTEXT);
   const [estimateState, setEstimateState] = useState<EstimateState>({ status: "idle" });
+  const [calculatorAssistantState, setCalculatorAssistantState] = useState<CalculatorAssistantPreviewState>({ status: "idle" });
+  const [calculatorAssistantCommand, setCalculatorAssistantCommand] = useState("");
+  const [calculatorAssistantCommandMessage, setCalculatorAssistantCommandMessage] = useState<CalculatorAssistantCommandMessage | null>(null);
+  const [calculatorAssistantCandidateStacks, setCalculatorAssistantCandidateStacks] = useState<readonly WorkbenchV2AssistantLayerStackCandidateStack[]>([]);
+  const [calculatorAssistantWorkbenchApplyProposal, setCalculatorAssistantWorkbenchApplyProposal] =
+    useState<ReportAssistantWorkbenchApplyProposal | null>(null);
+  const [calculatorAssistantCandidateComparisonState, setCalculatorAssistantCandidateComparisonState] =
+    useState<CalculatorAssistantCandidateComparisonState>({ status: "idle" });
   const [materialSearch, setMaterialSearch] = useState<Record<string, string>>({});
   const [openMaterialLayerId, setOpenMaterialLayerId] = useState<string | null>(null);
-  const [materialEditorOpen, setMaterialEditorOpen] = useState(false);
   const [materialEditorMaterialId, setMaterialEditorMaterialId] = useState<string | null>(INITIAL_LAYERS[0]?.materialId ?? null);
+  const [workbenchDrawerOpen, setWorkbenchDrawerOpen] = useState(false);
+  const [workbenchDrawerTab, setWorkbenchDrawerTab] = useState<WorkbenchDrawerTab>("projects");
   const [draggedLayerId, setDraggedLayerId] = useState<string | null>(null);
   const [layerDropTarget, setLayerDropTarget] = useState<LayerDropTarget | null>(null);
   const [layerUndoStack, setLayerUndoStack] = useState<LayerStackUndoStack>([]);
   const [serverProjects, setServerProjects] = useState<ServerProjectSummaryPayload[]>([]);
   const [selectedServerProjectId, setSelectedServerProjectId] = useState("");
+  const [expandedServerProjectId, setExpandedServerProjectId] = useState("");
   const [serverProjectNameDraft, setServerProjectNameDraft] = useState("");
   const serverProjectNameDraftRef = useRef(serverProjectNameDraft);
   const [serverProjectAssemblies, setServerProjectAssemblies] = useState<ServerProjectAssemblySummaryPayload[]>([]);
   const [selectedServerAssemblyId, setSelectedServerAssemblyId] = useState("");
+  const [activeServerAssemblyId, setActiveServerAssemblyId] = useState("");
+  const [activeServerAssemblyBaselineSnapshot, setActiveServerAssemblyBaselineSnapshot] = useState<WorkbenchV2ProjectSnapshot | null>(null);
   const [serverAssemblyNameDraft, setServerAssemblyNameDraft] = useState("");
   const serverAssemblyNameDraftRef = useRef(serverAssemblyNameDraft);
   const [serverAssemblyDescriptionDraft, setServerAssemblyDescriptionDraft] = useState("");
@@ -1754,14 +1971,39 @@ export function CalculatorWorkbench() {
   const serverReportDescriptionDraftRef = useRef(serverReportDescriptionDraft);
   const [serverProjectStatus, setServerProjectStatus] = useState<ServerProjectStatus>("idle");
   const [serverProjectMessage, setServerProjectMessage] = useState("Browser-local draft");
-  const [projectWorkspaceOpen, setProjectWorkspaceOpen] = useState(false);
   const serverProjectMutationInFlightRef = useRef(false);
+  const calculatorAssistantPreviewSnapshotRef = useRef<WorkbenchV2ProjectSnapshot | null>(null);
+  const calculatorAssistantPreviewRequestRef = useRef(0);
+  const calculatorAssistantPreviewAbortRef = useRef<AbortController | null>(null);
+  const calculatorAssistantCandidateBatchRequestRef = useRef(0);
+  const calculatorAssistantCandidateBatchAbortRef = useRef<AbortController | null>(null);
+  const [projectCreatePanelOpen, setProjectCreatePanelOpen] = useState(false);
+  const [assemblyCreatePanelOpen, setAssemblyCreatePanelOpen] = useState(false);
+  const [reportSourceDecisionOpen, setReportSourceDecisionOpen] = useState(false);
+  const [lastAppliedTemplateName, setLastAppliedTemplateName] = useState<string | null>(null);
+  const [workbenchPresets, setWorkbenchPresets] = useState<WorkbenchV2PresetSummary[]>([]);
+  const [selectedWorkbenchPresetId, setSelectedWorkbenchPresetId] = useState("");
+  const [selectedWorkbenchCommonPresetId, setSelectedWorkbenchCommonPresetId] = useState("");
+  const [workbenchPresetNameDraft, setWorkbenchPresetNameDraft] = useState("");
+  const workbenchPresetNameDraftRef = useRef(workbenchPresetNameDraft);
+  const [workbenchPresetDescriptionDraft, setWorkbenchPresetDescriptionDraft] = useState("");
+  const workbenchPresetDescriptionDraftRef = useRef(workbenchPresetDescriptionDraft);
+  const [workbenchPresetRenameDraft, setWorkbenchPresetRenameDraft] = useState("");
+  const workbenchPresetRenameDraftRef = useRef(workbenchPresetRenameDraft);
+  const [workbenchPresetRenameDescriptionDraft, setWorkbenchPresetRenameDescriptionDraft] = useState("");
+  const workbenchPresetRenameDescriptionDraftRef = useRef(workbenchPresetRenameDescriptionDraft);
+  const [workbenchPresetStatus, setWorkbenchPresetStatus] = useState<WorkbenchV2PresetStatus>("idle");
+  const [workbenchPresetMessage, setWorkbenchPresetMessage] = useState(() =>
+    formatWorkbenchV2PresetLibraryTriggerStatus(0, WORKBENCH_V2_COMMON_PRESET_COUNT)
+  );
+  const workbenchPresetMutationInFlightRef = useRef(false);
 
   const materials = useMemo(() => buildResolvedMaterialCatalog(customMaterials), [customMaterials]);
   const materialById = useMemo(() => new Map(materials.map((material) => [material.id, material])), [materials]);
   const estimateResult = estimateState.status === "ready" ? estimateState.result : null;
   const availableOutputs = OUTPUT_OPTIONS.filter((output) => output.modes.includes(mode));
   const outputRows = estimateResult ? buildOutputRows(estimateResult, selectedOutputs) : [];
+  const calculatorAssistantPreview = calculatorAssistantState.status === "ready" ? calculatorAssistantState.preview : null;
   const primaryOutput = getPrimaryOutput(outputRows);
   const remoteTasks = getRemoteTasks(estimateResult);
   const localTasks = buildLocalTasks(layers, selectedOutputs, materialById);
@@ -1799,13 +2041,73 @@ export function CalculatorWorkbench() {
   const undoLayerStackTitle = canUndoLayerStack ? undoLayerStackActionLabel : "No layer changes to undo";
   const selectedServerProject = serverProjects.find((project) => project.id === selectedServerProjectId) ?? null;
   const selectedServerAssembly = serverProjectAssemblies.find((assembly) => assembly.id === selectedServerAssemblyId) ?? null;
+  const activeServerAssembly = serverProjectAssemblies.find((assembly) => assembly.id === activeServerAssemblyId) ?? null;
   const selectedServerReport = serverProjectReports.find((report) => report.id === selectedServerReportId) ?? null;
+  const selectedWorkbenchPreset = workbenchPresets.find((preset) => preset.id === selectedWorkbenchPresetId) ?? null;
+  const selectedWorkbenchCommonPreset = findWorkbenchV2CommonPresetById(selectedWorkbenchCommonPresetId);
   const serverProjectBusy =
     serverProjectStatus === "loading" || serverProjectStatus === "syncing" || serverProjectStatus === "restoring";
+  const workbenchPresetBusy =
+    workbenchPresetStatus === "loading" || workbenchPresetStatus === "syncing" || workbenchPresetStatus === "restoring";
   const canCreateServerProject = !serverProjectBusy;
   const canRenameServerAssembly = Boolean(selectedServerProjectId && selectedServerAssembly) && !serverProjectBusy;
   const canRenameServerReport = Boolean(selectedServerProjectId && selectedServerReport) && !serverProjectBusy;
-  const projectWorkspaceTriggerStatus = selectedServerProject?.name ?? "No project";
+  const canRenameWorkbenchPreset = Boolean(selectedWorkbenchPreset) && !workbenchPresetBusy;
+  const currentWorkbenchDraftSnapshot = useMemo(
+    () =>
+      buildWorkbenchV2ProjectSnapshot({
+        context,
+        customMaterials,
+        id: typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : `workbench-v2-${Date.now()}`,
+        layers,
+        materialVisualOverrides,
+        mode,
+        name: activeServerAssembly?.name ?? lastAppliedTemplateName ?? "Current draft",
+        savedAtIso: new Date().toISOString(),
+        selectedLayerId,
+        selectedOutputs
+      }),
+    [
+      activeServerAssembly?.name,
+      context,
+      customMaterials,
+      lastAppliedTemplateName,
+      layers,
+      materialVisualOverrides,
+      mode,
+      selectedLayerId,
+      selectedOutputs
+    ]
+  );
+  const activeAssemblyHasBaseline = Boolean(activeServerAssembly && activeServerAssemblyBaselineSnapshot);
+  const activeAssemblyDirty = getWorkbenchV2DraftDirtyState(currentWorkbenchDraftSnapshot, activeServerAssemblyBaselineSnapshot);
+  const workbenchPersistenceState = deriveWorkbenchV2PersistenceState({
+    activeAssembly: activeServerAssembly
+      ? {
+          id: activeServerAssembly.id,
+          name: activeServerAssembly.name,
+          version: activeServerAssembly.version
+        }
+      : null,
+    activeAssemblyDirty,
+    activeAssemblyHasBaseline,
+    project: selectedServerProject
+      ? {
+          id: selectedServerProject.id,
+          name: selectedServerProject.name
+        }
+      : null,
+    templateName: lastAppliedTemplateName
+  });
+  const reportSourceDecisionKind: ReportSourceDecisionKind | null =
+    selectedServerProjectId && activeServerAssembly && activeAssemblyDirty
+      ? "combinationDirty"
+      : selectedServerProjectId && !activeServerAssembly
+        ? "projectDraft"
+        : null;
+  const canSaveNewServerAssembly = Boolean(
+    selectedServerProjectId && serverAssemblyNameDraft.trim().length > 0 && serverProjectStatus !== "syncing" && serverProjectStatus !== "restoring"
+  );
 
   useEffect(() => {
     const restored = readStoredMaterialEditorState();
@@ -1835,6 +2137,29 @@ export function CalculatorWorkbench() {
   }, []);
 
   useEffect(() => {
+    void refreshWorkbenchPresets({ silent: true });
+    // Template discovery is a persistence affordance; the initial read
+    // intentionally runs once per mounted workbench.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (!workbenchDrawerOpen) {
+      return;
+    }
+
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousDocumentOverscrollBehavior = document.documentElement.style.overscrollBehavior;
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overscrollBehavior = "none";
+
+    return () => {
+      document.body.style.overflow = previousBodyOverflow;
+      document.documentElement.style.overscrollBehavior = previousDocumentOverscrollBehavior;
+    };
+  }, [workbenchDrawerOpen]);
+
+  useEffect(() => {
     const nextName = selectedServerAssembly?.name ?? "";
     const nextDescription = selectedServerAssembly?.description ?? "";
     serverAssemblyRenameDraftRef.current = nextName;
@@ -1853,11 +2178,22 @@ export function CalculatorWorkbench() {
   }, [selectedServerReport?.description, selectedServerReport?.id, selectedServerReport?.name]);
 
   useEffect(() => {
+    const nextName = selectedWorkbenchPreset?.name ?? "";
+    const nextDescription = selectedWorkbenchPreset?.description ?? "";
+    workbenchPresetRenameDraftRef.current = nextName;
+    workbenchPresetRenameDescriptionDraftRef.current = nextDescription;
+    setWorkbenchPresetRenameDraft(nextName);
+    setWorkbenchPresetRenameDescriptionDraft(nextDescription);
+  }, [selectedWorkbenchPreset?.description, selectedWorkbenchPreset?.id, selectedWorkbenchPreset?.name]);
+
+  useEffect(() => {
     if (!selectedServerProjectId) {
       setServerProjectAssemblies([]);
       setSelectedServerAssemblyId("");
+      clearActiveProjectAssembly();
       setServerProjectReports([]);
       setSelectedServerReportId("");
+      setReportSourceDecisionOpen(false);
       serverAssemblyRenameDraftRef.current = "";
       serverAssemblyRenameDescriptionDraftRef.current = "";
       serverReportRenameDraftRef.current = "";
@@ -1979,6 +2315,39 @@ export function CalculatorWorkbench() {
     };
   }, [context, customMaterials, layers, materialById, mode, selectedOutputs]);
 
+  useEffect(() => {
+    if (calculatorAssistantPreviewSnapshotRef.current === currentWorkbenchDraftSnapshot) {
+      return;
+    }
+
+    if (calculatorAssistantPreviewSnapshotRef.current === null) {
+      calculatorAssistantPreviewSnapshotRef.current = currentWorkbenchDraftSnapshot;
+      return;
+    }
+
+    calculatorAssistantPreviewSnapshotRef.current = currentWorkbenchDraftSnapshot;
+    calculatorAssistantPreviewRequestRef.current += 1;
+    calculatorAssistantPreviewAbortRef.current?.abort();
+    calculatorAssistantPreviewAbortRef.current = null;
+    calculatorAssistantCandidateBatchRequestRef.current += 1;
+    calculatorAssistantCandidateBatchAbortRef.current?.abort();
+    calculatorAssistantCandidateBatchAbortRef.current = null;
+    setCalculatorAssistantState((current) => (current.status === "idle" ? current : { status: "idle" }));
+    setCalculatorAssistantCandidateComparisonState((current) => (current.status === "idle" ? current : { status: "idle" }));
+  }, [currentWorkbenchDraftSnapshot]);
+
+  useEffect(
+    () => () => {
+      calculatorAssistantPreviewRequestRef.current += 1;
+      calculatorAssistantPreviewAbortRef.current?.abort();
+      calculatorAssistantPreviewAbortRef.current = null;
+      calculatorAssistantCandidateBatchRequestRef.current += 1;
+      calculatorAssistantCandidateBatchAbortRef.current?.abort();
+      calculatorAssistantCandidateBatchAbortRef.current = null;
+    },
+    []
+  );
+
   function updateContext(patch: Partial<ContextDraft>) {
     setContext((current) => ({ ...current, ...patch }));
   }
@@ -2016,6 +2385,70 @@ export function CalculatorWorkbench() {
     setLayerDropTarget(null);
   }
 
+  function clearActiveProjectAssembly() {
+    setActiveServerAssemblyId("");
+    setActiveServerAssemblyBaselineSnapshot(null);
+  }
+
+  function markActiveProjectAssembly(assemblyId: string, snapshot: WorkbenchV2ProjectSnapshot | unknown) {
+    const parsed = parseWorkbenchV2ProjectSnapshot(snapshot);
+
+    setActiveServerAssemblyId(assemblyId);
+    setActiveServerAssemblyBaselineSnapshot(parsed.snapshot);
+    setLastAppliedTemplateName(null);
+  }
+
+  function clearSelectedProjectChildren() {
+    setSelectedServerAssemblyId("");
+    setSelectedServerReportId("");
+    clearActiveProjectAssembly();
+    serverAssemblyRenameDraftRef.current = "";
+    serverAssemblyRenameDescriptionDraftRef.current = "";
+    serverReportRenameDraftRef.current = "";
+    serverReportDescriptionDraftRef.current = "";
+    setServerAssemblyRenameDraft("");
+    setServerAssemblyRenameDescriptionDraft("");
+    setServerReportRenameDraft("");
+    setServerReportDescriptionDraft("");
+  }
+
+  async function refreshWorkbenchPresets(options?: { preserveMessage?: boolean; silent?: boolean }) {
+    if (!options?.silent) {
+      setWorkbenchPresetStatus("loading");
+      setWorkbenchPresetMessage("Loading templates");
+    }
+
+    try {
+      const response = await fetch("/api/workbench-v2/presets", {
+        method: "GET"
+      });
+
+      if (!response.ok) {
+        throw new Error(await readServerProjectError(response, "DAC could not load workbench templates."));
+      }
+
+      const payload = (await response.json()) as unknown;
+      const presets = parseWorkbenchV2PresetSummaries(payload);
+      setWorkbenchPresets(presets);
+
+      if (selectedWorkbenchPresetId && !presets.some((preset) => preset.id === selectedWorkbenchPresetId)) {
+        setSelectedWorkbenchPresetId("");
+        workbenchPresetRenameDraftRef.current = "";
+        workbenchPresetRenameDescriptionDraftRef.current = "";
+        setWorkbenchPresetRenameDraft("");
+        setWorkbenchPresetRenameDescriptionDraft("");
+      }
+
+      if (!options?.preserveMessage) {
+        setWorkbenchPresetStatus("idle");
+        setWorkbenchPresetMessage(formatWorkbenchV2PresetLibraryTriggerStatus(presets.length, WORKBENCH_V2_COMMON_PRESET_COUNT));
+      }
+    } catch (error) {
+      setWorkbenchPresetStatus("error");
+      setWorkbenchPresetMessage(error instanceof Error ? error.message : "Template list failed");
+    }
+  }
+
   async function refreshServerProjects(options?: { preserveMessage?: boolean; silent?: boolean }) {
     if (!options?.silent) {
       setServerProjectStatus("loading");
@@ -2039,6 +2472,7 @@ export function CalculatorWorkbench() {
         setSelectedServerProjectId("");
         setServerProjectAssemblies([]);
         setSelectedServerAssemblyId("");
+        clearActiveProjectAssembly();
         setServerProjectReports([]);
         setSelectedServerReportId("");
         serverAssemblyRenameDraftRef.current = "";
@@ -2049,6 +2483,10 @@ export function CalculatorWorkbench() {
         setServerAssemblyRenameDescriptionDraft("");
         setServerReportRenameDraft("");
         setServerReportDescriptionDraft("");
+      }
+
+      if (expandedServerProjectId && !projects.some((project) => project.id === expandedServerProjectId)) {
+        setExpandedServerProjectId("");
       }
 
       if (!options?.preserveMessage) {
@@ -2082,6 +2520,10 @@ export function CalculatorWorkbench() {
 
       if (selectedServerAssemblyId && !assemblies.some((assembly) => assembly.id === selectedServerAssemblyId)) {
         setSelectedServerAssemblyId("");
+      }
+
+      if (activeServerAssemblyId && !assemblies.some((assembly) => assembly.id === activeServerAssemblyId)) {
+        clearActiveProjectAssembly();
       }
 
       if (!options?.preserveMessage && !options?.silent) {
@@ -2129,7 +2571,7 @@ export function CalculatorWorkbench() {
     }
   }
 
-  function buildCurrentWorkbenchV2ServerSnapshot(name?: string) {
+  function buildCurrentWorkbenchV2Snapshot(name?: string, fallbackName?: string) {
     const savedAtIso = new Date().toISOString();
 
     return buildWorkbenchV2ProjectSnapshot({
@@ -2139,11 +2581,15 @@ export function CalculatorWorkbench() {
       layers,
       materialVisualOverrides,
       mode,
-      name: name?.trim() || `${mode === "wall" ? "Wall" : "Floor"} saved combination`,
+      name: name?.trim() || fallbackName || `${mode === "wall" ? "Wall" : "Floor"} saved combination`,
       savedAtIso,
       selectedLayerId,
       selectedOutputs
     });
+  }
+
+  function buildCurrentWorkbenchV2ServerSnapshot(name?: string) {
+    return buildCurrentWorkbenchV2Snapshot(name, `${mode === "wall" ? "Wall" : "Floor"} saved combination`);
   }
 
   function beginServerProjectMutation(): boolean {
@@ -2157,6 +2603,19 @@ export function CalculatorWorkbench() {
 
   function finishServerProjectMutation() {
     serverProjectMutationInFlightRef.current = false;
+  }
+
+  function beginWorkbenchPresetMutation(): boolean {
+    if (workbenchPresetMutationInFlightRef.current) {
+      return false;
+    }
+
+    workbenchPresetMutationInFlightRef.current = true;
+    return true;
+  }
+
+  function finishWorkbenchPresetMutation() {
+    workbenchPresetMutationInFlightRef.current = false;
   }
 
   function buildAssemblyCalculationSummary() {
@@ -2175,6 +2634,768 @@ export function CalculatorWorkbench() {
       selectedOutputs: selectedOutputLabels,
       status: estimateState.status === "blocked" ? ("needs_input" as const) : estimateState.status === "error" ? ("error" as const) : ("unsupported" as const)
     };
+  }
+
+  async function previewCalculatorSnapshotWithAssistant(snapshot: WorkbenchV2ProjectSnapshot) {
+    calculatorAssistantPreviewAbortRef.current?.abort();
+    const controller = new AbortController();
+    const requestId = calculatorAssistantPreviewRequestRef.current + 1;
+    calculatorAssistantPreviewRequestRef.current = requestId;
+    calculatorAssistantPreviewAbortRef.current = controller;
+    const requestIsCurrent = () => calculatorAssistantPreviewRequestRef.current === requestId && !controller.signal.aborted;
+
+    setCalculatorAssistantState({ status: "loading" });
+    calculatorAssistantPreviewSnapshotRef.current = snapshot;
+
+    try {
+      const preview = await requestCalculatorAssistantPreview({
+        signal: controller.signal,
+        snapshot
+      });
+      if (!requestIsCurrent()) {
+        return;
+      }
+
+      setCalculatorAssistantState({ preview, status: "ready" });
+    } catch (error) {
+      if (!requestIsCurrent()) {
+        return;
+      }
+
+      setCalculatorAssistantState({
+        message: error instanceof Error ? error.message : "Assistant calculator preview failed.",
+        status: "error"
+      });
+    } finally {
+      if (calculatorAssistantPreviewAbortRef.current === controller) {
+        calculatorAssistantPreviewAbortRef.current = null;
+      }
+    }
+  }
+
+  async function previewCurrentCalculatorWithAssistant() {
+    await previewCalculatorSnapshotWithAssistant(currentWorkbenchDraftSnapshot);
+  }
+
+  function getCurrentWorkbenchApplyTargetSignature(): string {
+    return createReportAssistantWorkbenchApplyTargetSignature({
+      context,
+      layers,
+      mode,
+      selectedOutputs
+    });
+  }
+
+  function applyConfirmedWorkbenchApplyPayload(payload: ReportAssistantWorkbenchConfirmedApplyPayload): boolean {
+    if (payload.mode !== mode) {
+      setMode(payload.mode);
+    }
+
+    setSelectedOutputs([...payload.selectedOutputs]);
+    setContext((current) => ({
+      ...current,
+      ...payload.contextPatch
+    }));
+
+    const changed = commitLayerStackChange("assistant Workbench apply proposal", () => ({
+      layers: payload.layers,
+      selectedLayerId: payload.selectedLayerId
+    }));
+
+    clearLayerInteractionState();
+    setCalculatorAssistantCandidateStacks([]);
+    setCalculatorAssistantCandidateComparisonState({ status: "idle" });
+    setCalculatorAssistantWorkbenchApplyProposal(null);
+    return changed;
+  }
+
+  function confirmCalculatorAssistantWorkbenchApplyProposal(proposal: ReportAssistantWorkbenchApplyProposal) {
+    let changed = false;
+    const result = confirmReportAssistantWorkbenchApplyProposal({
+      apply: (payload) => {
+        changed = applyConfirmedWorkbenchApplyPayload(payload);
+      },
+      confirm: () => window.confirm("Apply this assistant proposal to the current unsaved Workbench draft?"),
+      currentTargetWorkbenchSnapshotSignature: getCurrentWorkbenchApplyTargetSignature(),
+      proposal
+    });
+
+    if (!result.ok) {
+      if (result.code !== "cancelled") {
+        setCalculatorAssistantWorkbenchApplyProposal(null);
+      }
+      setCalculatorAssistantCommandMessage({
+        detail: result.message,
+        title: result.code === "cancelled" ? "Workbench apply cancelled" : "Workbench apply blocked",
+        tone: "warning"
+      });
+      if (result.code !== "cancelled") {
+        toast.error("Workbench apply blocked", { description: result.message });
+      }
+      return;
+    }
+
+    setCalculatorAssistantCommandMessage({
+      detail: changed
+        ? `${result.appliedLayerCount} assistant proposal layer${result.appliedLayerCount === 1 ? "" : "s"} applied to the visible unsaved Workbench draft. Run preview to compute values.`
+        : "Assistant proposal already matched the visible Workbench draft.",
+      title: changed ? "Workbench proposal applied" : "Workbench already matched",
+      tone: "success"
+    });
+    toast.success(changed ? "Workbench proposal applied" : "Workbench already matched", {
+      description: "Saved projects, reports, presets, and engine routes were not changed."
+    });
+  }
+
+  function calculatorAssistantCandidateIsCurrent(candidate: WorkbenchV2AssistantLayerStackCandidateStack): boolean {
+    const currentSignature = getWorkbenchV2AssistantLayerStackSignature(layers);
+
+    if (candidate.sourceLayerSignature === currentSignature) {
+      return true;
+    }
+
+    const detail = "The visible calculator layers changed after these candidates were generated. Generate combinations again before previewing or applying one.";
+    setCalculatorAssistantCommandMessage({
+      detail,
+      title: "Candidate is stale",
+      tone: "warning"
+    });
+    toast.error("Candidate is stale", { description: detail });
+    return false;
+  }
+
+  function buildCalculatorAssistantCandidateSnapshot(candidate: WorkbenchV2AssistantLayerStackCandidateStack): WorkbenchV2ProjectSnapshot {
+    const savedAtIso = new Date().toISOString();
+
+    return buildWorkbenchV2ProjectSnapshot({
+      context: {
+        ...context,
+        ...candidate.contextPatch
+      },
+      customMaterials,
+      id: typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : `workbench-v2-${Date.now()}`,
+      layers: candidate.layers,
+      materialVisualOverrides,
+      mode: candidate.mode,
+      name: `${candidate.label} candidate`,
+      savedAtIso,
+      selectedLayerId: candidate.selectedLayerId,
+      selectedOutputs
+    });
+  }
+
+  function previewCalculatorAssistantCandidateStack(candidate: WorkbenchV2AssistantLayerStackCandidateStack) {
+    if (!calculatorAssistantCandidateIsCurrent(candidate)) {
+      return;
+    }
+
+    setCalculatorAssistantCommandMessage({
+      detail: `${candidate.label} is being sent to the calculator preview route. The visible layer table is unchanged.`,
+      title: "Candidate preview requested",
+      tone: "success"
+    });
+    void previewCalculatorSnapshotWithAssistant(buildCalculatorAssistantCandidateSnapshot(candidate));
+  }
+
+  async function previewAllCalculatorAssistantCandidateStacks() {
+    const candidates = calculatorAssistantCandidateStacks;
+    if (!candidates.length) {
+      return;
+    }
+
+    const currentSignature = getWorkbenchV2AssistantLayerStackSignature(layers);
+    const staleCandidate = candidates.find((candidate) => candidate.sourceLayerSignature !== currentSignature);
+    if (staleCandidate) {
+      calculatorAssistantCandidateIsCurrent(staleCandidate);
+      return;
+    }
+
+    calculatorAssistantCandidateBatchAbortRef.current?.abort();
+    const controller = new AbortController();
+    const requestId = calculatorAssistantCandidateBatchRequestRef.current + 1;
+    calculatorAssistantCandidateBatchRequestRef.current = requestId;
+    calculatorAssistantCandidateBatchAbortRef.current = controller;
+    const requestIsCurrent = () => calculatorAssistantCandidateBatchRequestRef.current === requestId && !controller.signal.aborted;
+    const rows: CalculatorAssistantCandidateComparisonRow[] = [];
+
+    setCalculatorAssistantCandidateComparisonState({
+      candidateCount: candidates.length,
+      status: "loading"
+    });
+    setCalculatorAssistantCommandMessage({
+      detail: `${candidates.length} candidate stacks are being sent through calculator preview one at a time.`,
+      title: "Candidate comparison running",
+      tone: "success"
+    });
+
+    try {
+      for (const candidate of candidates) {
+        if (!requestIsCurrent()) {
+          return;
+        }
+
+        if (candidate.tasks.length) {
+          rows.push({
+            candidateId: candidate.candidateId,
+            commandTasks: candidate.tasks,
+            label: candidate.label,
+            outputRows: [],
+            previewTasks: [],
+            status: "needs_input"
+          });
+          continue;
+        }
+
+        try {
+          const preview = await requestCalculatorAssistantPreview({
+            signal: controller.signal,
+            snapshot: buildCalculatorAssistantCandidateSnapshot(candidate)
+          });
+
+          if (!requestIsCurrent()) {
+            return;
+          }
+
+          rows.push({
+            candidateId: candidate.candidateId,
+            commandTasks: [],
+            label: candidate.label,
+            outputRows: preview.outputRows,
+            previewTasks: preview.tasks,
+            status: preview.calculationSummary.status
+          });
+        } catch (error) {
+          if (!requestIsCurrent()) {
+            return;
+          }
+
+          rows.push({
+            candidateId: candidate.candidateId,
+            commandTasks: [],
+            errorMessage: error instanceof Error ? error.message : "Candidate calculator preview failed.",
+            label: candidate.label,
+            outputRows: [],
+            previewTasks: [],
+            status: "error"
+          });
+        }
+      }
+
+      if (!requestIsCurrent()) {
+        return;
+      }
+
+      const ranking = buildCalculatorAssistantCandidateComparisonRanking({
+        rows,
+        selectedOutputs
+      });
+
+      setCalculatorAssistantCandidateComparisonState({
+        ranking,
+        rows,
+        status: "ready"
+      });
+      setCalculatorAssistantCommandMessage({
+        detail: ranking.length
+          ? `${rows.length} candidate stacks previewed through the calculator. Ranking uses ${ranking[0]?.metric ?? selectedOutputs[0]}.`
+          : `${rows.length} candidate stacks previewed through the calculator. Ranking is hidden until every candidate has a live row for the selected metric.`,
+        title: "Candidate comparison ready",
+        tone: "success"
+      });
+      toast.success("Candidate comparison ready", {
+        description: "Rows are calculator-backed where live values are available."
+      });
+    } catch (error) {
+      if (!requestIsCurrent()) {
+        return;
+      }
+
+      setCalculatorAssistantCandidateComparisonState({
+        message: error instanceof Error ? error.message : "Candidate comparison failed.",
+        status: "error"
+      });
+    } finally {
+      if (calculatorAssistantCandidateBatchAbortRef.current === controller) {
+        calculatorAssistantCandidateBatchAbortRef.current = null;
+      }
+    }
+  }
+
+  function applyCalculatorAssistantCandidateStack(candidate: WorkbenchV2AssistantLayerStackCandidateStack) {
+    if (!calculatorAssistantCandidateIsCurrent(candidate)) {
+      return;
+    }
+
+    if (candidate.mode !== mode) {
+      setMode(candidate.mode);
+    }
+
+    const changed = commitLayerStackChange(`assistant candidate ${candidate.label}`, () => ({
+      layers: candidate.layers,
+      selectedLayerId: candidate.selectedLayerId
+    }));
+
+    setContext((current) => ({
+      ...current,
+      ...candidate.contextPatch
+    }));
+    clearLayerInteractionState();
+    setCalculatorAssistantCandidateStacks([]);
+    setCalculatorAssistantCandidateComparisonState({ status: "idle" });
+    setCalculatorAssistantCommandMessage({
+      detail: candidate.tasks.length
+        ? `${candidate.label} applied with ${candidate.tasks.length} missing input${candidate.tasks.length === 1 ? "" : "s"}. Add them before calculation.`
+        : `${candidate.label} applied to the visible calculator draft. Run preview to compute values.`,
+      title: changed ? "Candidate applied" : "Candidate already matched",
+      tone: candidate.tasks.length ? "warning" : "success"
+    });
+    toast.success(changed ? "Candidate applied" : "Candidate already matched", {
+      description: candidate.tasks.length
+        ? "Missing inputs remain blank instead of guessed."
+        : "Run calculator preview to compute values."
+    });
+  }
+
+  function applyCalculatorAssistantLayerStackCommand() {
+    const result = parseWorkbenchV2AssistantLayerStackApplyCommand({
+      currentLayers: layers,
+      currentMode: mode,
+      currentSelectedLayerId: selectedLayerId,
+      currentSelectedOutputs: selectedOutputs,
+      idFactory: () => createLayerId(),
+      instruction: calculatorAssistantCommand,
+      materials
+    });
+
+    if (result.ok === false) {
+      setCalculatorAssistantCommandMessage({
+        detail: result.message,
+        title: "Stack not applied",
+        tone: "warning"
+      });
+      toast.error("Stack not applied", { description: result.message });
+      return;
+    }
+
+    if (result.mode !== mode) {
+      setMode(result.mode);
+      if (!result.selectedOutputs) {
+        setSelectedOutputs(result.mode === "floor" ? ["Ln,w"] : ["Rw"]);
+      }
+    }
+
+    if (result.selectedOutputs) {
+      setSelectedOutputs([...result.selectedOutputs]);
+    }
+
+    if (result.candidateStacks) {
+      setCalculatorAssistantCandidateStacks(result.candidateStacks);
+      setCalculatorAssistantCandidateComparisonState({ status: "idle" });
+      setCalculatorAssistantCommand("");
+      setCalculatorAssistantCommandMessage({
+        detail: `${result.candidateStacks.length} candidate stacks prepared from the visible calculator layers. Run calculator preview for each candidate before comparing values.`,
+        title: "Candidate stacks prepared",
+        tone: "success"
+      });
+      toast.success("Candidate stacks prepared", {
+        description: "No calculator value was generated yet."
+      });
+      return;
+    }
+
+    if (result.commandKind === "set_context") {
+      const nextContext = {
+        ...context,
+        ...result.contextPatch
+      };
+
+      setContext(nextContext);
+      clearLayerInteractionState();
+      setCalculatorAssistantCommand("");
+      setCalculatorAssistantCandidateStacks([]);
+      setCalculatorAssistantCandidateComparisonState({ status: "idle" });
+
+      if (result.previewRequested) {
+        setCalculatorAssistantCommandMessage({
+          detail: "Calculator context updated. Running the patched calculator draft through the preview route.",
+          title: "Context updated and preview requested",
+          tone: "success"
+        });
+        void previewCalculatorSnapshotWithAssistant(
+          buildWorkbenchV2ProjectSnapshot({
+            context: nextContext,
+            customMaterials,
+            id: typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : `workbench-v2-${Date.now()}`,
+            layers,
+            materialVisualOverrides,
+            mode,
+            name: activeServerAssembly?.name ?? lastAppliedTemplateName ?? "Current draft",
+            savedAtIso: new Date().toISOString(),
+            selectedLayerId,
+            selectedOutputs
+          })
+        );
+        toast.success("Calculator context updated", {
+          description: "Preview uses the updated inputs."
+        });
+        return;
+      }
+
+      setCalculatorAssistantCommandMessage({
+        detail: result.tasks.map((task) => task.detail).join(" "),
+        title: "Calculator context updated",
+        tone: "success"
+      });
+      toast.success("Calculator context updated", {
+        description: "Run calculator preview to compute values."
+      });
+      return;
+    }
+
+    const changed = commitLayerStackChange("assistant layer stack command", () => ({
+      layers: result.layers,
+      selectedLayerId: result.selectedLayerId
+    }));
+
+    setContext((current) => ({
+      ...current,
+      ...result.contextPatch
+    }));
+    clearLayerInteractionState();
+    setCalculatorAssistantCommand("");
+    setCalculatorAssistantCandidateStacks([]);
+    setCalculatorAssistantCandidateComparisonState({ status: "idle" });
+    if (result.previewRequested) {
+      setCalculatorAssistantCommandMessage({
+        detail: "Running the current calculator draft through the preview route.",
+        title: "Preview requested",
+        tone: "success"
+      });
+      void previewCurrentCalculatorWithAssistant();
+      return;
+    }
+
+    const commandLabel = result.commandKind === "set_outputs"
+      ? "outputs updated"
+      : result.commandKind === "add_layer"
+        ? "layer added"
+        : result.commandKind === "remove_layer"
+          ? "layer removed"
+          : result.commandKind === "move_layer"
+            ? "layer moved"
+            : result.commandKind === "update_layer"
+              ? "layer updated"
+              : "layer stack updated";
+    setCalculatorAssistantCommandMessage({
+      detail: result.tasks.length
+        ? `${result.layerCount} layers applied. Add positive thicknesses before calculation.`
+        : result.commandKind === "set_outputs" && result.selectedOutputs
+          ? `Selected outputs: ${result.selectedOutputs.join(", ")}.`
+          : result.materialNames.length
+            ? `${result.layerCount} layers applied from ${result.materialNames.join(", ")}.`
+            : `Assistant ${commandLabel}.`,
+      title: changed || result.commandKind === "set_outputs" ? "Calculator command applied" : "Calculator already matched",
+      tone: result.tasks.length ? "warning" : "success"
+    });
+    toast.success(changed || result.commandKind === "set_outputs" ? "Calculator command applied" : "Calculator already matched", {
+      description: result.tasks.length
+        ? "Assistant left missing thicknesses blank instead of guessing."
+        : result.commandKind === "set_outputs" && result.selectedOutputs
+          ? `Selected ${result.selectedOutputs.join(", ")}.`
+          : `${result.layerCount} calculator layer${result.layerCount === 1 ? "" : "s"} applied.`
+    });
+  }
+
+  async function saveCurrentWorkbenchPreset() {
+    const presetName = workbenchPresetNameDraftRef.current.trim() || `${mode === "wall" ? "Wall" : "Floor"} template`;
+    const presetDescription = workbenchPresetDescriptionDraftRef.current.trim();
+    const snapshot = buildCurrentWorkbenchV2Snapshot(presetName, `${mode === "wall" ? "Wall" : "Floor"} template`);
+    if (!beginWorkbenchPresetMutation()) {
+      return;
+    }
+
+    setWorkbenchPresetStatus("syncing");
+    setWorkbenchPresetMessage("Saving template");
+
+    try {
+      const response = await fetch("/api/workbench-v2/presets", {
+        body: JSON.stringify({
+          description: presetDescription || undefined,
+          name: presetName,
+          snapshot
+        }),
+        headers: {
+          "content-type": "application/json"
+        },
+        method: "POST"
+      });
+
+      if (!response.ok) {
+        throw new Error(await readServerProjectError(response, "DAC could not save the template."));
+      }
+
+      const payload = (await response.json()) as unknown;
+      const preset = parseWorkbenchV2PresetRecord(payload);
+      if (!preset) {
+        throw new Error("DAC saved the template but the server response was incomplete.");
+      }
+
+      setSelectedWorkbenchPresetId(preset.id);
+      setSelectedWorkbenchCommonPresetId("");
+      workbenchPresetNameDraftRef.current = "";
+      workbenchPresetDescriptionDraftRef.current = "";
+      setWorkbenchPresetNameDraft("");
+      setWorkbenchPresetDescriptionDraft("");
+      await refreshWorkbenchPresets({ preserveMessage: true, silent: true });
+      setWorkbenchPresetStatus("idle");
+      setWorkbenchPresetMessage("Template saved");
+    } catch (error) {
+      setWorkbenchPresetStatus("error");
+      setWorkbenchPresetMessage(error instanceof Error ? error.message : "Template save failed");
+    } finally {
+      finishWorkbenchPresetMutation();
+    }
+  }
+
+  async function useSelectedWorkbenchPreset() {
+    if (!selectedWorkbenchPresetId) {
+      return;
+    }
+    if (!beginWorkbenchPresetMutation()) {
+      return;
+    }
+
+    setWorkbenchPresetStatus("restoring");
+    setWorkbenchPresetMessage("Loading template");
+
+    try {
+      const response = await fetch(`/api/workbench-v2/presets/${encodeURIComponent(selectedWorkbenchPresetId)}`, {
+        method: "GET"
+      });
+
+      if (!response.ok) {
+        throw new Error(await readServerProjectError(response, "DAC could not load the selected template."));
+      }
+
+      const payload = (await response.json()) as unknown;
+      const preset = parseWorkbenchV2PresetRecord(payload);
+      const parsed = preset ? parseWorkbenchV2ProjectSnapshot(preset.snapshot) : null;
+
+      if (!preset || !parsed?.snapshot) {
+        throw new Error("Selected template does not contain a restorable workbench v2 snapshot.");
+      }
+
+      const currentSnapshot = buildCurrentWorkbenchV2Snapshot("Current draft", "Current draft");
+      if (
+        !workbenchV2SnapshotsRepresentSameDraft(currentSnapshot, parsed.snapshot) &&
+        !window.confirm("Use this template and replace the current workbench draft?")
+      ) {
+        setWorkbenchPresetStatus("idle");
+        setWorkbenchPresetMessage("Template load cancelled");
+        return;
+      }
+
+      restoreWorkbenchV2Snapshot(parsed);
+      clearSelectedProjectChildren();
+      setSelectedWorkbenchPresetId(preset.id);
+      setSelectedWorkbenchCommonPresetId("");
+      setLastAppliedTemplateName(preset.name);
+      setReportSourceDecisionOpen(false);
+      setWorkbenchPresetStatus("idle");
+      setWorkbenchPresetMessage("Template loaded");
+    } catch (error) {
+      setWorkbenchPresetStatus("error");
+      setWorkbenchPresetMessage(error instanceof Error ? error.message : "Template load failed");
+    } finally {
+      finishWorkbenchPresetMutation();
+    }
+  }
+
+  async function useSelectedWorkbenchCommonPreset() {
+    const preset = selectedWorkbenchCommonPreset;
+
+    if (!preset) {
+      return;
+    }
+    if (!beginWorkbenchPresetMutation()) {
+      return;
+    }
+
+    setWorkbenchPresetStatus("restoring");
+    setWorkbenchPresetMessage("Loading common template");
+
+    try {
+      const parsed = parseWorkbenchV2ProjectSnapshot(preset.snapshot);
+
+      if (!parsed.snapshot) {
+        throw new Error("Selected common template does not contain a restorable workbench v2 snapshot.");
+      }
+
+      const currentSnapshot = buildCurrentWorkbenchV2Snapshot("Current draft", "Current draft");
+      if (
+        !workbenchV2SnapshotsRepresentSameDraft(currentSnapshot, parsed.snapshot) &&
+        !window.confirm("Use this common template and replace the current workbench draft?")
+      ) {
+        setWorkbenchPresetStatus("idle");
+        setWorkbenchPresetMessage("Common template load cancelled");
+        return;
+      }
+
+      restoreWorkbenchV2Snapshot(parsed);
+      clearSelectedProjectChildren();
+      setSelectedWorkbenchPresetId("");
+      setSelectedWorkbenchCommonPresetId(preset.id);
+      setLastAppliedTemplateName(preset.label);
+      setReportSourceDecisionOpen(false);
+      setWorkbenchPresetStatus("idle");
+      setWorkbenchPresetMessage("Common template loaded");
+    } catch (error) {
+      setWorkbenchPresetStatus("error");
+      setWorkbenchPresetMessage(error instanceof Error ? error.message : "Common template load failed");
+    } finally {
+      finishWorkbenchPresetMutation();
+    }
+  }
+
+  async function renameSelectedWorkbenchPreset() {
+    if (!selectedWorkbenchPreset) {
+      return;
+    }
+
+    const nextName = workbenchPresetRenameDraftRef.current.trim();
+    const nextDescription = workbenchPresetRenameDescriptionDraftRef.current.trim();
+    const currentDescription = selectedWorkbenchPreset.description ?? "";
+    if (!nextName) {
+      setWorkbenchPresetStatus("error");
+      setWorkbenchPresetMessage("Enter a template name first");
+      return;
+    }
+    if (nextName === selectedWorkbenchPreset.name && nextDescription === currentDescription) {
+      setWorkbenchPresetMessage("Template details unchanged");
+      return;
+    }
+    if (!beginWorkbenchPresetMutation()) {
+      return;
+    }
+
+    setWorkbenchPresetStatus("syncing");
+    setWorkbenchPresetMessage("Renaming template");
+
+    try {
+      const response = await fetch(`/api/workbench-v2/presets/${encodeURIComponent(selectedWorkbenchPreset.id)}`, {
+        body: JSON.stringify({
+          description: nextDescription || undefined,
+          name: nextName
+        }),
+        headers: {
+          "content-type": "application/json"
+        },
+        method: "PATCH"
+      });
+
+      if (!response.ok) {
+        throw new Error(await readServerProjectError(response, "DAC could not rename the template."));
+      }
+
+      const payload = (await response.json()) as unknown;
+      const preset = parseWorkbenchV2PresetRecord(payload);
+      if (!preset) {
+        throw new Error("DAC renamed the template but the server response was incomplete.");
+      }
+
+      setSelectedWorkbenchPresetId(preset.id);
+      workbenchPresetRenameDescriptionDraftRef.current = preset.description ?? "";
+      setWorkbenchPresetRenameDescriptionDraft(preset.description ?? "");
+      await refreshWorkbenchPresets({ preserveMessage: true, silent: true });
+      setWorkbenchPresetStatus("idle");
+      setWorkbenchPresetMessage("Updated template");
+    } catch (error) {
+      setWorkbenchPresetStatus("error");
+      setWorkbenchPresetMessage(error instanceof Error ? error.message : "Template rename failed");
+    } finally {
+      finishWorkbenchPresetMutation();
+    }
+  }
+
+  async function duplicateSelectedWorkbenchPreset() {
+    if (!selectedWorkbenchPreset) {
+      return;
+    }
+    if (!beginWorkbenchPresetMutation()) {
+      return;
+    }
+
+    setWorkbenchPresetStatus("syncing");
+    setWorkbenchPresetMessage("Duplicating template");
+
+    try {
+      const response = await fetch(`/api/workbench-v2/presets/${encodeURIComponent(selectedWorkbenchPreset.id)}/duplicate`, {
+        body: JSON.stringify({}),
+        headers: {
+          "content-type": "application/json"
+        },
+        method: "POST"
+      });
+
+      if (!response.ok) {
+        throw new Error(await readServerProjectError(response, "DAC could not duplicate the template."));
+      }
+
+      const payload = (await response.json()) as unknown;
+      const preset = parseWorkbenchV2PresetRecord(payload);
+      if (!preset) {
+        throw new Error("DAC duplicated the template but the server response was incomplete.");
+      }
+
+      setSelectedWorkbenchPresetId(preset.id);
+      await refreshWorkbenchPresets({ preserveMessage: true, silent: true });
+      setWorkbenchPresetStatus("idle");
+      setWorkbenchPresetMessage("Duplicated template");
+    } catch (error) {
+      setWorkbenchPresetStatus("error");
+      setWorkbenchPresetMessage(error instanceof Error ? error.message : "Template duplicate failed");
+    } finally {
+      finishWorkbenchPresetMutation();
+    }
+  }
+
+  async function deleteSelectedWorkbenchPreset() {
+    if (!selectedWorkbenchPreset) {
+      return;
+    }
+    if (!window.confirm(`Delete "${selectedWorkbenchPreset.name}" from templates?`)) {
+      return;
+    }
+    if (!beginWorkbenchPresetMutation()) {
+      return;
+    }
+
+    setWorkbenchPresetStatus("syncing");
+    setWorkbenchPresetMessage("Deleting template");
+
+    try {
+      const response = await fetch(`/api/workbench-v2/presets/${encodeURIComponent(selectedWorkbenchPreset.id)}`, {
+        method: "DELETE"
+      });
+
+      if (!response.ok) {
+        throw new Error(await readServerProjectError(response, "DAC could not delete the template."));
+      }
+
+      setSelectedWorkbenchPresetId("");
+      workbenchPresetRenameDraftRef.current = "";
+      workbenchPresetRenameDescriptionDraftRef.current = "";
+      setWorkbenchPresetRenameDraft("");
+      setWorkbenchPresetRenameDescriptionDraft("");
+      await refreshWorkbenchPresets({ preserveMessage: true, silent: true });
+      setWorkbenchPresetStatus("idle");
+      setWorkbenchPresetMessage("Deleted template");
+    } catch (error) {
+      setWorkbenchPresetStatus("error");
+      setWorkbenchPresetMessage(error instanceof Error ? error.message : "Template delete failed");
+    } finally {
+      finishWorkbenchPresetMutation();
+    }
   }
 
   async function createServerProject() {
@@ -2218,12 +3439,17 @@ export function CalculatorWorkbench() {
       }
 
       setSelectedServerProjectId(project.id);
+      setExpandedServerProjectId(project.id);
       setSelectedServerAssemblyId("");
       setSelectedServerReportId("");
+      clearActiveProjectAssembly();
+      setLastAppliedTemplateName(null);
+      setReportSourceDecisionOpen(false);
       setServerProjectAssemblies([]);
       setServerProjectReports([]);
       serverProjectNameDraftRef.current = "";
       setServerProjectNameDraft("");
+      setProjectCreatePanelOpen(false);
       await refreshServerProjects({ preserveMessage: true, silent: true });
       setServerProjectStatus("idle");
       setServerProjectMessage("Project created");
@@ -2235,18 +3461,28 @@ export function CalculatorWorkbench() {
     }
   }
 
-  async function saveCurrentAssemblyToServerProject() {
+  async function saveCurrentAssemblyToServerProject(): Promise<ServerProjectAssemblyRecordPayload | null> {
     if (!selectedServerProjectId) {
       setServerProjectStatus("error");
       setServerProjectMessage("Create or select a project first");
-      return;
+      setProjectCreatePanelOpen(true);
+      openWorkbenchDrawer("projects");
+      return null;
     }
 
-    const assemblyName = serverAssemblyNameDraftRef.current.trim() || `${mode === "wall" ? "Wall" : "Floor"} saved combination`;
+    const assemblyName = serverAssemblyNameDraftRef.current.trim();
+    if (!assemblyName) {
+      setServerProjectStatus("idle");
+      setServerProjectMessage("Name the layer combination first");
+      setAssemblyCreatePanelOpen(true);
+      openWorkbenchDrawer("projects");
+      return null;
+    }
+
     const assemblyDescription = serverAssemblyDescriptionDraftRef.current.trim();
     const snapshot = buildCurrentWorkbenchV2ServerSnapshot(assemblyName);
     if (!beginServerProjectMutation()) {
-      return;
+      return null;
     }
     setServerProjectStatus("syncing");
     setServerProjectMessage("Saving combination");
@@ -2277,6 +3513,9 @@ export function CalculatorWorkbench() {
       }
 
       setSelectedServerAssemblyId(assembly.id);
+      markActiveProjectAssembly(assembly.id, snapshot);
+      setAssemblyCreatePanelOpen(false);
+      setReportSourceDecisionOpen(false);
       serverAssemblyNameDraftRef.current = "";
       setServerAssemblyNameDraft("");
       serverAssemblyDescriptionDraftRef.current = "";
@@ -2285,9 +3524,70 @@ export function CalculatorWorkbench() {
       await refreshServerProjects({ preserveMessage: true, silent: true });
       setServerProjectStatus("idle");
       setServerProjectMessage("Saved combination");
+      return assembly;
     } catch (error) {
       setServerProjectStatus("error");
       setServerProjectMessage(error instanceof Error ? error.message : "Combination save failed");
+      return null;
+    } finally {
+      finishServerProjectMutation();
+    }
+  }
+
+  async function updateCurrentAssemblyInServerProject(): Promise<ServerProjectAssemblyRecordPayload | null> {
+    if (!selectedServerProjectId || !activeServerAssembly) {
+      setServerProjectStatus("idle");
+      setServerProjectMessage("Save this stack as a new combination first");
+      setAssemblyCreatePanelOpen(true);
+      openWorkbenchDrawer("projects");
+      return null;
+    }
+
+    const snapshot = buildCurrentWorkbenchV2ServerSnapshot(activeServerAssembly.name);
+    if (!beginServerProjectMutation()) {
+      return null;
+    }
+    setServerProjectStatus("syncing");
+    setServerProjectMessage("Updating combination");
+
+    try {
+      const response = await fetch(
+        `/api/projects/${encodeURIComponent(selectedServerProjectId)}/assemblies/${encodeURIComponent(activeServerAssembly.id)}`,
+        {
+          body: JSON.stringify({
+            calculationSummary: buildAssemblyCalculationSummary(),
+            kind: mode,
+            snapshot
+          }),
+          headers: {
+            "content-type": "application/json"
+          },
+          method: "PATCH"
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(await readServerProjectError(response, "DAC could not update the combination."));
+      }
+
+      const payload = (await response.json()) as unknown;
+      const assembly = parseProjectAssemblyRecord(payload);
+      if (!assembly) {
+        throw new Error("DAC updated the combination but the server response was incomplete.");
+      }
+
+      setSelectedServerAssemblyId(assembly.id);
+      markActiveProjectAssembly(assembly.id, snapshot);
+      setReportSourceDecisionOpen(false);
+      await refreshServerProjectAssemblies(selectedServerProjectId, { preserveMessage: true, silent: true });
+      await refreshServerProjects({ preserveMessage: true, silent: true });
+      setServerProjectStatus("idle");
+      setServerProjectMessage(`Updated ${assembly.name}`);
+      return assembly;
+    } catch (error) {
+      setServerProjectStatus("error");
+      setServerProjectMessage(error instanceof Error ? error.message : "Combination update failed");
+      return null;
     } finally {
       finishServerProjectMutation();
     }
@@ -2429,6 +3729,9 @@ export function CalculatorWorkbench() {
         throw new Error(await readServerProjectError(response, "DAC could not delete the combination."));
       }
 
+      if (activeServerAssemblyId === selectedServerAssembly.id) {
+        clearActiveProjectAssembly();
+      }
       setSelectedServerAssemblyId("");
       serverAssemblyRenameDraftRef.current = "";
       serverAssemblyRenameDescriptionDraftRef.current = "";
@@ -2446,8 +3749,8 @@ export function CalculatorWorkbench() {
     }
   }
 
-  async function loadSelectedProjectAssembly() {
-    if (!selectedServerProjectId || !selectedServerAssemblyId) {
+  async function loadProjectAssemblyById(assemblyId: string) {
+    if (!selectedServerProjectId || !assemblyId) {
       return;
     }
     if (!beginServerProjectMutation()) {
@@ -2459,7 +3762,7 @@ export function CalculatorWorkbench() {
 
     try {
       const response = await fetch(
-        `/api/projects/${encodeURIComponent(selectedServerProjectId)}/assemblies/${encodeURIComponent(selectedServerAssemblyId)}`,
+        `/api/projects/${encodeURIComponent(selectedServerProjectId)}/assemblies/${encodeURIComponent(assemblyId)}`,
         {
           method: "GET"
         }
@@ -2479,6 +3782,9 @@ export function CalculatorWorkbench() {
 
       restoreWorkbenchV2Snapshot(parsed);
       setSelectedServerAssemblyId(assembly.id);
+      markActiveProjectAssembly(assembly.id, assembly.snapshot);
+      setLastAppliedTemplateName(null);
+      setReportSourceDecisionOpen(false);
       setServerProjectStatus("idle");
       setServerProjectMessage("Loaded saved combination");
     } catch (error) {
@@ -2487,6 +3793,10 @@ export function CalculatorWorkbench() {
     } finally {
       finishServerProjectMutation();
     }
+  }
+
+  async function loadSelectedProjectAssembly() {
+    await loadProjectAssemblyById(selectedServerAssemblyId);
   }
 
   async function openSelectedProjectReport() {
@@ -2765,7 +4075,7 @@ export function CalculatorWorkbench() {
     setMaterialVisualOverrides(snapshot.materialVisualOverrides);
     setMaterialEditorRestoreWarning(formatWorkbenchV2SnapshotRestoreWarning(parsed));
     setMaterialEditorMaterialId(snapshot.layers.find((layer) => layer.id === snapshot.selectedLayerId)?.materialId ?? snapshot.layers[0]?.materialId ?? null);
-    setMaterialEditorOpen(false);
+    setWorkbenchDrawerTab((current) => (current === "materials" ? "projects" : current));
     setLayerUndoStack([]);
     clearLayerInteractionState();
   }
@@ -3017,10 +4327,39 @@ export function CalculatorWorkbench() {
     setSelectedLayerId(layerId);
   }
 
+  function openWorkbenchDrawer(tab: WorkbenchDrawerTab) {
+    setWorkbenchDrawerTab(tab);
+    setWorkbenchDrawerOpen(true);
+  }
+
+  function handleSaveCurrentAssemblyFromHandoff() {
+    if (!selectedServerProjectId) {
+      setServerProjectStatus("idle");
+      setServerProjectMessage("Choose a project first");
+      setProjectCreatePanelOpen(false);
+      openWorkbenchDrawer("projects");
+      return;
+    }
+
+    if (!activeServerAssembly) {
+      setServerProjectStatus("idle");
+      setServerProjectMessage("Name this stack and save it as a new combination");
+      setAssemblyCreatePanelOpen(true);
+      openWorkbenchDrawer("projects");
+      return;
+    }
+
+    void updateCurrentAssemblyInServerProject();
+  }
+
+  function handleSaveCurrentTemplateFromHandoff() {
+    void saveCurrentWorkbenchPreset();
+  }
+
   function openMaterialEditor(materialId: string | null = null) {
     const selectedLayerMaterialId = layers.find((layer) => layer.id === selectedLayerId)?.materialId ?? layers[0]?.materialId ?? null;
     setMaterialEditorMaterialId(materialId ?? selectedLayerMaterialId);
-    setMaterialEditorOpen(true);
+    openWorkbenchDrawer("materials");
   }
 
   function saveCustomMaterial(material: MaterialDefinition) {
@@ -3110,15 +4449,17 @@ export function CalculatorWorkbench() {
     return "Pending";
   }
 
-  function handleOpenReport() {
+  function openCurrentReport(options?: { linkedAssembly?: { id: string; name: string } | null }) {
     if (!canOpenReport) {
       return;
     }
 
+    const linkedAssembly = options?.linkedAssembly ?? null;
+    const linkedToProject = Boolean(selectedServerProjectId && linkedAssembly);
     const projectName = selectedServerProject?.name;
-    const serverProjectId = selectedServerProjectId || undefined;
-    const serverProjectAssemblyId = selectedServerAssemblyId || undefined;
-    const sourceAssemblySnapshot = buildCurrentWorkbenchV2ServerSnapshot(selectedServerAssembly?.name);
+    const serverProjectId = linkedToProject ? selectedServerProjectId : undefined;
+    const serverProjectAssemblyId = linkedToProject ? linkedAssembly!.id : undefined;
+    const sourceAssemblySnapshot = buildCurrentWorkbenchV2ServerSnapshot(linkedAssembly?.name);
     const projectContext: SimpleWorkbenchProposalPreviewProjectContext = {
       serverProjectAssemblyId,
       serverProjectId,
@@ -3149,27 +4490,303 @@ export function CalculatorWorkbench() {
     window.location.assign("/workbench/proposal");
   }
 
+  function handleOpenReport() {
+    if (!canOpenReport) {
+      return;
+    }
+
+    if (!selectedServerProjectId) {
+      openCurrentReport();
+      return;
+    }
+
+    if (activeServerAssembly && !activeAssemblyDirty) {
+      openCurrentReport({ linkedAssembly: activeServerAssembly });
+      return;
+    }
+
+    setReportSourceDecisionOpen(true);
+  }
+
+  async function saveCurrentAssemblyAndOpenReport() {
+    const assembly = await saveCurrentAssemblyToServerProject();
+    if (assembly) {
+      openCurrentReport({ linkedAssembly: assembly });
+    }
+  }
+
+  async function updateCurrentAssemblyAndOpenReport() {
+    const assembly = await updateCurrentAssemblyInServerProject();
+    if (assembly) {
+      openCurrentReport({ linkedAssembly: assembly });
+    }
+  }
+
+  function renderProjectWorkspacePanel() {
+    return (
+      <ProjectWorkspacePanel
+        busy={serverProjectBusy}
+        combinations={{
+          activeAssemblyDirty,
+          activeAssemblyId: activeServerAssemblyId,
+          assemblies: serverProjectAssemblies,
+          assemblyDescriptionDraft: serverAssemblyDescriptionDraft,
+          assemblyNameDraft: serverAssemblyNameDraft,
+          assemblyRenameDescriptionDraft: serverAssemblyRenameDescriptionDraft,
+          assemblyRenameDraft: serverAssemblyRenameDraft,
+          canRenameAssembly: canRenameServerAssembly,
+          createOpen: assemblyCreatePanelOpen,
+          onAssemblyDescriptionDraftChange: (value) => {
+            serverAssemblyDescriptionDraftRef.current = value;
+            setServerAssemblyDescriptionDraft(value);
+          },
+          onAssemblyNameDraftChange: (value) => {
+            serverAssemblyNameDraftRef.current = value;
+            setServerAssemblyNameDraft(value);
+          },
+          onAssemblyRenameDescriptionDraftChange: (value) => {
+            serverAssemblyRenameDescriptionDraftRef.current = value;
+            setServerAssemblyRenameDescriptionDraft(value);
+          },
+          onAssemblyRenameDraftChange: (value) => {
+            serverAssemblyRenameDraftRef.current = value;
+            setServerAssemblyRenameDraft(value);
+          },
+          onCreateOpenChange: setAssemblyCreatePanelOpen,
+          onDeleteAssembly: deleteSelectedProjectAssembly,
+          onDuplicateAssembly: duplicateSelectedProjectAssembly,
+          onLoadAssembly: loadSelectedProjectAssembly,
+          onLoadAssemblyById: loadProjectAssemblyById,
+          onRenameAssembly: renameSelectedProjectAssembly,
+          onSaveAssembly: () => {
+            void saveCurrentAssemblyToServerProject();
+          },
+          onSelectAssembly: (nextAssemblyId) => {
+            const nextAssembly = serverProjectAssemblies.find((assembly) => assembly.id === nextAssemblyId);
+            const nextName = nextAssembly?.name ?? "";
+            const nextDescription = nextAssembly?.description ?? "";
+            setSelectedServerAssemblyId(nextAssemblyId);
+            serverAssemblyRenameDraftRef.current = nextName;
+            serverAssemblyRenameDescriptionDraftRef.current = nextDescription;
+            setServerAssemblyRenameDraft(nextName);
+            setServerAssemblyRenameDescriptionDraft(nextDescription);
+          },
+          projectSelected: Boolean(selectedServerProjectId),
+          selectedAssembly: selectedServerAssembly,
+          selectedAssemblyId: selectedServerAssemblyId,
+          selectedProjectName: selectedServerProject?.name
+        }}
+        id="workbench-drawer-projects"
+        identity={{
+          canCreateProject: canCreateServerProject,
+          createOpen: projectCreatePanelOpen,
+          expandedProjectId: expandedServerProjectId,
+          onCreateProject: createServerProject,
+          onCreateOpenChange: setProjectCreatePanelOpen,
+          onProjectNameDraftChange: (value) => {
+            serverProjectNameDraftRef.current = value;
+            setServerProjectNameDraft(value);
+          },
+          onRefreshProjects: () => refreshServerProjects(),
+          onSelectProject: (nextProjectId) => {
+            if (!nextProjectId) {
+              setExpandedServerProjectId("");
+              setSelectedServerProjectId("");
+              setSelectedServerAssemblyId("");
+              setSelectedServerReportId("");
+              clearActiveProjectAssembly();
+              setReportSourceDecisionOpen(false);
+              serverAssemblyRenameDraftRef.current = "";
+              serverAssemblyRenameDescriptionDraftRef.current = "";
+              serverReportRenameDraftRef.current = "";
+              serverReportDescriptionDraftRef.current = "";
+              setServerAssemblyRenameDraft("");
+              setServerAssemblyRenameDescriptionDraft("");
+              setServerReportRenameDraft("");
+              setServerReportDescriptionDraft("");
+              return;
+            }
+
+            if (expandedServerProjectId === nextProjectId) {
+              setExpandedServerProjectId("");
+              return;
+            }
+
+            setExpandedServerProjectId(nextProjectId);
+
+            if (selectedServerProjectId === nextProjectId) {
+              return;
+            }
+
+            setSelectedServerProjectId(nextProjectId);
+            setSelectedServerAssemblyId("");
+            setSelectedServerReportId("");
+            clearActiveProjectAssembly();
+            setReportSourceDecisionOpen(false);
+            serverAssemblyRenameDraftRef.current = "";
+            serverAssemblyRenameDescriptionDraftRef.current = "";
+            serverReportRenameDraftRef.current = "";
+            serverReportDescriptionDraftRef.current = "";
+            setServerAssemblyRenameDraft("");
+            setServerAssemblyRenameDescriptionDraft("");
+            setServerReportRenameDraft("");
+            setServerReportDescriptionDraft("");
+          },
+          projectNameDraft: serverProjectNameDraft,
+          projects: serverProjects,
+          selectedProject: selectedServerProject,
+          selectedProjectId: selectedServerProjectId
+        }}
+        message={serverProjectMessage}
+        reports={{
+          assemblies: serverProjectAssemblies,
+          canRenameReport: canRenameServerReport,
+          onDeleteReport: deleteSelectedProjectReport,
+          onDuplicateReport: duplicateSelectedProjectReport,
+          onOpenReport: openSelectedProjectReport,
+          onRenameReport: renameSelectedProjectReport,
+          onReportDescriptionDraftChange: (value) => {
+            serverReportDescriptionDraftRef.current = value;
+            setServerReportDescriptionDraft(value);
+          },
+          onReportRenameDraftChange: (value) => {
+            serverReportRenameDraftRef.current = value;
+            setServerReportRenameDraft(value);
+          },
+          onSelectReport: (nextReportId) => {
+            const nextReport = serverProjectReports.find((report) => report.id === nextReportId);
+            const nextName = nextReport?.name ?? "";
+            const nextDescription = nextReport?.description ?? "";
+            setSelectedServerReportId(nextReportId);
+            serverReportRenameDraftRef.current = nextName;
+            serverReportDescriptionDraftRef.current = nextDescription;
+            setServerReportRenameDraft(nextName);
+            setServerReportDescriptionDraft(nextDescription);
+          },
+          onSetReportArchived: setSelectedProjectReportArchived,
+          projectSelected: Boolean(selectedServerProjectId),
+          reportDescriptionDraft: serverReportDescriptionDraft,
+          reportRenameDraft: serverReportRenameDraft,
+          reports: serverProjectReports,
+          selectedReport: selectedServerReport,
+          selectedReportId: selectedServerReportId
+        }}
+        status={serverProjectStatus}
+      />
+    );
+  }
+
+  function renderWorkbenchPresetLibraryPanel() {
+    return (
+      <WorkbenchPresetLibraryPanel
+        busy={workbenchPresetBusy}
+        canRenamePreset={canRenameWorkbenchPreset}
+        commonPresets={WORKBENCH_V2_COMMON_PRESETS}
+        id="workbench-drawer-presets"
+        message={workbenchPresetMessage}
+        onCommonPresetSelect={(nextPresetId) => {
+          setSelectedWorkbenchCommonPresetId(nextPresetId);
+          setSelectedWorkbenchPresetId("");
+          workbenchPresetRenameDraftRef.current = "";
+          workbenchPresetRenameDescriptionDraftRef.current = "";
+          setWorkbenchPresetRenameDraft("");
+          setWorkbenchPresetRenameDescriptionDraft("");
+        }}
+        onCommonPresetUse={useSelectedWorkbenchCommonPreset}
+        onDeletePreset={deleteSelectedWorkbenchPreset}
+        onDuplicatePreset={duplicateSelectedWorkbenchPreset}
+        onPresetDescriptionDraftChange={(value) => {
+          workbenchPresetDescriptionDraftRef.current = value;
+          setWorkbenchPresetDescriptionDraft(value);
+        }}
+        onPresetNameDraftChange={(value) => {
+          workbenchPresetNameDraftRef.current = value;
+          setWorkbenchPresetNameDraft(value);
+        }}
+        onPresetRenameDescriptionDraftChange={(value) => {
+          workbenchPresetRenameDescriptionDraftRef.current = value;
+          setWorkbenchPresetRenameDescriptionDraft(value);
+        }}
+        onPresetRenameDraftChange={(value) => {
+          workbenchPresetRenameDraftRef.current = value;
+          setWorkbenchPresetRenameDraft(value);
+        }}
+        onRenamePreset={renameSelectedWorkbenchPreset}
+        onSavePreset={saveCurrentWorkbenchPreset}
+        onSelectPreset={(nextPresetId) => {
+          const nextPreset = workbenchPresets.find((preset) => preset.id === nextPresetId);
+          const nextName = nextPreset?.name ?? "";
+          const nextDescription = nextPreset?.description ?? "";
+          setSelectedWorkbenchPresetId(nextPresetId);
+          setSelectedWorkbenchCommonPresetId("");
+          workbenchPresetRenameDraftRef.current = nextName;
+          workbenchPresetRenameDescriptionDraftRef.current = nextDescription;
+          setWorkbenchPresetRenameDraft(nextName);
+          setWorkbenchPresetRenameDescriptionDraft(nextDescription);
+        }}
+        onUsePreset={useSelectedWorkbenchPreset}
+        presetDescriptionDraft={workbenchPresetDescriptionDraft}
+        presetNameDraft={workbenchPresetNameDraft}
+        presetRenameDescriptionDraft={workbenchPresetRenameDescriptionDraft}
+        presetRenameDraft={workbenchPresetRenameDraft}
+        presets={workbenchPresets}
+        selectedCommonPreset={selectedWorkbenchCommonPreset}
+        selectedCommonPresetId={selectedWorkbenchCommonPresetId}
+        selectedPreset={selectedWorkbenchPreset}
+        selectedPresetId={selectedWorkbenchPresetId}
+        status={workbenchPresetStatus}
+      />
+    );
+  }
+
+  function renderMaterialEditorPanel() {
+    return (
+      <MaterialEditorPanel
+        layers={layers.map((layer, index) => ({
+          id: layer.id,
+          label: `Layer ${index + 1}`,
+          materialId: layer.materialId
+        }))}
+        materials={materials}
+        onDeleteMaterial={deleteCustomMaterial}
+        onReplaceMaterialInLayers={replaceMaterialInLayers}
+        onResetVisualOverride={resetMaterialVisualOverride}
+        onSaveMaterial={saveCustomMaterial}
+        onSaveVisualOverride={saveMaterialVisualOverride}
+        onSelectMaterial={setMaterialEditorMaterialId}
+        restoreWarning={materialEditorRestoreWarning}
+        selectedMaterialId={materialEditorMaterialId}
+        visualOverrides={materialVisualOverrides}
+      />
+    );
+  }
+
   return (
     <main className="calc-page">
       <div className="calc-shell">
         <header className="calc-header">
-          <div>
-            <div className="eyebrow">Calculator</div>
-            <h1>Acoustic workbench</h1>
-          </div>
-          <div className="calc-header-meta">
+          <div className="calc-header-main">
+            <div>
+              <div className="eyebrow">Calculator</div>
+              <h1>Acoustic workbench</h1>
+            </div>
             <button
-              aria-controls="workbench-project-workspace"
-              aria-expanded={projectWorkspaceOpen}
-              aria-label={projectWorkspaceOpen ? "Hide project workspace" : "Show project workspace"}
-              className={projectWorkspaceOpen ? "focus-ring ui-button ui-button-primary calc-project-trigger" : "focus-ring ui-button ui-button-ghost calc-project-trigger"}
-              onClick={() => setProjectWorkspaceOpen((current) => !current)}
+              aria-controls="workbench-drawer"
+              aria-expanded={workbenchDrawerOpen}
+              aria-label={workbenchDrawerOpen ? "Close workspace drawer" : "Open workspace drawer"}
+              className={workbenchDrawerOpen ? "focus-ring ui-button ui-button-primary calc-project-trigger" : "focus-ring ui-button ui-button-ghost calc-project-trigger"}
+              onClick={() => setWorkbenchDrawerOpen((current) => !current)}
               type="button"
             >
-              <FolderOpen className="h-4 w-4" />
-              <span>Project</span>
-              <small>{projectWorkspaceTriggerStatus}</small>
+              <Menu className="h-4 w-4" />
+              <span>Workspace</span>
+              <small>{workbenchPersistenceState.title}</small>
             </button>
+          </div>
+          <div className="calc-header-meta">
+            <span className={workbenchPersistenceState.kind === "combinationDirty" ? "ui-badge ui-badge-warning" : "ui-badge"}>
+              {workbenchPersistenceState.statusLabel}
+            </span>
             <span className="ui-badge">{mode === "wall" ? "Wall" : "Floor"}</span>
             <span className="ui-badge">{layers.length} layers</span>
             <span className="ui-badge">{formatThickness(totalThickness)}</span>
@@ -3177,120 +4794,76 @@ export function CalculatorWorkbench() {
           </div>
         </header>
 
+        {workbenchDrawerOpen ? (
+          <div className="calc-workbench-drawer-layer">
+            <button
+              aria-label="Close workspace drawer"
+              className="calc-workbench-drawer-backdrop"
+              onClick={() => setWorkbenchDrawerOpen(false)}
+              type="button"
+            />
+            <aside
+              aria-labelledby="workbench-drawer-title"
+              aria-modal="true"
+              className="calc-workbench-drawer"
+              id="workbench-drawer"
+              role="dialog"
+            >
+              <header className="calc-workbench-drawer-head">
+                <div>
+                  <div className="eyebrow">Workbench</div>
+                  <h2 id="workbench-drawer-title">Workspace</h2>
+                </div>
+                <button
+                  aria-label="Close workspace drawer"
+                  className="focus-ring ui-icon-button"
+                  onClick={() => setWorkbenchDrawerOpen(false)}
+                  type="button"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </header>
+
+              <div className="calc-workbench-drawer-body">
+                <nav className="calc-workbench-drawer-tabs" aria-label="Workspace sections">
+                  <button
+                    aria-current={workbenchDrawerTab === "projects" ? "page" : undefined}
+                    className="focus-ring"
+                    onClick={() => setWorkbenchDrawerTab("projects")}
+                    type="button"
+                  >
+                    Projects
+                  </button>
+                  <button
+                    aria-current={workbenchDrawerTab === "presets" ? "page" : undefined}
+                    className="focus-ring"
+                    onClick={() => setWorkbenchDrawerTab("presets")}
+                    type="button"
+                  >
+                    Templates
+                  </button>
+                  <button
+                    aria-current={workbenchDrawerTab === "materials" ? "page" : undefined}
+                    className="focus-ring"
+                    onClick={() => setWorkbenchDrawerTab("materials")}
+                    type="button"
+                  >
+                    Materials
+                  </button>
+                </nav>
+
+                <div className="calc-workbench-drawer-content">
+                  {workbenchDrawerTab === "projects" ? renderProjectWorkspacePanel() : null}
+                  {workbenchDrawerTab === "presets" ? renderWorkbenchPresetLibraryPanel() : null}
+                  {workbenchDrawerTab === "materials" ? <div id="workbench-drawer-materials">{renderMaterialEditorPanel()}</div> : null}
+                </div>
+              </div>
+            </aside>
+          </div>
+        ) : null}
+
         <section className="calc-grid" aria-label="Calculator workspace">
           <div className="calc-main">
-            {projectWorkspaceOpen ? (
-              <ProjectWorkspacePanel
-                busy={serverProjectBusy}
-                combinations={{
-                  assemblies: serverProjectAssemblies,
-                  assemblyDescriptionDraft: serverAssemblyDescriptionDraft,
-                  assemblyNameDraft: serverAssemblyNameDraft,
-                  assemblyRenameDescriptionDraft: serverAssemblyRenameDescriptionDraft,
-                  assemblyRenameDraft: serverAssemblyRenameDraft,
-                  canRenameAssembly: canRenameServerAssembly,
-                  onAssemblyDescriptionDraftChange: (value) => {
-                    serverAssemblyDescriptionDraftRef.current = value;
-                    setServerAssemblyDescriptionDraft(value);
-                  },
-                  onAssemblyNameDraftChange: (value) => {
-                    serverAssemblyNameDraftRef.current = value;
-                    setServerAssemblyNameDraft(value);
-                  },
-                  onAssemblyRenameDescriptionDraftChange: (value) => {
-                    serverAssemblyRenameDescriptionDraftRef.current = value;
-                    setServerAssemblyRenameDescriptionDraft(value);
-                  },
-                  onAssemblyRenameDraftChange: (value) => {
-                    serverAssemblyRenameDraftRef.current = value;
-                    setServerAssemblyRenameDraft(value);
-                  },
-                  onDeleteAssembly: deleteSelectedProjectAssembly,
-                  onDuplicateAssembly: duplicateSelectedProjectAssembly,
-                  onLoadAssembly: loadSelectedProjectAssembly,
-                  onRenameAssembly: renameSelectedProjectAssembly,
-                  onSaveAssembly: saveCurrentAssemblyToServerProject,
-                  onSelectAssembly: (nextAssemblyId) => {
-                    const nextAssembly = serverProjectAssemblies.find((assembly) => assembly.id === nextAssemblyId);
-                    const nextName = nextAssembly?.name ?? "";
-                    const nextDescription = nextAssembly?.description ?? "";
-                    setSelectedServerAssemblyId(nextAssemblyId);
-                    serverAssemblyRenameDraftRef.current = nextName;
-                    serverAssemblyRenameDescriptionDraftRef.current = nextDescription;
-                    setServerAssemblyRenameDraft(nextName);
-                    setServerAssemblyRenameDescriptionDraft(nextDescription);
-                  },
-                  projectSelected: Boolean(selectedServerProjectId),
-                  selectedAssembly: selectedServerAssembly,
-                  selectedAssemblyId: selectedServerAssemblyId,
-                  selectedProjectName: selectedServerProject?.name
-                }}
-                id="workbench-project-workspace"
-                identity={{
-                  canCreateProject: canCreateServerProject,
-                  onCreateProject: createServerProject,
-                  onProjectNameDraftChange: (value) => {
-                    serverProjectNameDraftRef.current = value;
-                    setServerProjectNameDraft(value);
-                  },
-                  onRefreshProjects: () => refreshServerProjects(),
-                  onSelectProject: (nextProjectId) => {
-                    setSelectedServerProjectId(nextProjectId);
-                    setSelectedServerAssemblyId("");
-                    setSelectedServerReportId("");
-                    serverAssemblyRenameDraftRef.current = "";
-                    serverAssemblyRenameDescriptionDraftRef.current = "";
-                    serverReportRenameDraftRef.current = "";
-                    serverReportDescriptionDraftRef.current = "";
-                    setServerAssemblyRenameDraft("");
-                    setServerAssemblyRenameDescriptionDraft("");
-                    setServerReportRenameDraft("");
-                    setServerReportDescriptionDraft("");
-                  },
-                  projectNameDraft: serverProjectNameDraft,
-                  projects: serverProjects,
-                  selectedProject: selectedServerProject,
-                  selectedProjectId: selectedServerProjectId
-                }}
-                message={serverProjectMessage}
-                onClose={() => setProjectWorkspaceOpen(false)}
-                reports={{
-                  assemblies: serverProjectAssemblies,
-                  canRenameReport: canRenameServerReport,
-                  onDeleteReport: deleteSelectedProjectReport,
-                  onDuplicateReport: duplicateSelectedProjectReport,
-                  onOpenReport: openSelectedProjectReport,
-                  onRenameReport: renameSelectedProjectReport,
-                  onReportRenameDraftChange: (value) => {
-                    serverReportRenameDraftRef.current = value;
-                    setServerReportRenameDraft(value);
-                  },
-                  onReportDescriptionDraftChange: (value) => {
-                    serverReportDescriptionDraftRef.current = value;
-                    setServerReportDescriptionDraft(value);
-                  },
-                  onSelectReport: (nextReportId) => {
-                    const nextReport = serverProjectReports.find((report) => report.id === nextReportId);
-                    const nextName = nextReport?.name ?? "";
-                    const nextDescription = nextReport?.description ?? "";
-                    setSelectedServerReportId(nextReportId);
-                    serverReportRenameDraftRef.current = nextName;
-                    serverReportDescriptionDraftRef.current = nextDescription;
-                    setServerReportRenameDraft(nextName);
-                    setServerReportDescriptionDraft(nextDescription);
-                  },
-                  onSetReportArchived: setSelectedProjectReportArchived,
-                  projectSelected: Boolean(selectedServerProjectId),
-                  reportRenameDraft: serverReportRenameDraft,
-                  reportDescriptionDraft: serverReportDescriptionDraft,
-                  reports: serverProjectReports,
-                  selectedReport: selectedServerReport,
-                  selectedReportId: selectedServerReportId
-                }}
-                status={serverProjectStatus}
-              />
-            ) : null}
-
             <section className="calc-section calc-setup-section">
               <div className="calc-section-head">
                 <div>
@@ -3844,27 +5417,6 @@ export function CalculatorWorkbench() {
               </div>
             </section>
 
-            {materialEditorOpen ? (
-              <MaterialEditorPanel
-                layers={layers.map((layer, index) => ({
-                  id: layer.id,
-                  label: `Layer ${index + 1}`,
-                  materialId: layer.materialId
-                }))}
-                materials={materials}
-                onClose={() => setMaterialEditorOpen(false)}
-                onDeleteMaterial={deleteCustomMaterial}
-                onReplaceMaterialInLayers={replaceMaterialInLayers}
-                onResetVisualOverride={resetMaterialVisualOverride}
-                onSaveMaterial={saveCustomMaterial}
-                onSaveVisualOverride={saveMaterialVisualOverride}
-                onSelectMaterial={setMaterialEditorMaterialId}
-                restoreWarning={materialEditorRestoreWarning}
-                selectedMaterialId={materialEditorMaterialId}
-                visualOverrides={materialVisualOverrides}
-              />
-            ) : null}
-
             <ProfessionalLayerIllustration
               layers={illustrationLayers}
               orientation={mode}
@@ -3919,6 +5471,279 @@ export function CalculatorWorkbench() {
               </div>
             </section>
 
+            <section className="calc-review-section calc-assistant-preview-section">
+              <div className="calc-review-head">
+                <h2>Assistant preview</h2>
+                <button
+                  className="focus-ring ui-button ui-button-ghost"
+                  disabled={calculatorAssistantState.status === "loading"}
+                  onClick={() => {
+                    void previewCurrentCalculatorWithAssistant();
+                  }}
+                  type="button"
+                >
+                  <Sparkles className="h-4 w-4" />
+                  {calculatorAssistantState.status === "loading" ? "Running" : "Run"}
+                </button>
+              </div>
+
+              {calculatorAssistantState.status === "error" ? <p className="calc-error-text">{calculatorAssistantState.message}</p> : null}
+
+              <form
+                className="calc-assistant-command"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  applyCalculatorAssistantLayerStackCommand();
+                }}
+              >
+                <label className="calc-assistant-command-field" htmlFor="calculator-assistant-stack-command">
+                  <span>Stack command</span>
+                  <textarea
+                    className="report-input report-textarea report-textarea-compact calc-assistant-command-input"
+                    id="calculator-assistant-stack-command"
+                    onChange={(event) => setCalculatorAssistantCommand(event.target.value)}
+                    placeholder="gypsum, rock wool, gypsum diz"
+                    value={calculatorAssistantCommand}
+                  />
+                </label>
+                <div className="calc-assistant-command-actions">
+                  <button
+                    className="focus-ring ui-button ui-button-primary"
+                    disabled={calculatorAssistantCommand.trim().length === 0}
+                    type="submit"
+                  >
+                    <Sparkles className="h-4 w-4" />
+                    Run command
+                  </button>
+                </div>
+              </form>
+
+              {calculatorAssistantCommandMessage ? (
+                <div className="calc-assistant-command-message" data-tone={calculatorAssistantCommandMessage.tone}>
+                  <strong>{calculatorAssistantCommandMessage.title}</strong>
+                  <span>{calculatorAssistantCommandMessage.detail}</span>
+                </div>
+              ) : null}
+
+              {calculatorAssistantWorkbenchApplyProposal ? (
+                <div className="calc-assistant-candidate-stacks" data-kind="workbench-apply-proposal">
+                  <div className="calc-assistant-candidate-stack-toolbar">
+                    <span>{calculatorAssistantWorkbenchApplyProposal.title}</span>
+                    <button
+                      className="focus-ring ui-button ui-button-primary"
+                      onClick={() => confirmCalculatorAssistantWorkbenchApplyProposal(calculatorAssistantWorkbenchApplyProposal)}
+                      type="button"
+                    >
+                      <ArrowRight className="h-4 w-4" />
+                      Apply to draft
+                    </button>
+                  </div>
+                  <div className="calc-assistant-candidate-stack">
+                    <div className="calc-assistant-candidate-stack-main">
+                      <strong>{calculatorAssistantWorkbenchApplyProposal.summary}</strong>
+                      <span>
+                        {calculatorAssistantWorkbenchApplyProposal.diff.layers
+                          .filter((entry) => entry.operation !== "unchanged")
+                          .slice(0, 4)
+                          .map((entry) => {
+                            const label = entry.after?.materialName ?? entry.after?.materialId ?? entry.before?.materialId ?? "layer";
+                            const thickness = entry.after?.thicknessMm ? `${entry.after.thicknessMm} mm` : "removed";
+                            return `${entry.operation} ${entry.index + 1}: ${thickness} ${label}`;
+                          })
+                          .join(" + ")}
+                      </span>
+                      <small>
+                        Outputs: {calculatorAssistantWorkbenchApplyProposal.diff.selectedOutputs.after.join(", ")}
+                      </small>
+                    </div>
+                    <div className="calc-assistant-candidate-stack-actions">
+                      <button
+                        className="focus-ring ui-button ui-button-ghost"
+                        onClick={() => setCalculatorAssistantWorkbenchApplyProposal(null)}
+                        type="button"
+                      >
+                        <X className="h-4 w-4" />
+                        Dismiss
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+
+              {calculatorAssistantCandidateStacks.length ? (
+                <div className="calc-assistant-candidate-stacks">
+                  <div className="calc-assistant-candidate-stack-toolbar">
+                    <span>{calculatorAssistantCandidateStacks.length} candidates</span>
+                    <button
+                      className="focus-ring ui-button ui-button-ghost"
+                      disabled={calculatorAssistantCandidateComparisonState.status === "loading"}
+                      onClick={() => {
+                        void previewAllCalculatorAssistantCandidateStacks();
+                      }}
+                      type="button"
+                    >
+                      <Sparkles className="h-4 w-4" />
+                      {calculatorAssistantCandidateComparisonState.status === "loading" ? "Previewing" : "Preview all"}
+                    </button>
+                  </div>
+                  {calculatorAssistantCandidateStacks.map((candidate) => (
+                    <div className="calc-assistant-candidate-stack" key={candidate.candidateId}>
+                      <div className="calc-assistant-candidate-stack-main">
+                        <strong>{candidate.label}</strong>
+                        <span>
+                          {candidate.layers.map((layer) => {
+                            const material = materialById.get(layer.materialId);
+                            const thickness = layer.thicknessMm.trim() ? `${layer.thicknessMm} mm` : "missing thickness";
+                            return `${thickness} ${material?.name ?? layer.materialId}`;
+                          }).join(" + ")}
+                        </span>
+                        {candidate.tasks.length ? <small>{candidate.tasks.length} missing input{candidate.tasks.length === 1 ? "" : "s"}</small> : null}
+                      </div>
+                      <div className="calc-assistant-candidate-stack-actions">
+                        <button
+                          className="focus-ring ui-button ui-button-ghost"
+                          disabled={calculatorAssistantState.status === "loading"}
+                          onClick={() => previewCalculatorAssistantCandidateStack(candidate)}
+                          type="button"
+                        >
+                          <Sparkles className="h-4 w-4" />
+                          Preview
+                        </button>
+                        <button
+                          className="focus-ring ui-button ui-button-primary"
+                          onClick={() => applyCalculatorAssistantCandidateStack(candidate)}
+                          type="button"
+                        >
+                          <ArrowRight className="h-4 w-4" />
+                          Use
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+
+              {calculatorAssistantCandidateComparisonState.status === "loading" ? (
+                <div className="calc-assistant-command-message" data-tone="success">
+                  <strong>Candidate comparison running</strong>
+                  <span>{calculatorAssistantCandidateComparisonState.candidateCount} candidates are being previewed through the calculator.</span>
+                </div>
+              ) : null}
+
+              {calculatorAssistantCandidateComparisonState.status === "error" ? (
+                <p className="calc-error-text">{calculatorAssistantCandidateComparisonState.message}</p>
+              ) : null}
+
+              {calculatorAssistantCandidateComparisonState.status === "ready" ? (
+                <div className="calc-assistant-candidate-comparison">
+                  {calculatorAssistantCandidateComparisonState.ranking.length ? (
+                    <div className="calc-assistant-candidate-ranking">
+                      {calculatorAssistantCandidateComparisonState.ranking.map((rank) => (
+                        <span key={rank.candidateId}>
+                          <strong>#{rank.rank}</strong>
+                          <small>{rank.label}</small>
+                          <em>{rank.metric}: {rank.valueLabel}</em>
+                        </span>
+                      ))}
+                    </div>
+                  ) : null}
+
+                  {calculatorAssistantCandidateComparisonState.rows.map((row) => (
+                    <div className="calc-assistant-candidate-comparison-row" data-status={row.status} key={row.candidateId}>
+                      <div className="calc-assistant-candidate-comparison-head">
+                        <strong>{row.label}</strong>
+                        <small>{row.status}</small>
+                      </div>
+                      {row.outputRows.length ? (
+                        <div className="calc-assistant-candidate-output-grid">
+                          {row.outputRows.map((output) => (
+                            <span data-status={output.status} key={`${row.candidateId}-${output.label}`}>
+                              <strong>{output.label}</strong>
+                              <small>{output.detail}</small>
+                              <em>{output.value}</em>
+                            </span>
+                          ))}
+                        </div>
+                      ) : null}
+                      {row.commandTasks.length || row.previewTasks.length || row.errorMessage ? (
+                        <div className="calc-assistant-candidate-task-list">
+                          {row.errorMessage ? <span>{row.errorMessage}</span> : null}
+                          {row.commandTasks.map((task) => <span key={`${row.candidateId}-${task.code}-${task.layerId ?? task.label}`}>{task.label}: {task.detail}</span>)}
+                          {row.previewTasks.map((task) => <span key={`${row.candidateId}-${task.id}`}>{task.label}: {task.detail}</span>)}
+                        </div>
+                      ) : null}
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+
+              {calculatorAssistantPreview ? (
+                <div className="calc-assistant-preview-summary" data-status={calculatorAssistantPreview.calculationSummary.status}>
+                  <span>
+                    <strong>{calculatorAssistantPreview.calculationSummary.primaryValueLabel ?? "--"}</strong>
+                    <small>{calculatorAssistantPreview.calculationSummary.primaryOutput ?? calculatorAssistantPreview.calculationSummary.status}</small>
+                  </span>
+                  <span>
+                    <strong>{calculatorAssistantPreview.requestedSnapshot.layerCount}</strong>
+                    <small>layers</small>
+                  </span>
+                  <span>
+                    <strong>{calculatorAssistantPreview.outputRows.length}</strong>
+                    <small>outputs</small>
+                  </span>
+                </div>
+              ) : null}
+
+              {calculatorAssistantPreview?.engineSummary ? (
+                <div className="calc-assistant-route-summary">
+                  <span>
+                    <strong>
+                      {calculatorAssistantPreview.engineSummary.calculatorLabel ??
+                        calculatorAssistantPreview.engineSummary.calculatorId ??
+                        "Calculator"}
+                    </strong>
+                    <small>{calculatorAssistantPreview.engineSummary.method}</small>
+                  </span>
+                  <span>
+                    <strong>{calculatorAssistantPreview.engineSummary.supportedTargetOutputs.length}</strong>
+                    <small>supported</small>
+                  </span>
+                  <span>
+                    <strong>{calculatorAssistantPreview.engineSummary.unsupportedTargetOutputs.length}</strong>
+                    <small>unsupported</small>
+                  </span>
+                </div>
+              ) : null}
+
+              {calculatorAssistantPreview?.tasks.length ? (
+                <div className="calc-task-list">
+                  {calculatorAssistantPreview.tasks.map((task) => (
+                    <div className="calc-task-row calc-assistant-task-row" key={task.id}>
+                      <span>
+                        <strong>{task.label}</strong>
+                        <small>{task.detail}</small>
+                      </span>
+                      <em>{task.source === "calculator_route" ? "Route" : "Snapshot"}</em>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+
+              {calculatorAssistantPreview ? (
+                <div className="calc-output-rows">
+                  {calculatorAssistantPreview.outputRows.map((row) => (
+                    <div className="calc-output-row" data-status={row.status} key={row.label}>
+                      <span>
+                        <strong>{row.label}</strong>
+                        <small>{row.detail}</small>
+                      </span>
+                      <em>{row.value}</em>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+            </section>
+
             {visibleResponseFigures.length || missingSelectedImpactCurve || missingSelectedAirborneCurve ? (
               <div className="calc-curve-stack">
                 {visibleResponseFigures.map((figure) => (
@@ -3946,11 +5771,152 @@ export function CalculatorWorkbench() {
                 <h2>Report handoff</h2>
               </div>
               {canOpenReport ? (
-                <button className="focus-ring ui-button ui-button-primary calc-report-link" onClick={handleOpenReport} type="button">
-                  <FileText className="h-4 w-4" />
-                  Open report
-                  <ArrowRight className="h-4 w-4" />
-                </button>
+                <>
+                  <div className="calc-report-actions">
+                    <button
+                      className={workbenchPersistenceState.kind === "combinationClean" ? "focus-ring ui-button ui-button-ghost" : "focus-ring ui-button"}
+                      disabled={serverProjectBusy || workbenchPersistenceState.kind === "combinationClean"}
+                      onClick={handleSaveCurrentAssemblyFromHandoff}
+                      title={
+                        workbenchPersistenceState.kind === "localDraft"
+                          ? "Choose a project before saving this stack"
+                          : workbenchPersistenceState.kind === "combinationDirty"
+                            ? "Update the active saved combination with the current stack"
+                            : workbenchPersistenceState.kind === "combinationClean"
+                              ? "The active combination is already saved"
+                              : "Name this stack and save it as a new combination"
+                      }
+                      type="button"
+                    >
+                      <Save className="h-4 w-4" />
+                      {workbenchPersistenceState.primaryActionLabel}
+                    </button>
+                    <button
+                      className="focus-ring ui-button"
+                      disabled={workbenchPresetBusy}
+                      onClick={handleSaveCurrentTemplateFromHandoff}
+                      type="button"
+                    >
+                      <Bookmark className="h-4 w-4" />
+                      Save as template
+                    </button>
+                    <button className="focus-ring ui-button ui-button-primary" onClick={handleOpenReport} type="button">
+                      <FileText className="h-4 w-4" />
+                      Open report
+                      <ArrowRight className="h-4 w-4" />
+                    </button>
+                  </div>
+                  {reportSourceDecisionOpen && reportSourceDecisionKind ? (
+                    <div className="calc-report-source-panel" data-kind={reportSourceDecisionKind}>
+                      <div className="calc-report-source-head">
+                        <div>
+                          <strong>Report source</strong>
+                          <span>
+                            {reportSourceDecisionKind === "combinationDirty"
+                              ? `Save the modified ${activeServerAssembly?.name ?? "combination"} before linking the report.`
+                              : "Save this stack as a named combination before linking the report."}
+                          </span>
+                        </div>
+                        <button className="focus-ring ui-button ui-button-ghost" onClick={() => setReportSourceDecisionOpen(false)} type="button">
+                          Cancel
+                        </button>
+                      </div>
+                      {reportSourceDecisionKind === "projectDraft" ? (
+                        <div className="calc-project-snapshot-controls">
+                          <input
+                            aria-label="Report source combination name"
+                            className="focus-ring ui-field calc-project-snapshot-select"
+                            disabled={serverProjectBusy}
+                            maxLength={160}
+                            onChange={(event) => {
+                              serverAssemblyNameDraftRef.current = event.target.value;
+                              setServerAssemblyNameDraft(event.target.value);
+                            }}
+                            placeholder="Combination name"
+                            value={serverAssemblyNameDraft}
+                          />
+                          <input
+                            aria-label="Report source combination description"
+                            className="focus-ring ui-field calc-project-snapshot-select"
+                            disabled={serverProjectBusy}
+                            maxLength={320}
+                            onChange={(event) => {
+                              serverAssemblyDescriptionDraftRef.current = event.target.value;
+                              setServerAssemblyDescriptionDraft(event.target.value);
+                            }}
+                            placeholder="Optional description"
+                            value={serverAssemblyDescriptionDraft}
+                          />
+                          <button
+                            className="focus-ring ui-button ui-button-primary"
+                            disabled={!canSaveNewServerAssembly}
+                            onClick={() => void saveCurrentAssemblyAndOpenReport()}
+                            type="button"
+                          >
+                            <Save className="h-4 w-4" />
+                            Save and open report
+                          </button>
+                        </div>
+                      ) : null}
+                      {reportSourceDecisionKind === "combinationDirty" ? (
+                        <>
+                          <div className="calc-report-actions">
+                            <button
+                              className="focus-ring ui-button ui-button-primary"
+                              disabled={serverProjectBusy}
+                              onClick={() => void updateCurrentAssemblyAndOpenReport()}
+                              type="button"
+                            >
+                              <Save className="h-4 w-4" />
+                              Update combination and open report
+                            </button>
+                          </div>
+                          <div className="calc-project-snapshot-controls">
+                            <input
+                              aria-label="Copy combination name"
+                              className="focus-ring ui-field calc-project-snapshot-select"
+                              disabled={serverProjectBusy}
+                              maxLength={160}
+                              onChange={(event) => {
+                                serverAssemblyNameDraftRef.current = event.target.value;
+                                setServerAssemblyNameDraft(event.target.value);
+                              }}
+                              placeholder="Copy name"
+                              value={serverAssemblyNameDraft}
+                            />
+                            <input
+                              aria-label="Copy combination description"
+                              className="focus-ring ui-field calc-project-snapshot-select"
+                              disabled={serverProjectBusy}
+                              maxLength={320}
+                              onChange={(event) => {
+                                serverAssemblyDescriptionDraftRef.current = event.target.value;
+                                setServerAssemblyDescriptionDraft(event.target.value);
+                              }}
+                              placeholder="Optional copy description"
+                              value={serverAssemblyDescriptionDraft}
+                            />
+                            <button
+                              className="focus-ring ui-button"
+                              disabled={!canSaveNewServerAssembly}
+                              onClick={() => void saveCurrentAssemblyAndOpenReport()}
+                              type="button"
+                            >
+                              <Copy className="h-4 w-4" />
+                              Save as copy and open
+                            </button>
+                          </div>
+                        </>
+                      ) : null}
+                      <div className="calc-report-source-foot">
+                        <button className="focus-ring ui-button ui-button-ghost" onClick={() => openCurrentReport()} type="button">
+                          <FileText className="h-4 w-4" />
+                          Open as local report draft
+                        </button>
+                      </div>
+                    </div>
+                  ) : null}
+                </>
               ) : (
                 <button className="ui-button calc-report-link" disabled type="button">
                   <FileText className="h-4 w-4" />

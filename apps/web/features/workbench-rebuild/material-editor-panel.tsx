@@ -37,7 +37,7 @@ type MaterialEditorLayer = {
 type MaterialEditorPanelProps = {
   layers: readonly MaterialEditorLayer[];
   materials: readonly MaterialDefinition[];
-  onClose: () => void;
+  onClose?: () => void;
   onDeleteMaterial: (materialId: string) => void;
   onReplaceMaterialInLayers: (fromMaterialId: string, toMaterialId: string) => void;
   onResetVisualOverride: (materialId: string) => void;
@@ -391,9 +391,11 @@ export function MaterialEditorPanel({
           <div className="eyebrow">Material editor</div>
           <h2>{getModeLabel(mode, selectedMaterial)}</h2>
         </div>
-        <button aria-label="Close material editor" className="focus-ring ui-icon-button" onClick={onClose} type="button">
-          <X className="h-4 w-4" />
-        </button>
+        {onClose ? (
+          <button aria-label="Close material editor" className="focus-ring ui-icon-button" onClick={onClose} type="button">
+            <X className="h-4 w-4" />
+          </button>
+        ) : null}
       </div>
 
       {restoreWarning ? (
@@ -405,14 +407,20 @@ export function MaterialEditorPanel({
 
       <div className="material-editor-layout" data-detail-first={canEditProperties ? "true" : "false"}>
         <div className="material-editor-browser">
+          <div className="material-editor-browser-head">
+            <div>
+              <span>Catalog</span>
+              <strong>{filteredMaterials.length} materials</strong>
+            </div>
+            <button className="focus-ring ui-button ui-button-ghost material-editor-new-button" onClick={startNewMaterial} type="button">
+              <Plus className="h-4 w-4" />
+              New material
+            </button>
+          </div>
           <div className="calc-search-input">
             <Search className="h-4 w-4" />
             <input onChange={(event) => setSearch(event.target.value)} placeholder="Search materials" value={search} />
           </div>
-          <button className="focus-ring ui-button ui-button-ghost material-editor-new-button" onClick={startNewMaterial} type="button">
-            <Plus className="h-4 w-4" />
-            New material
-          </button>
           <div className="material-editor-filter-row">
             <div className="material-editor-scope-tabs" aria-label="Material source filter">
               {CATALOG_SCOPE_OPTIONS.map((option) => (

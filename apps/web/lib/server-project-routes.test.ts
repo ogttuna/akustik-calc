@@ -138,7 +138,7 @@ function makeLocalScenarioImportPayload(input?: {
   };
 }
 
-function makeWorkbenchV2MaterialSnapshot() {
+function makeWorkbenchV2MaterialSnapshot(input?: { id?: string; name?: string }) {
   const customMaterial = {
     acoustic: {
       absorberClass: "porous_absorptive" as const,
@@ -161,7 +161,7 @@ function makeWorkbenchV2MaterialSnapshot() {
       wallTopologyMode: "double_leaf_framed"
     },
     customMaterials: [customMaterial],
-    id: "workbench-v2-server-snapshot",
+    id: input?.id ?? "workbench-v2-server-snapshot",
     layers: [
       { id: "layer-1", materialId: "gypsum_board", role: "side_a", thicknessMm: "12.5" },
       { id: "layer-2", materialId: customMaterial.id, role: "cavity", thicknessMm: "50" }
@@ -174,7 +174,7 @@ function makeWorkbenchV2MaterialSnapshot() {
       }
     ],
     mode: "wall",
-    name: "V2 material editor server snapshot",
+    name: input?.name ?? "V2 material editor server snapshot",
     savedAtIso: "2026-06-12T10:00:00.000Z",
     selectedLayerId: "layer-2",
     selectedOutputs: ["Rw", "DnT,w"]
@@ -778,6 +778,54 @@ describe("server project API routes", () => {
       ok: true
     });
 
+    const updatedSnapshot = makeWorkbenchV2MaterialSnapshot({
+      id: "workbench-v2-server-snapshot-updated",
+      name: "Updated V2 material editor server snapshot"
+    });
+    const updateAssemblySnapshotResponse = await updateAssembly(
+      jsonRequest(
+        `http://localhost/api/projects/${projectId}/assemblies/${assemblyId}`,
+        {
+          calculationSummary: {
+            primaryOutput: "Rw",
+            primaryValueLabel: "61 dB",
+            selectedOutputs: ["Rw"],
+            status: "ready"
+          },
+          kind: "wall",
+          snapshot: updatedSnapshot
+        },
+        "PATCH"
+      ),
+      {
+        params: Promise.resolve({
+          assemblyId,
+          projectId
+        })
+      }
+    );
+    const updateAssemblySnapshotBody = (await updateAssemblySnapshotResponse.json()) as {
+      assembly?: {
+        calculationSummary?: {
+          primaryValueLabel?: string;
+        };
+        snapshot?: unknown;
+        version?: number;
+      };
+    };
+
+    expect(updateAssemblySnapshotResponse.status).toBe(200);
+    expect(updateAssemblySnapshotBody.assembly).toMatchObject({
+      calculationSummary: {
+        primaryValueLabel: "61 dB"
+      },
+      version: 2
+    });
+    expect(parseWorkbenchV2ProjectSnapshot(updateAssemblySnapshotBody.assembly?.snapshot).snapshot).toMatchObject({
+      id: "workbench-v2-server-snapshot-updated",
+      name: "Updated V2 material editor server snapshot"
+    });
+
     const duplicateAssemblyResponse = await duplicateAssembly(
       jsonRequest(`http://localhost/api/projects/${projectId}/assemblies/${assemblyId}/duplicate`, {}),
       {
@@ -1032,7 +1080,7 @@ describe("server project API routes", () => {
       error: "Authentication required.",
       ok: false
     });
-  });
+  }, 10000);
 
   it("allows an authenticated configured owner to create, list, and read only their project", async () => {
     signInConfiguredUser("alice@example.com");

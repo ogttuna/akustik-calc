@@ -168,11 +168,13 @@ export type LayerCombinationResolverDoubleLeafFramedWallBandedFormulaComponentBr
 };
 
 export type LayerCombinationResolverDoubleLeafFramedWallBandedFormulaEvaluationInput = {
+  readonly absorberCoverageRatio?: number | null;
   readonly bridgeClass: GateQDoubleLeafFrameBridgeClass;
   readonly cavityAbsorptionClass?: "none" | "porous_absorptive" | "unknown";
   readonly cavityDepthMm?: number;
   readonly cavityFillCoverage?: "empty" | "full" | "partial" | "unknown";
   readonly exactSourceId?: string;
+  readonly flowResistivityPaSM2?: number | null;
   readonly flowResistivitySource?: GateRDoubleLeafFramedBridgePhysicalInputs["flowResistivitySource"];
   readonly requestedBasis?: LayerCombinationResolverDoubleLeafFramedWallBandedRequestedBasis;
   readonly resilientBarSideCount?: AirborneContext["resilientBarSideCount"];
@@ -248,6 +250,7 @@ export type LayerCombinationResolverDoubleLeafFramedWallBandedFormulaCorridorCon
 
 const FORMULA_OUTPUTS = new Set<RequestedOutputId>(["Rw", "C", "Ctr"]);
 const STC_COMPATIBILITY_OUTPUTS = new Set<RequestedOutputId>(["STC"]);
+const NOMINAL_POROUS_FLOW_RESISTIVITY_PA_SM2 = 15_000;
 const IMPACT_OUTPUTS = new Set<RequestedOutputId>([
   "AIIC",
   "CI",
@@ -319,9 +322,15 @@ const FORMULA_TERMS = [
     termId: "bridge_coupling_formula_owner"
   },
   {
-    description: "Apply porous absorber damping only when cavity coverage and flow-resistivity source are explicit.",
+    description: "Apply bounded porous absorber damping from cavity coverage and numeric flow resistivity when owned.",
     owner: "doubleLeafPorousAbsorberOwner",
-    requiredInputs: ["cavityFillCoverage", "cavityAbsorptionClass", "flowResistivitySource"],
+    requiredInputs: [
+      "cavityFillCoverage",
+      "cavityAbsorptionClass",
+      "flowResistivitySource",
+      "flowResistivityPaSM2",
+      "absorberCoverageRatio"
+    ],
     runtimeOwnedInGate: false,
     termId: "porous_absorber_damping_formula"
   },
@@ -519,9 +528,11 @@ type RequiredFormulaInputs = Required<
   Pick<
     LayerCombinationResolverDoubleLeafFramedWallBandedFormulaEvaluationInput,
     | "bridgeClass"
+    | "absorberCoverageRatio"
     | "cavityAbsorptionClass"
     | "cavityDepthMm"
     | "cavityFillCoverage"
+    | "flowResistivityPaSM2"
     | "flowResistivitySource"
     | "sideALeafMassKgM2"
     | "sideBLeafMassKgM2"
@@ -538,10 +549,12 @@ function getRequiredInputs(
   }
 
   return {
+    absorberCoverageRatio: input.absorberCoverageRatio ?? null,
     bridgeClass: input.bridgeClass,
     cavityAbsorptionClass: input.cavityAbsorptionClass as RequiredFormulaInputs["cavityAbsorptionClass"],
     cavityDepthMm: input.cavityDepthMm as number,
     cavityFillCoverage: input.cavityFillCoverage as RequiredFormulaInputs["cavityFillCoverage"],
+    flowResistivityPaSM2: input.flowResistivityPaSM2 ?? null,
     flowResistivitySource: input.flowResistivitySource as RequiredFormulaInputs["flowResistivitySource"],
     resilientBarSideCount: input.resilientBarSideCount,
     sideALeafMassKgM2: input.sideALeafMassKgM2 as number,
@@ -589,12 +602,35 @@ function porousDampingCreditDb(input: RequiredFormulaInputs): number {
     return 0;
   }
 
+  const nominalSourceCredit = (baseCreditDb: number): number => {
+    if (!(input.flowResistivityPaSM2 && Number.isFinite(input.flowResistivityPaSM2))) {
+      return baseCreditDb;
+    }
+
+    const logDistanceFromNominal = Math.abs(
+      Math.log10(input.flowResistivityPaSM2 / NOMINAL_POROUS_FLOW_RESISTIVITY_PA_SM2)
+    );
+    const multiplier = clamp(1 - (logDistanceFromNominal * 0.65), 0.45, 1);
+
+    return round1(baseCreditDb * multiplier);
+  };
+  const fullBaseCredit = input.flowResistivitySource === "engineering_default" ? 3 : 3.5;
+  const partialBaseCredit = input.flowResistivitySource === "engineering_default" ? 1.5 : 2;
+  const numericCoverageBaseCredit = (): number | null => {
+    if (input.bridgeClass === "direct_fixed_bridge" || input.absorberCoverageRatio === null) {
+      return null;
+    }
+
+    return fullBaseCredit * clamp(input.absorberCoverageRatio, 0, 1);
+  };
+  const numericCoverageCredit = numericCoverageBaseCredit();
+
   if (input.cavityFillCoverage === "full") {
-    return input.flowResistivitySource === "engineering_default" ? 3 : 3.5;
+    return nominalSourceCredit(numericCoverageCredit ?? fullBaseCredit);
   }
 
   if (input.cavityFillCoverage === "partial" || input.cavityFillCoverage === "unknown") {
-    return input.flowResistivitySource === "engineering_default" ? 1.5 : 2;
+    return nominalSourceCredit(numericCoverageCredit ?? partialBaseCredit);
   }
 
   return 0;

@@ -1,6 +1,6 @@
 # Next Agent Brief
 
-Last reviewed: 2026-06-18
+Last reviewed: 2026-06-19
 
 ## Documentation Map
 
@@ -30,13 +30,173 @@ Calculator drift lock:
 
 Fast path:
 
+- current selected implementation action:
+  `post_v1_wall_double_leaf_framed_porous_absorber_coverage_ratio_numeric_sensitivity_coverage_refresh_plan`;
+- current selected implementation file:
+  `packages/engine/src/post-v1-wall-double-leaf-framed-porous-absorber-coverage-ratio-numeric-sensitivity-coverage-refresh-contract.test.ts`;
+- current selected implementation plan:
+  `docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_POROUS_ABSORBER_COVERAGE_RATIO_NUMERIC_SENSITIVITY_COVERAGE_REFRESH_PLAN_2026-06-19.md`;
+- latest landed runtime owner:
+  `post_v1_wall_double_leaf_framed_porous_absorber_coverage_ratio_numeric_sensitivity_owner_plan`;
+- latest landed runtime owner file:
+  `packages/engine/src/post-v1-wall-double-leaf-framed-porous-absorber-coverage-ratio-numeric-sensitivity-owner-contract.test.ts`;
+- latest landed runtime owner plan:
+  `docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_POROUS_ABSORBER_COVERAGE_RATIO_NUMERIC_SENSITIVITY_OWNER_PLAN_2026-06-19.md`;
+- latest landed runtime owner status:
+  `post_v1_wall_double_leaf_framed_porous_absorber_coverage_ratio_numeric_sensitivity_owner_landed_runtime_selected_coverage_refresh`;
+- latest landed runtime owner follows:
+  `post_v1_wall_double_leaf_framed_porous_flow_resistivity_numeric_sensitivity_coverage_refresh_plan`
+  /
+  `packages/engine/src/post-v1-wall-double-leaf-framed-porous-flow-resistivity-numeric-sensitivity-coverage-refresh-contract.test.ts`
+  /
+  `docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_POROUS_FLOW_RESISTIVITY_NUMERIC_SENSITIVITY_COVERAGE_REFRESH_PLAN_2026-06-19.md`
+  /
+  `post_v1_wall_double_leaf_framed_porous_flow_resistivity_numeric_sensitivity_coverage_refresh_landed_no_runtime_selected_coverage_ratio_numeric_sensitivity_owner`;
+- latest landed no-runtime coverage refresh selected candidate:
+  `wall.double_leaf_framed.porous_flow_resistivity_numeric_sensitivity_owner`;
+- latest landed no-runtime coverage refresh follows owner status:
+  `post_v1_wall_double_leaf_framed_porous_flow_resistivity_numeric_sensitivity_owner_landed_runtime_selected_coverage_refresh`;
+- latest landed no-runtime coverage refresh counters:
+  `coverageRefreshContractFilesTouched: 1`,
+  `newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+  `newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+  `runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+  `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`;
+- latest landed runtime owner selected candidate:
+  `wall.double_leaf_framed.porous_absorber_coverage_ratio_numeric_sensitivity_owner`;
+- latest landed runtime owner behavior:
+  `advancedWall.cavities[].absorberCoverageRatio` is now numerically
+  active for context-owned double-leaf/framed porous walls. Ratio `1`
+  keeps `Rw 46`, `STC 46`, `C -1`, `Ctr -6.1`, `R'w 40`, `Dn,w 41`,
+  `Dn,A 39.5`, `DnT,w 43`, and `DnT,A 41.9`; ratio `0.5` returns
+  lab `Rw 44` / `STC 44` and field/building `R'w 38`, `Dn,w 39`,
+  `Dn,A 37.5`, `DnT,w 41`, and `DnT,A 39.9`; ratio `0.25` returns
+  lab `Rw 43` / `STC 43` and field/building `R'w 37`, `Dn,w 38`,
+  `Dn,A 36.5`, `DnT,w 40`, and `DnT,A 38.9`; no ratio preserves legacy
+  enum behavior, missing flow remains `needs_input`, and impact aliases
+  remain unsupported;
+- latest landed runtime owner counters:
+  `accuracyPromotedRequestShapes: 3`,
+  `accuracyPromotedTargetOutputs: 13`,
+  `newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+  `newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+  `runtimeValuesMoved 13`, `runtimeFormulaRetunes: 1`,
+  `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`;
+- latest landed runtime owner selected next action:
+  `post_v1_wall_double_leaf_framed_porous_absorber_coverage_ratio_numeric_sensitivity_coverage_refresh_plan`;
+- latest landed runtime owner selected next file:
+  `packages/engine/src/post-v1-wall-double-leaf-framed-porous-absorber-coverage-ratio-numeric-sensitivity-coverage-refresh-contract.test.ts`;
+- latest landed runtime owner selected next plan:
+  `docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_POROUS_ABSORBER_COVERAGE_RATIO_NUMERIC_SENSITIVITY_COVERAGE_REFRESH_PLAN_2026-06-19.md`;
+- latest landed runtime owner selected next label:
+  `post-V1 wall double-leaf/framed porous absorber coverage-ratio numeric sensitivity coverage refresh`;
+- this is not a broad source crawl;
+- latest landed runtime owner:
+  `post_v1_wall_double_leaf_framed_porous_flow_resistivity_numeric_sensitivity_owner_plan`;
+- latest landed runtime owner file:
+  `packages/engine/src/post-v1-wall-double-leaf-framed-porous-flow-resistivity-numeric-sensitivity-owner-contract.test.ts`;
+- latest landed runtime owner plan:
+  `docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_POROUS_FLOW_RESISTIVITY_NUMERIC_SENSITIVITY_OWNER_PLAN_2026-06-19.md`;
+- latest landed runtime owner status:
+  `post_v1_wall_double_leaf_framed_porous_flow_resistivity_numeric_sensitivity_owner_landed_runtime_selected_coverage_refresh`;
+- latest landed runtime owner follows:
+  `post_v1_wall_context_owned_porous_cavity_field_building_lab_companion_basis_integrity_coverage_refresh_plan`
+  /
+  `packages/engine/src/post-v1-wall-context-owned-porous-cavity-field-building-lab-companion-basis-integrity-coverage-refresh-contract.test.ts`
+  /
+  `post_v1_wall_context_owned_porous_cavity_field_building_lab_companion_basis_integrity_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`;
+- latest landed runtime owner selected candidate:
+  `wall.double_leaf_framed.porous_flow_resistivity_numeric_sensitivity_owner`;
+- latest landed runtime owner behavior:
+  `flowResistivityPaSM2` is now a numeric damping input for
+  double-leaf/framed porous cavity formula routes. Nominal
+  `15000 Pa*s/m2` keeps `Rw 46`, `STC 46`, `C -1`, `Ctr -6.1`,
+  `R'w 40`, `Dn,w 41`, `Dn,A 39.5`, `DnT,w 43`, and `DnT,A 41.9`;
+  off-nominal `5000` and `50000 Pa*s/m2` move the same route to
+  lab `Rw 45` / `STC 45` and field/building `R'w 39`, `Dn,w 40`,
+  `Dn,A 38.5`, `DnT,w 42`, and `DnT,A 40.9`; missing user flow stays
+  `needs_input`;
+- latest landed runtime owner counters:
+  `accuracyPromotedRequestShapes: 4`,
+  `accuracyPromotedTargetOutputs: 18`,
+  `newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+  `newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+  `runtimeValuesMoved 18`, `runtimeFormulaRetunes: 1`,
+  `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`;
+- latest landed runtime owner selected next action:
+  `post_v1_wall_double_leaf_framed_porous_flow_resistivity_numeric_sensitivity_coverage_refresh_plan`;
+- latest landed runtime owner selected next file:
+  `packages/engine/src/post-v1-wall-double-leaf-framed-porous-flow-resistivity-numeric-sensitivity-coverage-refresh-contract.test.ts`;
+- latest landed runtime owner selected next plan:
+  `docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_POROUS_FLOW_RESISTIVITY_NUMERIC_SENSITIVITY_COVERAGE_REFRESH_PLAN_2026-06-19.md`;
+- latest landed runtime owner selected next label:
+  `post-V1 wall double-leaf/framed porous flow-resistivity numeric sensitivity coverage refresh`;
+- latest landed no-runtime coverage refresh:
+  `post_v1_wall_context_owned_porous_cavity_field_building_lab_companion_basis_integrity_coverage_refresh_plan`;
+- latest landed no-runtime coverage refresh file:
+  `packages/engine/src/post-v1-wall-context-owned-porous-cavity-field-building-lab-companion-basis-integrity-coverage-refresh-contract.test.ts`;
+- latest landed no-runtime coverage refresh plan:
+  `docs/calculator/POST_V1_WALL_CONTEXT_OWNED_POROUS_CAVITY_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_COVERAGE_REFRESH_PLAN_2026-06-19.md`;
+- latest landed no-runtime coverage refresh status:
+  `post_v1_wall_context_owned_porous_cavity_field_building_lab_companion_basis_integrity_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`;
+- latest landed no-runtime coverage refresh selected next action:
+  `post_v1_runtime_first_route_family_rerank_after_wall_context_owned_porous_cavity_field_building_lab_companion_basis_integrity_plan`;
+- latest landed no-runtime coverage refresh selected next file:
+  `packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-context-owned-porous-cavity-field-building-lab-companion-basis-integrity-contract.test.ts`;
+- latest landed no-runtime coverage refresh selected next plan:
+  `docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_WALL_CONTEXT_OWNED_POROUS_CAVITY_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_PLAN_2026-06-19.md`;
+- latest landed no-runtime coverage refresh selected next label:
+  `post-V1 runtime-first route-family rerank after wall context-owned porous-cavity field/building lab-companion basis integrity`;
+- latest landed runtime owner:
+  `post_v1_wall_context_owned_porous_cavity_field_building_lab_companion_basis_integrity_owner_plan`;
+- latest landed runtime owner file:
+  `packages/engine/src/post-v1-wall-context-owned-porous-cavity-field-building-lab-companion-basis-integrity-owner-contract.test.ts`;
+- latest landed runtime owner plan:
+  `docs/calculator/POST_V1_WALL_CONTEXT_OWNED_POROUS_CAVITY_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_OWNER_PLAN_2026-06-19.md`;
+- latest landed runtime owner status:
+  `post_v1_wall_context_owned_porous_cavity_field_building_lab_companion_basis_integrity_owner_landed_runtime_selected_coverage_refresh`;
+- latest landed runtime owner follows:
+  `post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_coverage_refresh_plan`
+  /
+  `packages/engine/src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-airborne-frequency-field-building-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`
+  /
+  `docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+  /
+  `post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_coverage_refresh_landed_no_runtime_selected_wall_context_owned_porous_cavity_field_building_lab_companion_basis_integrity_owner`;
+- latest landed runtime owner selected candidate:
+  `wall.context_owned_porous_cavity_field_building_lab_companion_basis_integrity_owner`;
+- latest landed runtime owner behavior:
+  context-owned double-leaf/framed wall field/building lab companions now
+  use the owned direct lab curve (`Rw 46`, `STC 46`, `C -1`,
+  `Ctr -6.1`) when side leaf groups, independent frame topology,
+  absorptive cavity depth/fill, and
+  `advancedWall.cavities[].absorberFlowResistivityPaSM2` are supplied;
+  field/building adapter values remain `R'w 40`, `Dn,w 41`,
+  `Dn,A 39.5`, `DnT,w 43`, and `DnT,A 41.9`;
+- latest landed runtime owner counters:
+  `accuracyPromotedRequestShapes: 4`,
+  `accuracyPromotedTargetOutputs: 16`,
+  `newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+  `newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 4`,
+  `runtimeValuesMoved 16`, `runtimeFormulaRetunes: 0`,
+  `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`;
+- latest landed runtime owner selected next action:
+  `post_v1_wall_context_owned_porous_cavity_field_building_lab_companion_basis_integrity_coverage_refresh_plan`;
+- latest landed runtime owner selected next file:
+  `packages/engine/src/post-v1-wall-context-owned-porous-cavity-field-building-lab-companion-basis-integrity-coverage-refresh-contract.test.ts`;
+- latest landed runtime owner selected next plan:
+  `docs/calculator/POST_V1_WALL_CONTEXT_OWNED_POROUS_CAVITY_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_COVERAGE_REFRESH_PLAN_2026-06-19.md`;
+- latest landed runtime owner selected next label:
+  `post-V1 wall context-owned porous-cavity field/building lab-companion basis integrity coverage refresh`;
+- older fast-path entries below are historical unless they agree with
+  the current selected implementation action above.
 - latest checkpoint reconciliation:
   `docs/calculator/CHECKPOINT_2026-06-18_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_TARGET_OUTPUT_COVERAGE.md`;
-- current selected implementation action:
+- previous selected implementation action after that checkpoint:
   `post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_coverage_refresh_plan`;
-- current selected implementation file:
+- previous selected implementation file after that checkpoint:
   `packages/engine/src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-airborne-frequency-field-building-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`;
-- current selected implementation plan:
+- previous selected implementation plan after that checkpoint:
   `docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_COVERAGE_REFRESH_PLAN_2026-06-18.md`;
 - latest landed no-runtime coverage refresh:
   `post_v1_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_coverage_refresh_plan`;

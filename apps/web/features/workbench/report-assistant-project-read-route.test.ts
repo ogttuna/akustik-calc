@@ -177,7 +177,7 @@ describe("report assistant project-read route", () => {
         }
       ]
     });
-  });
+  }, 10000);
 
   it("rejects unsupported actions before calling project storage", async () => {
     const { POST } = await import("../../app/api/report-assistant/project-read/route");

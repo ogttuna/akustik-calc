@@ -138,14 +138,24 @@ Status on 2026-06-12:
   document so the editor does not fall back to an older local draft after a
   successful save. Browser E2E covers `REV-0001` preview, `REV-0003` restore,
   persisted report document rollback, and reopen from the project report list.
+- 2026-06-15 assistant project visibility context bridge is implemented:
+  read-only tool definitions now live in a client-safe contract module shared
+  by the server project-read helper and assistant context builder; report
+  assistant context can carry summary-only `projectWorkspace` data for project,
+  saved report, current revision, recent revision summaries, and available
+  `mutates: false` read tools; current report adjustment summaries are also
+  carried so assistant/manual report-only edits are visible as context. The
+  proposal configure assistant and report editor assistant now inject that
+  context when a saved project/report is linked. Patch, plausibility, and
+  assembly-alternative model payloads receive the read-only summary context
+  without adding a tool-calling loop or write-capable assistant/MCP tools.
 
 Deferred follow-up, not implemented in this pass:
 
-- assistant/MCP project visibility has the first read-only app surface in place:
-  helper, route, runtime status, and report-editor context affordance are
-  implemented. A standalone MCP wrapper/model tool loop and assistant write
-  tools remain out of scope for this first pass; do not add write-capable MCP
-  tools without a separate plan and review gate.
+- assistant/MCP project visibility now has the read-only app surface plus the
+  assistant model-context bridge in place. A standalone MCP wrapper/model tool
+  loop and assistant write tools remain out of scope for this first pass; do
+  not add write-capable MCP tools without a separate plan and review gate.
 - project workspace UI/UX refactor Phases 4-8 and the on-demand top-bar
   launcher refinement are implemented and validated for this pass.
   Product-owner acceptance can still request visual polish, but there is no

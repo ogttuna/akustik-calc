@@ -49,6 +49,23 @@ describe("report assistant planner", () => {
     ]);
   });
 
+  it("routes explicit Turkish wall comparisons to the comparison preview capability", () => {
+    expect(
+      planReportAssistantRequest({
+        instruction: "12.5 mm gypsum + 100 mm concrete ile 15 mm gypsum + 120 mm concrete karşılaştır Rw",
+        selectedOutputs: ["Rw"],
+        sourceStackAvailable: false
+      })
+    ).toMatchObject({
+      allowedTools: ["report_assistant_wall_candidate_comparison_preview"],
+      confidence: "high",
+      mode: "calculator_preview",
+      requiresClarification: false,
+      targetCapability: "report_assistant_wall_candidate_comparison_preview",
+      usedSignals: ["wall_candidate_comparison_intent", "layer_stack_evidence", "target_outputs_present"]
+    });
+  });
+
   it("selects confirmation-required action proposals for save requests", () => {
     expect(
       planReportAssistantRequest({
@@ -64,6 +81,34 @@ describe("report assistant planner", () => {
       requiresClarification: false,
       targetCapability: "save_project_report_revision_from_current_draft",
       usedSignals: ["mutation_intent", "confirmation_required"]
+    });
+  });
+
+  it("routes explicit PDF download requests to confirmation-required action proposals", () => {
+    expect(
+      planReportAssistantRequest({
+        instruction: "Calculate and download PDF",
+        selectedOutputs: ["Rw"],
+        sourceStackAvailable: true
+      })
+    ).toMatchObject({
+      allowedTools: ["export_current_report_snapshot_as_pdf"],
+      confidence: "high",
+      mode: "action_proposal",
+      requiresClarification: false,
+      targetCapability: "export_current_report_snapshot_as_pdf",
+      usedSignals: ["export_download_intent", "confirmation_required"]
+    });
+  });
+
+  it("does not treat a bare PDF mention as an export command", () => {
+    expect(
+      planReportAssistantRequest({
+        instruction: "PDF rapor formatını açıkla"
+      })
+    ).not.toMatchObject({
+      mode: "action_proposal",
+      targetCapability: "export_current_report_snapshot_as_pdf"
     });
   });
 

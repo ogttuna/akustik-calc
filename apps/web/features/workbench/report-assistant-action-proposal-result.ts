@@ -56,6 +56,27 @@ function targetEvidence(proposal: ReportAssistantActionProposal): readonly Repor
     });
   }
 
+  if (proposal.target.exportSnapshotSignature) {
+    evidence.push({
+      detail: proposal.target.exportSnapshotSignature,
+      label: "Export snapshot signature"
+    });
+  }
+
+  if (proposal.target.selectedOutputs && proposal.target.selectedOutputs.length > 0) {
+    evidence.push({
+      detail: proposal.target.selectedOutputs.join(", "),
+      label: "Selected outputs"
+    });
+  }
+
+  if (proposal.target.exportContentKinds && proposal.target.exportContentKinds.length > 0) {
+    evidence.push({
+      detail: proposal.target.exportContentKinds.join(", "),
+      label: "Export content"
+    });
+  }
+
   return evidence;
 }
 

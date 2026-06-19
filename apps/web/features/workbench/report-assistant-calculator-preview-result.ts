@@ -17,6 +17,39 @@ function outputRowUnit(value: string): string | undefined {
   return value.includes("dB") ? "dB" : undefined;
 }
 
+function previewTasks(input: {
+  preview: WorkbenchV2CalculatorAssistantPreview;
+  routeStatus: WorkbenchV2CalculatorAssistantPreview["calculationSummary"]["status"];
+}): {
+  code: string;
+  message: string;
+  severity: "info" | "warning";
+}[] {
+  const severity: "info" | "warning" = input.routeStatus === "ready" ? "info" : "warning";
+  const tasks = [
+    ...input.preview.tasks.map((task) => ({
+      code: task.id,
+      message: `${task.label}: ${task.detail}`,
+      severity
+    })),
+    ...(input.preview.layerStackDraft?.validation.missingInputs ?? []).map((missingInput) => ({
+      code: missingInput.code,
+      message: `${missingInput.message} ${missingInput.question}`,
+      severity
+    }))
+  ];
+  const seen = new Set<string>();
+
+  return tasks.filter((task) => {
+    if (seen.has(task.code)) {
+      return false;
+    }
+
+    seen.add(task.code);
+    return true;
+  });
+}
+
 export function calculatorPreviewToAssistantResult(
   input: ReportAssistantCalculatorPreviewResultInput
 ): ReportAssistantResultEnvelope {
@@ -67,11 +100,7 @@ export function calculatorPreviewToAssistantResult(
         detail: preview.engineSummary?.calculatorLabel ?? preview.engineSummary?.method
       }
     ],
-    tasks: preview.tasks.map((task) => ({
-      code: task.id,
-      message: `${task.label}: ${task.detail}`,
-      severity: routeStatus === "ready" ? "info" : "warning"
-    })),
+    tasks: previewTasks({ preview, routeStatus }),
     warnings: previewWarnings
   });
 }

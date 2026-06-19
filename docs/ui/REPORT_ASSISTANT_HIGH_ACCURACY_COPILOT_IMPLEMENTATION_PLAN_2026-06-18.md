@@ -5,10 +5,10 @@
 This is the implementation-ready plan for turning the report assistant into a
 high-accuracy DynEcho calculator copilot.
 
-The goal is not autonomous writing or calculator retuning. The goal is an
-assistant that can use the existing Workbench, project, preset, report, research,
-and calculator-preview surfaces effectively, while making every acoustic answer
-traceable to application-owned truth.
+The goal is not autonomous writing, calculator retuning, or model-authored
+acoustic values. The goal is an assistant that primarily operates the existing
+calculator UI/state on the user's behalf, while making every calculator action
+and every acoustic answer traceable to application-owned truth.
 
 The target behavior:
 
@@ -17,15 +17,21 @@ The target behavior:
    questions;
 3. build typed drafts for layer stacks;
 4. ask for missing physical inputs instead of guessing;
-5. run the existing calculator preview route for ready drafts;
-6. render authority, basis, route status, warnings, tasks, and stale state;
-7. require explicit confirmation before any report/project/preset/finding or
-   future Workbench-state mutation.
+5. apply explicit, deterministic edits to the visible calculator draft when the
+   user asks to arrange, add, remove, move, or update layers;
+6. run the existing calculator preview route for ready drafts;
+7. render authority, basis, route status, warnings, tasks, and stale state;
+8. require explicit confirmation before any report/project/preset/finding
+   mutation, while allowing explicit local Workbench stack commands to update
+   the unsaved calculator draft through deterministic client guards.
 
 End-state product contract:
 
 - The user can describe wall, floor, ceiling, opening, or alternative layer
   combinations in Turkish, English, or mixed wording.
+- The assistant can operate the calculator draft: replace the layer stack, add
+  layers, remove layers, reorder layers, set material/thickness/role/output and
+  route context fields, and then let the existing calculator compute.
 - The assistant first resolves intent and current Workbench/project/preset
   context, then creates a typed draft before any calculator call.
 - The assistant asks for missing physical inputs instead of guessing material
@@ -33,6 +39,14 @@ End-state product contract:
   target metric basis.
 - Complete owned drafts run through the existing calculator-preview surfaces.
   Numeric acoustic values never originate from model prose.
+- Combination generation means producing bounded calculator draft alternatives
+  and previewing them through the calculator, not asking the model to score
+  acoustic values.
+- Internet research is advisory only: it may help inspect whether a calculator
+  result seems plausible or find downloadable references, but it cannot replace
+  calculator output, source-row truth, or user confirmation for downloads.
+- PDF/report/download actions are explicit user-commanded side effects with
+  confirmation/stale guards where they touch saved/project/report state.
 - Every user-visible answer is backed by a typed result envelope with authority,
   route status, basis where numeric, source trace, warnings, tasks, preview or
   mutation posture, and stale policy.
@@ -88,34 +102,167 @@ Landed locally:
 - deterministic planner eval pack for calculator-ready, calculator-needs-input,
   patch-preview, action-confirmation, research, project-read, prompt-injection,
   host-allowlist, and unsupported side-effect route families;
+- Gate 4 trace/parity eval refresh that expands planner coverage to mixed
+  decimal-comma calculator prompts, Turkish comparison/alternative prompts,
+  Turkish prompt-injection wording, apply/reset blocking, calculator host
+  allowlist blocking, and described floor/impact `needs_input` route posture;
+- Gate 5 schema-first layer-stack draft model with validator coverage for ready
+  wall drafts, unknown material phrases, missing thickness/role/output,
+  double-leaf side/cavity mapping, and floor/impact physical-input capture;
+- Gate 5 described-wall parser adapter that attaches typed `layerStackDraft`
+  metadata to calculator previews, validates drafts before snapshot conversion,
+  and keeps described floor/impact requests on `needs_input` without numeric
+  basis rows;
+- Gate 5 result-envelope surface for typed draft missing inputs, so calculator
+  preview cards carry draft validation tasks instead of hiding route-required
+  questions in raw preview metadata;
+- Gate 6 schema-level bounded draft continuation helper with `draftId`,
+  context-signature stale guard, unresolved-field-only merges, and deterministic
+  validation refresh after every structured answer batch;
+- Gate 6 query-route continuation handoff that accepts parsed structured
+  draft-answer batches, returns typed `needs_input`/`stale` envelopes, and keeps
+  stale or invalid draft continuations away from calculator preview;
+- Gate 6 editor-state handoff that stores only bounded layer-stack draft state,
+  maps safe clarification messages into structured `draftContinuation` answers,
+  and keeps prompt-injection/stale contexts out of calculator preview;
+- Gate 6 ready-draft calculator-preview handoff that runs completed typed drafts
+  through the existing preview pipeline without reparsing the user's prose;
+- Gate 6 framed-wall support-spacing input capture so double-leaf/framed drafts
+  do not become schema-ready while calculator preview still needs
+  `supportSpacingMm`;
+- explicit local Workbench stack apply command in the calculator assistant
+  panel: recognized material aliases such as `gypsium/gypsum`, `rock wool`, and
+  `gypsum` can update the visible layer rows through the existing undo-backed
+  `commitLayerStackChange` path; missing thicknesses remain blank and surface as
+  `needs_input` instead of guessed defaults;
 - client-safe assistant tool-definition split so the browser result-card path
   can validate capability metadata without importing server-only finding queue
   helpers;
 - browser smoke for the proposal assistant thread, including local preflight
   blocks, calculator `needs_input`, and calculator-backed numeric preview cards;
-- broad assistant checkpoint suite: 32 test files / 231 tests passed.
+- floor/ceiling/impact described prompts now produce typed floor layer-stack
+  drafts, floor-role inference, route-required physical-input tasks, and
+  generic ASTM/ISO impact alias `unsupported` boundaries without numeric
+  preview;
+- calculator-page assistant commands now use one central control primitive for
+  replace-stack, add-layer, remove-layer, move-layer, update-layer,
+  set-outputs, and preview-only commands against the visible calculator draft;
+- calculator-page `kombinasyon yap` commands now produce bounded candidate
+  layer-stack drafts from the visible calculator stack without mutating the
+  current stack or inventing acoustic values;
+- generated calculator-page candidate stacks now carry context/stale metadata,
+  can be previewed through the existing calculator-preview route without
+  mutating the visible layer table, and can be applied back to the calculator
+  draft through the undo-backed layer-stack path;
+- generated calculator-page candidate stacks can now be batch-previewed through
+  the existing calculator-preview route into bounded comparison rows; ranking is
+  shown only when every visible candidate has a live calculator-backed row for
+  the first selected metric;
+- ready floor/impact layer-stack drafts now run complete owned `Ln,w` requests
+  through calculator-backed preview rows, preserve floor parser metadata, carry
+  field room-volume context into preview payloads, and keep `L'nT,50`/ASTM
+  impact boundaries on `needs_input`/`unsupported` instead of fabricating
+  values;
+- calculator-page assistant context commands now fill explicit calculator input
+  fields such as support spacing, dynamic stiffness, load basis, room volume,
+  field/building/lab mode, building basis, `CI`, `CI,50-2500`, and field `K`
+  without changing layer rows or inventing acoustic values;
+- explicit PDF/export/download requests now route through the planner into a
+  confirmation-only action proposal and report-editor confirmation path that
+  names the current snapshot signature, selected outputs, and export content
+  categories; stale/dirty calculator rows are not labeled as calculator-backed
+  export results, and a bare `PDF` mention is not treated as a download command;
+- report-assistant Workbench apply proposals now exist as a non-mutating,
+  confirmation-required typed contract with source draft guard, target Workbench
+  snapshot guard, exact layer diff, selected-output diff, context patch diff,
+  and calculator preview summary/basis metadata;
+- confirmed Workbench apply now exists for a pending typed proposal on the
+  calculator page: it verifies the current Workbench snapshot signature, asks
+  for user confirmation, then applies only the unsaved browser draft through the
+  undo-backed layer stack path, selected-output state, and context patch state;
+- repo-local golden assistant eval matrix now covers complete calculator-owned
+  wall stacks, incomplete wall stacks, wall candidate comparison, floor/impact
+  missing physical inputs, unsupported metric/basis, action confirmation,
+  prompt injection, untrusted saved-report/provider text, stale draft replay,
+  invented capabilities, and fabricated calculator values;
+- redacted assistant trace-event helper now converts typed result envelopes into
+  safe event summaries with request id, capability, result/renderer kind,
+  authority, route status, validation status, confirmation/stale status, source
+  trace refs, task codes, and redaction status without storing prompt/report/
+  provider bodies or numeric value labels;
+- project/revision read hardening now verifies that previous revision document
+  bodies remain gated behind explicit `read_project_report_revision` permission;
+  revision-summary-only requests do not read or leak full saved report/revision
+  document bodies;
+- broad assistant checkpoint suite: 42 test files / 330 tests passed.
 
 Still missing:
 
-- renderer-specific body polish beyond the calculator card;
-- planner parity/eval expansion from production-like traces beyond the first
-  deterministic local eval pack;
-- typed layer-stack draft and clarification loop;
-- multi-candidate comparison;
-- floor/ceiling/impact input capture;
-- confirmed apply-to-Workbench proposal;
-- golden assistant evals and redacted observability.
+- a report-editor to Workbench pending-apply handoff, only if a future slice can
+  share a safe current Workbench snapshot signature in the same browser context;
+- optional route/persistence wiring for redacted trace events if runtime event
+  collection is needed beyond the tested helper boundary.
 
 Current selected next action:
 
 ```text
-report_assistant_gate_4_trace_parity_eval_refresh
+report_assistant_trace_event_route_wiring_v1
 ```
 
-Continue remaining Gate 4 hardening with trace/parity eval coverage for planner
-route selection and regression checks for production-shaped prompts. Browser
-smoke is now green for the current assistant thread/result-card path. Do not
-begin Gate 5 layer-stack draft work until this Gate 4 refresh is green.
+Current assistant handoff / drift lock:
+
+- Treat this plan as assistant/workbench work only. It must not compete with or
+  overwrite active calculator-engine slices owned by other agents.
+- The assistant is a calculator operator, not a metric authority. It may build
+  layer stacks, fill explicit calculator inputs, set requested outputs, request
+  preview/comparison rows, and prepare confirmation-required actions. It must
+  not invent `Rw`, `STC`, `Ln,w`, `AIIC`, or companion values in prose.
+- Numeric rows may appear only when they come from the existing calculator
+  preview path, saved project/report state, or explicitly labeled external
+  advisory research. Advisory research is not a calculator result.
+- If route-required inputs are absent or the metric/basis route is not owned,
+  the correct assistant answer is `needs_input` or `unsupported`, not a
+  substituted metric, guessed family value, or confidence label.
+- The current landed local surface is the calculator-page unsaved-draft
+  operator plus a report-assistant Workbench apply proposal contract:
+  deterministic stack commands, selected-output commands, preview, generated
+  candidates, per-candidate preview/use, batch comparison rows, and typed
+  non-mutating Workbench apply diffs. Confirmed apply of a pending typed
+  proposal is landed for the calculator page; report-editor cross-surface handoff
+  remains blocked unless a safe same-browser target snapshot channel is added.
+
+Remaining implementation order from this checkpoint:
+
+1. `report_assistant_trace_event_route_wiring_v1` - only if runtime collection
+   is needed, wire the tested redacted event helper into route responses or a
+   bounded persistence sink without storing prompt/report/provider bodies.
+
+Gate 4 planner hardening is locally green and Gate 5's schema-first draft
+validator, parser adapter, result-envelope surface, Gate 6 route handoff, and
+Gate 6 editor-state/ready-preview/support-spacing handoff are locally landed.
+The local Workbench assistant now also has an explicit deterministic stack-apply
+slice for unsaved calculator drafts. Slice 7A's pure wall candidate comparison
+contract, Slice 7B's calculator-backed comparison preview helper, and Slice
+7C's query-route/result-card wiring are locally landed. Slice 8A's
+floor/ceiling/impact draft input-capture work is locally landed. Slice 8B's
+first calculator-control command primitive is locally landed for visible draft
+edits and preview-only commands. Slice 8C's first candidate-stack generation
+step is locally landed for bounded, non-mutating draft alternatives. Slice 8D's
+first candidate preview/apply control step is locally landed for one generated
+candidate at a time. Slice 8E's calculator-control batch comparison rows are
+locally landed for generated candidates. Slice 8F's ready floor/impact preview
+is locally landed for complete owned `Ln,w` floor drafts and preserves
+calculator missing-input/unsupported boundaries for field/ASTM impact outputs.
+Slice 8G's direct calculator context-field command parsing is locally landed
+for explicit calculator inputs. Slice 8H's explicit PDF/export/download
+boundary is locally landed as confirmation-only action proposals. Slice 9A/9B
+apply proposal and confirmed browser apply are locally landed for the
+calculator-page pending proposal path. Slice 10A's repo-local golden eval matrix
+is locally landed. Slice 10B's redacted trace-event helper is locally landed.
+The next bounded action, if needed, is route/persistence wiring for those
+already-redacted events.
+Do not change engine behavior, formula routes, source rows, or persistent
+Workbench/project mutation behavior.
 
 ## Work Rules
 
@@ -142,6 +289,10 @@ Gate transition quality bar:
 - Do not rely on prompt-only or agent-level guardrails for side effects. The
   route/tool that can create the side effect must own the validation and
   confirmation boundary.
+- Local unsaved Workbench stack edits are allowed only when the user gives an
+  explicit apply/arrange command and every material phrase resolves to one
+  catalog entry. The assistant must not invent material ids, thicknesses, roles,
+  outputs, or acoustic values.
 - Do not publish a numeric value unless the result envelope has numeric
   authority, basis rows, route status, and source trace.
 - Do not publish a natural-language-only assistant result after Gate 3; every
@@ -813,6 +964,1127 @@ Minimum eval bar before a gate can close:
 - For any calculator-adjacent gate, at least one assertion that no numeric row
   appears when readiness fails.
 
+## Current Implementation-Ready Queue - 2026-06-18
+
+This section is the implementation queue to follow from the current checkpoint.
+It is intentionally more concrete than the historical gate summaries below. Pick
+the first incomplete slice only, write the fail-first tests named in that slice,
+then implement only the files listed there.
+
+Current checkpoint:
+
+- `report_assistant_workbench_local_stack_apply_v1` is locally implemented for
+  the Workbench V2 calculator page.
+- A command such as `gypsium, rock wool, gypsum diz` can update the unsaved
+  Workbench layer rows through `commitLayerStackChange`.
+- Missing thicknesses stay blank and surface as calculator `needs_input`; the
+  assistant does not invent `mm` values.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec vitest run features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant-ui.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant.test.ts --maxWorkers=1`
+  with 3 files / 18 tests.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec sh -lc 'vitest run features/workbench/report-assistant*.test.ts features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant*.test.ts features/workbench-rebuild/report-editor-project-context.test.ts --maxWorkers=1'`
+  with 37 files / 263 tests.
+- Validation passed:
+  targeted ESLint on the touched assistant/Workbench files, standalone
+  TypeScript check for `workbench-v2-assistant-layer-stack-command.ts`, and
+  `git diff --check`.
+- Full web `tsc --noEmit` is currently blocked by unrelated dirty engine work in
+  `packages/engine/src/calculate-assembly.ts` around readonly
+  `advancedWall.targetOutputs`; do not fix that in assistant slices unless the
+  user changes scope.
+- `report_assistant_wall_candidate_comparison_contract_v1` is locally
+  implemented as a pure assistant contract: it parses bounded wall alternatives
+  into per-candidate `ReportAssistantLayerStackDraft` rows, caps candidates at
+  three, preserves unknown material rows as `needs_input`, and blocks ranking
+  until calculator-backed outputs exist.
+- Validation passed:
+  `pnpm --dir apps/web exec vitest run features/workbench/report-assistant-wall-candidate-comparison.test.ts --maxWorkers=1`
+  with 1 file / 5 tests.
+- Validation passed:
+  `pnpm --dir apps/web exec vitest run features/workbench/report-assistant-wall-candidate-comparison.test.ts features/workbench/report-assistant-layer-stack-draft.test.ts --maxWorkers=1`
+  with 2 files / 12 tests.
+- Validation passed:
+  `pnpm --dir apps/web exec sh -lc 'vitest run features/workbench/report-assistant*.test.ts features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant*.test.ts features/workbench-rebuild/report-editor-project-context.test.ts --maxWorkers=1'`
+  with 38 files / 274 tests.
+- Validation passed:
+  targeted ESLint on
+  `features/workbench/report-assistant-wall-candidate-comparison.ts` and
+  `features/workbench/report-assistant-wall-candidate-comparison.test.ts`.
+- Validation note:
+  the contract-only revision passed isolated TypeScript before Slice 7B. After
+  Slice 7B imports the existing calculator preview path, TypeScript checks hit
+  the unrelated dirty engine file noted below.
+- `report_assistant_wall_candidate_comparison_preview_v1` is locally
+  implemented as a pure preview helper: it runs ready wall candidates through
+  `previewReportAssistantLayerStackDraft`, copies only live calculator-backed
+  output rows into comparison rows with authority/basis/source trace, keeps
+  incomplete candidates visible as task rows, blocks ranking unless every
+  visible candidate has live output for the ranking metric, and returns no raw
+  Workbench snapshot/estimate/mutation state.
+- Validation passed:
+  `pnpm --dir apps/web exec vitest run features/workbench/report-assistant-wall-candidate-comparison.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant.test.ts features/workbench/report-assistant-calculator-preview-result.test.ts --maxWorkers=1`
+  with 3 files / 18 tests.
+- Validation passed:
+  `pnpm --dir apps/web exec sh -lc 'vitest run features/workbench/report-assistant*.test.ts features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant*.test.ts features/workbench-rebuild/report-editor-project-context.test.ts --maxWorkers=1'`
+  with 38 files / 274 tests.
+- Targeted ESLint passed for
+  `features/workbench/report-assistant-wall-candidate-comparison.ts` and
+  `features/workbench/report-assistant-wall-candidate-comparison.test.ts`.
+- Project-level/isolated web TypeScript checks for this helper currently hit
+  the unrelated dirty engine type error in
+  `packages/engine/src/calculate-assembly.ts` because the helper imports the
+  existing calculator preview path. Treat that as non-current-slice debt unless
+  the user changes scope.
+- `report_assistant_wall_candidate_comparison_query_card_v1` is locally
+  implemented: Turkish/English mm-based wall comparison prompts route to the
+  comparison preview capability, query responses carry a
+  `wall_candidate_comparison_card` result envelope, and the generic result card
+  renders comparison basis/task rows without requiring the legacy
+  `calculatorPreview` field.
+- Validation passed:
+  `pnpm --dir apps/web exec vitest run features/workbench/report-assistant-query-route.test.ts features/workbench/report-assistant-planner.test.ts features/workbench/report-assistant-result-card.test.ts features/workbench/report-assistant-result-card-model.test.ts features/workbench/report-assistant-capabilities.test.ts --maxWorkers=1`
+  with 6 files / 39 tests.
+- Validation passed:
+  `pnpm --dir apps/web exec vitest run features/workbench/report-assistant-planner-evals.test.ts --maxWorkers=1`
+  with 1 file / 3 tests.
+- Targeted ESLint and `git diff --check` passed on touched assistant/doc files.
+- Project-level web TypeScript still fails only on the unrelated dirty engine
+  `packages/engine/src/calculate-assembly.ts` readonly
+  `advancedWall.targetOutputs` issue.
+
+### Slice 7A - Wall Candidate Comparison Contract
+
+Label:
+
+```text
+report_assistant_wall_candidate_comparison_contract_v1
+```
+
+Status:
+
+- Locally implemented in
+  `apps/web/features/workbench/report-assistant-wall-candidate-comparison.ts`
+  with contract coverage in
+  `apps/web/features/workbench/report-assistant-wall-candidate-comparison.test.ts`.
+- The contract does not calculate, rank by invented values, mutate Workbench
+  state, or call provider/research routes.
+
+User-facing gap:
+
+- The assistant can preview one described wall stack, but cannot compare two or
+  three user-described wall alternatives with typed per-candidate readiness.
+
+Trigger examples:
+
+- `12.5 mm alçıpan + 50 mm taş yünü + 12.5 mm alçıpan ile 2x12.5 mm alçıpan + 75 mm taş yünü + 2x12.5 mm alçıpan karşılaştır`
+- `compare these wall options for Rw and STC: ...`
+- `bu üç duvar kombinasyonundan hangisi daha iyi`
+
+Files to add:
+
+- `apps/web/features/workbench/report-assistant-wall-candidate-comparison.ts`;
+- `apps/web/features/workbench/report-assistant-wall-candidate-comparison.test.ts`.
+
+Files allowed to touch:
+
+- `apps/web/features/workbench/report-assistant-layer-stack-draft.ts` only if a
+  reusable draft helper is missing;
+- `docs/ui/REPORT_ASSISTANT_HIGH_ACCURACY_COPILOT_IMPLEMENTATION_PLAN_2026-06-18.md`.
+
+Do not touch:
+
+- engine files;
+- Workbench state mutation files;
+- provider/research routes.
+
+Fail-first tests:
+
+- parses two explicit wall candidates and caps parsed candidates at three;
+- preserves each candidate original phrase and candidate label;
+- marks a candidate with unknown material as `needs_input` without removing it;
+- rejects comparison ranking when no candidate has calculator-backed output;
+- rejects floor/impact comparison as `unsupported` for this wall-only slice.
+
+Acceptance:
+
+- exports a typed `ReportAssistantWallCandidateComparison` result model;
+- each candidate owns one `ReportAssistantLayerStackDraft`;
+- candidate count is capped before preview or rendering;
+- failed candidates are explicit task rows, never silently dropped;
+- no numeric values exist in this slice.
+
+Validation:
+
+```bash
+pnpm --filter @dynecho/web exec vitest run \
+  features/workbench/report-assistant-wall-candidate-comparison.test.ts \
+  features/workbench/report-assistant-layer-stack-draft.test.ts \
+  --maxWorkers=1
+pnpm --filter @dynecho/web exec eslint \
+  features/workbench/report-assistant-wall-candidate-comparison.ts \
+  features/workbench/report-assistant-wall-candidate-comparison.test.ts
+git diff --check
+```
+
+Stop condition:
+
+- If candidate parsing requires model generation to split alternatives, stop and
+  add a structured provider-output schema first. Do not parse unbounded prose
+  into hidden extra candidates.
+
+### Slice 7B - Calculator-Backed Wall Comparison Preview
+
+Label:
+
+```text
+report_assistant_wall_candidate_comparison_preview_v1
+```
+
+Status:
+
+- Locally implemented in
+  `apps/web/features/workbench/report-assistant-wall-candidate-comparison.ts`
+  with coverage in
+  `apps/web/features/workbench/report-assistant-wall-candidate-comparison.test.ts`.
+- The helper remains preview-only and does not expose raw Workbench snapshot,
+  selected-layer, estimate payload, or mutation state.
+
+User-facing gap:
+
+- Candidate comparison must use existing calculator preview for every ready
+  candidate and show incomplete candidates as `needs_input`.
+
+Files allowed to touch:
+
+- `apps/web/features/workbench/report-assistant-wall-candidate-comparison.ts`;
+- `apps/web/features/workbench/report-assistant-wall-candidate-comparison.test.ts`;
+- `apps/web/features/workbench-rebuild/workbench-v2-calculator-assistant.ts`;
+- `apps/web/features/workbench-rebuild/workbench-v2-calculator-assistant.test.ts`.
+
+Implementation steps:
+
+1. Add a pure helper that maps a ready candidate draft to
+   `previewReportAssistantLayerStackDraft`.
+2. Run previews sequentially; no parallel provider/model calls.
+3. Build comparison rows from preview output rows only.
+4. Keep non-ready candidates as candidate tasks with no numeric row.
+5. Rank only by user-requested target output and only when two or more
+   candidates have live calculator-backed values for that target.
+
+Fail-first tests:
+
+- ready candidate A and ready candidate B produce calculator-backed `Rw`/`STC`
+  rows;
+- incomplete candidate remains visible with typed missing thickness/material
+  task;
+- ranking is absent when requested output is missing for any candidate;
+- no mutation flags are set and no Workbench layer state is returned.
+
+Acceptance:
+
+- comparison values have `authority: calculator_backed`;
+- every numeric value has metric id, basis, route status, and source trace;
+- non-ready candidates cannot inherit another candidate's value;
+- no candidate can request unsupported outputs by aliasing metrics.
+
+Validation:
+
+```bash
+pnpm --filter @dynecho/web exec vitest run \
+  features/workbench/report-assistant-wall-candidate-comparison.test.ts \
+  features/workbench-rebuild/workbench-v2-calculator-assistant.test.ts \
+  features/workbench/report-assistant-calculator-preview-result.test.ts \
+  --maxWorkers=1
+pnpm --filter @dynecho/web exec eslint \
+  features/workbench/report-assistant-wall-candidate-comparison.ts \
+  features/workbench/report-assistant-wall-candidate-comparison.test.ts \
+  features/workbench-rebuild/workbench-v2-calculator-assistant.ts
+```
+
+### Slice 7C - Query Route And Result Card For Comparison
+
+Label:
+
+```text
+report_assistant_wall_candidate_comparison_query_card_v1
+```
+
+Status:
+
+- Locally implemented in the query route, planner, capability registry, and
+  generic result-card path.
+- The result card uses typed envelope basis/tasks/trace, not the legacy
+  `calculatorPreview` prop.
+
+Files allowed to touch:
+
+- `apps/web/features/workbench/report-assistant-query.ts`;
+- `apps/web/features/workbench/report-assistant-query-route.test.ts`;
+- `apps/web/features/workbench/report-assistant-result-contract.ts` only if a
+  new renderer kind is required;
+- `apps/web/features/workbench/report-assistant-result-card-model.ts`;
+- `apps/web/features/workbench/report-assistant-result-card.tsx`;
+- `apps/web/features/workbench-rebuild/report-editor-project-context.test.ts`.
+
+Fail-first tests:
+
+- Turkish `karşılaştır` prompt routes to comparison, not single-stack preview;
+- query response includes `assistantResults` with comparison renderer kind;
+- result card renders ready rows and failed candidate tasks from envelope data;
+- legacy `calculatorPreview` field is not required to render comparison.
+
+Acceptance:
+
+- comparison route remains read-only and preview-only;
+- result card makes ready/needs-input/unsupported candidates visually distinct;
+- no apply/save button appears on the preview-only comparison card.
+
+Validation:
+
+```bash
+pnpm --filter @dynecho/web exec vitest run \
+  features/workbench/report-assistant-query-route.test.ts \
+  features/workbench/report-assistant-result-card-model.test.ts \
+  features/workbench/report-assistant-result-card.test.ts \
+  features/workbench-rebuild/report-editor-project-context.test.ts \
+  --maxWorkers=1
+```
+
+### Slice 8A - Floor/Ceiling/Impact Draft Parsing Without Numeric Preview
+
+Label:
+
+```text
+report_assistant_floor_impact_draft_input_capture_v1
+```
+
+User-facing gap:
+
+- Floor/impact prompts currently park as `needs_input`; the assistant must parse
+  layer rows and collect route-required physical inputs without guessing.
+
+Files allowed to touch:
+
+- `apps/web/features/workbench/report-assistant-layer-stack-draft.ts`;
+- `apps/web/features/workbench/report-assistant-layer-stack-draft.test.ts`;
+- `apps/web/features/workbench/report-assistant-layer-stack-draft-editor-state.ts`;
+- `apps/web/features/workbench/report-assistant-layer-stack-draft-editor-state.test.ts`;
+- `apps/web/features/workbench-rebuild/workbench-v2-calculator-assistant.ts`;
+- `apps/web/features/workbench-rebuild/workbench-v2-calculator-assistant.test.ts`.
+
+Fail-first tests:
+
+- `120 mm concrete floor + 30 mm rockwool için Ln,w hesapla` creates a floor
+  draft with parsed layers but `needs_input` for missing dynamic stiffness/load
+  basis where required;
+- `AIIC`/`IIC` requests ask for ASTM/ISO target metric basis instead of aliasing;
+- ceiling-board phrases map to ceiling roles only when the user names ceiling;
+- missing room volume/field context remains a typed task for field impact;
+- unsupported generic ASTM/ISO aliases return `unsupported`, not numeric rows.
+
+Acceptance:
+
+- floor/ceiling roles are enum-bounded;
+- physical inputs are typed continuation answers;
+- no floor/impact numeric rows are produced in this slice unless all route
+  inputs are explicit and the existing preview path already owns them.
+
+### Slice 8B - Unified Calculator Control Commands
+
+Label:
+
+```text
+report_assistant_calculator_control_command_unification_v1
+```
+
+User-facing gap:
+
+- The assistant should feel like it controls the calculator draft, not like a
+  collection of unrelated report/research/preview routes. If the user says
+  `gypsum, rock wool, gypsum diz`, the visible calculator layer rows should
+  update. If the user asks for combinations, bounded candidate stacks should be
+  generated and previewed through the calculator. If the user asks whether a
+  calculator result seems high, internet/research output should be advisory
+  only and never replace calculator truth.
+
+Primary files:
+
+- `apps/web/features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.ts`;
+- `apps/web/features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.test.ts`;
+- `apps/web/features/workbench-rebuild/workbench-v2-calculator-assistant.ts`;
+- `apps/web/features/workbench-rebuild/workbench-v2-calculator-assistant.test.ts`;
+- `apps/web/features/workbench-rebuild/calculator-workbench.tsx`;
+- `apps/web/features/workbench-rebuild/workbench-v2-calculator-assistant-ui.test.ts`;
+- route/result-card files only if the command needs to surface from the report
+  assistant thread, not for calculator-page local commands.
+
+Implementation steps:
+
+1. Treat `workbench-v2-assistant-layer-stack-command` as the central calculator
+   control primitive, not a side helper.
+2. Expand the command contract from replace-stack only into bounded operations:
+   `replace_stack`, `add_layer`, `remove_layer`, `move_layer`, `update_layer`,
+   `set_outputs`, `set_context`, and `preview`.
+3. Keep material matching deterministic through the catalog and reject unknown
+   or ambiguous materials before mutating visible layer rows.
+4. Keep missing thicknesses blank or as typed tasks; never infer default mm
+   values from model prose.
+5. Preserve undo-backed local Workbench updates for calculator-page commands.
+6. Run calculator preview only after the visible draft is complete enough for
+   the existing preview route; otherwise show the exact missing inputs.
+7. Keep research/download/PDF commands separate from calculator state commands:
+   research can advise and cite, download/export must be explicit, and neither
+   can invent calculator values.
+
+Fail-first tests for the first command-primitive stage:
+
+- `gypsium, rock wool, gypsum diz` replaces the visible stack with three rows,
+  resolves catalog ids, and leaves thicknesses blank with tasks.
+- `üste 12.5 mm gypsum ekle`, `rock wool'u ortaya taşı`, and `2. layerı sil`
+  update the local stack through one typed command surface and preserve undo.
+- `gypsumları 15 mm yap` updates only matching layer thicknesses and does not
+  touch unknown materials.
+- `Rw ve STC seç` updates selected outputs without changing layer rows.
+- `hesapla/preview` calls the existing calculator preview only when current
+  inputs are complete; otherwise it returns `needs_input`.
+
+Acceptance for the first command-primitive stage:
+
+- Calculator state changes are centralized through one typed command primitive.
+- Assistant-visible calculator edits are real UI state changes, not prose-only
+  claims.
+- Numeric acoustic values still come only from calculator preview/saved state.
+- Engine files, formula routes, source rows, and metric aliases are untouched.
+
+Validation:
+
+```bash
+pnpm --filter @dynecho/web exec vitest run \
+  features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.test.ts \
+  features/workbench-rebuild/workbench-v2-calculator-assistant-ui.test.ts \
+  --maxWorkers=1
+```
+
+### Slice 8C - Calculator-Control Candidate Stack Generation
+
+Label:
+
+```text
+report_assistant_calculator_control_candidate_generation_v1
+```
+
+User-facing gap:
+
+- The user can ask for combinations; the assistant should create bounded
+  calculator draft alternatives from the visible stack without mutating the
+  current stack or scoring alternatives from prose.
+
+Fail-first tests:
+
+- `kombinasyon yap` produces bounded candidate stacks from the visible
+  calculator layers without mutating the current stack.
+- generated candidates keep missing thickness tasks visible.
+- candidate stack cards list only layer drafts; they do not show acoustic values
+  before calculator preview.
+
+Acceptance:
+
+- Candidate stacks reuse current calculator materials and thicknesses.
+- Current visible calculator stack is not changed by candidate generation.
+- Numeric acoustic values still come only from calculator preview/saved state.
+- Engine files, formula routes, source rows, and metric aliases are untouched.
+
+Validation:
+
+```bash
+pnpm --filter @dynecho/web exec vitest run \
+  features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.test.ts \
+  features/workbench-rebuild/workbench-v2-calculator-assistant.test.ts \
+  features/workbench-rebuild/workbench-v2-calculator-assistant-ui.test.ts \
+  features/workbench-rebuild/report-editor-project-context.test.ts \
+  --maxWorkers=1
+```
+
+### Slice 8D - Calculator-Control Candidate Preview
+
+Label:
+
+```text
+report_assistant_calculator_control_candidate_preview_v1
+```
+
+Status:
+
+- Locally implemented for one generated calculator-page candidate at a time.
+- Candidate cards expose `Preview` and `Use` actions. `Preview` sends a
+  temporary candidate snapshot to the existing calculator-preview route without
+  mutating the visible layer table. `Use` applies the candidate layers back to
+  the visible calculator draft through the undo-backed layer-stack path.
+- Generated candidates carry a source layer-stack signature so stale candidate
+  preview/apply attempts are blocked after the visible calculator layers change.
+- This slice does not yet store a multi-candidate comparison table.
+
+User-facing gap:
+
+- Generated candidate stacks are visible. The user needs a safe way to run a
+  selected candidate through the calculator or apply it to the current
+  calculator draft without letting the assistant invent values.
+
+Fail-first tests:
+
+- generated candidate stacks expose preview/use controls in the calculator UI;
+- previewing a candidate uses the existing calculator preview route with a
+  temporary candidate snapshot and does not mutate the current visible stack;
+- applying a candidate uses the undo-backed layer-stack mutation path;
+- stale candidate preview/apply attempts are blocked after the visible layer
+  stack changes;
+- `bu Rw çok mu yüksek, internetten bak` routes to advisory research and keeps
+  the calculator value as calculator authority;
+- `pdf indir` remains an explicit export/download action and does not mutate
+  calculator state unless the user also gave a calculator command.
+
+Acceptance:
+
+- Candidate values are calculator-backed, not model-ranked.
+- Candidate preview/apply is guarded by the source layer-stack signature.
+- Candidate apply does not persist project/report state.
+- Research can advise plausibility but cannot replace calculator authority.
+- Download/export commands are explicit and separated from calculator state
+  mutation.
+- Engine files, formula routes, source rows, and metric aliases are untouched.
+
+Remaining follow-up:
+
+- Batch preview all generated candidate stacks into comparison rows and block
+  ranking until every visible candidate has calculator-backed rows for the
+  requested metric.
+
+### Slice 8E - Calculator-Control Candidate Batch Comparison Rows
+
+Label:
+
+```text
+report_assistant_calculator_control_candidate_batch_compare_v1
+```
+
+Status:
+
+- Locally implemented in the calculator-page assistant panel.
+- Generated candidate stacks now expose a `Preview all` action. Ready candidates
+  are sent one at a time through the existing calculator-preview route using
+  temporary Workbench snapshots; candidate rows with missing stack-command tasks
+  stay as `needs_input` rows and are not given inherited values.
+- Comparison rows show calculator output rows returned by the preview route,
+  candidate-scoped task rows, and per-candidate route status. Ranking is shown
+  only when every visible candidate has a live numeric row for the first
+  selected metric.
+
+Closed user-facing gap:
+
+- The calculator page can now generate candidates, preview/apply one candidate
+  at a time, and run every generated candidate into a bounded
+  calculator-backed comparison table.
+
+Acceptance:
+
+- Batch preview runs generated candidates sequentially through the existing
+  calculator-preview route.
+- Each candidate row shows calculator-backed outputs only when the route returns
+  live rows; incomplete candidates stay as task rows.
+- Ranking is absent unless every visible candidate has a calculator-backed row
+  for the requested metric.
+- No model-ranked values, no engine changes, no saved project mutation.
+
+Validation:
+
+```bash
+pnpm --dir apps/web exec vitest run \
+  features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.test.ts \
+  features/workbench-rebuild/workbench-v2-calculator-assistant-ui.test.ts \
+  --maxWorkers=1
+```
+
+Passed with 2 files / 17 tests.
+
+```bash
+pnpm --dir apps/web exec sh -lc 'vitest run features/workbench/report-assistant*.test.ts features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant*.test.ts features/workbench-rebuild/report-editor-project-context.test.ts --maxWorkers=1'
+```
+
+Passed with 38 files / 288 tests.
+
+TypeScript note:
+
+- Project-level web TypeScript remains blocked only by the unrelated dirty
+  engine file `packages/engine/src/calculate-assembly.ts` readonly
+  `advancedWall.targetOutputs` issue.
+
+### Slice 8F - Ready Floor/Impact Calculator Preview
+
+Label:
+
+```text
+report_assistant_floor_impact_ready_preview_v1
+```
+
+User-facing gap:
+
+- The assistant can already capture floor/impact route inputs in a draft, but a
+  complete owned floor/impact draft still needs a deterministic calculator
+  preview handoff before it can show numeric rows.
+
+Files allowed to touch:
+
+- `apps/web/features/workbench-rebuild/workbench-v2-calculator-assistant.ts`;
+- `apps/web/features/workbench-rebuild/workbench-v2-calculator-assistant.test.ts`;
+- `apps/web/features/workbench-rebuild/workbench-v2-calculator-assistant-route.test.ts`;
+- `apps/web/features/workbench/report-assistant-layer-stack-draft.ts` and
+  `apps/web/features/workbench/report-assistant-layer-stack-draft*.test.ts`
+  only if a draft validation/context field bridge is missing.
+
+Files and behavior not allowed:
+
+- no `packages/engine/src/**` changes;
+- no source-row import, formula retune, metric alias promotion, or calculator
+  route ownership change;
+- no saved project/report/preset mutation;
+- no natural-language fallback number if calculator preview does not return a
+  numeric row.
+
+Implementation steps:
+
+1. Add fail-first tests around `previewReportAssistantLayerStackDraft` for the
+   complete owned floor/impact cases before changing runtime code.
+2. Convert ready floor/impact drafts into temporary Workbench V2 snapshots using
+   the existing draft-to-Workbench mapping path.
+3. Carry `dynamicStiffnessMNm3`, `loadBasisKgM2`, impact receiving room volume,
+   field/lab context, and target metric basis into the existing calculator
+   preview payload.
+4. Return `needs_input` if any route-required physical input is missing.
+5. Return `unsupported` for physically unowned metric/basis combinations.
+6. Mark every numeric result as calculator-backed and preserve the preview
+   route/basis metadata already used by wall previews.
+
+Fail-first tests:
+
+- complete owned `Ln,w` floor draft returns calculator-backed rows;
+- complete owned `L'nT,50` draft carries field context and room volume;
+- missing dynamic stiffness/load basis blocks `AIIC`/`IIC` numeric rows;
+- unsupported basis remains unsupported with no substituted metric.
+- requesting `Rw`/`STC` alongside impact metrics does not cause a hidden metric
+  alias or family substitution.
+
+Stop conditions:
+
+- If a needed physical input is not represented in the draft schema or
+  Workbench V2 context, stop and add a schema/context-command plan instead of
+  smuggling the value through prose.
+- If the calculator preview returns `unsupported`, surface `unsupported` with
+  route/basis detail and do not retry through a different metric.
+- If a test requires changing `packages/engine/src/**`, stop and split the work;
+  this assistant slice is not an engine slice.
+
+Validation:
+
+```bash
+pnpm --filter @dynecho/web exec vitest run \
+  features/workbench/report-assistant-layer-stack-draft.test.ts \
+  features/workbench/report-assistant-layer-stack-draft-continuation.test.ts \
+  features/workbench-rebuild/workbench-v2-calculator-assistant.test.ts \
+  features/workbench-rebuild/workbench-v2-calculator-assistant-route.test.ts \
+  --maxWorkers=1
+```
+
+Then rerun the broad assistant checkpoint suite:
+
+```bash
+pnpm --dir apps/web exec sh -lc 'vitest run features/workbench/report-assistant*.test.ts features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant*.test.ts features/workbench-rebuild/report-editor-project-context.test.ts --maxWorkers=1'
+```
+
+Do not use project-level web TypeScript failure in the unrelated dirty engine
+file `packages/engine/src/calculate-assembly.ts` as a reason to edit engine
+code from this slice.
+
+Slice 8F landed checkpoint - 2026-06-19:
+
+- Ready floor impact layer-stack drafts now run through
+  `previewReportAssistantLayerStackDraft` into calculator-backed `Ln,w` rows
+  when dynamic stiffness and load basis are explicit.
+- Floor layer-stack draft previews now retain the floor parser label instead of
+  being reported as wall parser output.
+- Field impact drafts carry receiving-room volume into the calculator preview
+  payload, but `L'nT,50` still stays `needs_input` when the calculator asks for
+  route-required `CI`/`CI,50-2500` context. No value is fabricated.
+- ASTM `AIIC`/`IIC` requests stay pending until physical inputs are explicit and
+  remain `unsupported` when the current calculator route does not own the ASTM
+  basis. `Rw`/`STC` companions are not used to fabricate impact rows.
+- Report-assistant structured draft continuation now covers a ready floor
+  impact draft and returns calculator-backed `Ln,w` through the existing query
+  route without mutating Workbench/report state.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec vitest run features/workbench/report-assistant-layer-stack-draft.test.ts features/workbench/report-assistant-layer-stack-draft-continuation.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant-route.test.ts features/workbench/report-assistant-query-route.test.ts --maxWorkers=1`
+  with 5 files / 51 tests.
+- Validation passed:
+  `pnpm --dir apps/web exec sh -lc 'vitest run features/workbench/report-assistant*.test.ts features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant*.test.ts features/workbench-rebuild/report-editor-project-context.test.ts --maxWorkers=1'`
+  with 38 files / 294 tests.
+- Targeted ESLint and `git diff --check` passed on the touched assistant/doc
+  files.
+- Current selected next action:
+  `report_assistant_calculator_context_field_commands_v1`.
+
+### Slice 8G - Calculator Context-Field Commands
+
+Label:
+
+```text
+report_assistant_calculator_context_field_commands_v1
+```
+
+User-facing gap:
+
+- A user should be able to say things like "dynamic stiffness 15 MN/m3",
+  "load basis 120 kg/m2", "support spacing 600 mm", "receiving room 50 m3",
+  or "field/building mode" and see the calculator inputs update directly.
+- The assistant still must not answer with a self-produced acoustic value; it
+  only fills explicit calculator inputs and then asks the calculator to preview.
+
+Files allowed to touch:
+
+- `apps/web/features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.ts`;
+- `apps/web/features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.test.ts`;
+- `apps/web/features/workbench-rebuild/calculator-workbench.tsx` only for
+  wiring `contextPatch` through the existing undo/assistant state path;
+- `apps/web/features/workbench-rebuild/workbench-v2-calculator-assistant-ui.test.ts`.
+
+Command contract:
+
+- Parse only explicit, known context fields into
+  `Partial<WorkbenchV2ContextDraft>`.
+- Initial field set: `supportSpacingMm`,
+  `resilientLayerDynamicStiffnessMNm3`, `loadBasisKgM2`,
+  `impactReceivingRoomVolumeM3`, `receivingRoomVolumeM3`,
+  `buildingPredictionOutputBasis`, `airborneMode`, `ciDb`, `ci50_2500Db`,
+  `fieldKDb`, and any existing field/lab selector already represented in
+  Workbench V2 context.
+- Validate positive numeric values for physical inputs before applying a patch;
+  allow finite signed `CI`, `CI,50-2500`, and field `K` values because those
+  acoustic correction terms can be negative.
+- Reject ambiguous commands that mix an unknown field with a number.
+- Keep context-only commands separate from layer mutation commands in result
+  tasks so the UI can explain exactly what changed.
+
+Fail-first tests:
+
+- Turkish and English commands update `supportSpacingMm`,
+  `resilientLayerDynamicStiffnessMNm3`, `loadBasisKgM2`, and room volume.
+- A command that sets dynamic stiffness and then previews an impact stack uses
+  the patched context in the preview call.
+- Negative, zero, unitless ambiguous, or unknown context fields are rejected.
+- Context updates do not mutate layers, selected outputs, saved project state,
+  source rows, or engine code.
+
+Acceptance:
+
+- The user can fill route-required inputs from the calculator assistant command
+  box and see the visible calculator form reflect those inputs.
+- Preview rows still come only from calculator preview after the context patch.
+- Stale candidate previews/apply paths include the current context signature so
+  old candidate rows cannot silently reuse outdated physical inputs.
+
+Validation:
+
+```bash
+pnpm --dir apps/web exec vitest run \
+  features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.test.ts \
+  features/workbench-rebuild/workbench-v2-calculator-assistant-ui.test.ts \
+  --maxWorkers=1
+```
+
+Slice 8G landed checkpoint - 2026-06-19:
+
+- Calculator-page assistant commands now parse explicit context-field commands
+  without layer mutation: `support spacing 600 mm`, `dynamic stiffness 15`,
+  `load basis 200`, `room volume 50`, `building mode`, `apparent basis`, `CI
+  -1`, `CI,50-2500 4`, and field `K` style inputs.
+- Context-only commands return `commandKind: "set_context"` with a typed
+  `contextPatch`; layer rows, selected outputs, saved project state, source
+  rows, and engine code are not touched.
+- Commands that include preview intent, such as `dynamic stiffness 15 ... ve
+  hesapla`, update the calculator context first and send a patched Workbench V2
+  snapshot to the existing calculator-preview route, so the preview uses the new
+  physical inputs.
+- Unknown numeric context commands such as `density 50 gir` are rejected instead
+  of guessed, and invalid physical inputs such as negative dynamic stiffness are
+  blocked before any patch is applied.
+- Validation passed:
+  `pnpm --dir apps/web exec vitest run features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant-ui.test.ts --maxWorkers=1`
+  with 2 files / 23 tests.
+- Validation passed:
+  `pnpm --dir apps/web exec sh -lc 'vitest run features/workbench/report-assistant*.test.ts features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant*.test.ts features/workbench-rebuild/report-editor-project-context.test.ts --maxWorkers=1'`
+  with 38 files / 300 tests.
+- Targeted ESLint and `git diff --check` passed on the touched assistant/doc
+  files.
+- Current selected next action:
+  `report_assistant_explicit_export_download_boundaries_v1`.
+
+### Slice 8H - Explicit Export/Download Boundaries
+
+Label:
+
+```text
+report_assistant_explicit_export_download_boundaries_v1
+```
+
+User-facing gap:
+
+- Users may ask the assistant to export, download, or prepare a PDF after a
+  calculator-backed preview, but the assistant needs explicit intent and
+  snapshot boundaries before any browser-side export action is offered.
+
+Files allowed to touch:
+
+- `apps/web/features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.ts`
+  only if export/download intent parsing belongs beside calculator control
+  commands;
+- `apps/web/features/workbench/report-assistant-action-proposal.ts`;
+- `apps/web/features/workbench/report-assistant-action-proposal.test.ts`;
+- result-card model/render tests if a new confirmation card is needed.
+
+Rules:
+
+- Export/download is never implied by "calculate", "preview", "PDF", or
+  "compare combinations"; it requires explicit command wording such as
+  "download", "export", "PDF indir", or "dışa aktar".
+- The proposed export must name the current snapshot signature, selected
+  outputs, and whether it contains calculator-backed rows, task rows, or
+  advisory research text.
+- No automatic browser download starts from model text alone. The UI must show a
+  confirmation or an explicit export button tied to the current snapshot.
+- If calculator rows are stale or missing, the export proposal must say so and
+  must not label advisory text as a calculator result.
+
+Fail-first tests:
+
+- "preview this" does not create an export/download proposal.
+- "calculate and download PDF" creates a confirmation-required export proposal
+  after the current calculator/report snapshot is identified.
+- Stale calculator rows block export-as-calculator-result labeling.
+- Report-assistant advisory research cannot be exported as a calculator result
+  without a calculator-backed snapshot.
+
+Validation:
+
+```bash
+pnpm --dir apps/web exec vitest run \
+  features/workbench/report-assistant-action-proposal.test.ts \
+  features/workbench/report-assistant-result-card-model.test.ts \
+  features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.test.ts \
+  --maxWorkers=1
+```
+
+Slice 8H landed checkpoint - 2026-06-19:
+
+- `export_current_report_snapshot_as_pdf` is now a supported action proposal
+  only when the instruction explicitly says download/export/indir/dışa aktar
+  style wording. Plain preview/calculate/compare wording and bare `PDF` mentions
+  do not imply export.
+- The proposal is preview-only and confirmation-required. It points at the
+  existing `/api/proposal-pdf` route with placeholder `current_report_document`
+  payload metadata; no browser download starts from assistant/model text alone.
+- The report assistant planner now routes explicit export/download requests to
+  `export_current_report_snapshot_as_pdf`, while destructive mixed requests such
+  as delete/export remain unsupported before any route can run.
+- The action-proposal route now follows the same explicit-command boundary, so
+  direct route inference rejects bare `PDF` wording instead of preparing a
+  download proposal.
+- The report editor now accepts only the explicit PDF export proposal shape,
+  shows the export snapshot, selected outputs, and export content categories,
+  checks both document and assistant-context stale guards, and then calls the
+  existing local PDF exporter only after user confirmation.
+- The proposal target records `exportSnapshotSignature`, `selectedOutputs`,
+  `exportContentKinds`, calculator-backed row count, task row count, and warning
+  count so the UI can show exactly what would be exported before confirmation.
+- Dirty/stale calculator rows are excluded from
+  `calculator_backed_rows` labeling. Advisory/research export requests remain
+  `advisory_research_text` and cannot become calculator results without a
+  current calculator-backed snapshot.
+- Runtime status now exposes six confirmation-required action proposals,
+  including `export_current_report_snapshot_as_pdf`.
+- Validation passed:
+  `pnpm --dir apps/web exec vitest run features/workbench/report-assistant-action-proposal.test.ts features/workbench/report-assistant-result-card-model.test.ts features/workbench/report-assistant-runtime-status.test.ts features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.test.ts --maxWorkers=1`
+  with 4 files / 52 tests.
+- Validation passed:
+  `pnpm --dir apps/web exec vitest run features/workbench/report-assistant-planner.test.ts features/workbench/report-assistant-planner-evals.test.ts features/workbench/report-assistant-action-proposal.test.ts features/workbench-rebuild/report-editor-project-context.test.ts --maxWorkers=1`
+  with 4 files / 52 tests.
+- Validation passed:
+  `pnpm --dir apps/web exec sh -lc 'vitest run features/workbench/report-assistant*.test.ts features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant*.test.ts features/workbench-rebuild/report-editor-project-context.test.ts --maxWorkers=1'`
+  with 38 files / 310 tests.
+- Current selected next action:
+  `report_assistant_workbench_apply_proposal_contract_v1`.
+
+### Slice 9A - Report Assistant Apply Proposal Contract
+
+Label:
+
+```text
+report_assistant_workbench_apply_proposal_contract_v1
+```
+
+User-facing gap:
+
+- The calculator-page assistant can apply local stack commands, but the report
+  assistant thread cannot yet produce a confirmation-required Workbench stack
+  apply proposal from a ready draft.
+
+Files to add:
+
+- `apps/web/features/workbench/report-assistant-workbench-apply-proposal.ts`;
+- `apps/web/features/workbench/report-assistant-workbench-apply-proposal.test.ts`.
+
+Files allowed to touch:
+
+- `apps/web/features/workbench/report-assistant-action-proposal.ts`;
+- `apps/web/features/workbench/report-assistant-action-proposal.test.ts`;
+- `apps/web/features/workbench/report-assistant-result-contract.ts`;
+- `apps/web/features/workbench/report-assistant-result-card-model.ts`.
+
+Contract fields:
+
+- source draft id and context signature;
+- target Workbench snapshot signature;
+- exact layer diff;
+- selected outputs diff;
+- context patch diff;
+- calculator preview summary and basis;
+- `requiresConfirmation: true`;
+- stale guard fields.
+
+Acceptance:
+
+- proposal is non-mutating and preview-only;
+- exact stack diff is visible without reading natural-language prose;
+- stale source/target signatures reject proposal creation;
+- no saved project/report/preset mutation is bundled into this action.
+
+Slice 9A landed checkpoint - 2026-06-19:
+
+- `report_assistant_workbench_apply_proposal_contract_v1` is locally landed as a
+  pure assistant/workbench contract.
+- Added
+  `apps/web/features/workbench/report-assistant-workbench-apply-proposal.ts`
+  and
+  `apps/web/features/workbench/report-assistant-workbench-apply-proposal.test.ts`.
+- The proposal action is `apply_layer_stack_draft_to_workbench`, but the result
+  is still `mutates: false`, `previewOnly: true`, and
+  `requiresConfirmation: true`; it does not execute browser state writes.
+- Proposal creation requires the source draft context signature and target
+  Workbench snapshot signature to match. Stale source or target signatures fail
+  before any proposal is built.
+- Ready drafts produce exact proposed Workbench layers, selected outputs, and
+  context patch fields, plus visible layer diff, selected-output diff, and
+  context diff rows.
+- The proposal carries calculator preview summary and basis metadata when
+  available, but absent or non-ready previews remain warnings and do not create
+  calculator-backed numeric authority.
+- The capability registry now includes
+  `report_assistant_workbench_apply_proposal` as a route-less, model-hidden,
+  non-mutating confirmation-required action-proposal card capability.
+- No engine files, formula routes, source rows, saved project/report/preset
+  writes, report-editor confirmation behavior, or browser Workbench state
+  mutation behavior changed in this slice.
+- Validation passed:
+  `pnpm --dir apps/web exec vitest run features/workbench/report-assistant-workbench-apply-proposal.test.ts features/workbench/report-assistant-result-card-model.test.ts features/workbench/report-assistant-capabilities.test.ts --maxWorkers=1`
+  with 3 files / 16 tests.
+- Current selected next action:
+  `report_assistant_workbench_confirmed_apply_v1`.
+
+### Slice 9B - Confirmed Browser Workbench Apply
+
+Label:
+
+```text
+report_assistant_workbench_confirmed_apply_v1
+```
+
+Files allowed to touch:
+
+- `apps/web/features/workbench-rebuild/calculator-workbench.tsx`;
+- `apps/web/features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.ts`
+  only if a reusable apply helper is needed;
+- `apps/web/features/workbench-rebuild/workbench-v2-calculator-assistant-ui.test.ts`;
+- report editor only if a same-tab pending apply handoff already exists.
+
+Acceptance:
+
+- confirmation writes only unsaved browser Workbench draft state;
+- apply uses `commitLayerStackChange` or an equivalent undo-backed path;
+- cancellation leaves layer state unchanged;
+- stale apply returns a typed stale/error card;
+- no engine, source row, saved report, saved project, or preset write happens.
+
+Stop condition:
+
+- If the report editor and Workbench page cannot share a safe current snapshot
+  signature in the same browser context, stop at proposal/export-to-Workbench
+  handoff. Do not silently mutate an unseen Workbench page.
+
+Slice 9B landed checkpoint - 2026-06-19:
+
+- `report_assistant_workbench_confirmed_apply_v1` is locally landed for the
+  calculator page's pending typed proposal path.
+- Added
+  `apps/web/features/workbench/report-assistant-workbench-confirmed-apply.ts`
+  and
+  `apps/web/features/workbench/report-assistant-workbench-confirmed-apply.test.ts`.
+- `confirmReportAssistantWorkbenchApplyProposal` rejects malformed proposals,
+  stale target Workbench signatures, and user cancellation before any apply
+  callback runs.
+- `apps/web/features/workbench-rebuild/calculator-workbench.tsx` now has a
+  confirmed apply adapter for `ReportAssistantWorkbenchApplyProposal`: it
+  recomputes the visible Workbench snapshot signature, asks `window.confirm`,
+  then applies only the unsaved browser draft through `commitLayerStackChange`,
+  `setSelectedOutputs`, and context patch state.
+- The pending proposal card displays the typed layer diff and selected-output
+  target. `Dismiss` closes the proposal without changing calculator state.
+- This slice does not create a report-editor to Workbench handoff because the
+  repo has no safe same-browser current Workbench snapshot channel yet. It
+  intentionally does not silently mutate an unseen Workbench page.
+- No engine files, formula routes, source rows, saved project/report/preset
+  writes, provider/research routes, or report-editor saved state changed.
+- Validation passed:
+  `pnpm --dir apps/web exec vitest run features/workbench/report-assistant-workbench-confirmed-apply.test.ts features/workbench/report-assistant-workbench-apply-proposal.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant-ui.test.ts --maxWorkers=1`
+  with 3 files / 15 tests.
+- Current selected next action:
+  `report_assistant_golden_eval_matrix_v1`.
+
+### Slice 10A - Repo-Local Golden Assistant Evals
+
+Label:
+
+```text
+report_assistant_golden_eval_matrix_v1
+```
+
+Files to add:
+
+- `apps/web/features/workbench/report-assistant-golden-evals.ts`;
+- `apps/web/features/workbench/report-assistant-golden-evals.test.ts`;
+- optional fixtures under
+  `apps/web/features/workbench/__fixtures__/report-assistant-golden-evals.ts`.
+
+Required eval families:
+
+- complete calculator-owned wall stack;
+- incomplete wall stack;
+- wall candidate comparison;
+- floor/impact missing physical inputs;
+- unsupported metric/basis;
+- action proposal confirmation;
+- prompt injection;
+- untrusted saved-report/provider text;
+- stale draft replay;
+- invented capability/tool name;
+- fabricated calculator value prevention.
+
+Acceptance:
+
+- each eval asserts selected capability, route status, authority, source trace,
+  basis presence or absence, confirmation posture, and expected lack of numeric
+  rows when blocked;
+- score must be exactly 1.0 for deterministic local evals before the slice
+  closes.
+
+Slice 10A landed checkpoint - 2026-06-19:
+
+- `report_assistant_golden_eval_matrix_v1` is locally landed.
+- Added `apps/web/features/workbench/report-assistant-golden-evals.ts` and
+  `apps/web/features/workbench/report-assistant-golden-evals.test.ts`.
+- The matrix contains 11 deterministic repo-local eval families:
+  complete calculator-owned wall stack, incomplete wall stack, wall candidate
+  comparison, floor/impact missing physical inputs, unsupported metric/basis,
+  action proposal confirmation, prompt injection, untrusted saved-report/provider
+  text, stale draft replay, invented capability/tool name, and fabricated
+  calculator value prevention.
+- Successful numeric cases are accepted only when `authority:
+  calculator_backed`, basis rows, and `calculator_preview` source traces are
+  present.
+- Blocked, `needs_input`, `unsupported`, stale, invented-capability, and
+  fabricated-value cases assert `basisCount: 0` and no visible numeric rows.
+- The PDF/export action eval asserts confirmation-required proposal posture
+  instead of treating download as an automatic side effect.
+- No engine files, formula routes, source rows, saved project/report/preset
+  writes, provider/research behavior, or browser Workbench state mutation
+  behavior changed in this slice.
+- Validation passed:
+  `pnpm --dir apps/web exec vitest run features/workbench/report-assistant-golden-evals.test.ts --maxWorkers=1`
+  with 1 file / 4 tests.
+- Current selected next action:
+  `report_assistant_redacted_trace_events_v1`.
+
+### Slice 10B - Redacted Trace/Event Boundary
+
+Label:
+
+```text
+report_assistant_redacted_trace_events_v1
+```
+
+Files allowed to touch:
+
+- new trace/event helper under `apps/web/features/workbench/`;
+- route adapters that already produce result envelopes;
+- tests for redaction and event shape.
+
+Event fields:
+
+- request id;
+- selected capability;
+- result kind and renderer kind;
+- authority;
+- route status;
+- source trace ids, not full source bodies;
+- validation status;
+- confirmation/rejection/stale status;
+- redaction status.
+
+Acceptance:
+
+- no secrets, API keys, full report bodies, or full provider transcripts are
+  persisted;
+- failure events are emitted through the same typed path as success events;
+- trace data is enough to debug wrong tool selection without reading model
+  prose.
+
+Slice 10B landed checkpoint - 2026-06-19:
+
+- `report_assistant_redacted_trace_events_v1` is locally landed as a pure,
+  tested trace-event boundary.
+- Added
+  `apps/web/features/workbench/report-assistant-redacted-trace-events.ts` and
+  `apps/web/features/workbench/report-assistant-redacted-trace-events.test.ts`.
+- `createReportAssistantRedactedTraceEvent` accepts a typed assistant result
+  envelope and emits a small event with request id, selected capability,
+  result/renderer kind, authority, route status, validation status,
+  confirmation status, source-trace refs, task codes, basis metric ids, counts,
+  and redaction status.
+- The event intentionally does not include user prompt text, report/document
+  bodies, provider transcripts, source-trace label/detail text, evidence detail,
+  task messages, warning text, confidence prose, or numeric value labels.
+- Success, failure, confirmation-required, rejected confirmation, and invalid
+  envelope cases use the same event helper path.
+- This slice does not add a runtime persistence sink or global route response
+  field yet. If needed, the next slice should wire only these already-redacted
+  events into route responses or bounded storage.
+- No engine files, formula routes, source rows, calculator output behavior,
+  saved project/report/preset writes, provider/research behavior, or browser
+  Workbench mutation behavior changed.
+- Validation passed:
+  `pnpm --dir apps/web exec vitest run features/workbench/report-assistant-redacted-trace-events.test.ts --maxWorkers=1`
+  with 1 file / 5 tests.
+- Current selected next action:
+  `report_assistant_trace_event_route_wiring_v1` only if runtime collection is
+  needed; otherwise this is a clean checkpoint.
+
 Gate 3 implementation-ready checklist:
 
 - Introduce `assistantResults` on `AssistantMessage` without removing
@@ -1154,7 +2426,7 @@ Local implementation checkpoint - 2026-06-18:
 Planner eval refresh checkpoint - 2026-06-18:
 
 - Added `report-assistant-planner-evals.ts` as a local deterministic analogue
-  of a trace/eval pack. It captures 20 production-shaped planner examples and
+  of a trace/eval pack. It captures 25 production-shaped planner examples and
   scores expected `mode`, `targetCapability`, `requiresClarification`,
   `allowedTools`, `usedSignals`, clarification fragments, and rejection reasons.
 - Added `report-assistant-planner-evals.test.ts` to require a 1.0 local planner
@@ -1166,6 +2438,14 @@ Planner eval refresh checkpoint - 2026-06-18:
 - Current eval family coverage: `calculator_ready`, `calculator_needs_input`,
   `patch_preview`, `action_confirmation`, `research_review`, `project_read`,
   `prompt_injection`, `host_allowlist`, and `unsupported_side_effect`.
+- Trace/parity refresh cases now cover mixed English/Turkish calculator prompts
+  with comma decimals, Turkish comparison/alternative wording, unsupported
+  apply/reset wording, Turkish prompt-injection wording, and calculator-preview
+  host allowlist blocking.
+- Planner research detection now treats Turkish `karşılaştır`/`kıyasla` and
+  `alternatif` wording as read-only research/alternative intent before
+  calculator preview. This keeps multi-candidate prompts out of single-stack
+  preview until Gate 7 owns calculator-backed candidate comparison.
 - Validation passed:
   `pnpm --filter @dynecho/web exec vitest run features/workbench/report-assistant-planner-evals.test.ts features/workbench/report-assistant-planner.test.ts features/workbench-rebuild/report-editor-project-context.test.ts features/workbench/report-assistant-action-proposal.test.ts features/workbench/report-assistant-editor-workflow.test.ts --maxWorkers=1`
   with 5 files / 46 tests.
@@ -1174,6 +2454,38 @@ Planner eval refresh checkpoint - 2026-06-18:
 - The broader assistant checkpoint suite passed with 32 files / 231 tests.
 - `pnpm --filter @dynecho/web exec tsc --noEmit --pretty false --project tsconfig.json`
   later became green after the fixture type-refresh checkpoint below.
+
+Gate 4 trace/parity completion checkpoint - 2026-06-18:
+
+- Added a calculator-preview route regression for described floor/impact
+  requests. A prompt such as `120 mm concrete floor + 30 mm rockwool için Ln,w
+  ve AIIC hesapla` now stays `needs_input`, returns pending `--` rows, exposes
+  `unsupported-described-floor-configuration`, and publishes no numeric basis.
+- The planner eval guard list now explicitly includes every unsafe/incomplete
+  case that must not be scored as calculator-ready: incomplete calculator
+  prompts, unsupported side effects, prompt injection, host-disallowed action
+  proposals, and host-disallowed calculator preview.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec vitest run features/workbench/report-assistant-planner-evals.test.ts features/workbench/report-assistant-planner.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant-route.test.ts --maxWorkers=1`
+  with 3 files / 18 tests.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec tsc --noEmit --pretty false --project tsconfig.json`.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec sh -lc 'vitest run features/workbench/report-assistant*.test.ts --maxWorkers=1'`
+  with 28 files / 205 tests.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec vitest run features/workbench-rebuild/workbench-v2-calculator-assistant-route.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant-ui.test.ts features/workbench-rebuild/report-editor-project-context.test.ts --maxWorkers=1`
+  with 4 files / 27 tests.
+
+Gate 4 local status:
+
+- `report_assistant_gate_4_trace_parity_eval_refresh` is locally landed for the
+  current deterministic assistant slice.
+- Current selected next action:
+  `report_assistant_layer_stack_draft_v1`.
+- Do not start Gate 5 by changing parser output behavior first. Start with the
+  typed draft schema and validators, then adapt the existing described-wall
+  parser into that schema after invalid/incomplete drafts are covered.
 
 Green fixture/type-refresh checkpoint - 2026-06-18:
 
@@ -1335,6 +2647,119 @@ pnpm --filter @dynecho/web exec vitest run \
 
 Gate 5 is complete only when incomplete drafts cannot produce numeric output.
 
+Schema-first implementation checkpoint - 2026-06-18:
+
+- Added `apps/web/features/workbench/report-assistant-layer-stack-draft.ts`
+  without integrating it into calculator execution yet.
+- The draft model now has enum-bounded `mode`, source, layer role,
+  missing-input category, wall topology, floor/impact required physical inputs,
+  original phrases, context signature, requested outputs, assumptions, warnings,
+  and last-preview metadata.
+- `validateReportAssistantLayerStackDraft` returns `ready` only when layers,
+  normalized material ids, positive mm thicknesses, roles, target outputs, wall
+  topology/mapping, and route-required floor/impact physical inputs are present.
+  Otherwise it returns typed missing inputs plus minimal clarification
+  questions.
+- Added `apps/web/features/workbench/report-assistant-layer-stack-draft.test.ts`
+  with coverage for:
+  - complete wall stack readiness;
+  - original phrase preservation in material clarification;
+  - missing thickness, role, and target outputs;
+  - double-leaf side/cavity mapping;
+  - missing floor/impact dynamic stiffness, load basis, and metric basis;
+  - ready floor impact draft after those required inputs are explicit.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec vitest run features/workbench/report-assistant-layer-stack-draft.test.ts --maxWorkers=1`
+  with 1 file / 6 tests.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec tsc --noEmit --pretty false --project tsconfig.json`.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec eslint features/workbench/report-assistant-layer-stack-draft.ts features/workbench/report-assistant-layer-stack-draft.test.ts features/workbench/report-assistant-planner.ts features/workbench/report-assistant-planner-evals.ts features/workbench/report-assistant-planner-evals.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant-route.test.ts`.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec vitest run features/workbench/report-assistant-layer-stack-draft.test.ts features/workbench/report-assistant-planner-evals.test.ts features/workbench/report-assistant-planner.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant-route.test.ts --maxWorkers=1`
+  with 4 files / 24 tests.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec sh -lc 'vitest run features/workbench/report-assistant*.test.ts --maxWorkers=1'`
+  with 29 files / 211 tests.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec vitest run features/workbench-rebuild/workbench-v2-calculator-assistant-route.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant-ui.test.ts features/workbench-rebuild/report-editor-project-context.test.ts --maxWorkers=1`
+  with 4 files / 27 tests.
+
+Gate 5 local status:
+
+- `report_assistant_layer_stack_draft_v1` is partially landed as the
+  schema/validator slice.
+
+Parser-adapter implementation checkpoint - 2026-06-18:
+
+- `previewDescribedLayerConfiguration` now builds a typed `layerStackDraft`
+  from the existing deterministic described-wall parser before creating a
+  temporary Workbench V2 snapshot.
+- Ready described wall drafts carry `layerStackDraft.validation.ok: true`,
+  `lastCalculatorPreview.routeStatus`, context signature, requested outputs,
+  original phrases, and parser-inferred roles alongside the existing
+  calculator-backed preview rows.
+- Parse failures now return `needs_input` with `layerStackDraft.validation`
+  metadata instead of only prose/task strings. Unknown material phrases preserve
+  the parser source phrase and expose missing material/role codes.
+- Described floor/impact requests now attach a floor draft with typed missing
+  physical inputs (`dynamic_stiffness`, `load_basis`, `target_metric_basis`)
+  while still returning pending `--` rows and no numeric basis.
+- Draft-to-snapshot conversion remains gated by `validation.ok`; incomplete
+  drafts return `needs_input` before any calculator preview can execute.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec vitest run features/workbench-rebuild/workbench-v2-calculator-assistant.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant-route.test.ts features/workbench/report-assistant-layer-stack-draft.test.ts --maxWorkers=1`
+  with 3 files / 19 tests.
+
+Gate 5 local status:
+
+- `report_assistant_layer_stack_draft_parser_adapter_v1` is locally landed for
+  described wall and described floor/impact boundary previews.
+
+Result-envelope surface checkpoint - 2026-06-18:
+
+- `calculatorPreviewToAssistantResult` now merges
+  `preview.layerStackDraft.validation.missingInputs` into result-envelope
+  tasks, deduplicated by task code.
+- Draft missing inputs are surfaced with warning severity on non-ready
+  calculator previews and do not create basis rows.
+- Described floor/impact route responses now expose both the legacy
+  `unsupported-described-floor-configuration` task and typed draft inputs such
+  as `assistant_layer_stack_empty`,
+  `assistant_floor_impact_dynamic_stiffness_missing`,
+  `assistant_floor_impact_load_basis_missing`, and
+  `assistant_floor_impact_target_metric_basis_missing`.
+- Added `apps/web/features/workbench/report-assistant-calculator-preview-result.test.ts`
+  to prove typed draft missing inputs reach the assistant result envelope
+  without numeric authority.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec vitest run features/workbench/report-assistant-calculator-preview-result.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant-route.test.ts features/workbench/report-assistant-layer-stack-draft.test.ts --maxWorkers=1`
+  with 4 files / 20 tests.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec tsc --noEmit --pretty false --project tsconfig.json`.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec eslint features/workbench/report-assistant-layer-stack-draft.ts features/workbench/report-assistant-layer-stack-draft.test.ts features/workbench/report-assistant-calculator-preview-result.ts features/workbench/report-assistant-calculator-preview-result.test.ts features/workbench/report-assistant-planner.ts features/workbench/report-assistant-planner-evals.ts features/workbench/report-assistant-planner-evals.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant.ts features/workbench-rebuild/workbench-v2-calculator-assistant.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant-route.test.ts`.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec vitest run features/workbench/report-assistant-calculator-preview-result.test.ts features/workbench/report-assistant-layer-stack-draft.test.ts features/workbench/report-assistant-planner-evals.test.ts features/workbench/report-assistant-planner.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant-route.test.ts --maxWorkers=1`
+  with 6 files / 33 tests.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec sh -lc 'vitest run features/workbench/report-assistant*.test.ts --maxWorkers=1'`
+  with 30 files / 212 tests.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec vitest run features/workbench-rebuild/workbench-v2-calculator-assistant-route.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant-ui.test.ts features/workbench-rebuild/report-editor-project-context.test.ts --maxWorkers=1`
+  with 4 files / 27 tests.
+
+Gate 5 local status:
+
+- `report_assistant_layer_stack_draft_result_envelope_surface_v1` is locally
+  landed for calculator-preview result envelopes.
+- Current selected next action:
+  `report_assistant_layer_stack_draft_clarification_state_v1`.
+- The next implementation must add bounded draft continuation state with
+  `draftId` and context signature, then merge user answers into unresolved draft
+  fields before calculator preview. It must not add autonomous Workbench apply
+  behavior.
+
 ## Gate 6 - Clarification Loop
 
 Purpose:
@@ -1377,6 +2802,451 @@ Gate 6 runbook:
 
 Gate 6 is complete only when one clarification turn can update the same draft
 and produce either a ready calculator preview or a smaller remaining task list.
+
+Bounded continuation helper checkpoint - 2026-06-18:
+
+- Added `apps/web/features/workbench/report-assistant-layer-stack-draft-continuation.ts`
+  as a schema-level merge helper. It does not parse free text and does not call
+  calculator preview.
+- Continuation answers must carry `draftId` and `contextSignature`; mismatched
+  draft ids, stale answer signatures, or changed current context signatures are
+  rejected before draft mutation.
+- Answers are accepted only when they match an unresolved typed missing input.
+  Attempts to overwrite already-complete material, thickness, role, target
+  output, topology, or floor/impact physical inputs return `invalid_answer`.
+- Supported first-pass structured answers cover missing material, thickness,
+  role, target outputs, double-leaf topology/mapping, and floor/impact dynamic
+  stiffness, load basis, room volume, field/lab context, and metric basis.
+- The helper preserves prior assumptions and original phrases, applies answer
+  batches immutably, and re-runs `validateReportAssistantLayerStackDraft` after
+  every merge.
+- Added `apps/web/features/workbench/report-assistant-layer-stack-draft-continuation.test.ts`
+  with coverage for full wall recovery, partial answer shrinkage, stale context
+  rejection, wrong draft-id rejection, completed-field mutation rejection,
+  double-leaf topology merge, and floor/impact physical input batch merge.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec vitest run features/workbench/report-assistant-layer-stack-draft-continuation.test.ts features/workbench/report-assistant-layer-stack-draft.test.ts --maxWorkers=1`
+  with 2 files / 13 tests.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec tsc --noEmit --pretty false --project tsconfig.json`.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec eslint features/workbench/report-assistant-layer-stack-draft.ts features/workbench/report-assistant-layer-stack-draft.test.ts features/workbench/report-assistant-layer-stack-draft-continuation.ts features/workbench/report-assistant-layer-stack-draft-continuation.test.ts features/workbench/report-assistant-calculator-preview-result.ts features/workbench/report-assistant-calculator-preview-result.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant.ts features/workbench-rebuild/workbench-v2-calculator-assistant.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant-route.test.ts`.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec vitest run features/workbench/report-assistant-layer-stack-draft-continuation.test.ts features/workbench/report-assistant-layer-stack-draft.test.ts features/workbench/report-assistant-calculator-preview-result.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant-route.test.ts --maxWorkers=1`
+  with 5 files / 27 tests.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec sh -lc 'vitest run features/workbench/report-assistant*.test.ts --maxWorkers=1'`
+  with 31 files / 219 tests.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec vitest run features/workbench-rebuild/workbench-v2-calculator-assistant-route.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant-ui.test.ts features/workbench-rebuild/report-editor-project-context.test.ts --maxWorkers=1`
+  with 4 files / 27 tests.
+
+Gate 6 local status:
+
+- `report_assistant_layer_stack_draft_clarification_state_v1` is locally landed
+  as the pure helper/validator slice.
+
+Route handoff checkpoint - 2026-06-18:
+
+- The report-assistant query route now accepts an optional structured
+  `draftContinuation` payload. The route parses `draft`, `answers`, and
+  `currentContextSignature` before invoking query logic.
+- Parsed continuation requests run before natural-language mutation-intent
+  detection, because they are read-only structured draft merges rather than
+  Workbench/report apply operations.
+- Successful partial continuations return a `needs_input` query envelope with a
+  smaller typed task list and no `calculatorPreview`.
+- Stale continuation context returns HTTP 409 with
+  `stale_report_assistant_layer_stack_draft`, a typed `stale` assistant result,
+  and no calculator preview.
+- Invalid continuation payloads are rejected with
+  `invalid_report_assistant_layer_stack_draft_continuation` before merge logic
+  runs.
+- Added query-route coverage for structured material-answer merge and stale
+  context rejection.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec vitest run features/workbench/report-assistant-query-route.test.ts features/workbench/report-assistant-layer-stack-draft-continuation.test.ts --maxWorkers=1`
+  with 2 files / 17 tests.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec tsc --noEmit --pretty false --project tsconfig.json`.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec eslint app/api/report-assistant/query/route.ts features/workbench/report-assistant-query.ts features/workbench/report-assistant-query-route.test.ts features/workbench/report-assistant-layer-stack-draft-continuation.ts features/workbench/report-assistant-layer-stack-draft-continuation.test.ts`.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec vitest run features/workbench/report-assistant-query-route.test.ts features/workbench/report-assistant-layer-stack-draft-continuation.test.ts features/workbench/report-assistant-query.test.ts features/workbench/report-assistant-request-client.test.ts --maxWorkers=1`
+  with 3 files / 29 tests.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec sh -lc 'vitest run features/workbench/report-assistant*.test.ts --maxWorkers=1'`
+  with 31 files / 221 tests.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec vitest run features/workbench-rebuild/workbench-v2-calculator-assistant-route.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant-ui.test.ts features/workbench-rebuild/report-editor-project-context.test.ts --maxWorkers=1`
+  with 4 files / 27 tests.
+
+Gate 6 local status:
+
+- `report_assistant_layer_stack_draft_clarification_route_handoff_v1` is locally
+  landed for the query route.
+- `report_assistant_layer_stack_draft_editor_state_handoff_v1` is locally landed
+  for the report editor.
+- Query success payloads can now carry a top-level `layerStackDraft` so a
+  continuation response can update the editor-held draft even when it does not
+  run calculator preview.
+- Added
+  `apps/web/features/workbench/report-assistant-layer-stack-draft-editor-state.ts`
+  as the client-side bounded state helper. It extracts draft state from query
+  payloads and builds `draftContinuation` payloads only when a message can be
+  deterministically mapped to unresolved typed inputs.
+- The editor helper maps known material aliases, explicit mm thicknesses, layer
+  roles, target outputs, wall topology hints, and floor/impact physical inputs.
+  Unknown materials or ambiguous free text remain `needs_input`; no material id
+  or numeric value is invented.
+- `apps/web/features/workbench-rebuild/report-editor.tsx` now stores active
+  layer-stack draft state, clears it when the assistant context signature
+  changes, sends safe structured continuation answers through the read-only
+  query route, shows the remaining typed questions, and does not add Workbench
+  apply behavior.
+- Prompt-injection preflight still blocks before draft continuation. Side-effect
+  wording such as `uygula` can no longer turn a structured draft answer into a
+  mutating patch/action route when the answer can be safely represented as
+  `draftContinuation`.
+- Added
+  `apps/web/features/workbench/report-assistant-layer-stack-draft-editor-state.test.ts`
+  with coverage for payload extraction, wall layer material/thickness/role/output
+  continuation, unknown-material refusal, floor/impact physical inputs, and
+  local stale-context rejection.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec vitest run features/workbench/report-assistant-layer-stack-draft-editor-state.test.ts features/workbench/report-assistant-query-route.test.ts features/workbench-rebuild/report-editor-project-context.test.ts --maxWorkers=1`
+  with 3 files / 26 tests.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec tsc --noEmit --pretty false --project tsconfig.json`.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec sh -lc 'vitest run features/workbench/report-assistant*.test.ts --maxWorkers=1'`
+  with 32 files / 229 tests.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec vitest run features/workbench-rebuild/report-editor-project-context.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant-route.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant-ui.test.ts --maxWorkers=1`
+  with 4 files / 28 tests.
+- Current selected next action:
+  `report_assistant_layer_stack_draft_ready_preview_handoff_v1`.
+- The next implementation must let a ready typed draft run through calculator
+  preview without reparsing the user's prose and without adding autonomous
+  Workbench apply behavior.
+
+Ready-preview checkpoint - 2026-06-18:
+
+- Added `preview_layer_stack_draft` as a preview-only, non-mutating calculator
+  assistant tool capability.
+- Added `previewReportAssistantLayerStackDraft` to build a temporary Workbench
+  V2 snapshot from a validated typed draft, then run the existing calculator
+  preview pipeline. It attaches the original draft/validation back onto the
+  result card and preserves `lastCalculatorPreview`.
+- Query continuations that make a draft ready now run calculator preview
+  immediately and return a `preview_layer_stack_draft` `calculatorPreview`
+  response. Partial continuations still return only `needs_input`.
+- Report editor calculator-preview payload validation now allows both
+  `preview_described_layer_configuration` and `preview_layer_stack_draft`.
+- Added focused coverage proving a ready single-leaf typed draft produces live
+  `Rw`/`STC` rows without reparsing prose and that a query-route continuation
+  which completes a draft returns a calculator-backed result envelope.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec vitest run features/workbench-rebuild/workbench-v2-calculator-assistant.test.ts features/workbench/report-assistant-query-route.test.ts features/workbench-rebuild/report-editor-project-context.test.ts --maxWorkers=1`
+  with 3 files / 31 tests.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec tsc --noEmit --pretty false --project tsconfig.json`.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec eslint features/workbench/report-assistant-layer-stack-draft.ts features/workbench/report-assistant-layer-stack-draft.test.ts features/workbench/report-assistant-layer-stack-draft-continuation.ts features/workbench/report-assistant-layer-stack-draft-continuation.test.ts features/workbench/report-assistant-layer-stack-draft-editor-state.ts features/workbench/report-assistant-layer-stack-draft-editor-state.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant.ts features/workbench-rebuild/workbench-v2-calculator-assistant.test.ts features/workbench/report-assistant-query.ts features/workbench/report-assistant-query-route.test.ts features/workbench-rebuild/report-editor.tsx features/workbench-rebuild/report-editor-project-context.test.ts app/api/report-assistant/query/route.ts`.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec sh -lc 'vitest run features/workbench/report-assistant*.test.ts --maxWorkers=1'`
+  with 32 files / 229 tests.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec vitest run features/workbench-rebuild/report-editor-project-context.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant-route.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant-ui.test.ts --maxWorkers=1`
+  with 4 files / 28 tests.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec eslint features/workbench-rebuild/workbench-v2-calculator-assistant.ts features/workbench-rebuild/workbench-v2-calculator-assistant.test.ts features/workbench/report-assistant-query.ts features/workbench/report-assistant-query-route.test.ts features/workbench-rebuild/report-editor.tsx features/workbench-rebuild/report-editor-project-context.test.ts features/workbench/report-assistant-layer-stack-draft-editor-state.ts features/workbench/report-assistant-layer-stack-draft-editor-state.test.ts app/api/report-assistant/query/route.ts`.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec sh -lc 'vitest run features/workbench/report-assistant*.test.ts --maxWorkers=1'`
+  with 32 files / 227 tests.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec vitest run features/workbench-rebuild/report-editor-project-context.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant-route.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant-ui.test.ts --maxWorkers=1`
+  with 4 files / 28 tests.
+Support-spacing checkpoint - 2026-06-18:
+
+- Added `wall_support_spacing` as a typed draft physical input and
+  `supportSpacingMm` on wall topology drafts.
+- Double-leaf/framed wall drafts with framed support topology now ask for stud
+  or support spacing before they are schema-ready.
+- Structured continuation now supports `wall_support_spacing` answers and can
+  accept topology plus support spacing in the same bounded answer batch.
+- The editor-state helper maps explicit support/stud spacing messages such as
+  `stud spacing 600 mm` into typed continuation payloads only when the draft is
+  actually missing wall support spacing.
+- Ready-draft preview adapter now carries `supportSpacingMm` into Workbench V2
+  context instead of silently defaulting framed wall support spacing.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec vitest run features/workbench/report-assistant-layer-stack-draft.test.ts features/workbench/report-assistant-layer-stack-draft-continuation.test.ts features/workbench/report-assistant-layer-stack-draft-editor-state.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant.test.ts features/workbench/report-assistant-query-route.test.ts --maxWorkers=1`
+  with 5 files / 40 tests.
+- Validation passed:
+  `pnpm --filter @dynecho/web exec tsc --noEmit --pretty false --project tsconfig.json`.
+- Current selected next action:
+  `report_assistant_wall_candidate_comparison_preview_v1`.
+- The next implementation must start with Slice 7B from the current
+  implementation-ready queue: run ready wall candidates through the existing
+  calculator preview path while keeping incomplete candidates as typed task
+  rows. Do not wire query cards or apply behavior before the preview contract is
+  covered.
+
+Slice 7A checkpoint - 2026-06-18:
+
+- `report_assistant_wall_candidate_comparison_contract_v1` is locally landed as
+  a pure assistant contract/model.
+- Added
+  `apps/web/features/workbench/report-assistant-wall-candidate-comparison.ts`
+  and
+  `apps/web/features/workbench/report-assistant-wall-candidate-comparison.test.ts`.
+- It parses explicit `mm` wall alternatives, caps candidates at three before
+  preview/render work, preserves candidate labels/source phrases, keeps unknown
+  materials as per-candidate `needs_input` task rows, blocks ranking while no
+  calculator-backed output exists, and rejects floor/impact comparison requests
+  as unsupported for this wall-only slice.
+- It does not calculate acoustic values, retune formulas, mutate Workbench
+  state, call provider/research routes, or touch engine files.
+- Validation passed:
+  `pnpm --dir apps/web exec vitest run features/workbench/report-assistant-wall-candidate-comparison.test.ts features/workbench/report-assistant-layer-stack-draft.test.ts --maxWorkers=1`
+  with 2 files / 12 tests.
+- Validation passed:
+  `pnpm --dir apps/web exec sh -lc 'vitest run features/workbench/report-assistant*.test.ts features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant*.test.ts features/workbench-rebuild/report-editor-project-context.test.ts --maxWorkers=1'`
+  with 38 files / 274 tests.
+- Validation passed:
+  targeted ESLint, isolated TypeScript check for the new comparison files, and
+  `git diff --check` on touched assistant/doc files.
+- Project-level web `tsc --noEmit` still fails only on the unrelated dirty
+  engine file `packages/engine/src/calculate-assembly.ts` readonly
+  `advancedWall.targetOutputs` issue; do not fix it from assistant slices.
+- Current selected next action:
+  `report_assistant_wall_candidate_comparison_preview_v1`.
+
+Slice 7B checkpoint - 2026-06-18:
+
+- `report_assistant_wall_candidate_comparison_preview_v1` is locally landed as
+  a pure assistant preview helper.
+- Ready single-leaf wall candidates now run through the existing
+  `previewReportAssistantLayerStackDraft` path and comparison rows copy only
+  live calculator-backed output values.
+- Every copied numeric row carries `authority: calculator_backed`, a metric
+  basis row with `routeStatus: ready`, and `sourceTrace:
+  preview_layer_stack_draft`.
+- Candidates that are draft-invalid or route-level `needs_input` stay visible
+  with candidate-scoped task rows and no inherited numeric values.
+- Ranking is produced only when every visible candidate has a live
+  calculator-backed row for the requested ranking metric; otherwise it is
+  explicitly blocked.
+- The preview result is `previewOnly: true`, `mutates: false`, and intentionally
+  omits raw Workbench snapshot/estimate/mutation state.
+- Validation passed:
+  `pnpm --dir apps/web exec vitest run features/workbench/report-assistant-wall-candidate-comparison.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant.test.ts features/workbench/report-assistant-calculator-preview-result.test.ts --maxWorkers=1`
+  with 3 files / 18 tests.
+- Validation passed:
+  `pnpm --dir apps/web exec sh -lc 'vitest run features/workbench/report-assistant*.test.ts features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant*.test.ts features/workbench-rebuild/report-editor-project-context.test.ts --maxWorkers=1'`
+  with 38 files / 274 tests.
+- Targeted ESLint and `git diff --check` passed on touched assistant/doc files.
+- TypeScript project checks remain blocked only by the unrelated dirty engine
+  file `packages/engine/src/calculate-assembly.ts` readonly
+  `advancedWall.targetOutputs` issue.
+- Current selected next action:
+  `report_assistant_wall_candidate_comparison_query_card_v1`.
+
+Slice 7C checkpoint - 2026-06-18:
+
+- `report_assistant_wall_candidate_comparison_query_card_v1` is locally landed:
+  the query route returns `wall_candidate_comparison_card` envelopes for
+  explicit wall candidate comparison prompts, planner routing selects the
+  bounded comparison preview capability, and the generic card renders
+  comparison values/tasks without `calculatorPreview`.
+- Validation passed:
+  `pnpm --dir apps/web exec vitest run features/workbench/report-assistant-query-route.test.ts features/workbench/report-assistant-planner.test.ts features/workbench/report-assistant-result-card.test.ts features/workbench/report-assistant-result-card-model.test.ts features/workbench/report-assistant-capabilities.test.ts --maxWorkers=1`
+  with 6 files / 39 tests.
+- Validation passed:
+  `pnpm --dir apps/web exec vitest run features/workbench/report-assistant-planner-evals.test.ts --maxWorkers=1`
+  with 1 file / 3 tests.
+- Targeted ESLint and `git diff --check` passed on touched assistant/doc files.
+- Project-level web TypeScript remains blocked only by the unrelated dirty
+  engine file `packages/engine/src/calculate-assembly.ts`.
+- Current selected next action:
+  `report_assistant_floor_impact_draft_input_capture_v1`.
+
+Slice 8A checkpoint - 2026-06-18:
+
+- `report_assistant_floor_impact_draft_input_capture_v1` is locally landed as
+  an assistant/workbench-only input-capture slice.
+- Described floor/ceiling/impact prompts now parse explicit `mm` layer phrases
+  into typed floor drafts with floor roles such as `base_structure`,
+  `resilient_layer`, `floating_screed`, `floor_covering`, and
+  `ceiling_board`.
+- The parser distinguishes `gypsum board` floor-covering wording from explicit
+  `gypsum ceiling board` wording, so ceiling roles are not inferred unless the
+  user names a ceiling.
+- Impact requests stay non-numeric until route-required physical inputs are
+  available. `Ln,w` asks for dynamic stiffness and load basis; ASTM `IIC`/`AIIC`
+  also asks for target metric basis; field impact outputs also ask for
+  field/lab context and receiving-room volume.
+- Generic `ASTM impact` / `ISO impact` wording without an explicit metric is
+  returned as `unsupported` rather than being aliased to `AIIC`, `IIC`, or
+  `Ln,w`.
+- Structured draft continuation now supports field context plus receiving-room
+  volume in one bounded answer batch without triggering calculator preview.
+- No engine files, formula routes, source rows, persistent Workbench/project
+  mutation behavior, provider/research routes, or numeric floor/impact preview
+  behavior were changed.
+- Validation passed:
+  `pnpm --dir apps/web exec vitest run features/workbench-rebuild/workbench-v2-calculator-assistant.test.ts features/workbench/report-assistant-layer-stack-draft.test.ts features/workbench/report-assistant-layer-stack-draft-editor-state.test.ts features/workbench/report-assistant-layer-stack-draft-continuation.test.ts --maxWorkers=1`
+  with 4 files / 35 tests.
+- Validation passed:
+  `pnpm --dir apps/web exec vitest run features/workbench-rebuild/workbench-v2-calculator-assistant-route.test.ts --maxWorkers=1`
+  with 1 file / 5 tests.
+- Validation passed:
+  `pnpm --dir apps/web exec sh -lc 'vitest run features/workbench/report-assistant*.test.ts features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant*.test.ts features/workbench-rebuild/report-editor-project-context.test.ts --maxWorkers=1'`
+  with 38 files / 280 tests.
+- Targeted ESLint and `git diff --check` passed on touched assistant/doc files.
+- Project-level web TypeScript remains blocked only by the unrelated dirty
+  engine file `packages/engine/src/calculate-assembly.ts` readonly
+  `advancedWall.targetOutputs` issue.
+- Current selected next action:
+  `report_assistant_calculator_control_command_unification_v1`.
+
+Slice 8B first command-primitive checkpoint - 2026-06-18:
+
+- `report_assistant_calculator_control_command_unification_v1` is locally
+  landed for the calculator-page assistant's visible draft command surface.
+- The central `workbench-v2-assistant-layer-stack-command` primitive now
+  returns a typed `commandKind` for `replace_stack`, `add_layer`,
+  `remove_layer`, `move_layer`, `update_layer`, `set_outputs`, and `preview`.
+- The calculator panel passes the current visible layers, selected layer id,
+  current mode, and selected outputs into that primitive. It then applies real
+  undo-backed Workbench state changes, updates selected outputs, or triggers the
+  existing preview route for preview-only commands.
+- Material matching remains catalog-deterministic; unknown/ambiguous material
+  phrases still block before UI mutation. Missing thicknesses stay blank with
+  tasks instead of guessed defaults.
+- Example covered commands include `gypsium, rock wool, gypsum diz`,
+  `üste 15 mm gypsum ekle`, `2. layerı sil`, `rock wool'u ortaya taşı`,
+  `gypsumları 15 mm yap`, `Rw ve STC seç`, and `hesapla`.
+- No engine files, formula routes, source rows, metric aliases, report routes,
+  research routes, or saved project mutation behavior were changed.
+- Validation passed:
+  `pnpm --dir apps/web exec vitest run features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant-ui.test.ts --maxWorkers=1`
+  with 2 files / 15 tests.
+- Validation passed:
+  `pnpm --dir apps/web exec vitest run features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant-ui.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant-route.test.ts features/workbench-rebuild/report-editor-project-context.test.ts --maxWorkers=1`
+  with 5 files / 45 tests.
+- Validation passed:
+  `pnpm --dir apps/web exec sh -lc 'vitest run features/workbench/report-assistant*.test.ts features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant*.test.ts features/workbench-rebuild/report-editor-project-context.test.ts --maxWorkers=1'`
+  with 38 files / 286 tests.
+- Targeted ESLint, tracked `git diff --check`, and no-index whitespace checks
+  for the untracked assistant command files passed.
+- Project-level web TypeScript remains blocked only by the unrelated dirty
+  engine file `packages/engine/src/calculate-assembly.ts` readonly
+  `advancedWall.targetOutputs` issue.
+- Current selected next action:
+  `report_assistant_calculator_control_candidate_generation_v1`.
+
+Slice 8C candidate-stack checkpoint - 2026-06-18:
+
+- `report_assistant_calculator_control_candidate_generation_v1` is locally
+  landed for client-safe candidate stack generation from the visible calculator
+  draft.
+- `kombinasyon yap` now returns `commandKind: "generate_candidates"` and a
+  bounded three-candidate list: current order, reversed order, and rotated
+  order.
+- The current visible calculator stack is not mutated by candidate generation.
+  Candidate rows reuse current materials and thicknesses, rebuild roles per
+  candidate order, and keep missing-thickness tasks visible.
+- The calculator page renders generated candidate stack cards with layer
+  sequences and missing-input counts. It does not show acoustic values for
+  candidate stacks yet.
+- No engine files, formula routes, source rows, metric aliases, report routes,
+  research routes, or saved project mutation behavior were changed.
+- Validation passed:
+  `pnpm --dir apps/web exec vitest run features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant-ui.test.ts --maxWorkers=1`
+  with 2 files / 17 tests.
+- Current selected next action:
+  `report_assistant_calculator_control_candidate_preview_v1`.
+
+Slice 8D candidate preview/use checkpoint - 2026-06-18:
+
+- `report_assistant_calculator_control_candidate_preview_v1` is locally landed
+  for single-candidate calculator preview/use controls on generated
+  calculator-page candidates.
+- Candidate stacks now carry a context patch, mode, and source layer-stack
+  signature. Preview/apply attempts are blocked as stale if the visible
+  calculator layers changed after candidate generation.
+- Candidate `Preview` sends a temporary candidate Workbench snapshot through the
+  existing calculator-preview route and leaves the visible layer table
+  unchanged.
+- Candidate `Use` applies the selected candidate back to the visible calculator
+  draft through the undo-backed `commitLayerStackChange` path and updates
+  calculator context from the candidate patch.
+- This slice still does not batch-preview all generated candidates into a
+  comparison table and does not rank candidates.
+- No engine files, formula routes, source rows, metric aliases, report routes,
+  research routes, or saved project mutation behavior were changed.
+- Validation passed:
+  `pnpm --dir apps/web exec vitest run features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant-ui.test.ts --maxWorkers=1`
+  with 2 files / 17 tests.
+- Validation passed:
+  `pnpm --dir apps/web exec sh -lc 'vitest run features/workbench/report-assistant*.test.ts features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant*.test.ts features/workbench-rebuild/report-editor-project-context.test.ts --maxWorkers=1'`
+  with 38 files / 288 tests.
+- Targeted ESLint, tracked `git diff --check`, and no-index whitespace checks
+  for the untracked assistant command files passed.
+- Project-level web TypeScript remains blocked only by the unrelated dirty
+  engine file `packages/engine/src/calculate-assembly.ts` readonly
+  `advancedWall.targetOutputs` issue.
+- Current selected next action:
+  `report_assistant_calculator_control_candidate_batch_compare_v1`.
+
+Slice 8E candidate batch comparison checkpoint - 2026-06-18:
+
+- `report_assistant_calculator_control_candidate_batch_compare_v1` is locally
+  landed for generated calculator-page candidates.
+- Candidate `Preview all` runs ready generated candidates sequentially through
+  the existing calculator-preview route using temporary candidate snapshots.
+- Candidates with missing assistant stack-command tasks remain visible as
+  `needs_input` comparison rows and receive no inherited numeric values.
+- Comparison rows render per-candidate route status, returned calculator output
+  rows, candidate task rows, and route task rows. Ranking is shown only when
+  every visible candidate has a live numeric row for the first selected metric.
+- This slice does not persist project/report state, does not ask the model to
+  rank candidates, and does not touch engine files, formula routes, source rows,
+  or metric aliases.
+- Validation passed:
+  `pnpm --dir apps/web exec vitest run features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant-ui.test.ts --maxWorkers=1`
+  with 2 files / 17 tests.
+- Validation passed:
+  `pnpm --dir apps/web exec sh -lc 'vitest run features/workbench/report-assistant*.test.ts features/workbench-rebuild/workbench-v2-assistant-layer-stack-command.test.ts features/workbench-rebuild/workbench-v2-calculator-assistant*.test.ts features/workbench-rebuild/report-editor-project-context.test.ts --maxWorkers=1'`
+  with 38 files / 288 tests.
+- Targeted ESLint passed for the touched assistant TS/TSX files. CSS lint is
+  outside the current `apps/web` ESLint config and reports as ignored.
+- Project-level web TypeScript remains blocked only by the unrelated dirty
+  engine file `packages/engine/src/calculate-assembly.ts` readonly
+  `advancedWall.targetOutputs` issue.
+- Current selected next action:
+  `report_assistant_explicit_export_download_boundaries_v1`.
+
+Assistant calculator-control checkpoint review - 2026-06-18:
+
+- The implementation now matches the calculator-operator direction: the
+  assistant can mutate the unsaved calculator draft only through explicit
+  deterministic commands, and calculator-backed values still come from the
+  existing preview route rather than model prose.
+- Landed local calculator-page commands cover replace stack, add layer, remove
+  layer, move layer, update layer thickness by material match, set selected
+  outputs, current-stack preview, bounded candidate generation, single-candidate
+  preview/use, and batch candidate comparison rows.
+- Candidate comparison is bounded and preview-only: generated candidates carry a
+  source layer-stack signature, stale preview/apply attempts are blocked, and
+  ranking is hidden unless every visible candidate has a live calculator row for
+  the first selected metric.
+- The plan remains valid. Complete owned `Ln,w` floor/impact preview, direct
+  calculator context-field command parsing, and explicit export/download
+  boundaries are now covered; the next highest-accuracy gap is the
+  report-assistant Workbench apply proposal contract.
 
 ## Gate 7 - Wall Candidate Comparison
 
@@ -1510,14 +3380,47 @@ Acceptance:
 2. Gate 1 - result envelope contract. Core contract done locally on
    2026-06-18.
 3. Gate 2 - route envelope adapters. Done locally on 2026-06-18.
-4. Gate 3 - registry-driven report editor cards.
-5. Gate 4 - planner decision contract.
-6. Gate 5 - layer stack draft schema.
-7. Gate 6 - clarification loop.
-8. Gate 7 - wall candidate comparison.
-9. Gate 8 - floor/ceiling/impact input capture.
-10. Gate 9 - confirmed apply-to-Workbench proposal.
-11. Gate 10 - eval, observability, and hardening.
+4. Gate 3 - registry-driven report editor cards. Core path locally landed;
+   remaining body polish is non-blocking unless a renderer regression appears.
+5. Gate 4 - planner decision contract. Locally landed.
+6. Gate 5 - layer stack draft schema. Locally landed for wall and parked
+   floor/impact boundaries.
+7. Gate 6 - clarification loop. Locally landed through ready-preview and
+   support-spacing handoff.
+8. Local Workbench stack apply - locally landed for unsaved calculator-page
+   stack commands.
+9. Slice 7A - wall candidate comparison contract. Locally landed on
+   2026-06-18.
+10. Slice 7B - calculator-backed wall comparison preview. Locally landed on
+    2026-06-18.
+11. Slice 7C - query route and result card for comparison. Locally landed on
+    2026-06-18.
+12. Slice 8A - floor/ceiling/impact draft input capture. Locally landed on
+    2026-06-18.
+13. Slice 8B - unified calculator control commands. First command primitive
+    locally landed on 2026-06-18.
+14. Slice 8C - calculator-control candidate stack generation. Locally landed
+    on 2026-06-18.
+15. Slice 8D - calculator-control single-candidate preview/use. Locally landed
+    on 2026-06-18.
+16. Slice 8E - calculator-control candidate batch comparison rows. Locally
+    landed on 2026-06-18.
+17. Slice 8F - ready floor/impact calculator preview. Locally landed on
+    2026-06-19.
+18. Slice 8G - calculator context-field commands. Locally landed on
+    2026-06-19.
+19. Slice 8H - explicit export/download boundaries. Locally landed on
+    2026-06-19.
+20. Slice 9A - report assistant apply proposal contract. Locally landed on
+    2026-06-19.
+21. Slice 9B - confirmed browser Workbench apply. Locally landed on
+    2026-06-19 for pending typed proposals on the calculator page; report-editor
+    handoff remains blocked until a safe current Workbench snapshot channel
+    exists.
+22. Slice 10A - repo-local golden assistant evals. Locally landed on
+    2026-06-19.
+23. Slice 10B - redacted trace/event boundary. Helper boundary locally landed
+    on 2026-06-19; route/persistence wiring remains optional.
 
 ## Minimum Commit Strategy
 
@@ -1531,6 +3434,9 @@ Keep commits slice-bounded:
 - one commit for clarification loop;
 - one commit for candidate comparison;
 - one commit for floor/impact capture;
+- one commit for ready floor/impact preview;
+- one commit for calculator context-field commands;
+- one commit for explicit export/download boundaries;
 - one commit for apply proposal;
 - one commit for eval/observability/hardening.
 

@@ -223,6 +223,8 @@ describe("internal use operating envelope Gate B visibility", () => {
         testCase.id === "wall_lined_heavy_core_screening"
           ? "55 dB"
           : testCase.id === "wall_timber_double_board_generated"
+            ? "50 dB"
+            : testCase.id === "wall_clt_local_generated"
               ? "42 dB"
               : null;
       if (expectedLiveRw) {

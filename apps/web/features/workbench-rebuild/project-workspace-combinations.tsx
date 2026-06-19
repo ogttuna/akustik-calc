@@ -10,6 +10,8 @@ import {
 } from "./project-workspace-types";
 
 export type ProjectWorkspaceCombinationsProps = {
+  activeAssemblyDirty: boolean;
+  activeAssemblyId: string;
   assemblyDescriptionDraft: string;
   assemblyNameDraft: string;
   assemblyRenameDescriptionDraft: string;
@@ -17,13 +19,16 @@ export type ProjectWorkspaceCombinationsProps = {
   assemblies: readonly ProjectWorkspaceAssemblySummary[];
   busy: boolean;
   canRenameAssembly: boolean;
+  createOpen: boolean;
   onAssemblyDescriptionDraftChange: (value: string) => void;
   onAssemblyNameDraftChange: (value: string) => void;
   onAssemblyRenameDescriptionDraftChange: (value: string) => void;
   onAssemblyRenameDraftChange: (value: string) => void;
+  onCreateOpenChange: (open: boolean) => void;
   onDeleteAssembly: () => Promise<void> | void;
   onDuplicateAssembly: () => Promise<void> | void;
   onLoadAssembly: () => Promise<void> | void;
+  onLoadAssemblyById?: (assemblyId: string) => Promise<void> | void;
   onRenameAssembly: () => Promise<void> | void;
   onSaveAssembly: () => Promise<void> | void;
   onSelectAssembly: (assemblyId: string) => void;
@@ -47,44 +52,73 @@ function getProjectWorkspaceAssemblyResultLabel(assembly: ProjectWorkspaceAssemb
 }
 
 export function ProjectWorkspaceCombinations(props: ProjectWorkspaceCombinationsProps) {
+  const canSaveNewCombination =
+    props.projectSelected && props.assemblyNameDraft.trim().length > 0 && props.status !== "syncing" && props.status !== "restoring";
+
   return (
     <>
-      <div className="calc-project-snapshot-controls">
-        <input
-          aria-label="Saved combination name"
-          className="focus-ring ui-field calc-project-snapshot-select"
-          disabled={!props.projectSelected || props.busy}
-          maxLength={PROJECT_WORKSPACE_NAME_MAX_LENGTH}
-          onChange={(event) => props.onAssemblyNameDraftChange(event.target.value)}
-          placeholder={props.selectedProjectName ? `${props.selectedProjectName} combination name` : "Select a project first"}
-          value={props.assemblyNameDraft}
-        />
-        <input
-          aria-label="Saved combination description"
-          className="focus-ring ui-field calc-project-snapshot-select"
-          disabled={!props.projectSelected || props.busy}
-          maxLength={320}
-          onChange={(event) => props.onAssemblyDescriptionDraftChange(event.target.value)}
-          placeholder="Optional combination description"
-          value={props.assemblyDescriptionDraft}
-        />
+      <div className="calc-project-combination-toolbar" data-open={props.createOpen ? "true" : "false"}>
         <button
-          className="focus-ring ui-button ui-button-primary"
-          disabled={!props.projectSelected || props.status === "syncing" || props.status === "restoring"}
-          onClick={() => void props.onSaveAssembly()}
+          aria-expanded={props.createOpen}
+          className="focus-ring ui-button ui-button-ghost calc-project-reveal-button"
+          disabled={!props.projectSelected || props.busy}
+          onClick={() => props.onCreateOpenChange(!props.createOpen)}
+          title={props.projectSelected ? "Name and save the current stack as a new project combination" : "Select a project first"}
           type="button"
         >
           <FileText className="h-4 w-4" />
-          Save combination
+          Save current stack as combination
         </button>
+      </div>
+
+      <div className="calc-project-create-panel" data-open={props.createOpen ? "true" : "false"}>
+        {props.createOpen ? (
+          <div className="calc-project-snapshot-controls">
+            <input
+              aria-label="New combination name"
+              className="focus-ring ui-field calc-project-snapshot-select"
+              disabled={!props.projectSelected || props.busy}
+              maxLength={PROJECT_WORKSPACE_NAME_MAX_LENGTH}
+              onChange={(event) => props.onAssemblyNameDraftChange(event.target.value)}
+              placeholder={props.selectedProjectName ? "New combination name" : "Select a project first"}
+              value={props.assemblyNameDraft}
+            />
+            <input
+              aria-label="New combination description"
+              className="focus-ring ui-field calc-project-snapshot-select"
+              disabled={!props.projectSelected || props.busy}
+              maxLength={320}
+              onChange={(event) => props.onAssemblyDescriptionDraftChange(event.target.value)}
+              placeholder="Optional combination description"
+              value={props.assemblyDescriptionDraft}
+            />
+            <button
+              className="focus-ring ui-button ui-button-primary"
+              disabled={!canSaveNewCombination}
+              onClick={() => void props.onSaveAssembly()}
+              title={props.projectSelected ? "Save the current workspace stack as a new project combination" : "Select a project first"}
+              type="button"
+            >
+              <FileText className="h-4 w-4" />
+              Save as new combination
+            </button>
+          </div>
+        ) : null}
       </div>
       <div className="calc-project-list" aria-label="Saved combinations">
         {props.projectSelected && props.assemblies.length ? (
           props.assemblies.map((assembly) => {
             const selected = assembly.id === props.selectedAssemblyId;
+            const active = assembly.id === props.activeAssemblyId;
 
             return (
-              <div className="calc-project-row" data-assembly-id={assembly.id} data-selected={selected ? "true" : "false"} key={assembly.id}>
+              <div
+                className="calc-project-row"
+                data-active={active ? "true" : "false"}
+                data-assembly-id={assembly.id}
+                data-selected={selected ? "true" : "false"}
+                key={assembly.id}
+              >
                 <button
                   aria-pressed={selected}
                   className="focus-ring calc-project-row-main"
@@ -100,6 +134,7 @@ export function ProjectWorkspaceCombinations(props: ProjectWorkspaceCombinations
                       {formatProjectWorkspaceUpdatedDateLabel(assembly.updatedAtIso)}
                     </span>
                     {assembly.description ? <small>{assembly.description}</small> : null}
+                    {active ? <small>{props.activeAssemblyDirty ? "Open in workbench - modified" : "Open in workbench - saved"}</small> : null}
                   </span>
                   <span className="calc-project-row-result">{getProjectWorkspaceAssemblyResultLabel(assembly)}</span>
                 </button>
@@ -167,7 +202,7 @@ export function ProjectWorkspaceCombinations(props: ProjectWorkspaceCombinations
           })
         ) : (
           <div className="calc-project-list-empty">
-            {props.projectSelected ? "No saved combinations yet" : "Select a project to manage saved combinations"}
+            {props.projectSelected ? "No combinations in this project yet" : "Create or select a project first"}
           </div>
         )}
       </div>

@@ -200,15 +200,15 @@ const LIVE_CASES: readonly LiveWallCase[] = [
     expected: {
       c: 0.8,
       cards: {
-        Rw: { status: "live", value: "42 dB" },
+        Rw: { status: "live", value: "50 dB" },
         "R'w": { status: "live", value: "42 dB" },
         "Dn,w": { status: "live", value: "41 dB" },
         "Dn,A": { status: "live", value: "41.8 dB" },
         "DnT,w": { status: "live", value: "44 dB" },
         "DnT,A": { status: "live", value: "44.3 dB" },
-        STC: { status: "live", value: "42 dB" },
-        C: { status: "live", value: "+0.8 dB" },
-        Ctr: { status: "live", value: "-4 dB" }
+        STC: { status: "live", value: "50 dB" },
+        C: { status: "live", value: "+0.5 dB" },
+        Ctr: { status: "live", value: "-4.2 dB" }
       },
       ctr: -4,
       dnA: 41.8,

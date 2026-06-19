@@ -38,6 +38,11 @@ import {
   type ReportAssistantEditorRequestMode
 } from "../workbench/report-assistant-editor-workflow";
 import {
+  buildReportAssistantLayerStackDraftEditorContinuation,
+  getReportAssistantLayerStackDraftEditorStateFromQueryPayload,
+  type ReportAssistantLayerStackDraftEditorState
+} from "../workbench/report-assistant-layer-stack-draft-editor-state";
+import {
   isReportAssistantActionProposalName,
   type ReportAssistantActionProposal,
   type ReportAssistantActionProposalName
@@ -101,6 +106,7 @@ type AssistantQueryPayload = {
   assistantResults?: unknown;
   calculatorPreview?: unknown;
   errors?: unknown;
+  layerStackDraft?: unknown;
   ok?: unknown;
   warnings?: unknown;
 };
@@ -417,7 +423,7 @@ function getAssistantQueryCalculatorPreview(payload: AssistantQueryPayload | und
   };
   if (
     envelope.mutates !== false ||
-    envelope.name !== "preview_described_layer_configuration" ||
+    (envelope.name !== "preview_described_layer_configuration" && envelope.name !== "preview_layer_stack_draft") ||
     envelope.previewOnly !== true ||
     typeof envelope.preview !== "object" ||
     envelope.preview === null
@@ -534,12 +540,15 @@ function parseAssistantActionProposal(payload: AssistantActionProposalPayload | 
   const bodyPreview = applyRoute?.bodyPreview as Partial<ReportAssistantActionProposal["applyRoute"]["bodyPreview"]> | undefined;
   const actionIsCreate = proposal.action === "create_project_report_from_current_draft";
   const actionIsCreatePreset = proposal.action === "create_user_preset_from_current_stack";
+  const actionIsExport = proposal.action === "export_current_report_snapshot_as_pdf";
   const actionIsSaveAssembly = proposal.action === "save_current_stack_as_project_assembly";
   const actionIsRestore = proposal.action === "restore_report_revision_as_new_draft";
   const actionIsSave = proposal.action === "save_project_report_revision_from_current_draft";
+  const targetSelectedOutputs = target?.selectedOutputs;
   const unsupportedAction =
     !actionIsCreate &&
     !actionIsCreatePreset &&
+    !actionIsExport &&
     !actionIsSaveAssembly &&
     !actionIsRestore &&
     !actionIsSave;
@@ -556,7 +565,19 @@ function parseAssistantActionProposal(payload: AssistantActionProposalPayload | 
     applyRoute.method !== "POST" ||
     typeof applyRoute.pathname !== "string" ||
     !bodyPreview;
-  const actionShapeInvalid = actionIsCreatePreset
+  const actionShapeInvalid = actionIsExport
+    ? applyRoute?.pathname !== "/api/proposal-pdf" ||
+      bodyPreview?.document !== "current_report_document" ||
+      bodyPreview.source !== "assistant" ||
+      bodyPreview.exportContentSummary !== "current_export_content_summary" ||
+      bodyPreview.exportFormat !== "pdf" ||
+      bodyPreview.exportSnapshotSignature !== "current_assistant_context_signature" ||
+      bodyPreview.selectedOutputs !== "current_selected_output_set" ||
+      target?.exportFormat !== "pdf" ||
+      typeof target?.exportSnapshotSignature !== "string" ||
+      !Array.isArray(targetSelectedOutputs) ||
+      !targetSelectedOutputs.every((entry) => typeof entry === "string")
+    : actionIsCreatePreset
     ? bodyPreview?.document !== "current_report_document" ||
       bodyPreview.source !== "assistant" ||
       bodyPreview.name !== "current_assembly_library_name" ||
@@ -1450,6 +1471,8 @@ export function ReportEditor() {
   const reportIdParam = searchParams.get("reportId")?.trim() ?? "";
   const [isDownloading, setIsDownloading] = useState(false);
   const [assistantInstruction, setAssistantInstruction] = useState("");
+  const [activeLayerStackDraftState, setActiveLayerStackDraftState] =
+    useState<ReportAssistantLayerStackDraftEditorState | null>(null);
   const [assistantMessages, setAssistantMessages] = useState<AssistantMessage[]>([]);
   const [assistantValidation, setAssistantValidation] = useState<ReportAssistantPatchValidationResult | null>(null);
   const [assistantActionProposal, setAssistantActionProposal] = useState<ReportAssistantActionProposal | null>(null);
@@ -1848,6 +1871,10 @@ export function ReportEditor() {
 
   useEffect(() => {
     assistantContextSignatureRef.current = assistantContext?.assistantContextSignature ?? "no-assistant-context";
+  }, [assistantContext?.assistantContextSignature]);
+
+  useEffect(() => {
+    setActiveLayerStackDraftState(null);
   }, [assistantContext?.assistantContextSignature]);
 
   useEffect(() => {
@@ -2367,10 +2394,10 @@ export function ReportEditor() {
   async function handleDownloadExport(
     style: SimpleWorkbenchProposalExportStyle,
     format: SimpleWorkbenchProposalExportFormat
-  ) {
+  ): Promise<boolean> {
     if (!document) {
       toast.error("No report draft");
-      return;
+      return false;
     }
 
     setIsDownloading(true);
@@ -2381,10 +2408,12 @@ export function ReportEditor() {
         await downloadSimpleWorkbenchProposalPdf(document, { style });
       }
       toast.success(`${getSimpleWorkbenchProposalExportLabel({ format, style })} downloaded`);
+      return true;
     } catch (error) {
       toast.error(`${getSimpleWorkbenchProposalExportLabel({ format, style })} failed`, {
         description: error instanceof Error ? error.message : "Export failed."
       });
+      return false;
     } finally {
       setIsDownloading(false);
     }
@@ -2412,11 +2441,103 @@ export function ReportEditor() {
       selectedOutputs: getAssistantPlannerSelectedOutputs(assistantContext),
       sourceStackAvailable: hasProjectReportSourceContext(projectContext)
     });
+    const promptInjectionPreflightMessage = plannerDecision.usedSignals.includes("prompt_injection_signal")
+      ? getAssistantPlannerPreflightMessage(plannerDecision)
+      : null;
+    if (promptInjectionPreflightMessage) {
+      setIsAssistantLoading(false);
+      setAssistantMessages((current) => [
+        promptInjectionPreflightMessage,
+        ...current
+      ]);
+      return;
+    }
+
+    const draftContinuationBuild = activeLayerStackDraftState
+      ? buildReportAssistantLayerStackDraftEditorContinuation({
+          assistantContextSignature: assistantContext.assistantContextSignature,
+          instruction,
+          state: activeLayerStackDraftState
+        })
+      : null;
+
+    if (draftContinuationBuild?.ok) {
+      const activeRequest = startEditorAssistantRequest("read_only_query", assistantContext.assistantContextSignature);
+      const result = await sendReportAssistantRequest<AssistantQueryPayload>({
+        body: {
+          context: assistantContext,
+          document,
+          draftContinuation: draftContinuationBuild.draftContinuation,
+          instruction
+        },
+        documentSignature: assistantContext.assistantContextSignature,
+        kind: "read_only_query",
+        requestId: activeRequest.requestId,
+        url: "/api/report-assistant/query"
+      });
+
+      if (!finishEditorAssistantRequest(result)) {
+        return;
+      }
+
+      if (!result.ok) {
+        const messages = result.errors.length > 0 ? result.errors : getPayloadMessages(result.payload);
+        const assistantResults = getAssistantResultEnvelopes(result.payload);
+        if (result.httpStatus === 409) {
+          setActiveLayerStackDraftState(null);
+        }
+        setAssistantMessages((current) => [
+          {
+            ...(assistantResults.length > 0 ? { assistantResults } : {}),
+            detail: messages.join(" ") || "Draft continuation failed.",
+            id: `assistant-draft-continuation-error-${Date.now()}`,
+            title: "Draft answer rejected",
+            tone: "error"
+          },
+          ...current
+        ]);
+        return;
+      }
+
+      const answer = getAssistantQueryAnswer(result.payload);
+      const assistantResults = getAssistantResultEnvelopes(result.payload);
+      const nextDraftState = getReportAssistantLayerStackDraftEditorStateFromQueryPayload(
+        result.payload,
+        assistantContext.assistantContextSignature
+      );
+      if (nextDraftState) {
+        setActiveLayerStackDraftState(nextDraftState);
+      }
+      setAssistantMessages((current) => [
+        {
+          ...(assistantResults.length > 0 ? { assistantResults } : {}),
+          detail: answer ?? draftContinuationBuild.summary,
+          id: `assistant-draft-continuation-${Date.now()}`,
+          title: "Draft answer applied",
+          tone: nextDraftState?.validation.ok ? "success" : "warning"
+        },
+        ...current
+      ]);
+      return;
+    }
+
     const plannerPreflightMessage = getAssistantPlannerPreflightMessage(plannerDecision);
+    const draftContinuationErrorMessage =
+      activeLayerStackDraftState && draftContinuationBuild && !draftContinuationBuild.ok && plannerDecision.mode === "unsupported"
+        ? {
+            detail: [
+              ...draftContinuationBuild.errors,
+              ...draftContinuationBuild.questions
+            ].join(" "),
+            id: `assistant-draft-continuation-needs-input-${Date.now()}`,
+            title: "Draft answer needs more detail",
+            tone: "warning" as const
+          }
+        : null;
     if (plannerPreflightMessage) {
       setIsAssistantLoading(false);
       setAssistantMessages((current) => [
-        plannerPreflightMessage,
+        draftContinuationErrorMessage ?? plannerPreflightMessage,
         ...current
       ]);
       return;
@@ -2444,6 +2565,9 @@ export function ReportEditor() {
       if (!result.ok) {
         const messages = result.errors.length > 0 ? result.errors : getPayloadMessages(result.payload);
         const assistantResults = getAssistantResultEnvelopes(result.payload);
+        if (result.httpStatus === 409) {
+          setActiveLayerStackDraftState(null);
+        }
         setAssistantMessages((current) => [
           {
             ...(assistantResults.length > 0 ? { assistantResults } : {}),
@@ -2460,6 +2584,13 @@ export function ReportEditor() {
       const answer = getAssistantQueryAnswer(result.payload);
       const assistantResults = getAssistantResultEnvelopes(result.payload);
       const calculatorPreview = getAssistantQueryCalculatorPreview(result.payload);
+      const nextDraftState = getReportAssistantLayerStackDraftEditorStateFromQueryPayload(
+        result.payload,
+        assistantContext.assistantContextSignature
+      );
+      if (nextDraftState) {
+        setActiveLayerStackDraftState(nextDraftState);
+      }
       setAssistantMessages((current) => [
         {
           ...(assistantResults.length > 0 ? { assistantResults } : {}),
@@ -2606,12 +2737,14 @@ export function ReportEditor() {
     }
     const actionIsCreate = assistantActionProposal.action === "create_project_report_from_current_draft";
     const actionIsCreatePreset = assistantActionProposal.action === "create_user_preset_from_current_stack";
+    const actionIsExport = assistantActionProposal.action === "export_current_report_snapshot_as_pdf";
     const actionIsSaveAssembly = assistantActionProposal.action === "save_current_stack_as_project_assembly";
     const actionIsRestore = assistantActionProposal.action === "restore_report_revision_as_new_draft";
     const actionIsSave = assistantActionProposal.action === "save_project_report_revision_from_current_draft";
     if (
       !actionIsCreate &&
       !actionIsCreatePreset &&
+      !actionIsExport &&
       !actionIsSaveAssembly &&
       !actionIsRestore &&
       !actionIsSave
@@ -2624,6 +2757,34 @@ export function ReportEditor() {
         description: "Ask the assistant for a fresh action preview before saving."
       });
       setAssistantActionProposal(null);
+      return;
+    }
+    if (assistantActionProposal.assistantContextSignature !== assistantContext.assistantContextSignature) {
+      toast.error("Assistant action preview is stale", {
+        description: "Ask the assistant for a fresh action preview before confirming."
+      });
+      setAssistantActionProposal(null);
+      return;
+    }
+
+    if (actionIsExport) {
+      if (isDownloading) {
+        return;
+      }
+      const downloaded = await handleDownloadExport(activePdfStyle, "pdf");
+      if (!downloaded) {
+        return;
+      }
+      setAssistantActionProposal(null);
+      setAssistantMessages((current) => [
+        {
+          detail: "Current report snapshot exported as PDF after explicit assistant confirmation.",
+          id: `assistant-action-confirmed-${Date.now()}`,
+          title: "PDF export confirmed",
+          tone: "success"
+        },
+        ...current
+      ]);
       return;
     }
 
@@ -3373,6 +3534,40 @@ export function ReportEditor() {
                   Ask assistant
                 </button>
 
+                {activeLayerStackDraftState ? (
+                  <div className="report-assistant-proposal" data-kind="draft">
+                    <div>
+                      <strong>
+                        Layer-stack draft {activeLayerStackDraftState.validation.ok ? "ready" : "needs input"}
+                      </strong>
+                      <small>{activeLayerStackDraftState.draft.draftId}</small>
+                    </div>
+                    <ul>
+                      {activeLayerStackDraftState.validation.missingInputs.length > 0 ? (
+                        activeLayerStackDraftState.validation.missingInputs.slice(0, 5).map((input) => (
+                          <li key={`${input.code}-${input.layerId ?? input.physicalInput ?? "draft"}`}>
+                            <span>{input.code.replace(/_/gu, " ")}</span>
+                            <small>{input.question}</small>
+                          </li>
+                        ))
+                      ) : (
+                        <li>
+                          <span>ready</span>
+                          <small>Send a calculator preview request for this completed draft.</small>
+                        </li>
+                      )}
+                    </ul>
+                    <button
+                      className="focus-ring ui-button report-wide-action"
+                      disabled={isAssistantLoading}
+                      onClick={() => setActiveLayerStackDraftState(null)}
+                      type="button"
+                    >
+                      Dismiss draft
+                    </button>
+                  </div>
+                ) : null}
+
                 {assistantValidation ? (
                   <div className="report-assistant-proposal">
                     <div>
@@ -3443,15 +3638,44 @@ export function ReportEditor() {
                           <small>{assistantActionProposal.target.expectedReportUpdatedAtIso}</small>
                         </li>
                       ) : null}
+                      {assistantActionProposal.target.exportSnapshotSignature ? (
+                        <li>
+                          <span>Export snapshot</span>
+                          <small>{assistantActionProposal.target.exportSnapshotSignature}</small>
+                        </li>
+                      ) : null}
+                      {assistantActionProposal.target.selectedOutputs?.length ? (
+                        <li>
+                          <span>Selected outputs</span>
+                          <small>{assistantActionProposal.target.selectedOutputs.join(", ")}</small>
+                        </li>
+                      ) : null}
+                      {assistantActionProposal.target.exportContentKinds?.length ? (
+                        <li>
+                          <span>Export content</span>
+                          <small>{assistantActionProposal.target.exportContentKinds.join(", ")}</small>
+                        </li>
+                      ) : null}
                     </ul>
                     <button
                       className="focus-ring ui-button ui-button-primary report-wide-action"
-                      disabled={isProjectSaving}
+                      disabled={
+                        isProjectSaving ||
+                        (assistantActionProposal.action === "export_current_report_snapshot_as_pdf" && isDownloading)
+                      }
                       onClick={() => void handleConfirmAssistantActionProposal()}
                       type="button"
                     >
-                      <Save className="h-4 w-4" />
-                      {isProjectSaving
+                      {assistantActionProposal.action === "export_current_report_snapshot_as_pdf" ? (
+                        <Download className="h-4 w-4" />
+                      ) : (
+                        <Save className="h-4 w-4" />
+                      )}
+                      {assistantActionProposal.action === "export_current_report_snapshot_as_pdf"
+                        ? isDownloading
+                          ? "Exporting PDF..."
+                          : "Confirm PDF export"
+                        : isProjectSaving
                         ? "Confirming action..."
                         : assistantActionProposal.action === "create_project_report_from_current_draft"
                           ? "Confirm create report"
@@ -3465,7 +3689,10 @@ export function ReportEditor() {
                     </button>
                     <button
                       className="focus-ring ui-button report-wide-action"
-                      disabled={isProjectSaving}
+                      disabled={
+                        isProjectSaving ||
+                        (assistantActionProposal.action === "export_current_report_snapshot_as_pdf" && isDownloading)
+                      }
                       onClick={handleDismissAssistantActionProposal}
                       type="button"
                     >

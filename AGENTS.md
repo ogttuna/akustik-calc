@@ -32,6 +32,98 @@ tooling or docs work is allowed only when it directly accelerates this
 calculator goal and does not displace the current selected calculator
 slice.
 
+## Calculator Intent / Evidence Semantics
+
+The intended product bar is an industry-grade acoustic calculator,
+benchmarked against market tools such as INSUL, but focused on owned
+calculation rather than being a passive library or document catalog. The
+engine must become able to calculate more arbitrary user-entered layer
+combinations with defensible accuracy over time.
+
+Measured rows, lab results, manufacturer/source values, and project/user
+measurements are admissible evidence, not a replacement for the
+calculator. Use them directly only when construction identity, metric,
+standard/basis, and context match. Use them as anchors only when the
+variant is same-family and same-basis, and the delta is physically
+bounded by an owned rule, formula, or admissible evidence. A small layer
+change such as adding a gypsum board layer may be modeled as a bounded
+delta only when that boundary is explicit; do not turn nearby rows into
+generic aliases.
+
+When a lab value exists and the user requests field/building metrics,
+adapt it through owned building-prediction logic rather than copying the
+lab value into field outputs. Require or default the necessary physical
+context explicitly: element area, receiving-room volume, reverberation
+or normalization basis, junction/flanking context, opening/leakage
+context, mounting/framing/topology, dynamic stiffness, load basis, flow
+resistivity, cavity depth, stud/joist spacing, and other route-required
+parameters.
+
+Because layer combinations are effectively unbounded, the long-term
+default must be formula-route ownership: apply the available acoustic
+formulas in the correct combinations, add missing route-required inputs,
+and research/add new formulas when a high-ROI family cannot be
+calculated safely with the existing model. It is acceptable to ask the
+user for extra physical inputs or provide conservative defaults, but the
+result must expose the assumption/provenance and must not silently guess.
+
+The practical success criterion is not "more plans" or "more data rows";
+it is more layer combinations and more target outputs calculated on the
+right basis, with higher numeric accuracy, clearer required inputs, and
+explicit unsupported boundaries where the physics is not yet owned.
+
+## Vertical Calculator Milestone / Finish Protocol
+
+Plans, reranks, coverage refreshes, snapshot reconciliations, and docs
+updates are necessary support work, but they are not the product. Do not
+present them as calculator progress by themselves. They are valid only
+when they clearly select, unlock, protect, or record a calculator
+behavior that increases formula-family scope, numeric accuracy, required
+input capture, metric/basis integrity, or an owned boundary.
+
+Prefer vertical formula-family milestones over long horizontal support
+loops. A vertical milestone starts from a real user-entered wall, floor,
+ceiling, or opening stack and ends with a calculator behavior:
+
+- a new request shape becomes calculable through an exact measured row,
+  same-family anchor/delta, or owned formula route;
+- a new target output is produced on its correct basis;
+- route-required physical inputs are captured and missing ones return
+  precise `needs_input`;
+- an existing formula route is calibrated, bounded, or made more
+  accurate with admissible same-family evidence;
+- unsupported adjacent bases or aliases remain explicitly blocked.
+
+Before implementing a calculator slice, write a short selection card in
+the working notes or plan:
+
+- user construction / formula family;
+- target outputs to open;
+- formula, measured-row, anchor, or adapter route;
+- required physical inputs;
+- `needs_input` behavior for missing inputs;
+- `unsupported` boundaries that must remain blocked;
+- expected `newCalculableRequestShapes`, `newCalculableTargetOutputs`,
+  `runtimeBasisPromotions`, and `runtimeValuesMoved`.
+
+Support-only work has a loop limit. A no-runtime rerank or coverage
+refresh may be the right immediate step, but the next step must either
+move a runtime/accuracy/input-surface calculator behavior or explicitly
+stop and say why no safe behavior can move yet. Do not chain support
+work as if it were the end goal.
+
+Every final handoff after calculator work must include a progress
+ledger:
+
+- calculator behavior opened;
+- new calculable request shapes;
+- new calculable target outputs;
+- required inputs captured;
+- runtime/formula values moved;
+- support work done;
+- if no runtime/accuracy behavior moved, why stopping there was
+  necessary.
+
 Current calculator documentation map:
 `docs/calculator/DOCUMENTATION_MAP.md`. Use it to see which live docs
 are authority, which files are historical evidence, and which
@@ -48,6 +140,204 @@ resolver/candidate-surface alignment fix for the new measured-frequency
 compatible-delta candidate, and records green current-gate component
 validation. It does not replace the documentation map or selected next
 plan.
+
+## Latest Wall Double-Leaf/Framed Porous Absorber Coverage-Ratio Numeric Sensitivity Owner - 2026-06-19
+
+Latest landed runtime formula-sensitivity owner:
+`post_v1_wall_double_leaf_framed_porous_absorber_coverage_ratio_numeric_sensitivity_owner_plan`.
+Owner file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-porous-absorber-coverage-ratio-numeric-sensitivity-owner-contract.test.ts`.
+Owner plan doc:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_POROUS_ABSORBER_COVERAGE_RATIO_NUMERIC_SENSITIVITY_OWNER_PLAN_2026-06-19.md`.
+Owner status:
+`post_v1_wall_double_leaf_framed_porous_absorber_coverage_ratio_numeric_sensitivity_owner_landed_runtime_selected_coverage_refresh`.
+It follows the landed no-runtime coverage refresh
+`post_v1_wall_double_leaf_framed_porous_flow_resistivity_numeric_sensitivity_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-porous-flow-resistivity-numeric-sensitivity-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_POROUS_FLOW_RESISTIVITY_NUMERIC_SENSITIVITY_COVERAGE_REFRESH_PLAN_2026-06-19.md`
+/
+`post_v1_wall_double_leaf_framed_porous_flow_resistivity_numeric_sensitivity_coverage_refresh_landed_no_runtime_selected_coverage_ratio_numeric_sensitivity_owner`.
+That refresh re-probed selected candidate
+`wall.double_leaf_framed.porous_flow_resistivity_numeric_sensitivity_owner`
+after previous owner status
+`post_v1_wall_double_leaf_framed_porous_flow_resistivity_numeric_sensitivity_owner_landed_runtime_selected_coverage_refresh`.
+Refresh counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Selected candidate:
+`wall.double_leaf_framed.porous_absorber_coverage_ratio_numeric_sensitivity_owner`.
+
+The owner makes `advancedWall.cavities[].absorberCoverageRatio`
+numerically active in the double-leaf/framed porous damping route when
+the advanced-wall cavity supplies it. Ratio `1` keeps the previous full
+coverage pins: `Rw 46`, `STC 46`, `C -1`, `Ctr -6.1`, `R'w 40`,
+`Dn,w 41`, `Dn,A 39.5`, `DnT,w 43`, and `DnT,A 41.9`. Ratio `0.5`
+now reduces the same owned route to lab `Rw 44` / `STC 44` and
+field/building `R'w 38`, `Dn,w 39`, `Dn,A 37.5`, `DnT,w 41`, and
+`DnT,A 39.9`; ratio `0.25` reduces it to lab `Rw 43` / `STC 43` and
+field/building `R'w 37`, `Dn,w 38`, `Dn,A 36.5`, `DnT,w 40`, and
+`DnT,A 38.9`. No numeric ratio preserves the existing enum behavior.
+Missing user-supplied `flowResistivityPaSM2` remains `needs_input`, and
+impact/ASTM aliases remain unsupported. Counters:
+`accuracyPromotedRequestShapes: 3`,
+`accuracyPromotedTargetOutputs: 13`, `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 13`,
+`runtimeFormulaRetunes: 1`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Current selected next action:
+`post_v1_wall_double_leaf_framed_porous_absorber_coverage_ratio_numeric_sensitivity_coverage_refresh_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-porous-absorber-coverage-ratio-numeric-sensitivity-coverage-refresh-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_POROUS_ABSORBER_COVERAGE_RATIO_NUMERIC_SENSITIVITY_COVERAGE_REFRESH_PLAN_2026-06-19.md`.
+Current selected next label:
+`post-V1 wall double-leaf/framed porous absorber coverage-ratio numeric sensitivity coverage refresh`.
+
+## Latest Wall Double-Leaf/Framed Porous Flow-Resistivity Numeric Sensitivity Owner - 2026-06-19
+
+Latest landed runtime formula-sensitivity owner:
+`post_v1_wall_double_leaf_framed_porous_flow_resistivity_numeric_sensitivity_owner_plan`.
+Owner file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-porous-flow-resistivity-numeric-sensitivity-owner-contract.test.ts`.
+Owner plan doc:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_POROUS_FLOW_RESISTIVITY_NUMERIC_SENSITIVITY_OWNER_PLAN_2026-06-19.md`.
+Owner status:
+`post_v1_wall_double_leaf_framed_porous_flow_resistivity_numeric_sensitivity_owner_landed_runtime_selected_coverage_refresh`.
+It follows
+`post_v1_wall_context_owned_porous_cavity_field_building_lab_companion_basis_integrity_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-context-owned-porous-cavity-field-building-lab-companion-basis-integrity-coverage-refresh-contract.test.ts`
+/
+`post_v1_wall_context_owned_porous_cavity_field_building_lab_companion_basis_integrity_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`.
+Selected candidate:
+`wall.double_leaf_framed.porous_flow_resistivity_numeric_sensitivity_owner`.
+
+The owner makes `flowResistivityPaSM2` a numeric damping input in the
+double-leaf/framed porous cavity formula route instead of a boolean
+source-present flag. Nominal `15000 Pa*s/m2` keeps existing pins:
+`Rw 46`, `STC 46`, `C -1`, `Ctr -6.1`, `R'w 40`, `Dn,w 41`,
+`Dn,A 39.5`, `DnT,w 43`, and `DnT,A 41.9`. Off-nominal `5000` and
+`50000 Pa*s/m2` now reduce the same route to lab `Rw 45` / `STC 45`
+and field/building `R'w 39`, `Dn,w 40`, `Dn,A 38.5`, `DnT,w 42`,
+and `DnT,A 40.9`. Missing user-supplied `flowResistivityPaSM2` remains
+`needs_input`; exact source rows and compatible anchors retain
+precedence. Counters: `accuracyPromotedRequestShapes: 4`,
+`accuracyPromotedTargetOutputs: 18`, `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 18`,
+`runtimeFormulaRetunes: 1`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Current selected next action:
+`post_v1_wall_double_leaf_framed_porous_flow_resistivity_numeric_sensitivity_coverage_refresh_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-porous-flow-resistivity-numeric-sensitivity-coverage-refresh-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_POROUS_FLOW_RESISTIVITY_NUMERIC_SENSITIVITY_COVERAGE_REFRESH_PLAN_2026-06-19.md`.
+Current selected next label:
+`post-V1 wall double-leaf/framed porous flow-resistivity numeric sensitivity coverage refresh`.
+
+## Latest Wall Context-Owned Porous-Cavity Field/Building Lab-Companion Basis Integrity Coverage Refresh - 2026-06-19
+
+Latest landed no-runtime coverage refresh:
+`post_v1_wall_context_owned_porous_cavity_field_building_lab_companion_basis_integrity_coverage_refresh_plan`.
+Coverage refresh file:
+`packages/engine/src/post-v1-wall-context-owned-porous-cavity-field-building-lab-companion-basis-integrity-coverage-refresh-contract.test.ts`.
+Coverage refresh plan doc:
+`docs/calculator/POST_V1_WALL_CONTEXT_OWNED_POROUS_CAVITY_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_COVERAGE_REFRESH_PLAN_2026-06-19.md`.
+Coverage refresh status:
+`post_v1_wall_context_owned_porous_cavity_field_building_lab_companion_basis_integrity_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`.
+It follows
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-airborne-frequency-field-building-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`
+/
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_coverage_refresh_landed_no_runtime_selected_wall_context_owned_porous_cavity_field_building_lab_companion_basis_integrity_owner`
+and previous owner
+`post_v1_wall_context_owned_porous_cavity_field_building_lab_companion_basis_integrity_owner_plan`
+/
+`packages/engine/src/post-v1-wall-context-owned-porous-cavity-field-building-lab-companion-basis-integrity-owner-contract.test.ts`
+/
+`post_v1_wall_context_owned_porous_cavity_field_building_lab_companion_basis_integrity_owner_landed_runtime_selected_coverage_refresh`.
+Selected candidate re-probed:
+`wall.context_owned_porous_cavity_field_building_lab_companion_basis_integrity_owner`.
+The refresh protects lab, field lab-only, building lab-only, mixed
+field/building, single-output, and partial lab companion requests for
+the context-owned double-leaf/framed porous-cavity route. It keeps
+`Rw 46`, `STC 46`, `C -1`, `Ctr -6.1`, `R'w 40`, `Dn,w 41`,
+`Dn,A 39.5`, `DnT,w 43`, and `DnT,A 41.9` on their owned bases.
+Missing flow/topology inputs and impact aliases stay outside. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next action:
+`post_v1_runtime_first_route_family_rerank_after_wall_context_owned_porous_cavity_field_building_lab_companion_basis_integrity_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-context-owned-porous-cavity-field-building-lab-companion-basis-integrity-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_WALL_CONTEXT_OWNED_POROUS_CAVITY_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_PLAN_2026-06-19.md`.
+Current selected next label:
+`post-V1 runtime-first route-family rerank after wall context-owned porous-cavity field/building lab-companion basis integrity`.
+
+## Latest Wall Context-Owned Porous-Cavity Field/Building Lab-Companion Basis Integrity Owner - 2026-06-19
+
+Latest landed runtime owner:
+`post_v1_wall_context_owned_porous_cavity_field_building_lab_companion_basis_integrity_owner_plan`.
+Owner file:
+`packages/engine/src/post-v1-wall-context-owned-porous-cavity-field-building-lab-companion-basis-integrity-owner-contract.test.ts`.
+Owner plan doc:
+`docs/calculator/POST_V1_WALL_CONTEXT_OWNED_POROUS_CAVITY_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_OWNER_PLAN_2026-06-19.md`.
+Owner status:
+`post_v1_wall_context_owned_porous_cavity_field_building_lab_companion_basis_integrity_owner_landed_runtime_selected_coverage_refresh`.
+It follows
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-airborne-frequency-field-building-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+/
+`post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_coverage_refresh_landed_no_runtime_selected_wall_context_owned_porous_cavity_field_building_lab_companion_basis_integrity_owner`.
+Selected candidate:
+`wall.context_owned_porous_cavity_field_building_lab_companion_basis_integrity_owner`.
+The owner promotes the context-owned physical-input variant of the
+double-leaf/framed wall formula route. A wall with explicit side leaf
+groups, independent frame topology, absorptive cavity depth/fill, and
+`advancedWall.cavities[].absorberFlowResistivityPaSM2` now keeps
+field/building lab companions on the owned direct lab curve: `Rw 46`,
+`STC 46`, `C -1`, and `Ctr -6.1`. Field/building adapter outputs remain
+`R'w 40`, `Dn,w 41`, `Dn,A 39.5`, `DnT,w 43`, and `DnT,A 41.9`.
+Missing flow/topology inputs still return `needs_input`; impact aliases,
+opening/leak, generic flanking, source crawling, and formula retuning
+remain outside this owner.
+Counters: `accuracyPromotedRequestShapes: 4`,
+`accuracyPromotedTargetOutputs: 16`, `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 4`, `runtimeValuesMoved 16`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+
+Current selected next action:
+`post_v1_wall_context_owned_porous_cavity_field_building_lab_companion_basis_integrity_coverage_refresh_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-wall-context-owned-porous-cavity-field-building-lab-companion-basis-integrity-coverage-refresh-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_WALL_CONTEXT_OWNED_POROUS_CAVITY_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_COVERAGE_REFRESH_PLAN_2026-06-19.md`.
+Current selected next label:
+`post-V1 wall context-owned porous-cavity field/building lab-companion basis integrity coverage refresh`.
 
 ## Latest Project/User Measured Wall Airborne Frequency Field/Building Lab-Companion Target-Output Independence Coverage Refresh - 2026-06-18
 

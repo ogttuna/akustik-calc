@@ -281,6 +281,128 @@ describe("report assistant action proposal", () => {
     expect(JSON.stringify(proposal)).not.toContain("Action proposal fixture reads");
   });
 
+  it("does not imply export or download proposals from preview-only wording", () => {
+    const document = documentFixture();
+
+    const result = createReportAssistantActionProposal({
+      context: contextFixture(document),
+      document,
+      instruction: "Preview this report"
+    });
+
+    expect(result).toMatchObject({
+      code: "unsupported_report_assistant_action_proposal",
+      mutates: false,
+      ok: false,
+      statusCode: 400
+    });
+  });
+
+  it("does not imply export or download proposals from bare PDF wording", () => {
+    const document = documentFixture();
+
+    const result = createReportAssistantActionProposal({
+      context: contextFixture(document),
+      document,
+      instruction: "Explain the PDF report format"
+    });
+
+    expect(result).toMatchObject({
+      code: "unsupported_report_assistant_action_proposal",
+      mutates: false,
+      ok: false,
+      statusCode: 400
+    });
+  });
+
+  it("previews explicit PDF export from the current calculator/report snapshot without downloading", () => {
+    const document = documentFixture();
+    const context = contextFixture(document);
+
+    const result = createReportAssistantActionProposal({
+      context,
+      document,
+      instruction: "Calculate and download PDF"
+    });
+
+    expect(result.ok).toBe(true);
+    expect(result.mutates).toBe(false);
+    const proposal = (result as Extract<ReportAssistantActionProposalResult, { ok: true }>).proposal;
+    expect(proposal).toMatchObject({
+      action: "export_current_report_snapshot_as_pdf",
+      applyRoute: {
+        bodyPreview: {
+          document: "current_report_document",
+          exportContentSummary: "current_export_content_summary",
+          exportFormat: "pdf",
+          exportSnapshotSignature: "current_assistant_context_signature",
+          selectedOutputs: "current_selected_output_set",
+          source: "assistant"
+        },
+        method: "POST",
+        pathname: "/api/proposal-pdf"
+      },
+      documentSignature: context.documentSignature,
+      mutates: false,
+      previewMutates: false,
+      requiresConfirmation: true,
+      target: {
+        exportCalculatorBackedRowCount: 1,
+        exportContentKinds: ["calculator_backed_rows"],
+        exportFormat: "pdf",
+        exportSnapshotSignature: context.assistantContextSignature,
+        selectedOutputs: ["Rw"]
+      }
+    });
+    expect(proposal.summary).toContain(context.assistantContextSignature);
+    expect(proposal.summary).toContain("selected outputs: Rw");
+    expect(proposal.summary).toContain("calculator-backed rows");
+    expect(proposal.warnings).toEqual([]);
+    expect(JSON.stringify(proposal)).not.toContain("Action proposal fixture reads");
+  });
+
+  it("blocks stale calculator rows from calculator-result labeling in export proposals", () => {
+    const document = documentFixture();
+    const context = projectAssemblyContextFixture(document);
+
+    const result = createReportAssistantActionProposal({
+      context,
+      document,
+      instruction: "Download this calculator result as PDF"
+    });
+
+    expect(result.ok).toBe(true);
+    const proposal = (result as Extract<ReportAssistantActionProposalResult, { ok: true }>).proposal;
+    expect(proposal.target.exportCalculatorBackedRowCount).toBe(0);
+    expect(proposal.target.exportContentKinds).not.toContain("calculator_backed_rows");
+    expect(proposal.target.selectedOutputs).toEqual(["Rw"]);
+    expect(proposal.warnings).toContain(
+      "Current draft is dirty; refresh the calculator snapshot before labeling exported numeric rows as calculator-backed."
+    );
+    expect(proposal.warnings).toContain(
+      "No current calculator-backed rows are eligible for calculator-result labeling in this export proposal."
+    );
+  });
+
+  it("keeps advisory research export text separate from calculator-result labeling", () => {
+    const document = documentFixture();
+    const context = projectAssemblyContextFixture(document);
+
+    const result = createReportAssistantActionProposal({
+      context,
+      document,
+      instruction: "Export the advisory research as PDF"
+    });
+
+    expect(result.ok).toBe(true);
+    const proposal = (result as Extract<ReportAssistantActionProposalResult, { ok: true }>).proposal;
+    expect(proposal.target.exportContentKinds).toEqual(["advisory_research_text"]);
+    expect(proposal.target.exportContentKinds).not.toContain("calculator_backed_rows");
+    expect(proposal.warnings).toContain(
+      "Advisory research text can be exported only as advisory text, not as a calculator result, until a calculator-backed snapshot is current."
+    );
+  });
+
   it("requires a project assembly target before create-report previews", () => {
     const document = documentFixture();
 
@@ -679,6 +801,68 @@ describe("report assistant action proposal route", () => {
       }
     ]);
     expect(serialized).not.toContain("PRIVATE_ACTION_PROPOSAL_REPORT_BODY");
+  });
+
+  it("returns explicit PDF export previews for the current snapshot without returning the full report document", async () => {
+    const document = documentFixture({
+      executiveSummary: "PRIVATE_ACTION_PROPOSAL_EXPORT_BODY"
+    });
+    const context = contextFixture(document);
+
+    const response = await POST(routeRequest({
+      context,
+      document,
+      instruction: "Calculate and download PDF"
+    }));
+    const body = (await response.json()) as {
+      assistantResults?: ReportAssistantResultEnvelope[];
+      mutates?: boolean;
+      ok: boolean;
+      proposal?: {
+        applyRoute?: {
+          bodyPreview?: {
+            document?: string;
+            exportFormat?: string;
+          };
+          pathname?: string;
+        };
+        target?: {
+          exportContentKinds?: string[];
+          exportSnapshotSignature?: string;
+          selectedOutputs?: string[];
+        };
+      };
+    };
+    const serialized = JSON.stringify(body);
+
+    expect(response.status).toBe(200);
+    expect(body.ok).toBe(true);
+    expect(body.mutates).toBe(false);
+    expect(body.proposal?.applyRoute?.pathname).toBe("/api/proposal-pdf");
+    expect(body.proposal?.applyRoute?.bodyPreview?.document).toBe("current_report_document");
+    expect(body.proposal?.applyRoute?.bodyPreview?.exportFormat).toBe("pdf");
+    expect(body.proposal?.target?.exportSnapshotSignature).toBe(context.assistantContextSignature);
+    expect(body.proposal?.target?.selectedOutputs).toEqual(["Rw"]);
+    expect(body.proposal?.target?.exportContentKinds).toEqual(["calculator_backed_rows"]);
+    expect(body.assistantResults?.[0]).toMatchObject({
+      authority: "draft_only",
+      capabilityName: "export_current_report_snapshot_as_pdf",
+      mutates: false,
+      previewOnly: true,
+      rendererKind: "action_proposal_card",
+      requiresConfirmation: true,
+      resultKind: "action_proposal",
+      routeStatus: "ready"
+    });
+    expect(body.assistantResults?.[0]?.evidence).toContainEqual({
+      detail: context.assistantContextSignature,
+      label: "Export snapshot signature"
+    });
+    expect(body.assistantResults?.[0]?.evidence).toContainEqual({
+      detail: "Rw",
+      label: "Selected outputs"
+    });
+    expect(serialized).not.toContain("PRIVATE_ACTION_PROPOSAL_EXPORT_BODY");
   });
 
   it("returns create-report previews for the selected project assembly", async () => {

@@ -129,6 +129,34 @@ describe("report assistant result card model", () => {
     });
   });
 
+  it("renders explicit export proposals as confirmation-only action cards", () => {
+    const envelope = createReportAssistantResultEnvelope({
+      authority: "draft_only",
+      capabilityName: "export_current_report_snapshot_as_pdf",
+      confidenceReason: "The route produced a non-mutating export preview tied to the current report snapshot.",
+      routeStatus: "ready",
+      sourceTrace: [
+        {
+          kind: "deterministic",
+          label: "report_assistant_action_proposal_route"
+        }
+      ]
+    });
+
+    const model = createReportAssistantResultCardModel(envelope);
+
+    expect(model).toMatchObject({
+      rendererKind: "action_proposal_card",
+      rendererLabel: "Action proposal",
+      rendersCalculatorPreview: false,
+      tone: "warning"
+    });
+    expect(model.metaRows).toContainEqual({
+      label: "Confirmation",
+      value: "Required"
+    });
+  });
+
   it("classifies failure, boundary, and confirmation tones without natural-language parsing", () => {
     expect(
       getReportAssistantResultCardTone({

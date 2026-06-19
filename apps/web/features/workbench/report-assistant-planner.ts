@@ -112,8 +112,13 @@ function hasPromptInjectionSignal(normalized: string): boolean {
 }
 
 function hasUnsupportedSideEffectIntent(normalized: string): boolean {
-  return /\b(?:apply|archive|delete|download|export|reset)\b/u.test(normalized) ||
-    /\b(?:arsivle|disari aktar|indir|sil|uygula|sifirla)\b/u.test(normalized);
+  return /\b(?:apply|archive|delete|reset)\b/u.test(normalized) ||
+    /\b(?:arsivle|sil|uygula|sifirla)\b/u.test(normalized);
+}
+
+function hasExportDownloadIntent(normalized: string): boolean {
+  return /\b(?:download|export)\b/u.test(normalized) ||
+    /\b(?:disa aktar|disari aktar|indir)\b/u.test(normalized);
 }
 
 function hasCalculatorIntent(normalized: string): boolean {
@@ -125,12 +130,21 @@ function hasLayerStackEvidence(normalized: string): boolean {
   return /\b\d+(?:[.,]\d+)?\s*mm\b/u.test(normalized);
 }
 
+function hasWallCandidateComparisonIntent(normalized: string): boolean {
+  return hasLayerStackEvidence(normalized) &&
+    /\b(?:compare|comparison|karsilastir|karsilastirma|karşılaştır|kiyasla|kıyasla|vs)\b/u.test(normalized) &&
+    /\b(?:c|ctr|dn|dnt|duvar|rw|stc|wall)\b/u.test(normalized) &&
+    !/\b(?:aiic|ceiling|doseme|döşeme|floor|iic|impact|ln|slab|tavan)\b/u.test(normalized);
+}
+
 function hasResearchIntent(normalized: string): boolean {
-  return /\b(?:ara|arastir|compare|internet|kaynak|plausibility|research|source|verify)\b/u.test(normalized);
+  return /\b(?:alternatif|alternatives?|ara|arastir|compare|comparison|internet|karsilastir|karsilastirma|kaynak|kiyasla|plausibility|research|source|verify)\b/u
+    .test(normalized);
 }
 
 function hasAlternativeIntent(normalized: string): boolean {
-  return /\b(?:alternative|alternatif|assembly|combination|karsilastir|kombinasyon|malzeme|material)\b/u.test(normalized);
+  return /\b(?:alternative|alternatives|alternatif|assembly|combination|karsilastir|karsilastirma|kiyasla|kombinasyon|malzeme|material)\b/u
+    .test(normalized);
 }
 
 function hasProjectReadIntent(normalized: string): boolean {
@@ -150,6 +164,10 @@ function actionCapabilityForInput(input: ReportAssistantPlannerInput, normalized
   const wantsCreate = /\b(?:create|new|olustur|yeni)\b/u.test(normalized);
   const wantsSave = /\b(?:kaydet|persist|sakla|save)\b/u.test(normalized);
   const wantsReportRevision = /\b(?:project report|rapor|report|revise|revision|revizyon)\b/u.test(normalized);
+
+  if (hasExportDownloadIntent(normalized)) {
+    return "export_current_report_snapshot_as_pdf";
+  }
 
   if (wantsRestore && wantsReportRevision) {
     return "restore_report_revision_as_new_draft";
@@ -222,7 +240,11 @@ export function planReportAssistantRequest(input: ReportAssistantPlannerInput): 
   const actionCapabilityName = actionCapabilityForInput(input, normalized);
   if (actionCapabilityName) {
     const questions: string[] = [];
-    if (!input.hasProjectContext && actionCapabilityName !== "create_user_preset_from_current_stack") {
+    if (
+      !input.hasProjectContext &&
+      actionCapabilityName !== "create_user_preset_from_current_stack" &&
+      actionCapabilityName !== "export_current_report_snapshot_as_pdf"
+    ) {
       questions.push("Bu işlem için proje bağlamı gerekli; önce project/workbench kaynağını aç.");
     }
     if (!input.sourceStackAvailable && actionCapabilityName === "save_current_stack_as_project_assembly") {
@@ -237,7 +259,26 @@ export function planReportAssistantRequest(input: ReportAssistantPlannerInput): 
       mode: "action_proposal",
       requiresClarification: questions.length > 0,
       targetCapability: actionCapabilityName,
-      usedSignals: ["mutation_intent", "confirmation_required"]
+      usedSignals:
+        actionCapabilityName === "export_current_report_snapshot_as_pdf"
+          ? ["export_download_intent", "confirmation_required"]
+          : ["mutation_intent", "confirmation_required"]
+    });
+  }
+
+  if (hasWallCandidateComparisonIntent(normalized)) {
+    return candidateDecision({
+      allowedTools: ["report_assistant_wall_candidate_comparison_preview"],
+      confidence: "high",
+      input,
+      mode: "calculator_preview",
+      requiresClarification: false,
+      targetCapability: "report_assistant_wall_candidate_comparison_preview",
+      usedSignals: [
+        "wall_candidate_comparison_intent",
+        "layer_stack_evidence",
+        ...(input.selectedOutputs && input.selectedOutputs.length > 0 ? ["target_outputs_present"] : [])
+      ]
     });
   }
 

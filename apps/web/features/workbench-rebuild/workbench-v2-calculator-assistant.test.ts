@@ -4,12 +4,14 @@ import { describe, expect, it } from "vitest";
 import {
   WORKBENCH_V2_CALCULATOR_ASSISTANT_TOOL_DEFINITIONS,
   previewDescribedLayerConfiguration,
+  previewReportAssistantLayerStackDraft,
   previewWorkbenchV2CalculatorSnapshot
 } from "./workbench-v2-calculator-assistant";
 import {
   WORKBENCH_V2_DEFAULT_CONTEXT,
   buildWorkbenchV2ProjectSnapshot
 } from "./workbench-v2-project-snapshot";
+import type { ReportAssistantLayerStackDraft } from "../workbench/report-assistant-layer-stack-draft";
 
 const CUSTOM_PANEL_ID = "assistant_custom_panel_leaf";
 const CUSTOM_ABSORBER_ID = "assistant_custom_porous_absorber";
@@ -74,6 +76,55 @@ function wallSnapshot() {
   });
 }
 
+function readyFloorImpactDraft(input: {
+  floorImpactDraft?: ReportAssistantLayerStackDraft["floorImpactDraft"];
+  requestedOutputs: readonly RequestedOutputId[];
+}): ReportAssistantLayerStackDraft {
+  return {
+    assumptions: ["Floor impact physical inputs were provided explicitly."],
+    contextSignature: `ctx.ready.floor.${input.requestedOutputs.join(".")}`,
+    customMaterials: [],
+    draftId: `draft.ready.floor.${input.requestedOutputs.join(".")}`,
+    floorImpactDraft: input.floorImpactDraft ?? {
+      dynamicStiffnessMNm3: 15,
+      loadBasisKgM2: 200,
+      requiredPhysicalInputs: ["dynamic_stiffness", "load_basis"]
+    },
+    layers: [
+      {
+        id: "floor-layer-1",
+        materialId: "concrete",
+        materialName: "Concrete",
+        originalPhrase: "150 mm concrete",
+        role: "base_structure",
+        thicknessMm: 150
+      },
+      {
+        id: "floor-layer-2",
+        materialId: "geniemat_rst05",
+        materialName: "GenieMat RST05",
+        originalPhrase: "5 mm geniemat",
+        role: "resilient_layer",
+        thicknessMm: 5
+      },
+      {
+        id: "floor-layer-3",
+        materialId: "screed",
+        materialName: "Screed",
+        originalPhrase: "50 mm screed",
+        role: "floating_screed",
+        thicknessMm: 50
+      }
+    ],
+    mode: "floor",
+    originalPhrases: ["150 mm concrete", "5 mm geniemat", "50 mm screed"],
+    requestedOutputs: input.requestedOutputs,
+    source: "user_instruction",
+    sourceInstruction: "structured ready floor impact draft",
+    warnings: []
+  };
+}
+
 describe("workbench v2 calculator assistant", () => {
   it("declares preview-only non-mutating calculator access", () => {
     expect(WORKBENCH_V2_CALCULATOR_ASSISTANT_TOOL_DEFINITIONS).toEqual(expect.arrayContaining([
@@ -88,6 +139,12 @@ describe("workbench v2 calculator assistant", () => {
         name: "preview_described_layer_configuration",
         previewOnly: true,
         requiredInputs: ["description"]
+      }),
+      expect.objectContaining({
+        mutates: false,
+        name: "preview_layer_stack_draft",
+        previewOnly: true,
+        requiredInputs: ["draft"]
       })
     ]));
   });
@@ -210,6 +267,26 @@ describe("workbench v2 calculator assistant", () => {
       ],
       parser: "deterministic_wall_layer_description_v1"
     });
+    expect(result.ok && result.preview.layerStackDraft).toMatchObject({
+      draft: {
+        layers: [
+          { materialId: "gypsum_board", originalPhrase: "STC for 12.5 mm alcipan", role: "side_a", thicknessMm: 12.5 },
+          { materialId: "rockwool", originalPhrase: "50 mm tasyunu", role: "cavity", thicknessMm: 50 },
+          { materialId: "concrete", originalPhrase: "100 mm beton", role: "side_b", thicknessMm: 100 }
+        ],
+        lastCalculatorPreview: {
+          routeStatus: "ready"
+        },
+        mode: "wall",
+        requestedOutputs: ["Rw", "STC"],
+        source: "user_instruction"
+      },
+      validation: {
+        missingInputs: [],
+        ok: true,
+        status: "ready"
+      }
+    });
     expect(result.ok && result.preview.outputRows).toEqual([
       { detail: "Calculated", label: "Rw", status: "live", value: "57 dB" },
       { detail: "Calculated", label: "STC", status: "live", value: "57 dB" }
@@ -222,6 +299,274 @@ describe("workbench v2 calculator assistant", () => {
         { materialId: "concrete", thicknessMm: 100 }
       ],
       targetOutputs: ["Rw", "STC"]
+    });
+  });
+
+  it("runs the calculator from a ready typed layer-stack draft without reparsing prose", () => {
+    const result = previewReportAssistantLayerStackDraft({
+      draft: {
+        assumptions: ["Layer roles were provided through structured clarification answers."],
+        contextSignature: "ctx.ready.draft",
+        customMaterials: [],
+        draftId: "draft.ready.wall",
+        layers: [
+          {
+            id: "draft-layer-1",
+            materialId: "gypsum_board",
+            materialName: "Gypsum Board",
+            originalPhrase: "12.5 mm gypsum board",
+            role: "side_a",
+            thicknessMm: 12.5
+          },
+          {
+            id: "draft-layer-2",
+            materialId: "rockwool",
+            materialName: "Rockwool",
+            originalPhrase: "50 mm rockwool",
+            role: "cavity",
+            thicknessMm: 50
+          },
+          {
+            id: "draft-layer-3",
+            materialId: "concrete",
+            materialName: "Concrete",
+            originalPhrase: "100 mm concrete",
+            role: "side_b",
+            thicknessMm: 100
+          }
+        ],
+        mode: "wall",
+        originalPhrases: ["12.5 mm gypsum board", "50 mm rockwool", "100 mm concrete"],
+        requestedOutputs: ["Rw", "STC"],
+        source: "user_instruction",
+        sourceInstruction: "structured ready draft",
+        wallTopologyDraft: {
+          leafMapping: "not_required",
+          topology: "single_leaf"
+        },
+        warnings: []
+      }
+    });
+
+    expect(result).toMatchObject({
+      mutates: false,
+      name: "preview_layer_stack_draft",
+      ok: true,
+      previewOnly: true
+    });
+    expect(result.ok && result.preview.calculationSummary).toEqual({
+      primaryOutput: "Rw",
+      primaryValueLabel: "57 dB",
+      selectedOutputs: ["Rw", "STC"],
+      status: "ready"
+    });
+    expect(result.ok && result.preview.outputRows).toEqual([
+      { detail: "Calculated", label: "Rw", status: "live", value: "57 dB" },
+      { detail: "Calculated", label: "STC", status: "live", value: "57 dB" }
+    ]);
+    expect(result.ok && result.preview.layerStackDraft).toMatchObject({
+      draft: {
+        draftId: "draft.ready.wall",
+        lastCalculatorPreview: {
+          routeStatus: "ready",
+          snapshotSignature: "ctx.ready.draft"
+        }
+      },
+      validation: {
+        missingInputs: [],
+        ok: true,
+        status: "ready"
+      }
+    });
+    expect(result.ok && result.preview.estimatePayload).toMatchObject({
+      calculator: "dynamic",
+      layers: [
+        { materialId: "gypsum_board", thicknessMm: 12.5 },
+        { materialId: "rockwool", thicknessMm: 50 },
+        { materialId: "concrete", thicknessMm: 100 }
+      ],
+      targetOutputs: ["Rw", "STC"]
+    });
+  });
+
+  it("runs a complete owned floor impact draft through calculator preview for Ln,w", () => {
+    const result = previewReportAssistantLayerStackDraft({
+      draft: readyFloorImpactDraft({
+        requestedOutputs: ["Ln,w"]
+      })
+    });
+
+    expect(result).toMatchObject({
+      mutates: false,
+      name: "preview_layer_stack_draft",
+      ok: true,
+      previewOnly: true
+    });
+    expect(result.ok && result.preview.calculationSummary).toEqual({
+      primaryOutput: "Ln,w",
+      primaryValueLabel: "40.5 dB",
+      selectedOutputs: ["Ln,w"],
+      status: "ready"
+    });
+    expect(result.ok && result.preview.describedConfiguration).toMatchObject({
+      parser: "deterministic_floor_layer_description_v1"
+    });
+    expect(result.ok && result.preview.outputRows).toEqual([
+      { detail: "Calculated", label: "Ln,w", status: "live", value: "40.5 dB" }
+    ]);
+    expect(result.ok && result.preview.estimatePayload).toMatchObject({
+      calculator: "dynamic",
+      floorImpactContext: {
+        loadBasisKgM2: 200,
+        resilientLayerDynamicStiffnessMNm3: 15
+      },
+      layers: [
+        { floorRole: "base_structure", materialId: "concrete", thicknessMm: 150 },
+        { floorRole: "resilient_layer", materialId: "geniemat_rst05", thicknessMm: 5 },
+        { floorRole: "floating_screed", materialId: "screed", thicknessMm: 50 }
+      ],
+      targetOutputs: ["Ln,w"]
+    });
+    expect(result.ok && result.preview.layerStackDraft).toMatchObject({
+      draft: {
+        lastCalculatorPreview: {
+          routeStatus: "ready",
+          snapshotSignature: "ctx.ready.floor.Ln,w"
+        }
+      },
+      validation: {
+        missingInputs: [],
+        ok: true,
+        status: "ready"
+      }
+    });
+  });
+
+  it("carries field impact room volume into the calculator payload and keeps L'nT,50 blocked on route-required CI input", () => {
+    const result = previewReportAssistantLayerStackDraft({
+      draft: readyFloorImpactDraft({
+        floorImpactDraft: {
+          dynamicStiffnessMNm3: 15,
+          fieldLabContext: "field",
+          loadBasisKgM2: 200,
+          receivingRoomVolumeM3: 50,
+          requiredPhysicalInputs: ["dynamic_stiffness", "load_basis", "field_lab_context", "room_volume"]
+        },
+        requestedOutputs: ["L'nT,50"]
+      })
+    });
+
+    expect(result.ok && result.preview.describedConfiguration).toMatchObject({
+      parser: "deterministic_floor_layer_description_v1"
+    });
+    expect(result.ok && result.preview.estimatePayload).toMatchObject({
+      floorImpactContext: {
+        loadBasisKgM2: 200,
+        resilientLayerDynamicStiffnessMNm3: 15
+      },
+      impactFieldContext: {
+        receivingRoomVolumeM3: 50
+      },
+      targetOutputs: ["L'nT,50"]
+    });
+    expect(result.ok && result.preview.calculationSummary).toEqual({
+      primaryOutput: "L'nT,50",
+      selectedOutputs: ["L'nT,50"],
+      status: "needs_input"
+    });
+    expect(result.ok && result.preview.outputRows).toEqual([
+      {
+        detail: "Needs impactFieldContext, CI,50-2500",
+        label: "L'nT,50",
+        status: "needs_input",
+        value: "--"
+      }
+    ]);
+    expect(result.ok && result.preview.tasks.map((task) => task.id)).toEqual([
+      "route-impactFieldContext",
+      "route-impactFieldContext.ci50_2500Db"
+    ]);
+  });
+
+  it("blocks AIIC and IIC numeric rows until required floor impact physical inputs are explicit", () => {
+    const result = previewReportAssistantLayerStackDraft({
+      draft: readyFloorImpactDraft({
+        floorImpactDraft: {
+          requiredPhysicalInputs: ["dynamic_stiffness", "load_basis", "target_metric_basis"],
+          targetMetricBasis: "astm"
+        },
+        requestedOutputs: ["AIIC", "IIC"]
+      })
+    });
+
+    expect(result.ok && result.preview.calculationSummary).toEqual({
+      primaryOutput: "AIIC",
+      selectedOutputs: ["AIIC", "IIC"],
+      status: "needs_input"
+    });
+    expect(result.ok && result.preview.outputRows).toEqual([
+      { detail: "Pending until the layer-stack draft is complete.", label: "AIIC", status: "pending", value: "--" },
+      { detail: "Pending until the layer-stack draft is complete.", label: "IIC", status: "pending", value: "--" }
+    ]);
+    expect(result.ok && result.preview.tasks.map((task) => task.id)).toEqual([
+      "assistant_floor_impact_dynamic_stiffness_missing",
+      "assistant_floor_impact_load_basis_missing"
+    ]);
+    expect(result.ok && result.preview.estimatePayload).toBeUndefined();
+  });
+
+  it("keeps ASTM impact outputs unsupported instead of substituting an ISO impact value", () => {
+    const result = previewReportAssistantLayerStackDraft({
+      draft: readyFloorImpactDraft({
+        floorImpactDraft: {
+          dynamicStiffnessMNm3: 15,
+          loadBasisKgM2: 200,
+          requiredPhysicalInputs: ["dynamic_stiffness", "load_basis", "target_metric_basis"],
+          targetMetricBasis: "astm"
+        },
+        requestedOutputs: ["AIIC"]
+      })
+    });
+
+    expect(result.ok && result.preview.calculationSummary).toEqual({
+      primaryOutput: "AIIC",
+      selectedOutputs: ["AIIC"],
+      status: "unsupported"
+    });
+    expect(result.ok && result.preview.outputRows).toEqual([
+      { detail: "Unsupported for route", label: "AIIC", status: "unsupported", value: "--" }
+    ]);
+    expect(result.ok && result.preview.engineSummary?.acousticBoundary).toMatchObject({
+      origin: "unsupported",
+      route: "floor",
+      unsupportedOutputs: ["AIIC"]
+    });
+  });
+
+  it("does not alias mixed Rw/STC plus ASTM impact requests into a fabricated impact value", () => {
+    const result = previewReportAssistantLayerStackDraft({
+      draft: readyFloorImpactDraft({
+        floorImpactDraft: {
+          dynamicStiffnessMNm3: 15,
+          loadBasisKgM2: 200,
+          requiredPhysicalInputs: ["dynamic_stiffness", "load_basis", "target_metric_basis"],
+          targetMetricBasis: "astm"
+        },
+        requestedOutputs: ["Rw", "STC", "AIIC"]
+      })
+    });
+
+    expect(result.ok && result.preview.outputRows).toEqual([
+      { detail: "Calculated", label: "Rw", status: "live", value: "58 dB" },
+      { detail: "Calculated", label: "STC", status: "live", value: "59 dB" },
+      { detail: "Unsupported for route", label: "AIIC", status: "unsupported", value: "--" }
+    ]);
+    expect(result.ok && result.preview.estimatePayload).toMatchObject({
+      floorImpactContext: {
+        loadBasisKgM2: 200,
+        resilientLayerDynamicStiffnessMNm3: 15
+      },
+      targetOutputs: ["Rw", "STC", "AIIC"]
     });
   });
 
@@ -301,5 +646,173 @@ describe("workbench v2 calculator assistant", () => {
       previewOnly: true
     });
     expect(result.ok && result.preview.estimatePayload).toBeUndefined();
+    expect(result.ok && result.preview.layerStackDraft?.validation).toMatchObject({
+      ok: false,
+      status: "needs_input"
+    });
+    expect(result.ok && result.preview.layerStackDraft?.validation.missingInputs.map((input) => input.code)).toEqual([
+      "assistant_layer_material_missing",
+      "assistant_layer_role_missing"
+    ]);
+  });
+
+  it("parses described floor impact layers into a typed draft without numeric preview", () => {
+    const result = previewDescribedLayerConfiguration({
+      description: "120 mm concrete floor + 30 mm rockwool için Ln,w hesapla"
+    });
+
+    expect(result).toMatchObject({
+      mutates: false,
+      name: "preview_described_layer_configuration",
+      ok: true,
+      preview: {
+        calculationSummary: {
+          selectedOutputs: ["Ln,w"],
+          status: "needs_input"
+        },
+        describedConfiguration: {
+          layers: [
+            { materialId: "concrete", role: "base_structure", thicknessMm: 120 },
+            { materialId: "rockwool", role: "resilient_layer", thicknessMm: 30 }
+          ],
+          parser: "deterministic_floor_layer_description_v1"
+        },
+        outputRows: [
+          {
+            detail: "Pending until the described layer configuration is complete.",
+            label: "Ln,w",
+            status: "pending",
+            value: "--"
+          }
+        ]
+      },
+      previewOnly: true
+    });
+    expect(result.ok && result.preview.estimatePayload).toBeUndefined();
+    expect(result.ok && result.preview.layerStackDraft?.draft).toMatchObject({
+      floorImpactDraft: {
+        requiredPhysicalInputs: ["dynamic_stiffness", "load_basis"]
+      },
+      layers: [
+        { materialId: "concrete", role: "base_structure", thicknessMm: 120 },
+        { materialId: "rockwool", role: "resilient_layer", thicknessMm: 30 }
+      ],
+      mode: "floor",
+      requestedOutputs: ["Ln,w"]
+    });
+    expect(result.ok && result.preview.layerStackDraft?.validation.missingInputs.map((input) => input.code)).toEqual([
+      "assistant_floor_impact_dynamic_stiffness_missing",
+      "assistant_floor_impact_load_basis_missing"
+    ]);
+  });
+
+  it("asks for target metric basis for ASTM impact metrics instead of aliasing them", () => {
+    const result = previewDescribedLayerConfiguration({
+      description: "120 mm concrete slab + 5 mm geniemat + 50 mm screed için AIIC hesapla"
+    });
+
+    expect(result.ok && result.preview.calculationSummary).toEqual({
+      primaryOutput: "AIIC",
+      selectedOutputs: ["AIIC"],
+      status: "needs_input"
+    });
+    expect(result.ok && result.preview.describedConfiguration?.layers.map((layer) => ({
+      materialId: layer.materialId,
+      role: layer.role,
+      thicknessMm: layer.thicknessMm
+    }))).toEqual([
+      { materialId: "concrete", role: "base_structure", thicknessMm: 120 },
+      { materialId: "geniemat_rst05", role: "resilient_layer", thicknessMm: 5 },
+      { materialId: "screed", role: "floating_screed", thicknessMm: 50 }
+    ]);
+    expect(result.ok && result.preview.layerStackDraft?.validation.missingInputs.map((input) => input.code)).toEqual([
+      "assistant_floor_impact_dynamic_stiffness_missing",
+      "assistant_floor_impact_load_basis_missing",
+      "assistant_floor_impact_target_metric_basis_missing"
+    ]);
+    expect(result.ok && result.preview.outputRows).toEqual([
+      {
+        detail: "Pending until the described layer configuration is complete.",
+        label: "AIIC",
+        status: "pending",
+        value: "--"
+      }
+    ]);
+  });
+
+  it("maps ceiling board roles only when the user explicitly names a ceiling", () => {
+    const ceiling = previewDescribedLayerConfiguration({
+      description: "150 mm concrete floor + 13 mm gypsum ceiling board için L'nT,w hesapla"
+    });
+    const noCeiling = previewDescribedLayerConfiguration({
+      description: "150 mm concrete floor + 13 mm gypsum board için L'nT,w hesapla"
+    });
+
+    expect(ceiling.ok && ceiling.preview.describedConfiguration?.layers.map((layer) => ({
+      materialId: layer.materialId,
+      role: layer.role
+    }))).toEqual([
+      { materialId: "concrete", role: "base_structure" },
+      { materialId: "gypsum_board", role: "ceiling_board" }
+    ]);
+    expect(noCeiling.ok && noCeiling.preview.describedConfiguration?.layers.map((layer) => ({
+      materialId: layer.materialId,
+      role: layer.role
+    }))).toEqual([
+      { materialId: "concrete", role: "base_structure" },
+      { materialId: "gypsum_board", role: "floor_covering" }
+    ]);
+    expect(ceiling.ok && ceiling.preview.layerStackDraft?.validation.missingInputs.map((input) => input.code)).toEqual([
+      "assistant_floor_impact_dynamic_stiffness_missing",
+      "assistant_floor_impact_load_basis_missing",
+      "assistant_floor_impact_field_lab_context_missing",
+      "assistant_floor_impact_room_volume_missing"
+    ]);
+  });
+
+  it("keeps field impact room volume and field context as typed tasks", () => {
+    const result = previewDescribedLayerConfiguration({
+      description: "150 mm concrete floor için L'nT,50 hesapla"
+    });
+
+    expect(result.ok && result.preview.layerStackDraft?.draft.floorImpactDraft).toMatchObject({
+      requiredPhysicalInputs: ["dynamic_stiffness", "load_basis", "field_lab_context", "room_volume"]
+    });
+    expect(result.ok && result.preview.layerStackDraft?.validation.missingInputs.map((input) => input.code)).toEqual([
+      "assistant_floor_impact_dynamic_stiffness_missing",
+      "assistant_floor_impact_load_basis_missing",
+      "assistant_floor_impact_field_lab_context_missing",
+      "assistant_floor_impact_room_volume_missing"
+    ]);
+  });
+
+  it("returns unsupported for generic ASTM or ISO impact aliases without an explicit metric", () => {
+    const result = previewDescribedLayerConfiguration({
+      description: "ASTM impact için 120 mm concrete floor + 30 mm rockwool"
+    });
+
+    expect(result).toMatchObject({
+      mutates: false,
+      name: "preview_described_layer_configuration",
+      ok: true,
+      preview: {
+        calculationSummary: {
+          selectedOutputs: [],
+          status: "unsupported"
+        },
+        outputRows: [],
+        tasks: [
+          {
+            detail: "Generic ASTM/ISO impact basis wording is not a target metric. Ask for AIIC, IIC, Ln,w, L'nT,w, or another supported output explicitly.",
+            id: "unsupported-generic-impact-metric-basis",
+            label: "Unsupported generic impact metric alias",
+            source: "described_layer_configuration"
+          }
+        ]
+      },
+      previewOnly: true
+    });
+    expect(result.ok && result.preview.estimatePayload).toBeUndefined();
+    expect(result.ok && result.preview.layerStackDraft).toBeUndefined();
   });
 });

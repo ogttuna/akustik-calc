@@ -251,6 +251,119 @@ describe("workbench v2 calculator assistant route", () => {
     });
   });
 
+  it("keeps described floor and impact requests as needs-input boundaries without numeric rows", async () => {
+    const response = await POST(
+      routeRequest({
+        description: "120 mm concrete floor + 30 mm rockwool için Ln,w ve AIIC hesapla",
+        targetOutputs: ["Ln,w", "AIIC"] satisfies RequestedOutputId[]
+      })
+    );
+    const body = (await response.json()) as {
+      assistantResults?: ReportAssistantResultEnvelope[];
+      mutates?: boolean;
+      name?: string;
+      ok: boolean;
+      preview?: {
+        calculationSummary?: {
+          selectedOutputs?: string[];
+          status?: string;
+        };
+        describedConfiguration?: {
+          layers?: Array<{
+            materialId?: string;
+            role?: string;
+            thicknessMm?: number;
+          }>;
+          parser?: string;
+        };
+        layerStackDraft?: {
+          draft?: {
+            mode?: string;
+            requestedOutputs?: string[];
+          };
+          validation?: {
+            missingInputs?: Array<{
+              code?: string;
+            }>;
+            ok?: boolean;
+            status?: string;
+          };
+        };
+        outputRows?: Array<{
+          label?: string;
+          status?: string;
+          value?: string;
+        }>;
+        tasks?: Array<{
+          id?: string;
+        }>;
+      };
+      previewOnly?: boolean;
+    };
+
+    expect(response.status).toBe(200);
+    expect(body).toMatchObject({
+      mutates: false,
+      name: "preview_described_layer_configuration",
+      ok: true,
+      preview: {
+        calculationSummary: {
+          selectedOutputs: ["Ln,w", "AIIC"],
+          status: "needs_input"
+        },
+        describedConfiguration: {
+          layers: [
+            { materialId: "concrete", role: "base_structure", thicknessMm: 120 },
+            { materialId: "rockwool", role: "resilient_layer", thicknessMm: 30 }
+          ],
+          parser: "deterministic_floor_layer_description_v1"
+        },
+        layerStackDraft: {
+          draft: {
+            mode: "floor",
+            requestedOutputs: ["Ln,w", "AIIC"]
+          },
+          validation: {
+            ok: false,
+            status: "needs_input"
+          }
+        },
+        tasks: [
+          {
+            id: "assistant_floor_impact_dynamic_stiffness_missing"
+          },
+          {
+            id: "assistant_floor_impact_load_basis_missing"
+          },
+          {
+            id: "assistant_floor_impact_target_metric_basis_missing"
+          }
+        ]
+      },
+      previewOnly: true
+    });
+    expect(body.preview?.outputRows).toEqual([
+      { detail: "Pending until the described layer configuration is complete.", label: "Ln,w", status: "pending", value: "--" },
+      { detail: "Pending until the described layer configuration is complete.", label: "AIIC", status: "pending", value: "--" }
+    ]);
+    expect(body.preview?.layerStackDraft?.validation?.missingInputs?.map((input) => input.code)).toEqual([
+      "assistant_floor_impact_dynamic_stiffness_missing",
+      "assistant_floor_impact_load_basis_missing",
+      "assistant_floor_impact_target_metric_basis_missing"
+    ]);
+    expect(body.assistantResults?.[0]).toMatchObject({
+      authority: "needs_input",
+      basis: [],
+      capabilityName: "preview_described_layer_configuration",
+      routeStatus: "needs_input"
+    });
+    expect(body.assistantResults?.[0]?.tasks.map((task) => task.code)).toEqual([
+      "assistant_floor_impact_dynamic_stiffness_missing",
+      "assistant_floor_impact_load_basis_missing",
+      "assistant_floor_impact_target_metric_basis_missing"
+    ]);
+  });
+
   it("rejects malformed preview payloads without exposing a mutating shape", async () => {
     const response = await POST(routeRequest(null));
     const body = (await response.json()) as {

@@ -5,6 +5,7 @@ import {
   answerReportAssistantQuery,
   parseReportAssistantQueryAllowedReadActions
 } from "@/features/workbench/report-assistant-query";
+import { parseReportAssistantLayerStackDraftContinuationPayload } from "@/features/workbench/report-assistant-layer-stack-draft-continuation";
 import { routeFailureToAssistantResult } from "@/features/workbench/report-assistant-route-failure-result";
 import { parseSimpleWorkbenchProposalDocument } from "@/features/workbench/simple-workbench-proposal";
 import { getAuthState } from "@/lib/auth";
@@ -29,7 +30,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 function routeFailure(input: {
   code: string;
   errors: readonly string[];
-  routeStatus?: "error" | "needs_input" | "unsupported";
+  routeStatus?: "error" | "needs_input" | "unsupported" | "validation_failed";
   status: number;
   warnings?: readonly string[];
 }) {
@@ -123,10 +124,23 @@ export async function POST(request: Request) {
     });
   }
 
+  const draftContinuation = payload.draftContinuation === undefined
+    ? undefined
+    : parseReportAssistantLayerStackDraftContinuationPayload(payload.draftContinuation);
+  if (draftContinuation && !draftContinuation.ok) {
+    return routeFailure({
+      code: "invalid_report_assistant_layer_stack_draft_continuation",
+      errors: draftContinuation.errors,
+      routeStatus: "validation_failed",
+      status: 400
+    });
+  }
+
   const result = await answerReportAssistantQuery({
     allowedReadActions: allowedReadActions.actions,
     context,
     document,
+    ...(draftContinuation?.ok ? { draftContinuation: draftContinuation.request } : {}),
     instruction: payload.instruction,
     owner: owner.scope
   });
@@ -135,14 +149,16 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         assistantResults: [
-          routeFailureToAssistantResult({
-            capabilityName: "report_assistant_query_route",
-            code: result.code,
-            errors: result.errors,
-            evidence: result.evidence,
-            routeStatus: result.code.startsWith("unsupported_") ? "unsupported" : "error",
-            warnings: result.warnings
-          })
+          ...(result.assistantResults ?? [
+            routeFailureToAssistantResult({
+              capabilityName: "report_assistant_query_route",
+              code: result.code,
+              errors: result.errors,
+              evidence: result.evidence,
+              routeStatus: result.code.startsWith("unsupported_") ? "unsupported" : "error",
+              warnings: result.warnings
+            })
+          ])
         ],
         code: result.code,
         errors: result.errors,
@@ -163,6 +179,7 @@ export async function POST(request: Request) {
     assistantResults: result.assistantResults,
     ...(result.calculatorPreview ? { calculatorPreview: result.calculatorPreview } : {}),
     evidence: result.evidence,
+    ...(result.layerStackDraft ? { layerStackDraft: result.layerStackDraft } : {}),
     mutates: false,
     ok: true,
     usedReads: result.usedReads,

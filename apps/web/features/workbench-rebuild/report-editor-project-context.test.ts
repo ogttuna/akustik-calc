@@ -55,6 +55,10 @@ describe("report editor assistant project context", () => {
     expect(assistantRequest).toContain("startEditorAssistantRequest");
     expect(assistantRequest).toContain("finishEditorAssistantRequest(result)");
     expect(assistantRequest).toContain("requestId: activeRequest.requestId");
+    expect(assistantRequest).toContain("buildReportAssistantLayerStackDraftEditorContinuation");
+    expect(assistantRequest).toContain("draftContinuation: draftContinuationBuild.draftContinuation");
+    expect(assistantRequest).toContain("getReportAssistantLayerStackDraftEditorStateFromQueryPayload");
+    expect(assistantRequest).toContain("setActiveLayerStackDraftState(nextDraftState)");
     expect(assistantRequest).toContain("getAssistantQueryAnswer");
     expect(assistantRequest).toContain("getAssistantQueryCalculatorPreview");
     expect(assistantRequest).toContain("getAssistantActionProposalMessage");
@@ -91,7 +95,11 @@ describe("report editor assistant project context", () => {
 
   it("keeps calculator preview responses structured and guarded in the assistant thread", () => {
     expect(SOURCE).toContain("getAssistantQueryCalculatorPreview");
+    expect(SOURCE).toContain("activeLayerStackDraftState");
+    expect(SOURCE).toContain("Layer-stack draft");
+    expect(SOURCE).toContain("Dismiss draft");
     expect(SOURCE).toContain('envelope.name !== "preview_described_layer_configuration"');
+    expect(SOURCE).toContain('envelope.name !== "preview_layer_stack_draft"');
     expect(SOURCE).toContain("envelope.previewOnly !== true");
     expect(SOURCE).toContain("envelope.mutates !== false");
     expect(SOURCE).toContain("calculatorPreview ? { calculatorPreview } : {}");
@@ -123,10 +131,14 @@ describe("report editor assistant project context", () => {
     expect(confirmEnd).toBeGreaterThan(confirmStart);
     expect(confirmSource).toContain('assistantActionProposal.action === "create_project_report_from_current_draft"');
     expect(confirmSource).toContain('assistantActionProposal.action === "create_user_preset_from_current_stack"');
+    expect(confirmSource).toContain('assistantActionProposal.action === "export_current_report_snapshot_as_pdf"');
     expect(confirmSource).toContain('assistantActionProposal.action === "save_current_stack_as_project_assembly"');
     expect(confirmSource).toContain('assistantActionProposal.action === "save_project_report_revision_from_current_draft"');
     expect(confirmSource).toContain('assistantActionProposal.action === "restore_report_revision_as_new_draft"');
     expect(confirmSource).toContain("assistantActionProposal.documentSignature !== assistantContext.documentSignature");
+    expect(confirmSource).toContain("assistantActionProposal.assistantContextSignature !== assistantContext.assistantContextSignature");
+    expect(confirmSource).toContain('handleDownloadExport(activePdfStyle, "pdf")');
+    expect(confirmSource).toContain('"PDF export confirmed"');
     expect(confirmSource).toContain("hasProjectReportCreateContext(projectContext)");
     expect(confirmSource).toContain("hasProjectReportSourceContext(projectContext)");
     expect(confirmSource).toContain('fetch(assistantActionProposal.applyRoute.pathname');
@@ -150,6 +162,19 @@ describe("report editor assistant project context", () => {
     expect(confirmSource).toContain("storeSimpleWorkbenchProposalPreview(documentForProject");
     expect(confirmSource).not.toContain("applyValidatedReportAssistantPatch(");
     expect(confirmSource).not.toContain("handleSaveReportToProject(");
+  });
+
+  it("accepts only explicit assistant PDF export proposal shapes in the editor", () => {
+    expect(SOURCE).toContain('proposal.action === "export_current_report_snapshot_as_pdf"');
+    expect(SOURCE).toContain('applyRoute?.pathname !== "/api/proposal-pdf"');
+    expect(SOURCE).toContain('bodyPreview.exportFormat !== "pdf"');
+    expect(SOURCE).toContain('bodyPreview.exportSnapshotSignature !== "current_assistant_context_signature"');
+    expect(SOURCE).toContain('bodyPreview.selectedOutputs !== "current_selected_output_set"');
+    expect(SOURCE).toContain("targetSelectedOutputs");
+    expect(SOURCE).toContain("assistantActionProposal.target.exportSnapshotSignature");
+    expect(SOURCE).toContain("assistantActionProposal.target.selectedOutputs.join");
+    expect(SOURCE).toContain("assistantActionProposal.target.exportContentKinds.join");
+    expect(SOURCE).toContain("Confirm PDF export");
   });
 
   it("passes registry-backed planner action names to the action proposal route", () => {

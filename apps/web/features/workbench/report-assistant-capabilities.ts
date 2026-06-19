@@ -32,7 +32,8 @@ export type ReportAssistantCapabilityRendererKind =
   | "query_answer_card"
   | "research_review_card"
   | "runtime_status_card"
-  | "tool_result_card";
+  | "tool_result_card"
+  | "wall_candidate_comparison_card";
 
 export type ReportAssistantCapabilityResultKind =
   | "action_proposal"
@@ -45,7 +46,8 @@ export type ReportAssistantCapabilityResultKind =
   | "project_read"
   | "query_answer"
   | "runtime_status"
-  | "tool_result";
+  | "tool_result"
+  | "wall_candidate_comparison";
 
 export type ReportAssistantCapabilityStalePolicy =
   | "assistant_context_signature"
@@ -320,6 +322,39 @@ const REPORT_ASSISTANT_CALCULATOR_TOOL_CAPABILITIES = WORKBENCH_V2_CALCULATOR_AS
     : "assistant_context_signature"
 } as const satisfies ReportAssistantCapabilityContract));
 
+const REPORT_ASSISTANT_LOCAL_PREVIEW_CAPABILITIES = [
+  {
+    authPolicy: "session_when_configured",
+    category: "preview_tool",
+    description: "Compare bounded wall layer-stack candidates with preview-only calculator-backed rows.",
+    exposedToModel: false,
+    mutates: false,
+    name: "report_assistant_wall_candidate_comparison_preview",
+    previewOnly: true,
+    providerPolicy: "local_calculator",
+    rendererKind: "wall_candidate_comparison_card",
+    requiredInputs: ["instruction"],
+    requiresConfirmation: false,
+    resultKind: "wall_candidate_comparison",
+    stalePolicy: "snapshot_or_description_request"
+  },
+  {
+    authPolicy: "session_when_configured",
+    category: "preview_tool",
+    description: "Preview applying a ready assistant layer-stack draft to the unsaved Workbench calculator draft.",
+    exposedToModel: false,
+    mutates: false,
+    name: "report_assistant_workbench_apply_proposal",
+    previewOnly: true,
+    providerPolicy: "local_only",
+    rendererKind: "action_proposal_card",
+    requiredInputs: ["layerStackDraft", "targetWorkbenchSnapshotSignature"],
+    requiresConfirmation: true,
+    resultKind: "action_proposal",
+    stalePolicy: "target_stale_guard"
+  }
+] as const satisfies readonly ReportAssistantCapabilityContract[];
+
 const REPORT_ASSISTANT_ACTION_PROPOSAL_CAPABILITIES = REPORT_ASSISTANT_ACTION_PROPOSAL_DEFINITIONS.map((action) => ({
   authPolicy: "owner_scope_required",
   category: "action_proposal",
@@ -346,6 +381,7 @@ export const REPORT_ASSISTANT_CAPABILITY_REGISTRY: readonly ReportAssistantCapab
   ...REPORT_ASSISTANT_PROJECT_READ_TOOL_CAPABILITIES,
   ...REPORT_ASSISTANT_PRESET_READ_TOOL_CAPABILITIES,
   ...REPORT_ASSISTANT_CALCULATOR_TOOL_CAPABILITIES,
+  ...REPORT_ASSISTANT_LOCAL_PREVIEW_CAPABILITIES,
   ...REPORT_ASSISTANT_ACTION_PROPOSAL_CAPABILITIES
 ];
 

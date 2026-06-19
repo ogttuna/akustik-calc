@@ -172,6 +172,84 @@ function routeRequest(payload: unknown) {
   });
 }
 
+function incompleteLayerStackDraftFixture() {
+  return {
+    assumptions: ["Keep the user-described layer order."],
+    contextSignature: "ctx.layer-draft",
+    customMaterials: [],
+    draftId: "draft.layer-stack",
+    layers: [
+      {
+        id: "layer-1",
+        materialId: "gypsum_board",
+        materialName: "Gypsum Board",
+        originalPhrase: "12.5 mm gypsum board",
+        role: "side_a",
+        thicknessMm: 12.5
+      },
+      {
+        id: "layer-2",
+        originalPhrase: "mystery board",
+        role: "unknown"
+      }
+    ],
+    mode: "wall",
+    originalPhrases: ["12.5 mm gypsum board", "mystery board"],
+    requestedOutputs: [],
+    source: "user_instruction",
+    sourceInstruction: "12.5 mm gypsum board + mystery board hesapla",
+    wallTopologyDraft: {
+      leafMapping: "not_required",
+      topology: "single_leaf"
+    },
+    warnings: []
+  };
+}
+
+function incompleteFloorImpactLayerStackDraftFixture() {
+  return {
+    assumptions: ["Keep the user-described floor layer order."],
+    contextSignature: "ctx.floor-draft",
+    customMaterials: [],
+    draftId: "draft.floor-layer-stack",
+    floorImpactDraft: {
+      requiredPhysicalInputs: ["dynamic_stiffness", "load_basis"]
+    },
+    layers: [
+      {
+        id: "floor-layer-1",
+        materialId: "concrete",
+        materialName: "Concrete",
+        originalPhrase: "150 mm concrete",
+        role: "base_structure",
+        thicknessMm: 150
+      },
+      {
+        id: "floor-layer-2",
+        materialId: "geniemat_rst05",
+        materialName: "GenieMat RST05",
+        originalPhrase: "5 mm geniemat",
+        role: "resilient_layer",
+        thicknessMm: 5
+      },
+      {
+        id: "floor-layer-3",
+        materialId: "screed",
+        materialName: "Screed",
+        originalPhrase: "50 mm screed",
+        role: "floating_screed",
+        thicknessMm: 50
+      }
+    ],
+    mode: "floor",
+    originalPhrases: ["150 mm concrete", "5 mm geniemat", "50 mm screed"],
+    requestedOutputs: ["Ln,w"],
+    source: "user_instruction",
+    sourceInstruction: "150 mm concrete + 5 mm geniemat + 50 mm screed için Ln,w hesapla",
+    warnings: []
+  };
+}
+
 async function makeTempStoreDir() {
   const tempDir = await mkdtemp(path.join(os.tmpdir(), "dynecho-assistant-query-route-"));
   tempDirs.push(tempDir);
@@ -658,6 +736,462 @@ describe("report assistant query route", () => {
     expect(body.warnings).toContain("Calculator preview is read-only and did not mutate the report or Workbench stack.");
   });
 
+  it("answers Turkish wall candidate comparisons with a comparison result card envelope", async () => {
+    const response = await POST(routeRequest({
+      context: buildReportAssistantContext({
+        document: documentFixture()
+      }),
+      instruction: "12.5 mm gypsum + 100 mm concrete ile 15 mm gypsum + 120 mm concrete karşılaştır Rw ve STC"
+    }));
+    const body = (await response.json()) as {
+      answer?: string;
+      assistantResults?: Array<{
+        authority?: string;
+        basis?: Array<{
+          basis?: string;
+          metricId?: string;
+          routeStatus?: string;
+          valueLabel?: string;
+        }>;
+        capabilityName?: string;
+        mutates?: boolean;
+        previewOnly?: boolean;
+        rendererKind?: string;
+        requiresConfirmation?: boolean;
+        resultKind?: string;
+        routeStatus?: string;
+        tasks?: Array<{ code?: string }>;
+      }>;
+      calculatorPreview?: unknown;
+      mutates?: boolean;
+      ok: boolean;
+      warnings?: string[];
+    };
+
+    expect(response.status).toBe(200);
+    expect(body).toMatchObject({
+      mutates: false,
+      ok: true
+    });
+    expect(body.calculatorPreview).toBeUndefined();
+    expect(body.answer).toContain("Wall candidate comparison preview is ready.");
+    expect(body.answer).toContain("Ranking: 1. Candidate 2");
+    expect(body.assistantResults).toHaveLength(1);
+    expect(body.assistantResults?.[0]).toMatchObject({
+      authority: "calculator_backed",
+      capabilityName: "report_assistant_wall_candidate_comparison_preview",
+      mutates: false,
+      previewOnly: true,
+      rendererKind: "wall_candidate_comparison_card",
+      requiresConfirmation: false,
+      resultKind: "wall_candidate_comparison",
+      routeStatus: "ready"
+    });
+    expect(body.assistantResults?.[0]?.basis).toEqual([
+      expect.objectContaining({
+        basis: "wall-candidate-1:dynamic",
+        metricId: "Rw",
+        routeStatus: "ready",
+        valueLabel: "51 dB"
+      }),
+      expect.objectContaining({
+        basis: "wall-candidate-1:dynamic",
+        metricId: "STC",
+        routeStatus: "ready",
+        valueLabel: "51 dB"
+      }),
+      expect.objectContaining({
+        basis: "wall-candidate-2:dynamic",
+        metricId: "Rw",
+        routeStatus: "ready",
+        valueLabel: "53 dB"
+      }),
+      expect.objectContaining({
+        basis: "wall-candidate-2:dynamic",
+        metricId: "STC",
+        routeStatus: "ready",
+        valueLabel: "53 dB"
+      })
+    ]);
+    expect(body.assistantResults?.[0]?.tasks ?? []).toEqual([]);
+    expect(body.warnings).toContain("Wall candidate comparison preview is read-only and did not mutate the report or Workbench stack.");
+  });
+
+  it("merges structured draft clarification answers without running calculator preview", async () => {
+    const response = await POST(routeRequest({
+      context: buildReportAssistantContext({
+        document: documentFixture()
+      }),
+      draftContinuation: {
+        answers: [
+          {
+            contextSignature: "ctx.layer-draft",
+            draftId: "draft.layer-stack",
+            kind: "layer_material",
+            layerId: "layer-2",
+            materialId: "concrete",
+            materialName: "Concrete"
+          }
+        ],
+        currentContextSignature: "ctx.layer-draft",
+        draft: incompleteLayerStackDraftFixture()
+      },
+      instruction: "Eksik malzeme cevabını drafta uygula"
+    }));
+    const body = (await response.json()) as {
+      answer?: string;
+      assistantResults?: Array<{
+        authority?: string;
+        routeStatus?: string;
+        tasks?: Array<{
+          code?: string;
+          severity?: string;
+        }>;
+      }>;
+      calculatorPreview?: unknown;
+      layerStackDraft?: {
+        draft?: {
+          draftId?: string;
+          layers?: Array<{
+            materialId?: string;
+          }>;
+        };
+        validation?: {
+          missingInputs?: Array<{
+            code?: string;
+          }>;
+          status?: string;
+        };
+      };
+      mutates?: boolean;
+      ok: boolean;
+      warnings?: string[];
+    };
+
+    expect(response.status).toBe(200);
+    expect(body).toMatchObject({
+      mutates: false,
+      ok: true
+    });
+    expect(body.calculatorPreview).toBeUndefined();
+    expect(body.answer).toContain("Draft continuation applied. Remaining inputs:");
+    expect(body.assistantResults?.[0]).toMatchObject({
+      authority: "needs_input",
+      routeStatus: "needs_input"
+    });
+    expect(body.assistantResults?.[0]?.tasks?.map((task) => task.code)).toEqual([
+      "assistant_layer_thickness_missing",
+      "assistant_layer_role_missing",
+      "assistant_target_outputs_missing"
+    ]);
+    expect(body.layerStackDraft).toMatchObject({
+      draft: {
+        draftId: "draft.layer-stack",
+        layers: [
+          {
+            materialId: "gypsum_board"
+          },
+          {
+            materialId: "concrete"
+          }
+        ]
+      },
+      validation: {
+        status: "needs_input"
+      }
+    });
+    expect(body.layerStackDraft?.validation?.missingInputs?.map((input) => input.code)).toEqual([
+      "assistant_layer_thickness_missing",
+      "assistant_layer_role_missing",
+      "assistant_target_outputs_missing"
+    ]);
+    expect(body.warnings).toContain("Draft continuation is read-only and did not mutate Workbench or calculator state.");
+  });
+
+  it("runs calculator preview when structured draft clarification makes the draft ready", async () => {
+    const response = await POST(routeRequest({
+      context: buildReportAssistantContext({
+        document: documentFixture()
+      }),
+      draftContinuation: {
+        answers: [
+          {
+            contextSignature: "ctx.layer-draft",
+            draftId: "draft.layer-stack",
+            kind: "layer_material",
+            layerId: "layer-2",
+            materialId: "concrete",
+            materialName: "Concrete"
+          },
+          {
+            contextSignature: "ctx.layer-draft",
+            draftId: "draft.layer-stack",
+            kind: "layer_thickness",
+            layerId: "layer-2",
+            thicknessMm: 100
+          },
+          {
+            contextSignature: "ctx.layer-draft",
+            draftId: "draft.layer-stack",
+            kind: "layer_role",
+            layerId: "layer-2",
+            role: "side_b"
+          },
+          {
+            contextSignature: "ctx.layer-draft",
+            draftId: "draft.layer-stack",
+            kind: "target_outputs",
+            requestedOutputs: ["Rw"]
+          }
+        ],
+        currentContextSignature: "ctx.layer-draft",
+        draft: incompleteLayerStackDraftFixture()
+      },
+      instruction: "Eksikleri tamamla ve calculator preview calistir"
+    }));
+    const body = (await response.json()) as {
+      assistantResults?: Array<{
+        authority?: string;
+        basis?: Array<{
+          metricId?: string;
+          routeStatus?: string;
+        }>;
+        routeStatus?: string;
+      }>;
+      calculatorPreview?: {
+        name?: string;
+        preview?: {
+          calculationSummary?: {
+            status?: string;
+          };
+          outputRows?: Array<{
+            label?: string;
+            status?: string;
+          }>;
+        };
+      };
+      layerStackDraft?: {
+        validation?: {
+          ok?: boolean;
+          status?: string;
+        };
+      };
+      mutates?: boolean;
+      ok: boolean;
+      warnings?: string[];
+    };
+
+    expect(response.status).toBe(200);
+    expect(body).toMatchObject({
+      mutates: false,
+      ok: true
+    });
+    expect(body.calculatorPreview).toMatchObject({
+      name: "preview_layer_stack_draft",
+      preview: {
+        calculationSummary: {
+          status: "ready"
+        }
+      }
+    });
+    expect(body.calculatorPreview?.preview?.outputRows?.some((row) =>
+      row.label === "Rw" && row.status === "live"
+    )).toBe(true);
+    expect(body.assistantResults?.[0]).toMatchObject({
+      authority: "calculator_backed",
+      routeStatus: "ready"
+    });
+    expect(body.assistantResults?.[0]?.basis).toEqual([
+      expect.objectContaining({
+        metricId: "Rw",
+        routeStatus: "ready"
+      })
+    ]);
+    expect(body.layerStackDraft).toMatchObject({
+      validation: {
+        ok: true,
+        status: "ready"
+      }
+    });
+    expect(body.warnings).toEqual(expect.arrayContaining([
+      "Draft continuation is read-only and did not mutate Workbench or calculator state.",
+      "Calculator preview is read-only and did not mutate the report or Workbench stack."
+    ]));
+  });
+
+  it("runs floor impact calculator preview when structured physical-input answers make the draft ready", async () => {
+    const response = await POST(routeRequest({
+      context: buildReportAssistantContext({
+        document: documentFixture()
+      }),
+      draftContinuation: {
+        answers: [
+          {
+            contextSignature: "ctx.floor-draft",
+            draftId: "draft.floor-layer-stack",
+            dynamicStiffnessMNm3: 15,
+            kind: "floor_impact_dynamic_stiffness"
+          },
+          {
+            contextSignature: "ctx.floor-draft",
+            draftId: "draft.floor-layer-stack",
+            kind: "floor_impact_load_basis",
+            loadBasisKgM2: 200
+          }
+        ],
+        currentContextSignature: "ctx.floor-draft",
+        draft: incompleteFloorImpactLayerStackDraftFixture()
+      },
+      instruction: "Eksik zemin inputlarını tamamla ve calculator preview calistir"
+    }));
+    const body = (await response.json()) as {
+      assistantResults?: Array<{
+        authority?: string;
+        basis?: Array<{
+          metricId?: string;
+          routeStatus?: string;
+          valueLabel?: string;
+        }>;
+        routeStatus?: string;
+      }>;
+      calculatorPreview?: {
+        name?: string;
+        preview?: {
+          calculationSummary?: {
+            primaryValueLabel?: string;
+            status?: string;
+          };
+          describedConfiguration?: {
+            parser?: string;
+          };
+          estimatePayload?: {
+            floorImpactContext?: {
+              loadBasisKgM2?: number;
+              resilientLayerDynamicStiffnessMNm3?: number;
+            };
+          };
+          outputRows?: Array<{
+            label?: string;
+            status?: string;
+            value?: string;
+          }>;
+        };
+      };
+      layerStackDraft?: {
+        validation?: {
+          ok?: boolean;
+          status?: string;
+        };
+      };
+      mutates?: boolean;
+      ok: boolean;
+      warnings?: string[];
+    };
+
+    expect(response.status).toBe(200);
+    expect(body).toMatchObject({
+      mutates: false,
+      ok: true
+    });
+    expect(body.calculatorPreview).toMatchObject({
+      name: "preview_layer_stack_draft",
+      preview: {
+        calculationSummary: {
+          primaryValueLabel: "40.5 dB",
+          status: "ready"
+        },
+        describedConfiguration: {
+          parser: "deterministic_floor_layer_description_v1"
+        },
+        estimatePayload: {
+          floorImpactContext: {
+            loadBasisKgM2: 200,
+            resilientLayerDynamicStiffnessMNm3: 15
+          }
+        }
+      }
+    });
+    expect(body.calculatorPreview?.preview?.outputRows).toEqual([
+      { detail: "Calculated", label: "Ln,w", status: "live", value: "40.5 dB" }
+    ]);
+    expect(body.assistantResults?.[0]).toMatchObject({
+      authority: "calculator_backed",
+      routeStatus: "ready"
+    });
+    expect(body.assistantResults?.[0]?.basis).toEqual([
+      expect.objectContaining({
+        metricId: "Ln,w",
+        routeStatus: "ready",
+        valueLabel: "40.5 dB"
+      })
+    ]);
+    expect(body.layerStackDraft).toMatchObject({
+      validation: {
+        ok: true,
+        status: "ready"
+      }
+    });
+    expect(body.warnings).toEqual(expect.arrayContaining([
+      "Draft continuation is read-only and did not mutate Workbench or calculator state.",
+      "Calculator preview is read-only and did not mutate the report or Workbench stack."
+    ]));
+  });
+
+  it("rejects stale draft clarification before calculator preview", async () => {
+    const response = await POST(routeRequest({
+      context: buildReportAssistantContext({
+        document: documentFixture()
+      }),
+      draftContinuation: {
+        answers: [
+          {
+            contextSignature: "ctx.layer-draft",
+            draftId: "draft.layer-stack",
+            kind: "target_outputs",
+            requestedOutputs: ["Rw"]
+          }
+        ],
+        currentContextSignature: "ctx.changed",
+        draft: incompleteLayerStackDraftFixture()
+      },
+      instruction: "Bu eski draft cevabını uygula"
+    }));
+    const body = (await response.json()) as {
+      assistantResults?: Array<{
+        authority?: string;
+        routeStatus?: string;
+        tasks?: Array<{
+          code?: string;
+          message?: string;
+          severity?: string;
+        }>;
+      }>;
+      calculatorPreview?: unknown;
+      code?: string;
+      mutates?: boolean;
+      ok: boolean;
+    };
+
+    expect(response.status).toBe(409);
+    expect(body).toMatchObject({
+      code: "stale_report_assistant_layer_stack_draft",
+      mutates: false,
+      ok: false
+    });
+    expect(body.calculatorPreview).toBeUndefined();
+    expect(body.assistantResults?.[0]).toMatchObject({
+      authority: "draft_only",
+      routeStatus: "stale"
+    });
+    expect(body.assistantResults?.[0]?.tasks).toEqual([
+      {
+        code: "assistant_layer_stack_draft_stale",
+        message: "Draft context signature is stale; restart or revalidate the draft before merging answers.",
+        severity: "error"
+      }
+    ]);
+  });
+
   it("summarizes an explicit saved report document comparison without returning report bodies", async () => {
     const seeded = await seedProject();
     const currentDraft = documentFixture({
@@ -737,6 +1271,37 @@ describe("report assistant query route", () => {
     expect(body.usedReads?.every((read) => read.mutates === false)).toBe(true);
     expect(body.answer).toContain("current_revision_vs_previous_revision");
     expect(body.answer).toContain("Rw: 61 dB -> 58 dB");
+    expect(serialized).not.toContain("QUERY_PRIVATE_REPORT_DOCUMENT_BODY");
+    expect(serialized).not.toContain("QUERY_PRIVATE_REPORT_REVISION_BODY");
+  });
+
+  it("keeps previous revision document bodies gated behind explicit revision read permission", async () => {
+    const seeded = await seedProject({
+      withSecondRevision: true
+    });
+    const context = buildQueryContext(seeded);
+
+    const response = await POST(routeRequest({
+      allowedReadActions: ["list_project_report_revisions"],
+      context,
+      instruction: "Show project report revision history"
+    }));
+    const body = (await response.json()) as {
+      answer?: string;
+      ok: boolean;
+      usedReads?: Array<{ action: string; mutates: boolean }>;
+    };
+    const serialized = JSON.stringify(body);
+
+    expect(response.status).toBe(200);
+    expect(body.ok).toBe(true);
+    expect(body.usedReads?.map((read) => read.action)).toEqual([
+      "list_project_report_revisions"
+    ]);
+    expect(body.usedReads?.every((read) => read.mutates === false)).toBe(true);
+    expect(body.answer).toContain("saved revision summaries");
+    expect(body.answer).toContain("latest listed revision is");
+    expect(serialized).not.toContain("read_project_report_revision");
     expect(serialized).not.toContain("QUERY_PRIVATE_REPORT_DOCUMENT_BODY");
     expect(serialized).not.toContain("QUERY_PRIVATE_REPORT_REVISION_BODY");
   });

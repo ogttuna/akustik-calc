@@ -66,6 +66,10 @@ export const REPORT_ASSISTANT_RESULT_RENDERER_DEFINITIONS = {
   tool_result_card: {
     label: "Tool result",
     rendersCalculatorPreview: false
+  },
+  wall_candidate_comparison_card: {
+    label: "Wall comparison",
+    rendersCalculatorPreview: false
   }
 } as const satisfies Record<ReportAssistantCapabilityRendererKind, ReportAssistantResultRendererDefinition>;
 

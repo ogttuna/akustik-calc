@@ -272,13 +272,26 @@ export class FileServerProjectRepository {
     if (!assembly) {
       throw new ServerProjectStorageError("Assembly not found.", "assembly_not_found", 404);
     }
+    if (input.snapshot !== undefined && jsonSizeBytes(input.snapshot) > MAX_PROJECT_ASSEMBLY_BYTES) {
+      throw new ServerProjectStorageError(
+        `Project assembly snapshot exceeds ${MAX_PROJECT_ASSEMBLY_BYTES} bytes.`,
+        "project_assembly_too_large",
+        413
+      );
+    }
 
     const nowIso = this.now().toISOString();
+    const updatesSnapshot =
+      input.snapshot !== undefined || input.kind !== undefined || input.calculationSummary !== undefined;
     const updatedAssembly: ServerProjectAssemblyRecord = {
       ...assembly,
+      calculationSummary: input.calculationSummary === undefined ? assembly.calculationSummary : input.calculationSummary,
       description: input.description === undefined ? assembly.description : input.description,
+      kind: input.kind ?? assembly.kind,
       name: input.name ?? assembly.name,
-      updatedAtIso: nowIso
+      snapshot: input.snapshot === undefined ? assembly.snapshot : input.snapshot,
+      updatedAtIso: nowIso,
+      version: updatesSnapshot ? assembly.version + 1 : assembly.version
     };
     const updatedProject: ServerProjectRecord = {
       ...project,

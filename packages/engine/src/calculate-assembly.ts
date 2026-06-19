@@ -1609,16 +1609,51 @@ function getPostV1GateARBuildingLabSpectrumCompanionOutputs(input: {
   return getFiniteRequestedUnsupportedLabSpectrumOutputs(input);
 }
 
-function hasPostV1WallUserMaterialFormulaLabTrace(
-  airborneTrace: DynamicAirborneTrace | null | undefined
+function hasPostV1WallContextOwnedPorousCavityInput(
+  airborneContext: AirborneContext | null | undefined
 ): boolean {
+  const topology = airborneContext?.wallTopology;
+  const primaryCavity = airborneContext?.advancedWall?.cavities?.[0];
+
   return Boolean(
-    airborneTrace?.detectedFamily === "double_stud_system" &&
-      airborneTrace.strategy === "double_leaf_framed_bridge_mass_air_mass_runtime" &&
-      airborneTrace.selectedMethod === "mass_law" &&
-      airborneTrace.visibleLeafCount === 2 &&
-      airborneTrace.cavityCount === 1 &&
-      airborneTrace.hasPorousFill
+    topology?.cavity1AbsorptionClass === "porous_absorptive" &&
+      (topology.cavity1FillCoverage === "full" || topology.cavity1FillCoverage === "partial") &&
+      typeof primaryCavity?.absorberFlowResistivityPaSM2 === "number" &&
+      Number.isFinite(primaryCavity.absorberFlowResistivityPaSM2) &&
+      primaryCavity.absorberFlowResistivityPaSM2 > 0
+  );
+}
+
+function hasPostV1WallUserMaterialFormulaLabTrace(input: {
+  readonly airborneContext: AirborneContext | null | undefined;
+  readonly airborneTrace: DynamicAirborneTrace | null | undefined;
+}): boolean {
+  const topology = input.airborneContext?.wallTopology;
+  const hasContextOwnedPorousCavity =
+    hasPostV1WallContextOwnedPorousCavityInput(input.airborneContext);
+  const hasPorousFormulaInput =
+    Boolean(input.airborneTrace?.hasPorousFill) ||
+    hasContextOwnedPorousCavity;
+  const hasTwoVisibleLeavesOrContextOwnedLeafGroups = Boolean(
+    input.airborneTrace?.visibleLeafCount === 2 ||
+      (
+        hasContextOwnedPorousCavity &&
+        topology?.sideALeafLayerIndices?.length &&
+        topology.sideBLeafLayerIndices?.length
+      )
+  );
+  const hasVisibleOrContextOwnedCavity = Boolean(
+    input.airborneTrace?.cavityCount === 1 ||
+      hasContextOwnedPorousCavity
+  );
+
+  return Boolean(
+    input.airborneTrace?.detectedFamily === "double_stud_system" &&
+      input.airborneTrace.strategy === "double_leaf_framed_bridge_mass_air_mass_runtime" &&
+      input.airborneTrace.selectedMethod === "mass_law" &&
+      hasTwoVisibleLeavesOrContextOwnedLeafGroups &&
+      hasVisibleOrContextOwnedCavity &&
+      hasPorousFormulaInput
   );
 }
 
@@ -1638,17 +1673,26 @@ function getPostV1WallUserMaterialFormulaBuildingLabCompanionOutputs(input: {
   const hasRequestedBuildingOutput = input.support.targetOutputs.some((output) =>
     ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLOOR_FIELD_CONTINUATION_OUTPUTS.has(output)
   );
+  const targetSetIsLabOnly = input.support.targetOutputs.every((output) =>
+    GATE_AR_AIRBORNE_BUILDING_PREDICTION_LAB_ALIAS_OUTPUTS.has(output)
+  );
   const hasGateARBuildingBasis =
     input.airborneBasis?.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD &&
     input.airborneBasis.origin === "family_physics_prediction" &&
     input.airborneBasis.missingPhysicalInputs.length === 0;
+  const hasUserSuppliedOrContextOwnedPhysicalInput =
+    input.hasUserSuppliedMaterial ||
+    hasPostV1WallContextOwnedPorousCavityInput(input.airborneContext);
 
   if (
     input.airborneContext?.contextMode !== "building_prediction" ||
-    !input.hasUserSuppliedMaterial ||
-    !hasRequestedBuildingOutput ||
+    !hasUserSuppliedOrContextOwnedPhysicalInput ||
+    (!hasRequestedBuildingOutput && !targetSetIsLabOnly) ||
     !hasGateARBuildingBasis ||
-    !hasPostV1WallUserMaterialFormulaLabTrace(input.airborneTrace) ||
+    !hasPostV1WallUserMaterialFormulaLabTrace({
+      airborneContext: input.airborneContext,
+      airborneTrace: input.airborneTrace
+    }) ||
     input.catalogLabFallbackApplied ||
     input.sourceAnchorCandidatePresent ||
     hasOpeningLeakRouteRequest(input.airborneContext)
@@ -1656,7 +1700,9 @@ function getPostV1WallUserMaterialFormulaBuildingLabCompanionOutputs(input: {
     return [];
   }
 
-  return getFiniteRequestedUnsupportedLabSpectrumOutputs(input);
+  return targetSetIsLabOnly
+    ? getFiniteRequestedLabSpectrumOutputs(input)
+    : getFiniteRequestedUnsupportedLabSpectrumOutputs(input);
 }
 
 function getPostV1WallUserMaterialFormulaFieldLabCompanionOutputs(input: {
@@ -1676,12 +1722,18 @@ function getPostV1WallUserMaterialFormulaFieldLabCompanionOutputs(input: {
     input.airborneBasis?.method === GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD &&
     input.airborneBasis.origin === "family_physics_prediction" &&
     input.airborneBasis.missingPhysicalInputs.length === 0;
+  const hasUserSuppliedOrContextOwnedPhysicalInput =
+    input.hasUserSuppliedMaterial ||
+    hasPostV1WallContextOwnedPorousCavityInput(input.airborneContext);
 
   if (
     input.airborneContext?.contextMode !== "field_between_rooms" ||
-    !input.hasUserSuppliedMaterial ||
+    !hasUserSuppliedOrContextOwnedPhysicalInput ||
     !hasGateIFieldBasis ||
-    !hasPostV1WallUserMaterialFormulaLabTrace(input.airborneTrace) ||
+    !hasPostV1WallUserMaterialFormulaLabTrace({
+      airborneContext: input.airborneContext,
+      airborneTrace: input.airborneTrace
+    }) ||
     input.catalogLabFallbackApplied ||
     input.sourceAnchorCandidatePresent ||
     hasOpeningLeakRouteRequest(input.airborneContext)

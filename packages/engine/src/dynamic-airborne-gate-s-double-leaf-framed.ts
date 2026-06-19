@@ -142,6 +142,9 @@ function buildGateSBasis(input: {
   curve: TransmissionLossCurve;
   physicalInputs: GateRDoubleLeafFramedBridgePhysicalInputs;
 }): AirborneResultBasis {
+  const advancedWallPrecisionInputs =
+    input.physicalInputs.absorberCoverageRatio === null ? [] : ["absorberCoverageRatio"];
+
   return AirborneResultBasisSchema.parse({
     ...input.baseBasis,
     assumptions: [
@@ -164,6 +167,8 @@ function buildGateSBasis(input: {
       "sideALeafMassKgM2",
       "sideBLeafMassKgM2",
       "cavity1DepthMm",
+      "flowResistivityPaSM2",
+      ...advancedWallPrecisionInputs,
       "frameBridgeClass",
       "supportTopology",
       "supportSpacingMm",

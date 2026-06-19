@@ -129,4 +129,55 @@ describe("report assistant result card", () => {
     expect(html).not.toContain("Metric basis");
     expect(html).not.toContain("46 dB");
   });
+
+  it("server-renders wall comparison envelopes without legacy calculator preview props", () => {
+    const result = createReportAssistantResultEnvelope({
+      authority: "calculator_backed",
+      basis: [
+        {
+          basis: "wall-candidate-1:dynamic",
+          metricId: "Rw",
+          routeStatus: "ready",
+          unit: "dB",
+          valueLabel: "51 dB"
+        },
+        {
+          basis: "wall-candidate-2:dynamic",
+          metricId: "Rw",
+          routeStatus: "ready",
+          unit: "dB",
+          valueLabel: "53 dB"
+        }
+      ],
+      capabilityName: "report_assistant_wall_candidate_comparison_preview",
+      confidenceReason: "Comparison rows copy only live values returned by the calculator preview route.",
+      routeStatus: "ready",
+      sourceTrace: [
+        {
+          kind: "calculator_preview",
+          label: "preview_layer_stack_draft"
+        }
+      ],
+      tasks: [
+        {
+          code: "wall-candidate-2:assistant_layer_material_missing",
+          message: "Candidate 2: Layer 2 has no normalized material id.",
+          severity: "warning"
+        }
+      ]
+    });
+
+    const html = renderToStaticMarkup(createElement(AssistantResultCard, {
+      result
+    }));
+
+    expect(html).toContain('data-renderer="wall_candidate_comparison_card"');
+    expect(html).toContain("Wall comparison");
+    expect(html).toContain("51 dB");
+    expect(html).toContain("53 dB");
+    expect(html).toContain("wall-candidate-2:assistant_layer_material_missing");
+    expect(html).not.toContain("report-assistant-calculator-preview");
+    expect(html).not.toContain("Apply");
+    expect(html).not.toContain("Save");
+  });
 });

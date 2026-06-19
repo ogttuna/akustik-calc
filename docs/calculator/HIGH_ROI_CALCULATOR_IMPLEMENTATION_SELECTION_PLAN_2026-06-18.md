@@ -7,6 +7,61 @@ implementation-ready selection plan for the runtime-first rerank chain.
 It is a supplement to active selected-next plans, not a new selected
 implementation action and not a runtime owner by itself.
 
+Latest 2026-06-19 result from this selection discipline:
+
+`post_v1_wall_context_owned_porous_cavity_field_building_lab_companion_basis_integrity_owner_plan`
+
+Owner file:
+
+`packages/engine/src/post-v1-wall-context-owned-porous-cavity-field-building-lab-companion-basis-integrity-owner-contract.test.ts`
+
+Owner plan:
+
+`docs/calculator/POST_V1_WALL_CONTEXT_OWNED_POROUS_CAVITY_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_OWNER_PLAN_2026-06-19.md`
+
+Selected candidate:
+
+`wall.context_owned_porous_cavity_field_building_lab_companion_basis_integrity_owner`
+
+This came from the user-material physical input coverage stream and
+moved a concrete wrong-basis runtime behavior: context-owned
+double-leaf/framed wall field/building lab companions now use the owned
+direct lab curve when side leaf groups, independent frame topology,
+absorptive cavity depth/fill, and
+`advancedWall.cavities[].absorberFlowResistivityPaSM2` are supplied.
+Counters: `accuracyPromotedRequestShapes: 4`,
+`accuracyPromotedTargetOutputs: 16`, `runtimeBasisPromotions: 4`,
+`runtimeValuesMoved 16`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Latest no-runtime coverage refresh after this owner:
+
+`post_v1_wall_context_owned_porous_cavity_field_building_lab_companion_basis_integrity_coverage_refresh_plan`
+
+Coverage refresh file:
+
+`packages/engine/src/post-v1-wall-context-owned-porous-cavity-field-building-lab-companion-basis-integrity-coverage-refresh-contract.test.ts`
+
+Coverage refresh plan:
+
+`docs/calculator/POST_V1_WALL_CONTEXT_OWNED_POROUS_CAVITY_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_COVERAGE_REFRESH_PLAN_2026-06-19.md`
+
+Coverage refresh status:
+
+`post_v1_wall_context_owned_porous_cavity_field_building_lab_companion_basis_integrity_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`
+
+Current selected next after this refresh:
+
+`post_v1_runtime_first_route_family_rerank_after_wall_context_owned_porous_cavity_field_building_lab_companion_basis_integrity_plan`
+
+Current selected next file:
+
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-context-owned-porous-cavity-field-building-lab-companion-basis-integrity-contract.test.ts`
+
+Current selected next plan:
+
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_WALL_CONTEXT_OWNED_POROUS_CAVITY_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_PLAN_2026-06-19.md`
+
 Latest selected next after the project/user measured wall airborne
 frequency field/building lab-companion target-output independence
 coverage refresh:

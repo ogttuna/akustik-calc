@@ -238,13 +238,24 @@ export const ServerProjectCreateAssemblyRequestSchema = z
 
 export const ServerProjectUpdateAssemblyRequestSchema = z
   .object({
+    calculationSummary: ServerProjectAssemblyCalculationSummarySchema.optional(),
     description: ProjectOptionalTextSchema,
+    kind: ServerProjectAssemblyKindSchema.optional(),
+    snapshot: JsonValueSchema.optional(),
     name: ProjectNameSchema.optional()
   })
   .strict()
-  .refine((value) => value.name !== undefined || value.description !== undefined, {
-    message: "At least one assembly field must be provided."
-  });
+  .refine(
+    (value) =>
+      value.name !== undefined ||
+      value.description !== undefined ||
+      value.kind !== undefined ||
+      value.snapshot !== undefined ||
+      value.calculationSummary !== undefined,
+    {
+      message: "At least one assembly field must be provided."
+    }
+  );
 
 export const ServerProjectDuplicateAssemblyRequestSchema = z
   .object({

@@ -7,9 +7,15 @@ import type { SimpleWorkbenchProposalDocument } from "./simple-workbench-proposa
 export type ReportAssistantActionProposalName =
   | "create_project_report_from_current_draft"
   | "create_user_preset_from_current_stack"
+  | "export_current_report_snapshot_as_pdf"
   | "restore_report_revision_as_new_draft"
   | "save_current_stack_as_project_assembly"
   | "save_project_report_revision_from_current_draft";
+
+export type ReportAssistantExportContentKind =
+  | "advisory_research_text"
+  | "calculator_backed_rows"
+  | "task_rows";
 
 export type ReportAssistantActionProposalDefinition = {
   description: string;
@@ -31,6 +37,13 @@ export const REPORT_ASSISTANT_ACTION_PROPOSAL_DEFINITIONS: readonly ReportAssist
     description: "Preview creating an owner-scoped reusable preset from the current source stack.",
     mutates: false,
     name: "create_user_preset_from_current_stack",
+    previewOnly: true,
+    requiresConfirmation: true
+  },
+  {
+    description: "Preview exporting the current report snapshot as a PDF after explicit user confirmation.",
+    mutates: false,
+    name: "export_current_report_snapshot_as_pdf",
     previewOnly: true,
     requiresConfirmation: true
   },
@@ -62,6 +75,12 @@ export type ReportAssistantActionProposalTarget = {
   assemblyId?: string;
   assemblyName?: string;
   currentRevisionId?: string;
+  exportCalculatorBackedRowCount?: number;
+  exportContentKinds?: readonly ReportAssistantExportContentKind[];
+  exportFormat?: "pdf";
+  exportSnapshotSignature?: string;
+  exportTaskRowCount?: number;
+  exportWarningCount?: number;
   expectedReportUpdatedAtIso?: string;
   projectId?: string;
   projectName?: string;
@@ -70,6 +89,7 @@ export type ReportAssistantActionProposalTarget = {
   reportName?: string;
   restoreRevisionDisplayCode?: string;
   restoreRevisionId?: string;
+  selectedOutputs?: readonly string[];
 };
 
 export type ReportAssistantActionProposalApplyRoute = {
@@ -81,8 +101,12 @@ export type ReportAssistantActionProposalApplyRoute = {
     description?: "assistant_confirmed_source_stack_description";
     document: "current_report_document" | "selected_revision_document";
     expectedReportUpdatedAtIso?: string;
+    exportContentSummary?: "current_export_content_summary";
+    exportFormat?: "pdf";
+    exportSnapshotSignature?: "current_assistant_context_signature";
     kind?: "current_stack_kind";
     name?: "current_assembly_library_name" | "current_report_library_name";
+    selectedOutputs?: "current_selected_output_set";
     source: "assistant" | "manual";
     sourceAssemblySnapshot?: "selected_project_assembly_snapshot";
     sourceCalculationOutput?: "selected_project_calculation_output_if_present";
@@ -151,6 +175,7 @@ export function isReportAssistantActionProposalName(value: unknown): value is Re
   return (
     value === "create_project_report_from_current_draft" ||
     value === "create_user_preset_from_current_stack" ||
+    value === "export_current_report_snapshot_as_pdf" ||
     value === "restore_report_revision_as_new_draft" ||
     value === "save_current_stack_as_project_assembly" ||
     value === "save_project_report_revision_from_current_draft"
@@ -175,6 +200,15 @@ function fail(input: {
 
 function inferActionName(instruction: string): ReportAssistantActionProposalName | null {
   const normalized = normalizeInstruction(instruction);
+  const wantsExportDownload =
+    /\b(?:download|export)\b/u.test(normalized) ||
+    /\b(?:disa aktar|disari aktar|indir)\b/u.test(normalized);
+  const blocksAction =
+    /\b(?:apply|archive|delete|update|write)\b/u.test(normalized) ||
+    /\b(?:arsivle|guncelle|sil|uygula|yaz)\b/u.test(normalized);
+  const negatesExport =
+    /\b(?:do not|dont|don't|without|no)\s+(?:download|export|pdf)\b/u.test(normalized) ||
+    /\b(?:indirme|indirmeden|disa aktarma|disa aktarmadan|disari aktarma|disari aktarmadan)\b/u.test(normalized);
   const wantsCreate =
     /\b(?:create|new)\b/u.test(normalized) ||
     /\b(?:olustur|yeni)\b/u.test(normalized);
@@ -193,8 +227,13 @@ function inferActionName(instruction: string): ReportAssistantActionProposalName
   const wantsReportRevision =
     /\b(?:project report|report|revision|revise|rapor|revizyon)\b/u.test(normalized);
   const unsupportedMutation =
-    /\b(?:apply|archive|delete|download|export|update|write)\b/u.test(normalized) ||
-    /\b(?:arsivle|disari aktar|guncelle|indir|sil|uygula|yaz)\b/u.test(normalized);
+    blocksAction ||
+    /\b(?:download|export)\b/u.test(normalized) ||
+    /\b(?:disa aktar|disari aktar|indir)\b/u.test(normalized);
+
+  if (wantsExportDownload && !blocksAction && !negatesExport) {
+    return "export_current_report_snapshot_as_pdf";
+  }
 
   if (wantsRestore && wantsReportRevision && !unsupportedMutation) {
     return "restore_report_revision_as_new_draft";
@@ -316,6 +355,134 @@ function encodeRouteSegment(value: string): string {
   return encodeURIComponent(value);
 }
 
+function uniqueNonEmptyStrings(values: readonly (string | undefined)[]): string[] {
+  const unique: string[] = [];
+
+  for (const value of values) {
+    const normalized = value?.trim().replace(/\s+/gu, " ");
+    if (!normalized || unique.includes(normalized)) {
+      continue;
+    }
+
+    unique.push(normalized);
+  }
+
+  return unique;
+}
+
+function instructionMentionsAdvisoryResearch(instruction: string): boolean {
+  const normalized = normalizeInstruction(instruction);
+  return (
+    /\b(?:advisory|research|reference|source|sources|plausibility)\b/u.test(normalized) ||
+    /\b(?:arastir|arastirma|kaynak|kaynaklar|yorum|tavsiye)\b/u.test(normalized)
+  );
+}
+
+function formatContentKind(kind: ReportAssistantExportContentKind): string {
+  if (kind === "calculator_backed_rows") {
+    return "calculator-backed rows";
+  }
+  if (kind === "task_rows") {
+    return "task rows";
+  }
+  return "advisory research text";
+}
+
+function buildExportActionProposal(
+  input: ReportAssistantActionProposalInput
+): ReportAssistantActionProposalResult {
+  const selectedOutputs = uniqueNonEmptyStrings([
+    ...input.context.assistantOutputFacts.map((fact) => fact.outputId ?? fact.label),
+    ...input.context.metrics.map((metric) => metric.outputId ?? metric.label)
+  ]);
+  const draftDirty = input.context.projectWorkspace?.activeDraftState?.dirty === true;
+  const calculatorBackedRows = draftDirty
+    ? []
+    : input.context.assistantOutputFacts.filter((fact) => fact.status === "live" || fact.status === "bound");
+  const taskRows = input.context.assistantOutputFacts.filter((fact) =>
+    fact.status === "needs_input" || fact.status === "unsupported"
+  );
+  const includesAdvisoryResearchText = instructionMentionsAdvisoryResearch(input.instruction);
+  const exportContentKinds: ReportAssistantExportContentKind[] = [];
+
+  if (calculatorBackedRows.length > 0) {
+    exportContentKinds.push("calculator_backed_rows");
+  }
+  if (taskRows.length > 0) {
+    exportContentKinds.push("task_rows");
+  }
+  if (includesAdvisoryResearchText) {
+    exportContentKinds.push("advisory_research_text");
+  }
+
+  const warnings: string[] = [];
+  if (draftDirty) {
+    warnings.push(
+      "Current draft is dirty; refresh the calculator snapshot before labeling exported numeric rows as calculator-backed."
+    );
+  }
+  if (calculatorBackedRows.length === 0) {
+    warnings.push(
+      "No current calculator-backed rows are eligible for calculator-result labeling in this export proposal."
+    );
+  }
+  if (includesAdvisoryResearchText && calculatorBackedRows.length === 0) {
+    warnings.push(
+      "Advisory research text can be exported only as advisory text, not as a calculator result, until a calculator-backed snapshot is current."
+    );
+  }
+
+  const title = "Export current report snapshot as PDF";
+  const outputLabel = selectedOutputs.length > 0 ? selectedOutputs.join(", ") : "none";
+  const contentLabel = exportContentKinds.length > 0
+    ? exportContentKinds.map((kind) => formatContentKind(kind)).join(", ")
+    : "report snapshot text only";
+
+  return {
+    mutates: false,
+    ok: true,
+    proposal: {
+      action: "export_current_report_snapshot_as_pdf",
+      applyRoute: {
+        bodyPreview: {
+          assistantPatchSummary: "latest_assistant_patch_summary_if_present",
+          changeSummary: "Assistant-confirmed PDF export from the current report snapshot.",
+          document: "current_report_document",
+          exportContentSummary: "current_export_content_summary",
+          exportFormat: "pdf",
+          exportSnapshotSignature: "current_assistant_context_signature",
+          selectedOutputs: "current_selected_output_set",
+          source: "assistant"
+        },
+        method: "POST",
+        pathname: "/api/proposal-pdf"
+      },
+      assistantContextSignature: input.context.assistantContextSignature,
+      documentSignature: input.context.documentSignature,
+      mutates: false,
+      previewMutates: false,
+      requiresConfirmation: true,
+      summary: `Preview only. On confirmation, the app should export the current report snapshot as a PDF. Snapshot ${input.context.assistantContextSignature}; selected outputs: ${outputLabel}; content: ${contentLabel}.`,
+      target: {
+        exportCalculatorBackedRowCount: calculatorBackedRows.length,
+        exportContentKinds,
+        exportFormat: "pdf",
+        exportSnapshotSignature: input.context.assistantContextSignature,
+        exportTaskRowCount: taskRows.length,
+        exportWarningCount: warnings.length,
+        projectId: input.context.projectId ?? input.context.projectWorkspace?.project?.id,
+        projectName: input.context.projectWorkspace?.project?.name,
+        reportId: input.context.projectWorkspace?.report?.id ?? input.context.reportId,
+        reportName: input.context.projectWorkspace?.report?.name,
+        selectedOutputs
+      },
+      title,
+      warnings
+    },
+    warnings
+  };
+}
+
 export function createReportAssistantActionProposal(
   input: ReportAssistantActionProposalInput
 ): ReportAssistantActionProposalResult {
@@ -343,6 +510,10 @@ export function createReportAssistantActionProposal(
       errors: ["The current report document no longer matches the assistant context signature."],
       statusCode: 409
     });
+  }
+
+  if (action === "export_current_report_snapshot_as_pdf") {
+    return buildExportActionProposal(input);
   }
 
   if (action === "create_project_report_from_current_draft") {

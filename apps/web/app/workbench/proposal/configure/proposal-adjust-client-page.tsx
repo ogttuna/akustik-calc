@@ -10,7 +10,8 @@ import { toast } from "sonner";
 import type { ReportAssistantAssemblyAlternativeReview } from "@/features/workbench/report-assistant-assembly-alternatives";
 import {
   buildReportAssistantContext,
-  type ReportAssistantMetric
+  type ReportAssistantMetric,
+  type ReportAssistantProjectWorkspaceSnapshot
 } from "@/features/workbench/report-assistant-context";
 import {
   createReportAssistantConversationMessage,
@@ -32,6 +33,7 @@ import {
   sendReportAssistantRequest,
   type ReportAssistantRequestResult
 } from "@/features/workbench/report-assistant-request-client";
+import { loadReportAssistantProjectWorkspaceSnapshot } from "@/features/workbench/report-assistant-project-workspace";
 import {
   createReportAssistantActiveRequestRegistry,
   finishReportAssistantRequest,
@@ -73,7 +75,8 @@ import { buildSimpleWorkbenchProposalPreviewHtml } from "@/features/workbench/si
 import {
   readSimpleWorkbenchProposalPreview,
   resetSimpleWorkbenchProposalPreviewCustomizations,
-  storeSimpleWorkbenchProposalPreviewCustomizations
+  storeSimpleWorkbenchProposalPreviewCustomizations,
+  type SimpleWorkbenchProposalPreviewProjectContext
 } from "@/features/workbench/simple-workbench-proposal-preview-storage";
 
 import {
@@ -1057,9 +1060,11 @@ function EmptyArrayNote(props: { children: ReactNode }) {
 function ReportAssistantPatchPanel(props: {
   baseDocument: SimpleWorkbenchProposalDocument | null;
   document: SimpleWorkbenchProposalDocument;
+  hasUnsavedChanges: boolean;
   onApply: (document: SimpleWorkbenchProposalDocument) => void;
+  projectWorkspace?: ReportAssistantProjectWorkspaceSnapshot;
 }) {
-  const { baseDocument, document, onApply } = props;
+  const { baseDocument, document, hasUnsavedChanges, onApply, projectWorkspace } = props;
   const [assistantEndpointMessages, setAssistantEndpointMessages] = useState<string[]>([]);
   const [assistantEndpointWarnings, setAssistantEndpointWarnings] = useState<string[]>([]);
   const [assistantConversation, setAssistantConversation] = useState<AssistantConversationMessage[]>([]);
@@ -1084,13 +1089,35 @@ function ReportAssistantPatchPanel(props: {
   const [plausibilityUserInstruction, setPlausibilityUserInstruction] = useState("");
   const [plausibilityWarnings, setPlausibilityWarnings] = useState<string[]>([]);
   const [confirmationChecked, setConfirmationChecked] = useState(false);
+  const assistantActiveDraftState = useMemo<ReportAssistantProjectWorkspaceSnapshot["activeDraftState"]>(() => {
+    if (!projectWorkspace?.project) {
+      return {
+        dirty: hasUnsavedChanges,
+        kind: "local_draft"
+      };
+    }
+
+    return {
+      assemblyId: projectWorkspace.linkedAssembly?.id ?? projectWorkspace.report?.assemblyId,
+      assemblyName: projectWorkspace.linkedAssembly?.name,
+      assemblyVersion: projectWorkspace.linkedAssembly?.version,
+      dirty: hasUnsavedChanges,
+      kind: projectWorkspace.report ? "project_report_draft" : "project_draft",
+      projectId: projectWorkspace.project.id,
+      projectName: projectWorkspace.project.name,
+      reportId: projectWorkspace.report?.id,
+      reportUpdatedAtIso: projectWorkspace.report?.updatedAtIso
+    };
+  }, [hasUnsavedChanges, projectWorkspace]);
   const assistantContext = useMemo(
     () =>
       buildReportAssistantContext({
+        activeDraftState: assistantActiveDraftState,
         baseDocument: baseDocument ?? undefined,
-        document
+        document,
+        projectWorkspace
       }),
-    [baseDocument, document]
+    [assistantActiveDraftState, baseDocument, document, projectWorkspace]
   );
   const activeAssistantRequestsRef = useRef(createReportAssistantActiveRequestRegistry());
   const latestAssistantContextSignatureRef = useRef(assistantContext.assistantContextSignature);
@@ -2346,6 +2373,17 @@ function ReportAssistantPatchPanel(props: {
             <div>Document signature: <span className="font-mono text-[0.78rem]">{assistantContext.documentSignature}</span></div>
             <div>Assistant context signature: <span className="font-mono text-[0.78rem]">{assistantContext.assistantContextSignature}</span></div>
             <div>{assistantContext.metrics.length} report metric{assistantContext.metrics.length === 1 ? "" : "s"} exposed to the assistant context.</div>
+            <div>
+              Project context:{" "}
+              {assistantContext.projectWorkspace?.project
+                ? `${assistantContext.projectWorkspace.project.name}${assistantContext.projectWorkspace.report ? ` / ${assistantContext.projectWorkspace.report.name}` : ""}`
+                : "browser-local draft"}
+            </div>
+            {assistantContext.projectWorkspace?.report ? (
+              <div>
+                Saved revisions: {assistantContext.projectWorkspace.report.revisionCount ?? assistantContext.projectWorkspace.revisionSummaries.length}
+              </div>
+            ) : null}
             <div>Default scope: export-only until Save edits is clicked.</div>
           </div>
           {validation?.requiresUserConfirmation ? (
@@ -2683,6 +2721,8 @@ export function ProposalAdjustClientPage() {
   const [editableDocument, setEditableDocument] = useState<SimpleWorkbenchProposalDocument | null>(null);
   const [savedAtIso, setSavedAtIso] = useState<string>("");
   const [customizedAtIso, setCustomizedAtIso] = useState<string | undefined>(undefined);
+  const [projectContext, setProjectContext] = useState<SimpleWorkbenchProposalPreviewProjectContext | undefined>(undefined);
+  const [assistantProjectWorkspace, setAssistantProjectWorkspace] = useState<ReportAssistantProjectWorkspaceSnapshot | undefined>(undefined);
   const [lastSavedSignature, setLastSavedSignature] = useState("");
   const [isDownloadingExport, setIsDownloadingExport] = useState(false);
   const [activePdfStyle, setActivePdfStyle] = useState<ProposalPdfStyle>("simple");
@@ -2696,12 +2736,42 @@ export function ProposalAdjustClientPage() {
     setEditableDocument(preview?.document ?? null);
     setSavedAtIso(preview?.savedAtIso ?? "");
     setCustomizedAtIso(preview?.customizedAtIso ?? undefined);
+    setProjectContext(preview?.projectContext);
     setLastSavedSignature(signature);
   }
 
   useEffect(() => {
     loadStoredPreview();
   }, []);
+
+  useEffect(() => {
+    let active = true;
+
+    if (!projectContext?.serverProjectId) {
+      setAssistantProjectWorkspace(undefined);
+      return () => {
+        active = false;
+      };
+    }
+
+    setAssistantProjectWorkspace(undefined);
+
+    void loadReportAssistantProjectWorkspaceSnapshot(projectContext)
+      .then((snapshot) => {
+        if (active) {
+          setAssistantProjectWorkspace(snapshot);
+        }
+      })
+      .catch(() => {
+        if (active) {
+          setAssistantProjectWorkspace(undefined);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [projectContext?.serverProjectId, projectContext?.serverProjectReportId, projectContext?.serverProjectReportUpdatedAtIso]);
 
   useEffect(() => {
     setActivePdfStyle(searchParams.get("style") === "branded" ? "branded" : "simple");
@@ -3002,7 +3072,9 @@ export function ProposalAdjustClientPage() {
         <ReportAssistantPatchPanel
           baseDocument={baseDocument}
           document={editableDocument}
+          hasUnsavedChanges={hasUnsavedChanges}
           onApply={(nextDocument) => setEditableDocument(nextDocument)}
+          projectWorkspace={assistantProjectWorkspace}
         />
       </CollapsibleEditorSection>
 

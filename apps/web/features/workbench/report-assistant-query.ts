@@ -19,19 +19,33 @@ import {
   type ReportAssistantProjectReadResult,
   type ReportAssistantProjectReadToolName
 } from "./report-assistant-project-tools";
+import {
+  mergeReportAssistantLayerStackDraftContinuation,
+  type ReportAssistantLayerStackDraftContinuationRequest,
+  type ReportAssistantLayerStackDraftContinuationResult
+} from "./report-assistant-layer-stack-draft-continuation";
+import {
+  createReportAssistantWallCandidateComparison,
+  previewReportAssistantWallCandidateComparison,
+  type ReportAssistantWallCandidateComparisonPreview
+} from "./report-assistant-wall-candidate-comparison";
 import { calculatorPreviewToAssistantResult } from "./report-assistant-calculator-preview-result";
 import {
   createReportAssistantResultEnvelope,
   type ReportAssistantResultEnvelope,
-  type ReportAssistantResultSourceTrace
+  type ReportAssistantResultRouteStatus,
+  type ReportAssistantResultSourceTrace,
+  type ReportAssistantResultTask
 } from "./report-assistant-result-contract";
 import {
   parseSimpleWorkbenchProposalDocument,
   type SimpleWorkbenchProposalDocument
 } from "./simple-workbench-proposal";
 import {
+  previewReportAssistantLayerStackDraft,
   previewDescribedLayerConfiguration,
-  type WorkbenchV2CalculatorAssistantPreview
+  type WorkbenchV2CalculatorAssistantPreview,
+  type WorkbenchV2CalculatorAssistantToolName
 } from "../workbench-rebuild/workbench-v2-calculator-assistant";
 import type { ProjectOwnerScope } from "../../lib/server-project-storage";
 import {
@@ -60,16 +74,24 @@ export type ReportAssistantQueryUsedRead = {
 
 export type ReportAssistantQueryCalculatorPreview = {
   mutates: false;
-  name: "preview_described_layer_configuration";
+  name: Extract<
+    WorkbenchV2CalculatorAssistantToolName,
+    "preview_described_layer_configuration" | "preview_layer_stack_draft"
+  >;
   preview: WorkbenchV2CalculatorAssistantPreview;
   previewOnly: true;
 };
+
+export type ReportAssistantQueryLayerStackDraftState = NonNullable<
+  WorkbenchV2CalculatorAssistantPreview["layerStackDraft"]
+>;
 
 export type ReportAssistantQuerySuccess = {
   answer: string;
   assistantResults: readonly ReportAssistantResultEnvelope[];
   calculatorPreview?: ReportAssistantQueryCalculatorPreview;
   evidence: readonly ReportAssistantQueryEvidence[];
+  layerStackDraft?: ReportAssistantQueryLayerStackDraftState;
   mutates: false;
   ok: true;
   usedReads: readonly ReportAssistantQueryUsedRead[];
@@ -77,6 +99,7 @@ export type ReportAssistantQuerySuccess = {
 };
 
 export type ReportAssistantQueryFailure = {
+  assistantResults?: readonly ReportAssistantResultEnvelope[];
   code: string;
   errors: readonly string[];
   evidence: readonly ReportAssistantQueryEvidence[];
@@ -101,6 +124,7 @@ export type ReportAssistantQueryInput = {
   allowedReadActions?: readonly ReportAssistantQueryReadActionName[];
   context: ReportAssistantContext;
   document?: SimpleWorkbenchProposalDocument;
+  draftContinuation?: ReportAssistantLayerStackDraftContinuationRequest;
   instruction: string;
   owner: ProjectOwnerScope;
   presetRepository?: ReportAssistantQueryPresetRepository;
@@ -249,6 +273,13 @@ function wantsDescribedCalculatorPreview(normalizedInstruction: string): boolean
       .test(normalizedInstruction);
 }
 
+function wantsWallCandidateComparison(normalizedInstruction: string): boolean {
+  return /\b\d+(?:[.,]\d+)?\s*mm\b/u.test(normalizedInstruction) &&
+    /\b(?:compare|comparison|karsilastir|karsilastirma|karşılaştır|kiyasla|kıyasla|vs)\b/u.test(normalizedInstruction) &&
+    /\b(?:c|ctr|dn|dnt|duvar|rw|stc|wall)\b/u.test(normalizedInstruction) &&
+    !/\b(?:aiic|ceiling|doseme|döşeme|floor|iic|impact|ln|slab|tavan)\b/u.test(normalizedInstruction);
+}
+
 function getContextProjectId(context: ReportAssistantContext): string | undefined {
   return context.projectWorkspace?.project?.id ??
     context.projectWorkspace?.activeDraftState?.projectId ??
@@ -272,6 +303,7 @@ function canRead(
 }
 
 function queryFailure(input: {
+  assistantResults?: readonly ReportAssistantResultEnvelope[];
   code: string;
   errors: readonly string[];
   evidence?: readonly ReportAssistantQueryEvidence[];
@@ -280,6 +312,7 @@ function queryFailure(input: {
   warnings?: readonly string[];
 }): ReportAssistantQueryFailure {
   return {
+    ...(input.assistantResults ? { assistantResults: input.assistantResults } : {}),
     code: input.code,
     errors: input.errors,
     evidence: input.evidence ?? [],
@@ -296,6 +329,7 @@ function querySuccess(input: {
   assistantResults?: readonly ReportAssistantResultEnvelope[];
   calculatorPreview?: ReportAssistantQueryCalculatorPreview;
   evidence: readonly ReportAssistantQueryEvidence[];
+  layerStackDraft?: ReportAssistantQueryLayerStackDraftState;
   usedReads: readonly ReportAssistantQueryUsedRead[];
   warnings?: readonly string[];
 }): ReportAssistantQuerySuccess {
@@ -310,6 +344,7 @@ function querySuccess(input: {
     ],
     ...(input.calculatorPreview ? { calculatorPreview: input.calculatorPreview } : {}),
     evidence: input.evidence,
+    ...(input.layerStackDraft ? { layerStackDraft: input.layerStackDraft } : {}),
     mutates: false,
     ok: true,
     usedReads: input.usedReads,
@@ -376,6 +411,80 @@ function queryAnswerToAssistantResult(input: {
   });
 }
 
+function draftContinuationTasks(
+  result: ReportAssistantLayerStackDraftContinuationResult
+): readonly ReportAssistantResultTask[] {
+  if (!result.ok) {
+    return result.errors.map((message) => ({
+      code: result.status === "stale" ? "assistant_layer_stack_draft_stale" : "assistant_layer_stack_draft_invalid_answer",
+      message,
+      severity: result.status === "stale" ? "error" : "warning"
+    }));
+  }
+
+  return result.validation.missingInputs.map((missingInput) => ({
+    code: missingInput.code,
+    message: `${missingInput.message} ${missingInput.question}`,
+    severity: "warning"
+  }));
+}
+
+function draftContinuationRouteStatus(
+  result: ReportAssistantLayerStackDraftContinuationResult
+): ReportAssistantResultRouteStatus {
+  if (result.ok) {
+    return result.status === "ready" ? "ready" : "needs_input";
+  }
+
+  return result.status === "stale" ? "stale" : "validation_failed";
+}
+
+function draftContinuationToAssistantResult(
+  result: ReportAssistantLayerStackDraftContinuationResult
+): ReportAssistantResultEnvelope {
+  const routeStatus = draftContinuationRouteStatus(result);
+
+  return createReportAssistantResultEnvelope({
+    authority: result.ok
+      ? result.status === "ready" ? "draft_only" : "needs_input"
+      : result.status === "stale" ? "draft_only" : "error",
+    capabilityName: "report_assistant_query_route",
+    confidenceReason: result.ok
+      ? "The assistant merged only structured clarification answers that matched unresolved typed draft inputs."
+      : "The assistant rejected the draft continuation before calculator preview.",
+    evidence: [
+      {
+        label: "Layer-stack draft continuation",
+        detail: result.draft.draftId
+      }
+    ],
+    routeStatus,
+    sourceTrace: [
+      {
+        detail: result.draft.contextSignature,
+        kind: "deterministic",
+        label: "report_assistant_layer_stack_draft_continuation"
+      }
+    ],
+    tasks: draftContinuationTasks(result),
+    warnings: result.ok
+      ? ["Draft continuation is read-only and did not mutate Workbench or calculator state."]
+      : []
+  });
+}
+
+function buildDraftContinuationAnswer(result: ReportAssistantLayerStackDraftContinuationResult): string {
+  if (!result.ok) {
+    return `Draft continuation rejected: ${result.errors.join(" ")}`;
+  }
+
+  if (result.validation.ok) {
+    return "Draft continuation applied. The layer-stack draft is ready for calculator preview.";
+  }
+
+  return `Draft continuation applied. Remaining inputs: ${result.validation.clarifyingQuestions.join(" ")}`;
+}
+
 function buildCalculatorPreviewAnswer(preview: WorkbenchV2CalculatorAssistantPreview): string {
   const stack = preview.describedConfiguration?.layers.length
     ? preview.describedConfiguration.layers
@@ -398,6 +507,108 @@ function buildCalculatorPreviewAnswer(preview: WorkbenchV2CalculatorAssistantPre
     routeLabel ? `Route: ${routeLabel}.` : "",
     taskSummary
   ].filter(Boolean).join(" ");
+}
+
+function buildWallCandidateComparisonAnswer(preview: ReportAssistantWallCandidateComparisonPreview): string {
+  const candidateSummary = preview.candidates
+    .map((candidate) => `${candidate.label}: ${candidate.status}`)
+    .join("; ");
+  const rows = preview.outputRows
+    .slice(0, 8)
+    .map((row) => `${row.candidateId} ${row.label}: ${row.value} (${row.detail})`)
+    .join("; ");
+  const ranking = preview.ranking.status === "ready"
+    ? ` Ranking: ${preview.ranking.rows.map((row) => `${row.rank}. ${row.label} ${row.valueLabel}`).join("; ")}.`
+    : ` Ranking blocked: ${preview.ranking.reason}`;
+
+  return [
+    `Wall candidate comparison preview is ${preview.status}.`,
+    `Candidates: ${candidateSummary}.`,
+    `Outputs: ${rows || "none"}.`,
+    ranking
+  ].join(" ");
+}
+
+function wallCandidateComparisonTasks(
+  preview: ReportAssistantWallCandidateComparisonPreview
+): ReportAssistantResultTask[] {
+  const tasks = preview.candidates.flatMap((candidate) =>
+    candidate.tasks.map((task) => ({
+      code: `${candidate.candidateId}:${task.code}`,
+      message: `${candidate.label}: ${task.message}`,
+      severity: "warning" as const
+    }))
+  );
+
+  if (preview.ranking.status !== "ready") {
+    tasks.push({
+      code: "assistant_wall_candidate_comparison_ranking_blocked",
+      message: preview.ranking.reason,
+      severity: "warning"
+    });
+  }
+
+  if (tasks.length === 0 && preview.status !== "ready") {
+    tasks.push({
+      code: "assistant_wall_candidate_comparison_not_ready",
+      message: "Wall candidate comparison did not produce a live calculator-backed row.",
+      severity: "warning"
+    });
+  }
+
+  return tasks;
+}
+
+function wallCandidateComparisonToAssistantResult(
+  preview: ReportAssistantWallCandidateComparisonPreview
+): ReportAssistantResultEnvelope {
+  const basis = preview.outputRows.flatMap((row) =>
+    row.basis.map((basisRow) => ({
+      basis: `${row.candidateId}:${basisRow.basis}`,
+      metricId: basisRow.metricId,
+      routeStatus: basisRow.routeStatus,
+      unit: basisRow.unit,
+      valueLabel: basisRow.valueLabel
+    }))
+  );
+  const tasks = wallCandidateComparisonTasks(preview);
+  const authority = basis.length > 0
+    ? "calculator_backed"
+    : preview.status === "unsupported"
+      ? "unsupported"
+      : "needs_input";
+
+  return createReportAssistantResultEnvelope({
+    authority,
+    basis,
+    capabilityName: "report_assistant_wall_candidate_comparison_preview",
+    confidenceReason: basis.length > 0
+      ? "Comparison rows copy only live values returned by the calculator preview route."
+      : "The comparison stopped at a typed needs-input or unsupported boundary.",
+    evidence: [
+      {
+        detail: `${String(preview.candidates.length)} candidate(s)`,
+        label: "Wall candidate comparison"
+      }
+    ],
+    routeStatus: preview.status,
+    sourceTrace: [
+      ...preview.outputRows.flatMap((row) =>
+        row.sourceTrace.map((trace) => ({
+          detail: `${row.candidateId}: ${trace.detail ?? row.label}`,
+          kind: trace.kind,
+          label: trace.label
+        }))
+      ),
+      {
+        detail: preview.comparisonId,
+        kind: "deterministic" as const,
+        label: "report_assistant_wall_candidate_comparison"
+      }
+    ],
+    tasks,
+    warnings: preview.warnings
+  });
 }
 
 async function runQueryRead(input: {
@@ -1059,6 +1270,92 @@ export async function answerReportAssistantQuery(
   }
 
   const normalizedInstruction = normalizeQueryText(instruction);
+  const evidence = evidenceFromContext(input.context);
+  const usedReads: ReportAssistantQueryUsedRead[] = [];
+  const warnings: string[] = [];
+
+  if (input.draftContinuation) {
+    const continuationResult = mergeReportAssistantLayerStackDraftContinuation(input.draftContinuation);
+    const assistantResult = draftContinuationToAssistantResult(continuationResult);
+    const continuationEvidence = [
+      ...evidence,
+      {
+        label: "Layer-stack draft continuation",
+        referenceId: input.draftContinuation.draft.draftId,
+        source: "current_context" as const
+      }
+    ];
+
+    if (!continuationResult.ok) {
+      return queryFailure({
+        assistantResults: [assistantResult],
+        code: continuationResult.status === "stale"
+          ? "stale_report_assistant_layer_stack_draft"
+          : "invalid_report_assistant_layer_stack_draft_answer",
+        errors: continuationResult.errors,
+        evidence: continuationEvidence,
+        statusCode: continuationResult.status === "stale" ? 409 : 400,
+        usedReads,
+        warnings
+      });
+    }
+
+    warnings.push("Draft continuation is read-only and did not mutate Workbench or calculator state.");
+
+    if (continuationResult.status === "ready") {
+      const calculatorPreview = previewReportAssistantLayerStackDraft({
+        draft: continuationResult.draft
+      });
+
+      if (!calculatorPreview.ok) {
+        return queryFailure({
+          assistantResults: [assistantResult],
+          code: calculatorPreview.code,
+          errors: calculatorPreview.errors,
+          evidence: continuationEvidence,
+          statusCode: calculatorPreview.statusCode,
+          usedReads,
+          warnings
+        });
+      }
+
+      const queryCalculatorPreview = {
+        mutates: false,
+        name: "preview_layer_stack_draft",
+        preview: calculatorPreview.preview,
+        previewOnly: true
+      } as const satisfies ReportAssistantQueryCalculatorPreview;
+      warnings.push("Calculator preview is read-only and did not mutate the report or Workbench stack.");
+
+      return querySuccess({
+        answer: buildCalculatorPreviewAnswer(calculatorPreview.preview),
+        assistantResults: [
+          calculatorPreviewToAssistantResult(queryCalculatorPreview)
+        ],
+        calculatorPreview: queryCalculatorPreview,
+        evidence: continuationEvidence,
+        layerStackDraft: calculatorPreview.preview.layerStackDraft ?? {
+          draft: continuationResult.draft,
+          validation: continuationResult.validation
+        },
+        usedReads,
+        warnings
+      });
+    }
+
+    return querySuccess({
+      answer: buildDraftContinuationAnswer(continuationResult),
+      assistantResults: [assistantResult],
+      evidence: continuationEvidence,
+      layerStackDraft: {
+        draft: continuationResult.draft,
+        validation: continuationResult.validation
+      },
+      usedReads,
+      warnings
+    });
+  }
+
   if (hasMutationIntent(normalizedInstruction)) {
     return queryFailure({
       code: "mutation_intent_not_supported",
@@ -1070,9 +1367,43 @@ export async function answerReportAssistantQuery(
   const allowedActions = getAllowedActions(input.allowedReadActions);
   const readProject = input.readProject ?? runReportAssistantProjectReadTool;
   const presetRepository = input.presetRepository ?? createDefaultWorkbenchV2PresetRepository();
-  const evidence = evidenceFromContext(input.context);
-  const usedReads: ReportAssistantQueryUsedRead[] = [];
-  const warnings: string[] = [];
+
+  if (wantsWallCandidateComparison(normalizedInstruction)) {
+    const comparison = createReportAssistantWallCandidateComparison({
+      instruction
+    });
+
+    if (!comparison.ok) {
+      return queryFailure({
+        code: comparison.code,
+        errors: [comparison.message],
+        evidence,
+        statusCode: comparison.code === "unsupported_wall_candidate_comparison_route" ? 422 : 400,
+        usedReads,
+        warnings
+      });
+    }
+
+    const comparisonPreview = previewReportAssistantWallCandidateComparison({
+      comparison: comparison.comparison
+    });
+
+    evidence.push({
+      label: "Wall candidate comparison preview",
+      source: "calculator_preview"
+    });
+    warnings.push("Wall candidate comparison preview is read-only and did not mutate the report or Workbench stack.");
+
+    return querySuccess({
+      answer: buildWallCandidateComparisonAnswer(comparisonPreview),
+      assistantResults: [
+        wallCandidateComparisonToAssistantResult(comparisonPreview)
+      ],
+      evidence,
+      usedReads,
+      warnings
+    });
+  }
 
   if (wantsDescribedCalculatorPreview(normalizedInstruction)) {
     const calculatorPreview = previewDescribedLayerConfiguration({
@@ -1110,6 +1441,9 @@ export async function answerReportAssistantQuery(
       ],
       calculatorPreview: queryCalculatorPreview,
       evidence,
+      ...(calculatorPreview.preview.layerStackDraft
+        ? { layerStackDraft: calculatorPreview.preview.layerStackDraft }
+        : {}),
       usedReads,
       warnings
     });

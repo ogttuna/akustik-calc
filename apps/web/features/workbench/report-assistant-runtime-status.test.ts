@@ -63,7 +63,7 @@ describe("report assistant runtime status", () => {
       pathname: "/api/report-assistant/findings",
       requiresConfirmation: true
     }));
-    expect(status.actionProposals).toHaveLength(5);
+    expect(status.actionProposals).toHaveLength(6);
     expect(status.actionProposals).toEqual(expect.arrayContaining([
       expect.objectContaining({
         mutates: false,
@@ -74,6 +74,12 @@ describe("report assistant runtime status", () => {
       expect.objectContaining({
         mutates: false,
         name: "create_user_preset_from_current_stack",
+        previewOnly: true,
+        requiresConfirmation: true
+      }),
+      expect.objectContaining({
+        mutates: false,
+        name: "export_current_report_snapshot_as_pdf",
         previewOnly: true,
         requiresConfirmation: true
       }),

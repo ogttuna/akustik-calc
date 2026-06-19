@@ -48,8 +48,10 @@ export type GateRDoubleLeafFramedBridgeEquationOwner = {
 };
 
 export type GateRDoubleLeafFramedBridgePhysicalInputs = {
+  absorberCoverageRatio: number | null;
   bridgeClass: GateQDoubleLeafFrameBridgeClass;
   cavityDepthMm: number | null;
+  flowResistivityPaSM2: number | null;
   flowResistivitySource: "engineering_default" | "none" | "source_owned" | "unknown" | "user_supplied";
   leafMassRatio: number | null;
   sideALeafMassKgM2: number | null;
@@ -107,6 +109,7 @@ export type GateRDoubleLeafFramedBridgeScenarioPackEntry = {
 const WALL_AIRBORNE_OUTPUTS = ["Rw", "STC", "C", "Ctr"] as const satisfies readonly RequestedOutputId[];
 const AIR_DENSITY_KG_M3 = 1.2;
 const SOUND_SPEED_M_S = 343;
+const NOMINAL_POROUS_FLOW_RESISTIVITY_PA_SM2 = 15_000;
 const DOUBLE_LEAF_BANDS_HZ = [50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150] as const;
 
 function round1(value: number): number {
@@ -210,6 +213,34 @@ function flowResistivitySource(
   return "none";
 }
 
+function flowResistivityPaSM2(
+  layers: readonly LayerInput[],
+  catalog: readonly MaterialDefinition[],
+  airborneContext?: AirborneContext
+): number | null {
+  for (const layer of layers) {
+    const material = materialFor(layer, catalog);
+    if (material?.acoustic?.behavior !== "porous_absorber") {
+      continue;
+    }
+
+    const value = material.acoustic.flowResistivityPaSM2;
+    if (typeof value === "number" && Number.isFinite(value) && value > 0) {
+      return value;
+    }
+  }
+
+  const primaryCavity = airborneContext?.advancedWall?.cavities?.[0];
+  const value = primaryCavity?.absorberFlowResistivityPaSM2;
+  return typeof value === "number" && Number.isFinite(value) && value > 0 ? value : null;
+}
+
+function absorberCoverageRatio(airborneContext?: AirborneContext): number | null {
+  const value = airborneContext?.advancedWall?.cavities?.[0]?.absorberCoverageRatio;
+
+  return typeof value === "number" && Number.isFinite(value) ? clamp(value, 0, 1) : null;
+}
+
 function buildPhysicalInputs(input: {
   airborneContext?: AirborneContext;
   bridgeClass: GateQDoubleLeafFrameBridgeClass;
@@ -223,8 +254,10 @@ function buildPhysicalInputs(input: {
     sideAMass && sideBMass ? round1(Math.max(sideAMass, sideBMass) / Math.min(sideAMass, sideBMass)) : null;
 
   return {
+    absorberCoverageRatio: absorberCoverageRatio(input.airborneContext),
     bridgeClass: input.bridgeClass,
     cavityDepthMm: typeof topology?.cavity1DepthMm === "number" ? topology.cavity1DepthMm : null,
+    flowResistivityPaSM2: flowResistivityPaSM2(input.layers, input.catalog, input.airborneContext),
     flowResistivitySource: flowResistivitySource(input.layers, input.catalog, input.airborneContext),
     leafMassRatio,
     sideALeafMassKgM2: sideAMass,
@@ -268,7 +301,10 @@ function bridgeCouplingDeltaDb(
 }
 
 function porousDampingCreditDb(input: {
+  absorberCoverageRatio: number | null;
   airborneContext?: AirborneContext;
+  bridgeClass: GateQDoubleLeafFrameBridgeClass;
+  flowResistivityPaSM2: number | null;
   flowResistivitySource: GateRDoubleLeafFramedBridgePhysicalInputs["flowResistivitySource"];
 }): number {
   const coverage = input.airborneContext?.wallTopology?.cavity1FillCoverage;
@@ -277,12 +313,35 @@ function porousDampingCreditDb(input: {
     return 0;
   }
 
+  const nominalSourceCredit = (baseCreditDb: number): number => {
+    if (!(input.flowResistivityPaSM2 && Number.isFinite(input.flowResistivityPaSM2))) {
+      return baseCreditDb;
+    }
+
+    const logDistanceFromNominal = Math.abs(
+      Math.log10(input.flowResistivityPaSM2 / NOMINAL_POROUS_FLOW_RESISTIVITY_PA_SM2)
+    );
+    const multiplier = clamp(1 - (logDistanceFromNominal * 0.65), 0.45, 1);
+
+    return round1(baseCreditDb * multiplier);
+  };
+  const fullBaseCredit = input.flowResistivitySource === "engineering_default" ? 3 : 3.5;
+  const partialBaseCredit = input.flowResistivitySource === "engineering_default" ? 1.5 : 2;
+  const numericCoverageBaseCredit = (): number | null => {
+    if (input.bridgeClass === "direct_fixed_bridge" || input.absorberCoverageRatio === null) {
+      return null;
+    }
+
+    return fullBaseCredit * input.absorberCoverageRatio;
+  };
+  const numericCoverageCredit = numericCoverageBaseCredit();
+
   if (coverage === "full") {
-    return input.flowResistivitySource === "engineering_default" ? 3 : 3.5;
+    return nominalSourceCredit(numericCoverageCredit ?? fullBaseCredit);
   }
 
   if (coverage === "partial" || coverage === "unknown") {
-    return input.flowResistivitySource === "engineering_default" ? 1.5 : 2;
+    return nominalSourceCredit(numericCoverageCredit ?? partialBaseCredit);
   }
 
   return 0;
@@ -382,7 +441,10 @@ function buildBenchmarkRange(input: {
   const totalLeafMass = sideAMass + sideBMass;
   const bridgeDelta = bridgeCouplingDeltaDb(input.bridgeClass, input.airborneContext?.resilientBarSideCount);
   const dampingCredit = porousDampingCreditDb({
+    absorberCoverageRatio: input.physicalInputs.absorberCoverageRatio,
     airborneContext: input.airborneContext,
+    bridgeClass: input.bridgeClass,
+    flowResistivityPaSM2: input.physicalInputs.flowResistivityPaSM2,
     flowResistivitySource: input.physicalInputs.flowResistivitySource
   });
   const cavityDepthCredit = clamp((cavityDepthMm - 40) * 0.045, 0, 4.5);
@@ -443,10 +505,11 @@ function buildEquationOwners(): readonly GateRDoubleLeafFramedBridgeEquationOwne
       runtimePromotionRequired: true
     },
     {
-      formula: "damping_credit_db = f(cavityFillCoverage, absorptionClass, flowResistivityPaSM2)",
+      formula:
+        "damping_credit_db = f(cavityFillCoverage, absorptionClass, flowResistivityPaSM2, absorberCoverageRatio when supplied)",
       id: "porous_cavity_damping_owner",
       ownerStatus: "contracted_no_runtime",
-      requiredInputs: ["cavity1FillCoverage", "cavity1AbsorptionClass", "flowResistivityPaSM2"],
+      requiredInputs: ["cavity1FillCoverage", "cavity1AbsorptionClass", "flowResistivityPaSM2", "absorberCoverageRatio"],
       runtimePromotionRequired: true
     },
     {
@@ -472,6 +535,9 @@ function buildCandidateBasis(input: {
   physicalInputs: GateRDoubleLeafFramedBridgePhysicalInputs;
   sourceEvidenceAvailable?: boolean;
 }): AirborneResultBasis {
+  const advancedWallPrecisionInputs =
+    input.physicalInputs.absorberCoverageRatio === null ? [] : ["absorberCoverageRatio"];
+
   return AirborneResultBasisSchema.parse({
     assumptions: [
       "Gate R defines the double-leaf/framed solver candidate only; runtime candidate selection stays unchanged.",
@@ -497,6 +563,8 @@ function buildCandidateBasis(input: {
       "sideALeafGroup",
       "sideBLeafGroup",
       "cavity1DepthMm",
+      "flowResistivityPaSM2",
+      ...advancedWallPrecisionInputs,
       "frameBridgeClass",
       "supportTopology",
       "supportSpacingMm",
