@@ -144,6 +144,8 @@ function buildGateSBasis(input: {
 }): AirborneResultBasis {
   const advancedWallPrecisionInputs =
     input.physicalInputs.absorberCoverageRatio === null ? [] : ["absorberCoverageRatio"];
+  const advancedWallThicknessInputs =
+    input.physicalInputs.absorberThicknessMm === null ? [] : ["absorberThicknessMm"];
 
   return AirborneResultBasisSchema.parse({
     ...input.baseBasis,
@@ -169,6 +171,7 @@ function buildGateSBasis(input: {
       "cavity1DepthMm",
       "flowResistivityPaSM2",
       ...advancedWallPrecisionInputs,
+      ...advancedWallThicknessInputs,
       "frameBridgeClass",
       "supportTopology",
       "supportSpacingMm",

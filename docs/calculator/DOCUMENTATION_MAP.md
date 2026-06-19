@@ -40,13 +40,245 @@ the current selected runtime-first rerank. It supports the selected next
 plan but does not replace it or authorize a runtime owner before the
 rerank contract lands.
 
+Route input effectiveness indicator plan:
+`docs/calculator/WORKBENCH_ROUTE_INPUT_EFFECTIVENESS_INDICATOR_PLAN_2026-06-19.md`.
+This is a user-requested calculator-integrity/UI-clarity plan with its
+route, material, and layer-row slices implemented for marking whether
+visible workbench route inputs, route-critical material fields, metadata
+non-inputs, and layer material/role/thickness controls are used, needed,
+inactive, or defaulted for the selected route and output set. It
+supports route-required input capture and basis integrity. It does not
+replace the selected runtime implementation action.
+
 Latest checkpoint reconciliation:
-`docs/calculator/CHECKPOINT_2026-06-18_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_TARGET_OUTPUT_COVERAGE.md`.
-This confirms the measured-frequency field/building lab-companion
-target-output independence coverage refresh, the resolver/candidate
-surface alignment fix for the new measured-frequency compatible-delta
-candidate, and green current-gate component validation. It does not
-replace the selected next plan.
+`docs/calculator/CHECKPOINT_2026-06-19_DOUBLE_LEAF_FRAMED_PHYSICAL_INPUT_SENSITIVITY.md`.
+This confirms the double-leaf/framed physical-input sensitivity
+checkpoint after the absorber-thickness numeric-sensitivity coverage
+refresh, the implementation/docs comparison, the still-selected
+cavity-depth numeric-sensitivity owner, and green targeted/current-gate
+validation. It does not replace the selected next plan.
+
+## Latest Wall Double-Leaf/Framed Porous Absorber Thickness Numeric Sensitivity Coverage Refresh
+
+Coverage refresh action:
+`post_v1_wall_double_leaf_framed_porous_absorber_thickness_numeric_sensitivity_coverage_refresh_plan`
+
+Coverage refresh file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-porous-absorber-thickness-numeric-sensitivity-coverage-refresh-contract.test.ts`
+
+Coverage refresh plan:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_POROUS_ABSORBER_THICKNESS_NUMERIC_SENSITIVITY_COVERAGE_REFRESH_PLAN_2026-06-19.md`
+
+Coverage refresh status:
+`post_v1_wall_double_leaf_framed_porous_absorber_thickness_numeric_sensitivity_coverage_refresh_landed_no_runtime_selected_cavity_depth_numeric_sensitivity_owner`
+
+Previous owner status:
+`post_v1_wall_double_leaf_framed_porous_absorber_thickness_numeric_sensitivity_owner_landed_runtime_selected_coverage_refresh`
+
+Previous owner action/file:
+`post_v1_wall_double_leaf_framed_porous_absorber_thickness_numeric_sensitivity_owner_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-porous-absorber-thickness-numeric-sensitivity-owner-contract.test.ts`
+
+Selected candidate re-probed:
+`wall.double_leaf_framed.porous_absorber_thickness_numeric_sensitivity_owner`
+
+The refresh protects thickness-sensitive lab pins, field/building
+adapter values, no-thickness legacy behavior, missing
+`flowResistivityPaSM2` and missing `supportSpacingMm` as
+`needs_input`, impact aliases as `unsupported`, and direct-fixed
+double-leaf ownership. Counters: `coverageRefreshContractFilesTouched:
+1`, `newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next:
+`post_v1_wall_double_leaf_framed_cavity_depth_numeric_sensitivity_owner_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-cavity-depth-numeric-sensitivity-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_CAVITY_DEPTH_NUMERIC_SENSITIVITY_OWNER_PLAN_2026-06-19.md`
+/
+`post-V1 wall double-leaf/framed cavity-depth numeric sensitivity owner`
+
+## Latest Wall Double-Leaf/Framed Porous Absorber Thickness Numeric Sensitivity Owner
+
+Owner action:
+`post_v1_wall_double_leaf_framed_porous_absorber_thickness_numeric_sensitivity_owner_plan`
+
+Owner file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-porous-absorber-thickness-numeric-sensitivity-owner-contract.test.ts`
+
+Owner plan:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_POROUS_ABSORBER_THICKNESS_NUMERIC_SENSITIVITY_OWNER_PLAN_2026-06-19.md`
+
+Owner status:
+`post_v1_wall_double_leaf_framed_porous_absorber_thickness_numeric_sensitivity_owner_landed_runtime_selected_coverage_refresh`
+
+Previous refresh status:
+`post_v1_wall_double_leaf_framed_bridge_support_spacing_numeric_sensitivity_coverage_refresh_landed_no_runtime_selected_absorber_thickness_numeric_sensitivity_owner`
+
+Previous refresh action/file:
+`post_v1_wall_double_leaf_framed_bridge_support_spacing_numeric_sensitivity_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-bridge-support-spacing-numeric-sensitivity-coverage-refresh-contract.test.ts`
+
+Previous refresh re-probed candidate:
+`wall.double_leaf_framed.bridge_support_spacing_numeric_sensitivity_owner`
+
+Previous refresh counters: `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+
+Selected candidate:
+`wall.double_leaf_framed.porous_absorber_thickness_numeric_sensitivity_owner`
+
+The owner makes `advancedWall.cavities[].absorberThicknessMm`
+numerically active in the context-owned double-leaf/framed porous
+damping route. Full-depth `90 mm` in a `90 mm` cavity keeps lab
+`Rw/STC 46`, `C -1`, and `Ctr -6.1`; half-depth `45 mm` returns lab
+`Rw/STC 44`; thin `20 mm` returns lab `Rw/STC 43`. Field/building
+adapters move from the same owned base curve. No-thickness input
+preserves legacy behavior. Counters: `accuracyPromotedRequestShapes:
+3`, `accuracyPromotedTargetOutputs: 13`, `newCalculableLayerTemplates:
+0`, `newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 13`,
+`runtimeFormulaRetunes: 1`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Current selected next:
+`post_v1_wall_double_leaf_framed_porous_absorber_thickness_numeric_sensitivity_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-porous-absorber-thickness-numeric-sensitivity-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_POROUS_ABSORBER_THICKNESS_NUMERIC_SENSITIVITY_COVERAGE_REFRESH_PLAN_2026-06-19.md`
+/
+`post-V1 wall double-leaf/framed porous absorber thickness numeric sensitivity coverage refresh`
+
+## Latest Wall Double-Leaf/Framed Bridge Support-Spacing Numeric Sensitivity Coverage Refresh
+
+Coverage refresh action:
+`post_v1_wall_double_leaf_framed_bridge_support_spacing_numeric_sensitivity_coverage_refresh_plan`
+
+Coverage refresh file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-bridge-support-spacing-numeric-sensitivity-coverage-refresh-contract.test.ts`
+
+Coverage refresh plan:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_BRIDGE_SUPPORT_SPACING_NUMERIC_SENSITIVITY_COVERAGE_REFRESH_PLAN_2026-06-19.md`
+
+Coverage refresh status:
+`post_v1_wall_double_leaf_framed_bridge_support_spacing_numeric_sensitivity_coverage_refresh_landed_no_runtime_selected_absorber_thickness_numeric_sensitivity_owner`
+
+Previous owner status:
+`post_v1_wall_double_leaf_framed_bridge_support_spacing_numeric_sensitivity_owner_landed_runtime_selected_coverage_refresh`
+
+Selected candidate re-probed:
+`wall.double_leaf_framed.bridge_support_spacing_numeric_sensitivity_owner`
+
+The refresh protects support-spacing lab pins, field/building adapter
+values, missing `supportSpacingMm` as `needs_input`, impact aliases as
+`unsupported`, and direct-fixed double-leaf ownership. Counters:
+`coverageRefreshContractFilesTouched: 1`, `newCalculableLayerTemplates:
+0`, `newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Selected next:
+`post_v1_wall_double_leaf_framed_porous_absorber_thickness_numeric_sensitivity_owner_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-porous-absorber-thickness-numeric-sensitivity-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_POROUS_ABSORBER_THICKNESS_NUMERIC_SENSITIVITY_OWNER_PLAN_2026-06-19.md`
+/
+`post-V1 wall double-leaf/framed porous absorber thickness numeric sensitivity owner`
+
+## Latest Wall Double-Leaf/Framed Bridge Support-Spacing Numeric Sensitivity Owner
+
+Owner action:
+`post_v1_wall_double_leaf_framed_bridge_support_spacing_numeric_sensitivity_owner_plan`
+
+Owner file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-bridge-support-spacing-numeric-sensitivity-owner-contract.test.ts`
+
+Owner plan:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_BRIDGE_SUPPORT_SPACING_NUMERIC_SENSITIVITY_OWNER_PLAN_2026-06-19.md`
+
+Owner status:
+`post_v1_wall_double_leaf_framed_bridge_support_spacing_numeric_sensitivity_owner_landed_runtime_selected_coverage_refresh`
+
+Previous refresh status:
+`post_v1_wall_double_leaf_framed_porous_absorber_coverage_ratio_numeric_sensitivity_coverage_refresh_landed_no_runtime_selected_bridge_support_spacing_numeric_sensitivity_owner`
+
+Selected candidate:
+`wall.double_leaf_framed.bridge_support_spacing_numeric_sensitivity_owner`
+
+The owner makes `studSpacingMm` / `supportSpacingMm` numerically active
+in the owned double-leaf/framed bridge route. Full porous coverage with
+`15000 Pa*s/m2` flow now returns lab `Rw/STC 45` at `400 mm`, keeps
+`Rw/STC 46` at the `600 mm` baseline, and returns `Rw/STC 47` at
+`1200 mm`; field/building adapters move from the same owned base curve.
+Missing support spacing stays `needs_input`, impact aliases remain
+`unsupported`, and direct-fixed double-leaf stays on the existing
+direct-fixed owner. Counters: `accuracyPromotedRequestShapes: 3`,
+`accuracyPromotedTargetOutputs: 13`, `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 13`,
+`runtimeFormulaRetunes: 1`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Current selected next:
+`post_v1_wall_double_leaf_framed_bridge_support_spacing_numeric_sensitivity_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-bridge-support-spacing-numeric-sensitivity-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_BRIDGE_SUPPORT_SPACING_NUMERIC_SENSITIVITY_COVERAGE_REFRESH_PLAN_2026-06-19.md`
+/
+`post-V1 wall double-leaf/framed bridge support-spacing numeric sensitivity coverage refresh`
+
+## Latest Wall Double-Leaf/Framed Porous Absorber Coverage-Ratio Numeric Sensitivity Coverage Refresh
+
+Coverage refresh action:
+`post_v1_wall_double_leaf_framed_porous_absorber_coverage_ratio_numeric_sensitivity_coverage_refresh_plan`
+
+Coverage refresh file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-porous-absorber-coverage-ratio-numeric-sensitivity-coverage-refresh-contract.test.ts`
+
+Coverage refresh plan:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_POROUS_ABSORBER_COVERAGE_RATIO_NUMERIC_SENSITIVITY_COVERAGE_REFRESH_PLAN_2026-06-19.md`
+
+Coverage refresh status:
+`post_v1_wall_double_leaf_framed_porous_absorber_coverage_ratio_numeric_sensitivity_coverage_refresh_landed_no_runtime_selected_bridge_support_spacing_numeric_sensitivity_owner`
+
+Previous owner status:
+`post_v1_wall_double_leaf_framed_porous_absorber_coverage_ratio_numeric_sensitivity_owner_landed_runtime_selected_coverage_refresh`
+
+Selected candidate re-probed:
+`wall.double_leaf_framed.porous_absorber_coverage_ratio_numeric_sensitivity_owner`
+
+The refresh protects ratio `1`, `0.5`, and `0.25` lab pins,
+ratio-sensitive field/building adapter values, no-ratio legacy
+behavior, missing `flowResistivityPaSM2` as `needs_input`, and impact
+aliases as `unsupported`. Counters: `coverageRefreshContractFilesTouched:
+1`, `newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next:
+`post_v1_wall_double_leaf_framed_bridge_support_spacing_numeric_sensitivity_owner_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-bridge-support-spacing-numeric-sensitivity-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_BRIDGE_SUPPORT_SPACING_NUMERIC_SENSITIVITY_OWNER_PLAN_2026-06-19.md`
+/
+`post-V1 wall double-leaf/framed bridge support-spacing numeric sensitivity owner`
 
 ## Latest Wall Double-Leaf/Framed Porous Absorber Coverage-Ratio Numeric Sensitivity Owner
 

@@ -49,6 +49,7 @@ export type GateRDoubleLeafFramedBridgeEquationOwner = {
 
 export type GateRDoubleLeafFramedBridgePhysicalInputs = {
   absorberCoverageRatio: number | null;
+  absorberThicknessMm: number | null;
   bridgeClass: GateQDoubleLeafFrameBridgeClass;
   cavityDepthMm: number | null;
   flowResistivityPaSM2: number | null;
@@ -241,6 +242,25 @@ function absorberCoverageRatio(airborneContext?: AirborneContext): number | null
   return typeof value === "number" && Number.isFinite(value) ? clamp(value, 0, 1) : null;
 }
 
+function absorberThicknessMm(airborneContext?: AirborneContext): number | null {
+  const primaryCavity = airborneContext?.advancedWall?.cavities?.[0];
+  const value = primaryCavity?.absorberThicknessMm;
+  const advancedCavityDepth = primaryCavity?.depthMm;
+  const topologyCavityDepth = airborneContext?.wallTopology?.cavity1DepthMm;
+
+  if (
+    typeof advancedCavityDepth === "number" &&
+    Number.isFinite(advancedCavityDepth) &&
+    typeof topologyCavityDepth === "number" &&
+    Number.isFinite(topologyCavityDepth) &&
+    Math.abs(advancedCavityDepth - topologyCavityDepth) > 0.1
+  ) {
+    return null;
+  }
+
+  return typeof value === "number" && Number.isFinite(value) && value > 0 ? value : null;
+}
+
 function buildPhysicalInputs(input: {
   airborneContext?: AirborneContext;
   bridgeClass: GateQDoubleLeafFrameBridgeClass;
@@ -255,6 +275,7 @@ function buildPhysicalInputs(input: {
 
   return {
     absorberCoverageRatio: absorberCoverageRatio(input.airborneContext),
+    absorberThicknessMm: absorberThicknessMm(input.airborneContext),
     bridgeClass: input.bridgeClass,
     cavityDepthMm: typeof topology?.cavity1DepthMm === "number" ? topology.cavity1DepthMm : null,
     flowResistivityPaSM2: flowResistivityPaSM2(input.layers, input.catalog, input.airborneContext),
@@ -280,19 +301,52 @@ export function calculateGateRMassAirMassResonanceHz(input: {
   return round1(Math.sqrt(stiffnessTerm) / (2 * Math.PI));
 }
 
+function supportSpacingBridgeCorrectionDb(input: {
+  bridgeClass: GateQDoubleLeafFrameBridgeClass;
+  resilientSideCount: AirborneContext["resilientBarSideCount"] | undefined;
+  supportSpacingMm: number | null;
+}): number {
+  if (
+    input.bridgeClass === "direct_fixed_bridge" ||
+    input.bridgeClass === "unknown" ||
+    !(typeof input.supportSpacingMm === "number" && Number.isFinite(input.supportSpacingMm) && input.supportSpacingMm > 0)
+  ) {
+    return 0;
+  }
+
+  const spacingOctaves = Math.log2(clamp(input.supportSpacingMm, 300, 1200) / 600);
+  const sensitivity =
+    input.bridgeClass === "resilient_bridge"
+      ? input.resilientSideCount === "both_sides" ? 1.7 : 1.4
+      : input.bridgeClass === "independent_frame"
+        ? 1.7
+        : input.bridgeClass === "twin_frame_bridge"
+          ? 1.2
+          : 0.9;
+
+  return round1(clamp(spacingOctaves * sensitivity, -1.2, 1.5));
+}
+
 function bridgeCouplingDeltaDb(
   bridgeClass: GateQDoubleLeafFrameBridgeClass,
-  resilientSideCount: AirborneContext["resilientBarSideCount"] | undefined
+  resilientSideCount: AirborneContext["resilientBarSideCount"] | undefined,
+  supportSpacingMm: number | null
 ): number {
+  const supportSpacingCorrection = supportSpacingBridgeCorrectionDb({
+    bridgeClass,
+    resilientSideCount,
+    supportSpacingMm
+  });
+
   switch (bridgeClass) {
     case "independent_frame":
-      return 4;
+      return round1(4 + supportSpacingCorrection);
     case "twin_frame_bridge":
-      return 3;
+      return round1(3 + supportSpacingCorrection);
     case "resilient_bridge":
-      return resilientSideCount === "both_sides" ? 5.5 : 4.5;
+      return round1((resilientSideCount === "both_sides" ? 5.5 : 4.5) + supportSpacingCorrection);
     case "shared_stud_bridge":
-      return 1;
+      return round1(1 + supportSpacingCorrection);
     case "direct_fixed_bridge":
       return -5;
     case "unknown":
@@ -302,8 +356,10 @@ function bridgeCouplingDeltaDb(
 
 function porousDampingCreditDb(input: {
   absorberCoverageRatio: number | null;
+  absorberThicknessMm: number | null;
   airborneContext?: AirborneContext;
   bridgeClass: GateQDoubleLeafFrameBridgeClass;
+  cavityDepthMm: number | null;
   flowResistivityPaSM2: number | null;
   flowResistivitySource: GateRDoubleLeafFramedBridgePhysicalInputs["flowResistivitySource"];
 }): number {
@@ -327,6 +383,15 @@ function porousDampingCreditDb(input: {
   };
   const fullBaseCredit = input.flowResistivitySource === "engineering_default" ? 3 : 3.5;
   const partialBaseCredit = input.flowResistivitySource === "engineering_default" ? 1.5 : 2;
+  const thicknessMultiplier =
+    input.bridgeClass !== "direct_fixed_bridge" &&
+    (input.absorberCoverageRatio === null || input.absorberCoverageRatio >= 1) &&
+    input.absorberThicknessMm !== null &&
+    input.cavityDepthMm !== null &&
+    Number.isFinite(input.cavityDepthMm) &&
+    input.cavityDepthMm > 0
+      ? clamp(input.absorberThicknessMm / input.cavityDepthMm, 0, 1)
+      : 1;
   const numericCoverageBaseCredit = (): number | null => {
     if (input.bridgeClass === "direct_fixed_bridge" || input.absorberCoverageRatio === null) {
       return null;
@@ -337,11 +402,11 @@ function porousDampingCreditDb(input: {
   const numericCoverageCredit = numericCoverageBaseCredit();
 
   if (coverage === "full") {
-    return nominalSourceCredit(numericCoverageCredit ?? fullBaseCredit);
+    return nominalSourceCredit((numericCoverageCredit ?? fullBaseCredit) * thicknessMultiplier);
   }
 
   if (coverage === "partial" || coverage === "unknown") {
-    return nominalSourceCredit(numericCoverageCredit ?? partialBaseCredit);
+    return nominalSourceCredit((numericCoverageCredit ?? partialBaseCredit) * thicknessMultiplier);
   }
 
   return 0;
@@ -439,11 +504,17 @@ function buildBenchmarkRange(input: {
     sideBLeafMassKgM2: sideBMass
   });
   const totalLeafMass = sideAMass + sideBMass;
-  const bridgeDelta = bridgeCouplingDeltaDb(input.bridgeClass, input.airborneContext?.resilientBarSideCount);
+  const bridgeDelta = bridgeCouplingDeltaDb(
+    input.bridgeClass,
+    input.airborneContext?.resilientBarSideCount,
+    input.physicalInputs.supportSpacingMm
+  );
   const dampingCredit = porousDampingCreditDb({
     absorberCoverageRatio: input.physicalInputs.absorberCoverageRatio,
+    absorberThicknessMm: input.physicalInputs.absorberThicknessMm,
     airborneContext: input.airborneContext,
     bridgeClass: input.bridgeClass,
+    cavityDepthMm,
     flowResistivityPaSM2: input.physicalInputs.flowResistivityPaSM2,
     flowResistivitySource: input.physicalInputs.flowResistivitySource
   });
@@ -506,10 +577,16 @@ function buildEquationOwners(): readonly GateRDoubleLeafFramedBridgeEquationOwne
     },
     {
       formula:
-        "damping_credit_db = f(cavityFillCoverage, absorptionClass, flowResistivityPaSM2, absorberCoverageRatio when supplied)",
+        "damping_credit_db = f(cavityFillCoverage, absorptionClass, flowResistivityPaSM2, absorberCoverageRatio when supplied, absorberThicknessMm when supplied)",
       id: "porous_cavity_damping_owner",
       ownerStatus: "contracted_no_runtime",
-      requiredInputs: ["cavity1FillCoverage", "cavity1AbsorptionClass", "flowResistivityPaSM2", "absorberCoverageRatio"],
+      requiredInputs: [
+        "cavity1FillCoverage",
+        "cavity1AbsorptionClass",
+        "flowResistivityPaSM2",
+        "absorberCoverageRatio",
+        "absorberThicknessMm"
+      ],
       runtimePromotionRequired: true
     },
     {
@@ -537,6 +614,8 @@ function buildCandidateBasis(input: {
 }): AirborneResultBasis {
   const advancedWallPrecisionInputs =
     input.physicalInputs.absorberCoverageRatio === null ? [] : ["absorberCoverageRatio"];
+  const advancedWallThicknessInput =
+    input.physicalInputs.absorberThicknessMm === null ? [] : ["absorberThicknessMm"];
 
   return AirborneResultBasisSchema.parse({
     assumptions: [
@@ -565,6 +644,7 @@ function buildCandidateBasis(input: {
       "cavity1DepthMm",
       "flowResistivityPaSM2",
       ...advancedWallPrecisionInputs,
+      ...advancedWallThicknessInput,
       "frameBridgeClass",
       "supportTopology",
       "supportSpacingMm",

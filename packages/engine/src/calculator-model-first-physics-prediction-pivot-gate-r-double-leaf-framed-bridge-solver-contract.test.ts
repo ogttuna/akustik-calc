@@ -263,6 +263,7 @@ describe("calculator model-first physics prediction pivot Gate R", () => {
     expect(contract.candidateFamily).toBe("double_stud_system");
     expect(contract.physicalInputs).toEqual({
       absorberCoverageRatio: null,
+      absorberThicknessMm: null,
       bridgeClass: "independent_frame",
       cavityDepthMm: 90,
       flowResistivityPaSM2: 15000,

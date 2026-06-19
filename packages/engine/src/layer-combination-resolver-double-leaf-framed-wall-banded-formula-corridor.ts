@@ -169,6 +169,7 @@ export type LayerCombinationResolverDoubleLeafFramedWallBandedFormulaComponentBr
 
 export type LayerCombinationResolverDoubleLeafFramedWallBandedFormulaEvaluationInput = {
   readonly absorberCoverageRatio?: number | null;
+  readonly absorberThicknessMm?: number | null;
   readonly bridgeClass: GateQDoubleLeafFrameBridgeClass;
   readonly cavityAbsorptionClass?: "none" | "porous_absorptive" | "unknown";
   readonly cavityDepthMm?: number;
@@ -329,7 +330,8 @@ const FORMULA_TERMS = [
       "cavityAbsorptionClass",
       "flowResistivitySource",
       "flowResistivityPaSM2",
-      "absorberCoverageRatio"
+      "absorberCoverageRatio",
+      "absorberThicknessMm"
     ],
     runtimeOwnedInGate: false,
     termId: "porous_absorber_damping_formula"
@@ -529,6 +531,7 @@ type RequiredFormulaInputs = Required<
     LayerCombinationResolverDoubleLeafFramedWallBandedFormulaEvaluationInput,
     | "bridgeClass"
     | "absorberCoverageRatio"
+    | "absorberThicknessMm"
     | "cavityAbsorptionClass"
     | "cavityDepthMm"
     | "cavityFillCoverage"
@@ -550,6 +553,7 @@ function getRequiredInputs(
 
   return {
     absorberCoverageRatio: input.absorberCoverageRatio ?? null,
+    absorberThicknessMm: input.absorberThicknessMm ?? null,
     bridgeClass: input.bridgeClass,
     cavityAbsorptionClass: input.cavityAbsorptionClass as RequiredFormulaInputs["cavityAbsorptionClass"],
     cavityDepthMm: input.cavityDepthMm as number,
@@ -616,6 +620,14 @@ function porousDampingCreditDb(input: RequiredFormulaInputs): number {
   };
   const fullBaseCredit = input.flowResistivitySource === "engineering_default" ? 3 : 3.5;
   const partialBaseCredit = input.flowResistivitySource === "engineering_default" ? 1.5 : 2;
+  const thicknessMultiplier =
+    input.bridgeClass !== "direct_fixed_bridge" &&
+    (input.absorberCoverageRatio === null || input.absorberCoverageRatio >= 1) &&
+    input.absorberThicknessMm !== null &&
+    Number.isFinite(input.absorberThicknessMm) &&
+    input.absorberThicknessMm > 0
+      ? clamp(input.absorberThicknessMm / input.cavityDepthMm, 0, 1)
+      : 1;
   const numericCoverageBaseCredit = (): number | null => {
     if (input.bridgeClass === "direct_fixed_bridge" || input.absorberCoverageRatio === null) {
       return null;
@@ -626,11 +638,11 @@ function porousDampingCreditDb(input: RequiredFormulaInputs): number {
   const numericCoverageCredit = numericCoverageBaseCredit();
 
   if (input.cavityFillCoverage === "full") {
-    return nominalSourceCredit(numericCoverageCredit ?? fullBaseCredit);
+    return nominalSourceCredit((numericCoverageCredit ?? fullBaseCredit) * thicknessMultiplier);
   }
 
   if (input.cavityFillCoverage === "partial" || input.cavityFillCoverage === "unknown") {
-    return nominalSourceCredit(numericCoverageCredit ?? partialBaseCredit);
+    return nominalSourceCredit((numericCoverageCredit ?? partialBaseCredit) * thicknessMultiplier);
   }
 
   return 0;

@@ -112,3 +112,52 @@ When this refresh lands, update `AGENTS.md`,
 `docs/calculator/CURRENT_STATE.md`,
 `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`, and
 `docs/calculator/NEXT_AGENT_BRIEF.md`.
+
+## Landed Closeout
+
+Coverage refresh status:
+
+`post_v1_wall_double_leaf_framed_porous_absorber_coverage_ratio_numeric_sensitivity_coverage_refresh_landed_no_runtime_selected_bridge_support_spacing_numeric_sensitivity_owner`
+
+Coverage refresh file:
+
+`packages/engine/src/post-v1-wall-double-leaf-framed-porous-absorber-coverage-ratio-numeric-sensitivity-coverage-refresh-contract.test.ts`
+
+Coverage refresh selected candidate:
+
+`wall.double_leaf_framed.porous_absorber_coverage_ratio_numeric_sensitivity_owner`
+
+The refresh re-probes ratio `1`, `0.5`, and `0.25` lab values,
+ratio-sensitive field/building adapter values, no-ratio legacy behavior,
+missing `flowResistivityPaSM2` as `needs_input`, and impact aliases as
+`unsupported`. It moves no runtime values and retunes no formula.
+
+Coverage counters:
+
+- `coverageRefreshContractFilesTouched: 1`
+- `newCalculableLayerTemplates: 0`
+- `newCalculableRequestShapes: 0`
+- `newCalculableTargetOutputs: 0`
+- `runtimeBasisPromotions: 0`
+- `runtimeValuesMoved 0`
+- `runtimeFormulaRetunes: 0`
+- `sourceRowsImported: 0`
+- `frontendImplementationFilesTouched: 0`
+
+Selected next action:
+
+`post_v1_wall_double_leaf_framed_bridge_support_spacing_numeric_sensitivity_owner_plan`
+
+Selected next file:
+
+`packages/engine/src/post-v1-wall-double-leaf-framed-bridge-support-spacing-numeric-sensitivity-owner-contract.test.ts`
+
+Selected next plan:
+
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_BRIDGE_SUPPORT_SPACING_NUMERIC_SENSITIVITY_OWNER_PLAN_2026-06-19.md`
+
+Selected next label:
+
+`post-V1 wall double-leaf/framed bridge support-spacing numeric sensitivity owner`
+
+This is not a broad source crawl.
