@@ -436,13 +436,13 @@ function readOutputValue(result: AssemblyCalculation, outputId: RequestedOutputI
     case "AIIC":
       return result.impact?.AIIC ?? null;
     case "C":
-      return result.ratings.iso717.C;
+      return result.metrics.estimatedCDb ?? result.ratings.iso717.C;
     case "CI":
       return result.impact?.CI ?? null;
     case "CI,50-2500":
       return result.impact?.CI50_2500 ?? null;
     case "Ctr":
-      return result.ratings.iso717.Ctr;
+      return result.metrics.estimatedCtrDb ?? result.ratings.iso717.Ctr;
     case "DeltaLw":
       return result.impact?.DeltaLw ?? null;
     case "Dn,A":
@@ -470,11 +470,11 @@ function readOutputValue(result: AssemblyCalculation, outputId: RequestedOutputI
     case "LnT,A":
       return result.impact?.LnTA ?? null;
     case "Rw":
-      return result.ratings.iso717.Rw;
+      return result.metrics.estimatedRwDb ?? result.ratings.iso717.Rw;
     case "R'w":
       return result.ratings.field?.RwPrime ?? result.metrics.estimatedRwPrimeDb ?? null;
     case "STC":
-      return result.ratings.astmE413.STC;
+      return result.metrics.estimatedStc ?? result.ratings.astmE413.STC;
     case "HIIC":
     case "ISR":
     case "LIIC":
@@ -504,17 +504,19 @@ function getOutputDetail(result: AssemblyCalculation, outputId: RequestedOutputI
   return "No value returned";
 }
 
-function buildOutputRows(result: AssemblyCalculation, selectedOutputs: readonly RequestedOutputId[]): readonly OutputRow[] {
+export function buildOutputRows(result: AssemblyCalculation, selectedOutputs: readonly RequestedOutputId[]): readonly OutputRow[] {
   return selectedOutputs.map((outputId) => {
     const value = readOutputValue(result, outputId);
     const boundary = result.acousticAnswerBoundary;
+    const isSupported = result.supportedTargetOutputs.includes(outputId);
+    const isUnsupported = result.unsupportedTargetOutputs.includes(outputId) || boundary?.unsupportedOutputs.includes(outputId);
     let status: OutputStatus = "pending";
 
-    if (Number.isFinite(value)) {
+    if (isSupported && Number.isFinite(value)) {
       status = "live";
     } else if (boundary?.origin === "needs_input" && boundary.unsupportedOutputs.includes(outputId)) {
       status = "needs_input";
-    } else if (result.unsupportedTargetOutputs.includes(outputId) || boundary?.unsupportedOutputs.includes(outputId)) {
+    } else if (isUnsupported) {
       status = "unsupported";
     }
 
@@ -522,7 +524,7 @@ function buildOutputRows(result: AssemblyCalculation, selectedOutputs: readonly 
       detail: getOutputDetail(result, outputId, status),
       label: outputId,
       status,
-      value: value === null ? "--" : formatDb(value)
+      value: status === "live" && typeof value === "number" && Number.isFinite(value) ? formatDb(value) : "--"
     };
   });
 }

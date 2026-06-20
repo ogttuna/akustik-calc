@@ -232,6 +232,46 @@ function isExplicitlyUnsupportedOutput(
   return Boolean(result?.unsupportedTargetOutputs?.includes(output));
 }
 
+function hasConservativeBoundOutputValue(
+  result: AssemblyCalculation | null | undefined,
+  output: RequestedOutputId
+): boolean {
+  const bound = result?.lowerBoundImpact;
+
+  if (!bound) {
+    return false;
+  }
+
+  switch (output) {
+    case "DeltaLw":
+      return typeof bound.DeltaLwLowerBound === "number";
+    case "L'n,w":
+      return typeof bound.LPrimeNWUpperBound === "number";
+    case "L'nT,50":
+      return typeof bound.LPrimeNT50UpperBound === "number";
+    case "L'nT,w":
+      return typeof bound.LPrimeNTwUpperBound === "number";
+    case "Ln,w":
+      return typeof bound.LnWUpperBound === "number";
+    case "Ln,w+CI":
+      return typeof bound.LnWPlusCIUpperBound === "number";
+    default:
+      return false;
+  }
+}
+
+function isRequestedTargetOutputParked(
+  result: AssemblyCalculation | null | undefined,
+  output: RequestedOutputId
+): boolean {
+  return Boolean(
+    result?.targetOutputs?.includes(output) &&
+      !result.supportedTargetOutputs?.includes(output) &&
+      !result.unsupportedTargetOutputs?.includes(output) &&
+      !hasConservativeBoundOutputValue(result, output)
+  );
+}
+
 function isExplicitUnsupportedMissingInput(input: {
   output: RequestedOutputId;
   result: AssemblyCalculation | null;
@@ -611,6 +651,16 @@ export function buildOutputCard(input: {
       label: REQUESTED_OUTPUT_LABELS[output],
       output,
       status: "needs_input",
+      value: "Not ready"
+    };
+  }
+
+  if (isRequestedTargetOutputParked(result, output)) {
+    return {
+      detail: buildUnavailableOutputDetail({ output, result, studyMode }),
+      label: REQUESTED_OUTPUT_LABELS[output],
+      output,
+      status: isRouteBlockedOutput({ output, result, studyMode }) ? "needs_input" : "unsupported",
       value: "Not ready"
     };
   }

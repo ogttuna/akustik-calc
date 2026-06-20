@@ -27,6 +27,10 @@ import {
   type MaterialVisualOverride,
   validateMaterialEditorDraft
 } from "./material-editor-state";
+import type {
+  MaterialRouteInputEffectiveness,
+  MaterialRouteInputEffectivenessMap
+} from "./material-route-input-effectiveness";
 
 type MaterialEditorLayer = {
   id: string;
@@ -44,6 +48,7 @@ type MaterialEditorPanelProps = {
   onSaveMaterial: (material: MaterialDefinition) => void;
   onSaveVisualOverride: (override: MaterialVisualOverride) => void;
   onSelectMaterial: (materialId: string | null) => void;
+  routeInputEffectiveness?: MaterialRouteInputEffectivenessMap;
   restoreWarning?: string | null;
   selectedMaterialId: string | null;
   visualOverrides: readonly MaterialVisualOverride[];
@@ -107,10 +112,47 @@ const FIELD_DESCRIPTIONS = {
   youngModulusPa: "Elastic modulus in Pa. Describes stiffness for panel, mass, and timber-like materials."
 } as const;
 
+const ROUTE_INPUT_EFFECTIVENESS_LABELS: Record<MaterialRouteInputEffectiveness["status"], string> = {
+  inactive: "Inactive",
+  needed: "Needed",
+  used: "Used"
+};
+
+function MaterialRouteInputEffectivenessBadge(props: { effectiveness: MaterialRouteInputEffectiveness }) {
+  const badgeClassName = [
+    "material-route-input-effectiveness",
+    "ui-badge",
+    "ui-badge-compact",
+    props.effectiveness.status === "used" ? "ui-badge-success" : props.effectiveness.status === "needed" ? "ui-badge-warning" : ""
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  return (
+    <span className={badgeClassName} title={props.effectiveness.title}>
+      {ROUTE_INPUT_EFFECTIVENESS_LABELS[props.effectiveness.status]}
+    </span>
+  );
+}
+
+function MaterialFieldLabel(props: {
+  effectiveness?: MaterialRouteInputEffectiveness;
+  htmlFor: string;
+  label: string;
+}) {
+  return (
+    <label className="material-editor-field-label" htmlFor={props.htmlFor}>
+      <span>{props.label}</span>
+      {props.effectiveness ? <MaterialRouteInputEffectivenessBadge effectiveness={props.effectiveness} /> : null}
+    </label>
+  );
+}
+
 function MaterialTextField(props: {
   description?: string;
   disabled?: boolean;
   error?: string;
+  effectiveness?: MaterialRouteInputEffectiveness;
   label: string;
   onChange: (value: string) => void;
   placeholder?: string;
@@ -122,7 +164,7 @@ function MaterialTextField(props: {
 
   return (
     <div className="material-editor-field">
-      <label htmlFor={inputId}>{props.label}</label>
+      <MaterialFieldLabel effectiveness={props.effectiveness} htmlFor={inputId} label={props.label} />
       {props.description ? <small className="material-editor-description" id={descriptionId}>{props.description}</small> : null}
       <input
         aria-describedby={descriptionId}
@@ -142,6 +184,7 @@ function MaterialTextField(props: {
 function MaterialSelectField<TValue extends string>(props: {
   description?: string;
   disabled?: boolean;
+  effectiveness?: MaterialRouteInputEffectiveness;
   label: string;
   onChange: (value: TValue) => void;
   options: readonly { label: string; value: TValue }[];
@@ -152,7 +195,7 @@ function MaterialSelectField<TValue extends string>(props: {
 
   return (
     <div className="material-editor-field">
-      <label htmlFor={selectId}>{props.label}</label>
+      <MaterialFieldLabel effectiveness={props.effectiveness} htmlFor={selectId} label={props.label} />
       {props.description ? <small className="material-editor-description" id={descriptionId}>{props.description}</small> : null}
       <select
         aria-describedby={descriptionId}
@@ -202,6 +245,7 @@ function MaterialColorField(props: {
 function MaterialTextAreaField(props: {
   description?: string;
   disabled?: boolean;
+  effectiveness?: MaterialRouteInputEffectiveness;
   label: string;
   onChange: (value: string) => void;
   rows?: number;
@@ -212,7 +256,7 @@ function MaterialTextAreaField(props: {
 
   return (
     <div className="material-editor-field">
-      <label htmlFor={textareaId}>{props.label}</label>
+      <MaterialFieldLabel effectiveness={props.effectiveness} htmlFor={textareaId} label={props.label} />
       {props.description ? <small className="material-editor-description" id={descriptionId}>{props.description}</small> : null}
       <textarea
         aria-describedby={descriptionId}
@@ -250,21 +294,28 @@ export function MaterialEditorPanel({
   onSaveMaterial,
   onSaveVisualOverride,
   onSelectMaterial,
+  routeInputEffectiveness = {},
   restoreWarning = null,
   selectedMaterialId,
   visualOverrides
 }: MaterialEditorPanelProps) {
+  const initialSelectedMaterial = materials.find((material) => material.id === selectedMaterialId) ?? null;
+  const initialSelectedOverride = visualOverrides.find((override) => override.materialId === selectedMaterialId);
   const [mode, setMode] = useState<EditorMode>("existing");
   const [activeTab, setActiveTab] = useState<EditorTab>("properties");
   const [search, setSearch] = useState("");
   const [catalogScope, setCatalogScope] = useState<CatalogScope>("all");
   const [categoryFilter, setCategoryFilter] = useState<MaterialCategory | "all">("all");
-  const [draft, setDraft] = useState<MaterialEditorDraft>(() => createEmptyMaterialEditorDraft());
-  const [visualDraft, setVisualDraft] = useState<MaterialVisualDraft>(() => createMaterialVisualDraft(undefined));
+  const [draft, setDraft] = useState<MaterialEditorDraft>(() =>
+    initialSelectedMaterial ? createMaterialEditorDraftFromMaterial(initialSelectedMaterial) : createEmptyMaterialEditorDraft()
+  );
+  const [visualDraft, setVisualDraft] = useState<MaterialVisualDraft>(() =>
+    createMaterialVisualDraft(initialSelectedOverride, initialSelectedMaterial)
+  );
   const [replaceSourceLayers, setReplaceSourceLayers] = useState(true);
 
-  const selectedMaterial = materials.find((material) => material.id === selectedMaterialId) ?? null;
-  const selectedOverride = visualOverrides.find((override) => override.materialId === selectedMaterialId);
+  const selectedMaterial = initialSelectedMaterial;
+  const selectedOverride = initialSelectedOverride;
   const selectedVisualDefaults = useMemo(() => createDefaultMaterialVisualDraft(selectedMaterial), [selectedMaterial]);
   const visualReadabilityWarning = useMemo(() => getMaterialVisualReadabilityWarning(visualDraft), [visualDraft]);
   const selectedUsageCount = selectedMaterial ? countMaterialUsage(layers, selectedMaterial.id) : 0;
@@ -275,6 +326,15 @@ export function MaterialEditorPanel({
     [draft, materials, mode, selectedMaterial]
   );
   const hasErrors = Object.keys(validation.errors).length > 0;
+  const shouldShowPorousAbsorberFields =
+    draft.behavior === "porous_absorber" ||
+    draft.absorberClass === "porous_absorptive" ||
+    Boolean(draft.flowResistivityPaSM2.trim()) ||
+    Boolean(routeInputEffectiveness.flowResistivityPaSM2);
+  const shouldShowDynamicStiffnessField =
+    draft.behavior === "resilient_layer" ||
+    Boolean(draft.dynamicStiffnessMNm3.trim()) ||
+    Boolean(routeInputEffectiveness.dynamicStiffnessMNm3);
   const filteredMaterials = useMemo(() => {
     const normalized = search.trim().toLowerCase();
 
@@ -506,6 +566,7 @@ export function MaterialEditorPanel({
                 <MaterialSelectField
                   description={FIELD_DESCRIPTIONS.category}
                   disabled={!canEditProperties}
+                  effectiveness={routeInputEffectiveness.category}
                   label="Category"
                   onChange={(value) => updateDraft({ category: value })}
                   options={CATEGORY_OPTIONS}
@@ -514,6 +575,7 @@ export function MaterialEditorPanel({
                 <MaterialSelectField
                   description={FIELD_DESCRIPTIONS.behavior}
                   disabled={!canEditProperties}
+                  effectiveness={routeInputEffectiveness.behavior}
                   label="Behavior"
                   onChange={(value) => updateDraft({ behavior: value })}
                   options={BEHAVIOR_OPTIONS}
@@ -523,6 +585,7 @@ export function MaterialEditorPanel({
                   description={FIELD_DESCRIPTIONS.densityKgM3}
                   disabled={!canEditProperties}
                   error={validation.errors.densityKgM3}
+                  effectiveness={routeInputEffectiveness.densityKgM3}
                   label="Density"
                   onChange={(value) => updateDraft({ densityKgM3: value })}
                   placeholder="kg/m3"
@@ -534,6 +597,7 @@ export function MaterialEditorPanel({
                 <MaterialSelectField
                   description={FIELD_DESCRIPTIONS.propertySourceStatus}
                   disabled={!canEditProperties}
+                  effectiveness={routeInputEffectiveness.propertySourceStatus}
                   label="Source"
                   onChange={(value) => updateDraft({ propertySourceStatus: value })}
                   options={SOURCE_STATUS_OPTIONS}
@@ -542,6 +606,7 @@ export function MaterialEditorPanel({
                 <MaterialTextField
                   description={FIELD_DESCRIPTIONS.tags}
                   disabled={!canEditProperties}
+                  effectiveness={routeInputEffectiveness.tags}
                   label="Tags"
                   onChange={(value) => updateDraft({ tags: value })}
                   placeholder="comma separated"
@@ -549,11 +614,12 @@ export function MaterialEditorPanel({
                 />
               </div>
 
-              {draft.behavior === "porous_absorber" ? (
+              {shouldShowPorousAbsorberFields ? (
                 <div className="material-editor-field-grid">
                   <MaterialSelectField
                     description={FIELD_DESCRIPTIONS.absorberClass}
                     disabled={!canEditProperties}
+                    effectiveness={routeInputEffectiveness.absorberClass}
                     label="Absorber class"
                     onChange={(value) => updateDraft({ absorberClass: value })}
                     options={ABSORBER_OPTIONS}
@@ -563,6 +629,7 @@ export function MaterialEditorPanel({
                     description={FIELD_DESCRIPTIONS.flowResistivityPaSM2}
                     disabled={!canEditProperties}
                     error={validation.errors.flowResistivityPaSM2}
+                    effectiveness={routeInputEffectiveness.flowResistivityPaSM2}
                     label="Flow resistivity"
                     onChange={(value) => updateDraft({ flowResistivityPaSM2: value })}
                     placeholder="Pa.s/m2"
@@ -573,6 +640,7 @@ export function MaterialEditorPanel({
                     description={FIELD_DESCRIPTIONS.porosity}
                     disabled={!canEditProperties}
                     error={validation.errors.porosity}
+                    effectiveness={routeInputEffectiveness.porosity}
                     label="Porosity"
                     onChange={(value) => updateDraft({ porosity: value })}
                     placeholder="0-1"
@@ -581,12 +649,13 @@ export function MaterialEditorPanel({
                 </div>
               ) : null}
 
-              {draft.behavior === "resilient_layer" ? (
+              {shouldShowDynamicStiffnessField ? (
                 <div className="material-editor-field-grid">
                   <MaterialTextField
                     description={FIELD_DESCRIPTIONS.dynamicStiffnessMNm3}
                     disabled={!canEditProperties}
                     error={validation.errors.dynamicStiffnessMNm3}
+                    effectiveness={routeInputEffectiveness.dynamicStiffnessMNm3}
                     label="Dynamic stiffness"
                     onChange={(value) => updateDraft({ dynamicStiffnessMNm3: value })}
                     placeholder="MN/m3"
@@ -602,6 +671,7 @@ export function MaterialEditorPanel({
                     description={FIELD_DESCRIPTIONS.youngModulusPa}
                     disabled={!canEditProperties}
                     error={validation.errors.youngModulusPa}
+                    effectiveness={routeInputEffectiveness.youngModulusPa}
                     label="Young modulus"
                     onChange={(value) => updateDraft({ youngModulusPa: value })}
                     placeholder="Pa"
@@ -611,6 +681,7 @@ export function MaterialEditorPanel({
                     description={FIELD_DESCRIPTIONS.poissonRatio}
                     disabled={!canEditProperties}
                     error={validation.errors.poissonRatio}
+                    effectiveness={routeInputEffectiveness.poissonRatio}
                     label="Poisson ratio"
                     onChange={(value) => updateDraft({ poissonRatio: value })}
                     placeholder="0-0.5"
@@ -620,6 +691,7 @@ export function MaterialEditorPanel({
                     description={FIELD_DESCRIPTIONS.lossFactor}
                     disabled={!canEditProperties}
                     error={validation.errors.lossFactor}
+                    effectiveness={routeInputEffectiveness.lossFactor}
                     label="Loss factor"
                     onChange={(value) => updateDraft({ lossFactor: value })}
                     placeholder="0-1"
@@ -631,6 +703,7 @@ export function MaterialEditorPanel({
               <MaterialTextAreaField
                 description={FIELD_DESCRIPTIONS.notes}
                 disabled={!canEditProperties}
+                effectiveness={routeInputEffectiveness.notes}
                 label="Notes"
                 onChange={(value) => updateDraft({ notes: value })}
                 rows={3}

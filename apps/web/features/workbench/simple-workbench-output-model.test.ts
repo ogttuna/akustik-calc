@@ -273,6 +273,30 @@ describe("simple workbench output model", () => {
     );
   });
 
+  it("does not surface requested helper metrics that are parked outside support buckets", () => {
+    const card = buildOutputCard({
+      output: "STC",
+      result: buildFixture({
+        metrics: {
+          ...buildFixture().metrics,
+          estimatedStc: 55
+        },
+        supportedTargetOutputs: ["Rw"],
+        targetOutputs: ["STC"],
+        unsupportedTargetOutputs: []
+      }),
+      studyMode: "wall"
+    });
+
+    expect(card).toEqual(
+      expect.objectContaining({
+        label: "STC",
+        status: "unsupported",
+        value: "Not ready"
+      })
+    );
+  });
+
   it("marks answer-engine floor missing-role boundaries as needs-input cards", () => {
     const result = buildFixture({
       acousticAnswerBoundary: {

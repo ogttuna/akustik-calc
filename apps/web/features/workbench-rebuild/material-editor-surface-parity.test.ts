@@ -1,5 +1,5 @@
 import { calculateAssembly } from "@dynecho/engine";
-import type { MaterialDefinition, RequestedOutputId } from "@dynecho/shared";
+import type { AssemblyCalculation, MaterialDefinition, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -105,6 +105,52 @@ const explicitFieldContext = {
 };
 
 describe("material editor surface parity", () => {
+  it("renders visible lab companion metrics instead of stale rating-surface values", () => {
+    const result = {
+      curve: {
+        frequenciesHz: [100, 125, 160],
+        transmissionLossDb: [40, 44, 48]
+      },
+      impact: null,
+      layers: [],
+      metrics: {
+        airGapCount: 1,
+        estimatedCDb: -1,
+        estimatedCtrDb: -6.1,
+        estimatedRwDb: 46,
+        estimatedStc: 46,
+        insulationCount: 1,
+        method: "dynamic",
+        surfaceMassKgM2: 21.2,
+        totalThicknessMm: 115
+      },
+      ok: true,
+      ratings: {
+        astmE413: {
+          STC: 40
+        },
+        iso717: {
+          C: 0,
+          Ctr: 0,
+          Rw: 40,
+          composite: "Rw 40 (0;0)",
+          descriptor: "Rw"
+        }
+      },
+      supportedTargetOutputs: [...LAB_OUTPUTS],
+      targetOutputs: [...LAB_OUTPUTS],
+      unsupportedTargetOutputs: [],
+      warnings: []
+    } as AssemblyCalculation;
+
+    expect(buildOutputRows(result, LAB_OUTPUTS)).toEqual([
+      { detail: "Calculated", label: "Rw", status: "live", value: "46 dB" },
+      { detail: "Calculated", label: "STC", status: "live", value: "46 dB" },
+      { detail: "Calculated", label: "C", status: "live", value: "-1 dB" },
+      { detail: "Calculated", label: "Ctr", status: "live", value: "-6.1 dB" }
+    ]);
+  });
+
   it("keeps solver-active custom materials live from workbench payload through output rows", () => {
     const payload = buildEstimatePayload("wall", customLayerStack, LAB_OUTPUTS, explicitDoubleLeafContext, customMaterials);
 

@@ -56,4 +56,97 @@ describe("MaterialEditorPanel", () => {
     expect(html).toContain("Records whether the values are user supplied");
     expect(html).toContain("Free-form product/source notes");
   });
+
+  it("renders route input effectiveness badges on solver material fields", () => {
+    const html = renderToStaticMarkup(
+      React.createElement(MaterialEditorPanel, {
+        layers: [{ id: "layer-1", label: "Layer 1", materialId: "porous_absorber" }],
+        materials: [
+          {
+            acoustic: {
+              absorberClass: "porous_absorptive",
+              behavior: "porous_absorber",
+              notes: [],
+              propertySourceStatus: "user_supplied"
+            },
+            category: "insulation",
+            densityKgM3: 45,
+            id: "porous_absorber",
+            name: "Porous absorber",
+            tags: []
+          }
+        ],
+        onDeleteMaterial: () => undefined,
+        onReplaceMaterialInLayers: () => undefined,
+        onResetVisualOverride: () => undefined,
+        onSaveMaterial: () => undefined,
+        onSaveVisualOverride: () => undefined,
+        onSelectMaterial: () => undefined,
+        routeInputEffectiveness: {
+          notes: {
+            status: "inactive",
+            title: "Notes are saved with the material but are not used by the acoustic solver"
+          },
+          flowResistivityPaSM2: {
+            status: "needed",
+            title: "Required before this porous absorber route can calculate"
+          },
+          tags: {
+            status: "inactive",
+            title: "Tags are catalog/search metadata and are not used by the acoustic solver"
+          }
+        },
+        selectedMaterialId: "porous_absorber",
+        visualOverrides: []
+      })
+    );
+
+    expect(html).toContain("Flow resistivity");
+    expect(html).toContain("material-route-input-effectiveness");
+    expect(html).toContain("Needed");
+    expect(html).toContain("Inactive");
+  });
+
+  it("renders dynamic stiffness when a material carries impact stiffness even if acoustic behavior is not resilient", () => {
+    const html = renderToStaticMarkup(
+      React.createElement(MaterialEditorPanel, {
+        layers: [{ id: "layer-1", label: "Layer 1", materialId: "geniemat_rst05" }],
+        materials: [
+          {
+            acoustic: {
+              behavior: "rigid_mass",
+              notes: [],
+              propertySourceStatus: "user_supplied"
+            },
+            category: "support",
+            densityKgM3: 760,
+            id: "geniemat_rst05",
+            impact: {
+              dynamicStiffnessMNm3: 30
+            },
+            name: "GenieMat RST05",
+            tags: ["resilient"]
+          }
+        ],
+        onDeleteMaterial: () => undefined,
+        onReplaceMaterialInLayers: () => undefined,
+        onResetVisualOverride: () => undefined,
+        onSaveMaterial: () => undefined,
+        onSaveVisualOverride: () => undefined,
+        onSelectMaterial: () => undefined,
+        routeInputEffectiveness: {
+          dynamicStiffnessMNm3: {
+            status: "used",
+            title: "Used by the current floor impact route"
+          }
+        },
+        selectedMaterialId: "geniemat_rst05",
+        visualOverrides: []
+      })
+    );
+
+    expect(html).toContain("Dynamic stiffness");
+    expect(html).toContain("Used");
+    expect(html).toContain("30");
+  });
 });

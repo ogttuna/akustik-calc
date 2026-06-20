@@ -573,13 +573,13 @@ function readOutputValue(result: AssemblyCalculation, outputId: RequestedOutputI
     case "AIIC":
       return result.impact?.AIIC ?? null;
     case "C":
-      return result.ratings.iso717.C;
+      return result.metrics.estimatedCDb ?? result.ratings.iso717.C;
     case "CI":
       return result.impact?.CI ?? null;
     case "CI,50-2500":
       return result.impact?.CI50_2500 ?? null;
     case "Ctr":
-      return result.ratings.iso717.Ctr;
+      return result.metrics.estimatedCtrDb ?? result.ratings.iso717.Ctr;
     case "DeltaLw":
       return result.impact?.DeltaLw ?? null;
     case "Dn,A":
@@ -607,11 +607,11 @@ function readOutputValue(result: AssemblyCalculation, outputId: RequestedOutputI
     case "LnT,A":
       return result.impact?.LnTA ?? null;
     case "Rw":
-      return result.ratings.iso717.Rw;
+      return result.metrics.estimatedRwDb ?? result.ratings.iso717.Rw;
     case "R'w":
       return result.ratings.field?.RwPrime ?? result.metrics.estimatedRwPrimeDb ?? null;
     case "STC":
-      return result.ratings.astmE413.STC;
+      return result.metrics.estimatedStc ?? result.ratings.astmE413.STC;
     case "HIIC":
     case "ISR":
     case "LIIC":

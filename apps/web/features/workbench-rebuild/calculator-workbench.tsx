@@ -55,6 +55,7 @@ import {
   type SimpleWorkbenchProposalPreviewProjectContext
 } from "../workbench/simple-workbench-proposal-preview-storage";
 import { MaterialEditorPanel } from "./material-editor-panel";
+import { buildMaterialRouteInputEffectiveness } from "./material-route-input-effectiveness";
 import {
   buildResolvedMaterialCatalog,
   parseMaterialEditorPersistedState,
@@ -175,6 +176,13 @@ type CalculatorAssistantCandidateComparisonState =
     }
   | { message: string; status: "error" };
 type OutputStatus = "live" | "needs_input" | "unsupported" | "pending";
+type RouteInputEffectivenessStatus = "defaulted" | "inactive" | "needed" | "used";
+type RouteInputEffectiveness = {
+  status: RouteInputEffectivenessStatus;
+  title: string;
+};
+type LayerInputFieldId = "material" | "role" | "thickness";
+type LayerInputEffectivenessMap = Record<string, Partial<Record<LayerInputFieldId, RouteInputEffectiveness>>>;
 
 type DraftLayer = LayerStackUndoLayer;
 
@@ -387,6 +395,71 @@ const CONTEXT_INPUT_IDS: Record<keyof ContextDraft, string> = {
 };
 
 const INITIAL_CONTEXT: ContextDraft = WORKBENCH_V2_DEFAULT_CONTEXT;
+
+const ROUTE_INPUT_EFFECTIVENESS_LABELS: Record<RouteInputEffectivenessStatus, string> = {
+  defaulted: "Default",
+  inactive: "Inactive",
+  needed: "Needed",
+  used: "Used"
+};
+
+const AIRBORNE_CONTEXT_INPUT_IDS = new Set<string>([
+  CONTEXT_INPUT_IDS.airborneMode,
+  CONTEXT_INPUT_IDS.panelWidthMm,
+  CONTEXT_INPUT_IDS.panelHeightMm,
+  CONTEXT_INPUT_IDS.receivingRoomVolumeM3,
+  CONTEXT_INPUT_IDS.receivingRoomRt60S
+]);
+
+const BUILDING_PREDICTION_INPUT_IDS = new Set<string>([
+  CONTEXT_INPUT_IDS.sourceRoomVolumeM3,
+  CONTEXT_INPUT_IDS.flankingJunctionClass,
+  CONTEXT_INPUT_IDS.conservativeFlankingAssumption,
+  CONTEXT_INPUT_IDS.junctionCouplingLengthM,
+  CONTEXT_INPUT_IDS.buildingPredictionOutputBasis
+]);
+
+const IMPACT_FIELD_INPUT_IDS = new Set<string>([
+  CONTEXT_INPUT_IDS.fieldKDb,
+  CONTEXT_INPUT_IDS.ciDb,
+  CONTEXT_INPUT_IDS.ci50_2500Db,
+  CONTEXT_INPUT_IDS.impactReceivingRoomVolumeM3
+]);
+
+const FLOOR_IMPACT_INPUT_IDS = new Set<string>([
+  CONTEXT_INPUT_IDS.loadBasisKgM2,
+  CONTEXT_INPUT_IDS.resilientLayerDynamicStiffnessMNm3
+]);
+
+const WALL_TOPOLOGY_MANUAL_INPUT_IDS = new Set<string>([
+  CONTEXT_INPUT_IDS.wallSideALeafLayerIndices,
+  CONTEXT_INPUT_IDS.wallCavity1LayerIndices,
+  CONTEXT_INPUT_IDS.wallSideBLeafLayerIndices,
+  CONTEXT_INPUT_IDS.wallCavity1DepthMm,
+  CONTEXT_INPUT_IDS.wallCavity1FillCoverage,
+  CONTEXT_INPUT_IDS.wallCavity1AbsorptionClass,
+  CONTEXT_INPUT_IDS.wallSupportTopology,
+  CONTEXT_INPUT_IDS.supportSpacingMm,
+  CONTEXT_INPUT_IDS.airborneResilientBarSideCount
+]);
+
+const ROUTE_INPUT_DEFAULT_FIELD_ALIASES: Record<string, readonly string[]> = {
+  [CONTEXT_INPUT_IDS.airborneResilientBarSideCount]: ["resilientBarSideCount", "airborneResilientBarSideCount"],
+  [CONTEXT_INPUT_IDS.buildingPredictionOutputBasis]: ["buildingPredictionOutputBasis"],
+  [CONTEXT_INPUT_IDS.conservativeFlankingAssumption]: ["conservativeFlankingAssumption"],
+  [CONTEXT_INPUT_IDS.flankingJunctionClass]: ["flankingJunctionClass"],
+  [CONTEXT_INPUT_IDS.junctionCouplingLengthM]: ["junctionCouplingLengthM"],
+  [CONTEXT_INPUT_IDS.panelHeightMm]: ["panelHeightMm", "partitionAreaM2"],
+  [CONTEXT_INPUT_IDS.panelWidthMm]: ["panelWidthMm", "partitionAreaM2"],
+  [CONTEXT_INPUT_IDS.receivingRoomRt60S]: ["receivingRoomRt60S"],
+  [CONTEXT_INPUT_IDS.receivingRoomVolumeM3]: ["receivingRoomVolumeM3"],
+  [CONTEXT_INPUT_IDS.sourceRoomVolumeM3]: ["sourceRoomVolumeM3"],
+  [CONTEXT_INPUT_IDS.supportSpacingMm]: ["supportSpacingMm", "studSpacingMm"],
+  [CONTEXT_INPUT_IDS.wallCavity1AbsorptionClass]: ["cavity1AbsorptionClass", "absorberClass"],
+  [CONTEXT_INPUT_IDS.wallCavity1DepthMm]: ["cavity1DepthMm", "cavityDepthMm"],
+  [CONTEXT_INPUT_IDS.wallCavity1FillCoverage]: ["cavity1FillCoverage", "fillState"],
+  [CONTEXT_INPUT_IDS.wallSupportTopology]: ["supportTopology", "frameBridgeClass"]
+};
 
 const INITIAL_WALL_LAYERS: readonly DraftLayer[] = [
   { id: "rebuild-layer-1", materialId: "gypsum_board", role: "side_a", thicknessMm: "12.5" },
@@ -1067,6 +1140,23 @@ function getRemoteTasks(result: AssemblyCalculation | null): readonly RequiredTa
   return missingPhysicalInputs.map(getMissingInputTask);
 }
 
+function buildRouteInputTaskElementIds(tasks: readonly RequiredTask[]): Set<string> {
+  const targetElementIds = new Set<string>();
+
+  for (const task of tasks) {
+    if (task.targetElementId) {
+      targetElementIds.add(task.targetElementId);
+    }
+
+    if (normalizeRouteInputFieldId(task.id).includes("partitionaream2")) {
+      targetElementIds.add(CONTEXT_INPUT_IDS.panelWidthMm);
+      targetElementIds.add(CONTEXT_INPUT_IDS.panelHeightMm);
+    }
+  }
+
+  return targetElementIds;
+}
+
 function getMissingPhysicalInputs(result: AssemblyCalculation | null): readonly string[] {
   const boundary = result?.acousticAnswerBoundary;
 
@@ -1167,13 +1257,13 @@ function readOutputValue(result: AssemblyCalculation, outputId: RequestedOutputI
     case "AIIC":
       return result.impact?.AIIC ?? null;
     case "C":
-      return result.ratings.iso717.C;
+      return result.metrics.estimatedCDb ?? result.ratings.iso717.C;
     case "CI":
       return result.impact?.CI ?? null;
     case "CI,50-2500":
       return result.impact?.CI50_2500 ?? null;
     case "Ctr":
-      return result.ratings.iso717.Ctr;
+      return result.metrics.estimatedCtrDb ?? result.ratings.iso717.Ctr;
     case "DeltaLw":
       return result.impact?.DeltaLw ?? null;
     case "Dn,A":
@@ -1201,11 +1291,11 @@ function readOutputValue(result: AssemblyCalculation, outputId: RequestedOutputI
     case "LnT,A":
       return result.impact?.LnTA ?? null;
     case "Rw":
-      return result.ratings.iso717.Rw;
+      return result.metrics.estimatedRwDb ?? result.ratings.iso717.Rw;
     case "R'w":
       return result.ratings.field?.RwPrime ?? result.metrics.estimatedRwPrimeDb ?? null;
     case "STC":
-      return result.ratings.astmE413.STC;
+      return result.metrics.estimatedStc ?? result.ratings.astmE413.STC;
     case "HIIC":
     case "ISR":
     case "LIIC":
@@ -1261,6 +1351,435 @@ export function buildOutputRows(result: AssemblyCalculation, selectedOutputs: re
       value: status === "live" && hasDisplayValue ? formatDb(value) : "--"
     };
   });
+}
+
+function normalizeRouteInputFieldId(value: string): string {
+  return value.toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+function routeInputHasAirborneDefault(result: AssemblyCalculation | null, inputId: string): boolean {
+  const aliases = ROUTE_INPUT_DEFAULT_FIELD_ALIASES[inputId];
+  if (!aliases?.length) {
+    return false;
+  }
+
+  const normalizedAliases = aliases.map(normalizeRouteInputFieldId);
+  const propertyDefaults: readonly { field: string }[] = result?.airborneBasis?.propertyDefaults ?? [];
+  return propertyDefaults.some((defaultValue) => normalizedAliases.includes(normalizeRouteInputFieldId(defaultValue.field)));
+}
+
+function routeHasLiveOutput(
+  result: AssemblyCalculation | null,
+  selectedOutputs: readonly RequestedOutputId[],
+  predicate: (outputId: RequestedOutputId) => boolean
+): boolean {
+  if (!result) {
+    return false;
+  }
+
+  return selectedOutputs.some((outputId) => {
+    if (!predicate(outputId) || !result.supportedTargetOutputs.includes(outputId)) {
+      return false;
+    }
+
+    const value = readOutputValue(result, outputId);
+    return typeof value === "number" && Number.isFinite(value);
+  });
+}
+
+function routeHasLiveImpactOutput(result: AssemblyCalculation | null, selectedOutputs: readonly RequestedOutputId[]): boolean {
+  return routeHasLiveOutput(result, selectedOutputs, isImpactOutput);
+}
+
+function routeHasLiveAirborneOutput(result: AssemblyCalculation | null, selectedOutputs: readonly RequestedOutputId[]): boolean {
+  return routeHasLiveOutput(result, selectedOutputs, isAirborneCurveOutput);
+}
+
+function routeHasLiveAirborneContextOutput(result: AssemblyCalculation | null, selectedOutputs: readonly RequestedOutputId[]): boolean {
+  return routeHasLiveOutput(result, selectedOutputs, outputRequiresAirborneContext);
+}
+
+function isMeasuredExactAirborneRoute(result: AssemblyCalculation | null): boolean {
+  return result?.airborneBasis?.origin === "measured_exact_full_stack";
+}
+
+function isExactImpactRoute(result: AssemblyCalculation | null): boolean {
+  const basis = result?.impact?.basis;
+  return Boolean(basis?.startsWith("exact_") || basis?.includes("exact_source"));
+}
+
+function contextInputValueIsSent(inputId: string, context: ContextDraft, layerCount: number): boolean {
+  switch (inputId) {
+    case CONTEXT_INPUT_IDS.airborneMode:
+      return context.airborneMode !== "element_lab";
+    case CONTEXT_INPUT_IDS.airborneResilientBarSideCount:
+      return context.airborneResilientBarSideCount !== "auto";
+    case CONTEXT_INPUT_IDS.buildingPredictionOutputBasis:
+      return context.buildingPredictionOutputBasis !== "unknown";
+    case CONTEXT_INPUT_IDS.ci50_2500Db:
+      return parseOptionalFiniteNumber(context.ci50_2500Db) !== undefined;
+    case CONTEXT_INPUT_IDS.ciDb:
+      return parseOptionalFiniteNumber(context.ciDb) !== undefined;
+    case CONTEXT_INPUT_IDS.conservativeFlankingAssumption:
+      return context.conservativeFlankingAssumption !== "unknown";
+    case CONTEXT_INPUT_IDS.fieldKDb:
+      return parseOptionalFiniteNumber(context.fieldKDb) !== undefined;
+    case CONTEXT_INPUT_IDS.flankingJunctionClass:
+      return context.flankingJunctionClass !== "unknown";
+    case CONTEXT_INPUT_IDS.impactReceivingRoomVolumeM3:
+      return parseOptionalPositiveNumber(context.impactReceivingRoomVolumeM3) !== undefined;
+    case CONTEXT_INPUT_IDS.junctionCouplingLengthM:
+      return parseOptionalPositiveNumber(context.junctionCouplingLengthM) !== undefined;
+    case CONTEXT_INPUT_IDS.loadBasisKgM2:
+      return parseOptionalPositiveNumber(context.loadBasisKgM2) !== undefined;
+    case CONTEXT_INPUT_IDS.panelHeightMm:
+      return parseOptionalPositiveNumber(context.panelHeightMm) !== undefined;
+    case CONTEXT_INPUT_IDS.panelWidthMm:
+      return parseOptionalPositiveNumber(context.panelWidthMm) !== undefined;
+    case CONTEXT_INPUT_IDS.receivingRoomRt60S:
+      return parseOptionalPositiveNumber(context.receivingRoomRt60S) !== undefined;
+    case CONTEXT_INPUT_IDS.receivingRoomVolumeM3:
+      return parseOptionalPositiveNumber(context.receivingRoomVolumeM3) !== undefined;
+    case CONTEXT_INPUT_IDS.resilientLayerDynamicStiffnessMNm3:
+      return parseOptionalPositiveNumber(context.resilientLayerDynamicStiffnessMNm3) !== undefined;
+    case CONTEXT_INPUT_IDS.sourceRoomVolumeM3:
+      return parseOptionalPositiveNumber(context.sourceRoomVolumeM3) !== undefined;
+    case CONTEXT_INPUT_IDS.supportSpacingMm:
+      return parseOptionalPositiveNumber(context.supportSpacingMm) !== undefined;
+    case CONTEXT_INPUT_IDS.wallCavity1AbsorptionClass:
+      return context.wallTopologyMode !== "auto" && context.wallCavity1AbsorptionClass !== "unknown";
+    case CONTEXT_INPUT_IDS.wallCavity1DepthMm:
+      return context.wallTopologyMode !== "auto" && parseOptionalPositiveNumber(context.wallCavity1DepthMm) !== undefined;
+    case CONTEXT_INPUT_IDS.wallCavity1FillCoverage:
+      return context.wallTopologyMode !== "auto" && context.wallCavity1FillCoverage !== "unknown";
+    case CONTEXT_INPUT_IDS.wallCavity1LayerIndices:
+      return context.wallTopologyMode !== "auto" && parseLayerIndexList(context.wallCavity1LayerIndices, layerCount) !== undefined;
+    case CONTEXT_INPUT_IDS.wallSideALeafLayerIndices:
+      return context.wallTopologyMode !== "auto" && parseLayerIndexList(context.wallSideALeafLayerIndices, layerCount) !== undefined;
+    case CONTEXT_INPUT_IDS.wallSideBLeafLayerIndices:
+      return context.wallTopologyMode !== "auto" && parseLayerIndexList(context.wallSideBLeafLayerIndices, layerCount) !== undefined;
+    case CONTEXT_INPUT_IDS.wallSupportTopology:
+      return context.wallTopologyMode !== "auto" && context.wallSupportTopology !== "unknown";
+    case CONTEXT_INPUT_IDS.wallTopologyMode:
+      return context.wallTopologyMode !== "auto";
+    default:
+      return false;
+  }
+}
+
+function setRouteInputEffectiveness(
+  target: Record<string, RouteInputEffectiveness>,
+  inputId: string,
+  status: RouteInputEffectivenessStatus,
+  title: string
+): void {
+  if (target[inputId]) {
+    return;
+  }
+
+  target[inputId] = { status, title };
+}
+
+export function buildRouteInputEffectiveness(input: {
+  context: ContextDraft;
+  layerCount: number;
+  mode: StudyMode;
+  result: AssemblyCalculation | null;
+  routeInputTaskElementIds: ReadonlySet<string>;
+  selectedOutputs: readonly RequestedOutputId[];
+}): Record<string, RouteInputEffectiveness> {
+  const effectiveness: Record<string, RouteInputEffectiveness> = {};
+  const selectedAirborneContextOutput = input.selectedOutputs.some(outputRequiresAirborneContext);
+  const selectedAirborneOutput = input.selectedOutputs.some(isAirborneCurveOutput);
+  const selectedImpactContextOutput = input.selectedOutputs.some(outputRequiresImpactContext);
+  const selectedImpactOutput = input.selectedOutputs.some(isImpactOutput);
+  const liveAirborneOutput = routeHasLiveAirborneOutput(input.result, input.selectedOutputs);
+  const liveAirborneContextOutput = routeHasLiveAirborneContextOutput(input.result, input.selectedOutputs);
+  const liveImpactOutput = routeHasLiveImpactOutput(input.result, input.selectedOutputs);
+  const measuredExactAirborneRoute = isMeasuredExactAirborneRoute(input.result);
+  const exactImpactRoute = isExactImpactRoute(input.result);
+
+  for (const inputId of input.routeInputTaskElementIds) {
+    setRouteInputEffectiveness(effectiveness, inputId, "needed", "Required before this route can calculate");
+  }
+
+  for (const inputId of Object.values(CONTEXT_INPUT_IDS)) {
+    if (routeInputHasAirborneDefault(input.result, inputId)) {
+      setRouteInputEffectiveness(effectiveness, inputId, "defaulted", "Using a route default for this input");
+    }
+  }
+
+  if (selectedAirborneContextOutput && input.context.airborneMode !== "element_lab") {
+    const activeAirborneContextTitle =
+      input.context.airborneMode === "building_prediction"
+        ? "Used by the active building-prediction context"
+        : "Used by the active field airborne context";
+    const activeAirborneDefaultTitle =
+      input.context.airborneMode === "building_prediction"
+        ? "No value supplied; the active building-prediction route is using its current fallback assumption"
+        : "No value supplied; the active field airborne route is using its current fallback assumption";
+
+    setRouteInputEffectiveness(effectiveness, CONTEXT_INPUT_IDS.airborneMode, "used", activeAirborneContextTitle);
+    for (const inputId of AIRBORNE_CONTEXT_INPUT_IDS) {
+      if (inputId === CONTEXT_INPUT_IDS.airborneMode) {
+        continue;
+      }
+      setRouteInputEffectiveness(
+        effectiveness,
+        inputId,
+        contextInputValueIsSent(inputId, input.context, input.layerCount) ? "used" : "defaulted",
+        contextInputValueIsSent(inputId, input.context, input.layerCount) ? activeAirborneContextTitle : activeAirborneDefaultTitle
+      );
+    }
+
+    if (input.context.airborneMode === "building_prediction") {
+      for (const inputId of BUILDING_PREDICTION_INPUT_IDS) {
+        setRouteInputEffectiveness(
+          effectiveness,
+          inputId,
+          contextInputValueIsSent(inputId, input.context, input.layerCount) ? "used" : "defaulted",
+          contextInputValueIsSent(inputId, input.context, input.layerCount) ? "Used by the active building-prediction context" : activeAirborneDefaultTitle
+        );
+      }
+    } else {
+      for (const inputId of BUILDING_PREDICTION_INPUT_IDS) {
+        setRouteInputEffectiveness(effectiveness, inputId, "inactive", "Building-prediction inputs are not used outside Building mode");
+      }
+    }
+  }
+
+  if (selectedAirborneOutput && !selectedAirborneContextOutput && input.context.airborneMode !== "element_lab") {
+    for (const inputId of AIRBORNE_CONTEXT_INPUT_IDS) {
+      setRouteInputEffectiveness(effectiveness, inputId, "inactive", "Not used by the current output set");
+    }
+    for (const inputId of BUILDING_PREDICTION_INPUT_IDS) {
+      setRouteInputEffectiveness(effectiveness, inputId, "inactive", "Not used by the current output set");
+    }
+  }
+
+  if (selectedAirborneContextOutput && input.context.airborneMode === "element_lab") {
+    for (const inputId of AIRBORNE_CONTEXT_INPUT_IDS) {
+      setRouteInputEffectiveness(effectiveness, inputId, "inactive", "Not used until Field or Building mode is selected");
+    }
+    for (const inputId of BUILDING_PREDICTION_INPUT_IDS) {
+      setRouteInputEffectiveness(effectiveness, inputId, "inactive", "Building-prediction inputs are not used outside Building mode");
+    }
+  }
+
+  if (!selectedAirborneOutput && input.context.airborneMode !== "element_lab") {
+    for (const inputId of AIRBORNE_CONTEXT_INPUT_IDS) {
+      setRouteInputEffectiveness(effectiveness, inputId, "inactive", "Not used by the current output set");
+    }
+    for (const inputId of BUILDING_PREDICTION_INPUT_IDS) {
+      setRouteInputEffectiveness(effectiveness, inputId, "inactive", "Not used by the current output set");
+    }
+  }
+
+  if (!input.result) {
+    return effectiveness;
+  }
+
+  if (input.mode === "wall") {
+    if (input.context.wallTopologyMode === "auto") {
+      for (const inputId of WALL_TOPOLOGY_MANUAL_INPUT_IDS) {
+        setRouteInputEffectiveness(effectiveness, inputId, "inactive", "Manual wall topology is not sent while topology mode is Auto");
+      }
+    } else if (measuredExactAirborneRoute) {
+      setRouteInputEffectiveness(effectiveness, CONTEXT_INPUT_IDS.wallTopologyMode, "inactive", "Exact source row selected; manual topology is not used");
+      for (const inputId of WALL_TOPOLOGY_MANUAL_INPUT_IDS) {
+        setRouteInputEffectiveness(effectiveness, inputId, "inactive", "Exact source row selected; this input is not used");
+      }
+    } else if (liveAirborneOutput) {
+      setRouteInputEffectiveness(effectiveness, CONTEXT_INPUT_IDS.wallTopologyMode, "used", "Used by the current wall route");
+      for (const inputId of WALL_TOPOLOGY_MANUAL_INPUT_IDS) {
+        if (contextInputValueIsSent(inputId, input.context, input.layerCount)) {
+          setRouteInputEffectiveness(effectiveness, inputId, "used", "Used by the current wall route");
+        }
+      }
+    }
+  }
+
+  if (selectedAirborneContextOutput && input.context.airborneMode !== "element_lab") {
+    const airborneContextTitle =
+      input.context.airborneMode === "building_prediction"
+        ? "Used by the current building-prediction route"
+        : "Used by the current field airborne route";
+
+    if (liveAirborneContextOutput && !measuredExactAirborneRoute) {
+      setRouteInputEffectiveness(effectiveness, CONTEXT_INPUT_IDS.airborneMode, "used", airborneContextTitle);
+      for (const inputId of AIRBORNE_CONTEXT_INPUT_IDS) {
+        if (inputId !== CONTEXT_INPUT_IDS.airborneMode && contextInputValueIsSent(inputId, input.context, input.layerCount)) {
+          setRouteInputEffectiveness(effectiveness, inputId, "used", airborneContextTitle);
+        }
+      }
+    }
+
+    if (input.context.airborneMode === "building_prediction") {
+      if (liveAirborneContextOutput && !measuredExactAirborneRoute) {
+        for (const inputId of BUILDING_PREDICTION_INPUT_IDS) {
+          if (contextInputValueIsSent(inputId, input.context, input.layerCount)) {
+            setRouteInputEffectiveness(effectiveness, inputId, "used", "Used by the current building-prediction route");
+          }
+        }
+      }
+    } else {
+      for (const inputId of BUILDING_PREDICTION_INPUT_IDS) {
+        setRouteInputEffectiveness(effectiveness, inputId, "inactive", "Building-prediction inputs are not used outside Building mode");
+      }
+    }
+  }
+
+  if (input.mode === "floor") {
+    if (selectedImpactOutput && liveImpactOutput && !exactImpactRoute) {
+      for (const inputId of FLOOR_IMPACT_INPUT_IDS) {
+        if (contextInputValueIsSent(inputId, input.context, input.layerCount)) {
+          setRouteInputEffectiveness(effectiveness, inputId, "used", "Used by the current floor impact route");
+        }
+      }
+    } else if (selectedImpactOutput && exactImpactRoute) {
+      for (const inputId of FLOOR_IMPACT_INPUT_IDS) {
+        setRouteInputEffectiveness(effectiveness, inputId, "inactive", "Exact impact source selected; this input is not used");
+      }
+    }
+
+    if (selectedImpactContextOutput && liveImpactOutput && !exactImpactRoute) {
+      for (const inputId of IMPACT_FIELD_INPUT_IDS) {
+        if (contextInputValueIsSent(inputId, input.context, input.layerCount)) {
+          setRouteInputEffectiveness(effectiveness, inputId, "used", "Used by the current impact field route");
+        }
+      }
+    } else if (!selectedImpactContextOutput) {
+      for (const inputId of IMPACT_FIELD_INPUT_IDS) {
+        setRouteInputEffectiveness(effectiveness, inputId, "inactive", "Not used by the current impact output set");
+      }
+    }
+  }
+
+  return effectiveness;
+}
+
+function setLayerInputEffectiveness(
+  target: LayerInputEffectivenessMap,
+  layerId: string,
+  fieldId: LayerInputFieldId,
+  status: RouteInputEffectivenessStatus,
+  title: string
+): void {
+  target[layerId] = target[layerId] ?? {};
+  if (target[layerId]![fieldId]) {
+    return;
+  }
+
+  target[layerId]![fieldId] = { status, title };
+}
+
+export function buildLayerInputEffectiveness(input: {
+  layers: readonly DraftLayer[];
+  mode: StudyMode;
+  result: AssemblyCalculation | null;
+  selectedOutputs: readonly RequestedOutputId[];
+}): LayerInputEffectivenessMap {
+  const effectiveness: LayerInputEffectivenessMap = {};
+  const selectedAirborneOutput = input.selectedOutputs.some(isAirborneCurveOutput);
+  const selectedImpactOutput = input.selectedOutputs.some(isImpactOutput);
+  const liveAirborneOutput = routeHasLiveAirborneOutput(input.result, input.selectedOutputs);
+  const liveImpactOutput = routeHasLiveImpactOutput(input.result, input.selectedOutputs);
+  const liveFormulaAirborneOutput = liveAirborneOutput && !isMeasuredExactAirborneRoute(input.result);
+  const liveFormulaImpactOutput = liveImpactOutput && !isExactImpactRoute(input.result);
+  const liveFormulaOutput = liveFormulaAirborneOutput || liveFormulaImpactOutput;
+  const liveSelectedOutput = liveAirborneOutput || liveImpactOutput;
+
+  for (const layer of input.layers) {
+    const hasThickness = parsePositiveNumber(layer.thicknessMm) !== null;
+
+    if (!hasThickness) {
+      setLayerInputEffectiveness(
+        effectiveness,
+        layer.id,
+        "thickness",
+        "needed",
+        "Required before this layer stack can calculate"
+      );
+    }
+
+    if (!input.result) {
+      continue;
+    }
+
+    if (liveFormulaOutput) {
+      setLayerInputEffectiveness(
+        effectiveness,
+        layer.id,
+        "material",
+        "used",
+        "Used by the current formula route to define the layer stack"
+      );
+
+      if (hasThickness) {
+        setLayerInputEffectiveness(
+          effectiveness,
+          layer.id,
+          "thickness",
+          "used",
+          "Used by the current formula route to calculate layer mass and geometry"
+        );
+      }
+    } else if (liveSelectedOutput) {
+      setLayerInputEffectiveness(
+        effectiveness,
+        layer.id,
+        "material",
+        "used",
+        "Used to match the current exact source construction"
+      );
+
+      if (hasThickness) {
+        setLayerInputEffectiveness(
+          effectiveness,
+          layer.id,
+          "thickness",
+          "used",
+          "Used to match the current exact source construction"
+        );
+      }
+    }
+
+    if (input.mode === "wall") {
+      setLayerInputEffectiveness(
+        effectiveness,
+        layer.id,
+        "role",
+        "inactive",
+        "Wall layer role is not sent to the calculator; use Wall topology inputs for leaf and cavity grouping"
+      );
+    } else if (selectedImpactOutput && liveFormulaImpactOutput) {
+      setLayerInputEffectiveness(
+        effectiveness,
+        layer.id,
+        "role",
+        "used",
+        "Used by the current floor impact route to classify floor layers"
+      );
+    } else if (selectedImpactOutput && liveImpactOutput && isExactImpactRoute(input.result)) {
+      setLayerInputEffectiveness(
+        effectiveness,
+        layer.id,
+        "role",
+        "used",
+        "Used to match the current exact impact source construction"
+      );
+    } else if (selectedAirborneOutput && !selectedImpactOutput) {
+      setLayerInputEffectiveness(
+        effectiveness,
+        layer.id,
+        "role",
+        "inactive",
+        "Floor layer role is not used by the current airborne output set"
+      );
+    }
+  }
+
+  return effectiveness;
 }
 
 function parseEstimateError(payload: unknown): string {
@@ -1527,8 +2046,13 @@ function showAirborneContext(selectedOutputs: readonly RequestedOutputId[], resu
   );
 }
 
-function showBuildingPredictionContext(context: ContextDraft, result: AssemblyCalculation | null): boolean {
-  return context.airborneMode === "building_prediction" || getMissingPhysicalInputs(result).some(isBuildingPredictionInput);
+export function showBuildingPredictionContext(
+  context: ContextDraft,
+  selectedOutputs: readonly RequestedOutputId[],
+  result: AssemblyCalculation | null
+): boolean {
+  const selectedAirborneOutput = selectedOutputs.some(isAirborneCurveOutput);
+  return selectedAirborneOutput && (context.airborneMode === "building_prediction" || getMissingPhysicalInputs(result).some(isBuildingPredictionInput));
 }
 
 function showImpactContext(selectedOutputs: readonly RequestedOutputId[], result: AssemblyCalculation | null): boolean {
@@ -2126,7 +2650,7 @@ export function CalculatorWorkbench() {
   const primaryOutput = getPrimaryOutput(outputRows);
   const remoteTasks = getRemoteTasks(estimateResult);
   const localTasks = buildLocalTasks(layers, selectedOutputs, materialById);
-  const routeInputTaskElementIds = new Set(remoteTasks.map((task) => task.targetElementId).filter((id): id is string => Boolean(id)));
+  const routeInputTaskElementIds = buildRouteInputTaskElementIds(remoteTasks);
   const requiredTasks = [...localTasks, ...remoteTasks.filter((task) => !task.targetElementId || !routeInputTaskElementIds.has(task.targetElementId))];
   const responseFigures = buildWorkbenchResponseCurveFigures(estimateResult);
   const selectedImpactOutputs = selectedOutputs.some(isImpactOutput);
@@ -2149,11 +2673,35 @@ export function CalculatorWorkbench() {
   const totalThickness = layers.reduce((sum, layer) => sum + (parsePositiveNumber(layer.thicknessMm) ?? 0), 0);
   const canOpenReport = outputRows.some((row) => row.status === "live");
   const needsAirborne = showAirborneContext(selectedOutputs, estimateResult);
-  const needsBuildingPrediction = showBuildingPredictionContext(context, estimateResult);
+  const needsBuildingPrediction = showBuildingPredictionContext(context, selectedOutputs, estimateResult);
   const needsImpact = mode === "floor" && showImpactContext(selectedOutputs, estimateResult);
   const needsFloorImpact = mode === "floor" && showFloorImpactContext(selectedOutputs, estimateResult);
   const needsWallTopology = showWallTopologyContext(mode, context, estimateResult);
   const isRouteInputMissing = (inputId: string) => routeInputTaskElementIds.has(inputId);
+  const routeInputEffectiveness = buildRouteInputEffectiveness({
+    context,
+    layerCount: layers.length,
+    mode,
+    result: estimateResult,
+    routeInputTaskElementIds,
+    selectedOutputs
+  });
+  const materialEditorSelectedMaterial = materials.find((material) => material.id === materialEditorMaterialId) ?? null;
+  const materialRouteInputEffectiveness = buildMaterialRouteInputEffectiveness({
+    layers,
+    material: materialEditorSelectedMaterial,
+    mode,
+    result: estimateResult,
+    selectedOutputs
+  });
+  const layerInputEffectiveness = buildLayerInputEffectiveness({
+    layers,
+    mode,
+    result: estimateResult,
+    selectedOutputs
+  });
+  const getRouteInputEffectiveness = (inputId: string) => routeInputEffectiveness[inputId];
+  const getLayerInputEffectiveness = (layerId: string, fieldId: LayerInputFieldId) => layerInputEffectiveness[layerId]?.[fieldId];
   const canUndoLayerStack = layerUndoStack.length > 0;
   const lastLayerUndoActionLabel = layerUndoStack[layerUndoStack.length - 1]?.actionLabel;
   const undoLayerStackActionLabel = lastLayerUndoActionLabel ? `Undo ${lastLayerUndoActionLabel}` : "Undo layer change";
@@ -4947,6 +5495,7 @@ export function CalculatorWorkbench() {
         onSaveMaterial={saveCustomMaterial}
         onSaveVisualOverride={saveMaterialVisualOverride}
         onSelectMaterial={setMaterialEditorMaterialId}
+        routeInputEffectiveness={materialRouteInputEffectiveness}
         restoreWarning={materialEditorRestoreWarning}
         selectedMaterialId={materialEditorMaterialId}
         visualOverrides={materialVisualOverrides}
@@ -5110,7 +5659,7 @@ export function CalculatorWorkbench() {
                       </div>
                       <div className="calc-field-grid">
                         <label className="calc-field" data-missing={isRouteInputMissing(CONTEXT_INPUT_IDS.wallTopologyMode) ? "true" : undefined}>
-                          <span>Topology mode</span>
+                          <FieldLabel effectiveness={getRouteInputEffectiveness(CONTEXT_INPUT_IDS.wallTopologyMode)} label="Topology mode" />
                           <select
                             aria-invalid={isRouteInputMissing(CONTEXT_INPUT_IDS.wallTopologyMode) ? true : undefined}
                             className="focus-ring ui-field"
@@ -5126,6 +5675,7 @@ export function CalculatorWorkbench() {
                           </select>
                         </label>
                         <TextField
+                          effectiveness={getRouteInputEffectiveness(CONTEXT_INPUT_IDS.wallSideALeafLayerIndices)}
                           id={CONTEXT_INPUT_IDS.wallSideALeafLayerIndices}
                           invalid={isRouteInputMissing(CONTEXT_INPUT_IDS.wallSideALeafLayerIndices)}
                           label="Side A rows"
@@ -5134,6 +5684,7 @@ export function CalculatorWorkbench() {
                           value={context.wallSideALeafLayerIndices}
                         />
                         <TextField
+                          effectiveness={getRouteInputEffectiveness(CONTEXT_INPUT_IDS.wallCavity1LayerIndices)}
                           id={CONTEXT_INPUT_IDS.wallCavity1LayerIndices}
                           invalid={isRouteInputMissing(CONTEXT_INPUT_IDS.wallCavity1LayerIndices)}
                           label="Cavity rows"
@@ -5142,6 +5693,7 @@ export function CalculatorWorkbench() {
                           value={context.wallCavity1LayerIndices}
                         />
                         <TextField
+                          effectiveness={getRouteInputEffectiveness(CONTEXT_INPUT_IDS.wallSideBLeafLayerIndices)}
                           id={CONTEXT_INPUT_IDS.wallSideBLeafLayerIndices}
                           invalid={isRouteInputMissing(CONTEXT_INPUT_IDS.wallSideBLeafLayerIndices)}
                           label="Side B rows"
@@ -5150,6 +5702,7 @@ export function CalculatorWorkbench() {
                           value={context.wallSideBLeafLayerIndices}
                         />
                         <NumberField
+                          effectiveness={getRouteInputEffectiveness(CONTEXT_INPUT_IDS.wallCavity1DepthMm)}
                           id={CONTEXT_INPUT_IDS.wallCavity1DepthMm}
                           invalid={isRouteInputMissing(CONTEXT_INPUT_IDS.wallCavity1DepthMm)}
                           label="Cavity depth"
@@ -5158,7 +5711,7 @@ export function CalculatorWorkbench() {
                           value={context.wallCavity1DepthMm}
                         />
                         <label className="calc-field" data-missing={isRouteInputMissing(CONTEXT_INPUT_IDS.wallCavity1FillCoverage) ? "true" : undefined}>
-                          <span>Cavity fill</span>
+                          <FieldLabel effectiveness={getRouteInputEffectiveness(CONTEXT_INPUT_IDS.wallCavity1FillCoverage)} label="Cavity fill" />
                           <select
                             aria-invalid={isRouteInputMissing(CONTEXT_INPUT_IDS.wallCavity1FillCoverage) ? true : undefined}
                             className="focus-ring ui-field"
@@ -5174,7 +5727,10 @@ export function CalculatorWorkbench() {
                           </select>
                         </label>
                         <label className="calc-field" data-missing={isRouteInputMissing(CONTEXT_INPUT_IDS.wallCavity1AbsorptionClass) ? "true" : undefined}>
-                          <span>Cavity absorption</span>
+                          <FieldLabel
+                            effectiveness={getRouteInputEffectiveness(CONTEXT_INPUT_IDS.wallCavity1AbsorptionClass)}
+                            label="Cavity absorption"
+                          />
                           <select
                             aria-invalid={isRouteInputMissing(CONTEXT_INPUT_IDS.wallCavity1AbsorptionClass) ? true : undefined}
                             className="focus-ring ui-field"
@@ -5190,7 +5746,7 @@ export function CalculatorWorkbench() {
                           </select>
                         </label>
                         <label className="calc-field" data-missing={isRouteInputMissing(CONTEXT_INPUT_IDS.wallSupportTopology) ? "true" : undefined}>
-                          <span>Support topology</span>
+                          <FieldLabel effectiveness={getRouteInputEffectiveness(CONTEXT_INPUT_IDS.wallSupportTopology)} label="Support topology" />
                           <select
                             aria-invalid={isRouteInputMissing(CONTEXT_INPUT_IDS.wallSupportTopology) ? true : undefined}
                             className="focus-ring ui-field"
@@ -5206,6 +5762,7 @@ export function CalculatorWorkbench() {
                           </select>
                         </label>
                         <NumberField
+                          effectiveness={getRouteInputEffectiveness(CONTEXT_INPUT_IDS.supportSpacingMm)}
                           id={CONTEXT_INPUT_IDS.supportSpacingMm}
                           invalid={isRouteInputMissing(CONTEXT_INPUT_IDS.supportSpacingMm)}
                           label="Support spacing"
@@ -5214,7 +5771,10 @@ export function CalculatorWorkbench() {
                           value={context.supportSpacingMm}
                         />
                         <label className="calc-field" data-missing={isRouteInputMissing(CONTEXT_INPUT_IDS.airborneResilientBarSideCount) ? "true" : undefined}>
-                          <span>Resilient bars</span>
+                          <FieldLabel
+                            effectiveness={getRouteInputEffectiveness(CONTEXT_INPUT_IDS.airborneResilientBarSideCount)}
+                            label="Resilient bars"
+                          />
                           <select
                             aria-invalid={isRouteInputMissing(CONTEXT_INPUT_IDS.airborneResilientBarSideCount) ? true : undefined}
                             className="focus-ring ui-field"
@@ -5238,7 +5798,7 @@ export function CalculatorWorkbench() {
                   {needsAirborne || needsBuildingPrediction ? (
                     <>
                       <label className="calc-field" data-missing={isRouteInputMissing(CONTEXT_INPUT_IDS.airborneMode) ? "true" : undefined}>
-                        <span>Airborne mode</span>
+                        <FieldLabel effectiveness={getRouteInputEffectiveness(CONTEXT_INPUT_IDS.airborneMode)} label="Airborne mode" />
                         <select
                           aria-invalid={isRouteInputMissing(CONTEXT_INPUT_IDS.airborneMode) ? true : undefined}
                           className="focus-ring ui-field"
@@ -5252,6 +5812,7 @@ export function CalculatorWorkbench() {
                         </select>
                       </label>
                       <NumberField
+                        effectiveness={getRouteInputEffectiveness(CONTEXT_INPUT_IDS.panelWidthMm)}
                         id={CONTEXT_INPUT_IDS.panelWidthMm}
                         invalid={isRouteInputMissing(CONTEXT_INPUT_IDS.panelWidthMm)}
                         label="Panel width"
@@ -5260,6 +5821,7 @@ export function CalculatorWorkbench() {
                         value={context.panelWidthMm}
                       />
                       <NumberField
+                        effectiveness={getRouteInputEffectiveness(CONTEXT_INPUT_IDS.panelHeightMm)}
                         id={CONTEXT_INPUT_IDS.panelHeightMm}
                         invalid={isRouteInputMissing(CONTEXT_INPUT_IDS.panelHeightMm)}
                         label="Panel height"
@@ -5268,6 +5830,7 @@ export function CalculatorWorkbench() {
                         value={context.panelHeightMm}
                       />
                       <NumberField
+                        effectiveness={getRouteInputEffectiveness(CONTEXT_INPUT_IDS.receivingRoomVolumeM3)}
                         id={CONTEXT_INPUT_IDS.receivingRoomVolumeM3}
                         invalid={isRouteInputMissing(CONTEXT_INPUT_IDS.receivingRoomVolumeM3)}
                         label="Room volume"
@@ -5276,6 +5839,7 @@ export function CalculatorWorkbench() {
                         value={context.receivingRoomVolumeM3}
                       />
                       <NumberField
+                        effectiveness={getRouteInputEffectiveness(CONTEXT_INPUT_IDS.receivingRoomRt60S)}
                         id={CONTEXT_INPUT_IDS.receivingRoomRt60S}
                         invalid={isRouteInputMissing(CONTEXT_INPUT_IDS.receivingRoomRt60S)}
                         label="RT60"
@@ -5293,6 +5857,7 @@ export function CalculatorWorkbench() {
                       </div>
                       <div className="calc-field-grid">
                         <NumberField
+                          effectiveness={getRouteInputEffectiveness(CONTEXT_INPUT_IDS.sourceRoomVolumeM3)}
                           id={CONTEXT_INPUT_IDS.sourceRoomVolumeM3}
                           invalid={isRouteInputMissing(CONTEXT_INPUT_IDS.sourceRoomVolumeM3)}
                           label="Source room volume"
@@ -5301,7 +5866,7 @@ export function CalculatorWorkbench() {
                           value={context.sourceRoomVolumeM3}
                         />
                         <label className="calc-field" data-missing={isRouteInputMissing(CONTEXT_INPUT_IDS.flankingJunctionClass) ? "true" : undefined}>
-                          <span>Flanking junction</span>
+                          <FieldLabel effectiveness={getRouteInputEffectiveness(CONTEXT_INPUT_IDS.flankingJunctionClass)} label="Flanking junction" />
                           <select
                             aria-invalid={isRouteInputMissing(CONTEXT_INPUT_IDS.flankingJunctionClass) ? true : undefined}
                             className="focus-ring ui-field"
@@ -5320,7 +5885,10 @@ export function CalculatorWorkbench() {
                           className="calc-field"
                           data-missing={isRouteInputMissing(CONTEXT_INPUT_IDS.conservativeFlankingAssumption) ? "true" : undefined}
                         >
-                          <span>Flanking assumption</span>
+                          <FieldLabel
+                            effectiveness={getRouteInputEffectiveness(CONTEXT_INPUT_IDS.conservativeFlankingAssumption)}
+                            label="Flanking assumption"
+                          />
                           <select
                             aria-invalid={isRouteInputMissing(CONTEXT_INPUT_IDS.conservativeFlankingAssumption) ? true : undefined}
                             className="focus-ring ui-field"
@@ -5338,6 +5906,7 @@ export function CalculatorWorkbench() {
                           </select>
                         </label>
                         <NumberField
+                          effectiveness={getRouteInputEffectiveness(CONTEXT_INPUT_IDS.junctionCouplingLengthM)}
                           id={CONTEXT_INPUT_IDS.junctionCouplingLengthM}
                           invalid={isRouteInputMissing(CONTEXT_INPUT_IDS.junctionCouplingLengthM)}
                           label="Coupling length"
@@ -5346,7 +5915,10 @@ export function CalculatorWorkbench() {
                           value={context.junctionCouplingLengthM}
                         />
                         <label className="calc-field" data-missing={isRouteInputMissing(CONTEXT_INPUT_IDS.buildingPredictionOutputBasis) ? "true" : undefined}>
-                          <span>Output basis</span>
+                          <FieldLabel
+                            effectiveness={getRouteInputEffectiveness(CONTEXT_INPUT_IDS.buildingPredictionOutputBasis)}
+                            label="Output basis"
+                          />
                           <select
                             aria-invalid={isRouteInputMissing(CONTEXT_INPUT_IDS.buildingPredictionOutputBasis) ? true : undefined}
                             className="focus-ring ui-field"
@@ -5370,6 +5942,7 @@ export function CalculatorWorkbench() {
                   {needsImpact ? (
                     <>
                       <NumberField
+                        effectiveness={getRouteInputEffectiveness(CONTEXT_INPUT_IDS.fieldKDb)}
                         id={CONTEXT_INPUT_IDS.fieldKDb}
                         invalid={isRouteInputMissing(CONTEXT_INPUT_IDS.fieldKDb)}
                         label="K correction"
@@ -5378,6 +5951,7 @@ export function CalculatorWorkbench() {
                         value={context.fieldKDb}
                       />
                       <NumberField
+                        effectiveness={getRouteInputEffectiveness(CONTEXT_INPUT_IDS.ciDb)}
                         id={CONTEXT_INPUT_IDS.ciDb}
                         invalid={isRouteInputMissing(CONTEXT_INPUT_IDS.ciDb)}
                         label="CI"
@@ -5386,6 +5960,7 @@ export function CalculatorWorkbench() {
                         value={context.ciDb}
                       />
                       <NumberField
+                        effectiveness={getRouteInputEffectiveness(CONTEXT_INPUT_IDS.ci50_2500Db)}
                         id={CONTEXT_INPUT_IDS.ci50_2500Db}
                         invalid={isRouteInputMissing(CONTEXT_INPUT_IDS.ci50_2500Db)}
                         label="CI,50-2500"
@@ -5394,6 +5969,7 @@ export function CalculatorWorkbench() {
                         value={context.ci50_2500Db}
                       />
                       <NumberField
+                        effectiveness={getRouteInputEffectiveness(CONTEXT_INPUT_IDS.impactReceivingRoomVolumeM3)}
                         id={CONTEXT_INPUT_IDS.impactReceivingRoomVolumeM3}
                         invalid={isRouteInputMissing(CONTEXT_INPUT_IDS.impactReceivingRoomVolumeM3)}
                         label="Impact room volume"
@@ -5407,6 +5983,7 @@ export function CalculatorWorkbench() {
                   {needsFloorImpact ? (
                     <>
                       <NumberField
+                        effectiveness={getRouteInputEffectiveness(CONTEXT_INPUT_IDS.loadBasisKgM2)}
                         id={CONTEXT_INPUT_IDS.loadBasisKgM2}
                         invalid={isRouteInputMissing(CONTEXT_INPUT_IDS.loadBasisKgM2)}
                         label="Load basis"
@@ -5415,6 +5992,7 @@ export function CalculatorWorkbench() {
                         value={context.loadBasisKgM2}
                       />
                       <NumberField
+                        effectiveness={getRouteInputEffectiveness(CONTEXT_INPUT_IDS.resilientLayerDynamicStiffnessMNm3)}
                         id={CONTEXT_INPUT_IDS.resilientLayerDynamicStiffnessMNm3}
                         invalid={isRouteInputMissing(CONTEXT_INPUT_IDS.resilientLayerDynamicStiffnessMNm3)}
                         label="Dynamic stiffness"
@@ -5504,7 +6082,7 @@ export function CalculatorWorkbench() {
 
                       <div className="calc-layer-fields">
                         <div className="calc-field calc-material-combobox" onBlur={(event) => handleMaterialComboboxBlur(layer.id, event)}>
-                          <span>Material</span>
+                          <FieldLabel effectiveness={getLayerInputEffectiveness(layer.id, "material")} label="Material" />
                           <button
                             aria-controls={getLayerMaterialPopoverId(layer.id)}
                             aria-expanded={openMaterialLayerId === layer.id}
@@ -5554,7 +6132,7 @@ export function CalculatorWorkbench() {
                         </div>
 
                         <label className="calc-field">
-                          <span>Role</span>
+                          <FieldLabel effectiveness={getLayerInputEffectiveness(layer.id, "role")} label="Role" />
                           <select
                             className="focus-ring ui-field"
                             id={getLayerRoleInputId(layer.id)}
@@ -5570,6 +6148,7 @@ export function CalculatorWorkbench() {
                         </label>
 
                         <NumberField
+                          effectiveness={getLayerInputEffectiveness(layer.id, "thickness")}
                           id={getLayerThicknessInputId(layer.id)}
                           label="Thickness"
                           onChange={(value) => updateLayerWithUndo("changing a layer thickness", layer.id, { thicknessMm: value })}
@@ -6126,6 +6705,7 @@ export function CalculatorWorkbench() {
 }
 
 function NumberField(props: {
+  effectiveness?: RouteInputEffectiveness;
   id: string;
   invalid?: boolean;
   label: string;
@@ -6135,7 +6715,7 @@ function NumberField(props: {
 }) {
   return (
     <label className="calc-field" data-missing={props.invalid ? "true" : undefined}>
-      <span>{props.label}</span>
+      <FieldLabel effectiveness={props.effectiveness} label={props.label} />
       <div className="calc-number-field">
         <input
           aria-invalid={props.invalid ? true : undefined}
@@ -6153,6 +6733,7 @@ function NumberField(props: {
 }
 
 function TextField(props: {
+  effectiveness?: RouteInputEffectiveness;
   id: string;
   invalid?: boolean;
   label: string;
@@ -6162,7 +6743,7 @@ function TextField(props: {
 }) {
   return (
     <label className="calc-field" data-missing={props.invalid ? "true" : undefined}>
-      <span>{props.label}</span>
+      <FieldLabel effectiveness={props.effectiveness} label={props.label} />
       <input
         aria-invalid={props.invalid ? true : undefined}
         className="focus-ring ui-field"
@@ -6174,5 +6755,37 @@ function TextField(props: {
         value={props.value}
       />
     </label>
+  );
+}
+
+function FieldLabel(props: { effectiveness?: RouteInputEffectiveness; label: string }) {
+  return (
+    <span className="calc-field-label">
+      <span>{props.label}</span>
+      {props.effectiveness ? <RouteInputEffectivenessBadge effectiveness={props.effectiveness} /> : null}
+    </span>
+  );
+}
+
+function RouteInputEffectivenessBadge(props: { effectiveness: RouteInputEffectiveness }) {
+  const badgeClassName = [
+    "calc-route-input-effectiveness",
+    "ui-badge",
+    "ui-badge-compact",
+    props.effectiveness.status === "used"
+      ? "ui-badge-success"
+      : props.effectiveness.status === "needed"
+        ? "ui-badge-warning"
+        : props.effectiveness.status === "defaulted"
+          ? "ui-badge-accent"
+          : ""
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  return (
+    <span className={badgeClassName} title={props.effectiveness.title}>
+      {ROUTE_INPUT_EFFECTIVENESS_LABELS[props.effectiveness.status]}
+    </span>
   );
 }
