@@ -18,6 +18,23 @@ This review does not select or change a calculator slice. It must not change
 engine formulas, source rows, route selection, metric basis behavior,
 `needs_input`, or `unsupported` boundaries.
 
+Status sync - 2026-06-19:
+
+- This file is the 2026-06-17 baseline capability review, not the live remaining
+  work list.
+- The current implementation checkpoint and selected next assistant action are
+  tracked in
+  `docs/ui/REPORT_ASSISTANT_HIGH_ACCURACY_COPILOT_IMPLEMENTATION_PLAN_2026-06-18.md`.
+- The current source-review/ask-before-report-override slice is tracked in
+  `docs/ui/REPORT_ASSISTANT_NATURAL_LANGUAGE_SOURCE_REVIEW_AND_CONFIRMED_OVERRIDE_PLAN_2026-06-19.md`.
+- Several gaps listed below have since landed locally, including typed result
+  cards, calculator-page stack control, candidate preview/comparison, current
+  calculator source-review packets, source-review result cards, calculator-page
+  confirmation-required report-only apply from source review, source-review
+  intent hardening for mixed Turkish/English review/override wording, and
+  redacted trace helper coverage. Keep the historical matrix for context, but
+  use the two plan files above for current status.
+
 ## Sources Reviewed
 
 Local implementation:
@@ -1375,6 +1392,15 @@ The report assistant is directionally well designed for a high-integrity
 calculator product. Its most important quality is that it is not over-agentic:
 it proposes, previews, explains, and researches while the application owns
 validation and mutation.
+
+2026-06-20 provider-readiness note: the live source-research/browser smoke is
+not complete in this local checkout because no report-assistant research/model
+provider endpoint is configured in the shell or `apps/web/.env.local`. This is
+the correct stop point for best practice: do not claim live internet grounding
+is product-verified from mocked/context-only tests. The local provider-absent
+fallback and provider-status redaction were rechecked and passed 4 focused
+provider/source-review files / 41 tests, confirming the assistant falls back
+with explicit warnings instead of inventing source-backed acoustic values.
 
 The next improvement is not "make it more autonomous". The next improvement is
 "make the existing safe capabilities contract-driven": a capability registry,

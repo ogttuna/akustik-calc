@@ -194,20 +194,86 @@ Landed locally:
   bodies remain gated behind explicit `read_project_report_revision` permission;
   revision-summary-only requests do not read or leak full saved report/revision
   document bodies;
-- broad assistant checkpoint suite: 42 test files / 330 tests passed.
+- current-calculator source-review packet helper now packages the visible
+  Workbench calculator preview or report context into a typed review packet
+  containing layer summaries, selected output, calculator/report display value,
+  value authority, route status, basis, tasks, warnings, missing inputs,
+  unsupported outputs, and context/snapshot signatures; blocked
+  `needs_input`/`unsupported` outputs cannot produce numeric source
+  recommendations;
+- plausibility route adapter now accepts current calculator review packets,
+  converts them into local plausibility context, reuses the existing source
+  research flow, and suppresses provider-supplied report patches so current
+  calculator source review stays read-only until the report override proposal
+  gate;
+- calculator-page source-review UI wiring now connects natural review wording
+  such as "Rw fazla mi az mi, internetten arastir" to the plausibility route
+  before the layer mutation parser runs. It runs or reuses the current
+  calculator preview, sends the typed current-calculator review packet, renders
+  the source-review result card, and keeps `suggestPatch: false`;
+- if the user asks about an output that is not currently selected, such as
+  `STC`, the calculator page adds that output only to a temporary review
+  preview snapshot. The visible selected outputs, layer rows, calculator values,
+  and report values are not changed by the review request;
+- stale source-review requests/results are cleared when the user edits the
+  draft, so an old review cannot be mistaken for the current stack;
+- research review result cards now separate calculator result, research verdict,
+  advisory suggested report value, comparability, source quality, source count,
+  and source range in the shared assistant card without adding apply controls;
+- source-backed report override proposals now convert validated source
+  `valueRecommendation` values into server-built, confirmation-required
+  report-only patches through the existing patch validator while suppressing
+  provider-supplied patches and leaving calculator truth unchanged;
+- calculator-page source-review confirmed report apply now lets a selected saved
+  report receive a source-backed, confirmation-required report-only draft
+  customization from the source-review card. The first review request remains
+  read-only with `suggestPatch: false`; context-only reviews, missing report
+  targets, metric mismatches, validator rejections, stale calculator draft
+  changes, and selected-report changes do not apply anything;
+- source-review golden eval and redacted trace coverage now protects provider
+  review authority, no-calculator-basis posture, source-review confirmation
+  state, and redaction of dB/source/provider details;
+- broad assistant checkpoint suite: 42 test files / 330 tests passed;
+- latest calculator-page confirmed report-apply checkpoint: 5 focused assistant
+  files / 34 tests passed, touched assistant files passed ESLint, and touched
+  assistant/doc whitespace checks passed. Full web typecheck was attempted but
+  is currently blocked by unrelated engine type debt in
+  `packages/engine/src/dynamic-airborne.ts`.
+- source-review intent hardening now adds a typed calculator-page routing
+  fallback (`source_review`, `report_override_request`, `clarify`,
+  `layer_mutation`), expands Turkish/mixed wording coverage, blocks direct
+  current-calculator value setting such as "Rw 52 yap" and "Rw 52 olmalı",
+  keeps genuine layer arrangement commands on the existing draft path, and
+  extends report/planner intent coverage for ask-before-report-override wording.
+  The latest focused assistant validation passed 11 files / 101 tests plus
+  touched-file ESLint and `git diff --check`; full web typecheck remains
+  blocked by unrelated current engine type debt in
+  `packages/engine/src/dynamic-airborne.ts`.
 
 Still missing:
 
 - a report-editor to Workbench pending-apply handoff, only if a future slice can
   share a safe current Workbench snapshot signature in the same browser context;
-- optional route/persistence wiring for redacted trace events if runtime event
-  collection is needed beyond the tested helper boundary.
+- optional runtime route/persistence wiring for already-redacted trace events,
+  only if a bounded collection sink is needed;
+- optional browser/manual smoke with a configured research provider. Local tests
+  already cover the route/card wiring with mocked/context-backed responses.
+- 2026-06-20 provider-smoke readiness check: current local shell and
+  `apps/web/.env.local` do not configure
+  `DYNECHO_REPORT_ASSISTANT_RESEARCH_ENDPOINT` or a compatible
+  `system_llm_gemini_proxy` model provider, so the live provider/browser smoke
+  remains blocked/skipped rather than product-verified. The provider-unavailable
+  fallback and provider-status redaction were rechecked with 4 focused
+  provider/source-review files / 41 tests passed.
 
 Current selected next action:
 
 ```text
-report_assistant_trace_event_route_wiring_v1
+report_assistant_provider_browser_smoke_v1
 ```
+
+Selected plan:
+`docs/ui/REPORT_ASSISTANT_NATURAL_LANGUAGE_SOURCE_REVIEW_AND_CONFIRMED_OVERRIDE_PLAN_2026-06-19.md`.
 
 Current assistant handoff / drift lock:
 
@@ -233,9 +299,55 @@ Current assistant handoff / drift lock:
 
 Remaining implementation order from this checkpoint:
 
-1. `report_assistant_trace_event_route_wiring_v1` - only if runtime collection
-   is needed, wire the tested redacted event helper into route responses or a
-   bounded persistence sink without storing prompt/report/provider bodies.
+1. `report_assistant_source_review_intent_v1` - landed 2026-06-19. Routes
+   natural Turkish/English questions such as "değer fazla mı az mı, internetten
+   araştır, daha makul değer varsa sor" into source-backed plausibility review
+   intent instead of draft mutation or direct patch.
+2. `report_assistant_current_calculator_review_packet_v1` - landed 2026-06-19.
+   Packages the visible calculator preview or report context into a typed review
+   packet with selected metric, calculator value authority, route status, basis,
+   tasks, warnings, and snapshot/context signatures.
+3. `report_assistant_source_backed_plausibility_review_v1` - landed
+   2026-06-19. Reuses the existing plausibility research route for current
+   calculator review packets, keeps provider output advisory, and suppresses
+   provider patches.
+4. `report_assistant_source_review_card_v1` - landed 2026-06-19. Renders
+   calculator value and source review separately in the shared assistant result
+   card, with source quality, comparability, citation count, range, and advisory
+   suggested report value when present.
+5. `report_assistant_source_backed_report_override_proposal_v1` - landed
+   2026-06-19. Converts source-backed recommendations into pending
+   confirmation-required report-only patches through the existing validator; it
+   does not apply changes or alter calculator live values/engine truth.
+6. `report_assistant_source_review_eval_trace_v1` - landed 2026-06-19. Adds
+   golden eval and redacted trace coverage for source review, recommendation,
+   confirmation posture, and provider-patch suppression.
+7. `report_assistant_calculator_source_review_ui_wiring_v1` - landed
+   2026-06-19. Routes calculator-page natural source-review prompts before
+   mutation parsing, sends the current calculator review packet to the
+   plausibility route, renders the source-review card, handles explicit
+   non-selected outputs through a temporary review preview, and clears stale
+   review state on draft edits.
+8. `report_assistant_calculator_source_review_confirmed_report_apply_v1` -
+   landed 2026-06-20. The calculator-page source-review card can prepare a
+   selected-report, confirmation-required report-only edit when a validated
+   advisory report value exists. The first calculator source-review request
+   remains read-only with `suggestPatch: false`; the edit path loads the current
+   selected report document/context, uses the shared source-backed patch builder,
+   validates with the shared patch validator, and applies through confirmed
+   `export_only` report draft semantics. It blocks missing reports, metric
+   mismatches, validator rejections, stale calculator draft changes, and selected
+   report changes. It never alters calculator live values or layer state.
+9. `report_assistant_source_review_intent_hardening_v1` - landed 2026-06-20.
+   Adds typed calculator-page routing for source review/report override/clarify
+   vs layer mutation, catches more Turkish/mixed review wording, blocks direct
+   current-calculator value setting, and extends report/planner intent tests.
+10. `report_assistant_provider_browser_smoke_v1` - verify the live/provider path
+   in a provider-configured browser/manual smoke, with a provider-unavailable
+   skip/report path when credentials are absent.
+11. `report_assistant_trace_event_route_wiring_v1` - only if runtime collection
+   is still needed, wire the tested redacted event helper into route responses
+   or a bounded persistence sink without storing prompt/report/provider bodies.
 
 Gate 4 planner hardening is locally green and Gate 5's schema-first draft
 validator, parser adapter, result-envelope surface, Gate 6 route handoff, and
@@ -259,8 +371,12 @@ boundary is locally landed as confirmation-only action proposals. Slice 9A/9B
 apply proposal and confirmed browser apply are locally landed for the
 calculator-page pending proposal path. Slice 10A's repo-local golden eval matrix
 is locally landed. Slice 10B's redacted trace-event helper is locally landed.
-The next bounded action, if needed, is route/persistence wiring for those
-already-redacted events.
+Calculator-page source-review UI wiring, the confirmation-required report-only
+apply handoff, and source-review intent hardening are locally landed. The next
+bounded action is a provider-configured browser/manual smoke for the live source
+review path. Runtime trace-event route wiring remains optional and should run
+after the provider smoke gap unless a bounded collection requirement is
+explicitly selected.
 Do not change engine behavior, formula routes, source rows, or persistent
 Workbench/project mutation behavior.
 
@@ -3421,6 +3537,13 @@ Acceptance:
     2026-06-19.
 23. Slice 10B - redacted trace/event boundary. Helper boundary locally landed
     on 2026-06-19; route/persistence wiring remains optional.
+24. Calculator-page source-review confirmed report apply. Locally landed on
+    2026-06-20 for selected saved reports as a report-only draft customization;
+    calculator live values and layer state stay unchanged.
+25. Source-review intent hardening. Locally landed on 2026-06-20 for
+    calculator-page source-review/report-override/clarify routing and
+    report/planner intent coverage; direct current-calculator value setting is
+    blocked before mutation paths.
 
 ## Minimum Commit Strategy
 
@@ -3438,6 +3561,8 @@ Keep commits slice-bounded:
 - one commit for calculator context-field commands;
 - one commit for explicit export/download boundaries;
 - one commit for apply proposal;
+- one commit for calculator-page source-review confirmed report apply;
+- one commit for source-review intent hardening;
 - one commit for eval/observability/hardening.
 
 Each commit should include its doc update and targeted tests. Avoid combining
@@ -3504,5 +3629,8 @@ pnpm --filter @dynecho/web exec vitest run \
   --maxWorkers=1
 ```
 
-Full web typecheck should be run and reported, but known unrelated fixture/type
-debt must be separated from the assistant gate result until fixed.
+Full web typecheck should be run and reported for broad user-visible assistant
+gates. For the latest calculator-page source-review checkpoint, full web
+typecheck was attempted but blocked by unrelated current engine type debt in
+`packages/engine/src/dynamic-airborne.ts`; keep that debt separate from the
+assistant gate result instead of hiding the gate status.
