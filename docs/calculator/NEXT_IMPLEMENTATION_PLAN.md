@@ -21,11 +21,11 @@ Documentation map:
 current authority docs from historical slice evidence.
 
 Latest checkpoint reconciliation:
-[CHECKPOINT_2026-06-19_DOUBLE_LEAF_FRAMED_PHYSICAL_INPUT_SENSITIVITY.md](./CHECKPOINT_2026-06-19_DOUBLE_LEAF_FRAMED_PHYSICAL_INPUT_SENSITIVITY.md).
-It records the double-leaf/framed physical-input sensitivity checkpoint
-after the absorber-thickness numeric-sensitivity coverage refresh, the
-implementation/docs comparison, the still-selected cavity-depth
-numeric-sensitivity owner, and green targeted/current-gate validation.
+[CHECKPOINT_2026-06-20_FULL_GATE_AND_CAVITY_DEPTH_HANDOFF.md](./CHECKPOINT_2026-06-20_FULL_GATE_AND_CAVITY_DEPTH_HANDOFF.md).
+It records the broad full-gate checkpoint, the implementation/docs
+comparison, the still-selected cavity-depth numeric-sensitivity owner,
+and the fact that the selected owner contract file is the next runtime
+calculator task rather than landed runtime behavior.
 
 Calculator scope lock: this plan is valid only insofar as it advances
 the acoustic calculator. Do not replace the selected slice with UI

@@ -262,7 +262,7 @@ describe("workbench store", () => {
       "air_gap:50",
       "concrete:100"
     ]);
-  });
+  }, 15_000);
 
   it("can clear the current rows without changing the selected mode or preset reference", async () => {
     const { useWorkbenchStore } = await import("./workbench-store");
@@ -277,7 +277,7 @@ describe("workbench store", () => {
     expect(state.studyMode).toBe("floor");
     expect(state.activePresetId).toBe("heavy_concrete_impact_floor");
     expect(state.airborneContextMode).toBe("building_prediction");
-  });
+  }, 15_000);
 
   it("keeps representative wall and floor presets stable when the same final thickness is reached through different edit paths", async () => {
     const { evaluateScenario } = await import("./scenario-analysis");

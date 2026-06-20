@@ -133,13 +133,13 @@ documentation map, source of truth, and next-agent brief name them as
 current.
 
 Latest checkpoint reconciliation:
-`docs/calculator/CHECKPOINT_2026-06-19_DOUBLE_LEAF_FRAMED_PHYSICAL_INPUT_SENSITIVITY.md`.
-It confirms the double-leaf/framed physical-input sensitivity
-checkpoint after the absorber-thickness numeric-sensitivity coverage
-refresh, records that the current selected next action remains the
-cavity-depth numeric-sensitivity owner, and records green targeted and
-current-gate validation. It does not replace the documentation map or
-selected next plan.
+`docs/calculator/CHECKPOINT_2026-06-20_FULL_GATE_AND_CAVITY_DEPTH_HANDOFF.md`.
+It confirms the broad full-gate checkpoint and docs/implementation
+comparison after the workbench expectation fixes, records that the
+current selected next action remains the cavity-depth numeric-sensitivity
+owner, and records that the selected owner contract is planned but not
+landed yet. It does not replace the documentation map or selected next
+plan.
 
 ## Latest Wall Double-Leaf/Framed Porous Absorber Thickness Numeric Sensitivity Coverage Refresh - 2026-06-19
 

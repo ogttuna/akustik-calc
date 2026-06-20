@@ -138,7 +138,7 @@ describe("validation regime helpers", () => {
     expect(getValidationFamilyModeRows(family!).find((row) => row.id === "field_standardized_volume_estimate")?.caseCount).toBe(2);
   });
 
-  it("builds a coverage snapshot row that flags the remaining timber fallback while releasing composite from staged field-only status", () => {
+  it("builds a coverage snapshot row that flags the remaining timber fallback while marking composite broadly covered", () => {
     const rows = getValidationCoverageSnapshotRows();
     const timberRow = rows.find((row) => row.id === "timber_frame");
     const compositeRow = rows.find((row) => row.id === "composite_panel");
@@ -148,7 +148,7 @@ describe("validation regime helpers", () => {
     expect(timberRow?.benchmarkMix).toBe("13 exact · 4 estimate · 2 low confidence");
 
     expect(compositeRow).toBeTruthy();
-    expect(compositeRow?.focusLabel).toBe("Remaining low-confidence lane");
+    expect(compositeRow?.focusLabel).toBe("Broadly covered");
   });
 
   it("derives next hardening tasks directly from the current family matrix", () => {

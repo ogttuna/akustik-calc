@@ -1,6 +1,6 @@
 # Calculator Documentation Map
 
-Last reviewed: 2026-06-19
+Last reviewed: 2026-06-20
 
 ## Purpose
 
@@ -51,12 +51,13 @@ supports route-required input capture and basis integrity. It does not
 replace the selected runtime implementation action.
 
 Latest checkpoint reconciliation:
-`docs/calculator/CHECKPOINT_2026-06-19_DOUBLE_LEAF_FRAMED_PHYSICAL_INPUT_SENSITIVITY.md`.
-This confirms the double-leaf/framed physical-input sensitivity
-checkpoint after the absorber-thickness numeric-sensitivity coverage
-refresh, the implementation/docs comparison, the still-selected
-cavity-depth numeric-sensitivity owner, and green targeted/current-gate
-validation. It does not replace the selected next plan.
+`docs/calculator/CHECKPOINT_2026-06-20_FULL_GATE_AND_CAVITY_DEPTH_HANDOFF.md`.
+This confirms the live docs/implementation comparison after the broad
+2026-06-20 `pnpm check`, records that the selected cavity-depth
+numeric-sensitivity owner remains the next runtime calculator task, and
+keeps the 2026-06-19 physical-input sensitivity checkpoint as the
+focused owner-chain validation reference. It does not replace the
+selected next plan.
 
 ## Latest Wall Double-Leaf/Framed Porous Absorber Thickness Numeric Sensitivity Coverage Refresh
 

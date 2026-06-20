@@ -1,6 +1,6 @@
 # Next Agent Brief
 
-Last reviewed: 2026-06-19
+Last reviewed: 2026-06-20
 
 ## Documentation Map
 
@@ -37,7 +37,11 @@ Fast path:
 - current selected implementation plan:
   `docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_CAVITY_DEPTH_NUMERIC_SENSITIVITY_OWNER_PLAN_2026-06-19.md`;
 - latest checkpoint reconciliation:
-  `docs/calculator/CHECKPOINT_2026-06-19_DOUBLE_LEAF_FRAMED_PHYSICAL_INPUT_SENSITIVITY.md`;
+  `docs/calculator/CHECKPOINT_2026-06-20_FULL_GATE_AND_CAVITY_DEPTH_HANDOFF.md`;
+- selected cavity-depth owner contract status:
+  planned and selected, but not landed yet; create
+  `packages/engine/src/post-v1-wall-double-leaf-framed-cavity-depth-numeric-sensitivity-owner-contract.test.ts`
+  as the next runtime calculator task;
 - latest landed no-runtime coverage refresh:
   `post_v1_wall_double_leaf_framed_porous_absorber_thickness_numeric_sensitivity_coverage_refresh_plan`;
 - latest landed no-runtime coverage refresh file:

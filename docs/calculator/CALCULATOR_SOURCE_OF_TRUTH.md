@@ -1,6 +1,6 @@
 # Calculator Source Of Truth
 
-Last reviewed: 2026-06-19
+Last reviewed: 2026-06-20
 
 ## Documentation Map
 
@@ -44,13 +44,13 @@ runtime/accuracy behavior moved.
 
 Latest checkpoint reconciliation:
 
-`docs/calculator/CHECKPOINT_2026-06-19_DOUBLE_LEAF_FRAMED_PHYSICAL_INPUT_SENSITIVITY.md`
+`docs/calculator/CHECKPOINT_2026-06-20_FULL_GATE_AND_CAVITY_DEPTH_HANDOFF.md`
 
-That checkpoint records the double-leaf/framed physical-input
-sensitivity implementation/docs reconciliation after the
-absorber-thickness numeric-sensitivity coverage refresh, the
-still-selected cavity-depth numeric-sensitivity owner, and green
-targeted/current-gate validation.
+That checkpoint records the broad full-gate validation, the live
+implementation/docs reconciliation after the workbench expectation
+fixes, and the still-selected cavity-depth numeric-sensitivity owner.
+The focused 2026-06-19 double-leaf/framed physical-input sensitivity
+checkpoint remains the owner-chain validation reference.
 
 The long-range industry-grade calculator direction is:
 

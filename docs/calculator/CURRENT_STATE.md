@@ -9,13 +9,13 @@ Documentation map:
 [DOCUMENTATION_MAP.md](./DOCUMENTATION_MAP.md).
 
 Current reconciliation checkpoint:
-[CHECKPOINT_2026-06-19_DOUBLE_LEAF_FRAMED_PHYSICAL_INPUT_SENSITIVITY.md](./CHECKPOINT_2026-06-19_DOUBLE_LEAF_FRAMED_PHYSICAL_INPUT_SENSITIVITY.md).
+[CHECKPOINT_2026-06-20_FULL_GATE_AND_CAVITY_DEPTH_HANDOFF.md](./CHECKPOINT_2026-06-20_FULL_GATE_AND_CAVITY_DEPTH_HANDOFF.md).
 
-This checkpoint confirms the double-leaf/framed physical-input
-sensitivity implementation and docs are aligned after the
-absorber-thickness numeric-sensitivity coverage refresh, and that the
-current selected next implementation remains the cavity-depth
-numeric-sensitivity owner.
+This checkpoint confirms the broad full-gate validation, the live
+docs/implementation comparison, and that the current selected next
+implementation remains the cavity-depth numeric-sensitivity owner. The
+selected owner contract file is not landed yet; creating and
+implementing it is the next calculator runtime task.
 
 Previous calculator excellence and cleanup review:
 [CALCULATOR_EXCELLENCE_AND_CLEANUP_REVIEW_2026-06-15.md](./CALCULATOR_EXCELLENCE_AND_CLEANUP_REVIEW_2026-06-15.md).

@@ -141,8 +141,8 @@ const CASES: readonly WallSelectorCardCase[] = [
       dnTwDb: 47,
       rwDb: 47,
       rwPrimeDb: 47,
-      supported: ["R'w", "DnT,w"],
-      unsupported: ["Rw"],
+      supported: ["Rw", "R'w", "DnT,w"],
+      unsupported: [],
       withoutBoundaryPosture: true
     },
     branch: {
@@ -151,7 +151,7 @@ const CASES: readonly WallSelectorCardCase[] = [
       value: "Lined Massive Wall"
     },
     cards: {
-      Rw: { status: "unsupported", value: "Not ready" },
+      Rw: { status: "live", value: "47 dB" },
       "R'w": { status: "live", value: "47 dB" },
       "DnT,w": { status: "live", value: "47 dB" }
     }
@@ -169,16 +169,16 @@ const CASES: readonly WallSelectorCardCase[] = [
       detectedFamily: "lined_massive_wall",
       postureIncludes: [/ambiguous boundary with Double Leaf/i, /family-boundary hold/i],
       rwDb: 45,
-      supported: [],
-      unsupported: ["Rw", "R'w", "DnT,w"]
+      supported: ["Rw"],
+      unsupported: ["R'w", "DnT,w"]
     },
     branch: {
-      detailIncludes: [/ambiguous boundary with Double Leaf/i, /conservative family-boundary hold/i],
+      detailIncludes: [/building prediction is selected/i, /owned building-prediction adapter/i],
       tone: "warning",
-      value: "Lined Massive Wall"
+      value: "Awaiting physical input"
     },
     cards: {
-      Rw: { status: "unsupported", value: "Not ready" },
+      Rw: { status: "live", value: "45 dB" },
       "R'w": { status: "needs_input", value: "Not ready" },
       "DnT,w": { status: "needs_input", value: "Not ready" }
     }
@@ -196,17 +196,18 @@ const CASES: readonly WallSelectorCardCase[] = [
     expected: {
       detectedFamily: "lined_massive_wall",
       rwDb: 47,
-      supported: [],
-      unsupported: ["Rw", "R'w", "DnT,w"],
+      supported: ["Rw"],
+      unsupported: ["R'w", "DnT,w"],
       withoutBoundaryPosture: true
     },
     branch: {
+      detailIncludes: [/building prediction is selected/i, /owned building-prediction adapter/i],
       detailWithout: [/boundary|hold/i],
-      tone: "neutral",
-      value: "Lined Massive Wall"
+      tone: "warning",
+      value: "Awaiting physical input"
     },
     cards: {
-      Rw: { status: "unsupported", value: "Not ready" },
+      Rw: { status: "live", value: "47 dB" },
       "R'w": { status: "needs_input", value: "Not ready" },
       "DnT,w": { status: "needs_input", value: "Not ready" }
     }
