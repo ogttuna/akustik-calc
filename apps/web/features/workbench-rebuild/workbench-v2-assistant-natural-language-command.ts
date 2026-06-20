@@ -243,6 +243,7 @@ function buildCommandIntentRequestBody(input: {
       },
       safeNormalizedCommandExamples: [
         "12.5 mm gypsum + 50 mm rock wool + 12.5 mm gypsum diz",
+        "gypsum board araya rock wool sonra aynı gypsumdan seç inputları makul doldur",
         "ekrandaki layerların kalınlıklarını mantıklı şekilde gir",
         "hepsinin kalınlığını 10 mm artır",
         "rock wool'u ortaya taşı",
@@ -323,8 +324,11 @@ export function buildWorkbenchV2AssistantNaturalLanguageCommandModelRequest(inpu
               "Do not calculate or invent Rw, STC, DnT, Ln, IIC, AIIC, or any dB value.",
               "Do not claim web research was done.",
               "If the user asks for source/web/Rw verification, reject or clarify that this is research/report-review work, not a draft mutation.",
+              "If the user asks whether a calculator value is too high/low, asks for internet/source-backed review, or asks whether a report value should be overridden after confirmation, reject or clarify instead of returning an apply command.",
               "If the requested change is physically meaningless, destructive, or underspecified, explain that briefly instead of forcing a command.",
-              "Use only material ids/names visible in the supplied catalog, but tolerate typos and mixed Turkish/English wording.",
+              "Use only material ids/names visible in the supplied catalog, but tolerate typos, family words, and mixed Turkish/English wording.",
+              "Do not reject clear material-family wording just because it is not an exact catalog label: gypsum/gypsium/plasterboard means the general gypsum board catalog item, and rock wool/rockwool/mineral wool means the general rockwool catalog item when those items exist.",
+              "When the user says 'hangisi farketmez', 'en uygunu', or asks to fill reasonable inputs, choose the general safe catalog item and write a normalized command that asks the host app to fill reasonable draft inputs.",
               "The host app will validate the normalizedCommand before applying anything."
             ].join(" ")
           }

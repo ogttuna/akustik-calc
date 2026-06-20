@@ -2,8 +2,6 @@ import type { LayerInput, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
-import { OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS } from "./open-box-timber-raw-bare-estimate";
-import { OPEN_WEB_RAW_BARE_FORMULA_BASIS } from "./open-web-raw-bare-estimate";
 import { TUAS_C11C_COMBINED_WET_SOURCE_LAYERS } from "./tuas-c11c-exact-import-readiness";
 
 type SourceGapSnapshot = {
@@ -124,49 +122,49 @@ const CASES: readonly SourceGapCase[] = [
     }
   },
   {
-    id: "raw bare open-web uses source-absent raw-bare runtime with explicit field impact companions",
+    id: "roleless raw bare open-web keeps source-absent raw-bare runtime blocked",
     layers: [{ materialId: "open_web_steel_floor", thicknessMm: 300 }],
     expected: {
-      candidateIds: ["source_absent_raw_bare_open_web_formula"],
-      ci50_2500: 5.2,
-      estimateBasis: OPEN_WEB_RAW_BARE_FORMULA_BASIS,
-      estimateKind: "family_archetype",
-      fitPercent: 100,
-      impactBasis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
-      lPrimeNT50: 100.8,
-      lPrimeNTw: 95.6,
-      lPrimeNW: 98,
-      lnW: 96,
-      lnWPlusCI: 97.8,
+      candidateIds: null,
+      ci50_2500: null,
+      estimateBasis: null,
+      estimateKind: null,
+      fitPercent: null,
+      impactBasis: null,
+      lPrimeNT50: null,
+      lPrimeNTw: null,
+      lPrimeNW: null,
+      lnW: null,
+      lnWPlusCI: null,
       matchId: null,
-      rw: 32,
+      rw: 70,
       rwPrime: 70,
       dnTw: 73,
-      supported: FIELD_OUTPUTS,
-      unsupported: []
+      supported: ["R'w", "DnT,w"],
+      unsupported: FAIL_CLOSED_IMPACT_UNSUPPORTED
     }
   },
   {
-    id: "raw bare open-box uses source-absent raw-bare runtime with explicit field impact companions",
+    id: "roleless raw bare open-box keeps source-absent raw-bare runtime blocked",
     layers: [{ materialId: "open_box_timber_slab", thicknessMm: 220 }],
     expected: {
-      candidateIds: ["source_absent_raw_bare_open_box_formula"],
-      ci50_2500: 3.4,
-      estimateBasis: OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS,
-      estimateKind: "family_archetype",
-      fitPercent: 100,
-      impactBasis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
-      lPrimeNT50: 94.1,
-      lPrimeNTw: 90.7,
-      lPrimeNW: 93.1,
-      lnW: 91.1,
-      lnWPlusCI: 90.2,
+      candidateIds: null,
+      ci50_2500: null,
+      estimateBasis: null,
+      estimateKind: null,
+      fitPercent: null,
+      impactBasis: null,
+      lPrimeNT50: null,
+      lPrimeNTw: null,
+      lPrimeNW: null,
+      lnW: null,
+      lnWPlusCI: null,
       matchId: null,
-      rw: 38.1,
+      rw: 35,
       rwPrime: 35,
       dnTw: 38,
-      supported: FIELD_OUTPUTS,
-      unsupported: []
+      supported: ["R'w", "DnT,w"],
+      unsupported: FAIL_CLOSED_IMPACT_UNSUPPORTED
     }
   },
   {

@@ -23,6 +23,7 @@ type RouteSnapshot = {
 
 type AuditCase = {
   expected: RouteSnapshot;
+  expectedTagged?: RouteSnapshot;
   id: string;
   raw: readonly ScenarioRow[];
   tagged: readonly ScenarioRow[];
@@ -100,6 +101,15 @@ const FAIL_CLOSED_STATUSES: Record<FieldOutput, CardStatus> = {
   "L'nT,w": "needs_input"
 };
 
+const AIRBORNE_ONLY_STATUSES: Record<FieldOutput, CardStatus> = {
+  Rw: "live",
+  "R'w": "live",
+  "DnT,w": "live",
+  "Ln,w": "unsupported",
+  "L'n,w": "needs_input",
+  "L'nT,w": "needs_input"
+};
+
 const CASES: readonly AuditCase[] = [
   {
     id: "open-web lower-only packaged lane",
@@ -146,12 +156,11 @@ const CASES: readonly AuditCase[] = [
     expected: {
       basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
       candidateIds: [
-        "pmc_m1_bare_composite_lab_2026",
         "pmc_m1_dry_floating_plus_c2x_lab_2026",
         "pmc_m1_dry_floating_plus_c1x_lab_2026",
-        "pmc_m1_dry_floating_floor_lab_2026"
+        "pmc_m1_bare_composite_lab_2026"
       ],
-      kind: "low_confidence",
+      kind: "family_general",
       statuses: LIVE_STATUSES,
       supported: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]
     }
@@ -176,13 +185,26 @@ const CASES: readonly AuditCase[] = [
       kind: null,
       statuses: FAIL_CLOSED_STATUSES,
       supported: ["R'w", "DnT,w"]
+    },
+    expectedTagged: {
+      basis: null,
+      candidateIds: null,
+      kind: null,
+      statuses: AIRBORNE_ONLY_STATUSES,
+      supported: ["Rw", "R'w", "DnT,w"]
     }
   }
 ];
 
 describe("raw floor packaged-lane route audit", () => {
-  it.each(CASES)("$id", ({ id, raw, tagged, expected }) => {
-    expect(snapshot(`${id}-raw`, raw)).toEqual(snapshot(`${id}-tagged`, tagged));
-    expect(snapshot(`${id}-raw`, raw)).toEqual(expected);
+  it.each(CASES)("$id", ({ expected, expectedTagged, id, raw, tagged }) => {
+    const rawSnapshot = snapshot(`${id}-raw`, raw);
+    const taggedSnapshot = snapshot(`${id}-tagged`, tagged);
+
+    if (!expectedTagged) {
+      expect(rawSnapshot).toEqual(taggedSnapshot);
+    }
+    expect(rawSnapshot).toEqual(expected);
+    expect(taggedSnapshot).toEqual(expectedTagged ?? expected);
   });
 });

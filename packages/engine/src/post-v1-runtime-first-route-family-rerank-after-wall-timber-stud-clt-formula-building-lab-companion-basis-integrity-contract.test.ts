@@ -82,7 +82,7 @@ type Candidate = {
   readonly selectedNextActionIfSelected: string | null;
   readonly selectedNextFileIfSelected: string | null;
   readonly sourceRowsRequiredForRuntimeSelection: boolean;
-  readonly targetOutputs: readonly RequestedOutputId[];
+  readonly targetOutputs: readonly (RequestedOutputId | "OITC")[];
 };
 
 const CANDIDATES = [

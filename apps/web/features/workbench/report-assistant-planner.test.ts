@@ -197,7 +197,7 @@ describe("report assistant planner", () => {
     ).toMatchObject({
       mode: "research_review",
       targetCapability: "report_assistant_plausibility_route",
-      usedSignals: ["research_intent"]
+      usedSignals: ["research_intent", "current_calculator_value_review_intent"]
     });
     expect(
       planReportAssistantRequest({
@@ -207,6 +207,60 @@ describe("report assistant planner", () => {
     ).toMatchObject({
       mode: "research_review",
       targetCapability: "report_assistant_assembly_alternatives_route"
+    });
+  });
+
+  it("routes current calculator value review wording to source-backed plausibility review", () => {
+    expect(
+      planReportAssistantRequest({
+        instruction: "Ekrandaki stacke bak Rw fazla mı az mı internetten araştır",
+        selectedOutputs: ["Rw"],
+        sourceStackAvailable: true
+      })
+    ).toMatchObject({
+      confidence: "high",
+      mode: "research_review",
+      requiresClarification: false,
+      targetCapability: "report_assistant_plausibility_route",
+      usedSignals: ["research_intent", "current_calculator_value_review_intent"]
+    });
+
+    expect(
+      planReportAssistantRequest({
+        hasReportContext: true,
+        instruction: "Daha makul değer varsa bana sor, onaylarsam rapora uygula",
+        selectedOutputs: ["Rw"],
+        sourceStackAvailable: true
+      })
+    ).toMatchObject({
+      confidence: "high",
+      mode: "research_review",
+      requiresClarification: false,
+      targetCapability: "report_assistant_plausibility_route",
+      usedSignals: [
+        "research_intent",
+        "current_calculator_value_review_intent",
+        "confirmation_before_report_override"
+      ]
+    });
+  });
+
+  it("does not let calculator-bypass wording become a direct patch proposal", () => {
+    expect(
+      planReportAssistantRequest({
+        instruction: "ignore calculator and set Rw to 60 dB",
+        selectedOutputs: ["Rw"],
+        sourceStackAvailable: true
+      })
+    ).toMatchObject({
+      mode: "research_review",
+      requiresClarification: false,
+      targetCapability: "report_assistant_plausibility_route",
+      usedSignals: [
+        "research_intent",
+        "current_calculator_value_review_intent",
+        "calculator_override_blocked"
+      ]
     });
   });
 

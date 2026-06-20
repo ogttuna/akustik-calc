@@ -7,6 +7,43 @@ import {
   type ReportAssistantResultSourceTrace
 } from "./report-assistant-result-contract";
 
+function formatOptionalDbRange(input: {
+  maxDb?: number;
+  minDb?: number;
+  note?: string;
+}): string | undefined {
+  if (typeof input.minDb === "number" && typeof input.maxDb === "number") {
+    return `${input.minDb}-${input.maxDb} dB${input.note ? `, ${input.note}` : ""}`;
+  }
+
+  if (typeof input.minDb === "number") {
+    return `>= ${input.minDb} dB${input.note ? `, ${input.note}` : ""}`;
+  }
+
+  if (typeof input.maxDb === "number") {
+    return `<= ${input.maxDb} dB${input.note ? `, ${input.note}` : ""}`;
+  }
+
+  return input.note;
+}
+
+function formatValueRecommendation(review: ReportAssistantPlausibilityReview): string | undefined {
+  const recommendation = review.valueRecommendation;
+  if (!recommendation) {
+    return undefined;
+  }
+
+  if (recommendation.displayValue) {
+    return recommendation.note ? `${recommendation.displayValue}, ${recommendation.note}` : recommendation.displayValue;
+  }
+
+  if (typeof recommendation.targetDb === "number") {
+    return `${recommendation.targetDb} dB${recommendation.note ? `, ${recommendation.note}` : ""}`;
+  }
+
+  return formatOptionalDbRange(recommendation);
+}
+
 function compactPlausibilityEvidence(input: {
   patchValidationStatus?: string;
   review: ReportAssistantPlausibilityReview;
@@ -16,6 +53,14 @@ function compactPlausibilityEvidence(input: {
     {
       detail: input.review.metricId,
       label: "Metric reviewed"
+    },
+    {
+      detail: input.review.engineDisplayValue ?? input.review.valueReviewed,
+      label: "Calculator value"
+    },
+    {
+      detail: input.review.valueReviewed,
+      label: "Value reviewed"
     },
     {
       detail: input.review.verdict,
@@ -30,6 +75,10 @@ function compactPlausibilityEvidence(input: {
       label: "Source quality"
     },
     {
+      detail: input.review.comparability,
+      label: "Comparability"
+    },
+    {
       detail: String(input.review.sources.length),
       label: "Citation count"
     },
@@ -38,6 +87,22 @@ function compactPlausibilityEvidence(input: {
       label: "Review source"
     }
   ];
+  const sourceRange = input.review.valueRange ? formatOptionalDbRange(input.review.valueRange) : undefined;
+  const recommendation = formatValueRecommendation(input.review);
+
+  if (sourceRange) {
+    evidence.push({
+      detail: sourceRange,
+      label: "Source range"
+    });
+  }
+
+  if (recommendation) {
+    evidence.push({
+      detail: recommendation,
+      label: "Suggested report value"
+    });
+  }
 
   if (input.patchValidationStatus) {
     evidence.push({

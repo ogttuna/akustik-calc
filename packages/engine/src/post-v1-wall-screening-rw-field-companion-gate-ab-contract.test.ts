@@ -78,6 +78,19 @@ describe("post-V1 wall screening Rw field companion Gate AB", () => {
     expect(result.warnings.join("\n")).not.toContain("Unsupported target outputs: Rw");
   });
 
+  it("keeps screening wall Rw target-output independent on field lab-companion requests", () => {
+    const testCase = generatedCase("wall-masonry-brick");
+    const result = calculateAssembly(testCase.rows, {
+      ...testCase.fieldOptions,
+      targetOutputs: ["Rw"]
+    });
+
+    expect(result.metrics.estimatedRwDb).toBe(40);
+    expect(result.supportedTargetOutputs).toEqual(["Rw"]);
+    expect(result.unsupportedTargetOutputs).toEqual([]);
+    expect(result.warnings.join("\n")).not.toContain("Unsupported target outputs: Rw");
+  });
+
   it("keeps laminated CLT field companions live while lab companions stay on direct formula values", () => {
     const testCase = generatedCase("wall-clt-local");
     const result = calculateAssembly(testCase.rows, {

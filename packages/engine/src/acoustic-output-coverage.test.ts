@@ -448,8 +448,8 @@ describe("acoustic output coverage", () => {
             targetOutputs: ["Rw", "Ln,w", "CI", "CI,50-2500", "Ln,w+CI", "L'n,w"]
           }
         ),
-        supported: ["Rw", "Ln,w", "CI", "CI,50-2500", "Ln,w+CI"],
-        unsupported: ["L'n,w"]
+        supported: ["Ln,w", "CI", "CI,50-2500", "Ln,w+CI"],
+        unsupported: ["Rw", "L'n,w"]
       },
       {
         extraChecks: (result) => {

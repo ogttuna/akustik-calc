@@ -22,7 +22,7 @@ export type WorkbenchPresetLibraryPanelProps = {
   commonPresets: readonly WorkbenchV2CommonPreset[];
   id?: string;
   message: string;
-  onCommonPresetSelect: (presetId: string) => void;
+  onCommonPresetSelect: (presetId: string) => Promise<void> | void;
   onCommonPresetUse: () => Promise<void> | void;
   onClose?: () => void;
   onDeletePreset: () => Promise<void> | void;

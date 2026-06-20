@@ -1,0 +1,386 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - generic [ref=e6]: DAC
+          - generic [ref=e7]: DynEcho
+          - generic [ref=e8]: admin
+        - generic [ref=e9]:
+          - button "Switch to dark mode" [ref=e10] [cursor=pointer]:
+            - img [ref=e11]
+            - generic [ref=e17]: Light
+          - button "Sign out" [ref=e19] [cursor=pointer]
+    - main [ref=e20]:
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - generic [ref=e23]:
+            - generic [ref=e24]:
+              - generic [ref=e25]: Calculator
+              - heading "Acoustic workbench" [level=1] [ref=e26]
+            - button "Open workspace drawer" [ref=e27] [cursor=pointer]:
+              - img [ref=e28]
+              - generic [ref=e29]: Workspace
+              - generic [ref=e30]: Local draft
+          - generic [ref=e31]:
+            - generic [ref=e32]: Local draft
+            - generic [ref=e33]: Wall
+            - generic [ref=e34]: 3 layers
+            - generic [ref=e35]: 162.5 mm
+            - generic [ref=e36]: Ready
+        - region "Calculator workspace" [ref=e37]:
+          - generic [ref=e38]:
+            - generic [ref=e39]:
+              - heading "Setup" [level=2] [ref=e42]
+              - generic [ref=e43]:
+                - generic "Assembly mode" [ref=e44]:
+                  - button "Wall" [pressed] [ref=e45] [cursor=pointer]
+                  - button "Floor" [ref=e46] [cursor=pointer]
+                - generic [ref=e47]:
+                  - generic [ref=e48]:
+                    - checkbox "Rw Airborne" [checked] [ref=e49]
+                    - generic [ref=e50]: Rw
+                    - generic [ref=e51]: Airborne
+                  - generic [ref=e52]:
+                    - checkbox "R'w Airborne" [active] [ref=e53]
+                    - generic [ref=e54]: R'w
+                    - generic [ref=e55]: Airborne
+                  - generic [ref=e56]:
+                    - checkbox "DnT,w Airborne" [ref=e57]
+                    - generic [ref=e58]: DnT,w
+                    - generic [ref=e59]: Airborne
+                  - generic [ref=e60]:
+                    - checkbox "STC Airborne" [ref=e61]
+                    - generic [ref=e62]: STC
+                    - generic [ref=e63]: Airborne
+                  - generic [ref=e64]:
+                    - checkbox "C Spectrum" [ref=e65]
+                    - generic [ref=e66]: C
+                    - generic [ref=e67]: Spectrum
+                  - generic [ref=e68]:
+                    - checkbox "Ctr Spectrum" [ref=e69]
+                    - generic [ref=e70]: Ctr
+                    - generic [ref=e71]: Spectrum
+            - generic [ref=e902]:
+              - heading "Route inputs" [level=2] [ref=e905]
+              - generic [ref=e906]:
+                - generic [ref=e907]:
+                  - generic [ref=e908]:
+                    - generic [ref=e909]: Airborne mode
+                    - generic "Not used by the current lab airborne output set" [ref=e1103]: Inactive
+                  - combobox "Airborne mode Inactive" [ref=e1104]:
+                    - option "Lab"
+                    - option "Field"
+                    - option "Building" [selected]
+                - generic [ref=e912]:
+                  - generic [ref=e913]:
+                    - generic [ref=e914]: Panel width
+                    - generic "Not used by the current lab airborne output set" [ref=e1105]: Inactive
+                  - generic [ref=e916]:
+                    - spinbutton "Panel width Inactive mm" [ref=e1106]: "3000"
+                    - emphasis [ref=e918]: mm
+                - generic [ref=e919]:
+                  - generic [ref=e920]:
+                    - generic [ref=e921]: Panel height
+                    - generic "Not used by the current lab airborne output set" [ref=e1107]: Inactive
+                  - generic [ref=e923]:
+                    - spinbutton "Panel height Inactive mm" [ref=e1108]: "2600"
+                    - emphasis [ref=e925]: mm
+                - generic [ref=e926]:
+                  - generic [ref=e927]:
+                    - generic [ref=e928]: Room volume
+                    - generic "Not used by the current lab airborne output set" [ref=e1109]: Inactive
+                  - generic [ref=e930]:
+                    - spinbutton "Room volume Inactive m3" [ref=e1110]: "50"
+                    - emphasis [ref=e932]: m3
+                - generic [ref=e933]:
+                  - generic [ref=e934]:
+                    - generic [ref=e935]: RT60
+                    - generic "Not used by the current lab airborne output set" [ref=e1111]: Inactive
+                  - generic [ref=e936]:
+                    - spinbutton "RT60 Inactive s" [ref=e1112]
+                    - emphasis [ref=e938]: s
+                - generic [ref=e1053]:
+                  - strong [ref=e1055]: Building prediction
+                  - generic [ref=e1056]:
+                    - generic [ref=e1057]:
+                      - generic [ref=e1058]:
+                        - generic [ref=e1059]: Source room volume
+                        - generic "Not used by the current lab airborne output set" [ref=e1113]: Inactive
+                      - generic [ref=e1060]:
+                        - spinbutton "Source room volume Inactive m3" [ref=e1114]
+                        - emphasis [ref=e1062]: m3
+                    - generic [ref=e1063]:
+                      - generic [ref=e1064]:
+                        - generic [ref=e1065]: Flanking junction
+                        - generic "Not used by the current lab airborne output set" [ref=e1115]: Inactive
+                      - combobox "Flanking junction Inactive" [ref=e1116]:
+                        - option "Unknown" [selected]
+                        - option "Rigid cross junction"
+                        - option "Rigid T junction"
+                        - option "Lightweight junction"
+                        - option "Isolated junction"
+                        - option "Mixed junction"
+                    - generic [ref=e1067]:
+                      - generic [ref=e1068]:
+                        - generic [ref=e1069]: Flanking assumption
+                        - generic "Not used by the current lab airborne output set" [ref=e1117]: Inactive
+                      - combobox "Flanking assumption Inactive" [ref=e1118]:
+                        - option "Unknown" [selected]
+                        - option "Single conservative path"
+                        - option "Multi-path conservative"
+                        - option "Worst-case screening"
+                    - generic [ref=e1071]:
+                      - generic [ref=e1072]:
+                        - generic [ref=e1073]: Coupling length
+                        - generic "Not used by the current lab airborne output set" [ref=e1119]: Inactive
+                      - generic [ref=e1074]:
+                        - spinbutton "Coupling length Inactive m" [ref=e1120]
+                        - emphasis [ref=e1076]: m
+                    - generic [ref=e1077]:
+                      - generic [ref=e1078]:
+                        - generic [ref=e1079]: Output basis
+                        - generic "Not used by the current lab airborne output set" [ref=e1121]: Inactive
+                      - combobox "Output basis Inactive" [ref=e1122]:
+                        - option "Unknown" [selected]
+                        - option "Apparent"
+                        - option "Standardized"
+                        - option "Apparent + standardized"
+            - generic [ref=e72]:
+              - generic [ref=e73]:
+                - heading "Layer stack" [level=2] [ref=e75]
+                - generic [ref=e76]:
+                  - button "Undo layer change" [disabled] [ref=e77]:
+                    - img [ref=e78]
+                  - button "Materials" [ref=e81] [cursor=pointer]:
+                    - img [ref=e82]
+                    - text: Materials
+                  - button "Add layer" [ref=e88] [cursor=pointer]:
+                    - img [ref=e89]
+                    - text: Add layer
+              - generic [ref=e90]:
+                - generic [ref=e91]:
+                  - generic [ref=e92]: Material
+                  - generic [ref=e93]: Role
+                  - generic [ref=e94]: Thickness
+                  - generic [ref=e95]: Actions
+                - article [ref=e96]:
+                  - generic [ref=e97]:
+                    - button "Drag layer 1" [ref=e98] [cursor=pointer]:
+                      - img [ref=e99]
+                    - button "Select layer 1" [ref=e106] [cursor=pointer]: "1"
+                  - generic [ref=e107]:
+                    - generic [ref=e108]:
+                      - generic [ref=e109]: Material
+                      - button "Gypsum Board 850 kg/m3 / finish" [ref=e110] [cursor=pointer]:
+                        - strong [ref=e111]: Gypsum Board
+                        - generic [ref=e112]: 850 kg/m3 / finish
+                    - generic [ref=e113]:
+                      - generic [ref=e114]: Role
+                      - combobox "Role" [ref=e115]:
+                        - option "Side A" [selected]
+                        - option "Cavity"
+                        - option "Core"
+                        - option "Support"
+                        - option "Side B"
+                    - generic [ref=e116]:
+                      - generic [ref=e118]: Thickness
+                      - generic [ref=e119]:
+                        - spinbutton "Thickness mm" [ref=e120]: "12.5"
+                        - emphasis [ref=e121]: mm
+                  - generic [ref=e122]:
+                    - button "Move layer up" [disabled] [ref=e123]:
+                      - img [ref=e124]
+                    - button "Move layer down" [ref=e126] [cursor=pointer]:
+                      - img [ref=e127]
+                    - button "Duplicate layer" [ref=e129] [cursor=pointer]:
+                      - img [ref=e130]
+                    - button "Remove layer" [ref=e133] [cursor=pointer]:
+                      - img [ref=e134]
+                - article [ref=e137]:
+                  - generic [ref=e138]:
+                    - button "Drag layer 2" [ref=e139] [cursor=pointer]:
+                      - img [ref=e140]
+                    - button "Select layer 2" [ref=e147] [cursor=pointer]: "2"
+                  - generic [ref=e148]:
+                    - generic [ref=e149]:
+                      - generic [ref=e150]: Material
+                      - button "Rock Wool 45 kg/m3 / insulation" [ref=e151] [cursor=pointer]:
+                        - strong [ref=e152]: Rock Wool
+                        - generic [ref=e153]: 45 kg/m3 / insulation
+                    - generic [ref=e154]:
+                      - generic [ref=e155]: Role
+                      - combobox "Role" [ref=e156]:
+                        - option "Side A"
+                        - option "Cavity" [selected]
+                        - option "Core"
+                        - option "Support"
+                        - option "Side B"
+                    - generic [ref=e157]:
+                      - generic [ref=e159]: Thickness
+                      - generic [ref=e160]:
+                        - spinbutton "Thickness mm" [ref=e161]: "50"
+                        - emphasis [ref=e162]: mm
+                  - generic [ref=e163]:
+                    - button "Move layer up" [ref=e164] [cursor=pointer]:
+                      - img [ref=e165]
+                    - button "Move layer down" [ref=e167] [cursor=pointer]:
+                      - img [ref=e168]
+                    - button "Duplicate layer" [ref=e170] [cursor=pointer]:
+                      - img [ref=e171]
+                    - button "Remove layer" [ref=e174] [cursor=pointer]:
+                      - img [ref=e175]
+                - article [ref=e178]:
+                  - generic [ref=e179]:
+                    - button "Drag layer 3" [ref=e180] [cursor=pointer]:
+                      - img [ref=e181]
+                    - button "Select layer 3" [ref=e188] [cursor=pointer]: "3"
+                  - generic [ref=e189]:
+                    - generic [ref=e190]:
+                      - generic [ref=e191]: Material
+                      - button "Concrete 2400 kg/m3 / mass" [ref=e192] [cursor=pointer]:
+                        - strong [ref=e193]: Concrete
+                        - generic [ref=e194]: 2400 kg/m3 / mass
+                    - generic [ref=e195]:
+                      - generic [ref=e196]: Role
+                      - combobox "Role" [ref=e197]:
+                        - option "Side A"
+                        - option "Cavity"
+                        - option "Core"
+                        - option "Support"
+                        - option "Side B" [selected]
+                    - generic [ref=e198]:
+                      - generic [ref=e200]: Thickness
+                      - generic [ref=e201]:
+                        - spinbutton "Thickness mm" [ref=e202]: "100"
+                        - emphasis [ref=e203]: mm
+                  - generic [ref=e204]:
+                    - button "Move layer up" [ref=e205] [cursor=pointer]:
+                      - img [ref=e206]
+                    - button "Move layer down" [disabled] [ref=e208]:
+                      - img [ref=e209]
+                    - button "Duplicate layer" [ref=e211] [cursor=pointer]:
+                      - img [ref=e212]
+                    - button "Remove layer" [ref=e215] [cursor=pointer]:
+                      - img [ref=e216]
+            - generic [ref=e219]:
+              - generic [ref=e220]:
+                - generic [ref=e221]:
+                  - generic [ref=e222]: Wall section
+                  - heading "Wall construction preview" [level=3] [ref=e223]
+                - generic [ref=e224]:
+                  - generic [ref=e225]: 3 layers
+                  - generic [ref=e226]: /162.5 mm
+              - generic [ref=e227]:
+                - figure "wall construction section" [ref=e228]:
+                  - img [ref=e229]:
+                    - generic [ref=e232]: Side A
+                    - generic [ref=e233]: Side B
+                    - generic [ref=e241]: "1"
+                    - generic [ref=e255]: "2"
+                    - generic [ref=e267]: "3"
+                    - generic [ref=e268]: 162.5 mm
+                - generic "Technical layer schedule" [ref=e269]:
+                  - generic [ref=e270]:
+                    - generic [ref=e271]: Technical layer schedule
+                    - strong [ref=e272]: "Selected: Gypsum Board"
+                  - list [ref=e273]:
+                    - listitem [ref=e274]:
+                      - generic [ref=e275]: "1"
+                      - generic [ref=e276]:
+                        - strong [ref=e277]: Gypsum Board
+                        - generic [ref=e278]: Side A
+                      - generic [ref=e279]: 12.5 mm
+                    - listitem [ref=e280]:
+                      - generic [ref=e281]: "2"
+                      - generic [ref=e282]:
+                        - strong [ref=e283]: Rock Wool
+                        - generic [ref=e284]: Cavity
+                      - generic [ref=e285]: 50 mm
+                    - listitem [ref=e286]:
+                      - generic [ref=e287]: "3"
+                      - generic [ref=e288]:
+                        - strong [ref=e289]: Concrete
+                        - generic [ref=e290]: Side B
+                      - generic [ref=e291]: 100 mm
+          - complementary "Calculation review" [ref=e292]:
+            - generic [ref=e293]:
+              - generic [ref=e294]: Current result
+              - strong [ref=e295]: 55 dB
+              - paragraph [ref=e296]: "Rw: Calculated"
+            - generic [ref=e297]:
+              - generic [ref=e298]:
+                - heading "Outputs" [level=2] [ref=e299]
+                - generic [ref=e300]: "1"
+              - generic [ref=e302]:
+                - generic [ref=e303]:
+                  - strong [ref=e304]: Rw
+                  - generic [ref=e305]: Calculated
+                - emphasis [ref=e306]: 55 dB
+            - generic [ref=e307]:
+              - generic [ref=e308]:
+                - heading "Assistant preview" [level=2] [ref=e309]
+                - button "Run" [ref=e310] [cursor=pointer]:
+                  - img [ref=e311]
+                  - text: Run
+              - generic [ref=e314]:
+                - generic [ref=e315]:
+                  - generic [ref=e316]: Stack command
+                  - textbox "Stack command" [ref=e317]:
+                    - /placeholder: Ekrandaki katmanların kalınlıklarını mantıklı gir
+                - button "Run" [disabled] [ref=e319]:
+                  - img [ref=e320]
+                  - text: Run
+            - article [ref=e1124]:
+              - generic [ref=e1125]:
+                - generic [ref=e1126]:
+                  - generic [ref=e1127]: Airborne spectrum
+                  - heading "Airborne response curve" [level=3] [ref=e1128]
+                - generic [ref=e1129]:
+                  - generic [ref=e1130]: Apparent overlay
+                  - generic [ref=e1131]: 63..4000 Hz
+                  - generic [ref=e1132]: Higher is better
+              - generic "Frequency bands" [ref=e1133]:
+                - generic [ref=e1134]: "Low: 63-250 Hz"
+                - generic [ref=e1135]: "Speech: 500-1k Hz"
+                - generic [ref=e1136]: "High: 2k-4k Hz"
+              - paragraph [ref=e1137]: Final apparent curve after the active leakage and field overlays.
+              - img "Airborne response curve, Higher is better" [ref=e1138]:
+                - application [ref=e1141]:
+                  - generic [ref=e1179]:
+                    - generic [ref=e1180]:
+                      - generic [ref=e1182]: "63"
+                      - generic [ref=e1184]: "100"
+                      - generic [ref=e1186]: "160"
+                      - generic [ref=e1188]: "250"
+                      - generic [ref=e1190]: "400"
+                      - generic [ref=e1192]: "630"
+                      - generic [ref=e1194]: 1k
+                      - generic [ref=e1196]: 1.60k
+                      - generic [ref=e1198]: 2.5k
+                      - generic [ref=e1200]: 4k
+                    - generic [ref=e1201]:
+                      - generic [ref=e1203]: "25"
+                      - generic [ref=e1205]: "40"
+                      - generic [ref=e1207]: "55"
+                      - generic [ref=e1209]: "70"
+                      - generic [ref=e1211]: "80"
+                    - generic [ref=e1212]: Level (dB)
+            - generic [ref=e323]:
+              - heading "Report handoff" [level=2] [ref=e325]
+              - generic [ref=e1213]:
+                - button "Choose project" [ref=e1214] [cursor=pointer]:
+                  - img [ref=e1215]
+                  - text: Choose project
+                - button "Save as template" [ref=e1219] [cursor=pointer]:
+                  - img [ref=e1220]
+                  - text: Save as template
+                - button "Open report" [ref=e1222] [cursor=pointer]:
+                  - img [ref=e1223]
+                  - text: Open report
+                  - img [ref=e1226]
+  - button "Open Next.js Dev Tools" [ref=e481] [cursor=pointer]:
+    - img [ref=e482]
+  - alert [ref=e485]
+  - region "Notifications alt+T"
+  - generic [ref=e486]: "25"

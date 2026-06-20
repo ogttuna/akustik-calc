@@ -103,6 +103,7 @@ describe("post-V1 floor raw-bare/floating same-basis holdout owner Gate FD", () 
   it("rejects all three selected Gate CL floor ledgers because admissible same-basis holdouts are absent", () => {
     const ownerLedgers = buildPostV1GateFDOwnerLedgers();
     const selectedGateCLLedgers = buildPostV1GateFCSelectedFloorResidualLedgers();
+    const gateFDTargetOutputs = new Set<string>(POST_V1_GATE_FD_TARGET_OUTPUTS);
 
     expect(ownerLedgers.map((ledger) => ledger.gateCLResidualLedgerId)).toEqual(
       POST_V1_GATE_FC_SELECTED_RESIDUAL_LEDGER_IDS
@@ -133,7 +134,7 @@ describe("post-V1 floor raw-bare/floating same-basis holdout owner Gate FD", () 
         sourceRowsRequiredBeforeFutureBudgetTightening: true
       });
       expect(ledger.currentErrorBudgetDb, ledger.id).toBeGreaterThanOrEqual(8);
-      expect(ledger.metrics.some((metric) => POST_V1_GATE_FD_TARGET_OUTPUTS.includes(metric))).toBe(true);
+      expect(ledger.metrics.some((metric) => gateFDTargetOutputs.has(metric))).toBe(true);
       expect(ledger.rejectedEvidenceContextIds).toHaveLength(2);
     }
   });

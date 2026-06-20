@@ -1,0 +1,1355 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - generic [ref=e6]: DAC
+          - generic [ref=e7]: DynEcho
+          - generic [ref=e8]: admin
+        - generic [ref=e9]:
+          - button "Switch to dark mode" [ref=e10] [cursor=pointer]:
+            - img [ref=e11]
+            - generic [ref=e17]: Light
+          - button "Sign out" [ref=e19] [cursor=pointer]
+    - main [ref=e20]:
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - generic [ref=e23]:
+            - generic [ref=e24]:
+              - generic [ref=e25]: Calculator
+              - heading "Acoustic workbench" [level=1] [ref=e26]
+            - button "Close workspace drawer" [expanded] [active] [ref=e443] [cursor=pointer]:
+              - img [ref=e28]
+              - generic [ref=e29]: Workspace
+              - generic [ref=e30]: Local draft
+          - generic [ref=e31]:
+            - generic [ref=e32]: Local draft
+            - generic [ref=e33]: Wall
+            - generic [ref=e34]: 3 layers
+            - generic [ref=e35]: 162.5 mm
+            - generic [ref=e36]: Ready
+        - generic:
+          - button "Close workspace drawer" [ref=e444] [cursor=pointer]
+          - dialog "Workspace" [ref=e445]:
+            - generic [ref=e446]:
+              - generic [ref=e447]:
+                - generic [ref=e448]: Workbench
+                - heading "Workspace" [level=2] [ref=e449]
+              - button "Close workspace drawer" [ref=e450] [cursor=pointer]:
+                - img [ref=e451]
+            - generic [ref=e454]:
+              - navigation "Workspace sections" [ref=e455]:
+                - button "Projects" [ref=e456] [cursor=pointer]
+                - button "Templates" [ref=e457] [cursor=pointer]
+                - button "Materials" [ref=e458] [cursor=pointer]
+              - region "Project workspace" [ref=e460]:
+                - generic [ref=e461]:
+                  - heading "Projects" [level=2] [ref=e463]
+                  - generic [ref=e465]: 127 projects
+                - generic [ref=e466]:
+                  - region "Project selection" [ref=e467]:
+                    - generic [ref=e468]:
+                      - generic [ref=e469]:
+                        - generic [ref=e470]: Project list
+                        - generic [ref=e471]:
+                          - button "New project" [ref=e472] [cursor=pointer]:
+                            - img [ref=e473]
+                            - text: New project
+                          - button "Refresh projects" [ref=e474] [cursor=pointer]:
+                            - img [ref=e475]
+                      - generic "Projects" [ref=e478]:
+                        - button "Browser-local draft Not attached to a saved project Active" [pressed] [ref=e480] [cursor=pointer]:
+                          - generic [ref=e481]:
+                            - strong [ref=e482]: Browser-local draft
+                            - generic [ref=e483]: Not attached to a saved project
+                          - generic [ref=e484]: Active
+                        - button "denmee 1 combination - 0 reports admin Updated 16 Jun 2026" [ref=e486] [cursor=pointer]:
+                          - generic [ref=e487]:
+                            - strong [ref=e488]: denmee
+                            - generic [ref=e489]: 1 combination - 0 reports
+                            - generic [ref=e490]: admin
+                          - generic [ref=e491]:
+                            - generic [ref=e492]: Updated 16 Jun 2026
+                            - img [ref=e493]
+                        - button "deneme2 2 combinations - 0 reports admin Updated 16 Jun 2026" [ref=e496] [cursor=pointer]:
+                          - generic [ref=e497]:
+                            - strong [ref=e498]: deneme2
+                            - generic [ref=e499]: 2 combinations - 0 reports
+                            - generic [ref=e500]: admin
+                          - generic [ref=e501]:
+                            - generic [ref=e502]: Updated 16 Jun 2026
+                            - img [ref=e503]
+                        - button "deneme 0 combinations - 0 reports admin Updated 16 Jun 2026" [ref=e506] [cursor=pointer]:
+                          - generic [ref=e507]:
+                            - strong [ref=e508]: deneme
+                            - generic [ref=e509]: 0 combinations - 0 reports
+                            - generic [ref=e510]: admin
+                          - generic [ref=e511]:
+                            - generic [ref=e512]: Updated 16 Jun 2026
+                            - img [ref=e513]
+                        - button "Drawer UX QA 1781587197 1 combination - 0 reports admin Updated 16 Jun 2026" [ref=e516] [cursor=pointer]:
+                          - generic [ref=e517]:
+                            - strong [ref=e518]: Drawer UX QA 1781587197
+                            - generic [ref=e519]: 1 combination - 0 reports
+                            - generic [ref=e520]: admin
+                          - generic [ref=e521]:
+                            - generic [ref=e522]: Updated 16 Jun 2026
+                            - img [ref=e523]
+                        - button "Workbench v2 local report target 1781523958107 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e526] [cursor=pointer]:
+                          - generic [ref=e527]:
+                            - strong [ref=e528]: Workbench v2 local report target 1781523958107
+                            - generic [ref=e529]: 1 combination - 1 report
+                            - generic [ref=e530]: admin
+                          - generic [ref=e531]:
+                            - generic [ref=e532]: Updated 15 Jun 2026
+                            - img [ref=e533]
+                        - button "Workbench v2 local report target 1781523716416 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e536] [cursor=pointer]:
+                          - generic [ref=e537]:
+                            - strong [ref=e538]: Workbench v2 local report target 1781523716416
+                            - generic [ref=e539]: 1 combination - 1 report
+                            - generic [ref=e540]: admin
+                          - generic [ref=e541]:
+                            - generic [ref=e542]: Updated 15 Jun 2026
+                            - img [ref=e543]
+                        - button "Workbench v2 local report target 1781523597061 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e546] [cursor=pointer]:
+                          - generic [ref=e547]:
+                            - strong [ref=e548]: Workbench v2 local report target 1781523597061
+                            - generic [ref=e549]: 1 combination - 1 report
+                            - generic [ref=e550]: admin
+                          - generic [ref=e551]:
+                            - generic [ref=e552]: Updated 15 Jun 2026
+                            - img [ref=e553]
+                        - button "Workbench v2 local report target 1781523368302 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e556] [cursor=pointer]:
+                          - generic [ref=e557]:
+                            - strong [ref=e558]: Workbench v2 local report target 1781523368302
+                            - generic [ref=e559]: 1 combination - 1 report
+                            - generic [ref=e560]: admin
+                          - generic [ref=e561]:
+                            - generic [ref=e562]: Updated 15 Jun 2026
+                            - img [ref=e563]
+                        - button "Responsive workspace 1781521224592 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e566] [cursor=pointer]:
+                          - generic [ref=e567]:
+                            - strong [ref=e568]: Responsive workspace 1781521224592
+                            - generic [ref=e569]: 1 combination - 1 report
+                            - generic [ref=e570]: admin
+                          - generic [ref=e571]:
+                            - generic [ref=e572]: Updated 15 Jun 2026
+                            - img [ref=e573]
+                        - button "Rapid guarded 1781521079083 2 combinations - 1 report admin Updated 15 Jun 2026" [ref=e576] [cursor=pointer]:
+                          - generic [ref=e577]:
+                            - strong [ref=e578]: Rapid guarded 1781521079083
+                            - generic [ref=e579]: 2 combinations - 1 report
+                            - generic [ref=e580]: admin
+                          - generic [ref=e581]:
+                            - generic [ref=e582]: Updated 15 Jun 2026
+                            - img [ref=e583]
+                        - button "Responsive workspace 1781521028909 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e586] [cursor=pointer]:
+                          - generic [ref=e587]:
+                            - strong [ref=e588]: Responsive workspace 1781521028909
+                            - generic [ref=e589]: 1 combination - 1 report
+                            - generic [ref=e590]: admin
+                          - generic [ref=e591]:
+                            - generic [ref=e592]: Updated 15 Jun 2026
+                            - img [ref=e593]
+                        - button "Workbench v2 local report target 1781520914831 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e596] [cursor=pointer]:
+                          - generic [ref=e597]:
+                            - strong [ref=e598]: Workbench v2 local report target 1781520914831
+                            - generic [ref=e599]: 1 combination - 1 report
+                            - generic [ref=e600]: admin
+                          - generic [ref=e601]:
+                            - generic [ref=e602]: Updated 15 Jun 2026
+                            - img [ref=e603]
+                        - button "Responsive workspace 1781520534934 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e606] [cursor=pointer]:
+                          - generic [ref=e607]:
+                            - strong [ref=e608]: Responsive workspace 1781520534934
+                            - generic [ref=e609]: 1 combination - 1 report
+                            - generic [ref=e610]: admin
+                          - generic [ref=e611]:
+                            - generic [ref=e612]: Updated 15 Jun 2026
+                            - img [ref=e613]
+                        - button "Workbench v2 local report target 1781520501419 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e616] [cursor=pointer]:
+                          - generic [ref=e617]:
+                            - strong [ref=e618]: Workbench v2 local report target 1781520501419
+                            - generic [ref=e619]: 1 combination - 1 report
+                            - generic [ref=e620]: admin
+                          - generic [ref=e621]:
+                            - generic [ref=e622]: Updated 15 Jun 2026
+                            - img [ref=e623]
+                        - button "Workbench v2 report save 1781520471787 0 combinations - 0 reports admin Updated 15 Jun 2026" [ref=e626] [cursor=pointer]:
+                          - generic [ref=e627]:
+                            - strong [ref=e628]: Workbench v2 report save 1781520471787
+                            - generic [ref=e629]: 0 combinations - 0 reports
+                            - generic [ref=e630]: admin
+                          - generic [ref=e631]:
+                            - generic [ref=e632]: Updated 15 Jun 2026
+                            - img [ref=e633]
+                        - button "Workbench v2 material editor 1781520437237 1 combination - 0 reports admin Updated 15 Jun 2026" [ref=e636] [cursor=pointer]:
+                          - generic [ref=e637]:
+                            - strong [ref=e638]: Workbench v2 material editor 1781520437237
+                            - generic [ref=e639]: 1 combination - 0 reports
+                            - generic [ref=e640]: admin
+                          - generic [ref=e641]:
+                            - generic [ref=e642]: Updated 15 Jun 2026
+                            - img [ref=e643]
+                        - button "Workbench v2 report save 1781520390604 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e646] [cursor=pointer]:
+                          - generic [ref=e647]:
+                            - strong [ref=e648]: Workbench v2 report save 1781520390604
+                            - generic [ref=e649]: 1 combination - 1 report
+                            - generic [ref=e650]: admin
+                          - generic [ref=e651]:
+                            - generic [ref=e652]: Updated 15 Jun 2026
+                            - img [ref=e653]
+                        - button "Workbench v2 material editor 1781520355633 1 combination - 0 reports admin Updated 15 Jun 2026" [ref=e656] [cursor=pointer]:
+                          - generic [ref=e657]:
+                            - strong [ref=e658]: Workbench v2 material editor 1781520355633
+                            - generic [ref=e659]: 1 combination - 0 reports
+                            - generic [ref=e660]: admin
+                          - generic [ref=e661]:
+                            - generic [ref=e662]: Updated 15 Jun 2026
+                            - img [ref=e663]
+                        - button "Workbench v2 report save 1781520206209 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e666] [cursor=pointer]:
+                          - generic [ref=e667]:
+                            - strong [ref=e668]: Workbench v2 report save 1781520206209
+                            - generic [ref=e669]: 1 combination - 1 report
+                            - generic [ref=e670]: admin
+                          - generic [ref=e671]:
+                            - generic [ref=e672]: Updated 15 Jun 2026
+                            - img [ref=e673]
+                        - button "Workbench v2 report save 1781520146445 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e676] [cursor=pointer]:
+                          - generic [ref=e677]:
+                            - strong [ref=e678]: Workbench v2 report save 1781520146445
+                            - generic [ref=e679]: 1 combination - 1 report
+                            - generic [ref=e680]: admin
+                          - generic [ref=e681]:
+                            - generic [ref=e682]: Updated 15 Jun 2026
+                            - img [ref=e683]
+                        - button "Rapid guarded 1781520067306 2 combinations - 1 report admin Updated 15 Jun 2026" [ref=e686] [cursor=pointer]:
+                          - generic [ref=e687]:
+                            - strong [ref=e688]: Rapid guarded 1781520067306
+                            - generic [ref=e689]: 2 combinations - 1 report
+                            - generic [ref=e690]: admin
+                          - generic [ref=e691]:
+                            - generic [ref=e692]: Updated 15 Jun 2026
+                            - img [ref=e693]
+                        - button "Responsive workspace 1781520050296 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e696] [cursor=pointer]:
+                          - generic [ref=e697]:
+                            - strong [ref=e698]: Responsive workspace 1781520050296
+                            - generic [ref=e699]: 1 combination - 1 report
+                            - generic [ref=e700]: admin
+                          - generic [ref=e701]:
+                            - generic [ref=e702]: Updated 15 Jun 2026
+                            - img [ref=e703]
+                        - button "Workbench v2 local report target 1781520026894 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e706] [cursor=pointer]:
+                          - generic [ref=e707]:
+                            - strong [ref=e708]: Workbench v2 local report target 1781520026894
+                            - generic [ref=e709]: 1 combination - 1 report
+                            - generic [ref=e710]: admin
+                          - generic [ref=e711]:
+                            - generic [ref=e712]: Updated 15 Jun 2026
+                            - img [ref=e713]
+                        - button "Workbench v2 report save 1781519998352 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e716] [cursor=pointer]:
+                          - generic [ref=e717]:
+                            - strong [ref=e718]: Workbench v2 report save 1781519998352
+                            - generic [ref=e719]: 1 combination - 1 report
+                            - generic [ref=e720]: admin
+                          - generic [ref=e721]:
+                            - generic [ref=e722]: Updated 15 Jun 2026
+                            - img [ref=e723]
+                        - button "Workbench v2 material editor 1781519962839 1 combination - 0 reports admin Updated 15 Jun 2026" [ref=e726] [cursor=pointer]:
+                          - generic [ref=e727]:
+                            - strong [ref=e728]: Workbench v2 material editor 1781519962839
+                            - generic [ref=e729]: 1 combination - 0 reports
+                            - generic [ref=e730]: admin
+                          - generic [ref=e731]:
+                            - generic [ref=e732]: Updated 15 Jun 2026
+                            - img [ref=e733]
+                        - button "Rapid guarded 1781514192499 2 combinations - 1 report admin Updated 15 Jun 2026" [ref=e736] [cursor=pointer]:
+                          - generic [ref=e737]:
+                            - strong [ref=e738]: Rapid guarded 1781514192499
+                            - generic [ref=e739]: 2 combinations - 1 report
+                            - generic [ref=e740]: admin
+                          - generic [ref=e741]:
+                            - generic [ref=e742]: Updated 15 Jun 2026
+                            - img [ref=e743]
+                        - button "Responsive workspace 1781514179251 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e746] [cursor=pointer]:
+                          - generic [ref=e747]:
+                            - strong [ref=e748]: Responsive workspace 1781514179251
+                            - generic [ref=e749]: 1 combination - 1 report
+                            - generic [ref=e750]: admin
+                          - generic [ref=e751]:
+                            - generic [ref=e752]: Updated 15 Jun 2026
+                            - img [ref=e753]
+                        - button "Workbench v2 local report target 1781514162159 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e756] [cursor=pointer]:
+                          - generic [ref=e757]:
+                            - strong [ref=e758]: Workbench v2 local report target 1781514162159
+                            - generic [ref=e759]: 1 combination - 1 report
+                            - generic [ref=e760]: admin
+                          - generic [ref=e761]:
+                            - generic [ref=e762]: Updated 15 Jun 2026
+                            - img [ref=e763]
+                        - button "Workbench v2 report save 1781514129406 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e766] [cursor=pointer]:
+                          - generic [ref=e767]:
+                            - strong [ref=e768]: Workbench v2 report save 1781514129406
+                            - generic [ref=e769]: 1 combination - 1 report
+                            - generic [ref=e770]: admin
+                          - generic [ref=e771]:
+                            - generic [ref=e772]: Updated 15 Jun 2026
+                            - img [ref=e773]
+                        - button "Workbench v2 material editor 1781514096110 1 combination - 0 reports admin Updated 15 Jun 2026" [ref=e776] [cursor=pointer]:
+                          - generic [ref=e777]:
+                            - strong [ref=e778]: Workbench v2 material editor 1781514096110
+                            - generic [ref=e779]: 1 combination - 0 reports
+                            - generic [ref=e780]: admin
+                          - generic [ref=e781]:
+                            - generic [ref=e782]: Updated 15 Jun 2026
+                            - img [ref=e783]
+                        - button "Rapid guarded 1781514071373 2 combinations - 1 report admin Updated 15 Jun 2026" [ref=e786] [cursor=pointer]:
+                          - generic [ref=e787]:
+                            - strong [ref=e788]: Rapid guarded 1781514071373
+                            - generic [ref=e789]: 2 combinations - 1 report
+                            - generic [ref=e790]: admin
+                          - generic [ref=e791]:
+                            - generic [ref=e792]: Updated 15 Jun 2026
+                            - img [ref=e793]
+                        - button "Responsive workspace 1781514051408 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e796] [cursor=pointer]:
+                          - generic [ref=e797]:
+                            - strong [ref=e798]: Responsive workspace 1781514051408
+                            - generic [ref=e799]: 1 combination - 1 report
+                            - generic [ref=e800]: admin
+                          - generic [ref=e801]:
+                            - generic [ref=e802]: Updated 15 Jun 2026
+                            - img [ref=e803]
+                        - button "Rapid guarded 1781513954756 2 combinations - 0 reports admin Updated 15 Jun 2026" [ref=e806] [cursor=pointer]:
+                          - generic [ref=e807]:
+                            - strong [ref=e808]: Rapid guarded 1781513954756
+                            - generic [ref=e809]: 2 combinations - 0 reports
+                            - generic [ref=e810]: admin
+                          - generic [ref=e811]:
+                            - generic [ref=e812]: Updated 15 Jun 2026
+                            - img [ref=e813]
+                        - button "Responsive workspace 1781513913570 1 combination - 0 reports admin Updated 15 Jun 2026" [ref=e816] [cursor=pointer]:
+                          - generic [ref=e817]:
+                            - strong [ref=e818]: Responsive workspace 1781513913570
+                            - generic [ref=e819]: 1 combination - 0 reports
+                            - generic [ref=e820]: admin
+                          - generic [ref=e821]:
+                            - generic [ref=e822]: Updated 15 Jun 2026
+                            - img [ref=e823]
+                        - button "Workbench v2 local report target 1781513897244 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e826] [cursor=pointer]:
+                          - generic [ref=e827]:
+                            - strong [ref=e828]: Workbench v2 local report target 1781513897244
+                            - generic [ref=e829]: 1 combination - 1 report
+                            - generic [ref=e830]: admin
+                          - generic [ref=e831]:
+                            - generic [ref=e832]: Updated 15 Jun 2026
+                            - img [ref=e833]
+                        - button "Workbench v2 report save 1781513860116 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e836] [cursor=pointer]:
+                          - generic [ref=e837]:
+                            - strong [ref=e838]: Workbench v2 report save 1781513860116
+                            - generic [ref=e839]: 1 combination - 1 report
+                            - generic [ref=e840]: admin
+                          - generic [ref=e841]:
+                            - generic [ref=e842]: Updated 15 Jun 2026
+                            - img [ref=e843]
+                        - button "Workbench v2 material editor 1781513825067 1 combination - 0 reports admin Updated 15 Jun 2026" [ref=e846] [cursor=pointer]:
+                          - generic [ref=e847]:
+                            - strong [ref=e848]: Workbench v2 material editor 1781513825067
+                            - generic [ref=e849]: 1 combination - 0 reports
+                            - generic [ref=e850]: admin
+                          - generic [ref=e851]:
+                            - generic [ref=e852]: Updated 15 Jun 2026
+                            - img [ref=e853]
+                        - button "Rapid guarded 1781511861986 2 combinations - 1 report admin Updated 15 Jun 2026" [ref=e856] [cursor=pointer]:
+                          - generic [ref=e857]:
+                            - strong [ref=e858]: Rapid guarded 1781511861986
+                            - generic [ref=e859]: 2 combinations - 1 report
+                            - generic [ref=e860]: admin
+                          - generic [ref=e861]:
+                            - generic [ref=e862]: Updated 15 Jun 2026
+                            - img [ref=e863]
+                        - button "Responsive workspace 1781511849286 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e866] [cursor=pointer]:
+                          - generic [ref=e867]:
+                            - strong [ref=e868]: Responsive workspace 1781511849286
+                            - generic [ref=e869]: 1 combination - 1 report
+                            - generic [ref=e870]: admin
+                          - generic [ref=e871]:
+                            - generic [ref=e872]: Updated 15 Jun 2026
+                            - img [ref=e873]
+                        - button "Workbench v2 report save 1781511806319 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e876] [cursor=pointer]:
+                          - generic [ref=e877]:
+                            - strong [ref=e878]: Workbench v2 report save 1781511806319
+                            - generic [ref=e879]: 1 combination - 1 report
+                            - generic [ref=e880]: admin
+                          - generic [ref=e881]:
+                            - generic [ref=e882]: Updated 15 Jun 2026
+                            - img [ref=e883]
+                        - button "Workbench v2 material editor 1781511771936 1 combination - 0 reports admin Updated 15 Jun 2026" [ref=e886] [cursor=pointer]:
+                          - generic [ref=e887]:
+                            - strong [ref=e888]: Workbench v2 material editor 1781511771936
+                            - generic [ref=e889]: 1 combination - 0 reports
+                            - generic [ref=e890]: admin
+                          - generic [ref=e891]:
+                            - generic [ref=e892]: Updated 15 Jun 2026
+                            - img [ref=e893]
+                        - button "Rapid guarded 1781511103248 2 combinations - 1 report admin Updated 15 Jun 2026" [ref=e896] [cursor=pointer]:
+                          - generic [ref=e897]:
+                            - strong [ref=e898]: Rapid guarded 1781511103248
+                            - generic [ref=e899]: 2 combinations - 1 report
+                            - generic [ref=e900]: admin
+                          - generic [ref=e901]:
+                            - generic [ref=e902]: Updated 15 Jun 2026
+                            - img [ref=e903]
+                        - button "Responsive workspace 1781511090243 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e906] [cursor=pointer]:
+                          - generic [ref=e907]:
+                            - strong [ref=e908]: Responsive workspace 1781511090243
+                            - generic [ref=e909]: 1 combination - 1 report
+                            - generic [ref=e910]: admin
+                          - generic [ref=e911]:
+                            - generic [ref=e912]: Updated 15 Jun 2026
+                            - img [ref=e913]
+                        - button "Workbench v2 report save 1781511047276 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e916] [cursor=pointer]:
+                          - generic [ref=e917]:
+                            - strong [ref=e918]: Workbench v2 report save 1781511047276
+                            - generic [ref=e919]: 1 combination - 1 report
+                            - generic [ref=e920]: admin
+                          - generic [ref=e921]:
+                            - generic [ref=e922]: Updated 15 Jun 2026
+                            - img [ref=e923]
+                        - button "Workbench v2 material editor 1781511013435 1 combination - 0 reports admin Updated 15 Jun 2026" [ref=e926] [cursor=pointer]:
+                          - generic [ref=e927]:
+                            - strong [ref=e928]: Workbench v2 material editor 1781511013435
+                            - generic [ref=e929]: 1 combination - 0 reports
+                            - generic [ref=e930]: admin
+                          - generic [ref=e931]:
+                            - generic [ref=e932]: Updated 15 Jun 2026
+                            - img [ref=e933]
+                        - button "Responsive workspace 1781510983229 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e936] [cursor=pointer]:
+                          - generic [ref=e937]:
+                            - strong [ref=e938]: Responsive workspace 1781510983229
+                            - generic [ref=e939]: 1 combination - 1 report
+                            - generic [ref=e940]: admin
+                          - generic [ref=e941]:
+                            - generic [ref=e942]: Updated 15 Jun 2026
+                            - img [ref=e943]
+                        - button "Rapid guarded 1781508257036 2 combinations - 1 report admin Updated 15 Jun 2026" [ref=e946] [cursor=pointer]:
+                          - generic [ref=e947]:
+                            - strong [ref=e948]: Rapid guarded 1781508257036
+                            - generic [ref=e949]: 2 combinations - 1 report
+                            - generic [ref=e950]: admin
+                          - generic [ref=e951]:
+                            - generic [ref=e952]: Updated 15 Jun 2026
+                            - img [ref=e953]
+                        - button "Responsive workspace 1781508243183 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e956] [cursor=pointer]:
+                          - generic [ref=e957]:
+                            - strong [ref=e958]: Responsive workspace 1781508243183
+                            - generic [ref=e959]: 1 combination - 1 report
+                            - generic [ref=e960]: admin
+                          - generic [ref=e961]:
+                            - generic [ref=e962]: Updated 15 Jun 2026
+                            - img [ref=e963]
+                        - button "Workbench v2 report save 1781508200358 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e966] [cursor=pointer]:
+                          - generic [ref=e967]:
+                            - strong [ref=e968]: Workbench v2 report save 1781508200358
+                            - generic [ref=e969]: 1 combination - 1 report
+                            - generic [ref=e970]: admin
+                          - generic [ref=e971]:
+                            - generic [ref=e972]: Updated 15 Jun 2026
+                            - img [ref=e973]
+                        - button "Workbench v2 material editor 1781508168681 1 combination - 0 reports admin Updated 15 Jun 2026" [ref=e976] [cursor=pointer]:
+                          - generic [ref=e977]:
+                            - strong [ref=e978]: Workbench v2 material editor 1781508168681
+                            - generic [ref=e979]: 1 combination - 0 reports
+                            - generic [ref=e980]: admin
+                          - generic [ref=e981]:
+                            - generic [ref=e982]: Updated 15 Jun 2026
+                            - img [ref=e983]
+                        - button "Workbench v2 report save 1781508119075 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e986] [cursor=pointer]:
+                          - generic [ref=e987]:
+                            - strong [ref=e988]: Workbench v2 report save 1781508119075
+                            - generic [ref=e989]: 1 combination - 1 report
+                            - generic [ref=e990]: admin
+                          - generic [ref=e991]:
+                            - generic [ref=e992]: Updated 15 Jun 2026
+                            - img [ref=e993]
+                        - button "Workbench v2 material editor 1781508091856 1 combination - 0 reports admin Updated 15 Jun 2026" [ref=e996] [cursor=pointer]:
+                          - generic [ref=e997]:
+                            - strong [ref=e998]: Workbench v2 material editor 1781508091856
+                            - generic [ref=e999]: 1 combination - 0 reports
+                            - generic [ref=e1000]: admin
+                          - generic [ref=e1001]:
+                            - generic [ref=e1002]: Updated 15 Jun 2026
+                            - img [ref=e1003]
+                        - button "Rapid guarded 1781507671528 2 combinations - 1 report admin Updated 15 Jun 2026" [ref=e1006] [cursor=pointer]:
+                          - generic [ref=e1007]:
+                            - strong [ref=e1008]: Rapid guarded 1781507671528
+                            - generic [ref=e1009]: 2 combinations - 1 report
+                            - generic [ref=e1010]: admin
+                          - generic [ref=e1011]:
+                            - generic [ref=e1012]: Updated 15 Jun 2026
+                            - img [ref=e1013]
+                        - button "Responsive workspace 1781507646134 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e1016] [cursor=pointer]:
+                          - generic [ref=e1017]:
+                            - strong [ref=e1018]: Responsive workspace 1781507646134
+                            - generic [ref=e1019]: 1 combination - 1 report
+                            - generic [ref=e1020]: admin
+                          - generic [ref=e1021]:
+                            - generic [ref=e1022]: Updated 15 Jun 2026
+                            - img [ref=e1023]
+                        - button "Workbench v2 report save 1781507587185 1 combination - 0 reports admin Updated 15 Jun 2026" [ref=e1026] [cursor=pointer]:
+                          - generic [ref=e1027]:
+                            - strong [ref=e1028]: Workbench v2 report save 1781507587185
+                            - generic [ref=e1029]: 1 combination - 0 reports
+                            - generic [ref=e1030]: admin
+                          - generic [ref=e1031]:
+                            - generic [ref=e1032]: Updated 15 Jun 2026
+                            - img [ref=e1033]
+                        - button "Workbench v2 material editor 1781507515378 1 combination - 0 reports admin Updated 15 Jun 2026" [ref=e1036] [cursor=pointer]:
+                          - generic [ref=e1037]:
+                            - strong [ref=e1038]: Workbench v2 material editor 1781507515378
+                            - generic [ref=e1039]: 1 combination - 0 reports
+                            - generic [ref=e1040]: admin
+                          - generic [ref=e1041]:
+                            - generic [ref=e1042]: Updated 15 Jun 2026
+                            - img [ref=e1043]
+                        - button "Responsive workspace 1781507456558 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e1046] [cursor=pointer]:
+                          - generic [ref=e1047]:
+                            - strong [ref=e1048]: Responsive workspace 1781507456558
+                            - generic [ref=e1049]: 1 combination - 1 report
+                            - generic [ref=e1050]: admin
+                          - generic [ref=e1051]:
+                            - generic [ref=e1052]: Updated 15 Jun 2026
+                            - img [ref=e1053]
+                        - button "Rapid guarded 1781507178375 2 combinations - 1 report admin Updated 15 Jun 2026" [ref=e1056] [cursor=pointer]:
+                          - generic [ref=e1057]:
+                            - strong [ref=e1058]: Rapid guarded 1781507178375
+                            - generic [ref=e1059]: 2 combinations - 1 report
+                            - generic [ref=e1060]: admin
+                          - generic [ref=e1061]:
+                            - generic [ref=e1062]: Updated 15 Jun 2026
+                            - img [ref=e1063]
+                        - button "Responsive workspace 1781507170286 1 combination - 0 reports admin Updated 15 Jun 2026" [ref=e1066] [cursor=pointer]:
+                          - generic [ref=e1067]:
+                            - strong [ref=e1068]: Responsive workspace 1781507170286
+                            - generic [ref=e1069]: 1 combination - 0 reports
+                            - generic [ref=e1070]: admin
+                          - generic [ref=e1071]:
+                            - generic [ref=e1072]: Updated 15 Jun 2026
+                            - img [ref=e1073]
+                        - button "Workbench v2 report save 1781507130411 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e1076] [cursor=pointer]:
+                          - generic [ref=e1077]:
+                            - strong [ref=e1078]: Workbench v2 report save 1781507130411
+                            - generic [ref=e1079]: 1 combination - 1 report
+                            - generic [ref=e1080]: admin
+                          - generic [ref=e1081]:
+                            - generic [ref=e1082]: Updated 15 Jun 2026
+                            - img [ref=e1083]
+                        - button "Workbench v2 material editor 1781507101396 1 combination - 0 reports admin Updated 15 Jun 2026" [ref=e1086] [cursor=pointer]:
+                          - generic [ref=e1087]:
+                            - strong [ref=e1088]: Workbench v2 material editor 1781507101396
+                            - generic [ref=e1089]: 1 combination - 0 reports
+                            - generic [ref=e1090]: admin
+                          - generic [ref=e1091]:
+                            - generic [ref=e1092]: Updated 15 Jun 2026
+                            - img [ref=e1093]
+                        - button "Rapid guarded 1781506826287 2 combinations - 1 report admin Updated 15 Jun 2026" [ref=e1096] [cursor=pointer]:
+                          - generic [ref=e1097]:
+                            - strong [ref=e1098]: Rapid guarded 1781506826287
+                            - generic [ref=e1099]: 2 combinations - 1 report
+                            - generic [ref=e1100]: admin
+                          - generic [ref=e1101]:
+                            - generic [ref=e1102]: Updated 15 Jun 2026
+                            - img [ref=e1103]
+                        - button "Responsive workspace 1781506816677 1 combination - 0 reports admin Updated 15 Jun 2026" [ref=e1106] [cursor=pointer]:
+                          - generic [ref=e1107]:
+                            - strong [ref=e1108]: Responsive workspace 1781506816677
+                            - generic [ref=e1109]: 1 combination - 0 reports
+                            - generic [ref=e1110]: admin
+                          - generic [ref=e1111]:
+                            - generic [ref=e1112]: Updated 15 Jun 2026
+                            - img [ref=e1113]
+                        - button "Workbench v2 report save 1781506770603 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e1116] [cursor=pointer]:
+                          - generic [ref=e1117]:
+                            - strong [ref=e1118]: Workbench v2 report save 1781506770603
+                            - generic [ref=e1119]: 1 combination - 1 report
+                            - generic [ref=e1120]: admin
+                          - generic [ref=e1121]:
+                            - generic [ref=e1122]: Updated 15 Jun 2026
+                            - img [ref=e1123]
+                        - button "Workbench v2 material editor 1781506733389 1 combination - 0 reports admin Updated 15 Jun 2026" [ref=e1126] [cursor=pointer]:
+                          - generic [ref=e1127]:
+                            - strong [ref=e1128]: Workbench v2 material editor 1781506733389
+                            - generic [ref=e1129]: 1 combination - 0 reports
+                            - generic [ref=e1130]: admin
+                          - generic [ref=e1131]:
+                            - generic [ref=e1132]: Updated 15 Jun 2026
+                            - img [ref=e1133]
+                        - button "Rapid guarded 1781506674607 2 combinations - 0 reports admin Updated 15 Jun 2026" [ref=e1136] [cursor=pointer]:
+                          - generic [ref=e1137]:
+                            - strong [ref=e1138]: Rapid guarded 1781506674607
+                            - generic [ref=e1139]: 2 combinations - 0 reports
+                            - generic [ref=e1140]: admin
+                          - generic [ref=e1141]:
+                            - generic [ref=e1142]: Updated 15 Jun 2026
+                            - img [ref=e1143]
+                        - button "Responsive workspace 1781506664283 1 combination - 0 reports admin Updated 15 Jun 2026" [ref=e1146] [cursor=pointer]:
+                          - generic [ref=e1147]:
+                            - strong [ref=e1148]: Responsive workspace 1781506664283
+                            - generic [ref=e1149]: 1 combination - 0 reports
+                            - generic [ref=e1150]: admin
+                          - generic [ref=e1151]:
+                            - generic [ref=e1152]: Updated 15 Jun 2026
+                            - img [ref=e1153]
+                        - button "Workbench v2 report save 1781506607323 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e1156] [cursor=pointer]:
+                          - generic [ref=e1157]:
+                            - strong [ref=e1158]: Workbench v2 report save 1781506607323
+                            - generic [ref=e1159]: 1 combination - 1 report
+                            - generic [ref=e1160]: admin
+                          - generic [ref=e1161]:
+                            - generic [ref=e1162]: Updated 15 Jun 2026
+                            - img [ref=e1163]
+                        - button "Workbench v2 material editor 1781506568954 1 combination - 0 reports admin Updated 15 Jun 2026" [ref=e1166] [cursor=pointer]:
+                          - generic [ref=e1167]:
+                            - strong [ref=e1168]: Workbench v2 material editor 1781506568954
+                            - generic [ref=e1169]: 1 combination - 0 reports
+                            - generic [ref=e1170]: admin
+                          - generic [ref=e1171]:
+                            - generic [ref=e1172]: Updated 15 Jun 2026
+                            - img [ref=e1173]
+                        - button "Rapid guarded 1781506137508 2 combinations - 1 report admin Updated 15 Jun 2026" [ref=e1176] [cursor=pointer]:
+                          - generic [ref=e1177]:
+                            - strong [ref=e1178]: Rapid guarded 1781506137508
+                            - generic [ref=e1179]: 2 combinations - 1 report
+                            - generic [ref=e1180]: admin
+                          - generic [ref=e1181]:
+                            - generic [ref=e1182]: Updated 15 Jun 2026
+                            - img [ref=e1183]
+                        - button "Responsive workspace 1781506118046 1 combination - 0 reports admin Updated 15 Jun 2026" [ref=e1186] [cursor=pointer]:
+                          - generic [ref=e1187]:
+                            - strong [ref=e1188]: Responsive workspace 1781506118046
+                            - generic [ref=e1189]: 1 combination - 0 reports
+                            - generic [ref=e1190]: admin
+                          - generic [ref=e1191]:
+                            - generic [ref=e1192]: Updated 15 Jun 2026
+                            - img [ref=e1193]
+                        - button "Rapid guarded 1781505766241 2 combinations - 1 report admin Updated 15 Jun 2026" [ref=e1196] [cursor=pointer]:
+                          - generic [ref=e1197]:
+                            - strong [ref=e1198]: Rapid guarded 1781505766241
+                            - generic [ref=e1199]: 2 combinations - 1 report
+                            - generic [ref=e1200]: admin
+                          - generic [ref=e1201]:
+                            - generic [ref=e1202]: Updated 15 Jun 2026
+                            - img [ref=e1203]
+                        - button "Responsive workspace 1781505750539 1 combination - 0 reports admin Updated 15 Jun 2026" [ref=e1206] [cursor=pointer]:
+                          - generic [ref=e1207]:
+                            - strong [ref=e1208]: Responsive workspace 1781505750539
+                            - generic [ref=e1209]: 1 combination - 0 reports
+                            - generic [ref=e1210]: admin
+                          - generic [ref=e1211]:
+                            - generic [ref=e1212]: Updated 15 Jun 2026
+                            - img [ref=e1213]
+                        - button "Workbench v2 report save 1781505131801 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e1216] [cursor=pointer]:
+                          - generic [ref=e1217]:
+                            - strong [ref=e1218]: Workbench v2 report save 1781505131801
+                            - generic [ref=e1219]: 1 combination - 1 report
+                            - generic [ref=e1220]: admin
+                          - generic [ref=e1221]:
+                            - generic [ref=e1222]: Updated 15 Jun 2026
+                            - img [ref=e1223]
+                        - button "Rapid guarded 1781502795611 2 combinations - 1 report admin Updated 15 Jun 2026" [ref=e1226] [cursor=pointer]:
+                          - generic [ref=e1227]:
+                            - strong [ref=e1228]: Rapid guarded 1781502795611
+                            - generic [ref=e1229]: 2 combinations - 1 report
+                            - generic [ref=e1230]: admin
+                          - generic [ref=e1231]:
+                            - generic [ref=e1232]: Updated 15 Jun 2026
+                            - img [ref=e1233]
+                        - button "Responsive workspace 1781502787051 1 combination - 0 reports admin Updated 15 Jun 2026" [ref=e1236] [cursor=pointer]:
+                          - generic [ref=e1237]:
+                            - strong [ref=e1238]: Responsive workspace 1781502787051
+                            - generic [ref=e1239]: 1 combination - 0 reports
+                            - generic [ref=e1240]: admin
+                          - generic [ref=e1241]:
+                            - generic [ref=e1242]: Updated 15 Jun 2026
+                            - img [ref=e1243]
+                        - button "Workbench v2 report save 1781502745669 1 combination - 1 report admin Updated 15 Jun 2026" [ref=e1246] [cursor=pointer]:
+                          - generic [ref=e1247]:
+                            - strong [ref=e1248]: Workbench v2 report save 1781502745669
+                            - generic [ref=e1249]: 1 combination - 1 report
+                            - generic [ref=e1250]: admin
+                          - generic [ref=e1251]:
+                            - generic [ref=e1252]: Updated 15 Jun 2026
+                            - img [ref=e1253]
+                        - button "Workbench v2 material editor 1781502712246 1 combination - 0 reports admin Updated 15 Jun 2026" [ref=e1256] [cursor=pointer]:
+                          - generic [ref=e1257]:
+                            - strong [ref=e1258]: Workbench v2 material editor 1781502712246
+                            - generic [ref=e1259]: 1 combination - 0 reports
+                            - generic [ref=e1260]: admin
+                          - generic [ref=e1261]:
+                            - generic [ref=e1262]: Updated 15 Jun 2026
+                            - img [ref=e1263]
+                        - button "Workbench v2 material editor 1781501569688 1 combination - 0 reports admin Updated 15 Jun 2026" [ref=e1266] [cursor=pointer]:
+                          - generic [ref=e1267]:
+                            - strong [ref=e1268]: Workbench v2 material editor 1781501569688
+                            - generic [ref=e1269]: 1 combination - 0 reports
+                            - generic [ref=e1270]: admin
+                          - generic [ref=e1271]:
+                            - generic [ref=e1272]: Updated 15 Jun 2026
+                            - img [ref=e1273]
+                        - button "Rapid guarded 1781274268566 2 combinations - 1 report admin Updated 12 Jun 2026" [ref=e1276] [cursor=pointer]:
+                          - generic [ref=e1277]:
+                            - strong [ref=e1278]: Rapid guarded 1781274268566
+                            - generic [ref=e1279]: 2 combinations - 1 report
+                            - generic [ref=e1280]: admin
+                          - generic [ref=e1281]:
+                            - generic [ref=e1282]: Updated 12 Jun 2026
+                            - img [ref=e1283]
+                        - button "Responsive workspace 1781274259805 1 combination - 0 reports admin Updated 12 Jun 2026" [ref=e1286] [cursor=pointer]:
+                          - generic [ref=e1287]:
+                            - strong [ref=e1288]: Responsive workspace 1781274259805
+                            - generic [ref=e1289]: 1 combination - 0 reports
+                            - generic [ref=e1290]: admin
+                          - generic [ref=e1291]:
+                            - generic [ref=e1292]: Updated 12 Jun 2026
+                            - img [ref=e1293]
+                        - button "Workbench v2 report save 1781274220134 1 combination - 1 report admin Updated 12 Jun 2026" [ref=e1296] [cursor=pointer]:
+                          - generic [ref=e1297]:
+                            - strong [ref=e1298]: Workbench v2 report save 1781274220134
+                            - generic [ref=e1299]: 1 combination - 1 report
+                            - generic [ref=e1300]: admin
+                          - generic [ref=e1301]:
+                            - generic [ref=e1302]: Updated 12 Jun 2026
+                            - img [ref=e1303]
+                        - button "Workbench v2 material editor 1781274187138 1 combination - 0 reports admin Updated 12 Jun 2026" [ref=e1306] [cursor=pointer]:
+                          - generic [ref=e1307]:
+                            - strong [ref=e1308]: Workbench v2 material editor 1781274187138
+                            - generic [ref=e1309]: 1 combination - 0 reports
+                            - generic [ref=e1310]: admin
+                          - generic [ref=e1311]:
+                            - generic [ref=e1312]: Updated 12 Jun 2026
+                            - img [ref=e1313]
+                        - button "Rapid guarded 1781274036642 2 combinations - 1 report admin Updated 12 Jun 2026" [ref=e1316] [cursor=pointer]:
+                          - generic [ref=e1317]:
+                            - strong [ref=e1318]: Rapid guarded 1781274036642
+                            - generic [ref=e1319]: 2 combinations - 1 report
+                            - generic [ref=e1320]: admin
+                          - generic [ref=e1321]:
+                            - generic [ref=e1322]: Updated 12 Jun 2026
+                            - img [ref=e1323]
+                        - button "Responsive workspace 1781274024104 1 combination - 0 reports admin Updated 12 Jun 2026" [ref=e1326] [cursor=pointer]:
+                          - generic [ref=e1327]:
+                            - strong [ref=e1328]: Responsive workspace 1781274024104
+                            - generic [ref=e1329]: 1 combination - 0 reports
+                            - generic [ref=e1330]: admin
+                          - generic [ref=e1331]:
+                            - generic [ref=e1332]: Updated 12 Jun 2026
+                            - img [ref=e1333]
+                        - button "Workbench v2 material editor 0 combinations - 0 reports admin Updated 12 Jun 2026" [ref=e1336] [cursor=pointer]:
+                          - generic [ref=e1337]:
+                            - strong [ref=e1338]: Workbench v2 material editor
+                            - generic [ref=e1339]: 0 combinations - 0 reports
+                            - generic [ref=e1340]: admin
+                          - generic [ref=e1341]:
+                            - generic [ref=e1342]: Updated 12 Jun 2026
+                            - img [ref=e1343]
+                        - button "Rapid guarded 1781273933804 2 combinations - 1 report admin Updated 12 Jun 2026" [ref=e1346] [cursor=pointer]:
+                          - generic [ref=e1347]:
+                            - strong [ref=e1348]: Rapid guarded 1781273933804
+                            - generic [ref=e1349]: 2 combinations - 1 report
+                            - generic [ref=e1350]: admin
+                          - generic [ref=e1351]:
+                            - generic [ref=e1352]: Updated 12 Jun 2026
+                            - img [ref=e1353]
+                        - button "Rapid guarded 1781273802682 1 combination - 0 reports admin Updated 12 Jun 2026" [ref=e1356] [cursor=pointer]:
+                          - generic [ref=e1357]:
+                            - strong [ref=e1358]: Rapid guarded 1781273802682
+                            - generic [ref=e1359]: 1 combination - 0 reports
+                            - generic [ref=e1360]: admin
+                          - generic [ref=e1361]:
+                            - generic [ref=e1362]: Updated 12 Jun 2026
+                            - img [ref=e1363]
+                        - button "Responsive workspace 1781273793663 1 combination - 0 reports admin Updated 12 Jun 2026" [ref=e1366] [cursor=pointer]:
+                          - generic [ref=e1367]:
+                            - strong [ref=e1368]: Responsive workspace 1781273793663
+                            - generic [ref=e1369]: 1 combination - 0 reports
+                            - generic [ref=e1370]: admin
+                          - generic [ref=e1371]:
+                            - generic [ref=e1372]: Updated 12 Jun 2026
+                            - img [ref=e1373]
+                        - button "Workbench v2 report save 1781273753581 1 combination - 1 report admin Updated 12 Jun 2026" [ref=e1376] [cursor=pointer]:
+                          - generic [ref=e1377]:
+                            - strong [ref=e1378]: Workbench v2 report save 1781273753581
+                            - generic [ref=e1379]: 1 combination - 1 report
+                            - generic [ref=e1380]: admin
+                          - generic [ref=e1381]:
+                            - generic [ref=e1382]: Updated 12 Jun 2026
+                            - img [ref=e1383]
+                        - button "Workbench v2 material editor 1 combination - 0 reports admin Updated 12 Jun 2026" [ref=e1386] [cursor=pointer]:
+                          - generic [ref=e1387]:
+                            - strong [ref=e1388]: Workbench v2 material editor
+                            - generic [ref=e1389]: 1 combination - 0 reports
+                            - generic [ref=e1390]: admin
+                          - generic [ref=e1391]:
+                            - generic [ref=e1392]: Updated 12 Jun 2026
+                            - img [ref=e1393]
+                        - button "Rapid guarded 1781273686992 2 combinations - 1 report admin Updated 12 Jun 2026" [ref=e1396] [cursor=pointer]:
+                          - generic [ref=e1397]:
+                            - strong [ref=e1398]: Rapid guarded 1781273686992
+                            - generic [ref=e1399]: 2 combinations - 1 report
+                            - generic [ref=e1400]: admin
+                          - generic [ref=e1401]:
+                            - generic [ref=e1402]: Updated 12 Jun 2026
+                            - img [ref=e1403]
+                        - button "Rapid guarded 1781273511229 2 combinations - 0 reports admin Updated 12 Jun 2026" [ref=e1406] [cursor=pointer]:
+                          - generic [ref=e1407]:
+                            - strong [ref=e1408]: Rapid guarded 1781273511229
+                            - generic [ref=e1409]: 2 combinations - 0 reports
+                            - generic [ref=e1410]: admin
+                          - generic [ref=e1411]:
+                            - generic [ref=e1412]: Updated 12 Jun 2026
+                            - img [ref=e1413]
+                        - button "Responsive workspace 1781272765676 1 combination - 0 reports admin Updated 12 Jun 2026" [ref=e1416] [cursor=pointer]:
+                          - generic [ref=e1417]:
+                            - strong [ref=e1418]: Responsive workspace 1781272765676
+                            - generic [ref=e1419]: 1 combination - 0 reports
+                            - generic [ref=e1420]: admin
+                          - generic [ref=e1421]:
+                            - generic [ref=e1422]: Updated 12 Jun 2026
+                            - img [ref=e1423]
+                        - button "Workbench v2 report save 1781272728723 1 combination - 1 report admin Updated 12 Jun 2026" [ref=e1426] [cursor=pointer]:
+                          - generic [ref=e1427]:
+                            - strong [ref=e1428]: Workbench v2 report save 1781272728723
+                            - generic [ref=e1429]: 1 combination - 1 report
+                            - generic [ref=e1430]: admin
+                          - generic [ref=e1431]:
+                            - generic [ref=e1432]: Updated 12 Jun 2026
+                            - img [ref=e1433]
+                        - button "Workbench v2 material editor 1 combination - 0 reports admin Updated 12 Jun 2026" [ref=e1436] [cursor=pointer]:
+                          - generic [ref=e1437]:
+                            - strong [ref=e1438]: Workbench v2 material editor
+                            - generic [ref=e1439]: 1 combination - 0 reports
+                            - generic [ref=e1440]: admin
+                          - generic [ref=e1441]:
+                            - generic [ref=e1442]: Updated 12 Jun 2026
+                            - img [ref=e1443]
+                        - button "Responsive workspace 1781272669467 1 combination - 0 reports admin Updated 12 Jun 2026" [ref=e1446] [cursor=pointer]:
+                          - generic [ref=e1447]:
+                            - strong [ref=e1448]: Responsive workspace 1781272669467
+                            - generic [ref=e1449]: 1 combination - 0 reports
+                            - generic [ref=e1450]: admin
+                          - generic [ref=e1451]:
+                            - generic [ref=e1452]: Updated 12 Jun 2026
+                            - img [ref=e1453]
+                        - button "Workbench v2 report save 1781271264074 1 combination - 1 report admin Updated 12 Jun 2026" [ref=e1456] [cursor=pointer]:
+                          - generic [ref=e1457]:
+                            - strong [ref=e1458]: Workbench v2 report save 1781271264074
+                            - generic [ref=e1459]: 1 combination - 1 report
+                            - generic [ref=e1460]: admin
+                          - generic [ref=e1461]:
+                            - generic [ref=e1462]: Updated 12 Jun 2026
+                            - img [ref=e1463]
+                        - button "Workbench v2 material editor 1 combination - 0 reports admin Updated 12 Jun 2026" [ref=e1466] [cursor=pointer]:
+                          - generic [ref=e1467]:
+                            - strong [ref=e1468]: Workbench v2 material editor
+                            - generic [ref=e1469]: 1 combination - 0 reports
+                            - generic [ref=e1470]: admin
+                          - generic [ref=e1471]:
+                            - generic [ref=e1472]: Updated 12 Jun 2026
+                            - img [ref=e1473]
+                        - button "UI QA Request 1781271143214 0 combinations - 0 reports admin Updated 12 Jun 2026" [ref=e1476] [cursor=pointer]:
+                          - generic [ref=e1477]:
+                            - strong [ref=e1478]: UI QA Request 1781271143214
+                            - generic [ref=e1479]: 0 combinations - 0 reports
+                            - generic [ref=e1480]: admin
+                          - generic [ref=e1481]:
+                            - generic [ref=e1482]: Updated 12 Jun 2026
+                            - img [ref=e1483]
+                        - button "Workbench v2 report save 1781270882511 1 combination - 1 report admin Updated 12 Jun 2026" [ref=e1486] [cursor=pointer]:
+                          - generic [ref=e1487]:
+                            - strong [ref=e1488]: Workbench v2 report save 1781270882511
+                            - generic [ref=e1489]: 1 combination - 1 report
+                            - generic [ref=e1490]: admin
+                          - generic [ref=e1491]:
+                            - generic [ref=e1492]: Updated 12 Jun 2026
+                            - img [ref=e1493]
+                        - button "Workbench v2 material editor 1 combination - 0 reports admin Updated 12 Jun 2026" [ref=e1496] [cursor=pointer]:
+                          - generic [ref=e1497]:
+                            - strong [ref=e1498]: Workbench v2 material editor
+                            - generic [ref=e1499]: 1 combination - 0 reports
+                            - generic [ref=e1500]: admin
+                          - generic [ref=e1501]:
+                            - generic [ref=e1502]: Updated 12 Jun 2026
+                            - img [ref=e1503]
+                        - button "Workbench v2 report save 1781270620042 1 combination - 1 report admin Updated 12 Jun 2026" [ref=e1506] [cursor=pointer]:
+                          - generic [ref=e1507]:
+                            - strong [ref=e1508]: Workbench v2 report save 1781270620042
+                            - generic [ref=e1509]: 1 combination - 1 report
+                            - generic [ref=e1510]: admin
+                          - generic [ref=e1511]:
+                            - generic [ref=e1512]: Updated 12 Jun 2026
+                            - img [ref=e1513]
+                        - button "Workbench v2 report save 1781270066695 1 combination - 1 report admin Updated 12 Jun 2026" [ref=e1516] [cursor=pointer]:
+                          - generic [ref=e1517]:
+                            - strong [ref=e1518]: Workbench v2 report save 1781270066695
+                            - generic [ref=e1519]: 1 combination - 1 report
+                            - generic [ref=e1520]: admin
+                          - generic [ref=e1521]:
+                            - generic [ref=e1522]: Updated 12 Jun 2026
+                            - img [ref=e1523]
+                        - button "Workbench v2 material editor 1 combination - 0 reports admin Updated 12 Jun 2026" [ref=e1526] [cursor=pointer]:
+                          - generic [ref=e1527]:
+                            - strong [ref=e1528]: Workbench v2 material editor
+                            - generic [ref=e1529]: 1 combination - 0 reports
+                            - generic [ref=e1530]: admin
+                          - generic [ref=e1531]:
+                            - generic [ref=e1532]: Updated 12 Jun 2026
+                            - img [ref=e1533]
+                        - button "Workbench v2 report save 1781269980331 1 combination - 1 report admin Updated 12 Jun 2026" [ref=e1536] [cursor=pointer]:
+                          - generic [ref=e1537]:
+                            - strong [ref=e1538]: Workbench v2 report save 1781269980331
+                            - generic [ref=e1539]: 1 combination - 1 report
+                            - generic [ref=e1540]: admin
+                          - generic [ref=e1541]:
+                            - generic [ref=e1542]: Updated 12 Jun 2026
+                            - img [ref=e1543]
+                        - button "Workbench v2 report save 1781268913079 1 combination - 1 report admin Updated 12 Jun 2026" [ref=e1546] [cursor=pointer]:
+                          - generic [ref=e1547]:
+                            - strong [ref=e1548]: Workbench v2 report save 1781268913079
+                            - generic [ref=e1549]: 1 combination - 1 report
+                            - generic [ref=e1550]: admin
+                          - generic [ref=e1551]:
+                            - generic [ref=e1552]: Updated 12 Jun 2026
+                            - img [ref=e1553]
+                        - button "Workbench v2 material editor 1 combination - 0 reports admin Updated 12 Jun 2026" [ref=e1556] [cursor=pointer]:
+                          - generic [ref=e1557]:
+                            - strong [ref=e1558]: Workbench v2 material editor
+                            - generic [ref=e1559]: 1 combination - 0 reports
+                            - generic [ref=e1560]: admin
+                          - generic [ref=e1561]:
+                            - generic [ref=e1562]: Updated 12 Jun 2026
+                            - img [ref=e1563]
+                        - button "Workbench v2 report save 1781268838524 1 combination - 1 report admin Updated 12 Jun 2026" [ref=e1566] [cursor=pointer]:
+                          - generic [ref=e1567]:
+                            - strong [ref=e1568]: Workbench v2 report save 1781268838524
+                            - generic [ref=e1569]: 1 combination - 1 report
+                            - generic [ref=e1570]: admin
+                          - generic [ref=e1571]:
+                            - generic [ref=e1572]: Updated 12 Jun 2026
+                            - img [ref=e1573]
+                        - button "Workbench v2 report save 1781268766060 1 combination - 1 report admin Updated 12 Jun 2026" [ref=e1576] [cursor=pointer]:
+                          - generic [ref=e1577]:
+                            - strong [ref=e1578]: Workbench v2 report save 1781268766060
+                            - generic [ref=e1579]: 1 combination - 1 report
+                            - generic [ref=e1580]: admin
+                          - generic [ref=e1581]:
+                            - generic [ref=e1582]: Updated 12 Jun 2026
+                            - img [ref=e1583]
+                        - button "Workbench v2 report save 1781268697311 1 combination - 1 report admin Updated 12 Jun 2026" [ref=e1586] [cursor=pointer]:
+                          - generic [ref=e1587]:
+                            - strong [ref=e1588]: Workbench v2 report save 1781268697311
+                            - generic [ref=e1589]: 1 combination - 1 report
+                            - generic [ref=e1590]: admin
+                          - generic [ref=e1591]:
+                            - generic [ref=e1592]: Updated 12 Jun 2026
+                            - img [ref=e1593]
+                        - button "Workbench v2 report save 1781268450221 1 combination - 1 report admin Updated 12 Jun 2026" [ref=e1596] [cursor=pointer]:
+                          - generic [ref=e1597]:
+                            - strong [ref=e1598]: Workbench v2 report save 1781268450221
+                            - generic [ref=e1599]: 1 combination - 1 report
+                            - generic [ref=e1600]: admin
+                          - generic [ref=e1601]:
+                            - generic [ref=e1602]: Updated 12 Jun 2026
+                            - img [ref=e1603]
+                        - button "Workbench v2 report save 1781268371967 1 combination - 0 reports admin Updated 12 Jun 2026" [ref=e1606] [cursor=pointer]:
+                          - generic [ref=e1607]:
+                            - strong [ref=e1608]: Workbench v2 report save 1781268371967
+                            - generic [ref=e1609]: 1 combination - 0 reports
+                            - generic [ref=e1610]: admin
+                          - generic [ref=e1611]:
+                            - generic [ref=e1612]: Updated 12 Jun 2026
+                            - img [ref=e1613]
+                        - button "Workbench v2 report save 1781267954782 1 combination - 1 report admin Updated 12 Jun 2026" [ref=e1616] [cursor=pointer]:
+                          - generic [ref=e1617]:
+                            - strong [ref=e1618]: Workbench v2 report save 1781267954782
+                            - generic [ref=e1619]: 1 combination - 1 report
+                            - generic [ref=e1620]: admin
+                          - generic [ref=e1621]:
+                            - generic [ref=e1622]: Updated 12 Jun 2026
+                            - img [ref=e1623]
+                        - button "Workbench v2 material editor 1 combination - 0 reports admin Updated 12 Jun 2026" [ref=e1626] [cursor=pointer]:
+                          - generic [ref=e1627]:
+                            - strong [ref=e1628]: Workbench v2 material editor
+                            - generic [ref=e1629]: 1 combination - 0 reports
+                            - generic [ref=e1630]: admin
+                          - generic [ref=e1631]:
+                            - generic [ref=e1632]: Updated 12 Jun 2026
+                            - img [ref=e1633]
+                        - button "Workbench v2 report save 1781267888885 1 combination - 1 report admin Updated 12 Jun 2026" [ref=e1636] [cursor=pointer]:
+                          - generic [ref=e1637]:
+                            - strong [ref=e1638]: Workbench v2 report save 1781267888885
+                            - generic [ref=e1639]: 1 combination - 1 report
+                            - generic [ref=e1640]: admin
+                          - generic [ref=e1641]:
+                            - generic [ref=e1642]: Updated 12 Jun 2026
+                            - img [ref=e1643]
+                        - button "Workbench v2 report save 1781267555368 1 combination - 1 report admin Updated 12 Jun 2026" [ref=e1646] [cursor=pointer]:
+                          - generic [ref=e1647]:
+                            - strong [ref=e1648]: Workbench v2 report save 1781267555368
+                            - generic [ref=e1649]: 1 combination - 1 report
+                            - generic [ref=e1650]: admin
+                          - generic [ref=e1651]:
+                            - generic [ref=e1652]: Updated 12 Jun 2026
+                            - img [ref=e1653]
+                        - button "Workbench v2 material editor 1 combination - 0 reports admin Updated 12 Jun 2026" [ref=e1656] [cursor=pointer]:
+                          - generic [ref=e1657]:
+                            - strong [ref=e1658]: Workbench v2 material editor
+                            - generic [ref=e1659]: 1 combination - 0 reports
+                            - generic [ref=e1660]: admin
+                          - generic [ref=e1661]:
+                            - generic [ref=e1662]: Updated 12 Jun 2026
+                            - img [ref=e1663]
+                        - button "Workbench v2 report save 1781267490522 1 combination - 1 report admin Updated 12 Jun 2026" [ref=e1666] [cursor=pointer]:
+                          - generic [ref=e1667]:
+                            - strong [ref=e1668]: Workbench v2 report save 1781267490522
+                            - generic [ref=e1669]: 1 combination - 1 report
+                            - generic [ref=e1670]: admin
+                          - generic [ref=e1671]:
+                            - generic [ref=e1672]: Updated 12 Jun 2026
+                            - img [ref=e1673]
+                        - button "Workbench v2 report save 1781267431535 1 combination - 1 report admin Updated 12 Jun 2026" [ref=e1676] [cursor=pointer]:
+                          - generic [ref=e1677]:
+                            - strong [ref=e1678]: Workbench v2 report save 1781267431535
+                            - generic [ref=e1679]: 1 combination - 1 report
+                            - generic [ref=e1680]: admin
+                          - generic [ref=e1681]:
+                            - generic [ref=e1682]: Updated 12 Jun 2026
+                            - img [ref=e1683]
+                        - button "Workbench v2 material editor 1 combination - 0 reports admin Updated 12 Jun 2026" [ref=e1686] [cursor=pointer]:
+                          - generic [ref=e1687]:
+                            - strong [ref=e1688]: Workbench v2 material editor
+                            - generic [ref=e1689]: 1 combination - 0 reports
+                            - generic [ref=e1690]: admin
+                          - generic [ref=e1691]:
+                            - generic [ref=e1692]: Updated 12 Jun 2026
+                            - img [ref=e1693]
+                        - button "Workbench v2 report save 1781267323688 1 combination - 0 reports admin Updated 12 Jun 2026" [ref=e1696] [cursor=pointer]:
+                          - generic [ref=e1697]:
+                            - strong [ref=e1698]: Workbench v2 report save 1781267323688
+                            - generic [ref=e1699]: 1 combination - 0 reports
+                            - generic [ref=e1700]: admin
+                          - generic [ref=e1701]:
+                            - generic [ref=e1702]: Updated 12 Jun 2026
+                            - img [ref=e1703]
+                        - button "Workbench v2 material editor 1 combination - 0 reports admin Updated 12 Jun 2026" [ref=e1706] [cursor=pointer]:
+                          - generic [ref=e1707]:
+                            - strong [ref=e1708]: Workbench v2 material editor
+                            - generic [ref=e1709]: 1 combination - 0 reports
+                            - generic [ref=e1710]: admin
+                          - generic [ref=e1711]:
+                            - generic [ref=e1712]: Updated 12 Jun 2026
+                            - img [ref=e1713]
+                        - button "Workbench v2 material editor 1 combination - 0 reports admin Updated 12 Jun 2026" [ref=e1716] [cursor=pointer]:
+                          - generic [ref=e1717]:
+                            - strong [ref=e1718]: Workbench v2 material editor
+                            - generic [ref=e1719]: 1 combination - 0 reports
+                            - generic [ref=e1720]: admin
+                          - generic [ref=e1721]:
+                            - generic [ref=e1722]: Updated 12 Jun 2026
+                            - img [ref=e1723]
+                        - button "Workbench v2 material editor 1 combination - 0 reports admin Updated 12 Jun 2026" [ref=e1726] [cursor=pointer]:
+                          - generic [ref=e1727]:
+                            - strong [ref=e1728]: Workbench v2 material editor
+                            - generic [ref=e1729]: 1 combination - 0 reports
+                            - generic [ref=e1730]: admin
+                          - generic [ref=e1731]:
+                            - generic [ref=e1732]: Updated 12 Jun 2026
+                            - img [ref=e1733]
+                        - button "Workbench v2 material editor 1 combination - 0 reports admin Updated 12 Jun 2026" [ref=e1736] [cursor=pointer]:
+                          - generic [ref=e1737]:
+                            - strong [ref=e1738]: Workbench v2 material editor
+                            - generic [ref=e1739]: 1 combination - 0 reports
+                            - generic [ref=e1740]: admin
+                          - generic [ref=e1741]:
+                            - generic [ref=e1742]: Updated 12 Jun 2026
+                            - img [ref=e1743]
+                        - button "Workbench v2 material editor 0 combinations - 0 reports admin Updated 12 Jun 2026" [ref=e1746] [cursor=pointer]:
+                          - generic [ref=e1747]:
+                            - strong [ref=e1748]: Workbench v2 material editor
+                            - generic [ref=e1749]: 0 combinations - 0 reports
+                            - generic [ref=e1750]: admin
+                          - generic [ref=e1751]:
+                            - generic [ref=e1752]: Updated 12 Jun 2026
+                            - img [ref=e1753]
+                  - region "Project required" [ref=e1755]:
+                    - generic [ref=e1756]: No project selected
+                    - strong [ref=e1757]: Select a project to save combinations and reports.
+        - region "Calculator workspace" [ref=e37]:
+          - generic [ref=e38]:
+            - generic [ref=e39]:
+              - heading "Setup" [level=2] [ref=e42]
+              - generic [ref=e43]:
+                - generic "Assembly mode" [ref=e44]:
+                  - button "Wall" [pressed] [ref=e45] [cursor=pointer]
+                  - button "Floor" [ref=e46] [cursor=pointer]
+                - generic [ref=e47]:
+                  - generic [ref=e48]:
+                    - checkbox "Rw Airborne" [checked] [ref=e49]
+                    - generic [ref=e50]: Rw
+                    - generic [ref=e51]: Airborne
+                  - generic [ref=e52]:
+                    - checkbox "R'w Airborne" [ref=e53]
+                    - generic [ref=e54]: R'w
+                    - generic [ref=e55]: Airborne
+                  - generic [ref=e56]:
+                    - checkbox "DnT,w Airborne" [ref=e57]
+                    - generic [ref=e58]: DnT,w
+                    - generic [ref=e59]: Airborne
+                  - generic [ref=e60]:
+                    - checkbox "STC Airborne" [ref=e61]
+                    - generic [ref=e62]: STC
+                    - generic [ref=e63]: Airborne
+                  - generic [ref=e64]:
+                    - checkbox "C Spectrum" [ref=e65]
+                    - generic [ref=e66]: C
+                    - generic [ref=e67]: Spectrum
+                  - generic [ref=e68]:
+                    - checkbox "Ctr Spectrum" [ref=e69]
+                    - generic [ref=e70]: Ctr
+                    - generic [ref=e71]: Spectrum
+            - generic [ref=e72]:
+              - generic [ref=e73]:
+                - heading "Layer stack" [level=2] [ref=e75]
+                - generic [ref=e76]:
+                  - button "Undo layer change" [disabled] [ref=e77]:
+                    - img [ref=e78]
+                  - button "Materials" [ref=e81] [cursor=pointer]:
+                    - img [ref=e82]
+                    - text: Materials
+                  - button "Add layer" [ref=e88] [cursor=pointer]:
+                    - img [ref=e89]
+                    - text: Add layer
+              - generic [ref=e90]:
+                - generic [ref=e91]:
+                  - generic [ref=e92]: Material
+                  - generic [ref=e93]: Role
+                  - generic [ref=e94]: Thickness
+                  - generic [ref=e95]: Actions
+                - article [ref=e96]:
+                  - generic [ref=e97]:
+                    - button "Drag layer 1" [ref=e98] [cursor=pointer]:
+                      - img [ref=e99]
+                    - button "Select layer 1" [ref=e106] [cursor=pointer]: "1"
+                  - generic [ref=e107]:
+                    - generic [ref=e108]:
+                      - generic [ref=e109]: Material
+                      - button "Gypsum Board 850 kg/m3 / finish" [ref=e110] [cursor=pointer]:
+                        - strong [ref=e111]: Gypsum Board
+                        - generic [ref=e112]: 850 kg/m3 / finish
+                    - generic [ref=e113]:
+                      - generic [ref=e114]: Role
+                      - combobox "Role" [ref=e115]:
+                        - option "Side A" [selected]
+                        - option "Cavity"
+                        - option "Core"
+                        - option "Support"
+                        - option "Side B"
+                    - generic [ref=e116]:
+                      - generic [ref=e117]: Thickness
+                      - generic [ref=e118]:
+                        - spinbutton "Thickness mm" [ref=e119]: "12.5"
+                        - emphasis [ref=e120]: mm
+                  - generic [ref=e121]:
+                    - button "Move layer up" [disabled] [ref=e122]:
+                      - img [ref=e123]
+                    - button "Move layer down" [ref=e125] [cursor=pointer]:
+                      - img [ref=e126]
+                    - button "Duplicate layer" [ref=e128] [cursor=pointer]:
+                      - img [ref=e129]
+                    - button "Remove layer" [ref=e132] [cursor=pointer]:
+                      - img [ref=e133]
+                - article [ref=e136]:
+                  - generic [ref=e137]:
+                    - button "Drag layer 2" [ref=e138] [cursor=pointer]:
+                      - img [ref=e139]
+                    - button "Select layer 2" [ref=e146] [cursor=pointer]: "2"
+                  - generic [ref=e147]:
+                    - generic [ref=e148]:
+                      - generic [ref=e149]: Material
+                      - button "Rock Wool 45 kg/m3 / insulation" [ref=e150] [cursor=pointer]:
+                        - strong [ref=e151]: Rock Wool
+                        - generic [ref=e152]: 45 kg/m3 / insulation
+                    - generic [ref=e153]:
+                      - generic [ref=e154]: Role
+                      - combobox "Role" [ref=e155]:
+                        - option "Side A"
+                        - option "Cavity" [selected]
+                        - option "Core"
+                        - option "Support"
+                        - option "Side B"
+                    - generic [ref=e156]:
+                      - generic [ref=e157]: Thickness
+                      - generic [ref=e158]:
+                        - spinbutton "Thickness mm" [ref=e159]: "50"
+                        - emphasis [ref=e160]: mm
+                  - generic [ref=e161]:
+                    - button "Move layer up" [ref=e162] [cursor=pointer]:
+                      - img [ref=e163]
+                    - button "Move layer down" [ref=e165] [cursor=pointer]:
+                      - img [ref=e166]
+                    - button "Duplicate layer" [ref=e168] [cursor=pointer]:
+                      - img [ref=e169]
+                    - button "Remove layer" [ref=e172] [cursor=pointer]:
+                      - img [ref=e173]
+                - article [ref=e176]:
+                  - generic [ref=e177]:
+                    - button "Drag layer 3" [ref=e178] [cursor=pointer]:
+                      - img [ref=e179]
+                    - button "Select layer 3" [ref=e186] [cursor=pointer]: "3"
+                  - generic [ref=e187]:
+                    - generic [ref=e188]:
+                      - generic [ref=e189]: Material
+                      - button "Concrete 2400 kg/m3 / mass" [ref=e190] [cursor=pointer]:
+                        - strong [ref=e191]: Concrete
+                        - generic [ref=e192]: 2400 kg/m3 / mass
+                    - generic [ref=e193]:
+                      - generic [ref=e194]: Role
+                      - combobox "Role" [ref=e195]:
+                        - option "Side A"
+                        - option "Cavity"
+                        - option "Core"
+                        - option "Support"
+                        - option "Side B" [selected]
+                    - generic [ref=e196]:
+                      - generic [ref=e197]: Thickness
+                      - generic [ref=e198]:
+                        - spinbutton "Thickness mm" [ref=e199]: "100"
+                        - emphasis [ref=e200]: mm
+                  - generic [ref=e201]:
+                    - button "Move layer up" [ref=e202] [cursor=pointer]:
+                      - img [ref=e203]
+                    - button "Move layer down" [disabled] [ref=e205]:
+                      - img [ref=e206]
+                    - button "Duplicate layer" [ref=e208] [cursor=pointer]:
+                      - img [ref=e209]
+                    - button "Remove layer" [ref=e212] [cursor=pointer]:
+                      - img [ref=e213]
+            - generic [ref=e216]:
+              - generic [ref=e217]:
+                - generic [ref=e218]:
+                  - generic [ref=e219]: Wall section
+                  - heading "Wall construction preview" [level=3] [ref=e220]
+                - generic [ref=e221]:
+                  - generic [ref=e222]: 3 layers
+                  - generic [ref=e223]: /162.5 mm
+              - generic [ref=e224]:
+                - figure "wall construction section" [ref=e225]:
+                  - img [ref=e226]:
+                    - generic [ref=e229]: Side A
+                    - generic [ref=e230]: Side B
+                    - generic [ref=e238]: "1"
+                    - generic [ref=e252]: "2"
+                    - generic [ref=e264]: "3"
+                    - generic [ref=e265]: 162.5 mm
+                - generic "Technical layer schedule" [ref=e266]:
+                  - generic [ref=e267]:
+                    - generic [ref=e268]: Technical layer schedule
+                    - strong [ref=e269]: "Selected: Gypsum Board"
+                  - list [ref=e270]:
+                    - listitem [ref=e271]:
+                      - generic [ref=e272]: "1"
+                      - generic [ref=e273]:
+                        - strong [ref=e274]: Gypsum Board
+                        - generic [ref=e275]: Side A
+                      - generic [ref=e276]: 12.5 mm
+                    - listitem [ref=e277]:
+                      - generic [ref=e278]: "2"
+                      - generic [ref=e279]:
+                        - strong [ref=e280]: Rock Wool
+                        - generic [ref=e281]: Cavity
+                      - generic [ref=e282]: 50 mm
+                    - listitem [ref=e283]:
+                      - generic [ref=e284]: "3"
+                      - generic [ref=e285]:
+                        - strong [ref=e286]: Concrete
+                        - generic [ref=e287]: Side B
+                      - generic [ref=e288]: 100 mm
+          - complementary "Calculation review" [ref=e289]:
+            - generic [ref=e290]:
+              - generic [ref=e291]: Current result
+              - strong [ref=e292]: 57 dB
+              - paragraph [ref=e293]: "Rw: Calculated"
+            - generic [ref=e294]:
+              - generic [ref=e295]:
+                - heading "Outputs" [level=2] [ref=e296]
+                - generic [ref=e297]: "1"
+              - generic [ref=e299]:
+                - generic [ref=e300]:
+                  - strong [ref=e301]: Rw
+                  - generic [ref=e302]: Calculated
+                - emphasis [ref=e303]: 57 dB
+            - generic [ref=e304]:
+              - generic [ref=e305]:
+                - heading "Assistant preview" [level=2] [ref=e306]
+                - button "Run" [ref=e307] [cursor=pointer]:
+                  - img [ref=e308]
+                  - text: Run
+              - generic [ref=e311]:
+                - generic [ref=e312]:
+                  - generic [ref=e313]: Stack command
+                  - textbox "Stack command" [ref=e314]:
+                    - /placeholder: Ekrandaki katmanların kalınlıklarını mantıklı gir
+                - button "Run" [disabled] [ref=e316]:
+                  - img [ref=e317]
+                  - text: Run
+            - article [ref=e328]:
+              - generic [ref=e329]:
+                - generic [ref=e330]:
+                  - generic [ref=e331]: Airborne spectrum
+                  - heading "Airborne response curve" [level=3] [ref=e332]
+                - generic [ref=e333]:
+                  - generic [ref=e334]: Dynamic topology
+                  - generic [ref=e335]: 63..4000 Hz
+                  - generic [ref=e336]: Higher is better
+              - generic "Frequency bands" [ref=e337]:
+                - generic [ref=e338]: "Low: 63-250 Hz"
+                - generic [ref=e339]: "Speech: 500-1k Hz"
+                - generic [ref=e340]: "High: 2k-4k Hz"
+              - paragraph [ref=e341]: Curve returned by the dynamic calculator for the active layer topology.
+              - img "Airborne response curve, Higher is better" [ref=e342]:
+                - application [ref=e345]:
+                  - generic [ref=e383]:
+                    - generic [ref=e384]:
+                      - generic [ref=e386]: "63"
+                      - generic [ref=e388]: "100"
+                      - generic [ref=e390]: "160"
+                      - generic [ref=e392]: "250"
+                      - generic [ref=e394]: "400"
+                      - generic [ref=e396]: "630"
+                      - generic [ref=e398]: 1k
+                      - generic [ref=e400]: 1.60k
+                      - generic [ref=e402]: 2.5k
+                      - generic [ref=e404]: 4k
+                    - generic [ref=e405]:
+                      - generic [ref=e407]: "25"
+                      - generic [ref=e409]: "40"
+                      - generic [ref=e411]: "55"
+                      - generic [ref=e413]: "70"
+                      - generic [ref=e415]: "80"
+                    - generic [ref=e416]: Level (dB)
+            - generic [ref=e320]:
+              - heading "Report handoff" [level=2] [ref=e322]
+              - generic [ref=e417]:
+                - button "Choose project" [ref=e418] [cursor=pointer]:
+                  - img [ref=e419]
+                  - text: Choose project
+                - button "Save as template" [ref=e423] [cursor=pointer]:
+                  - img [ref=e424]
+                  - text: Save as template
+                - button "Open report" [ref=e426] [cursor=pointer]:
+                  - img [ref=e427]
+                  - text: Open report
+                  - img [ref=e430]
+  - button "Open Next.js Dev Tools" [ref=e437] [cursor=pointer]:
+    - img [ref=e438]
+  - alert [ref=e441]
+  - region "Notifications alt+T"
+  - generic [ref=e442]: "25"

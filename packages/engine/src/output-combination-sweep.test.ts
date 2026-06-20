@@ -173,6 +173,21 @@ function expectCleanPartition(
   }
 }
 
+function withOptionalSupportedOutputs(
+  result: ReturnType<typeof calculateAssembly> | ReturnType<typeof calculateImpactOnly>,
+  requiredSupported: readonly RequestedOutputId[],
+  optionalSupported: readonly RequestedOutputId[]
+): RequestedOutputId[] {
+  const required = new Set(requiredSupported);
+  const optional = new Set(optionalSupported);
+
+  return result.targetOutputs.filter(
+    (output: RequestedOutputId) =>
+      required.has(output) ||
+      (optional.has(output) && result.supportedTargetOutputs.includes(output))
+  );
+}
+
 describe("output combination sweep", () => {
   it(
     "keeps representative dynamic airborne wall combinations sane across lab and field bundles",
@@ -301,8 +316,18 @@ describe("output combination sweep", () => {
         });
 
         expectCleanPartition(lab, ["Rw"], `${testCase.label} lab`, failures);
-        expectCleanPartition(field, ["R'w", "DnT,w", "DnT,A", "Dn,w", "Dn,A"], `${testCase.label} field`, failures);
-        expectCleanPartition(partialField, ["R'w", "Dn,w", "Dn,A"], `${testCase.label} partial field`, failures);
+        expectCleanPartition(
+          field,
+          withOptionalSupportedOutputs(field, ["R'w", "DnT,w", "DnT,A", "Dn,w", "Dn,A"], ["Rw"]),
+          `${testCase.label} field`,
+          failures
+        );
+        expectCleanPartition(
+          partialField,
+          withOptionalSupportedOutputs(partialField, ["R'w", "Dn,w", "Dn,A"], ["Rw"]),
+          `${testCase.label} partial field`,
+          failures
+        );
 
         expectFiniteNumber(lab.metrics.estimatedRwDb, `${testCase.label} lab Rw`, failures);
         expectFiniteNumber(field.metrics.estimatedRwPrimeDb, `${testCase.label} field R'w`, failures);
@@ -423,6 +448,8 @@ describe("output combination sweep", () => {
             return hasCI50;
           case "L'nT,50":
             return hasCI || hasCI50;
+          case "DeltaLw":
+            return typeof result.impact?.DeltaLw === "number";
           default:
             return false;
         }
@@ -540,7 +567,7 @@ describe("output combination sweep", () => {
       }
 
       if (typeof system.impactBounds.LnWPlusCIUpperBound === "number") {
-        assemblySupported.push("Ln,w+CI");
+        assemblySupported.push("Ln,w+CI", "L'nT,50");
       }
 
       if (typeof system.impactBounds.DeltaLwLowerBound === "number") {

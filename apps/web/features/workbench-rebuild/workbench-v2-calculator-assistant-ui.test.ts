@@ -2,6 +2,17 @@ import { readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
 
+import {
+  buildCalculatorAssistantSourceReviewSnapshot,
+  classifyCalculatorAssistantCommandRouting,
+  isCalculatorAssistantSourceReviewCommand,
+  resolveCalculatorAssistantSourceReviewOutputId
+} from "./calculator-workbench";
+import {
+  WORKBENCH_V2_DEFAULT_CONTEXT,
+  type WorkbenchV2ProjectSnapshot
+} from "./workbench-v2-project-snapshot";
+
 describe("workbench v2 calculator assistant ui", () => {
   const source = readFileSync(new URL("./calculator-workbench.tsx", import.meta.url), "utf8");
 
@@ -52,6 +63,155 @@ describe("workbench v2 calculator assistant ui", () => {
     expect(source).toContain("Preview");
     expect(source).toContain("Preview all");
     expect(source).toContain("Use");
+  });
+
+  it("routes source-review wording away from calculator draft mutation", () => {
+    expect(isCalculatorAssistantSourceReviewCommand({
+      instruction: "Ekrandaki stacke bak Rw fazla mı az mı? İnternetten araştır.",
+      selectedOutputs: ["Rw"]
+    })).toBe(true);
+    expect(isCalculatorAssistantSourceReviewCommand({
+      instruction: "Şu değer makul mu kaynaklarla karşılaştır.",
+      selectedOutputs: ["Rw"]
+    })).toBe(true);
+    expect(isCalculatorAssistantSourceReviewCommand({
+      instruction: "gypsium, rock wool, gypsum mantıklı kalınlıklarla diz",
+      selectedOutputs: ["Rw"]
+    })).toBe(false);
+    expect(isCalculatorAssistantSourceReviewCommand({
+      instruction: "ekrandaki katmanların kalınlıklarını internetten araştırıp doldur",
+      selectedOutputs: ["Rw"]
+    })).toBe(false);
+    expect(isCalculatorAssistantSourceReviewCommand({
+      instruction: "db garip geldi netten bak abi daha makul değer varsa bana sor",
+      selectedOutputs: ["Rw"]
+    })).toBe(true);
+    expect(isCalculatorAssistantSourceReviewCommand({
+      instruction: "Daha makul değer varsa bana sor, onaylarsam rapora uygula",
+      selectedOutputs: ["Rw"]
+    })).toBe(true);
+  });
+
+  it("blocks direct calculator value override wording before layer mutation parsing", () => {
+    expect(classifyCalculatorAssistantCommandRouting({
+      instruction: "Rw 52 yap",
+      selectedOutputs: ["Rw"]
+    })).toMatchObject({
+      reason: "direct_calculator_value_override",
+      status: "clarify"
+    });
+    expect(classifyCalculatorAssistantCommandRouting({
+      instruction: "Rw 52 olmalı",
+      selectedOutputs: ["Rw"]
+    })).toMatchObject({
+      reason: "direct_calculator_value_override",
+      status: "clarify"
+    });
+    expect(classifyCalculatorAssistantCommandRouting({
+      instruction: "Rw 52 olmalı mı",
+      selectedOutputs: ["Rw"]
+    })).toMatchObject({
+      reason: "current_value_review",
+      status: "source_review"
+    });
+    expect(classifyCalculatorAssistantCommandRouting({
+      instruction: "sonucu 52 dB yap",
+      selectedOutputs: ["Rw"]
+    })).toMatchObject({
+      reason: "direct_calculator_value_override",
+      status: "clarify"
+    });
+    expect(classifyCalculatorAssistantCommandRouting({
+      instruction: "Rw doğru cevap 52 olmalı, editleyim mi diye sor",
+      selectedOutputs: ["Rw"]
+    })).toMatchObject({
+      reason: "report_override_confirmation",
+      status: "report_override_request"
+    });
+    expect(classifyCalculatorAssistantCommandRouting({
+      instruction: "gypsium, rock wool, gypsum mantıklı kalınlıklarla diz",
+      selectedOutputs: ["Rw"]
+    })).toMatchObject({
+      status: "layer_mutation"
+    });
+  });
+
+  it("selects the explicitly requested source-review output before falling back", () => {
+    expect(resolveCalculatorAssistantSourceReviewOutputId({
+      availableOutputs: ["Rw", "STC"],
+      fallbackOutput: "Rw",
+      instruction: "STC yüksek mi kaynaklarla araştır"
+    })).toBe("STC");
+    expect(resolveCalculatorAssistantSourceReviewOutputId({
+      availableOutputs: ["Rw", "STC"],
+      fallbackOutput: "Rw",
+      instruction: "Bu değer makul mü?"
+    })).toBe("Rw");
+  });
+
+  it("adds explicitly requested review outputs to temporary preview snapshots only", () => {
+    const snapshot: WorkbenchV2ProjectSnapshot = {
+      context: WORKBENCH_V2_DEFAULT_CONTEXT,
+      customMaterials: [],
+      id: "review-snapshot",
+      layers: [
+        { id: "layer-1", materialId: "gypsum_board", role: "side_a", thicknessMm: "12.5" }
+      ],
+      materialVisualOverrides: [],
+      mode: "wall",
+      name: "Review snapshot",
+      savedAtIso: "2026-06-19T00:00:00.000Z",
+      schemaId: "dynecho.workbench-v2.snapshot.v1",
+      selectedLayerId: "layer-1",
+      selectedOutputs: ["Rw"]
+    };
+
+    const next = buildCalculatorAssistantSourceReviewSnapshot({
+      outputId: "STC",
+      snapshot
+    });
+    const alreadySelected = buildCalculatorAssistantSourceReviewSnapshot({
+      outputId: "Rw",
+      snapshot
+    });
+
+    expect(next).not.toBe(snapshot);
+    expect(next.selectedOutputs).toEqual(["Rw", "STC"]);
+    expect(snapshot.selectedOutputs).toEqual(["Rw"]);
+    expect(alreadySelected).toBe(snapshot);
+  });
+
+  it("wires current calculator source review through the plausibility route and typed result card", () => {
+    expect(source).toContain("buildReportAssistantCurrentCalculatorReviewPacketFromCalculatorPreview");
+    expect(source).toContain("buildCalculatorAssistantSourceReviewSnapshot");
+    expect(source).toContain('fetch("/api/report-assistant/plausibility"');
+    expect(source).toContain("currentCalculatorReviewPacket");
+    expect(source).toContain("suggestPatch: false");
+    expect(source).toContain("isCalculatorAssistantSourceReviewCommand");
+    expect(source).toContain("reviewCurrentCalculatorWithAssistantSource");
+    expect(source).toContain("AssistantResultCard");
+    expect(source).toContain("Source review running");
+    expect(source).toContain("Calculator output was left unchanged.");
+  });
+
+  it("keeps source-review report edits separate from calculator mutation and behind confirmation", () => {
+    expect(source).toContain("parseCalculatorAssistantSourceReviewReview");
+    expect(source).toContain("buildReportAssistantSourceBackedReportOverridePatch");
+    expect(source).toContain("validateReportAssistantPatch");
+    expect(source).toContain("applyValidatedReportAssistantPatch");
+    expect(source).toContain("loadSelectedCalculatorAssistantReportOverrideTarget");
+    expect(source).toContain("prepareCalculatorAssistantReportOverrideProposal");
+    expect(source).toContain("applyPreparedCalculatorAssistantReportOverrideProposal");
+    expect(source).toContain("storeSimpleWorkbenchProposalPreviewCustomizations");
+    expect(source).toContain("Open or create a report first");
+    expect(source).toContain("Source-backed review required");
+    expect(source).toContain("Context-only reviews stay advisory.");
+    expect(source).toContain("Prepare report edit");
+    expect(source).toContain("Apply to report draft");
+    expect(source).toContain("Calculator values and layer stack will stay unchanged.");
+    expect(source).toContain("Calculator values stay unchanged.");
+    expect(source).toContain("setCalculatorAssistantReportOverrideProposalState((current) => (current.status === \"idle\" ? current : { status: \"idle\" }))");
+    expect(source).not.toContain("Rw 41 yanlış, 52 yapıyorum");
   });
 
   it("lets assistant context commands update calculator inputs before preview", () => {

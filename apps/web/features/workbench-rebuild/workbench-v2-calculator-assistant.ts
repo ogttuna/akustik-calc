@@ -25,6 +25,7 @@ import {
   type ReportAssistantLayerStackDraftPhysicalInputKey,
   type ReportAssistantLayerStackDraftValidation
 } from "../workbench/report-assistant-layer-stack-draft";
+import { typicalWorkbenchV2AssistantThicknessMmForLayer } from "./workbench-v2-assistant-layer-stack-command";
 
 export type WorkbenchV2CalculatorAssistantToolName =
   | "preview_layer_stack_draft"
@@ -191,7 +192,7 @@ const DESCRIBED_LAYER_MATERIAL_ALIASES: readonly {
     materialId: "acoustic_gypsum_board"
   },
   {
-    aliases: ["gypsum board", "gypsum", "plasterboard", "drywall", "alcipan", "gkb"],
+    aliases: ["gypsum board", "gypsium", "gypsum", "plasterboard", "drywall", "alcipan", "gkb"],
     materialId: "gypsum_board"
   },
   {
@@ -751,7 +752,20 @@ function normalizeDescribedText(value: string): string {
 
 function containsNormalizedAlias(haystack: string, alias: string): boolean {
   const normalizedAlias = normalizeDescribedText(alias);
-  return normalizedAlias.length > 0 && ` ${haystack} `.includes(` ${normalizedAlias} `);
+  if (!normalizedAlias.length) {
+    return false;
+  }
+
+  if (` ${haystack} `.includes(` ${normalizedAlias} `)) {
+    return true;
+  }
+
+  if (normalizedAlias.includes(" ")) {
+    return false;
+  }
+
+  const suffixPattern = new RegExp(`\\b${normalizedAlias}(?:lar|ler|lari|leri|i|u|a|e|n|da|de|dan|den|tan|ten)?\\b`, "u");
+  return suffixPattern.test(haystack);
 }
 
 function readDescription(value: unknown): string | null {
@@ -821,6 +835,7 @@ function describedNeedsInputResult(input: {
   mode: WorkbenchV2StudyMode;
   selectedOutputs: readonly RequestedOutputId[];
   tasks: readonly WorkbenchV2CalculatorAssistantTask[];
+  warnings?: readonly string[];
 }): WorkbenchV2CalculatorAssistantPreviewResult {
   const rows = describedPendingRows({
     detail: "Pending until the described layer configuration is complete.",
@@ -843,7 +858,7 @@ function describedNeedsInputResult(input: {
         parser: input.mode === "floor"
           ? "deterministic_floor_layer_description_v1"
           : "deterministic_wall_layer_description_v1",
-        warnings: []
+        warnings: [...(input.warnings ?? [])]
       },
       ...(input.layerStackDraft ? { layerStackDraft: input.layerStackDraft } : {}),
       outputRows: rows,
@@ -905,21 +920,63 @@ function describedUnsupportedResult(input: {
   };
 }
 
-function splitDescribedLayerSegments(description: string): string[] {
+function wantsDescribedAssumedInputs(description: string): boolean {
+  const normalized = normalizeDescribedText(description);
+  const mentionsThickness = /\b(?:kalinli(?:k|g)\w*|thickness(?:es)?)\b/u.test(normalized);
+  const mentionsDraftInputs = /\b(?:input|inputlar|inputlari|inputs|girdi|girdiler|girdileri)\b/u.test(normalized);
+  const mentionsReasonableDefaults = /\b(?:default|draft|engineering|fill|infer|makul|mantikli|reasonable|sensible|tipik|typical|uygun|varsayilan)\b/u
+    .test(normalized);
+
+  return (
+    mentionsReasonableDefaults &&
+    (mentionsThickness || mentionsDraftInputs)
+  ) || (
+    /\b(?:eksik|missing)\b/u.test(normalized) &&
+    (mentionsThickness || mentionsDraftInputs)
+  ) || (
+    (mentionsThickness || mentionsDraftInputs) &&
+    /\b(?:doldur|fill|gir|girelim|girin|set|tamamla)\b/u.test(normalized)
+  );
+}
+
+function splitDescribedLayerSegments(
+  description: string,
+  options?: {
+    allowMaterialOnlySegments?: boolean;
+    aliasEntries?: readonly {
+      alias: string;
+      material: MaterialDefinition;
+    }[];
+  }
+): string[] {
   return description
     .replace(/\bmm\s*,\s*(?=\d)/giu, "mm + ")
     .replace(/([^\d]),\s*(?=\d+(?:[.,]\d+)?\s*(?:mm|millimeters?|millimetres?|milimetre|milimeter)\b)/giu, "$1 + ")
-    .replace(/\b(?:and|ve)\b/giu, "+")
+    .replace(/\b(?:araya|arasina|arasına|ortaya)\b/giu, "\n")
+    .replace(/\b(?:and|then|sonra|ve)\b/giu, "+")
     .split(/[+;\n]+/u)
     .map((segment) => segment.trim())
-    .filter((segment) => DESCRIBED_LAYER_THICKNESS_PATTERN.test(segment));
+    .filter((segment) => {
+      if (DESCRIBED_LAYER_THICKNESS_PATTERN.test(segment)) {
+        return true;
+      }
+
+      if (!options?.allowMaterialOnlySegments || !options.aliasEntries) {
+        return false;
+      }
+
+      const normalized = normalizeDescribedText(cleanMaterialPhrase(segment, ""));
+      return options.aliasEntries.some((entry) => containsNormalizedAlias(normalized, entry.alias));
+    });
 }
 
 function cleanMaterialPhrase(segment: string, thicknessText: string): string {
-  return segment
-    .replace(thicknessText, " ")
+  const withoutThickness = thicknessText ? segment.replace(thicknessText, " ") : segment;
+
+  return withoutThickness
     .replace(/^\s*\d+\s*x\s*/iu, " ")
     .replace(/\b(?:calculate|calculator|configuration|config|estimate|for|from|hesapla|hesap|icin|ile|katman|layer|layers|stack|wall|duvar|floor|ceiling|slab|doseme|tavan|thick|kalin|kalinlikta|kalinliginda)\b/giu, " ")
+    .replace(/\b(?:aynı|ayni|bakalim|bakalım|bi|bir|daha|en|farketmez|girdi|girdileri|hangisi|input|inputlari|inputları|koy|makul|same|sec|seç|uygunu)\b/giu, " ")
     .replace(/\b(?:rw|stc|ctr|dnt|dn|ln|iic|aiic)\b/giu, " ")
     .replace(/^\s*\d+\s*x\s*/iu, " ")
     .replace(/\s+/gu, " ")
@@ -1091,17 +1148,20 @@ function describedDraftIdentity(input: {
 }
 
 function buildDescribedLayerStackDraft(input: {
+  assumeWallPhysicalInputs?: boolean;
   description: string;
   floorImpactDraft?: ReportAssistantLayerStackDraft["floorImpactDraft"];
   layers: readonly ReportAssistantLayerStackDraftLayer[];
   mode: WorkbenchV2StudyMode;
   selectedOutputs: readonly RequestedOutputId[];
+  warnings?: readonly string[];
 }): ReportAssistantLayerStackDraft {
   const identity = describedDraftIdentity({
     description: input.description,
     mode: input.mode,
     selectedOutputs: input.selectedOutputs
   });
+  const hasWallCavity = input.mode === "wall" && input.layers.some((layer) => layer.role === "cavity");
 
   return {
     assumptions: input.mode === "wall" && input.layers.length > 0
@@ -1125,11 +1185,17 @@ function buildDescribedLayerStackDraft(input: {
       ? {
           wallTopologyDraft: {
             leafMapping: input.layers.length > 0 ? "inferred" : "missing",
-            topology: input.layers.length > 0 ? "single_leaf" : "unknown"
+            ...(hasWallCavity && input.assumeWallPhysicalInputs
+              ? {
+                  supportSpacingMm: 600,
+                  supportTopology: "independent_frames" as const
+                }
+              : {}),
+            topology: input.layers.length > 0 ? hasWallCavity ? "double_leaf_framed" : "single_leaf" : "unknown"
           } as const
         }
       : {}),
-    warnings: []
+    warnings: [...(input.warnings ?? [])]
   };
 }
 
@@ -1141,16 +1207,22 @@ function parseDescribedWallLayers(input: {
   errors: readonly string[];
   layers: WorkbenchV2DraftLayer[];
   parsedLayers: NonNullable<WorkbenchV2CalculatorAssistantPreview["describedConfiguration"]>["layers"];
+  warnings: readonly string[];
 } {
-  const segments = splitDescribedLayerSegments(input.description);
   const aliasEntries = buildMaterialAliasEntries(input.materials);
+  const assumeMissingThicknesses = wantsDescribedAssumedInputs(input.description);
+  const segments = splitDescribedLayerSegments(input.description, {
+    aliasEntries,
+    allowMaterialOnlySegments: assumeMissingThicknesses
+  });
   const errors: string[] = [];
   const draftSeeds: ReportAssistantLayerStackDraftLayer[] = [];
   const parsed: {
+    assumedThickness: boolean;
     material: MaterialDefinition;
     materialPhrase: string;
     originalPhrase: string;
-    thicknessMm: number;
+    thicknessMm?: number;
   }[] = [];
 
   if (!segments.length) {
@@ -1158,7 +1230,8 @@ function parseDescribedWallLayers(input: {
       draftLayers: [],
       errors: ["Describe each layer with a positive thickness in mm, for example: 12.5 mm gypsum board + 50 mm rockwool + 100 mm concrete."],
       layers: [],
-      parsedLayers: []
+      parsedLayers: [],
+      warnings: []
     };
   }
 
@@ -1171,7 +1244,7 @@ function parseDescribedWallLayers(input: {
         thicknessIndex: thicknessMatch.index
       })
       : { count: 1 };
-    const materialPhrase = thicknessMatch ? cleanMaterialPhrase(segment, thicknessMatch[0]) : "";
+    const materialPhrase = cleanMaterialPhrase(segment, thicknessMatch?.[0] ?? "");
     const material = materialPhrase ? matchDescribedMaterial({ aliasEntries, materialPhrase }) : null;
 
     draftSeeds.push({
@@ -1188,8 +1261,10 @@ function parseDescribedWallLayers(input: {
     });
 
     if (!thicknessMm) {
-      errors.push(`Layer ${index + 1} needs a positive thickness in mm.`);
-      continue;
+      if (!assumeMissingThicknesses) {
+        errors.push(`Layer ${index + 1} needs a positive thickness in mm.`);
+        continue;
+      }
     }
 
     if (repeat.error) {
@@ -1204,10 +1279,11 @@ function parseDescribedWallLayers(input: {
 
     for (let repeatIndex = 0; repeatIndex < repeat.count; repeatIndex += 1) {
       parsed.push({
+        assumedThickness: !thicknessMm,
         material,
         materialPhrase,
         originalPhrase: segment,
-        thicknessMm
+        ...(thicknessMm ? { thicknessMm } : {})
       });
     }
   }
@@ -1217,22 +1293,43 @@ function parseDescribedWallLayers(input: {
       draftLayers: draftSeeds,
       errors,
       layers: [],
-      parsedLayers: []
+      parsedLayers: [],
+      warnings: []
     };
   }
 
+  const roles = parsed.map((layer, index) =>
+    roleForDescribedWallLayer({
+      index,
+      parsed
+    })
+  );
+  const resolved = parsed.map((layer, index) => {
+    const role = roles[index] ?? "core";
+    const thicknessMm = layer.thicknessMm ?? typicalWorkbenchV2AssistantThicknessMmForLayer({
+      material: layer.material,
+      mode: "wall",
+      role
+    });
+
+    return {
+      ...layer,
+      role,
+      thicknessMm
+    };
+  });
+  const warnings = resolved.some((layer) => layer.assumedThickness)
+    ? ["Assistant filled missing layer thicknesses with engineering-default draft values; verify product/source data before relying on report values."]
+    : [];
   const layers = parsed.map((layer, index) => ({
     id: `assistant-described-layer-${index + 1}`,
     materialId: layer.material.id,
-    role: roleForDescribedWallLayer({
-      index,
-      parsed
-    }),
-    thicknessMm: String(layer.thicknessMm)
+    role: resolved[index]?.role ?? "core",
+    thicknessMm: String(resolved[index]?.thicknessMm ?? layer.thicknessMm ?? "")
   }));
 
   return {
-    draftLayers: parsed.map((layer, index) => ({
+    draftLayers: resolved.map((layer, index) => ({
       id: `assistant-described-draft-layer-${index + 1}`,
       materialId: layer.material.id,
       materialName: layer.material.name,
@@ -1242,12 +1339,13 @@ function parseDescribedWallLayers(input: {
     })),
     errors: [],
     layers,
-    parsedLayers: parsed.map((layer, index) => ({
+    parsedLayers: resolved.map((layer, index) => ({
       materialId: layer.material.id,
       materialName: layer.material.name,
       role: layers[index]?.role ?? "core",
       thicknessMm: layer.thicknessMm
-    }))
+    })),
+    warnings
   };
 }
 
@@ -1443,16 +1541,22 @@ function parseDescribedFloorLayers(input: {
   errors: readonly string[];
   layers: WorkbenchV2DraftLayer[];
   parsedLayers: NonNullable<WorkbenchV2CalculatorAssistantPreview["describedConfiguration"]>["layers"];
+  warnings: readonly string[];
 } {
-  const segments = splitDescribedLayerSegments(input.description);
   const aliasEntries = buildMaterialAliasEntries(input.materials);
+  const assumeMissingThicknesses = wantsDescribedAssumedInputs(input.description);
+  const segments = splitDescribedLayerSegments(input.description, {
+    aliasEntries,
+    allowMaterialOnlySegments: assumeMissingThicknesses
+  });
   const errors: string[] = [];
   const draftSeeds: ReportAssistantLayerStackDraftLayer[] = [];
   const parsed: {
+    assumedThickness: boolean;
     material: MaterialDefinition;
     materialPhrase: string;
     originalPhrase: string;
-    thicknessMm: number;
+    thicknessMm?: number;
   }[] = [];
 
   if (!segments.length) {
@@ -1460,7 +1564,8 @@ function parseDescribedFloorLayers(input: {
       draftLayers: [],
       errors: ["Describe each floor layer with a positive thickness in mm, for example: 120 mm concrete slab + 30 mm rockwool + 50 mm screed."],
       layers: [],
-      parsedLayers: []
+      parsedLayers: [],
+      warnings: []
     };
   }
 
@@ -1473,7 +1578,7 @@ function parseDescribedFloorLayers(input: {
         thicknessIndex: thicknessMatch.index
       })
       : { count: 1 };
-    const materialPhrase = thicknessMatch ? cleanMaterialPhrase(segment, thicknessMatch[0]) : "";
+    const materialPhrase = cleanMaterialPhrase(segment, thicknessMatch?.[0] ?? "");
     const material = materialPhrase ? matchDescribedMaterial({ aliasEntries, materialPhrase }) : null;
 
     draftSeeds.push({
@@ -1490,8 +1595,10 @@ function parseDescribedFloorLayers(input: {
     });
 
     if (!thicknessMm) {
-      errors.push(`Layer ${index + 1} needs a positive thickness in mm.`);
-      continue;
+      if (!assumeMissingThicknesses) {
+        errors.push(`Layer ${index + 1} needs a positive thickness in mm.`);
+        continue;
+      }
     }
 
     if (repeat.error) {
@@ -1506,10 +1613,11 @@ function parseDescribedFloorLayers(input: {
 
     for (let repeatIndex = 0; repeatIndex < repeat.count; repeatIndex += 1) {
       parsed.push({
+        assumedThickness: !thicknessMm,
         material,
         materialPhrase,
         originalPhrase: segment,
-        thicknessMm
+        ...(thicknessMm ? { thicknessMm } : {})
       });
     }
   }
@@ -1519,7 +1627,8 @@ function parseDescribedFloorLayers(input: {
       draftLayers: draftSeeds,
       errors,
       layers: [],
-      parsedLayers: []
+      parsedLayers: [],
+      warnings: []
     };
   }
 
@@ -1531,30 +1640,48 @@ function parseDescribedFloorLayers(input: {
       segment: layer.originalPhrase
     })
   );
-  const layers = parsed.map((layer, index) => ({
+  const resolved = parsed.map((layer, index) => {
+    const role = roles[index] ?? "upper_fill";
+    const thicknessMm = layer.thicknessMm ?? typicalWorkbenchV2AssistantThicknessMmForLayer({
+      material: layer.material,
+      mode: "floor",
+      role
+    });
+
+    return {
+      ...layer,
+      role,
+      thicknessMm
+    };
+  });
+  const warnings = resolved.some((layer) => layer.assumedThickness)
+    ? ["Assistant filled missing layer thicknesses with engineering-default draft values; verify product/source data before relying on report values."]
+    : [];
+  const layers = resolved.map((layer, index) => ({
     id: `assistant-described-layer-${index + 1}`,
     materialId: layer.material.id,
-    role: roles[index] ?? "upper_fill",
+    role: layer.role,
     thicknessMm: String(layer.thicknessMm)
   }));
 
   return {
-    draftLayers: parsed.map((layer, index) => ({
+    draftLayers: resolved.map((layer, index) => ({
       id: `assistant-described-draft-layer-${index + 1}`,
       materialId: layer.material.id,
       materialName: layer.material.name,
       originalPhrase: layer.originalPhrase,
-      role: roles[index] ?? "upper_fill",
+      role: layer.role,
       thicknessMm: layer.thicknessMm
     })),
     errors: [],
     layers,
-    parsedLayers: parsed.map((layer, index) => ({
+    parsedLayers: resolved.map((layer) => ({
       materialId: layer.material.id,
       materialName: layer.material.name,
-      role: roles[index] ?? "upper_fill",
+      role: layer.role,
       thicknessMm: layer.thicknessMm
-    }))
+    })),
+    warnings
   };
 }
 
@@ -1936,6 +2063,7 @@ export function previewDescribedLayerConfiguration(input: {
     });
   }
   const selectedOutputs = overrideOutputs ?? (explicitOutputs.length ? explicitOutputs : inferTargetOutputsFromDescription({ description, mode }));
+  const assumeReasonableDraftInputs = wantsDescribedAssumedInputs(description);
 
   if (mode !== "wall") {
     const materials = buildResolvedMaterialCatalog([]);
@@ -1944,6 +2072,7 @@ export function previewDescribedLayerConfiguration(input: {
       materials
     });
     const draft = buildDescribedLayerStackDraft({
+      assumeWallPhysicalInputs: parsed.warnings.length > 0,
       description,
       floorImpactDraft: floorImpactDraftFromDescription({
         description,
@@ -1951,7 +2080,8 @@ export function previewDescribedLayerConfiguration(input: {
       }),
       layers: parsed.draftLayers,
       mode,
-      selectedOutputs
+      selectedOutputs,
+      warnings: parsed.warnings
     });
     const validation = validateReportAssistantLayerStackDraft(draft);
 
@@ -1970,7 +2100,8 @@ export function previewDescribedLayerConfiguration(input: {
           id: `described-floor-layer-parse-${index + 1}`,
           label: "Layer description needs input",
           source: "described_layer_configuration"
-        }))
+        })),
+        warnings: parsed.warnings
       });
     }
 
@@ -1989,7 +2120,8 @@ export function previewDescribedLayerConfiguration(input: {
           id: input.code,
           label: "Layer stack draft needs input",
           source: "described_layer_configuration"
-        }))
+        })),
+        warnings: parsed.warnings
       });
     }
 
@@ -2009,7 +2141,8 @@ export function previewDescribedLayerConfiguration(input: {
           label: "Floor impact preview deferred",
           source: "described_layer_configuration"
         }
-      ]
+      ],
+      warnings: parsed.warnings
     });
   }
 
@@ -2019,10 +2152,12 @@ export function previewDescribedLayerConfiguration(input: {
     materials
   });
   const draft = buildDescribedLayerStackDraft({
+    assumeWallPhysicalInputs: assumeReasonableDraftInputs,
     description,
     layers: parsed.draftLayers,
     mode,
-    selectedOutputs
+    selectedOutputs,
+    warnings: parsed.warnings
   });
   const validation = validateReportAssistantLayerStackDraft(draft);
 
@@ -2040,7 +2175,8 @@ export function previewDescribedLayerConfiguration(input: {
         id: `described-layer-parse-${index + 1}`,
         label: "Layer description needs input",
         source: "described_layer_configuration"
-      }))
+      })),
+      warnings: parsed.warnings
     });
   }
 
@@ -2058,12 +2194,13 @@ export function previewDescribedLayerConfiguration(input: {
         id: input.code,
         label: "Layer stack draft needs input",
         source: "described_layer_configuration"
-      }))
+      })),
+      warnings: parsed.warnings
     });
   }
 
   const snapshot = buildWorkbenchV2ProjectSnapshot({
-    context: WORKBENCH_V2_DEFAULT_CONTEXT,
+    context: assumeReasonableDraftInputs ? contextForLayerStackDraft(draft) : WORKBENCH_V2_DEFAULT_CONTEXT,
     customMaterials: [],
     id: "assistant-described-layer-calculator-preview",
     layers: parsed.layers,
@@ -2098,7 +2235,7 @@ export function previewDescribedLayerConfiguration(input: {
         description,
         layers: parsed.parsedLayers,
         parser: "deterministic_wall_layer_description_v1",
-        warnings: []
+        warnings: parsed.warnings
       },
       layerStackDraft: {
         draft: {

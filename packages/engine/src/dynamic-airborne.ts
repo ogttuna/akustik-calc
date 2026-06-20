@@ -117,6 +117,7 @@ import {
 } from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
 import { maybeCalculateGateAYAdvancedWallRuntime } from "./dynamic-airborne-gate-ay-advanced-wall";
 import { maybeCalculateGateSDoubleLeafFramedBridgeRuntime } from "./dynamic-airborne-gate-s-double-leaf-framed";
+import { resolveGateQDoubleLeafFramedBridgeCavityDepthMm } from "./dynamic-calculator-double-leaf-framed-bridge-input-contract";
 import { ROCKWOOL_TRIPLE_LEAF_SOURCE_REQUIRED_RUNTIME_WARNING } from "./rockwool-triple-leaf-source-required-boundary";
 import {
   maybeCalculateBroadAccuracyWallTripleLeafLocalSubstitutionRuntimeCorridor
@@ -1092,9 +1093,7 @@ function hasCavityOnlyAdvancedWallDoubleLeafFramedContext(options: DynamicAirbor
   return Boolean(
     topology?.topologyMode === "double_leaf_framed" &&
       directFixedContextModeOwned &&
-      typeof topology.cavity1DepthMm === "number" &&
-      Number.isFinite(topology.cavity1DepthMm) &&
-      topology.cavity1DepthMm > 0 &&
+      resolveGateQDoubleLeafFramedBridgeCavityDepthMm(options.airborneContext) !== null &&
       typeof options.airborneContext?.studSpacingMm === "number" &&
       Number.isFinite(options.airborneContext.studSpacingMm) &&
       options.airborneContext.studSpacingMm > 0 &&

@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
 
+import { parseReportAssistantCurrentCalculatorReviewPacket } from "@/features/workbench/report-assistant-current-calculator-review-packet";
 import { parseReportAssistantContextPayload } from "@/features/workbench/report-assistant-instruction";
 import {
-  parseReportAssistantPlausibilityRequest,
+  buildReportAssistantContextFromCurrentCalculatorReviewPacket,
+  buildReportAssistantSourceBackedReportOverridePatch,
+  parseReportAssistantPlausibilityRequest
 } from "@/features/workbench/report-assistant-plausibility";
 import { plausibilityReviewToAssistantResult } from "@/features/workbench/report-assistant-plausibility-result";
 import { createReportAssistantPlausibilityReview } from "@/features/workbench/report-assistant-plausibility-research";
@@ -70,6 +73,114 @@ export async function POST(request: Request) {
   }
 
   const context = parseReportAssistantContextPayload(payload.context);
+  const calculatorReviewPacketPayload =
+    payload.currentCalculatorReviewPacket ?? payload.calculatorReviewPacket ?? payload.reviewPacket;
+  const calculatorReviewPacket =
+    calculatorReviewPacketPayload === undefined
+      ? null
+      : parseReportAssistantCurrentCalculatorReviewPacket(calculatorReviewPacketPayload);
+  if (calculatorReviewPacketPayload !== undefined && !calculatorReviewPacket) {
+    return NextResponse.json(
+      {
+        assistantResults: [
+          routeFailureToAssistantResult({
+            capabilityName: "report_assistant_plausibility_route",
+            code: "invalid_current_calculator_review_packet",
+            errors: ["Current calculator review packet is invalid."],
+            routeStatus: "needs_input"
+          })
+        ],
+        error: "Current calculator review packet is invalid.",
+        ok: false
+      },
+      {
+        status: 400
+      }
+    );
+  }
+
+  if (calculatorReviewPacket) {
+    const reviewRequest = parseReportAssistantPlausibilityRequest({
+      ...(isObjectRecord(payload.review) ? payload.review : {}),
+      metricId: calculatorReviewPacket.metric.metricId,
+      suggestPatch: false
+    });
+
+    if (!reviewRequest) {
+      return NextResponse.json(
+        {
+          assistantResults: [
+            routeFailureToAssistantResult({
+              capabilityName: "report_assistant_plausibility_route",
+              code: "missing_current_calculator_review_request",
+              errors: ["Current calculator review requires a review request."],
+              routeStatus: "needs_input"
+            })
+          ],
+          error: "Current calculator review requires a review request.",
+          ok: false
+        },
+        {
+          status: 400
+        }
+      );
+    }
+
+    const result = await createReportAssistantPlausibilityReview({
+      context: buildReportAssistantContextFromCurrentCalculatorReviewPacket(calculatorReviewPacket),
+      request: reviewRequest
+    });
+
+    if (!result.ok) {
+      return NextResponse.json(
+        {
+          assistantResults: [
+            routeFailureToAssistantResult({
+              capabilityName: "report_assistant_plausibility_route",
+              code: "plausibility_review_failed",
+              errors: result.errors,
+              routeStatus: result.source === "research_provider" ? "provider_failed" : "error",
+              sourceTraceKind: result.source === "research_provider" ? "provider_review" : "deterministic",
+              warnings: result.warnings
+            })
+          ],
+          errors: result.errors,
+          ok: false,
+          source: result.source,
+          warnings: result.warnings
+        },
+        {
+          status: 400
+        }
+      );
+    }
+
+    const { suggestedReportPatch: ignoredSuggestedReportPatch, ...reviewWithoutPatch } = result.review;
+    const review = ignoredSuggestedReportPatch
+      ? {
+          ...reviewWithoutPatch,
+          rationale: [
+            ...reviewWithoutPatch.rationale,
+            "Calculator source review is read-only; suggested report patches are suppressed until the report override proposal gate."
+          ]
+        }
+      : result.review;
+
+    return NextResponse.json({
+      assistantResults: [
+        plausibilityReviewToAssistantResult({
+          review,
+          source: result.source,
+          warnings: result.warnings
+        })
+      ],
+      ok: true,
+      review,
+      source: result.source,
+      warnings: result.warnings
+    });
+  }
+
   const document = parseSimpleWorkbenchProposalDocument(payload.document);
   const reviewRequest = parseReportAssistantPlausibilityRequest(payload.review);
 
@@ -122,7 +233,14 @@ export async function POST(request: Request) {
     );
   }
 
-  const suggestedReportPatch = result.review.suggestedReportPatch;
+  const sourceBackedReportOverridePatch =
+    result.source !== "research_provider" || reviewRequest.suggestPatch === false
+      ? null
+      : buildReportAssistantSourceBackedReportOverridePatch({
+          context,
+          review: result.review
+        });
+  const suggestedReportPatch = result.review.suggestedReportPatch ?? sourceBackedReportOverridePatch;
   if (!suggestedReportPatch) {
     return NextResponse.json({
       assistantResults: [
@@ -139,6 +257,14 @@ export async function POST(request: Request) {
     });
   }
 
+  const reviewWithSuggestedReportPatch =
+    result.review.suggestedReportPatch === suggestedReportPatch
+      ? result.review
+      : {
+          ...result.review,
+          suggestedReportPatch
+        };
+
   const patchValidation = validateReportAssistantPatch({
     context,
     document,
@@ -147,9 +273,9 @@ export async function POST(request: Request) {
 
   if (patchValidation.status === "rejected") {
     const sanitizedReview = {
-      ...result.review,
+      ...reviewWithSuggestedReportPatch,
       rationale: [
-        ...result.review.rationale,
+        ...reviewWithSuggestedReportPatch.rationale,
         "Suggested report patch was rejected by the shared patch validator and was not returned."
       ],
       suggestedReportPatch: undefined
@@ -176,14 +302,14 @@ export async function POST(request: Request) {
     assistantResults: [
       plausibilityReviewToAssistantResult({
         patchValidationStatus: patchValidation.status,
-        review: result.review,
+        review: reviewWithSuggestedReportPatch,
         source: result.source,
         warnings: result.warnings
       })
     ],
     ok: true,
     patchValidation,
-    review: result.review,
+    review: reviewWithSuggestedReportPatch,
     source: result.source,
     warnings: result.warnings
   });

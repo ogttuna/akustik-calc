@@ -1,0 +1,308 @@
+- main [ref=e2]:
+  - complementary "Ana navigasyon" [ref=e3]:
+    - generic [ref=e4]:
+      - img [ref=e6]
+      - generic [ref=e8]: Finans
+    - generic [ref=e9]:
+      - generic [ref=e10]:
+        - img [ref=e11]
+        - generic [ref=e15]: Machinity
+        - strong [ref=e16]: Owner
+      - generic [ref=e17]:
+        - generic [ref=e18]: Aktif şirket
+        - button "Aktif şirket Ana Şirket" [disabled] [ref=e19]:
+          - generic [ref=e20]: Ana Şirket
+          - img [ref=e21]
+    - navigation [ref=e23]:
+      - link "Gösterge" [ref=e24] [cursor=pointer]:
+        - /url: /
+        - img [ref=e25]
+        - generic [ref=e30]: Gösterge
+      - link "İşlemler" [ref=e31] [cursor=pointer]:
+        - /url: /movements
+        - img [ref=e32]
+        - generic [ref=e35]: İşlemler
+      - link "Dokümanlar" [ref=e36] [cursor=pointer]:
+        - /url: /documents
+        - img [ref=e37]
+        - generic [ref=e40]: Dokümanlar
+      - link "Banka/Kasa" [ref=e41] [cursor=pointer]:
+        - /url: /accounts
+        - img [ref=e42]
+        - generic [ref=e44]: Banka/Kasa
+      - link "Kredi Kartları" [ref=e45] [cursor=pointer]:
+        - /url: /credit-cards
+        - img [ref=e46]
+        - generic [ref=e48]: Kredi Kartları
+      - link "Krediler" [ref=e49] [cursor=pointer]:
+        - /url: /loans
+        - img [ref=e50]
+        - generic [ref=e53]: Krediler
+      - link "Çek/Senet" [ref=e54] [cursor=pointer]:
+        - /url: /payment-instruments
+        - img [ref=e55]
+        - generic [ref=e57]: Çek/Senet
+      - link "Cariler" [ref=e58] [cursor=pointer]:
+        - /url: /counterparties
+        - img [ref=e59]
+        - generic [ref=e63]: Cariler
+      - link "Projeler" [ref=e64] [cursor=pointer]:
+        - /url: /projects
+        - img [ref=e65]
+        - generic [ref=e68]: Projeler
+      - link "Şirket" [ref=e69] [cursor=pointer]:
+        - /url: /company
+        - img [ref=e70]
+        - generic [ref=e74]: Şirket
+      - link "Yönetim" [ref=e75] [cursor=pointer]:
+        - /url: /admin
+        - img [ref=e76]
+        - generic [ref=e79]: Yönetim
+      - link "Tanımlar" [ref=e80] [cursor=pointer]:
+        - /url: /master-data
+        - img [ref=e81]
+        - generic [ref=e85]: Tanımlar
+      - link "Planlar" [ref=e86] [cursor=pointer]:
+        - /url: /plans
+        - img [ref=e87]
+        - generic [ref=e89]: Planlar
+      - link "Raporlar" [ref=e90] [cursor=pointer]:
+        - /url: /reports
+        - img [ref=e91]
+        - generic [ref=e93]: Raporlar
+    - generic [ref=e94]:
+      - generic [ref=e95]:
+        - img [ref=e97]
+        - generic [ref=e100]:
+          - strong [ref=e101]: Development User
+          - generic [ref=e102]: admin@machinity.local
+      - button "Çıkış yap" [ref=e104] [cursor=pointer]:
+        - img [ref=e105]
+  - generic [ref=e108]:
+    - generic [ref=e109]:
+      - generic [ref=e110]:
+        - generic [ref=e111]:
+          - button "Geri" [ref=e112] [cursor=pointer]:
+            - img [ref=e113]
+          - generic [ref=e115]:
+            - navigation "Sayfa yolu" [ref=e116]:
+              - generic [ref=e117]:
+                - link "Banka/Kasa" [ref=e118] [cursor=pointer]:
+                  - /url: /accounts
+                - img [ref=e119]
+              - generic [ref=e122]: Detay
+            - generic [ref=e123]:
+              - heading "TRY ana hesap" [level=1] [ref=e124]
+              - paragraph [ref=e125]: Machinity / Ana Şirket (fixture)
+        - search [ref=e126]:
+          - img [ref=e127]
+          - searchbox "Bu sayfada ara" [ref=e130]
+        - generic [ref=e131]:
+          - group "Tema seçimi" [ref=e132]:
+            - button "Sistem teması" [pressed] [ref=e133] [cursor=pointer]:
+              - img [ref=e134]
+            - button "Aydınlık tema" [ref=e136] [cursor=pointer]:
+              - img [ref=e137]
+            - button "Karanlık tema" [ref=e143] [cursor=pointer]:
+              - img [ref=e144]
+          - button "Hızlı arama" [ref=e146] [cursor=pointer]:
+            - img [ref=e147]
+          - group [ref=e149]:
+            - button "Bildirimler (1 okunmamış)" [ref=e150] [cursor=pointer]:
+              - img [ref=e151]
+              - generic [ref=e154]: "1"
+          - generic [ref=e155]:
+            - button "Yeni hareket" [ref=e156] [cursor=pointer]:
+              - img [ref=e158]
+              - generic [ref=e159]: Yeni hareket
+            - button "Hesabı düzenle" [ref=e160] [cursor=pointer]:
+              - img [ref=e162]
+              - generic [ref=e165]: Hesabı düzenle
+            - button "Bakiye eşleştir" [ref=e166] [cursor=pointer]:
+              - img [ref=e168]
+              - generic [ref=e172]: Bakiye eşleştir
+            - button "Dışa aktar" [ref=e173] [cursor=pointer]:
+              - img [ref=e175]
+              - generic [ref=e178]: Dışa aktar
+      - generic "TCMB doviz kurlari" [ref=e179]:
+        - generic [ref=e180]: TCMB
+        - generic [ref=e182]: Kur bilgisi aliniyor
+    - generic [ref=e183]:
+      - region "Banka/Kasa detayı özeti" [ref=e184]:
+        - article [ref=e185]:
+          - generic [ref=e186]: Güncel bakiye
+          - strong [ref=e187]: 1.830.500,00 ₺
+          - generic [ref=e188]: ₺
+        - article [ref=e189]:
+          - generic [ref=e190]: Açılış bakiyesi
+          - strong [ref=e191]: 1.000.000,00 ₺
+          - generic [ref=e192]: Başlangıç
+        - article [ref=e193]:
+          - generic [ref=e194]: Hareket
+          - strong [ref=e195]: "0"
+          - generic [ref=e196]: Hesap etkisi
+        - article [ref=e197]:
+          - generic [ref=e198]: Durum
+          - strong [ref=e199]: Aktif
+          - generic [ref=e200]: Banka/Kasa
+      - generic [ref=e201]:
+        - group [ref=e202]:
+          - generic "Banka/Kasa bilgisi Kurum, tip ve durum bilgileri. Banka" [ref=e203] [cursor=pointer]:
+            - generic [ref=e204]:
+              - img [ref=e206]
+              - generic [ref=e208]:
+                - heading "Banka/Kasa bilgisi" [level=2] [ref=e209]
+                - paragraph [ref=e210]: Kurum, tip ve durum bilgileri.
+            - generic [ref=e211]:
+              - generic [ref=e212]: Banka
+              - img [ref=e214]
+        - group [ref=e216]:
+          - generic "Defter kırılımı Açılış, güncel ve sistem bakiyesi. Kurum" [ref=e217] [cursor=pointer]:
+            - generic [ref=e218]:
+              - img [ref=e220]
+              - generic [ref=e222]:
+                - heading "Defter kırılımı" [level=2] [ref=e223]
+                - paragraph [ref=e224]: Açılış, güncel ve sistem bakiyesi.
+            - generic [ref=e225]:
+              - generic [ref=e226]: Kurum
+              - img [ref=e228]
+      - group "Banka/Kasa bağlantıları" [ref=e230]:
+        - generic "Banka/Kasa bağlantıları Hareketler, içe aktarımlar ve nakit takvimi burada toplanır. 3 bağlantı" [ref=e231] [cursor=pointer]:
+          - generic [ref=e232]:
+            - img [ref=e234]
+            - generic [ref=e237]:
+              - heading "Banka/Kasa bağlantıları" [level=2] [ref=e238]
+              - paragraph [ref=e239]: Hareketler, içe aktarımlar ve nakit takvimi burada toplanır.
+          - generic [ref=e240]:
+            - generic [ref=e241]: 3 bağlantı
+            - img [ref=e243]
+      - generic [ref=e245]:
+        - generic [ref=e246]:
+          - heading "Banka/Kasa hareketleri" [level=2] [ref=e247]
+          - generic [ref=e248]:
+            - generic [ref=e249]: 0 / 0 hareket
+            - button "Hareketleri dışa aktar" [disabled] [ref=e250]:
+              - img [ref=e252]
+              - generic [ref=e255]: Hareketleri dışa aktar
+        - generic [ref=e256]:
+          - button "Filtreler Varsayılan görünüm" [expanded] [ref=e257] [cursor=pointer]:
+            - generic [ref=e258]:
+              - strong [ref=e259]: Filtreler
+              - generic [ref=e260]: Varsayılan görünüm
+          - group "Durum ve tip" [ref=e261]:
+            - generic [ref=e262]: Durum ve tip
+            - generic [ref=e263]:
+              - generic [ref=e264]:
+                - generic [ref=e265]: Durum
+                - generic [ref=e266]:
+                  - generic [ref=e267]: Durum
+                  - button "Durum Tüm durumlar" [ref=e268] [cursor=pointer]:
+                    - generic [ref=e269]: Tüm durumlar
+                    - img [ref=e270]
+              - generic [ref=e272]:
+                - generic [ref=e273]: Tip
+                - generic [ref=e274]:
+                  - generic [ref=e275]: Tip
+                  - button "Tip Tüm tipler" [ref=e276] [cursor=pointer]:
+                    - generic [ref=e277]: Tüm tipler
+                    - img [ref=e278]
+          - group "Para ve tarih" [ref=e280]:
+            - generic [ref=e281]: Para ve tarih
+            - generic [ref=e282]:
+              - generic [ref=e283]:
+                - generic [ref=e284]: Dönem
+                - generic [ref=e285]:
+                  - generic [ref=e286]: Dönem
+                  - button "Dönem Özel" [ref=e287] [cursor=pointer]:
+                    - generic [ref=e288]: Özel
+                    - img [ref=e289]
+              - generic [ref=e291]:
+                - generic [ref=e292]: Başlangıç
+                - generic [ref=e293]:
+                  - textbox "Başlangıç Takvim aç" [ref=e294]:
+                    - /placeholder: DD/MM/YYYY
+                  - button "Takvim aç" [ref=e295] [cursor=pointer]:
+                    - img [ref=e296]
+                  - textbox
+              - generic [ref=e298]:
+                - generic [ref=e299]: Bitiş
+                - generic [ref=e300]:
+                  - textbox "Bitiş Takvim aç" [ref=e301]:
+                    - /placeholder: DD/MM/YYYY
+                  - button "Takvim aç" [ref=e302] [cursor=pointer]:
+                    - img [ref=e303]
+                  - textbox
+              - generic [ref=e305]:
+                - generic [ref=e306]: Min tutar
+                - textbox "Min tutar" [ref=e307]:
+                  - /placeholder: 0,00
+              - generic [ref=e308]:
+                - generic [ref=e309]: Maks tutar
+                - textbox "Maks tutar" [ref=e310]:
+                  - /placeholder: 0,00
+          - group "Sınıflandırma" [ref=e311]:
+            - generic [ref=e312]: Sınıflandırma
+            - generic [ref=e313]:
+              - generic [ref=e314]:
+                - generic [ref=e315]: Üst kategori
+                - button "Üst kategori Tüm kategoriler" [ref=e316] [cursor=pointer]:
+                  - generic [ref=e317]: Tüm kategoriler
+                  - img [ref=e318]
+              - generic [ref=e320]:
+                - generic [ref=e321]: Orta kategori
+                - button "Orta kategori Tüm orta kategoriler" [disabled] [ref=e322]:
+                  - generic [ref=e323]: Tüm orta kategoriler
+                  - img [ref=e324]
+              - generic [ref=e326]:
+                - generic [ref=e327]: Alt kategori
+                - button "Alt kategori Tüm alt kategoriler" [disabled] [ref=e328]:
+                  - generic [ref=e329]: Tüm alt kategoriler
+                  - img [ref=e330]
+              - generic [ref=e332]:
+                - generic [ref=e333]: Etiket
+                - button "Etiket" [ref=e334] [cursor=pointer]:
+                  - generic [ref=e335]: Tüm etiketler
+                  - img [ref=e336]
+              - generic [ref=e338]:
+                - generic [ref=e339]: Belge
+                - generic [ref=e340]:
+                  - generic [ref=e341]: Belge
+                  - button "Belge Tüm hareketler" [ref=e342] [cursor=pointer]:
+                    - generic [ref=e343]: Tüm hareketler
+                    - img [ref=e344]
+          - button "Uygula" [ref=e347] [cursor=pointer]:
+            - img [ref=e349]
+            - generic [ref=e350]: Uygula
+        - table [ref=e353]:
+          - rowgroup [ref=e366]:
+            - row "Başlık Tip Tutar Tarih Kategori Etiketler Cari Proje Durum Belge" [ref=e367]:
+              - columnheader "Başlık" [ref=e368]
+              - columnheader "Tip" [ref=e369]
+              - columnheader "Tutar" [ref=e370]
+              - columnheader "Tarih" [ref=e371]
+              - columnheader "Kategori" [ref=e372]
+              - columnheader "Etiketler" [ref=e373]
+              - columnheader "Cari" [ref=e374]
+              - columnheader "Proje" [ref=e375]
+              - columnheader "Durum" [ref=e376]
+              - columnheader "Belge" [ref=e377]
+              - columnheader [ref=e378]
+          - rowgroup [ref=e379]:
+            - row "Kayıt bulunamadı" [ref=e380]:
+              - cell "Kayıt bulunamadı" [ref=e381]
+      - generic [ref=e382]:
+        - generic [ref=e383]:
+          - heading "Gerçek bakiye düzeltmeleri" [level=2] [ref=e384]
+          - generic [ref=e385]: Sistem / gerçek
+        - table [ref=e388]:
+          - rowgroup [ref=e396]:
+            - row "Tarih Sistem bakiyesi Gerçek bakiye Fark Sonuç" [ref=e397]:
+              - columnheader "Tarih" [ref=e398]
+              - columnheader "Sistem bakiyesi" [ref=e399]
+              - columnheader "Gerçek bakiye" [ref=e400]
+              - columnheader "Fark" [ref=e401]
+              - columnheader "Sonuç" [ref=e402]
+              - columnheader [ref=e403]
+          - rowgroup [ref=e404]:
+            - row "Henüz gerçek bakiye düzeltmesi yok" [ref=e405]:
+              - cell "Henüz gerçek bakiye düzeltmesi yok" [ref=e406]

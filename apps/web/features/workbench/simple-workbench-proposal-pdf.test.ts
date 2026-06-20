@@ -1,8 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
+  buildSimpleWorkbenchProposalSuggestedFilename,
   downloadSimpleWorkbenchProposalDocx,
-  downloadSimpleWorkbenchProposalPdf
+  downloadSimpleWorkbenchProposalPdf,
+  normalizeSimpleWorkbenchProposalExportFilename
 } from "./simple-workbench-proposal-pdf";
 import type { SimpleWorkbenchProposalDocument } from "./simple-workbench-proposal";
 
@@ -124,9 +126,41 @@ const MANUALLY_EDITED_DOCUMENT: SimpleWorkbenchProposalDocument = {
   ]
 };
 
+const LAYERED_DOCUMENT: SimpleWorkbenchProposalDocument = {
+  ...DOCUMENT,
+  layers: [
+    {
+      categoryLabel: "Board",
+      index: 1,
+      label: "12.5 mm gypsum board",
+      thicknessLabel: "12.5 mm"
+    },
+    {
+      categoryLabel: "Insulation",
+      index: 2,
+      label: "Rock wool infill",
+      thicknessLabel: "50 mm"
+    },
+    {
+      categoryLabel: "Board",
+      index: 3,
+      label: "12.5 mm gypsum board",
+      thicknessLabel: "12.5 mm"
+    }
+  ],
+  projectName: "North Tower Corridor",
+  studyModeLabel: "Wall"
+};
+
 describe("simple workbench proposal pdf helper", () => {
+  let anchor: {
+    click: ReturnType<typeof vi.fn>;
+    download: string;
+    href: string;
+  };
+
   beforeEach(() => {
-    const anchor = {
+    anchor = {
       click: vi.fn(),
       download: "",
       href: ""
@@ -170,6 +204,41 @@ describe("simple workbench proposal pdf helper", () => {
     });
     expect(window.document.createElement).toHaveBeenCalledWith("a");
     expect(window.URL.createObjectURL).toHaveBeenCalledTimes(1);
+  });
+
+  it("builds a short pdf filename suggestion from the project and visible layers", () => {
+    expect(
+      buildSimpleWorkbenchProposalSuggestedFilename(LAYERED_DOCUMENT, {
+        format: "pdf",
+        style: "branded"
+      })
+    ).toBe("north-tower-corridor-wall-12-5-mm-gypsum-board-50-mm-rock-wool-infill.pdf");
+  });
+
+  it("sanitizes an edited pdf filename while keeping the pdf extension", () => {
+    expect(
+      normalizeSimpleWorkbenchProposalExportFilename(" Client / Final : Rw?.pdf ", {
+        fallbackFilename: "north-tower-corridor-wall.pdf",
+        format: "pdf"
+      })
+    ).toBe("client-final-rw.pdf");
+  });
+
+  it("falls back to the suggested pdf filename when the edited name is blank", () => {
+    expect(
+      normalizeSimpleWorkbenchProposalExportFilename("   ", {
+        fallbackFilename: "north-tower-corridor-wall.pdf",
+        format: "pdf"
+      })
+    ).toBe("north-tower-corridor-wall.pdf");
+  });
+
+  it("uses the caller supplied pdf filename for the browser download", async () => {
+    await downloadSimpleWorkbenchProposalPdf(DOCUMENT, {
+      filename: " Client / Final : Rw?.pdf "
+    });
+
+    expect(anchor.download).toBe("client-final-rw.pdf");
   });
 
   it("posts the proposal snapshot to the simple pdf route when requested", async () => {

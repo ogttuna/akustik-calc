@@ -93,16 +93,22 @@ const CASES: readonly SourceGapCase[] = [
     ],
     expected: {
       cards: {
-        ...FAIL_CLOSED_CARDS,
+        Rw: { status: "live", value: "47 dB" },
         "R'w": { status: "live", value: "47 dB" },
-        "DnT,w": { status: "live", value: "50 dB" }
+        "DnT,w": { status: "live", value: "50 dB" },
+        "Ln,w": { status: "live", value: "59 dB" },
+        "CI,50-2500": { status: "live", value: "+1 dB" },
+        "Ln,w+CI": { status: "live", value: "60 dB" },
+        "L'n,w": { status: "live", value: "61 dB" },
+        "L'nT,w": { status: "live", value: "58.6 dB" },
+        "L'nT,50": { status: "live", value: "59.6 dB" }
       },
       estimateBasis: null,
       estimateKind: null,
-      impactBasis: null,
+      impactBasis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
       matchId: null,
-      supported: ["R'w", "DnT,w"],
-      unsupported: FAIL_CLOSED_UNSUPPORTED
+      supported: FIELD_OUTPUTS,
+      unsupported: []
     }
   },
   {

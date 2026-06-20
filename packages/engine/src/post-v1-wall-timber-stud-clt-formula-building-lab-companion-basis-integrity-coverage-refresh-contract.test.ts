@@ -122,7 +122,8 @@ function completeBuildingContext(testCase: ReturnType<typeof generatedCase>): Ai
 }
 
 function missingBuildingOutputBasisContext(testCase: ReturnType<typeof generatedCase>): AirborneContext {
-  const { buildingPredictionOutputBasis: _omitted, ...context } = completeBuildingContext(testCase);
+  const context = { ...completeBuildingContext(testCase) };
+  delete context.buildingPredictionOutputBasis;
 
   return context;
 }
@@ -416,8 +417,8 @@ describe("post-V1 wall timber-stud + CLT formula building lab-companion basis in
       dnW: 51,
       rw: 51,
       stc: 51,
-      supportedTargetOutputs: ["STC", "C", "Ctr"],
-      unsupportedTargetOutputs: ["Rw"]
+      supportedTargetOutputs: [...LAB_OUTPUTS],
+      unsupportedTargetOutputs: []
     });
     expect(lsfFieldLabOnly.airborneBasis?.method).not.toBe(GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD);
     expect(resultSnapshot(lsfFieldOnly)).toMatchObject({

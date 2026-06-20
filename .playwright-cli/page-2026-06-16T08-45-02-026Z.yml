@@ -1,0 +1,222 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]: DACDynEchoadmin
+      - generic [ref=e6]:
+        - button "Switch to dark mode" [ref=e7]:
+          - img [ref=e8]
+          - text: Light
+        - button "Sign out" [ref=e15]
+  - main [ref=e16]:
+    - generic [ref=e17]:
+      - generic [ref=e18]:
+        - generic [ref=e19]:
+          - generic [ref=e20]:
+            - generic [ref=e21]: Calculator
+            - heading "Acoustic workbench" [level=1] [ref=e22]
+          - button "Open workspace menu" [ref=e23]:
+            - img [ref=e24]
+            - text: WorkspaceNo project / 4 common
+        - generic [ref=e25]:
+          - text: Wall
+          - generic [ref=e26]: 3 layers
+          - text: 162.5 mmPending
+      - region "Calculator workspace" [ref=e27]:
+        - generic [ref=e28]:
+          - generic [ref=e29]:
+            - heading "Setup" [level=2] [ref=e32]
+            - generic [ref=e33]:
+              - generic "Assembly mode" [ref=e34]:
+                - button "Wall" [pressed] [ref=e35]
+                - button "Floor" [ref=e36]
+              - generic [ref=e37]:
+                - generic [ref=e38]:
+                  - checkbox "RwAirborne" [checked] [ref=e39]
+                  - text: RwAirborne
+                - generic [ref=e40]:
+                  - checkbox "R'wAirborne" [ref=e41]
+                  - text: R'wAirborne
+                - generic [ref=e42]:
+                  - checkbox "DnT,wAirborne" [ref=e43]
+                  - text: DnT,wAirborne
+                - generic [ref=e44]:
+                  - checkbox "STCAirborne" [ref=e45]
+                  - text: STCAirborne
+                - generic [ref=e46]:
+                  - checkbox "CSpectrum" [ref=e47]
+                  - text: CSpectrum
+                - generic [ref=e48]:
+                  - checkbox "CtrSpectrum" [ref=e49]
+                  - text: CtrSpectrum
+          - generic [ref=e50]:
+            - generic [ref=e51]:
+              - heading "Layer stack" [level=2] [ref=e53]
+              - generic [ref=e54]:
+                - button "Undo layer change" [disabled] [ref=e55]:
+                  - img [ref=e56]
+                - button "Materials" [ref=e59]:
+                  - img [ref=e60]
+                  - text: Materials
+                - button "Add layer" [ref=e66]:
+                  - img [ref=e67]
+                  - text: Add layer
+            - generic [ref=e68]:
+              - generic [ref=e69]: MaterialRoleThicknessActions
+              - article [ref=e70]:
+                - generic [ref=e71]:
+                  - button "Drag layer 1" [ref=e72]:
+                    - img [ref=e73]
+                  - button "Select layer 1" [ref=e80]: "1"
+                - generic [ref=e81]:
+                  - generic [ref=e82]:
+                    - text: Material
+                    - button "Gypsum Board850 kg/m3 / finish" [ref=e83]:
+                      - strong [ref=e84]: Gypsum Board
+                      - generic [ref=e85]: 850 kg/m3 / finish
+                  - generic [ref=e86]:
+                    - text: Role
+                    - combobox "Role" [ref=e87]:
+                      - option "Side A" [selected]
+                      - option "Cavity"
+                      - option "Core"
+                      - option "Support"
+                      - option "Side B"
+                  - generic [ref=e88]:
+                    - text: Thickness
+                    - generic [ref=e89]:
+                      - spinbutton "Thickness mm" [ref=e90]: "12.5"
+                      - emphasis [ref=e91]: mm
+                - generic [ref=e92]:
+                  - button "Move layer up" [disabled] [ref=e93]:
+                    - img [ref=e94]
+                  - button "Move layer down" [ref=e96]:
+                    - img [ref=e97]
+                  - button "Duplicate layer" [ref=e99]:
+                    - img [ref=e100]
+                  - button "Remove layer" [ref=e103]:
+                    - img [ref=e104]
+              - article [ref=e107]:
+                - generic [ref=e108]:
+                  - button "Drag layer 2" [ref=e109]:
+                    - img [ref=e110]
+                  - button "Select layer 2" [ref=e117]: "2"
+                - generic [ref=e118]:
+                  - generic [ref=e119]:
+                    - text: Material
+                    - button "Rock Wool45 kg/m3 / insulation" [ref=e120]:
+                      - strong [ref=e121]: Rock Wool
+                      - generic [ref=e122]: 45 kg/m3 / insulation
+                  - generic [ref=e123]:
+                    - text: Role
+                    - combobox "Role" [ref=e124]:
+                      - option "Side A"
+                      - option "Cavity" [selected]
+                      - option "Core"
+                      - option "Support"
+                      - option "Side B"
+                  - generic [ref=e125]:
+                    - text: Thickness
+                    - generic [ref=e126]:
+                      - spinbutton "Thickness mm" [ref=e127]: "50"
+                      - emphasis [ref=e128]: mm
+                - generic [ref=e129]:
+                  - button "Move layer up" [ref=e130]:
+                    - img [ref=e131]
+                  - button "Move layer down" [ref=e133]:
+                    - img [ref=e134]
+                  - button "Duplicate layer" [ref=e136]:
+                    - img [ref=e137]
+                  - button "Remove layer" [ref=e140]:
+                    - img [ref=e141]
+              - article [ref=e144]:
+                - generic [ref=e145]:
+                  - button "Drag layer 3" [ref=e146]:
+                    - img [ref=e147]
+                  - button "Select layer 3" [ref=e154]: "3"
+                - generic [ref=e155]:
+                  - generic [ref=e156]:
+                    - text: Material
+                    - button "Concrete2400 kg/m3 / mass" [ref=e157]:
+                      - strong [ref=e158]: Concrete
+                      - generic [ref=e159]: 2400 kg/m3 / mass
+                  - generic [ref=e160]:
+                    - text: Role
+                    - combobox "Role" [ref=e161]:
+                      - option "Side A"
+                      - option "Cavity"
+                      - option "Core"
+                      - option "Support"
+                      - option "Side B" [selected]
+                  - generic [ref=e162]:
+                    - text: Thickness
+                    - generic [ref=e163]:
+                      - spinbutton "Thickness mm" [ref=e164]: "100"
+                      - emphasis [ref=e165]: mm
+                - generic [ref=e166]:
+                  - button "Move layer up" [ref=e167]:
+                    - img [ref=e168]
+                  - button "Move layer down" [disabled] [ref=e170]:
+                    - img [ref=e171]
+                  - button "Duplicate layer" [ref=e173]:
+                    - img [ref=e174]
+                  - button "Remove layer" [ref=e177]:
+                    - img [ref=e178]
+          - generic [ref=e181]:
+            - generic [ref=e182]:
+              - generic [ref=e183]:
+                - generic [ref=e184]: Wall section
+                - heading "Wall construction preview" [level=3] [ref=e185]
+              - generic [ref=e186]:
+                - generic [ref=e187]: 3 layers
+                - text: 162.5 mm
+            - generic [ref=e188]:
+              - figure "wall construction section" [ref=e189]:
+                - img [ref=e190]:
+                  - generic [ref=e193]: Side A
+                  - generic [ref=e194]: Side B
+                  - generic [ref=e202]: "1"
+                  - generic [ref=e216]: "2"
+                  - generic [ref=e228]: "3"
+                  - generic [ref=e229]: 162.5 mm
+              - generic "Technical layer schedule" [ref=e230]:
+                - generic [ref=e231]:
+                  - text: Technical layer schedule
+                  - strong [ref=e232]: "Selected: Gypsum Board"
+                - list [ref=e233]:
+                  - listitem [ref=e234]:
+                    - text: "1"
+                    - generic [ref=e235]:
+                      - strong [ref=e236]: Gypsum Board
+                      - text: Side A
+                    - text: 12.5 mm
+                  - listitem [ref=e237]:
+                    - text: "2"
+                    - generic [ref=e238]:
+                      - strong [ref=e239]: Rock Wool
+                      - text: Cavity
+                    - text: 50 mm
+                  - listitem [ref=e240]:
+                    - text: "3"
+                    - generic [ref=e241]:
+                      - strong [ref=e242]: Concrete
+                      - text: Side B
+                    - text: 100 mm
+        - complementary "Calculation review" [ref=e243]:
+          - generic [ref=e244]:
+            - text: Current result
+            - strong [ref=e245]: "--"
+            - paragraph [ref=e246]: Complete inputs to calculate.
+          - generic [ref=e247]:
+            - generic [ref=e248]:
+              - heading "Outputs" [level=2] [ref=e249]
+              - text: "1"
+            - generic [ref=e251]:
+              - generic [ref=e252]:
+                - strong [ref=e253]: Rw
+                - text: Pending
+              - emphasis [ref=e254]: "--"
+          - generic [ref=e255]:
+            - heading "Report handoff" [level=2] [ref=e257]
+            - button "Result required" [disabled] [ref=e258]:
+              - img [ref=e259]
+              - text: Result required

@@ -837,7 +837,7 @@ function handledBlockedHeavyConcreteCombinedRow(
 ): boolean {
   const blocked = result.warnings.some((warning: string) =>
     /reinforced-concrete combined upper\/lower impact runtime is waiting for/i.test(warning)
-  );
+  ) && result.impact === null && result.floorSystemEstimate === null;
 
   if (!blocked) {
     return false;

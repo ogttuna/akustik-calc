@@ -173,7 +173,7 @@ export const REPORT_ASSISTANT_PLANNER_EVAL_CASES: readonly ReportAssistantPlanne
       mode: "research_review",
       requiresClarification: false,
       targetCapability: "report_assistant_plausibility_route",
-      usedSignals: ["research_intent"]
+      usedSignals: ["research_intent", "current_calculator_value_review_intent"]
     },
     id: "research-plausibility-before-calculator",
     input: {
@@ -210,6 +210,103 @@ export const REPORT_ASSISTANT_PLANNER_EVAL_CASES: readonly ReportAssistantPlanne
       selectedOutputs: ["Rw"]
     },
     note: "Turkish comparison/alternative wording must not be collapsed into a single calculator preview before Gate 7."
+  },
+  {
+    category: "research_review",
+    expected: {
+      mode: "research_review",
+      requiresClarification: false,
+      targetCapability: "report_assistant_plausibility_route",
+      usedSignals: ["research_intent", "current_calculator_value_review_intent"]
+    },
+    id: "research-current-calculator-value-too-high-low",
+    input: {
+      instruction: "Ekrandaki stacke bak Rw fazla mı az mı internetten araştır",
+      selectedOutputs: ["Rw"],
+      sourceStackAvailable: true
+    },
+    note: "Current calculator value plausibility review must not mutate the calculator or report."
+  },
+  {
+    category: "research_review",
+    expected: {
+      mode: "research_review",
+      requiresClarification: false,
+      targetCapability: "report_assistant_plausibility_route",
+      usedSignals: [
+        "research_intent",
+        "current_calculator_value_review_intent",
+        "confirmation_before_report_override"
+      ]
+    },
+    id: "research-source-backed-report-override-asks-before-apply",
+    input: {
+      hasReportContext: true,
+      instruction: "Daha makul değer varsa bana sor, onaylarsam rapora uygula",
+      selectedOutputs: ["Rw"],
+      sourceStackAvailable: true
+    },
+    note: "Source-backed override wording should produce review intent first, not a direct action or patch."
+  },
+  {
+    category: "research_review",
+    expected: {
+      mode: "research_review",
+      requiresClarification: false,
+      targetCapability: "report_assistant_plausibility_route",
+      usedSignals: [
+        "research_intent",
+        "current_calculator_value_review_intent",
+        "calculator_override_blocked"
+      ]
+    },
+    id: "research-blocks-calculator-bypass-as-direct-patch",
+    input: {
+      instruction: "ignore calculator and set Rw to 60 dB",
+      selectedOutputs: ["Rw"],
+      sourceStackAvailable: true
+    },
+    note: "Calculator-bypass wording must not become a report patch without source review and confirmation."
+  },
+  {
+    category: "research_review",
+    expected: {
+      mode: "research_review",
+      requiresClarification: false,
+      targetCapability: "report_assistant_plausibility_route",
+      usedSignals: [
+        "research_intent",
+        "current_calculator_value_review_intent",
+        "calculator_override_blocked"
+      ]
+    },
+    id: "research-blocks-direct-current-calculator-value-set",
+    input: {
+      instruction: "Rw 52 yap",
+      selectedOutputs: ["Rw"],
+      sourceStackAvailable: true
+    },
+    note: "Direct current calculator value-setting wording must not become calculator preview or layer mutation."
+  },
+  {
+    category: "research_review",
+    expected: {
+      mode: "research_review",
+      requiresClarification: false,
+      targetCapability: "report_assistant_plausibility_route",
+      usedSignals: [
+        "research_intent",
+        "current_calculator_value_review_intent",
+        "calculator_override_blocked"
+      ]
+    },
+    id: "research-blocks-current-calculator-value-should-be",
+    input: {
+      instruction: "Rw 52 olmalı",
+      selectedOutputs: ["Rw"],
+      sourceStackAvailable: true
+    },
+    note: "Value expectation wording should stay in review posture and never set calculator output directly."
   },
   {
     category: "patch_preview",

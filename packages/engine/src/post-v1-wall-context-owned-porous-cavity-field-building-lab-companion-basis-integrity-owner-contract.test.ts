@@ -15,8 +15,6 @@ import {
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
-const PREVIOUS_RERANK_ACTION =
-  "post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_field_building_lab_companion_target_output_independence_coverage_refresh_plan";
 const PREVIOUS_RERANK_FILE =
   "packages/engine/src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-airborne-frequency-field-building-lab-companion-target-output-independence-coverage-refresh-contract.test.ts";
 const PREVIOUS_RERANK_STATUS =
@@ -56,7 +54,6 @@ const OWNER_COUNTERS = {
 } as const;
 
 const LAB_OUTPUTS = ["Rw", "STC", "C", "Ctr"] as const satisfies readonly RequestedOutputId[];
-const FIELD_OUTPUTS = ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A"] as const satisfies readonly RequestedOutputId[];
 const MIXED_FIELD_OUTPUTS = ["R'w", "Rw", "STC", "C", "Ctr", "DnT,w"] as const satisfies readonly RequestedOutputId[];
 const MIXED_BUILDING_OUTPUTS = ["DnT,w", "Rw", "STC", "C", "Ctr", "R'w"] as const satisfies readonly RequestedOutputId[];
 const IMPACT_OUTPUTS = ["IIC", "AIIC"] as const satisfies readonly RequestedOutputId[];
@@ -90,18 +87,18 @@ const CONTEXT_OWNED_POROUS_CAVITY_BASE = {
       }
     ]
   }
-} as const;
+} satisfies Pick<AirborneContext, "advancedWall" | "sharedTrack" | "studSpacingMm" | "wallTopology">;
 
-const FIELD_CONTEXT = {
+const FIELD_CONTEXT: AirborneContext = {
   ...CONTEXT_OWNED_POROUS_CAVITY_BASE,
   contextMode: "field_between_rooms",
   panelHeightMm: 2800,
   panelWidthMm: 3200,
   receivingRoomRt60S: 0.6,
   receivingRoomVolumeM3: 55
-} as const satisfies AirborneContext;
+};
 
-const BUILDING_CONTEXT = {
+const BUILDING_CONTEXT: AirborneContext = {
   ...CONTEXT_OWNED_POROUS_CAVITY_BASE,
   buildingPredictionOutputBasis: "apparent_and_standardized",
   conservativeFlankingAssumption: "multi_path_conservative",
@@ -113,14 +110,14 @@ const BUILDING_CONTEXT = {
   receivingRoomRt60S: 0.6,
   receivingRoomVolumeM3: 55,
   sourceRoomVolumeM3: 42
-} as const satisfies AirborneContext;
+};
 
-const LAB_CONTEXT = {
+const LAB_CONTEXT: AirborneContext = {
   ...CONTEXT_OWNED_POROUS_CAVITY_BASE,
   contextMode: "element_lab"
-} as const satisfies AirborneContext;
+};
 
-const MISSING_CONTEXT_OWNED_FLOW_CONTEXT = {
+const MISSING_CONTEXT_OWNED_FLOW_CONTEXT: AirborneContext = {
   contextMode: "field_between_rooms",
   panelHeightMm: 2800,
   panelWidthMm: 3200,
@@ -137,7 +134,7 @@ const MISSING_CONTEXT_OWNED_FLOW_CONTEXT = {
     supportTopology: "independent_frames",
     topologyMode: "double_leaf_framed"
   }
-} as const satisfies AirborneContext;
+};
 
 const REQUIRED_DOCS = [
   "AGENTS.md",

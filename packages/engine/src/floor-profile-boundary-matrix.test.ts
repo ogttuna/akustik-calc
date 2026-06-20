@@ -157,8 +157,8 @@ const CASES: readonly BoundaryCase[] = [
       candidateIds: null,
       estimateKind: null,
       floorSystemMatchId: null,
-      supportedTargetOutputs: ["R'w", "DnT,w"],
-      unsupportedTargetOutputs: ["Rw", "Ln,w", "L'n,w", "L'nT,w"]
+      supportedTargetOutputs: ["Rw", "R'w", "DnT,w"],
+      unsupportedTargetOutputs: ["Ln,w", "L'n,w", "L'nT,w"]
     }
   },
   {
@@ -183,8 +183,8 @@ const CASES: readonly BoundaryCase[] = [
       candidateIds: null,
       estimateKind: null,
       floorSystemMatchId: null,
-      supportedTargetOutputs: ["R'w", "DnT,w"],
-      unsupportedTargetOutputs: ["Rw", "Ln,w", "L'n,w", "L'nT,w"]
+      supportedTargetOutputs: ["Rw", "R'w", "DnT,w"],
+      unsupportedTargetOutputs: ["Ln,w", "L'n,w", "L'nT,w"]
     }
   },
   {
@@ -196,20 +196,20 @@ const CASES: readonly BoundaryCase[] = [
       { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
     ],
     expectedLab: {
-      basis: null,
-      candidateIds: null,
-      estimateKind: null,
+      basis: "broad_accuracy_floor_helper_only_timber_open_web_impact_stack_source_absent_formula_corridor",
+      candidateIds: ["source_absent_open_box_timber_helper_only_formula"],
+      estimateKind: "family_archetype",
       floorSystemMatchId: null,
-      supportedTargetOutputs: ["Rw"],
-      unsupportedTargetOutputs: ["Ln,w", "Ln,w+CI"]
+      supportedTargetOutputs: ["Rw", "Ln,w", "Ln,w+CI"],
+      unsupportedTargetOutputs: []
     },
     expectedField: {
-      basis: null,
-      candidateIds: null,
-      estimateKind: null,
+      basis: "broad_accuracy_floor_helper_only_timber_open_web_impact_stack_source_absent_formula_corridor",
+      candidateIds: ["source_absent_open_box_timber_helper_only_formula"],
+      estimateKind: "family_archetype",
       floorSystemMatchId: null,
-      supportedTargetOutputs: ["R'w", "DnT,w"],
-      unsupportedTargetOutputs: ["Rw", "Ln,w", "L'n,w", "L'nT,w"]
+      supportedTargetOutputs: ["Rw", "R'w", "DnT,w", "Ln,w"],
+      unsupportedTargetOutputs: ["L'n,w", "L'nT,w"]
     }
   },
   {
@@ -246,20 +246,20 @@ const CASES: readonly BoundaryCase[] = [
     id: "open-web bare guard",
     layers: [{ floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 300 }],
     expectedLab: {
-      basis: null,
-      candidateIds: null,
-      estimateKind: null,
+      basis: "broad_accuracy_floor_open_web_raw_bare_source_absent_formula_corridor",
+      candidateIds: ["source_absent_raw_bare_open_web_formula"],
+      estimateKind: "family_archetype",
       floorSystemMatchId: null,
-      supportedTargetOutputs: ["Rw"],
-      unsupportedTargetOutputs: ["Ln,w", "Ln,w+CI"]
+      supportedTargetOutputs: ["Rw", "Ln,w", "Ln,w+CI"],
+      unsupportedTargetOutputs: []
     },
     expectedField: {
-      basis: null,
-      candidateIds: null,
-      estimateKind: null,
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+      candidateIds: ["source_absent_raw_bare_open_web_formula"],
+      estimateKind: "family_archetype",
       floorSystemMatchId: null,
-      supportedTargetOutputs: ["R'w", "DnT,w"],
-      unsupportedTargetOutputs: ["Rw", "Ln,w", "L'n,w", "L'nT,w"]
+      supportedTargetOutputs: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"],
+      unsupportedTargetOutputs: []
     }
   },
   {
@@ -316,8 +316,8 @@ const CASES: readonly BoundaryCase[] = [
       candidateIds: null,
       estimateKind: null,
       floorSystemMatchId: null,
-      supportedTargetOutputs: ["R'w", "DnT,w"],
-      unsupportedTargetOutputs: ["Rw", "Ln,w", "L'n,w", "L'nT,w"]
+      supportedTargetOutputs: ["Rw", "R'w", "DnT,w"],
+      unsupportedTargetOutputs: ["Ln,w", "L'n,w", "L'nT,w"]
     }
   },
   {
@@ -403,14 +403,13 @@ const CASES: readonly BoundaryCase[] = [
       { floorRole: "base_structure", materialId: "composite_steel_deck", thicknessMm: 150 }
     ],
     expectedLab: {
-      basis: "predictor_floor_system_low_confidence_estimate",
+      basis: "predictor_composite_panel_published_interaction_estimate",
       candidateIds: [
-        "pmc_m1_bare_composite_lab_2026",
         "pmc_m1_dry_floating_plus_c2x_lab_2026",
         "pmc_m1_dry_floating_plus_c1x_lab_2026",
-        "pmc_m1_dry_floating_floor_lab_2026"
+        "pmc_m1_bare_composite_lab_2026"
       ],
-      estimateKind: "low_confidence",
+      estimateKind: "family_general",
       floorSystemMatchId: null,
       supportedTargetOutputs: ["Rw", "Ln,w"],
       unsupportedTargetOutputs: ["Ln,w+CI"]
@@ -418,12 +417,11 @@ const CASES: readonly BoundaryCase[] = [
     expectedField: {
       basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
       candidateIds: [
-        "pmc_m1_bare_composite_lab_2026",
         "pmc_m1_dry_floating_plus_c2x_lab_2026",
         "pmc_m1_dry_floating_plus_c1x_lab_2026",
-        "pmc_m1_dry_floating_floor_lab_2026"
+        "pmc_m1_bare_composite_lab_2026"
       ],
-      estimateKind: "low_confidence",
+      estimateKind: "family_general",
       floorSystemMatchId: null,
       supportedTargetOutputs: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"],
       unsupportedTargetOutputs: []

@@ -31,17 +31,60 @@ Calculator drift lock:
 Fast path:
 
 - current selected implementation action:
-  `post_v1_wall_double_leaf_framed_cavity_depth_numeric_sensitivity_owner_plan`;
+  `post_v1_wall_double_leaf_framed_cavity_depth_numeric_sensitivity_coverage_refresh_plan`;
 - current selected implementation file:
-  `packages/engine/src/post-v1-wall-double-leaf-framed-cavity-depth-numeric-sensitivity-owner-contract.test.ts`;
+  `packages/engine/src/post-v1-wall-double-leaf-framed-cavity-depth-numeric-sensitivity-coverage-refresh-contract.test.ts`;
 - current selected implementation plan:
-  `docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_CAVITY_DEPTH_NUMERIC_SENSITIVITY_OWNER_PLAN_2026-06-19.md`;
+  `docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_CAVITY_DEPTH_NUMERIC_SENSITIVITY_COVERAGE_REFRESH_PLAN_2026-06-20.md`;
+- implementation sync:
+  the cavity-depth owner file exists and is included in
+  `tools/dev/run-calculator-current-gate.ts`; the coverage-refresh file
+  above does not exist yet and is the next file to create;
+- latest full current gate after the owner landed:
+  `pnpm calculator:gate:current` passed with shared `2 files / 19 tests`,
+  engine `787 files / 4318 tests`, web `127 files / 505 passed + 18 skipped`,
+  and repo build `5/5`; known non-fatal noise is existing Zustand persist
+  storage warnings and optional `sharp/@img` Next build warnings;
 - latest checkpoint reconciliation:
   `docs/calculator/CHECKPOINT_2026-06-20_FULL_GATE_AND_CAVITY_DEPTH_HANDOFF.md`;
-- selected cavity-depth owner contract status:
-  planned and selected, but not landed yet; create
-  `packages/engine/src/post-v1-wall-double-leaf-framed-cavity-depth-numeric-sensitivity-owner-contract.test.ts`
-  as the next runtime calculator task;
+- latest landed runtime owner:
+  `post_v1_wall_double_leaf_framed_cavity_depth_numeric_sensitivity_owner_plan`;
+- latest landed runtime owner file:
+  `packages/engine/src/post-v1-wall-double-leaf-framed-cavity-depth-numeric-sensitivity-owner-contract.test.ts`;
+- latest landed runtime owner plan:
+  `docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_CAVITY_DEPTH_NUMERIC_SENSITIVITY_OWNER_PLAN_2026-06-19.md`;
+- latest landed runtime owner status:
+  `post_v1_wall_double_leaf_framed_cavity_depth_numeric_sensitivity_owner_landed_runtime_selected_coverage_refresh`;
+- latest landed runtime owner follows:
+  `post_v1_wall_double_leaf_framed_porous_absorber_thickness_numeric_sensitivity_coverage_refresh_landed_no_runtime_selected_cavity_depth_numeric_sensitivity_owner`;
+- latest landed runtime owner selected candidate:
+  `wall.double_leaf_framed.cavity_depth_numeric_sensitivity_owner`;
+- latest landed runtime owner behavior:
+  topology `cavity1DepthMm` remains numerically active for `60`, `90`,
+  and `140 mm`, and advanced-only
+  `advancedWall.cavities[0].depthMm` now enters the owned Gate S /
+  Gate I / Gate AR double-leaf/framed route for lab `Rw`/`STC`/`C`/
+  `Ctr` and field/building `R'w`, `Dn,w`, `Dn,A`, `DnT,w`, and
+  `DnT,A`; missing or non-positive cavity depth stays `needs_input`;
+  when topology and advanced depth are both supplied, topology depth is
+  authoritative and mismatch withholds porous-thickness precision credit;
+  impact aliases stay `unsupported`;
+- latest landed runtime owner counters:
+  `accuracyPromotedRequestShapes: 6`,
+  `accuracyPromotedTargetOutputs: 26`,
+  `newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 3`,
+  `newCalculableTargetOutputs: 13`, `runtimeBasisPromotions: 3`,
+  `runtimeValuesMoved 13`, `runtimeFormulaRetunes: 0`,
+  `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`;
+- latest landed runtime owner selected next action:
+  `post_v1_wall_double_leaf_framed_cavity_depth_numeric_sensitivity_coverage_refresh_plan`;
+- latest landed runtime owner selected next file:
+  `packages/engine/src/post-v1-wall-double-leaf-framed-cavity-depth-numeric-sensitivity-coverage-refresh-contract.test.ts`;
+- latest landed runtime owner selected next plan:
+  `docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_CAVITY_DEPTH_NUMERIC_SENSITIVITY_COVERAGE_REFRESH_PLAN_2026-06-20.md`;
+- latest landed runtime owner selected next label:
+  `post-V1 wall double-leaf/framed cavity-depth numeric sensitivity coverage refresh`;
+- this is not a broad source crawl;
 - latest landed no-runtime coverage refresh:
   `post_v1_wall_double_leaf_framed_porous_absorber_thickness_numeric_sensitivity_coverage_refresh_plan`;
 - latest landed no-runtime coverage refresh file:

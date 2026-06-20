@@ -16,8 +16,29 @@ function hasCalculatorPreviewIntent(normalized: string): boolean {
       .test(normalized);
 }
 
+function hasSourceReviewIntent(normalized: string): boolean {
+  const hasMetricOrValue =
+    /\b(?:aiic|c|ci|ctr|deger\w*|delta\s*lw|dn|dna|dnt|iic|ln|lnw|rw|stc|value)\b/u.test(normalized);
+  const hasResearchOrReview =
+    /\b(?:ara|arastir|compare|dogru|dusuk|fazla|high|internet|karsilastir|kaynak|kontrol|low|makul|mantikli|normal|plausibility|plausible|reasonable|research|review|sensible|source|too high|too low|verify|yanlis|yuksek)\b/u
+      .test(normalized);
+  const asksBeforeApply =
+    /\b(?:ask me|bana sor|confirm|editleyim mi|onay|onayla|onaylarsam|sor|uygulayayim mi|uygulayayım mı|yazayim mi|yazayım mı)\b/u
+      .test(normalized);
+  const bypassesCalculator =
+    /\b(?:calculator(?:'?[a-z]*)?\s+(?:wrong|ignore|yanlis)|hesab[ia]?\s+bosver|hesap\s+yanlis|ignore\s+(?:the\s+)?calculator|calculator\s+yerine)\b/u
+      .test(normalized);
+
+  return hasMetricOrValue && (hasResearchOrReview || asksBeforeApply || bypassesCalculator);
+}
+
 export function classifyReportAssistantEditorRequest(instruction: string): ReportAssistantEditorRequestMode {
   const normalized = normalizeInstruction(instruction);
+
+  if (hasSourceReviewIntent(normalized)) {
+    return "read_only_query";
+  }
+
   const hasActionIntent =
     /\b(?:apply|archive|create|delete|download|export|persist|restore|save|update|write)\b/u.test(normalized) ||
     /\b(?:arsivle|disari aktar|geri yukle|guncelle|indir|kaydet|olustur|sakla|sil|uygula|yaz)\b/u

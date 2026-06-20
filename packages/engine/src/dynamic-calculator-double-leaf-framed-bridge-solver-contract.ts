@@ -13,6 +13,7 @@ import {
 
 import {
   buildGateQDoubleLeafFramedBridgeInputContract,
+  resolveGateQDoubleLeafFramedBridgeCavityDepthMm,
   type GateQDoubleLeafFrameBridgeClass,
   type GateQDoubleLeafFramedBridgeInputContract
 } from "./dynamic-calculator-double-leaf-framed-bridge-input-contract";
@@ -268,6 +269,7 @@ function buildPhysicalInputs(input: {
   layers: readonly LayerInput[];
 }): GateRDoubleLeafFramedBridgePhysicalInputs {
   const topology = input.airborneContext?.wallTopology;
+  const cavityDepthMm = resolveGateQDoubleLeafFramedBridgeCavityDepthMm(input.airborneContext);
   const sideAMass = sumSurfaceMass(input.layers, topology?.sideALeafLayerIndices, input.catalog);
   const sideBMass = sumSurfaceMass(input.layers, topology?.sideBLeafLayerIndices, input.catalog);
   const leafMassRatio =
@@ -277,7 +279,7 @@ function buildPhysicalInputs(input: {
     absorberCoverageRatio: absorberCoverageRatio(input.airborneContext),
     absorberThicknessMm: absorberThicknessMm(input.airborneContext),
     bridgeClass: input.bridgeClass,
-    cavityDepthMm: typeof topology?.cavity1DepthMm === "number" ? topology.cavity1DepthMm : null,
+    cavityDepthMm,
     flowResistivityPaSM2: flowResistivityPaSM2(input.layers, input.catalog, input.airborneContext),
     flowResistivitySource: flowResistivitySource(input.layers, input.catalog, input.airborneContext),
     leafMassRatio,

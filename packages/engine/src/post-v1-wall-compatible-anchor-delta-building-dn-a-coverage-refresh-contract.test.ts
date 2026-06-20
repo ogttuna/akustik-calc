@@ -11,8 +11,7 @@ import {
   GATE_AR_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID
 } from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
 import {
-  GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD,
-  GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID
+  GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD
 } from "./dynamic-airborne-gate-i-airborne-field-context";
 import { buildLayerCombinationResolverCandidateCoverageMatrixRefreshContract } from "./layer-combination-resolver-candidate-coverage-matrix-refresh";
 import { buildLayerCombinationResolverCompanyInternalV0RehearsalContract } from "./layer-combination-resolver-company-internal-v0-rehearsal";
@@ -461,7 +460,7 @@ describe("post-V1 wall compatible anchor-delta building Dn,A coverage refresh", 
     expect(pairedBuildingAll.layerCombinationResolverTrace).toMatchObject({
       runtimeBasisId: GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
       selectedCandidateId: GATE_AR_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID,
-      supportedMetrics: expect.arrayContaining(BUILDING_ALL_OUTPUTS),
+      supportedMetrics: expect.arrayContaining([...BUILDING_ALL_OUTPUTS]),
       valuePins: expect.arrayContaining([
         { metric: "R'w", value: 50 },
         { metric: "Dn,w", value: 51 },

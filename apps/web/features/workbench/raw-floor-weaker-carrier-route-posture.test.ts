@@ -15,6 +15,7 @@ type CardStatus = "live" | "needs_input" | "unsupported";
 
 type CarrierCase = {
   expectedStatuses: Record<FieldOutput, CardStatus>;
+  expectedVariantStatuses?: Partial<Record<string, Record<FieldOutput, CardStatus>>>;
   id: string;
   variants: readonly {
     id: string;
@@ -47,10 +48,41 @@ const FAIL_CLOSED_STATUSES: Record<FieldOutput, CardStatus> = {
   "L'nT,w": "needs_input"
 };
 
+const AIRBORNE_ONLY_STATUSES: Record<FieldOutput, CardStatus> = {
+  Rw: "live",
+  "R'w": "live",
+  "DnT,w": "live",
+  "Ln,w": "unsupported",
+  "L'n,w": "needs_input",
+  "L'nT,w": "needs_input"
+};
+
+const LAB_IMPACT_ONLY_STATUSES: Record<FieldOutput, CardStatus> = {
+  Rw: "live",
+  "R'w": "live",
+  "DnT,w": "live",
+  "Ln,w": "live",
+  "L'n,w": "needs_input",
+  "L'nT,w": "needs_input"
+};
+
+const LIVE_STATUSES: Record<FieldOutput, CardStatus> = {
+  Rw: "live",
+  "R'w": "live",
+  "DnT,w": "live",
+  "Ln,w": "live",
+  "L'n,w": "live",
+  "L'nT,w": "live"
+};
+
 const CASES: readonly CarrierCase[] = [
   {
     id: "open-box-timber-bare-carrier",
     expectedStatuses: FAIL_CLOSED_STATUSES,
+    expectedVariantStatuses: {
+      "tagged-single": LIVE_STATUSES,
+      "tagged-split": LIVE_STATUSES
+    },
     variants: [
       {
         id: "raw-single",
@@ -79,6 +111,10 @@ const CASES: readonly CarrierCase[] = [
   {
     id: "open-web-steel-bare-carrier",
     expectedStatuses: FAIL_CLOSED_STATUSES,
+    expectedVariantStatuses: {
+      "tagged-single": LIVE_STATUSES,
+      "tagged-split": LIVE_STATUSES
+    },
     variants: [
       {
         id: "raw-single",
@@ -107,6 +143,10 @@ const CASES: readonly CarrierCase[] = [
   {
     id: "lightweight-steel-bare-carrier",
     expectedStatuses: FAIL_CLOSED_STATUSES,
+    expectedVariantStatuses: {
+      "tagged-single": AIRBORNE_ONLY_STATUSES,
+      "tagged-split": AIRBORNE_ONLY_STATUSES
+    },
     variants: [
       {
         id: "raw-single",
@@ -135,6 +175,10 @@ const CASES: readonly CarrierCase[] = [
   {
     id: "steel-joist-bare-carrier",
     expectedStatuses: FAIL_CLOSED_STATUSES,
+    expectedVariantStatuses: {
+      "tagged-single": AIRBORNE_ONLY_STATUSES,
+      "tagged-split": AIRBORNE_ONLY_STATUSES
+    },
     variants: [
       {
         id: "raw-single",
@@ -163,6 +207,9 @@ const CASES: readonly CarrierCase[] = [
   {
     id: "steel-joist-helper-heavy-package",
     expectedStatuses: FAIL_CLOSED_STATUSES,
+    expectedVariantStatuses: {
+      "tagged-helper-fill-board-mixed": AIRBORNE_ONLY_STATUSES
+    },
     variants: [
       {
         id: "raw-helper-fill-board-mixed",
@@ -187,6 +234,10 @@ const CASES: readonly CarrierCase[] = [
   {
     id: "open-box-timber-non-combined-packages",
     expectedStatuses: FAIL_CLOSED_STATUSES,
+    expectedVariantStatuses: {
+      "tagged-lower-only": LAB_IMPACT_ONLY_STATUSES,
+      "tagged-upper-only": AIRBORNE_ONLY_STATUSES
+    },
     variants: [
       {
         id: "raw-lower-only",
@@ -378,11 +429,12 @@ describe("raw floor weaker carrier route posture", () => {
     for (const testCase of CASES) {
       for (const variant of testCase.variants) {
         const resultSnapshot = snapshot(`${testCase.id}-${variant.id}`, variant.rows);
+        const expectedStatuses = testCase.expectedVariantStatuses?.[variant.id] ?? testCase.expectedStatuses;
 
         for (const output of FIELD_OUTPUTS) {
-          if (resultSnapshot.outputCards[output] !== testCase.expectedStatuses[output]) {
+          if (resultSnapshot.outputCards[output] !== expectedStatuses[output]) {
             failures.push(
-              `${testCase.id} ${variant.id}: expected ${output} card status ${testCase.expectedStatuses[output]}, got ${resultSnapshot.outputCards[output]}`
+              `${testCase.id} ${variant.id}: expected ${output} card status ${expectedStatuses[output]}, got ${resultSnapshot.outputCards[output]}`
             );
           }
         }

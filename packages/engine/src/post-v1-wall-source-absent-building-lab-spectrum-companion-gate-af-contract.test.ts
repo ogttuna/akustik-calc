@@ -115,6 +115,23 @@ describe("post-V1 wall source-absent building lab-spectrum companion Gate AF", (
     }
   });
 
+  it("keeps source-absent building lab spectrum target-output independent", () => {
+    for (const pin of POST_V1_GATE_AF_WALL_SOURCE_ABSENT_BUILDING_LAB_SPECTRUM_VALUE_PINS) {
+      const testCase = generatedCase(pin.caseId);
+      const result = calculateAssembly(testCase.rows, {
+        ...testCase.fieldOptions,
+        airborneContext: buildingContext(testCase.fieldOptions.airborneContext),
+        targetOutputs: [pin.metric]
+      });
+
+      expect(result.supportedTargetOutputs, `${pin.caseId} ${pin.metric}`).toEqual([pin.metric]);
+      expect(result.unsupportedTargetOutputs, `${pin.caseId} ${pin.metric}`).toEqual([]);
+      expect(result.warnings.join("\n"), `${pin.caseId} ${pin.metric}`).not.toContain(
+        `Unsupported target outputs: ${pin.metric}`
+      );
+    }
+  });
+
   it("does not reopen grouped multileaf building routes from parked diagnostic values", () => {
     const testCase = generatedCase("wall-held-aac");
     const result = calculateAssembly(testCase.rows, {

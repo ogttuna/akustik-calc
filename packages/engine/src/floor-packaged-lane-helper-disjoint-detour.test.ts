@@ -38,8 +38,10 @@ describe("floor packaged-lane helper disjoint detours", () => {
     const fillDisjointResult = calculateAssembly(fillDisjoint, { targetOutputs: LAB_OUTPUTS });
     const cavityDisjointResult = calculateAssembly(cavityDisjoint, { targetOutputs: LAB_OUTPUTS });
 
-    expect(canonicalResult.floorSystemEstimate?.kind).toBe("family_general");
-    expect(canonicalResult.impact?.basis).toBe("predictor_floor_system_family_general_estimate");
+    expect(canonicalResult.floorSystemEstimate?.kind).toBe("family_archetype");
+    expect(canonicalResult.impact?.basis).toBe(
+      "broad_accuracy_floor_helper_only_timber_open_web_impact_stack_source_absent_formula_corridor"
+    );
 
     expect(fillDisjointResult.floorSystemEstimate?.kind).toBe("low_confidence");
     expect(fillDisjointResult.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
@@ -87,7 +89,7 @@ describe("floor packaged-lane helper disjoint detours", () => {
     const fillDisjointResult = calculateAssembly(fillDisjoint, { targetOutputs: LAB_OUTPUTS });
     const cavityDisjointResult = calculateAssembly(cavityDisjoint, { targetOutputs: LAB_OUTPUTS });
 
-    expect(canonicalResult.floorSystemEstimate?.kind).toBe("low_confidence");
+    expect(canonicalResult.floorSystemEstimate?.kind).toBe("family_general");
 
     expect(fillDisjointResult.floorSystemEstimate?.kind).toBe("low_confidence");
     expect(fillDisjointResult.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");

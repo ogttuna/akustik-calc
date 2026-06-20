@@ -306,6 +306,9 @@ describe("report assistant Workbench apply proposal", () => {
       ok: false,
       statusCode: 400
     });
+    if (result.ok) {
+      throw new Error("Expected incomplete draft proposal to be rejected.");
+    }
     expect(result.errors).toEqual([
       'What is the mm thickness for "gypsum board"?',
       'What role should "gypsum board" use in the stack?',

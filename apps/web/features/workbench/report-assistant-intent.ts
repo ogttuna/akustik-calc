@@ -52,6 +52,10 @@ function hasSpecificDbRecommendation(value: string): boolean {
   return /(?:^|[^\d])\d+(?:[.,]\d+)?(?:\s*[-–]\s*\d+(?:[.,]\d+)?)?\s*db(?:$|[^\d])/iu.test(value);
 }
 
+function hasMetricReference(value: string): boolean {
+  return /\b(?:aiic|c|ci|ctr|delta\s*lw|dn|dna|dnt|iic|ln|lnw|rw|stc)\b/iu.test(value);
+}
+
 function parseDbValues(value: string): number[] {
   return [...value.matchAll(/(?:^|[^\d])([+-]?\d+(?:[.,]\d+)?)\s*db(?:$|[^\d])/giu)]
     .map((match) => Number(match[1]?.replace(",", ".")))
@@ -114,11 +118,11 @@ function getRecommendationDirection(input: {
 
 function hasQuestionSignal(value: string): boolean {
   return /[?？]/u.test(value) ||
-    /\b(?:mi|mu|midir|mudur|sence|acaba|dogru|uygun|mantikli|makul|normal|fazla|az|dusuk|yuksek|plausible|reasonable|correct|valid|right|wrong|too\s+high|too\s+low|does\s+this|is\s+this|should\s+this)\b/iu.test(value);
+    /\b(?:mi|mu|midir|mudur|sence|acaba|dogru|garip|supheli|uygun|mantikli|makul|normal|fazla|az|dusuk|yuksek|plausible|reasonable|correct|suspicious|valid|right|wrong|too\s+high|too\s+low|does\s+this|is\s+this|should\s+this)\b/iu.test(value);
 }
 
 function hasExplicitResearchSignal(value: string): boolean {
-  return /\b(?:arastir|internet|kaynak|referans|reference|source|search|research|google|web|karsilastir|compare|incele|analiz|analyze|degerlendir|evaluate|review|kontrol|check|yorumla|comment|bak)\b/iu.test(value);
+  return /\b(?:arastir|internet|kaynak|net|netten|referans|reference|source|search|research|google|web|karsilastir|compare|incele|analiz|analyze|degerlendir|evaluate|review|kontrol|check|yorumla|comment|bak)\b/iu.test(value);
 }
 
 function hasTraceExplanationSignal(value: string): boolean {
@@ -134,6 +138,21 @@ function hasAssemblyAlternativeSignal(value: string): boolean {
 
 function hasChallengeOrRetrySignal(value: string): boolean {
   return /\b(?:again|bence\s+yanlis|bir\s+daha|dikkate\s+al|emin\s+misin|hakli\s+degilsin|kaynag\w*\s+dikkate|recheck|retry|tekrar|yaniliyorsun|yanlis|yeniden)\b/iu.test(value);
+}
+
+function hasCalculatorOverrideReviewSignal(value: string): boolean {
+  return /\b(?:calculator(?:'?[a-z]*)?\s+(?:wrong|ignore|yanlis)|hesab[ia]?\s+bosver|hesap\s+yanlis|ignore\s+(?:the\s+)?calculator|calculator\s+yerine)\b/iu
+    .test(value);
+}
+
+function hasReviewBeforeReportOverrideSignal(value: string): boolean {
+  const wantsConfirmation = /\b(?:ask me|bana\s+sor|confirm|editleyeyim\s+mi|editleyim\s+mi|onay|onayla|onaylarsam|sor|uygulayayim\s+mi|uygulayayım\s+mi|yazayim\s+mi|yazayım\s+mi)\b/iu
+    .test(value);
+  const mentionsReportEdit = /\b(?:apply|edit|editle|editleyeyim|editleyim|rapor|rapora|report|uygula|yaz)\b/iu.test(value);
+  const mentionsValueReview = /\b(?:db|deger|dogru|fazla|garip|makul|mantikli|plausible|reasonable|sonuc|value|yanlis)\b/iu.test(value) ||
+    hasMetricReference(value);
+
+  return wantsConfirmation && mentionsReportEdit && mentionsValueReview;
 }
 
 function hasReviewFindingSignal(value: string): boolean {
@@ -162,6 +181,8 @@ export function classifyReportAssistantInstructionIntent(input: {
   const hasPatch = hasNumericDbValue(normalized) && hasExplicitPatchVerb(normalized);
   const hasAssemblyAlternative = hasAssemblyAlternativeSignal(normalized);
   const hasChallengeOrRetry = hasChallengeOrRetrySignal(normalized);
+  const hasCalculatorOverrideReview = hasCalculatorOverrideReviewSignal(normalized);
+  const hasReviewBeforeReportOverride = hasReviewBeforeReportOverrideSignal(normalized);
   const hasReviewFinding = hasReviewFindingSignal(normalized);
 
   if (hasReviewFinding) {
@@ -173,7 +194,7 @@ export function classifyReportAssistantInstructionIntent(input: {
     };
   }
 
-  if (hasResearch || hasChallengeOrRetry || hasAssemblyAlternative) {
+  if (hasResearch || hasChallengeOrRetry || hasAssemblyAlternative || hasCalculatorOverrideReview || hasReviewBeforeReportOverride) {
     return {
       intent: "research",
       intentClass: hasAssemblyAlternative

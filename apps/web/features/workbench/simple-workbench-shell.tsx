@@ -42,6 +42,7 @@ import { buildSimpleWorkbenchEvidencePacket } from "./simple-workbench-evidence"
 import { buildSimpleWorkbenchMethodDossier } from "./simple-workbench-method-dossier";
 import { buildSimpleWorkbenchProposalBrief } from "./simple-workbench-proposal-brief";
 import type { SimpleWorkbenchProposalDocument } from "./simple-workbench-proposal";
+import { useSimpleWorkbenchProposalPdfFilenameDialog } from "./simple-workbench-proposal-filename-dialog";
 import {
   downloadSimpleWorkbenchProposalDocx,
   downloadSimpleWorkbenchProposalPdf,
@@ -525,6 +526,7 @@ export function SimpleWorkbenchShell() {
   const { theme, toggle: toggleTheme } = useTheme();
   const [isDesktop, setIsDesktop] = useState(false);
   const [isExportingPdf, setIsExportingPdf] = useState(false);
+  const { pdfFilenameDialog, requestPdfFilename } = useSimpleWorkbenchProposalPdfFilenameDialog();
   const [resetDialogOpen, setResetDialogOpen] = useState(false);
   const [serverProjectStatus, setServerProjectStatus] = useState<ServerProjectStatus>("idle");
   const [serverProjectMessage, setServerProjectMessage] = useState("Browser-local");
@@ -1395,13 +1397,31 @@ export function SimpleWorkbenchShell() {
     style: SimpleWorkbenchProposalExportStyle,
     format: SimpleWorkbenchProposalExportFormat
   ) => {
+    let doc: SimpleWorkbenchProposalDocument;
+    try {
+      doc = buildQuickProposalDocument();
+    } catch {
+      toast.error(`${getSimpleWorkbenchProposalExportLabel({ format, style })} failed`);
+      return;
+    }
+
+    const filename =
+      format === "pdf"
+        ? await requestPdfFilename(doc, {
+            style
+          })
+        : undefined;
+
+    if (filename === null) {
+      return;
+    }
+
     setIsExportingPdf(true);
     try {
-      const doc = buildQuickProposalDocument();
       if (format === "docx") {
         await downloadSimpleWorkbenchProposalDocx(doc, { projectId: activeServerProject?.id, style });
       } else {
-        await downloadSimpleWorkbenchProposalPdf(doc, { projectId: activeServerProject?.id, style });
+        await downloadSimpleWorkbenchProposalPdf(doc, { filename, projectId: activeServerProject?.id, style });
       }
       toast.success(`${getSimpleWorkbenchProposalExportLabel({ format, style })} downloaded`);
     } catch {
@@ -1835,6 +1855,7 @@ export function SimpleWorkbenchShell() {
           }}
         />
       ) : null}
+      {pdfFilenameDialog}
       <SimpleWorkbenchResetDialog
         onCancel={() => setResetDialogOpen(false)}
         onConfirm={() => { reset(); setResetDialogOpen(false); }}

@@ -150,6 +150,59 @@ describe("post-V1 floor raw-bare airborne building prediction Gate BQ", () => {
     );
   });
 
+  it("keeps the raw-bare direct Rw owner live when building-prediction requests include Rw", () => {
+    const openBoxRwOnly = calculateAssembly(POST_V1_GATE_BQ_RAW_OPEN_BOX_220, {
+      airborneContext: POST_V1_GATE_BQ_BUILDING_PREDICTION_CONTEXT,
+      calculator: "dynamic",
+      targetOutputs: ["Rw"]
+    });
+    const openWebRwOnly = calculateAssembly(POST_V1_GATE_BQ_RAW_OPEN_WEB_300, {
+      airborneContext: POST_V1_GATE_BQ_BUILDING_PREDICTION_CONTEXT,
+      calculator: "dynamic",
+      targetOutputs: ["Rw"]
+    });
+    const mixedWithUnownedCompanion = calculateAssembly(POST_V1_GATE_BQ_RAW_OPEN_BOX_220, {
+      airborneContext: POST_V1_GATE_BQ_BUILDING_PREDICTION_CONTEXT,
+      calculator: "dynamic",
+      targetOutputs: ["Rw", "R'w", "DnT,w", "C"]
+    });
+
+    expect(openBoxRwOnly.supportedTargetOutputs).toEqual(["Rw"]);
+    expect(openBoxRwOnly.unsupportedTargetOutputs).toEqual([]);
+    expect(openBoxRwOnly.metrics).toMatchObject({
+      estimatedRwDb: 38.1,
+      estimatedRwPrimeDb: 36,
+      estimatedDnTwDb: 39
+    });
+    expect(openBoxRwOnly.airborneBasis).toMatchObject({
+      method: FLOOR_RAW_BARE_AIRBORNE_BUILDING_PREDICTION_RUNTIME_BASIS,
+      origin: "family_physics_prediction"
+    });
+    expect(openBoxRwOnly.layerCombinationResolverTrace).toMatchObject({
+      requestedBasis: "building_prediction",
+      selectedCandidateId: FLOOR_RAW_BARE_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID,
+      supportedMetrics: ["Rw"],
+      valuePins: [{ metric: "Rw", value: 38.1 }]
+    });
+
+    expect(openWebRwOnly.supportedTargetOutputs).toEqual(["Rw"]);
+    expect(openWebRwOnly.unsupportedTargetOutputs).toEqual([]);
+    expect(openWebRwOnly.metrics.estimatedRwDb).toBe(32);
+    expect(openWebRwOnly.layerCombinationResolverTrace).toMatchObject({
+      selectedCandidateId: FLOOR_RAW_BARE_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID,
+      supportedMetrics: ["Rw"],
+      valuePins: [{ metric: "Rw", value: 32 }]
+    });
+
+    expect(mixedWithUnownedCompanion.supportedTargetOutputs).toEqual(["Rw", "R'w", "DnT,w"]);
+    expect(mixedWithUnownedCompanion.unsupportedTargetOutputs).toEqual(["C"]);
+    expect(mixedWithUnownedCompanion.metrics).toMatchObject({
+      estimatedDnTwDb: 39,
+      estimatedRwDb: 38.1,
+      estimatedRwPrimeDb: 36
+    });
+  });
+
   it("keeps mixed impact and airborne building outputs live while lab impact and ASTM stay separate", () => {
     const result = calculateAssembly(POST_V1_GATE_BQ_RAW_OPEN_BOX_220, {
       airborneContext: POST_V1_GATE_BQ_BUILDING_PREDICTION_CONTEXT,

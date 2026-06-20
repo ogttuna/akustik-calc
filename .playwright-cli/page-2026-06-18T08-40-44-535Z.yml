@@ -1,0 +1,528 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - generic [ref=e6]: DAC
+          - generic [ref=e7]: DynEcho
+          - generic [ref=e8]: admin
+        - generic [ref=e9]:
+          - button "Switch to dark mode" [ref=e10] [cursor=pointer]:
+            - img [ref=e11]
+            - generic [ref=e17]: Light
+          - button "Sign out" [ref=e19] [cursor=pointer]
+    - main [ref=e20]:
+      - generic [ref=e21]:
+        - generic [ref=e30]:
+          - generic [ref=e31]:
+            - paragraph [ref=e32]: Report editor
+            - heading "Riverside Residences" [level=1] [ref=e33]
+            - generic [ref=e34]:
+              - generic [ref=e35]: Packaged 18 Jun 2026, 11:39
+              - generic [ref=e36]: Local draft saved
+              - generic [ref=e37]: Preview ready
+              - generic [ref=e38]: Local only
+          - generic [ref=e39]:
+            - link "Calculator" [ref=e40] [cursor=pointer]:
+              - /url: /workbench-v2
+              - img [ref=e41]
+              - text: Calculator
+            - button "Reload preview" [ref=e43] [cursor=pointer]:
+              - img [ref=e44]
+            - button "Revision history" [disabled] [ref=e49]:
+              - img [ref=e50]
+              - text: Revision history
+            - button "Reset edits" [disabled] [ref=e54]:
+              - img [ref=e55]
+            - button "Save local draft" [disabled] [ref=e58]:
+              - img [ref=e59]
+              - text: Save local draft
+            - button "Save as template" [disabled] [ref=e63]:
+              - img [ref=e64]
+              - text: Save as template
+            - button "Save project report" [ref=e66] [cursor=pointer]:
+              - img [ref=e67]
+              - text: Save project report
+        - generic [ref=e71]:
+          - generic [ref=e72]:
+            - generic [ref=e73]:
+              - radiogroup "Report style" [ref=e74]:
+                - generic [ref=e75] [cursor=pointer]:
+                  - radio "Branded" [checked]
+                  - generic [ref=e76]: Branded
+                - generic [ref=e77] [cursor=pointer]:
+                  - radio "Simple"
+                  - generic [ref=e78]: Simple
+              - generic [ref=e79]:
+                - button "PDF" [ref=e80] [cursor=pointer]:
+                  - img [ref=e81]
+                  - text: PDF
+                - button "DOCX" [ref=e84] [cursor=pointer]:
+                  - img [ref=e85]
+                  - text: DOCX
+                - button "Print" [ref=e88] [cursor=pointer]:
+                  - img [ref=e89]
+                  - text: Print
+            - iframe [ref=e93]:
+              - main [ref=f1e2]:
+                - generic [ref=f1e3]:
+                  - generic [ref=f1e4]:
+                    - generic [ref=f1e5]:
+                      - generic [ref=f1e6]:
+                        - generic [ref=f1e7]: MAC
+                        - generic [ref=f1e8]:
+                          - strong [ref=f1e9]: Machinity Acoustic Consultants
+                          - generic [ref=f1e10]: Building Acoustics and Vibration Control
+                      - generic [ref=f1e11]:
+                        - text: Acoustic analysis report
+                        - generic [ref=f1e12]: MAC-2026-014 · Rev 01
+                    - heading "Acoustic Analysis Report" [level=1] [ref=f1e13]
+                    - paragraph [ref=f1e14]: Acoustic analysis report for Riverside Residences. Key values, construction details, assumptions, and validity are stated for client review.
+                    - generic [ref=f1e15]:
+                      - generic [ref=f1e16]:
+                        - strong [ref=f1e17]: ISO 717-1
+                        - generic [ref=f1e18]: Weighted airborne rating basis
+                      - generic [ref=f1e19]:
+                        - strong [ref=f1e20]: ISO 717-2
+                        - generic [ref=f1e21]: Weighted impact rating basis
+                      - generic [ref=f1e22]:
+                        - strong [ref=f1e23]: ISO 12354-2
+                        - generic [ref=f1e24]: Prediction method
+                    - generic [ref=f1e25]:
+                      - generic [ref=f1e26]:
+                        - generic [ref=f1e27]:
+                          - strong [ref=f1e28]: Project
+                          - generic [ref=f1e29]: Riverside Residences
+                          - generic [ref=f1e30]: Machinity Acoustics | Pre-tender | Consultant issue
+                        - generic [ref=f1e31]:
+                          - strong [ref=f1e32]: Issued to
+                          - generic [ref=f1e33]: Riverside Development Team
+                          - generic [ref=f1e34]:
+                            - text: Design Coordination Team
+                            - text: Riverside Residences floor acoustic proposal
+                            - text: Client review and acoustic coordination
+                            - text: Valid for 30 calendar days unless superseded by a later issue.
+                        - generic [ref=f1e35]:
+                          - generic [ref=f1e36]: Report summary
+                          - heading "Riverside Residences floor acoustic proposal" [level=3] [ref=f1e37]
+                          - paragraph [ref=f1e38]: Riverside Residences currently reads Rw 61 dB.
+                      - generic [ref=f1e39]:
+                        - generic [ref=f1e40]:
+                          - strong [ref=f1e41]: Primary acoustic value
+                          - generic [ref=f1e42]: Rw 61 dB
+                          - generic [ref=f1e43]: Rw 61 dB and Ln,w 49 dB are packaged for assistant smoke.
+                        - generic [ref=f1e44]:
+                          - strong [ref=f1e45]: Issue
+                          - generic [ref=f1e46]: MAC-2026-014
+                          - generic [ref=f1e47]: Rev 01 | 21 March 2026
+                        - generic [ref=f1e48]:
+                          - strong [ref=f1e49]: Consultant
+                          - generic [ref=f1e50]: Machinity Acoustic Consultants
+                          - generic [ref=f1e51]: O. Tuna | Lead Acoustic Consultant
+                        - generic [ref=f1e52]:
+                          - strong [ref=f1e53]: Contact
+                          - generic [ref=f1e54]: offers@machinity-acoustics.com
+                          - generic [ref=f1e55]:
+                            - text: +90 212 000 00 00
+                            - text: Maslak District, Istanbul, Turkiye
+                  - generic [ref=f1e57]:
+                    - generic [ref=f1e58]:
+                      - generic [ref=f1e59]: Scope
+                      - heading "Acoustic calculation basis" [level=3] [ref=f1e60]
+                      - paragraph [ref=f1e61]: Floor · Building prediction. Read this as a supported floor estimate, not as a measured claim.
+                    - generic [ref=f1e62]:
+                      - generic [ref=f1e63]: Issue authority
+                      - heading "Prepared for client review" [level=3] [ref=f1e64]
+                      - paragraph [ref=f1e65]: O. Tuna, Lead Acoustic Consultant, prepared MAC-2026-014 Rev 01 on behalf of Machinity Acoustic Consultants for Machinity Acoustics.
+                    - generic [ref=f1e66]:
+                      - generic [ref=f1e67]: Validity
+                      - heading "Offer basis" [level=3] [ref=f1e68]
+                      - paragraph [ref=f1e69]: Client review and acoustic coordination. Valid for 30 calendar days unless superseded by a later issue.
+                    - generic [ref=f1e70]:
+                      - generic [ref=f1e71]: Transmittal
+                      - heading "Recipient and subject" [level=3] [ref=f1e72]
+                      - paragraph [ref=f1e73]: "Issued to Riverside Development Team. Design Coordination Team. Subject: Riverside Residences floor acoustic proposal."
+                  - generic [ref=f1e74]:
+                    - generic [ref=f1e75]: Signature and Issue Authority
+                    - generic [ref=f1e76]:
+                      - generic [ref=f1e77]:
+                        - generic [ref=f1e78]: Issued by
+                        - heading "O. Tuna" [level=3] [ref=f1e79]
+                        - paragraph [ref=f1e80]: Machinity Acoustic Consultants
+                        - paragraph [ref=f1e81]: Lead Acoustic Consultant · offers@machinity-acoustics.com · +90 212 000 00 00
+                        - paragraph [ref=f1e82]: Maslak District, Istanbul, Turkiye
+                        - generic [ref=f1e83]: Authorized consultant signature
+                      - generic [ref=f1e84]:
+                        - generic [ref=f1e85]: Issue control
+                        - heading "MAC-2026-014 · Rev 01" [level=3] [ref=f1e86]
+                        - paragraph [ref=f1e87]: Issued on 21 March 2026 for Machinity Acoustics.
+                        - paragraph [ref=f1e88]: "Primary issue contact: offers@machinity-acoustics.com · +90 212 000 00 00"
+                        - paragraph [ref=f1e89]: "Issued to: Riverside Development Team · Design Coordination Team"
+                        - paragraph [ref=f1e90]: "Purpose: Client review and acoustic coordination · Valid for 30 calendar days unless superseded by a later issue."
+                        - generic [ref=f1e91]: Issue date and transmittal confirmation
+                - generic [ref=f1e92]:
+                  - generic [ref=f1e93]:
+                    - generic [ref=f1e94]: Machinity Acoustic Consultants | Acoustic analysis report
+                    - generic [ref=f1e95]:
+                      - generic [ref=f1e96]:
+                        - heading "Report Summary" [level=1] [ref=f1e97]
+                        - paragraph [ref=f1e98]: Acoustic indices, construction basis, report notes, and client issue details for this analysis report.
+                      - generic [ref=f1e99]:
+                        - generic [ref=f1e100]:
+                          - strong [ref=f1e101]: Study
+                          - generic [ref=f1e102]: Floor
+                          - generic [ref=f1e103]: Building prediction | Consultant issue
+                        - generic [ref=f1e104]:
+                          - strong [ref=f1e105]: Review status
+                          - generic [ref=f1e106]: Scoped estimate
+                          - generic [ref=f1e107]: Read this as a supported floor estimate, not as a measured claim.
+                        - generic [ref=f1e108]:
+                          - strong [ref=f1e109]: Build-up
+                          - generic [ref=f1e110]: 230 mm total
+                          - generic [ref=f1e111]: 2 visible rows · 2 density lines · 2 surface-mass lines
+                        - generic [ref=f1e112]:
+                          - strong [ref=f1e113]: Validity
+                          - generic [ref=f1e114]: Rev 01
+                          - generic [ref=f1e115]: Valid for 30 calendar days unless superseded by a later issue.
+                  - generic [ref=f1e116]:
+                    - generic [ref=f1e117]: Executive Summary
+                    - generic [ref=f1e118]:
+                      - heading "Report summary" [level=3] [ref=f1e119]
+                      - paragraph [ref=f1e120]: Riverside Residences currently reads Rw 61 dB.
+                  - generic [ref=f1e121]:
+                    - generic [ref=f1e122]: Acoustic Indices
+                    - generic [ref=f1e123]:
+                      - generic [ref=f1e124]:
+                        - strong [ref=f1e125]: Primary acoustic value
+                        - generic [ref=f1e126]: Rw 61 dB
+                        - generic [ref=f1e127]: Rw 61 dB and Ln,w 49 dB are packaged for assistant smoke.
+                      - generic [ref=f1e128]:
+                        - strong [ref=f1e129]: Project stage
+                        - generic [ref=f1e130]: Pre-tender
+                        - generic [ref=f1e131]: Client review and acoustic coordination
+                      - generic [ref=f1e132]:
+                        - strong [ref=f1e133]: Validation
+                        - generic [ref=f1e134]: Scoped estimate
+                        - generic [ref=f1e135]: Read this as a supported floor estimate, not as a measured claim.
+                      - generic [ref=f1e136]:
+                        - strong [ref=f1e137]: Stack
+                        - generic [ref=f1e138]: 230 mm total
+                        - generic [ref=f1e139]: 2 visible rows · 2 density lines · 2 surface-mass lines
+                  - generic [ref=f1e140]:
+                    - generic [ref=f1e141]: Acoustic Result Profile
+                    - generic [ref=f1e142]:
+                      - generic [ref=f1e143]:
+                        - generic [ref=f1e144]:
+                          - heading "Result summary" [level=3] [ref=f1e145]
+                          - paragraph [ref=f1e146]: Rw 61 dB is the current headline answer. Single-number ratings on this proposal are expressed using the relevant ISO rating language.
+                        - generic [ref=f1e147]:
+                          - generic [ref=f1e148]:
+                            - strong [ref=f1e149]: Rw
+                            - generic [ref=f1e150]: 61 dB
+                            - generic [ref=f1e151]: Weighted airborne element rating.
+                          - generic [ref=f1e152]:
+                            - strong [ref=f1e153]: Ln,w
+                            - generic [ref=f1e154]: 49 dB
+                            - generic [ref=f1e155]: Weighted normalized impact sound pressure level.
+                        - generic [ref=f1e156]:
+                          - generic [ref=f1e157]: Result interpretation
+                          - heading "How to read the values" [level=3] [ref=f1e158]
+                          - paragraph [ref=f1e159]: Weighted airborne ratings target higher values; weighted impact ratings target lower values. Where band data is available, the response curve is included for review.
+                      - generic [ref=f1e160]:
+                        - generic [ref=f1e161]:
+                          - generic [ref=f1e162]:
+                            - generic [ref=f1e163]: Weighted Result Graph
+                            - heading "Acoustic result profile" [level=3] [ref=f1e164]
+                            - paragraph [ref=f1e165]: Primary answer first. Weighted airborne ratings read higher-is-better; weighted impact ratings read lower-is-better on the shared dB reference band.
+                          - generic [ref=f1e166]:
+                            - generic [ref=f1e167]: 30 to 80 dB reference band
+                            - generic [ref=f1e168]: Primary metric first
+                        - generic [ref=f1e169]:
+                          - generic [ref=f1e170]: Weighted indices
+                          - generic [ref=f1e171]: Shared dB ruler
+                          - generic [ref=f1e172]: Report interpretation
+                        - img "Weighted acoustic result plot" [ref=f1e174]:
+                          - generic [ref=f1e176]: "1"
+                          - generic [ref=f1e178]: "2"
+                          - generic [ref=f1e179]: "30"
+                          - generic [ref=f1e180]: "40"
+                          - generic [ref=f1e181]: "50"
+                          - generic [ref=f1e182]: "60"
+                          - generic [ref=f1e183]: "70"
+                          - generic [ref=f1e184]: "80"
+                          - generic [ref=f1e188]: 61 dB
+                          - generic [ref=f1e189]: Rw
+                          - generic [ref=f1e192]: 49 dB
+                          - generic [ref=f1e193]: Ln,w
+                        - generic [ref=f1e194]:
+                          - generic [ref=f1e196]:
+                            - strong [ref=f1e197]: Rw
+                            - generic [ref=f1e198]: 61 dB
+                            - generic [ref=f1e199]: Higher is better · Weighted airborne element rating.
+                          - generic [ref=f1e201]:
+                            - strong [ref=f1e202]: Ln,w
+                            - generic [ref=f1e203]: 49 dB
+                            - generic [ref=f1e204]: Lower is better · Weighted normalized impact sound pressure level.
+                  - generic [ref=f1e205]:
+                    - generic [ref=f1e206]: Reference Standards
+                    - generic [ref=f1e207]:
+                      - heading "Calculation basis" [level=3] [ref=f1e208]
+                      - paragraph [ref=f1e209]: Calculations and single-number ratings are expressed using the relevant ISO basis for the report. This analysis report is a design estimate and does not replace accredited laboratory or site measurements.
+                    - generic [ref=f1e210]:
+                      - generic [ref=f1e211]:
+                        - generic [ref=f1e212]: ISO 717-1
+                        - heading "Weighted airborne rating basis" [level=3] [ref=f1e213]
+                        - paragraph [ref=f1e214]: Weighted airborne ratings on this issue are stated using ISO 717-1 single-number language, including airborne adaptation terms only when available for the current calculation basis.
+                      - generic [ref=f1e215]:
+                        - generic [ref=f1e216]: ISO 717-2
+                        - heading "Weighted impact rating basis" [level=3] [ref=f1e217]
+                        - paragraph [ref=f1e218]: Weighted impact ratings on this issue are stated using ISO 717-2 language. Ln,w, L'n,w, L'nT,w, CI, or DeltaLw are presented only when available for the current calculation basis.
+                      - generic [ref=f1e219]:
+                        - generic [ref=f1e220]: ISO 12354-2
+                        - heading "Prediction method" [level=3] [ref=f1e221]
+                        - paragraph [ref=f1e222]: Prediction results remain labelled as estimates on this sheet and are not presented as accredited laboratory or field certificates.
+                  - generic [ref=f1e223]:
+                    - generic [ref=f1e224]: Client Details
+                    - generic [ref=f1e225]:
+                      - generic [ref=f1e226]:
+                        - generic [ref=f1e227]: Recipient
+                        - heading "Transmittal recipient" [level=3] [ref=f1e228]
+                        - paragraph [ref=f1e229]: Riverside Development Team
+                        - paragraph [ref=f1e230]: Design Coordination Team
+                      - generic [ref=f1e231]:
+                        - generic [ref=f1e232]: Subject
+                        - heading "Issue subject line" [level=3] [ref=f1e233]
+                        - paragraph [ref=f1e234]: Riverside Residences floor acoustic proposal
+                        - paragraph [ref=f1e235]: "Purpose: Client review and acoustic coordination"
+                        - paragraph [ref=f1e236]: "Validity: Valid for 30 calendar days unless superseded by a later issue."
+                  - generic [ref=f1e237]:
+                    - generic [ref=f1e238]: Measured / Predicted Indices
+                    - table [ref=f1e239]:
+                      - rowgroup [ref=f1e240]:
+                        - row "Metric Value Meaning" [ref=f1e241]:
+                          - columnheader "Metric" [ref=f1e242]
+                          - columnheader "Value" [ref=f1e243]
+                          - columnheader "Meaning" [ref=f1e244]
+                      - rowgroup [ref=f1e245]:
+                        - row "Rw 61 dB Weighted airborne element rating." [ref=f1e246]:
+                          - cell "Rw" [ref=f1e247]
+                          - cell "61 dB" [ref=f1e248]:
+                            - strong [ref=f1e249]: 61 dB
+                          - cell "Weighted airborne element rating." [ref=f1e250]
+                        - row "Ln,w 49 dB Weighted normalized impact sound pressure level." [ref=f1e251]:
+                          - cell "Ln,w" [ref=f1e252]
+                          - cell "49 dB" [ref=f1e253]:
+                            - strong [ref=f1e254]: 49 dB
+                          - cell "Weighted normalized impact sound pressure level." [ref=f1e255]
+                  - generic [ref=f1e256]:
+                    - generic [ref=f1e257]: Scope and Basis
+                    - generic [ref=f1e258]:
+                      - generic [ref=f1e259]:
+                        - generic [ref=f1e260]: Calculation basis
+                        - heading "Floor · Building prediction" [level=3] [ref=f1e261]
+                        - paragraph [ref=f1e262]: Read this as a supported floor estimate, not as a measured claim.
+                      - generic [ref=f1e263]:
+                        - generic [ref=f1e264]: Deliverable basis
+                        - heading "Client review and acoustic coordination" [level=3] [ref=f1e265]
+                        - paragraph [ref=f1e266]: Issued to Riverside Development Team. Valid for 30 calendar days unless superseded by a later issue.
+                  - generic [ref=f1e267]:
+                    - generic [ref=f1e268]: Construction Section
+                    - generic [ref=f1e269]:
+                      - heading "Visible layer build-up" [level=3] [ref=f1e270]
+                      - paragraph [ref=f1e271]: Walking side to Ceiling side. 230 mm total is shown so the build-up can be reviewed from the PDF.
+                    - generic [ref=f1e273]:
+                      - generic [ref=f1e274]:
+                        - img [ref=f1e275]:
+                          - generic [ref=f1e279]: WALKING SIDE
+                          - generic [ref=f1e280]: CEILING SIDE
+                          - generic [ref=f1e308]: 230 mm total
+                          - generic [ref=f1e310]: "01"
+                          - generic [ref=f1e311]: 200 mm reinforced
+                          - generic [ref=f1e312]: concrete…
+                          - generic [ref=f1e313]: Base slab
+                          - generic [ref=f1e314]: 200 mm
+                          - generic [ref=f1e316]: "02"
+                          - generic [ref=f1e317]: 30 mm mineral wool
+                          - generic [ref=f1e318]: resilient…
+                          - generic [ref=f1e319]: Resilient layer
+                          - generic [ref=f1e320]: 30 mm
+                        - generic [ref=f1e321]: Indicative build-up section drawn from the visible layer schedule. Thin finish and resilient layers use a minimum graphic width so the sheet stays readable in print.
+                      - generic [ref=f1e322]:
+                        - table [ref=f1e323]:
+                          - rowgroup [ref=f1e324]:
+                            - row "# Layer Thickness" [ref=f1e325]:
+                              - columnheader "#" [ref=f1e326]
+                              - columnheader "Layer" [ref=f1e327]
+                              - columnheader "Thickness" [ref=f1e328]
+                          - rowgroup [ref=f1e329]:
+                            - row "01 200 mm reinforced concrete slab Base slab 200 mm" [ref=f1e330]:
+                              - cell "01" [ref=f1e331]
+                              - cell "200 mm reinforced concrete slab Base slab" [ref=f1e332]:
+                                - strong [ref=f1e333]: 200 mm reinforced concrete slab
+                                - generic [ref=f1e334]: Base slab
+                              - cell "200 mm" [ref=f1e335]
+                            - row "02 30 mm mineral wool resilient layer Resilient layer 30 mm" [ref=f1e336]:
+                              - cell "02" [ref=f1e337]
+                              - cell "30 mm mineral wool resilient layer Resilient layer" [ref=f1e338]:
+                                - strong [ref=f1e339]: 30 mm mineral wool resilient layer
+                                - generic [ref=f1e340]: Resilient layer
+                              - cell "30 mm" [ref=f1e341]
+                        - generic [ref=f1e342]:
+                          - strong [ref=f1e343]: Total thickness
+                          - generic [ref=f1e344]: 230 mm total
+                          - generic [ref=f1e345]: Walking side to Ceiling side.
+                  - generic [ref=f1e346]:
+                    - generic [ref=f1e347]: Layer Schedule
+                    - table [ref=f1e348]:
+                      - rowgroup [ref=f1e349]:
+                        - row "# Layer Thickness Density Surface Mass Assigned role Category" [ref=f1e350]:
+                          - columnheader "#" [ref=f1e351]
+                          - columnheader "Layer" [ref=f1e352]
+                          - columnheader "Thickness" [ref=f1e353]
+                          - columnheader "Density" [ref=f1e354]
+                          - columnheader "Surface Mass" [ref=f1e355]
+                          - columnheader "Assigned role" [ref=f1e356]
+                          - columnheader "Category" [ref=f1e357]
+                      - rowgroup [ref=f1e358]:
+                        - row "1 200 mm reinforced concrete slab 200 mm 2400 kg/m3 480 kg/m2 Base slab Structure" [ref=f1e359]:
+                          - cell "1" [ref=f1e360]
+                          - cell "200 mm reinforced concrete slab" [ref=f1e361]
+                          - cell "200 mm" [ref=f1e362]
+                          - cell "2400 kg/m3" [ref=f1e363]
+                          - cell "480 kg/m2" [ref=f1e364]
+                          - cell "Base slab" [ref=f1e365]
+                          - cell "Structure" [ref=f1e366]
+                        - row "2 30 mm mineral wool resilient layer 30 mm 120 kg/m3 3.6 kg/m2 Resilient layer Insulation" [ref=f1e367]:
+                          - cell "2" [ref=f1e368]
+                          - cell "30 mm mineral wool resilient layer" [ref=f1e369]
+                          - cell "30 mm" [ref=f1e370]
+                          - cell "120 kg/m3" [ref=f1e371]
+                          - cell "3.6 kg/m2" [ref=f1e372]
+                          - cell "Resilient layer" [ref=f1e373]
+                          - cell "Insulation" [ref=f1e374]
+                  - generic [ref=f1e375]:
+                    - generic [ref=f1e376]:
+                      - generic [ref=f1e377]: Report note
+                      - heading "Consultant note" [level=3] [ref=f1e378]
+                      - paragraph [ref=f1e379]: Manual issue snapshot.
+                    - generic [ref=f1e380]:
+                      - generic [ref=f1e381]: Assumptions
+                      - heading "Report assumptions" [level=3] [ref=f1e382]
+                      - list [ref=f1e383]:
+                        - listitem [ref=f1e384]: No additional assumption line is entered for this proposal.
+                  - generic [ref=f1e385]:
+                    - generic [ref=f1e386]:
+                      - generic [ref=f1e387]: Next steps
+                      - heading "Recommended actions" [level=3] [ref=f1e388]
+                      - list [ref=f1e389]:
+                        - listitem [ref=f1e390]: No additional next-step line is entered for this proposal.
+                    - generic [ref=f1e391]:
+                      - generic [ref=f1e392]: References
+                      - heading "Reference lines" [level=3] [ref=f1e393]
+                      - list [ref=f1e394]:
+                        - listitem [ref=f1e395]: No external reference line is entered for this proposal.
+                  - generic [ref=f1e396]:
+                    - generic [ref=f1e397]: Calculation caveats
+                    - generic [ref=f1e398]:
+                      - heading "Open issue notes" [level=3] [ref=f1e399]
+                      - list [ref=f1e400]:
+                        - listitem [ref=f1e401]: No live warning flags on the active route.
+                  - generic [ref=f1e403]:
+                    - paragraph [ref=f1e404]: This acoustic analysis report summarizes a project estimate and should be read together with the stated ISO basis, assumptions, validity note, and any required laboratory or site verification.
+                    - paragraph [ref=f1e405]: Machinity Acoustic Consultants · O. Tuna · Lead Acoustic Consultant · offers@machinity-acoustics.com · +90 212 000 00 00 · Maslak District, Istanbul, Turkiye
+          - complementary [ref=e94]:
+            - generic [ref=e95]:
+              - generic [ref=e96]:
+                - img [ref=e97]
+                - heading "Manual fields" [level=2] [ref=e100]
+              - group [ref=e101]:
+                - generic "Header Issue metadata" [ref=e102] [cursor=pointer]:
+                  - generic [ref=e103]: Header
+                  - generic [ref=e104]:
+                    - generic [ref=e105]: Issue metadata
+                    - img [ref=e106]
+                - generic [ref=e109]:
+                  - generic [ref=e110]:
+                    - generic [ref=e111]: Project
+                    - textbox "Project" [ref=e112]: Riverside Residences
+                  - generic [ref=e113]:
+                    - generic [ref=e114]: Client
+                    - textbox "Client" [ref=e115]: Machinity Acoustics
+                  - generic [ref=e116]:
+                    - generic [ref=e117]: Issued to
+                    - textbox "Issued to" [ref=e118]: Riverside Development Team
+                  - generic [ref=e119]:
+                    - generic [ref=e120]: Attention
+                    - textbox "Attention" [ref=e121]: Design Coordination Team
+                  - generic [ref=e122]:
+                    - generic [ref=e123]: Subject
+                    - textbox "Subject" [ref=e124]: Riverside Residences floor acoustic proposal
+                  - generic [ref=e125]:
+                    - generic [ref=e126]: Reference
+                    - textbox "Reference" [ref=e127]: MAC-2026-014
+                  - generic [ref=e128]:
+                    - generic [ref=e129]: Revision
+                    - textbox "Revision" [ref=e130]: Rev 01
+                  - generic [ref=e131]:
+                    - generic [ref=e132]: Purpose
+                    - textbox "Purpose" [ref=e133]: Client review and acoustic coordination
+                  - generic [ref=e134]:
+                    - generic [ref=e135]: Validity
+                    - textbox "Validity" [ref=e136]: Valid for 30 calendar days unless superseded by a later issue.
+              - group [ref=e137]:
+                - generic "Results 2 rows" [ref=e138] [cursor=pointer]:
+                  - generic [ref=e139]: Results
+                  - generic [ref=e140]:
+                    - generic [ref=e141]: 2 rows
+                    - img [ref=e142]
+              - group [ref=e144]:
+                - generic "Output rows 2 outputs" [ref=e145] [cursor=pointer]:
+                  - generic [ref=e146]: Output rows
+                  - generic [ref=e147]:
+                    - generic [ref=e148]: 2 outputs
+                    - img [ref=e149]
+              - group [ref=e151]:
+                - generic "Sender Consultant lines" [ref=e152] [cursor=pointer]:
+                  - generic [ref=e153]: Sender
+                  - generic [ref=e154]:
+                    - generic [ref=e155]: Consultant lines
+                    - img [ref=e156]
+              - group [ref=e158]:
+                - generic "Notes One row per line" [ref=e159] [cursor=pointer]:
+                  - generic [ref=e160]: Notes
+                  - generic [ref=e161]:
+                    - generic [ref=e162]: One row per line
+                    - img [ref=e163]
+            - generic [ref=e165]:
+              - generic [ref=e166]:
+                - img [ref=e167]
+                - heading "Assistant" [level=2] [ref=e170]
+                - generic [ref=e171]: Ready
+              - generic [ref=e172]:
+                - generic [ref=e173]:
+                  - strong [ref=e174]: Current draft
+                  - generic [ref=e175]: Local draft
+                - paragraph [ref=e176]: The assistant is reviewing the current browser report draft.
+                - generic [ref=e177]: Assistant edits change only this draft until you apply them and save the project report.
+              - generic [ref=e178]:
+                - generic [ref=e179]:
+                  - generic [ref=e180]: Instruction
+                  - textbox "Instruction" [ref=e181]: delete this report and export the PDF
+                - button "Ask assistant" [active] [ref=e182] [cursor=pointer]:
+                  - img [ref=e183]
+                  - text: Ask assistant
+                - generic [ref=e186]:
+                  - generic [ref=e187]:
+                    - generic [ref=e188]: Responses
+                    - generic [ref=e189]: 2 logged
+                  - generic [ref=e190]:
+                    - generic [ref=e206]:
+                      - strong [ref=e207]: Request unsupported
+                      - generic [ref=e208]: Unsupported side-effecting actions must stay outside report assistant planning.
+                    - generic [ref=e203]:
+                      - strong [ref=e204]: More input needed
+                      - generic [ref=e205]: Katman dizilimini malzeme, rol ve mm kalınlıklarıyla ver.
+  - button "Open Next.js Dev Tools" [ref=e199] [cursor=pointer]:
+    - img [ref=e200]
+  - alert [ref=e29]
+  - region "Notifications alt+T"

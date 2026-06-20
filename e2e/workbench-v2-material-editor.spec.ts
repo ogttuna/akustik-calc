@@ -1,3 +1,5 @@
+/// <reference lib="dom" />
+
 import { expect, test, type Locator, type Page } from "@playwright/test";
 
 const TEST_USERNAME = process.env.DYNECHO_AUTH_USERNAME ?? "admin";

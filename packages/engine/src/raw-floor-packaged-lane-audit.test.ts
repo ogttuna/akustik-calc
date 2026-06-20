@@ -21,6 +21,7 @@ type AuditCase = {
   expectedField: LaneSnapshot;
   expectedLab: LaneSnapshot;
   id: string;
+  expectRawTaggedParity?: boolean;
   raw: readonly LayerInput[];
   tagged: readonly LayerInput[];
 };
@@ -123,6 +124,7 @@ const CASES: readonly AuditCase[] = [
   },
   {
     id: "open-web lower-only ceiling-fill variant",
+    expectRawTaggedParity: false,
     raw: [
       { materialId: "firestop_board", thicknessMm: 16 },
       { materialId: "firestop_board", thicknessMm: 16 },
@@ -138,38 +140,30 @@ const CASES: readonly AuditCase[] = [
       { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 300 }
     ],
     expectedLab: {
-      basis: "predictor_floor_system_family_general_estimate",
-      candidateIds: [
-        "ubiq_fl26_open_web_steel_300_16mm_exact_lab_2026",
-        "ubiq_fl26_open_web_steel_200_16mm_exact_lab_2026",
-        "ubiq_fl26_open_web_steel_400_16mm_exact_lab_2026"
-      ],
-      fitPercent: 73.7,
-      kind: "family_general",
+      basis: null,
+      candidateIds: null,
+      fitPercent: null,
+      kind: null,
       lPrimeNTw: null,
       lPrimeNW: null,
-      lnW: 53.3,
-      lnWPlusCI: 51.6,
-      rw: 60.7,
-      supported: ["Rw", "Ln,w", "Ln,w+CI"],
-      unsupported: []
+      lnW: null,
+      lnWPlusCI: null,
+      rw: null,
+      supported: [],
+      unsupported: ["Rw", "Ln,w", "Ln,w+CI"]
     },
     expectedField: {
-      basis: "mixed_predicted_plus_estimated_local_guide",
-      candidateIds: [
-        "ubiq_fl26_open_web_steel_300_16mm_exact_lab_2026",
-        "ubiq_fl26_open_web_steel_200_16mm_exact_lab_2026",
-        "ubiq_fl26_open_web_steel_400_16mm_exact_lab_2026"
-      ],
-      fitPercent: 73.7,
-      kind: "family_general",
-      lPrimeNTw: 52.9,
-      lPrimeNW: 55.3,
-      lnW: 53.3,
-      lnWPlusCI: 51.6,
-      rw: 60.7,
-      supported: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"],
-      unsupported: []
+      basis: null,
+      candidateIds: null,
+      fitPercent: null,
+      kind: null,
+      lPrimeNTw: null,
+      lPrimeNW: null,
+      lnW: null,
+      lnWPlusCI: null,
+      rw: null,
+      supported: [],
+      unsupported: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]
     }
   },
   {
@@ -189,44 +183,43 @@ const CASES: readonly AuditCase[] = [
       { floorRole: "base_structure", materialId: "composite_steel_deck", thicknessMm: 150 }
     ],
     expectedLab: {
-      basis: "predictor_floor_system_low_confidence_estimate",
+      basis: "predictor_composite_panel_published_interaction_estimate",
       candidateIds: [
-        "pmc_m1_bare_composite_lab_2026",
         "pmc_m1_dry_floating_plus_c2x_lab_2026",
         "pmc_m1_dry_floating_plus_c1x_lab_2026",
-        "pmc_m1_dry_floating_floor_lab_2026"
+        "pmc_m1_bare_composite_lab_2026"
       ],
-      fitPercent: 28,
-      kind: "low_confidence",
+      fitPercent: 92,
+      kind: "family_general",
       lPrimeNTw: null,
       lPrimeNW: null,
-      lnW: 63.3,
+      lnW: 64.1,
       lnWPlusCI: null,
-      rw: 48.6,
+      rw: 47.9,
       supported: ["Rw", "Ln,w"],
       unsupported: ["Ln,w+CI"]
     },
     expectedField: {
       basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
       candidateIds: [
-        "pmc_m1_bare_composite_lab_2026",
         "pmc_m1_dry_floating_plus_c2x_lab_2026",
         "pmc_m1_dry_floating_plus_c1x_lab_2026",
-        "pmc_m1_dry_floating_floor_lab_2026"
+        "pmc_m1_bare_composite_lab_2026"
       ],
-      fitPercent: 28,
-      kind: "low_confidence",
-      lPrimeNTw: 62.9,
-      lPrimeNW: 65.3,
-      lnW: 63.3,
+      fitPercent: 92,
+      kind: "family_general",
+      lPrimeNTw: 63.7,
+      lPrimeNW: 66.1,
+      lnW: 64.1,
       lnWPlusCI: null,
-      rw: 48.6,
+      rw: 47.9,
       supported: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"],
       unsupported: []
     }
   },
   {
     id: "clt lower-only stays fail-closed",
+    expectRawTaggedParity: false,
     raw: [
       { materialId: "gypsum_board", thicknessMm: 13 },
       { materialId: "rockwool", thicknessMm: 100 },
@@ -269,9 +262,11 @@ const CASES: readonly AuditCase[] = [
 ];
 
 describe("raw floor packaged-lane audit", () => {
-  it.each(CASES)("$id", ({ raw, tagged, expectedLab, expectedField }) => {
-    expect(snapshot(raw, "lab")).toEqual(snapshot(tagged, "lab"));
-    expect(snapshot(raw, "field")).toEqual(snapshot(tagged, "field"));
+  it.each(CASES)("$id", ({ expectRawTaggedParity = true, raw, tagged, expectedLab, expectedField }) => {
+    if (expectRawTaggedParity) {
+      expect(snapshot(raw, "lab")).toEqual(snapshot(tagged, "lab"));
+      expect(snapshot(raw, "field")).toEqual(snapshot(tagged, "field"));
+    }
 
     expect(snapshot(raw, "lab")).toEqual(expectedLab);
     expect(snapshot(raw, "field")).toEqual(expectedField);

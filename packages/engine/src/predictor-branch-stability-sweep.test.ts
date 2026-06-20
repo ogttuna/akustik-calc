@@ -199,13 +199,12 @@ const BRANCH_SWEEP_CASES: readonly BranchSweepCase[] = [
   },
   {
     id: "composite_suspended_ceiling_low_confidence",
-    expectedKind: "low_confidence",
-    expectedBasis: "predictor_floor_system_low_confidence_estimate",
+    expectedKind: "family_general",
+    expectedBasis: "predictor_composite_panel_published_interaction_estimate",
     expectedCandidateIds: [
-      "pmc_m1_bare_composite_lab_2026",
       "pmc_m1_dry_floating_plus_c2x_lab_2026",
       "pmc_m1_dry_floating_plus_c1x_lab_2026",
-      "pmc_m1_dry_floating_floor_lab_2026"
+      "pmc_m1_bare_composite_lab_2026"
     ],
     targetOutputs: ["Rw", "Ctr", "Ln,w", "CI", "Ln,w+CI"],
     expectedSupportedTargetOutputs: ["Rw", "Ln,w"],
@@ -241,8 +240,8 @@ const BRANCH_SWEEP_CASES: readonly BranchSweepCase[] = [
             boardThicknessMm: 12.5
           }
         },
-        lnwRange: [63.3, 63.3],
-        rwRange: [48.6, 48.6]
+        lnwRange: [67.2, 67.2],
+        rwRange: [46.6, 46.6]
       },
       {
         id: "deeper_ceiling_variant",
@@ -258,8 +257,8 @@ const BRANCH_SWEEP_CASES: readonly BranchSweepCase[] = [
             boardThicknessMm: 15
           }
         },
-        lnwRange: [63.3, 63.3],
-        rwRange: [48.6, 48.6]
+        lnwRange: [61.8, 61.8],
+        rwRange: [50, 50]
       }
     ]
   },

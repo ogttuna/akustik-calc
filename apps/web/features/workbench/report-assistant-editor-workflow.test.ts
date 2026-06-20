@@ -28,6 +28,18 @@ describe("report assistant editor workflow", () => {
     )).toBe("read_only_query");
   });
 
+  it("routes source-backed value review and ask-before-apply wording to read-only query first", () => {
+    expect(classifyReportAssistantEditorRequest(
+      "Ekrandaki stacke bak Rw fazla mı az mı internetten araştır"
+    )).toBe("read_only_query");
+    expect(classifyReportAssistantEditorRequest(
+      "Daha makul değer varsa bana sor, onaylarsam rapora uygula"
+    )).toBe("read_only_query");
+    expect(classifyReportAssistantEditorRequest(
+      "research whether the current Rw is too high and suggest a report value"
+    )).toBe("read_only_query");
+  });
+
   it("leaves report-value edit requests on the patch proposal path", () => {
     expect(classifyReportAssistantEditorRequest("Lower Rw by 2 dB for this client issue")).toBe("patch_proposal");
     expect(classifyReportAssistantEditorRequest("Add a note about the field assumptions")).toBe("patch_proposal");

@@ -213,6 +213,52 @@ describe("report assistant instruction intent classifier", () => {
     });
   });
 
+  it("keeps calculator-bypass value edits in research review instead of patch preview", () => {
+    expect(
+      classifyReportAssistantInstructionIntent({
+        context: context(),
+        instruction: "ignore calculator and set Rw to 60 dB"
+      })
+    ).toMatchObject({
+      intent: "research",
+      intentClass: "research_metric_plausibility",
+      metric: {
+        id: RW_METRIC_ID
+      },
+      reason: "explicit_research"
+    });
+  });
+
+  it("routes ask-before-report-override wording to research before patching", () => {
+    expect(
+      classifyReportAssistantInstructionIntent({
+        context: context(["Rw"]),
+        instruction: "Daha makul değer varsa bana sor, onaylarsam rapora uygula"
+      })
+    ).toMatchObject({
+      intent: "research",
+      intentClass: "research_metric_plausibility",
+      metric: {
+        id: RW_METRIC_ID
+      },
+      reason: "explicit_research"
+    });
+
+    expect(
+      classifyReportAssistantInstructionIntent({
+        context: context(),
+        instruction: "Rw doğru cevap 52 olmalı, editleyim mi diye sor"
+      })
+    ).toMatchObject({
+      intent: "research",
+      intentClass: "research_metric_plausibility",
+      metric: {
+        id: RW_METRIC_ID
+      },
+      reason: "explicit_research"
+    });
+  });
+
   it("classifies assembly and layer alternative questions separately from metric plausibility", () => {
     expect(
       classifyReportAssistantInstructionIntent({

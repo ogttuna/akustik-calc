@@ -713,9 +713,20 @@ function getFieldAdapterSupportedMetrics(
   result: FloorRuntimeTraceCarrier
 ): RequestedOutputId[] {
   const supportedOutputSet = new Set(result.supportedTargetOutputs ?? []);
-  return trace.supportedMetrics.filter((metric): metric is RequestedOutputId =>
+  const supportedMetrics = trace.supportedMetrics.filter((metric): metric is RequestedOutputId =>
     supportedOutputSet.has(metric as RequestedOutputId)
   );
+
+  if (
+    trace.runtimeBasisId === FLOOR_RAW_BARE_AIRBORNE_BUILDING_PREDICTION_RUNTIME_BASIS &&
+    supportedOutputSet.has("Rw") &&
+    typeof result.floorSystemRatings?.Rw === "number" &&
+    Number.isFinite(result.floorSystemRatings.Rw)
+  ) {
+    return [...new Set([...supportedMetrics, "Rw" as RequestedOutputId])];
+  }
+
+  return supportedMetrics;
 }
 
 function getFloorRuntimeCandidateSupportedMetrics(

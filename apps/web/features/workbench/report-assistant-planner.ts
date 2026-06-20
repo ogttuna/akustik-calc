@@ -142,6 +142,45 @@ function hasResearchIntent(normalized: string): boolean {
     .test(normalized);
 }
 
+function hasMetricReference(normalized: string): boolean {
+  return /\b(?:aiic|c|ci|ctr|delta\s*lw|dn|dna|dnt|iic|ln|lnw|rw|stc)\b/u.test(normalized);
+}
+
+function hasValuePlausibilityIntent(normalized: string): boolean {
+  return /\b(?:az|deger\w*|dogru|dusuk|fazla|high|low|makul|mantikli|normal|plausible|reasonable|sensible|suspicious|too high|too low|wrong|yanlis|yuksek)\b/u
+    .test(normalized);
+}
+
+function hasReviewBeforeApplySignal(normalized: string): boolean {
+  return /\b(?:approve|ask me|bana sor|confirm|editleyeyim mi|editleyim mi|onay|onayla|onaylarsam|sor|uygulayayim mi|uygulayayım mı|yazayim mi|yazayım mı)\b/u
+    .test(normalized);
+}
+
+function hasCalculatorOverrideReviewSignal(normalized: string): boolean {
+  return /\b(?:calculator(?:'?[a-z]*)?\s+(?:wrong|ignore|yanlis)|hesab[ia]?\s+bosver|hesap\s+yanlis|ignore\s+(?:the\s+)?calculator|calculator\s+yerine)\b/u
+    .test(normalized);
+}
+
+function hasDirectCurrentCalculatorValueSetSignal(normalized: string): boolean {
+  return hasMetricReference(normalized) &&
+    /\b\d+(?:[.,]\d+)?\s*(?:db)?\b/u.test(normalized) &&
+    /\b(?:apply|ayarla|change|degistir|dogru\s+cevap|editle|make|must\s+be|olmali|olmasi\s+gerek|olsun|replace|set|should\s+be|target|uygula|yap|yaz)\b/u.test(normalized);
+}
+
+function hasCurrentValueReviewIntent(input: ReportAssistantPlannerInput, normalized: string): boolean {
+  const hasMetricContext = Boolean(input.selectedOutputs && input.selectedOutputs.length > 0) || hasMetricReference(normalized);
+
+  return hasMetricContext && (
+    hasResearchIntent(normalized) ||
+    hasCalculatorOverrideReviewSignal(normalized) ||
+    (input.sourceStackAvailable === true && hasDirectCurrentCalculatorValueSetSignal(normalized)) ||
+    (
+      hasValuePlausibilityIntent(normalized) &&
+      (input.sourceStackAvailable === true || hasReviewBeforeApplySignal(normalized))
+    )
+  );
+}
+
 function hasAlternativeIntent(normalized: string): boolean {
   return /\b(?:alternative|alternatives|alternatif|assembly|combination|karsilastir|karsilastirma|kiyasla|kombinasyon|malzeme|material)\b/u
     .test(normalized);
@@ -155,6 +194,11 @@ function hasProjectReadIntent(normalized: string): boolean {
 function hasPatchIntent(normalized: string): boolean {
   return /\b(?:adjust|append|change|duzelt|edit|note|revise|set|update|write)\b/u.test(normalized) ||
     /\b(?:degistir|duzenle|guncelle|not ekle|revize|yaz)\b/u.test(normalized);
+}
+
+function hasReportTextPatchIntent(normalized: string): boolean {
+  return hasPatchIntent(normalized) &&
+    /\b(?:aciklama\w*|comment\w*|metin|note|not|ozet|rapor|report|summary|text)\b/u.test(normalized);
 }
 
 function actionCapabilityForInput(input: ReportAssistantPlannerInput, normalized: string): string | null {
@@ -282,17 +326,35 @@ export function planReportAssistantRequest(input: ReportAssistantPlannerInput): 
     });
   }
 
-  if (hasResearchIntent(normalized)) {
+  if (hasReportTextPatchIntent(normalized)) {
+    return candidateDecision({
+      confidence: "medium",
+      input,
+      mode: "patch_proposal",
+      targetCapability: "report_assistant_patch_route",
+      usedSignals: ["patch_intent", "preview_only"]
+    });
+  }
+
+  const currentValueReviewIntent = !hasAlternativeIntent(normalized) && hasCurrentValueReviewIntent(input, normalized);
+  if (currentValueReviewIntent || hasResearchIntent(normalized)) {
     const targetCapability = hasAlternativeIntent(normalized)
       ? "report_assistant_assembly_alternatives_route"
       : "report_assistant_plausibility_route";
 
     return candidateDecision({
-      confidence: "medium",
+      confidence: currentValueReviewIntent ? "high" : "medium",
       input,
       mode: "research_review",
       targetCapability,
-      usedSignals: ["research_intent"]
+      usedSignals: [
+        "research_intent",
+        ...(currentValueReviewIntent ? ["current_calculator_value_review_intent"] : []),
+        ...(hasReviewBeforeApplySignal(normalized) ? ["confirmation_before_report_override"] : []),
+        ...(hasCalculatorOverrideReviewSignal(normalized) || hasDirectCurrentCalculatorValueSetSignal(normalized)
+          ? ["calculator_override_blocked"]
+          : [])
+      ]
     });
   }
 

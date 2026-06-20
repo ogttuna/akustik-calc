@@ -112,18 +112,25 @@ describe("company-internal calculation-grade mainline matrix refresh after heavy
         "floor.lightweight_steel_suspended_ceiling_lnt50.unsupported",
         "wall.building_prediction_missing_context.needs_input"
       ]),
-      currentPostureCoverage: ["family_physics", "needs_input", "unsupported", "exact", "source_anchored_delta"],
+      currentPostureCoverage: [
+        "family_physics",
+        "bounded_screening",
+        "needs_input",
+        "unsupported",
+        "exact",
+        "source_anchored_delta"
+      ],
       exactSourcePrecedenceRowIds: [
         "floor.lightweight_steel_exact_source_precedence.lab",
         "floor.lightweight_steel_suspended_ceiling_exact_source_precedence.lab",
         "floor.reinforced_concrete_combined_exact_source_precedence.lab"
       ],
       failureClassCounts: {
-        basis_boundary: 5,
+        basis_boundary: 3,
         correct_block: 14,
         coverage_gap: 0,
         hostile_input_refusal: 4,
-        none: 34,
+        none: 36,
         unsupported_metric: 4
       },
       heavyCompositeRowIds: [...COMPANY_INTERNAL_CALCULATION_GRADE_HEAVY_COMPOSITE_ROW_IDS],

@@ -1,0 +1,27 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - button "Switch to dark mode" [ref=e5]:
+        - img [ref=e6]
+        - text: Light
+      - generic [ref=e12]:
+        - generic [ref=e13]: Protected DAC access
+        - generic [ref=e14]:
+          - heading "Sign in to the workbench" [level=1] [ref=e15]
+          - paragraph [ref=e16]: The landing page stays public. The calculation workspace, proposal preview, and server-side calculation routes now require an authenticated session.
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - text: Username
+          - textbox "Username" [ref=e19]
+        - generic [ref=e20]:
+          - text: Password
+          - textbox "Password" [ref=e21]
+        - button "Sign in" [ref=e22]
+      - generic [ref=e23]:
+        - link "Back to overview" [ref=e24] [cursor=pointer]:
+          - /url: /
+        - generic [ref=e25]:
+          - generic [ref=e26]: Next route
+          - generic [ref=e27]: /workbench-v2
+  - alert [ref=e28]
+  - region "Notifications alt+T"

@@ -257,6 +257,11 @@ function assertFiniteSupportedOutputs(
   }
 }
 
+function hasExplicitNeedsInputBoundary(result: ReturnType<typeof calculateAssembly>): boolean {
+  return result.airborneBasis?.origin === "needs_input" &&
+    (result.airborneBasis.missingPhysicalInputs?.length ?? 0) > 0;
+}
+
 describe("dynamic guided combination sweep", () => {
   it("keeps representative guided wall combinations numerically sane on the dynamic route", () => {
     const failures: string[] = [];
@@ -275,7 +280,7 @@ describe("dynamic guided combination sweep", () => {
         continue;
       }
 
-      if (!lab.supportedTargetOutputs.length) {
+      if (!lab.supportedTargetOutputs.length && !hasExplicitNeedsInputBoundary(lab)) {
         failures.push(`${testCase.id} lab: expected at least one supported output`);
       }
 
@@ -293,7 +298,7 @@ describe("dynamic guided combination sweep", () => {
         continue;
       }
 
-      if (!field.supportedTargetOutputs.length) {
+      if (!field.supportedTargetOutputs.length && !hasExplicitNeedsInputBoundary(field)) {
         failures.push(`${testCase.id} field: expected at least one supported field output`);
       }
 

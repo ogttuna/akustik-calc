@@ -92,18 +92,18 @@ const CONTEXT_OWNED_POROUS_CAVITY_BASE = {
       }
     ]
   }
-} as const;
+} satisfies Pick<AirborneContext, "advancedWall" | "sharedTrack" | "studSpacingMm" | "wallTopology">;
 
-const FIELD_CONTEXT = {
+const FIELD_CONTEXT: AirborneContext = {
   ...CONTEXT_OWNED_POROUS_CAVITY_BASE,
   contextMode: "field_between_rooms",
   panelHeightMm: 2800,
   panelWidthMm: 3200,
   receivingRoomRt60S: 0.6,
   receivingRoomVolumeM3: 55
-} as const satisfies AirborneContext;
+};
 
-const BUILDING_CONTEXT = {
+const BUILDING_CONTEXT: AirborneContext = {
   ...CONTEXT_OWNED_POROUS_CAVITY_BASE,
   buildingPredictionOutputBasis: "apparent_and_standardized",
   conservativeFlankingAssumption: "multi_path_conservative",
@@ -115,14 +115,14 @@ const BUILDING_CONTEXT = {
   receivingRoomRt60S: 0.6,
   receivingRoomVolumeM3: 55,
   sourceRoomVolumeM3: 42
-} as const satisfies AirborneContext;
+};
 
-const LAB_CONTEXT = {
+const LAB_CONTEXT: AirborneContext = {
   ...CONTEXT_OWNED_POROUS_CAVITY_BASE,
   contextMode: "element_lab"
-} as const satisfies AirborneContext;
+};
 
-const MISSING_CONTEXT_OWNED_FLOW_CONTEXT = {
+const MISSING_CONTEXT_OWNED_FLOW_CONTEXT: AirborneContext = {
   contextMode: "field_between_rooms",
   panelHeightMm: 2800,
   panelWidthMm: 3200,
@@ -139,9 +139,9 @@ const MISSING_CONTEXT_OWNED_FLOW_CONTEXT = {
     supportTopology: "independent_frames",
     topologyMode: "double_leaf_framed"
   }
-} as const satisfies AirborneContext;
+};
 
-const MISSING_SIDE_GROUP_CONTEXT = {
+const MISSING_SIDE_GROUP_CONTEXT: AirborneContext = {
   ...FIELD_CONTEXT,
   wallTopology: {
     cavity1AbsorptionClass: "porous_absorptive",
@@ -150,9 +150,9 @@ const MISSING_SIDE_GROUP_CONTEXT = {
     supportTopology: "independent_frames",
     topologyMode: "double_leaf_framed"
   }
-} as const satisfies AirborneContext;
+};
 
-const MISSING_ABSORPTIVE_CAVITY_CONTEXT = {
+const MISSING_ABSORPTIVE_CAVITY_CONTEXT: AirborneContext = {
   ...FIELD_CONTEXT,
   wallTopology: {
     cavity1DepthMm: 90,
@@ -162,7 +162,7 @@ const MISSING_ABSORPTIVE_CAVITY_CONTEXT = {
     supportTopology: "independent_frames",
     topologyMode: "double_leaf_framed"
   }
-} as const satisfies AirborneContext;
+};
 
 const LAB_OUTPUTS = ["Rw", "STC", "C", "Ctr"] as const satisfies readonly RequestedOutputId[];
 const FIELD_OUTPUTS = ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A"] as const satisfies readonly RequestedOutputId[];

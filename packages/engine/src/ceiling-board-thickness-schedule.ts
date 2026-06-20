@@ -14,6 +14,39 @@ type ThicknessRun = {
   unitThicknessMm: number;
 };
 
+const NOMINAL_CEILING_BOARD_THICKNESSES_BY_MATERIAL: Record<string, readonly number[]> = {
+  acoustic_gypsum_board: [12.5, 13, 15],
+  firestop_board: [15, 16],
+  gypsum_board: [12.5, 13, 15],
+  impactstop_board: [15, 16],
+  nrc_type_c_gypsum_board: [12.5, 13, 15]
+};
+
+const DEFAULT_NOMINAL_CEILING_BOARD_THICKNESSES_MM = [12.5, 13, 15, 16] as const;
+
+function getNominalCeilingBoardThicknessesMm(materialId: string | undefined): readonly number[] {
+  return materialId ? NOMINAL_CEILING_BOARD_THICKNESSES_BY_MATERIAL[materialId] ?? DEFAULT_NOMINAL_CEILING_BOARD_THICKNESSES_MM
+    : DEFAULT_NOMINAL_CEILING_BOARD_THICKNESSES_MM;
+}
+
+function allSameMaterial(layers: readonly ThicknessLikeLayer[]): boolean {
+  const materialId = layers[0]?.material.id;
+
+  return Boolean(materialId) && layers.every((layer) => layer.material.id === materialId);
+}
+
+function isUniformBoardSchedule(thicknessesMm: readonly number[]): boolean {
+  const firstThicknessMm = thicknessesMm[0];
+
+  return (
+    typeof firstThicknessMm === "number" &&
+    firstThicknessMm >= 10 &&
+    thicknessesMm.every(
+      (thicknessMm) => Math.abs(thicknessMm - firstThicknessMm) <= CEILING_BOARD_SCHEDULE_PACK_TOLERANCE_MM
+    )
+  );
+}
+
 function toThicknessRuns(expectedScheduleMm: readonly number[]): ThicknessRun[] {
   const runs: ThicknessRun[] = [];
 
@@ -98,6 +131,71 @@ export function matchesPackedThicknessSchedule(
       matchesOrderedPackedThicknessRuns(actualThicknessesMm, expectedScheduleMm) ||
       matchesOrderedPackedThicknessRuns(actualThicknessesMm, [...expectedScheduleMm].reverse())
     )
+  );
+}
+
+export function inferScheduleEquivalentCeilingBoardThicknesses(
+  layers: readonly ThicknessLikeLayer[]
+): number[] | null {
+  if (layers.length === 0 || !allSameMaterial(layers)) {
+    return null;
+  }
+
+  const thicknessesMm = layers.map((layer) => layer.thicknessMm);
+  if (thicknessesMm.some((thicknessMm) => !(typeof thicknessMm === "number" && thicknessMm > 0))) {
+    return null;
+  }
+
+  const actualThicknessesMm = thicknessesMm as number[];
+  if (isUniformBoardSchedule(actualThicknessesMm)) {
+    return [...actualThicknessesMm];
+  }
+
+  const totalThicknessMm = actualThicknessesMm.reduce((sum, thicknessMm) => sum + thicknessMm, 0);
+  const maxPieceThicknessMm = Math.max(...actualThicknessesMm);
+  const nominalThicknessesMm = getNominalCeilingBoardThicknessesMm(layers[0]?.material.id);
+  let best:
+    | {
+        boardCount: number;
+        boardThicknessMm: number;
+        nominalDeltaMm: number;
+      }
+    | null = null;
+
+  for (let boardCount = 1; boardCount <= layers.length; boardCount += 1) {
+    const boardThicknessMm = totalThicknessMm / boardCount;
+    if (boardThicknessMm + CEILING_BOARD_SCHEDULE_PACK_TOLERANCE_MM < maxPieceThicknessMm) {
+      continue;
+    }
+
+    const nominalDeltaMm = Math.min(
+      ...nominalThicknessesMm.map((nominalThicknessMm) => Math.abs(boardThicknessMm - nominalThicknessMm))
+    );
+    if (nominalDeltaMm > CEILING_BOARD_SCHEDULE_PACK_TOLERANCE_MM) {
+      continue;
+    }
+
+    if (
+      !best ||
+      nominalDeltaMm < best.nominalDeltaMm ||
+      (Math.abs(nominalDeltaMm - best.nominalDeltaMm) <= CEILING_BOARD_SCHEDULE_PACK_TOLERANCE_MM &&
+        boardThicknessMm > best.boardThicknessMm)
+    ) {
+      best = {
+        boardCount,
+        boardThicknessMm,
+        nominalDeltaMm
+      };
+    }
+  }
+
+  if (!best) {
+    return null;
+  }
+
+  return Array.from(
+    { length: best.boardCount },
+    () => Math.round(best.boardThicknessMm * 1000) / 1000
   );
 }
 

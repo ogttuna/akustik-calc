@@ -6,6 +6,8 @@ import {
   getReportAssistantMetricDirection,
   getReportAssistantMetricId
 } from "./report-assistant-context";
+import type { ReportAssistantCurrentCalculatorReviewPacket } from "./report-assistant-current-calculator-review-packet";
+import { buildReportAssistantContextFromCurrentCalculatorReviewPacket } from "./report-assistant-plausibility";
 import {
   buildSystemLlmGeminiGroundedResearchRequest,
   createReportAssistantPlausibilityReview,
@@ -18,6 +20,7 @@ import type { SimpleWorkbenchProposalDocument } from "./simple-workbench-proposa
 const RW_METRIC_ID = getReportAssistantMetricId("Rw");
 const DELTALW_METRIC_ID = getReportAssistantMetricId("DeltaLw");
 const IIC_METRIC_ID = getReportAssistantMetricId("IIC");
+const CALCULATOR_RW_METRIC_ID = "output:Rw";
 
 function metadata(outputId: "DeltaLw" | "IIC" | "Rw" = "Rw") {
   return {
@@ -167,6 +170,63 @@ function parkedMetricContext(status: "needs_input" | "unsupported") {
       document: parkedDocument,
       reportId: `research-${status}-test`
     })
+  };
+}
+
+function calculatorReviewPacket(): ReportAssistantCurrentCalculatorReviewPacket {
+  return {
+    contextSignature: "calculator-context:research-test",
+    layers: [
+      {
+        index: 1,
+        label: "Gypsum Board 12.5 mm",
+        materialId: "gypsum_board",
+        materialName: "Gypsum Board",
+        role: "side_a",
+        sourceText: "side_a: Gypsum Board 12.5 mm",
+        thicknessMm: 12.5
+      },
+      {
+        index: 2,
+        label: "Rock Wool 50 mm",
+        materialId: "rockwool",
+        materialName: "Rock Wool",
+        role: "cavity",
+        sourceText: "cavity: Rock Wool 50 mm",
+        thicknessMm: 50
+      },
+      {
+        index: 3,
+        label: "Gypsum Board 12.5 mm",
+        materialId: "gypsum_board",
+        materialName: "Gypsum Board",
+        role: "side_b",
+        sourceText: "side_b: Gypsum Board 12.5 mm",
+        thicknessMm: 12.5
+      }
+    ],
+    metric: {
+      basis: "lab",
+      calculatorDisplayValue: "41 dB",
+      direction: "higher_is_better",
+      label: "Rw",
+      metricId: CALCULATOR_RW_METRIC_ID,
+      outputId: "Rw",
+      status: "live",
+      valueAuthority: "calculator_preview"
+    },
+    missingInputs: [],
+    numericReviewAllowed: true,
+    requestedOutputs: ["Rw"],
+    reviewStatus: "ready",
+    route: "wall",
+    routeBasis: "formula",
+    snapshotSignature: "workbench-snapshot:research-test",
+    source: "calculator_preview",
+    sourceName: "Described wall layer configuration",
+    tasks: [],
+    unsupportedOutputs: [],
+    warnings: []
   };
 }
 
@@ -382,6 +442,103 @@ describe("report assistant source-bounded plausibility research", () => {
       ]));
       expect(JSON.stringify(envelope)).not.toContain("I found comparable acoustic references");
       expect(JSON.stringify(envelope)).not.toContain("Comparable heavyweight concrete floors");
+    }
+  });
+
+  it("sends current calculator review packets to source research without accepting provider patches", async () => {
+    const fetchMock = vi.fn(async (_url: string | URL | Request, init?: RequestInit) => {
+      const body = JSON.parse(String(init?.body)) as {
+        context: {
+          layersSummary: readonly string[];
+          metric: {
+            engineDisplayValue?: string;
+            id: string;
+            reportDisplayValue: string;
+          };
+        };
+        review: {
+          suggestPatch?: boolean;
+        };
+      };
+
+      expect(body.context.metric).toMatchObject({
+        engineDisplayValue: "41 dB",
+        id: CALCULATOR_RW_METRIC_ID,
+        reportDisplayValue: "41 dB"
+      });
+      expect(body.context.layersSummary.join(" ")).toContain("Rock Wool 50 mm");
+      expect(body.review.suggestPatch).toBe(false);
+
+      return new Response(
+        JSON.stringify({
+          review: {
+            answerText: "Comparable gypsum and mineral wool wall references sit above the current value, but exact comparability is partial.",
+            comparability: "partial",
+            comparableAssemblies: [
+              {
+                comparisonNote: "Similar gypsum + mineral wool wall, not the exact calculator stack.",
+                label: "Gypsum mineral wool wall reference",
+                matchingLayers: ["Gypsum Board", "Rock Wool"],
+                metricValues: ["Rw 45-50 dB"],
+                sourceTitle: "Wall acoustic reference",
+                sourceUrl: "https://example.com/wall-acoustic-reference",
+                weakeningDifferences: ["unknown stud/cavity details"]
+              }
+            ],
+            confidence: "medium",
+            metricId: CALCULATOR_RW_METRIC_ID,
+            rationale: ["Source evidence is advisory only."],
+            recommendedActionText: "Ask the user before applying any report-only recommendation.",
+            severity: "medium",
+            sourceQuality: "mixed",
+            suggestedReportPatch: {
+              operations: [],
+              summary: "Provider patch must be ignored"
+            },
+            valueRecommendation: {
+              displayValue: "47 dB",
+              note: "Advisory source-backed report value only."
+            },
+            verdict: "suspicious"
+          }
+        }),
+        {
+          status: 200
+        }
+      );
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const result = await createReportAssistantPlausibilityReview({
+      context: buildReportAssistantContextFromCurrentCalculatorReviewPacket(calculatorReviewPacket()),
+      request: {
+        metricId: CALCULATOR_RW_METRIC_ID,
+        research: true,
+        suggestPatch: true,
+        userInstruction: "Ekrandaki stacke bak, Rw fazla mi az mi internetten arastir."
+      },
+      settings: {
+        endpoint: "https://research.example.test/review",
+        timeoutMs: 1000
+      }
+    });
+
+    expect(result).toMatchObject({
+      ok: true,
+      review: {
+        engineDisplayValue: "41 dB",
+        metricId: CALCULATOR_RW_METRIC_ID,
+        sourceQuality: "mixed",
+        valueRecommendation: {
+          displayValue: "47 dB"
+        },
+        valueReviewed: "41 dB",
+        verdict: "suspicious"
+      },
+      source: "research_provider"
+    });
+    if (result.ok) {
+      expect(result.review.suggestedReportPatch).toBeUndefined();
     }
   });
 

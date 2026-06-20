@@ -332,6 +332,43 @@ describe("wall resilient-bar side-count blind audit", () => {
     }
   });
 
+  it("keeps building needs-input side-count rows from publishing lab aliases as supported outputs", () => {
+    const britishGypsumPair = PAIR_CASES.find(
+      (pair) => pair.pairId === "british_gypsum_soundbloc_resilient_pair"
+    );
+
+    expect(britishGypsumPair).toBeDefined();
+
+    if (!britishGypsumPair) {
+      throw new Error("Missing British Gypsum resilient side-count pair");
+    }
+
+    for (const rowId of britishGypsumPair.ids) {
+      const row = findRow(rowId);
+      const result = calculateAssembly(row.layers, {
+        airborneContext: explicitContextFor(row, "building"),
+        calculator: "dynamic",
+        targetOutputs: WALL_OUTPUTS
+      });
+
+      expect(result.airborneCandidateResolution?.selectedOrigin, rowId).toBe("needs_input");
+      expect(result.layerCombinationResolverTrace?.supportBucket, rowId).toBe("needs_input");
+      expect(result.supportedTargetOutputs, rowId).toEqual([]);
+      expect(result.unsupportedTargetOutputs, rowId).toEqual([...WALL_OUTPUTS]);
+
+      for (const output of ["Rw", "STC", "C", "Ctr"] as const satisfies readonly RequestedOutputId[]) {
+        const single = calculateAssembly(row.layers, {
+          airborneContext: explicitContextFor(row, "building"),
+          calculator: "dynamic",
+          targetOutputs: [output]
+        });
+
+        expect(single.supportedTargetOutputs, `${rowId} ${output}`).toEqual([]);
+        expect(single.unsupportedTargetOutputs, `${rowId} ${output}`).toEqual([output]);
+      }
+    }
+  });
+
   it("keeps the side-count exact rows explicit in the corpus classification surface", () => {
     expect(
       RESILIENT_SIDE_COUNT_ROWS.map((row) => ({

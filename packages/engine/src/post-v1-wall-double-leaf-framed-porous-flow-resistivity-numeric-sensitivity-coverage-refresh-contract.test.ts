@@ -135,7 +135,7 @@ const CONTEXT_OWNED_POROUS_CAVITY_BASE = {
     supportTopology: "independent_frames",
     topologyMode: "double_leaf_framed"
   }
-} as const;
+} satisfies Pick<AirborneContext, "sharedTrack" | "studSpacingMm" | "wallTopology">;
 
 const REQUIRED_DOCS = [
   "AGENTS.md",

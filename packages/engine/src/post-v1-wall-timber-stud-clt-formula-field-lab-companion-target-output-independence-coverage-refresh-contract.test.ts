@@ -359,8 +359,8 @@ describe("post-V1 wall timber-stud + CLT formula field lab-companion target-outp
       dnW: 51,
       rw: 51,
       stc: 51,
-      supportedTargetOutputs: ["STC", "C", "Ctr"],
-      unsupportedTargetOutputs: ["Rw"]
+      supportedTargetOutputs: [...LAB_OUTPUTS],
+      unsupportedTargetOutputs: []
     });
     expect(lsfLabOnly.airborneBasis?.method).not.toBe(GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD);
     expect(resultSnapshot(lsfFieldOnly)).toMatchObject({

@@ -52,11 +52,20 @@ const LIVE_STATUSES: Record<FieldOutput, CardStatus> = {
   "L'nT,w": "live"
 };
 
-const FAIL_CLOSED_STATUSES: Record<FieldOutput, CardStatus> = {
-  Rw: "unsupported",
+const AIRBORNE_ONLY_STATUSES: Record<FieldOutput, CardStatus> = {
+  Rw: "live",
   "R'w": "live",
   "DnT,w": "live",
   "Ln,w": "unsupported",
+  "L'n,w": "needs_input",
+  "L'nT,w": "needs_input"
+};
+
+const SOURCE_ABSENT_LAB_IMPACT_STATUSES: Record<FieldOutput, CardStatus> = {
+  Rw: "live",
+  "R'w": "live",
+  "DnT,w": "live",
+  "Ln,w": "live",
   "L'n,w": "needs_input",
   "L'nT,w": "needs_input"
 };
@@ -161,7 +170,7 @@ const CASES: readonly BoundaryCase[] = [
       candidateIds: null,
       estimateKind: null,
       floorSystemMatchId: null,
-      statuses: FAIL_CLOSED_STATUSES
+      statuses: AIRBORNE_ONLY_STATUSES
     }
   },
   {
@@ -178,7 +187,7 @@ const CASES: readonly BoundaryCase[] = [
       candidateIds: null,
       estimateKind: null,
       floorSystemMatchId: null,
-      statuses: FAIL_CLOSED_STATUSES
+      statuses: AIRBORNE_ONLY_STATUSES
     }
   },
   {
@@ -190,11 +199,11 @@ const CASES: readonly BoundaryCase[] = [
       { floorRole: "base_structure", id: "d", materialId: "open_box_timber_slab", thicknessMm: 370 }
     ],
     expected: {
-      basis: null,
-      candidateIds: null,
-      estimateKind: null,
+      basis: "broad_accuracy_floor_helper_only_timber_open_web_impact_stack_source_absent_formula_corridor",
+      candidateIds: ["source_absent_open_box_timber_helper_only_formula"],
+      estimateKind: "family_archetype",
       floorSystemMatchId: null,
-      statuses: FAIL_CLOSED_STATUSES
+      statuses: SOURCE_ABSENT_LAB_IMPACT_STATUSES
     }
   },
   {
@@ -222,11 +231,11 @@ const CASES: readonly BoundaryCase[] = [
     id: "openweb-bare",
     rows: [{ floorRole: "base_structure", id: "a", materialId: "open_web_steel_floor", thicknessMm: 300 }],
     expected: {
-      basis: null,
-      candidateIds: null,
-      estimateKind: null,
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+      candidateIds: ["source_absent_raw_bare_open_web_formula"],
+      estimateKind: "family_archetype",
       floorSystemMatchId: null,
-      statuses: FAIL_CLOSED_STATUSES
+      statuses: LIVE_STATUSES
     }
   },
   {
@@ -262,7 +271,7 @@ const CASES: readonly BoundaryCase[] = [
       candidateIds: null,
       estimateKind: null,
       floorSystemMatchId: null,
-      statuses: FAIL_CLOSED_STATUSES
+      statuses: AIRBORNE_ONLY_STATUSES
     }
   },
   {
@@ -323,12 +332,11 @@ const CASES: readonly BoundaryCase[] = [
     expected: {
       basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
       candidateIds: [
-        "pmc_m1_bare_composite_lab_2026",
         "pmc_m1_dry_floating_plus_c2x_lab_2026",
         "pmc_m1_dry_floating_plus_c1x_lab_2026",
-        "pmc_m1_dry_floating_floor_lab_2026"
+        "pmc_m1_bare_composite_lab_2026"
       ],
-      estimateKind: "low_confidence",
+      estimateKind: "family_general",
       floorSystemMatchId: null,
       statuses: LIVE_STATUSES
     }

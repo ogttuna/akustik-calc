@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
   buildReportAssistantContext,
@@ -10,6 +10,7 @@ import {
   parseReportAssistantPlausibilityRequest,
   reviewReportAssistantMetricPlausibility
 } from "./report-assistant-plausibility";
+import type { ReportAssistantCurrentCalculatorReviewPacket } from "./report-assistant-current-calculator-review-packet";
 import { validateReportAssistantPatch } from "./report-assistant-patch";
 import type { ReportAssistantResultEnvelope } from "./report-assistant-result-contract";
 import type { SimpleWorkbenchProposalDocument } from "./simple-workbench-proposal";
@@ -31,6 +32,7 @@ vi.mock("@/lib/auth", () => ({
 
 const RW_METRIC_ID = getReportAssistantMetricId("Rw");
 const IIC_METRIC_ID = getReportAssistantMetricId("IIC");
+const CALCULATOR_RW_METRIC_ID = "output:Rw";
 
 function metadata(outputId: "IIC" | "Rw") {
   return {
@@ -194,6 +196,74 @@ function jsonRequest(payload: unknown) {
     method: "POST"
   });
 }
+
+function calculatorReviewPacket(input?: {
+  missingInput?: string;
+  status?: "needs_input" | "ready" | "unsupported";
+}): ReportAssistantCurrentCalculatorReviewPacket {
+  const status = input?.status ?? "ready";
+  const missingInput = input?.missingInput;
+  return {
+    contextSignature: "calculator-context:route-test",
+    layers: [
+      {
+        index: 1,
+        label: "Gypsum Board 12.5 mm",
+        materialId: "gypsum_board",
+        materialName: "Gypsum Board",
+        role: "side_a",
+        sourceText: "side_a: Gypsum Board 12.5 mm",
+        thicknessMm: 12.5
+      },
+      {
+        index: 2,
+        label: "Rock Wool 50 mm",
+        materialId: "rockwool",
+        materialName: "Rock Wool",
+        role: "cavity",
+        sourceText: "cavity: Rock Wool 50 mm",
+        thicknessMm: 50
+      },
+      {
+        index: 3,
+        label: "Gypsum Board 12.5 mm",
+        materialId: "gypsum_board",
+        materialName: "Gypsum Board",
+        role: "side_b",
+        sourceText: "side_b: Gypsum Board 12.5 mm",
+        thicknessMm: 12.5
+      }
+    ],
+    metric: {
+      basis: "lab",
+      ...(status === "ready" ? { calculatorDisplayValue: "41 dB" } : {}),
+      direction: "higher_is_better",
+      label: "Rw",
+      metricId: CALCULATOR_RW_METRIC_ID,
+      outputId: "Rw",
+      status: status === "ready" ? "live" : status,
+      valueAuthority: "calculator_preview"
+    },
+    missingInputs: missingInput ? [missingInput] : [],
+    numericReviewAllowed: status === "ready",
+    ...(status === "ready" ? {} : { numericReviewBlocker: missingInput ?? "Calculator output is not ready." }),
+    requestedOutputs: ["Rw"],
+    reviewStatus: status,
+    route: "wall",
+    routeBasis: "formula",
+    snapshotSignature: "workbench-snapshot:route-test",
+    source: "calculator_preview",
+    sourceName: "Described wall layer configuration",
+    tasks: missingInput ? [`Support spacing: ${missingInput}`] : [],
+    unsupportedOutputs: status === "unsupported" ? ["Rw"] : [],
+    warnings: []
+  };
+}
+
+afterEach(() => {
+  vi.unstubAllEnvs();
+  vi.unstubAllGlobals();
+});
 
 describe("report assistant plausibility review", () => {
   it("flags severe report-engine drift without auto-loading an over-limit patch", () => {
@@ -388,6 +458,10 @@ describe("report assistant plausibility review", () => {
     });
     expect(payload.assistantResults?.[0]?.evidence).toEqual(expect.arrayContaining([
       {
+        detail: "61 dB",
+        label: "Calculator value"
+      },
+      {
         detail: RW_METRIC_ID,
         label: "Metric reviewed"
       },
@@ -401,5 +475,196 @@ describe("report assistant plausibility review", () => {
       }
     ]));
     expect(boundedDocument.primaryMetricValue).toBe("54 dB");
+  }, 15000);
+
+  it("builds a confirmation-required report-only patch from source-backed value recommendations", async () => {
+    const { POST } = await import("../../app/api/report-assistant/plausibility/route");
+    const boundedDocument = documentWithRwReportValue("54 dB");
+    const currentContext = context(boundedDocument);
+    const fetchMock = vi.fn(async () =>
+      new Response(
+        JSON.stringify({
+          review: {
+            answerText: "Source references suggest a report-only Rw value near 57 dB, but this is not calculator truth.",
+            comparability: "partial",
+            confidence: "medium",
+            metricId: RW_METRIC_ID,
+            rationale: ["Comparable sources are advisory and not calculator calibration."],
+            recommendedActionText: "Ask the user before applying this report-only value.",
+            severity: "medium",
+            sourceQuality: "mixed",
+            sources: [
+              {
+                title: "Wall system acoustic reference",
+                url: "https://example.com/wall-system-acoustic-reference"
+              }
+            ],
+            valueRecommendation: {
+              displayValue: "57 dB",
+              note: "Report-only advisory recommendation."
+            },
+            verdict: "suspicious"
+          }
+        }),
+        {
+          status: 200
+        }
+      )
+    );
+    vi.stubEnv("DYNECHO_REPORT_ASSISTANT_RESEARCH_ENDPOINT", "https://research.example.test/review");
+    vi.stubGlobal("fetch", fetchMock);
+
+    const response = await POST(
+      jsonRequest({
+        context: currentContext,
+        document: boundedDocument,
+        review: {
+          metricId: RW_METRIC_ID,
+          research: true,
+          suggestPatch: true,
+          userInstruction: "Internetten arastir, daha makul deger varsa rapora yazmadan once sor."
+        }
+      })
+    );
+    const payload = (await response.json()) as {
+      ok: boolean;
+      patchValidation?: {
+        operations: readonly {
+          afterValue?: string;
+          beforeValue?: string;
+          metricId?: string;
+          type: string;
+        }[];
+        status: string;
+      };
+      review: {
+        suggestedReportPatch?: {
+          operations: readonly {
+            displayValue?: string;
+            metricId?: string;
+            type: string;
+          }[];
+          requiresUserConfirmation?: boolean;
+        };
+      };
+    };
+
+    expect(response.status).toBe(200);
+    expect(payload).toMatchObject({
+      ok: true,
+      patchValidation: {
+        operations: [
+          {
+            afterValue: "57 dB",
+            beforeValue: "54 dB",
+            metricId: RW_METRIC_ID,
+            type: "metric_value"
+          }
+        ],
+        status: "requires_confirmation"
+      },
+      review: {
+        suggestedReportPatch: {
+          operations: [
+            {
+              displayValue: "57 dB",
+              metricId: RW_METRIC_ID,
+              type: "set_metric_display_value"
+            }
+          ],
+          requiresUserConfirmation: true
+        }
+      }
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(boundedDocument.primaryMetricValue).toBe("54 dB");
+  }, 15000);
+
+  it("reviews the current calculator packet without requiring a report document", async () => {
+    const { POST } = await import("../../app/api/report-assistant/plausibility/route");
+    const response = await POST(
+      jsonRequest({
+        currentCalculatorReviewPacket: calculatorReviewPacket(),
+        review: {
+          metricId: "ignored-user-metric",
+          research: false,
+          userInstruction: "Ekrandaki stacke bak Rw fazla mi az mi?"
+        }
+      })
+    );
+    const payload = (await response.json()) as {
+      assistantResults?: ReportAssistantResultEnvelope[];
+      ok: boolean;
+      patchValidation?: unknown;
+      review: {
+        engineDisplayValue?: string;
+        metricId: string;
+        suggestedReportPatch?: unknown;
+        valueReviewed: string;
+        verdict: string;
+      };
+      source: string;
+    };
+
+    expect(response.status).toBe(200);
+    expect(payload).toMatchObject({
+      ok: true,
+      review: {
+        engineDisplayValue: "41 dB",
+        metricId: CALCULATOR_RW_METRIC_ID,
+        valueReviewed: "41 dB",
+        verdict: "plausible"
+      },
+      source: "context"
+    });
+    expect(payload.patchValidation).toBeUndefined();
+    expect(payload.review.suggestedReportPatch).toBeUndefined();
+    expect(payload.assistantResults?.[0]).toMatchObject({
+      authority: "deterministic_read",
+      capabilityName: "report_assistant_plausibility_route",
+      mutates: false,
+      previewOnly: true,
+      rendererKind: "research_review_card",
+      routeStatus: "ready"
+    });
+  }, 15000);
+
+  it("keeps blocked calculator packets non-numeric in the review route", async () => {
+    const { POST } = await import("../../app/api/report-assistant/plausibility/route");
+    const response = await POST(
+      jsonRequest({
+        currentCalculatorReviewPacket: calculatorReviewPacket({
+          missingInput: "support spacing",
+          status: "needs_input"
+        }),
+        review: {
+          metricId: CALCULATOR_RW_METRIC_ID,
+          research: false,
+          userInstruction: "Internet kaynaklariyla daha makul Rw degeri oner."
+        }
+      })
+    );
+    const payload = (await response.json()) as {
+      ok: boolean;
+      review: {
+        metricId: string;
+        suggestedReportPatch?: unknown;
+        valueRecommendation?: {
+          note?: string;
+        };
+        verdict: string;
+      };
+    };
+
+    expect(response.status).toBe(200);
+    expect(payload).toMatchObject({
+      ok: true,
+      review: {
+        metricId: CALCULATOR_RW_METRIC_ID,
+        verdict: "insufficient_context"
+      }
+    });
+    expect(payload.review.suggestedReportPatch).toBeUndefined();
+    expect(payload.review.valueRecommendation?.note).toContain("No source-backed numeric recommendation");
   }, 15000);
 });

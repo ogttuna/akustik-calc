@@ -64,6 +64,7 @@ import {
 } from "@/features/workbench/proposal-adjust-output-edits";
 import { buildSimpleWorkbenchProposalConstructionSection } from "@/features/workbench/simple-workbench-proposal-construction-section";
 import { SimpleWorkbenchProposalConstructionFigure } from "@/features/workbench/simple-workbench-proposal-construction-figure";
+import { useSimpleWorkbenchProposalPdfFilenameDialog } from "@/features/workbench/simple-workbench-proposal-filename-dialog";
 import {
   downloadSimpleWorkbenchProposalDocx,
   downloadSimpleWorkbenchProposalPdf,
@@ -2725,6 +2726,7 @@ export function ProposalAdjustClientPage() {
   const [assistantProjectWorkspace, setAssistantProjectWorkspace] = useState<ReportAssistantProjectWorkspaceSnapshot | undefined>(undefined);
   const [lastSavedSignature, setLastSavedSignature] = useState("");
   const [isDownloadingExport, setIsDownloadingExport] = useState(false);
+  const { pdfFilenameDialog, requestPdfFilename } = useSimpleWorkbenchProposalPdfFilenameDialog();
   const [activePdfStyle, setActivePdfStyle] = useState<ProposalPdfStyle>("simple");
   const [activeEditorTab, setActiveEditorTab] = useState<ProposalEditorTabId>("copy");
 
@@ -2771,7 +2773,7 @@ export function ProposalAdjustClientPage() {
     return () => {
       active = false;
     };
-  }, [projectContext?.serverProjectId, projectContext?.serverProjectReportId, projectContext?.serverProjectReportUpdatedAtIso]);
+  }, [projectContext]);
 
   useEffect(() => {
     setActivePdfStyle(searchParams.get("style") === "branded" ? "branded" : "simple");
@@ -2928,16 +2930,40 @@ export function ProposalAdjustClientPage() {
       return;
     }
 
+    let documentToExport: SimpleWorkbenchProposalDocument;
+    try {
+      documentToExport = markReportAdjustmentScope(editableDocument, "export_only");
+    } catch (error) {
+      toast.error(`${getSimpleWorkbenchProposalExportLabel({ format, style })} failed`, {
+        description:
+          error instanceof Error
+            ? error.message
+            : `The server could not generate the ${getSimpleWorkbenchProposalExportLabel({ format, style })}.`
+      });
+      return;
+    }
+
+    const filename =
+      format === "pdf"
+        ? await requestPdfFilename(documentToExport, {
+            style
+          })
+        : undefined;
+
+    if (filename === null) {
+      return;
+    }
+
     setIsDownloadingExport(true);
 
     try {
-      const documentToExport = markReportAdjustmentScope(editableDocument, "export_only");
       if (format === "docx") {
         await downloadSimpleWorkbenchProposalDocx(documentToExport, {
           style
         });
       } else {
         await downloadSimpleWorkbenchProposalPdf(documentToExport, {
+          filename,
           style
         });
       }
@@ -2962,6 +2988,7 @@ export function ProposalAdjustClientPage() {
   if (!editableDocument) {
     return (
       <main className="flex min-h-screen flex-col gap-6 overflow-x-clip px-[clamp(0.75rem,1.6vw,1.5rem)] pb-10 pt-4">
+        {pdfFilenameDialog}
         <SurfacePanel className="px-5 py-6 sm:px-6">
           <div className="eyebrow">No Report Snapshot</div>
           <h1 className="mt-1 font-display text-[1.7rem] leading-none tracking-[-0.05em] text-[color:var(--ink)]">
@@ -2987,6 +3014,7 @@ export function ProposalAdjustClientPage() {
 
   return (
     <main className="flex min-h-screen flex-col gap-4 overflow-x-clip px-[clamp(0.75rem,1.6vw,1.5rem)] pb-10 pt-4">
+      {pdfFilenameDialog}
       <SurfacePanel className="px-5 py-4 sm:px-6">
         <div className="flex min-w-0 flex-wrap items-start justify-between gap-4">
           <div className="min-w-0">

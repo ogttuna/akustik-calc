@@ -147,12 +147,21 @@ function hasCavityOrPorousLayer(
   return layers.some((layer) => isCavityLayer(layer, catalog) || isPorousFillLayer(layer, catalog));
 }
 
-function hasPositiveCavityDepth(topology: AirborneContext["wallTopology"] | undefined): boolean {
-  return Boolean(
-    typeof topology?.cavity1DepthMm === "number" &&
-      Number.isFinite(topology.cavity1DepthMm) &&
-      topology.cavity1DepthMm > 0
-  );
+function positiveFiniteNumber(value: unknown): number | null {
+  return typeof value === "number" && Number.isFinite(value) && value > 0 ? value : null;
+}
+
+export function resolveGateQDoubleLeafFramedBridgeCavityDepthMm(
+  context: AirborneContext | null | undefined
+): number | null {
+  const topologyDepth = positiveFiniteNumber(context?.wallTopology?.cavity1DepthMm);
+  const advancedDepth = positiveFiniteNumber(context?.advancedWall?.cavities?.[0]?.depthMm);
+
+  return topologyDepth ?? advancedDepth;
+}
+
+function hasPositiveCavityDepth(context: AirborneContext | undefined): boolean {
+  return resolveGateQDoubleLeafFramedBridgeCavityDepthMm(context) !== null;
 }
 
 function hasExplicitEmptyCavity(topology: AirborneContext["wallTopology"] | undefined): boolean {
@@ -319,7 +328,7 @@ export function buildGateQDoubleLeafFramedBridgeInputContract(input: {
   const requiresResilientSideCount = bridgeClass === "resilient_bridge";
   const hasPorousCavityFill = hasPorousFill(input.layers, catalog);
   const hasVisibleCavityOrPorousLayer = hasCavityOrPorousLayer(input.layers, catalog);
-  const hasExplicitCavityDepth = hasPositiveCavityDepth(topology);
+  const hasExplicitCavityDepth = hasPositiveCavityDepth(input.airborneContext);
   const hasContextOwnedPorousCavity = hasContextOwnedPorousCavityInput(input.airborneContext);
   const usesEngineeringFlowDefault = hasEngineeringFlowDefault(input.layers, catalog);
   const needsPorousFlowInput = needsPorousFlowResistivityInput({
@@ -337,7 +346,8 @@ export function buildGateQDoubleLeafFramedBridgeInputContract(input: {
       source: "wall_topology"
     },
     {
-      detail: "Enter the cavity depth in millimetres between the two leaves.",
+      detail:
+        "Enter a positive cavity depth in millimetres between the leaves; advanced cavity depth is used only when topology depth is omitted.",
       fieldId: "cavity1DepthMm",
       isMissing: !hasExplicitCavityDepth,
       label: "Cavity depth",

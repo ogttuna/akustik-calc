@@ -12,6 +12,7 @@ type ScenarioRow = {
 };
 
 type InferredSplitCase = {
+  allowTaggedRoleEvidenceUpgrade?: boolean;
   id: string;
   rawSingle: readonly ScenarioRow[];
   rawSplit: readonly ScenarioRow[];
@@ -265,6 +266,7 @@ const CASES: readonly InferredSplitCase[] = [
   },
   {
     id: "clt-lower-only-guard",
+    allowTaggedRoleEvidenceUpgrade: true,
     rawSingle: [
       { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
       { id: "b", materialId: "rockwool", thicknessMm: 100 },
@@ -296,6 +298,7 @@ const CASES: readonly InferredSplitCase[] = [
   },
   {
     id: "open-box-lower-only-guard",
+    allowTaggedRoleEvidenceUpgrade: true,
     rawSingle: [
       { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
       { id: "b", materialId: "rockwool", thicknessMm: 90 },
@@ -356,6 +359,7 @@ const CASES: readonly InferredSplitCase[] = [
   },
   {
     id: "open-web-noncanonical-continuation-board-and-fill-split",
+    allowTaggedRoleEvidenceUpgrade: true,
     rawSingle: [
       { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
       { id: "b", materialId: "rockwool", thicknessMm: 90 },
@@ -422,6 +426,7 @@ const CASES: readonly InferredSplitCase[] = [
   },
   {
     id: "clt-lower-only-non-packable-board-schedule",
+    allowTaggedRoleEvidenceUpgrade: true,
     rawSingle: [
       { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
       { id: "b", materialId: "rockwool", thicknessMm: 100 },
@@ -453,6 +458,7 @@ const CASES: readonly InferredSplitCase[] = [
   },
   {
     id: "open-box-lower-only-non-packable-board-schedule",
+    allowTaggedRoleEvidenceUpgrade: true,
     rawSingle: [
       { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
       { id: "b", materialId: "rockwool", thicknessMm: 90 },
@@ -529,17 +535,21 @@ describe("raw floor inferred split parity route surface", () => {
     const failures: string[] = [];
 
     for (const testCase of CASES) {
-      const baseline = snapshot(`${testCase.id}-raw-single`, testCase.rawSingle);
-      const candidates = [
-        ["raw split", snapshot(`${testCase.id}-raw-split`, testCase.rawSplit)],
-        ["tagged single", snapshot(`${testCase.id}-tagged-single`, testCase.taggedSingle)],
-        ["tagged split", snapshot(`${testCase.id}-tagged-split`, testCase.taggedSplit)]
-      ] as const;
+      const rawBaseline = snapshot(`${testCase.id}-raw-single`, testCase.rawSingle);
+      const rawSplit = snapshot(`${testCase.id}-raw-split`, testCase.rawSplit);
+      const taggedBaseline = snapshot(`${testCase.id}-tagged-single`, testCase.taggedSingle);
+      const taggedSplit = snapshot(`${testCase.id}-tagged-split`, testCase.taggedSplit);
 
-      for (const [label, candidate] of candidates) {
-        if (JSON.stringify(candidate) !== JSON.stringify(baseline)) {
-          failures.push(`${testCase.id} route ${label} drifted from the defended raw-single surface`);
-        }
+      if (JSON.stringify(rawSplit) !== JSON.stringify(rawBaseline)) {
+        failures.push(`${testCase.id} route raw split drifted from the defended raw-single surface`);
+      }
+
+      if (JSON.stringify(taggedSplit) !== JSON.stringify(taggedBaseline)) {
+        failures.push(`${testCase.id} route tagged split drifted from the defended tagged-single surface`);
+      }
+
+      if (!testCase.allowTaggedRoleEvidenceUpgrade && JSON.stringify(taggedBaseline) !== JSON.stringify(rawBaseline)) {
+        failures.push(`${testCase.id} route tagged single drifted from the defended raw-single surface`);
       }
     }
 

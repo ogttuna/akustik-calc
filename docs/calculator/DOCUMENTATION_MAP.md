@@ -53,11 +53,70 @@ replace the selected runtime implementation action.
 Latest checkpoint reconciliation:
 `docs/calculator/CHECKPOINT_2026-06-20_FULL_GATE_AND_CAVITY_DEPTH_HANDOFF.md`.
 This confirms the live docs/implementation comparison after the broad
-2026-06-20 `pnpm check`, records that the selected cavity-depth
-numeric-sensitivity owner remains the next runtime calculator task, and
-keeps the 2026-06-19 physical-input sensitivity checkpoint as the
-focused owner-chain validation reference. It does not replace the
-selected next plan.
+2026-06-20 `pnpm check`, records the cavity-depth numeric-sensitivity
+owner handoff, and keeps the 2026-06-19 physical-input sensitivity
+checkpoint as the focused owner-chain validation reference. The owner
+has now landed; the current selected next is its coverage refresh.
+
+Post-owner implementation sync:
+`packages/engine/src/post-v1-wall-double-leaf-framed-cavity-depth-numeric-sensitivity-owner-contract.test.ts`
+exists and is included in `tools/dev/run-calculator-current-gate.ts`.
+The selected coverage-refresh file
+`packages/engine/src/post-v1-wall-double-leaf-framed-cavity-depth-numeric-sensitivity-coverage-refresh-contract.test.ts`
+does not exist yet. Latest full `pnpm calculator:gate:current` after
+the owner landed passed with shared `2 files / 19 tests`, engine
+`787 files / 4318 tests`, web `127 files / 505 passed + 18 skipped`,
+and repo build `5/5`.
+
+## Latest Wall Double-Leaf/Framed Cavity-Depth Numeric Sensitivity Owner
+
+Owner action:
+`post_v1_wall_double_leaf_framed_cavity_depth_numeric_sensitivity_owner_plan`
+
+Owner file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-cavity-depth-numeric-sensitivity-owner-contract.test.ts`
+
+Owner plan:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_CAVITY_DEPTH_NUMERIC_SENSITIVITY_OWNER_PLAN_2026-06-19.md`
+
+Owner status:
+`post_v1_wall_double_leaf_framed_cavity_depth_numeric_sensitivity_owner_landed_runtime_selected_coverage_refresh`
+
+Previous refresh:
+`post_v1_wall_double_leaf_framed_porous_absorber_thickness_numeric_sensitivity_coverage_refresh_landed_no_runtime_selected_cavity_depth_numeric_sensitivity_owner`
+/
+`post_v1_wall_double_leaf_framed_porous_absorber_thickness_numeric_sensitivity_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-porous-absorber-thickness-numeric-sensitivity-coverage-refresh-contract.test.ts`
+
+Selected candidate:
+`wall.double_leaf_framed.cavity_depth_numeric_sensitivity_owner`
+
+The owner protects topology `cavity1DepthMm` sensitivity and opens the
+same owned Gate S / Gate I / Gate AR double-leaf/framed formula route
+when only `advancedWall.cavities[0].depthMm` is supplied. It publishes
+advanced-only lab `Rw`/`STC`/`C`/`Ctr` plus field/building `R'w`,
+`Dn,w`, `Dn,A`, `DnT,w`, and `DnT,A`; missing or non-positive cavity
+depth stays `needs_input`. When topology and advanced depth are both
+supplied, topology depth remains authoritative and a mismatch withholds
+the porous-thickness precision credit instead of overriding topology.
+Impact aliases stay `unsupported`. Counters:
+`accuracyPromotedRequestShapes: 6`,
+`accuracyPromotedTargetOutputs: 26`, `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 3`, `newCalculableTargetOutputs: 13`,
+`runtimeBasisPromotions: 3`, `runtimeValuesMoved 13`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Current selected next:
+`post_v1_wall_double_leaf_framed_cavity_depth_numeric_sensitivity_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-cavity-depth-numeric-sensitivity-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_CAVITY_DEPTH_NUMERIC_SENSITIVITY_COVERAGE_REFRESH_PLAN_2026-06-20.md`
+/
+`post-V1 wall double-leaf/framed cavity-depth numeric sensitivity coverage refresh`
 
 ## Latest Wall Double-Leaf/Framed Porous Absorber Thickness Numeric Sensitivity Coverage Refresh
 

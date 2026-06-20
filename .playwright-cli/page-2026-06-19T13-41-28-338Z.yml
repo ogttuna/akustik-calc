@@ -1,0 +1,427 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - generic [ref=e6]: DAC
+          - generic [ref=e7]: DynEcho
+          - generic [ref=e8]: admin
+        - generic [ref=e9]:
+          - button "Switch to dark mode" [ref=e10] [cursor=pointer]:
+            - img [ref=e11]
+            - generic [ref=e17]: Light
+          - button "Sign out" [ref=e19] [cursor=pointer]
+    - main [ref=e20]:
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - generic [ref=e23]:
+            - generic [ref=e24]:
+              - generic [ref=e25]: Calculator
+              - heading "Acoustic workbench" [level=1] [ref=e26]
+            - button "Close workspace drawer" [expanded] [ref=e340] [cursor=pointer]:
+              - img [ref=e28]
+              - generic [ref=e29]: Workspace
+              - generic [ref=e30]: Local draft
+          - generic [ref=e31]:
+            - generic [ref=e32]: Local draft
+            - generic [ref=e33]: Wall
+            - generic [ref=e34]: 3 layers
+            - generic [ref=e35]: 162.5 mm
+            - generic [ref=e36]: Ready
+        - generic:
+          - button "Close workspace drawer" [ref=e341] [cursor=pointer]
+          - dialog "Workspace" [ref=e342]:
+            - generic [ref=e343]:
+              - generic [ref=e344]:
+                - generic [ref=e345]: Workbench
+                - heading "Workspace" [level=2] [ref=e346]
+              - button "Close workspace drawer" [ref=e347] [cursor=pointer]:
+                - img [ref=e348]
+            - generic [ref=e351]:
+              - navigation "Workspace sections" [ref=e352]:
+                - button "Projects" [ref=e353] [cursor=pointer]
+                - button "Templates" [ref=e354] [cursor=pointer]
+                - button "Materials" [ref=e355] [cursor=pointer]
+              - region "Material editor" [ref=e358]:
+                - generic [ref=e360]:
+                  - generic [ref=e361]: Material editor
+                  - heading "Built-in material" [level=2] [ref=e362]
+                - generic [ref=e363]:
+                  - generic [ref=e364]:
+                    - generic [ref=e365]:
+                      - generic [ref=e366]:
+                        - generic [ref=e367]: Catalog
+                        - strong [ref=e368]: 2 materials
+                      - button "New material" [ref=e369] [cursor=pointer]:
+                        - img [ref=e370]
+                        - text: New material
+                    - generic [ref=e371]:
+                      - img [ref=e372]
+                      - textbox "Search materials" [ref=e375]: Rock Wool
+                    - generic [ref=e376]:
+                      - generic "Material source filter" [ref=e377]:
+                        - button "All" [pressed] [ref=e378] [cursor=pointer]
+                        - button "Project" [ref=e379] [cursor=pointer]
+                        - button "Built-in" [ref=e380] [cursor=pointer]
+                      - combobox "Material category filter" [ref=e381]:
+                        - option "All categories" [selected]
+                        - option "Mass"
+                        - option "Finish"
+                        - option "Insulation"
+                        - option "Gap"
+                        - option "Support"
+                    - listbox [ref=e382]:
+                      - option "High Density Rock Wool insulation / 90 kg/m3 Built-in" [ref=e698] [cursor=pointer]:
+                        - generic [ref=e699]:
+                          - strong [ref=e700]: High Density Rock Wool
+                          - generic [ref=e701]: insulation / 90 kg/m3
+                        - emphasis [ref=e702]: Built-in
+                      - option "Rock Wool insulation / 45 kg/m3 Built-in / 1 used" [active] [selected] [ref=e949] [cursor=pointer]:
+                        - generic [ref=e950]:
+                          - strong [ref=e951]: Rock Wool
+                          - generic [ref=e952]: insulation / 45 kg/m3
+                        - emphasis [ref=e953]: Built-in / 1 used
+                  - generic [ref=e783]:
+                    - tablist [ref=e784]:
+                      - button "Properties" [ref=e785] [cursor=pointer]
+                      - button "Appearance" [ref=e786] [cursor=pointer]:
+                        - img [ref=e787]
+                        - text: Appearance
+                    - generic [ref=e793]:
+                      - strong [ref=e795]: Built-in catalog material
+                      - generic [ref=e796]:
+                        - generic [ref=e797]:
+                          - generic [ref=e799]: Name
+                          - textbox "Name" [disabled] [ref=e800]: Rock Wool
+                        - generic [ref=e801]:
+                          - generic [ref=e803]: Category
+                          - combobox "Category" [disabled] [ref=e804]:
+                            - option "Mass"
+                            - option "Finish"
+                            - option "Insulation" [selected]
+                            - option "Gap"
+                            - option "Support"
+                        - generic [ref=e805]:
+                          - generic [ref=e807]: Behavior
+                          - combobox "Behavior" [disabled] [ref=e808]:
+                            - option "Rigid mass"
+                            - option "Panel leaf"
+                            - option "Limp membrane"
+                            - option "Porous absorber" [selected]
+                            - option "Air cavity"
+                            - option "Resilient layer"
+                            - option "Structural bridge"
+                            - option "Mass timber"
+                        - generic [ref=e809]:
+                          - generic [ref=e811]: Density
+                          - textbox "Density" [disabled] [ref=e812]:
+                            - /placeholder: kg/m3
+                            - text: "45"
+                      - generic [ref=e813]:
+                        - generic [ref=e814]:
+                          - generic [ref=e816]: Source
+                          - combobox "Source" [disabled] [ref=e817]:
+                            - option "User supplied"
+                            - option "Catalog nominal"
+                            - option "Engineering default" [selected]
+                            - option "Source owned"
+                            - option "Unknown"
+                        - generic [ref=e818]:
+                          - generic [ref=e820]: Tags
+                          - textbox "Tags" [disabled] [ref=e821]:
+                            - /placeholder: comma separated
+                            - text: cavity-fill, porous
+                      - generic [ref=e954]:
+                        - generic [ref=e955]:
+                          - generic [ref=e957]: Absorber class
+                          - combobox "Absorber class" [disabled] [ref=e958]:
+                            - option "Unknown"
+                            - option "None"
+                            - option "Porous absorber" [selected]
+                        - generic [ref=e959]:
+                          - generic [ref=e961]: Flow resistivity
+                          - textbox "Flow resistivity" [disabled] [ref=e962]:
+                            - /placeholder: Pa.s/m2
+                            - text: "15000"
+                        - generic [ref=e963]:
+                          - generic [ref=e965]: Porosity
+                          - textbox "Porosity" [disabled] [ref=e966]:
+                            - /placeholder: 0-1
+                            - text: "0.95"
+                      - generic [ref=e835]:
+                        - generic [ref=e836]: Notes
+                        - textbox "Notes" [disabled] [ref=e837]: Nominal porous absorber default for family physics; source-owned product flow-resistivity can replace it later.
+                      - button "Create project copy" [ref=e839] [cursor=pointer]:
+                        - img [ref=e840]
+                        - text: Create project copy
+        - region "Calculator workspace" [ref=e37]:
+          - generic [ref=e38]:
+            - generic [ref=e39]:
+              - heading "Setup" [level=2] [ref=e42]
+              - generic [ref=e43]:
+                - generic "Assembly mode" [ref=e44]:
+                  - button "Wall" [pressed] [ref=e45] [cursor=pointer]
+                  - button "Floor" [ref=e46] [cursor=pointer]
+                - generic [ref=e47]:
+                  - generic [ref=e48]:
+                    - checkbox "Rw Airborne" [checked] [ref=e49]
+                    - generic [ref=e50]: Rw
+                    - generic [ref=e51]: Airborne
+                  - generic [ref=e52]:
+                    - checkbox "R'w Airborne" [ref=e53]
+                    - generic [ref=e54]: R'w
+                    - generic [ref=e55]: Airborne
+                  - generic [ref=e56]:
+                    - checkbox "DnT,w Airborne" [ref=e57]
+                    - generic [ref=e58]: DnT,w
+                    - generic [ref=e59]: Airborne
+                  - generic [ref=e60]:
+                    - checkbox "STC Airborne" [ref=e61]
+                    - generic [ref=e62]: STC
+                    - generic [ref=e63]: Airborne
+                  - generic [ref=e64]:
+                    - checkbox "C Spectrum" [ref=e65]
+                    - generic [ref=e66]: C
+                    - generic [ref=e67]: Spectrum
+                  - generic [ref=e68]:
+                    - checkbox "Ctr Spectrum" [ref=e69]
+                    - generic [ref=e70]: Ctr
+                    - generic [ref=e71]: Spectrum
+            - generic [ref=e72]:
+              - generic [ref=e73]:
+                - heading "Layer stack" [level=2] [ref=e75]
+                - generic [ref=e76]:
+                  - button "Undo layer change" [disabled] [ref=e77]:
+                    - img [ref=e78]
+                  - button "Materials" [ref=e81] [cursor=pointer]:
+                    - img [ref=e82]
+                    - text: Materials
+                  - button "Add layer" [ref=e88] [cursor=pointer]:
+                    - img [ref=e89]
+                    - text: Add layer
+              - generic [ref=e90]:
+                - generic [ref=e91]:
+                  - generic [ref=e92]: Material
+                  - generic [ref=e93]: Role
+                  - generic [ref=e94]: Thickness
+                  - generic [ref=e95]: Actions
+                - article [ref=e96]:
+                  - generic [ref=e97]:
+                    - button "Drag layer 1" [ref=e98] [cursor=pointer]:
+                      - img [ref=e99]
+                    - button "Select layer 1" [ref=e106] [cursor=pointer]: "1"
+                  - generic [ref=e107]:
+                    - generic [ref=e108]:
+                      - generic [ref=e109]: Material
+                      - button "Gypsum Board 850 kg/m3 / finish" [ref=e110] [cursor=pointer]:
+                        - strong [ref=e111]: Gypsum Board
+                        - generic [ref=e112]: 850 kg/m3 / finish
+                    - generic [ref=e113]:
+                      - generic [ref=e114]: Role
+                      - combobox "Role" [ref=e115]:
+                        - option "Side A" [selected]
+                        - option "Cavity"
+                        - option "Core"
+                        - option "Support"
+                        - option "Side B"
+                    - generic [ref=e116]:
+                      - generic [ref=e118]: Thickness
+                      - generic [ref=e119]:
+                        - spinbutton "Thickness mm" [ref=e120]: "12.5"
+                        - emphasis [ref=e121]: mm
+                  - generic [ref=e122]:
+                    - button "Move layer up" [disabled] [ref=e123]:
+                      - img [ref=e124]
+                    - button "Move layer down" [ref=e126] [cursor=pointer]:
+                      - img [ref=e127]
+                    - button "Duplicate layer" [ref=e129] [cursor=pointer]:
+                      - img [ref=e130]
+                    - button "Remove layer" [ref=e133] [cursor=pointer]:
+                      - img [ref=e134]
+                - article [ref=e137]:
+                  - generic [ref=e138]:
+                    - button "Drag layer 2" [ref=e139] [cursor=pointer]:
+                      - img [ref=e140]
+                    - button "Select layer 2" [ref=e147] [cursor=pointer]: "2"
+                  - generic [ref=e148]:
+                    - generic [ref=e149]:
+                      - generic [ref=e150]: Material
+                      - button "Rock Wool 45 kg/m3 / insulation" [ref=e151] [cursor=pointer]:
+                        - strong [ref=e152]: Rock Wool
+                        - generic [ref=e153]: 45 kg/m3 / insulation
+                    - generic [ref=e154]:
+                      - generic [ref=e155]: Role
+                      - combobox "Role" [ref=e156]:
+                        - option "Side A"
+                        - option "Cavity" [selected]
+                        - option "Core"
+                        - option "Support"
+                        - option "Side B"
+                    - generic [ref=e157]:
+                      - generic [ref=e159]: Thickness
+                      - generic [ref=e160]:
+                        - spinbutton "Thickness mm" [ref=e161]: "50"
+                        - emphasis [ref=e162]: mm
+                  - generic [ref=e163]:
+                    - button "Move layer up" [ref=e164] [cursor=pointer]:
+                      - img [ref=e165]
+                    - button "Move layer down" [ref=e167] [cursor=pointer]:
+                      - img [ref=e168]
+                    - button "Duplicate layer" [ref=e170] [cursor=pointer]:
+                      - img [ref=e171]
+                    - button "Remove layer" [ref=e174] [cursor=pointer]:
+                      - img [ref=e175]
+                - article [ref=e178]:
+                  - generic [ref=e179]:
+                    - button "Drag layer 3" [ref=e180] [cursor=pointer]:
+                      - img [ref=e181]
+                    - button "Select layer 3" [ref=e188] [cursor=pointer]: "3"
+                  - generic [ref=e189]:
+                    - generic [ref=e190]:
+                      - generic [ref=e191]: Material
+                      - button "Concrete 2400 kg/m3 / mass" [ref=e192] [cursor=pointer]:
+                        - strong [ref=e193]: Concrete
+                        - generic [ref=e194]: 2400 kg/m3 / mass
+                    - generic [ref=e195]:
+                      - generic [ref=e196]: Role
+                      - combobox "Role" [ref=e197]:
+                        - option "Side A"
+                        - option "Cavity"
+                        - option "Core"
+                        - option "Support"
+                        - option "Side B" [selected]
+                    - generic [ref=e198]:
+                      - generic [ref=e200]: Thickness
+                      - generic [ref=e201]:
+                        - spinbutton "Thickness mm" [ref=e202]: "100"
+                        - emphasis [ref=e203]: mm
+                  - generic [ref=e204]:
+                    - button "Move layer up" [ref=e205] [cursor=pointer]:
+                      - img [ref=e206]
+                    - button "Move layer down" [disabled] [ref=e208]:
+                      - img [ref=e209]
+                    - button "Duplicate layer" [ref=e211] [cursor=pointer]:
+                      - img [ref=e212]
+                    - button "Remove layer" [ref=e215] [cursor=pointer]:
+                      - img [ref=e216]
+            - generic [ref=e219]:
+              - generic [ref=e220]:
+                - generic [ref=e221]:
+                  - generic [ref=e222]: Wall section
+                  - heading "Wall construction preview" [level=3] [ref=e223]
+                - generic [ref=e224]:
+                  - generic [ref=e225]: 3 layers
+                  - generic [ref=e226]: /162.5 mm
+              - generic [ref=e227]:
+                - figure "wall construction section" [ref=e228]:
+                  - img [ref=e229]:
+                    - generic [ref=e232]: Side A
+                    - generic [ref=e233]: Side B
+                    - generic [ref=e241]: "1"
+                    - generic [ref=e255]: "2"
+                    - generic [ref=e267]: "3"
+                    - generic [ref=e268]: 162.5 mm
+                - generic "Technical layer schedule" [ref=e269]:
+                  - generic [ref=e270]:
+                    - generic [ref=e271]: Technical layer schedule
+                    - strong [ref=e272]: "Selected: Gypsum Board"
+                  - list [ref=e273]:
+                    - listitem [ref=e274]:
+                      - generic [ref=e275]: "1"
+                      - generic [ref=e276]:
+                        - strong [ref=e277]: Gypsum Board
+                        - generic [ref=e278]: Side A
+                      - generic [ref=e279]: 12.5 mm
+                    - listitem [ref=e280]:
+                      - generic [ref=e281]: "2"
+                      - generic [ref=e282]:
+                        - strong [ref=e283]: Rock Wool
+                        - generic [ref=e284]: Cavity
+                      - generic [ref=e285]: 50 mm
+                    - listitem [ref=e286]:
+                      - generic [ref=e287]: "3"
+                      - generic [ref=e288]:
+                        - strong [ref=e289]: Concrete
+                        - generic [ref=e290]: Side B
+                      - generic [ref=e291]: 100 mm
+          - complementary "Calculation review" [ref=e292]:
+            - generic [ref=e293]:
+              - generic [ref=e294]: Current result
+              - strong [ref=e295]: 57 dB
+              - paragraph [ref=e296]: "Rw: Calculated"
+            - generic [ref=e297]:
+              - generic [ref=e298]:
+                - heading "Outputs" [level=2] [ref=e299]
+                - generic [ref=e300]: "1"
+              - generic [ref=e302]:
+                - generic [ref=e303]:
+                  - strong [ref=e304]: Rw
+                  - generic [ref=e305]: Calculated
+                - emphasis [ref=e306]: 57 dB
+            - generic [ref=e307]:
+              - generic [ref=e308]:
+                - heading "Assistant preview" [level=2] [ref=e309]
+                - button "Run" [ref=e310] [cursor=pointer]:
+                  - img [ref=e311]
+                  - text: Run
+              - generic [ref=e314]:
+                - generic [ref=e315]:
+                  - generic [ref=e316]: Stack command
+                  - textbox "Stack command" [ref=e317]:
+                    - /placeholder: Ekrandaki katmanların kalınlıklarını mantıklı gir
+                - button "Run" [disabled] [ref=e319]:
+                  - img [ref=e320]
+                  - text: Run
+            - article [ref=e844]:
+              - generic [ref=e845]:
+                - generic [ref=e846]:
+                  - generic [ref=e847]: Airborne spectrum
+                  - heading "Airborne response curve" [level=3] [ref=e848]
+                - generic [ref=e849]:
+                  - generic [ref=e850]: Dynamic topology
+                  - generic [ref=e851]: 63..4000 Hz
+                  - generic [ref=e852]: Higher is better
+              - generic "Frequency bands" [ref=e853]:
+                - generic [ref=e854]: "Low: 63-250 Hz"
+                - generic [ref=e855]: "Speech: 500-1k Hz"
+                - generic [ref=e856]: "High: 2k-4k Hz"
+              - paragraph [ref=e857]: Curve returned by the dynamic calculator for the active layer topology.
+              - img "Airborne response curve, Higher is better" [ref=e858]:
+                - application [ref=e861]:
+                  - generic [ref=e899]:
+                    - generic [ref=e900]:
+                      - generic [ref=e902]: "63"
+                      - generic [ref=e904]: "100"
+                      - generic [ref=e906]: "160"
+                      - generic [ref=e908]: "250"
+                      - generic [ref=e910]: "400"
+                      - generic [ref=e912]: "630"
+                      - generic [ref=e914]: 1k
+                      - generic [ref=e916]: 1.60k
+                      - generic [ref=e918]: 2.5k
+                      - generic [ref=e920]: 4k
+                    - generic [ref=e921]:
+                      - generic [ref=e923]: "25"
+                      - generic [ref=e925]: "40"
+                      - generic [ref=e927]: "55"
+                      - generic [ref=e929]: "70"
+                      - generic [ref=e931]: "80"
+                    - generic [ref=e932]: Level (dB)
+            - generic [ref=e323]:
+              - heading "Report handoff" [level=2] [ref=e325]
+              - generic [ref=e933]:
+                - button "Choose project" [ref=e934] [cursor=pointer]:
+                  - img [ref=e935]
+                  - text: Choose project
+                - button "Save as template" [ref=e939] [cursor=pointer]:
+                  - img [ref=e940]
+                  - text: Save as template
+                - button "Open report" [ref=e942] [cursor=pointer]:
+                  - img [ref=e943]
+                  - text: Open report
+                  - img [ref=e946]
+  - button "Open Next.js Dev Tools" [ref=e335] [cursor=pointer]:
+    - img [ref=e336]
+  - alert [ref=e339]
+  - region "Notifications alt+T"
+  - generic [ref=e948]: "25"

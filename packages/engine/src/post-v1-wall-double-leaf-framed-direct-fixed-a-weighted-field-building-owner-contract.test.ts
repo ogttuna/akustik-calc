@@ -33,8 +33,6 @@ const OWNER_FILE =
   "packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-a-weighted-field-building-owner-contract.test.ts";
 const OWNER_STATUS =
   "post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_owner_landed_runtime_selected_surface_parity";
-const OWNER_LABEL =
-  "post-V1 wall double-leaf/framed direct-fixed A-weighted field/building owner";
 const OWNER_PLAN_DOC =
   "docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_DIRECT_FIXED_A_WEIGHTED_FIELD_BUILDING_OWNER_PLAN_2026-06-11.md";
 const OWNER_CANDIDATE_ID =

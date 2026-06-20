@@ -124,8 +124,8 @@ describe("CLT floor monotonicity", () => {
       expect(result.lab.supportedTargetOutputs).toEqual(["Rw"]);
       expect(result.lab.unsupportedTargetOutputs).toEqual(["Ln,w", "Ln,w+CI"]);
       expect(result.field.impact?.basis).toBeUndefined();
-      expect(result.field.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
-      expect(result.field.unsupportedTargetOutputs).toEqual(["Rw", "Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]);
+      expect(result.field.supportedTargetOutputs).toEqual(["Rw", "R'w", "DnT,w"]);
+      expect(result.field.unsupportedTargetOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]);
     }
   });
 
@@ -176,8 +176,8 @@ describe("CLT floor monotonicity", () => {
       expect(result.field.floorSystemMatch).toBeNull();
       expect(result.field.floorSystemEstimate).toBeNull();
       expect(result.field.impact).toBeNull();
-      expect(result.field.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
-      expect(result.field.unsupportedTargetOutputs).toEqual(["Rw", "Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]);
+      expect(result.field.supportedTargetOutputs).toEqual(["Rw", "R'w", "DnT,w"]);
+      expect(result.field.unsupportedTargetOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]);
     }
   });
 });

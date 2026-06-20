@@ -237,11 +237,7 @@ describe("broad accuracy floor open-box timber raw-bare carrier owner contract",
       ["open_web_wrong_family_base_only", 72]
     ]);
 
-    for (const id of [
-      "roleless_370mm_open_box_base_only",
-      "tagged_370mm_open_box_base_only",
-      "split_185_185_open_box_base_only"
-    ] as const) {
+    for (const id of ["tagged_370mm_open_box_base_only", "split_185_185_open_box_base_only"] as const) {
       const current = snapshot(RAW_BARE_PROBE_LAYERS[id]);
 
       expect(current, id).toMatchObject({
@@ -256,6 +252,16 @@ describe("broad accuracy floor open-box timber raw-bare carrier owner contract",
       expect(current.ratingsBasis, id).not.toBe(OPEN_BOX_TIMBER_SIMILARITY_BASIS);
       expect(forbiddenPackageTransferRws.has(current.ratingsRw ?? NaN), id).toBe(false);
     }
+
+    expect(snapshot(RAW_BARE_PROBE_LAYERS.roleless_370mm_open_box_base_only)).toMatchObject({
+      floorSystemEstimateKind: null,
+      floorSystemMatchId: null,
+      impactBasis: null,
+      ratingsBasis: "screening_mass_law_curve_seed_v3",
+      ratingsRw: 42,
+      supported: ["Rw"],
+      unsupported: ["Ln,w", "CI", "CI,50-2500", "Ln,w+CI", "L'n,w", "IIC"]
+    });
 
     for (const id of [
       "upper_only_dry_package_without_lower_owner",

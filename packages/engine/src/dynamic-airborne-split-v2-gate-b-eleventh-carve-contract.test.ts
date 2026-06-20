@@ -77,7 +77,7 @@ describe("dynamic-airborne split v2 Gate B eleventh carve contract", () => {
     // context-owned absorptive cavity hook and its field/building target
     // filter add narrow call-sites while keeping the carved guard
     // implementations outside this composer.
-    expect(countPhysicalLines(source)).toBe(2151);
+    expect(countPhysicalLines(source)).toBe(2150);
     expect(countPhysicalLines(guardModule)).toBe(1422);
     expect([...sections.keys()]).toEqual(REMAINING_GUARD_ORDER);
   });

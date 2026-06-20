@@ -527,7 +527,10 @@ describe("scenario analysis", () => {
     expect(withoutOverride.result).not.toBeNull();
     expect(withOverride.result).not.toBeNull();
     expect(withoutOverride.result?.impact?.basis).toBe("predictor_heavy_concrete_published_upper_treatment_estimate");
-    expect(withoutOverride.result?.impact?.DeltaLw ?? null).toBe(33.4);
+    expect(withoutOverride.result?.impact?.LnW ?? null).toBe(50);
+    expect(withoutOverride.result?.impact?.DeltaLw ?? null).toBeNull();
+    expect(withoutOverride.result?.supportedTargetOutputs).toEqual(["Rw", "Ln,w"]);
+    expect(withoutOverride.result?.unsupportedTargetOutputs).toEqual(["Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w"]);
     expect(withOverride.result?.impact?.DeltaLw ?? null).not.toBeNull();
     expect(withOverride.result?.impact?.LnW ?? null).not.toBeNull();
     expect(withOverride.result?.impact?.basis).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");

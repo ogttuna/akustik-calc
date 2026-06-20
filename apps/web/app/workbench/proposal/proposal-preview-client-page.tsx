@@ -16,6 +16,7 @@ import { buildSimpleWorkbenchProposalPreviewHtml } from "@/features/workbench/si
 import { buildSimpleWorkbenchProposalConstructionSection } from "@/features/workbench/simple-workbench-proposal-construction-section";
 import { SimpleWorkbenchProposalConstructionFigure } from "@/features/workbench/simple-workbench-proposal-construction-figure";
 import { buildSimpleWorkbenchProposalDossier } from "@/features/workbench/simple-workbench-proposal-dossier";
+import { useSimpleWorkbenchProposalPdfFilenameDialog } from "@/features/workbench/simple-workbench-proposal-filename-dialog";
 import { getSimpleWorkbenchProposalBranding } from "@/features/workbench/simple-workbench-proposal-branding";
 import {
   downloadSimpleWorkbenchProposalDocx,
@@ -89,6 +90,7 @@ export function ProposalPreviewClientPage() {
   const [loadedPreview, setLoadedPreview] = useState<LoadedSimpleWorkbenchProposalPreview | null>(null);
   const [frameReady, setFrameReady] = useState(false);
   const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
+  const { pdfFilenameDialog, requestPdfFilename } = useSimpleWorkbenchProposalPdfFilenameDialog();
   const activePdfStyle = searchParams.get("style") === "simple" ? "simple" : "branded";
   const activeStyleDescriptor = useMemo(() => getProposalPdfStyleDescriptor(activePdfStyle), [activePdfStyle]);
 
@@ -230,6 +232,17 @@ export function ProposalPreviewClientPage() {
       return;
     }
 
+    const filename =
+      format === "pdf"
+        ? await requestPdfFilename(proposalDocument, {
+            style
+          })
+        : undefined;
+
+    if (filename === null) {
+      return;
+    }
+
     setIsDownloadingPdf(true);
 
     try {
@@ -239,6 +252,7 @@ export function ProposalPreviewClientPage() {
         });
       } else {
         await downloadSimpleWorkbenchProposalPdf(proposalDocument, {
+          filename,
           style
         });
       }
@@ -290,6 +304,7 @@ export function ProposalPreviewClientPage() {
 
   return (
     <main className="ui-shell flex min-h-screen flex-col gap-6 overflow-x-clip px-4 pb-12 pt-4 sm:px-6 lg:px-8">
+      {pdfFilenameDialog}
       <SurfacePanel className="px-5 py-5 sm:px-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>

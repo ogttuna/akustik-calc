@@ -233,7 +233,7 @@ const CASES: readonly OriginCase[] = [
       warningMentionsPublishedLowConfidenceFit: false,
       warningMentionsUnsupportedRwCtr: false,
       warningMentionsVisibleDerivedTopology: true,
-      warningMentionsWithheldClosestCandidate: true
+      warningMentionsWithheldClosestCandidate: false
     }
   },
   {
@@ -299,7 +299,7 @@ describe("reinforced concrete low-confidence follow-up origin matrix", () => {
 
     expect(expandedBoardBoundary.confidenceProvenance).toBeNull();
     expect(expandedBoardBoundary.warningMentionsHeavyConcreteFormulaNeedsInput).toBe(true);
-    expect(expandedBoardBoundary.warningMentionsWithheldClosestCandidate).toBe(true);
+    expect(expandedBoardBoundary.warningMentionsWithheldClosestCandidate).toBe(false);
 
     expect(heavyFloatingFormula.confidenceProvenance).toBe("formula_estimate_narrow_scope");
     expect(heavyFloatingFormula.formulaNotesMentionFloatingBranch).toBe(true);

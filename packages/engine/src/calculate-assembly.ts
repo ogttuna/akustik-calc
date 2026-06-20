@@ -509,6 +509,9 @@ const POST_V1_WALL_SCREENING_FIELD_LAB_COMPANION_FAMILIES = new Set([
 ]);
 const POST_V1_WALL_SOURCE_ABSENT_BUILDING_LAB_SPECTRUM_FAMILIES = new Set([
   ...POST_V1_WALL_SCREENING_FIELD_LAB_COMPANION_FAMILIES,
+  "laminated_single_leaf",
+  "masonry_nonhomogeneous",
+  "rigid_massive_wall",
   "lined_massive_wall"
 ]);
 const POST_V1_RAW_BARE_FLOOR_AIRBORNE_BUILDING_OUTPUT_SET = new Set<RequestedOutputId>(
@@ -1162,6 +1165,10 @@ function getPostV1WallScreeningFieldLabCompanionOutputs(input: {
   const hasRequestedFieldOutput = input.support.targetOutputs.some((output) =>
     ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLOOR_FIELD_CONTINUATION_OUTPUTS.has(output)
   );
+  const targetSetIsLabOnly = input.support.targetOutputs.length > 0 &&
+    input.support.targetOutputs.every((output) =>
+      GATE_AR_AIRBORNE_BUILDING_PREDICTION_LAB_ALIAS_OUTPUTS.has(output)
+    );
   const hasSelectedScreeningBasis =
     input.airborneBasis?.origin === "screening_fallback" &&
     input.airborneBasis.method === POST_V1_WALL_SCREENING_FIELD_LAB_COMPANION_METHOD &&
@@ -1199,7 +1206,7 @@ function getPostV1WallScreeningFieldLabCompanionOutputs(input: {
     ) ||
     !targetOutputSet.has("Rw") ||
     !unsupportedOutputSet.has("Rw") ||
-    !hasRequestedFieldOutput ||
+    (!hasRequestedFieldOutput && !targetSetIsLabOnly) ||
     typeof input.estimatedRwDb !== "number" ||
     !Number.isFinite(input.estimatedRwDb)
   ) {
@@ -1373,6 +1380,34 @@ function getPostV1OpenBoxFinishedPackageBuildingLabCompanionOutputs(input: {
   return outputs;
 }
 
+function getPostV1RawBareFloorBuildingDirectRwCompanionOutputs(input: {
+  readonly floorSystemRatings: (FloorSystemAirborneRatings & { readonly basis?: string }) | null;
+  readonly runtime: PostV1RawBareFloorAirborneBuildingPredictionRuntime | null;
+  readonly support: TargetOutputSupportLike;
+}): RequestedOutputId[] {
+  const ratings = input.floorSystemRatings;
+  if (
+    !input.runtime ||
+    !ratings ||
+    !isRawBareFloorAirborneBasis(ratings.basis)
+  ) {
+    return [];
+  }
+
+  const targetOutputSet = new Set(input.support.targetOutputs);
+  const unsupportedOutputSet = new Set(input.support.unsupportedTargetOutputs);
+
+  return (
+    targetOutputSet.has("Rw") &&
+    unsupportedOutputSet.has("Rw") &&
+    typeof ratings.Rw === "number" &&
+    Number.isFinite(ratings.Rw) &&
+    round1(ratings.Rw) === input.runtime.directRwDb
+  )
+    ? ["Rw"]
+    : [];
+}
+
 function getPostV1LowDensityExactAstmLabAirborneCompanionOutputs(input: {
   readonly floorSystemRatings: (FloorSystemAirborneRatings & { readonly basis?: string }) | null;
   readonly impact: ImpactCalculation | null | undefined;
@@ -1477,28 +1512,55 @@ function getPostV1WallFramedCalibrationLabSpectrumCompanionOutputs(input: {
   readonly estimatedCtrDb: number | null | undefined;
   readonly estimatedRwDb: number | null | undefined;
   readonly estimatedStcDb: number | null | undefined;
+  readonly sourceAnchorCandidatePresent: boolean;
   readonly support: TargetOutputSupportLike;
 }): RequestedOutputId[] {
   const hasRequestedFieldOutput = input.support.targetOutputs.some((output) =>
     ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLOOR_FIELD_CONTINUATION_OUTPUTS.has(output)
   );
+  const targetSetIsLabOnly = input.support.targetOutputs.length > 0 &&
+    input.support.targetOutputs.every((output) =>
+      GATE_AR_AIRBORNE_BUILDING_PREDICTION_LAB_ALIAS_OUTPUTS.has(output)
+    );
+  const targetSetHasRw = input.support.targetOutputs.includes("Rw");
   const hasFramedCalibrationTrace =
     input.airborneTrace?.detectedFamily === "stud_wall_system" &&
-    input.airborneTrace.strategy === "stud_surrogate_blend+framed_wall_calibration";
+      input.airborneTrace.strategy === "stud_surrogate_blend+framed_wall_calibration";
   const hasExplicitFramedMetadata = Boolean(
     input.airborneContext?.connectionType ||
       input.airborneContext?.studType
   );
 
   if (
+    (
+      input.airborneContext?.contextMode !== "field_between_rooms" &&
+      input.airborneContext?.contextMode !== "building_prediction"
+    ) ||
     !hasFramedCalibrationTrace ||
     !hasExplicitFramedMetadata ||
-    !hasRequestedFieldOutput
+    (
+      input.airborneContext?.contextMode === "building_prediction" &&
+      (
+        input.airborneContext.connectionType === "resilient_channel" ||
+        input.airborneContext.studType === "resilient_stud" ||
+        (
+          typeof input.airborneContext.resilientBarSideCount === "string" &&
+          input.airborneContext.resilientBarSideCount !== "auto"
+        )
+      )
+    ) ||
+    (!hasRequestedFieldOutput && !targetSetIsLabOnly)
   ) {
     return [];
   }
 
-  return getFiniteRequestedUnsupportedLabSpectrumOutputs(input);
+  if (targetSetIsLabOnly && !targetSetHasRw) {
+    return [];
+  }
+
+  return targetSetIsLabOnly
+    ? getFiniteRequestedLabSpectrumOutputs(input)
+    : getFiniteRequestedUnsupportedLabSpectrumOutputs(input);
 }
 
 function getPostV1WallSourceAbsentBuildingLabSpectrumCompanionOutputs(input: {
@@ -1515,6 +1577,10 @@ function getPostV1WallSourceAbsentBuildingLabSpectrumCompanionOutputs(input: {
   const hasRequestedFieldOutput = input.support.targetOutputs.some((output) =>
     ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLOOR_FIELD_CONTINUATION_OUTPUTS.has(output)
   );
+  const targetSetIsLabOnly = input.support.targetOutputs.length > 0 &&
+    input.support.targetOutputs.every((output) =>
+      GATE_AR_AIRBORNE_BUILDING_PREDICTION_LAB_ALIAS_OUTPUTS.has(output)
+    );
   const hasSupportedFieldOutput = input.support.supportedTargetOutputs.some((output) =>
     ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLOOR_FIELD_CONTINUATION_OUTPUTS.has(output)
   );
@@ -1525,7 +1591,7 @@ function getPostV1WallSourceAbsentBuildingLabSpectrumCompanionOutputs(input: {
 
   if (
     input.airborneContext?.contextMode !== "building_prediction" ||
-    !hasRequestedFieldOutput ||
+    (!hasRequestedFieldOutput && !targetSetIsLabOnly) ||
     hasSupportedFieldOutput ||
     !hasSourceAbsentLabTrace ||
     input.catalogLabFallbackApplied ||
@@ -1535,7 +1601,9 @@ function getPostV1WallSourceAbsentBuildingLabSpectrumCompanionOutputs(input: {
     return [];
   }
 
-  return getFiniteRequestedUnsupportedLabSpectrumOutputs(input);
+  return targetSetIsLabOnly
+    ? getFiniteRequestedLabSpectrumOutputs(input)
+    : getFiniteRequestedUnsupportedLabSpectrumOutputs(input);
 }
 
 function hasPostV1WallHeavyCompositeBuildingLabTrace(
@@ -1561,6 +1629,29 @@ function hasPostV1WallFlatMulticavityBuildingLabTrace(
   );
 }
 
+function hasPostV1StudWallBuildingLabCompanionBoundary(input: {
+  readonly airborneContext: AirborneContext | null | undefined;
+  readonly airborneTrace: DynamicAirborneTrace | null | undefined;
+}): boolean {
+  const hasFramedCalibrationTrace = Boolean(
+    input.airborneTrace?.detectedFamily === "stud_wall_system" &&
+      input.airborneTrace.strategy.startsWith("stud_surrogate_blend+framed_wall_calibration")
+  );
+
+  return Boolean(
+    input.airborneContext?.contextMode === "building_prediction" &&
+      hasFramedCalibrationTrace &&
+      (
+        input.airborneContext.connectionType === "resilient_channel" ||
+        input.airborneContext.studType === "resilient_stud" ||
+        (
+          typeof input.airborneContext.resilientBarSideCount === "string" &&
+          input.airborneContext.resilientBarSideCount !== "auto"
+        )
+      )
+  );
+}
+
 function getPostV1WallHeavyCompositeBuildingLabSpectrumCompanionOutputs(input: {
   readonly airborneContext: AirborneContext | null | undefined;
   readonly airborneTrace: DynamicAirborneTrace | null | undefined;
@@ -1575,6 +1666,10 @@ function getPostV1WallHeavyCompositeBuildingLabSpectrumCompanionOutputs(input: {
   const hasRequestedFieldOutput = input.support.targetOutputs.some((output) =>
     ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLOOR_FIELD_CONTINUATION_OUTPUTS.has(output)
   );
+  const targetSetIsLabOnly = input.support.targetOutputs.length > 0 &&
+    input.support.targetOutputs.every((output) =>
+      GATE_AR_AIRBORNE_BUILDING_PREDICTION_LAB_ALIAS_OUTPUTS.has(output)
+    );
   const hasSupportedFieldOutput = input.support.supportedTargetOutputs.some((output) =>
     ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLOOR_FIELD_CONTINUATION_OUTPUTS.has(output)
   );
@@ -1582,7 +1677,7 @@ function getPostV1WallHeavyCompositeBuildingLabSpectrumCompanionOutputs(input: {
 
   if (
     input.airborneContext?.contextMode !== "building_prediction" ||
-    !hasRequestedFieldOutput ||
+    (!hasRequestedFieldOutput && !targetSetIsLabOnly) ||
     hasSupportedFieldOutput ||
     !hasHeavyCompositeTrace ||
     input.catalogLabFallbackApplied ||
@@ -1592,7 +1687,9 @@ function getPostV1WallHeavyCompositeBuildingLabSpectrumCompanionOutputs(input: {
     return [];
   }
 
-  return getFiniteRequestedUnsupportedLabSpectrumOutputs(input);
+  return targetSetIsLabOnly
+    ? getFiniteRequestedLabSpectrumOutputs(input)
+    : getFiniteRequestedUnsupportedLabSpectrumOutputs(input);
 }
 
 function getPostV1GateARBuildingLabSpectrumCompanionOutputs(input: {
@@ -1614,6 +1711,7 @@ function getPostV1GateARBuildingLabSpectrumCompanionOutputs(input: {
     input.support.targetOutputs.every((output) =>
       GATE_AR_AIRBORNE_BUILDING_PREDICTION_LAB_ALIAS_OUTPUTS.has(output)
     );
+  const targetSetHasRw = input.support.targetOutputs.includes("Rw");
   const hasGateARBuildingBasis =
     input.airborneBasis?.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD &&
     input.airborneBasis.origin === "family_physics_prediction" &&
@@ -1635,10 +1733,18 @@ function getPostV1GateARBuildingLabSpectrumCompanionOutputs(input: {
     (!hasRequestedBuildingOutput && !targetSetIsLabOnly) ||
     !hasGateARBuildingBasis ||
     (!hasOwnedDirectCurveBasis && !hasOwnedDirectCurveTrace) ||
+    hasPostV1StudWallBuildingLabCompanionBoundary({
+      airborneContext: input.airborneContext,
+      airborneTrace: input.airborneTrace
+    }) ||
     input.catalogLabFallbackApplied ||
     input.sourceAnchorCandidatePresent ||
     hasOpeningLeakRouteRequest(input.airborneContext)
   ) {
+    return [];
+  }
+
+  if (targetSetIsLabOnly && !targetSetHasRw) {
     return [];
   }
 
@@ -5843,6 +5949,9 @@ export function calculateAssembly(
           estimatedCtrDb: visibleEstimatedCtrDbWithFloorPackageLabCompanion,
           estimatedRwDb: visibleEstimatedRwDbWithFloorPackageLabCompanion,
           estimatedStcDb: visibleEstimatedStcDb,
+          sourceAnchorCandidatePresent: Boolean(
+            compatibleWallAnchorDeltaResult.match || verifiedAirborneAnchorResult.match
+          ),
           support: visibleTargetOutputSupportWithExactMetricScope
         });
   const postV1WallSourceAbsentBuildingLabSpectrumCompanionOutputs =
@@ -6013,6 +6122,12 @@ export function calculateAssembly(
       runtime: openBoxFinishedPackageFloorAirborneBuildingPredictionRuntime,
       support: visibleTargetOutputSupportWithExactMetricScope
     });
+  const postV1RawBareFloorBuildingDirectRwCompanionOutputs =
+    getPostV1RawBareFloorBuildingDirectRwCompanionOutputs({
+      floorSystemRatings,
+      runtime: rawBareFloorAirborneBuildingPredictionRuntime,
+      support: visibleTargetOutputSupportWithExactMetricScope
+    });
   const postV1LowDensityExactAstmLabAirborneCompanionOutputs =
     getPostV1LowDensityExactAstmLabAirborneCompanionOutputs({
       floorSystemRatings,
@@ -6040,6 +6155,7 @@ export function calculateAssembly(
           ...postV1WallTimberStudCltFormulaFieldLabCompanionOutputs,
           ...postV1WallTimberStudCltFormulaBuildingLabCompanionOutputs,
           ...postV1OpenBoxFinishedPackageBuildingLabCompanionOutputs,
+          ...postV1RawBareFloorBuildingDirectRwCompanionOutputs,
           ...postV1LowDensityExactAstmLabAirborneCompanionOutputs,
           ...postV1OpenBoxFinishedPackageBuildingImpactCompanionOutputs
         ])
@@ -6659,7 +6775,8 @@ export function calculateAssembly(
   }
   if (
     rawBareFloorAirborneBuildingPredictionRuntime &&
-    ownedFloorBuildingPredictionAirborneOutputs.size > 0
+    (ownedFloorBuildingPredictionAirborneOutputs.size > 0 ||
+      postV1RawBareFloorBuildingDirectRwCompanionOutputs.length > 0)
   ) {
     result.airborneBasis = buildRawBareFloorAirborneBuildingPredictionBasis();
   }

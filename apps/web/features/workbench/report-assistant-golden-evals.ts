@@ -2,6 +2,7 @@ import type { RequestedOutputId } from "@dynecho/shared";
 
 import { calculatorPreviewToAssistantResult } from "./report-assistant-calculator-preview-result";
 import { planReportAssistantRequest } from "./report-assistant-planner";
+import { plausibilityReviewToAssistantResult } from "./report-assistant-plausibility-result";
 import {
   createReportAssistantResultEnvelope,
   validateReportAssistantResultEnvelope,
@@ -38,6 +39,7 @@ export type ReportAssistantGoldenEvalFamily =
   | "incomplete_wall_stack"
   | "invented_capability"
   | "prompt_injection"
+  | "source_review_advisory"
   | "stale_draft_replay"
   | "unsupported_metric_basis"
   | "untrusted_source_injection"
@@ -104,6 +106,7 @@ export const REPORT_ASSISTANT_REQUIRED_GOLDEN_EVAL_FAMILIES: readonly ReportAssi
   "floor_impact_missing_physical_inputs",
   "unsupported_metric_basis",
   "action_proposal_confirmation",
+  "source_review_advisory",
   "prompt_injection",
   "untrusted_source_injection",
   "stale_draft_replay",
@@ -461,6 +464,65 @@ export const REPORT_ASSISTANT_GOLDEN_EVAL_CASES: readonly ReportAssistantGoldenE
         })
       });
     }
+  },
+  {
+    expected: {
+      authority: "provider_review",
+      basisPresence: "absent",
+      capabilityName: "report_assistant_plausibility_route",
+      mutates: false,
+      numericRowsVisible: false,
+      previewOnly: true,
+      requiresConfirmation: false,
+      routeStatus: "ready",
+      sourceTraceKinds: ["provider_review"]
+    },
+    family: "source_review_advisory",
+    id: "golden-source-review-advisory-not-calculator-backed",
+    note: "Source-backed plausibility review may recommend a report value but cannot become calculator-backed truth.",
+    run: () => observationFromEnvelope({
+      envelope: plausibilityReviewToAssistantResult({
+        review: {
+          answerText: "Comparable sources suggest a report-only value, but calculator truth is unchanged.",
+          comparableAssemblies: [
+            {
+              comparisonNote: "Similar gypsum and rock wool wall only.",
+              label: "Gypsum rock wool wall reference",
+              matchingLayers: ["Gypsum board", "Rock wool"],
+              metricValues: ["Rw 45-50 dB"],
+              sourceTitle: "Wall acoustic reference",
+              sourceUrl: "https://example.com/wall-acoustic-reference",
+              weakeningDifferences: ["unknown stud spacing"]
+            }
+          ],
+          comparability: "partial",
+          confidence: "medium",
+          engineDisplayValue: "41 dB",
+          missingEvidence: ["Exact tested stack is unavailable."],
+          metric: "Rw",
+          metricId: "output:Rw",
+          rationale: ["Provider review is advisory evidence only."],
+          recommendedActionText: "Ask for confirmation before any report-only edit.",
+          severity: "medium",
+          sourceQuality: "mixed",
+          sources: [
+            {
+              title: "Wall acoustic reference",
+              url: "https://example.com/wall-acoustic-reference"
+            }
+          ],
+          valueRecommendation: {
+            displayValue: "47 dB",
+            note: "Advisory report value only."
+          },
+          valueReviewed: "41 dB",
+          verdict: "suspicious"
+        },
+        source: "research_provider",
+        warnings: []
+      }),
+      numericRowsVisible: false
+    })
   },
   {
     expected: {

@@ -65,6 +65,29 @@ function errorEnvelope(): ReportAssistantResultEnvelope {
   });
 }
 
+function sourceReviewEnvelope(): ReportAssistantResultEnvelope {
+  return createReportAssistantResultEnvelope({
+    authority: "provider_review",
+    capabilityName: "report_assistant_plausibility_route",
+    confidenceReason: "Provider said suggested report value 47 dB from https://example.com/private-source.",
+    evidence: [
+      {
+        detail: "Calculator 41 dB; suggested report value 47 dB; source https://example.com/private-source",
+        label: "Suggested report value"
+      }
+    ],
+    routeStatus: "ready",
+    sourceTrace: [
+      {
+        detail: "Provider transcript contained source quotes and Rw 47 dB recommendation.",
+        kind: "provider_review",
+        label: "report_assistant_plausibility_route"
+      }
+    ],
+    warnings: ["Provider patch was suppressed before validation."]
+  });
+}
+
 describe("report assistant redacted trace events", () => {
   it("keeps calculator success events useful without storing prompt, source detail, or values", () => {
     const event = createReportAssistantRedactedTraceEvent({
@@ -172,6 +195,39 @@ describe("report assistant redacted trace events", () => {
       confirmationStatus: "rejected",
       stage: "confirmation"
     });
+  });
+
+  it("records source-review confirmation posture without leaking source values or provider text", () => {
+    const event = createReportAssistantRedactedTraceEvent({
+      confirmationStatus: "required_pending",
+      envelope: sourceReviewEnvelope(),
+      requestId: "assistant-request-source-review",
+      usedToolNames: ["report_assistant_plausibility_route"]
+    });
+    const serialized = JSON.stringify(event);
+
+    expect(event).toMatchObject({
+      authority: "provider_review",
+      confirmationStatus: "required_pending",
+      evidenceCount: 1,
+      rendererKind: "research_review_card",
+      resultKind: "plausibility_review",
+      routeStatus: "ready",
+      selectedCapability: "report_assistant_plausibility_route",
+      sourceTraceCount: 1,
+      usedToolNames: ["report_assistant_plausibility_route"],
+      validationStatus: "passed",
+      warningCount: 1
+    });
+    expect(event.sourceTraceRefs[0]).toMatchObject({
+      hasDetail: true,
+      kind: "provider_review"
+    });
+    expect(serialized).not.toContain("47 dB");
+    expect(serialized).not.toContain("41 dB");
+    expect(serialized).not.toContain("https://example.com/private-source");
+    expect(serialized).not.toContain("Provider transcript");
+    expect(serialized).not.toContain("Provider patch was suppressed");
   });
 
   it("records validation failure counts and hashed refs without leaking validator text", () => {

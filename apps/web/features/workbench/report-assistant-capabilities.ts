@@ -124,6 +124,25 @@ const REPORT_ASSISTANT_ROUTE_CAPABILITIES = [
   {
     authPolicy: "session_when_configured",
     category: "route",
+    description: "Parse natural-language calculator commands into preview-only Workbench actions.",
+    exposedToModel: false,
+    mutates: false,
+    name: "report_assistant_calculator_command_intent_route",
+    previewOnly: true,
+    providerPolicy: "local_calculator",
+    rendererKind: "tool_result_card",
+    requiredInputs: ["calculator context", "instruction"],
+    requiresConfirmation: false,
+    resultKind: "tool_result",
+    route: {
+      method: "POST",
+      pathname: "/api/report-assistant/calculator-command-intent"
+    },
+    stalePolicy: "assistant_context_signature"
+  },
+  {
+    authPolicy: "session_when_configured",
+    category: "route",
     description: "Run preview-only calculator output from a Workbench snapshot or described wall stack.",
     exposedToModel: false,
     mutates: false,

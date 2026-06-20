@@ -1,0 +1,548 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - generic [ref=e6]: DAC
+          - generic [ref=e7]: DynEcho
+          - generic [ref=e8]: Preview mode
+        - generic [ref=e9]:
+          - button "Switch to dark mode" [ref=e10] [cursor=pointer]:
+            - img [ref=e11]
+            - generic [ref=e17]: Light
+          - button "Sign out" [ref=e19] [cursor=pointer]
+    - main [ref=e20]:
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - generic [ref=e23]:
+            - paragraph [ref=e24]: Report editor
+            - heading "DAC Operator Deck" [level=1] [ref=e25]
+            - generic [ref=e26]:
+              - generic [ref=e27]: Packaged 16 Jun 2026, 11:48
+              - generic [ref=e28]: Local draft saved
+              - generic [ref=e29]: Preview ready
+              - generic [ref=e30]: Project target needed
+          - generic [ref=e31]:
+            - link "Calculator" [ref=e32] [cursor=pointer]:
+              - /url: /workbench-v2
+              - img [ref=e33]
+              - text: Calculator
+            - button "Reload preview" [ref=e35] [cursor=pointer]:
+              - img [ref=e36]
+            - button "Revision history" [disabled] [ref=e41]:
+              - img [ref=e42]
+              - text: Revision history
+            - button "Reset edits" [disabled] [ref=e46]:
+              - img [ref=e47]
+            - button "Save local draft" [disabled] [ref=e50]:
+              - img [ref=e51]
+              - text: Save local draft
+            - button "Save as template" [ref=e55] [cursor=pointer]:
+              - img [ref=e56]
+              - text: Save as template
+            - button "Save project report" [ref=e58] [cursor=pointer]:
+              - img [ref=e59]
+              - text: Save project report
+        - generic [ref=e63]:
+          - generic [ref=e64]:
+            - generic [ref=e65]:
+              - radiogroup "Report style" [ref=e66]:
+                - generic [ref=e67] [cursor=pointer]:
+                  - radio "Branded" [checked]
+                  - generic [ref=e68]: Branded
+                - generic [ref=e69] [cursor=pointer]:
+                  - radio "Simple"
+                  - generic [ref=e70]: Simple
+              - generic [ref=e71]:
+                - button "PDF" [ref=e72] [cursor=pointer]:
+                  - img [ref=e73]
+                  - text: PDF
+                - button "DOCX" [ref=e76] [cursor=pointer]:
+                  - img [ref=e77]
+                  - text: DOCX
+                - button "Print" [ref=e80] [cursor=pointer]:
+                  - img [ref=e81]
+                  - text: Print
+            - iframe [ref=e85]:
+              - main [ref=f1e2]:
+                - generic [ref=f1e3]:
+                  - generic [ref=f1e4]:
+                    - generic [ref=f1e5]:
+                      - generic [ref=f1e6]:
+                        - generic [ref=f1e7]: DAC
+                        - generic [ref=f1e8]:
+                          - strong [ref=f1e9]: DYNECHO Acoustic Consulting
+                          - generic [ref=f1e10]: Acoustic analysis report
+                      - generic [ref=f1e11]:
+                        - text: Acoustic analysis report
+                        - generic [ref=f1e12]: DEC-2026-001 · Rev 00
+                    - heading "Acoustic Analysis Report" [level=1] [ref=f1e13]
+                    - paragraph [ref=f1e14]: Acoustic analysis report for DAC Operator Deck. Key values, construction details, assumptions, and validity are stated for client review.
+                    - generic [ref=f1e15]:
+                      - generic [ref=f1e16]:
+                        - strong [ref=f1e17]: ISO 717-1
+                        - generic [ref=f1e18]: Weighted airborne rating basis
+                      - generic [ref=f1e19]:
+                        - strong [ref=f1e20]: ISO 12354-1
+                        - generic [ref=f1e21]: Prediction method
+                    - generic [ref=f1e22]:
+                      - generic [ref=f1e23]:
+                        - generic [ref=f1e24]:
+                          - strong [ref=f1e25]: Project
+                          - generic [ref=f1e26]: DAC Operator Deck
+                          - generic [ref=f1e27]: Client delivery team | Concept | Consultant issue
+                        - generic [ref=f1e28]:
+                          - strong [ref=f1e29]: Issued to
+                          - generic [ref=f1e30]: Client delivery team
+                          - generic [ref=f1e31]:
+                            - text: Design coordination team
+                            - text: Wall acoustic analysis report
+                            - text: Client review and acoustic coordination
+                            - text: Valid for 30 calendar days unless superseded by a later issue.
+                        - generic [ref=f1e32]:
+                          - generic [ref=f1e33]: Report summary
+                          - heading "Wall acoustic analysis report" [level=3] [ref=f1e34]
+                          - paragraph [ref=f1e35]: Rw 57 dB from the current wall layer stack.
+                      - generic [ref=f1e36]:
+                        - generic [ref=f1e37]:
+                          - strong [ref=f1e38]: Primary acoustic value
+                          - generic [ref=f1e39]: Rw 57 dB
+                          - generic [ref=f1e40]: Wall build-up from calculator workbench
+                        - generic [ref=f1e41]:
+                          - strong [ref=f1e42]: Issue
+                          - generic [ref=f1e43]: DEC-2026-001
+                          - generic [ref=f1e44]: Rev 00 | 16 June 2026
+                        - generic [ref=f1e45]:
+                          - strong [ref=f1e46]: Consultant
+                          - generic [ref=f1e47]: DYNECHO Acoustic Consulting
+                          - generic [ref=f1e48]: Acoustic consultant | Acoustic Consultant
+                        - generic [ref=f1e49]:
+                          - strong [ref=f1e50]: Contact
+                          - generic [ref=f1e51]: Contact email not entered
+                          - generic [ref=f1e52]:
+                            - text: Contact phone not entered
+                            - text: Office address not entered
+                  - generic [ref=f1e54]:
+                    - generic [ref=f1e55]:
+                      - generic [ref=f1e56]: Scope
+                      - heading "Acoustic calculation basis" [level=3] [ref=f1e57]
+                      - paragraph [ref=f1e58]: Wall · Calculator route. Calculation basis is limited to the selected build-up and requested outputs.
+                    - generic [ref=f1e59]:
+                      - generic [ref=f1e60]: Issue authority
+                      - heading "Prepared for client review" [level=3] [ref=f1e61]
+                      - paragraph [ref=f1e62]: Acoustic consultant, Acoustic Consultant, prepared DEC-2026-001 Rev 00 on behalf of DYNECHO Acoustic Consulting for Client delivery team.
+                    - generic [ref=f1e63]:
+                      - generic [ref=f1e64]: Validity
+                      - heading "Offer basis" [level=3] [ref=f1e65]
+                      - paragraph [ref=f1e66]: Client review and acoustic coordination. Valid for 30 calendar days unless superseded by a later issue.
+                    - generic [ref=f1e67]:
+                      - generic [ref=f1e68]: Transmittal
+                      - heading "Recipient and subject" [level=3] [ref=f1e69]
+                      - paragraph [ref=f1e70]: "Issued to Client delivery team. Design coordination team. Subject: Wall acoustic analysis report."
+                  - generic [ref=f1e71]:
+                    - generic [ref=f1e72]: Signature and Issue Authority
+                    - generic [ref=f1e73]:
+                      - generic [ref=f1e74]:
+                        - generic [ref=f1e75]: Issued by
+                        - heading "Acoustic consultant" [level=3] [ref=f1e76]
+                        - paragraph [ref=f1e77]: DYNECHO Acoustic Consulting
+                        - paragraph [ref=f1e78]: Acoustic Consultant · Contact email not entered · Contact phone not entered
+                        - paragraph [ref=f1e79]: Office address not entered
+                        - generic [ref=f1e80]: Authorized consultant signature
+                      - generic [ref=f1e81]:
+                        - generic [ref=f1e82]: Issue control
+                        - heading "DEC-2026-001 · Rev 00" [level=3] [ref=f1e83]
+                        - paragraph [ref=f1e84]: Issued on 16 June 2026 for Client delivery team.
+                        - paragraph [ref=f1e85]: "Primary issue contact: Contact email not entered · Contact phone not entered"
+                        - paragraph [ref=f1e86]: "Issued to: Client delivery team · Design coordination team"
+                        - paragraph [ref=f1e87]: "Purpose: Client review and acoustic coordination · Valid for 30 calendar days unless superseded by a later issue."
+                        - generic [ref=f1e88]: Issue date and transmittal confirmation
+                - generic [ref=f1e89]:
+                  - generic [ref=f1e90]:
+                    - generic [ref=f1e91]: DYNECHO Acoustic Consulting | Acoustic analysis report
+                    - generic [ref=f1e92]:
+                      - generic [ref=f1e93]:
+                        - heading "Report Summary" [level=1] [ref=f1e94]
+                        - paragraph [ref=f1e95]: Acoustic indices, construction basis, report notes, and client issue details for this analysis report.
+                      - generic [ref=f1e96]:
+                        - generic [ref=f1e97]:
+                          - strong [ref=f1e98]: Study
+                          - generic [ref=f1e99]: Wall
+                          - generic [ref=f1e100]: Calculator route | Consultant issue
+                        - generic [ref=f1e101]:
+                          - strong [ref=f1e102]: Review status
+                          - generic [ref=f1e103]: Calculated estimate
+                          - generic [ref=f1e104]: Calculation basis is limited to the selected build-up and requested outputs.
+                        - generic [ref=f1e105]:
+                          - strong [ref=f1e106]: Build-up
+                          - generic [ref=f1e107]: 162.5 mm total
+                          - generic [ref=f1e108]: 3 visible rows · 3 density lines · 3 surface-mass lines
+                        - generic [ref=f1e109]:
+                          - strong [ref=f1e110]: Validity
+                          - generic [ref=f1e111]: Rev 00
+                          - generic [ref=f1e112]: Valid for 30 calendar days unless superseded by a later issue.
+                  - generic [ref=f1e113]:
+                    - generic [ref=f1e114]: Executive Summary
+                    - generic [ref=f1e115]:
+                      - heading "Report summary" [level=3] [ref=f1e116]
+                      - paragraph [ref=f1e117]: Rw 57 dB from the current wall layer stack.
+                  - generic [ref=f1e118]:
+                    - generic [ref=f1e119]: Acoustic Indices
+                    - generic [ref=f1e120]:
+                      - generic [ref=f1e121]:
+                        - strong [ref=f1e122]: Primary acoustic value
+                        - generic [ref=f1e123]: Rw 57 dB
+                        - generic [ref=f1e124]: Wall build-up from calculator workbench
+                      - generic [ref=f1e125]:
+                        - strong [ref=f1e126]: Project stage
+                        - generic [ref=f1e127]: Concept
+                        - generic [ref=f1e128]: Client review and acoustic coordination
+                      - generic [ref=f1e129]:
+                        - strong [ref=f1e130]: Validation
+                        - generic [ref=f1e131]: Calculated estimate
+                        - generic [ref=f1e132]: Calculation basis is limited to the selected build-up and requested outputs.
+                      - generic [ref=f1e133]:
+                        - strong [ref=f1e134]: Stack
+                        - generic [ref=f1e135]: 162.5 mm total
+                        - generic [ref=f1e136]: 3 visible rows · 3 density lines · 3 surface-mass lines
+                  - generic [ref=f1e137]:
+                    - generic [ref=f1e138]: Acoustic Result Profile
+                    - generic [ref=f1e139]:
+                      - generic [ref=f1e140]:
+                        - generic [ref=f1e141]:
+                          - heading "Result summary" [level=3] [ref=f1e142]
+                          - paragraph [ref=f1e143]: Rw 57 dB is the current headline answer. Single-number ratings on this proposal are expressed using the relevant ISO rating language.
+                        - generic [ref=f1e145]:
+                          - strong [ref=f1e146]: Rw
+                          - generic [ref=f1e147]: 57 dB
+                          - generic [ref=f1e148]: Calculated
+                        - generic [ref=f1e149]:
+                          - generic [ref=f1e150]: Result interpretation
+                          - heading "How to read the values" [level=3] [ref=f1e151]
+                          - paragraph [ref=f1e152]: Weighted airborne ratings target higher values; weighted impact ratings target lower values. Where band data is available, the response curve is included for review.
+                      - generic [ref=f1e154]:
+                        - generic [ref=f1e155]:
+                          - generic [ref=f1e156]:
+                            - generic [ref=f1e157]: Airborne Curve
+                            - heading "Airborne response curve" [level=3] [ref=f1e158]
+                            - paragraph [ref=f1e159]: Curve returned by the dynamic calculator for the active layer topology.
+                          - generic [ref=f1e160]:
+                            - generic [ref=f1e161]: 63..4000 Hz
+                            - generic [ref=f1e162]: Higher is better
+                        - generic [ref=f1e163]:
+                          - generic [ref=f1e164]: Low · 63-250 Hz
+                          - generic [ref=f1e165]: Speech · 500-1k Hz
+                          - generic [ref=f1e166]: High · 2k-4k Hz
+                        - img "Airborne response curve" [ref=f1e168]:
+                          - generic [ref=f1e170]: Low
+                          - generic [ref=f1e172]: Speech
+                          - generic [ref=f1e174]: High
+                          - generic [ref=f1e175]: "25"
+                          - generic [ref=f1e176]: "35"
+                          - generic [ref=f1e177]: "45"
+                          - generic [ref=f1e178]: "55"
+                          - generic [ref=f1e179]: "65"
+                          - generic [ref=f1e180]: "75"
+                          - generic [ref=f1e181]: "63"
+                          - generic [ref=f1e182]: "80"
+                          - generic [ref=f1e183]: "100"
+                          - generic [ref=f1e184]: "125"
+                          - generic [ref=f1e185]: "160"
+                          - generic [ref=f1e186]: "200"
+                          - generic [ref=f1e187]: "250"
+                          - generic [ref=f1e188]: "315"
+                          - generic [ref=f1e189]: "400"
+                          - generic [ref=f1e190]: "500"
+                          - generic [ref=f1e191]: "630"
+                          - generic [ref=f1e192]: "800"
+                          - generic [ref=f1e193]: 1k
+                          - generic [ref=f1e194]: 1.25k
+                          - generic [ref=f1e195]: 1.60k
+                          - generic [ref=f1e196]: 2k
+                          - generic [ref=f1e197]: 2.5k
+                          - generic [ref=f1e198]: 3.1k
+                          - generic [ref=f1e199]: 4k
+                          - generic [ref=f1e220]: Frequency (Hz)
+                          - generic [ref=f1e221]: Level (dB)
+                        - generic [ref=f1e222]:
+                          - generic [ref=f1e223]:
+                            - strong [ref=f1e224]: Low band
+                            - generic [ref=f1e225]: 40.9 dB
+                            - generic [ref=f1e226]: 125 Hz anchor
+                          - generic [ref=f1e227]:
+                            - strong [ref=f1e228]: Speech band
+                            - generic [ref=f1e229]: 53.0 dB
+                            - generic [ref=f1e230]: 500 Hz anchor
+                          - generic [ref=f1e231]:
+                            - strong [ref=f1e232]: High band
+                            - generic [ref=f1e233]: 65.0 dB
+                            - generic [ref=f1e234]: 2k Hz anchor
+                        - generic [ref=f1e238]:
+                          - strong [ref=f1e239]: Active transmission-loss curve
+                          - generic [ref=f1e240]: Active answer curve.
+                  - generic [ref=f1e241]:
+                    - generic [ref=f1e242]: Reference Standards
+                    - generic [ref=f1e243]:
+                      - heading "Calculation basis" [level=3] [ref=f1e244]
+                      - paragraph [ref=f1e245]: Calculations and single-number ratings are expressed using the relevant ISO basis for the report. This analysis report is a design estimate and does not replace accredited laboratory or site measurements.
+                    - generic [ref=f1e246]:
+                      - generic [ref=f1e247]:
+                        - generic [ref=f1e248]: ISO 717-1
+                        - heading "Weighted airborne rating basis" [level=3] [ref=f1e249]
+                        - paragraph [ref=f1e250]: Weighted airborne ratings on this issue are stated using ISO 717-1 single-number language, including airborne adaptation terms only when available for the current calculation basis.
+                      - generic [ref=f1e251]:
+                        - generic [ref=f1e252]: ISO 12354-1
+                        - heading "Prediction method" [level=3] [ref=f1e253]
+                        - paragraph [ref=f1e254]: Prediction results remain labelled as estimates on this sheet and are not presented as accredited laboratory or field certificates.
+                  - generic [ref=f1e255]:
+                    - generic [ref=f1e256]: Client Details
+                    - generic [ref=f1e257]:
+                      - generic [ref=f1e258]:
+                        - generic [ref=f1e259]: Recipient
+                        - heading "Transmittal recipient" [level=3] [ref=f1e260]
+                        - paragraph [ref=f1e261]: Client delivery team
+                        - paragraph [ref=f1e262]: Design coordination team
+                      - generic [ref=f1e263]:
+                        - generic [ref=f1e264]: Subject
+                        - heading "Issue subject line" [level=3] [ref=f1e265]
+                        - paragraph [ref=f1e266]: Wall acoustic analysis report
+                        - paragraph [ref=f1e267]: "Purpose: Client review and acoustic coordination"
+                        - paragraph [ref=f1e268]: "Validity: Valid for 30 calendar days unless superseded by a later issue."
+                  - generic [ref=f1e269]:
+                    - generic [ref=f1e270]: Measured / Predicted Indices
+                    - table [ref=f1e271]:
+                      - rowgroup [ref=f1e272]:
+                        - row "Metric Value Meaning" [ref=f1e273]:
+                          - columnheader "Metric" [ref=f1e274]
+                          - columnheader "Value" [ref=f1e275]
+                          - columnheader "Meaning" [ref=f1e276]
+                      - rowgroup [ref=f1e277]:
+                        - row "Rw 57 dB Calculated" [ref=f1e278]:
+                          - cell "Rw" [ref=f1e279]
+                          - cell "57 dB" [ref=f1e280]:
+                            - strong [ref=f1e281]: 57 dB
+                          - cell "Calculated" [ref=f1e282]
+                  - generic [ref=f1e283]:
+                    - generic [ref=f1e284]: Scope and Basis
+                    - generic [ref=f1e285]:
+                      - generic [ref=f1e286]:
+                        - generic [ref=f1e287]: Calculation basis
+                        - heading "Wall · Calculator route" [level=3] [ref=f1e288]
+                        - paragraph [ref=f1e289]: Calculation basis is limited to the selected build-up and requested outputs.
+                      - generic [ref=f1e290]:
+                        - generic [ref=f1e291]: Deliverable basis
+                        - heading "Client review and acoustic coordination" [level=3] [ref=f1e292]
+                        - paragraph [ref=f1e293]: Issued to Client delivery team. Valid for 30 calendar days unless superseded by a later issue.
+                  - generic [ref=f1e294]:
+                    - generic [ref=f1e295]: Construction Section
+                    - generic [ref=f1e296]:
+                      - heading "Visible layer build-up" [level=3] [ref=f1e297]
+                      - paragraph [ref=f1e298]: Side A to Side B. 162.5 mm total is shown so the build-up can be reviewed from the PDF.
+                    - generic [ref=f1e300]:
+                      - generic [ref=f1e301]:
+                        - img [ref=f1e302]:
+                          - generic [ref=f1e306]: SIDE A
+                          - generic [ref=f1e307]: SIDE B
+                          - generic [ref=f1e350]: 162.5 mm total
+                          - generic [ref=f1e352]: "01"
+                          - generic [ref=f1e353]: Gypsum Board
+                          - generic [ref=f1e354]: Side A
+                          - generic [ref=f1e355]: 12.5 mm
+                          - generic [ref=f1e357]: "02"
+                          - generic [ref=f1e358]: Rock Wool
+                          - generic [ref=f1e359]: Cavity
+                          - generic [ref=f1e360]: 50 mm
+                          - generic [ref=f1e362]: "03"
+                          - generic [ref=f1e363]: Concrete
+                          - generic [ref=f1e364]: Side B
+                          - generic [ref=f1e365]: 100 mm
+                        - generic [ref=f1e366]: Indicative build-up section drawn from the visible layer schedule. Thin finish and resilient layers use a minimum graphic width so the sheet stays readable in print.
+                      - generic [ref=f1e367]:
+                        - table [ref=f1e368]:
+                          - rowgroup [ref=f1e369]:
+                            - row "# Layer Thickness" [ref=f1e370]:
+                              - columnheader "#" [ref=f1e371]
+                              - columnheader "Layer" [ref=f1e372]
+                              - columnheader "Thickness" [ref=f1e373]
+                          - rowgroup [ref=f1e374]:
+                            - row "01 Gypsum Board Side A 12.5 mm" [ref=f1e375]:
+                              - cell "01" [ref=f1e376]
+                              - cell "Gypsum Board Side A" [ref=f1e377]:
+                                - strong [ref=f1e378]: Gypsum Board
+                                - generic [ref=f1e379]: Side A
+                              - cell "12.5 mm" [ref=f1e380]
+                            - row "02 Rock Wool Cavity 50 mm" [ref=f1e381]:
+                              - cell "02" [ref=f1e382]
+                              - cell "Rock Wool Cavity" [ref=f1e383]:
+                                - strong [ref=f1e384]: Rock Wool
+                                - generic [ref=f1e385]: Cavity
+                              - cell "50 mm" [ref=f1e386]
+                            - row "03 Concrete Side B 100 mm" [ref=f1e387]:
+                              - cell "03" [ref=f1e388]
+                              - cell "Concrete Side B" [ref=f1e389]:
+                                - strong [ref=f1e390]: Concrete
+                                - generic [ref=f1e391]: Side B
+                              - cell "100 mm" [ref=f1e392]
+                        - generic [ref=f1e393]:
+                          - strong [ref=f1e394]: Total thickness
+                          - generic [ref=f1e395]: 162.5 mm total
+                          - generic [ref=f1e396]: Side A to Side B.
+                  - generic [ref=f1e397]:
+                    - generic [ref=f1e398]: Layer Schedule
+                    - table [ref=f1e399]:
+                      - rowgroup [ref=f1e400]:
+                        - row "# Layer Thickness Density Surface Mass Assigned role Category" [ref=f1e401]:
+                          - columnheader "#" [ref=f1e402]
+                          - columnheader "Layer" [ref=f1e403]
+                          - columnheader "Thickness" [ref=f1e404]
+                          - columnheader "Density" [ref=f1e405]
+                          - columnheader "Surface Mass" [ref=f1e406]
+                          - columnheader "Assigned role" [ref=f1e407]
+                          - columnheader "Category" [ref=f1e408]
+                      - rowgroup [ref=f1e409]:
+                        - row "1 Gypsum Board 12.5 mm 850 kg/m3 10.6 kg/m2 Side A finish" [ref=f1e410]:
+                          - cell "1" [ref=f1e411]
+                          - cell "Gypsum Board" [ref=f1e412]
+                          - cell "12.5 mm" [ref=f1e413]
+                          - cell "850 kg/m3" [ref=f1e414]
+                          - cell "10.6 kg/m2" [ref=f1e415]
+                          - cell "Side A" [ref=f1e416]
+                          - cell "finish" [ref=f1e417]
+                        - row "2 Rock Wool 50 mm 45 kg/m3 2.3 kg/m2 Cavity insulation" [ref=f1e418]:
+                          - cell "2" [ref=f1e419]
+                          - cell "Rock Wool" [ref=f1e420]
+                          - cell "50 mm" [ref=f1e421]
+                          - cell "45 kg/m3" [ref=f1e422]
+                          - cell "2.3 kg/m2" [ref=f1e423]
+                          - cell "Cavity" [ref=f1e424]
+                          - cell "insulation" [ref=f1e425]
+                        - row "3 Concrete 100 mm 2400 kg/m3 240.0 kg/m2 Side B mass" [ref=f1e426]:
+                          - cell "3" [ref=f1e427]
+                          - cell "Concrete" [ref=f1e428]
+                          - cell "100 mm" [ref=f1e429]
+                          - cell "2400 kg/m3" [ref=f1e430]
+                          - cell "240.0 kg/m2" [ref=f1e431]
+                          - cell "Side B" [ref=f1e432]
+                          - cell "mass" [ref=f1e433]
+                  - generic [ref=f1e434]:
+                    - generic [ref=f1e435]:
+                      - generic [ref=f1e436]: Report note
+                      - heading "Consultant note" [level=3] [ref=f1e437]
+                      - paragraph [ref=f1e438]: No additional report note entered.
+                    - generic [ref=f1e439]:
+                      - generic [ref=f1e440]: Assumptions
+                      - heading "Report assumptions" [level=3] [ref=f1e441]
+                      - list [ref=f1e442]:
+                        - listitem [ref=f1e443]:
+                          - strong [ref=f1e444]: Packaged workbench state
+                          - text: Report snapshot was packaged from the current calculator workbench state.
+                  - generic [ref=f1e445]:
+                    - generic [ref=f1e446]:
+                      - generic [ref=f1e447]: Next steps
+                      - heading "Recommended actions" [level=3] [ref=f1e448]
+                      - list [ref=f1e449]:
+                        - listitem [ref=f1e450]: No additional next-step line is entered for this proposal.
+                    - generic [ref=f1e451]:
+                      - generic [ref=f1e452]: References
+                      - heading "Reference lines" [level=3] [ref=f1e453]
+                      - list [ref=f1e454]:
+                        - listitem [ref=f1e455]: No external reference line is entered for this proposal.
+                  - generic [ref=f1e456]:
+                    - generic [ref=f1e457]: Calculation caveats
+                    - generic [ref=f1e458]:
+                      - heading "Open issue notes" [level=3] [ref=f1e459]
+                      - list [ref=f1e460]:
+                        - listitem [ref=f1e461]: No live warning flags on the active route.
+                  - generic [ref=f1e463]:
+                    - paragraph [ref=f1e464]: This acoustic analysis report summarizes a project estimate and should be read together with the stated ISO basis, assumptions, validity note, and any required laboratory or site verification.
+                    - paragraph [ref=f1e465]: DYNECHO Acoustic Consulting · Acoustic consultant · Acoustic Consultant · Contact email not entered · Contact phone not entered · Office address not entered
+          - complementary [ref=e86]:
+            - generic [ref=e87]:
+              - generic [ref=e88]:
+                - img [ref=e89]
+                - heading "Manual fields" [level=2] [ref=e92]
+              - group [ref=e93]:
+                - generic "Header Issue metadata" [ref=e94] [cursor=pointer]:
+                  - generic [ref=e95]: Header
+                  - generic [ref=e96]:
+                    - generic [ref=e97]: Issue metadata
+                    - img [ref=e98]
+                - generic [ref=e101]:
+                  - generic [ref=e102]:
+                    - generic [ref=e103]: Project
+                    - textbox "Project" [ref=e104]: DAC Operator Deck
+                  - generic [ref=e105]:
+                    - generic [ref=e106]: Client
+                    - textbox "Client" [ref=e107]: Client delivery team
+                  - generic [ref=e108]:
+                    - generic [ref=e109]: Issued to
+                    - textbox "Issued to" [ref=e110]: Client delivery team
+                  - generic [ref=e111]:
+                    - generic [ref=e112]: Attention
+                    - textbox "Attention" [ref=e113]: Design coordination team
+                  - generic [ref=e114]:
+                    - generic [ref=e115]: Subject
+                    - textbox "Subject" [ref=e116]: Wall acoustic analysis report
+                  - generic [ref=e117]:
+                    - generic [ref=e118]: Reference
+                    - textbox "Reference" [ref=e119]: DEC-2026-001
+                  - generic [ref=e120]:
+                    - generic [ref=e121]: Revision
+                    - textbox "Revision" [ref=e122]: Rev 00
+                  - generic [ref=e123]:
+                    - generic [ref=e124]: Purpose
+                    - textbox "Purpose" [ref=e125]: Client review and acoustic coordination
+                  - generic [ref=e126]:
+                    - generic [ref=e127]: Validity
+                    - textbox "Validity" [ref=e128]: Valid for 30 calendar days unless superseded by a later issue.
+              - group [ref=e129]:
+                - generic "Results 1 rows" [ref=e130] [cursor=pointer]:
+                  - generic [ref=e131]: Results
+                  - generic [ref=e132]:
+                    - generic [ref=e133]: 1 rows
+                    - img [ref=e134]
+              - group [ref=e136]:
+                - generic "Output rows 1 outputs" [ref=e137] [cursor=pointer]:
+                  - generic [ref=e138]: Output rows
+                  - generic [ref=e139]:
+                    - generic [ref=e140]: 1 outputs
+                    - img [ref=e141]
+              - group [ref=e143]:
+                - generic "Sender Consultant lines" [ref=e144] [cursor=pointer]:
+                  - generic [ref=e145]: Sender
+                  - generic [ref=e146]:
+                    - generic [ref=e147]: Consultant lines
+                    - img [ref=e148]
+              - group [ref=e150]:
+                - generic "Notes One row per line" [ref=e151] [cursor=pointer]:
+                  - generic [ref=e152]: Notes
+                  - generic [ref=e153]:
+                    - generic [ref=e154]: One row per line
+                    - img [ref=e155]
+            - generic [ref=e157]:
+              - generic [ref=e158]:
+                - img [ref=e159]
+                - heading "Assistant" [level=2] [ref=e162]
+                - generic [ref=e163]: Ready
+              - generic [ref=e164]:
+                - generic [ref=e165]:
+                  - strong [ref=e166]: Current draft
+                  - generic [ref=e167]: Local draft
+                - paragraph [ref=e168]: The assistant is reviewing the current browser report draft.
+                - generic [ref=e169]: Assistant edits change only this draft until you apply them and save the project report.
+              - generic [ref=e170]:
+                - generic [ref=e171]:
+                  - generic [ref=e172]: Instruction
+                  - textbox "Instruction" [ref=e173]
+                - button "Propose edit" [ref=e174] [cursor=pointer]:
+                  - img [ref=e175]
+                  - text: Propose edit
+                - generic [ref=e178]:
+                  - generic [ref=e179]:
+                    - generic [ref=e180]: Responses
+                    - generic [ref=e181]: No response yet
+                  - generic [ref=e183]:
+                    - strong [ref=e184]: Ready for a focused edit
+                    - generic [ref=e185]: Assistant results and apply/reject status appear here.
+  - alert [ref=e186]
+  - region "Notifications alt+T"

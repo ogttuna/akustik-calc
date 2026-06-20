@@ -13,6 +13,39 @@ user-entered acoustic layer combinations with defensible physics, correct
 metric bases, explicit route-required inputs, and precise `needs_input`
 / `unsupported` boundaries.
 
+## Post-Checkpoint Implementation Supersession - 2026-06-20
+
+This checkpoint is now historical for the cavity-depth owner status. The
+section below that says the selected owner contract file is not present
+was true at checkpoint creation, but it is no longer the current
+implementation state.
+
+Current implementation state:
+
+- `post_v1_wall_double_leaf_framed_cavity_depth_numeric_sensitivity_owner_plan`
+  has landed in
+  `packages/engine/src/post-v1-wall-double-leaf-framed-cavity-depth-numeric-sensitivity-owner-contract.test.ts`.
+- `tools/dev/run-calculator-current-gate.ts` includes the owner contract
+  in the current calculator gate.
+- The owner opens advanced-only
+  `advancedWall.cavities[0].depthMm` for the owned double-leaf/framed
+  Gate S / Gate I / Gate AR route while keeping topology depth
+  authoritative when both depth sources are supplied.
+- Latest full `pnpm calculator:gate:current` after the owner landed
+  passed: shared `2 files / 19 tests`, engine `787 files / 4318 tests`,
+  web `127 files / 505 passed + 18 skipped`, and repo build `5/5`.
+  Known non-fatal noise remains the existing Zustand persist storage
+  warnings in web tests and optional `sharp/@img` warnings in Next build.
+- Current selected next is now
+  `post_v1_wall_double_leaf_framed_cavity_depth_numeric_sensitivity_coverage_refresh_plan`
+  /
+  `packages/engine/src/post-v1-wall-double-leaf-framed-cavity-depth-numeric-sensitivity-coverage-refresh-contract.test.ts`
+  /
+  `docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_CAVITY_DEPTH_NUMERIC_SENSITIVITY_COVERAGE_REFRESH_PLAN_2026-06-20.md`.
+- That coverage-refresh contract is not implemented yet. It is the next
+  short no-runtime regression boundary before the next runtime-first
+  route-family rerank.
+
 ## Documents Reviewed
 
 - `docs/calculator/DOCUMENTATION_MAP.md`
@@ -26,7 +59,8 @@ metric bases, explicit route-required inputs, and precise `needs_input`
 
 ## Implementation vs Documentation
 
-The live authority docs still agree on the selected next implementation:
+At checkpoint creation, the live authority docs agreed on the selected
+next implementation:
 
 `post_v1_wall_double_leaf_framed_cavity_depth_numeric_sensitivity_owner_plan`
 /
@@ -34,23 +68,24 @@ The live authority docs still agree on the selected next implementation:
 /
 `docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_CAVITY_DEPTH_NUMERIC_SENSITIVITY_OWNER_PLAN_2026-06-19.md`
 
-The selected plan is still the right next calculator move. It continues
-the user-material physical input coverage stream by hardening
+At checkpoint creation, the selected plan was the right next calculator
+move. It continued the user-material physical input coverage stream by
+hardening
 `cavity1DepthMm` / `advancedWall.cavities[].depthMm` as a numerically
 active owned double-leaf/framed formula input. This improves calculator
 accuracy for arbitrary user-entered double-leaf/framed stacks rather
 than adding source rows or UI-only polish.
 
-The selected owner contract file is not present yet. That is the current
-implementation gap, not a contradiction in the docs: the plan is ready,
-but the runtime owner has not landed. The next implementation step is to
-create that contract, then either formalize already-live depth
-sensitivity or fix any discovered depth-source / required-input /
-field-building propagation gaps.
+At checkpoint creation, the selected owner contract file was not present
+yet. That gap has since been closed by the landed owner described in the
+post-checkpoint supersession section above. The remaining current task is
+the no-runtime coverage refresh, not the runtime owner.
 
-The latest landed calculator behavior remains the double-leaf/framed
-absorber-thickness numeric-sensitivity runtime owner and its no-runtime
-coverage refresh. Those are still aligned with docs:
+At checkpoint creation, the latest landed calculator behavior was the
+double-leaf/framed absorber-thickness numeric-sensitivity runtime owner
+and its no-runtime coverage refresh. Those remain aligned with docs, but
+they are no longer the latest landed behavior after the cavity-depth
+owner:
 
 - `absorberThicknessMm = 90`, `45`, and `20` remain protected lab pins.
 - Field/building adapters derive from the same owned lab curve.
@@ -72,8 +107,8 @@ calculator rules:
 
 ## Remaining Gaps
 
-- Implement the selected cavity-depth numeric-sensitivity owner next.
-  This is the first runtime/accuracy task after this checkpoint.
+- The selected cavity-depth numeric-sensitivity owner has since landed.
+  The current immediate gap is its no-runtime coverage refresh contract.
 - Keep support-only work bounded. The next slice should move or protect
   calculator behavior through a contract; do not start another docs-only
   loop unless a concrete blocker is found.

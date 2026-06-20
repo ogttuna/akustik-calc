@@ -29,34 +29,54 @@ describe("bare tagged floor family contract", () => {
       expectedFieldRwPrime: number;
       expectedFieldDnTw: number;
       expectedLabRw: number;
+      expectedImpactOnlySupported: readonly RequestedOutputId[];
+      expectedLabSupported: readonly RequestedOutputId[];
+      expectedFieldSupported: readonly RequestedOutputId[];
+      opensFloorSystemEstimate: boolean;
     }> = [
       {
         label: "open-box timber",
         layers: [{ floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }],
         expectedFieldRwPrime: 40,
         expectedFieldDnTw: 43,
-        expectedLabRw: 42
+        expectedImpactOnlySupported: ["Rw", "Ln,w", "Ln,w+CI"],
+        expectedLabRw: 42.3,
+        expectedLabSupported: ["Rw", "Ln,w", "Ln,w+CI"],
+        expectedFieldSupported: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w", "L'nT,50"],
+        opensFloorSystemEstimate: true
       },
       {
         label: "open-web steel",
         layers: [{ floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 300 }],
         expectedFieldRwPrime: 70,
         expectedFieldDnTw: 73,
-        expectedLabRw: 72
+        expectedImpactOnlySupported: ["Rw", "Ln,w", "Ln,w+CI"],
+        expectedLabRw: 32,
+        expectedLabSupported: ["Rw", "Ln,w", "Ln,w+CI"],
+        expectedFieldSupported: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w", "L'nT,50"],
+        opensFloorSystemEstimate: true
       },
       {
         label: "steel joist",
         layers: [{ floorRole: "base_structure", materialId: "steel_joist_floor", thicknessMm: 250 }],
         expectedFieldRwPrime: 69,
         expectedFieldDnTw: 71,
-        expectedLabRw: 71
+        expectedImpactOnlySupported: [],
+        expectedLabRw: 71,
+        expectedLabSupported: ["Rw"],
+        expectedFieldSupported: ["Rw", "R'w", "DnT,w"],
+        opensFloorSystemEstimate: false
       },
       {
         label: "generic lightweight steel",
         layers: [{ floorRole: "base_structure", materialId: "lightweight_steel_floor", thicknessMm: 250 }],
         expectedFieldRwPrime: 69,
         expectedFieldDnTw: 71,
-        expectedLabRw: 71
+        expectedImpactOnlySupported: [],
+        expectedLabRw: 71,
+        expectedLabSupported: ["Rw"],
+        expectedFieldSupported: ["Rw", "R'w", "DnT,w"],
+        opensFloorSystemEstimate: false
       }
     ];
 
@@ -73,29 +93,29 @@ describe("bare tagged floor family contract", () => {
         targetOutputs: LAB_OUTPUTS
       });
 
-      if (assemblyLab.impact || assemblyField.impact || impactOnly.impact) {
-        failures.push(`${entry.label}: expected impact lane to stay fail-closed on both assembly and impact-only surfaces`);
+      if (entry.opensFloorSystemEstimate && (!assemblyLab.impact || !assemblyField.impact || !impactOnly.impact)) {
+        failures.push(`${entry.label}: expected tagged raw-bare owner to open the impact lane on assembly and impact-only surfaces`);
       }
 
-      if (assemblyLab.floorSystemEstimate || assemblyField.floorSystemEstimate || impactOnly.floorSystemEstimate) {
+      if (!entry.opensFloorSystemEstimate && (assemblyLab.floorSystemEstimate || assemblyField.floorSystemEstimate || impactOnly.floorSystemEstimate)) {
         failures.push(`${entry.label}: expected no floor-system family estimate to be synthesized`);
       }
 
-      if (assemblyLab.supportedTargetOutputs.join("|") !== "Rw") {
+      if (assemblyLab.supportedTargetOutputs.join("|") !== entry.expectedLabSupported.join("|")) {
         failures.push(
-          `${entry.label}: expected assembly lab support to stay on Rw only, got ${JSON.stringify(assemblyLab.supportedTargetOutputs)}`
+          `${entry.label}: expected assembly lab support ${JSON.stringify(entry.expectedLabSupported)}, got ${JSON.stringify(assemblyLab.supportedTargetOutputs)}`
         );
       }
 
-      if (assemblyField.supportedTargetOutputs.join("|") !== "R'w|DnT,w") {
+      if (assemblyField.supportedTargetOutputs.join("|") !== entry.expectedFieldSupported.join("|")) {
         failures.push(
-          `${entry.label}: expected assembly field support to stay on R'w + DnT,w only, got ${JSON.stringify(assemblyField.supportedTargetOutputs)}`
+          `${entry.label}: expected assembly field support ${JSON.stringify(entry.expectedFieldSupported)}, got ${JSON.stringify(assemblyField.supportedTargetOutputs)}`
         );
       }
 
-      if (impactOnly.supportedTargetOutputs.length !== 0) {
+      if (impactOnly.supportedTargetOutputs.join("|") !== entry.expectedImpactOnlySupported.join("|")) {
         failures.push(
-          `${entry.label}: expected impact-only surface to keep all requested outputs unsupported, got ${JSON.stringify(impactOnly.supportedTargetOutputs)}`
+          `${entry.label}: expected impact-only support ${JSON.stringify(entry.expectedImpactOnlySupported)}, got ${JSON.stringify(impactOnly.supportedTargetOutputs)}`
         );
       }
 

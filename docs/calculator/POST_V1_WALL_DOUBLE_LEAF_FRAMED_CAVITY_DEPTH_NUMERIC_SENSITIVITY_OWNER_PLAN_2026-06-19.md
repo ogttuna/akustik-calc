@@ -16,6 +16,14 @@ Owner file:
 
 `packages/engine/src/post-v1-wall-double-leaf-framed-cavity-depth-numeric-sensitivity-owner-contract.test.ts`
 
+Owner status:
+
+`post_v1_wall_double_leaf_framed_cavity_depth_numeric_sensitivity_owner_landed_runtime_selected_coverage_refresh`
+
+Selected candidate:
+
+`wall.double_leaf_framed.cavity_depth_numeric_sensitivity_owner`
+
 Previous refresh:
 
 `post_v1_wall_double_leaf_framed_porous_absorber_thickness_numeric_sensitivity_coverage_refresh_plan`
@@ -73,24 +81,48 @@ alignment, field/building propagation, or stale no-depth behavior.
 
 ## Expected Counters
 
-The exact runtime movement depends on whether the implementation only
-formalizes already-live depth sensitivity or fixes a missed depth
-source. Expected minimum:
+Before implementation, the expected minimum for this selected owner was
+`runtimeValuesMoved 0` if it only formalized already-live topology-depth
+sensitivity. The landed owner moved values because it found and fixed a
+missed user-entered depth source.
 
-- `accuracyPromotedRequestShapes: 3`
-- `accuracyPromotedTargetOutputs: 13`
+The owner found and fixed a missed depth source:
+`advancedWall.cavities[0].depthMm` was usable by the solver contract
+only after the runtime input contract and advanced-wall route guard were
+aligned. Landed counters:
+
+- `accuracyPromotedRequestShapes: 6`
+- `accuracyPromotedTargetOutputs: 26`
 - `newCalculableLayerTemplates: 0`
-- `newCalculableRequestShapes: 0`
-- `newCalculableTargetOutputs: 0`
-- `runtimeBasisPromotions: 0`
-- `runtimeValuesMoved 0`
+- `newCalculableRequestShapes: 3`
+- `newCalculableTargetOutputs: 13`
+- `runtimeBasisPromotions: 3`
+- `runtimeValuesMoved 13`
 - `runtimeFormulaRetunes: 0`
 - `sourceRowsImported: 0`
 - `frontendImplementationFilesTouched: 0`
 
-If the owner discovers that a user-entered depth source is ignored or
-incorrectly defaulted, it may move runtime values, but only within the
-owned mass-air-mass/cavity-depth formula route and with tests proving the
-boundary.
+Landed behavior:
+
+- Topology `cavity1DepthMm` values `60`, `90`, and `140 mm` remain
+  numerically active for lab `Rw`, `STC`, `C`, and `Ctr`.
+- Advanced-only `advancedWall.cavities[0].depthMm` now feeds the owned
+  Gate S / Gate I / Gate AR formula route when topology depth is omitted.
+- Advanced-only depth now calculates lab `Rw`/`STC`/`C`/`Ctr` and
+  field/building `R'w`, `Dn,w`, `Dn,A`, `DnT,w`, and `DnT,A`.
+- Missing and non-positive cavity depth remain `needs_input` in the Gate
+  R input contract.
+- When topology and advanced depth are both supplied, topology depth
+  remains authoritative and a mismatch withholds the porous-thickness
+  precision credit instead of overriding topology.
+- Impact aliases remain `unsupported`.
+
+Selected next:
+
+`post_v1_wall_double_leaf_framed_cavity_depth_numeric_sensitivity_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-cavity-depth-numeric-sensitivity-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_CAVITY_DEPTH_NUMERIC_SENSITIVITY_COVERAGE_REFRESH_PLAN_2026-06-20.md`
 
 This is not a broad source crawl.

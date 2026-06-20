@@ -1,0 +1,820 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - generic [ref=e6]: DAC
+          - generic [ref=e7]: DynEcho
+          - generic [ref=e8]: Preview mode
+        - generic [ref=e9]:
+          - button "Switch to dark mode" [ref=e10] [cursor=pointer]:
+            - img [ref=e11]
+            - generic [ref=e17]: Light
+          - button "Sign out" [ref=e19] [cursor=pointer]
+    - main [ref=e20]:
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - generic [ref=e23]:
+            - generic [ref=e24]:
+              - generic [ref=e25]: Calculator
+              - heading "Acoustic workbench" [level=1] [ref=e26]
+            - button "Close workspace menu" [expanded] [ref=e418] [cursor=pointer]:
+              - img [ref=e28]
+              - generic [ref=e29]: Workspace
+              - generic [ref=e30]: Local draft
+          - generic [ref=e31]:
+            - generic [ref=e32]: Local draft
+            - generic [ref=e33]: Wall
+            - generic [ref=e34]: 3 layers
+            - generic [ref=e35]: 162.5 mm
+            - generic [ref=e36]: Ready
+        - generic:
+          - button "Close workspace menu" [ref=e419] [cursor=pointer]
+          - dialog "Workspace menu" [ref=e420]:
+            - generic [ref=e421]:
+              - generic [ref=e422]:
+                - generic [ref=e423]: Workbench
+                - heading "Workspace menu" [level=2] [ref=e424]
+              - button "Close workspace menu" [ref=e425] [cursor=pointer]:
+                - img [ref=e426]
+            - tablist "Workspace sections" [ref=e429]:
+              - tab "Projects No project" [ref=e430] [cursor=pointer]:
+                - img [ref=e431]
+                - generic [ref=e433]: Projects
+                - generic [ref=e434]: No project
+              - tab "Templates 4 common" [ref=e435] [cursor=pointer]:
+                - img [ref=e436]
+                - generic [ref=e438]: Templates
+                - generic [ref=e439]: 4 common
+              - tab "Materials Catalog editor" [active] [selected] [ref=e440] [cursor=pointer]:
+                - img [ref=e441]
+                - generic [ref=e447]: Materials
+                - generic [ref=e448]: Catalog editor
+            - region "Material editor" [ref=e544]:
+              - generic [ref=e546]:
+                - generic [ref=e547]: Material editor
+                - heading "Built-in material" [level=2] [ref=e548]
+              - generic [ref=e549]:
+                - generic [ref=e550]:
+                  - generic [ref=e551]:
+                    - generic [ref=e552]:
+                      - generic [ref=e553]: Catalog
+                      - strong [ref=e554]: 116 materials
+                    - button "New material" [ref=e555] [cursor=pointer]:
+                      - img [ref=e556]
+                      - text: New material
+                  - generic [ref=e557]:
+                    - img [ref=e558]
+                    - textbox "Search materials" [ref=e561]
+                  - generic [ref=e562]:
+                    - generic "Material source filter" [ref=e563]:
+                      - button "All" [pressed] [ref=e564] [cursor=pointer]
+                      - button "Project" [ref=e565] [cursor=pointer]
+                      - button "Built-in" [ref=e566] [cursor=pointer]
+                    - combobox "Material category filter" [ref=e567]:
+                      - option "All categories" [selected]
+                      - option "Mass"
+                      - option "Finish"
+                      - option "Insulation"
+                      - option "Gap"
+                      - option "Support"
+                  - listbox [ref=e568]:
+                    - option "AAC Block mass / 500 kg/m3 Built-in" [ref=e569] [cursor=pointer]:
+                      - generic [ref=e570]:
+                        - strong [ref=e571]: AAC Block
+                        - generic [ref=e572]: mass / 500 kg/m3
+                      - emphasis [ref=e573]: Built-in
+                    - option "Acoustic Gypsum Board finish / 1024 kg/m3 Built-in" [ref=e574] [cursor=pointer]:
+                      - generic [ref=e575]:
+                        - strong [ref=e576]: Acoustic Gypsum Board
+                        - generic [ref=e577]: finish / 1024 kg/m3
+                      - emphasis [ref=e578]: Built-in
+                    - option "Acoustic Hanger Ceiling support / 0 kg/m3 Built-in" [ref=e579] [cursor=pointer]:
+                      - generic [ref=e580]:
+                        - strong [ref=e581]: Acoustic Hanger Ceiling
+                        - generic [ref=e582]: support / 0 kg/m3
+                      - emphasis [ref=e583]: Built-in
+                    - option "Acoustic Mount Clip support / 0 kg/m3 Built-in" [ref=e584] [cursor=pointer]:
+                      - generic [ref=e585]:
+                        - strong [ref=e586]: Acoustic Mount Clip
+                        - generic [ref=e587]: support / 0 kg/m3
+                      - emphasis [ref=e588]: Built-in
+                    - option "Air Gap gap / 0 kg/m3 Built-in" [ref=e589] [cursor=pointer]:
+                      - generic [ref=e590]:
+                        - strong [ref=e591]: Air Gap
+                        - generic [ref=e592]: gap / 0 kg/m3
+                      - emphasis [ref=e593]: Built-in
+                    - option "Anhydrite Screed mass / 2050 kg/m3 Built-in" [ref=e594] [cursor=pointer]:
+                      - generic [ref=e595]:
+                        - strong [ref=e596]: Anhydrite Screed
+                        - generic [ref=e597]: mass / 2050 kg/m3
+                      - emphasis [ref=e598]: Built-in
+                    - option "Bitumen Membrane finish / 1100 kg/m3 Built-in" [ref=e599] [cursor=pointer]:
+                      - generic [ref=e600]:
+                        - strong [ref=e601]: Bitumen Membrane
+                        - generic [ref=e602]: finish / 1100 kg/m3
+                      - emphasis [ref=e603]: Built-in
+                    - option "Bonded Chippings mass / 1800 kg/m3 Built-in" [ref=e604] [cursor=pointer]:
+                      - generic [ref=e605]:
+                        - strong [ref=e606]: Bonded Chippings
+                        - generic [ref=e607]: mass / 1800 kg/m3
+                      - emphasis [ref=e608]: Built-in
+                    - option "Carpet + Foam Underlay finish / 320 kg/m3 Built-in" [ref=e609] [cursor=pointer]:
+                      - generic [ref=e610]:
+                        - strong [ref=e611]: Carpet + Foam Underlay
+                        - generic [ref=e612]: finish / 320 kg/m3
+                      - emphasis [ref=e613]: Built-in
+                    - option "Celcon Dense Plaster finish / 1845 kg/m3 Built-in" [ref=e614] [cursor=pointer]:
+                      - generic [ref=e615]:
+                        - strong [ref=e616]: Celcon Dense Plaster
+                        - generic [ref=e617]: finish / 1845 kg/m3
+                      - emphasis [ref=e618]: Built-in
+                    - option "Celcon High Strength Grade mass / 830 kg/m3 Built-in" [ref=e619] [cursor=pointer]:
+                      - generic [ref=e620]:
+                        - strong [ref=e621]: Celcon High Strength Grade
+                        - generic [ref=e622]: mass / 830 kg/m3
+                      - emphasis [ref=e623]: Built-in
+                    - option "Celcon Lightweight Plaster finish / 770 kg/m3 Built-in" [ref=e624] [cursor=pointer]:
+                      - generic [ref=e625]:
+                        - strong [ref=e626]: Celcon Lightweight Plaster
+                        - generic [ref=e627]: finish / 770 kg/m3
+                      - emphasis [ref=e628]: Built-in
+                    - option "Celcon Solar Grade mass / 570 kg/m3 Built-in" [ref=e629] [cursor=pointer]:
+                      - generic [ref=e630]:
+                        - strong [ref=e631]: Celcon Solar Grade
+                        - generic [ref=e632]: mass / 570 kg/m3
+                      - emphasis [ref=e633]: Built-in
+                    - option "Celcon Standard Grade mass / 700 kg/m3 Built-in" [ref=e634] [cursor=pointer]:
+                      - generic [ref=e635]:
+                        - strong [ref=e636]: Celcon Standard Grade
+                        - generic [ref=e637]: mass / 700 kg/m3
+                      - emphasis [ref=e638]: Built-in
+                    - option "Cellulose Fill insulation / 45 kg/m3 Built-in" [ref=e639] [cursor=pointer]:
+                      - generic [ref=e640]:
+                        - strong [ref=e641]: Cellulose Fill
+                        - generic [ref=e642]: insulation / 45 kg/m3
+                      - emphasis [ref=e643]: Built-in
+                    - option "Cement Board finish / 1400 kg/m3 Built-in" [ref=e644] [cursor=pointer]:
+                      - generic [ref=e645]:
+                        - strong [ref=e646]: Cement Board
+                        - generic [ref=e647]: finish / 1400 kg/m3
+                      - emphasis [ref=e648]: Built-in
+                    - option "Cement Plaster finish / 1700 kg/m3 Built-in" [ref=e649] [cursor=pointer]:
+                      - generic [ref=e650]:
+                        - strong [ref=e651]: Cement Plaster
+                        - generic [ref=e652]: finish / 1700 kg/m3
+                      - emphasis [ref=e653]: Built-in
+                    - option "Ceramic Tile finish / 2000 kg/m3 Built-in" [ref=e654] [cursor=pointer]:
+                      - generic [ref=e655]:
+                        - strong [ref=e656]: Ceramic Tile
+                        - generic [ref=e657]: finish / 2000 kg/m3
+                      - emphasis [ref=e658]: Built-in
+                    - option "CLT Panel mass / 470 kg/m3 Built-in" [ref=e659] [cursor=pointer]:
+                      - generic [ref=e660]:
+                        - strong [ref=e661]: CLT Panel
+                        - generic [ref=e662]: mass / 470 kg/m3
+                      - emphasis [ref=e663]: Built-in
+                    - option "Composite Steel Deck mass / 2350 kg/m3 Built-in" [ref=e664] [cursor=pointer]:
+                      - generic [ref=e665]:
+                        - strong [ref=e666]: Composite Steel Deck
+                        - generic [ref=e667]: mass / 2350 kg/m3
+                      - emphasis [ref=e668]: Built-in
+                    - option "Concrete mass / 2400 kg/m3 Built-in / 1 used" [ref=e669] [cursor=pointer]:
+                      - generic [ref=e670]:
+                        - strong [ref=e671]: Concrete
+                        - generic [ref=e672]: mass / 2400 kg/m3
+                      - emphasis [ref=e673]: Built-in / 1 used
+                    - option "Dense Plaster finish / 2077 kg/m3 Built-in" [ref=e674] [cursor=pointer]:
+                      - generic [ref=e675]:
+                        - strong [ref=e676]: Dense Plaster
+                        - generic [ref=e677]: finish / 2077 kg/m3
+                      - emphasis [ref=e678]: Built-in
+                    - option "Diamond Board finish / 1024 kg/m3 Built-in" [ref=e679] [cursor=pointer]:
+                      - generic [ref=e680]:
+                        - strong [ref=e681]: Diamond Board
+                        - generic [ref=e682]: finish / 1024 kg/m3
+                      - emphasis [ref=e683]: Built-in
+                    - option "Dry Floating Gypsum Fiberboard finish / 900 kg/m3 Built-in" [ref=e684] [cursor=pointer]:
+                      - generic [ref=e685]:
+                        - strong [ref=e686]: Dry Floating Gypsum Fiberboard
+                        - generic [ref=e687]: finish / 900 kg/m3
+                      - emphasis [ref=e688]: Built-in
+                    - option "Elastic Bonded Fill mass / 1500 kg/m3 Built-in" [ref=e689] [cursor=pointer]:
+                      - generic [ref=e690]:
+                        - strong [ref=e691]: Elastic Bonded Fill
+                        - generic [ref=e692]: mass / 1500 kg/m3
+                      - emphasis [ref=e693]: Built-in
+                    - option "Engineered Timber + Acoustic Underlay finish / 780 kg/m3 Built-in" [ref=e694] [cursor=pointer]:
+                      - generic [ref=e695]:
+                        - strong [ref=e696]: Engineered Timber + Acoustic Underlay
+                        - generic [ref=e697]: finish / 780 kg/m3
+                      - emphasis [ref=e698]: Built-in
+                    - option "Engineered Timber Flooring finish / 750 kg/m3 Built-in" [ref=e699] [cursor=pointer]:
+                      - generic [ref=e700]:
+                        - strong [ref=e701]: Engineered Timber Flooring
+                        - generic [ref=e702]: finish / 750 kg/m3
+                      - emphasis [ref=e703]: Built-in
+                    - option "EPS Floor Insulation Board insulation / 15 kg/m3 Built-in" [ref=e704] [cursor=pointer]:
+                      - generic [ref=e705]:
+                        - strong [ref=e706]: EPS Floor Insulation Board
+                        - generic [ref=e707]: insulation / 15 kg/m3
+                      - emphasis [ref=e708]: Built-in
+                    - option "EPS Underlay support / 35 kg/m3 Built-in" [ref=e709] [cursor=pointer]:
+                      - generic [ref=e710]:
+                        - strong [ref=e711]: EPS Underlay
+                        - generic [ref=e712]: support / 35 kg/m3
+                      - emphasis [ref=e713]: Built-in
+                    - option "Fire Board finish / 820 kg/m3 Built-in" [ref=e714] [cursor=pointer]:
+                      - generic [ref=e715]:
+                        - strong [ref=e716]: Fire Board
+                        - generic [ref=e717]: finish / 820 kg/m3
+                      - emphasis [ref=e718]: Built-in
+                    - option "Firestop Board finish / 820 kg/m3 Built-in" [ref=e719] [cursor=pointer]:
+                      - generic [ref=e720]:
+                        - strong [ref=e721]: Firestop Board
+                        - generic [ref=e722]: finish / 820 kg/m3
+                      - emphasis [ref=e723]: Built-in
+                    - option "Furring Channel support / 0 kg/m3 Built-in" [ref=e724] [cursor=pointer]:
+                      - generic [ref=e725]:
+                        - strong [ref=e726]: Furring Channel
+                        - generic [ref=e727]: support / 0 kg/m3
+                      - emphasis [ref=e728]: Built-in
+                    - option "Generic Fill mass / 1800 kg/m3 Built-in" [ref=e729] [cursor=pointer]:
+                      - generic [ref=e730]:
+                        - strong [ref=e731]: Generic Fill
+                        - generic [ref=e732]: mass / 1800 kg/m3
+                      - emphasis [ref=e733]: Built-in
+                    - option "Generic Resilient Underlay support / 700 kg/m3 Built-in" [ref=e734] [cursor=pointer]:
+                      - generic [ref=e735]:
+                        - strong [ref=e736]: Generic Resilient Underlay
+                        - generic [ref=e737]: support / 700 kg/m3
+                      - emphasis [ref=e738]: Built-in
+                    - option "Generic Resilient Underlay S30 support / 700 kg/m3 Built-in" [ref=e739] [cursor=pointer]:
+                      - generic [ref=e740]:
+                        - strong [ref=e741]: Generic Resilient Underlay S30
+                        - generic [ref=e742]: support / 700 kg/m3
+                      - emphasis [ref=e743]: Built-in
+                    - option "GenieClip RST Ceiling support / 0 kg/m3 Built-in" [ref=e744] [cursor=pointer]:
+                      - generic [ref=e745]:
+                        - strong [ref=e746]: GenieClip RST Ceiling
+                        - generic [ref=e747]: support / 0 kg/m3
+                      - emphasis [ref=e748]: Built-in
+                    - option "GenieMat RST02 support / 760 kg/m3 Built-in" [ref=e749] [cursor=pointer]:
+                      - generic [ref=e750]:
+                        - strong [ref=e751]: GenieMat RST02
+                        - generic [ref=e752]: support / 760 kg/m3
+                      - emphasis [ref=e753]: Built-in
+                    - option "GenieMat RST05 support / 760 kg/m3 Built-in" [ref=e754] [cursor=pointer]:
+                      - generic [ref=e755]:
+                        - strong [ref=e756]: GenieMat RST05
+                        - generic [ref=e757]: support / 760 kg/m3
+                      - emphasis [ref=e758]: Built-in
+                    - option "GenieMat RST12 support / 760 kg/m3 Built-in" [ref=e759] [cursor=pointer]:
+                      - generic [ref=e760]:
+                        - strong [ref=e761]: GenieMat RST12
+                        - generic [ref=e762]: support / 760 kg/m3
+                      - emphasis [ref=e763]: Built-in
+                    - option "Geotextile Separator Layer finish / 150 kg/m3 Built-in" [ref=e764] [cursor=pointer]:
+                      - generic [ref=e765]:
+                        - strong [ref=e766]: Geotextile Separator Layer
+                        - generic [ref=e767]: finish / 150 kg/m3
+                      - emphasis [ref=e768]: Built-in
+                    - option "Getzner AFM 21 support / 760 kg/m3 Built-in" [ref=e769] [cursor=pointer]:
+                      - generic [ref=e770]:
+                        - strong [ref=e771]: Getzner AFM 21
+                        - generic [ref=e772]: support / 760 kg/m3
+                      - emphasis [ref=e773]: Built-in
+                    - option "Getzner AFM 23 support / 760 kg/m3 Built-in" [ref=e774] [cursor=pointer]:
+                      - generic [ref=e775]:
+                        - strong [ref=e776]: Getzner AFM 23
+                        - generic [ref=e777]: support / 760 kg/m3
+                      - emphasis [ref=e778]: Built-in
+                    - option "Getzner AFM 26 support / 760 kg/m3 Built-in" [ref=e779] [cursor=pointer]:
+                      - generic [ref=e780]:
+                        - strong [ref=e781]: Getzner AFM 26
+                        - generic [ref=e782]: support / 760 kg/m3
+                      - emphasis [ref=e783]: Built-in
+                    - option "Getzner AFM 29 support / 760 kg/m3 Built-in" [ref=e784] [cursor=pointer]:
+                      - generic [ref=e785]:
+                        - strong [ref=e786]: Getzner AFM 29
+                        - generic [ref=e787]: support / 760 kg/m3
+                      - emphasis [ref=e788]: Built-in
+                    - option "Getzner AFM 33 support / 760 kg/m3 Built-in" [ref=e789] [cursor=pointer]:
+                      - generic [ref=e790]:
+                        - strong [ref=e791]: Getzner AFM 33
+                        - generic [ref=e792]: support / 760 kg/m3
+                      - emphasis [ref=e793]: Built-in
+                    - option "Getzner AFM 35 support / 760 kg/m3 Built-in" [ref=e794] [cursor=pointer]:
+                      - generic [ref=e795]:
+                        - strong [ref=e796]: Getzner AFM 35
+                        - generic [ref=e797]: support / 760 kg/m3
+                      - emphasis [ref=e798]: Built-in
+                    - option "Glass Wool insulation / 16 kg/m3 Built-in" [ref=e799] [cursor=pointer]:
+                      - generic [ref=e800]:
+                        - strong [ref=e801]: Glass Wool
+                        - generic [ref=e802]: insulation / 16 kg/m3
+                      - emphasis [ref=e803]: Built-in
+                    - option "Glass Wool Board insulation / 30 kg/m3 Built-in" [ref=e804] [cursor=pointer]:
+                      - generic [ref=e805]:
+                        - strong [ref=e806]: Glass Wool Board
+                        - generic [ref=e807]: insulation / 30 kg/m3
+                      - emphasis [ref=e808]: Built-in
+                    - option "Gypsum Board finish / 850 kg/m3 Built-in / 1 used" [selected] [ref=e809] [cursor=pointer]:
+                      - generic [ref=e810]:
+                        - strong [ref=e811]: Gypsum Board
+                        - generic [ref=e812]: finish / 850 kg/m3
+                      - emphasis [ref=e813]: Built-in / 1 used
+                    - option "Gypsum Plaster finish / 1000 kg/m3 Built-in" [ref=e814] [cursor=pointer]:
+                      - generic [ref=e815]:
+                        - strong [ref=e816]: Gypsum Plaster
+                        - generic [ref=e817]: finish / 1000 kg/m3
+                      - emphasis [ref=e818]: Built-in
+                    - option "Heavy Concrete mass / 3000 kg/m3 Built-in" [ref=e819] [cursor=pointer]:
+                      - generic [ref=e820]:
+                        - strong [ref=e821]: Heavy Concrete
+                        - generic [ref=e822]: mass / 3000 kg/m3
+                      - emphasis [ref=e823]: Built-in
+                    - option "HELUZ 14 brousená mass / 740 kg/m3 Built-in" [ref=e824] [cursor=pointer]:
+                      - generic [ref=e825]:
+                        - strong [ref=e826]: HELUZ 14 brousená
+                        - generic [ref=e827]: mass / 740 kg/m3
+                      - emphasis [ref=e828]: Built-in
+                    - option "HELUZ AKU 11.5 mass / 1070 kg/m3 Built-in" [ref=e829] [cursor=pointer]:
+                      - generic [ref=e830]:
+                        - strong [ref=e831]: HELUZ AKU 11.5
+                        - generic [ref=e832]: mass / 1070 kg/m3
+                      - emphasis [ref=e833]: Built-in
+                    - option "HELUZ AKU 20 P15 mass / 1020 kg/m3 Built-in" [ref=e834] [cursor=pointer]:
+                      - generic [ref=e835]:
+                        - strong [ref=e836]: HELUZ AKU 20 P15
+                        - generic [ref=e837]: mass / 1020 kg/m3
+                      - emphasis [ref=e838]: Built-in
+                    - option "HELUZ AKU 30/33.3 P20 mass / 980 kg/m3 Built-in" [ref=e839] [cursor=pointer]:
+                      - generic [ref=e840]:
+                        - strong [ref=e841]: HELUZ AKU 30/33.3 P20
+                        - generic [ref=e842]: mass / 980 kg/m3
+                      - emphasis [ref=e843]: Built-in
+                    - option "High Density Rock Wool insulation / 90 kg/m3 Built-in" [ref=e844] [cursor=pointer]:
+                      - generic [ref=e845]:
+                        - strong [ref=e846]: High Density Rock Wool
+                        - generic [ref=e847]: insulation / 90 kg/m3
+                      - emphasis [ref=e848]: Built-in
+                    - option "Hollow Brick mass / 1200 kg/m3 Built-in" [ref=e849] [cursor=pointer]:
+                      - generic [ref=e850]:
+                        - strong [ref=e851]: Hollow Brick
+                        - generic [ref=e852]: mass / 1200 kg/m3
+                      - emphasis [ref=e853]: Built-in
+                    - option "Hollow-core Plank mass / 2400 kg/m3 Built-in" [ref=e854] [cursor=pointer]:
+                      - generic [ref=e855]:
+                        - strong [ref=e856]: Hollow-core Plank
+                        - generic [ref=e857]: mass / 2400 kg/m3
+                      - emphasis [ref=e858]: Built-in
+                    - option "Impactstop Board finish / 820 kg/m3 Built-in" [ref=e859] [cursor=pointer]:
+                      - generic [ref=e860]:
+                        - strong [ref=e861]: Impactstop Board
+                        - generic [ref=e862]: finish / 820 kg/m3
+                      - emphasis [ref=e863]: Built-in
+                    - option "INEX FLOOR 19 mass / 1250 kg/m3 Built-in" [ref=e864] [cursor=pointer]:
+                      - generic [ref=e865]:
+                        - strong [ref=e866]: INEX FLOOR 19
+                        - generic [ref=e867]: mass / 1250 kg/m3
+                      - emphasis [ref=e868]: Built-in
+                    - option "Laminate Flooring finish / 850 kg/m3 Built-in" [ref=e869] [cursor=pointer]:
+                      - generic [ref=e870]:
+                        - strong [ref=e871]: Laminate Flooring
+                        - generic [ref=e872]: finish / 850 kg/m3
+                      - emphasis [ref=e873]: Built-in
+                    - option "Lightweight Concrete mass / 1800 kg/m3 Built-in" [ref=e874] [cursor=pointer]:
+                      - generic [ref=e875]:
+                        - strong [ref=e876]: Lightweight Concrete
+                        - generic [ref=e877]: mass / 1800 kg/m3
+                      - emphasis [ref=e878]: Built-in
+                    - option "Lightweight Plaster finish / 908 kg/m3 Built-in" [ref=e879] [cursor=pointer]:
+                      - generic [ref=e880]:
+                        - strong [ref=e881]: Lightweight Plaster
+                        - generic [ref=e882]: finish / 908 kg/m3
+                      - emphasis [ref=e883]: Built-in
+                    - option "Lightweight Steel Floor mass / 7850 kg/m3 Built-in" [ref=e884] [cursor=pointer]:
+                      - generic [ref=e885]:
+                        - strong [ref=e886]: Lightweight Steel Floor
+                        - generic [ref=e887]: mass / 7850 kg/m3
+                      - emphasis [ref=e888]: Built-in
+                    - option "Lime Plaster finish / 1600 kg/m3 Built-in" [ref=e889] [cursor=pointer]:
+                      - generic [ref=e890]:
+                        - strong [ref=e891]: Lime Plaster
+                        - generic [ref=e892]: finish / 1600 kg/m3
+                      - emphasis [ref=e893]: Built-in
+                    - option "Lime-Cement Plaster 1300 finish / 1300 kg/m3 Built-in" [ref=e894] [cursor=pointer]:
+                      - generic [ref=e895]:
+                        - strong [ref=e896]: Lime-Cement Plaster 1300
+                        - generic [ref=e897]: finish / 1300 kg/m3
+                      - emphasis [ref=e898]: Built-in
+                    - option "Lime-Cement Plaster 1700 finish / 1700 kg/m3 Built-in" [ref=e899] [cursor=pointer]:
+                      - generic [ref=e900]:
+                        - strong [ref=e901]: Lime-Cement Plaster 1700
+                        - generic [ref=e902]: finish / 1700 kg/m3
+                      - emphasis [ref=e903]: Built-in
+                    - option "Lime-Cement Plaster 1780 finish / 1780 kg/m3 Built-in" [ref=e904] [cursor=pointer]:
+                      - generic [ref=e905]:
+                        - strong [ref=e906]: Lime-Cement Plaster 1780
+                        - generic [ref=e907]: finish / 1780 kg/m3
+                      - emphasis [ref=e908]: Built-in
+                    - option "Mineral Screed mass / 2000 kg/m3 Built-in" [ref=e909] [cursor=pointer]:
+                      - generic [ref=e910]:
+                        - strong [ref=e911]: Mineral Screed
+                        - generic [ref=e912]: mass / 2000 kg/m3
+                      - emphasis [ref=e913]: Built-in
+                    - option "MLV Sound Barrier finish / 1900 kg/m3 Built-in" [ref=e914] [cursor=pointer]:
+                      - generic [ref=e915]:
+                        - strong [ref=e916]: MLV Sound Barrier
+                        - generic [ref=e917]: finish / 1900 kg/m3
+                      - emphasis [ref=e918]: Built-in
+                    - option "MW-T Impact Layer support / 140 kg/m3 Built-in" [ref=e919] [cursor=pointer]:
+                      - generic [ref=e920]:
+                        - strong [ref=e921]: MW-T Impact Layer
+                        - generic [ref=e922]: support / 140 kg/m3
+                      - emphasis [ref=e923]: Built-in
+                    - option "MW-T Impact Layer S35 support / 140 kg/m3 Built-in" [ref=e924] [cursor=pointer]:
+                      - generic [ref=e925]:
+                        - strong [ref=e926]: MW-T Impact Layer S35
+                        - generic [ref=e927]: support / 140 kg/m3
+                      - emphasis [ref=e928]: Built-in
+                    - option "MW-T Impact Layer S40 support / 140 kg/m3 Built-in" [ref=e929] [cursor=pointer]:
+                      - generic [ref=e930]:
+                        - strong [ref=e931]: MW-T Impact Layer S40
+                        - generic [ref=e932]: support / 140 kg/m3
+                      - emphasis [ref=e933]: Built-in
+                    - option "MW-T Impact Layer S6 support / 140 kg/m3 Built-in" [ref=e934] [cursor=pointer]:
+                      - generic [ref=e935]:
+                        - strong [ref=e936]: MW-T Impact Layer S6
+                        - generic [ref=e937]: support / 140 kg/m3
+                      - emphasis [ref=e938]: Built-in
+                    - option "Non-bonded Chippings mass / 1800 kg/m3 Built-in" [ref=e939] [cursor=pointer]:
+                      - generic [ref=e940]:
+                        - strong [ref=e941]: Non-bonded Chippings
+                        - generic [ref=e942]: mass / 1800 kg/m3
+                      - emphasis [ref=e943]: Built-in
+                    - option "NRC 2024 Glass-Fiber Batt insulation / 12 kg/m3 Built-in" [ref=e944] [cursor=pointer]:
+                      - generic [ref=e945]:
+                        - strong [ref=e946]: NRC 2024 Glass-Fiber Batt
+                        - generic [ref=e947]: insulation / 12 kg/m3
+                      - emphasis [ref=e948]: Built-in
+                    - option "NRC 2024 Type C Gypsum Board finish / 772 kg/m3 Built-in" [ref=e949] [cursor=pointer]:
+                      - generic [ref=e950]:
+                        - strong [ref=e951]: NRC 2024 Type C Gypsum Board
+                        - generic [ref=e952]: finish / 772 kg/m3
+                      - emphasis [ref=e953]: Built-in
+                    - option "Open-box Timber Slab mass / 430 kg/m3 Built-in" [ref=e954] [cursor=pointer]:
+                      - generic [ref=e955]:
+                        - strong [ref=e956]: Open-box Timber Slab
+                        - generic [ref=e957]: mass / 430 kg/m3
+                      - emphasis [ref=e958]: Built-in
+                    - option "Open-web Steel Floor mass / 7850 kg/m3 Built-in" [ref=e959] [cursor=pointer]:
+                      - generic [ref=e960]:
+                        - strong [ref=e961]: Open-web Steel Floor
+                        - generic [ref=e962]: mass / 7850 kg/m3
+                      - emphasis [ref=e963]: Built-in
+                    - option "OSB mass / 650 kg/m3 Built-in" [ref=e964] [cursor=pointer]:
+                      - generic [ref=e965]:
+                        - strong [ref=e966]: OSB
+                        - generic [ref=e967]: mass / 650 kg/m3
+                      - emphasis [ref=e968]: Built-in
+                - generic [ref=e969]:
+                  - tablist [ref=e970]:
+                    - button "Properties" [ref=e971] [cursor=pointer]
+                    - button "Appearance" [ref=e972] [cursor=pointer]:
+                      - img [ref=e973]
+                      - text: Appearance
+                  - generic [ref=e979]:
+                    - generic [ref=e980]:
+                      - strong [ref=e981]: Built-in catalog material
+                      - generic [ref=e982]: Create a project copy before changing calculation properties.
+                    - generic [ref=e983]:
+                      - generic [ref=e984]:
+                        - generic [ref=e985]: Name
+                        - generic [ref=e986]: Project display name shown in layer pickers, schedules, snapshots, and reports.
+                        - textbox "Name" [disabled] [ref=e987]: Gypsum Board
+                      - generic [ref=e988]:
+                        - generic [ref=e989]: Category
+                        - generic [ref=e990]: Groups the material for browsing, visual defaults, and schedule labels.
+                        - combobox "Category" [disabled] [ref=e991]:
+                          - option "Mass"
+                          - option "Finish" [selected]
+                          - option "Insulation"
+                          - option "Gap"
+                          - option "Support"
+                      - generic [ref=e992]:
+                        - generic [ref=e993]: Behavior
+                        - generic [ref=e994]: "Tells the acoustic solver how to interpret this material: panel leaf, porous absorber, resilient layer, mass, or support."
+                        - combobox "Behavior" [disabled] [ref=e995]:
+                          - option "Rigid mass"
+                          - option "Panel leaf" [selected]
+                          - option "Limp membrane"
+                          - option "Porous absorber"
+                          - option "Air cavity"
+                          - option "Resilient layer"
+                          - option "Structural bridge"
+                          - option "Mass timber"
+                      - generic [ref=e996]:
+                        - generic [ref=e997]: Density
+                        - generic [ref=e998]: Material density, rho, in kg/m3. Combined with layer thickness to estimate surface mass.
+                        - textbox "Density" [disabled] [ref=e999]:
+                          - /placeholder: kg/m3
+                          - text: "850"
+                    - generic [ref=e1000]:
+                      - generic [ref=e1001]:
+                        - generic [ref=e1002]: Source
+                        - generic [ref=e1003]: Records whether the values are user supplied, catalog nominal, engineering default, source owned, or unknown.
+                        - combobox "Source" [disabled] [ref=e1004]:
+                          - option "User supplied"
+                          - option "Catalog nominal"
+                          - option "Engineering default" [selected]
+                          - option "Source owned"
+                          - option "Unknown"
+                      - generic [ref=e1005]:
+                        - generic [ref=e1006]: Tags
+                        - generic [ref=e1007]: Comma-separated search keywords. They help users find the material and do not affect calculations.
+                        - textbox "Tags" [disabled] [ref=e1008]:
+                          - /placeholder: comma separated
+                          - text: lining, board
+                    - generic [ref=e1009]:
+                      - generic [ref=e1010]:
+                        - generic [ref=e1011]: Young modulus
+                        - generic [ref=e1012]: Elastic modulus in Pa. Describes stiffness for panel, mass, and timber-like materials.
+                        - textbox "Young modulus" [disabled] [ref=e1013]:
+                          - /placeholder: Pa
+                          - text: "2500000000"
+                      - generic [ref=e1014]:
+                        - generic [ref=e1015]: Poisson ratio
+                        - generic [ref=e1016]: Elastic transverse strain ratio. Typical solid material values are between 0 and 0.5.
+                        - textbox "Poisson ratio" [disabled] [ref=e1017]:
+                          - /placeholder: 0-0.5
+                          - text: "0.25"
+                      - generic [ref=e1018]:
+                        - generic [ref=e1019]: Loss factor
+                        - generic [ref=e1020]: Internal damping ratio from 0 to 1. Higher values indicate more panel or mass damping.
+                        - textbox "Loss factor" [disabled] [ref=e1021]:
+                          - /placeholder: 0-1
+                          - text: "0.03"
+                    - generic [ref=e1022]:
+                      - generic [ref=e1023]: Notes
+                      - generic [ref=e1024]: Free-form product/source notes. Saved with the material and not used directly by the solver.
+                      - textbox "Notes" [disabled] [ref=e1025]: Nominal board stiffness/damping for uncalibrated family solvers and uncertainty accounting.
+                    - button "Create project copy" [ref=e1027] [cursor=pointer]:
+                      - img [ref=e1028]
+                      - text: Create project copy
+        - region "Calculator workspace" [ref=e37]:
+          - generic [ref=e38]:
+            - generic [ref=e39]:
+              - heading "Setup" [level=2] [ref=e42]
+              - generic [ref=e43]:
+                - generic "Assembly mode" [ref=e44]:
+                  - button "Wall" [pressed] [ref=e45] [cursor=pointer]
+                  - button "Floor" [ref=e46] [cursor=pointer]
+                - generic [ref=e47]:
+                  - generic [ref=e48]:
+                    - checkbox "Rw Airborne" [checked] [ref=e49]
+                    - generic [ref=e50]: Rw
+                    - generic [ref=e51]: Airborne
+                  - generic [ref=e52]:
+                    - checkbox "R'w Airborne" [ref=e53]
+                    - generic [ref=e54]: R'w
+                    - generic [ref=e55]: Airborne
+                  - generic [ref=e56]:
+                    - checkbox "DnT,w Airborne" [ref=e57]
+                    - generic [ref=e58]: DnT,w
+                    - generic [ref=e59]: Airborne
+                  - generic [ref=e60]:
+                    - checkbox "STC Airborne" [ref=e61]
+                    - generic [ref=e62]: STC
+                    - generic [ref=e63]: Airborne
+                  - generic [ref=e64]:
+                    - checkbox "C Spectrum" [ref=e65]
+                    - generic [ref=e66]: C
+                    - generic [ref=e67]: Spectrum
+                  - generic [ref=e68]:
+                    - checkbox "Ctr Spectrum" [ref=e69]
+                    - generic [ref=e70]: Ctr
+                    - generic [ref=e71]: Spectrum
+            - generic [ref=e72]:
+              - generic [ref=e73]:
+                - heading "Layer stack" [level=2] [ref=e75]
+                - generic [ref=e76]:
+                  - button "Undo layer change" [disabled] [ref=e77]:
+                    - img [ref=e78]
+                  - button "Materials" [ref=e81] [cursor=pointer]:
+                    - img [ref=e82]
+                    - text: Materials
+                  - button "Add layer" [ref=e88] [cursor=pointer]:
+                    - img [ref=e89]
+                    - text: Add layer
+              - generic [ref=e90]:
+                - generic [ref=e91]:
+                  - generic [ref=e92]: Material
+                  - generic [ref=e93]: Role
+                  - generic [ref=e94]: Thickness
+                  - generic [ref=e95]: Actions
+                - article [ref=e96]:
+                  - generic [ref=e97]:
+                    - button "Drag layer 1" [ref=e98] [cursor=pointer]:
+                      - img [ref=e99]
+                    - button "Select layer 1" [ref=e106] [cursor=pointer]: "1"
+                  - generic [ref=e107]:
+                    - generic [ref=e108]:
+                      - generic [ref=e109]: Material
+                      - button "Gypsum Board 850 kg/m3 / finish" [ref=e110] [cursor=pointer]:
+                        - strong [ref=e111]: Gypsum Board
+                        - generic [ref=e112]: 850 kg/m3 / finish
+                    - generic [ref=e113]:
+                      - generic [ref=e114]: Role
+                      - combobox "Role" [ref=e115]:
+                        - option "Side A" [selected]
+                        - option "Cavity"
+                        - option "Core"
+                        - option "Support"
+                        - option "Side B"
+                    - generic [ref=e116]:
+                      - generic [ref=e117]: Thickness
+                      - generic [ref=e118]:
+                        - spinbutton "Thickness mm" [ref=e119]: "12.5"
+                        - emphasis [ref=e120]: mm
+                  - generic [ref=e121]:
+                    - button "Move layer up" [disabled] [ref=e122]:
+                      - img [ref=e123]
+                    - button "Move layer down" [ref=e125] [cursor=pointer]:
+                      - img [ref=e126]
+                    - button "Duplicate layer" [ref=e128] [cursor=pointer]:
+                      - img [ref=e129]
+                    - button "Remove layer" [ref=e132] [cursor=pointer]:
+                      - img [ref=e133]
+                - article [ref=e136]:
+                  - generic [ref=e137]:
+                    - button "Drag layer 2" [ref=e138] [cursor=pointer]:
+                      - img [ref=e139]
+                    - button "Select layer 2" [ref=e146] [cursor=pointer]: "2"
+                  - generic [ref=e147]:
+                    - generic [ref=e148]:
+                      - generic [ref=e149]: Material
+                      - button "Rock Wool 45 kg/m3 / insulation" [ref=e150] [cursor=pointer]:
+                        - strong [ref=e151]: Rock Wool
+                        - generic [ref=e152]: 45 kg/m3 / insulation
+                    - generic [ref=e153]:
+                      - generic [ref=e154]: Role
+                      - combobox "Role" [ref=e155]:
+                        - option "Side A"
+                        - option "Cavity" [selected]
+                        - option "Core"
+                        - option "Support"
+                        - option "Side B"
+                    - generic [ref=e156]:
+                      - generic [ref=e157]: Thickness
+                      - generic [ref=e158]:
+                        - spinbutton "Thickness mm" [ref=e159]: "50"
+                        - emphasis [ref=e160]: mm
+                  - generic [ref=e161]:
+                    - button "Move layer up" [ref=e162] [cursor=pointer]:
+                      - img [ref=e163]
+                    - button "Move layer down" [ref=e165] [cursor=pointer]:
+                      - img [ref=e166]
+                    - button "Duplicate layer" [ref=e168] [cursor=pointer]:
+                      - img [ref=e169]
+                    - button "Remove layer" [ref=e172] [cursor=pointer]:
+                      - img [ref=e173]
+                - article [ref=e176]:
+                  - generic [ref=e177]:
+                    - button "Drag layer 3" [ref=e178] [cursor=pointer]:
+                      - img [ref=e179]
+                    - button "Select layer 3" [ref=e186] [cursor=pointer]: "3"
+                  - generic [ref=e187]:
+                    - generic [ref=e188]:
+                      - generic [ref=e189]: Material
+                      - button "Concrete 2400 kg/m3 / mass" [ref=e190] [cursor=pointer]:
+                        - strong [ref=e191]: Concrete
+                        - generic [ref=e192]: 2400 kg/m3 / mass
+                    - generic [ref=e193]:
+                      - generic [ref=e194]: Role
+                      - combobox "Role" [ref=e195]:
+                        - option "Side A"
+                        - option "Cavity"
+                        - option "Core"
+                        - option "Support"
+                        - option "Side B" [selected]
+                    - generic [ref=e196]:
+                      - generic [ref=e197]: Thickness
+                      - generic [ref=e198]:
+                        - spinbutton "Thickness mm" [ref=e199]: "100"
+                        - emphasis [ref=e200]: mm
+                  - generic [ref=e201]:
+                    - button "Move layer up" [ref=e202] [cursor=pointer]:
+                      - img [ref=e203]
+                    - button "Move layer down" [disabled] [ref=e205]:
+                      - img [ref=e206]
+                    - button "Duplicate layer" [ref=e208] [cursor=pointer]:
+                      - img [ref=e209]
+                    - button "Remove layer" [ref=e212] [cursor=pointer]:
+                      - img [ref=e213]
+            - generic [ref=e216]:
+              - generic [ref=e217]:
+                - generic [ref=e218]:
+                  - generic [ref=e219]: Wall section
+                  - heading "Wall construction preview" [level=3] [ref=e220]
+                - generic [ref=e221]:
+                  - generic [ref=e222]: 3 layers
+                  - generic [ref=e223]: /162.5 mm
+              - generic [ref=e224]:
+                - figure "wall construction section" [ref=e225]:
+                  - img [ref=e226]:
+                    - generic [ref=e229]: Side A
+                    - generic [ref=e230]: Side B
+                    - generic [ref=e238]: "1"
+                    - generic [ref=e252]: "2"
+                    - generic [ref=e264]: "3"
+                    - generic [ref=e265]: 162.5 mm
+                - generic "Technical layer schedule" [ref=e266]:
+                  - generic [ref=e267]:
+                    - generic [ref=e268]: Technical layer schedule
+                    - strong [ref=e269]: "Selected: Gypsum Board"
+                  - list [ref=e270]:
+                    - listitem [ref=e271]:
+                      - generic [ref=e272]: "1"
+                      - generic [ref=e273]:
+                        - strong [ref=e274]: Gypsum Board
+                        - generic [ref=e275]: Side A
+                      - generic [ref=e276]: 12.5 mm
+                    - listitem [ref=e277]:
+                      - generic [ref=e278]: "2"
+                      - generic [ref=e279]:
+                        - strong [ref=e280]: Rock Wool
+                        - generic [ref=e281]: Cavity
+                      - generic [ref=e282]: 50 mm
+                    - listitem [ref=e283]:
+                      - generic [ref=e284]: "3"
+                      - generic [ref=e285]:
+                        - strong [ref=e286]: Concrete
+                        - generic [ref=e287]: Side B
+                      - generic [ref=e288]: 100 mm
+          - complementary "Calculation review" [ref=e289]:
+            - generic [ref=e290]:
+              - generic [ref=e291]: Current result
+              - strong [ref=e292]: 57 dB
+              - paragraph [ref=e293]: "Rw: Calculated"
+            - generic [ref=e294]:
+              - generic [ref=e295]:
+                - heading "Outputs" [level=2] [ref=e296]
+                - generic [ref=e297]: "1"
+              - generic [ref=e299]:
+                - generic [ref=e300]:
+                  - strong [ref=e301]: Rw
+                  - generic [ref=e302]: Calculated
+                - emphasis [ref=e303]: 57 dB
+            - article [ref=e313]:
+              - generic [ref=e314]:
+                - generic [ref=e315]:
+                  - generic [ref=e316]: Airborne spectrum
+                  - heading "Airborne response curve" [level=3] [ref=e317]
+                - generic [ref=e318]:
+                  - generic [ref=e319]: Dynamic topology
+                  - generic [ref=e320]: 63..4000 Hz
+                  - generic [ref=e321]: Higher is better
+              - generic "Frequency bands" [ref=e322]:
+                - generic [ref=e323]: "Low: 63-250 Hz"
+                - generic [ref=e324]: "Speech: 500-1k Hz"
+                - generic [ref=e325]: "High: 2k-4k Hz"
+              - paragraph [ref=e326]: Curve returned by the dynamic calculator for the active layer topology.
+              - img "Airborne response curve, Higher is better" [ref=e327]:
+                - application [ref=e330]:
+                  - generic [ref=e368]:
+                    - generic [ref=e369]:
+                      - generic [ref=e371]: "63"
+                      - generic [ref=e373]: "100"
+                      - generic [ref=e375]: "160"
+                      - generic [ref=e377]: "250"
+                      - generic [ref=e379]: "400"
+                      - generic [ref=e381]: "630"
+                      - generic [ref=e383]: 1k
+                      - generic [ref=e385]: 1.60k
+                      - generic [ref=e387]: 2.5k
+                      - generic [ref=e389]: 4k
+                    - generic [ref=e390]:
+                      - generic [ref=e392]: "25"
+                      - generic [ref=e394]: "40"
+                      - generic [ref=e396]: "55"
+                      - generic [ref=e398]: "70"
+                      - generic [ref=e400]: "80"
+                    - generic [ref=e401]: Level (dB)
+            - generic [ref=e304]:
+              - heading "Report handoff" [level=2] [ref=e306]
+              - generic [ref=e402]:
+                - button "Choose project" [ref=e403] [cursor=pointer]:
+                  - img [ref=e404]
+                  - text: Choose project
+                - button "Save as template" [ref=e408] [cursor=pointer]:
+                  - img [ref=e409]
+                  - text: Save as template
+                - button "Open report" [ref=e411] [cursor=pointer]:
+                  - img [ref=e412]
+                  - text: Open report
+                  - img [ref=e415]
+  - alert [ref=e311]
+  - region "Notifications alt+T"
+  - generic [ref=e417]: "25"

@@ -1814,9 +1814,9 @@
     },
     {
       "id": "pmc_composite_ceiling_only_family_specific_estimate",
-      "mode": "low_confidence_estimate",
+      "mode": "family_specific_estimate",
       "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10004424/",
-      "expectedBasis": "predictor_floor_system_low_confidence_estimate",
+      "expectedBasis": "predictor_composite_panel_published_interaction_estimate",
       "impactPredictorInput": {
         "structuralSupportType": "composite_panel",
         "impactSystemType": "suspended_ceiling_only",

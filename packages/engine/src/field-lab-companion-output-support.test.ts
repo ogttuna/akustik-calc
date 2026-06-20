@@ -10,7 +10,6 @@ const SINGLE_LEAF_CONCRETE_STACK = [
 
 const COMPLETE_FIELD_CONTEXT = {
   contextMode: "field_between_rooms",
-  fieldKDb: 2,
   panelHeightMm: 2600,
   panelWidthMm: 3000,
   receivingRoomRt60S: 0.5,

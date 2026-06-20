@@ -64,7 +64,7 @@ function withFieldAnchorOutputs(outputs: readonly RequestedOutputId[]): Requeste
 
 function isOpenBoxTimberBaseLayer(layer: ResolvedLayer): boolean {
   return layer.material.id === "open_box_timber_slab" &&
-    (!layer.floorRole || layer.floorRole === "base_structure");
+    layer.floorRole === "base_structure";
 }
 
 function detectRawBareOpenBoxTimberCarrier(layers: readonly ResolvedLayer[]): {

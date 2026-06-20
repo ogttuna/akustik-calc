@@ -780,6 +780,7 @@ async function main() {
         "src/post-v1-wall-double-leaf-framed-bridge-support-spacing-numeric-sensitivity-coverage-refresh-contract.test.ts",
         "src/post-v1-wall-double-leaf-framed-porous-absorber-thickness-numeric-sensitivity-owner-contract.test.ts",
         "src/post-v1-wall-double-leaf-framed-porous-absorber-thickness-numeric-sensitivity-coverage-refresh-contract.test.ts",
+        "src/post-v1-wall-double-leaf-framed-cavity-depth-numeric-sensitivity-owner-contract.test.ts",
         "src/acoustic-calculator-answer-engine-v1-contract.test.ts",
         "src/acoustic-calculator-company-internal-usable-v1-acceptance-gate-contract.test.ts",
         "src/broad-accuracy-floor-open-box-timber-similarity-transfer-owner-contract.test.ts",

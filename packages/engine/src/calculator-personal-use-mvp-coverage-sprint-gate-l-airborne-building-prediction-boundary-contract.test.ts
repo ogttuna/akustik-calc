@@ -175,7 +175,7 @@ describe("Personal-Use MVP Coverage Sprint Gate L airborne building-prediction b
     ]);
   });
 
-  it("blocks lab-looking outputs when the requested context is building prediction", () => {
+  it("publishes owned lab companions when lab-looking outputs are requested with building prediction context", () => {
     const result = calculateAssembly(CLT_WALL, {
       airborneContext: WALL_BUILDING_CONTEXT,
       calculator: "dynamic",
@@ -188,15 +188,19 @@ describe("Personal-Use MVP Coverage Sprint Gate L airborne building-prediction b
       targetOutputs: WALL_LAB_OUTPUTS
     });
 
-    expect(result.supportedTargetOutputs).toEqual([]);
-    expect(result.unsupportedTargetOutputs).toEqual(["Rw", "STC"]);
+    expect(result.supportedTargetOutputs).toEqual(["Rw", "STC"]);
+    expect(result.unsupportedTargetOutputs).toEqual([]);
     expect(result.airborneCandidateResolution).toMatchObject({
       selectedCandidateId: "candidate_dynamic_needs_input",
       selectedOrigin: "needs_input"
     });
-    expect(result.airborneBasis?.missingPhysicalInputs).toEqual([
-      ...GATE_M_BUILDING_PREDICTION_MISSING_INPUTS
-    ]);
+    expect(result.airborneBasis?.missingPhysicalInputs).toEqual(expect.arrayContaining([
+      "buildingPredictionOutputBasis",
+      "conservativeFlankingAssumption",
+      "flankingJunctionClass",
+      "junctionCouplingLengthM",
+      "sourceRoomVolumeM3"
+    ]));
     expect(result.warnings).toContain(GATE_L_AIRBORNE_BUILDING_PREDICTION_BOUNDARY_WARNING);
     expect(assessment).toMatchObject({
       missingPhysicalInputs: [...GATE_M_BUILDING_PREDICTION_MISSING_INPUTS],

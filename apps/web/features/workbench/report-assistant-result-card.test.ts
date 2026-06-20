@@ -3,6 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
 import { AssistantResultCard } from "./report-assistant-result-card";
+import { plausibilityReviewToAssistantResult } from "./report-assistant-plausibility-result";
 import { createReportAssistantResultEnvelope } from "./report-assistant-result-contract";
 import type { WorkbenchV2CalculatorAssistantPreview } from "../workbench-rebuild/workbench-v2-calculator-assistant";
 
@@ -179,5 +180,64 @@ describe("report assistant result card", () => {
     expect(html).not.toContain("report-assistant-calculator-preview");
     expect(html).not.toContain("Apply");
     expect(html).not.toContain("Save");
+  });
+
+  it("server-renders research review cards with calculator and source values separated", () => {
+    const result = plausibilityReviewToAssistantResult({
+      review: {
+        answerText: "Sources suggest this wall may be higher than the current calculator result, but evidence is partial.",
+        comparableAssemblies: [
+          {
+            comparisonNote: "Similar gypsum and mineral wool wall only.",
+            label: "Gypsum mineral wool wall reference",
+            matchingLayers: ["Gypsum board", "Rock wool"],
+            metricValues: ["Rw 45-50 dB"],
+            sourceTitle: "Wall acoustic reference",
+            sourceUrl: "https://example.com/wall-acoustic-reference",
+            weakeningDifferences: ["unknown stud spacing"]
+          }
+        ],
+        comparability: "partial",
+        confidence: "medium",
+        engineDisplayValue: "41 dB",
+        missingEvidence: ["Exact tested stack is not available."],
+        metric: "Rw",
+        metricId: "output:Rw",
+        rationale: ["Source evidence is advisory only."],
+        recommendedActionText: "Ask before applying any report-only value.",
+        severity: "medium",
+        sourceQuality: "mixed",
+        sources: [
+          {
+            title: "Wall acoustic reference",
+            url: "https://example.com/wall-acoustic-reference"
+          }
+        ],
+        valueRecommendation: {
+          displayValue: "47 dB",
+          note: "Advisory report value only."
+        },
+        valueReviewed: "41 dB",
+        verdict: "suspicious"
+      },
+      source: "research_provider",
+      warnings: []
+    });
+
+    const html = renderToStaticMarkup(createElement(AssistantResultCard, {
+      result
+    }));
+
+    expect(html).toContain('data-renderer="research_review_card"');
+    expect(html).toContain("Calculator result");
+    expect(html).toContain("41 dB");
+    expect(html).toContain("Research verdict");
+    expect(html).toContain("suspicious");
+    expect(html).toContain("Suggested report value");
+    expect(html).toContain("47 dB");
+    expect(html).toContain("partial");
+    expect(html).toContain("mixed");
+    expect(html).toContain("1 source");
+    expect(html.match(/Suggested report value/gu)).toHaveLength(1);
   });
 });

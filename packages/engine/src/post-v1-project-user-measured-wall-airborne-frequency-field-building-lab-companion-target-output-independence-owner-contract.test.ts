@@ -29,8 +29,6 @@ const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
 const PREVIOUS_RERANK_ACTION =
   "post_v1_runtime_first_route_family_rerank_after_project_user_measured_wall_airborne_frequency_field_building_lab_companion_basis_integrity_coverage_refresh_plan";
-const PREVIOUS_RERANK_FILE =
-  "packages/engine/src/post-v1-runtime-first-route-family-rerank-after-project-user-measured-wall-airborne-frequency-field-building-lab-companion-basis-integrity-coverage-refresh-contract.test.ts";
 const PREVIOUS_RERANK_PLAN_DOC =
   "docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_FIELD_BUILDING_LAB_COMPANION_BASIS_INTEGRITY_COVERAGE_REFRESH_PLAN_2026-06-18.md";
 const PREVIOUS_RERANK_STATUS =

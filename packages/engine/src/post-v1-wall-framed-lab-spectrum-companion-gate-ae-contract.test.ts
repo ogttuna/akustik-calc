@@ -110,6 +110,41 @@ describe("post-V1 wall framed lab-spectrum companion Gate AE", () => {
     }
   });
 
+  it("keeps framed Rw target-output independent while blocking lab aliases without Rw ownership", () => {
+    for (const pin of POST_V1_GATE_AE_WALL_FRAMED_LAB_SPECTRUM_VALUE_PINS.filter(
+      (entry) => entry.metric === "Rw"
+    )) {
+      const testCase = generatedCase(pin.caseId);
+      const buildingResult = calculateAssembly(testCase.rows, {
+        ...testCase.fieldOptions,
+        airborneContext: buildingContext(testCase.fieldOptions.airborneContext),
+        targetOutputs: [pin.metric]
+      });
+
+      expect(buildingResult.supportedTargetOutputs, `${pin.caseId} building ${pin.metric}`).toEqual([
+        pin.metric
+      ]);
+      expect(buildingResult.unsupportedTargetOutputs, `${pin.caseId} building ${pin.metric}`).toEqual([]);
+    }
+
+    const lsf = generatedCase("wall-lsf-knauf");
+    const buildingCAndCtrOnly = calculateAssembly(lsf.rows, {
+      ...lsf.fieldOptions,
+      airborneContext: buildingContext(lsf.fieldOptions.airborneContext),
+      targetOutputs: ["C", "Ctr"]
+    });
+    const fieldRwOnly = calculateAssembly(lsf.rows, {
+      ...lsf.fieldOptions,
+      targetOutputs: ["Rw"]
+    });
+
+    expect(buildingCAndCtrOnly.supportedTargetOutputs).toEqual([]);
+    expect(buildingCAndCtrOnly.unsupportedTargetOutputs).toEqual(["C", "Ctr"]);
+    expect(fieldRwOnly.supportedTargetOutputs).toEqual(["Rw"]);
+    expect(fieldRwOnly.unsupportedTargetOutputs).toEqual([]);
+    expect(fieldRwOnly.metrics.estimatedRwDb).toBe(51);
+  });
+
   it("does not open lab-spectrum companions without explicit framed metadata or grouped topology", () => {
     const lsf = generatedCase("wall-lsf-knauf");
     const noFramedMetadata = calculateAssembly(lsf.rows, {

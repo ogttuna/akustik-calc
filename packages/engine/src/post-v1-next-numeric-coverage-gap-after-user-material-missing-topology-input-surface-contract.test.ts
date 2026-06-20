@@ -119,7 +119,6 @@ const FIELD_BUILDING_OUTPUTS = [
   "DnT,w",
   "DnT,A"
 ] as const satisfies readonly RequestedOutputId[];
-const ASTM_OUTPUTS = ["IIC", "AIIC"] as const satisfies readonly RequestedOutputId[];
 const IMPACT_OUTPUTS = ["Ln,w", "L'n,w"] as const satisfies readonly RequestedOutputId[];
 
 const CUSTOM_PANEL_ID = "custom_panel_leaf";

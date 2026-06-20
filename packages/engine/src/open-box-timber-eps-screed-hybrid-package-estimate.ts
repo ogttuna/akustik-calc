@@ -91,6 +91,24 @@ function layersForRole(
   return layers.filter((layer) => layer.floorRole === floorRole);
 }
 
+function roleLayersAreContiguous(
+  layers: readonly ResolvedLayer[],
+  floorRole: ResolvedLayer["floorRole"]
+): boolean {
+  const indexes = layers
+    .map((layer, index) => (layer.floorRole === floorRole ? index : -1))
+    .filter((index) => index >= 0);
+
+  if (indexes.length <= 1) {
+    return true;
+  }
+
+  const firstIndex = indexes[0] as number;
+  const lastIndex = indexes.at(-1) as number;
+
+  return lastIndex - firstIndex + 1 === indexes.length;
+}
+
 function thicknessNear(value: number | undefined, target: number, tolerance = 2): boolean {
   return typeof value === "number" && Number.isFinite(value) && Math.abs(value - target) <= tolerance;
 }
@@ -171,6 +189,9 @@ function detectEpsScreedHybridPackage(
   }
 
   if (
+    !roleLayersAreContiguous(layers, "floating_screed") ||
+    !roleLayersAreContiguous(layers, "ceiling_cavity") ||
+    !roleLayersAreContiguous(layers, "ceiling_board") ||
     !singleLayerMatches(layersForRole(layers, "upper_fill"), {
       materialId: "eps_floor_insulation_board",
       thicknessMm: 35,

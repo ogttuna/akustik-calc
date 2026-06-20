@@ -235,10 +235,10 @@ const CASES: readonly RawRouteCase[] = [
     id: "raw_open_box_single",
     rows: [{ id: "a", materialId: "open_box_timber_slab", thicknessMm: 370 }],
     expected: {
-      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
-      estimateKind: "family_archetype",
+      basis: null,
+      estimateKind: null,
       floorSystemMatchId: null,
-      supported: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]
+      supported: ["R'w", "DnT,w"]
     }
   },
   {

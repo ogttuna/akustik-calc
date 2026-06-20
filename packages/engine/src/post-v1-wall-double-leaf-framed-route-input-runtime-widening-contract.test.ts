@@ -36,8 +36,6 @@ const RUNTIME_WIDENING_FILE =
   "packages/engine/src/post-v1-wall-double-leaf-framed-route-input-runtime-widening-contract.test.ts";
 const RUNTIME_WIDENING_STATUS =
   "post_v1_wall_double_leaf_framed_route_input_runtime_widening_landed_runtime_selected_surface_parity";
-const RUNTIME_WIDENING_LABEL =
-  "post-V1 wall double-leaf/framed route-input runtime widening";
 const RUNTIME_WIDENING_PLAN_DOC =
   "docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_ROUTE_INPUT_RUNTIME_WIDENING_PLAN_2026-06-11.md";
 

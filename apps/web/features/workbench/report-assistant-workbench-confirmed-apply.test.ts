@@ -175,7 +175,7 @@ describe("report assistant Workbench confirmed apply", () => {
       proposal: {
         ...proposal,
         requiresConfirmation: false
-      }
+      } as unknown as typeof proposal
     })).toEqual({
       code: "invalid_proposal",
       message: "Workbench apply proposal must be non-mutating, preview-only, and confirmation-required.",

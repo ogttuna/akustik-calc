@@ -98,7 +98,7 @@ type Candidate = {
   readonly reason: string;
   readonly routeFamily: string;
   readonly runtimeOwnerAuthorizedNext: boolean;
-  readonly targetOutputs: readonly RequestedOutputId[];
+  readonly targetOutputs: readonly (RequestedOutputId | "OITC")[];
 };
 
 const LAB_OUTPUTS = ["Rw", "STC", "C", "Ctr"] as const satisfies readonly RequestedOutputId[];

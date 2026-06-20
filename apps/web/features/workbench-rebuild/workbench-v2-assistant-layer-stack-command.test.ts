@@ -92,6 +92,32 @@ describe("workbench v2 assistant layer stack command", () => {
     expect(result.ok && result.warnings[0]).toContain("engineering-default draft values");
   });
 
+  it("treats broad material selection and reasonable input wording as a usable stack command", () => {
+    const result = parse(
+      "1 tane gypsum board seç hangisi farketmez stacke en uygunu seç araya rockwool koy sonra bi tane daha aynı gypsumdan seç inputları da makul şekilde doldur bakalım"
+    );
+
+    expect(result.ok).toBe(true);
+    expect(result.ok && result.commandKind).toBe("replace_stack");
+    expect(result.ok && result.layers).toEqual([
+      { id: "assistant-test-layer-1", materialId: "gypsum_board", role: "side_a", thicknessMm: "12.5" },
+      { id: "assistant-test-layer-2", materialId: "rockwool", role: "cavity", thicknessMm: "50" },
+      { id: "assistant-test-layer-3", materialId: "gypsum_board", role: "side_b", thicknessMm: "12.5" }
+    ]);
+    expect(result.ok && result.contextPatch).toMatchObject({
+      wallCavity1DepthMm: "50",
+      wallCavity1LayerIndices: "2",
+      wallSideALeafLayerIndices: "1",
+      wallSideBLeafLayerIndices: "3",
+      wallTopologyMode: "double_leaf_framed"
+    });
+    expect(result.ok && result.tasks.map((task) => task.code)).toEqual([
+      "assistant_layer_thickness_assumed",
+      "assistant_layer_thickness_assumed",
+      "assistant_layer_thickness_assumed"
+    ]);
+  });
+
   it("does not mutate on layer phrases without explicit apply intent", () => {
     expect(parse("gypsum, rock wool, gypsum")).toEqual({
       code: "missing_apply_intent",

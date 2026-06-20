@@ -108,7 +108,7 @@ export const IMPACT_VALIDATION_MODE_MATRIX: readonly ImpactValidationModeRegime[
     posture: "estimate"
   },
   {
-    caseCount: 8,
+    caseCount: 9,
     id: "family_specific_estimate",
     label: "Family-specific estimate",
     note: "Narrow family branches such as CLT, composite, steel, or published heavy-concrete treatment estimates before broad averaging.",
@@ -136,10 +136,10 @@ export const IMPACT_VALIDATION_MODE_MATRIX: readonly ImpactValidationModeRegime[
     posture: "estimate"
   },
   {
-    caseCount: 6,
+    caseCount: 5,
     id: "low_confidence_estimate",
     label: "Low-confidence family fallback",
-    note: "Last-resort published-family blend that keeps the result non-empty without pretending it is a narrow same-family fit; this now covers the timber nil-ceiling, concrete combined, steel suspended, and composite ceiling-only fallback corridors.",
+    note: "Last-resort published-family blend that keeps the result non-empty without pretending it is a narrow same-family fit; this now covers the timber nil-ceiling, concrete combined, and steel suspended fallback corridors.",
     posture: "low_confidence"
   },
   {
@@ -326,11 +326,10 @@ export const IMPACT_VALIDATION_FAMILY_MATRIX: readonly ImpactValidationFamilyReg
     maxToleranceDb: 0.1,
     modeDistribution: [
       { caseCount: 3, id: "official_floor_system" },
-      { caseCount: 2, id: "family_specific_estimate" },
-      { caseCount: 1, id: "family_archetype_estimate" },
-      { caseCount: 1, id: "low_confidence_estimate" }
+      { caseCount: 3, id: "family_specific_estimate" },
+      { caseCount: 1, id: "family_archetype_estimate" }
     ],
-    note: "Composite families are covered on the floor-side corpus, and the suspended-ceiling-only predictor lane now resolves into a labeled low-confidence fallback anchored by the PMC family instead of claiming a narrower published-interaction basis. The real-world field continuation pack still includes a live composite ceiling-only chain."
+    note: "Composite families are covered on the floor-side corpus, and the suspended-ceiling-only predictor lane now resolves into the published-interaction family estimate instead of falling back to low confidence. The real-world field continuation pack still includes a live composite ceiling-only chain."
   })
 ] as const;
 

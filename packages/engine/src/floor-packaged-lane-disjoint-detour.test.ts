@@ -55,7 +55,7 @@ describe("floor packaged-lane disjoint detours", () => {
     const canonicalResult = calculateAssembly(canonical, { targetOutputs: LAB_OUTPUTS });
     const disjointResult = calculateAssembly(disjoint, { targetOutputs: LAB_OUTPUTS });
 
-    expect(canonicalResult.floorSystemEstimate?.kind).toBe("low_confidence");
+    expect(canonicalResult.floorSystemEstimate?.kind).toBe("family_general");
     expect(hasCeilingBoardBlocker(canonicalResult.warnings)).toBe(false);
 
     expect(disjointResult.floorSystemEstimate?.kind).toBe("low_confidence");

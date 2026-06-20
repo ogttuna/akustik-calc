@@ -218,7 +218,7 @@ function containsNormalizedAlias(haystack: string, alias: string): boolean {
     return false;
   }
 
-  const suffixPattern = new RegExp(`\\b${normalizedAlias}(?:lar|ler|lari|leri|i|u|a|e|n)?\\b`, "u");
+  const suffixPattern = new RegExp(`\\b${normalizedAlias}(?:lar|ler|lari|leri|i|u|a|e|n|da|de|dan|den|tan|ten)?\\b`, "u");
   return suffixPattern.test(haystack);
 }
 
@@ -323,14 +323,20 @@ function hasExplicitApplyIntent(instruction: string): boolean {
 function wantsAssumedThicknesses(instruction: string): boolean {
   const normalized = normalizeCommandText(instruction);
   const mentionsThickness = /\b(?:kalinli(?:k|g)\w*|thickness(?:es)?)\b/u.test(normalized);
+  const mentionsDraftInputs = /\b(?:input|inputlar|inputlari|inputs|girdi|girdiler|girdileri)\b/u.test(normalized);
+  const mentionsReasonableDefaults = /\b(?:default|draft|engineering|fill|infer|makul|mantikli|reasonable|sensible|tipik|typical|uygun|varsayilan)\b/u
+    .test(normalized);
 
   return (
     mentionsThickness &&
-    /\b(?:default|draft|engineering|fill|infer|makul|mantikli|reasonable|sensible|tipik|typical|uygun|varsayilan)\b/u
-      .test(normalized)
+    mentionsReasonableDefaults
+  ) || (
+    mentionsDraftInputs &&
+    mentionsReasonableDefaults &&
+    /\b(?:doldur|fill|gir|girelim|girin|set|tamamla)\b/u.test(normalized)
   ) || (
     /\b(?:eksik|missing)\b/u.test(normalized) &&
-    mentionsThickness
+    (mentionsThickness || mentionsDraftInputs)
   ) || (
     mentionsThickness &&
     /\b(?:doldur|gir|girelim|girin|set|tamamla)\b/u.test(normalized)
@@ -394,12 +400,8 @@ function commandKindFromInstruction(instruction: string): WorkbenchV2AssistantCa
     return "generate_candidates";
   }
 
-  if (/\b(?:select|sec)\b/u.test(normalized)) {
+  if (/\b(?:select|sec)\b/u.test(normalized) && parseRequestedOutputs(instruction).length > 0) {
     return "set_outputs";
-  }
-
-  if (/\b(?:preview|run|calculate|hesapla)\b/u.test(normalized)) {
-    return "preview";
   }
 
   if (/\b(?:delete|remove|sil|kaldir)\b/u.test(normalized)) {
@@ -420,6 +422,10 @@ function commandKindFromInstruction(instruction: string): WorkbenchV2AssistantCa
     (THICKNESS_PATTERN.test(instruction) && /\b(?:make|set|yap|ayarla)\b/u.test(normalized))
   ) {
     return "update_layer";
+  }
+
+  if (/\b(?:preview|run|calculate|hesapla)\b/u.test(normalized) && !/\b(?:araya|arrange|build|create|diz|dizelim|dizilimi|dizilimini|kur|koy|olustur|olusturalim|sec|select|use)\b/u.test(normalized)) {
+    return "preview";
   }
 
   return "replace_stack";
@@ -454,6 +460,7 @@ function splitLayerSegments(instruction: string): string[] {
   return instruction
     .replace(/\s*(?:->|=>|→)\s*/gu, "\n")
     .replace(/\s*[+,;]\s*/gu, "\n")
+    .replace(/\b(?:araya|arasina|arasına|ortaya)\b/giu, "\n")
     .replace(/\b(?:and|then|sonra|ve)\b/giu, "\n")
     .split(/\n+/u)
     .map((segment) => segment.trim())
@@ -468,6 +475,7 @@ function cleanLayerMaterialPhrase(segment: string): string {
       /\b(?:add|alta|apply|arrange|asağı|asagi|build|calculator|calculate|create|delete|edge|ekle|for|from|insert|layer|layeri|layers|make|move|ortaya|remove|set|sil|stack|tasi|taşı|top|use|uste|üst|üste|wall|ayarla|calculatoru|duvar|diz|dizelim|dizilimi|dizilimini|hesap|hesapla|icin|ile|katman|katmanlari|katmanlarını|kaldir|kaldır|kur|olustur|olusturalim|uygula|yap)\b/giu,
       " "
     )
+    .replace(/\b(?:aynı|ayni|bakalim|bakalım|bi|bir|daha|en|farketmez|girdi|girdileri|hangisi|input|inputlari|inputları|koy|makul|same|sec|seç|uygunu)\b/giu, " ")
     .replace(/\b(?:rw|stc|ctr|dnt|dn|ln|iic|aiic)\b/giu, " ")
     .replace(/\s+/gu, " ")
     .trim();
@@ -588,7 +596,7 @@ function formatThicknessMm(value: number): string {
   return Number.isInteger(rounded) ? String(rounded) : String(rounded);
 }
 
-function typicalThicknessMmForLayer(input: {
+export function typicalWorkbenchV2AssistantThicknessMmForLayer(input: {
   material: MaterialDefinition;
   mode: WorkbenchV2StudyMode;
   role: string;
@@ -718,7 +726,7 @@ function applyAssumedThicknesses(input: {
     }
 
     const material = materialForExistingLayer(layer, byId);
-    const thicknessMm = formatThicknessMm(typicalThicknessMmForLayer({
+    const thicknessMm = formatThicknessMm(typicalWorkbenchV2AssistantThicknessMmForLayer({
       material,
       mode: input.mode,
       role: layer.role
@@ -876,7 +884,11 @@ function buildCandidateStack(input: {
 
   return {
     candidateId: `assistant-candidate-${input.candidateIndex + 1}`,
-    contextPatch: buildContextPatch({ layers, mode: input.mode }),
+    contextPatch: buildContextPatch({
+      assumePhysicalInputs: input.assumeMissingThicknesses,
+      layers,
+      mode: input.mode
+    }),
     label: input.label,
     layers,
     mode: input.mode,
@@ -1275,7 +1287,11 @@ function parseContextFieldCommand(input: {
   };
 }
 
-function buildWallContextPatch(layers: readonly WorkbenchV2DraftLayer[]): Partial<WorkbenchV2ContextDraft> {
+function buildWallContextPatch(input: {
+  assumePhysicalInputs?: boolean;
+  layers: readonly WorkbenchV2DraftLayer[];
+}): Partial<WorkbenchV2ContextDraft> {
+  const layers = input.layers;
   const sideAIndices = layers.flatMap((layer, index) => layer.role === "side_a" ? [index] : []);
   const cavityIndices = layers.flatMap((layer, index) => layer.role === "cavity" ? [index] : []);
   const sideBIndices = layers.flatMap((layer, index) => layer.role === "side_b" ? [index] : []);
@@ -1289,11 +1305,18 @@ function buildWallContextPatch(layers: readonly WorkbenchV2DraftLayer[]): Partia
     wallCavity1LayerIndices: formatIndexList(cavityIndices),
     wallSideALeafLayerIndices: formatIndexList(sideAIndices),
     wallSideBLeafLayerIndices: formatIndexList(sideBIndices),
+    ...(hasCavity && input.assumePhysicalInputs
+      ? {
+          supportSpacingMm: "600",
+          wallSupportTopology: "independent_frames" as const
+        }
+      : {}),
     wallTopologyMode: hasCavity ? "double_leaf_framed" : "auto"
   };
 }
 
 function buildContextPatch(input: {
+  assumePhysicalInputs?: boolean;
   layers: readonly WorkbenchV2DraftLayer[];
   mode: WorkbenchV2StudyMode;
 }): Partial<WorkbenchV2ContextDraft> {
@@ -1301,7 +1324,10 @@ function buildContextPatch(input: {
     return {};
   }
 
-  return buildWallContextPatch(input.layers);
+  return buildWallContextPatch({
+    assumePhysicalInputs: input.assumePhysicalInputs,
+    layers: input.layers
+  });
 }
 
 function parseLayerSeeds(input: {
@@ -1746,7 +1772,11 @@ export function parseWorkbenchV2AssistantLayerStackApplyCommand(input: {
 
   return {
     commandKind,
-    contextPatch: buildContextPatch({ layers, mode }),
+    contextPatch: buildContextPatch({
+      assumePhysicalInputs: assumedThicknesses !== null,
+      layers,
+      mode
+    }),
     layerCount: layers.length,
     layers,
     materialNames: parsed.parsedLayers.map((layer) => layer.material.name),

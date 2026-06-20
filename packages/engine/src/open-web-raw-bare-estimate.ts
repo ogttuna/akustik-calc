@@ -79,7 +79,7 @@ function withFieldAnchorOutputs(outputs: readonly RequestedOutputId[]): Requeste
 
 function isOpenWebSteelBaseLayer(layer: ResolvedLayer): boolean {
   return layer.material.id === "open_web_steel_floor" &&
-    (!layer.floorRole || layer.floorRole === "base_structure");
+    layer.floorRole === "base_structure";
 }
 
 function detectRawBareOpenWebCarrier(layers: readonly ResolvedLayer[]): RawBareOpenWebCarrier | null {

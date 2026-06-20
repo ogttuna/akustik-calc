@@ -17,10 +17,7 @@ import {
   type FileServerProjectRepository,
   type ProjectOwnerScope
 } from "../../lib/server-project-storage";
-import {
-  REPORT_ASSISTANT_PROJECT_READ_TOOL_DEFINITIONS,
-  type ReportAssistantProjectReadToolName
-} from "./report-assistant-project-read-contract";
+import type { ReportAssistantProjectReadToolName } from "./report-assistant-project-read-contract";
 
 export {
   REPORT_ASSISTANT_PROJECT_READ_TOOL_DEFINITIONS,

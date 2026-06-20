@@ -15,6 +15,7 @@ import {
   type SingleEntryRoleConflict
 } from "./floor-role-topology";
 import {
+  inferScheduleEquivalentCeilingBoardThicknesses,
   layersMatchPackedThicknessSchedule,
   matchesPackedThicknessSchedule
 } from "./ceiling-board-thickness-schedule";
@@ -750,25 +751,16 @@ function normalizeScheduleEquivalentCeilingBoards(
     return [...layers];
   }
 
-  const maxThicknessMm = Math.max(...ceilingBoards.map((layer) => layer.thicknessMm));
-  if (!(maxThicknessMm > 0)) {
-    return [...layers];
-  }
-
-  const totalThicknessMm = ceilingBoards.reduce((sum, layer) => sum + layer.thicknessMm, 0);
-  const packedBoardCount = Math.round(totalThicknessMm / maxThicknessMm);
-
-  if (
-    packedBoardCount <= 0 ||
-    Math.abs(totalThicknessMm - packedBoardCount * maxThicknessMm) > CEILING_BOARD_SCHEDULE_PACK_TOLERANCE_MM
-  ) {
+  const canonicalThicknessesMm = inferScheduleEquivalentCeilingBoardThicknesses(ceilingBoards);
+  if (!canonicalThicknessesMm?.length) {
     return [...layers];
   }
 
   const alreadyCanonical =
-    ceilingBoards.length === packedBoardCount &&
+    ceilingBoards.length === canonicalThicknessesMm.length &&
     ceilingBoards.every(
-      (layer) => Math.abs(layer.thicknessMm - maxThicknessMm) <= CEILING_BOARD_SCHEDULE_PACK_TOLERANCE_MM
+      (layer, index) =>
+        Math.abs(layer.thicknessMm - (canonicalThicknessesMm[index] ?? 0)) <= CEILING_BOARD_SCHEDULE_PACK_TOLERANCE_MM
     );
   if (alreadyCanonical) {
     return [...layers];
@@ -776,9 +768,9 @@ function normalizeScheduleEquivalentCeilingBoards(
 
   return [
     ...layers.slice(0, firstIndex),
-    ...Array.from({ length: packedBoardCount }, () => ({
+    ...canonicalThicknessesMm.map((thicknessMm) => ({
       ...firstBoard,
-      thicknessMm: maxThicknessMm,
+      thicknessMm,
       material: { ...firstBoard.material }
     })),
     ...layers.slice(lastIndex + 1)

@@ -271,7 +271,7 @@ describe("post-V1 wall compatible anchor-delta A-weighted field/building adapter
       candidateKind: "field_building_adapter",
       runtimeBasisId: GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
       selectedCandidateId: GATE_AR_AIRBORNE_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID,
-      supportedMetrics: expect.arrayContaining(BUILDING_OWNED_OUTPUTS),
+      supportedMetrics: expect.arrayContaining([...BUILDING_OWNED_OUTPUTS]),
       valuePins: expect.arrayContaining([
         { metric: "R'w", value: 50 },
         { metric: "Dn,w", value: 51 },

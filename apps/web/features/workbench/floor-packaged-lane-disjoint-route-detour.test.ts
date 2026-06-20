@@ -28,8 +28,8 @@ const IMPACT_FIELD_CONTEXT = {
   receivingRoomVolumeM3: 55
 };
 
-const FAIL_CLOSED_STATUSES: Record<FieldOutput, CardStatus> = {
-  Rw: "unsupported",
+const IMPACT_FAIL_CLOSED_STATUSES: Record<FieldOutput, CardStatus> = {
+  Rw: "live",
   "R'w": "live",
   "DnT,w": "live",
   "Ln,w": "unsupported",
@@ -119,7 +119,7 @@ describe("floor packaged-lane disjoint route detours", () => {
       { floorRole: "base_structure", id: "e", materialId: "composite_steel_deck", thicknessMm: 150 }
     ]);
 
-    expect(canonical.result?.floorSystemEstimate?.kind).toBe("low_confidence");
+    expect(canonical.result?.floorSystemEstimate?.kind).toBe("family_general");
     expect(hasCeilingBoardBlocker(canonical.warnings)).toBe(false);
 
     expect(disjoint.result?.floorSystemEstimate?.kind).toBe("low_confidence");
@@ -131,7 +131,7 @@ describe("floor packaged-lane disjoint route detours", () => {
     ).toBe(true);
   });
 
-  it("keeps CLT and open-box disjoint routes fail-closed with blocker copy", () => {
+  it("keeps CLT and open-box disjoint routes impact-closed with blocker copy while airborne cards stay live", () => {
     const cases = [
       {
         id: "clt-disjoint",
@@ -160,7 +160,7 @@ describe("floor packaged-lane disjoint route detours", () => {
 
       expect(scenario.result?.floorSystemEstimate, testCase.id).toBeNull();
       expect(scenario.result?.impact, testCase.id).toBeNull();
-      expect(scenario.statuses, testCase.id).toEqual(FAIL_CLOSED_STATUSES);
+      expect(scenario.statuses, testCase.id).toEqual(IMPACT_FAIL_CLOSED_STATUSES);
       expect(hasCeilingBoardBlocker(scenario.warnings), testCase.id).toBe(true);
     }
   });

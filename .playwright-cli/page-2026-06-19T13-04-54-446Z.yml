@@ -1,0 +1,492 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - generic [ref=e6]: DAC
+          - generic [ref=e7]: DynEcho
+          - generic [ref=e8]: admin
+        - generic [ref=e9]:
+          - button "Switch to dark mode" [ref=e10] [cursor=pointer]:
+            - img [ref=e11]
+            - generic [ref=e17]: Light
+          - button "Sign out" [ref=e19] [cursor=pointer]
+    - main [ref=e20]:
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - generic [ref=e23]:
+            - generic [ref=e24]:
+              - generic [ref=e25]: Calculator
+              - heading "Acoustic workbench" [level=1] [ref=e26]
+            - button "Open workspace drawer" [ref=e2334] [cursor=pointer]:
+              - img [ref=e28]
+              - generic [ref=e29]: Workspace
+              - generic [ref=e30]: Knauf W112 Diamant + mineral wool / Unsaved stack
+          - generic [ref=e31]:
+            - generic [ref=e32]: Template loaded
+            - generic [ref=e33]: Wall
+            - generic [ref=e34]: 6 layers
+            - generic [ref=e35]: 125 mm
+            - generic [ref=e36]: Ready
+        - region "Calculator workspace" [ref=e37]:
+          - generic [ref=e38]:
+            - generic [ref=e39]:
+              - heading "Setup" [level=2] [ref=e42]
+              - generic [ref=e43]:
+                - generic "Assembly mode" [ref=e44]:
+                  - button "Wall" [pressed] [ref=e45] [cursor=pointer]
+                  - button "Floor" [ref=e46] [cursor=pointer]
+                - generic [ref=e47]:
+                  - generic [ref=e48]:
+                    - checkbox "Rw Airborne" [checked] [ref=e49]
+                    - generic [ref=e50]: Rw
+                    - generic [ref=e51]: Airborne
+                  - generic [ref=e52]:
+                    - checkbox "R'w Airborne" [ref=e53]
+                    - generic [ref=e54]: R'w
+                    - generic [ref=e55]: Airborne
+                  - generic [ref=e56]:
+                    - checkbox "DnT,w Airborne" [ref=e57]
+                    - generic [ref=e58]: DnT,w
+                    - generic [ref=e59]: Airborne
+                  - generic [ref=e60]:
+                    - checkbox "STC Airborne" [checked] [active] [ref=e61]
+                    - generic [ref=e62]: STC
+                    - generic [ref=e63]: Airborne
+                  - generic [ref=e64]:
+                    - checkbox "C Spectrum" [ref=e65]
+                    - generic [ref=e66]: C
+                    - generic [ref=e67]: Spectrum
+                  - generic [ref=e68]:
+                    - checkbox "Ctr Spectrum" [ref=e69]
+                    - generic [ref=e70]: Ctr
+                    - generic [ref=e71]: Spectrum
+            - generic [ref=e1858]:
+              - heading "Route inputs" [level=2] [ref=e1861]
+              - generic [ref=e1863]:
+                - generic [ref=e1864]:
+                  - strong [ref=e1865]: Wall ownership
+                  - button "Use layer roles" [ref=e1866] [cursor=pointer]
+                - generic [ref=e1867]:
+                  - generic [ref=e1868]:
+                    - generic [ref=e1869]: Topology mode
+                    - combobox "Topology mode" [ref=e1870]:
+                      - option "Auto"
+                      - option "Double leaf / framed" [selected]
+                  - generic [ref=e1871]:
+                    - generic [ref=e1872]: Side A rows
+                    - textbox "Side A rows" [ref=e1873]:
+                      - /placeholder: "1"
+                      - text: 1, 2
+                  - generic [ref=e1874]:
+                    - generic [ref=e1875]: Cavity rows
+                    - textbox "Cavity rows" [ref=e1876]:
+                      - /placeholder: "2"
+                      - text: 3, 4
+                  - generic [ref=e1877]:
+                    - generic [ref=e1878]: Side B rows
+                    - textbox "Side B rows" [ref=e1879]:
+                      - /placeholder: "3"
+                      - text: 5, 6
+                  - generic [ref=e1880]:
+                    - generic [ref=e1881]: Cavity depth
+                    - generic [ref=e1882]:
+                      - spinbutton "Cavity depth mm" [ref=e1883]: "75"
+                      - emphasis [ref=e1884]: mm
+                  - generic [ref=e1885]:
+                    - generic [ref=e1886]: Cavity fill
+                    - combobox "Cavity fill" [ref=e1887]:
+                      - option "Unknown"
+                      - option "Empty"
+                      - option "Partial"
+                      - option "Full" [selected]
+                  - generic [ref=e1888]:
+                    - generic [ref=e1889]: Cavity absorption
+                    - combobox "Cavity absorption" [ref=e1890]:
+                      - option "Unknown"
+                      - option "None"
+                      - option "Porous absorber" [selected]
+                  - generic [ref=e1891]:
+                    - generic [ref=e1892]: Support topology
+                    - combobox "Support topology" [ref=e1893]:
+                      - option "Unknown"
+                      - option "Independent frames"
+                      - option "Single shared stud" [selected]
+                      - option "Twin frame"
+                      - option "Resilient channel"
+                      - option "Direct fixed"
+                  - generic [ref=e1894]:
+                    - generic [ref=e1895]: Support spacing
+                    - generic [ref=e1896]:
+                      - spinbutton "Support spacing mm" [ref=e1897]: "600"
+                      - emphasis [ref=e1898]: mm
+                  - generic [ref=e1899]:
+                    - generic [ref=e1900]: Resilient bars
+                    - combobox "Resilient bars" [ref=e1901]:
+                      - option "Auto" [selected]
+                      - option "One side"
+                      - option "Both sides"
+            - generic [ref=e72]:
+              - generic [ref=e73]:
+                - heading "Layer stack" [level=2] [ref=e75]
+                - generic [ref=e76]:
+                  - button "Undo layer change" [disabled] [ref=e77]:
+                    - img [ref=e78]
+                  - button "Materials" [ref=e81] [cursor=pointer]:
+                    - img [ref=e82]
+                    - text: Materials
+                  - button "Add layer" [ref=e88] [cursor=pointer]:
+                    - img [ref=e89]
+                    - text: Add layer
+              - generic [ref=e90]:
+                - generic [ref=e91]:
+                  - generic [ref=e92]: Material
+                  - generic [ref=e93]: Role
+                  - generic [ref=e94]: Thickness
+                  - generic [ref=e95]: Actions
+                - article [ref=e1902]:
+                  - generic [ref=e1903]:
+                    - button "Drag layer 1" [ref=e1904] [cursor=pointer]:
+                      - img [ref=e1905]
+                    - button "Select layer 1" [ref=e1912] [cursor=pointer]: "1"
+                  - generic [ref=e1913]:
+                    - generic [ref=e1914]:
+                      - generic [ref=e1915]: Material
+                      - button "Diamond Board 1024 kg/m3 / finish" [ref=e1916] [cursor=pointer]:
+                        - strong [ref=e1917]: Diamond Board
+                        - generic [ref=e1918]: 1024 kg/m3 / finish
+                    - generic [ref=e1919]:
+                      - generic [ref=e1920]: Role
+                      - combobox "Role" [ref=e1921]:
+                        - option "Side A" [selected]
+                        - option "Cavity"
+                        - option "Core"
+                        - option "Support"
+                        - option "Side B"
+                    - generic [ref=e1922]:
+                      - generic [ref=e1923]: Thickness
+                      - generic [ref=e1924]:
+                        - spinbutton "Thickness mm" [ref=e1925]: "12.5"
+                        - emphasis [ref=e1926]: mm
+                  - generic [ref=e1927]:
+                    - button "Move layer up" [disabled] [ref=e1928]:
+                      - img [ref=e1929]
+                    - button "Move layer down" [ref=e1931] [cursor=pointer]:
+                      - img [ref=e1932]
+                    - button "Duplicate layer" [ref=e1934] [cursor=pointer]:
+                      - img [ref=e1935]
+                    - button "Remove layer" [ref=e1938] [cursor=pointer]:
+                      - img [ref=e1939]
+                - article [ref=e1942]:
+                  - generic [ref=e1943]:
+                    - button "Drag layer 2" [ref=e1944] [cursor=pointer]:
+                      - img [ref=e1945]
+                    - button "Select layer 2" [ref=e1952] [cursor=pointer]: "2"
+                  - generic [ref=e1953]:
+                    - generic [ref=e1954]:
+                      - generic [ref=e1955]: Material
+                      - button "Diamond Board 1024 kg/m3 / finish" [ref=e1956] [cursor=pointer]:
+                        - strong [ref=e1957]: Diamond Board
+                        - generic [ref=e1958]: 1024 kg/m3 / finish
+                    - generic [ref=e1959]:
+                      - generic [ref=e1960]: Role
+                      - combobox "Role" [ref=e1961]:
+                        - option "Side A" [selected]
+                        - option "Cavity"
+                        - option "Core"
+                        - option "Support"
+                        - option "Side B"
+                    - generic [ref=e1962]:
+                      - generic [ref=e1963]: Thickness
+                      - generic [ref=e1964]:
+                        - spinbutton "Thickness mm" [ref=e1965]: "12.5"
+                        - emphasis [ref=e1966]: mm
+                  - generic [ref=e1967]:
+                    - button "Move layer up" [ref=e1968] [cursor=pointer]:
+                      - img [ref=e1969]
+                    - button "Move layer down" [ref=e1971] [cursor=pointer]:
+                      - img [ref=e1972]
+                    - button "Duplicate layer" [ref=e1974] [cursor=pointer]:
+                      - img [ref=e1975]
+                    - button "Remove layer" [ref=e1978] [cursor=pointer]:
+                      - img [ref=e1979]
+                - article [ref=e1982]:
+                  - generic [ref=e1983]:
+                    - button "Drag layer 3" [ref=e1984] [cursor=pointer]:
+                      - img [ref=e1985]
+                    - button "Select layer 3" [ref=e1992] [cursor=pointer]: "3"
+                  - generic [ref=e1993]:
+                    - generic [ref=e1994]:
+                      - generic [ref=e1995]: Material
+                      - button "Air Gap 0 kg/m3 / gap" [ref=e1996] [cursor=pointer]:
+                        - strong [ref=e1997]: Air Gap
+                        - generic [ref=e1998]: 0 kg/m3 / gap
+                    - generic [ref=e1999]:
+                      - generic [ref=e2000]: Role
+                      - combobox "Role" [ref=e2001]:
+                        - option "Side A"
+                        - option "Cavity" [selected]
+                        - option "Core"
+                        - option "Support"
+                        - option "Side B"
+                    - generic [ref=e2002]:
+                      - generic [ref=e2003]: Thickness
+                      - generic [ref=e2004]:
+                        - spinbutton "Thickness mm" [ref=e2005]: "5"
+                        - emphasis [ref=e2006]: mm
+                  - generic [ref=e2007]:
+                    - button "Move layer up" [ref=e2008] [cursor=pointer]:
+                      - img [ref=e2009]
+                    - button "Move layer down" [ref=e2011] [cursor=pointer]:
+                      - img [ref=e2012]
+                    - button "Duplicate layer" [ref=e2014] [cursor=pointer]:
+                      - img [ref=e2015]
+                    - button "Remove layer" [ref=e2018] [cursor=pointer]:
+                      - img [ref=e2019]
+                - article [ref=e2022]:
+                  - generic [ref=e2023]:
+                    - button "Drag layer 4" [ref=e2024] [cursor=pointer]:
+                      - img [ref=e2025]
+                    - button "Select layer 4" [ref=e2032] [cursor=pointer]: "4"
+                  - generic [ref=e2033]:
+                    - generic [ref=e2034]:
+                      - generic [ref=e2035]: Material
+                      - button "Glass Wool Board 30 kg/m3 / insulation" [ref=e2036] [cursor=pointer]:
+                        - strong [ref=e2037]: Glass Wool Board
+                        - generic [ref=e2038]: 30 kg/m3 / insulation
+                    - generic [ref=e2039]:
+                      - generic [ref=e2040]: Role
+                      - combobox "Role" [ref=e2041]:
+                        - option "Side A"
+                        - option "Cavity" [selected]
+                        - option "Core"
+                        - option "Support"
+                        - option "Side B"
+                    - generic [ref=e2042]:
+                      - generic [ref=e2043]: Thickness
+                      - generic [ref=e2044]:
+                        - spinbutton "Thickness mm" [ref=e2045]: "70"
+                        - emphasis [ref=e2046]: mm
+                  - generic [ref=e2047]:
+                    - button "Move layer up" [ref=e2048] [cursor=pointer]:
+                      - img [ref=e2049]
+                    - button "Move layer down" [ref=e2051] [cursor=pointer]:
+                      - img [ref=e2052]
+                    - button "Duplicate layer" [ref=e2054] [cursor=pointer]:
+                      - img [ref=e2055]
+                    - button "Remove layer" [ref=e2058] [cursor=pointer]:
+                      - img [ref=e2059]
+                - article [ref=e2062]:
+                  - generic [ref=e2063]:
+                    - button "Drag layer 5" [ref=e2064] [cursor=pointer]:
+                      - img [ref=e2065]
+                    - button "Select layer 5" [ref=e2072] [cursor=pointer]: "5"
+                  - generic [ref=e2073]:
+                    - generic [ref=e2074]:
+                      - generic [ref=e2075]: Material
+                      - button "Diamond Board 1024 kg/m3 / finish" [ref=e2076] [cursor=pointer]:
+                        - strong [ref=e2077]: Diamond Board
+                        - generic [ref=e2078]: 1024 kg/m3 / finish
+                    - generic [ref=e2079]:
+                      - generic [ref=e2080]: Role
+                      - combobox "Role" [ref=e2081]:
+                        - option "Side A"
+                        - option "Cavity"
+                        - option "Core"
+                        - option "Support"
+                        - option "Side B" [selected]
+                    - generic [ref=e2082]:
+                      - generic [ref=e2083]: Thickness
+                      - generic [ref=e2084]:
+                        - spinbutton "Thickness mm" [ref=e2085]: "12.5"
+                        - emphasis [ref=e2086]: mm
+                  - generic [ref=e2087]:
+                    - button "Move layer up" [ref=e2088] [cursor=pointer]:
+                      - img [ref=e2089]
+                    - button "Move layer down" [ref=e2091] [cursor=pointer]:
+                      - img [ref=e2092]
+                    - button "Duplicate layer" [ref=e2094] [cursor=pointer]:
+                      - img [ref=e2095]
+                    - button "Remove layer" [ref=e2098] [cursor=pointer]:
+                      - img [ref=e2099]
+                - article [ref=e2102]:
+                  - generic [ref=e2103]:
+                    - button "Drag layer 6" [ref=e2104] [cursor=pointer]:
+                      - img [ref=e2105]
+                    - button "Select layer 6" [ref=e2112] [cursor=pointer]: "6"
+                  - generic [ref=e2113]:
+                    - generic [ref=e2114]:
+                      - generic [ref=e2115]: Material
+                      - button "Diamond Board 1024 kg/m3 / finish" [ref=e2116] [cursor=pointer]:
+                        - strong [ref=e2117]: Diamond Board
+                        - generic [ref=e2118]: 1024 kg/m3 / finish
+                    - generic [ref=e2119]:
+                      - generic [ref=e2120]: Role
+                      - combobox "Role" [ref=e2121]:
+                        - option "Side A"
+                        - option "Cavity"
+                        - option "Core"
+                        - option "Support"
+                        - option "Side B" [selected]
+                    - generic [ref=e2122]:
+                      - generic [ref=e2123]: Thickness
+                      - generic [ref=e2124]:
+                        - spinbutton "Thickness mm" [ref=e2125]: "12.5"
+                        - emphasis [ref=e2126]: mm
+                  - generic [ref=e2127]:
+                    - button "Move layer up" [ref=e2128] [cursor=pointer]:
+                      - img [ref=e2129]
+                    - button "Move layer down" [disabled] [ref=e2131]:
+                      - img [ref=e2132]
+                    - button "Duplicate layer" [ref=e2134] [cursor=pointer]:
+                      - img [ref=e2135]
+                    - button "Remove layer" [ref=e2138] [cursor=pointer]:
+                      - img [ref=e2139]
+            - generic [ref=e216]:
+              - generic [ref=e217]:
+                - generic [ref=e218]:
+                  - generic [ref=e219]: Wall section
+                  - heading "Wall construction preview" [level=3] [ref=e220]
+                - generic [ref=e221]:
+                  - generic [ref=e222]: 6 layers
+                  - generic [ref=e223]: /125 mm
+              - generic [ref=e224]:
+                - figure "wall construction section" [ref=e225]:
+                  - img [ref=e226]:
+                    - generic [ref=e229]: Side A
+                    - generic [ref=e230]: Side B
+                    - generic [ref=e2148]: "1"
+                    - generic [ref=e2155]: "2"
+                    - generic [ref=e2164]: "3"
+                    - generic [ref=e2178]: "4"
+                    - generic [ref=e2185]: "5"
+                    - generic [ref=e2192]: "6"
+                    - generic [ref=e265]: 125 mm
+                - generic "Technical layer schedule" [ref=e266]:
+                  - generic [ref=e267]:
+                    - generic [ref=e268]: Technical layer schedule
+                    - strong [ref=e269]: "Selected: Diamond Board"
+                  - list [ref=e270]:
+                    - listitem [ref=e2193]:
+                      - generic [ref=e2194]: "1"
+                      - generic [ref=e2195]:
+                        - strong [ref=e2196]: Diamond Board
+                        - generic [ref=e2197]: Side A
+                      - generic [ref=e2198]: 12.5 mm
+                    - listitem [ref=e2199]:
+                      - generic [ref=e2200]: "2"
+                      - generic [ref=e2201]:
+                        - strong [ref=e2202]: Diamond Board
+                        - generic [ref=e2203]: Side A
+                      - generic [ref=e2204]: 12.5 mm
+                    - listitem [ref=e2205]:
+                      - generic [ref=e2206]: "3"
+                      - generic [ref=e2207]:
+                        - strong [ref=e2208]: Air Gap
+                        - generic [ref=e2209]: Cavity
+                      - generic [ref=e2210]: 5 mm
+                    - listitem [ref=e2211]:
+                      - generic [ref=e2212]: "4"
+                      - generic [ref=e2213]:
+                        - strong [ref=e2214]: Glass Wool Board
+                        - generic [ref=e2215]: Cavity
+                      - generic [ref=e2216]: 70 mm
+                    - listitem [ref=e2217]:
+                      - generic [ref=e2218]: "5"
+                      - generic [ref=e2219]:
+                        - strong [ref=e2220]: Diamond Board
+                        - generic [ref=e2221]: Side B
+                      - generic [ref=e2222]: 12.5 mm
+                    - listitem [ref=e2223]:
+                      - generic [ref=e2224]: "6"
+                      - generic [ref=e2225]:
+                        - strong [ref=e2226]: Diamond Board
+                        - generic [ref=e2227]: Side B
+                      - generic [ref=e2228]: 12.5 mm
+          - complementary "Calculation review" [ref=e289]:
+            - generic [ref=e290]:
+              - generic [ref=e291]: Current result
+              - strong [ref=e292]: 51 dB
+              - paragraph [ref=e293]: "Rw: Calculated"
+            - generic [ref=e294]:
+              - generic [ref=e295]:
+                - heading "Outputs" [level=2] [ref=e296]
+                - generic [ref=e297]: "2"
+              - generic [ref=e298]:
+                - generic [ref=e299]:
+                  - generic [ref=e300]:
+                    - strong [ref=e301]: Rw
+                    - generic [ref=e302]: Calculated
+                  - emphasis [ref=e303]: 51 dB
+                - generic [ref=e2357]:
+                  - generic [ref=e2358]:
+                    - strong [ref=e2359]: STC
+                    - generic [ref=e2360]: Calculated
+                  - emphasis [ref=e2361]: 51 dB
+            - generic [ref=e304]:
+              - generic [ref=e305]:
+                - heading "Assistant preview" [level=2] [ref=e306]
+                - button "Run" [ref=e307] [cursor=pointer]:
+                  - img [ref=e308]
+                  - text: Run
+              - generic [ref=e311]:
+                - generic [ref=e312]:
+                  - generic [ref=e313]: Stack command
+                  - textbox "Stack command" [ref=e314]:
+                    - /placeholder: Ekrandaki katmanların kalınlıklarını mantıklı gir
+                - button "Run" [disabled] [ref=e316]:
+                  - img [ref=e317]
+                  - text: Run
+            - article [ref=e2363]:
+              - generic [ref=e2364]:
+                - generic [ref=e2365]:
+                  - generic [ref=e2366]: Airborne spectrum
+                  - heading "Airborne response curve" [level=3] [ref=e2367]
+                - generic [ref=e2368]:
+                  - generic [ref=e2369]: Dynamic topology
+                  - generic [ref=e2370]: 63..4000 Hz
+                  - generic [ref=e2371]: Higher is better
+              - generic "Frequency bands" [ref=e2372]:
+                - generic [ref=e2373]: "Low: 63-250 Hz"
+                - generic [ref=e2374]: "Speech: 500-1k Hz"
+                - generic [ref=e2375]: "High: 2k-4k Hz"
+              - paragraph [ref=e2376]: Curve returned by the dynamic calculator for the active layer topology.
+              - img "Airborne response curve, Higher is better" [ref=e2377]:
+                - application [ref=e2380]:
+                  - generic [ref=e2418]:
+                    - generic [ref=e2419]:
+                      - generic [ref=e2421]: "63"
+                      - generic [ref=e2423]: "100"
+                      - generic [ref=e2425]: "160"
+                      - generic [ref=e2427]: "250"
+                      - generic [ref=e2429]: "400"
+                      - generic [ref=e2431]: "630"
+                      - generic [ref=e2433]: 1k
+                      - generic [ref=e2435]: 1.60k
+                      - generic [ref=e2437]: 2.5k
+                      - generic [ref=e2439]: 4k
+                    - generic [ref=e2440]:
+                      - generic [ref=e2442]: "20"
+                      - generic [ref=e2444]: "35"
+                      - generic [ref=e2446]: "50"
+                      - generic [ref=e2448]: "65"
+                      - generic [ref=e2450]: "75"
+                    - generic [ref=e2451]: Level (dB)
+            - generic [ref=e320]:
+              - heading "Report handoff" [level=2] [ref=e322]
+              - generic [ref=e2452]:
+                - button "Choose project" [ref=e2453] [cursor=pointer]:
+                  - img [ref=e2454]
+                  - text: Choose project
+                - button "Save as template" [ref=e2458] [cursor=pointer]:
+                  - img [ref=e2459]
+                  - text: Save as template
+                - button "Open report" [ref=e2461] [cursor=pointer]:
+                  - img [ref=e2462]
+                  - text: Open report
+                  - img [ref=e2465]
+  - button "Open Next.js Dev Tools" [ref=e437] [cursor=pointer]:
+    - img [ref=e438]
+  - alert [ref=e441]
+  - region "Notifications alt+T"
+  - generic [ref=e442]: "20"

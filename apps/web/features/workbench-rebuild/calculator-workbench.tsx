@@ -39,6 +39,28 @@ import { toast } from "sonner";
 
 import { buildWorkbenchResponseCurveFigures } from "../workbench/response-curve-model";
 import {
+  buildReportAssistantContext,
+  type ReportAssistantContext
+} from "../workbench/report-assistant-context";
+import {
+  buildReportAssistantCurrentCalculatorReviewPacketFromCalculatorPreview,
+  type ReportAssistantCurrentCalculatorReviewPacket
+} from "../workbench/report-assistant-current-calculator-review-packet";
+import {
+  buildReportAssistantSourceBackedReportOverridePatch,
+  type ReportAssistantPlausibilityReview
+} from "../workbench/report-assistant-plausibility";
+import {
+  applyValidatedReportAssistantPatch,
+  validateReportAssistantPatch,
+  type ReportAssistantPatchValidationResult
+} from "../workbench/report-assistant-patch";
+import { AssistantResultCard } from "../workbench/report-assistant-result-card";
+import {
+  validateReportAssistantResultEnvelope,
+  type ReportAssistantResultEnvelope
+} from "../workbench/report-assistant-result-contract";
+import {
   confirmReportAssistantWorkbenchApplyProposal,
   type ReportAssistantWorkbenchConfirmedApplyPayload
 } from "../workbench/report-assistant-workbench-confirmed-apply";
@@ -52,6 +74,7 @@ import {
 } from "../workbench/simple-workbench-proposal";
 import {
   storeSimpleWorkbenchProposalPreview,
+  storeSimpleWorkbenchProposalPreviewCustomizations,
   type SimpleWorkbenchProposalPreviewProjectContext
 } from "../workbench/simple-workbench-proposal-preview-storage";
 import { MaterialEditorPanel } from "./material-editor-panel";
@@ -175,6 +198,44 @@ type CalculatorAssistantCandidateComparisonState =
       status: "ready";
     }
   | { message: string; status: "error" };
+type CalculatorAssistantSourceReviewState =
+  | { status: "idle" }
+  | { status: "loading" }
+  | {
+      preview: WorkbenchV2CalculatorAssistantPreview;
+      result: ReportAssistantResultEnvelope;
+      review: ReportAssistantPlausibilityReview;
+      source: "context" | "research_provider" | null;
+      status: "ready";
+      warnings: readonly string[];
+    }
+  | {
+      message: string;
+      preview?: WorkbenchV2CalculatorAssistantPreview;
+      result?: ReportAssistantResultEnvelope;
+      status: "error";
+      warnings: readonly string[];
+    };
+type CalculatorAssistantReportOverrideTarget = {
+  document: SimpleWorkbenchProposalDocument;
+  projectContext: SimpleWorkbenchProposalPreviewProjectContext;
+  reportId: string;
+  reportName: string;
+  reportUpdatedAtIso: string;
+  assistantContext: ReportAssistantContext;
+};
+type CalculatorAssistantReportOverrideProposalState =
+  | { status: "idle" }
+  | { status: "loading" }
+  | { message: string; status: "blocked" }
+  | {
+      review: ReportAssistantPlausibilityReview;
+      status: "ready";
+      target: CalculatorAssistantReportOverrideTarget;
+      validation: ReportAssistantPatchValidationResult;
+    }
+  | { message: string; reportId?: string; reportName?: string; status: "applied" }
+  | { message: string; status: "error" };
 type OutputStatus = "live" | "needs_input" | "unsupported" | "pending";
 type RouteInputEffectivenessStatus = "defaulted" | "inactive" | "needed" | "used";
 type RouteInputEffectiveness = {
@@ -289,6 +350,208 @@ const OUTPUT_OPTIONS: readonly OutputOption[] = [
   { group: "Impact", id: "CI", label: "CI", modes: ["floor"] },
   { group: "Impact", id: "CI,50-2500", label: "CI,50", modes: ["floor"] }
 ];
+
+const CALCULATOR_SOURCE_REVIEW_RESEARCH_PATTERN =
+  /\b(?:analiz|analyze|arastir|bak|check|comment|compare|degerlendir|evaluate|google|incele|internet|karsilastir|kaynak|kontrol|net|netten|referans|reference|research|review|search|source|web|yorumla)\b/u;
+const CALCULATOR_SOURCE_REVIEW_QUESTION_PATTERN =
+  /\b(?:az|dogru|dusuk|fazla|garip|high|low|makul|mantikli|midir|mi|mu|mudur|nasil|normal|plausible|reasonable|right|sence|supheli|too\s+high|too\s+low|valid|wrong|yanlis|yuksek)\b/u;
+const CALCULATOR_SOURCE_REVIEW_VALUE_PATTERN =
+  /\b(?:db|deger|desibel|metric|output|performans|result|sonuc|value)\b/u;
+const CALCULATOR_SOURCE_REVIEW_REPORT_CONFIRM_PATTERN =
+  /\b(?:apply|bana\s+sor|confirm|editleyeyim\s+mi|editleyim\s+mi|onay|onayla|onaylarsam|rapor|rapora|report|sor|uygula|uygulayayim\s+mi|uygulayayım\s+mi|yazayim\s+mi|yazayım\s+mi)\b/u;
+const CALCULATOR_SOURCE_REVIEW_DIRECT_VALUE_OVERRIDE_PATTERN =
+  /\b(?:apply|ayarla|change|degistir|editle|make|olsun|replace|set|target|uygula|yap|yaz)\b/u;
+const CALCULATOR_SOURCE_REVIEW_VALUE_EXPECTATION_PATTERN =
+  /\b(?:dogru\s+cevap|must\s+be|olmali|olmasi\s+gerek|should\s+be)\b/u;
+const CALCULATOR_SOURCE_REVIEW_NUMERIC_TARGET_PATTERN =
+  /\b\d+(?:[.,]\d+)?\s*(?:db)?\b/u;
+
+export type CalculatorAssistantCommandRoutingDecision =
+  | {
+      confidence: "high" | "medium";
+      reason: "current_value_review" | "explicit_source_review";
+      status: "source_review";
+    }
+  | {
+      confidence: "high" | "medium";
+      reason: "report_override_confirmation";
+      status: "report_override_request";
+    }
+  | {
+      confidence: "high" | "medium";
+      message: string;
+      reason: "direct_calculator_value_override";
+      status: "clarify";
+    }
+  | {
+      confidence: "medium";
+      reason: "calculator_draft_mutation";
+      status: "layer_mutation";
+    };
+
+function normalizeCalculatorAssistantReviewText(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/ı/gu, "i")
+    .replace(/ç/gu, "c")
+    .replace(/ğ/gu, "g")
+    .replace(/ö/gu, "o")
+    .replace(/ş/gu, "s")
+    .replace(/ü/gu, "u")
+    .replace(/[^a-z0-9']+/gu, " ")
+    .trim();
+}
+
+function compactCalculatorAssistantMetricText(value: string): string {
+  return normalizeCalculatorAssistantReviewText(value).replace(/[^a-z0-9]+/gu, "");
+}
+
+function outputAliasesForSourceReview(output: RequestedOutputId): readonly string[] {
+  const option = OUTPUT_OPTIONS.find((entry) => entry.id === output);
+  return [
+    output,
+    option?.label,
+    output.replace(/^output:/u, "")
+  ].filter((entry): entry is string => Boolean(entry));
+}
+
+function instructionMentionsCalculatorOutput(input: {
+  instruction: string;
+  outputs?: readonly RequestedOutputId[];
+}): boolean {
+  const instructionCompact = compactCalculatorAssistantMetricText(input.instruction);
+  const outputs = input.outputs?.length ? input.outputs : OUTPUT_OPTIONS.map((option) => option.id);
+
+  return outputs.some((output) =>
+    outputAliasesForSourceReview(output).some((alias) => {
+      const aliasCompact = compactCalculatorAssistantMetricText(alias);
+      return aliasCompact.length > 1 && instructionCompact.includes(aliasCompact);
+    })
+  );
+}
+
+export function isCalculatorAssistantSourceReviewCommand(input: {
+  instruction: string;
+  selectedOutputs?: readonly RequestedOutputId[];
+}): boolean {
+  const decision = classifyCalculatorAssistantCommandRouting(input);
+  return decision.status === "source_review" || decision.status === "report_override_request";
+}
+
+export function classifyCalculatorAssistantCommandRouting(input: {
+  instruction: string;
+  selectedOutputs?: readonly RequestedOutputId[];
+}): CalculatorAssistantCommandRoutingDecision {
+  const normalized = normalizeCalculatorAssistantReviewText(input.instruction);
+  const asksForReview = CALCULATOR_SOURCE_REVIEW_QUESTION_PATTERN.test(normalized);
+  const asksForResearch = CALCULATOR_SOURCE_REVIEW_RESEARCH_PATTERN.test(normalized);
+  const asksForReportOverrideConfirmation = CALCULATOR_SOURCE_REVIEW_REPORT_CONFIRM_PATTERN.test(normalized);
+  const mentionsValue = CALCULATOR_SOURCE_REVIEW_VALUE_PATTERN.test(normalized);
+  const mentionsOutput = instructionMentionsCalculatorOutput({
+    instruction: input.instruction,
+    outputs: input.selectedOutputs
+  }) || instructionMentionsCalculatorOutput({
+    instruction: input.instruction
+  });
+  const hasNumericTarget = CALCULATOR_SOURCE_REVIEW_NUMERIC_TARGET_PATTERN.test(normalized);
+  const hasDirectValueOverrideVerb = CALCULATOR_SOURCE_REVIEW_DIRECT_VALUE_OVERRIDE_PATTERN.test(normalized);
+  const hasValueExpectation = CALCULATOR_SOURCE_REVIEW_VALUE_EXPECTATION_PATTERN.test(normalized);
+  const hasCurrentOutputContext = mentionsOutput || (Boolean(input.selectedOutputs?.length) && mentionsValue);
+  const isValueExpectationReview =
+    hasCurrentOutputContext &&
+    hasNumericTarget &&
+    hasValueExpectation &&
+    asksForReview &&
+    !asksForReportOverrideConfirmation;
+  const isDirectCalculatorValueOverride =
+    hasCurrentOutputContext &&
+    hasNumericTarget &&
+    (hasDirectValueOverrideVerb || hasValueExpectation) &&
+    !asksForReview &&
+    !asksForResearch &&
+    !asksForReportOverrideConfirmation;
+
+  if (isValueExpectationReview) {
+    return {
+      confidence: "high",
+      reason: "current_value_review",
+      status: "source_review"
+    };
+  }
+
+  if (isDirectCalculatorValueOverride) {
+    return {
+      confidence: "high",
+      message: "Calculator values are computed by the calculator. I can review the value against sources or prepare a report-only edit after a source-backed review, but I will not set the calculator result directly.",
+      reason: "direct_calculator_value_override",
+      status: "clarify"
+    };
+  }
+
+  if (
+    asksForReportOverrideConfirmation &&
+    (mentionsOutput || mentionsValue || Boolean(input.selectedOutputs?.length)) &&
+    (asksForReview || asksForResearch || mentionsValue || hasNumericTarget)
+  ) {
+    return {
+      confidence: "high",
+      reason: "report_override_confirmation",
+      status: "report_override_request"
+    };
+  }
+
+  if (
+    (asksForReview && (mentionsValue || mentionsOutput) && (asksForResearch || /\?/u.test(input.instruction))) ||
+    (asksForResearch && (mentionsValue || mentionsOutput))
+  ) {
+    return {
+      confidence: asksForResearch ? "high" : "medium",
+      reason: asksForResearch ? "explicit_source_review" : "current_value_review",
+      status: "source_review"
+    };
+  }
+
+  return {
+    confidence: "medium",
+    reason: "calculator_draft_mutation",
+    status: "layer_mutation"
+  };
+}
+
+function shouldRequestCalculatorAssistantSourceResearch(instruction: string): boolean {
+  const decision = classifyCalculatorAssistantCommandRouting({ instruction });
+  return decision.status === "report_override_request" ||
+    CALCULATOR_SOURCE_REVIEW_RESEARCH_PATTERN.test(normalizeCalculatorAssistantReviewText(instruction));
+}
+
+export function resolveCalculatorAssistantSourceReviewOutputId(input: {
+  availableOutputs: readonly RequestedOutputId[];
+  fallbackOutput?: RequestedOutputId;
+  instruction: string;
+}): RequestedOutputId | undefined {
+  const explicit = input.availableOutputs.find((output) =>
+    instructionMentionsCalculatorOutput({
+      instruction: input.instruction,
+      outputs: [output]
+    })
+  );
+
+  return explicit ?? input.fallbackOutput ?? input.availableOutputs[0];
+}
+
+export function buildCalculatorAssistantSourceReviewSnapshot(input: {
+  outputId?: RequestedOutputId;
+  snapshot: WorkbenchV2ProjectSnapshot;
+}): WorkbenchV2ProjectSnapshot {
+  if (!input.outputId || input.snapshot.selectedOutputs.includes(input.outputId)) {
+    return input.snapshot;
+  }
+
+  return {
+    ...input.snapshot,
+    selectedOutputs: [...input.snapshot.selectedOutputs, input.outputId]
+  };
+}
 
 const FLOOR_ROLES: readonly { label: string; value: FloorRole }[] = [
   { label: "Base", value: "base_structure" },
@@ -1828,6 +2091,72 @@ function parseCalculatorAssistantPreviewPayload(payload: unknown): WorkbenchV2Ca
   return preview as WorkbenchV2CalculatorAssistantPreview;
 }
 
+function parseCalculatorAssistantSourceReviewMessage(payload: unknown): string {
+  if (isObjectRecord(payload)) {
+    if (Array.isArray(payload.errors)) {
+      const errors = payload.errors.filter((entry): entry is string => typeof entry === "string" && entry.trim().length > 0);
+      if (errors.length) {
+        return errors.join("; ");
+      }
+    }
+
+    if (typeof payload.error === "string" && payload.error.trim()) {
+      return payload.error;
+    }
+  }
+
+  return "Current calculator source review failed.";
+}
+
+function parseCalculatorAssistantSourceReviewWarnings(payload: unknown): string[] {
+  return isObjectRecord(payload) && Array.isArray(payload.warnings)
+    ? payload.warnings.filter((entry): entry is string => typeof entry === "string" && entry.trim().length > 0)
+    : [];
+}
+
+function parseCalculatorAssistantSourceReviewSource(payload: unknown): "context" | "research_provider" | null {
+  if (!isObjectRecord(payload)) {
+    return null;
+  }
+
+  return payload.source === "context" || payload.source === "research_provider" ? payload.source : null;
+}
+
+function parseCalculatorAssistantSourceReviewResult(payload: unknown): ReportAssistantResultEnvelope | null {
+  const firstResult = isObjectRecord(payload) && Array.isArray(payload.assistantResults)
+    ? payload.assistantResults.find(isObjectRecord)
+    : null;
+
+  if (!firstResult) {
+    return null;
+  }
+
+  const validation = validateReportAssistantResultEnvelope(firstResult as ReportAssistantResultEnvelope);
+  return validation.ok ? validation.envelope : null;
+}
+
+function parseCalculatorAssistantSourceReviewReview(payload: unknown): ReportAssistantPlausibilityReview | null {
+  if (!isObjectRecord(payload) || !isObjectRecord(payload.review)) {
+    return null;
+  }
+
+  const review = payload.review;
+  if (
+    typeof review.metricId !== "string" ||
+    typeof review.metric !== "string" ||
+    typeof review.valueReviewed !== "string" ||
+    typeof review.verdict !== "string" ||
+    typeof review.comparability !== "string" ||
+    typeof review.sourceQuality !== "string" ||
+    !Array.isArray(review.sources) ||
+    !Array.isArray(review.rationale)
+  ) {
+    return null;
+  }
+
+  return review as ReportAssistantPlausibilityReview;
+}
+
 function parseCalculatorAssistantCommandIntentError(payload: unknown): string {
   if (isObjectRecord(payload)) {
     if (Array.isArray(payload.errors)) {
@@ -1963,6 +2292,80 @@ async function requestCalculatorAssistantPreview(input: {
   }
 
   return preview;
+}
+
+async function requestCalculatorAssistantSourceReview(input: {
+  instruction: string;
+  packet: ReportAssistantCurrentCalculatorReviewPacket;
+  research: boolean;
+  signal: AbortSignal;
+}): Promise<{
+  message?: string;
+  ok: boolean;
+  result?: ReportAssistantResultEnvelope;
+  review?: ReportAssistantPlausibilityReview;
+  source: "context" | "research_provider" | null;
+  warnings: readonly string[];
+}> {
+  const response = await fetch("/api/report-assistant/plausibility", {
+    body: JSON.stringify({
+      currentCalculatorReviewPacket: input.packet,
+      review: {
+        metricId: input.packet.metric.metricId,
+        research: input.research,
+        sources: [],
+        suggestPatch: false,
+        userInstruction: input.instruction
+      }
+    }),
+    headers: {
+      "Content-Type": "application/json"
+    },
+    method: "POST",
+    signal: input.signal
+  });
+  let payload: unknown = null;
+
+  try {
+    payload = await response.json();
+  } catch {
+    payload = null;
+  }
+
+  const result = parseCalculatorAssistantSourceReviewResult(payload);
+  const review = parseCalculatorAssistantSourceReviewReview(payload);
+  const source = parseCalculatorAssistantSourceReviewSource(payload);
+  const warnings = parseCalculatorAssistantSourceReviewWarnings(payload);
+
+  if (!response.ok) {
+    return {
+      message: parseCalculatorAssistantSourceReviewMessage(payload),
+      ok: false,
+      ...(result ? { result } : {}),
+      ...(review ? { review } : {}),
+      source,
+      warnings
+    };
+  }
+
+  if (!result || !review) {
+    return {
+      message: "Current calculator source review response is incomplete.",
+      ok: false,
+      ...(result ? { result } : {}),
+      ...(review ? { review } : {}),
+      source,
+      warnings
+    };
+  }
+
+  return {
+    ok: true,
+    result,
+    review,
+    source,
+    warnings
+  };
 }
 
 function parseCalculatorAssistantOutputNumber(value: string): number | null {
@@ -2577,6 +2980,10 @@ export function CalculatorWorkbench() {
   const [calculatorAssistantCommandPending, setCalculatorAssistantCommandPending] = useState(false);
   const [calculatorAssistantCommandMessage, setCalculatorAssistantCommandMessage] = useState<CalculatorAssistantCommandMessage | null>(null);
   const [calculatorAssistantCandidateStacks, setCalculatorAssistantCandidateStacks] = useState<readonly WorkbenchV2AssistantLayerStackCandidateStack[]>([]);
+  const [calculatorAssistantSourceReviewState, setCalculatorAssistantSourceReviewState] =
+    useState<CalculatorAssistantSourceReviewState>({ status: "idle" });
+  const [calculatorAssistantReportOverrideProposalState, setCalculatorAssistantReportOverrideProposalState] =
+    useState<CalculatorAssistantReportOverrideProposalState>({ status: "idle" });
   const [calculatorAssistantWorkbenchApplyProposal, setCalculatorAssistantWorkbenchApplyProposal] =
     useState<ReportAssistantWorkbenchApplyProposal | null>(null);
   const [calculatorAssistantCandidateComparisonState, setCalculatorAssistantCandidateComparisonState] =
@@ -2618,6 +3025,8 @@ export function CalculatorWorkbench() {
   const calculatorAssistantPreviewSnapshotRef = useRef<WorkbenchV2ProjectSnapshot | null>(null);
   const calculatorAssistantPreviewRequestRef = useRef(0);
   const calculatorAssistantPreviewAbortRef = useRef<AbortController | null>(null);
+  const calculatorAssistantSourceReviewRequestRef = useRef(0);
+  const calculatorAssistantSourceReviewAbortRef = useRef<AbortController | null>(null);
   const calculatorAssistantCandidateBatchRequestRef = useRef(0);
   const calculatorAssistantCandidateBatchAbortRef = useRef<AbortController | null>(null);
   const [projectCreatePanelOpen, setProjectCreatePanelOpen] = useState(false);
@@ -2647,6 +3056,7 @@ export function CalculatorWorkbench() {
   const availableOutputs = OUTPUT_OPTIONS.filter((output) => output.modes.includes(mode));
   const outputRows = estimateResult ? buildOutputRows(estimateResult, selectedOutputs) : [];
   const calculatorAssistantPreview = calculatorAssistantState.status === "ready" ? calculatorAssistantState.preview : null;
+  const calculatorAssistantBusy = calculatorAssistantCommandPending || calculatorAssistantSourceReviewState.status === "loading";
   const primaryOutput = getPrimaryOutput(outputRows);
   const remoteTasks = getRemoteTasks(estimateResult);
   const localTasks = buildLocalTasks(layers, selectedOutputs, materialById);
@@ -2996,18 +3406,30 @@ export function CalculatorWorkbench() {
     calculatorAssistantPreviewRequestRef.current += 1;
     calculatorAssistantPreviewAbortRef.current?.abort();
     calculatorAssistantPreviewAbortRef.current = null;
+    calculatorAssistantSourceReviewRequestRef.current += 1;
+    calculatorAssistantSourceReviewAbortRef.current?.abort();
+    calculatorAssistantSourceReviewAbortRef.current = null;
     calculatorAssistantCandidateBatchRequestRef.current += 1;
     calculatorAssistantCandidateBatchAbortRef.current?.abort();
     calculatorAssistantCandidateBatchAbortRef.current = null;
     setCalculatorAssistantState((current) => (current.status === "idle" ? current : { status: "idle" }));
+    setCalculatorAssistantSourceReviewState((current) => (current.status === "idle" ? current : { status: "idle" }));
+    setCalculatorAssistantReportOverrideProposalState((current) => (current.status === "idle" ? current : { status: "idle" }));
     setCalculatorAssistantCandidateComparisonState((current) => (current.status === "idle" ? current : { status: "idle" }));
   }, [currentWorkbenchDraftSnapshot]);
+
+  useEffect(() => {
+    setCalculatorAssistantReportOverrideProposalState((current) => (current.status === "idle" ? current : { status: "idle" }));
+  }, [selectedServerProjectId, selectedServerReportId]);
 
   useEffect(
     () => () => {
       calculatorAssistantPreviewRequestRef.current += 1;
       calculatorAssistantPreviewAbortRef.current?.abort();
       calculatorAssistantPreviewAbortRef.current = null;
+      calculatorAssistantSourceReviewRequestRef.current += 1;
+      calculatorAssistantSourceReviewAbortRef.current?.abort();
+      calculatorAssistantSourceReviewAbortRef.current = null;
       calculatorAssistantCandidateBatchRequestRef.current += 1;
       calculatorAssistantCandidateBatchAbortRef.current?.abort();
       calculatorAssistantCandidateBatchAbortRef.current = null;
@@ -3303,7 +3725,7 @@ export function CalculatorWorkbench() {
     };
   }
 
-  async function previewCalculatorSnapshotWithAssistant(snapshot: WorkbenchV2ProjectSnapshot) {
+  async function previewCalculatorSnapshotWithAssistant(snapshot: WorkbenchV2ProjectSnapshot): Promise<WorkbenchV2CalculatorAssistantPreview | null> {
     calculatorAssistantPreviewAbortRef.current?.abort();
     const controller = new AbortController();
     const requestId = calculatorAssistantPreviewRequestRef.current + 1;
@@ -3320,19 +3742,21 @@ export function CalculatorWorkbench() {
         snapshot
       });
       if (!requestIsCurrent()) {
-        return;
+        return null;
       }
 
       setCalculatorAssistantState({ preview, status: "ready" });
+      return preview;
     } catch (error) {
       if (!requestIsCurrent()) {
-        return;
+        return null;
       }
 
       setCalculatorAssistantState({
         message: error instanceof Error ? error.message : "Assistant calculator preview failed.",
         status: "error"
       });
+      return null;
     } finally {
       if (calculatorAssistantPreviewAbortRef.current === controller) {
         calculatorAssistantPreviewAbortRef.current = null;
@@ -3340,8 +3764,334 @@ export function CalculatorWorkbench() {
     }
   }
 
-  async function previewCurrentCalculatorWithAssistant() {
-    await previewCalculatorSnapshotWithAssistant(currentWorkbenchDraftSnapshot);
+  async function previewCurrentCalculatorWithAssistant(): Promise<WorkbenchV2CalculatorAssistantPreview | null> {
+    return previewCalculatorSnapshotWithAssistant(currentWorkbenchDraftSnapshot);
+  }
+
+  async function reviewCurrentCalculatorWithAssistantSource(instruction: string) {
+    calculatorAssistantSourceReviewAbortRef.current?.abort();
+    const controller = new AbortController();
+    const requestId = calculatorAssistantSourceReviewRequestRef.current + 1;
+    calculatorAssistantSourceReviewRequestRef.current = requestId;
+    calculatorAssistantSourceReviewAbortRef.current = controller;
+    const requestIsCurrent = () => calculatorAssistantSourceReviewRequestRef.current === requestId && !controller.signal.aborted;
+
+    setCalculatorAssistantSourceReviewState({ status: "loading" });
+    setCalculatorAssistantReportOverrideProposalState({ status: "idle" });
+    setCalculatorAssistantCommandMessage({
+      detail: "Running the current calculator draft first, then sending the calculator-owned value and layer summary to the source review route.",
+      title: "Source review requested",
+      tone: "success"
+    });
+
+    try {
+      const requestedOutputId = resolveCalculatorAssistantSourceReviewOutputId({
+        availableOutputs: availableOutputs.map((output) => output.id),
+        fallbackOutput: selectedOutputs[0],
+        instruction
+      });
+      const sourceReviewSnapshot = buildCalculatorAssistantSourceReviewSnapshot({
+        outputId: requestedOutputId,
+        snapshot: currentWorkbenchDraftSnapshot
+      });
+      const preview = calculatorAssistantState.status === "ready" && calculatorAssistantPreviewSnapshotRef.current === sourceReviewSnapshot
+        ? calculatorAssistantState.preview
+        : await previewCalculatorSnapshotWithAssistant(sourceReviewSnapshot);
+
+      if (!requestIsCurrent() || !preview) {
+        return;
+      }
+
+      const availableReviewOutputs = Array.from(new Set<RequestedOutputId>([
+        ...preview.outputRows.map((row) => row.label),
+        ...preview.calculationSummary.selectedOutputs
+      ]));
+      const outputId = resolveCalculatorAssistantSourceReviewOutputId({
+        availableOutputs: availableReviewOutputs,
+        fallbackOutput: requestedOutputId ?? preview.calculationSummary.primaryOutput ?? preview.calculationSummary.selectedOutputs[0],
+        instruction
+      });
+      const packetResult = buildReportAssistantCurrentCalculatorReviewPacketFromCalculatorPreview({
+        outputId,
+        preview,
+        snapshotSignature: getCurrentWorkbenchApplyTargetSignature()
+      });
+
+      if (!packetResult.ok) {
+        const message = packetResult.errors.join(" ");
+        setCalculatorAssistantSourceReviewState({
+          message,
+          preview,
+          status: "error",
+          warnings: []
+        });
+        setCalculatorAssistantCommandMessage({
+          detail: message,
+          title: "Source review blocked",
+          tone: "warning"
+        });
+        toast.warning("Source review blocked", { description: message });
+        return;
+      }
+
+      const review = await requestCalculatorAssistantSourceReview({
+        instruction,
+        packet: packetResult.packet,
+        research: shouldRequestCalculatorAssistantSourceResearch(instruction),
+        signal: controller.signal
+      });
+
+      if (!requestIsCurrent()) {
+        return;
+      }
+
+      if (!review.ok || !review.result || !review.review) {
+        const message = review.message ?? "Current calculator source review failed.";
+        setCalculatorAssistantSourceReviewState({
+          message,
+          preview,
+          ...(review.result ? { result: review.result } : {}),
+          status: "error",
+          warnings: review.warnings
+        });
+        setCalculatorAssistantCommandMessage({
+          detail: message,
+          title: "Source review failed",
+          tone: "warning"
+        });
+        toast.error("Source review failed", { description: message });
+        return;
+      }
+
+      setCalculatorAssistantSourceReviewState({
+        preview,
+        result: review.result,
+        review: review.review,
+        source: review.source,
+        status: "ready",
+        warnings: review.warnings
+      });
+      setCalculatorAssistantCommand("");
+      setCalculatorAssistantCommandMessage({
+        detail: review.source === "research_provider"
+          ? "Source-backed review is ready. Calculator values were not changed."
+          : "Context-only review is ready. Calculator values were not changed.",
+        title: "Source review ready",
+        tone: "success"
+      });
+      toast.success("Source review ready", {
+        description: "Calculator output was left unchanged."
+      });
+    } catch (error) {
+      if (!requestIsCurrent()) {
+        return;
+      }
+
+      const message = error instanceof Error ? error.message : "Current calculator source review failed.";
+      setCalculatorAssistantSourceReviewState({
+        message,
+        status: "error",
+        warnings: []
+      });
+      setCalculatorAssistantCommandMessage({
+        detail: message,
+        title: "Source review failed",
+        tone: "warning"
+      });
+      toast.error("Source review failed", { description: message });
+    } finally {
+      if (calculatorAssistantSourceReviewAbortRef.current === controller) {
+        calculatorAssistantSourceReviewAbortRef.current = null;
+      }
+    }
+  }
+
+  async function loadSelectedCalculatorAssistantReportOverrideTarget(): Promise<CalculatorAssistantReportOverrideTarget | null> {
+    if (!selectedServerProjectId || !selectedServerReportId) {
+      return null;
+    }
+
+    const response = await fetch(
+      `/api/projects/${encodeURIComponent(selectedServerProjectId)}/reports/${encodeURIComponent(selectedServerReportId)}`,
+      {
+        method: "GET"
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(await readServerProjectError(response, "DAC could not open the selected report."));
+    }
+
+    const payload = (await response.json()) as unknown;
+    const report = parseProjectReportRecord(payload);
+    if (!report) {
+      throw new Error("Selected report does not contain a restorable proposal document.");
+    }
+
+    const document: SimpleWorkbenchProposalDocument = {
+      ...report.reportDocument,
+      serverProjectId: selectedServerProjectId,
+      serverProjectScenarioId: report.assemblyId
+    };
+    const projectContext: SimpleWorkbenchProposalPreviewProjectContext = {
+      serverProjectAssemblyId: report.assemblyId,
+      serverProjectId: selectedServerProjectId,
+      serverProjectReportId: report.id,
+      serverProjectReportUpdatedAtIso: report.updatedAtIso,
+      sourceAssemblySnapshot: report.sourceAssemblySnapshot,
+      sourceCalculationOutput: report.sourceCalculationOutput,
+      sourceMaterialSnapshot: report.sourceMaterialSnapshot
+    };
+    const assistantContext = buildReportAssistantContext({
+      document,
+      reportId: report.id
+    });
+
+    return {
+      assistantContext,
+      document,
+      projectContext,
+      reportId: report.id,
+      reportName: report.name,
+      reportUpdatedAtIso: report.updatedAtIso
+    };
+  }
+
+  async function prepareCalculatorAssistantReportOverrideProposal() {
+    if (calculatorAssistantSourceReviewState.status !== "ready") {
+      setCalculatorAssistantReportOverrideProposalState({
+        message: "Run a source review before preparing a report draft edit.",
+        status: "blocked"
+      });
+      return;
+    }
+
+    if (!selectedServerProjectId || !selectedServerReportId) {
+      setCalculatorAssistantReportOverrideProposalState({
+        message: "Open or create a report first. The assistant will not apply a source review without a selected report target.",
+        status: "blocked"
+      });
+      return;
+    }
+
+    setCalculatorAssistantReportOverrideProposalState({ status: "loading" });
+
+    try {
+      const target = await loadSelectedCalculatorAssistantReportOverrideTarget();
+      if (!target) {
+        setCalculatorAssistantReportOverrideProposalState({
+          message: "Open or create a report first. The assistant will not apply a source review without a selected report target.",
+          status: "blocked"
+        });
+        return;
+      }
+
+      const review = calculatorAssistantSourceReviewState.review;
+      if (calculatorAssistantSourceReviewState.source !== "research_provider") {
+        setCalculatorAssistantReportOverrideProposalState({
+          message: "No source-backed report edit was prepared. Run a source-backed review before applying a report draft edit.",
+          status: "blocked"
+        });
+        return;
+      }
+
+      const metricExists = target.assistantContext.metrics.some((metric) => metric.id === review.metricId);
+      if (!metricExists) {
+        setCalculatorAssistantReportOverrideProposalState({
+          message: `The selected report does not contain ${review.metric}. Open or create a matching report before applying this review.`,
+          status: "blocked"
+        });
+        return;
+      }
+
+      const patch = buildReportAssistantSourceBackedReportOverridePatch({
+        context: target.assistantContext,
+        review
+      });
+
+      if (!patch) {
+        setCalculatorAssistantReportOverrideProposalState({
+          message: "No source-backed report edit was prepared. Calculator values stay unchanged.",
+          status: "blocked"
+        });
+        return;
+      }
+
+      const validation = validateReportAssistantPatch({
+        context: target.assistantContext,
+        document: target.document,
+        patch
+      });
+
+      if (validation.status === "rejected") {
+        setCalculatorAssistantReportOverrideProposalState({
+          message: validation.errors.join(" ") || "The report edit was rejected by the shared patch validator.",
+          status: "blocked"
+        });
+        return;
+      }
+
+      setCalculatorAssistantReportOverrideProposalState({
+        review,
+        status: "ready",
+        target,
+        validation
+      });
+    } catch (error) {
+      setCalculatorAssistantReportOverrideProposalState({
+        message: error instanceof Error ? error.message : "Report draft edit preparation failed.",
+        status: "error"
+      });
+    }
+  }
+
+  function applyPreparedCalculatorAssistantReportOverrideProposal() {
+    if (calculatorAssistantReportOverrideProposalState.status !== "ready") {
+      return;
+    }
+
+    const proposal = calculatorAssistantReportOverrideProposalState;
+    if (typeof window !== "undefined") {
+      const confirmed = window.confirm(
+        "Apply this source review recommendation to the selected report draft? Calculator values and layer stack will stay unchanged."
+      );
+      if (!confirmed) {
+        return;
+      }
+    }
+
+    try {
+      const nextDocument = applyValidatedReportAssistantPatch(proposal.target.document, proposal.validation, {
+        confirmed: true,
+        scope: "export_only",
+        source: "assistant"
+      });
+
+      storeReportSnapshot(proposal.target.document, proposal.target.projectContext);
+      storeSimpleWorkbenchProposalPreviewCustomizations(nextDocument, {
+        projectContext: proposal.target.projectContext
+      });
+      setCalculatorAssistantReportOverrideProposalState({
+        message: "Report draft updated. Calculator values stay unchanged.",
+        reportId: proposal.target.reportId,
+        reportName: proposal.target.reportName,
+        status: "applied"
+      });
+      toast.success("Report draft updated", {
+        description: "Calculator values stay unchanged. Review and save the report draft when ready."
+      });
+      window.location.assign(
+        `/workbench/proposal?projectId=${encodeURIComponent(selectedServerProjectId)}&reportId=${encodeURIComponent(proposal.target.reportId)}`
+      );
+    } catch (error) {
+      setCalculatorAssistantReportOverrideProposalState({
+        message: error instanceof Error ? error.message : "Report draft edit failed.",
+        status: "error"
+      });
+      toast.error("Report draft edit failed", {
+        description: error instanceof Error ? error.message : "The selected report draft was not changed."
+      });
+    }
   }
 
   function getCurrentWorkbenchApplyTargetSignature(): string {
@@ -3630,7 +4380,30 @@ export function CalculatorWorkbench() {
   }
 
   async function applyCalculatorAssistantLayerStackCommand() {
-    if (calculatorAssistantCommandPending) {
+    if (calculatorAssistantBusy) {
+      return;
+    }
+
+    const instruction = calculatorAssistantCommand.trim();
+    const routingDecision = classifyCalculatorAssistantCommandRouting({
+      instruction,
+      selectedOutputs
+    });
+
+    if (routingDecision.status === "source_review" || routingDecision.status === "report_override_request") {
+      await reviewCurrentCalculatorWithAssistantSource(instruction);
+      return;
+    }
+
+    if (routingDecision.status === "clarify") {
+      setCalculatorAssistantCommandMessage({
+        detail: routingDecision.message,
+        title: "Calculator value override blocked",
+        tone: "warning"
+      });
+      toast.warning("Calculator value override blocked", {
+        description: routingDecision.message
+      });
       return;
     }
 
@@ -3640,7 +4413,7 @@ export function CalculatorWorkbench() {
       currentSelectedLayerId: selectedLayerId,
       currentSelectedOutputs: selectedOutputs,
       idFactory: () => createLayerId(),
-      instruction: calculatorAssistantCommand,
+      instruction,
       materials
     });
     let interpretedCommandDetail = "";
@@ -3659,7 +4432,7 @@ export function CalculatorWorkbench() {
           currentLayers: layers,
           currentMode: mode,
           currentSelectedOutputs: selectedOutputs,
-          instruction: calculatorAssistantCommand,
+          instruction,
           materials
         });
 
@@ -3952,8 +4725,8 @@ export function CalculatorWorkbench() {
     }
   }
 
-  async function useSelectedWorkbenchCommonPreset() {
-    const preset = selectedWorkbenchCommonPreset;
+  async function applyWorkbenchCommonPresetById(presetId: string) {
+    const preset = findWorkbenchV2CommonPresetById(presetId);
 
     if (!preset) {
       return;
@@ -3996,6 +4769,14 @@ export function CalculatorWorkbench() {
     } finally {
       finishWorkbenchPresetMutation();
     }
+  }
+
+  async function applySelectedWorkbenchCommonPreset() {
+    if (!selectedWorkbenchCommonPresetId) {
+      return;
+    }
+
+    await applyWorkbenchCommonPresetById(selectedWorkbenchCommonPresetId);
   }
 
   async function renameSelectedWorkbenchPreset() {
@@ -5432,8 +6213,9 @@ export function CalculatorWorkbench() {
           workbenchPresetRenameDescriptionDraftRef.current = "";
           setWorkbenchPresetRenameDraft("");
           setWorkbenchPresetRenameDescriptionDraft("");
+          void applyWorkbenchCommonPresetById(nextPresetId);
         }}
-        onCommonPresetUse={useSelectedWorkbenchCommonPreset}
+        onCommonPresetUse={applySelectedWorkbenchCommonPreset}
         onDeletePreset={deleteSelectedWorkbenchPreset}
         onDuplicatePreset={duplicateSelectedWorkbenchPreset}
         onPresetDescriptionDraftChange={(value) => {
@@ -6272,7 +7054,7 @@ export function CalculatorWorkbench() {
                   <span>Stack command</span>
                   <textarea
                     className="report-input report-textarea report-textarea-compact calc-assistant-command-input"
-                    disabled={calculatorAssistantCommandPending}
+                    disabled={calculatorAssistantBusy}
                     id="calculator-assistant-stack-command"
                     onChange={(event) => setCalculatorAssistantCommand(event.target.value)}
                     placeholder="Ekrandaki katmanların kalınlıklarını mantıklı gir"
@@ -6282,11 +7064,15 @@ export function CalculatorWorkbench() {
                 <div className="calc-assistant-command-actions">
                   <button
                     className="focus-ring ui-button ui-button-primary"
-                    disabled={calculatorAssistantCommand.trim().length === 0 || calculatorAssistantCommandPending}
+                    disabled={calculatorAssistantCommand.trim().length === 0 || calculatorAssistantBusy}
                     type="submit"
                   >
                     <Sparkles className="h-4 w-4" />
-                    {calculatorAssistantCommandPending ? "Interpreting" : "Run"}
+                    {calculatorAssistantSourceReviewState.status === "loading"
+                      ? "Reviewing"
+                      : calculatorAssistantCommandPending
+                        ? "Interpreting"
+                        : "Run"}
                   </button>
                 </div>
               </form>
@@ -6296,6 +7082,125 @@ export function CalculatorWorkbench() {
                   <strong>{calculatorAssistantCommandMessage.title}</strong>
                   <span>{calculatorAssistantCommandMessage.detail}</span>
                 </div>
+              ) : null}
+
+              {calculatorAssistantSourceReviewState.status === "loading" ? (
+                <div className="calc-assistant-command-message" data-tone="success">
+                  <strong>Source review running</strong>
+                  <span>Calculator preview and source review are running without changing the visible layer stack.</span>
+                </div>
+              ) : null}
+
+              {calculatorAssistantSourceReviewState.status === "error" ? (
+                <div className="calc-assistant-command-message" data-tone="warning">
+                  <strong>Source review failed</strong>
+                  <span>{calculatorAssistantSourceReviewState.message}</span>
+                </div>
+              ) : null}
+
+              {calculatorAssistantSourceReviewState.status === "ready" ? (
+                <>
+                  <AssistantResultCard
+                    calculatorPreview={calculatorAssistantSourceReviewState.preview}
+                    result={calculatorAssistantSourceReviewState.result}
+                  />
+
+                  <div className="calc-assistant-candidate-stacks" data-kind="source-review-report-override">
+                    <div className="calc-assistant-candidate-stack-toolbar">
+                      <span>Report draft edit</span>
+                      <button
+                        className="focus-ring ui-button ui-button-ghost"
+                        disabled={
+                          !selectedServerReportId ||
+                          calculatorAssistantSourceReviewState.source !== "research_provider" ||
+                          calculatorAssistantReportOverrideProposalState.status === "loading"
+                        }
+                        onClick={() => void prepareCalculatorAssistantReportOverrideProposal()}
+                        type="button"
+                      >
+                        <FileText className="h-4 w-4" />
+                        Prepare report edit
+                      </button>
+                    </div>
+
+                    {!selectedServerReportId ? (
+                      <div className="calc-assistant-command-message" data-tone="warning">
+                        <strong>Report target required</strong>
+                        <span>Open or create a report first. Source review recommendations are never applied to calculator values.</span>
+                      </div>
+                    ) : null}
+
+                    {selectedServerReportId && calculatorAssistantSourceReviewState.source !== "research_provider" ? (
+                      <div className="calc-assistant-command-message" data-tone="warning">
+                        <strong>Source-backed review required</strong>
+                        <span>Context-only reviews stay advisory. Run a source-backed review before preparing a report draft edit.</span>
+                      </div>
+                    ) : null}
+
+                    {calculatorAssistantReportOverrideProposalState.status === "loading" ? (
+                      <div className="calc-assistant-command-message" data-tone="success">
+                        <strong>Preparing report edit</strong>
+                        <span>Loading the selected report and validating a report-only edit. Calculator values stay unchanged.</span>
+                      </div>
+                    ) : null}
+
+                    {calculatorAssistantReportOverrideProposalState.status === "blocked" ? (
+                      <div className="calc-assistant-command-message" data-tone="warning">
+                        <strong>Report edit blocked</strong>
+                        <span>{calculatorAssistantReportOverrideProposalState.message}</span>
+                      </div>
+                    ) : null}
+
+                    {calculatorAssistantReportOverrideProposalState.status === "error" ? (
+                      <div className="calc-assistant-command-message" data-tone="warning">
+                        <strong>Report edit failed</strong>
+                        <span>{calculatorAssistantReportOverrideProposalState.message}</span>
+                      </div>
+                    ) : null}
+
+                    {calculatorAssistantReportOverrideProposalState.status === "applied" ? (
+                      <div className="calc-assistant-command-message" data-tone="success">
+                        <strong>Report draft updated</strong>
+                        <span>{calculatorAssistantReportOverrideProposalState.message}</span>
+                      </div>
+                    ) : null}
+
+                    {calculatorAssistantReportOverrideProposalState.status === "ready" ? (
+                      <div className="calc-assistant-candidate-stack">
+                        <div className="calc-assistant-candidate-stack-main">
+                          <strong>{calculatorAssistantReportOverrideProposalState.validation.patchSummary}</strong>
+                          <span>
+                            Target report: {calculatorAssistantReportOverrideProposalState.target.reportName}. Calculator values and layers stay unchanged.
+                          </span>
+                          {calculatorAssistantReportOverrideProposalState.validation.operations.map((operation, index) => (
+                            <span key={`${operation.type}-${index}`}>
+                              {operation.type === "metric_value"
+                                ? `${operation.label}: ${operation.beforeValue} -> ${operation.afterValue}`
+                                : operation.type === "report_note"
+                                  ? `Add ${operation.section} note`
+                                  : `Replace report text value ${operation.beforeValue} -> ${operation.afterValue}`}
+                            </span>
+                          ))}
+                        </div>
+                        <button
+                          className="focus-ring ui-button ui-button-primary"
+                          onClick={applyPreparedCalculatorAssistantReportOverrideProposal}
+                          type="button"
+                        >
+                          <ArrowRight className="h-4 w-4" />
+                          Apply to report draft
+                        </button>
+                      </div>
+                    ) : null}
+                  </div>
+                </>
+              ) : null}
+
+              {calculatorAssistantSourceReviewState.status === "error" && calculatorAssistantSourceReviewState.result ? (
+                <AssistantResultCard
+                  calculatorPreview={calculatorAssistantSourceReviewState.preview}
+                  result={calculatorAssistantSourceReviewState.result}
+                />
               ) : null}
 
               {calculatorAssistantWorkbenchApplyProposal ? (

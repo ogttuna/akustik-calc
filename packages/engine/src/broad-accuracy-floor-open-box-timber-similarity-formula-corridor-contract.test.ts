@@ -66,7 +66,7 @@ const R5B_EXACT_LAYERS = [
 ] as const satisfies readonly LayerInput[];
 
 const RAW_BARE_OPEN_BOX_LAYERS = [
-  { materialId: "open_box_timber_slab", thicknessMm: 370 }
+  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
 ] as const satisfies readonly LayerInput[];
 
 const PARTIAL_FINISH_OPEN_BOX_LAYERS = R5B_EXACT_LAYERS.filter(

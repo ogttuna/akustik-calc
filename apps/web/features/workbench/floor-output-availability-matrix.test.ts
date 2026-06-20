@@ -457,8 +457,12 @@ describe("floor output availability matrix", () => {
       })
     );
 
-    expect(openBoxResult.supportedTargetOutputs).not.toContain("Rw");
-    expect(openBoxResult.unsupportedTargetOutputs).toContain("Rw");
+    expect(openBoxResult.floorSystemRatings?.basis).toBe(
+      "broad_accuracy_floor_open_box_timber_raw_bare_source_absent_formula_corridor"
+    );
+    expect(openBoxResult.supportedTargetOutputs).toContain("Rw");
+    expect(openBoxResult.unsupportedTargetOutputs).not.toContain("Rw");
+    expect(openBoxResult.unsupportedTargetOutputs).toEqual(expect.arrayContaining(["DnT,w", "DeltaLw"]));
     expect(
       buildOutputCard({
         output: "Rw",
@@ -467,8 +471,8 @@ describe("floor output availability matrix", () => {
       })
     ).toEqual(
       expect.objectContaining({
-        status: "unsupported",
-        value: "Not ready"
+        status: "live",
+        value: "42.3 dB"
       })
     );
   });

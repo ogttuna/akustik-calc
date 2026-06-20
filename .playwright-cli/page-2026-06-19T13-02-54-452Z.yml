@@ -1,0 +1,29 @@
+- generic [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - button "Switch to dark mode" [ref=e5] [cursor=pointer]:
+        - img [ref=e6]
+        - generic [ref=e12]: Light
+      - generic [ref=e13]:
+        - generic [ref=e14]: Protected DAC access
+        - generic [ref=e15]:
+          - heading "Sign in to the workbench" [level=1] [ref=e16]
+          - paragraph [ref=e17]: The landing page stays public. The calculation workspace, proposal preview, and server-side calculation routes now require an authenticated session.
+      - generic [ref=e18]:
+        - generic [ref=e19]:
+          - generic [ref=e20]: Username
+          - textbox "Username" [ref=e21]: admin
+        - generic [ref=e22]:
+          - generic [ref=e23]: Password
+          - textbox "Password" [active] [ref=e24]: admin
+        - button "Sign in" [ref=e25] [cursor=pointer]
+      - generic [ref=e26]:
+        - link "Back to overview" [ref=e27] [cursor=pointer]:
+          - /url: /
+        - generic [ref=e28]:
+          - generic [ref=e29]: Next route
+          - generic [ref=e30]: /workbench-v2
+  - button "Open Next.js Dev Tools" [ref=e36] [cursor=pointer]:
+    - img [ref=e37]
+  - alert [ref=e40]
+  - region "Notifications alt+T"

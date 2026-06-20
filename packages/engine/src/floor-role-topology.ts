@@ -1,5 +1,7 @@
 import type { FloorRole } from "@dynecho/shared";
 
+import { inferScheduleEquivalentCeilingBoardThicknesses } from "./ceiling-board-thickness-schedule";
+
 export type SingleEntryFloorRole = Exclude<FloorRole, "ceiling_board">;
 
 export type SingleEntryRoleConflict = {
@@ -27,8 +29,6 @@ type FloorRoleTopologyLayer = {
   };
   thicknessMm?: number;
 };
-
-const CEILING_BOARD_SCHEDULE_PACK_TOLERANCE_MM = 0.25;
 
 export const SINGLE_ENTRY_FLOOR_ROLES: readonly SingleEntryFloorRole[] = [
   "base_structure",
@@ -156,16 +156,5 @@ export function collectCeilingBoardTopologyConflict(
 function isScheduleEquivalentCeilingBoardPackage(
   ceilingBoards: readonly FloorRoleTopologyLayer[]
 ): boolean {
-  const maxThicknessMm = Math.max(...ceilingBoards.map((layer) => layer.thicknessMm ?? 0));
-  if (!(maxThicknessMm > 0)) {
-    return false;
-  }
-
-  const totalThicknessMm = ceilingBoards.reduce((sum, layer) => sum + (layer.thicknessMm ?? 0), 0);
-  const packedBoardCount = Math.round(totalThicknessMm / maxThicknessMm);
-
-  return (
-    packedBoardCount > 0 &&
-    Math.abs(totalThicknessMm - packedBoardCount * maxThicknessMm) <= CEILING_BOARD_SCHEDULE_PACK_TOLERANCE_MM
-  );
+  return Boolean(inferScheduleEquivalentCeilingBoardThicknesses(ceilingBoards));
 }

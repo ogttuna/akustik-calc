@@ -7,6 +7,22 @@ import {
 import type { ReportAssistantResultEnvelope } from "./report-assistant-result-contract";
 import type { WorkbenchV2CalculatorAssistantPreview } from "../workbench-rebuild/workbench-v2-calculator-assistant";
 
+const SOURCE_REVIEW_SUMMARY_EVIDENCE_LABELS = new Set([
+  "Calculator value",
+  "Citation count",
+  "Comparability",
+  "Review source",
+  "Review verdict",
+  "Source quality",
+  "Source range",
+  "Suggested report value",
+  "Value reviewed"
+]);
+
+function getResultEvidenceDetail(result: ReportAssistantResultEnvelope, label: string): string | undefined {
+  return result.evidence.find((entry) => entry.label === label)?.detail;
+}
+
 export function AssistantCalculatorPreviewBlock(props: {
   preview: WorkbenchV2CalculatorAssistantPreview;
 }) {
@@ -97,6 +113,47 @@ export function AssistantCalculatorPreviewBlock(props: {
   );
 }
 
+function AssistantSourceReviewSummaryBlock(props: {
+  result: ReportAssistantResultEnvelope;
+}) {
+  if (props.result.rendererKind !== "research_review_card") {
+    return null;
+  }
+
+  const calculatorValue = getResultEvidenceDetail(props.result, "Calculator value");
+  const verdict = getResultEvidenceDetail(props.result, "Review verdict");
+  const comparability = getResultEvidenceDetail(props.result, "Comparability");
+  const sourceQuality = getResultEvidenceDetail(props.result, "Source quality");
+  const citationCount = getResultEvidenceDetail(props.result, "Citation count");
+  const sourceRange = getResultEvidenceDetail(props.result, "Source range");
+  const suggestedReportValue = getResultEvidenceDetail(props.result, "Suggested report value");
+
+  return (
+    <div className="report-assistant-source-review-summary">
+      <div className="report-assistant-source-review-main">
+        <span>
+          <strong>{calculatorValue ?? "Not available"}</strong>
+          <small>Calculator result</small>
+        </span>
+        <span>
+          <strong>{verdict ? formatReportAssistantResultToken(verdict) : "Review pending"}</strong>
+          <small>Research verdict</small>
+        </span>
+        <span>
+          <strong>{suggestedReportValue ?? "No advisory value"}</strong>
+          <small>Suggested report value</small>
+        </span>
+      </div>
+      <div className="report-assistant-source-review-meta">
+        <span>{comparability ? formatReportAssistantResultToken(comparability) : "comparability unknown"}</span>
+        <span>{sourceQuality ? formatReportAssistantResultToken(sourceQuality) : "source quality unknown"}</span>
+        <span>{citationCount ?? "0"} source{citationCount === "1" ? "" : "s"}</span>
+        {sourceRange ? <span>{sourceRange}</span> : null}
+      </div>
+    </div>
+  );
+}
+
 export function AssistantResultCard(props: {
   calculatorPreview?: WorkbenchV2CalculatorAssistantPreview;
   result: ReportAssistantResultEnvelope;
@@ -105,6 +162,9 @@ export function AssistantResultCard(props: {
   const card = createReportAssistantResultCardModel(result);
   const calculatorPreview = props.calculatorPreview;
   const showCalculatorPreview = card.rendersCalculatorPreview && calculatorPreview;
+  const traceEvidence = result.rendererKind === "research_review_card"
+    ? result.evidence.filter((entry) => !SOURCE_REVIEW_SUMMARY_EVIDENCE_LABELS.has(entry.label))
+    : result.evidence;
 
   return (
     <div
@@ -136,6 +196,8 @@ export function AssistantResultCard(props: {
       ) : null}
 
       {showCalculatorPreview ? <AssistantCalculatorPreviewBlock preview={calculatorPreview} /> : null}
+
+      <AssistantSourceReviewSummaryBlock result={result} />
 
       {result.basis.length > 0 ? (
         <div className="report-assistant-result-section">
@@ -182,7 +244,7 @@ export function AssistantResultCard(props: {
         </div>
       ) : null}
 
-      {result.evidence.length > 0 || result.sourceTrace.length > 0 ? (
+      {traceEvidence.length > 0 || result.sourceTrace.length > 0 ? (
         <div className="report-assistant-result-section">
           <strong>Trace</strong>
           <div className="report-assistant-result-trace">
@@ -192,7 +254,7 @@ export function AssistantResultCard(props: {
                 <small>{trace.detail ? `${trace.label}: ${trace.detail}` : trace.label}</small>
               </span>
             ))}
-            {result.evidence.map((entry, index) => (
+            {traceEvidence.map((entry, index) => (
               <span key={`${entry.label}-${index}`}>
                 <strong>{entry.label}</strong>
                 <small>{entry.detail ?? entry.href ?? "Evidence"}</small>

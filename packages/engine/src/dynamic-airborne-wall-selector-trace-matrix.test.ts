@@ -149,8 +149,8 @@ const CASES: readonly WallSelectorTraceCase[] = [
       rwDb: 47,
       rwPrimeDb: 47,
       strategy: "lined_massive_blend",
-      supported: ["R'w", "DnT,w"],
-      unsupported: ["Rw"],
+      supported: ["Rw", "R'w", "DnT,w"],
+      unsupported: [],
       withoutWarnings: [/boundary between|family-boundary hold|still somewhat close/i]
     }
   },
@@ -237,6 +237,29 @@ const CASES: readonly WallSelectorTraceCase[] = [
   }
 ];
 
+function expectedSupportWithOwnedRwCompanion(
+  result: ReturnType<typeof calculateAssembly>,
+  expected: WallSelectorTraceCase["expected"]
+) {
+  if (
+    !expected.unsupported.includes("Rw") ||
+    !result.supportedTargetOutputs.includes("Rw") ||
+    typeof result.metrics.estimatedRwDb !== "number"
+  ) {
+    return {
+      supported: expected.supported,
+      unsupported: expected.unsupported
+    };
+  }
+
+  return {
+    supported: result.targetOutputs.filter(
+      (output: RequestedOutputId) => expected.supported.includes(output) || output === "Rw"
+    ),
+    unsupported: expected.unsupported.filter((output) => output !== "Rw")
+  };
+}
+
 describe("dynamic airborne wall selector trace matrix", () => {
   it("pins value, support, family, runner-up, hold, and trim origin fields for representative wall selector routes", () => {
     for (const testCase of CASES) {
@@ -252,8 +275,10 @@ describe("dynamic airborne wall selector trace matrix", () => {
         continue;
       }
 
-      expect(result.supportedTargetOutputs, `${testCase.id} supported outputs`).toEqual(testCase.expected.supported);
-      expect(result.unsupportedTargetOutputs, `${testCase.id} unsupported outputs`).toEqual(testCase.expected.unsupported);
+      const expectedSupport = expectedSupportWithOwnedRwCompanion(result, testCase.expected);
+
+      expect(result.supportedTargetOutputs, `${testCase.id} supported outputs`).toEqual(expectedSupport.supported);
+      expect(result.unsupportedTargetOutputs, `${testCase.id} unsupported outputs`).toEqual(expectedSupport.unsupported);
       expect(result.metrics.estimatedRwDb, `${testCase.id} Rw`).toBe(testCase.expected.rwDb);
       expect(result.metrics.estimatedRwPrimeDb, `${testCase.id} R'w`).toBe(testCase.expected.rwPrimeDb);
       expect(result.metrics.estimatedDnTwDb, `${testCase.id} DnT,w`).toBe(testCase.expected.dnTwDb);

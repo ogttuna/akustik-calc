@@ -941,6 +941,14 @@ export function deriveFloorSystemEstimate(
     structuralFamily === "lightweight_steel" &&
     currentProfile === "lower_only" &&
     Boolean(lowerOnlyCeilingBoardTopologyConflict && lowerOnlyCeilingBoardTopologyConflict.scheduleSegments > 1);
+  const openBoxLowerOnlyCeilingBoardTierHold =
+    structuralFamily === "open_box_timber" &&
+    currentProfile === "lower_only" &&
+    Boolean(lowerOnlyCeilingBoardTopologyConflict && lowerOnlyCeilingBoardTopologyConflict.scheduleSegments > 1);
+  const compositeLowerOnlyCeilingBoardTierHold =
+    structuralFamily === "composite_panel" &&
+    currentProfile === "lower_only" &&
+    Boolean(lowerOnlyCeilingBoardTopologyConflict && lowerOnlyCeilingBoardTopologyConflict.scheduleSegments > 1);
   const lightweightSteelLowerOnlyHelperTierHold =
     structuralFamily === "lightweight_steel" && currentProfile === "lower_only" && lowerOnlyHelperRoleConflicts.length > 0;
   const compositeLowerOnlyHelperTierHold =
@@ -948,6 +956,7 @@ export function deriveFloorSystemEstimate(
   const lowerOnlyFamilyGeneralTierHold =
     lightweightSteelLowerOnlyCeilingBoardTierHold ||
     lightweightSteelLowerOnlyHelperTierHold ||
+    compositeLowerOnlyCeilingBoardTierHold ||
     compositeLowerOnlyHelperTierHold;
 
   if (
@@ -962,6 +971,7 @@ export function deriveFloorSystemEstimate(
     massTimberMalformedLaminateUnderlayFinishTierHold ||
     openBoxCombinedAmbiguousUpperTierHold ||
     openBoxMalformedLaminateUnderlayFinishTierHold ||
+    openBoxLowerOnlyCeilingBoardTierHold ||
     // UBIQ FL-23/25/27 upper-only open-web source rows are materially weaker
     // than the imported FL-24/26/28 lower-treatment corridor. Until those rows
     // are imported explicitly, do not borrow lower-treatment ratings here.
@@ -1068,6 +1078,13 @@ export function deriveFloorSystemEstimate(
         ? [
             `Lower-only helper topology stayed on the conservative composite continuation: ${formatAmbiguousSingleEntryRoleConflicts(
               lowerOnlyHelperRoleConflicts
+            )}.`
+          ]
+        : []),
+      ...(compositeLowerOnlyCeilingBoardTierHold && lowerOnlyCeilingBoardTopologyConflict
+        ? [
+            `Disjoint lower-board topology stayed on the conservative composite continuation: ${formatCeilingBoardTopologyConflict(
+              lowerOnlyCeilingBoardTopologyConflict
             )}.`
           ]
         : []),

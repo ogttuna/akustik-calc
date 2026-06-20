@@ -106,6 +106,21 @@ function layersForRole(layers: readonly ResolvedLayer[], role: FloorRole): reado
   return layers.filter((layer) => layer.floorRole === role);
 }
 
+function roleLayersAreContiguous(layers: readonly ResolvedLayer[], role: FloorRole): boolean {
+  const indexes = layers
+    .map((layer, index) => (layer.floorRole === role ? index : -1))
+    .filter((index) => index >= 0);
+
+  if (indexes.length <= 1) {
+    return true;
+  }
+
+  const firstIndex = indexes[0] as number;
+  const lastIndex = indexes.at(-1) as number;
+
+  return lastIndex - firstIndex + 1 === indexes.length;
+}
+
 function totalThickness(layers: readonly ResolvedLayer[]): number {
   return round1(layers.reduce((sum, layer) => sum + layer.thicknessMm, 0));
 }
@@ -290,6 +305,14 @@ function detectHelperOnlyStack(layers: readonly ResolvedLayer[]): DetectedHelper
   const cavityLayers = layersForRole(layers, "ceiling_cavity");
 
   if (baseLayers.length === 0 || boardLayers.length === 0 || fillLayers.length === 0 || cavityLayers.length !== 1) {
+    return null;
+  }
+
+  if (
+    !roleLayersAreContiguous(layers, "base_structure") ||
+    !roleLayersAreContiguous(layers, "ceiling_board") ||
+    !roleLayersAreContiguous(layers, "ceiling_fill")
+  ) {
     return null;
   }
 

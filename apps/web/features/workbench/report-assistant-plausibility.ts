@@ -1,4 +1,5 @@
 import type { ReportAssistantContext } from "./report-assistant-context";
+import type { ReportAssistantCurrentCalculatorReviewPacket } from "./report-assistant-current-calculator-review-packet";
 import {
   sanitizeReportAssistantResearchReviewPacket,
   type ReportAssistantResearchReviewPacket
@@ -321,6 +322,217 @@ function buildRestoreEnginePatch(input: {
     ],
     summary: `Restore ${input.metricLabel} to the captured engine value ${input.engineDisplayValue}.`
   };
+}
+
+function sourceBackedRecommendationDisplayValue(
+  review: ReportAssistantPlausibilityReview
+): string | undefined {
+  const recommendation = review.valueRecommendation;
+  if (!recommendation) {
+    return undefined;
+  }
+
+  if (recommendation.displayValue?.trim()) {
+    return recommendation.displayValue.trim();
+  }
+
+  if (typeof recommendation.targetDb === "number" && Number.isFinite(recommendation.targetDb)) {
+    return `${recommendation.targetDb} dB`;
+  }
+
+  return undefined;
+}
+
+export function buildReportAssistantSourceBackedReportOverridePatch(input: {
+  context: ReportAssistantContext;
+  review: ReportAssistantPlausibilityReview;
+}): ReportAssistantPatch | null {
+  const metric = input.context.metrics.find((entry) => entry.id === input.review.metricId);
+  const displayValue = sourceBackedRecommendationDisplayValue(input.review);
+  if (
+    !metric ||
+    !displayValue ||
+    metric.status === "needs_input" ||
+    metric.status === "unsupported" ||
+    input.review.sources.length === 0 ||
+    input.review.sourceQuality === "none" ||
+    input.review.comparability === "not_comparable" ||
+    displayValue === metric.reportDisplayValue
+  ) {
+    return null;
+  }
+
+  const sourceCount = input.review.sources.length;
+  const calculatorText = input.review.engineDisplayValue
+    ? ` Calculator value remains ${input.review.engineDisplayValue}.`
+    : "";
+
+  return {
+    documentSignature: input.context.documentSignature,
+    operations: [
+      {
+        displayValue,
+        metricId: metric.id,
+        reason: [
+          `Source-backed plausibility review suggested a report-only ${metric.label} value of ${displayValue}.`,
+          `Comparability ${input.review.comparability}; source quality ${input.review.sourceQuality}; sources ${sourceCount}.`,
+          calculatorText.trim()
+        ].filter((entry) => entry.length > 0).join(" "),
+        type: "set_metric_display_value"
+      }
+    ],
+    requiresUserConfirmation: true,
+    summary: `Propose report-only ${metric.label} value ${displayValue} from source-backed review.`
+  };
+}
+
+function metricStatusFromCurrentCalculatorPacket(
+  packet: ReportAssistantCurrentCalculatorReviewPacket
+): ReportAssistantContext["metrics"][number]["status"] {
+  return packet.metric.status === "pending" ? "needs_input" : packet.metric.status;
+}
+
+function basisCategoryFromCurrentCalculatorPacket(
+  packet: ReportAssistantCurrentCalculatorReviewPacket
+): ReportAssistantContext["assistantOutputFacts"][number]["basisCategory"] {
+  if (packet.metric.basisCategory) {
+    return packet.metric.basisCategory;
+  }
+
+  if (packet.reviewStatus === "needs_input") {
+    return "needs_input";
+  }
+
+  if (packet.reviewStatus === "unsupported") {
+    return "unsupported";
+  }
+
+  return "unknown";
+}
+
+function currentCalculatorPacketContextSignature(packet: ReportAssistantCurrentCalculatorReviewPacket): string {
+  return packet.contextSignature ??
+    packet.snapshotSignature ??
+    packet.documentSignature ??
+    `current-calculator-review:${packet.source}:${packet.sourceName}:${packet.metric.metricId}`;
+}
+
+function currentCalculatorPacketDisplayValue(packet: ReportAssistantCurrentCalculatorReviewPacket): string {
+  return packet.metric.calculatorDisplayValue ??
+    packet.metric.reportDisplayValue ??
+    packet.numericReviewBlocker ??
+    "Not ready";
+}
+
+function uniqueReviewStrings(values: readonly (string | undefined)[]): string[] {
+  const out: string[] = [];
+
+  for (const value of values) {
+    const normalized = value?.trim().replace(/\s+/gu, " ");
+    if (!normalized || out.includes(normalized)) {
+      continue;
+    }
+    out.push(normalized);
+  }
+
+  return out;
+}
+
+export function buildReportAssistantContextFromCurrentCalculatorReviewPacket(
+  packet: ReportAssistantCurrentCalculatorReviewPacket
+): ReportAssistantContext {
+  const status = metricStatusFromCurrentCalculatorPacket(packet);
+  const displayValue = currentCalculatorPacketDisplayValue(packet);
+  const signature = currentCalculatorPacketContextSignature(packet);
+  const outputId = packet.metric.outputId;
+  const parsedDisplayValue = parseDbValue(packet.metric.calculatorDisplayValue ?? displayValue);
+  const warnings = uniqueReviewStrings([
+    ...packet.warnings,
+    packet.numericReviewBlocker,
+    packet.numericReviewAllowed
+      ? undefined
+      : "Current calculator review is non-numeric until the blocked route is resolved.",
+    `Calculator value authority: ${packet.metric.valueAuthority}.`
+  ]);
+  const missingInputs = uniqueReviewStrings([
+    ...packet.missingInputs,
+    packet.reviewStatus === "needs_input" ? packet.numericReviewBlocker : undefined
+  ]);
+
+  return {
+    assistantContextSignature: signature,
+    assistantOutputFacts: [
+      {
+        basis: packet.metric.basis,
+        basisCategory: basisCategoryFromCurrentCalculatorPacket(packet),
+        ...(packet.metric.calculatorDisplayValue ? { engineDisplayValue: packet.metric.calculatorDisplayValue } : {}),
+        label: packet.metric.label,
+        metricId: packet.metric.metricId,
+        missingInputs,
+        ...(outputId ? { outputId } : {}),
+        ...(packet.numericReviewBlocker ? { parkedReason: packet.numericReviewBlocker } : {}),
+        reportDisplayValue: displayValue,
+        status,
+        usedInputs: [
+          `Calculator packet source: ${packet.source}.`,
+          `Review status: ${packet.reviewStatus}.`,
+          ...packet.layers.map((layer) => layer.sourceText)
+        ],
+        warnings
+      }
+    ],
+    createdAtIso: packet.createdAtIso ?? "1970-01-01T00:00:00.000Z",
+    documentComparisonSummaries: [],
+    documentSignature: packet.documentSignature ?? signature,
+    layersSummary: packet.layers.map((layer) => layer.sourceText),
+    metrics: [
+      {
+        basis: packet.metric.basis,
+        direction: packet.metric.direction,
+        ...(packet.metric.calculatorDisplayValue ? { engineDisplayValue: packet.metric.calculatorDisplayValue } : {}),
+        id: packet.metric.metricId,
+        label: packet.metric.label,
+        locations: [],
+        metric: packet.metric.outputId ?? packet.metric.label,
+        ...(parsedDisplayValue ? { numericDb: parsedDisplayValue.numericDb } : {}),
+        ...(outputId ? { outputId } : {}),
+        reportDisplayValue: displayValue,
+        status
+      }
+    ],
+    reportAdjustments: [],
+    reportId: packet.sourceName,
+    traceSummary: {
+      ...(packet.routeBasis ? { basis: packet.routeBasis } : {}),
+      missingPhysicalInputs: missingInputs,
+      route: packet.route,
+      unsupportedOutputs: packet.unsupportedOutputs,
+      warnings
+    },
+    warnings
+  };
+}
+
+export function reviewReportAssistantCurrentCalculatorPacketPlausibility(input: {
+  packet: ReportAssistantCurrentCalculatorReviewPacket;
+  request: ReportAssistantPlausibilityRequest;
+}): ReportAssistantPlausibilityReviewResult {
+  if (input.request.metricId !== input.packet.metric.metricId) {
+    return {
+      errors: [
+        `Review metric id ${input.request.metricId} does not match calculator packet metric ${input.packet.metric.metricId}.`
+      ],
+      ok: false
+    };
+  }
+
+  return reviewReportAssistantMetricPlausibility({
+    context: buildReportAssistantContextFromCurrentCalculatorReviewPacket(input.packet),
+    request: {
+      ...input.request,
+      suggestPatch: false
+    }
+  });
 }
 
 function buildContextOnlyAnswer(input: {

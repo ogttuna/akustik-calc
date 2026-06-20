@@ -14,8 +14,6 @@ import { getDefaultMaterialCatalog } from "./material-catalog";
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
-const PREVIOUS_COVERAGE_REFRESH_ACTION =
-  "post_v1_wall_double_leaf_framed_direct_fixed_a_weighted_field_building_coverage_refresh_plan";
 const PREVIOUS_COVERAGE_REFRESH_FILE =
   "packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-a-weighted-field-building-coverage-refresh-contract.test.ts";
 const PREVIOUS_COVERAGE_REFRESH_STATUS =

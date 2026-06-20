@@ -130,26 +130,6 @@ const CLOSED_MIXED_OUTPUTS = [
   "IIC"
 ] as const satisfies readonly RequestedOutputId[];
 const FIELD_IMPACT_OUTPUTS = ["L'n,w", "L'nT,w", "L'nT,50"] as const satisfies readonly RequestedOutputId[];
-const LAB_FIELD_MIXED_OUTPUTS = [
-  "Rw",
-  "STC",
-  "C",
-  "Ctr",
-  "Ln,w",
-  "DeltaLw",
-  ...FIELD_IMPACT_OUTPUTS,
-  "IIC"
-] as const satisfies readonly RequestedOutputId[];
-const FIELD_FIELD_MIXED_OUTPUTS = [
-  "Rw",
-  "STC",
-  "C",
-  "Ctr",
-  "Ln,w",
-  "DeltaLw",
-  ...FIELD_IMPACT_OUTPUTS,
-  "AIIC"
-] as const satisfies readonly RequestedOutputId[];
 
 const AIRBORNE_FIELD_CONTEXT = {
   contextMode: "field_between_rooms",
@@ -181,13 +161,6 @@ const ASTM_LAB_IIC_SOURCE = {
   label: "ASTM E492 lab exact bands for the visible heavy floating floor",
   levelsDb: astmContourLevels(62),
   standardMethod: "ASTM E492 / ASTM E989"
-} as const satisfies ExactImpactSource;
-
-const ASTM_FIELD_AIIC_SOURCE = {
-  ...ASTM_LAB_IIC_SOURCE,
-  labOrField: "field",
-  label: "ASTM E1007 field exact bands for the visible heavy floating floor",
-  standardMethod: "ASTM E1007 / ASTM E989"
 } as const satisfies ExactImpactSource;
 
 function customMaterial(input: {

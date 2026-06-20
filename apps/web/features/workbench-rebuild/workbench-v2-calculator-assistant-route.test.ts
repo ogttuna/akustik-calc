@@ -251,6 +251,47 @@ describe("workbench v2 calculator assistant route", () => {
     });
   });
 
+  it("fills reasonable draft inputs for broad material-family described wall stacks", async () => {
+    const response = await POST(
+      routeRequest({
+        description:
+          "gypsum board seç hangisi farketmez araya rock wool koy sonra aynı gypsumdan seç inputları makul doldur Rw ve STC hesapla"
+      })
+    );
+    const body = (await response.json()) as {
+      ok: boolean;
+      preview?: {
+        calculationSummary?: {
+          selectedOutputs?: string[];
+          status?: string;
+        };
+        describedConfiguration?: {
+          layers?: Array<{
+            materialId?: string;
+            thicknessMm?: number;
+          }>;
+          warnings?: string[];
+        };
+        outputRows?: Array<{
+          label?: string;
+          status?: string;
+        }>;
+      };
+    };
+
+    expect(response.status).toBe(200);
+    expect(body.ok).toBe(true);
+    expect(body.preview?.describedConfiguration?.layers).toEqual([
+      { materialId: "gypsum_board", materialName: "Gypsum Board", role: "side_a", thicknessMm: 12.5 },
+      { materialId: "rockwool", materialName: "Rock Wool", role: "cavity", thicknessMm: 50 },
+      { materialId: "gypsum_board", materialName: "Gypsum Board", role: "side_b", thicknessMm: 12.5 }
+    ]);
+    expect(body.preview?.describedConfiguration?.warnings?.[0]).toContain("engineering-default draft values");
+    expect(body.preview?.calculationSummary?.selectedOutputs).toEqual(["Rw", "STC"]);
+    expect(body.preview?.calculationSummary?.status).toBe("ready");
+    expect(body.preview?.outputRows?.map((row) => row.status)).toEqual(["live", "live"]);
+  });
+
   it("keeps described floor and impact requests as needs-input boundaries without numeric rows", async () => {
     const response = await POST(
       routeRequest({

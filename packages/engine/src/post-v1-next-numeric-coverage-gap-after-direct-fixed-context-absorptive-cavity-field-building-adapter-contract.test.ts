@@ -15,8 +15,6 @@ import {
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 
-const PREVIOUS_COVERAGE_REFRESH_ACTION =
-  "post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_field_building_adapter_coverage_refresh_plan";
 const PREVIOUS_COVERAGE_REFRESH_FILE =
   "packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-field-building-adapter-coverage-refresh-contract.test.ts";
 const PREVIOUS_COVERAGE_REFRESH_STATUS =

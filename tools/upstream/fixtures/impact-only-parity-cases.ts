@@ -355,6 +355,13 @@ export const IMPACT_ONLY_PARITY_CASES: readonly ImpactOnlyParityCase[] = [
       targetOutputs: ["Ln,w", "DeltaLw", "L'n,w", "L'nT,w"]
     },
     compare: {
+      acceptedLocalDivergences: [
+        {
+          metrics: ["impact.basis", "supportedImpactOutputs", "unsupportedImpactOutputs"],
+          reason:
+            "Local now carries explicit impact field context through the owned field adapter, so L'n,w and L'nT,w are supported instead of staying lab-only like Acoustic2."
+        }
+      ],
       compareImpactBasis: true,
       impactMetrics: ["LnW", "DeltaLw"]
     }
@@ -1443,6 +1450,13 @@ export const IMPACT_ONLY_PARITY_CASES: readonly ImpactOnlyParityCase[] = [
       targetOutputs: ["Ln,w"]
     },
     compare: {
+      acceptedLocalDivergences: [
+        {
+          metrics: ["impact.metricBasis.LnW", "impact.basis", "impact.estimateCandidateIds"],
+          reason:
+            "Local composite-panel ceiling-only input now stays on the published interaction owner after schedule normalization instead of the older low-confidence Acoustic2 fallback."
+        }
+      ],
       compareImpactBasis: true,
       compareImpactEstimateCandidateIds: true,
       compareFloorMetrics: true,

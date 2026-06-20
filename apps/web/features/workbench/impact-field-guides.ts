@@ -137,11 +137,17 @@ export function buildImpactGuideFieldGuides(input: {
             kind: "active",
             meaning: "When only bound support exists, guide outputs also stay on an upper-bound lane instead of fabricating an exact field result."
           }
-      : hasBaseLnWPlusCIUpperBound
+      : hasBaseLnWPlusCIUpperBound && typeof input.guideResult?.LPrimeNT50UpperBound === "number"
         ? {
             currentUse: "Guide derivation is currently anchored to the selected combined Ln,w+CI upper-bound source.",
             kind: "active",
             meaning: "This base can produce a conservative L'nT,50 upper bound through the Turkish K/Hd local-guide branch, but it cannot fabricate split Ln,w, CI, L'n,w, or L'nT,w."
+          }
+      : hasBaseLnWPlusCIUpperBound
+        ? {
+            currentUse: "The selected source only carries a combined Ln,w+CI upper bound; no field-guide base is active until K/Hd derivation produces a guarded field upper bound.",
+            kind: "conditional",
+            meaning: "A combined Ln,w+CI upper bound is not a field-guide base by itself and must not be treated as split Ln,w."
           }
       : {
           currentUse: "The selected guide base has not produced Ln,w yet. Activate a live impact result or the heavy-reference shortcut first.",

@@ -68,6 +68,29 @@ describe("workbench v2 assistant natural-language command", () => {
     expect(JSON.stringify(request.body)).not.toContain("do-not-forward");
   });
 
+  it("tells the calculator command model to reject source review and report override requests", () => {
+    const request = buildWorkbenchV2AssistantNaturalLanguageCommandModelRequest({
+      currentLayers,
+      currentMode: "wall",
+      currentSelectedOutputs: ["Rw"],
+      instruction: "Rw fazla mı az mı internetten araştır, gerekirse raporda editleyim mi diye sor",
+      materials,
+      settings: {
+        endpoint: "http://system_llm:4000/gemini-proxy",
+        model: "gemini-3-flash-preview",
+        provider: "system_llm_gemini_proxy",
+        proxyKey: "proxy-secret",
+        timeoutMs: 12000
+      }
+    });
+
+    const body = JSON.stringify(request.body);
+    expect(body).toContain("value is too high/low");
+    expect(body).toContain("internet/source-backed review");
+    expect(body).toContain("report value should be overridden after confirmation");
+    expect(body).toContain("instead of returning an apply command");
+  });
+
   it("calls a configured provider and returns a safe normalized command decision", async () => {
     const fetchMock = vi.fn(async () =>
       new Response(

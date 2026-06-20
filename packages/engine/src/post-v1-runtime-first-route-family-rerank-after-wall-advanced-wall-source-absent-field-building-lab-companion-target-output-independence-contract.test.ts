@@ -102,7 +102,7 @@ type Candidate = {
   readonly routeFamily: string;
   readonly runtimeOwnerAuthorizedNext: boolean;
   readonly sourceRowsRequiredForRuntimeSelection: boolean;
-  readonly targetOutputs: readonly RequestedOutputId[];
+  readonly targetOutputs: readonly (RequestedOutputId | "OITC")[];
 };
 
 const LAB_OUTPUTS = ["Rw", "STC", "C", "Ctr"] as const satisfies readonly RequestedOutputId[];
@@ -553,8 +553,8 @@ describe("post-V1 runtime-first route-family rerank after wall advanced-wall sou
       targetOutputs: IMPACT_OUTPUTS
     });
 
-    expect(labOnlyField.supportedTargetOutputs).toEqual([]);
-    expect(labOnlyField.unsupportedTargetOutputs).toEqual([...LAB_OUTPUTS]);
+    expect(labOnlyField.supportedTargetOutputs).toEqual([...LAB_OUTPUTS]);
+    expect(labOnlyField.unsupportedTargetOutputs).toEqual([]);
     expect(incompleteField.supportedTargetOutputs).toEqual([]);
     expect(incompleteField.unsupportedTargetOutputs).toEqual([...EXACT_FIELD_MIXED_OUTPUTS]);
     expect(impact.supportedTargetOutputs).toEqual([]);

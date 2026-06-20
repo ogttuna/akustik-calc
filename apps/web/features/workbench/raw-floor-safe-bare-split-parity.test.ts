@@ -111,6 +111,7 @@ const SAFE_BARE_CASES: readonly BareCarrierCase[] = [
     ]
   },
   {
+    compareTaggedVariants: false,
     id: "raw-open-box-timber-raw-bare-runtime-carrier",
     rawSingle: [{ id: "a", materialId: "open_box_timber_slab", thicknessMm: 370 }],
     rawSplit: [

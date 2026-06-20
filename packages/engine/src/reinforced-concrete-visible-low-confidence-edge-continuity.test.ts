@@ -119,7 +119,7 @@ describe("reinforced concrete visible low-confidence cleanup edge continuity", (
       expandedBoardSchedule.warnings.some((warning: string) =>
         /withheld the closest candidate label because it drifted outside the defended same-family route/i.test(warning)
       )
-    ).toBe(true);
+    ).toBe(false);
     expect(expandedBoardSchedule.supportedTargetOutputs).toEqual(["Rw", "Ctr"]);
     expect(expandedBoardSchedule.unsupportedTargetOutputs).toEqual(["Ln,w"]);
     expect(expandedBoardSchedule.floorSystemRatings?.Rw).toBe(baseline.floorSystemRatings?.Rw);

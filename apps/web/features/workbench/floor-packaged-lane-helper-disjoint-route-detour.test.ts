@@ -28,8 +28,8 @@ const IMPACT_FIELD_CONTEXT = {
   receivingRoomVolumeM3: 55
 };
 
-const FAIL_CLOSED_STATUSES: Record<FieldOutput, CardStatus> = {
-  Rw: "unsupported",
+const IMPACT_FAIL_CLOSED_STATUSES: Record<FieldOutput, CardStatus> = {
+  Rw: "live",
   "R'w": "live",
   "DnT,w": "live",
   "Ln,w": "unsupported",
@@ -75,7 +75,7 @@ function hasPredictorBlocker(warnings: readonly string[], role: "ceiling_fill" |
 }
 
 describe("floor packaged-lane helper disjoint route detours", () => {
-  it("demotes disjoint open-web lower helper topology off the defended family-general tier", () => {
+  it("demotes disjoint open-web lower helper topology off the defended helper formula tier", () => {
     const canonical = evaluateRows("openweb-helper-canonical", [
       { floorRole: "ceiling_board", id: "a", materialId: "firestop_board", thicknessMm: 16 },
       { floorRole: "ceiling_board", id: "b", materialId: "firestop_board", thicknessMm: 16 },
@@ -98,7 +98,7 @@ describe("floor packaged-lane helper disjoint route detours", () => {
       { floorRole: "base_structure", id: "e", materialId: "open_web_steel_floor", thicknessMm: 300 }
     ]);
 
-    expect(canonical.result?.floorSystemEstimate?.kind).toBe("family_general");
+    expect(canonical.result?.floorSystemEstimate?.kind).toBe("family_archetype");
 
     expect(fillDisjoint.result?.floorSystemEstimate?.kind).toBe("low_confidence");
     expect(hasPredictorBlocker(fillDisjoint.warnings, "ceiling_fill")).toBe(true);
@@ -148,7 +148,7 @@ describe("floor packaged-lane helper disjoint route detours", () => {
       { floorRole: "base_structure", id: "e", materialId: "composite_steel_deck", thicknessMm: 150 }
     ]);
 
-    expect(canonical.result?.floorSystemEstimate?.kind).toBe("low_confidence");
+    expect(canonical.result?.floorSystemEstimate?.kind).toBe("family_general");
 
     expect(fillDisjoint.result?.floorSystemEstimate?.kind).toBe("low_confidence");
     expect(hasPredictorBlocker(fillDisjoint.warnings, "ceiling_fill")).toBe(true);
@@ -167,7 +167,7 @@ describe("floor packaged-lane helper disjoint route detours", () => {
     ).toBe(true);
   });
 
-  it("keeps CLT and open-box disjoint lower helper routes fail-closed with blocker copy", () => {
+  it("keeps CLT and open-box disjoint lower helper routes impact-closed with blocker copy while airborne cards stay live", () => {
     const cases = [
       {
         id: "clt-helper-fill-disjoint",
@@ -198,7 +198,7 @@ describe("floor packaged-lane helper disjoint route detours", () => {
 
       expect(scenario.result?.floorSystemEstimate, testCase.id).toBeNull();
       expect(scenario.result?.impact, testCase.id).toBeNull();
-      expect(scenario.statuses, testCase.id).toEqual(FAIL_CLOSED_STATUSES);
+      expect(scenario.statuses, testCase.id).toEqual(IMPACT_FAIL_CLOSED_STATUSES);
       expect(hasPredictorBlocker(scenario.warnings, testCase.role), testCase.id).toBe(true);
     }
   });

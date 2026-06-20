@@ -108,7 +108,6 @@ type NumericGapCandidate = {
 };
 
 const FIELD_TARGETS = ["R'w", "Dn,w", "DnT,w", "Dn,A", "DnT,A"] as const satisfies readonly RequestedOutputId[];
-const FIELD_BASE_TARGETS = ["R'w", "Dn,w", "DnT,w"] as const satisfies readonly RequestedOutputId[];
 const LAB_COMPANION_TARGETS = ["Rw", "STC", "C", "Ctr"] as const satisfies readonly RequestedOutputId[];
 
 const EXACT_LSF_LAB_STACK = [

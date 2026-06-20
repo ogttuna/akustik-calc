@@ -99,6 +99,7 @@ describe("post-V1 next numeric coverage/accuracy gap Gate FC", () => {
   it("selects only Gate CL floor residual ledgers that still lack same-basis holdouts", () => {
     const selectedLedgers = buildPostV1GateFCSelectedFloorResidualLedgers();
     const allResidualLedgers = evaluatePostV1GateCLResidualLedgers();
+    const gateFCTargetOutputs = new Set<string>(POST_V1_GATE_FC_TARGET_OUTPUTS);
 
     expect(selectedLedgers.map((ledger) => ledger.id)).toEqual(
       POST_V1_GATE_FC_SELECTED_RESIDUAL_LEDGER_IDS
@@ -118,7 +119,7 @@ describe("post-V1 next numeric coverage/accuracy gap Gate FC", () => {
       });
       expect(ledger.currentErrorBudgetDb, ledger.id).toBeGreaterThanOrEqual(8);
       expect(ledger.blockers.length, ledger.id).toBeGreaterThan(0);
-      expect(ledger.metrics.some((metric) => POST_V1_GATE_FC_TARGET_OUTPUTS.includes(metric))).toBe(true);
+      expect(ledger.metrics.some((metric) => gateFCTargetOutputs.has(metric))).toBe(true);
     }
   });
 

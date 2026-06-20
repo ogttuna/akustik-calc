@@ -92,8 +92,8 @@ describe("Dataholz GDMTXA04A material-surface recheck", () => {
     expect(result.impact?.CI).toBe(4);
     expect(result.impact?.CI50_2500).toBe(9);
     expect(result.impact?.LnWPlusCI).toBe(53);
-    expect(result.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "CI", "CI,50-2500", "Ln,w+CI"]);
-    expect(result.unsupportedTargetOutputs).toEqual(["Ctr"]);
+    expect(result.supportedTargetOutputs).toEqual(["Rw", "Ctr", "Ln,w", "CI", "CI,50-2500", "Ln,w+CI"]);
+    expect(result.unsupportedTargetOutputs).toEqual([]);
   });
 
   it("defers exact visible reopen until the source composite surface can be modeled explicitly", () => {

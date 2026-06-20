@@ -292,7 +292,7 @@ describe("post-V1 wall compatible anchor-delta building Dn,A owner", () => {
     expect(buildingMixed.unsupportedTargetOutputs).toEqual([]);
     expect(buildingMixed.layerCombinationResolverTrace).toMatchObject({
       runtimeBasisId: GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
-      supportedMetrics: expect.arrayContaining(BUILDING_COMPATIBLE_OWNER_OUTPUTS),
+      supportedMetrics: expect.arrayContaining([...BUILDING_COMPATIBLE_OWNER_OUTPUTS]),
       valuePins: expect.arrayContaining([
         { metric: "R'w", value: 50 },
         { metric: "Dn,w", value: 51 },

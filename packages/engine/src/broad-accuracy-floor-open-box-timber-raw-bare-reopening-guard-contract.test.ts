@@ -353,7 +353,6 @@ describe("broad accuracy floor open-box timber raw-bare reopening guard contract
     const contract = buildBroadAccuracyFloorOpenBoxTimberRawBareReopeningGuardContract();
     const forbiddenPackageTransferRws = new Set(contract.packageTransferPinsFrozen.map((pin) => pin.Rw));
     const completeBaseOnlyRuntimeProbeIds = new Set<BroadAccuracyFloorOpenBoxTimberRawBareProbeId>([
-      "roleless_370mm_open_box_base_only",
       "tagged_370mm_open_box_base_only",
       "split_185_185_open_box_base_only"
     ]);
@@ -385,6 +384,17 @@ describe("broad accuracy floor open-box timber raw-bare reopening guard contract
           ratingsRw: 32,
           supported: ["Rw", "Ln,w", "CI", "CI,50-2500", "Ln,w+CI"],
           unsupported: []
+        });
+      } else if (probe.id === "roleless_370mm_open_box_base_only") {
+        expect(snapshot, probe.id).toMatchObject({
+          floorSystemEstimateKind: null,
+          floorSystemMatchId: null,
+          impactBasis: null,
+          impactLnW: null,
+          ratingsBasis: "screening_mass_law_curve_seed_v3",
+          ratingsRw: 42,
+          supported: ["Rw"],
+          unsupported: ["Ln,w", "CI", "CI,50-2500", "Ln,w+CI"]
         });
       } else {
         expect(snapshot, probe.id).toMatchObject({
