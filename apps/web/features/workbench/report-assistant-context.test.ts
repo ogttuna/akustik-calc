@@ -603,4 +603,55 @@ describe("report assistant context identity", () => {
     expect(serialized).not.toContain("sourceUrl");
     expect(parsed?.presetLibrarySummary).toEqual(context.presetLibrarySummary);
   });
+
+  it("does not turn blocked coverage display values into calculator-backed numeric evidence", () => {
+    const baseDocument = documentWithLayer({
+      label: "Concrete slab",
+      surfaceMassLabel: "480 kg/m2",
+      thicknessLabel: "200 mm"
+    });
+    const document: SimpleWorkbenchProposalDocument = {
+      ...baseDocument,
+      coverageItems: baseDocument.coverageItems.map((item) =>
+        item.label === "Rw"
+          ? {
+              ...item,
+              detail: "Cavity depth is missing.",
+              engineDisplayValue: "99 dB",
+              postureDetail: "Needs input before calculation.",
+              postureLabel: "Needs input",
+              postureTone: "warning",
+              status: "needs_input",
+              value: "99 dB"
+            }
+          : item
+      ),
+      metrics: baseDocument.metrics.filter((metric) => metric.label !== "Rw"),
+      primaryMetricLabel: "Rw",
+      primaryMetricValue: "Needs input"
+    };
+
+    const context = buildReportAssistantContext({
+      baseDocument,
+      createdAtIso: "2026-06-22T09:00:00.000Z",
+      document
+    });
+    const rwMetric = context.metrics.find((metric) => metric.id === getReportAssistantMetricId("Rw"));
+    const rwFact = context.assistantOutputFacts.find((fact) => fact.metricId === getReportAssistantMetricId("Rw"));
+
+    expect(rwMetric).toMatchObject({
+      reportDisplayValue: "99 dB",
+      status: "needs_input"
+    });
+    expect(rwMetric?.engineDisplayValue).toBeUndefined();
+    expect(rwMetric?.numericDb).toBeUndefined();
+    expect(rwFact).toMatchObject({
+      basisCategory: "needs_input",
+      reportDisplayValue: "99 dB",
+      status: "needs_input"
+    });
+    expect(rwFact?.engineDisplayValue).toBeUndefined();
+    expect(rwFact?.valuePinDb).toBeUndefined();
+    expect(rwFact?.usedInputs.join(" ")).not.toContain("value pin");
+  });
 });

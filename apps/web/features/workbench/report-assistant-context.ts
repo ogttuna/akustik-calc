@@ -997,14 +997,16 @@ function upsertMetric(
 
   const basis = input.basis ?? getReportAssistantMetricBasis(outputId);
   const direction = input.direction ?? getReportAssistantMetricDirection(outputId);
-  const engineDisplayValue =
-    input.engineDisplayValue ??
-    findBaseDisplayValue({
-      baseDocument: input.baseDocument,
-      label: input.label,
-      metricId,
-      outputId
-    });
+  const canCarryCalculatorValue = canCarryCalculatorBackedMetricValue(input.status);
+  const engineDisplayValue = canCarryCalculatorValue
+    ? input.engineDisplayValue ??
+      findBaseDisplayValue({
+        baseDocument: input.baseDocument,
+        label: input.label,
+        metricId,
+        outputId
+      })
+    : undefined;
 
   metricsById.set(metricId, {
     basis,
@@ -1014,7 +1016,8 @@ function upsertMetric(
     label: input.label,
     locations: [input.location],
     metric: outputId ?? input.label,
-    numericDb: parseFirstNumericDb(input.value),
+    // Coordination note: blocked report/proposal rows may still display report text, but not calculator-backed numeric evidence.
+    numericDb: canCarryCalculatorValue ? parseFirstNumericDb(input.value) : undefined,
     outputId,
     reportDisplayValue: input.value,
     status: input.status
@@ -1053,12 +1056,44 @@ function uniqueBoundedStrings(values: readonly (string | undefined)[], maxItems 
   return unique;
 }
 
-function formatBoundedList(label: string, values: readonly string[] | undefined): string | undefined {
+function formatReportAssistantPhysicalInput(value: string): string {
+  // AGENT COORDINATION 2026-06-22: Report-assistant basis copy only; keep raw trace values on context objects.
+  const normalized = value.toLowerCase().replace(/[^a-z0-9]/gu, "");
+
+  if (normalized.includes("flooraream2")) return "floor area";
+  if (normalized.includes("partitionaream2")) return "partition width and height";
+  if (normalized.includes("receivingroomvolumem3")) return "receiving-room volume";
+  if (normalized.includes("receivingroomrt60s")) return "receiving-room RT60";
+  if (normalized.includes("loadbasiskgm2")) return "load basis";
+  if (normalized.includes("resilientlayerdynamicstiffnessmnm3")) return "dynamic stiffness";
+  if (normalized === "impactfieldcontext") return "impact field context";
+  if (normalized.includes("fieldkdb")) return "K correction";
+  if (normalized.includes("ci502500db")) return "CI,50-2500";
+  if (normalized.includes("cidb")) return "CI";
+  if (normalized.includes("flowresistivitypasm2")) return "flow resistivity";
+  if (normalized.includes("surfacemasskgm2")) return "leaf surface mass";
+  if (normalized.includes("cavity1depthmm")) return "first cavity depth";
+  if (normalized.includes("sidealeafgroup")) return "side A leaf group";
+  if (normalized.includes("sidebleafgroup")) return "side B leaf group";
+  if (normalized.includes("supportspacingmm") || normalized.includes("studspacingmm")) return "support spacing";
+  if (normalized.includes("resilientbarsidecount")) return "resilient bar side count";
+
+  return value
+    .replace(/_/gu, " ")
+    .replace(/([a-z])([A-Z])/gu, "$1 $2")
+    .replace(/\b\w/gu, (match) => match.toUpperCase());
+}
+
+function formatBoundedList(
+  label: string,
+  values: readonly string[] | undefined,
+  formatter: (value: string) => string = (value) => value
+): string | undefined {
   if (!values || values.length === 0) {
     return undefined;
   }
 
-  return `${label}: ${values.slice(0, 5).join(", ")}${values.length > 5 ? ", ..." : ""}`;
+  return `${label}: ${values.slice(0, 5).map(formatter).join(", ")}${values.length > 5 ? ", ..." : ""}`;
 }
 
 function isImpactOutput(outputId: RequestedOutputId | undefined): boolean {
@@ -1088,9 +1123,17 @@ function getOutputFactValuePin(input: {
   metric: ReportAssistantMetric;
   snapshot?: SimpleWorkbenchAssistantTraceSnapshot;
 }): number | undefined {
+  if (input.metric.status !== "live" && input.metric.status !== "bound") {
+    return undefined;
+  }
+
   return input.snapshot?.layerCombinationResolver?.valuePins?.find(
     (pin) => pin.metric === input.metric.metric || pin.metric === input.metric.outputId || pin.metric === input.metric.label
   )?.value;
+}
+
+function canCarryCalculatorBackedMetricValue(status: SimpleWorkbenchProposalCoverageStatus): boolean {
+  return status === "live" || status === "bound";
 }
 
 function inferOutputFactBasisCategory(input: {
@@ -1172,7 +1215,7 @@ function buildOutputFactUsedInputs(input: {
     candidateResolution?.selectedOrigin ? `selected origin: ${candidateResolution.selectedOrigin}` : undefined,
     resolver?.supportBucket ? `support bucket: ${resolver.supportBucket}` : undefined,
     valuePinDb !== undefined ? `value pin: ${metric.metric} ${valuePinDb} dB` : undefined,
-    formatBoundedList("resolver required inputs", resolver?.requiredInputs),
+    formatBoundedList("resolver required inputs", resolver?.requiredInputs, formatReportAssistantPhysicalInput),
     isImpactOutput(metric.outputId) ? (impact?.selectedLabel ? `impact lane: ${impact.selectedLabel}` : undefined) : undefined,
     isImpactOutput(metric.outputId)
       ? (impact?.supportFamilyLabel ?? impact?.supportFamily

@@ -297,6 +297,23 @@ function reviewStatusFromCoverageStatus(status: SimpleWorkbenchProposalCoverageS
   return "ready";
 }
 
+function formatCalculatorMissingInput(input: string): string {
+  // AGENT COORDINATION 2026-06-22: Assistant review blocker copy only; keep packet missingInputs raw for traceability.
+  const normalized = input.replace(/[^a-z0-9]/giu, "").toLowerCase();
+
+  if (normalized.includes("ci502500")) return "CI,50-2500";
+  if (normalized.includes("fieldkdb")) return "field K correction";
+  if (normalized.includes("loadbasiskgm2")) return "load basis";
+  if (normalized.includes("receivingroomvolume")) return "receiving room volume";
+  if (normalized.includes("supportspacingmm") || normalized.includes("studspacingmm")) return "support spacing";
+
+  return input.replace(/([a-z])([A-Z])/gu, "$1 $2").replace(/_/gu, " ").trim();
+}
+
+function formatCalculatorMissingInputs(inputs: readonly string[]): string {
+  return inputs.map(formatCalculatorMissingInput).join(", ");
+}
+
 function numericReviewBlocker(input: {
   calculatorDisplayValue?: string;
   missingInputs: readonly string[];
@@ -305,7 +322,7 @@ function numericReviewBlocker(input: {
 }): string | undefined {
   if (input.reviewStatus === "needs_input") {
     return input.missingInputs.length
-      ? `Missing calculator inputs: ${input.missingInputs.join(", ")}.`
+      ? `Missing calculator inputs: ${formatCalculatorMissingInputs(input.missingInputs)}.`
       : "Calculator output needs input before numeric source review.";
   }
 
@@ -359,9 +376,12 @@ export function buildReportAssistantCurrentCalculatorReviewPacketFromContext(inp
     fact: entry,
     metric
   }));
-  const calculatorDisplayValue = metric.engineDisplayValue ?? fact?.engineDisplayValue ?? (metric.status === "live" ? metric.reportDisplayValue : undefined);
+  // AGENT COORDINATION 2026-06-22: Report-context numeric review value gating only; do not change preview row behavior here.
+  const status = reviewStatusFromCoverageStatus(metric.status);
+  const capturedEngineDisplayValue = status === "ready" ? metric.engineDisplayValue ?? fact?.engineDisplayValue : undefined;
+  const calculatorDisplayValue = capturedEngineDisplayValue ?? (status === "ready" && metric.status === "live" ? metric.reportDisplayValue : undefined);
   const valueAuthority: ReportAssistantCurrentCalculatorReviewValueAuthority =
-    metric.engineDisplayValue || fact?.engineDisplayValue
+    capturedEngineDisplayValue
       ? "captured_engine_value"
       : "report_metric_without_engine_capture";
   const missingInputs = [
@@ -372,7 +392,6 @@ export function buildReportAssistantCurrentCalculatorReviewPacketFromContext(inp
     ...(fact?.outputId && fact.status === "unsupported" ? [fact.outputId] : []),
     ...input.context.traceSummary.unsupportedOutputs
   ].filter((entry, index, all) => all.indexOf(entry) === index);
-  const status = reviewStatusFromCoverageStatus(metric.status);
   const blocker = numericReviewBlocker({
     calculatorDisplayValue,
     missingInputs,

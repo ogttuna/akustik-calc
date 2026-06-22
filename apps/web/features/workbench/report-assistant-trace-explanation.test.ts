@@ -73,7 +73,7 @@ const BASE_CONTEXT: ReportAssistantContext = {
       engineDisplayValue: "Not ready",
       label: "Ln,w+CI",
       metricId: "output:Ln,w+CI",
-      missingInputs: ["CI adaptation evidence"],
+      missingInputs: ["impactFieldContext.ci50_2500Db"],
       outputId: "Ln,w+CI",
       parkedReason: "Add CI support evidence before publishing Ln,w+CI.",
       reportDisplayValue: "Not ready",
@@ -309,6 +309,8 @@ describe("report assistant trace explanation", () => {
     expect(deltaLwAnswer.detail).toContain("finish dynamic stiffness");
     expect(lnwCiAnswer.detail).toContain("Ln,w+CI intermediate logic:");
     expect(lnwCiAnswer.detail).toContain("Parked output Ln,w+CI");
+    expect(lnwCiAnswer.detail).toContain("CI,50-2500");
+    expect(lnwCiAnswer.detail).not.toContain("impactFieldContext.ci50_2500Db");
     expect(lnwCiAnswer.detail).toContain("Add CI support evidence");
     expect(rwAnswer.detail).toContain("Rw intermediate logic:");
     expect(rwAnswer.detail).toContain("airborne lane");

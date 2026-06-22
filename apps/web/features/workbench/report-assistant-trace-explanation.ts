@@ -34,6 +34,41 @@ function formatTraceList(values: readonly string[] | undefined, maxItems = 4): s
   return `${visible.map(normalizeTraceToken).join(", ")}${hiddenCount > 0 ? `, +${hiddenCount} more` : ""}`;
 }
 
+function formatPhysicalInputTraceList(values: readonly string[] | undefined, maxItems = 4): string | undefined {
+  // AGENT COORDINATION 2026-06-22: Human-facing trace copy only; raw ids remain on trace objects.
+  if (!values || values.length === 0) {
+    return undefined;
+  }
+
+  const visible = values.slice(0, maxItems);
+  const hiddenCount = values.length - visible.length;
+  return `${visible.map(formatPhysicalInputTraceToken).join(", ")}${hiddenCount > 0 ? `, +${hiddenCount} more` : ""}`;
+}
+
+function formatPhysicalInputTraceToken(value: string): string {
+  const normalized = value.toLowerCase().replace(/[^a-z0-9]/gu, "");
+
+  if (normalized.includes("flooraream2")) return "floor area";
+  if (normalized.includes("partitionaream2")) return "partition width and height";
+  if (normalized.includes("receivingroomvolumem3")) return "receiving-room volume";
+  if (normalized.includes("receivingroomrt60s")) return "receiving-room RT60";
+  if (normalized.includes("loadbasiskgm2")) return "load basis";
+  if (normalized.includes("resilientlayerdynamicstiffnessmnm3")) return "dynamic stiffness";
+  if (normalized === "impactfieldcontext") return "impact field context";
+  if (normalized.includes("fieldkdb")) return "K correction";
+  if (normalized.includes("ci502500db")) return "CI,50-2500";
+  if (normalized.includes("cidb")) return "CI";
+  if (normalized.includes("flowresistivitypasm2")) return "flow resistivity";
+  if (normalized.includes("surfacemasskgm2")) return "leaf surface mass";
+  if (normalized.includes("cavity1depthmm")) return "first cavity depth";
+  if (normalized.includes("sidealeafgroup")) return "side A leaf group";
+  if (normalized.includes("sidebleafgroup")) return "side B leaf group";
+  if (normalized.includes("supportspacingmm") || normalized.includes("studspacingmm")) return "support spacing";
+  if (normalized.includes("resilientbarsidecount")) return "resilient bar side count";
+
+  return normalizeTraceToken(value).replace(/\b\w/gu, (match) => match.toUpperCase());
+}
+
 function formatTraceNumber(value: number | undefined, suffix: string): string | undefined {
   return typeof value === "number" && Number.isFinite(value) ? `${value}${suffix}` : undefined;
 }
@@ -171,7 +206,7 @@ function buildResolverLine(input: {
     resolver.candidateKind ? `candidate kind ${normalizeTraceToken(resolver.candidateKind)}` : undefined,
     resolver.supportBucket ? `support bucket ${normalizeTraceToken(resolver.supportBucket)}` : undefined,
     resolver.supportedMetrics ? `supported ${formatTraceList(resolver.supportedMetrics)}` : undefined,
-    resolver.requiredInputs ? `required inputs ${formatTraceList(resolver.requiredInputs)}` : undefined,
+    resolver.requiredInputs ? `required inputs ${formatPhysicalInputTraceList(resolver.requiredInputs)}` : undefined,
     metricPin ? `value pin ${metricPin.metric} ${metricPin.value} dB` : undefined
   ]);
 
@@ -187,7 +222,7 @@ function buildOutputFactLine(input: {
   }
 
   const usedInputs = formatTraceList(fact.usedInputs, 3);
-  const missingInputs = formatTraceList(fact.missingInputs, 3);
+  const missingInputs = formatPhysicalInputTraceList(fact.missingInputs, 3);
   const detail = joinTraceParts([
     `basis category ${normalizeTraceToken(fact.basisCategory)}`,
     fact.status !== "live" ? `status ${normalizeTraceToken(fact.status)}` : undefined,
@@ -290,7 +325,7 @@ function buildInputCoverageLine(input: {
   }
 
   const usedInputs = formatTraceList(fact.usedInputs, 5);
-  const missingInputs = formatTraceList(fact.missingInputs, 5);
+  const missingInputs = formatPhysicalInputTraceList(fact.missingInputs, 5);
   const detail = joinTraceParts([
     usedInputs ? `used ${usedInputs}` : undefined,
     missingInputs ? `missing ${missingInputs}` : undefined

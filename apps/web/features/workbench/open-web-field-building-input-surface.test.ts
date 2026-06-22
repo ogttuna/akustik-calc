@@ -487,7 +487,8 @@ describe("open-web field/building input surface", () => {
       surface: COMPLETE_BUILDING_SURFACE,
       targetOutputs: BUILDING_TARGETS
     });
-    expect(building.warnings.join(" ")).toContain("floor_open_web_building_prediction_runtime_owner_missing");
+    expect(building.warnings.join(" ")).toContain("open-web building-prediction runtime owner is not implemented");
+    expect(building.warnings.join(" ")).not.toContain("floor_open_web_building_prediction_runtime_owner_missing");
     expect(building.result.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
     expect(building.result.unsupportedTargetOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w"]);
     expect(building.result.metrics).toMatchObject({

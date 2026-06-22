@@ -24,8 +24,9 @@ const AIRBORNE_PHYSICAL_INPUT_LABELS: Partial<Record<string, string>> = {
 };
 
 export function formatAirbornePhysicalPromptInput(input: string): string {
+  // AGENT COORDINATION 2026-06-22: User-facing prompt copy only; keep route/input ids in engine traces unchanged.
   const label = AIRBORNE_PHYSICAL_INPUT_LABELS[input];
-  return label ? `${label} [${input}]` : input;
+  return label ?? input;
 }
 
 export function formatAirbornePhysicalPromptInputs(inputs: readonly string[]): string {

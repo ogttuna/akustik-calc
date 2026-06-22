@@ -133,6 +133,67 @@ function getStoppedAnswerFamily(result: AssemblyResult): "airborne" | "impact" |
   return "requested";
 }
 
+function formatReportPhysicalInput(field: string): string {
+  // AGENT COORDINATION 2026-06-22: User-facing report summary copy only; raw boundary ids remain in result payloads.
+  if (field.startsWith("floorRole:")) {
+    const role = field.slice("floorRole:".length);
+    return FLOOR_ROLE_LABELS[role as keyof typeof FLOOR_ROLE_LABELS] ?? role.replace(/_/gu, " ");
+  }
+
+  const normalized = field.toLowerCase().replace(/[^a-z0-9]/gu, "");
+
+  if (normalized.includes("guidehddborreceivingroomvolumem3")) return "guide Hd or receiving-room volume";
+  if (normalized.includes("loadbasiskgm2")) return "load basis";
+  if (normalized.includes("resilientlayerdynamicstiffnessmnm3")) return "dynamic stiffness";
+  if (normalized === "impactfieldcontext") return "impact field context";
+  if (normalized.includes("fieldkdb")) return "K correction";
+  if (normalized.includes("ci502500db")) return "CI,50-2500";
+  if (normalized.includes("cidb")) return "CI";
+  if (normalized.includes("partitionaream2")) return "partition width and height";
+  if (normalized.includes("receivingroomvolumem3")) return "receiving-room volume";
+  if (normalized.includes("receivingroomrt60s")) return "receiving-room RT60";
+  if (normalized.includes("sourceroomvolumem3")) return "source-room volume";
+  if (normalized.includes("flowresistivitypasm2")) return "flow resistivity";
+  if (normalized.includes("surfacemasskgm2")) return "leaf surface mass";
+  if (normalized.includes("cavity1depthmm")) return "first cavity depth";
+  if (normalized.includes("sidealeafgroup")) return "side A leaf group";
+  if (normalized.includes("sidebleafgroup")) return "side B leaf group";
+  if (normalized.includes("supportspacingmm") || normalized.includes("studspacingmm")) return "support spacing";
+  if (normalized.includes("resilientbarsidecount")) return "resilient bar side count";
+
+  return field
+    .replace(/_/gu, " ")
+    .replace(/([a-z])([A-Z])/gu, "$1 $2")
+    .replace(/\b\w/gu, (match) => match.toUpperCase());
+}
+
+function formatReportPhysicalInputs(fields: readonly string[]): string {
+  return fields.map(formatReportPhysicalInput).join(", ");
+}
+
+function formatReportWarningLine(line: string): string {
+  // AGENT COORDINATION 2026-06-22: Report rendering copy only; API/engine warning strings are intentionally untouched.
+  return [
+    ["impactFieldContext.guideHdDb_or_receivingRoomVolumeM3", "guide Hd or receiving-room volume"],
+    ["resilientLayerDynamicStiffnessMNm3", "dynamic stiffness"],
+    ["impactFieldContext.ci50_2500Db", "CI,50-2500"],
+    ["impactFieldContext.fieldKDb", "K correction"],
+    ["impactFieldContext.ciDb", "CI"],
+    ["receivingRoomVolumeM3", "receiving-room volume"],
+    ["receivingRoomRt60S", "receiving-room RT60"],
+    ["partitionAreaM2", "partition width and height"],
+    ["flowResistivityPaSM2", "flow resistivity"],
+    ["surfaceMassKgM2", "leaf surface mass"],
+    ["loadBasisKgM2", "load basis"],
+    ["impactFieldContext", "impact field context"],
+    ["cavity1DepthMm", "first cavity depth"],
+    ["sideALeafGroup", "side A leaf group"],
+    ["sideBLeafGroup", "side B leaf group"],
+    ["supportSpacingMm", "support spacing"],
+    ["resilientBarSideCount", "resilient bar side count"]
+  ].reduce((text, [field, label]) => text.replaceAll(field, label), line);
+}
+
 function buildScopedAnswerSummaryParts(input: {
   result: AssemblyResult;
   targetLnwDb: string;
@@ -153,7 +214,7 @@ function buildScopedAnswerSummaryParts(input: {
 
   if (input.result.acousticAnswerBoundary) {
     const missingInputs = input.result.acousticAnswerBoundary.requiredInputs;
-    const missingSuffix = missingInputs.length > 0 ? `; needs ${missingInputs.join(", ")}` : "";
+    const missingSuffix = missingInputs.length > 0 ? `; needs ${formatReportPhysicalInputs(missingInputs)}` : "";
 
     return [`${getStoppedAnswerFamily(input.result)} answer ${input.result.acousticAnswerBoundary.origin}${missingSuffix}`];
   }
@@ -581,7 +642,7 @@ export function composeWorkbenchReport({
 
   const warningLines =
     currentScenario.warnings.length > 0
-      ? currentScenario.warnings.map((warning: string) => `- ${warning}`)
+      ? currentScenario.warnings.map((warning: string) => `- ${formatReportWarningLine(warning)}`)
       : ["- No explicit warnings in the live stack."];
   const dnTAkReportLine = getDnTAkReportLine(currentScenario.result);
   const dutchDnTAkComplianceLines = getDutchResidentialDnTAkComplianceReportLines(currentScenario.result);
@@ -797,7 +858,7 @@ export function composeWorkbenchReport({
                 `- Matched catalog id: ${currentScenario.result.impactPredictorStatus.matchedCatalogCaseId ?? "None"}`,
                 `- Future supported target outputs: ${listOutputs(currentScenario.result.impactPredictorStatus.futureSupportedTargetOutputs) || "None"}`,
                 ...currentScenario.result.impactPredictorStatus.notes.map((line: string) => `- Predictor note: ${line}`),
-                ...currentScenario.result.impactPredictorStatus.warnings.map((line: string) => `- Predictor warning: ${line}`)
+                ...currentScenario.result.impactPredictorStatus.warnings.map((line: string) => `- Predictor warning: ${formatReportWarningLine(line)}`)
               ]
             : []),
           ...(predictorLowerBound

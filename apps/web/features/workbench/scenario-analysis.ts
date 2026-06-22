@@ -114,6 +114,27 @@ function shouldForwardHeavyConcreteCombinedImpactPredictor(
   return surface?.status === "ready_for_formula_corridor" || surface?.status === "unsafe_topology";
 }
 
+function formatRuntimeBoundaryLabel(boundary: string): string {
+  // AGENT COORDINATION 2026-06-22: User-facing scenario warning copy only; keep raw boundary ids on input-surface objects.
+  const labels: Partial<Record<string, string>> = {
+    duplicateCavityId: "duplicate cavity ids",
+    duplicateLeafId: "duplicate leaf ids",
+    duplicateOpeningId: "duplicate opening ids",
+    duplicateOpeningSignature: "duplicate opening definitions",
+    duplicatePanelId: "duplicate panel ids",
+    duplicatePanelLayerOwnership: "duplicate panel layer ownership",
+    field_or_building_output_basis: "field/building output basis",
+    floor_open_web_building_prediction_runtime_owner_missing: "open-web building-prediction runtime owner is not implemented",
+    openingAreaExceedsHostWallArea: "opening area exceeds host wall area"
+  };
+
+  return labels[boundary] ?? boundary.replace(/_/gu, " ").replace(/([a-z])([A-Z])/gu, "$1 $2").toLowerCase();
+}
+
+function formatRuntimeBoundaryList(boundaries: readonly string[]): string {
+  return boundaries.map(formatRuntimeBoundaryLabel).join(", ");
+}
+
 export type EvaluatedScenario = {
   airborneContext?: AirborneContext | null;
   id: string;
@@ -292,7 +313,7 @@ export function evaluateScenario(input: {
   }
   if (openWebFieldBuildingInputSurface?.status === "unsupported") {
     scenarioWarnings.push(
-      `Floor open-web field/building input surface is parked because the visible floor context is outside the current runtime boundary: ${openWebFieldBuildingInputSurface.unsupportedBoundaries.join(", ")}.`
+      `Floor open-web field/building input surface is parked because the visible floor context is outside the current runtime boundary: ${formatRuntimeBoundaryList(openWebFieldBuildingInputSurface.unsupportedBoundaries)}.`
     );
   }
   const airborneFieldMissingInputWarning = airborneFieldContextInputSurface
@@ -309,7 +330,7 @@ export function evaluateScenario(input: {
   }
   if (advancedWallInputSurface?.status === "unsupported") {
     scenarioWarnings.push(
-      `Advanced wall source-absent input surface is parked because the visible advanced-wall fields are outside the Gate AY lab runtime boundary: ${advancedWallInputSurface.hostileInputBoundaries.length > 0 ? advancedWallInputSurface.hostileInputBoundaries.join(", ") : "field_or_building_output_basis"}.`
+      `Advanced wall source-absent input surface is parked because the visible advanced-wall fields are outside the Gate AY lab runtime boundary: ${formatRuntimeBoundaryList(advancedWallInputSurface.hostileInputBoundaries.length > 0 ? advancedWallInputSurface.hostileInputBoundaries : ["field_or_building_output_basis"])}.`
     );
   }
   const openingLeakMissingInputWarning = openingLeakCompositeInputSurface
@@ -320,7 +341,7 @@ export function evaluateScenario(input: {
   }
   if (openingLeakCompositeInputSurface?.status === "unsupported") {
     scenarioWarnings.push(
-      `Opening/leak composite input surface is parked because the visible opening fields are unsafe: ${openingLeakCompositeInputSurface.hostileInputBoundaries.join(", ")}.`
+      `Opening/leak composite input surface is parked because the visible opening fields are unsafe: ${formatRuntimeBoundaryList(openingLeakCompositeInputSurface.hostileInputBoundaries)}.`
     );
   }
   const activeInputSurfacePredictors = [

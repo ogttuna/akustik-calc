@@ -6,6 +6,7 @@ import {
   getReportAssistantMetricDirection,
   getReportAssistantMetricId
 } from "./report-assistant-context";
+import type { ReportAssistantContext } from "./report-assistant-context";
 import {
   buildSystemLlmGeminiGroundedAssemblyAlternativeResearchRequest,
   createReportAssistantAssemblyAlternativeReview,
@@ -233,6 +234,35 @@ describe("report assistant assembly alternative research", () => {
     }
   });
 
+  it("formats missing physical inputs in context-only rationale without leaking route ids", async () => {
+    const baseContext = context();
+    const reviewContext: ReportAssistantContext = {
+      ...baseContext,
+      traceSummary: {
+        ...baseContext.traceSummary,
+        missingPhysicalInputs: ["loadBasisKgM2", "impactFieldContext.ci50_2500Db", "sideALeafGroup"]
+      }
+    };
+
+    const result = await createReportAssistantAssemblyAlternativeReview({
+      context: reviewContext,
+      request: {
+        research: true,
+        userInstruction: "Eksik inputları da anlaşılır yaz."
+      },
+      settings: null
+    });
+
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      const rationale = result.review.rationale.join(" ");
+      expect(rationale).toContain("Missing physical inputs remain: Load basis, CI,50-2500, Side A leaf group.");
+      expect(rationale).not.toContain("loadBasisKgM2");
+      expect(rationale).not.toContain("impactFieldContext");
+      expect(rationale).not.toContain("sideALeafGroup");
+    }
+  });
+
   it("parses source-backed provider alternatives without exposing report patches", async () => {
     const fetchMock = vi.fn(async (_url: string | URL | Request, init?: RequestInit) => {
       const body = JSON.parse(String(init?.body)) as {
@@ -279,6 +309,11 @@ describe("report assistant assembly alternative research", () => {
             suggestedAlternatives: [
               {
                 affectedLayers: ["2. Mineral wool - 50 mm"],
+                candidateLayers: [
+                  { materialName: "Gypsum Board", role: "side_a", thicknessMm: "12.5" },
+                  { materialName: "Rock Wool", role: "cavity", thicknessMm: "75" },
+                  { materialName: "Gypsum Board", role: "side_b", thicknessMm: "12.5" }
+                ],
                 expectedMetricDirection: "higher_airborne_insulation",
                 expectedTradeoffs: ["More depth or mass may be needed."],
                 label: "Higher-density mineral wool cavity absorber",
@@ -325,6 +360,11 @@ describe("report assistant assembly alternative research", () => {
         ],
         suggestedAlternatives: [
           {
+            candidateLayers: [
+              { materialName: "Gypsum Board", role: "side_a", thicknessMm: "12.5" },
+              { materialName: "Rock Wool", role: "cavity", thicknessMm: "75" },
+              { materialName: "Gypsum Board", role: "side_b", thicknessMm: "12.5" }
+            ],
             label: "Higher-density mineral wool cavity absorber"
           }
         ]
@@ -469,6 +509,7 @@ describe("report assistant assembly alternative research", () => {
     expect(payload.task).toBe("dynecho.report_assistant.assembly_alternative_research");
     expect(payload.contract.rules.join(" ")).toContain("Do not return report patches");
     expect(payload.contract.rules.join(" ")).toContain("suggestedAlternatives");
+    expect(payload.contract.rules.join(" ")).toContain("candidateLayers");
   });
 
   it("returns route reviews without mutating report or requiring a metric", async () => {

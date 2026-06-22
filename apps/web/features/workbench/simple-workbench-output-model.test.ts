@@ -335,11 +335,12 @@ describe("simple workbench output model", () => {
 
     expect(rwCard).toEqual(
       expect.objectContaining({
-        detail: expect.stringContaining("floorRole:base_structure"),
+        detail: expect.stringContaining("base structure"),
         status: "needs_input",
         value: "Not ready"
       })
     );
+    expect(rwCard.detail).not.toContain("floorRole:base_structure");
     expect(lnwCard).toEqual(
       expect.objectContaining({
         detail: expect.stringContaining("Assign floor roles"),
@@ -441,11 +442,12 @@ describe("simple workbench output model", () => {
 
     expect(rwCard).toEqual(
       expect.objectContaining({
-        detail: expect.stringContaining("sideALeafGroup"),
+        detail: expect.stringContaining("side A leaf group"),
         status: "needs_input",
         value: "Not ready"
       })
     );
+    expect(rwCard.detail).not.toContain("sideALeafGroup");
   });
 
   it("does not surface wall-side Rw once the apparent field route marks it unsupported", () => {

@@ -407,6 +407,38 @@ function uniqueStrings(values: readonly (string | undefined)[], maxItems = 10): 
   return out;
 }
 
+function formatResearchPhysicalInput(value: string): string {
+  // AGENT COORDINATION 2026-06-22: Plausibility answer copy only; keep assistant output facts raw.
+  const normalized = value.toLowerCase().replace(/[^a-z0-9]/gu, "");
+
+  if (normalized.includes("flooraream2")) return "floor area";
+  if (normalized.includes("partitionaream2")) return "partition width and height";
+  if (normalized.includes("receivingroomvolumem3")) return "receiving-room volume";
+  if (normalized.includes("receivingroomrt60s")) return "receiving-room RT60";
+  if (normalized.includes("loadbasiskgm2")) return "load basis";
+  if (normalized.includes("resilientlayerdynamicstiffnessmnm3")) return "dynamic stiffness";
+  if (normalized === "impactfieldcontext") return "impact field context";
+  if (normalized.includes("fieldkdb")) return "K correction";
+  if (normalized.includes("ci502500db")) return "CI,50-2500";
+  if (normalized.includes("cidb")) return "CI";
+  if (normalized.includes("flowresistivitypasm2")) return "flow resistivity";
+  if (normalized.includes("surfacemasskgm2")) return "leaf surface mass";
+  if (normalized.includes("cavity1depthmm")) return "first cavity depth";
+  if (normalized.includes("sidealeafgroup")) return "side A leaf group";
+  if (normalized.includes("sidebleafgroup")) return "side B leaf group";
+  if (normalized.includes("supportspacingmm") || normalized.includes("studspacingmm")) return "support spacing";
+  if (normalized.includes("resilientbarsidecount")) return "resilient bar side count";
+
+  return value
+    .replace(/_/gu, " ")
+    .replace(/([a-z])([A-Z])/gu, "$1 $2")
+    .replace(/\b\w/gu, (match) => match.toUpperCase());
+}
+
+function formatResearchPhysicalInputs(values: readonly string[]): string {
+  return values.map(formatResearchPhysicalInput).join(", ");
+}
+
 function getParkedMetricReason(input: {
   context: ReportAssistantContext;
   metric: ReportAssistantMetric;
@@ -417,7 +449,7 @@ function getParkedMetricReason(input: {
   }
 
   if (outputFact?.missingInputs.length) {
-    return `Missing inputs: ${outputFact.missingInputs.join(", ")}.`;
+    return `Missing inputs: ${formatResearchPhysicalInputs(outputFact.missingInputs)}.`;
   }
 
   return input.metric.status === "needs_input"

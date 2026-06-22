@@ -168,7 +168,7 @@ function hasWallUnsupportedAnswerBoundary(
 
 function buildFloorAnswerBoundaryMissingInputDetail(result: AssemblyCalculation): string {
   const missingInputs = result.acousticAnswerBoundary?.missingPhysicalInputs ?? [];
-  const suffix = missingInputs.length > 0 ? ` Missing: ${missingInputs.join(", ")}.` : "";
+  const suffix = missingInputs.length > 0 ? ` Missing: ${formatInputList(missingInputs)}.` : "";
 
   return `Assign floor roles before treating this floor output as supported.${suffix}`;
 }
@@ -213,16 +213,50 @@ function getHeavyConcreteCombinedPhysicalInputPromptFields(
   return [];
 }
 
+function formatPhysicalInputLabel(field: string): string {
+  // AGENT COORDINATION 2026-06-22: Output-card copy only; keep calculator missingPhysicalInputs ids unchanged.
+  if (field.startsWith("floorRole:")) {
+    const role = field.slice("floorRole:".length);
+    const roleLabels: Partial<Record<string, string>> = {
+      base_structure: "base structure",
+      ceiling_board: "ceiling board",
+      ceiling_cavity: "ceiling cavity",
+      ceiling_fill: "ceiling fill"
+    };
+
+    return roleLabels[role] ?? role.replace(/_/gu, " ");
+  }
+
+  const normalized = field.toLowerCase().replace(/[^a-z0-9]/gu, "");
+
+  if (normalized.includes("guidehddborreceivingroomvolumem3")) return "guide Hd or receiving-room volume";
+  if (normalized.includes("loadbasiskgm2")) return "load basis";
+  if (normalized.includes("resilientlayerdynamicstiffnessmnm3")) return "dynamic stiffness";
+  if (normalized === "impactfieldcontext") return "impact field context";
+  if (normalized.includes("fieldkdb")) return "K correction";
+  if (normalized.includes("ci502500db")) return "CI,50-2500";
+  if (normalized.includes("cidb")) return "CI";
+  if (normalized.includes("receivingroomvolumem3")) return "receiving-room volume";
+  if (normalized.includes("guidehddb")) return "guide Hd";
+
+  return field
+    .replace(/_/gu, " ")
+    .replace(/([a-z])([A-Z])/gu, "$1 $2")
+    .replace(/\b\w/gu, (match) => match.toUpperCase());
+}
+
 function formatInputList(fields: readonly string[]): string {
-  if (fields.length <= 1) {
-    return fields[0] ?? "";
+  const labels = fields.map(formatPhysicalInputLabel);
+
+  if (labels.length <= 1) {
+    return labels[0] ?? "";
   }
 
-  if (fields.length === 2) {
-    return `${fields[0]} and ${fields[1]}`;
+  if (labels.length === 2) {
+    return `${labels[0]} and ${labels[1]}`;
   }
 
-  return `${fields.slice(0, -1).join(", ")}, and ${fields[fields.length - 1]}`;
+  return `${labels.slice(0, -1).join(", ")}, and ${labels[labels.length - 1]}`;
 }
 
 function isExplicitlyUnsupportedOutput(

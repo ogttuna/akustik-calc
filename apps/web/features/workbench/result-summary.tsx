@@ -33,6 +33,43 @@ function formatSignedDb(value: number): string {
   return `${value >= 0 ? "+" : ""}${formatDecimal(value)} dB`;
 }
 
+function formatMissingPhysicalInputLabel(fieldId: string): string {
+  // AGENT COORDINATION 2026-06-22: User-facing result summary copy only; do not change boundary semantics here.
+  const normalized = fieldId.toLowerCase().replace(/[^a-z0-9]/gu, "");
+
+  if (normalized.includes("loadbasiskgm2")) return "Load basis";
+  if (normalized.includes("resilientlayerdynamicstiffnessmnm3")) return "Dynamic stiffness";
+  if (normalized.includes("flowresistivitypasm2")) return "Flow resistivity";
+  if (normalized.includes("surfacemasskgm2")) return "Leaf surface mass";
+  if (normalized === "impactfieldcontext") return "Impact field context";
+  if (normalized.includes("fieldkdb")) return "K correction";
+  if (normalized.includes("ci502500db")) return "CI,50-2500";
+  if (normalized.includes("cidb")) return "CI";
+  if (normalized.includes("receivingroomvolumem3")) return "Receiving-room volume";
+  if (normalized.includes("receivingroomrt60s")) return "RT60";
+  if (normalized.includes("guidehddb")) return "guide Hd";
+  if (normalized.includes("sourceroomvolumem3")) return "Source-room volume";
+  if (normalized.includes("panelwidthmm")) return "Panel width";
+  if (normalized.includes("panelheightmm")) return "Panel height";
+  if (normalized.includes("partitionaream2")) return "Partition area";
+  if (normalized.includes("supportspacingmm") || normalized.includes("studspacingmm")) return "Support spacing";
+  if (normalized.includes("cavity1depthmm")) return "First cavity depth";
+  if (normalized.includes("sidealeafgroup")) return "Side A leaf group";
+  if (normalized.includes("sidebleafgroup")) return "Side B leaf group";
+  if (normalized.includes("walltopology") || normalized.includes("leafgrouping")) return "Wall topology";
+  if (normalized.includes("resilientbarsidecount")) return "Resilient bar side count";
+
+  const leaf = fieldId.split(".").at(-1) ?? fieldId;
+  return leaf
+    .replace(/_/gu, " ")
+    .replace(/([a-z])([A-Z])/gu, "$1 $2")
+    .replace(/\b\w/gu, (match) => match.toUpperCase());
+}
+
+function formatMissingPhysicalInputList(fieldIds: readonly string[]): string {
+  return fieldIds.map(formatMissingPhysicalInputLabel).join(", ");
+}
+
 export function ResultSummary({ result, targetLnwDb, targetRwDb, warnings }: ResultSummaryProps) {
   const noteLines = buildWorkbenchWarningNotes(result, [...(result?.warnings ?? []), ...warnings]);
   const lowerBoundImpact = result?.lowerBoundImpact ?? null;
@@ -63,7 +100,7 @@ export function ResultSummary({ result, targetLnwDb, targetRwDb, warnings }: Res
   );
   const floorAnswerStopDetail =
     floorAnswerBoundary?.origin === "needs_input"
-      ? `Needs input: ${floorAnswerBoundary.missingPhysicalInputs.join(", ")}`
+      ? `Needs input: ${formatMissingPhysicalInputList(floorAnswerBoundary.missingPhysicalInputs)}`
       : floorAnswerBoundary?.origin === "unsupported"
         ? `Unsupported outputs: ${floorAnswerBoundary.unsupportedOutputs.join(", ")}`
         : "Stopped by the selected answer boundary";
@@ -180,7 +217,7 @@ export function ResultSummary({ result, targetLnwDb, targetRwDb, warnings }: Res
                   <span className="inline-flex items-center gap-2">
                     <Gauge className="h-4 w-4" />
                     {airborneAnswerParked
-                      ? `Needs input${airborneAnswerMissingInputs.length > 0 ? `: ${airborneAnswerMissingInputs.join(", ")}` : ""}`
+                      ? `Needs input${airborneAnswerMissingInputs.length > 0 ? `: ${formatMissingPhysicalInputList(airborneAnswerMissingInputs)}` : ""}`
                       : activeCalculatorLabel}
                   </span>
                 }

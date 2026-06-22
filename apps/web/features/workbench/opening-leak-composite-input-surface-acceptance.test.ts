@@ -376,7 +376,8 @@ describe("opening/leak composite input surface acceptance", () => {
       origin: "unsupported"
     });
     expect(duplicateOpening.result?.airborneBasis?.errorBudgetDb).toBeUndefined();
-    expect(duplicateOpening.warnings.join("\n")).toContain("duplicateOpeningId");
+    expect(duplicateOpening.warnings.join("\n")).toContain("duplicate opening ids");
+    expect(duplicateOpening.warnings.join("\n")).not.toContain("duplicateOpeningId");
 
     const excessiveArea = evaluateOpeningScenario({
       surface: {
@@ -385,7 +386,8 @@ describe("opening/leak composite input surface acceptance", () => {
       }
     });
     expect(excessiveArea.result?.airborneBasis?.origin).toBe("unsupported");
-    expect(excessiveArea.result?.warnings.join("\n")).toContain("openingAreaExceedsHostWallArea");
+    expect(excessiveArea.warnings.join("\n")).toContain("opening area exceeds host wall area");
+    expect(excessiveArea.warnings.join("\n")).not.toContain("openingAreaExceedsHostWallArea");
 
     const sourceAbsentOpening = evaluateOpeningScenario({
       surface: {

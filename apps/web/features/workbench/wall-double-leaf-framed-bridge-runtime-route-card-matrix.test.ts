@@ -312,26 +312,29 @@ describe("wall double-leaf/framed bridge runtime route-card Gate S", () => {
       tone: "warning",
       value: "Awaiting physical input"
     });
-    expect(snapshot.branch.detail).toContain("resilientBarSideCount");
+    expect(snapshot.branch.detail).toContain("resilient bar side count");
+    expect(snapshot.branch.detail).not.toContain("resilientBarSideCount");
 
     for (const output of WALL_OUTPUTS) {
       expect(snapshot.cards.get(output), output).toMatchObject({
-        detail: expect.stringContaining("resilientBarSideCount"),
+        detail: expect.stringContaining("resilient bar side count"),
         status: "needs_input",
         value: "Not ready"
       });
+      expect(snapshot.cards.get(output)?.detail, output).not.toContain("resilientBarSideCount");
     }
     expect(snapshot.warnings).not.toContain(GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_WARNING);
 
     const proposal = buildProposalDocument({
       branch: snapshot.branch,
       cards: [...snapshot.cards.values()],
-      validationDetail: "Needs resilientBarSideCount before the airborne runtime can defend the route."
+      validationDetail: "Needs resilient bar side count before the airborne runtime can defend the route."
     });
     const text = buildSimpleWorkbenchProposalText(proposal);
 
     expect(text).toContain("- Rw: Needs input | Awaiting route input | Not ready");
-    expect(text).toContain("resilientBarSideCount");
+    expect(text).toContain("resilient bar side count");
+    expect(text).not.toContain("resilientBarSideCount");
     expect(text).not.toContain("currently reads Rw 45 dB");
   });
 });

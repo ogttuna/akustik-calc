@@ -533,6 +533,8 @@ function localTasks(input: {
 function missingInputLabel(fieldId: string): string {
   const normalized = fieldId.toLowerCase().replace(/[^a-z0-9]/gu, "");
 
+  if (normalized.includes("flowresistivitypasm2")) return "Flow resistivity";
+  if (normalized.includes("surfacemasskgm2")) return "Leaf surface mass";
   if (normalized.includes("loadbasiskgm2")) return "Load basis";
   if (normalized.includes("resilientlayerdynamicstiffnessmnm3")) return "Dynamic stiffness";
   if (normalized.includes("fieldkdb")) return "K correction";
@@ -540,6 +542,7 @@ function missingInputLabel(fieldId: string): string {
   if (normalized.includes("cidb")) return "CI";
   if (normalized.includes("receivingroomvolumem3")) return "Receiving-room volume";
   if (normalized.includes("receivingroomrt60s")) return "RT60";
+  if (normalized === "impactfieldcontext") return "Impact field context";
   if (normalized.includes("panelwidthmm")) return "Panel width";
   if (normalized.includes("panelheightmm")) return "Panel height";
   if (normalized.includes("sourceroomvolumem3")) return "Source-room volume";
@@ -547,7 +550,34 @@ function missingInputLabel(fieldId: string): string {
   if (normalized.includes("resilientbarsidecount")) return "Resilient bar side count";
   if (normalized.includes("walltopology") || normalized.includes("leafgrouping")) return "Wall topology";
 
-  return fieldId.split(".").at(-1) ?? fieldId;
+  const leaf = fieldId.split(".").at(-1) ?? fieldId;
+  return leaf
+    .replace(/_/gu, " ")
+    .replace(/([a-z])([A-Z])/gu, "$1 $2")
+    .replace(/\b\w/gu, (match) => match.toUpperCase());
+}
+
+function missingInputDetail(fieldId: string): string {
+  // AGENT COORDINATION 2026-06-22: Copy-only route input guidance; keep assistant route/status semantics unchanged.
+  const normalized = fieldId.toLowerCase().replace(/[^a-z0-9]/gu, "");
+
+  if (normalized.includes("flowresistivitypasm2")) {
+    return "The active porous cavity damping route needs flow resistivity on the selected porous absorber material.";
+  }
+
+  if (normalized.includes("surfacemasskgm2")) {
+    return "The active leaf route needs positive surface mass from the leaf material or its density and thickness.";
+  }
+
+  if (normalized.includes("resilientlayerdynamicstiffnessmnm3")) {
+    return "The active floor impact route needs dynamic stiffness on the selected resilient layer material.";
+  }
+
+  if (normalized === "impactfieldcontext") {
+    return "Complete the impact field context required by the selected field impact output.";
+  }
+
+  return `The active formula route needs ${fieldId} before it can calculate the selected output.`;
 }
 
 function routeTasks(result: AssemblyCalculation): WorkbenchV2CalculatorAssistantTask[] {
@@ -562,7 +592,7 @@ function routeTasks(result: AssemblyCalculation): WorkbenchV2CalculatorAssistant
     : [];
 
   return Array.from(new Set<string>(missingPhysicalInputs)).map((fieldId) => ({
-    detail: `Calculator route requires ${fieldId}.`,
+    detail: missingInputDetail(fieldId),
     id: `route-${fieldId}`,
     label: missingInputLabel(fieldId),
     source: "calculator_route" as const
@@ -623,6 +653,7 @@ function readOutputValue(result: AssemblyCalculation, outputId: RequestedOutputI
 }
 
 function outputDetail(result: AssemblyCalculation, outputId: RequestedOutputId, status: WorkbenchV2CalculatorAssistantOutputStatus): string {
+  // AGENT COORDINATION 2026-06-22: Output-row detail copy only; keep support/status gating unchanged.
   const boundary = result.acousticAnswerBoundary;
 
   if (status === "live") {
@@ -637,10 +668,10 @@ function outputDetail(result: AssemblyCalculation, outputId: RequestedOutputId, 
   }
 
   if (result.unsupportedTargetOutputs.includes(outputId) || boundary?.unsupportedOutputs.includes(outputId)) {
-    return "Unsupported for route";
+    return "Unsupported by the current route";
   }
 
-  return "No value";
+  return "No supported value for the selected output yet";
 }
 
 function outputRows(

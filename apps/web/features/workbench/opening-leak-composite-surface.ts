@@ -48,6 +48,36 @@ function listOutputs(outputs: readonly RequestedOutputId[]): string {
   return outputs.join(", ");
 }
 
+function formatOpeningMissingInput(input: string): string {
+  // AGENT COORDINATION 2026-06-22: Opening/leak surface copy only; raw missingInputs stay available on the surface object.
+  const labels: Partial<Record<string, string>> = {
+    hostWallAreaM2: "host wall area",
+    openingAreaM2: "opening area",
+    openingElementRwDb: "opening element Rw",
+    openingLeakagePenaltyDb: "opening leakage penalty"
+  };
+
+  return labels[input] ?? input.replace(/([a-z])([A-Z])/gu, "$1 $2").replace(/\b\w/gu, (match) => match.toUpperCase());
+}
+
+function formatOpeningMissingInputs(inputs: readonly string[]): string {
+  return inputs.map(formatOpeningMissingInput).join(", ");
+}
+
+function formatOpeningWarningLine(line: string): string {
+  // AGENT COORDINATION 2026-06-22: User-facing opening/leak warning copy only; raw engine warning ids stay on result.warnings.
+  return [
+    ["openingElementRwDb", "opening element Rw"],
+    ["hostWallAreaM2", "host wall area"],
+    ["openingLeakagePenaltyDb", "opening leakage penalty"],
+    ["openingAreaM2", "opening area"],
+    ["duplicateOpeningId", "duplicate opening ids"],
+    ["duplicateOpeningSignature", "duplicate opening definitions"],
+    ["openingAreaExceedsHostWallArea", "opening area exceeds host wall area"],
+    ["sourceAbsentOpeningValueBudgetOwner", "source-absent opening value budget owner"]
+  ].reduce((text, [field, label]) => text.replaceAll(field, label), line);
+}
+
 function hasOpeningLeakCompositeMethod(result: AssemblyCalculation | null | undefined): result is AssemblyCalculation {
   return result?.airborneBasis?.method === WEB_GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD;
 }
@@ -97,12 +127,13 @@ export function getGateSOpeningLeakCompositeSurface(
   );
   const stcAdapterBasis = getGateAHOpeningLeakStcAdapterBasis(result);
   const stcAdapterActive = Boolean(stcAdapterBasis);
-  const warning =
+  const rawWarning =
     result.warnings.find((entry: string) => entry === WEB_GATE_AH_OPENING_LEAK_STC_SPECTRUM_ADAPTER_WARNING) ??
     result.warnings.find((entry: string) => entry === WEB_GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_WARNING) ??
     result.warnings.find((entry: string) => /Opening\/leak composite runtime/i.test(entry)) ??
     result.warnings.find((entry: string) => /Opening\/leak STC spectrum adapter/i.test(entry)) ??
     null;
+  const warning = rawWarning ? formatOpeningWarningLine(rawWarning) : null;
   const label =
     origin === "family_physics_prediction"
       ? "Opening/leak composite runtime"
@@ -118,7 +149,7 @@ export function getGateSOpeningLeakCompositeSurface(
       : "";
   const missingText =
     missingInputs.length > 0
-      ? ` Missing physical inputs: ${missingInputs.join(", ")}.`
+      ? ` Missing physical inputs: ${formatOpeningMissingInputs(missingInputs)}.`
       : "";
   const baseDetail =
     origin === "family_physics_prediction"
@@ -138,7 +169,7 @@ export function getGateSOpeningLeakCompositeSurface(
     unsupportedOutputs.length > 0
       ? `Unsupported opening/leak outputs: ${listOutputs(unsupportedOutputs)}.`
       : "No unsupported opening/leak companion output was requested.",
-    ...(missingInputs.length > 0 ? [`Missing opening/leak inputs: ${missingInputs.join(", ")}.`] : []),
+    ...(missingInputs.length > 0 ? [`Missing opening/leak inputs: ${formatOpeningMissingInputs(missingInputs)}.`] : []),
     ...(warning ? [warning] : [])
   ];
 
@@ -155,7 +186,7 @@ export function getGateSOpeningLeakCompositeSurface(
       `- Airborne opening/leak basis: Gate S opening/leak composite runtime (method ${method}; origin ${origin}).`,
       origin === "family_physics_prediction"
         ? `- Airborne opening/leak Rw: ${formatBudget(result.metrics.estimatedRwDb)} dB${stcAdapterActive ? `; STC: ${formatBudget(result.metrics.estimatedStc)} dB through Gate AH ASTM E413 adapter` : ""}, budget ${budgetLabel ?? "unavailable"}, not measured evidence.`
-        : `- Airborne opening/leak status: ${origin}${missingInputs.length > 0 ? `; missing ${missingInputs.join(", ")}` : ""}.`,
+        : `- Airborne opening/leak status: ${origin}${missingInputs.length > 0 ? `; missing ${formatOpeningMissingInputs(missingInputs)}` : ""}.`,
       ...(unsupportedOutputs.length > 0
         ? [
             `- Airborne opening/leak unsupported outputs: ${listOutputs(unsupportedOutputs)} stay unsupported; no ${stcAdapterActive ? "field or building" : "STC, field, or building"} alias.`
@@ -187,7 +218,7 @@ export function getGateSOpeningLeakCompositeOutputDetail(
   }
 
   if (surface.origin === "needs_input") {
-    return `${surface.detail} Complete ${surface.missingInputs.join(", ")} before ${output} can be promoted.`;
+    return `${surface.detail} Complete ${formatOpeningMissingInputs(surface.missingInputs)} before ${output} can be promoted.`;
   }
 
   if (surface.unsupportedOutputs.includes(output)) {

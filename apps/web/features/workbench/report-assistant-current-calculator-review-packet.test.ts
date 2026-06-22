@@ -158,7 +158,7 @@ describe("report assistant current calculator review packet", () => {
   it("keeps needs-input outputs reviewable only as blocked non-numeric packets", () => {
     const result = buildReportAssistantCurrentCalculatorReviewPacketFromContext({
       context: context({
-        missingInputs: ["support spacing"],
+        missingInputs: ["supportSpacingMm", "impactFieldContext.ci50_2500Db"],
         status: "needs_input"
       }),
       metricId: RW_METRIC_ID
@@ -170,9 +170,9 @@ describe("report assistant current calculator review packet", () => {
         metric: {
           status: "needs_input"
         },
-        missingInputs: ["support spacing"],
+        missingInputs: ["supportSpacingMm", "impactFieldContext.ci50_2500Db"],
         numericReviewAllowed: false,
-        numericReviewBlocker: "Missing calculator inputs: support spacing.",
+        numericReviewBlocker: "Missing calculator inputs: support spacing, CI,50-2500.",
         reviewStatus: "needs_input"
       }
     });
@@ -201,6 +201,34 @@ describe("report assistant current calculator review packet", () => {
         unsupportedOutputs: ["IIC"]
       }
     });
+  });
+
+  it("does not carry stale captured engine values for non-live report-context metrics", () => {
+    const result = buildReportAssistantCurrentCalculatorReviewPacketFromContext({
+      context: context({
+        engineDisplayValue: "61 dB",
+        outputId: "IIC",
+        status: "unsupported"
+      }),
+      metricId: IIC_METRIC_ID
+    });
+
+    expect(result).toMatchObject({
+      ok: true,
+      packet: {
+        metric: {
+          metricId: IIC_METRIC_ID,
+          outputId: "IIC",
+          status: "unsupported",
+          valueAuthority: "report_metric_without_engine_capture"
+        },
+        numericReviewAllowed: false,
+        numericReviewBlocker: "Unsupported calculator outputs: IIC.",
+        reviewStatus: "unsupported",
+        unsupportedOutputs: ["IIC"]
+      }
+    });
+    expect(result.ok && result.packet.metric.calculatorDisplayValue).toBeUndefined();
   });
 
   it("builds a ready packet from calculator preview rows and described layers", () => {

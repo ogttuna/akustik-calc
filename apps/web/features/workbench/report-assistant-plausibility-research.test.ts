@@ -1319,6 +1319,49 @@ describe("report assistant source-bounded plausibility research", () => {
     }
   });
 
+  it("formats parked metric missing inputs without leaking route ids", () => {
+    const { metricId, reviewContext } = parkedMetricContext("needs_input");
+    const contextWithRawMissingInputs = {
+      ...reviewContext,
+      assistantOutputFacts: reviewContext.assistantOutputFacts.map((fact) =>
+        fact.metricId === metricId
+          ? (({ parkedReason: _parkedReason, ...factWithoutParkedReason }) => ({
+              ...factWithoutParkedReason,
+              missingInputs: ["loadBasisKgM2", "impactFieldContext.ci50_2500Db"]
+            }))(fact)
+          : fact
+      )
+    };
+
+    const review = extractReportAssistantPlausibilityReviewFromResearchResponse({
+      context: contextWithRawMissingInputs,
+      request: {
+        metricId,
+        research: true,
+        suggestPatch: true
+      },
+      response: {
+        review: {
+          comparability: "direct",
+          metricId,
+          rationale: ["Provider incorrectly returned a numeric claim for a parked metric."],
+          severity: "low",
+          sources: [],
+          valueRecommendation: {
+            targetDb: 55
+          },
+          verdict: "plausible"
+        }
+      }
+    });
+
+    expect(review?.answerText).toContain("Missing inputs: load basis, CI,50-2500.");
+    expect(review?.answerText).not.toContain("loadBasisKgM2");
+    expect(review?.answerText).not.toContain("impactFieldContext");
+    expect(review?.insufficientSourcesReason).toBe("Missing inputs: load basis, CI,50-2500.");
+    expect(review?.valueRecommendation?.targetDb).toBeUndefined();
+  });
+
   it("accepts selected metric aliases from providers but rejects another metric", () => {
     const aliasReview = extractReportAssistantPlausibilityReviewFromResearchResponse({
       context: context(),

@@ -172,8 +172,88 @@ describe("result answer chart", () => {
     expect(chartHtml).toBe("");
     expect(summaryHtml).toContain("Impact answer");
     expect(summaryHtml).toContain("Not ready");
-    expect(summaryHtml).toContain("Needs input: loadBasisKgM2");
+    expect(summaryHtml).toContain("Needs input: Load basis");
+    expect(summaryHtml).not.toContain("loadBasisKgM2");
     expect(summaryHtml).not.toContain("Rw estimate");
     expect(summaryHtml).not.toContain(">STC<");
+  });
+
+  it("formats grouped floor field-context needs-input rows for users", () => {
+    vi.stubGlobal("React", React);
+    const result = buildFixture({
+      acousticAnswerBoundary: {
+        method: "dynamic_calculator_floor_impact_missing_field_context",
+        missingPhysicalInputs: ["impactFieldContext", "impactFieldContext.ci50_2500Db"],
+        origin: "needs_input",
+        requiredInputs: ["impactFieldContext", "impactFieldContext.ci50_2500Db"],
+        route: "floor",
+        unsupportedOutputs: ["L'nT,50"]
+      },
+      impact: null,
+      supportedImpactOutputs: [],
+      supportedTargetOutputs: [],
+      targetOutputs: ["L'nT,50"],
+      unsupportedImpactOutputs: ["L'nT,50"],
+      unsupportedTargetOutputs: ["L'nT,50"]
+    });
+
+    const summaryHtml = renderToStaticMarkup(
+      createElement(ResultSummary, {
+        result,
+        targetLnwDb: "55",
+        targetRwDb: "52",
+        warnings: []
+      })
+    );
+
+    expect(summaryHtml).toContain("Needs input: Impact field context, CI,50-2500");
+    expect(summaryHtml).not.toContain("impactFieldContext");
+    expect(summaryHtml).not.toContain("ci50_2500Db");
+  });
+
+  it("formats parked airborne answer missing inputs for users", () => {
+    vi.stubGlobal("React", React);
+    const result = buildFixture({
+      acousticAnswerBoundary: {
+        method: "dynamic_calculator_route_input_contract_missing_physical_fields",
+        missingPhysicalInputs: ["sideALeafGroup", "cavity1DepthMm"],
+        origin: "needs_input",
+        requiredInputs: ["sideALeafGroup", "cavity1DepthMm"],
+        route: "wall",
+        unsupportedOutputs: ["Rw", "STC"]
+      },
+      airborneBasis: {
+        assumptions: ["missing physical fields are user prompts"],
+        calculationStandard: "none",
+        curveBasis: "no_curve",
+        kind: "airborne_needs_input",
+        method: "dynamic_calculator_route_input_contract_missing_physical_fields",
+        missingPhysicalInputs: ["sideALeafGroup", "cavity1DepthMm"],
+        missingSourceEvidence: [],
+        origin: "needs_input",
+        propertyDefaults: [],
+        ratingStandard: "none",
+        requiredInputs: ["sideALeafGroup", "cavity1DepthMm"]
+      },
+      impact: null,
+      supportedImpactOutputs: [],
+      supportedTargetOutputs: [],
+      targetOutputs: ["Rw", "STC"],
+      unsupportedImpactOutputs: [],
+      unsupportedTargetOutputs: ["Rw", "STC"]
+    });
+
+    const summaryHtml = renderToStaticMarkup(
+      createElement(ResultSummary, {
+        result,
+        targetLnwDb: "55",
+        targetRwDb: "52",
+        warnings: []
+      })
+    );
+
+    expect(summaryHtml).toContain("Needs input: Side A leaf group, First cavity depth");
+    expect(summaryHtml).not.toContain("sideALeafGroup");
+    expect(summaryHtml).not.toContain("cavity1DepthMm");
   });
 });

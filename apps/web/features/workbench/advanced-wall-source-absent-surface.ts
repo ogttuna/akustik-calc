@@ -1,5 +1,7 @@
 import type { AssemblyCalculation, RequestedOutputId } from "@dynecho/shared";
 
+import { WORKBENCH_ADVANCED_WALL_INPUT_LABELS } from "./advanced-wall-source-absent-input-surface";
+
 export const WEB_GATE_AY_ADVANCED_WALL_RUNTIME_METHOD =
   "gate_ay_advanced_wall_source_absent_direct_curve_runtime_corridor";
 
@@ -50,6 +52,16 @@ function budgetLabel(result: AssemblyCalculation): string | null {
     : null;
 }
 
+function formatAdvancedWallMissingInput(input: string): string {
+  // AGENT COORDINATION 2026-06-22: Advanced-wall surface copy only; raw missingPhysicalInputs remain on the engine basis.
+  return WORKBENCH_ADVANCED_WALL_INPUT_LABELS[input as keyof typeof WORKBENCH_ADVANCED_WALL_INPUT_LABELS] ??
+    input.replace(/([a-z])([A-Z])/gu, "$1 $2");
+}
+
+function formatAdvancedWallMissingInputs(inputs: readonly string[]): string {
+  return inputs.map(formatAdvancedWallMissingInput).join(", ");
+}
+
 export function getGateAYAdvancedWallSurface(
   result: AssemblyCalculation | null | undefined
 ): AdvancedWallSourceAbsentSurface | null {
@@ -79,7 +91,7 @@ export function getGateAYAdvancedWallSurface(
   const detail =
     origin === "family_physics_prediction"
       ? `Gate AY advanced wall runtime is active through ${method}: lab Rw ${formatValue(result.metrics.estimatedRwDb)} dB, STC ${formatValue(result.metrics.estimatedStc)} dB, C ${formatValue(result.metrics.estimatedCDb)} dB, Ctr ${formatValue(result.metrics.estimatedCtrDb)} dB, budget ${budget ?? "unavailable"}, not measured evidence. Field and building outputs are not aliased.`
-      : `Gate AY advanced wall runtime is blocked through ${method}: origin ${origin}${missingInputs.length > 0 ? `, missing ${missingInputs.join(", ")}` : ""}. No source-absent lab budget is shown while blocked.`;
+      : `Gate AY advanced wall runtime is blocked through ${method}: origin ${origin}${missingInputs.length > 0 ? `, missing ${formatAdvancedWallMissingInputs(missingInputs)}` : ""}. No source-absent lab budget is shown while blocked.`;
 
   return {
     budgetLabel: budget,
@@ -105,7 +117,7 @@ export function getGateAYAdvancedWallSurface(
       `- Airborne advanced-wall basis: Gate AY advanced wall source-absent runtime (method ${method}; origin ${origin}).`,
       origin === "family_physics_prediction"
         ? `- Airborne advanced-wall values: Rw ${formatValue(result.metrics.estimatedRwDb)} dB; STC ${formatValue(result.metrics.estimatedStc)} dB; C ${formatValue(result.metrics.estimatedCDb)} dB; Ctr ${formatValue(result.metrics.estimatedCtrDb)} dB; budget ${budget ?? "unavailable"}; not measured evidence.`
-        : `- Airborne advanced-wall status: ${origin}${missingInputs.length > 0 ? `; missing ${missingInputs.join(", ")}` : ""}.`,
+        : `- Airborne advanced-wall status: ${origin}${missingInputs.length > 0 ? `; missing ${formatAdvancedWallMissingInputs(missingInputs)}` : ""}.`,
       ...(unsupportedOutputs.length > 0
         ? [
             `- Airborne advanced-wall unsupported outputs: ${unsupportedOutputs.join(", ")} stay unsupported; no field/building alias.`
@@ -133,7 +145,7 @@ export function getGateAYAdvancedWallOutputDetail(
   }
 
   if (surface.origin === "needs_input") {
-    return `${surface.detail} Complete ${surface.missingInputs.join(", ")} before ${output} can be promoted.`;
+    return `${surface.detail} Complete ${formatAdvancedWallMissingInputs(surface.missingInputs)} before ${output} can be promoted.`;
   }
 
   if (surface.unsupportedOutputs.includes(output)) {

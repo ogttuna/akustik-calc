@@ -226,6 +226,18 @@ describe("advanced wall source-absent input surface acceptance", () => {
     expect(partialScenario.result?.supportedTargetOutputs).toEqual([]);
     expect(partialScenario.result?.unsupportedTargetOutputs).toEqual(["Rw", "STC", "C", "Ctr"]);
     expect(partialScenario.warnings.join(" ")).toContain("Panel loss factor");
+    expect(partialScenario.warnings.join(" ")).not.toContain("panelLossFactor");
+    expect(partialScenario.warnings.join(" ")).not.toContain("panelCriticalFrequencyHz");
+
+    const partialRwCard = addOutputCardPosture(
+      buildOutputCard({ output: "Rw", result: partialScenario.result, studyMode: "wall" }),
+      { result: partialScenario.result, studyMode: "wall" }
+    );
+    expect(partialRwCard.detail).toContain("Panel loss factor");
+    expect(partialRwCard.detail).not.toContain("panelLossFactor");
+    expect(getGateAYAdvancedWallSurface(partialScenario.result)?.reportLines.join("\n")).not.toContain(
+      "panelCriticalFrequencyHz"
+    );
   });
 
   it("keeps field/building outputs parked instead of aliasing lab advanced-wall values", () => {
@@ -241,6 +253,7 @@ describe("advanced wall source-absent input surface acceptance", () => {
     expect(scenario.result?.airborneBasis?.origin).toBe("unsupported");
     expect(scenario.result?.supportedTargetOutputs).toEqual([]);
     expect(scenario.result?.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
-    expect(scenario.warnings.join(" ")).toContain("field_or_building_output_basis");
+    expect(scenario.warnings.join(" ")).toContain("field/building output basis");
+    expect(scenario.warnings.join(" ")).not.toContain("field_or_building_output_basis");
   });
 });

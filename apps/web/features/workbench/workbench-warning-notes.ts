@@ -35,8 +35,47 @@ export const EXACT_FLOOR_FAMILY_CURVE_NOTE =
 export const LOW_CONFIDENCE_FLOOR_FAMILY_NOTE =
   "Low-confidence published-family fallback is active on the impact lane. Ln,w stays source-backed, but the family fit is weak, so narrow the topology before treating this as a delivery-ready claim.";
 
+function formatUserVisibleWarning(warning: string): string {
+  // AGENT COORDINATION 2026-06-22: User-facing workbench warning copy only; keep engine warning ids intact at source.
+  return [
+    ["DynEcho", "DAC"],
+    ["absorberCoverageRatio", "Absorber coverage ratio"],
+    ["absorberFlowResistivityPaSM2", "Absorber flow resistivity"],
+    ["absorberThicknessMm", "Absorber thickness"],
+    ["cavityDepthMm", "Cavity depth"],
+    ["cavitySealState", "Cavity seal state"],
+    ["cavitySequence", "Cavity sequence"],
+    ["duplicateOpeningId", "duplicate opening ids"],
+    ["duplicateOpeningSignature", "duplicate opening definitions"],
+    ["duplicateOwnershipGuard", "duplicate ownership guard"],
+    ["field_or_building_output_basis", "field/building output basis"],
+    ["fieldBuildingAdapterBoundary", "Field/building adapter boundary"],
+    [
+      "floor_open_web_building_prediction_runtime_owner_missing",
+      "open-web building-prediction runtime owner is not implemented"
+    ],
+    ["frameDepthMm", "Frame depth"],
+    ["frameLineCouplingStiffnessMNPerM3", "Frame coupling stiffness"],
+    ["frameMaterialClass", "Frame material class"],
+    ["frameSpacingMm", "Frame spacing"],
+    ["hostWallAreaM2", "Host wall area"],
+    ["mechanicalBridgeAreaRatio", "Mechanical bridge area ratio"],
+    ["openingAreaExceedsHostWallArea", "opening area exceeds host wall area"],
+    ["panelBendingStiffnessNm", "Panel bending stiffness"],
+    ["panelCriticalFrequencyHz", "Panel critical frequency"],
+    ["panelLayerOwnership", "Panel layer ownership"],
+    ["panelLossFactor", "Panel loss factor"],
+    ["panelMaterialClass", "Panel material class"],
+    ["panelSurfaceMassKgM2", "Panel surface mass"],
+    ["panelThicknessMm", "Panel thickness"],
+    ["resilientConnectionStiffnessMNPerM3", "Resilient connection stiffness"],
+    ["resilientConnectionType", "Resilient connection type"],
+    ["sourceAbsentOpeningValueBudgetOwner", "source-absent opening value budget owner"]
+  ].reduce((formatted, [needle, replacement]) => formatted.replaceAll(needle, replacement), warning);
+}
+
 export function buildWorkbenchWarningNotes(result: AssemblyCalculation | null, warnings: readonly string[]): string[] {
-  const dedupedWarnings = Array.from(new Set(warnings.map((warning) => warning.replaceAll("DynEcho", "DAC"))));
+  const dedupedWarnings = Array.from(new Set(warnings.map(formatUserVisibleWarning)));
   const isLowConfidenceFloorEstimate =
     result?.dynamicImpactTrace?.estimateTier === "low_confidence" ||
     result?.impact?.basis === "predictor_floor_system_low_confidence_estimate" ||

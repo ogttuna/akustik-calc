@@ -438,12 +438,13 @@ describe("opening/leak composite surface parity", () => {
       status: "needs_input",
       value: "Not ready"
     });
-    expect(missingRwCard.detail).toContain("openingElementRwDb");
+    expect(missingRwCard.detail).toContain("opening element Rw");
+    expect(missingRwCard.detail).not.toContain("openingElementRwDb");
 
     for (const [scenario, warningFragment] of [
-      [duplicate, "duplicateOpeningId"],
-      [excessiveArea, "openingAreaExceedsHostWallArea"],
-      [sourceAbsent, "sourceAbsentOpeningValueBudgetOwner"],
+      [duplicate, "duplicate opening ids"],
+      [excessiveArea, "opening area exceeds host wall area"],
+      [sourceAbsent, "source-absent opening value budget owner"],
       [stcOnly, "STC-only opening ratings cannot be aliased"]
     ] as const) {
       const card = addOutputCardPosture(

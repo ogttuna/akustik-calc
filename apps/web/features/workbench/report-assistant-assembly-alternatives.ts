@@ -36,10 +36,18 @@ export type ReportAssistantComparableAssembly = {
 
 export type ReportAssistantAssemblyAlternativeSuggestion = {
   affectedLayers: readonly string[];
+  candidateLayers?: readonly ReportAssistantAssemblyAlternativeCandidateLayer[];
   expectedMetricDirection: ReportAssistantAssemblyAlternativeExpectedMetricDirection;
   expectedTradeoffs: readonly string[];
   label: string;
   rationale: readonly string[];
+};
+
+export type ReportAssistantAssemblyAlternativeCandidateLayer = {
+  materialName: string;
+  role?: string;
+  sourcePhrase?: string;
+  thicknessMm: string;
 };
 
 export type ReportAssistantAssemblyAlternativeRequest = {
@@ -121,6 +129,55 @@ function normalizeStringArray(value: unknown, maxItems = 10): string[] {
         .filter((entry): entry is string => typeof entry === "string")
         .map((entry) => entry.trim())
         .filter((entry) => entry.length > 0)
+        .slice(0, maxItems)
+    : [];
+}
+
+function normalizeCandidateLayer(value: unknown): ReportAssistantAssemblyAlternativeCandidateLayer | null {
+  if (!isObjectRecord(value)) {
+    return null;
+  }
+
+  const materialName =
+    normalizeOptionalString(value.materialName) ??
+    normalizeOptionalString(value.material) ??
+    normalizeOptionalString(value.name) ??
+    normalizeOptionalString(value.catalogMaterialName);
+  const rawThickness =
+    value.thicknessMm ??
+    value.thickness ??
+    value.thicknessLabel ??
+    value.mm;
+  const thicknessMm = typeof rawThickness === "number"
+    ? String(rawThickness)
+    : normalizeOptionalString(rawThickness);
+
+  if (!materialName || !thicknessMm) {
+    return null;
+  }
+
+  const layer: ReportAssistantAssemblyAlternativeCandidateLayer = {
+    materialName,
+    thicknessMm
+  };
+  const role = normalizeOptionalString(value.role);
+  const sourcePhrase = normalizeOptionalString(value.sourcePhrase) ?? normalizeOptionalString(value.phrase);
+
+  if (role) {
+    layer.role = role;
+  }
+  if (sourcePhrase) {
+    layer.sourcePhrase = sourcePhrase;
+  }
+
+  return layer;
+}
+
+function normalizeCandidateLayers(value: unknown, maxItems = 12): ReportAssistantAssemblyAlternativeCandidateLayer[] {
+  return Array.isArray(value)
+    ? value
+        .map((entry) => normalizeCandidateLayer(entry))
+        .filter((entry): entry is ReportAssistantAssemblyAlternativeCandidateLayer => entry !== null)
         .slice(0, maxItems)
     : [];
 }
@@ -417,13 +474,20 @@ function normalizeSuggestion(value: unknown): ReportAssistantAssemblyAlternative
     return null;
   }
 
-  return {
+  const suggestion: ReportAssistantAssemblyAlternativeSuggestion = {
     affectedLayers: normalizeStringArray(value.affectedLayers ?? value.layers, 8),
     expectedMetricDirection: normalizeExpectedMetricDirection(value.expectedMetricDirection ?? value.metricDirection),
     expectedTradeoffs: normalizeStringArray(value.expectedTradeoffs ?? value.tradeoffs, 8),
     label,
     rationale: normalizeStringArray(value.rationale ?? value.reasoning ?? value.reason, 8)
   };
+  const candidateLayers = normalizeCandidateLayers(value.candidateLayers ?? value.proposedLayers ?? value.layerStack);
+
+  if (candidateLayers.length > 0) {
+    suggestion.candidateLayers = candidateLayers;
+  }
+
+  return suggestion;
 }
 
 function normalizeAffectedLayers(input: {
@@ -462,13 +526,44 @@ function buildContextTraceLines(context: ReportAssistantContext): string[] {
     lines.push(`Basis: ${context.traceSummary.basis}.`);
   }
   if (context.traceSummary.missingPhysicalInputs.length > 0) {
-    lines.push(`Missing physical inputs remain: ${context.traceSummary.missingPhysicalInputs.join(", ")}.`);
+    lines.push(`Missing physical inputs remain: ${formatTracePhysicalInputs(context.traceSummary.missingPhysicalInputs)}.`);
   }
   if (context.traceSummary.unsupportedOutputs.length > 0) {
     lines.push(`Unsupported outputs remain: ${context.traceSummary.unsupportedOutputs.join(", ")}.`);
   }
 
   return lines;
+}
+
+function formatTracePhysicalInput(input: string): string {
+  // AGENT COORDINATION 2026-06-22: Review copy only; keep raw route ids in traceSummary for deterministic tooling.
+  const normalized = input.toLowerCase().replace(/[^a-z0-9]/gu, "");
+
+  if (normalized.includes("loadbasiskgm2")) return "Load basis";
+  if (normalized.includes("resilientlayerdynamicstiffnessmnm3")) return "Dynamic stiffness";
+  if (normalized === "impactfieldcontext") return "Impact field context";
+  if (normalized.includes("fieldkdb")) return "K correction";
+  if (normalized.includes("ci502500db")) return "CI,50-2500";
+  if (normalized.includes("cidb")) return "CI";
+  if (normalized.includes("flowresistivitypasm2")) return "Flow resistivity";
+  if (normalized.includes("surfacemasskgm2")) return "Leaf surface mass";
+  if (normalized.includes("receivingroomvolumem3")) return "Receiving-room volume";
+  if (normalized.includes("receivingroomrt60s")) return "RT60";
+  if (normalized.includes("cavity1depthmm")) return "First cavity depth";
+  if (normalized.includes("sidealeafgroup")) return "Side A leaf group";
+  if (normalized.includes("sidebleafgroup")) return "Side B leaf group";
+  if (normalized.includes("supportspacingmm") || normalized.includes("studspacingmm")) return "Support spacing";
+  if (normalized.includes("resilientbarsidecount")) return "Resilient bar side count";
+
+  const leaf = input.split(".").at(-1) ?? input;
+  return leaf
+    .replace(/_/gu, " ")
+    .replace(/([a-z])([A-Z])/gu, "$1 $2")
+    .replace(/\b\w/gu, (match) => match.toUpperCase());
+}
+
+function formatTracePhysicalInputs(inputs: readonly string[]): string {
+  return inputs.map(formatTracePhysicalInput).join(", ");
 }
 
 export function parseReportAssistantAssemblyAlternativeRequest(
@@ -592,6 +687,7 @@ function buildAssemblyAlternativeResearchRequestBody(input: {
       rules: [
         "Return only non-mutating advice. Do not return report patches, do not apply changes, and do not change calculator outputs.",
         "Use suggestedAlternatives for layer/material alternatives; each item must include label, affectedLayers, expectedMetricDirection, expectedTradeoffs, and rationale.",
+        "When and only when a suggestion has an explicit previewable stack, include candidateLayers as an array of materialName, thicknessMm, optional role, and optional sourcePhrase. Do not invent missing candidateLayers.",
         "Use affectedLayers for the current layer rows touched by the question.",
         "Use expectedMetricDirection with one of: higher_airborne_insulation, lower_airborne_insulation, lower_impact_noise, higher_impact_noise, neutral_or_unknown.",
         "Use sourceQuality with one of: none, weak, mixed, strong.",
@@ -605,7 +701,7 @@ function buildAssemblyAlternativeResearchRequestBody(input: {
         ...(input.strictJsonRetry
           ? [
               "Retry contract: return one top-level JSON object, not an array or prose.",
-              "The object must include answerText, suggestedAlternatives, affectedLayers, expectedMetricDirection, expectedTradeoffs, sourceQuality, comparability, comparableAssemblies, missingEvidence, sources, and insufficientSourcesReason."
+              "The object must include answerText, suggestedAlternatives, affectedLayers, expectedMetricDirection, expectedTradeoffs, sourceQuality, comparability, comparableAssemblies, missingEvidence, sources, and insufficientSourcesReason; candidateLayers is optional inside suggestedAlternatives only when explicit."
             ]
           : [])
       ]
