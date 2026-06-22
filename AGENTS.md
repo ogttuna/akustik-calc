@@ -137,8 +137,1061 @@ Latest checkpoint reconciliation:
 It confirms the broad full-gate checkpoint and docs/implementation
 comparison after the workbench expectation fixes, records that the
 current selected runtime action was the cavity-depth numeric-sensitivity
-owner, and is now superseded by the landed owner section below. It does
-not replace the documentation map or selected next plan.
+owner, and is now superseded by the landed owner, coverage refresh,
+reranks, leaf surface-mass owner, leaf surface-mass coverage refresh,
+frequency-backbone owner, frequency-backbone coverage refresh, explicit
+surface-mass leaf scope opener and coverage refresh, and the single-leaf
+explicit surface-mass unknown-material scope opener, coverage refresh,
+field-context adapter owner, field-context adapter coverage refresh, and
+building-context adapter owner, building-context adapter coverage
+refresh, building `DnT,A,k` characteristic adapter owner, single-leaf
+building `DnT,A,k` coverage refresh, double-leaf/framed building
+`DnT,A,k` owner, double-leaf/framed building `DnT,A,k` coverage
+refresh, compatible anchor-delta building `DnT,A,k` owner and coverage
+refresh, direct-fixed double-leaf/framed building `DnT,A,k` owner and
+coverage refresh, local-substitution building `DnT,A,k` owner,
+local-substitution building `DnT,A,k` coverage refresh, and
+opening/leak building `DnT,A,k` owner sections below. It does not
+replace the documentation map or selected next plan.
+
+## Latest Wall Opening/Leak Building DnT,A,k Characteristic Adapter Owner - 2026-06-22
+
+Latest landed runtime/accuracy owner:
+`post_v1_wall_opening_leak_building_dntak_characteristic_adapter_owner_plan`.
+Owner file:
+`packages/engine/src/post-v1-wall-opening-leak-building-dntak-characteristic-adapter-owner-contract.test.ts`.
+Owner plan doc:
+`docs/calculator/POST_V1_WALL_OPENING_LEAK_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_OWNER_PLAN_2026-06-22.md`.
+Owner status:
+`post_v1_wall_opening_leak_building_dntak_characteristic_adapter_owner_landed_runtime_selected_coverage_refresh`.
+It follows
+`post_v1_wall_local_substitution_building_dntak_characteristic_adapter_coverage_refresh_landed_no_runtime_selected_opening_leak_building_dntak_characteristic_adapter_owner`.
+Selected candidate:
+`wall.opening_leak_building_dntak_characteristic_adapter_owner`.
+The opening/leak `building_prediction` A-weighted route now calculates
+`DnT,A,k 30.4` from the owned opening/leak building `DnT,A 31.3`,
+receiving-room volume, partition area with the 7 m2 minimum, and
+`T0=0.5 s`. Mixed opening/leak building requests now keep
+`R'w 31.6`, `DnT,w 32.1`, `DnT,A 31.3`, and `DnT,A,k 30.4` together
+on the opening/leak A-weighted building basis. Missing frequency band,
+missing volume, missing building output basis, apparent-only basis,
+field context, lab context, building `Dn,A`, and impact aliases remain
+closed. Counters: `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 1`, `newCalculableTargetOutputs: 1`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 1`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+Validation for this owner: targeted owner + previous local-substitution
+coverage refresh passed `2 files / 10 tests`; the opening/local neighbor
+chain passed `5 files / 26 tests`; `git diff --check` passed. The owner
+and previous coverage refresh pass inside `pnpm calculator:gate:current`,
+but the full current gate still exits non-zero on existing unrelated
+global failures.
+
+Current selected next action:
+`post_v1_wall_opening_leak_building_dntak_characteristic_adapter_coverage_refresh_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-wall-opening-leak-building-dntak-characteristic-adapter-coverage-refresh-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_WALL_OPENING_LEAK_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-22.md`.
+Current selected next label:
+`post-V1 wall opening/leak building DnT,A,k characteristic adapter coverage refresh`.
+
+## Latest Wall Local-Substitution Building DnT,A,k Characteristic Adapter Coverage Refresh - 2026-06-22
+
+Latest landed no-runtime coverage refresh:
+`post_v1_wall_local_substitution_building_dntak_characteristic_adapter_coverage_refresh_plan`.
+Coverage refresh file:
+`packages/engine/src/post-v1-wall-local-substitution-building-dntak-characteristic-adapter-coverage-refresh-contract.test.ts`.
+Coverage refresh plan doc:
+`docs/calculator/POST_V1_WALL_LOCAL_SUBSTITUTION_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-22.md`.
+Coverage refresh status:
+`post_v1_wall_local_substitution_building_dntak_characteristic_adapter_coverage_refresh_landed_no_runtime_selected_opening_leak_building_dntak_characteristic_adapter_owner`.
+It follows
+`post_v1_wall_local_substitution_building_dntak_characteristic_adapter_owner_landed_runtime_selected_coverage_refresh`.
+Selected candidate re-probed:
+`wall.local_substitution_building_dntak_characteristic_adapter_owner`.
+The refresh protects grouped triple-leaf local-substitution
+`DnT,A 53.9` and `DnT,A,k 52.4`, mixed building outputs, missing input
+honesty, apparent-only, field, lab, and impact boundaries. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Selected next:
+`post_v1_wall_opening_leak_building_dntak_characteristic_adapter_owner_plan`
+/
+`packages/engine/src/post-v1-wall-opening-leak-building-dntak-characteristic-adapter-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_OPENING_LEAK_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_OWNER_PLAN_2026-06-22.md`
+/
+`post-V1 wall opening/leak building DnT,A,k characteristic adapter owner`.
+
+## Latest Wall Local-Substitution Building DnT,A,k Characteristic Adapter Owner - 2026-06-22
+
+Latest landed runtime/accuracy owner:
+`post_v1_wall_local_substitution_building_dntak_characteristic_adapter_owner_plan`.
+Owner file:
+`packages/engine/src/post-v1-wall-local-substitution-building-dntak-characteristic-adapter-owner-contract.test.ts`.
+Owner plan doc:
+`docs/calculator/POST_V1_WALL_LOCAL_SUBSTITUTION_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_OWNER_PLAN_2026-06-22.md`.
+Owner status:
+`post_v1_wall_local_substitution_building_dntak_characteristic_adapter_owner_landed_runtime_selected_coverage_refresh`.
+It follows
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_building_dntak_characteristic_adapter_coverage_refresh_landed_no_runtime_selected_local_substitution_building_dntak_characteristic_adapter_owner`.
+Selected candidate:
+`wall.local_substitution_building_dntak_characteristic_adapter_owner`.
+The grouped triple-leaf local-substitution `building_prediction` route
+now calculates `DnT,A,k 52.4` from the owned local-substitution
+building `DnT,A 53.9`, receiving-room volume, partition area with the
+7 m2 minimum, and `T0=0.5 s`. Mixed building requests now keep
+`R'w 51`, `Dn,w 51`, `Dn,A 52.4`, `DnT,w 53`, `DnT,A 53.9`, and
+`DnT,A,k 52.4` together on the local-substitution building basis.
+Missing volume, missing building output basis, apparent-only basis,
+field context, lab context, and impact aliases remain closed. Counters:
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 1`,
+`newCalculableTargetOutputs: 1`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 1`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next action:
+`post_v1_wall_local_substitution_building_dntak_characteristic_adapter_coverage_refresh_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-wall-local-substitution-building-dntak-characteristic-adapter-coverage-refresh-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_WALL_LOCAL_SUBSTITUTION_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-22.md`.
+Current selected next label:
+`post-V1 wall local-substitution building DnT,A,k characteristic adapter coverage refresh`.
+
+Implementation sync:
+the direct-fixed coverage-refresh file and local-substitution owner file
+exist and are included in `tools/dev/run-calculator-current-gate.ts`;
+the selected local-substitution coverage-refresh file does not exist
+yet.
+
+## Latest Wall Double-Leaf/Framed Direct-Fixed Context Absorptive-Cavity Building DnT,A,k Characteristic Adapter Coverage Refresh - 2026-06-22
+
+Latest landed no-runtime coverage refresh:
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_building_dntak_characteristic_adapter_coverage_refresh_plan`.
+Coverage refresh file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-building-dntak-characteristic-adapter-coverage-refresh-contract.test.ts`.
+Coverage refresh plan doc:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_DIRECT_FIXED_CONTEXT_ABSORPTIVE_CAVITY_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-22.md`.
+Coverage refresh status:
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_building_dntak_characteristic_adapter_coverage_refresh_landed_no_runtime_selected_local_substitution_building_dntak_characteristic_adapter_owner`.
+It follows
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_building_dntak_characteristic_adapter_owner_landed_runtime_selected_coverage_refresh`.
+Selected candidate re-probed:
+`wall.double_leaf_framed.direct_fixed_context_absorptive_cavity_building_dntak_characteristic_adapter_owner`.
+The refresh protects full and partial direct-fixed absorptive-cavity
+`DnT,A,k` pins, mixed building outputs, missing-input honesty,
+apparent-only, field, lab, and impact boundaries. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Selected next:
+`post_v1_wall_local_substitution_building_dntak_characteristic_adapter_owner_plan`
+/
+`packages/engine/src/post-v1-wall-local-substitution-building-dntak-characteristic-adapter-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_LOCAL_SUBSTITUTION_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_OWNER_PLAN_2026-06-22.md`
+/
+`post-V1 wall local-substitution building DnT,A,k characteristic adapter owner`.
+
+## Latest Wall Double-Leaf/Framed Direct-Fixed Context Absorptive-Cavity Building DnT,A,k Characteristic Adapter Owner - 2026-06-22
+
+Latest landed runtime/accuracy owner:
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_building_dntak_characteristic_adapter_owner_plan`.
+Owner file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-building-dntak-characteristic-adapter-owner-contract.test.ts`.
+Owner plan doc:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_DIRECT_FIXED_CONTEXT_ABSORPTIVE_CAVITY_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_OWNER_PLAN_2026-06-22.md`.
+Owner status:
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_building_dntak_characteristic_adapter_owner_landed_runtime_selected_coverage_refresh`.
+It follows
+`post_v1_wall_compatible_anchor_delta_building_dntak_characteristic_adapter_coverage_refresh_landed_no_runtime_selected_direct_fixed_double_leaf_building_dntak_characteristic_adapter_owner`.
+Selected candidate:
+`wall.double_leaf_framed.direct_fixed_context_absorptive_cavity_building_dntak_characteristic_adapter_owner`.
+Direct-fixed double-leaf/framed absorptive-cavity `building_prediction`
+requests now calculate `DnT,A,k` from the Gate EO direct-fixed
+bridge-loss curve, owned Gate AR `DnT,A`, receiving-room volume,
+partition area with the 7 m2 minimum, and `T0=0.5 s`. Full absorptive
+cavity returns `DnT,A 31.0` and `DnT,A,k 27.7`; partial absorptive
+cavity returns `DnT,A 29.0` and `DnT,A,k 25.7`. Missing volume,
+missing building output basis, missing absorber flow, apparent-only
+basis, field-context `DnT,A,k`, lab-only `DnT,A,k`, and impact aliases
+remain closed. Counters: `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 2`, `newCalculableTargetOutputs: 1`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 2`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Current selected next action:
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_building_dntak_characteristic_adapter_coverage_refresh_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-building-dntak-characteristic-adapter-coverage-refresh-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_DIRECT_FIXED_CONTEXT_ABSORPTIVE_CAVITY_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-22.md`.
+Current selected next label:
+`post-V1 wall double-leaf/framed direct-fixed context absorptive-cavity building DnT,A,k characteristic adapter coverage refresh`.
+
+## Latest Wall Compatible Anchor-Delta Building DnT,A,k Characteristic Adapter Coverage Refresh - 2026-06-22
+
+Latest landed no-runtime coverage refresh:
+`post_v1_wall_compatible_anchor_delta_building_dntak_characteristic_adapter_coverage_refresh_plan`.
+Coverage refresh file:
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-building-dntak-characteristic-adapter-coverage-refresh-contract.test.ts`.
+Coverage refresh plan doc:
+`docs/calculator/POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-22.md`.
+Coverage refresh status:
+`post_v1_wall_compatible_anchor_delta_building_dntak_characteristic_adapter_coverage_refresh_landed_no_runtime_selected_direct_fixed_double_leaf_building_dntak_characteristic_adapter_owner`.
+It follows
+`post_v1_wall_compatible_anchor_delta_building_dntak_characteristic_adapter_owner_landed_runtime_selected_coverage_refresh`.
+Selected candidate re-probed:
+`wall.compatible_anchor_delta.building_dntak_characteristic_adapter_owner`.
+The refresh protects paired exterior-board `DnT,A,k 49.0`, one-side
+exterior-board `DnT,A,k 47.5`, mixed Gate AR building outputs, resolver
+`DnT,A,k` value pins, missing volume, missing building output basis,
+apparent-only basis, field/lab separation, non-compatible-anchor
+separation, and impact unsupported boundaries. Counters:
+`coverageRefreshContractFilesTouched: 1`, `newCalculableLayerTemplates:
+0`, `newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Selected next:
+`post_v1_wall_double_leaf_framed_direct_fixed_context_absorptive_cavity_building_dntak_characteristic_adapter_owner_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-direct-fixed-context-absorptive-cavity-building-dntak-characteristic-adapter-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_DIRECT_FIXED_CONTEXT_ABSORPTIVE_CAVITY_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_OWNER_PLAN_2026-06-22.md`
+/
+`post-V1 wall double-leaf/framed direct-fixed context absorptive-cavity building DnT,A,k characteristic adapter owner`.
+
+## Latest Wall Compatible Anchor-Delta Building DnT,A,k Characteristic Adapter Owner - 2026-06-22
+
+Latest landed runtime/accuracy owner:
+`post_v1_wall_compatible_anchor_delta_building_dntak_characteristic_adapter_owner_plan`.
+Owner file:
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-building-dntak-characteristic-adapter-owner-contract.test.ts`.
+Owner plan doc:
+`docs/calculator/POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_OWNER_PLAN_2026-06-22.md`.
+Owner status:
+`post_v1_wall_compatible_anchor_delta_building_dntak_characteristic_adapter_owner_landed_runtime_selected_coverage_refresh`.
+It follows
+`post_v1_wall_double_leaf_framed_context_owned_porous_cavity_building_dntak_characteristic_adapter_coverage_refresh_landed_no_runtime_selected_compatible_anchor_delta_building_dntak_characteristic_adapter_owner`.
+Selected candidate:
+`wall.compatible_anchor_delta.building_dntak_characteristic_adapter_owner`.
+Compatible anchor-delta lightweight steel frame `building_prediction`
+requests now calculate `DnT,A,k` from the measured LSF anchor, bounded
+added-board delta, owned Gate AR `DnT,A`, receiving-room volume,
+partition area with the 7 m2 minimum, and `T0=0.5 s`. Paired exterior
+boards return `DnT,A 51.9` and `DnT,A,k 49.0`; one-side exterior board
+returns `DnT,A 50.4` and `DnT,A,k 47.5`. Resolver trace now carries
+`DnT,A,k` in `supportedMetrics` and `valuePins`. Missing volume,
+missing building output basis, apparent-only basis, field-context
+`DnT,A,k`, lab-only `DnT,A,k`, and impact aliases remain closed.
+Counters: `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 2`, `newCalculableTargetOutputs: 1`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 2`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Current selected next action:
+`post_v1_wall_compatible_anchor_delta_building_dntak_characteristic_adapter_coverage_refresh_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-building-dntak-characteristic-adapter-coverage-refresh-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-22.md`.
+Current selected next label:
+`post-V1 wall compatible anchor-delta building DnT,A,k characteristic adapter coverage refresh`.
+
+## Latest Wall Double-Leaf/Framed Context-Owned Porous-Cavity Building DnT,A,k Characteristic Adapter Coverage Refresh - 2026-06-22
+
+Latest landed no-runtime coverage refresh:
+`post_v1_wall_double_leaf_framed_context_owned_porous_cavity_building_dntak_characteristic_adapter_coverage_refresh_plan`.
+Coverage refresh file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-context-owned-porous-cavity-building-dntak-characteristic-adapter-coverage-refresh-contract.test.ts`.
+Coverage refresh plan doc:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_CONTEXT_OWNED_POROUS_CAVITY_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-22.md`.
+Coverage refresh status:
+`post_v1_wall_double_leaf_framed_context_owned_porous_cavity_building_dntak_characteristic_adapter_coverage_refresh_landed_no_runtime_selected_compatible_anchor_delta_building_dntak_characteristic_adapter_owner`.
+It follows
+`post_v1_wall_double_leaf_framed_context_owned_porous_cavity_building_dntak_characteristic_adapter_owner_landed_runtime_selected_coverage_refresh`.
+Selected candidate re-probed:
+`wall.double_leaf_framed.context_owned_porous_cavity_building_dntak_characteristic_adapter_owner`.
+The refresh protects complete double-leaf/framed porous-cavity
+`DnT,A,k 40.7` from `DnT,A 43.6`, mixed Gate AR building outputs,
+resolver `DnT,A,k` value pins, missing volume, missing porous-flow
+inputs, apparent-only basis, field/lab separation, and impact
+unsupported boundaries. Counters: `coverageRefreshContractFilesTouched:
+1`, `newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Selected next:
+`post_v1_wall_compatible_anchor_delta_building_dntak_characteristic_adapter_owner_plan`
+/
+`packages/engine/src/post-v1-wall-compatible-anchor-delta-building-dntak-characteristic-adapter-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_OWNER_PLAN_2026-06-22.md`
+/
+`post-V1 wall compatible anchor-delta building DnT,A,k characteristic adapter owner`.
+
+## Latest Wall Double-Leaf/Framed Context-Owned Porous-Cavity Building DnT,A,k Characteristic Adapter Owner - 2026-06-22
+
+Latest landed runtime/accuracy owner:
+`post_v1_wall_double_leaf_framed_context_owned_porous_cavity_building_dntak_characteristic_adapter_owner_plan`.
+Owner file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-context-owned-porous-cavity-building-dntak-characteristic-adapter-owner-contract.test.ts`.
+Owner plan doc:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_CONTEXT_OWNED_POROUS_CAVITY_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_OWNER_PLAN_2026-06-22.md`.
+Owner status:
+`post_v1_wall_double_leaf_framed_context_owned_porous_cavity_building_dntak_characteristic_adapter_owner_landed_runtime_selected_coverage_refresh`.
+It follows
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_building_dntak_characteristic_adapter_coverage_refresh_landed_no_runtime_selected_double_leaf_framed_building_dntak_characteristic_adapter_owner`.
+Selected candidate:
+`wall.double_leaf_framed.context_owned_porous_cavity_building_dntak_characteristic_adapter_owner`.
+Complete context-owned double-leaf/framed porous-cavity
+`building_prediction` requests now calculate `DnT,A,k` from the owned
+Gate AR `DnT,A`, receiving-room volume, partition area with the 7 m2
+minimum, and `T0=0.5 s`. The landed pin is `DnT,A 43.6` and
+`DnT,A,k 40.7`. Missing volume, missing porous-flow/cavity inputs,
+apparent-only basis, field-context `DnT,A,k`, lab-only requests, and
+impact aliases remain closed. Counters: `newCalculableLayerTemplates:
+0`, `newCalculableRequestShapes: 1`, `newCalculableTargetOutputs: 1`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 1`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Current selected next action:
+`post_v1_wall_double_leaf_framed_context_owned_porous_cavity_building_dntak_characteristic_adapter_coverage_refresh_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-context-owned-porous-cavity-building-dntak-characteristic-adapter-coverage-refresh-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_CONTEXT_OWNED_POROUS_CAVITY_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-22.md`.
+Current selected next label:
+`post-V1 wall double-leaf/framed context-owned porous-cavity building DnT,A,k characteristic adapter coverage refresh`.
+
+## Latest Wall Single-Leaf Explicit Surface-Mass Unknown-Material Building DnT,A,k Characteristic Adapter Coverage Refresh - 2026-06-22
+
+Latest landed no-runtime coverage refresh:
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_building_dntak_characteristic_adapter_coverage_refresh_plan`.
+Coverage refresh file:
+`packages/engine/src/post-v1-wall-single-leaf-explicit-surface-mass-unknown-material-building-dntak-characteristic-adapter-coverage-refresh-contract.test.ts`.
+Coverage refresh plan doc:
+`docs/calculator/POST_V1_WALL_SINGLE_LEAF_EXPLICIT_SURFACE_MASS_UNKNOWN_MATERIAL_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-22.md`.
+Coverage refresh status:
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_building_dntak_characteristic_adapter_coverage_refresh_landed_no_runtime_selected_double_leaf_framed_building_dntak_characteristic_adapter_owner`.
+It follows
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_building_dntak_characteristic_adapter_owner_landed_runtime_selected_coverage_refresh`.
+Selected candidate re-probed:
+`wall.single_leaf.explicit_surface_mass_unknown_material_building_dntak_characteristic_adapter_owner`.
+The refresh protects single project panel and laminated project-panel
+`DnT,A,k` pins, mixed building requests, missing mass, missing volume,
+apparent-only basis, field separation, and impact unsupported
+boundaries. Counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next action:
+`post_v1_wall_double_leaf_framed_context_owned_porous_cavity_building_dntak_characteristic_adapter_owner_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-context-owned-porous-cavity-building-dntak-characteristic-adapter-owner-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_CONTEXT_OWNED_POROUS_CAVITY_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_OWNER_PLAN_2026-06-22.md`.
+Current selected next label:
+`post-V1 wall double-leaf/framed context-owned porous-cavity building DnT,A,k characteristic adapter owner`.
+
+## Latest Wall Single-Leaf Explicit Surface-Mass Unknown-Material Building DnT,A,k Characteristic Adapter Owner - 2026-06-22
+
+Latest landed runtime/accuracy owner:
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_building_dntak_characteristic_adapter_owner_plan`.
+Owner file:
+`packages/engine/src/post-v1-wall-single-leaf-explicit-surface-mass-unknown-material-building-dntak-characteristic-adapter-owner-contract.test.ts`.
+Owner plan doc:
+`docs/calculator/POST_V1_WALL_SINGLE_LEAF_EXPLICIT_SURFACE_MASS_UNKNOWN_MATERIAL_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_OWNER_PLAN_2026-06-22.md`.
+Owner status:
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_building_dntak_characteristic_adapter_owner_landed_runtime_selected_coverage_refresh`.
+It follows
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_building_context_adapter_coverage_refresh_landed_no_runtime_selected_building_dntak_characteristic_adapter_owner`
+/
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_building_context_adapter_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-single-leaf-explicit-surface-mass-unknown-material-building-context-adapter-coverage-refresh-contract.test.ts`.
+Selected candidate:
+`wall.single_leaf.explicit_surface_mass_unknown_material_building_dntak_characteristic_adapter_owner`.
+The owner opens `DnT,A,k` for complete `building_prediction`
+requests on project/user single-leaf and laminated single-leaf panels
+with positive `surfaceMassKgM2`. It derives the characteristic value
+from the owned Gate AR `DnT,A`, receiving-room volume, partition area
+with the 7 m2 minimum, and `T0=0.5 s`; it does not alias lab
+`Rw`/`STC` or copy `DnT,A` blindly. The single project panel returns
+`DnT,A 35.2` and `DnT,A,k 32.3`; the laminated project panel returns
+`DnT,A 33.6` and `DnT,A,k 30.7`. Missing mass, missing building
+inputs, apparent-only output basis, field-context `DnT,A,k`, and impact
+aliases remain closed. Counters: `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 2`, `newCalculableTargetOutputs: 2`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 2`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Current selected next action:
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_building_dntak_characteristic_adapter_coverage_refresh_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-wall-single-leaf-explicit-surface-mass-unknown-material-building-dntak-characteristic-adapter-coverage-refresh-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_WALL_SINGLE_LEAF_EXPLICIT_SURFACE_MASS_UNKNOWN_MATERIAL_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-22.md`.
+Current selected next label:
+`post-V1 wall single-leaf explicit surface-mass unknown-material building DnT,A,k characteristic adapter coverage refresh`.
+
+## Latest Wall Single-Leaf Explicit Surface-Mass Unknown-Material Building-Context Adapter Coverage Refresh - 2026-06-22
+
+Latest landed no-runtime coverage refresh:
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_building_context_adapter_coverage_refresh_plan`.
+Coverage refresh file:
+`packages/engine/src/post-v1-wall-single-leaf-explicit-surface-mass-unknown-material-building-context-adapter-coverage-refresh-contract.test.ts`.
+Coverage refresh plan doc:
+`docs/calculator/POST_V1_WALL_SINGLE_LEAF_EXPLICIT_SURFACE_MASS_UNKNOWN_MATERIAL_BUILDING_CONTEXT_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-22.md`.
+Coverage refresh status:
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_building_context_adapter_coverage_refresh_landed_no_runtime_selected_building_dntak_characteristic_adapter_owner`.
+It follows
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_building_context_adapter_owner_landed_runtime_selected_coverage_refresh`
+/
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_building_context_adapter_owner_plan`
+/
+`packages/engine/src/post-v1-wall-single-leaf-explicit-surface-mass-unknown-material-building-context-adapter-owner-contract.test.ts`.
+Selected candidate re-probed:
+`wall.single_leaf.explicit_surface_mass_unknown_material_building_context_adapter_owner`.
+The refresh protects the project single panel and laminated project
+panel building `R'w`/`Dn,w`/`Dn,A`/`DnT,w`/`DnT,A` pins on the owned
+Gate AR building-context adapter, missing mass, missing building input,
+cavity/wrong topology, field separation, impact unsupported, and the
+successor `DnT,A,k` path. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next action:
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_building_dntak_characteristic_adapter_owner_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-wall-single-leaf-explicit-surface-mass-unknown-material-building-dntak-characteristic-adapter-owner-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_WALL_SINGLE_LEAF_EXPLICIT_SURFACE_MASS_UNKNOWN_MATERIAL_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_OWNER_PLAN_2026-06-22.md`.
+Current selected next label:
+`post-V1 wall single-leaf explicit surface-mass unknown-material building DnT,A,k characteristic adapter owner`.
+
+## Latest Wall Single-Leaf Explicit Surface-Mass Unknown-Material Building-Context Adapter Owner - 2026-06-22
+
+Latest landed runtime/accuracy owner:
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_building_context_adapter_owner_plan`.
+Owner file:
+`packages/engine/src/post-v1-wall-single-leaf-explicit-surface-mass-unknown-material-building-context-adapter-owner-contract.test.ts`.
+Owner plan doc:
+`docs/calculator/POST_V1_WALL_SINGLE_LEAF_EXPLICIT_SURFACE_MASS_UNKNOWN_MATERIAL_BUILDING_CONTEXT_ADAPTER_OWNER_PLAN_2026-06-22.md`.
+Owner status:
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_building_context_adapter_owner_landed_runtime_selected_coverage_refresh`.
+It follows
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_field_context_adapter_coverage_refresh_landed_no_runtime_selected_building_context_adapter_owner`
+/
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_field_context_adapter_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-single-leaf-explicit-surface-mass-unknown-material-field-context-adapter-coverage-refresh-contract.test.ts`.
+Selected candidate:
+`wall.single_leaf.explicit_surface_mass_unknown_material_building_context_adapter_owner`.
+Complete `building_prediction` requests for project/user single-leaf
+and laminated single-leaf panels with positive `surfaceMassKgM2` now
+use the owned Gate AR building-prediction adapter on top of the
+single-leaf mass-law / banded lab curve instead of the unsupported
+building corridor. The single project panel returns `R'w 30`, `Dn,w
+31`, `Dn,A 32.8`, `DnT,w 33`, and `DnT,A 35.2`; the laminated project
+panel returns `R'w 29`, `Dn,w 30`, `Dn,A 31.2`, `DnT,w 32`, and
+`DnT,A 33.6`. Missing mass, missing building inputs, cavity/wrong
+topology, and impact aliases remain closed. Counters:
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 2`,
+`newCalculableTargetOutputs: 10`, `runtimeBasisPromotions: 2`,
+`runtimeValuesMoved 10`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next action:
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_building_context_adapter_coverage_refresh_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-wall-single-leaf-explicit-surface-mass-unknown-material-building-context-adapter-coverage-refresh-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_WALL_SINGLE_LEAF_EXPLICIT_SURFACE_MASS_UNKNOWN_MATERIAL_BUILDING_CONTEXT_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-22.md`.
+Current selected next label:
+`post-V1 wall single-leaf explicit surface-mass unknown-material building-context adapter coverage refresh`.
+
+## Latest Wall Single-Leaf Explicit Surface-Mass Unknown-Material Field-Context Adapter Coverage Refresh - 2026-06-22
+
+Latest landed no-runtime coverage refresh:
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_field_context_adapter_coverage_refresh_plan`.
+Coverage refresh file:
+`packages/engine/src/post-v1-wall-single-leaf-explicit-surface-mass-unknown-material-field-context-adapter-coverage-refresh-contract.test.ts`.
+Coverage refresh plan doc:
+`docs/calculator/POST_V1_WALL_SINGLE_LEAF_EXPLICIT_SURFACE_MASS_UNKNOWN_MATERIAL_FIELD_CONTEXT_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-22.md`.
+Coverage refresh status:
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_field_context_adapter_coverage_refresh_landed_no_runtime_selected_building_context_adapter_owner`.
+It follows
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_field_context_adapter_owner_landed_runtime_selected_coverage_refresh`
+/
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_field_context_adapter_owner_plan`
+/
+`packages/engine/src/post-v1-wall-single-leaf-explicit-surface-mass-unknown-material-field-context-adapter-owner-contract.test.ts`.
+Selected candidate re-probed:
+`wall.single_leaf.explicit_surface_mass_unknown_material_field_context_adapter_owner`.
+The refresh protects the project single panel and laminated project
+panel field `R'w`/`Dn,w`/`Dn,A`/`DnT,w`/`DnT,A` pins on the owned Gate
+I field-context adapter, missing mass, missing field input, cavity/wrong
+topology, building unsupported, and impact unsupported boundaries.
+Counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next action:
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_building_context_adapter_owner_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-wall-single-leaf-explicit-surface-mass-unknown-material-building-context-adapter-owner-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_WALL_SINGLE_LEAF_EXPLICIT_SURFACE_MASS_UNKNOWN_MATERIAL_BUILDING_CONTEXT_ADAPTER_OWNER_PLAN_2026-06-22.md`.
+Current selected next label:
+`post-V1 wall single-leaf explicit surface-mass unknown-material building-context adapter owner`.
+
+## Latest Wall Single-Leaf Explicit Surface-Mass Unknown-Material Field-Context Adapter Owner - 2026-06-22
+
+Latest landed runtime/accuracy owner:
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_field_context_adapter_owner_plan`.
+Owner file:
+`packages/engine/src/post-v1-wall-single-leaf-explicit-surface-mass-unknown-material-field-context-adapter-owner-contract.test.ts`.
+Owner plan doc:
+`docs/calculator/POST_V1_WALL_SINGLE_LEAF_EXPLICIT_SURFACE_MASS_UNKNOWN_MATERIAL_FIELD_CONTEXT_ADAPTER_OWNER_PLAN_2026-06-22.md`.
+Owner status:
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_field_context_adapter_owner_landed_runtime_selected_coverage_refresh`.
+It follows
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_coverage_refresh_landed_no_runtime_selected_field_context_adapter_owner`
+/
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-single-leaf-explicit-surface-mass-unknown-material-coverage-refresh-contract.test.ts`.
+Selected candidate:
+`wall.single_leaf.explicit_surface_mass_unknown_material_field_context_adapter_owner`.
+The owner promotes complete `field_between_rooms` requests for
+project/user single-leaf and laminated single-leaf panels with positive
+`surfaceMassKgM2` from diagnostic `screening_fallback` to the owned
+Gate I field-context adapter on top of the single-leaf mass-law /
+banded lab curve. The single project panel now returns `R'w 30`,
+`Dn,w 31`, `Dn,A 32.8`, `DnT,w 33`, and `DnT,A 35.2`; the laminated
+project panel returns `R'w 29`, `Dn,w 30`, `Dn,A 31.2`, `DnT,w 32`,
+and `DnT,A 33.6`. Missing mass, missing field context inputs,
+cavity/wrong topology, building prediction, ASTM aliases, and impact
+aliases remain closed. Counters: `accuracyPromotedRequestShapes: 2`,
+`accuracyPromotedTargetOutputs: 10`, `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 2`, `runtimeValuesMoved 10`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Current selected next action:
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_field_context_adapter_coverage_refresh_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-wall-single-leaf-explicit-surface-mass-unknown-material-field-context-adapter-coverage-refresh-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_WALL_SINGLE_LEAF_EXPLICIT_SURFACE_MASS_UNKNOWN_MATERIAL_FIELD_CONTEXT_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-22.md`.
+Current selected next label:
+`post-V1 wall single-leaf explicit surface-mass unknown-material field-context adapter coverage refresh`.
+
+## Latest Wall Single-Leaf Explicit Surface-Mass Unknown-Material Coverage Refresh - 2026-06-22
+
+Latest landed no-runtime coverage refresh:
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_coverage_refresh_plan`.
+Coverage refresh file:
+`packages/engine/src/post-v1-wall-single-leaf-explicit-surface-mass-unknown-material-coverage-refresh-contract.test.ts`.
+Coverage refresh plan doc:
+`docs/calculator/POST_V1_WALL_SINGLE_LEAF_EXPLICIT_SURFACE_MASS_UNKNOWN_MATERIAL_COVERAGE_REFRESH_PLAN_2026-06-22.md`.
+Coverage refresh status:
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_coverage_refresh_landed_no_runtime_selected_field_context_adapter_owner`.
+It follows
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_scope_opener_landed_runtime_selected_coverage_refresh`
+/
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_scope_opener_plan`
+/
+`packages/engine/src/post-v1-wall-single-leaf-explicit-surface-mass-unknown-material-scope-opener-contract.test.ts`.
+Selected candidate re-probed:
+`wall.single_leaf.explicit_surface_mass_unknown_material_scope_opener`.
+The refresh protects the project single panel and laminated project
+panel lab `Rw`/`STC`/`C`/`Ctr` pins on the owned single-leaf
+mass-law / banded formula basis, missing/zero `surfaceMassKgM2`,
+cavity/wrong-topology exclusions, field non-promotion from its current
+screening basis, building unsupported, and impact unsupported
+boundaries. Counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next action:
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_field_context_adapter_owner_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-wall-single-leaf-explicit-surface-mass-unknown-material-field-context-adapter-owner-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_WALL_SINGLE_LEAF_EXPLICIT_SURFACE_MASS_UNKNOWN_MATERIAL_FIELD_CONTEXT_ADAPTER_OWNER_PLAN_2026-06-22.md`.
+Current selected next label:
+`post-V1 wall single-leaf explicit surface-mass unknown-material field-context adapter owner`.
+
+## Latest Wall Single-Leaf Explicit Surface-Mass Unknown-Material Scope Opener - 2026-06-22
+
+Latest landed runtime scope opener:
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_scope_opener_plan`.
+Owner file:
+`packages/engine/src/post-v1-wall-single-leaf-explicit-surface-mass-unknown-material-scope-opener-contract.test.ts`.
+Owner plan doc:
+`docs/calculator/POST_V1_WALL_SINGLE_LEAF_EXPLICIT_SURFACE_MASS_UNKNOWN_MATERIAL_SCOPE_OPENER_PLAN_2026-06-22.md`.
+Owner status:
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_scope_opener_landed_runtime_selected_coverage_refresh`.
+It follows
+`post_v1_wall_double_leaf_framed_explicit_surface_mass_leaf_coverage_refresh_landed_no_runtime_selected_single_leaf_explicit_surface_mass_scope_opener`
+/
+`post_v1_wall_double_leaf_framed_explicit_surface_mass_leaf_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-explicit-surface-mass-leaf-coverage-refresh-contract.test.ts`.
+Selected candidate:
+`wall.single_leaf.explicit_surface_mass_unknown_material_scope_opener`.
+The owner promotes cavity-free single-leaf wall panels and laminated
+single-leaf project panel stacks with positive user-supplied
+`surfaceMassKgM2` from diagnostic `screening_fallback` to the owned
+layer-combination resolver single-leaf mass-law / banded formula basis
+for lab `Rw`, `STC`, `C`, and `Ctr`. It keeps the numeric pins stable
+(`18 kg/m2` single panel `Rw/STC 32`, laminated `18 kg/m2` stack
+`Rw/STC 31`) while changing the runtime basis to
+`family_physics_prediction`. Missing or non-positive explicit mass does
+not publish values; cavity/wrong-topology stacks stay out of this owner;
+building outputs remain parked for this project-material basis; impact
+aliases remain `unsupported`. Counters: `newCalculableLayerTemplates:
+1`, `newCalculableRequestShapes: 2`, `newCalculableTargetOutputs: 8`,
+`runtimeBasisPromotions: 2`, `runtimeValuesMoved 8`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Current selected next action:
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_coverage_refresh_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-wall-single-leaf-explicit-surface-mass-unknown-material-coverage-refresh-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_WALL_SINGLE_LEAF_EXPLICIT_SURFACE_MASS_UNKNOWN_MATERIAL_COVERAGE_REFRESH_PLAN_2026-06-22.md`.
+Current selected next label:
+`post-V1 wall single-leaf explicit surface-mass unknown-material coverage refresh`.
+
+## Latest Wall Double-Leaf/Framed Explicit Surface-Mass Leaf Coverage Refresh - 2026-06-22
+
+Latest landed no-runtime coverage refresh:
+`post_v1_wall_double_leaf_framed_explicit_surface_mass_leaf_coverage_refresh_plan`.
+Coverage refresh file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-explicit-surface-mass-leaf-coverage-refresh-contract.test.ts`.
+Coverage refresh plan doc:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_EXPLICIT_SURFACE_MASS_LEAF_COVERAGE_REFRESH_PLAN_2026-06-22.md`.
+Coverage refresh status:
+`post_v1_wall_double_leaf_framed_explicit_surface_mass_leaf_coverage_refresh_landed_no_runtime_selected_single_leaf_explicit_surface_mass_scope_opener`.
+It follows
+`post_v1_wall_double_leaf_framed_explicit_surface_mass_leaf_scope_opener_landed_runtime_selected_coverage_refresh`
+/
+`post_v1_wall_double_leaf_framed_explicit_surface_mass_leaf_scope_opener_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-explicit-surface-mass-leaf-scope-opener-contract.test.ts`.
+Selected candidate re-probed:
+`wall.double_leaf_framed.explicit_surface_mass_leaf_scope_opener`.
+The refresh protects explicit `surfaceMassKgM2` side-leaf lab,
+field/building, missing-input, known insulation/gap exclusion, known
+catalog zero-mass non-override, and impact unsupported boundaries
+without moving runtime values. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next action:
+`post_v1_wall_single_leaf_explicit_surface_mass_unknown_material_scope_opener_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-wall-single-leaf-explicit-surface-mass-unknown-material-scope-opener-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_WALL_SINGLE_LEAF_EXPLICIT_SURFACE_MASS_UNKNOWN_MATERIAL_SCOPE_OPENER_PLAN_2026-06-22.md`.
+Current selected next label:
+`post-V1 wall single-leaf explicit surface-mass unknown-material scope opener`.
+
+## Latest Wall Double-Leaf/Framed Explicit Surface-Mass Leaf Scope Opener - 2026-06-22
+
+Latest landed runtime scope opener:
+`post_v1_wall_double_leaf_framed_explicit_surface_mass_leaf_scope_opener_plan`.
+Owner file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-explicit-surface-mass-leaf-scope-opener-contract.test.ts`.
+Owner plan doc:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_EXPLICIT_SURFACE_MASS_LEAF_SCOPE_OPENER_PLAN_2026-06-22.md`.
+Owner status:
+`post_v1_wall_double_leaf_framed_explicit_surface_mass_leaf_scope_opener_landed_runtime_selected_coverage_refresh`.
+It follows
+`post_v1_wall_double_leaf_framed_frequency_backbone_numeric_sensitivity_coverage_refresh_landed_no_runtime_selected_explicit_surface_mass_leaf_scope_opener`
+/
+`post_v1_wall_double_leaf_framed_frequency_backbone_numeric_sensitivity_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-frequency-backbone-numeric-sensitivity-coverage-refresh-contract.test.ts`.
+Selected candidate:
+`wall.double_leaf_framed.explicit_surface_mass_leaf_scope_opener`.
+The owner opens the owned Gate S / Gate I / Gate AR double-leaf/framed
+route for explicit side-leaf layers that supply `surfaceMassKgM2`
+directly, even when the project material id has no catalog density row.
+Lab `Rw`/`STC`/`C`/`Ctr` and field/building `R'w`, `Dn,w`, `Dn,A`,
+`DnT,w`, and `DnT,A` now calculate from the same physical route when
+leaf grouping, cavity depth, porous flow resistivity, support topology,
+and support spacing are supplied. Missing `surfaceMassKgM2` remains
+`needs_input`; known gap/insulation materials are not counted as side
+leaves just because a surface mass is present; impact aliases remain
+`unsupported`. Counters: `newCalculableLayerTemplates: 1`,
+`newCalculableRequestShapes: 3`, `newCalculableTargetOutputs: 14`,
+`runtimeBasisPromotions: 3`, `runtimeValuesMoved 14`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Current selected next action:
+`post_v1_wall_double_leaf_framed_explicit_surface_mass_leaf_coverage_refresh_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-explicit-surface-mass-leaf-coverage-refresh-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_EXPLICIT_SURFACE_MASS_LEAF_COVERAGE_REFRESH_PLAN_2026-06-22.md`.
+Current selected next label:
+`post-V1 wall double-leaf/framed explicit surface-mass leaf coverage refresh`.
+
+Implementation sync:
+the frequency-backbone coverage-refresh file and explicit surface-mass
+owner file exist and are included in `tools/dev/run-calculator-current-gate.ts`;
+the selected explicit surface-mass coverage-refresh file does not exist
+yet.
+
+## Latest Wall Double-Leaf/Framed Frequency-Backbone Numeric Sensitivity Coverage Refresh - 2026-06-22
+
+Latest landed no-runtime coverage refresh:
+`post_v1_wall_double_leaf_framed_frequency_backbone_numeric_sensitivity_coverage_refresh_plan`.
+Coverage refresh file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-frequency-backbone-numeric-sensitivity-coverage-refresh-contract.test.ts`.
+Coverage refresh plan doc:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_FREQUENCY_BACKBONE_NUMERIC_SENSITIVITY_COVERAGE_REFRESH_PLAN_2026-06-22.md`.
+Coverage refresh status:
+`post_v1_wall_double_leaf_framed_frequency_backbone_numeric_sensitivity_coverage_refresh_landed_no_runtime_selected_explicit_surface_mass_leaf_scope_opener`.
+It follows
+`post_v1_wall_double_leaf_framed_frequency_backbone_numeric_sensitivity_owner_landed_runtime_selected_coverage_refresh`
+/
+`post_v1_wall_double_leaf_framed_frequency_backbone_numeric_sensitivity_owner_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-frequency-backbone-numeric-sensitivity-owner-contract.test.ts`.
+Selected candidate re-probed:
+`wall.double_leaf_framed.frequency_backbone_numeric_sensitivity_owner`.
+The refresh protects the calculated Gate S frequency curve, ISO 717-1
+`Rw`/`C`/`Ctr`, ASTM E413 `STC`, missing flow/support spacing
+`needs_input`, and impact unsupported boundaries. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Selected next:
+`post_v1_wall_double_leaf_framed_explicit_surface_mass_leaf_scope_opener_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-explicit-surface-mass-leaf-scope-opener-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_EXPLICIT_SURFACE_MASS_LEAF_SCOPE_OPENER_PLAN_2026-06-22.md`.
+
+## Latest Wall Double-Leaf/Framed Frequency-Backbone Numeric Sensitivity Owner - 2026-06-22
+
+Latest landed runtime/basis owner:
+`post_v1_wall_double_leaf_framed_frequency_backbone_numeric_sensitivity_owner_plan`.
+Owner file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-frequency-backbone-numeric-sensitivity-owner-contract.test.ts`.
+Owner plan doc:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_FREQUENCY_BACKBONE_NUMERIC_SENSITIVITY_OWNER_PLAN_2026-06-22.md`.
+Owner status:
+`post_v1_wall_double_leaf_framed_frequency_backbone_numeric_sensitivity_owner_landed_runtime_selected_coverage_refresh`.
+It follows
+`post_v1_runtime_first_route_family_rerank_after_wall_double_leaf_framed_leaf_surface_mass_numeric_sensitivity_coverage_refresh_landed_no_runtime_selected_frequency_backbone_numeric_sensitivity_owner`
+/
+`post_v1_runtime_first_route_family_rerank_after_wall_double_leaf_framed_leaf_surface_mass_numeric_sensitivity_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-double-leaf-framed-leaf-surface-mass-numeric-sensitivity-coverage-refresh-contract.test.ts`.
+Selected candidate:
+`wall.double_leaf_framed.frequency_backbone_numeric_sensitivity_owner`.
+
+The owner makes the calculated Gate S transmission-loss curve an
+explicit runtime frequency backbone for light, baseline, heavy, and
+asymmetric double-leaf/framed gypsum leaf stacks. Lab `Rw`, `STC`, `C`,
+and `Ctr` are asserted to derive from that same calculated curve through
+ISO 717-1 and ASTM E413 adapters; STC remains an ASTM E413 adapter
+output, not an alias of `Rw`. Runtime basis now exposes
+`calculatedFrequencyCurveShape` and the ISO 717-1 `C`/`Ctr` spectrum
+adaptation adapter as required route inputs. Missing flow resistivity,
+missing support spacing, and impact aliases remain `needs_input` or
+`unsupported`. Scalar rating pins stayed numerically stable, so no
+hidden formula retune was made. Counters:
+`accuracyPromotedRequestShapes: 4`,
+`accuracyPromotedTargetOutputs: 16`, `frequencyCurveBandsOwned: 76`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 4`,
+`runtimeValuesMoved 16`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next action:
+`post_v1_wall_double_leaf_framed_frequency_backbone_numeric_sensitivity_coverage_refresh_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-frequency-backbone-numeric-sensitivity-coverage-refresh-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_FREQUENCY_BACKBONE_NUMERIC_SENSITIVITY_COVERAGE_REFRESH_PLAN_2026-06-22.md`.
+Current selected next label:
+`post-V1 wall double-leaf/framed frequency-backbone numeric sensitivity coverage refresh`.
+
+Implementation sync:
+the owner file exists and is included in
+`tools/dev/run-calculator-current-gate.ts`; the selected coverage-refresh
+file does not exist yet.
+
+## Latest Runtime-First Route-Family Rerank After Wall Double-Leaf/Framed Leaf Surface-Mass Numeric Sensitivity Coverage Refresh - 2026-06-22
+
+Latest landed no-runtime rerank:
+`post_v1_runtime_first_route_family_rerank_after_wall_double_leaf_framed_leaf_surface_mass_numeric_sensitivity_coverage_refresh_plan`.
+Rerank file:
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-double-leaf-framed-leaf-surface-mass-numeric-sensitivity-coverage-refresh-contract.test.ts`.
+Rerank plan doc:
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_WALL_DOUBLE_LEAF_FRAMED_LEAF_SURFACE_MASS_NUMERIC_SENSITIVITY_COVERAGE_REFRESH_PLAN_2026-06-22.md`.
+Rerank status:
+`post_v1_runtime_first_route_family_rerank_after_wall_double_leaf_framed_leaf_surface_mass_numeric_sensitivity_coverage_refresh_landed_no_runtime_selected_frequency_backbone_numeric_sensitivity_owner`.
+It follows
+`post_v1_wall_double_leaf_framed_leaf_surface_mass_numeric_sensitivity_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-leaf-surface-mass-numeric-sensitivity-coverage-refresh-contract.test.ts`
+/
+`post_v1_wall_double_leaf_framed_leaf_surface_mass_numeric_sensitivity_coverage_refresh_landed_input_boundary_selected_runtime_first_route_family_rerank`.
+Selected candidate:
+`wall.double_leaf_framed.frequency_backbone_numeric_sensitivity_owner`.
+The rerank selects the calculated frequency-curve backbone as the next
+bounded runtime/accuracy owner because the Gate S / Gate I / Gate AR
+double-leaf/framed physical-input chain now has flow resistivity,
+absorber coverage ratio, support spacing, absorber thickness, cavity
+depth, and side-leaf surface mass active. The next owner should tighten
+lab `Rw`, `STC`, `C`, and `Ctr` over the same calculated curve before
+broader building/flanking, source-absent adjacent input, impact, or
+project/user measured-anchor work. Counters: `candidateCount: 8`,
+`roiAnalysisIterations: 4`, `estimatedNextRuntimeValuesMoved: 16`,
+`estimatedNextAccuracyPromotedTargetOutputs: 16`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next action:
+`post_v1_wall_double_leaf_framed_frequency_backbone_numeric_sensitivity_owner_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-frequency-backbone-numeric-sensitivity-owner-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_FREQUENCY_BACKBONE_NUMERIC_SENSITIVITY_OWNER_PLAN_2026-06-22.md`.
+Current selected next label:
+`post-V1 wall double-leaf/framed frequency-backbone numeric sensitivity owner`.
+
+## Latest Wall Double-Leaf/Framed Leaf Surface-Mass Numeric Sensitivity Coverage Refresh - 2026-06-22
+
+Latest landed input-boundary coverage refresh:
+`post_v1_wall_double_leaf_framed_leaf_surface_mass_numeric_sensitivity_coverage_refresh_plan`.
+Coverage refresh file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-leaf-surface-mass-numeric-sensitivity-coverage-refresh-contract.test.ts`.
+Coverage refresh plan doc:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_LEAF_SURFACE_MASS_NUMERIC_SENSITIVITY_COVERAGE_REFRESH_PLAN_2026-06-22.md`.
+Coverage refresh status:
+`post_v1_wall_double_leaf_framed_leaf_surface_mass_numeric_sensitivity_coverage_refresh_landed_input_boundary_selected_runtime_first_route_family_rerank`.
+It follows
+`post_v1_wall_double_leaf_framed_leaf_surface_mass_numeric_sensitivity_owner_landed_runtime_selected_coverage_refresh`
+/
+`post_v1_wall_double_leaf_framed_leaf_surface_mass_numeric_sensitivity_owner_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-leaf-surface-mass-numeric-sensitivity-owner-contract.test.ts`.
+Selected candidate re-probed:
+`wall.double_leaf_framed.leaf_surface_mass_numeric_sensitivity_owner`.
+The refresh protects the owned Gate S / Gate I / Gate AR
+double-leaf/framed route's leaf-mass sensitivity without retuning the
+formula. Light `9.5 mm`, baseline `12.5 mm`, and heavy `18 mm` gypsum
+leaves keep lab `Rw/STC 43`, `46`, and `49`; asymmetric `12.5 + 25 mm`
+leaves keep `leafMassRatio 2` and lab `Rw/STC 49`; field/building
+companions remain tied to the same owned direct curve. Missing side-leaf
+grouping remains `needs_input`; unresolved side-leaf surface mass now
+returns a precise solver-level `needs_input` boundary instead of a
+generic negative boundary; and `IIC` / `AIIC` remain `unsupported`.
+Counters: `coverageRefreshContractFilesTouched: 1`,
+`requiredInputBoundariesMoved: 1`, `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Historical selected next action at coverage refresh closeout:
+`post_v1_runtime_first_route_family_rerank_after_wall_double_leaf_framed_leaf_surface_mass_numeric_sensitivity_coverage_refresh_plan`.
+Historical selected next file at coverage refresh closeout:
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-double-leaf-framed-leaf-surface-mass-numeric-sensitivity-coverage-refresh-contract.test.ts`.
+Historical selected next plan doc at coverage refresh closeout:
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_WALL_DOUBLE_LEAF_FRAMED_LEAF_SURFACE_MASS_NUMERIC_SENSITIVITY_COVERAGE_REFRESH_PLAN_2026-06-22.md`.
+Historical selected next label at coverage refresh closeout:
+`post-V1 runtime-first route-family rerank after wall double-leaf/framed leaf surface-mass numeric sensitivity coverage refresh`.
+
+## Latest Wall Double-Leaf/Framed Leaf Surface-Mass Numeric Sensitivity Owner - 2026-06-22
+
+Latest landed runtime owner:
+`post_v1_wall_double_leaf_framed_leaf_surface_mass_numeric_sensitivity_owner_plan`.
+Owner file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-leaf-surface-mass-numeric-sensitivity-owner-contract.test.ts`.
+Owner plan doc:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_LEAF_SURFACE_MASS_NUMERIC_SENSITIVITY_OWNER_PLAN_2026-06-22.md`.
+Owner status:
+`post_v1_wall_double_leaf_framed_leaf_surface_mass_numeric_sensitivity_owner_landed_runtime_selected_coverage_refresh`.
+It follows
+`post_v1_runtime_first_route_family_rerank_after_wall_double_leaf_framed_cavity_depth_numeric_sensitivity_coverage_refresh_landed_no_runtime_selected_leaf_surface_mass_numeric_sensitivity_owner`
+/
+`post_v1_runtime_first_route_family_rerank_after_wall_double_leaf_framed_cavity_depth_numeric_sensitivity_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-double-leaf-framed-cavity-depth-numeric-sensitivity-coverage-refresh-contract.test.ts`.
+Selected candidate:
+`wall.double_leaf_framed.leaf_surface_mass_numeric_sensitivity_owner`.
+The owner protects the owned Gate S / Gate I / Gate AR
+double-leaf/framed route's side-leaf surface mass sensitivity. Light
+`9.5 mm`, baseline `12.5 mm`, and heavy `18 mm` gypsum leaves return
+lab `Rw/STC 43`, `46`, and `49`; asymmetric `12.5 + 25 mm` leaves keep
+`leafMassRatio 2` active and return lab `Rw/STC 49`. Field and building
+companions move from the same owned direct curve. Missing side B leaf
+grouping remains `needs_input`, and `IIC` / `AIIC` remain
+`unsupported`. Counters: `accuracyPromotedRequestShapes: 3`,
+`accuracyPromotedTargetOutputs: 13`, `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 13`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Historical selected next action at owner closeout:
+`post_v1_wall_double_leaf_framed_leaf_surface_mass_numeric_sensitivity_coverage_refresh_plan`.
+Historical selected next file at owner closeout:
+`packages/engine/src/post-v1-wall-double-leaf-framed-leaf-surface-mass-numeric-sensitivity-coverage-refresh-contract.test.ts`.
+Historical selected next plan doc at owner closeout:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_LEAF_SURFACE_MASS_NUMERIC_SENSITIVITY_COVERAGE_REFRESH_PLAN_2026-06-22.md`.
+Historical selected next label at owner closeout:
+`post-V1 wall double-leaf/framed leaf surface-mass numeric sensitivity coverage refresh`.
+
+## Latest Runtime-First Route-Family Rerank After Wall Double-Leaf/Framed Cavity-Depth Numeric Sensitivity Coverage Refresh - 2026-06-22
+
+Latest landed no-runtime rerank:
+`post_v1_runtime_first_route_family_rerank_after_wall_double_leaf_framed_cavity_depth_numeric_sensitivity_coverage_refresh_plan`.
+Rerank file:
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-double-leaf-framed-cavity-depth-numeric-sensitivity-coverage-refresh-contract.test.ts`.
+Rerank plan doc:
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_WALL_DOUBLE_LEAF_FRAMED_CAVITY_DEPTH_NUMERIC_SENSITIVITY_COVERAGE_REFRESH_PLAN_2026-06-22.md`.
+Rerank status:
+`post_v1_runtime_first_route_family_rerank_after_wall_double_leaf_framed_cavity_depth_numeric_sensitivity_coverage_refresh_landed_no_runtime_selected_leaf_surface_mass_numeric_sensitivity_owner`.
+It follows
+`post_v1_wall_double_leaf_framed_cavity_depth_numeric_sensitivity_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-cavity-depth-numeric-sensitivity-coverage-refresh-contract.test.ts`
+/
+`post_v1_wall_double_leaf_framed_cavity_depth_numeric_sensitivity_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`.
+Selected candidate:
+`wall.double_leaf_framed.leaf_surface_mass_numeric_sensitivity_owner`.
+The rerank compared the remaining double-leaf/framed physical-input
+axes after flow resistivity, absorber coverage ratio, support spacing,
+absorber thickness, and cavity depth landed. It selected side-leaf
+surface mass because the owned Gate S / Gate I / Gate AR route already
+uses `sideALeafMassKgM2`, `sideBLeafMassKgM2`, total leaf mass, leaf
+mass ratio, and mass-air-mass resonance, making this a bounded
+accuracy/sensitivity owner for arbitrary user-entered board/custom wall
+layers. Frequency backbone and building/flanking broadening remain
+valid but higher-blast-radius; broad source crawling, UI polish, and
+process cleanup stay rejected. Counters: `candidateCount: 8`,
+`roiAnalysisIterations: 4`, `estimatedNextRuntimeValuesMoved: 13`,
+`estimatedNextAccuracyPromotedTargetOutputs: 13`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next action:
+`post_v1_wall_double_leaf_framed_leaf_surface_mass_numeric_sensitivity_owner_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-leaf-surface-mass-numeric-sensitivity-owner-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_LEAF_SURFACE_MASS_NUMERIC_SENSITIVITY_OWNER_PLAN_2026-06-22.md`.
+Current selected next label:
+`post-V1 wall double-leaf/framed leaf surface-mass numeric sensitivity owner`.
+
+## Latest Wall Double-Leaf/Framed Cavity-Depth Numeric Sensitivity Coverage Refresh - 2026-06-22
+
+Latest landed no-runtime coverage refresh:
+`post_v1_wall_double_leaf_framed_cavity_depth_numeric_sensitivity_coverage_refresh_plan`.
+Coverage refresh file:
+`packages/engine/src/post-v1-wall-double-leaf-framed-cavity-depth-numeric-sensitivity-coverage-refresh-contract.test.ts`.
+Coverage refresh plan doc:
+`docs/calculator/POST_V1_WALL_DOUBLE_LEAF_FRAMED_CAVITY_DEPTH_NUMERIC_SENSITIVITY_COVERAGE_REFRESH_PLAN_2026-06-20.md`.
+Coverage refresh status:
+`post_v1_wall_double_leaf_framed_cavity_depth_numeric_sensitivity_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`.
+It follows
+`post_v1_wall_double_leaf_framed_cavity_depth_numeric_sensitivity_owner_landed_runtime_selected_coverage_refresh`
+/
+`post_v1_wall_double_leaf_framed_cavity_depth_numeric_sensitivity_owner_plan`
+/
+`packages/engine/src/post-v1-wall-double-leaf-framed-cavity-depth-numeric-sensitivity-owner-contract.test.ts`.
+Selected candidate re-probed:
+`wall.double_leaf_framed.cavity_depth_numeric_sensitivity_owner`.
+The refresh protects topology `cavity1DepthMm = 60`, `90`, and
+`140 mm` lab pins; advanced-only `advancedWall.cavities[0].depthMm`
+lab, field, and building outputs; missing, zero, and negative cavity
+depth as precise `needs_input`; topology-authoritative mismatch
+behavior; and `IIC` / `AIIC` as `unsupported`. Counters:
+`coverageRefreshContractFilesTouched: 1`, `newCalculableLayerTemplates:
+0`, `newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Current selected next action:
+`post_v1_runtime_first_route_family_rerank_after_wall_double_leaf_framed_cavity_depth_numeric_sensitivity_coverage_refresh_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-double-leaf-framed-cavity-depth-numeric-sensitivity-coverage-refresh-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_WALL_DOUBLE_LEAF_FRAMED_CAVITY_DEPTH_NUMERIC_SENSITIVITY_COVERAGE_REFRESH_PLAN_2026-06-22.md`.
+Current selected next label:
+`post-V1 runtime-first route-family rerank after wall double-leaf/framed cavity-depth numeric sensitivity coverage refresh`.
 
 ## Latest Wall Double-Leaf/Framed Cavity-Depth Numeric Sensitivity Owner - 2026-06-20
 

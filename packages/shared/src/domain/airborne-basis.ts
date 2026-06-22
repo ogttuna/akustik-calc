@@ -6,6 +6,7 @@ import { RequestedOutputSchema } from "./output";
 export const AirborneResultOriginSchema = z.enum([
   "measured_exact_full_stack",
   "measured_exact_subassembly_plus_calculated_delta",
+  "user_verified_calculated_exact",
   "calibrated_family_physics",
   "family_physics_prediction",
   "bounded_prediction",
@@ -18,6 +19,7 @@ export type AirborneResultOrigin = z.infer<typeof AirborneResultOriginSchema>;
 export const AirborneBasisKindSchema = z.enum([
   "airborne_measured_exact",
   "airborne_anchored_delta",
+  "airborne_user_verified_calculated_exact",
   "airborne_calibrated_prediction",
   "airborne_physics_prediction",
   "airborne_bound",
@@ -66,6 +68,7 @@ export type AirborneRatingStandard = z.infer<typeof AirborneRatingStandardSchema
 
 export const AirborneToleranceClassSchema = z.enum([
   "exact_source",
+  "user_verified_calculated_exact",
   "calibrated_prediction",
   "uncalibrated_prediction",
   "bounded_prediction",
@@ -191,6 +194,7 @@ export const AirborneCandidateSchema: z.ZodType<
 export const AIRBORNE_CANDIDATE_RESOLVER_PRECEDENCE = [
   "measured_exact_full_stack",
   "measured_exact_subassembly_plus_calculated_delta",
+  "user_verified_calculated_exact",
   "calibrated_family_physics",
   "family_physics_prediction",
   "bounded_prediction",

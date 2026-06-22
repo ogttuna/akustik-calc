@@ -278,7 +278,7 @@ describe("post-V1 runtime-first rerank after wall opening/leak common-wall same-
     expect(summary.rejectedOrClosed.every((candidate) => !candidate.runtimeOwnerAuthorizedNow)).toBe(true);
   });
 
-  it("proves material and impact inputs exist while live measured-anchor intake rejects bare rows", () => {
+  it("proves material and impact inputs exist while bare measured-anchor rows and calculated anchors stay blocked", () => {
     const estimateRequestSchema = readRepoFile(ESTIMATE_REQUEST_SCHEMA_FILE);
     const measuredAnchorPlan = readRepoFile(PROJECT_USER_MEASURED_SOURCE_ANCHOR_PLAN);
 
@@ -289,7 +289,8 @@ describe("post-V1 runtime-first rerank after wall opening/leak common-wall same-
       expect(estimateRequestSchema).toContain("ActiveProjectUserMeasuredWallRwAnchorSchema");
     }
 
-    expect(measuredAnchorPlan).toContain("It does not yet accept a project/user airborne measured source anchor list.");
+    expect(measuredAnchorPlan).toContain("It does not yet accept a project/user user-verified calculated anchor list.");
+    expect(measuredAnchorPlan).toContain("The existing measured-anchor lane is scalar `Rw` only");
     expect(measuredAnchorPlan).toContain("Phase 1");
     expect(measuredAnchorPlan).toContain("Fingerprint must exclude:");
 

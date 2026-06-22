@@ -1,4 +1,5 @@
 import type {
+  AirborneContext,
   AirbornePropertyDefault,
   AirborneResultBasis,
   DynamicAirborneConfidenceClass,
@@ -15,6 +16,8 @@ import {
   LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_ERROR_BUDGET_DB,
   LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_WARNING
 } from "./layer-combination-resolver-single-leaf-mass-law-banded-runtime-constants";
+import { maybeBuildGateARAirborneBuildingPredictionBasisFromBase } from "./dynamic-airborne-gate-ar-airborne-building-prediction-runtime-corridor";
+import { maybeBuildGateIAirborneFieldContextBasisFromBase } from "./dynamic-airborne-gate-i-airborne-field-context";
 
 export const GATE_O_SINGLE_LEAF_MASSIVE_PANEL_PREDICTION_WARNING =
   LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_WARNING;
@@ -46,19 +49,63 @@ function hasMassTimberOrClt(layers: readonly ResolvedLayer[]): boolean {
   });
 }
 
-function hasCompleteSingleLeafMassInputs(layers: readonly ResolvedLayer[]): boolean {
+function isProjectExplicitSurfaceMassLayer(layer: ResolvedLayer): boolean {
+  return layer.material.tags.includes("project-explicit-surface-mass");
+}
+
+function hasCatalogBackedMassInputs(layer: ResolvedLayer): boolean {
+  return (
+    Number.isFinite(layer.thicknessMm) &&
+    layer.thicknessMm > 0 &&
+    Number.isFinite(layer.material.densityKgM3) &&
+    layer.material.densityKgM3 > 0 &&
+    Number.isFinite(layer.surfaceMassKgM2) &&
+    layer.surfaceMassKgM2 > 0
+  );
+}
+
+function hasUserSuppliedSurfaceMassInputs(layer: ResolvedLayer): boolean {
+  return (
+    isProjectExplicitSurfaceMassLayer(layer) &&
+    Number.isFinite(layer.thicknessMm) &&
+    layer.thicknessMm > 0 &&
+    Number.isFinite(layer.surfaceMassKgM2) &&
+    layer.surfaceMassKgM2 > 0
+  );
+}
+
+function hasExplicitNonSingleLeafTopologyIntent(context: AirborneContext | null | undefined): boolean {
+  const wallTopology = context?.wallTopology;
+  if (!wallTopology) {
+    return false;
+  }
+
+  const topologyMode = wallTopology.topologyMode ?? "auto";
+  return (
+    (topologyMode !== "auto" && topologyMode !== "flat_layer_order") ||
+    (wallTopology.sideALeafLayerIndices?.length ?? 0) > 0 ||
+    (wallTopology.sideBLeafLayerIndices?.length ?? 0) > 0 ||
+    (wallTopology.internalLeafLayerIndices?.length ?? 0) > 0 ||
+    (wallTopology.cavity1LayerIndices?.length ?? 0) > 0 ||
+    (wallTopology.cavity2LayerIndices?.length ?? 0) > 0 ||
+    (context?.advancedWall?.cavities?.length ?? 0) > 0
+  );
+}
+
+function hasCompleteSingleLeafMassInputs(
+  layers: readonly ResolvedLayer[],
+  options: {
+    readonly allowProjectExplicitSurfaceMass: boolean;
+  }
+): boolean {
   const solidLayers = layers.filter((layer) => layer.surfaceMassKgM2 > 0 && layer.material.category !== "gap");
 
   return (
     solidLayers.length > 0 &&
     solidLayers.every(
       (layer) =>
-        Number.isFinite(layer.thicknessMm) &&
-        layer.thicknessMm > 0 &&
-        Number.isFinite(layer.material.densityKgM3) &&
-        layer.material.densityKgM3 > 0 &&
-        Number.isFinite(layer.surfaceMassKgM2) &&
-        layer.surfaceMassKgM2 > 0
+        hasCatalogBackedMassInputs(layer) ||
+        (options.allowProjectExplicitSurfaceMass && hasUserSuppliedSurfaceMassInputs(layer))
     )
   );
 }
@@ -91,6 +138,7 @@ function buildPropertyDefaults(layers: readonly ResolvedLayer[]): AirborneProper
 }
 
 export function maybeBuildGateOSingleLeafMassivePanelBasis(input: {
+  airborneContext?: AirborneContext | null;
   confidenceClass: DynamicAirborneConfidenceClass;
   curve: TransmissionLossCurve;
   family: DynamicAirborneFamily;
@@ -113,15 +161,47 @@ export function maybeBuildGateOSingleLeafMassivePanelBasis(input: {
     return null;
   }
 
-  if (hasMassTimberOrClt(input.layers) || !hasCompleteSingleLeafMassInputs(input.layers)) {
+  const usesProjectExplicitSurfaceMass = input.layers.some(isProjectExplicitSurfaceMassLayer);
+  const contextMode = input.airborneContext?.contextMode ?? "element_lab";
+
+  if (usesProjectExplicitSurfaceMass && hasExplicitNonSingleLeafTopologyIntent(input.airborneContext)) {
     return null;
   }
 
-  return {
+  if (
+    hasMassTimberOrClt(input.layers) ||
+    !hasCompleteSingleLeafMassInputs(input.layers, {
+      allowProjectExplicitSurfaceMass: true
+    })
+  ) {
+    return null;
+  }
+
+  const projectExplicitAssumptions = usesProjectExplicitSurfaceMass
+    ? [
+        "one or more single-leaf layers use user-supplied surfaceMassKgM2 because the project material has no catalog density row",
+        "user-supplied surface mass is accepted only for cavity-free single-leaf element-lab requests; field/building adapters remain separate owners"
+      ]
+    : [];
+  const massRequiredInputs = usesProjectExplicitSurfaceMass
+    ? [
+        "userSuppliedSurfaceMassKgM2",
+        "thicknessMm",
+        "stiffness/coincidence family default"
+      ]
+    : [
+        "densityKgM3",
+        "surfaceMassKgM2",
+        "thicknessMm",
+        "stiffness/coincidence family"
+      ];
+
+  const basis: AirborneResultBasis = {
     assumptions: [
       "single-leaf / massive-panel topology has one visible solid leaf and no cavity, porous fill, or frame bridge",
       "source absence blocks exact/calibrated promotion only, not this formula-backed single-leaf runtime",
       "the layer-combination resolver single-leaf mass-law banded runtime corridor owns the public element-lab basis",
+      ...projectExplicitAssumptions,
       `underlying delegate lineage remains ${METHOD_LABEL_BY_DELEGATE[input.selectedMethod]}`,
       `current dynamic strategy remains ${input.strategy}`
     ],
@@ -146,13 +226,30 @@ export function maybeBuildGateOSingleLeafMassivePanelBasis(input: {
       "cavityCount=0",
       "supportLayerCount=0",
       "porousLayerCount=0",
-      "densityKgM3",
-      "surfaceMassKgM2",
-      "thicknessMm",
-      "stiffness/coincidence family",
+      ...massRequiredInputs,
       "one-third-octave TL curve",
       "ISO717-1 rating adapter"
     ],
     toleranceClass: "uncalibrated_prediction"
   };
+
+  if (usesProjectExplicitSurfaceMass && contextMode === "field_between_rooms") {
+    return maybeBuildGateIAirborneFieldContextBasisFromBase({
+      baseBasis: basis,
+      context: input.airborneContext,
+      family: input.family,
+      frequencyBands: basis.frequencyBands
+    });
+  }
+  if (usesProjectExplicitSurfaceMass && contextMode === "building_prediction") {
+    return maybeBuildGateARAirborneBuildingPredictionBasisFromBase({
+      baseBasis: basis,
+      context: input.airborneContext,
+      family: input.family,
+      frequencyBands: basis.frequencyBands,
+      sourceDescription: "the owned single-leaf mass-law / banded calculated lab curve"
+    });
+  }
+
+  return basis;
 }

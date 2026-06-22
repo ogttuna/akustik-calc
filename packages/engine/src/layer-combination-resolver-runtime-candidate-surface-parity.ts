@@ -797,8 +797,17 @@ function getRuntimeSupportedMetricsForAssembly(
   const supportedMetrics = trace.supportedMetrics.filter((metric) =>
     supportedTargetOutputs.has(metric)
   );
+  const gateARCharacteristicDnTAkMetric =
+    trace.runtimeBasisId === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD &&
+    supportedTargetOutputs.has("DnT,A,k") &&
+    typeof result.metrics.estimatedDnTAkDb === "number" &&
+    Number.isFinite(result.metrics.estimatedDnTAkDb)
+      ? (["DnT,A,k"] as const satisfies readonly RequestedOutputId[])
+      : [];
 
-  return supportedMetrics.length > 0 ? supportedMetrics : trace.supportedMetrics;
+  return supportedMetrics.length > 0 || gateARCharacteristicDnTAkMetric.length > 0
+    ? [...new Set([...supportedMetrics, ...gateARCharacteristicDnTAkMetric])]
+    : trace.supportedMetrics;
 }
 
 function withScenarioSpecificAirborneRuntimePins(

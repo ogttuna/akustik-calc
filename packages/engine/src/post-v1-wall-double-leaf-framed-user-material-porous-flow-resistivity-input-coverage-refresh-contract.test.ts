@@ -73,12 +73,36 @@ const FIELD_BUILDING_OUTPUTS = [
 ] as const satisfies readonly RequestedOutputId[];
 const ASTM_OUTPUTS = ["IIC", "AIIC"] as const satisfies readonly RequestedOutputId[];
 const IMPACT_OUTPUTS = ["Ln,w", "L'n,w"] as const satisfies readonly RequestedOutputId[];
+const MIXED_IMPACT_OR_ALIAS_OUTPUTS = [
+  "Ln,w",
+  "L'n,w",
+  "CI",
+  "CI,50-2500",
+  "Ln,w+CI",
+  "DeltaLw",
+  "L'nT,w",
+  "L'nT,50",
+  "LnT,A",
+  "IIC",
+  "AIIC",
+  "NISR",
+  "ISR",
+  "LIIC",
+  "LIR",
+  "HIIC"
+] as const satisfies readonly RequestedOutputId[];
 
 const CUSTOM_PANEL_ID = "custom_panel_leaf";
 const CUSTOM_ABSORBER_ID = "custom_porous_absorber";
+const CUSTOM_RIGID_CAVITY_ID = "custom_rigid_cavity_fill";
 const CUSTOM_DOUBLE_LEAF_STACK = [
   { materialId: CUSTOM_PANEL_ID, thicknessMm: 12.5 },
   { materialId: CUSTOM_ABSORBER_ID, thicknessMm: 90 },
+  { materialId: CUSTOM_PANEL_ID, thicknessMm: 12.5 }
+] as const satisfies readonly LayerInput[];
+const CUSTOM_RIGID_CAVITY_STACK = [
+  { materialId: CUSTOM_PANEL_ID, thicknessMm: 12.5 },
+  { materialId: CUSTOM_RIGID_CAVITY_ID, thicknessMm: 90 },
   { materialId: CUSTOM_PANEL_ID, thicknessMm: 12.5 }
 ] as const satisfies readonly LayerInput[];
 
@@ -207,6 +231,18 @@ function buildCustomMaterialCatalog(flow: FlowPosture): readonly MaterialDefinit
       id: CUSTOM_ABSORBER_ID,
       name: "Custom Porous Absorber",
       tags: ["porous", "rockwool", "mineral_wool", "custom"]
+    },
+    {
+      acoustic: {
+        behavior: "rigid_mass",
+        notes: [],
+        propertySourceStatus: "user_supplied"
+      },
+      category: "mass",
+      densityKgM3: 45,
+      id: CUSTOM_RIGID_CAVITY_ID,
+      name: "Custom Rigid Cavity Fill",
+      tags: ["custom"]
     }
   ];
 }
@@ -378,6 +414,47 @@ describe("post-V1 wall double-leaf/framed user-material porous flow-resistivity 
     expectMissingFlowBoundary(missingBuildingFlow, FIELD_BUILDING_OUTPUTS);
   });
 
+  it("keeps mixed airborne plus impact requests from naming impact aliases as flow-resistivity needs_input", () => {
+    const probes = [
+      { context: EXPLICIT_DOUBLE_LEAF_CONTEXT, needsInputOutput: "Rw" },
+      { context: FIELD_CONTEXT, needsInputOutput: "R'w" },
+      { context: BUILDING_CONTEXT, needsInputOutput: "DnT,w" }
+    ] as const satisfies readonly {
+      context: AirborneContext;
+      needsInputOutput: RequestedOutputId;
+    }[];
+
+    for (const probe of probes) {
+      for (const aliasOutput of MIXED_IMPACT_OR_ALIAS_OUTPUTS) {
+        const outputs = [probe.needsInputOutput, aliasOutput] as const satisfies readonly RequestedOutputId[];
+        const result = calculateCustomWall("missing_user_supplied", probe.context, outputs);
+
+        expect(result.supportedTargetOutputs, outputs.join(" + ")).toEqual([]);
+        expect(result.supportedImpactOutputs, outputs.join(" + ")).toEqual([]);
+        expect(result.unsupportedTargetOutputs, outputs.join(" + ")).toEqual([...outputs]);
+        expect(result.unsupportedImpactOutputs, outputs.join(" + ")).toContain(aliasOutput);
+        expect(result.airborneBasis, outputs.join(" + ")).toMatchObject({
+          method: "dynamic_calculator_route_input_contract_missing_physical_fields",
+          missingPhysicalInputs: expect.arrayContaining(["flowResistivityPaSM2"]),
+          origin: "needs_input"
+        });
+        expect(result.acousticAnswerBoundary, outputs.join(" + ")).toMatchObject({
+          method: "dynamic_calculator_route_input_contract_missing_physical_fields",
+          missingPhysicalInputs: expect.arrayContaining(["flowResistivityPaSM2"]),
+          origin: "needs_input",
+          route: "wall",
+          unsupportedOutputs: [probe.needsInputOutput]
+        });
+        expect(result.warnings, outputs.join(" + ")).toContain(
+          `Acoustic Calculator Answer Engine V1 selected needs_input for ${probe.needsInputOutput}; DynEcho kept those outputs out of the published answer until the required physical inputs or basis owner are available.`
+        );
+        expect(result.warnings.join("\n"), outputs.join(" + ")).not.toContain(
+          `needs_input for ${probe.needsInputOutput}, ${aliasOutput}`
+        );
+      }
+    }
+  });
+
   it("keeps the route-input surface aligned with the flow-resistivity material-property prompt", () => {
     const missingFlowContract = buildBridgeInputContract("missing_user_supplied");
     const unknownFlowContract = buildBridgeInputContract("missing_unknown");
@@ -425,6 +502,67 @@ describe("post-V1 wall double-leaf/framed user-material porous flow-resistivity 
     expect(contextOwnedContract.inputCompleteness.status).toBe("complete");
     expect(contextOwnedContract.inputCompleteness.missingPhysicalInputs).toEqual([]);
     expect(contextOwnedContract.prompts).toEqual([]);
+  });
+
+  it("keeps flow-resistivity completeness scoped to porous absorber material definitions", () => {
+    const builtInPorousMaterials = getDefaultMaterialCatalog().filter((material) =>
+      material.acoustic?.behavior === "porous_absorber" ||
+      material.acoustic?.absorberClass === "porous_absorptive"
+    );
+    const builtInPorousMaterialsMissingFlow = builtInPorousMaterials.filter(
+      (material) =>
+        typeof material.acoustic?.flowResistivityPaSM2 !== "number" ||
+        !Number.isFinite(material.acoustic.flowResistivityPaSM2) ||
+        material.acoustic.flowResistivityPaSM2 <= 0
+    );
+
+    expect(builtInPorousMaterials.length).toBeGreaterThan(0);
+    expect(builtInPorousMaterialsMissingFlow).toEqual([]);
+
+    const rigidMismatchContract = buildGateQDoubleLeafFramedBridgeInputContract({
+      airborneContext: EXPLICIT_DOUBLE_LEAF_CONTEXT,
+      catalog: buildCustomMaterialCatalog("missing_user_supplied"),
+      layers: CUSTOM_RIGID_CAVITY_STACK,
+      targetOutputs: LAB_OUTPUTS
+    });
+    const emptyRigidCavityContract = buildGateQDoubleLeafFramedBridgeInputContract({
+      airborneContext: {
+        ...EXPLICIT_DOUBLE_LEAF_CONTEXT,
+        wallTopology: {
+          ...EXPLICIT_DOUBLE_LEAF_CONTEXT.wallTopology,
+          cavity1AbsorptionClass: "none",
+          cavity1FillCoverage: "empty"
+        }
+      },
+      catalog: buildCustomMaterialCatalog("missing_user_supplied"),
+      layers: CUSTOM_RIGID_CAVITY_STACK,
+      targetOutputs: LAB_OUTPUTS
+    });
+
+    expect(rigidMismatchContract.inputCompleteness.missingPhysicalInputs).not.toContain("flowResistivityPaSM2");
+    expect(rigidMismatchContract.prompts).toEqual(
+      expect.not.arrayContaining([
+        expect.objectContaining({
+          fieldId: "flowResistivityPaSM2"
+        })
+      ])
+    );
+    expect(rigidMismatchContract.prompts).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          fieldId: "cavity1FillCoverage",
+          source: "wall_topology"
+        }),
+        expect.objectContaining({
+          fieldId: "absorberClass",
+          source: "wall_topology"
+        })
+      ])
+    );
+
+    expect(emptyRigidCavityContract.inputCompleteness.status).toBe("complete");
+    expect(emptyRigidCavityContract.inputCompleteness.missingPhysicalInputs).toEqual([]);
+    expect(emptyRigidCavityContract.prompts).toEqual([]);
   });
 
   it("keeps missing-topology, unknown-material, ASTM/IIC/AIIC, and impact boundaries outside the refresh", () => {

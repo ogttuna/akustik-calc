@@ -154,3 +154,42 @@ This is not a broad source crawl.
 - `runtimeFormulaRetunes: 0`
 - `sourceRowsImported: 0`
 - `frontendImplementationFilesTouched: 0`
+
+## Coverage Refresh Closeout
+
+Coverage refresh status:
+
+`post_v1_wall_double_leaf_framed_cavity_depth_numeric_sensitivity_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank`
+
+The refresh landed as a no-runtime regression boundary. It re-probes
+topology `cavity1DepthMm = 60`, `90`, and `140 mm`; advanced-only
+`advancedWall.cavities[0].depthMm` lab, field, and building outputs;
+missing, zero, and negative cavity depth as precise `needs_input`;
+topology-authoritative mismatch behavior; and `IIC` / `AIIC` as
+`unsupported`. It does not retune formulas, import source rows, touch
+frontend files, or broaden the source crawl. This is not a broad source
+crawl.
+
+Coverage counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+## Current Selected Next
+
+Selected next action:
+
+`post_v1_runtime_first_route_family_rerank_after_wall_double_leaf_framed_cavity_depth_numeric_sensitivity_coverage_refresh_plan`
+
+Selected next file:
+
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-double-leaf-framed-cavity-depth-numeric-sensitivity-coverage-refresh-contract.test.ts`
+
+Selected next plan:
+
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_WALL_DOUBLE_LEAF_FRAMED_CAVITY_DEPTH_NUMERIC_SENSITIVITY_COVERAGE_REFRESH_PLAN_2026-06-22.md`
+
+Selected next label:
+
+`post-V1 runtime-first route-family rerank after wall double-leaf/framed cavity-depth numeric sensitivity coverage refresh`

@@ -122,6 +122,10 @@ function round0(value: number): number {
   return Math.round(value);
 }
 
+function uniqueInputFields(fields: readonly AcousticInputFieldId[]): AcousticInputFieldId[] {
+  return [...new Set(fields)];
+}
+
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
 }
@@ -143,12 +147,23 @@ function materialFor(
 
 function surfaceMassForLayer(layer: LayerInput | ResolvedLayer, catalog: readonly MaterialDefinition[]): number {
   const material = materialFor(layer, catalog);
-  if (!material || material.category === "gap" || material.category === "insulation") {
+  if (material?.category === "gap" || material?.category === "insulation") {
     return 0;
   }
 
-  if ("surfaceMassKgM2" in layer && Number.isFinite(layer.surfaceMassKgM2)) {
-    return layer.surfaceMassKgM2;
+  // 2026-06-22 agent note: keep optional explicit layer mass narrowed locally after
+  // LayerInputSchema made the field optional for catalog-derived layers.
+  const explicitSurfaceMassKgM2 = "surfaceMassKgM2" in layer ? layer.surfaceMassKgM2 : undefined;
+  if (
+    typeof explicitSurfaceMassKgM2 === "number" &&
+    Number.isFinite(explicitSurfaceMassKgM2) &&
+    explicitSurfaceMassKgM2 > 0
+  ) {
+    return explicitSurfaceMassKgM2;
+  }
+
+  if (!material) {
+    return 0;
   }
 
   return (Math.max(material.densityKgM3, 0) * Math.max(layer.thicknessMm, 0)) / 1000;
@@ -556,10 +571,10 @@ function buildBenchmarkRange(input: {
 function buildEquationOwners(): readonly GateRDoubleLeafFramedBridgeEquationOwner[] {
   return [
     {
-      formula: "m_leaf = sum(density_kg_m3 * thickness_mm / 1000) over explicit side leaf group",
+      formula: "m_leaf = sum(surface_mass_kg_m2 or density_kg_m3 * thickness_mm / 1000) over explicit side leaf group",
       id: "surface_mass_partition_owner",
       ownerStatus: "contracted_no_runtime",
-      requiredInputs: ["sideALeafGroup", "sideBLeafGroup", "densityKgM3", "thicknessMm"],
+      requiredInputs: ["sideALeafGroup", "sideBLeafGroup", "surfaceMassKgM2", "densityKgM3", "thicknessMm"],
       runtimePromotionRequired: true
     },
     {
@@ -608,6 +623,24 @@ function buildEquationOwners(): readonly GateRDoubleLeafFramedBridgeEquationOwne
   ];
 }
 
+function missingLeafSurfaceMassInputs(input: {
+  airborneContext?: AirborneContext;
+  physicalInputs: GateRDoubleLeafFramedBridgePhysicalInputs;
+}): AcousticInputFieldId[] {
+  const topology = input.airborneContext?.wallTopology;
+  const missing: AcousticInputFieldId[] = [];
+
+  if (topology?.sideALeafLayerIndices?.length && input.physicalInputs.sideALeafMassKgM2 === null) {
+    missing.push("surfaceMassKgM2");
+  }
+
+  if (topology?.sideBLeafLayerIndices?.length && input.physicalInputs.sideBLeafMassKgM2 === null) {
+    missing.push("surfaceMassKgM2");
+  }
+
+  return uniqueInputFields(missing);
+}
+
 function buildCandidateBasis(input: {
   benchmarkRange: GateRDoubleLeafFramedBridgeBenchmarkRange;
   candidateFamily: DynamicAirborneFamily;
@@ -623,7 +656,8 @@ function buildCandidateBasis(input: {
     assumptions: [
       "Gate R defines the double-leaf/framed solver candidate only; runtime candidate selection stays unchanged.",
       "Exact full-stack or calibrated source rows may override later only through the Gate H source-promotion policy.",
-      "Rw and STC are separate rating-adapter outputs over a calculated curve, not informal aliases."
+      "The Gate S frequency backbone is the owned calculated transmission-loss curve for this complete double-leaf/framed route.",
+      "Rw, STC, C, and Ctr are re-rated from the same calculated frequency curve; STC is an ASTM E413 adapter output, not an alias of Rw."
     ],
     calculationStandard: "engine_double_leaf_cavity",
     curveBasis: "calculated_frequency_curve",
@@ -653,7 +687,9 @@ function buildCandidateBasis(input: {
       "massAirMassResonanceOwner",
       "bridgeCouplingOwner",
       "porousCavityDampingOwner",
+      "calculatedFrequencyCurveShape",
       "ISO717-1 Rw adapter",
+      "ISO717-1 C/Ctr spectrum adaptation adapter",
       "ASTM E413 STC adapter boundary"
     ],
     toleranceClass: "uncalibrated_prediction"
@@ -685,6 +721,13 @@ export function buildGateRDoubleLeafFramedBridgeSolverContract(input: {
   const equationOwners = buildEquationOwners();
   const isExplicitDoubleLeafFramed =
     input.airborneContext?.wallTopology?.topologyMode === "double_leaf_framed";
+  const missingPhysicalInputs = uniqueInputFields([
+    ...inputContract.missingPhysicalInputs,
+    ...missingLeafSurfaceMassInputs({
+      airborneContext: input.airborneContext,
+      physicalInputs
+    })
+  ]);
   const negativeBoundaryReasons: string[] = [];
 
   if (!isExplicitDoubleLeafFramed) {
@@ -701,7 +744,7 @@ export function buildGateRDoubleLeafFramedBridgeSolverContract(input: {
 
   const candidateFamily = candidateFamilyForBridge(inputContract.bridgeClass);
   const benchmarkRange =
-    isExplicitDoubleLeafFramed && inputContract.missingPhysicalInputs.length === 0
+    isExplicitDoubleLeafFramed && missingPhysicalInputs.length === 0
       ? buildBenchmarkRange({
           airborneContext: input.airborneContext,
           bridgeClass: inputContract.bridgeClass,
@@ -710,7 +753,7 @@ export function buildGateRDoubleLeafFramedBridgeSolverContract(input: {
       : null;
   const readinessStatus: GateRDoubleLeafFramedBridgeReadinessStatus = !isExplicitDoubleLeafFramed
     ? "family_boundary_rejected"
-    : inputContract.missingPhysicalInputs.length > 0
+    : missingPhysicalInputs.length > 0
       ? "needs_input"
       : negativeBoundaryReasons.length > 0 || !candidateFamily || !benchmarkRange
         ? "negative_boundary"
@@ -732,7 +775,7 @@ export function buildGateRDoubleLeafFramedBridgeSolverContract(input: {
     candidateFamily: readinessStatus === "solver_candidate_ready" ? candidateFamily : null,
     equationOwners,
     inputContract,
-    missingPhysicalInputs: inputContract.missingPhysicalInputs,
+    missingPhysicalInputs,
     negativeBoundaryReasons,
     physicalInputs,
     readinessStatus,

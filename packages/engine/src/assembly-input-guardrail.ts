@@ -8,7 +8,9 @@
 // which is hostile to downstream integrations.
 //
 // Two input classes are guarded:
-//   - Unknown materialId (not present in the effective catalog)
+//   - Unknown materialId (not present in the effective catalog) unless
+//     the caller supplied a positive surfaceMassKgM2 for a physics route
+//     that can use explicit leaf mass without catalog density
 //   - Invalid thicknessMm (NaN, Infinity, non-finite, ≤ 0, > MAX_MM)
 //
 // A fail-closed result still produces a valid `AssemblyCalculation`
@@ -47,11 +49,22 @@ export type AssemblyInputGuardDecision =
   | { kind: "pass" }
   | { kind: "fail"; warnings: string[] };
 
+export type AssemblyInputGuardOptions = {
+  allowedUnknownMaterialIds?: readonly string[];
+};
+
+function hasExplicitSurfaceMass(layer: LayerInput): boolean {
+  const value = (layer as { surfaceMassKgM2?: unknown }).surfaceMassKgM2;
+  return typeof value === "number" && Number.isFinite(value) && value > 0;
+}
+
 export function evaluateAssemblyInputGuard(
   layers: readonly LayerInput[],
-  catalog: readonly MaterialDefinition[]
+  catalog: readonly MaterialDefinition[],
+  options: AssemblyInputGuardOptions = {}
 ): AssemblyInputGuardDecision {
   const warnings: string[] = [];
+  const allowedUnknownMaterialIds = new Set(options.allowedUnknownMaterialIds ?? []);
 
   layers.forEach((layer, index) => {
     const position = index + 1;
@@ -82,6 +95,10 @@ export function evaluateAssemblyInputGuard(
     try {
       resolveMaterial(materialId, catalog);
     } catch {
+      if (hasExplicitSurfaceMass(layer) || allowedUnknownMaterialIds.has(materialId)) {
+        return;
+      }
+
       warnings.push(
         `Layer ${position} references an unknown material: \`${materialId}\`. Add the material to the catalog or fix the layer before recalculating.`
       );

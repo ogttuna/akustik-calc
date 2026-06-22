@@ -54,7 +54,9 @@ function buildGateIFieldBasis(input: {
   frequencyBands?: AirborneResultBasis["frequencyBands"];
 }): AirborneResultBasis {
   const baseAssumptions = input.baseBasis.assumptions.filter(
-    (assumption) => !/field\/apparent outputs remain outside/i.test(assumption)
+    (assumption) =>
+      !/field\/apparent outputs remain outside/i.test(assumption) &&
+      !/field\/building adapters remain separate owners/i.test(assumption)
   );
   const baseErrorBudgetDb =
     typeof input.baseBasis.errorBudgetDb === "number" && Number.isFinite(input.baseBasis.errorBudgetDb)

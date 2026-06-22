@@ -2005,7 +2005,7 @@ export function calculateDynamicAirborneResult(
     visibleLeafMassRatio: topology.visibleLeafMassRatio
   };
   const gateOSingleLeafMassivePanelBasis = maybeBuildGateOSingleLeafMassivePanelBasis({
-    confidenceClass,
+    airborneContext: options.airborneContext, confidenceClass,
     curve: dynamicCurve,
     family: family.family,
     layers: analysisLayers,

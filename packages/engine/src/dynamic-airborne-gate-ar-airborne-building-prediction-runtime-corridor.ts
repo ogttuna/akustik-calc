@@ -114,6 +114,10 @@ function isLightweightFramedDoubleLeafCandidate(topology: AirborneTopologySummar
   );
 }
 
+function hasProjectExplicitSurfaceMassLayer(layers: readonly ResolvedLayer[]): boolean {
+  return layers.some((layer) => layer.material.tags.includes("project-explicit-surface-mass"));
+}
+
 function isGateCJDoubleLeafBuildingOwnerBoundary(input: {
   context: AirborneContext | null | undefined;
   options: DynamicAirborneOptions;
@@ -258,6 +262,7 @@ export function maybeBuildGateARAirborneBuildingPredictionRuntimeBasis(input: {
   const context = input.options.airborneContext;
   if (
     !hasCompleteGateARBuildingPredictionContext(context) ||
+    (input.topology.visibleLeafCount === 1 && hasProjectExplicitSurfaceMassLayer(input.layers)) ||
     isGateCJDoubleLeafBuildingOwnerBoundary({
       context,
       options: input.options,

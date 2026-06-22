@@ -152,6 +152,8 @@ function buildGateSBasis(input: {
     assumptions: [
       "The layer-combination resolver double-leaf/framed runtime corridor owns this source-absent formula-backed runtime for complete inputs only.",
       "Side A and side B leaf masses, cavity depth, bridge class, support topology, support spacing, and porous damping are explicit physical inputs.",
+      "The Gate S frequency backbone is the owned calculated transmission-loss curve for this complete double-leaf/framed route.",
+      "Rw, STC, C, and Ctr are re-rated from the same calculated frequency curve; STC is an ASTM E413 adapter output, not an alias of Rw.",
       "Exact full-stack or calibrated source rows can still override this source-absent prediction through the Gate H source-promotion policy.",
       "Rw and STC remain separate rating-adapter outputs over the calculated curve; STC is not an alias of Rw."
     ],
@@ -168,6 +170,7 @@ function buildGateSBasis(input: {
       "sideBLeafGroup",
       "sideALeafMassKgM2",
       "sideBLeafMassKgM2",
+      "surfaceMassKgM2",
       "cavity1DepthMm",
       "flowResistivityPaSM2",
       ...advancedWallPrecisionInputs,
@@ -178,7 +181,9 @@ function buildGateSBasis(input: {
       "massAirMassResonanceHz",
       "bridgeCouplingDeltaDb",
       "porousCavityDampingCreditDb",
+      "calculatedFrequencyCurveShape",
       "ISO717-1 Rw adapter",
+      "ISO717-1 C/Ctr spectrum adaptation adapter",
       "ASTM E413 STC adapter boundary"
     ]
   });
