@@ -4327,6 +4327,14 @@ textarea.ui-field {
   line-height: 1.25;
 }
 
+.calc-output-row > span {
+  min-width: 0;
+}
+
+.calc-output-row small {
+  overflow-wrap: anywhere;
+}
+
 .calc-task-row em {
   color: var(--state-accent-text);
   font-size: 0.74rem;
@@ -4342,6 +4350,17 @@ textarea.ui-field {
   padding: 0.625rem;
   color: var(--state-danger-text);
   font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.calc-reference-note {
+  margin: 0;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-control);
+  background: var(--surface-inset);
+  padding: 0.625rem;
+  color: var(--text-muted);
+  font-size: 0.78rem;
   line-height: 1.35;
 }
 
@@ -4408,6 +4427,45 @@ textarea.ui-field {
 
 .calc-assistant-command-input {
   min-height: 4.5rem;
+}
+
+.calc-assistant-prompt-examples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.calc-assistant-prompt-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  max-width: 100%;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-control);
+  background: var(--surface-inset);
+  color: var(--text-secondary);
+  padding: 0.38rem 0.5rem;
+  font-size: 0.74rem;
+  font-weight: 720;
+  letter-spacing: 0;
+  cursor: pointer;
+}
+
+.calc-assistant-prompt-chip:hover:not(:disabled) {
+  border-color: var(--state-accent-border);
+  color: var(--text-primary);
+}
+
+.calc-assistant-prompt-chip:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.calc-assistant-prompt-chip span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .calc-assistant-command-actions {

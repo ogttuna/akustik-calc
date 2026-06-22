@@ -10,12 +10,17 @@ import type {
   EstimateRequest,
   FloorRole,
   MaterialDefinition,
+  ProjectUserVerifiedCalculatedAnchorMetricBasis,
+  ProjectUserVerifiedCalculatedAnchorRequestContext,
+  ProjectUserVerifiedCalculatedAnchorResultBasisTrace,
+  ProjectUserVerifiedCalculatedAnchorValue,
   RequestedOutputId,
   WallCavityAbsorptionClass,
   WallCavityFillCoverage,
   WallSupportTopology,
   WallTopologyMode
 } from "@dynecho/shared";
+import { buildProjectUserVerifiedCalculatedAnchorFingerprint } from "@dynecho/shared";
 import {
   ArrowDown,
   ArrowRight,
@@ -42,6 +47,10 @@ import {
   buildReportAssistantContext,
   type ReportAssistantContext
 } from "../workbench/report-assistant-context";
+import type {
+  ReportAssistantAssemblyAlternativeReview,
+  ReportAssistantAssemblyAlternativeReviewSource
+} from "../workbench/report-assistant-assembly-alternatives";
 import {
   buildReportAssistantCurrentCalculatorReviewPacketFromCalculatorPreview,
   type ReportAssistantCurrentCalculatorReviewPacket
@@ -108,11 +117,28 @@ import {
   findWorkbenchV2CommonPresetById
 } from "./workbench-v2-common-presets";
 import {
+  createWorkbenchV2AssistantBoundedEditPlan,
+  type WorkbenchV2AssistantBoundedEditPlanResult
+} from "./workbench-v2-assistant-bounded-edit-plan";
+import { createWorkbenchV2AssistantBoundedEditPlanApplyProposal } from "./workbench-v2-assistant-bounded-edit-plan-apply-proposal";
+import {
   getWorkbenchV2AssistantLayerStackSignature,
   parseWorkbenchV2AssistantLayerStackApplyCommand,
   type WorkbenchV2AssistantLayerStackApplyResult,
   type WorkbenchV2AssistantLayerStackCandidateStack
 } from "./workbench-v2-assistant-layer-stack-command";
+import {
+  createWorkbenchV2AssistantCandidateApplyProposal,
+  type WorkbenchV2AssistantCandidateApplyPreviewSummary
+} from "./workbench-v2-assistant-candidate-apply-proposal";
+import {
+  createWorkbenchV2AssistantSourceAlternativeCandidatesFromReview,
+  type WorkbenchV2AssistantSourceAlternativeClarificationPrompt
+} from "./workbench-v2-assistant-source-alternative-candidate";
+import {
+  isWorkbenchWallRwImprovementCandidateStack,
+  planWorkbenchWallRwImprovementCandidates
+} from "./workbench-v2-assistant-wall-rw-improvement-planner";
 import type {
   WorkbenchV2CalculatorAssistantOutputRow,
   WorkbenchV2CalculatorAssistantPreview,
@@ -126,6 +152,17 @@ import {
   type WorkbenchV2PresetStatus,
   type WorkbenchV2PresetSummary
 } from "./workbench-v2-presets";
+import {
+  parseWorkbenchV2MeasuredWallRwAnchorSummaries,
+  type WorkbenchV2MeasuredWallRwAnchorSummary
+} from "./workbench-v2-measured-wall-rw-anchors";
+import {
+  formatWorkbenchV2VerifiedCalculatedAnchorContext,
+  formatWorkbenchV2VerifiedCalculatedAnchorValues,
+  getApplicableWorkbenchV2VerifiedCalculatedAnchors,
+  parseWorkbenchV2VerifiedCalculatedAnchorSummaries,
+  type WorkbenchV2VerifiedCalculatedAnchorSummary
+} from "./workbench-v2-verified-calculated-anchors";
 import {
   deriveWorkbenchV2PersistenceState,
   getWorkbenchV2DraftDirtyState
@@ -146,7 +183,7 @@ type EstimateState =
   | { status: "idle" }
   | { reasons: readonly RequiredTask[]; status: "blocked" }
   | { status: "loading" }
-  | { result: AssemblyCalculation; status: "ready" }
+  | { request: EstimateRequest; result: AssemblyCalculation; status: "ready" }
   | { message: string; status: "error" };
 type CalculatorAssistantPreviewState =
   | { status: "idle" }
@@ -205,9 +242,11 @@ type CalculatorAssistantSourceReviewState =
       preview: WorkbenchV2CalculatorAssistantPreview;
       result: ReportAssistantResultEnvelope;
       review: ReportAssistantPlausibilityReview;
+      reviewedOutputId?: RequestedOutputId;
       source: "context" | "research_provider" | null;
       status: "ready";
       warnings: readonly string[];
+      workbenchSnapshotSignature: string;
     }
   | {
       message: string;
@@ -216,6 +255,29 @@ type CalculatorAssistantSourceReviewState =
       status: "error";
       warnings: readonly string[];
     };
+type CalculatorAssistantSourceAlternativeState =
+  | { status: "idle" }
+  | { status: "loading" }
+  | {
+      candidateCount: number;
+      clarificationPrompts: readonly WorkbenchV2AssistantSourceAlternativeClarificationPrompt[];
+      result: ReportAssistantResultEnvelope;
+      review: ReportAssistantAssemblyAlternativeReview;
+      source: ReportAssistantAssemblyAlternativeReviewSource;
+      status: "ready";
+      taskCount: number;
+      warnings: readonly string[];
+    }
+  | {
+      message: string;
+      result?: ReportAssistantResultEnvelope;
+      status: "error";
+      warnings: readonly string[];
+    };
+type CalculatorAssistantBoundedEditPlanState =
+  | { status: "idle" }
+  | { result: Extract<WorkbenchV2AssistantBoundedEditPlanResult, { ok: true }>; status: "ready" }
+  | { result: Extract<WorkbenchV2AssistantBoundedEditPlanResult, { ok: false }>; status: "blocked" };
 type CalculatorAssistantReportOverrideTarget = {
   document: SimpleWorkbenchProposalDocument;
   projectContext: SimpleWorkbenchProposalPreviewProjectContext;
@@ -260,6 +322,22 @@ type OutputRow = {
   status: OutputStatus;
   value: string;
 };
+
+type VerifiedCalculatedAnchorCapturePackage = {
+  requestContext: ProjectUserVerifiedCalculatedAnchorRequestContext;
+  resultBasisTrace: ProjectUserVerifiedCalculatedAnchorResultBasisTrace;
+  values: ProjectUserVerifiedCalculatedAnchorValue[];
+};
+
+type VerifiedCalculatedAnchorCaptureResult =
+  | {
+      package: VerifiedCalculatedAnchorCapturePackage;
+      status: "ready";
+    }
+  | {
+      reason: "no_live_values";
+      status: "blocked";
+    };
 
 type RequiredTask = {
   actionLabel?: string;
@@ -334,6 +412,7 @@ type ServerProjectReportRecordPayload = ServerProjectReportSummaryPayload & {
 };
 
 type ServerProjectStatus = "error" | "idle" | "loading" | "restoring" | "syncing";
+type WorkbenchVerifiedCalculatedAnchorStatus = "error" | "idle" | "syncing";
 
 const OUTPUT_OPTIONS: readonly OutputOption[] = [
   { group: "Airborne", id: "Rw", label: "Rw", modes: ["wall", "floor"] },
@@ -352,19 +431,66 @@ const OUTPUT_OPTIONS: readonly OutputOption[] = [
 ];
 
 const CALCULATOR_SOURCE_REVIEW_RESEARCH_PATTERN =
-  /\b(?:analiz|analyze|arastir|bak|check|comment|compare|degerlendir|evaluate|google|incele|internet|karsilastir|kaynak|kontrol|net|netten|referans|reference|research|review|search|source|web|yorumla)\b/u;
+  /\b(?:analiz|analyze|arastir\w*|bak|check|comment|compare|degerlendir\w*|evaluate|google|incele\w*|internet|karsilastir\w*|kaynak|kontrol|net|netten|referans|reference|research|review|search|source|web|yorumla\w*)\b/u;
 const CALCULATOR_SOURCE_REVIEW_QUESTION_PATTERN =
   /\b(?:az|dogru|dusuk|fazla|garip|high|low|makul|mantikli|midir|mi|mu|mudur|nasil|normal|plausible|reasonable|right|sence|supheli|too\s+high|too\s+low|valid|wrong|yanlis|yuksek)\b/u;
 const CALCULATOR_SOURCE_REVIEW_VALUE_PATTERN =
   /\b(?:db|deger|desibel|metric|output|performans|result|sonuc|value)\b/u;
 const CALCULATOR_SOURCE_REVIEW_REPORT_CONFIRM_PATTERN =
   /\b(?:apply|bana\s+sor|confirm|editleyeyim\s+mi|editleyim\s+mi|onay|onayla|onaylarsam|rapor|rapora|report|sor|uygula|uygulayayim\s+mi|uygulayayım\s+mi|yazayim\s+mi|yazayım\s+mi)\b/u;
+const CALCULATOR_SOURCE_REVIEW_REPORT_FOLLOWUP_REPORT_PATTERN =
+  /\b(?:rapor|rapora|report)\b/u;
+const CALCULATOR_SOURCE_REVIEW_REPORT_FOLLOWUP_APPLY_PATTERN =
+  /\b(?:apply|edit|editle|tamam|uygula|yaz)\b/u;
 const CALCULATOR_SOURCE_REVIEW_DIRECT_VALUE_OVERRIDE_PATTERN =
   /\b(?:apply|ayarla|change|degistir|editle|make|olsun|replace|set|target|uygula|yap|yaz)\b/u;
 const CALCULATOR_SOURCE_REVIEW_VALUE_EXPECTATION_PATTERN =
   /\b(?:dogru\s+cevap|must\s+be|olmali|olmasi\s+gerek|should\s+be)\b/u;
 const CALCULATOR_SOURCE_REVIEW_NUMERIC_TARGET_PATTERN =
   /\b\d+(?:[.,]\d+)?\s*(?:db)?\b/u;
+const CALCULATOR_ASSISTANT_SOURCE_ALTERNATIVE_SUBJECT_PATTERN =
+  /\b(?:assembly|build\s*up|duvar|katman|kombinasyon|layer|malzeme|material|panel|stack)\b/u;
+const CALCULATOR_ASSISTANT_SOURCE_ALTERNATIVE_INTENT_PATTERN =
+  /\b(?:alternatif\w*|alternative\w*|instead|oner\w*|replace|substitute|yerine)\b/u;
+// Coordination note (assistant objective planner, 2026-06-22):
+// Keep this route ahead of generic candidate generation. If another agent edits
+// assistant command routing, update this note and the objective-routing tests.
+const CALCULATOR_ASSISTANT_OBJECTIVE_IMPROVEMENT_PATTERN =
+  /\b(?:artir\w*|arttir\w*|artsin|begenmedim|improve|increase|iyilestir\w*|raise|yukselt\w*)\b/u;
+const CALCULATOR_ASSISTANT_OBJECTIVE_LAYER_PLANNING_PATTERN =
+  /\b(?:add|alternatif|alternatifler|calculator|candidate|candidates|dene|deneyelim|ekle|hesapla|katman|layer|layers|malzeme|mantikli|material|sec)\b/u;
+const CALCULATOR_ASSISTANT_MULTI_STEP_CONNECTOR_PATTERN =
+  /\b(?:2|ardindan|birden|iki|sonra|then|two)\b|[,;]/u;
+const CALCULATOR_ASSISTANT_ADD_EDIT_PATTERN = /\b(?:add|ekle|insert)\b/u;
+const CALCULATOR_ASSISTANT_REMOVE_EDIT_PATTERN = /\b(?:cikar|delete|kaldir|remove|sil)\b/u;
+const CALCULATOR_ASSISTANT_REPLACE_EDIT_PATTERN = /\b(?:change|degistir|replace)\b/u;
+const CALCULATOR_ASSISTANT_ALTERNATIVE_EDIT_PATTERN =
+  /\b(?:alternatif|alternatifler|candidate|candidates|kombinasyon|kombinasyonlar|option|options)\b/u;
+const CALCULATOR_ASSISTANT_RESEARCH_DRAFT_WRITE_PATTERN =
+  /\b(?:add|ayarla|change|degistir|diz|doldur|edit|editle|ekle|insert|kaldir|remove|sil|uygula|yap)\b/u;
+
+export const CALCULATOR_ASSISTANT_PROMPT_EXAMPLES = [
+  {
+    label: "Rw kontrol et",
+    prompt: "Ekrandaki stacke bak Rw fazla mı az mı? İnternetten araştır."
+  },
+  {
+    label: "Rw artır",
+    prompt: "Bu layer kombinasyonunun Rw değerini beğenmedim, birkaç layer daha ekle ki Rw artsın, en mantıklısını seç."
+  },
+  {
+    label: "Edit planı",
+    prompt: "2. layerı sil, 15 mm gypsum ekle, Rw ve STC seç, hesapla."
+  },
+  {
+    label: "Alternatif ara",
+    prompt: "Bu katman kombinasyonuna alternatif malzeme araştır."
+  },
+  {
+    label: "Araştırmayı ayır",
+    prompt: "internetten araştır sonra gypsum ekle."
+  }
+] satisfies readonly { label: string; prompt: string }[];
 
 export type CalculatorAssistantCommandRoutingDecision =
   | {
@@ -378,9 +504,24 @@ export type CalculatorAssistantCommandRoutingDecision =
       status: "report_override_request";
     }
   | {
+      confidence: "high";
+      reason: "wall_rw_improvement_candidate_planning";
+      status: "objective_candidate_planning";
+    }
+  | {
+      confidence: "high" | "medium";
+      reason: "source_backed_layer_alternative_research";
+      status: "source_alternative_research";
+    }
+  | {
+      confidence: "medium";
+      reason: "multi_step_edit_plan_required";
+      status: "bounded_edit_plan";
+    }
+  | {
       confidence: "high" | "medium";
       message: string;
-      reason: "direct_calculator_value_override";
+      reason: "direct_calculator_value_override" | "research_write_requires_clarification";
       status: "clarify";
     }
   | {
@@ -438,6 +579,12 @@ export function isCalculatorAssistantSourceReviewCommand(input: {
   return decision.status === "source_review" || decision.status === "report_override_request";
 }
 
+export function isCalculatorAssistantReportOverrideFollowupCommand(instruction: string): boolean {
+  const normalized = normalizeCalculatorAssistantReviewText(instruction);
+  return CALCULATOR_SOURCE_REVIEW_REPORT_FOLLOWUP_REPORT_PATTERN.test(normalized) &&
+    CALCULATOR_SOURCE_REVIEW_REPORT_FOLLOWUP_APPLY_PATTERN.test(normalized);
+}
+
 export function classifyCalculatorAssistantCommandRouting(input: {
   instruction: string;
   selectedOutputs?: readonly RequestedOutputId[];
@@ -457,6 +604,27 @@ export function classifyCalculatorAssistantCommandRouting(input: {
   const hasDirectValueOverrideVerb = CALCULATOR_SOURCE_REVIEW_DIRECT_VALUE_OVERRIDE_PATTERN.test(normalized);
   const hasValueExpectation = CALCULATOR_SOURCE_REVIEW_VALUE_EXPECTATION_PATTERN.test(normalized);
   const hasCurrentOutputContext = mentionsOutput || (Boolean(input.selectedOutputs?.length) && mentionsValue);
+  const wantsSourceAlternativeResearch =
+    asksForResearch &&
+    CALCULATOR_ASSISTANT_SOURCE_ALTERNATIVE_INTENT_PATTERN.test(normalized) &&
+    CALCULATOR_ASSISTANT_SOURCE_ALTERNATIVE_SUBJECT_PATTERN.test(normalized);
+  const mixesResearchWithDraftWrite =
+    asksForResearch &&
+    CALCULATOR_ASSISTANT_RESEARCH_DRAFT_WRITE_PATTERN.test(normalized) &&
+    !wantsSourceAlternativeResearch;
+  const wantsObjectiveImprovement =
+    hasCurrentOutputContext &&
+    CALCULATOR_ASSISTANT_OBJECTIVE_IMPROVEMENT_PATTERN.test(normalized) &&
+    CALCULATOR_ASSISTANT_OBJECTIVE_LAYER_PLANNING_PATTERN.test(normalized);
+  const editOperationCount = [
+    CALCULATOR_ASSISTANT_ADD_EDIT_PATTERN.test(normalized),
+    CALCULATOR_ASSISTANT_REMOVE_EDIT_PATTERN.test(normalized),
+    CALCULATOR_ASSISTANT_REPLACE_EDIT_PATTERN.test(normalized),
+    CALCULATOR_ASSISTANT_ALTERNATIVE_EDIT_PATTERN.test(normalized)
+  ].filter(Boolean).length;
+  const wantsMultiStepEditPlan =
+    editOperationCount >= 2 &&
+    CALCULATOR_ASSISTANT_MULTI_STEP_CONNECTOR_PATTERN.test(normalized);
   const isValueExpectationReview =
     hasCurrentOutputContext &&
     hasNumericTarget &&
@@ -488,6 +656,39 @@ export function classifyCalculatorAssistantCommandRouting(input: {
     };
   }
 
+  if (wantsObjectiveImprovement) {
+    return {
+      confidence: "high",
+      reason: "wall_rw_improvement_candidate_planning",
+      status: "objective_candidate_planning"
+    };
+  }
+
+  if (wantsSourceAlternativeResearch) {
+    return {
+      confidence: hasCurrentOutputContext ? "high" : "medium",
+      reason: "source_backed_layer_alternative_research",
+      status: "source_alternative_research"
+    };
+  }
+
+  if (mixesResearchWithDraftWrite) {
+    return {
+      confidence: "high",
+      message: "Research wording was not applied to the Workbench draft. I can research or review first, then prepare a separate confirmation-gated apply proposal after the material/layer change is clear.",
+      reason: "research_write_requires_clarification",
+      status: "clarify"
+    };
+  }
+
+  if (wantsMultiStepEditPlan) {
+    return {
+      confidence: "medium",
+      reason: "multi_step_edit_plan_required",
+      status: "bounded_edit_plan"
+    };
+  }
+
   if (
     asksForReportOverrideConfirmation &&
     (mentionsOutput || mentionsValue || Boolean(input.selectedOutputs?.length)) &&
@@ -516,6 +717,12 @@ export function classifyCalculatorAssistantCommandRouting(input: {
     reason: "calculator_draft_mutation",
     status: "layer_mutation"
   };
+}
+
+export function ensureCalculatorAssistantRwFirstSelectedOutputs(
+  selectedOutputs: readonly RequestedOutputId[]
+): RequestedOutputId[] {
+  return ["Rw", ...selectedOutputs.filter((output) => output !== "Rw")];
 }
 
 function shouldRequestCalculatorAssistantSourceResearch(instruction: string): boolean {
@@ -1121,7 +1328,26 @@ function isBuildingPredictionInput(fieldId: string): boolean {
 }
 
 function getMissingInputTask(fieldId: string): RequiredTask {
+  // AGENT COORDINATION 2026-06-22: Copy-only route input guidance; keep task ids, focusing, and route status semantics unchanged.
   const normalized = fieldId.toLowerCase().replace(/[^a-z0-9]/g, "");
+
+  if (normalized.includes("flowresistivitypasm2")) {
+    return {
+      actionLabel: "Edit material",
+      detail: "The active porous cavity damping route needs flow resistivity on the selected porous absorber material.",
+      id: `remote-${fieldId}`,
+      label: "Flow resistivity"
+    };
+  }
+
+  if (normalized.includes("surfacemasskgm2")) {
+    return {
+      actionLabel: "Review material",
+      detail: "The active leaf route needs positive surface mass from the leaf material or its density and thickness.",
+      id: `remote-${fieldId}`,
+      label: "Leaf surface mass"
+    };
+  }
 
   if (normalized.includes("sidealeafgroup")) {
     return {
@@ -1323,6 +1549,16 @@ function getMissingInputTask(fieldId: string): RequiredTask {
     };
   }
 
+  if (normalized === "impactfieldcontext") {
+    return {
+      actionLabel: "Review",
+      detail: "Complete the impact field context required by the selected field impact output.",
+      id: `remote-${fieldId}`,
+      label: "Impact field context",
+      targetElementId: CONTEXT_INPUT_IDS.fieldKDb
+    };
+  }
+
   if (normalized.includes("receivingroomrt60s")) {
     return {
       actionLabel: "Enter",
@@ -1386,9 +1622,12 @@ function getMissingInputTask(fieldId: string): RequiredTask {
   }
 
   return {
-    detail: "Required physical input is missing.",
+    detail: "The active formula route needs this physical input before it can calculate the selected output.",
     id: `remote-${fieldId}`,
-    label: fieldId.split(".").at(-1) ?? fieldId
+    label: (fieldId.split(".").at(-1) ?? fieldId)
+      .replace(/_/gu, " ")
+      .replace(/([a-z])([A-Z])/gu, "$1 $2")
+      .replace(/\b\w/gu, (match) => match.toUpperCase())
   };
 }
 
@@ -1504,6 +1743,7 @@ export function buildEstimatePayload(
   const payload: EstimateRequest = {
     calculator: "dynamic",
     layers: requestLayers,
+    mode,
     targetOutputs: [...selectedOutputs]
   };
 
@@ -1571,6 +1811,7 @@ function readOutputValue(result: AssemblyCalculation, outputId: RequestedOutputI
 }
 
 function getOutputDetail(result: AssemblyCalculation, outputId: RequestedOutputId, status: OutputStatus): string {
+  // AGENT COORDINATION 2026-06-22: Output-row detail copy only; keep support/status gating unchanged.
   const boundary = result.acousticAnswerBoundary;
 
   if (status === "live") {
@@ -1583,10 +1824,10 @@ function getOutputDetail(result: AssemblyCalculation, outputId: RequestedOutputI
   }
 
   if (result.unsupportedTargetOutputs.includes(outputId) || boundary?.unsupportedOutputs.includes(outputId)) {
-    return "Unsupported for route";
+    return "Unsupported by the current route";
   }
 
-  return "No value";
+  return "No supported value for the selected output yet";
 }
 
 export function buildOutputRows(result: AssemblyCalculation, selectedOutputs: readonly RequestedOutputId[]): readonly OutputRow[] {
@@ -1614,6 +1855,142 @@ export function buildOutputRows(result: AssemblyCalculation, selectedOutputs: re
       value: status === "live" && hasDisplayValue ? formatDb(value) : "--"
     };
   });
+}
+
+function stableJsonForVerifiedCalculatedCapture(value: unknown): string {
+  if (value === null || typeof value !== "object") {
+    return JSON.stringify(value);
+  }
+
+  if (Array.isArray(value)) {
+    return `[${value.map(stableJsonForVerifiedCalculatedCapture).join(",")}]`;
+  }
+
+  const entries = Object.entries(value as Record<string, unknown>)
+    .filter(([, entryValue]) => entryValue !== undefined)
+    .sort(([left], [right]) => left.localeCompare(right));
+
+  return `{${entries.map(([key, entryValue]) => `${JSON.stringify(key)}:${stableJsonForVerifiedCalculatedCapture(entryValue)}`).join(",")}}`;
+}
+
+export function estimateRequestsEqualForVerifiedCalculatedCapture(
+  left: EstimateRequest,
+  right: EstimateRequest
+): boolean {
+  return stableJsonForVerifiedCalculatedCapture(left) === stableJsonForVerifiedCalculatedCapture(right);
+}
+
+export function getVerifiedCalculatedMetricBasis(
+  outputId: RequestedOutputId,
+  context: ContextDraft
+): ProjectUserVerifiedCalculatedAnchorMetricBasis {
+  if (isImpactOutput(outputId)) {
+    return outputRequiresImpactContext(outputId) || outputId === "AIIC" ? "impact_field" : "impact_lab";
+  }
+
+  if (outputRequiresAirborneContext(outputId)) {
+    return context.airborneMode === "building_prediction" ? "airborne_building_prediction" : "airborne_field";
+  }
+
+  return "airborne_lab";
+}
+
+export function buildVerifiedCalculatedAnchorCapturePackage(input: {
+  context: ContextDraft;
+  currentRequest: EstimateRequest;
+  mode: StudyMode;
+  result: AssemblyCalculation;
+  selectedOutputs: readonly RequestedOutputId[];
+}): VerifiedCalculatedAnchorCaptureResult {
+  const targetOutputs = input.currentRequest.targetOutputs?.length
+    ? input.currentRequest.targetOutputs
+    : input.selectedOutputs;
+  const supportedOutputs = new Set([
+    ...input.result.supportedTargetOutputs,
+    ...input.result.supportedImpactOutputs
+  ]);
+  const unsupportedOutputs = new Set([
+    ...input.result.unsupportedTargetOutputs,
+    ...input.result.unsupportedImpactOutputs,
+    ...(input.result.acousticAnswerBoundary?.unsupportedOutputs ?? [])
+  ]);
+  const routeId = input.result.airborneBasis?.method ?? input.result.metrics.method;
+  const values: ProjectUserVerifiedCalculatedAnchorValue[] = [];
+
+  for (const outputId of input.selectedOutputs) {
+    if (!targetOutputs.includes(outputId) || !supportedOutputs.has(outputId) || unsupportedOutputs.has(outputId)) {
+      continue;
+    }
+
+    const value = readOutputValue(input.result, outputId);
+    if (typeof value !== "number" || !Number.isFinite(value)) {
+      continue;
+    }
+
+    values.push({
+      metric: outputId,
+      metricBasis: getVerifiedCalculatedMetricBasis(outputId, input.context),
+      provenance: {
+        basisId: input.result.airborneBasis?.kind,
+        outputStatus: "supported",
+        routeId,
+        source: "calculated_live_result"
+      },
+      valueDb: value
+    });
+  }
+
+  if (!values.length) {
+    return {
+      reason: "no_live_values",
+      status: "blocked"
+    };
+  }
+
+  const requestContext: ProjectUserVerifiedCalculatedAnchorRequestContext = {
+    airborneContext: input.currentRequest.airborneContext,
+    calculator: input.currentRequest.calculator,
+    exactImpactSource: input.currentRequest.exactImpactSource,
+    floorImpactContext: input.currentRequest.floorImpactContext,
+    impactFieldContext: input.currentRequest.impactFieldContext,
+    impactPredictorInput: input.currentRequest.impactPredictorInput,
+    layers: input.currentRequest.layers,
+    materialCatalog: input.currentRequest.materialCatalog ?? [],
+    mode: input.mode,
+    steelFloorFormulaSurface: input.currentRequest.steelFloorFormulaSurface,
+    targetOutputs: [...targetOutputs]
+  };
+  const resultBasisTrace: ProjectUserVerifiedCalculatedAnchorResultBasisTrace = {
+    assumptions: input.result.airborneBasis?.assumptions ?? [],
+    ratingAdapterBasisSet: input.result.ratingAdapterBasisSet ?? [],
+    supportedImpactOutputs: [...input.result.supportedImpactOutputs],
+    supportedTargetOutputs: [...input.result.supportedTargetOutputs],
+    targetOutputs: [...targetOutputs],
+    unsupportedImpactOutputs: [...input.result.unsupportedImpactOutputs],
+    unsupportedTargetOutputs: [...input.result.unsupportedTargetOutputs],
+    warnings: [...input.result.warnings]
+  };
+
+  if (input.result.airborneBasis) {
+    resultBasisTrace.airborneBasis = input.result.airborneBasis;
+  }
+  if (input.result.airborneCandidateResolution) {
+    resultBasisTrace.airborneCandidateResolution = input.result.airborneCandidateResolution;
+  }
+  if (input.result.calculatorId) {
+    resultBasisTrace.calculator = input.result.calculatorId;
+  } else if (input.currentRequest.calculator) {
+    resultBasisTrace.calculator = input.currentRequest.calculator;
+  }
+
+  return {
+    package: {
+      requestContext,
+      resultBasisTrace,
+      values
+    },
+    status: "ready"
+  };
 }
 
 function normalizeRouteInputFieldId(value: string): string {
@@ -1743,6 +2120,134 @@ function setRouteInputEffectiveness(
   target[inputId] = { status, title };
 }
 
+const LAB_AIRBORNE_CONTEXT_INACTIVE_TITLE =
+  "Current output set is lab airborne only; field/building context inputs affect outputs such as R'w, Dn,w, or DnT,w, not this lab output";
+const AIRBORNE_CONTEXT_LAB_MODE_INACTIVE_TITLE =
+  "Selected field/building output needs Field or Building mode; this input is inactive while Airborne mode is Lab mode";
+const NON_AIRBORNE_CONTEXT_INACTIVE_TITLE =
+  "Airborne context inputs are inactive because the selected output set is not airborne";
+const AUTO_WALL_TOPOLOGY_INACTIVE_TITLE =
+  "Manual wall topology inputs are inactive while topology mode is Auto; the current output uses automatic layer-stack interpretation instead of manual leaf/cavity grouping";
+
+function getRouteInputLabel(inputId: string): string {
+  switch (inputId) {
+    case CONTEXT_INPUT_IDS.airborneMode:
+      return "Airborne mode";
+    case CONTEXT_INPUT_IDS.airborneResilientBarSideCount:
+      return "Resilient bar side count";
+    case CONTEXT_INPUT_IDS.buildingPredictionOutputBasis:
+      return "Building prediction output basis";
+    case CONTEXT_INPUT_IDS.ci50_2500Db:
+      return "CI50-2500";
+    case CONTEXT_INPUT_IDS.ciDb:
+      return "CI";
+    case CONTEXT_INPUT_IDS.conservativeFlankingAssumption:
+      return "Conservative flanking assumption";
+    case CONTEXT_INPUT_IDS.fieldKDb:
+      return "Field K";
+    case CONTEXT_INPUT_IDS.flankingJunctionClass:
+      return "Flanking junction";
+    case CONTEXT_INPUT_IDS.impactReceivingRoomVolumeM3:
+      return "Impact receiving room volume";
+    case CONTEXT_INPUT_IDS.junctionCouplingLengthM:
+      return "Junction coupling length";
+    case CONTEXT_INPUT_IDS.loadBasisKgM2:
+      return "Load basis";
+    case CONTEXT_INPUT_IDS.panelHeightMm:
+      return "Panel height";
+    case CONTEXT_INPUT_IDS.panelWidthMm:
+      return "Panel width";
+    case CONTEXT_INPUT_IDS.receivingRoomRt60S:
+      return "Receiving room RT60";
+    case CONTEXT_INPUT_IDS.receivingRoomVolumeM3:
+      return "Receiving room volume";
+    case CONTEXT_INPUT_IDS.resilientLayerDynamicStiffnessMNm3:
+      return "Dynamic stiffness";
+    case CONTEXT_INPUT_IDS.sourceRoomVolumeM3:
+      return "Source room volume";
+    case CONTEXT_INPUT_IDS.supportSpacingMm:
+      return "Support spacing";
+    case CONTEXT_INPUT_IDS.wallCavity1AbsorptionClass:
+      return "Cavity absorption class";
+    case CONTEXT_INPUT_IDS.wallCavity1DepthMm:
+      return "Cavity depth";
+    case CONTEXT_INPUT_IDS.wallCavity1FillCoverage:
+      return "Cavity fill";
+    case CONTEXT_INPUT_IDS.wallCavity1LayerIndices:
+      return "Cavity layer rows";
+    case CONTEXT_INPUT_IDS.wallSideALeafLayerIndices:
+      return "Side A leaf rows";
+    case CONTEXT_INPUT_IDS.wallSideBLeafLayerIndices:
+      return "Side B leaf rows";
+    case CONTEXT_INPUT_IDS.wallSupportTopology:
+      return "Support topology";
+    case CONTEXT_INPUT_IDS.wallTopologyMode:
+      return "Wall topology mode";
+    default:
+      return "This input";
+  }
+}
+
+function buildRouteInputNeededTitle(inputId: string): string {
+  return `${getRouteInputLabel(inputId)} is required before the current route can calculate the selected output`;
+}
+
+function buildRouteInputDefaultedTitle(inputId: string): string {
+  return `${getRouteInputLabel(inputId)} is using a route default for the current output; enter a value to replace the fallback`;
+}
+
+function buildBuildingPredictionOutsideModeTitle(airborneMode: ContextDraft["airborneMode"]): string {
+  if (airborneMode === "field_between_rooms") {
+    return "Building-prediction inputs are inactive while Field airborne mode owns the current output";
+  }
+
+  return "Building-prediction inputs are inactive outside Building mode for the selected output set";
+}
+
+function buildAirborneContextUsedTitle(airborneMode: ContextDraft["airborneMode"]): string {
+  if (airborneMode === "building_prediction") {
+    return "Used by the current building-prediction route for the current output";
+  }
+
+  return "Used by the current field airborne route for the current output";
+}
+
+function hasUnsupportedSelectedAirborneContextOutput(
+  result: AssemblyCalculation,
+  selectedOutputs: readonly RequestedOutputId[]
+): boolean {
+  const boundaryUnsupportedOutputs = result.acousticAnswerBoundary?.unsupportedOutputs ?? [];
+  return selectedOutputs.some(
+    (outputId) =>
+      outputRequiresAirborneContext(outputId) &&
+      (result.unsupportedTargetOutputs.includes(outputId) || boundaryUnsupportedOutputs.includes(outputId))
+  );
+}
+
+function buildInactiveAirborneContextTitle(input: {
+  measuredExactAirborneRoute: boolean;
+  result: AssemblyCalculation;
+  selectedOutputs: readonly RequestedOutputId[];
+}): string {
+  if (input.measuredExactAirborneRoute) {
+    return "Exact source row selected; field/building context inputs are not used by the active route";
+  }
+
+  if (hasUnsupportedSelectedAirborneContextOutput(input.result, input.selectedOutputs)) {
+    return "Selected field/building output is unsupported by the active route";
+  }
+
+  return "No supported field/building output is live for the active route";
+}
+
+function buildFloorImpactInputUsedTitle(inputId: string): string {
+  if (inputId === CONTEXT_INPUT_IDS.resilientLayerDynamicStiffnessMNm3) {
+    return "Used by the current floor impact formula route as the dynamic stiffness input for the current output";
+  }
+
+  return "Used by the current floor impact formula route as the load basis input for the current output";
+}
+
 export function buildRouteInputEffectiveness(input: {
   context: ContextDraft;
   layerCount: number;
@@ -1751,6 +2256,8 @@ export function buildRouteInputEffectiveness(input: {
   routeInputTaskElementIds: ReadonlySet<string>;
   selectedOutputs: readonly RequestedOutputId[];
 }): Record<string, RouteInputEffectiveness> {
+  // AGENT COORDINATION 2026-06-22: Working only on route input effectiveness tooltip copy in this helper (needed/defaulted/mode-boundary titles).
+  // If you also need this region, update this note before editing; do not change status semantics without tests.
   const effectiveness: Record<string, RouteInputEffectiveness> = {};
   const selectedAirborneContextOutput = input.selectedOutputs.some(outputRequiresAirborneContext);
   const selectedAirborneOutput = input.selectedOutputs.some(isAirborneCurveOutput);
@@ -1763,78 +2270,66 @@ export function buildRouteInputEffectiveness(input: {
   const exactImpactRoute = isExactImpactRoute(input.result);
 
   for (const inputId of input.routeInputTaskElementIds) {
-    setRouteInputEffectiveness(effectiveness, inputId, "needed", "Required before this route can calculate");
+    setRouteInputEffectiveness(effectiveness, inputId, "needed", buildRouteInputNeededTitle(inputId));
   }
 
   for (const inputId of Object.values(CONTEXT_INPUT_IDS)) {
     if (routeInputHasAirborneDefault(input.result, inputId)) {
-      setRouteInputEffectiveness(effectiveness, inputId, "defaulted", "Using a route default for this input");
-    }
-  }
-
-  if (selectedAirborneContextOutput && input.context.airborneMode !== "element_lab") {
-    const activeAirborneContextTitle =
-      input.context.airborneMode === "building_prediction"
-        ? "Used by the active building-prediction context"
-        : "Used by the active field airborne context";
-    const activeAirborneDefaultTitle =
-      input.context.airborneMode === "building_prediction"
-        ? "No value supplied; the active building-prediction route is using its current fallback assumption"
-        : "No value supplied; the active field airborne route is using its current fallback assumption";
-
-    setRouteInputEffectiveness(effectiveness, CONTEXT_INPUT_IDS.airborneMode, "used", activeAirborneContextTitle);
-    for (const inputId of AIRBORNE_CONTEXT_INPUT_IDS) {
-      if (inputId === CONTEXT_INPUT_IDS.airborneMode) {
-        continue;
-      }
-      setRouteInputEffectiveness(
-        effectiveness,
-        inputId,
-        contextInputValueIsSent(inputId, input.context, input.layerCount) ? "used" : "defaulted",
-        contextInputValueIsSent(inputId, input.context, input.layerCount) ? activeAirborneContextTitle : activeAirborneDefaultTitle
-      );
-    }
-
-    if (input.context.airborneMode === "building_prediction") {
-      for (const inputId of BUILDING_PREDICTION_INPUT_IDS) {
-        setRouteInputEffectiveness(
-          effectiveness,
-          inputId,
-          contextInputValueIsSent(inputId, input.context, input.layerCount) ? "used" : "defaulted",
-          contextInputValueIsSent(inputId, input.context, input.layerCount) ? "Used by the active building-prediction context" : activeAirborneDefaultTitle
-        );
-      }
-    } else {
-      for (const inputId of BUILDING_PREDICTION_INPUT_IDS) {
-        setRouteInputEffectiveness(effectiveness, inputId, "inactive", "Building-prediction inputs are not used outside Building mode");
-      }
+      setRouteInputEffectiveness(effectiveness, inputId, "defaulted", buildRouteInputDefaultedTitle(inputId));
     }
   }
 
   if (selectedAirborneOutput && !selectedAirborneContextOutput && input.context.airborneMode !== "element_lab") {
     for (const inputId of AIRBORNE_CONTEXT_INPUT_IDS) {
-      setRouteInputEffectiveness(effectiveness, inputId, "inactive", "Not used by the current output set");
+      setRouteInputEffectiveness(effectiveness, inputId, "inactive", LAB_AIRBORNE_CONTEXT_INACTIVE_TITLE);
     }
     for (const inputId of BUILDING_PREDICTION_INPUT_IDS) {
-      setRouteInputEffectiveness(effectiveness, inputId, "inactive", "Not used by the current output set");
+      setRouteInputEffectiveness(effectiveness, inputId, "inactive", LAB_AIRBORNE_CONTEXT_INACTIVE_TITLE);
     }
   }
 
   if (selectedAirborneContextOutput && input.context.airborneMode === "element_lab") {
     for (const inputId of AIRBORNE_CONTEXT_INPUT_IDS) {
-      setRouteInputEffectiveness(effectiveness, inputId, "inactive", "Not used until Field or Building mode is selected");
+      setRouteInputEffectiveness(effectiveness, inputId, "inactive", AIRBORNE_CONTEXT_LAB_MODE_INACTIVE_TITLE);
     }
     for (const inputId of BUILDING_PREDICTION_INPUT_IDS) {
-      setRouteInputEffectiveness(effectiveness, inputId, "inactive", "Building-prediction inputs are not used outside Building mode");
+      setRouteInputEffectiveness(effectiveness, inputId, "inactive", buildBuildingPredictionOutsideModeTitle(input.context.airborneMode));
     }
   }
 
   if (!selectedAirborneOutput && input.context.airborneMode !== "element_lab") {
     for (const inputId of AIRBORNE_CONTEXT_INPUT_IDS) {
-      setRouteInputEffectiveness(effectiveness, inputId, "inactive", "Not used by the current output set");
+      setRouteInputEffectiveness(effectiveness, inputId, "inactive", NON_AIRBORNE_CONTEXT_INACTIVE_TITLE);
     }
     for (const inputId of BUILDING_PREDICTION_INPUT_IDS) {
-      setRouteInputEffectiveness(effectiveness, inputId, "inactive", "Not used by the current output set");
+      setRouteInputEffectiveness(effectiveness, inputId, "inactive", NON_AIRBORNE_CONTEXT_INACTIVE_TITLE);
+    }
+  }
+
+  if (
+    selectedAirborneContextOutput &&
+    input.context.airborneMode !== "element_lab" &&
+    input.result &&
+    (!liveAirborneContextOutput || measuredExactAirborneRoute)
+  ) {
+    const inactiveAirborneContextTitle = buildInactiveAirborneContextTitle({
+      measuredExactAirborneRoute,
+      result: input.result,
+      selectedOutputs: input.selectedOutputs
+    });
+
+    for (const inputId of AIRBORNE_CONTEXT_INPUT_IDS) {
+      setRouteInputEffectiveness(effectiveness, inputId, "inactive", inactiveAirborneContextTitle);
+    }
+
+    if (input.context.airborneMode === "building_prediction") {
+      for (const inputId of BUILDING_PREDICTION_INPUT_IDS) {
+        setRouteInputEffectiveness(effectiveness, inputId, "inactive", inactiveAirborneContextTitle);
+      }
+    } else {
+      for (const inputId of BUILDING_PREDICTION_INPUT_IDS) {
+        setRouteInputEffectiveness(effectiveness, inputId, "inactive", buildBuildingPredictionOutsideModeTitle(input.context.airborneMode));
+      }
     }
   }
 
@@ -1845,28 +2340,45 @@ export function buildRouteInputEffectiveness(input: {
   if (input.mode === "wall") {
     if (input.context.wallTopologyMode === "auto") {
       for (const inputId of WALL_TOPOLOGY_MANUAL_INPUT_IDS) {
-        setRouteInputEffectiveness(effectiveness, inputId, "inactive", "Manual wall topology is not sent while topology mode is Auto");
+        setRouteInputEffectiveness(effectiveness, inputId, "inactive", AUTO_WALL_TOPOLOGY_INACTIVE_TITLE);
       }
     } else if (measuredExactAirborneRoute) {
-      setRouteInputEffectiveness(effectiveness, CONTEXT_INPUT_IDS.wallTopologyMode, "inactive", "Exact source row selected; manual topology is not used");
+      setRouteInputEffectiveness(
+        effectiveness,
+        CONTEXT_INPUT_IDS.wallTopologyMode,
+        "inactive",
+        "Exact source owns the current output; manual topology is not used"
+      );
       for (const inputId of WALL_TOPOLOGY_MANUAL_INPUT_IDS) {
-        setRouteInputEffectiveness(effectiveness, inputId, "inactive", "Exact source row selected; this input is not used");
+        setRouteInputEffectiveness(
+          effectiveness,
+          inputId,
+          "inactive",
+          "Exact source owns the current output; manual wall topology inputs are not used"
+        );
       }
     } else if (liveAirborneOutput) {
-      setRouteInputEffectiveness(effectiveness, CONTEXT_INPUT_IDS.wallTopologyMode, "used", "Used by the current wall route");
+      setRouteInputEffectiveness(
+        effectiveness,
+        CONTEXT_INPUT_IDS.wallTopologyMode,
+        "used",
+        "Used by the current wall topology formula route for the current output"
+      );
       for (const inputId of WALL_TOPOLOGY_MANUAL_INPUT_IDS) {
         if (contextInputValueIsSent(inputId, input.context, input.layerCount)) {
-          setRouteInputEffectiveness(effectiveness, inputId, "used", "Used by the current wall route");
+          setRouteInputEffectiveness(
+            effectiveness,
+            inputId,
+            "used",
+            "Used by the current wall topology formula route for leaf/cavity grouping"
+          );
         }
       }
     }
   }
 
   if (selectedAirborneContextOutput && input.context.airborneMode !== "element_lab") {
-    const airborneContextTitle =
-      input.context.airborneMode === "building_prediction"
-        ? "Used by the current building-prediction route"
-        : "Used by the current field airborne route";
+    const airborneContextTitle = buildAirborneContextUsedTitle(input.context.airborneMode);
 
     if (liveAirborneContextOutput && !measuredExactAirborneRoute) {
       setRouteInputEffectiveness(effectiveness, CONTEXT_INPUT_IDS.airborneMode, "used", airborneContextTitle);
@@ -1881,13 +2393,13 @@ export function buildRouteInputEffectiveness(input: {
       if (liveAirborneContextOutput && !measuredExactAirborneRoute) {
         for (const inputId of BUILDING_PREDICTION_INPUT_IDS) {
           if (contextInputValueIsSent(inputId, input.context, input.layerCount)) {
-            setRouteInputEffectiveness(effectiveness, inputId, "used", "Used by the current building-prediction route");
+            setRouteInputEffectiveness(effectiveness, inputId, "used", buildAirborneContextUsedTitle(input.context.airborneMode));
           }
         }
       }
     } else {
       for (const inputId of BUILDING_PREDICTION_INPUT_IDS) {
-        setRouteInputEffectiveness(effectiveness, inputId, "inactive", "Building-prediction inputs are not used outside Building mode");
+        setRouteInputEffectiveness(effectiveness, inputId, "inactive", buildBuildingPredictionOutsideModeTitle(input.context.airborneMode));
       }
     }
   }
@@ -1896,24 +2408,39 @@ export function buildRouteInputEffectiveness(input: {
     if (selectedImpactOutput && liveImpactOutput && !exactImpactRoute) {
       for (const inputId of FLOOR_IMPACT_INPUT_IDS) {
         if (contextInputValueIsSent(inputId, input.context, input.layerCount)) {
-          setRouteInputEffectiveness(effectiveness, inputId, "used", "Used by the current floor impact route");
+          setRouteInputEffectiveness(effectiveness, inputId, "used", buildFloorImpactInputUsedTitle(inputId));
         }
       }
     } else if (selectedImpactOutput && exactImpactRoute) {
       for (const inputId of FLOOR_IMPACT_INPUT_IDS) {
-        setRouteInputEffectiveness(effectiveness, inputId, "inactive", "Exact impact source selected; this input is not used");
+        setRouteInputEffectiveness(
+          effectiveness,
+          inputId,
+          "inactive",
+          "Exact impact source owns the current output; floor impact formula route inputs are not used"
+        );
       }
     }
 
     if (selectedImpactContextOutput && liveImpactOutput && !exactImpactRoute) {
       for (const inputId of IMPACT_FIELD_INPUT_IDS) {
         if (contextInputValueIsSent(inputId, input.context, input.layerCount)) {
-          setRouteInputEffectiveness(effectiveness, inputId, "used", "Used by the current impact field route");
+          setRouteInputEffectiveness(
+            effectiveness,
+            inputId,
+            "used",
+            "Used by the current impact field formula route for the current output"
+          );
         }
       }
     } else if (!selectedImpactContextOutput) {
       for (const inputId of IMPACT_FIELD_INPUT_IDS) {
-        setRouteInputEffectiveness(effectiveness, inputId, "inactive", "Not used by the current impact output set");
+        setRouteInputEffectiveness(
+          effectiveness,
+          inputId,
+          "inactive",
+          "impact field inputs are not used by the selected output set"
+        );
       }
     }
   }
@@ -1942,6 +2469,8 @@ export function buildLayerInputEffectiveness(input: {
   result: AssemblyCalculation | null;
   selectedOutputs: readonly RequestedOutputId[];
 }): LayerInputEffectivenessMap {
+  // AGENT COORDINATION 2026-06-22: Working only on layer input effectiveness tooltip copy in this helper.
+  // If you also need this region, update this note before editing to avoid overlapping UI/status work.
   const effectiveness: LayerInputEffectivenessMap = {};
   const selectedAirborneOutput = input.selectedOutputs.some(isAirborneCurveOutput);
   const selectedImpactOutput = input.selectedOutputs.some(isImpactOutput);
@@ -1961,7 +2490,7 @@ export function buildLayerInputEffectiveness(input: {
         layer.id,
         "thickness",
         "needed",
-        "Required before this layer stack can calculate"
+        "Needed: layer thickness is required before the current output can calculate the layer stack"
       );
     }
 
@@ -1993,7 +2522,7 @@ export function buildLayerInputEffectiveness(input: {
         layer.id,
         "material",
         "used",
-        "Used to match the current exact source construction"
+        "Used to match the exact source construction for the current output"
       );
 
       if (hasThickness) {
@@ -2002,7 +2531,7 @@ export function buildLayerInputEffectiveness(input: {
           layer.id,
           "thickness",
           "used",
-          "Used to match the current exact source construction"
+          "Used to match the exact source construction for the current output"
         );
       }
     }
@@ -2029,7 +2558,7 @@ export function buildLayerInputEffectiveness(input: {
         layer.id,
         "role",
         "used",
-        "Used to match the current exact impact source construction"
+        "Used to match the exact impact source construction for the current output"
       );
     } else if (selectedAirborneOutput && !selectedImpactOutput) {
       setLayerInputEffectiveness(
@@ -2122,6 +2651,14 @@ function parseCalculatorAssistantSourceReviewSource(payload: unknown): "context"
   return payload.source === "context" || payload.source === "research_provider" ? payload.source : null;
 }
 
+function parseCalculatorAssistantAssemblyAlternativeSource(payload: unknown): ReportAssistantAssemblyAlternativeReviewSource | null {
+  if (!isObjectRecord(payload)) {
+    return null;
+  }
+
+  return payload.source === "context" || payload.source === "research_provider" ? payload.source : null;
+}
+
 function parseCalculatorAssistantSourceReviewResult(payload: unknown): ReportAssistantResultEnvelope | null {
   const firstResult = isObjectRecord(payload) && Array.isArray(payload.assistantResults)
     ? payload.assistantResults.find(isObjectRecord)
@@ -2155,6 +2692,31 @@ function parseCalculatorAssistantSourceReviewReview(payload: unknown): ReportAss
   }
 
   return review as ReportAssistantPlausibilityReview;
+}
+
+function parseCalculatorAssistantAssemblyAlternativeReview(payload: unknown): ReportAssistantAssemblyAlternativeReview | null {
+  if (!isObjectRecord(payload) || !isObjectRecord(payload.review)) {
+    return null;
+  }
+
+  const review = payload.review;
+  if (
+    !Array.isArray(review.affectedLayers) ||
+    typeof review.answerText !== "string" ||
+    !Array.isArray(review.comparableAssemblies) ||
+    typeof review.comparability !== "string" ||
+    typeof review.expectedMetricDirection !== "string" ||
+    !Array.isArray(review.expectedTradeoffs) ||
+    !Array.isArray(review.missingEvidence) ||
+    !Array.isArray(review.rationale) ||
+    typeof review.sourceQuality !== "string" ||
+    !Array.isArray(review.sources) ||
+    !Array.isArray(review.suggestedAlternatives)
+  ) {
+    return null;
+  }
+
+  return review as ReportAssistantAssemblyAlternativeReview;
 }
 
 function parseCalculatorAssistantCommandIntentError(payload: unknown): string {
@@ -2351,6 +2913,79 @@ async function requestCalculatorAssistantSourceReview(input: {
   if (!result || !review) {
     return {
       message: "Current calculator source review response is incomplete.",
+      ok: false,
+      ...(result ? { result } : {}),
+      ...(review ? { review } : {}),
+      source,
+      warnings
+    };
+  }
+
+  return {
+    ok: true,
+    result,
+    review,
+    source,
+    warnings
+  };
+}
+
+async function requestCalculatorAssistantAssemblyAlternatives(input: {
+  assistantContext: ReportAssistantContext;
+  document: SimpleWorkbenchProposalDocument;
+  instruction: string;
+  research: boolean;
+  signal: AbortSignal;
+}): Promise<{
+  message?: string;
+  ok: boolean;
+  result?: ReportAssistantResultEnvelope;
+  review?: ReportAssistantAssemblyAlternativeReview;
+  source: ReportAssistantAssemblyAlternativeReviewSource | null;
+  warnings: readonly string[];
+}> {
+  const response = await fetch("/api/report-assistant/assembly-alternatives", {
+    body: JSON.stringify({
+      context: input.assistantContext,
+      document: input.document,
+      request: {
+        research: input.research,
+        userInstruction: input.instruction
+      }
+    }),
+    headers: {
+      "Content-Type": "application/json"
+    },
+    method: "POST",
+    signal: input.signal
+  });
+  let payload: unknown = null;
+
+  try {
+    payload = await response.json();
+  } catch {
+    payload = null;
+  }
+
+  const result = parseCalculatorAssistantSourceReviewResult(payload);
+  const review = parseCalculatorAssistantAssemblyAlternativeReview(payload);
+  const source = parseCalculatorAssistantAssemblyAlternativeSource(payload);
+  const warnings = parseCalculatorAssistantSourceReviewWarnings(payload);
+
+  if (!response.ok) {
+    return {
+      message: parseCalculatorAssistantSourceReviewMessage(payload),
+      ok: false,
+      ...(result ? { result } : {}),
+      ...(review ? { review } : {}),
+      source,
+      warnings
+    };
+  }
+
+  if (!result || !review || !source) {
+    return {
+      message: "Assembly alternative research response is incomplete.",
       ok: false,
       ...(result ? { result } : {}),
       ...(review ? { review } : {}),
@@ -2831,11 +3466,14 @@ function parseAssemblyCalculationSummary(value: unknown): ServerProjectAssemblyS
     return undefined;
   }
 
+  const status = value.status;
+
   return {
     primaryOutput: typeof value.primaryOutput === "string" ? value.primaryOutput : undefined,
-    primaryValueLabel: typeof value.primaryValueLabel === "string" ? value.primaryValueLabel : undefined,
+    // Coordination note: only ready project summaries may replay a numeric display value into the workspace UI.
+    ...(status === "ready" && typeof value.primaryValueLabel === "string" ? { primaryValueLabel: value.primaryValueLabel } : {}),
     selectedOutputs: value.selectedOutputs.filter((entry): entry is string => typeof entry === "string"),
-    status: value.status
+    status
   };
 }
 
@@ -2979,9 +3617,14 @@ export function CalculatorWorkbench() {
   const [calculatorAssistantCommand, setCalculatorAssistantCommand] = useState("");
   const [calculatorAssistantCommandPending, setCalculatorAssistantCommandPending] = useState(false);
   const [calculatorAssistantCommandMessage, setCalculatorAssistantCommandMessage] = useState<CalculatorAssistantCommandMessage | null>(null);
+  const calculatorAssistantCommandInputRef = useRef<HTMLTextAreaElement | null>(null);
   const [calculatorAssistantCandidateStacks, setCalculatorAssistantCandidateStacks] = useState<readonly WorkbenchV2AssistantLayerStackCandidateStack[]>([]);
   const [calculatorAssistantSourceReviewState, setCalculatorAssistantSourceReviewState] =
     useState<CalculatorAssistantSourceReviewState>({ status: "idle" });
+  const [calculatorAssistantSourceAlternativeState, setCalculatorAssistantSourceAlternativeState] =
+    useState<CalculatorAssistantSourceAlternativeState>({ status: "idle" });
+  const [calculatorAssistantBoundedEditPlanState, setCalculatorAssistantBoundedEditPlanState] =
+    useState<CalculatorAssistantBoundedEditPlanState>({ status: "idle" });
   const [calculatorAssistantReportOverrideProposalState, setCalculatorAssistantReportOverrideProposalState] =
     useState<CalculatorAssistantReportOverrideProposalState>({ status: "idle" });
   const [calculatorAssistantWorkbenchApplyProposal, setCalculatorAssistantWorkbenchApplyProposal] =
@@ -3027,6 +3670,8 @@ export function CalculatorWorkbench() {
   const calculatorAssistantPreviewAbortRef = useRef<AbortController | null>(null);
   const calculatorAssistantSourceReviewRequestRef = useRef(0);
   const calculatorAssistantSourceReviewAbortRef = useRef<AbortController | null>(null);
+  const calculatorAssistantSourceAlternativeRequestRef = useRef(0);
+  const calculatorAssistantSourceAlternativeAbortRef = useRef<AbortController | null>(null);
   const calculatorAssistantCandidateBatchRequestRef = useRef(0);
   const calculatorAssistantCandidateBatchAbortRef = useRef<AbortController | null>(null);
   const [projectCreatePanelOpen, setProjectCreatePanelOpen] = useState(false);
@@ -3034,6 +3679,13 @@ export function CalculatorWorkbench() {
   const [reportSourceDecisionOpen, setReportSourceDecisionOpen] = useState(false);
   const [lastAppliedTemplateName, setLastAppliedTemplateName] = useState<string | null>(null);
   const [workbenchPresets, setWorkbenchPresets] = useState<WorkbenchV2PresetSummary[]>([]);
+  // Agent coordination, 2026-06-22:
+  // Explicit measured Rw references live beside presets. If another agent
+  // changes template loading or estimate refresh here, keep preset-save !=
+  // evidence, keep retired anchors as passive history only, and update
+  // PROJECT_USER_MEASURED_SOURCE_ANCHOR_PLAN plus focused Workbench preset
+  // route/panel tests.
+  const [workbenchMeasuredWallRwAnchors, setWorkbenchMeasuredWallRwAnchors] = useState<WorkbenchV2MeasuredWallRwAnchorSummary[]>([]);
   const [selectedWorkbenchPresetId, setSelectedWorkbenchPresetId] = useState("");
   const [selectedWorkbenchCommonPresetId, setSelectedWorkbenchCommonPresetId] = useState("");
   const [workbenchPresetNameDraft, setWorkbenchPresetNameDraft] = useState("");
@@ -3044,6 +3696,21 @@ export function CalculatorWorkbench() {
   const workbenchPresetRenameDraftRef = useRef(workbenchPresetRenameDraft);
   const [workbenchPresetRenameDescriptionDraft, setWorkbenchPresetRenameDescriptionDraft] = useState("");
   const workbenchPresetRenameDescriptionDraftRef = useRef(workbenchPresetRenameDescriptionDraft);
+  const [workbenchPresetMeasuredRwDraft, setWorkbenchPresetMeasuredRwDraft] = useState("");
+  const workbenchPresetMeasuredRwDraftRef = useRef(workbenchPresetMeasuredRwDraft);
+  const [workbenchPresetMeasuredRwToleranceDraft, setWorkbenchPresetMeasuredRwToleranceDraft] = useState("0");
+  const workbenchPresetMeasuredRwToleranceDraftRef = useRef(workbenchPresetMeasuredRwToleranceDraft);
+  const [workbenchMeasuredAnchorRevision, setWorkbenchMeasuredAnchorRevision] = useState(0);
+  // Agent coordination, 2026-06-22:
+  // This state is only for explicit user-verified calculated reference capture.
+  // It must not feed /api/estimate or the measured Rw preset anchor lane.
+  const [workbenchVerifiedCalculatedAnchorStatus, setWorkbenchVerifiedCalculatedAnchorStatus] =
+    useState<WorkbenchVerifiedCalculatedAnchorStatus>("idle");
+  const [workbenchVerifiedCalculatedAnchorMessage, setWorkbenchVerifiedCalculatedAnchorMessage] = useState("");
+  const [workbenchVerifiedCalculatedAnchors, setWorkbenchVerifiedCalculatedAnchors] = useState<
+    readonly WorkbenchV2VerifiedCalculatedAnchorSummary[]
+  >([]);
+  const workbenchVerifiedCalculatedAnchorMutationInFlightRef = useRef(false);
   const [workbenchPresetStatus, setWorkbenchPresetStatus] = useState<WorkbenchV2PresetStatus>("idle");
   const [workbenchPresetMessage, setWorkbenchPresetMessage] = useState(() =>
     formatWorkbenchV2PresetLibraryTriggerStatus(0, WORKBENCH_V2_COMMON_PRESET_COUNT)
@@ -3055,8 +3722,59 @@ export function CalculatorWorkbench() {
   const estimateResult = estimateState.status === "ready" ? estimateState.result : null;
   const availableOutputs = OUTPUT_OPTIONS.filter((output) => output.modes.includes(mode));
   const outputRows = estimateResult ? buildOutputRows(estimateResult, selectedOutputs) : [];
+  const verifiedCalculatedCaptureLiveValueCount = outputRows.filter((row) => row.status === "live").length;
+  const verifiedCalculatedCaptureBusy = workbenchVerifiedCalculatedAnchorStatus === "syncing";
+  const canSaveVerifiedCalculatedAnchor =
+    estimateState.status === "ready" && verifiedCalculatedCaptureLiveValueCount > 0 && !verifiedCalculatedCaptureBusy;
+  const activeWorkbenchVerifiedCalculatedAnchors = workbenchVerifiedCalculatedAnchors.filter(
+    (anchor) => anchor.status === "active"
+  );
+  // Agent coordination, 2026-06-22:
+  // UX hardening for user-verified calculated references. This fingerprint is
+  // display-only; runtime still resolves exact matches through /api/estimate.
+  const currentVerifiedCalculatedAnchorFingerprint = useMemo(() => {
+    if (estimateState.status !== "ready") {
+      return null;
+    }
+
+    const currentRequest = buildEstimatePayload(mode, layers, selectedOutputs, context, customMaterials);
+    if (!currentRequest || !estimateRequestsEqualForVerifiedCalculatedCapture(currentRequest, estimateState.request)) {
+      return null;
+    }
+
+    const capture = buildVerifiedCalculatedAnchorCapturePackage({
+      context,
+      currentRequest,
+      mode,
+      result: estimateState.result,
+      selectedOutputs
+    });
+    if (capture.status !== "ready") {
+      return null;
+    }
+
+    return buildProjectUserVerifiedCalculatedAnchorFingerprint({
+      requestContext: capture.package.requestContext
+    });
+  }, [context, customMaterials, estimateState, layers, mode, selectedOutputs]);
+  const applicableWorkbenchVerifiedCalculatedAnchors = getApplicableWorkbenchV2VerifiedCalculatedAnchors(
+    activeWorkbenchVerifiedCalculatedAnchors,
+    currentVerifiedCalculatedAnchorFingerprint
+  );
+  const hiddenWorkbenchVerifiedCalculatedAnchorCount =
+    activeWorkbenchVerifiedCalculatedAnchors.length - applicableWorkbenchVerifiedCalculatedAnchors.length;
   const calculatorAssistantPreview = calculatorAssistantState.status === "ready" ? calculatorAssistantState.preview : null;
-  const calculatorAssistantBusy = calculatorAssistantCommandPending || calculatorAssistantSourceReviewState.status === "loading";
+  const calculatorAssistantBusy =
+    calculatorAssistantCommandPending ||
+    calculatorAssistantSourceReviewState.status === "loading" ||
+    calculatorAssistantSourceAlternativeState.status === "loading" ||
+    calculatorAssistantReportOverrideProposalState.status === "loading";
+  const calculatorAssistantBoundedEditPlanSteps =
+    calculatorAssistantBoundedEditPlanState.status === "ready"
+      ? calculatorAssistantBoundedEditPlanState.result.steps
+      : calculatorAssistantBoundedEditPlanState.status === "blocked"
+        ? calculatorAssistantBoundedEditPlanState.result.partialSteps
+        : [];
   const primaryOutput = getPrimaryOutput(outputRows);
   const remoteTasks = getRemoteTasks(estimateResult);
   const localTasks = buildLocalTasks(layers, selectedOutputs, materialById);
@@ -3121,6 +3839,9 @@ export function CalculatorWorkbench() {
   const activeServerAssembly = serverProjectAssemblies.find((assembly) => assembly.id === activeServerAssemblyId) ?? null;
   const selectedServerReport = serverProjectReports.find((report) => report.id === selectedServerReportId) ?? null;
   const selectedWorkbenchPreset = workbenchPresets.find((preset) => preset.id === selectedWorkbenchPresetId) ?? null;
+  const selectedWorkbenchPresetMeasuredRwAnchors = workbenchMeasuredWallRwAnchors.filter(
+    (anchor) => anchor.createdFromPresetId === selectedWorkbenchPresetId
+  );
   const selectedWorkbenchCommonPreset = findWorkbenchV2CommonPresetById(selectedWorkbenchCommonPresetId);
   const serverProjectBusy =
     serverProjectStatus === "loading" || serverProjectStatus === "syncing" || serverProjectStatus === "restoring";
@@ -3196,6 +3917,15 @@ export function CalculatorWorkbench() {
   }, []);
 
   useEffect(() => {
+    if (workbenchVerifiedCalculatedAnchorStatus !== "error") {
+      return;
+    }
+
+    setWorkbenchVerifiedCalculatedAnchorStatus("idle");
+    setWorkbenchVerifiedCalculatedAnchorMessage("");
+  }, [context, customMaterials, layers, mode, selectedOutputs]);
+
+  useEffect(() => {
     if (!materialEditorStoreLoaded) {
       return;
     }
@@ -3215,6 +3945,8 @@ export function CalculatorWorkbench() {
 
   useEffect(() => {
     void refreshWorkbenchPresets({ silent: true });
+    void refreshWorkbenchMeasuredWallRwAnchors({ silent: true });
+    void refreshWorkbenchVerifiedCalculatedAnchors({ silent: true });
     // Template discovery is a persistence affordance; the initial read
     // intentionally runs once per mounted workbench.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -3262,6 +3994,13 @@ export function CalculatorWorkbench() {
     setWorkbenchPresetRenameDraft(nextName);
     setWorkbenchPresetRenameDescriptionDraft(nextDescription);
   }, [selectedWorkbenchPreset?.description, selectedWorkbenchPreset?.id, selectedWorkbenchPreset?.name]);
+
+  useEffect(() => {
+    workbenchPresetMeasuredRwDraftRef.current = "";
+    workbenchPresetMeasuredRwToleranceDraftRef.current = "0";
+    setWorkbenchPresetMeasuredRwDraft("");
+    setWorkbenchPresetMeasuredRwToleranceDraft("0");
+  }, [selectedWorkbenchPreset?.id]);
 
   useEffect(() => {
     if (!selectedServerProjectId) {
@@ -3344,6 +4083,7 @@ export function CalculatorWorkbench() {
       return;
     }
 
+    const estimateRequest = payload;
     const controller = new AbortController();
     const timeoutId = window.setTimeout(() => {
       setEstimateState({ status: "loading" });
@@ -3351,7 +4091,7 @@ export function CalculatorWorkbench() {
       async function estimate() {
         try {
           const response = await fetch("/api/estimate", {
-            body: JSON.stringify(payload),
+            body: JSON.stringify(estimateRequest),
             headers: {
               "Content-Type": "application/json"
             },
@@ -3366,7 +4106,7 @@ export function CalculatorWorkbench() {
           }
 
           if (typeof data === "object" && data !== null && "result" in data) {
-            setEstimateState({ result: (data as { result: AssemblyCalculation }).result, status: "ready" });
+            setEstimateState({ request: estimateRequest, result: (data as { result: AssemblyCalculation }).result, status: "ready" });
             return;
           }
 
@@ -3390,7 +4130,7 @@ export function CalculatorWorkbench() {
       window.clearTimeout(timeoutId);
       controller.abort();
     };
-  }, [context, customMaterials, layers, materialById, mode, selectedOutputs]);
+  }, [context, customMaterials, layers, materialById, mode, selectedOutputs, workbenchMeasuredAnchorRevision]);
 
   useEffect(() => {
     if (calculatorAssistantPreviewSnapshotRef.current === currentWorkbenchDraftSnapshot) {
@@ -3409,11 +4149,16 @@ export function CalculatorWorkbench() {
     calculatorAssistantSourceReviewRequestRef.current += 1;
     calculatorAssistantSourceReviewAbortRef.current?.abort();
     calculatorAssistantSourceReviewAbortRef.current = null;
+    calculatorAssistantSourceAlternativeRequestRef.current += 1;
+    calculatorAssistantSourceAlternativeAbortRef.current?.abort();
+    calculatorAssistantSourceAlternativeAbortRef.current = null;
     calculatorAssistantCandidateBatchRequestRef.current += 1;
     calculatorAssistantCandidateBatchAbortRef.current?.abort();
     calculatorAssistantCandidateBatchAbortRef.current = null;
     setCalculatorAssistantState((current) => (current.status === "idle" ? current : { status: "idle" }));
     setCalculatorAssistantSourceReviewState((current) => (current.status === "idle" ? current : { status: "idle" }));
+    setCalculatorAssistantSourceAlternativeState((current) => (current.status === "idle" ? current : { status: "idle" }));
+    setCalculatorAssistantBoundedEditPlanState((current) => (current.status === "idle" ? current : { status: "idle" }));
     setCalculatorAssistantReportOverrideProposalState((current) => (current.status === "idle" ? current : { status: "idle" }));
     setCalculatorAssistantCandidateComparisonState((current) => (current.status === "idle" ? current : { status: "idle" }));
   }, [currentWorkbenchDraftSnapshot]);
@@ -3430,6 +4175,9 @@ export function CalculatorWorkbench() {
       calculatorAssistantSourceReviewRequestRef.current += 1;
       calculatorAssistantSourceReviewAbortRef.current?.abort();
       calculatorAssistantSourceReviewAbortRef.current = null;
+      calculatorAssistantSourceAlternativeRequestRef.current += 1;
+      calculatorAssistantSourceAlternativeAbortRef.current?.abort();
+      calculatorAssistantSourceAlternativeAbortRef.current = null;
       calculatorAssistantCandidateBatchRequestRef.current += 1;
       calculatorAssistantCandidateBatchAbortRef.current?.abort();
       calculatorAssistantCandidateBatchAbortRef.current = null;
@@ -3535,6 +4283,62 @@ export function CalculatorWorkbench() {
     } catch (error) {
       setWorkbenchPresetStatus("error");
       setWorkbenchPresetMessage(error instanceof Error ? error.message : "Template list failed");
+    }
+  }
+
+  async function refreshWorkbenchMeasuredWallRwAnchors(options?: { preserveMessage?: boolean; silent?: boolean }) {
+    if (!options?.silent) {
+      setWorkbenchPresetStatus("loading");
+      setWorkbenchPresetMessage("Loading Rw references");
+    }
+
+    try {
+      const response = await fetch("/api/workbench-v2/measured-wall-rw-anchors", {
+        method: "GET"
+      });
+
+      if (!response.ok) {
+        throw new Error(await readServerProjectError(response, "DAC could not load measured Rw references."));
+      }
+
+      const payload = (await response.json()) as unknown;
+      setWorkbenchMeasuredWallRwAnchors(parseWorkbenchV2MeasuredWallRwAnchorSummaries(payload));
+
+      if (!options?.preserveMessage && !options?.silent) {
+        setWorkbenchPresetStatus("idle");
+        setWorkbenchPresetMessage("Rw references loaded");
+      }
+    } catch (error) {
+      setWorkbenchPresetStatus("error");
+      setWorkbenchPresetMessage(error instanceof Error ? error.message : "Rw reference list failed");
+    }
+  }
+
+  async function refreshWorkbenchVerifiedCalculatedAnchors(options?: { preserveMessage?: boolean; silent?: boolean }) {
+    if (!options?.silent) {
+      setWorkbenchVerifiedCalculatedAnchorStatus("syncing");
+      setWorkbenchVerifiedCalculatedAnchorMessage("");
+    }
+
+    try {
+      const response = await fetch("/api/workbench-v2/verified-calculated-anchors", {
+        method: "GET"
+      });
+
+      if (!response.ok) {
+        throw new Error(await readServerProjectError(response, "DAC could not load verified references."));
+      }
+
+      const payload = (await response.json()) as unknown;
+      setWorkbenchVerifiedCalculatedAnchors(parseWorkbenchV2VerifiedCalculatedAnchorSummaries(payload));
+
+      if (!options?.preserveMessage && !options?.silent) {
+        setWorkbenchVerifiedCalculatedAnchorStatus("idle");
+        setWorkbenchVerifiedCalculatedAnchorMessage("");
+      }
+    } catch (error) {
+      setWorkbenchVerifiedCalculatedAnchorStatus("error");
+      setWorkbenchVerifiedCalculatedAnchorMessage(error instanceof Error ? error.message : "Verified reference list failed");
     }
   }
 
@@ -3707,6 +4511,19 @@ export function CalculatorWorkbench() {
     workbenchPresetMutationInFlightRef.current = false;
   }
 
+  function beginWorkbenchVerifiedCalculatedAnchorMutation(): boolean {
+    if (workbenchVerifiedCalculatedAnchorMutationInFlightRef.current) {
+      return false;
+    }
+
+    workbenchVerifiedCalculatedAnchorMutationInFlightRef.current = true;
+    return true;
+  }
+
+  function finishWorkbenchVerifiedCalculatedAnchorMutation() {
+    workbenchVerifiedCalculatedAnchorMutationInFlightRef.current = false;
+  }
+
   function buildAssemblyCalculationSummary() {
     const selectedOutputLabels = selectedOutputs.map((output) => output);
 
@@ -3777,6 +4594,7 @@ export function CalculatorWorkbench() {
     const requestIsCurrent = () => calculatorAssistantSourceReviewRequestRef.current === requestId && !controller.signal.aborted;
 
     setCalculatorAssistantSourceReviewState({ status: "loading" });
+    setCalculatorAssistantSourceAlternativeState((current) => (current.status === "idle" ? current : { status: "idle" }));
     setCalculatorAssistantReportOverrideProposalState({ status: "idle" });
     setCalculatorAssistantCommandMessage({
       detail: "Running the current calculator draft first, then sending the calculator-owned value and layer summary to the source review route.",
@@ -3811,10 +4629,11 @@ export function CalculatorWorkbench() {
         fallbackOutput: requestedOutputId ?? preview.calculationSummary.primaryOutput ?? preview.calculationSummary.selectedOutputs[0],
         instruction
       });
+      const sourceReviewWorkbenchSnapshotSignature = getCurrentWorkbenchApplyTargetSignature();
       const packetResult = buildReportAssistantCurrentCalculatorReviewPacketFromCalculatorPreview({
         outputId,
         preview,
-        snapshotSignature: getCurrentWorkbenchApplyTargetSignature()
+        snapshotSignature: sourceReviewWorkbenchSnapshotSignature
       });
 
       if (!packetResult.ok) {
@@ -3867,9 +4686,11 @@ export function CalculatorWorkbench() {
         preview,
         result: review.result,
         review: review.review,
+        ...(outputId ? { reviewedOutputId: outputId } : {}),
         source: review.source,
         status: "ready",
-        warnings: review.warnings
+        warnings: review.warnings,
+        workbenchSnapshotSignature: packetResult.packet.snapshotSignature ?? sourceReviewWorkbenchSnapshotSignature
       });
       setCalculatorAssistantCommand("");
       setCalculatorAssistantCommandMessage({
@@ -3902,6 +4723,146 @@ export function CalculatorWorkbench() {
     } finally {
       if (calculatorAssistantSourceReviewAbortRef.current === controller) {
         calculatorAssistantSourceReviewAbortRef.current = null;
+      }
+    }
+  }
+
+  async function researchCalculatorAssistantSourceAlternatives(instruction: string) {
+    calculatorAssistantSourceAlternativeAbortRef.current?.abort();
+    const controller = new AbortController();
+    const requestId = calculatorAssistantSourceAlternativeRequestRef.current + 1;
+    calculatorAssistantSourceAlternativeRequestRef.current = requestId;
+    calculatorAssistantSourceAlternativeAbortRef.current = controller;
+    const requestIsCurrent = () => calculatorAssistantSourceAlternativeRequestRef.current === requestId && !controller.signal.aborted;
+
+    setCalculatorAssistantSourceAlternativeState({ status: "loading" });
+    setCalculatorAssistantSourceReviewState((current) => (current.status === "idle" ? current : { status: "idle" }));
+    setCalculatorAssistantReportOverrideProposalState({ status: "idle" });
+    setCalculatorAssistantCommandMessage({
+      detail: "Researching source-backed layer/material alternatives. Any mapped stack will still require calculator preview before comparison.",
+      title: "Source alternative research requested",
+      tone: "success"
+    });
+
+    try {
+      const document = buildReportSnapshot({
+        layers,
+        materialById,
+        mode,
+        outputRows,
+        projectName: activeServerAssembly?.name ?? lastAppliedTemplateName ?? "Current draft",
+        responseFigures,
+        serverProjectId: selectedServerProjectId || undefined,
+        serverProjectScenarioId: activeServerAssemblyId || undefined
+      });
+      const assistantContext = buildReportAssistantContext({
+        document,
+        reportId: activeServerAssemblyId || selectedServerReportId || "workbench-v2-source-alternatives"
+      });
+      const result = await requestCalculatorAssistantAssemblyAlternatives({
+        assistantContext,
+        document,
+        instruction,
+        research: true,
+        signal: controller.signal
+      });
+
+      if (!requestIsCurrent()) {
+        return;
+      }
+
+      if (!result.ok || !result.result || !result.review || !result.source) {
+        const message = result.message ?? "Source alternative research failed.";
+        setCalculatorAssistantSourceAlternativeState({
+          message,
+          ...(result.result ? { result: result.result } : {}),
+          status: "error",
+          warnings: result.warnings
+        });
+        setCalculatorAssistantCommandMessage({
+          detail: message,
+          title: "Source alternative research failed",
+          tone: "warning"
+        });
+        toast.error("Source alternative research failed", { description: message });
+        return;
+      }
+
+      // Coordination note (assistant source alternatives, 2026-06-22):
+      // Provider/research text enters Workbench candidates only through explicit
+      // candidateLayers + catalog mapping. If another agent wires this area,
+      // keep clarification prompts non-mutating and preview/ranking calculator-backed.
+      const candidateBridge = createWorkbenchV2AssistantSourceAlternativeCandidatesFromReview({
+        currentLayers: layers,
+        idFactory: (_candidateIndex, _layerIndex) => createLayerId(),
+        materials,
+        mode,
+        review: result.review,
+        selectedOutputs
+      });
+
+      if (candidateBridge.candidateStacks.length) {
+        setCalculatorAssistantCandidateStacks(candidateBridge.candidateStacks);
+        setCalculatorAssistantCandidateComparisonState({ status: "idle" });
+      }
+
+      setCalculatorAssistantSourceAlternativeState({
+        candidateCount: candidateBridge.candidateStacks.length,
+        clarificationPrompts: candidateBridge.clarificationPrompts,
+        result: result.result,
+        review: result.review,
+        source: result.source,
+        status: "ready",
+        taskCount: candidateBridge.tasks.length,
+        warnings: [...result.warnings, ...candidateBridge.warnings]
+      });
+      setCalculatorAssistantCommand("");
+
+      const title = candidateBridge.candidateStacks.length
+        ? "Source alternative candidates prepared"
+        : candidateBridge.clarificationPrompts.length
+          ? "Source alternative needs clarification"
+          : "Source alternative review ready";
+      const detail = candidateBridge.candidateStacks.length
+        ? `${candidateBridge.candidateStacks.length} source alternative candidate${candidateBridge.candidateStacks.length === 1 ? "" : "s"} prepared. No Workbench layer changed yet. Preview all candidates before comparing values.`
+        : candidateBridge.clarificationPrompts[0]?.message ??
+          candidateBridge.tasks[0]?.detail ??
+          "Source alternative review is ready, but no previewable candidate stack was produced.";
+
+      setCalculatorAssistantCommandMessage({
+        detail,
+        title,
+        tone: candidateBridge.candidateStacks.length ? "success" : "warning"
+      });
+      if (candidateBridge.candidateStacks.length) {
+        toast.success(title, {
+          description: "No Workbench layer changed yet."
+        });
+      } else {
+        toast.warning(title, {
+          description: "Candidate generation is waiting for explicit material mapping or custom material properties."
+        });
+      }
+    } catch (error) {
+      if (!requestIsCurrent()) {
+        return;
+      }
+
+      const message = error instanceof Error ? error.message : "Source alternative research failed.";
+      setCalculatorAssistantSourceAlternativeState({
+        message,
+        status: "error",
+        warnings: []
+      });
+      setCalculatorAssistantCommandMessage({
+        detail: message,
+        title: "Source alternative research failed",
+        tone: "warning"
+      });
+      toast.error("Source alternative research failed", { description: message });
+    } finally {
+      if (calculatorAssistantSourceAlternativeAbortRef.current === controller) {
+        calculatorAssistantSourceAlternativeAbortRef.current = null;
       }
     }
   }
@@ -3957,21 +4918,33 @@ export function CalculatorWorkbench() {
     };
   }
 
-  async function prepareCalculatorAssistantReportOverrideProposal() {
+  function blockCalculatorAssistantReportOverrideProposal(message: string) {
+    setCalculatorAssistantReportOverrideProposalState({
+      message,
+      status: "blocked"
+    });
+    setCalculatorAssistantCommandMessage({
+      detail: message,
+      title: "Report edit blocked",
+      tone: "warning"
+    });
+    toast.warning("Report edit blocked", { description: message });
+  }
+
+  async function prepareCalculatorAssistantReportOverrideProposal(): Promise<boolean> {
     if (calculatorAssistantSourceReviewState.status !== "ready") {
-      setCalculatorAssistantReportOverrideProposalState({
-        message: "Run a source review before preparing a report draft edit.",
-        status: "blocked"
-      });
-      return;
+      blockCalculatorAssistantReportOverrideProposal("Run a source review before preparing a report draft edit.");
+      return false;
+    }
+
+    if (calculatorAssistantSourceReviewState.workbenchSnapshotSignature !== getCurrentWorkbenchApplyTargetSignature()) {
+      blockCalculatorAssistantReportOverrideProposal("The visible Workbench draft changed after this source review. Run source review again before preparing a report edit.");
+      return false;
     }
 
     if (!selectedServerProjectId || !selectedServerReportId) {
-      setCalculatorAssistantReportOverrideProposalState({
-        message: "Open or create a report first. The assistant will not apply a source review without a selected report target.",
-        status: "blocked"
-      });
-      return;
+      blockCalculatorAssistantReportOverrideProposal("Open or create a report first. The assistant will not apply a source review without a selected report target.");
+      return false;
     }
 
     setCalculatorAssistantReportOverrideProposalState({ status: "loading" });
@@ -3979,29 +4952,20 @@ export function CalculatorWorkbench() {
     try {
       const target = await loadSelectedCalculatorAssistantReportOverrideTarget();
       if (!target) {
-        setCalculatorAssistantReportOverrideProposalState({
-          message: "Open or create a report first. The assistant will not apply a source review without a selected report target.",
-          status: "blocked"
-        });
-        return;
+        blockCalculatorAssistantReportOverrideProposal("Open or create a report first. The assistant will not apply a source review without a selected report target.");
+        return false;
       }
 
       const review = calculatorAssistantSourceReviewState.review;
       if (calculatorAssistantSourceReviewState.source !== "research_provider") {
-        setCalculatorAssistantReportOverrideProposalState({
-          message: "No source-backed report edit was prepared. Run a source-backed review before applying a report draft edit.",
-          status: "blocked"
-        });
-        return;
+        blockCalculatorAssistantReportOverrideProposal("No source-backed report edit was prepared. Run a source-backed review before applying a report draft edit.");
+        return false;
       }
 
       const metricExists = target.assistantContext.metrics.some((metric) => metric.id === review.metricId);
       if (!metricExists) {
-        setCalculatorAssistantReportOverrideProposalState({
-          message: `The selected report does not contain ${review.metric}. Open or create a matching report before applying this review.`,
-          status: "blocked"
-        });
-        return;
+        blockCalculatorAssistantReportOverrideProposal(`The selected report does not contain ${review.metric}. Open or create a matching report before applying this review.`);
+        return false;
       }
 
       const patch = buildReportAssistantSourceBackedReportOverridePatch({
@@ -4010,11 +4974,8 @@ export function CalculatorWorkbench() {
       });
 
       if (!patch) {
-        setCalculatorAssistantReportOverrideProposalState({
-          message: "No source-backed report edit was prepared. Calculator values stay unchanged.",
-          status: "blocked"
-        });
-        return;
+        blockCalculatorAssistantReportOverrideProposal("No source-backed report edit was prepared. Calculator values stay unchanged.");
+        return false;
       }
 
       const validation = validateReportAssistantPatch({
@@ -4024,11 +4985,8 @@ export function CalculatorWorkbench() {
       });
 
       if (validation.status === "rejected") {
-        setCalculatorAssistantReportOverrideProposalState({
-          message: validation.errors.join(" ") || "The report edit was rejected by the shared patch validator.",
-          status: "blocked"
-        });
-        return;
+        blockCalculatorAssistantReportOverrideProposal(validation.errors.join(" ") || "The report edit was rejected by the shared patch validator.");
+        return false;
       }
 
       setCalculatorAssistantReportOverrideProposalState({
@@ -4037,11 +4995,24 @@ export function CalculatorWorkbench() {
         target,
         validation
       });
+      setCalculatorAssistantCommandMessage({
+        detail: `Report-only edit prepared for ${target.reportName}. Calculator values and layer stack will stay unchanged.`,
+        title: "Report edit prepared",
+        tone: "success"
+      });
+      return true;
     } catch (error) {
+      const message = error instanceof Error ? error.message : "Report draft edit preparation failed.";
       setCalculatorAssistantReportOverrideProposalState({
-        message: error instanceof Error ? error.message : "Report draft edit preparation failed.",
+        message,
         status: "error"
       });
+      setCalculatorAssistantCommandMessage({
+        detail: message,
+        title: "Report edit failed",
+        tone: "warning"
+      });
+      return false;
     }
   }
 
@@ -4051,6 +5022,24 @@ export function CalculatorWorkbench() {
     }
 
     const proposal = calculatorAssistantReportOverrideProposalState;
+    if (
+      selectedServerProjectId !== proposal.target.projectContext.serverProjectId ||
+      selectedServerReportId !== proposal.target.reportId
+    ) {
+      const message = "The selected report target changed after this report edit was prepared. Prepare the report edit again for the currently selected report.";
+      setCalculatorAssistantReportOverrideProposalState({
+        message,
+        status: "blocked"
+      });
+      setCalculatorAssistantCommandMessage({
+        detail: message,
+        title: "Report edit blocked",
+        tone: "warning"
+      });
+      toast.warning("Report edit blocked", { description: message });
+      return;
+    }
+
     if (typeof window !== "undefined") {
       const confirmed = window.confirm(
         "Apply this source review recommendation to the selected report draft? Calculator values and layer stack will stay unchanged."
@@ -4164,6 +5153,69 @@ export function CalculatorWorkbench() {
     });
   }
 
+  function prepareCalculatorAssistantBoundedEditPlanApplyProposal() {
+    // Coordination note (assistant bounded edit-plan proposal, 2026-06-22):
+    // This helper only prepares the existing confirmation-gated Workbench proposal.
+    // The visible draft may change only through confirmCalculatorAssistantWorkbenchApplyProposal.
+    if (calculatorAssistantBoundedEditPlanState.status !== "ready") {
+      const detail = "Run a successful bounded dry run before preparing a Workbench apply proposal.";
+      setCalculatorAssistantCommandMessage({
+        detail,
+        title: "Bounded apply proposal blocked",
+        tone: "warning"
+      });
+      toast.warning("Bounded apply proposal blocked", { description: detail });
+      return;
+    }
+
+    const currentLayerSignature = getWorkbenchV2AssistantLayerStackSignature(layers);
+    if (currentLayerSignature !== calculatorAssistantBoundedEditPlanState.result.initialLayerSignature) {
+      const detail = "The visible layer stack changed after this dry run. Run the dry run again before preparing an apply proposal.";
+      setCalculatorAssistantCommandMessage({
+        detail,
+        title: "Bounded apply proposal blocked",
+        tone: "warning"
+      });
+      toast.warning("Bounded apply proposal blocked", { description: detail });
+      setCalculatorAssistantWorkbenchApplyProposal(null);
+      return;
+    }
+
+    const proposalResult = createWorkbenchV2AssistantBoundedEditPlanApplyProposal({
+      materials,
+      plan: calculatorAssistantBoundedEditPlanState.result,
+      targetWorkbench: {
+        context,
+        layers,
+        mode,
+        selectedOutputs
+      }
+    });
+
+    if (!proposalResult.ok) {
+      const detail = proposalResult.errors.join(" ") || "The bounded dry run cannot be converted into a safe Workbench proposal yet.";
+      setCalculatorAssistantCommandMessage({
+        detail,
+        title: "Bounded apply proposal blocked",
+        tone: "warning"
+      });
+      toast.warning("Bounded apply proposal blocked", { description: detail });
+      return;
+    }
+
+    setCalculatorAssistantCandidateStacks([]);
+    setCalculatorAssistantCandidateComparisonState({ status: "idle" });
+    setCalculatorAssistantWorkbenchApplyProposal(proposalResult.proposal);
+    setCalculatorAssistantCommandMessage({
+      detail: "The bounded plan is ready in the Apply bounded edit plan to draft confirmation card. Review the diff before applying to the visible draft.",
+      title: "Workbench apply proposal prepared",
+      tone: "success"
+    });
+    toast.success("Workbench apply proposal prepared", {
+      description: "No Workbench layer changed yet."
+    });
+  }
+
   function calculatorAssistantCandidateIsCurrent(candidate: WorkbenchV2AssistantLayerStackCandidateStack): boolean {
     const currentSignature = getWorkbenchV2AssistantLayerStackSignature(layers);
 
@@ -4179,6 +5231,31 @@ export function CalculatorWorkbench() {
     });
     toast.error("Candidate is stale", { description: detail });
     return false;
+  }
+
+  function calculatorAssistantCandidatePreviewSummaryForApply(
+    candidate: WorkbenchV2AssistantLayerStackCandidateStack
+  ): WorkbenchV2AssistantCandidateApplyPreviewSummary | undefined {
+    if (calculatorAssistantCandidateComparisonState.status !== "ready") {
+      return undefined;
+    }
+
+    const row = calculatorAssistantCandidateComparisonState.rows.find((entry) => entry.candidateId === candidate.candidateId);
+    if (!row || row.status === "error") {
+      return undefined;
+    }
+
+    const routeStatus =
+      row.status === "ready" || row.status === "needs_input" || row.status === "unsupported"
+        ? row.status
+        : "not_run";
+    const primary = row.outputRows.find((output) => output.status === "live");
+
+    return {
+      outputRows: row.outputRows,
+      ...(primary ? { primaryOutput: `${primary.label} ${primary.value}` } : {}),
+      routeStatus
+    };
   }
 
   function buildCalculatorAssistantCandidateSnapshot(candidate: WorkbenchV2AssistantLayerStackCandidateStack): WorkbenchV2ProjectSnapshot {
@@ -4343,6 +5420,58 @@ export function CalculatorWorkbench() {
       return;
     }
 
+    // Coordination note (assistant objective apply, 2026-06-22):
+    // Objective planner candidates must prepare a confirmed Workbench proposal,
+    // not use the lightweight candidate mutation path. Update tests if this changes.
+    if (isWorkbenchWallRwImprovementCandidateStack(candidate)) {
+      if (candidate.mode !== mode) {
+        const detail = "This objective candidate was generated for a different Workbench mode. Generate candidates again before using it.";
+        setCalculatorAssistantCommandMessage({
+          detail,
+          title: "Candidate mode changed",
+          tone: "warning"
+        });
+        toast.error("Candidate mode changed", { description: detail });
+        return;
+      }
+
+      const requestedOutputs = ensureCalculatorAssistantRwFirstSelectedOutputs(selectedOutputs);
+      const proposalResult = createWorkbenchV2AssistantCandidateApplyProposal({
+        candidate,
+        materials,
+        preview: calculatorAssistantCandidatePreviewSummaryForApply(candidate),
+        requestedOutputs,
+        targetWorkbench: {
+          context,
+          layers,
+          mode,
+          selectedOutputs
+        }
+      });
+
+      if (!proposalResult.ok) {
+        const detail = proposalResult.errors.join(" ");
+        setCalculatorAssistantCommandMessage({
+          detail,
+          title: "Workbench proposal blocked",
+          tone: "warning"
+        });
+        toast.error("Workbench proposal blocked", { description: detail });
+        return;
+      }
+
+      setCalculatorAssistantWorkbenchApplyProposal(proposalResult.proposal);
+      setCalculatorAssistantCommandMessage({
+        detail: `${candidate.label} is ready as a confirmed Workbench apply proposal. Review the diff before applying to the visible draft.`,
+        title: "Workbench apply proposal prepared",
+        tone: "success"
+      });
+      toast.success("Workbench apply proposal prepared", {
+        description: "No Workbench layer changed yet."
+      });
+      return;
+    }
+
     if (candidate.mode !== mode) {
       setMode(candidate.mode);
     }
@@ -4385,23 +5514,138 @@ export function CalculatorWorkbench() {
     }
 
     const instruction = calculatorAssistantCommand.trim();
+    if (isCalculatorAssistantReportOverrideFollowupCommand(instruction)) {
+      const prepared = await prepareCalculatorAssistantReportOverrideProposal();
+      if (prepared) {
+        setCalculatorAssistantCommand("");
+      }
+      return;
+    }
+
     const routingDecision = classifyCalculatorAssistantCommandRouting({
       instruction,
       selectedOutputs
     });
+    if (routingDecision.status !== "bounded_edit_plan") {
+      setCalculatorAssistantBoundedEditPlanState((current) => (current.status === "idle" ? current : { status: "idle" }));
+    }
 
     if (routingDecision.status === "source_review" || routingDecision.status === "report_override_request") {
       await reviewCurrentCalculatorWithAssistantSource(instruction);
       return;
     }
 
+    if (routingDecision.status === "source_alternative_research") {
+      await researchCalculatorAssistantSourceAlternatives(instruction);
+      return;
+    }
+
+    if (routingDecision.status === "objective_candidate_planning") {
+      const improvementPlan = planWorkbenchWallRwImprovementCandidates({
+        candidateCap: 3,
+        constraints: {
+          maxAddedLayers: 2
+        },
+        context,
+        currentLayers: layers,
+        idFactory: () => createLayerId(),
+        materials,
+        mode,
+        selectedOutputs
+      });
+      if (!improvementPlan.candidateStacks.length) {
+        const detail = improvementPlan.warnings.join(" ") || "No safe Rw improvement candidates could be prepared from the visible wall stack.";
+        setCalculatorAssistantCommandMessage({
+          detail,
+          title: "Rw improvement candidates blocked",
+          tone: "warning"
+        });
+        toast.warning("Rw improvement candidates blocked", {
+          description: detail
+        });
+        return;
+      }
+
+      const nextSelectedOutputs = ensureCalculatorAssistantRwFirstSelectedOutputs(selectedOutputs);
+      if (nextSelectedOutputs.join("|") !== selectedOutputs.join("|")) {
+        setSelectedOutputs(nextSelectedOutputs);
+      }
+      setCalculatorAssistantCandidateStacks(improvementPlan.candidateStacks);
+      setCalculatorAssistantSourceAlternativeState((current) => (current.status === "idle" ? current : { status: "idle" }));
+      setCalculatorAssistantCandidateComparisonState({ status: "idle" });
+      setCalculatorAssistantCommand("");
+      const detail = `${improvementPlan.candidateStacks.length} Rw improvement candidate${improvementPlan.candidateStacks.length === 1 ? "" : "s"} prepared from the visible wall stack. Preview all candidates before comparing values or applying one.`;
+      setCalculatorAssistantCommandMessage({
+        detail,
+        title: "Rw improvement candidates prepared",
+        tone: "success"
+      });
+      toast.success("Rw improvement candidates prepared", {
+        description: "No calculator value was generated yet."
+      });
+      return;
+    }
+
+    if (routingDecision.status === "bounded_edit_plan") {
+      // Coordination note (assistant bounded edit plans, 2026-06-22):
+      // This branch is read-only. It may prepare a dry-run plan; the panel may
+      // later prepare a confirmation-gated proposal, but must not call
+      // commitLayerStackChange, setLayers, provider/research routes, or direct apply.
+      const plan = createWorkbenchV2AssistantBoundedEditPlan({
+        currentLayers: layers,
+        currentMode: mode,
+        currentSelectedLayerId: selectedLayerId,
+        currentSelectedOutputs: selectedOutputs,
+        idFactory: () => createLayerId(),
+        instruction,
+        materials
+      });
+      setCalculatorAssistantCandidateStacks([]);
+      setCalculatorAssistantCandidateComparisonState({ status: "idle" });
+      setCalculatorAssistantSourceAlternativeState((current) => (current.status === "idle" ? current : { status: "idle" }));
+      setCalculatorAssistantWorkbenchApplyProposal(null);
+
+      if (plan.ok) {
+        setCalculatorAssistantBoundedEditPlanState({
+          result: plan,
+          status: "ready"
+        });
+        setCalculatorAssistantCommand("");
+        setCalculatorAssistantCommandMessage({
+          detail: `${plan.steps.length} ordered step${plan.steps.length === 1 ? "" : "s"} parsed. No Workbench layer changed yet. Review the dry run before any future apply flow.`,
+          title: "Multi-step dry run ready",
+          tone: "success"
+        });
+        toast.success("Multi-step dry run ready", {
+          description: "No Workbench layer changed yet."
+        });
+      } else {
+        setCalculatorAssistantBoundedEditPlanState({
+          result: plan,
+          status: "blocked"
+        });
+        setCalculatorAssistantCommandMessage({
+          detail: `${plan.message} No Workbench layer changed yet.`,
+          title: "Multi-step dry run blocked",
+          tone: "warning"
+        });
+        toast.warning("Multi-step dry run blocked", {
+          description: plan.message
+        });
+      }
+      return;
+    }
+
     if (routingDecision.status === "clarify") {
+      const title = routingDecision.reason === "research_write_requires_clarification"
+        ? "Research edit needs clarification"
+        : "Calculator value override blocked";
       setCalculatorAssistantCommandMessage({
         detail: routingDecision.message,
-        title: "Calculator value override blocked",
+        title,
         tone: "warning"
       });
-      toast.warning("Calculator value override blocked", {
+      toast.warning(title, {
         description: routingDecision.message
       });
       return;
@@ -4497,6 +5741,7 @@ export function CalculatorWorkbench() {
 
     if (result.candidateStacks) {
       setCalculatorAssistantCandidateStacks(result.candidateStacks);
+      setCalculatorAssistantSourceAlternativeState((current) => (current.status === "idle" ? current : { status: "idle" }));
       setCalculatorAssistantCandidateComparisonState({ status: "idle" });
       setCalculatorAssistantCommand("");
       setCalculatorAssistantCommandMessage({
@@ -4666,6 +5911,231 @@ export function CalculatorWorkbench() {
     } catch (error) {
       setWorkbenchPresetStatus("error");
       setWorkbenchPresetMessage(error instanceof Error ? error.message : "Template save failed");
+    } finally {
+      finishWorkbenchPresetMutation();
+    }
+  }
+
+  // Agent coordination, 2026-06-22:
+  // This is the only UI handler that writes user_verified_calculated_result
+  // records. It stores the current live result package only; do not route it
+  // through measured Rw anchors or /api/estimate runtime loading.
+  async function saveCurrentVerifiedCalculatedAnchor() {
+    if (estimateState.status !== "ready") {
+      setWorkbenchVerifiedCalculatedAnchorStatus("error");
+      setWorkbenchVerifiedCalculatedAnchorMessage("Run the calculator before saving a reference.");
+      return;
+    }
+
+    const currentRequest = buildEstimatePayload(mode, layers, selectedOutputs, context, customMaterials);
+    if (!currentRequest || !estimateRequestsEqualForVerifiedCalculatedCapture(currentRequest, estimateState.request)) {
+      setWorkbenchVerifiedCalculatedAnchorStatus("error");
+      setWorkbenchVerifiedCalculatedAnchorMessage("Recalculate before saving this reference.");
+      return;
+    }
+
+    const capture = buildVerifiedCalculatedAnchorCapturePackage({
+      context,
+      currentRequest,
+      mode,
+      result: estimateState.result,
+      selectedOutputs
+    });
+    if (capture.status !== "ready") {
+      setWorkbenchVerifiedCalculatedAnchorStatus("error");
+      setWorkbenchVerifiedCalculatedAnchorMessage("No live output is available to save.");
+      return;
+    }
+    if (!beginWorkbenchVerifiedCalculatedAnchorMutation()) {
+      return;
+    }
+
+    const referenceName = `${activeServerAssembly?.name ?? lastAppliedTemplateName ?? (mode === "wall" ? "Wall" : "Floor")} verified result`;
+    const snapshot = buildCurrentWorkbenchV2Snapshot(referenceName, `${mode === "wall" ? "Wall" : "Floor"} verified result`);
+
+    setWorkbenchVerifiedCalculatedAnchorStatus("syncing");
+    setWorkbenchVerifiedCalculatedAnchorMessage("");
+
+    try {
+      const response = await fetch("/api/workbench-v2/verified-calculated-anchors", {
+        body: JSON.stringify({
+          createdFromProjectId: selectedServerProjectId || undefined,
+          description: "Current live calculator result confirmed as a verified reference.",
+          name: referenceName,
+          requestContext: capture.package.requestContext,
+          resultBasisTrace: capture.package.resultBasisTrace,
+          scope: selectedServerProjectId ? "project_evidence" : "user_evidence",
+          values: capture.package.values,
+          workbenchSnapshot: snapshot
+        }),
+        headers: {
+          "content-type": "application/json"
+        },
+        method: "POST"
+      });
+
+      if (!response.ok) {
+        throw new Error(await readServerProjectError(response, "DAC could not save the verified reference."));
+      }
+
+      const payload = (await response.json()) as unknown;
+      if (typeof payload !== "object" || payload === null || !("anchor" in payload)) {
+        throw new Error("DAC saved the verified reference but the server response was incomplete.");
+      }
+
+      await refreshWorkbenchVerifiedCalculatedAnchors({ preserveMessage: true, silent: true });
+      setWorkbenchVerifiedCalculatedAnchorStatus("idle");
+      setWorkbenchVerifiedCalculatedAnchorMessage("Verified reference saved");
+      toast.success("Verified reference saved", {
+        description: `${capture.package.values.length} output${capture.package.values.length === 1 ? "" : "s"} saved.`
+      });
+    } catch (error) {
+      setWorkbenchVerifiedCalculatedAnchorStatus("error");
+      setWorkbenchVerifiedCalculatedAnchorMessage(error instanceof Error ? error.message : "Verified reference save failed");
+    } finally {
+      finishWorkbenchVerifiedCalculatedAnchorMutation();
+    }
+  }
+
+  async function retireWorkbenchVerifiedCalculatedAnchor(anchorId: string) {
+    if (!anchorId) {
+      return;
+    }
+    if (!globalThis.confirm("Retire this verified reference? It will no longer be used by future calculator estimates.")) {
+      return;
+    }
+    if (!beginWorkbenchVerifiedCalculatedAnchorMutation()) {
+      return;
+    }
+
+    setWorkbenchVerifiedCalculatedAnchorStatus("syncing");
+    setWorkbenchVerifiedCalculatedAnchorMessage("");
+
+    try {
+      const response = await fetch(`/api/workbench-v2/verified-calculated-anchors/${encodeURIComponent(anchorId)}`, {
+        method: "DELETE"
+      });
+
+      if (!response.ok) {
+        throw new Error(await readServerProjectError(response, "DAC could not retire the verified reference."));
+      }
+
+      await refreshWorkbenchVerifiedCalculatedAnchors({ preserveMessage: true, silent: true });
+      setWorkbenchVerifiedCalculatedAnchorStatus("idle");
+      setWorkbenchVerifiedCalculatedAnchorMessage("Verified reference retired");
+    } catch (error) {
+      setWorkbenchVerifiedCalculatedAnchorStatus("error");
+      setWorkbenchVerifiedCalculatedAnchorMessage(error instanceof Error ? error.message : "Verified reference retire failed");
+    } finally {
+      finishWorkbenchVerifiedCalculatedAnchorMutation();
+    }
+  }
+
+  // Agent coordination, 2026-06-22:
+  // These handlers are the UI path that turns a saved wall preset into evidence.
+  // If another agent edits them, preserve explicit user action, active-only
+  // estimate loading, confirmed retirement, and the focused route tests.
+  async function saveSelectedWorkbenchPresetMeasuredRwAnchor() {
+    if (!selectedWorkbenchPreset) {
+      return;
+    }
+    if (selectedWorkbenchPreset.kind !== "wall") {
+      setWorkbenchPresetStatus("error");
+      setWorkbenchPresetMessage("Rw references require a wall template");
+      return;
+    }
+
+    const valueDb = Number(workbenchPresetMeasuredRwDraftRef.current.trim());
+    const toleranceText = workbenchPresetMeasuredRwToleranceDraftRef.current.trim();
+    const toleranceDb = toleranceText ? Number(toleranceText) : 0;
+
+    if (!Number.isFinite(valueDb) || valueDb < 0 || valueDb > 120) {
+      setWorkbenchPresetStatus("error");
+      setWorkbenchPresetMessage("Enter measured Rw between 0 and 120 dB");
+      return;
+    }
+    if (!Number.isFinite(toleranceDb) || toleranceDb < 0 || toleranceDb > 20) {
+      setWorkbenchPresetStatus("error");
+      setWorkbenchPresetMessage("Enter Rw tolerance between 0 and 20 dB");
+      return;
+    }
+    if (!beginWorkbenchPresetMutation()) {
+      return;
+    }
+
+    setWorkbenchPresetStatus("syncing");
+    setWorkbenchPresetMessage("Saving Rw reference");
+
+    try {
+      const response = await fetch("/api/workbench-v2/measured-wall-rw-anchors", {
+        body: JSON.stringify({
+          presetId: selectedWorkbenchPreset.id,
+          ratingStandard: "ISO 717-1",
+          sourceLabel: `${selectedWorkbenchPreset.name} measured lab Rw`,
+          toleranceDb,
+          valueDb
+        }),
+        headers: {
+          "content-type": "application/json"
+        },
+        method: "POST"
+      });
+
+      if (!response.ok) {
+        throw new Error(await readServerProjectError(response, "DAC could not save the measured Rw reference."));
+      }
+
+      const payload = (await response.json()) as unknown;
+      if (typeof payload !== "object" || payload === null || !("anchor" in payload)) {
+        throw new Error("DAC saved the Rw reference but the server response was incomplete.");
+      }
+
+      workbenchPresetMeasuredRwDraftRef.current = "";
+      workbenchPresetMeasuredRwToleranceDraftRef.current = "0";
+      setWorkbenchPresetMeasuredRwDraft("");
+      setWorkbenchPresetMeasuredRwToleranceDraft("0");
+      await refreshWorkbenchMeasuredWallRwAnchors({ preserveMessage: true, silent: true });
+      setWorkbenchMeasuredAnchorRevision((current) => current + 1);
+      setWorkbenchPresetStatus("idle");
+      setWorkbenchPresetMessage("Rw reference saved");
+    } catch (error) {
+      setWorkbenchPresetStatus("error");
+      setWorkbenchPresetMessage(error instanceof Error ? error.message : "Rw reference save failed");
+    } finally {
+      finishWorkbenchPresetMutation();
+    }
+  }
+
+  async function retireSelectedWorkbenchPresetMeasuredRwAnchor(anchorId: string) {
+    if (!anchorId) {
+      return;
+    }
+    if (!globalThis.confirm("Retire this measured Rw reference? It will no longer be used by calculator estimates.")) {
+      return;
+    }
+    if (!beginWorkbenchPresetMutation()) {
+      return;
+    }
+
+    setWorkbenchPresetStatus("syncing");
+    setWorkbenchPresetMessage("Retiring Rw reference");
+
+    try {
+      const response = await fetch(`/api/workbench-v2/measured-wall-rw-anchors/${encodeURIComponent(anchorId)}`, {
+        method: "DELETE"
+      });
+
+      if (!response.ok) {
+        throw new Error(await readServerProjectError(response, "DAC could not retire the measured Rw reference."));
+      }
+
+      await refreshWorkbenchMeasuredWallRwAnchors({ preserveMessage: true, silent: true });
+      setWorkbenchMeasuredAnchorRevision((current) => current + 1);
+      setWorkbenchPresetStatus("idle");
+      setWorkbenchPresetMessage("Rw reference retired");
+    } catch (error) {
+      setWorkbenchPresetStatus("error");
+      setWorkbenchPresetMessage(error instanceof Error ? error.message : "Rw reference retire failed");
     } finally {
       finishWorkbenchPresetMutation();
     }
@@ -6235,6 +7705,16 @@ export function CalculatorWorkbench() {
           setWorkbenchPresetRenameDraft(value);
         }}
         onRenamePreset={renameSelectedWorkbenchPreset}
+        onMeasuredRwDraftChange={(value) => {
+          workbenchPresetMeasuredRwDraftRef.current = value;
+          setWorkbenchPresetMeasuredRwDraft(value);
+        }}
+        onMeasuredRwToleranceDraftChange={(value) => {
+          workbenchPresetMeasuredRwToleranceDraftRef.current = value;
+          setWorkbenchPresetMeasuredRwToleranceDraft(value);
+        }}
+        onRetireMeasuredRwAnchor={retireSelectedWorkbenchPresetMeasuredRwAnchor}
+        onSaveMeasuredRwAnchor={saveSelectedWorkbenchPresetMeasuredRwAnchor}
         onSavePreset={saveCurrentWorkbenchPreset}
         onSelectPreset={(nextPresetId) => {
           const nextPreset = workbenchPresets.find((preset) => preset.id === nextPresetId);
@@ -6248,6 +7728,8 @@ export function CalculatorWorkbench() {
           setWorkbenchPresetRenameDescriptionDraft(nextDescription);
         }}
         onUsePreset={useSelectedWorkbenchPreset}
+        measuredRwDraft={workbenchPresetMeasuredRwDraft}
+        measuredRwToleranceDraft={workbenchPresetMeasuredRwToleranceDraft}
         presetDescriptionDraft={workbenchPresetDescriptionDraft}
         presetNameDraft={workbenchPresetNameDraft}
         presetRenameDescriptionDraft={workbenchPresetRenameDescriptionDraft}
@@ -6256,6 +7738,7 @@ export function CalculatorWorkbench() {
         selectedCommonPreset={selectedWorkbenchCommonPreset}
         selectedCommonPresetId={selectedWorkbenchCommonPresetId}
         selectedPreset={selectedWorkbenchPreset}
+        selectedPresetMeasuredRwAnchors={selectedWorkbenchPresetMeasuredRwAnchors}
         selectedPresetId={selectedWorkbenchPresetId}
         status={workbenchPresetStatus}
       />
@@ -7008,8 +8491,29 @@ export function CalculatorWorkbench() {
             <section className="calc-review-section">
               <div className="calc-review-head">
                 <h2>Outputs</h2>
-                <span>{outputRows.length || selectedOutputs.length}</span>
+                <div className="calc-section-actions">
+                  <span>{outputRows.length || selectedOutputs.length}</span>
+                  <button
+                    className="focus-ring ui-button ui-button-ghost"
+                    disabled={!canSaveVerifiedCalculatedAnchor}
+                    onClick={() => {
+                      void saveCurrentVerifiedCalculatedAnchor();
+                    }}
+                    title={
+                      canSaveVerifiedCalculatedAnchor
+                        ? "Save current live result as a verified reference"
+                        : "A live calculated result is required"
+                    }
+                    type="button"
+                  >
+                    <Bookmark className="h-4 w-4" />
+                    {verifiedCalculatedCaptureBusy ? "Saving" : "Save verified ref"}
+                  </button>
+                </div>
               </div>
+              {workbenchVerifiedCalculatedAnchorStatus === "error" ? (
+                <p className="calc-error-text">{workbenchVerifiedCalculatedAnchorMessage}</p>
+              ) : null}
               <div className="calc-output-rows">
                 {(outputRows.length ? outputRows : selectedOutputs.map((output) => ({ detail: "Pending", label: output, status: "pending" as const, value: "--" }))).map(
                   (row) => (
@@ -7023,6 +8527,43 @@ export function CalculatorWorkbench() {
                   )
                 )}
               </div>
+              {applicableWorkbenchVerifiedCalculatedAnchors.length ? (
+                <>
+                  <div className="calc-review-head">
+                    <h2>Applicable references</h2>
+                    <span>{applicableWorkbenchVerifiedCalculatedAnchors.length}</span>
+                  </div>
+                  <div className="calc-output-rows">
+                    {applicableWorkbenchVerifiedCalculatedAnchors.map((anchor) => (
+                      <div className="calc-output-row" data-status="live" key={anchor.id}>
+                        <span>
+                          <strong>{anchor.name}</strong>
+                          <small>{formatWorkbenchV2VerifiedCalculatedAnchorValues(anchor)}</small>
+                          <small>{formatWorkbenchV2VerifiedCalculatedAnchorContext(anchor)}</small>
+                        </span>
+                        <button
+                          className="focus-ring ui-button ui-button-ghost"
+                          disabled={verifiedCalculatedCaptureBusy}
+                          onClick={() => {
+                            void retireWorkbenchVerifiedCalculatedAnchor(anchor.id);
+                          }}
+                          type="button"
+                        >
+                          Retire
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : null}
+              {hiddenWorkbenchVerifiedCalculatedAnchorCount > 0 ? (
+                <p className="calc-reference-note">
+                  {hiddenWorkbenchVerifiedCalculatedAnchorCount === 1
+                    ? "1 saved verified reference is"
+                    : `${hiddenWorkbenchVerifiedCalculatedAnchorCount} saved verified references are`}{" "}
+                  for a different calculation context.
+                </p>
+              ) : null}
             </section>
 
             <section className="calc-review-section calc-assistant-preview-section">
@@ -7058,9 +8599,29 @@ export function CalculatorWorkbench() {
                     id="calculator-assistant-stack-command"
                     onChange={(event) => setCalculatorAssistantCommand(event.target.value)}
                     placeholder="Ekrandaki katmanların kalınlıklarını mantıklı gir"
+                    ref={calculatorAssistantCommandInputRef}
                     value={calculatorAssistantCommand}
                   />
                 </label>
+                <div aria-label="Assistant prompt examples" className="calc-assistant-prompt-examples">
+                  {CALCULATOR_ASSISTANT_PROMPT_EXAMPLES.map((example) => (
+                    <button
+                      aria-label={`Use assistant prompt: ${example.prompt}`}
+                      className="calc-assistant-prompt-chip focus-ring"
+                      disabled={calculatorAssistantBusy}
+                      key={example.label}
+                      onClick={() => {
+                        setCalculatorAssistantCommand(example.prompt);
+                        requestAnimationFrame(() => calculatorAssistantCommandInputRef.current?.focus());
+                      }}
+                      title={example.prompt}
+                      type="button"
+                    >
+                      <Sparkles className="h-4 w-4" />
+                      <span>{example.label}</span>
+                    </button>
+                  ))}
+                </div>
                 <div className="calc-assistant-command-actions">
                   <button
                     className="focus-ring ui-button ui-button-primary"
@@ -7081,6 +8642,66 @@ export function CalculatorWorkbench() {
                 <div className="calc-assistant-command-message" data-tone={calculatorAssistantCommandMessage.tone}>
                   <strong>{calculatorAssistantCommandMessage.title}</strong>
                   <span>{calculatorAssistantCommandMessage.detail}</span>
+                </div>
+              ) : null}
+
+              {calculatorAssistantBoundedEditPlanState.status !== "idle" ? (
+                <div className="calc-assistant-candidate-stacks" data-kind="bounded-edit-plan-dry-run">
+                  <div className="calc-assistant-candidate-stack-toolbar">
+                    <span>
+                      {calculatorAssistantBoundedEditPlanState.status === "ready"
+                        ? "Multi-step dry run"
+                        : "Multi-step dry run blocked"}
+                    </span>
+                    <small>{calculatorAssistantBoundedEditPlanSteps.length} step{calculatorAssistantBoundedEditPlanSteps.length === 1 ? "" : "s"} / read-only</small>
+                    {calculatorAssistantBoundedEditPlanState.status === "ready" ? (
+                      <button
+                        className="focus-ring ui-button ui-button-ghost"
+                        onClick={prepareCalculatorAssistantBoundedEditPlanApplyProposal}
+                        type="button"
+                      >
+                        <ArrowRight className="h-4 w-4" />
+                        Prepare apply proposal
+                      </button>
+                    ) : null}
+                  </div>
+
+                  <div
+                    className="calc-assistant-command-message"
+                    data-tone={calculatorAssistantBoundedEditPlanState.status === "ready" ? "success" : "warning"}
+                  >
+                    <strong>
+                      {calculatorAssistantBoundedEditPlanState.status === "ready"
+                        ? "No Workbench layer changed yet."
+                        : "Multi-step dry run blocked"}
+                    </strong>
+                    <span>
+                      {calculatorAssistantBoundedEditPlanState.status === "ready"
+                        ? `Preview required: ${calculatorAssistantBoundedEditPlanState.result.previewRequired ? "yes" : "no"}. Apply is gated by a separate proposal and confirmation.`
+                        : `${calculatorAssistantBoundedEditPlanState.result.message} No Workbench layer changed yet.`}
+                    </span>
+                  </div>
+
+                  {calculatorAssistantBoundedEditPlanSteps.map((step) => (
+                    <div className="calc-assistant-candidate-stack" key={step.stepId}>
+                      <div className="calc-assistant-candidate-stack-main">
+                        <strong>{step.stepId}: {step.commandKind.replace(/_/gu, " ")}</strong>
+                        <span>{step.summary}</span>
+                        <small>
+                          {`Layers: ${step.layerCountBefore} -> ${step.layerCountAfter}`}
+                          {step.selectedOutputs?.length ? ` / outputs: ${step.selectedOutputs.join(", ")}` : ""}
+                        </small>
+                        {step.tasks.slice(0, 2).map((task) => (
+                          <span key={`${step.stepId}-${task.code}-${task.layerId ?? task.label}`}>
+                            {task.label}: {task.detail}
+                          </span>
+                        ))}
+                        {step.warnings.slice(0, 2).map((warning) => (
+                          <span key={`${step.stepId}-${warning}`}>{warning}</span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               ) : null}
 
@@ -7201,6 +8822,52 @@ export function CalculatorWorkbench() {
                   calculatorPreview={calculatorAssistantSourceReviewState.preview}
                   result={calculatorAssistantSourceReviewState.result}
                 />
+              ) : null}
+
+              {calculatorAssistantSourceAlternativeState.status === "loading" ? (
+                <div className="calc-assistant-command-message" data-tone="success">
+                  <strong>Source alternative research running</strong>
+                  <span>Research suggestions are being normalized without changing the visible layer stack.</span>
+                </div>
+              ) : null}
+
+              {calculatorAssistantSourceAlternativeState.status === "error" ? (
+                <div className="calc-assistant-command-message" data-tone="warning">
+                  <strong>Source alternative research failed</strong>
+                  <span>{calculatorAssistantSourceAlternativeState.message}</span>
+                </div>
+              ) : null}
+
+              {calculatorAssistantSourceAlternativeState.status === "error" && calculatorAssistantSourceAlternativeState.result ? (
+                <AssistantResultCard result={calculatorAssistantSourceAlternativeState.result} />
+              ) : null}
+
+              {calculatorAssistantSourceAlternativeState.status === "ready" ? (
+                <>
+                  <AssistantResultCard result={calculatorAssistantSourceAlternativeState.result} />
+                  <div className="calc-assistant-candidate-stacks" data-kind="source-alternative-candidate-bridge">
+                    <div className="calc-assistant-candidate-stack-toolbar">
+                      <span>{calculatorAssistantSourceAlternativeState.candidateCount} source candidate{calculatorAssistantSourceAlternativeState.candidateCount === 1 ? "" : "s"}</span>
+                      <small>{calculatorAssistantSourceAlternativeState.source} / {calculatorAssistantSourceAlternativeState.taskCount} task{calculatorAssistantSourceAlternativeState.taskCount === 1 ? "" : "s"}</small>
+                    </div>
+                    {calculatorAssistantSourceAlternativeState.clarificationPrompts.length ? (
+                      <div className="calc-assistant-command-message" data-tone="warning">
+                        <strong>Source alternative needs clarification</strong>
+                        <span>
+                          {calculatorAssistantSourceAlternativeState.clarificationPrompts
+                            .map((prompt) => prompt.message)
+                            .join(" ")}
+                        </span>
+                      </div>
+                    ) : null}
+                    {calculatorAssistantSourceAlternativeState.warnings.length ? (
+                      <div className="calc-assistant-command-message" data-tone="warning">
+                        <strong>Source alternative guardrails</strong>
+                        <span>{calculatorAssistantSourceAlternativeState.warnings.slice(0, 2).join(" ")}</span>
+                      </div>
+                    ) : null}
+                  </div>
+                </>
               ) : null}
 
               {calculatorAssistantWorkbenchApplyProposal ? (

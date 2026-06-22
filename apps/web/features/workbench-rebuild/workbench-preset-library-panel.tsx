@@ -15,6 +15,12 @@ import {
   type WorkbenchV2PresetStatus,
   type WorkbenchV2PresetSummary
 } from "./workbench-v2-presets";
+import {
+  formatWorkbenchV2MeasuredWallRwAnchorValue,
+  type WorkbenchV2MeasuredWallRwAnchorSummary
+} from "./workbench-v2-measured-wall-rw-anchors";
+
+const WORKBENCH_PRESET_MEASURED_RW_ANCHOR_CREATE_UI_ENABLED = false;
 
 export type WorkbenchPresetLibraryPanelProps = {
   busy: boolean;
@@ -32,9 +38,15 @@ export type WorkbenchPresetLibraryPanelProps = {
   onPresetRenameDescriptionDraftChange: (value: string) => void;
   onPresetRenameDraftChange: (value: string) => void;
   onRenamePreset: () => Promise<void> | void;
+  onMeasuredRwDraftChange: (value: string) => void;
+  onMeasuredRwToleranceDraftChange: (value: string) => void;
+  onRetireMeasuredRwAnchor: (anchorId: string) => Promise<void> | void;
+  onSaveMeasuredRwAnchor: () => Promise<void> | void;
   onSavePreset: () => Promise<void> | void;
   onSelectPreset: (presetId: string) => void;
   onUsePreset: () => Promise<void> | void;
+  measuredRwDraft: string;
+  measuredRwToleranceDraft: string;
   presetDescriptionDraft: string;
   presetNameDraft: string;
   presetRenameDescriptionDraft: string;
@@ -43,6 +55,7 @@ export type WorkbenchPresetLibraryPanelProps = {
   selectedCommonPreset: WorkbenchV2CommonPreset | null;
   selectedCommonPresetId: string;
   selectedPreset: WorkbenchV2PresetSummary | null;
+  selectedPresetMeasuredRwAnchors: readonly WorkbenchV2MeasuredWallRwAnchorSummary[];
   selectedPresetId: string;
   status: WorkbenchV2PresetStatus;
 };
@@ -97,6 +110,20 @@ export function WorkbenchPresetLibraryPanel(props: WorkbenchPresetLibraryPanelPr
         {props.presets.length ? (
           props.presets.map((preset) => {
             const selected = preset.id === props.selectedPresetId;
+            // Agent coordination, 2026-06-22:
+            // Keep this panel presentational. Parent owns measured Rw anchor
+            // fetch/create/retire. Active refs are evidence; retired refs are
+            // passive history only and must not block a replacement reference.
+            const activeRwReference = selected
+              ? props.selectedPresetMeasuredRwAnchors.find((anchor) => anchor.sourceStatus === "active") ?? null
+              : null;
+            const retiredRwReferenceCount = selected
+              ? props.selectedPresetMeasuredRwAnchors.filter((anchor) => anchor.sourceStatus === "retired").length
+              : 0;
+            const retiredRwReferenceLabel =
+              retiredRwReferenceCount === 1
+                ? "1 retired Rw reference"
+                : `${retiredRwReferenceCount} retired Rw references`;
 
             return (
               <div className="calc-project-row" data-preset-id={preset.id} data-selected={selected ? "true" : "false"} key={preset.id}>
@@ -135,6 +162,59 @@ export function WorkbenchPresetLibraryPanel(props: WorkbenchPresetLibraryPanelPr
                       placeholder="Selected template description"
                       value={props.presetRenameDescriptionDraft}
                     />
+                    {preset.kind === "wall" && activeRwReference ? (
+                      <div className="calc-project-row-actions">
+                        <span className="ui-badge">{formatWorkbenchV2MeasuredWallRwAnchorValue(activeRwReference)}</span>
+                        <span className="ui-badge">Rw reference active</span>
+                        {retiredRwReferenceCount > 0 ? <span className="ui-badge">{retiredRwReferenceLabel}</span> : null}
+                        <button
+                          className="focus-ring ui-button ui-button-danger"
+                          disabled={props.busy}
+                          onClick={() => void props.onRetireMeasuredRwAnchor(activeRwReference.id)}
+                          type="button"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                          Retire Rw reference
+                        </button>
+                      </div>
+                    ) : preset.kind === "wall" ? (
+                      <div className="calc-project-snapshot-controls">
+                        {retiredRwReferenceCount > 0 ? <span className="ui-badge">{retiredRwReferenceLabel}</span> : null}
+                        {WORKBENCH_PRESET_MEASURED_RW_ANCHOR_CREATE_UI_ENABLED ? (
+                          <>
+                            <input
+                              aria-label="Measured lab Rw"
+                              className="focus-ring ui-field"
+                              disabled={props.busy}
+                              inputMode="decimal"
+                              onChange={(event) => props.onMeasuredRwDraftChange(event.target.value)}
+                              placeholder="Measured lab Rw"
+                              value={props.measuredRwDraft}
+                            />
+                            <input
+                              aria-label="Rw tolerance dB"
+                              className="focus-ring ui-field"
+                              disabled={props.busy}
+                              inputMode="decimal"
+                              onChange={(event) => props.onMeasuredRwToleranceDraftChange(event.target.value)}
+                              placeholder="Tolerance dB"
+                              value={props.measuredRwToleranceDraft}
+                            />
+                            <button
+                              className="focus-ring ui-button ui-button-ghost"
+                              disabled={!props.selectedPreset || props.busy}
+                              onClick={() => void props.onSaveMeasuredRwAnchor()}
+                              type="button"
+                            >
+                              <Save className="h-4 w-4" />
+                              Save Rw reference
+                            </button>
+                          </>
+                        ) : (
+                          <span className="ui-badge">Reference capture paused</span>
+                        )}
+                      </div>
+                    ) : null}
                     <div className="calc-project-row-actions">
                       <button
                         className="focus-ring ui-button ui-button-ghost"

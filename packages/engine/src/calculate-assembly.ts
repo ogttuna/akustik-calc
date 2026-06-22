@@ -30,6 +30,8 @@ import {
   type MaterialDefinition,
   type ProjectUserMeasuredWallAirborneFrequencyAnchor,
   type ProjectUserMeasuredWallRwAnchor,
+  type ProjectUserVerifiedCalculatedAnchor,
+  type ProjectUserVerifiedCalculatedAnchorRequestContext,
   type RequestedOutputId,
   type ResolvedLayer,
   type AssemblyRatings,
@@ -63,7 +65,10 @@ import { classifyLayerRole, materialText } from "./airborne-topology";
 import { calculateDynamicAirborneResult } from "./dynamic-airborne";
 import { PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_AY_RUNTIME_METHOD } from "./gate-ay-advanced-wall-runtime-constants";
 import { GATE_L_AIRBORNE_BUILDING_PREDICTION_BOUNDARY_WARNING } from "./dynamic-airborne-gate-l-building-prediction-boundary";
-import { GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING } from "./dynamic-airborne-gate-n-building-prediction-runtime-adapter";
+import {
+  GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_METHOD,
+  GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING
+} from "./dynamic-airborne-gate-n-building-prediction-runtime-adapter";
 import {
   GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
   GATE_AR_AIRBORNE_BUILDING_PREDICTION_WARNING,
@@ -102,6 +107,7 @@ import {
   maybeBuildGateSOpeningLeakCompositeRuntimeCorridor
 } from "./dynamic-airborne-gate-s-opening-leak-composite-transmission-loss-runtime-corridor";
 import {
+  COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD,
   maybeBuildCompanyInternalOpeningLeakFieldBuildingRuntimeCorridor
 } from "./company-internal-opening-leak-building-runtime-corridor";
 import {
@@ -278,6 +284,9 @@ import {
   buildProjectUserMeasuredWallAirborneFrequencyFieldBuildingDirectCurveBasis
 } from "./project-user-measured-wall-airborne-frequency-field-building-adapter";
 import {
+  maybeBuildProjectUserVerifiedCalculatedExactBridge
+} from "./project-user-verified-calculated-exact-bridge";
+import {
   POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_LAB_COMPANION_WARNING,
   POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_ADAPTER_WARNING,
   buildAdvancedWallSourceAbsentFieldBuildingDirectCurveBasis
@@ -288,6 +297,8 @@ export type CalculateAssemblyOptions = {
   airborneContext?: AirborneContext | null;
   airborneMeasuredFrequencySourceAnchors?: readonly ProjectUserMeasuredWallAirborneFrequencyAnchor[] | null;
   airborneMeasuredSourceAnchors?: readonly ProjectUserMeasuredWallRwAnchor[] | null;
+  airborneUserVerifiedCalculatedAnchors?: readonly ProjectUserVerifiedCalculatedAnchor[] | null;
+  airborneUserVerifiedCalculatedRequestContext?: ProjectUserVerifiedCalculatedAnchorRequestContext | null;
   calculator?: AirborneCalculatorId | null;
   catalog?: readonly MaterialDefinition[];
   exactImpactSource?: ExactImpactSource | null;
@@ -682,6 +693,48 @@ function hasPostV1GateNReceivingRoomVolume(context: ImpactFieldContext | null): 
 
 function hasPositiveNumber(value: number | null | undefined): value is number {
   return typeof value === "number" && Number.isFinite(value) && value > 0;
+}
+
+function computeGateARCharacteristicDnTAkDb(input: {
+  airborneBasis: AirborneResultBasis | null | undefined;
+  airborneContext: AirborneContext | null | undefined;
+  dnTADb: number | null | undefined;
+}): number | undefined {
+  if (
+    !isGateARCharacteristicDnTAkRuntimeBasis(input.airborneBasis) ||
+    input.airborneContext?.contextMode !== "building_prediction" ||
+    (
+      input.airborneContext.buildingPredictionOutputBasis !== "standardized" &&
+      input.airborneContext.buildingPredictionOutputBasis !== "apparent_and_standardized"
+    ) ||
+    !hasPositiveNumber(input.airborneContext.panelWidthMm) ||
+    !hasPositiveNumber(input.airborneContext.panelHeightMm) ||
+    !hasPositiveNumber(input.airborneContext.receivingRoomVolumeM3) ||
+    typeof input.dnTADb !== "number" ||
+    !Number.isFinite(input.dnTADb)
+  ) {
+    return undefined;
+  }
+
+  const partitionAreaM2 = (input.airborneContext.panelWidthMm * input.airborneContext.panelHeightMm) / 1_000_000;
+  const characteristicAreaM2 = Math.max(partitionAreaM2, 7);
+  const referenceReverberationTimeS = 0.5;
+  const characteristicCorrectionDb = 10 * Math.log10(
+    (0.16 * input.airborneContext.receivingRoomVolumeM3) /
+    (referenceReverberationTimeS * characteristicAreaM2)
+  );
+
+  return round1(input.dnTADb - characteristicCorrectionDb);
+}
+
+function isGateARCharacteristicDnTAkRuntimeBasis(
+  airborneBasis: AirborneResultBasis | null | undefined
+): boolean {
+  return (
+    airborneBasis?.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD ||
+    airborneBasis?.method === COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD ||
+    airborneBasis?.method === BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_BUILDING_RUNTIME_METHOD
+  );
 }
 
 function isRawBareFloorAirborneBasis(
@@ -2451,6 +2504,17 @@ function getAnswerEngineV1WallNeedsInputUnsupportedOutputs(input: {
   contextMode?: AirborneContext["contextMode"];
   outputs: readonly RequestedOutputId[];
 }): RequestedOutputId[] {
+  const missingInputs = new Set(input.basis.missingPhysicalInputs);
+  const hasRouteOwnedMissingInput = input.basis.missingPhysicalInputs.some(
+    (missingInput) => !ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FIELD_CONTEXT_MISSING_INPUTS.has(missingInput)
+  );
+
+  if (hasRouteOwnedMissingInput) {
+    return input.outputs.filter((output) =>
+      ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_WALL_AIRBORNE_OUTPUTS.has(output)
+    );
+  }
+
   if (!hasAnswerEngineV1FieldOrBuildingMissingPhysicalInput(input.basis)) {
     return input.outputs.filter((output) =>
       ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_WALL_AIRBORNE_OUTPUTS.has(output)
@@ -2469,7 +2533,6 @@ function getAnswerEngineV1WallNeedsInputUnsupportedOutputs(input: {
     return input.outputs.filter((output) => hasAnswerEngineV1FieldOrBuildingAirborneOutput([output]));
   }
 
-  const missingInputs = new Set(input.basis.missingPhysicalInputs);
   const missingFieldGeometry =
     missingInputs.has("contextMode") ||
     missingInputs.has("partitionAreaM2") ||
@@ -2742,6 +2805,122 @@ function applyAcousticCalculatorAnswerEngineV1FlatDoubleLeafBoundary(input: {
   );
 }
 
+function hasOwnedExplicitSideLeafSurfaceMass(layer: ResolvedLayer | undefined): boolean {
+  if (!layer || layer.material.category === "gap" || layer.material.category === "insulation") {
+    return false;
+  }
+
+  return Number.isFinite(layer.surfaceMassKgM2) && layer.surfaceMassKgM2 > 0;
+}
+
+const EXPLICIT_DOUBLE_LEAF_SURFACE_MASS_AIRBORNE_OUTPUTS = new Set<RequestedOutputId>([
+  "Rw",
+  "STC",
+  "C",
+  "Ctr",
+  "R'w",
+  "Dn,w",
+  "Dn,A",
+  "DnT,w",
+  "DnT,A"
+]);
+
+function isExplicitDoubleLeafSurfaceMassNeedsInputEligibleResult(result: AssemblyCalculation): boolean {
+  if (
+    result.targetOutputs.length === 0 ||
+    !result.targetOutputs.some((output: RequestedOutputId) =>
+      EXPLICIT_DOUBLE_LEAF_SURFACE_MASS_AIRBORNE_OUTPUTS.has(output)
+    )
+  ) {
+    return false;
+  }
+
+  if (result.airborneBasis?.origin === "screening_fallback") {
+    return true;
+  }
+
+  if (
+    result.airborneBasis?.origin === "needs_input" &&
+    result.airborneBasis.method === "dynamic_calculator_route_input_contract_missing_physical_fields"
+  ) {
+    return true;
+  }
+
+  return result.airborneBasis?.method === GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_METHOD;
+}
+
+function buildExplicitDoubleLeafSurfaceMassNeedsInputBasis(): AirborneResultBasis {
+  return {
+    assumptions: [
+      "Explicit double-leaf/framed topology was supplied, but at least one side leaf lacks a usable surface mass.",
+      "DynEcho blocks the screening fallback until side leaf surface mass is supplied for the owned double-leaf/framed formula route."
+    ],
+    calculationStandard: "engine_double_leaf_cavity",
+    curveBasis: "no_curve",
+    family: "double_leaf",
+    kind: "airborne_needs_input",
+    method: "gate_s_double_leaf_framed_explicit_surface_mass_leaf_needs_input",
+    missingPhysicalInputs: ["surfaceMassKgM2"],
+    missingSourceEvidence: [],
+    origin: "needs_input",
+    propertyDefaults: [],
+    ratingStandard: "none",
+    requiredInputs: ["sideALeafGroup", "sideBLeafGroup", "surfaceMassKgM2"]
+  };
+}
+
+function applyExplicitDoubleLeafSurfaceMassNeedsInputBoundary(input: {
+  airborneContext?: AirborneContext | null;
+  result: AssemblyCalculation;
+}): void {
+  const topology = input.airborneContext?.wallTopology;
+  if (
+    input.result.acousticAnswerBoundary ||
+    topology?.topologyMode !== "double_leaf_framed" ||
+    !isExplicitDoubleLeafSurfaceMassNeedsInputEligibleResult(input.result)
+  ) {
+    return;
+  }
+
+  const sideALayers = topology.sideALeafLayerIndices ?? [];
+  const sideBLayers = topology.sideBLeafLayerIndices ?? [];
+  // Preserve the topology input contract until both leaf groups are known; surface mass is only actionable after that mapping exists.
+  if (sideALayers.length === 0 || sideBLayers.length === 0) {
+    return;
+  }
+
+  const sideAHasMass = sideALayers.length > 0 &&
+    sideALayers.every((index) => hasOwnedExplicitSideLeafSurfaceMass(input.result.layers[index]));
+  const sideBHasMass = sideBLayers.length > 0 &&
+    sideBLayers.every((index) => hasOwnedExplicitSideLeafSurfaceMass(input.result.layers[index]));
+
+  if (sideAHasMass && sideBHasMass) {
+    return;
+  }
+
+  const basis = buildExplicitDoubleLeafSurfaceMassNeedsInputBasis();
+  input.result.airborneBasis = basis;
+  input.result.acousticAnswerBoundary = buildAnswerEngineV1WallNeedsInputBoundary({
+    basis,
+    contextMode: input.airborneContext?.contextMode,
+    outputs: input.result.targetOutputs
+  }) ?? undefined;
+
+  if (input.result.airborneCandidateResolution) {
+    input.result.airborneCandidateResolution = selectAnswerEngineV1NeedsInputCandidate({
+      basis,
+      resolution: input.result.airborneCandidateResolution
+    });
+    input.result.airborneCandidateSet = input.result.airborneCandidateResolution.candidates;
+  }
+
+  const parkedOutputs = input.result.acousticAnswerBoundary?.unsupportedOutputs ?? input.result.targetOutputs;
+  parkResultTargetOutputs(input.result, parkedOutputs);
+  input.result.warnings.push(
+    `Gate S double-leaf/framed route selected needs_input for ${parkedOutputs.join(", ")}; provide surfaceMassKgM2 for each side leaf before DynEcho publishes this wall answer.`
+  );
+}
+
 function applyAcousticCalculatorAnswerEngineV1WallNeedsInputBoundary(
   result: AssemblyCalculation
 ): void {
@@ -2760,10 +2939,15 @@ function applyAcousticCalculatorAnswerEngineV1WallNeedsInputBoundary(
     basis: result.airborneBasis,
     resolution: result.airborneCandidateResolution
   });
+  const shouldDeferToSelectedFloorImpactPath =
+    hasAnswerEngineV1SelectedFloorImpactPath(result) &&
+    !ownedPhysicalInputStop &&
+    !doubleLeafFramedRouteInputStop &&
+    !fieldOrBuildingInputStop;
 
   if (
     result.acousticAnswerBoundary ||
-    hasAnswerEngineV1SelectedFloorImpactPath(result) ||
+    shouldDeferToSelectedFloorImpactPath ||
     (
       hasAnswerEngineV1SupportedWallAirborneOutput(result.supportedTargetOutputs) &&
       !ownedPhysicalInputStop &&
@@ -2789,8 +2973,21 @@ function applyAcousticCalculatorAnswerEngineV1WallNeedsInputBoundary(
   });
 
   if (boundary) {
+    const newlyParkedOutputs = boundary.unsupportedOutputs.filter((output) =>
+      result.supportedTargetOutputs.includes(output)
+    );
     result.acousticAnswerBoundary = boundary;
     parkResultTargetOutputs(result, boundary.unsupportedOutputs);
+    if (
+      newlyParkedOutputs.length > 0 &&
+      !result.warnings.some((warning: string) =>
+        warning.includes(`needs_input for ${boundary.unsupportedOutputs.join(", ")}`)
+      )
+    ) {
+      result.warnings.push(
+        `Acoustic Calculator Answer Engine V1 selected needs_input for ${boundary.unsupportedOutputs.join(", ")}; provide ${boundary.missingPhysicalInputs.join(", ")} before DynEcho publishes wall airborne answers.`
+      );
+    }
   }
 }
 
@@ -3592,14 +3789,109 @@ function resolveLayers(
   catalog: readonly MaterialDefinition[]
 ): ResolvedLayer[] {
   return layers.map((layer) => {
-    const material = resolveMaterial(layer.materialId, catalog);
+    let material: MaterialDefinition;
+    try {
+      material = resolveMaterial(layer.materialId, catalog);
+    } catch {
+      if (
+        typeof layer.surfaceMassKgM2 !== "number" ||
+        !Number.isFinite(layer.surfaceMassKgM2) ||
+        layer.surfaceMassKgM2 <= 0
+      ) {
+        throw new Error(`Unknown material: ${layer.materialId}`);
+      }
+
+      material = {
+        acoustic: {
+          behavior: "panel_leaf",
+          notes: [],
+          propertySourceStatus: "user_supplied"
+        },
+        category: "finish",
+        densityKgM3: 0,
+        id: layer.materialId,
+        name: layer.materialId,
+        tags: ["project-explicit-surface-mass"]
+      };
+    }
+
+    const explicitSurfaceMassKgM2 = typeof layer.surfaceMassKgM2 === "number" &&
+      Number.isFinite(layer.surfaceMassKgM2) &&
+      layer.surfaceMassKgM2 > 0
+      ? layer.surfaceMassKgM2
+      : null;
 
     return {
       ...layer,
       material,
-      surfaceMassKgM2: computeLayerSurfaceMassKgM2(layer, material)
+      surfaceMassKgM2: explicitSurfaceMassKgM2 ?? computeLayerSurfaceMassKgM2(layer, material)
     };
   });
+}
+
+function hasPositiveExplicitSurfaceMass(layer: LayerInput): boolean {
+  return (
+    typeof layer.surfaceMassKgM2 === "number" &&
+    Number.isFinite(layer.surfaceMassKgM2) &&
+    layer.surfaceMassKgM2 > 0
+  );
+}
+
+function buildExplicitSurfaceMassCatalogAdditions(
+  layers: readonly LayerInput[],
+  catalog: readonly MaterialDefinition[],
+  allowedUnknownMaterialIds: readonly string[] = []
+): MaterialDefinition[] {
+  const allowedUnknownMaterialIdSet = new Set(allowedUnknownMaterialIds);
+
+  return layers.flatMap((layer): MaterialDefinition[] => {
+    if (!hasPositiveExplicitSurfaceMass(layer) && !allowedUnknownMaterialIdSet.has(layer.materialId)) {
+      return [];
+    }
+
+    try {
+      resolveMaterial(layer.materialId, catalog);
+      return [];
+    } catch {
+      return [
+        {
+          acoustic: {
+            behavior: "panel_leaf",
+            notes: [],
+            propertySourceStatus: "user_supplied"
+          },
+          category: "finish",
+          densityKgM3: 0,
+          id: layer.materialId,
+          name: layer.materialId,
+          tags: ["project-explicit-surface-mass"]
+        }
+      ];
+    }
+  });
+}
+
+function explicitSideLeafMaterialIdsFromContext(
+  layers: readonly LayerInput[],
+  context: AirborneContext | null | undefined
+): string[] {
+  const sideLeafIndices = [
+    ...(context?.wallTopology?.sideALeafLayerIndices ?? []),
+    ...(context?.wallTopology?.sideBLeafLayerIndices ?? [])
+  ];
+
+  return [
+    ...new Set(
+      sideLeafIndices.flatMap((index) => {
+        const materialId = layers[index]?.materialId;
+        return typeof materialId === "string" && materialId.length > 0 ? [materialId] : [];
+      })
+    )
+  ];
+}
+
+function isProjectExplicitSurfaceMassMaterial(material: MaterialDefinition): boolean {
+  return material.tags.includes("project-explicit-surface-mass");
 }
 
 function coalesceMergeSafeAirborneLayers(layers: readonly ResolvedLayer[]): ResolvedLayer[] {
@@ -3616,7 +3908,9 @@ function coalesceMergeSafeAirborneLayers(layers: readonly ResolvedLayer[]): Reso
       const thicknessMm = previous.thicknessMm + layer.thicknessMm;
       coalesced[coalesced.length - 1] = {
         ...previous,
-        surfaceMassKgM2: computeLayerSurfaceMassKgM2({ thicknessMm }, previous.material),
+        surfaceMassKgM2: isProjectExplicitSurfaceMassMaterial(previous.material)
+          ? round1(previous.surfaceMassKgM2 + layer.surfaceMassKgM2)
+          : computeLayerSurfaceMassKgM2({ thicknessMm }, previous.material),
         thicknessMm
       };
       continue;
@@ -4347,7 +4641,12 @@ export function calculateAssembly(
   // same cases earlier in the UI path; this is the last line of
   // defense so the engine never crashes on malformed layer input.
   const guardCatalog = mergePredictorCatalog(getDefaultMaterialCatalog(), options.catalog ?? []);
-  const guardDecision = evaluateAssemblyInputGuard(inputLayers, guardCatalog);
+  const guardAllowedUnknownMaterialIds = options.calculator === "dynamic"
+    ? explicitSideLeafMaterialIdsFromContext(inputLayers, options.airborneContext ?? null)
+    : [];
+  const guardDecision = evaluateAssemblyInputGuard(inputLayers, guardCatalog, {
+    allowedUnknownMaterialIds: guardAllowedUnknownMaterialIds
+  });
   if (guardDecision.kind === "fail") {
     return buildFailClosedAssemblyResult(
       options.targetOutputs ?? [],
@@ -4357,6 +4656,7 @@ export function calculateAssembly(
   }
 
   const layers = inputLayers.map((layer) => LayerInputSchema.parse(layer));
+  const parsedAirborneContext = options.airborneContext ? AirborneContextSchema.parse(options.airborneContext) : null;
   const explicitPredictorInput = options.impactPredictorInput
     ? ImpactPredictorInputSchema.parse(options.impactPredictorInput)
     : null;
@@ -4365,11 +4665,18 @@ export function calculateAssembly(
     explicitPredictorInput ? "explicit_predictor_input" : undefined;
   let predictorAdaptation = predictorInput ? adaptImpactPredictorInput(predictorInput) : null;
   const baseCatalog = mergePredictorCatalog(getDefaultMaterialCatalog(), options.catalog ?? []);
-  let catalog = mergePredictorCatalog(baseCatalog, predictorAdaptation?.catalogAdditions ?? []);
+  const explicitSurfaceMassCatalogAdditions = buildExplicitSurfaceMassCatalogAdditions(
+    layers,
+    baseCatalog,
+    options.calculator === "dynamic" ? explicitSideLeafMaterialIdsFromContext(layers, parsedAirborneContext) : []
+  );
+  let catalog = mergePredictorCatalog(baseCatalog, [
+    ...explicitSurfaceMassCatalogAdditions,
+    ...(predictorAdaptation?.catalogAdditions ?? [])
+  ]);
   const exactImpactSource = options.exactImpactSource ? ExactImpactSourceSchema.parse(options.exactImpactSource) : null;
   const exactImpact = exactImpactSource ? buildOwnedImpactFromExactSource(exactImpactSource) : null;
   const impactFieldContext = options.impactFieldContext ? ImpactFieldContextSchema.parse(options.impactFieldContext) : null;
-  const parsedAirborneContext = options.airborneContext ? AirborneContextSchema.parse(options.airborneContext) : null;
   const targetOutputs = options.targetOutputs ?? [];
   const steelFloorFormulaSurface = options.steelFloorFormulaSurface ?? null;
   const inferredWallAutoTopology = options.calculator === "dynamic"
@@ -4692,6 +4999,25 @@ export function calculateAssembly(
       projectUserMeasuredWallAirborneFrequencyCompatibleDelta.applied ||
       Boolean(projectUserMeasuredWallAirborneFrequencyFieldBuildingSource),
     resolvedLayers,
+    targetOutputs
+  });
+  // Agent coordination, 2026-06-22:
+  // User-verified calculated anchors are a separate exact-only lane. Keep them
+  // below measured/source exact and compatible-delta paths; do not merge them
+  // into airborneMeasuredSourceAnchors.
+  const projectUserVerifiedCalculatedExactBridge = maybeBuildProjectUserVerifiedCalculatedExactBridge({
+    anchors: options.calculator === "dynamic" ? options.airborneUserVerifiedCalculatedAnchors : null,
+    compatibleAnchorDeltaAlreadyApplied:
+      compatibleWallAnchorDeltaResult.applied ||
+      projectUserMeasuredWallAirborneFrequencyCompatibleDelta.applied ||
+      Boolean(projectUserMeasuredWallAirborneFrequencyFieldBuildingSource),
+    exactFullStackAlreadyApplied:
+      verifiedAirborneAnchorResult.applied ||
+      projectUserMeasuredWallAirborneFrequencyExactCurveBridge.applied ||
+      projectUserMeasuredWallAirborneFrequencyCompatibleDelta.applied ||
+      Boolean(projectUserMeasuredWallAirborneFrequencyFieldBuildingSource) ||
+      projectUserMeasuredWallRwExactBridge.applied,
+    requestContext: options.airborneUserVerifiedCalculatedRequestContext,
     targetOutputs
   });
   const compatibleWallAnchorDeltaFieldBuildingOverlayResult =
@@ -5810,8 +6136,16 @@ export function calculateAssembly(
       )
     : [];
   const gateARAirborneBuildingPredictionActive =
-    dynamicCandidateResolverRuntime?.resolution.selectedBasis?.method ===
-    GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD;
+    isGateARCharacteristicDnTAkRuntimeBasis(dynamicCandidateResolverRuntime?.resolution.selectedBasis);
+  const gateARCharacteristicDnTAkDb = computeGateARCharacteristicDnTAkDb({
+    airborneBasis: dynamicCandidateResolverRuntime?.resolution.selectedBasis ?? dynamicAirborneResult?.airborneBasis,
+    airborneContext,
+    dnTADb: ratingsWithFloorAirborneBuildingPredictionRuntime.field?.DnTA
+  });
+  const postV1GateARCharacteristicDnTAkOutputs =
+    gateARAirborneBuildingPredictionActive && gateARCharacteristicDnTAkDb !== undefined
+      ? targetOutputSupport.targetOutputs.filter((output) => output === "DnT,A,k")
+      : [];
   const gateARAirborneBuildingPredictionLabAliasBlockedOutputs =
     gateARAirborneBuildingPredictionActive
       ? targetOutputSupport.targetOutputs.filter((output) =>
@@ -5859,6 +6193,14 @@ export function calculateAssembly(
       impact,
       supportedTargetOutputs: targetOutputSupport.supportedTargetOutputs
     });
+  // Agent coordination, 2026-06-22:
+  // Stored user-verified calculated exact values must not be reported as
+  // Answer Engine V1 parked outputs in the same response.
+  const projectUserVerifiedCalculatedExactOutputSet = new Set(
+    targetOutputs.filter((output) =>
+      Object.prototype.hasOwnProperty.call(projectUserVerifiedCalculatedExactBridge.values, output)
+    )
+  );
   const answerEngineV1SelectedCandidate = dynamicCandidateResolverRuntime?.resolution.candidates.find(
     (candidate) => candidate.id === dynamicCandidateResolverRuntime.resolution.selectedCandidateId
   );
@@ -5896,16 +6238,21 @@ export function calculateAssembly(
       resolution: dynamicCandidateResolverRuntime.resolution,
       strategy: dynamicAirborneResult?.trace.strategy
     });
+  const answerEngineV1CandidateOutputs = (answerEngineV1SelectedCandidate?.outputIds.length
+    ? answerEngineV1SelectedCandidate.outputIds
+    : targetOutputSupport.targetOutputs
+  ).filter((output) => targetOutputSupport.targetOutputs.includes(output));
   const answerEngineV1ParkedOutputs =
-    shouldParkAnswerEngineV1Outputs
+    shouldParkAnswerEngineV1Outputs && dynamicCandidateResolverRuntime?.resolution.selectedBasis
       ? [
           ...new Set(
-            (answerEngineV1SelectedCandidate?.outputIds.length
-              ? answerEngineV1SelectedCandidate.outputIds
-              : targetOutputSupport.targetOutputs
-            ).filter((output) => targetOutputSupport.targetOutputs.includes(output))
+            getAnswerEngineV1WallNeedsInputUnsupportedOutputs({
+              basis: dynamicCandidateResolverRuntime.resolution.selectedBasis,
+              contextMode: visibleAirborneOverlay?.contextMode,
+              outputs: answerEngineV1CandidateOutputs
+            })
           )
-        ]
+        ].filter((output) => !projectUserVerifiedCalculatedExactOutputSet.has(output))
       : [];
   const visibleTargetOutputSupport = moveSupportedOutputsToUnsupported(
     moveSupportedOutputsToUnsupported(
@@ -6157,7 +6504,8 @@ export function calculateAssembly(
           ...postV1OpenBoxFinishedPackageBuildingLabCompanionOutputs,
           ...postV1RawBareFloorBuildingDirectRwCompanionOutputs,
           ...postV1LowDensityExactAstmLabAirborneCompanionOutputs,
-          ...postV1OpenBoxFinishedPackageBuildingImpactCompanionOutputs
+          ...postV1OpenBoxFinishedPackageBuildingImpactCompanionOutputs,
+          ...postV1GateARCharacteristicDnTAkOutputs
         ])
       ]
     ),
@@ -6191,6 +6539,13 @@ export function calculateAssembly(
       visibleTargetOutputSupportWithProjectUserMeasuredFrequencyBoundary,
       postV1ProjectUserMeasuredWallAirborneFrequencyFieldBuildingLabCompanionOutputs
     );
+  const projectUserVerifiedCalculatedExactSupportedOutputs = targetOutputs.filter((output) =>
+    projectUserVerifiedCalculatedExactOutputSet.has(output)
+  );
+  const visibleTargetOutputSupportWithUserVerifiedCalculatedExact = moveUnsupportedOutputsToSupported(
+    visibleTargetOutputSupportWithProjectUserMeasuredFrequencyCompanions,
+    projectUserVerifiedCalculatedExactSupportedOutputs
+  );
   const postV1WallDirectFormulaLabCompanionOutputSet = new Set([
     ...postV1WallUserMaterialFormulaBuildingLabCompanionOutputs,
     ...postV1WallUserMaterialFormulaFieldLabCompanionOutputs,
@@ -6232,6 +6587,10 @@ export function calculateAssembly(
       : typeof projectUserMeasuredWallAirborneFrequencyCompatibleDelta.values.Rw === "number"
         ? projectUserMeasuredWallAirborneFrequencyCompatibleDelta.values.Rw
       : visibleEstimatedRwDbWithProjectUserMeasuredAnchor;
+  const visibleEstimatedRwDbWithUserVerifiedCalculatedExact =
+    typeof projectUserVerifiedCalculatedExactBridge.values.Rw === "number"
+      ? projectUserVerifiedCalculatedExactBridge.values.Rw
+      : visibleEstimatedRwDbWithProjectUserMeasuredFrequencyCurve;
   const visibleEstimatedCDbWithPostV1WallLabCompanion =
     postV1WallDirectFormulaLabCompanionOutputSet.has("C") &&
     typeof wallDirectLabRatings?.iso717.C === "number" &&
@@ -6256,6 +6615,10 @@ export function calculateAssembly(
       : typeof projectUserMeasuredWallAirborneFrequencyCompatibleDelta.values.C === "number"
         ? projectUserMeasuredWallAirborneFrequencyCompatibleDelta.values.C
       : visibleEstimatedCDbWithProjectUserMeasuredFrequencyFieldBuildingLabCompanion;
+  const visibleEstimatedCDbWithUserVerifiedCalculatedExact =
+    typeof projectUserVerifiedCalculatedExactBridge.values.C === "number"
+      ? projectUserVerifiedCalculatedExactBridge.values.C
+      : visibleEstimatedCDbWithProjectUserMeasuredFrequencyCurve;
   const visibleEstimatedCtrDbWithPostV1WallLabCompanion =
     postV1WallDirectFormulaLabCompanionOutputSet.has("Ctr") &&
     typeof wallDirectLabRatings?.iso717.Ctr === "number" &&
@@ -6280,6 +6643,10 @@ export function calculateAssembly(
       : typeof projectUserMeasuredWallAirborneFrequencyCompatibleDelta.values.Ctr === "number"
         ? projectUserMeasuredWallAirborneFrequencyCompatibleDelta.values.Ctr
       : visibleEstimatedCtrDbWithProjectUserMeasuredFrequencyFieldBuildingLabCompanion;
+  const visibleEstimatedCtrDbWithUserVerifiedCalculatedExact =
+    typeof projectUserVerifiedCalculatedExactBridge.values.Ctr === "number"
+      ? projectUserVerifiedCalculatedExactBridge.values.Ctr
+      : visibleEstimatedCtrDbWithProjectUserMeasuredFrequencyCurve;
   const visibleEstimatedStcDbWithPostV1WallLabCompanion =
     postV1WallDirectFormulaLabCompanionOutputSet.has("STC") &&
     typeof wallDirectLabRatings?.astmE413.STC === "number" &&
@@ -6304,21 +6671,44 @@ export function calculateAssembly(
       : typeof projectUserMeasuredWallAirborneFrequencyCompatibleDelta.values.STC === "number"
         ? projectUserMeasuredWallAirborneFrequencyCompatibleDelta.values.STC
       : visibleEstimatedStcDbWithProjectUserMeasuredFrequencyFieldBuildingLabCompanion;
+  const visibleEstimatedStcDbWithUserVerifiedCalculatedExact =
+    typeof projectUserVerifiedCalculatedExactBridge.values.STC === "number"
+      ? projectUserVerifiedCalculatedExactBridge.values.STC
+      : visibleEstimatedStcDbWithProjectUserMeasuredFrequencyCurve;
+  const ratingsWithGateARCharacteristicDnTAk =
+    gateARCharacteristicDnTAkDb !== undefined
+      ? {
+          ...ratingsWithFloorAirborneBuildingPredictionRuntime,
+          field: {
+            ...ratingsWithFloorAirborneBuildingPredictionRuntime.field,
+            DnTAk: gateARCharacteristicDnTAkDb,
+            basis: [
+              ratingsWithFloorAirborneBuildingPredictionRuntime.field?.basis,
+              "nen_5077_characteristic_dntak_from_gate_ar_building_prediction"
+            ].filter(Boolean).join("+")
+          }
+        }
+      : ratingsWithFloorAirborneBuildingPredictionRuntime;
   const hideParkedAirborneBuildingPredictionMetrics =
     parkedAirborneBuildingPredictionOutputs.some((output) =>
       hasAnswerEngineV1FieldOrBuildingAirborneOutput([output])
     );
   const visibleRatings = hideParkedAirborneBuildingPredictionMetrics
     ? {
-        ...ratingsWithFloorAirborneBuildingPredictionRuntime,
+        ...ratingsWithGateARCharacteristicDnTAk,
         iso717: {
-          ...ratingsWithFloorAirborneBuildingPredictionRuntime.iso717,
+          ...ratingsWithGateARCharacteristicDnTAk.iso717,
           RwPrime: undefined
         },
         field: undefined
       }
-    : ratingsWithFloorAirborneBuildingPredictionRuntime;
+    : ratingsWithGateARCharacteristicDnTAk;
   const warnings = buildEstimateWarnings(resolvedLayers, selectedCalculatorLabel);
+  if (gateARCharacteristicDnTAkDb !== undefined && targetOutputSupport.targetOutputs.includes("DnT,A,k")) {
+    warnings.push(
+      "Gate AR characteristic DnT,A,k adapter active. DynEcho derived DnT,A,k from the owned building DnT,A value, receiving-room volume, partition area with the 7 m2 minimum, and T0=0.5 s; it did not alias lab Rw/STC or copy DnT,A blindly."
+    );
+  }
   const dynamicAirborneWarningsForResult = (dynamicAirborneResult?.warnings ?? []).filter(
     (warning) =>
       !(
@@ -6414,6 +6804,7 @@ export function calculateAssembly(
   warnings.push(...projectUserMeasuredWallAirborneFrequencyExactCurveBridge.warnings);
   warnings.push(...projectUserMeasuredWallAirborneFrequencyCompatibleDelta.warnings);
   warnings.push(...projectUserMeasuredWallRwExactBridge.warnings);
+  warnings.push(...projectUserVerifiedCalculatedExactBridge.warnings);
   warnings.push(
     ...(compatibleWallAnchorDeltaLabCompanionBasis
       ? compatibleWallAnchorDeltaResult.warnings.filter(
@@ -6438,7 +6829,7 @@ export function calculateAssembly(
   if (localSubstitutionLabSpectrumAdapter) {
     warnings.push(BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_WARNING);
   }
-  warnings.push(...buildTargetOutputWarnings(visibleTargetOutputSupportWithProjectUserMeasuredFrequencyCompanions));
+  warnings.push(...buildTargetOutputWarnings(visibleTargetOutputSupportWithUserVerifiedCalculatedExact));
   if (exactMeasuredSourceMetricUnsupportedOutputs.length > 0 && sourceAnchorMatch) {
     warnings.push(
       `Exact measured airborne source ${sourceAnchorMatch.label} reports ${sourceAnchorMatch.metricLabel}; DynEcho kept ${exactMeasuredSourceMetricUnsupportedOutputs.join(", ")} out of the exact answer instead of aliasing measured and calculated metrics.`
@@ -6697,29 +7088,29 @@ export function calculateAssembly(
       airborneIsoDescriptor: visibleRatings.iso717.descriptor,
       totalThicknessMm,
       surfaceMassKgM2,
-      estimatedRwDb: visibleEstimatedRwDbWithProjectUserMeasuredFrequencyCurve,
+      estimatedRwDb: visibleEstimatedRwDbWithUserVerifiedCalculatedExact,
       estimatedRwPrimeDb: hideParkedAirborneBuildingPredictionMetrics
         ? undefined
         : visibleRatings.field?.RwPrime ?? visibleRatings.iso717.RwPrime,
-      estimatedCDb: visibleEstimatedCDbWithProjectUserMeasuredFrequencyCurve,
-      estimatedCtrDb: visibleEstimatedCtrDbWithProjectUserMeasuredFrequencyCurve,
+      estimatedCDb: visibleEstimatedCDbWithUserVerifiedCalculatedExact,
+      estimatedCtrDb: visibleEstimatedCtrDbWithUserVerifiedCalculatedExact,
       estimatedDnTwDb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatings.field?.DnTw,
       estimatedDnTADb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatings.field?.DnTA,
       estimatedDnTAkDb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatings.field?.DnTAk,
       estimatedDnWDb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatings.field?.DnW,
       estimatedDnADb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatings.field?.DnA,
-      estimatedStc: visibleEstimatedStcDbWithProjectUserMeasuredFrequencyCurve,
+      estimatedStc: visibleEstimatedStcDbWithUserVerifiedCalculatedExact,
       airGapCount: resolvedLayers.filter((layer) => layer.material.category === "gap").length,
       insulationCount: resolvedLayers.filter((layer) => layer.material.category === "insulation").length,
       method: dynamicAirborneResult?.id ?? importedCalculatorResult?.id ?? "screening_mass_law_curve_seed_v3"
     },
     ratings: visibleRatings,
     ratingAdapterBasisSet: ratingAdapterBasisSet.length > 0 ? ratingAdapterBasisSet : undefined,
-    supportedImpactOutputs: visibleTargetOutputSupportWithProjectUserMeasuredFrequencyCompanions.supportedImpactOutputs,
-    supportedTargetOutputs: visibleTargetOutputSupportWithProjectUserMeasuredFrequencyCompanions.supportedTargetOutputs,
-    targetOutputs: visibleTargetOutputSupportWithProjectUserMeasuredFrequencyCompanions.targetOutputs,
-    unsupportedImpactOutputs: visibleTargetOutputSupportWithProjectUserMeasuredFrequencyCompanions.unsupportedImpactOutputs,
-    unsupportedTargetOutputs: visibleTargetOutputSupportWithProjectUserMeasuredFrequencyCompanions.unsupportedTargetOutputs,
+    supportedImpactOutputs: visibleTargetOutputSupportWithUserVerifiedCalculatedExact.supportedImpactOutputs,
+    supportedTargetOutputs: visibleTargetOutputSupportWithUserVerifiedCalculatedExact.supportedTargetOutputs,
+    targetOutputs: visibleTargetOutputSupportWithUserVerifiedCalculatedExact.targetOutputs,
+    unsupportedImpactOutputs: visibleTargetOutputSupportWithUserVerifiedCalculatedExact.unsupportedImpactOutputs,
+    unsupportedTargetOutputs: visibleTargetOutputSupportWithUserVerifiedCalculatedExact.unsupportedTargetOutputs,
     warnings
   };
 
@@ -6773,6 +7164,9 @@ export function calculateAssembly(
   if (projectUserMeasuredWallAirborneFrequencyFieldBuildingBasis) {
     result.airborneBasis = projectUserMeasuredWallAirborneFrequencyFieldBuildingBasis;
   }
+  if (projectUserVerifiedCalculatedExactBridge.basis) {
+    result.airborneBasis = projectUserVerifiedCalculatedExactBridge.basis;
+  }
   if (
     rawBareFloorAirborneBuildingPredictionRuntime &&
     (ownedFloorBuildingPredictionAirborneOutputs.size > 0 ||
@@ -6800,8 +7194,13 @@ export function calculateAssembly(
       gateDXExactSourceFamilyFieldContextBasis ||
       projectUserMeasuredWallAirborneFrequencyExactCurveBridge.basis ||
       projectUserMeasuredWallAirborneFrequencyCompatibleDelta.basis ||
-      projectUserMeasuredWallRwExactBridge.basis
+      projectUserMeasuredWallRwExactBridge.basis ||
+      projectUserVerifiedCalculatedExactBridge.basis
     ),
+    result
+  });
+  applyExplicitDoubleLeafSurfaceMassNeedsInputBoundary({
+    airborneContext,
     result
   });
   applyAcousticCalculatorAnswerEngineV1WallNeedsInputBoundary(result);

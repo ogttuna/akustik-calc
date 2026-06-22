@@ -118,6 +118,7 @@ const EstimateRequestSchemaInternal = z.object({
   impactPredictorInput: ImpactPredictorInputSchema.optional(),
   layers: z.array(LayerInputSchema).min(1),
   materialCatalog: EstimateMaterialCatalogSchema.optional(),
+  mode: z.enum(["wall", "floor", "ceiling", "opening"]).optional(),
   steelFloorFormulaSurface: SteelFloorFormulaInputSurfaceSchema.optional(),
   targetOutputs: z.array(RequestedOutputSchema).min(1).optional()
 });
