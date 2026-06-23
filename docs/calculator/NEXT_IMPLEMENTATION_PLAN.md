@@ -81,7 +81,15 @@ Current selected implementation plan:
 Current selected implementation label:
 `post-V1 wall British Gypsum exact lab calculated lab companion coverage refresh`.
 
-Recent user-requested support handoff:
+Recent user-requested support handoffs:
+`docs/calculator/WORKBENCH_V2_OUTPUT_SELECTION_FLOW_BUG_HUNT_2026-06-23.md`.
+It records Workbench V2 selected-output state hardening across snapshot
+build/restore, assistant output commands, assistant calculator preview
+overrides, and confirmed Workbench apply proposals. It did not change
+this selected implementation action, formula ownership, source rows,
+runtime values, route support buckets, or `needs_input` /
+`unsupported` semantics.
+
 `docs/calculator/PUBLIC_SOURCE_MATERIAL_CATALOG_EXPANSION_HANDOFF_2026-06-23.md`.
 It records public-source product-specific material seed rows, aliases,
 and a direct-calculation contract for existing dynamic airborne and

@@ -165,6 +165,25 @@ characteristic adapter owner and coverage refresh, and British Gypsum
 exact lab calculated lab companion owner sections below.
 It does not replace the documentation map or selected next plan.
 
+## Latest Workbench V2 Output Selection Flow Bug Hunt - 2026-06-23
+
+User-requested non-runtime support handoff:
+`docs/calculator/WORKBENCH_V2_OUTPUT_SELECTION_FLOW_BUG_HUNT_2026-06-23.md`.
+This records the Workbench V2 selected-output flow bug hunt across
+snapshot build/restore, assistant `set_outputs`, assistant calculator
+preview `targetOutputs`, and confirmed Workbench apply proposal
+boundaries. The Workbench V2 output catalog now centralizes
+user-visible output ids, mode availability, defaults, filtering, and
+normalization. Wall drafts cannot silently carry floor-only outputs such
+as `AIIC` / `IIC`; invalid wall selections fall back to `Rw`, invalid
+floor selections fall back to `Ln,w`, and mixed override lists keep only
+mode-supported outputs. This is state-boundary support only:
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`. It does not
+replace the selected British Gypsum exact lab calculated lab companion
+coverage refresh.
+
 ## Latest Public-Source Material Catalog Expansion Support Handoff - 2026-06-23
 
 User-requested support handoff:

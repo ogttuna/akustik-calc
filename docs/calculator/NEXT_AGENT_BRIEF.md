@@ -34,6 +34,14 @@ Recent user-requested non-runtime support work:
   records route-input visibility/copy bug-hunt work across the web
   workbench, report assistant, scenario warnings, Gate AY, and
   opening/leak surfaces.
+- `docs/calculator/WORKBENCH_V2_OUTPUT_SELECTION_FLOW_BUG_HUNT_2026-06-23.md`
+  records the follow-up Workbench V2 selected-output flow bug hunt. It
+  centralizes user-visible output ids and protects snapshot
+  build/restore, assistant `set_outputs`, assistant calculator preview
+  overrides, and confirmed Workbench apply proposals from carrying
+  mode-incompatible outputs. Treat this as Workbench state-boundary
+  support only: no formula retune, source row import, route ownership
+  movement, runtime value movement, or selected-next replacement landed.
 - `docs/calculator/PUBLIC_SOURCE_MATERIAL_CATALOG_EXPANSION_HANDOFF_2026-06-23.md`
   records the user-requested public-source material catalog expansion.
   It added product-specific physical seed rows and aliases for
@@ -49,6 +57,10 @@ Recent user-requested non-runtime support work:
   calculator counters, or the selected calculator slice. The current
   selected slice is the British Gypsum exact lab calculated lab
   companion coverage refresh.
+- Treat the Workbench V2 output-selection bug-hunt record as
+  selected-output state-integrity context only. It did not add new
+  calculable request shapes or target outputs; it prevents impossible
+  selected-output state from crossing the wall/floor mode boundary.
 - After that reconciliation, a bounded British Gypsum exact lab
   needs-input boundary fix landed. It keeps `A046005` / `A046006`
   explicit exact and legacy auto-side-count lab `Rw`, `STC`, `C`, and

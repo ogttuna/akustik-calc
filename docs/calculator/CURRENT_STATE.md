@@ -60,6 +60,34 @@ Current selected next implementation plan:
 Current selected next implementation label:
 `post-V1 wall British Gypsum exact lab calculated lab companion coverage refresh`.
 
+## Latest User-Requested Workbench V2 Output-Selection Flow Support
+
+Support handoff:
+`docs/calculator/WORKBENCH_V2_OUTPUT_SELECTION_FLOW_BUG_HUNT_2026-06-23.md`.
+
+Workbench V2 selected-output state was hardened across snapshot
+build/restore, assistant `set_outputs`, assistant calculator preview
+`targetOutputs`, and confirmed Workbench apply proposals.
+
+The Workbench V2 user-visible output catalog is centralized in
+`apps/web/features/workbench-rebuild/workbench-v2-output-catalog.ts`.
+It defines mode availability, defaults, and normalization for selected
+outputs. Wall snapshots or assistant payloads no longer carry
+floor-only outputs such as `AIIC` and `IIC`; invalid wall selections
+fall back to `Rw`, invalid floor selections fall back to `Ln,w`, and
+mixed override lists keep only mode-supported outputs.
+
+This was non-runtime support work. It did not change engine formulas,
+source rows, formula coefficients, route ownership, support buckets,
+numeric values, or the current selected next implementation.
+
+Counters: `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`,
+`frontendImplementationFilesTouched: 7`, and
+`frontendRegressionFilesTouched: 7`.
+
 ## Latest User-Requested Material Catalog Expansion Support
 
 Support handoff:

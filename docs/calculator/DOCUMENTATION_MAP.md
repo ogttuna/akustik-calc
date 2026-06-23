@@ -60,6 +60,18 @@ focused web validations only. It does not change formula ownership,
 numeric values, route selection, `needs_input` / `unsupported`
 semantics, or the current selected runtime/coverage-refresh chain.
 
+Latest Workbench V2 output-selection flow bug hunt:
+`docs/calculator/WORKBENCH_V2_OUTPUT_SELECTION_FLOW_BUG_HUNT_2026-06-23.md`.
+This is a follow-up user-requested non-runtime support record for
+selected-output state, snapshot build/restore, assistant preview
+`targetOutputs`, assistant `set_outputs`, and confirmed Workbench apply
+proposal boundaries. It centralizes Workbench V2 user-output ids and
+mode filtering so floor-only outputs cannot silently cross into wall
+drafts and newer outputs are not dropped by stale allow lists. It does
+not change formulas, runtime values, route ownership, source rows,
+`needs_input` / `unsupported` semantics, or the current selected
+runtime/coverage-refresh chain.
+
 Latest user-requested material catalog expansion support handoff:
 `docs/calculator/PUBLIC_SOURCE_MATERIAL_CATALOG_EXPANSION_HANDOFF_2026-06-23.md`.
 This records the public-source product-specific seed rows and aliases
@@ -5944,12 +5956,12 @@ This is not a broad source crawl.
 
 | Question | Current answer |
 | --- | --- |
-| What landed most recently? | User-requested public-source material catalog expansion support, after the latest British Gypsum exact lab calculated lab companion owner. |
-| Did runtime values move in the latest support work? | No. It added physical material seed rows, aliases, and direct-calculation coverage only. |
-| What values are pinned? | Material properties and route-input proofs, for example SoundBloc 12.5 surface mass `10.3 kg/m2`, Tecsound SY 70 surface mass `7.0 kg/m2`, and REGUPOL sound 15 dynamic stiffness `s'=6 MN/m3`. No acoustic rating values were imported. |
-| Which engine basis is used? | Existing dynamic airborne routing for `Rw/STC` and existing heavy floating-floor impact routing for `Ln,w/DeltaLw`. |
-| What is next? | Continue the selected British Gypsum exact lab calculated lab companion coverage refresh unless the user explicitly asks for more material catalog support. |
-| What should not happen next? | Do not treat material rows as measured source rows, copy manufacturer acoustic ratings, retune formulas, change the selected-next chain, or bypass required inputs such as `floorImpactContext.loadBasisKgM2`. |
+| What landed most recently? | User-requested Workbench V2 output-selection flow bug hunt support, after the public-source material catalog expansion support and the latest British Gypsum exact lab calculated lab companion owner. |
+| Did runtime values move in the latest support work? | No. It centralized Workbench V2 output ids and hardened selected-output state boundaries only. |
+| What values are pinned? | No acoustic numeric values were pinned or moved. The pinned behavior is state integrity: mode-incompatible outputs are filtered or rejected, and invalid/empty selections fall back to `Rw` for wall and `Ln,w` for floor. |
+| Which engine basis is used? | No engine basis changed. Existing calculator routes and support buckets remain authoritative. |
+| What is next? | Continue the selected British Gypsum exact lab calculated lab companion coverage refresh unless the user explicitly asks for more Workbench support work. |
+| What should not happen next? | Do not treat this support record as runtime progress, a formula retune, a source-row import, a selected-next replacement, or permission to alias floor-only outputs into wall requests. |
 
 ## Active Route File Set
 
@@ -6111,6 +6123,23 @@ When workbench/surface parity lands, keep these in sync:
 - `CURRENT_STATE.md`;
 - `SYSTEM_MAP.md`;
 - current gate runner if a new web test is added.
+
+When Workbench V2 selected-output state boundaries land without moving
+engine behavior, keep these in sync:
+
+- Workbench V2 output catalog, snapshot, assistant preview, assistant
+  command, and apply proposal implementation files under
+  `apps/web/features/workbench-rebuild/` and
+  `apps/web/features/workbench/`;
+- focused regression tests for snapshot build/restore, assistant
+  preview overrides, assistant output commands, confirmed apply
+  proposals, and route-input visibility;
+- a dated support handoff such as
+  `WORKBENCH_V2_OUTPUT_SELECTION_FLOW_BUG_HUNT_2026-06-23.md`;
+- `AGENTS.md`, `NEXT_AGENT_BRIEF.md`, `CURRENT_STATE.md`,
+  `NEXT_IMPLEMENTATION_PLAN.md`, and this documentation map with an
+  explicit note that formulas, runtime values, source rows, and the
+  selected-next chain did not move.
 
 When a no-runtime coverage refresh lands, keep these in sync:
 

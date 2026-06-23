@@ -2584,3 +2584,33 @@ Safety boundary:
   contracts, required-input boundaries, or formula inputs. That is intentional;
   this bug hunt only removed raw-id leakage from user-facing workbench,
   report, card, warning, and assistant copy paths.
+
+## Follow-Up Output Selection Flow Bug Hunt - 2026-06-23
+
+Follow-up support handoff:
+
+`docs/calculator/WORKBENCH_V2_OUTPUT_SELECTION_FLOW_BUG_HUNT_2026-06-23.md`
+
+This follow-up continues the same user-requested bug-hunt track, but
+focuses on selected output state rather than raw input-label copy.
+
+What landed:
+
+- Workbench V2 user-visible output ids now live in a shared output
+  catalog with mode availability.
+- Snapshot build/restore, assistant `set_outputs`, assistant calculator
+  preview overrides, and confirmed Workbench apply proposals now filter
+  or reject output selections that do not belong to the active wall/floor
+  mode.
+- Newer outputs such as `Dn,w`, `Dn,A`, `DnT,A`, `DnT,A,k`,
+  `Ln,w+CI`, `LnT,A`, `IIC`, and `AIIC` are preserved where valid
+  instead of being dropped by stale allow lists.
+
+Safety boundary:
+
+- This did not change engine formulas, runtime values, route ownership,
+  source rows, formula coefficients, or the current selected calculator
+  implementation action.
+- It protects Workbench V2 and assistant state so selected outputs cannot
+  silently cross the mode boundary and make the user think an impossible
+  output is active.
