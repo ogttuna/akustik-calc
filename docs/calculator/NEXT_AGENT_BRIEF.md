@@ -43,11 +43,57 @@ Recent user-requested non-runtime support work:
 Fast path:
 
 - current selected implementation action:
-  `post_v1_wall_opening_leak_building_dntak_characteristic_adapter_coverage_refresh_plan`;
+  `post_v1_wall_opening_leak_building_apparent_dna_companion_coverage_refresh_plan`;
 - current selected implementation file:
-  `packages/engine/src/post-v1-wall-opening-leak-building-dntak-characteristic-adapter-coverage-refresh-contract.test.ts`;
+  `packages/engine/src/post-v1-wall-opening-leak-building-apparent-dna-companion-coverage-refresh-contract.test.ts`;
 - current selected implementation plan:
+  `docs/calculator/POST_V1_WALL_OPENING_LEAK_BUILDING_APPARENT_DNA_COMPANION_COVERAGE_REFRESH_PLAN_2026-06-23.md`;
+- latest landed no-runtime coverage refresh:
+  `post_v1_wall_opening_leak_building_dntak_characteristic_adapter_coverage_refresh_plan`;
+- latest landed no-runtime coverage refresh file:
+  `packages/engine/src/post-v1-wall-opening-leak-building-dntak-characteristic-adapter-coverage-refresh-contract.test.ts`;
+- latest landed no-runtime coverage refresh plan:
   `docs/calculator/POST_V1_WALL_OPENING_LEAK_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-22.md`;
+- latest landed no-runtime coverage refresh status:
+  `post_v1_wall_opening_leak_building_dntak_characteristic_adapter_coverage_refresh_landed_no_runtime_selected_opening_leak_building_apparent_dna_companion_owner`;
+- latest landed no-runtime coverage refresh previous owner status:
+  `post_v1_wall_opening_leak_building_dntak_characteristic_adapter_owner_landed_runtime_selected_coverage_refresh`;
+- latest landed no-runtime coverage refresh re-probed:
+  `wall.opening_leak_building_dntak_characteristic_adapter_owner`;
+- latest landed no-runtime coverage refresh counters:
+  `coverageRefreshContractFilesTouched: 1`,
+  `newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+  `newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+  `runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+  `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`;
+- latest landed runtime/accuracy owner:
+  `post_v1_wall_opening_leak_building_apparent_dna_companion_owner_plan`;
+- latest landed runtime/accuracy owner file:
+  `packages/engine/src/post-v1-wall-opening-leak-building-apparent-dna-companion-owner-contract.test.ts`;
+- latest landed runtime/accuracy owner plan:
+  `docs/calculator/POST_V1_WALL_OPENING_LEAK_BUILDING_APPARENT_DNA_COMPANION_OWNER_PLAN_2026-06-23.md`;
+- latest landed runtime/accuracy owner status:
+  `post_v1_wall_opening_leak_building_apparent_dna_companion_owner_landed_runtime_selected_coverage_refresh`;
+- latest landed runtime/accuracy owner selected candidate:
+  `wall.opening_leak_building_apparent_dna_companion_owner`;
+- latest landed runtime/accuracy owner behavior:
+  opening/leak `building_prediction` requests now calculate
+  `Dn,w 31.9` and `Dn,A 31.1` beside `R'w 31.6`, `DnT,w 32.1`,
+  `DnT,A 31.3`, and `DnT,A,k 30.4`;
+- latest landed runtime/accuracy owner counters:
+  `newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 2`,
+  `newCalculableTargetOutputs: 2`, `runtimeBasisPromotions: 2`,
+  `runtimeValuesMoved 4`, `runtimeFormulaRetunes: 0`,
+  `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`;
+- latest landed runtime/accuracy owner selected next action:
+  `post_v1_wall_opening_leak_building_apparent_dna_companion_coverage_refresh_plan`;
+- latest landed runtime/accuracy owner selected next file:
+  `packages/engine/src/post-v1-wall-opening-leak-building-apparent-dna-companion-coverage-refresh-contract.test.ts`;
+- latest landed runtime/accuracy owner selected next plan:
+  `docs/calculator/POST_V1_WALL_OPENING_LEAK_BUILDING_APPARENT_DNA_COMPANION_COVERAGE_REFRESH_PLAN_2026-06-23.md`;
+- latest landed runtime/accuracy owner selected next label:
+  `post-V1 wall opening/leak building apparent Dn,w/Dn,A companion coverage refresh`;
+- this is not a broad source crawl;
 - implementation sync:
   the cavity-depth owner and coverage-refresh files exist and are
   included in `tools/dev/run-calculator-current-gate.ts`; the
@@ -82,8 +128,11 @@ Fast path:
   `DnT,A,k` owner file also exists and is included; the
   local-substitution coverage refresh file also exists and is included;
   the opening/leak building `DnT,A,k` owner file also exists and is
-  included; the opening/leak coverage refresh file above does not exist
-  yet and is the next no-runtime guard to create;
+  included; the opening/leak building `DnT,A,k` coverage refresh file
+  also exists and is included; the opening/leak building apparent
+  `Dn,w` / `Dn,A` companion owner file also exists and is included; the
+  opening/leak apparent companion coverage refresh file above does not
+  exist yet and is the next no-runtime guard to create;
 - latest landed runtime/accuracy owner:
   `post_v1_wall_opening_leak_building_dntak_characteristic_adapter_owner_plan`;
 - latest landed runtime/accuracy owner file:

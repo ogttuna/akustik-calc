@@ -129,15 +129,15 @@ describe("company-internal opening/leak A-weighted spectrum-adapter surface pari
     expect(contract.buildingSnapshot).toMatchObject({
       basisId: COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD,
       candidateId: COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_SELECTED_CANDIDATE_ID,
-      dnA: null,
+      dnA: 31.1,
       dntA: 31.3,
       dntw: 32.1,
-      dnw: null,
+      dnw: 31.9,
       errorBudgetDb: COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_BUILDING_TOLERANCE_DB,
       frequencyBandSet: COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FREQUENCY_BAND_SET,
       rwPrime: 31.6,
-      supportedTargetOutputs: ["R'w", "DnT,w", "DnT,A"],
-      unsupportedTargetOutputs: ["Dn,A"]
+      supportedTargetOutputs: ["R'w", "Dn,w", "DnT,w", "DnT,A", "Dn,A"],
+      unsupportedTargetOutputs: []
     });
   });
 

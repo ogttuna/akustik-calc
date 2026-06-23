@@ -127,7 +127,8 @@ export type CompanyInternalOpeningLeakRuntimeResult = {
 };
 
 const FIELD_OUTPUTS = new Set<RequestedOutputId>(["R'w", "Dn,w", "DnT,w"]);
-const BUILDING_OUTPUTS = new Set<RequestedOutputId>(["R'w", "DnT,w"]);
+const BUILDING_APPARENT_OUTPUTS = new Set<RequestedOutputId>(["R'w", "Dn,w"]);
+const BUILDING_STANDARDIZED_OUTPUTS = new Set<RequestedOutputId>(["DnT,w"]);
 const A_WEIGHTED_OUTPUTS = new Set<RequestedOutputId>(["Dn,A", "DnT,A"]);
 const OPENING_ROUTE_OUTPUTS = new Set<RequestedOutputId>([
   "Dn,w",
@@ -229,19 +230,27 @@ function requestedSupportedOutputs(input: {
   const baseSupportSet =
     input.basis === "field_apparent"
       ? FIELD_OUTPUTS
-      : input.buildingOutputBasis === "apparent"
-        ? new Set<RequestedOutputId>(["R'w"])
+    : input.buildingOutputBasis === "apparent"
+        ? BUILDING_APPARENT_OUTPUTS
         : input.buildingOutputBasis === "standardized"
-          ? new Set<RequestedOutputId>(["DnT,w"])
-          : BUILDING_OUTPUTS;
+          ? BUILDING_STANDARDIZED_OUTPUTS
+          : new Set<RequestedOutputId>([
+              ...BUILDING_APPARENT_OUTPUTS,
+              ...BUILDING_STANDARDIZED_OUTPUTS
+            ]);
   const supportSet = new Set<RequestedOutputId>(baseSupportSet);
 
   if (input.aWeightedRuntimeOwned) {
     if (input.basis === "field_apparent") {
       supportSet.add("Dn,A");
       supportSet.add("DnT,A");
-    } else if (input.buildingOutputBasis !== "apparent") {
-      supportSet.add("DnT,A");
+    } else {
+      if (input.buildingOutputBasis !== "standardized") {
+        supportSet.add("Dn,A");
+      }
+      if (input.buildingOutputBasis !== "apparent") {
+        supportSet.add("DnT,A");
+      }
     }
   }
 
@@ -421,10 +430,7 @@ function promotedResult(input: {
     input.fieldFlankingPenaltyDb + (input.buildingJunctionPenaltyDb ?? 0)
   );
   const rwPrimeDb = round1(input.labCompositeRwDb - totalFlankingPenaltyDb);
-  const dnWDb =
-    input.basis === "field_apparent"
-      ? round1(rwPrimeDb + dnOffsetDb(input.context))
-      : null;
+  const normalizedDnWDb = round1(rwPrimeDb + dnOffsetDb(input.context));
   const dnTwDb = round1(rwPrimeDb + roomNormalization);
   const requestedAWeightedOutputs = requestedAWeightedOpeningOutputs(input.targetOutputs);
   const aWeightedRuntimeOwned = hasAWeightedFrequencyBandSet(input.context);
@@ -440,6 +446,10 @@ function promotedResult(input: {
       ? COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_BUILDING_TOLERANCE_DB
       : COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FIELD_TOLERANCE_DB
     : input.errorBudgetDb;
+  const dnWDb =
+    supportedOutputs.includes("Dn,w") || supportedOutputs.includes("Dn,A")
+      ? normalizedDnWDb
+      : null;
   const dnADb = supportedOutputs.includes("Dn,A") && dnWDb !== null
     ? round1(dnWDb + COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_ADAPTER_DB_RUNTIME)
     : null;

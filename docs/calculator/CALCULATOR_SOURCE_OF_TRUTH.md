@@ -62,10 +62,11 @@ single-leaf building `DnT,A,k` coverage refresh, double-leaf/framed
 building `DnT,A,k` owner and coverage refresh, compatible anchor-delta
 building `DnT,A,k` owner and coverage refresh, and direct-fixed
 double-leaf/framed building `DnT,A,k` owner and coverage refresh,
-local-substitution building `DnT,A,k` owner and coverage refresh, and
-opening/leak building `DnT,A,k` owner have now landed; the current
-selected next is the wall opening/leak building `DnT,A,k`
-characteristic adapter coverage refresh.
+local-substitution building `DnT,A,k` owner and coverage refresh,
+opening/leak building `DnT,A,k` owner and coverage refresh, and
+opening/leak building apparent `Dn,w` / `Dn,A` companion owner have now
+landed; the current selected next is the wall opening/leak building
+apparent `Dn,w` / `Dn,A` companion coverage refresh.
 The focused 2026-06-19 double-leaf/framed physical-input sensitivity
 checkpoint remains the owner-chain validation reference.
 
@@ -118,9 +119,12 @@ The local-substitution building `DnT,A,k` characteristic adapter
 coverage refresh contract file also exists and is in the current
 calculator gate. The opening/leak building `DnT,A,k` characteristic
 adapter owner contract file also exists and is in the current
-calculator gate. The selected opening/leak building `DnT,A,k`
-characteristic adapter coverage refresh contract file does not exist
-yet.
+calculator gate. The opening/leak building `DnT,A,k` characteristic
+adapter coverage refresh contract file also exists and is in the
+current calculator gate. The opening/leak building apparent `Dn,w` /
+`Dn,A` companion owner contract file also exists and is in the current
+calculator gate. The selected opening/leak building apparent `Dn,w` /
+`Dn,A` companion coverage refresh contract file does not exist yet.
 
 Latest landed runtime/accuracy owner:
 `post_v1_wall_opening_leak_building_dntak_characteristic_adapter_owner_plan`
@@ -150,7 +154,7 @@ and previous coverage refresh pass inside `pnpm calculator:gate:current`,
 but the full current gate still exits non-zero on existing unrelated
 global failures.
 
-Current selected next:
+Historical selected next at owner landing:
 `post_v1_wall_opening_leak_building_dntak_characteristic_adapter_coverage_refresh_plan`
 /
 `packages/engine/src/post-v1-wall-opening-leak-building-dntak-characteristic-adapter-coverage-refresh-contract.test.ts`
@@ -158,6 +162,53 @@ Current selected next:
 `docs/calculator/POST_V1_WALL_OPENING_LEAK_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-22.md`
 /
 `post-V1 wall opening/leak building DnT,A,k characteristic adapter coverage refresh`.
+
+Latest landed no-runtime coverage refresh:
+`post_v1_wall_opening_leak_building_dntak_characteristic_adapter_coverage_refresh_plan`
+landed in
+`packages/engine/src/post-v1-wall-opening-leak-building-dntak-characteristic-adapter-coverage-refresh-contract.test.ts`
+with plan
+`docs/calculator/POST_V1_WALL_OPENING_LEAK_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-22.md`
+and status
+`post_v1_wall_opening_leak_building_dntak_characteristic_adapter_coverage_refresh_landed_no_runtime_selected_opening_leak_building_apparent_dna_companion_owner`.
+It follows
+`post_v1_wall_opening_leak_building_dntak_characteristic_adapter_owner_landed_runtime_selected_coverage_refresh`
+and re-probes selected candidate
+`wall.opening_leak_building_dntak_characteristic_adapter_owner`.
+Counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Latest landed runtime/accuracy owner:
+`post_v1_wall_opening_leak_building_apparent_dna_companion_owner_plan`
+landed in
+`packages/engine/src/post-v1-wall-opening-leak-building-apparent-dna-companion-owner-contract.test.ts`
+with plan
+`docs/calculator/POST_V1_WALL_OPENING_LEAK_BUILDING_APPARENT_DNA_COMPANION_OWNER_PLAN_2026-06-23.md`
+and status
+`post_v1_wall_opening_leak_building_apparent_dna_companion_owner_landed_runtime_selected_coverage_refresh`.
+Selected candidate:
+`wall.opening_leak_building_apparent_dna_companion_owner`.
+The opening/leak building route now calculates `Dn,w 31.9` and
+`Dn,A 31.1` beside `R'w 31.6`, `DnT,w 32.1`, `DnT,A 31.3`, and
+`DnT,A,k 30.4`. Counters: `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 2`, `newCalculableTargetOutputs: 2`,
+`runtimeBasisPromotions: 2`, `runtimeValuesMoved 4`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Current selected next:
+`post_v1_wall_opening_leak_building_apparent_dna_companion_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-opening-leak-building-apparent-dna-companion-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_OPENING_LEAK_BUILDING_APPARENT_DNA_COMPANION_COVERAGE_REFRESH_PLAN_2026-06-23.md`
+/
+`post-V1 wall opening/leak building apparent Dn,w/Dn,A companion coverage refresh`.
 
 Latest landed no-runtime coverage refresh:
 `post_v1_wall_local_substitution_building_dntak_characteristic_adapter_coverage_refresh_plan`

@@ -82,6 +82,32 @@ Selected next plan:
 Selected next label:
 `post-V1 wall opening/leak building DnT,A,k characteristic adapter coverage refresh`
 
+Selected next coverage refresh status:
+`post_v1_wall_opening_leak_building_dntak_characteristic_adapter_coverage_refresh_landed_no_runtime_selected_opening_leak_building_apparent_dna_companion_owner`
+
+Selected next coverage refresh candidate:
+`wall.opening_leak_building_dntak_characteristic_adapter_owner`
+
+Selected next coverage refresh counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+
+Post-refresh selected runtime action:
+`post_v1_wall_opening_leak_building_apparent_dna_companion_owner_plan`
+
+Post-refresh selected runtime file:
+`packages/engine/src/post-v1-wall-opening-leak-building-apparent-dna-companion-owner-contract.test.ts`
+
+Post-refresh selected runtime plan:
+`docs/calculator/POST_V1_WALL_OPENING_LEAK_BUILDING_APPARENT_DNA_COMPANION_OWNER_PLAN_2026-06-23.md`
+
 ## Selection Card
 
 User construction / formula family:

@@ -807,6 +807,8 @@ async function main() {
         "src/post-v1-wall-local-substitution-building-dntak-characteristic-adapter-owner-contract.test.ts",
         "src/post-v1-wall-local-substitution-building-dntak-characteristic-adapter-coverage-refresh-contract.test.ts",
         "src/post-v1-wall-opening-leak-building-dntak-characteristic-adapter-owner-contract.test.ts",
+        "src/post-v1-wall-opening-leak-building-dntak-characteristic-adapter-coverage-refresh-contract.test.ts",
+        "src/post-v1-wall-opening-leak-building-apparent-dna-companion-owner-contract.test.ts",
         "src/acoustic-calculator-answer-engine-v1-contract.test.ts",
         "src/acoustic-calculator-company-internal-usable-v1-acceptance-gate-contract.test.ts",
         "src/broad-accuracy-floor-open-box-timber-similarity-transfer-owner-contract.test.ts",

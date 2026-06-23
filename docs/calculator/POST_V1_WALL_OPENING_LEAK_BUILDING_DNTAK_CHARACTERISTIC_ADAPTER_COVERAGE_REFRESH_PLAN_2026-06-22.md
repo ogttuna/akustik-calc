@@ -1,7 +1,7 @@
 # Post-V1 Wall Opening/Leak Building DnT,A,k Characteristic Adapter Coverage Refresh Plan - 2026-06-22
 
 Status:
-`post_v1_wall_opening_leak_building_dntak_characteristic_adapter_coverage_refresh_plan_selected_after_opening_leak_building_dntak_characteristic_adapter_owner`
+`post_v1_wall_opening_leak_building_dntak_characteristic_adapter_coverage_refresh_landed_no_runtime_selected_opening_leak_building_apparent_dna_companion_owner`
 
 ## Purpose
 
@@ -39,6 +39,44 @@ Selected coverage refresh plan:
 
 Selected coverage refresh label:
 `post-V1 wall opening/leak building DnT,A,k characteristic adapter coverage refresh`
+
+Coverage refresh status:
+`post_v1_wall_opening_leak_building_dntak_characteristic_adapter_coverage_refresh_landed_no_runtime_selected_opening_leak_building_apparent_dna_companion_owner`
+
+Selected next action:
+`post_v1_wall_opening_leak_building_apparent_dna_companion_owner_plan`
+
+Selected next file:
+`packages/engine/src/post-v1-wall-opening-leak-building-apparent-dna-companion-owner-contract.test.ts`
+
+Selected next plan:
+`docs/calculator/POST_V1_WALL_OPENING_LEAK_BUILDING_APPARENT_DNA_COMPANION_OWNER_PLAN_2026-06-23.md`
+
+Selected next label:
+`post-V1 wall opening/leak building apparent Dn,w/Dn,A companion owner`
+
+Selected next owner status:
+`post_v1_wall_opening_leak_building_apparent_dna_companion_owner_landed_runtime_selected_coverage_refresh`
+
+Selected next owner candidate:
+`wall.opening_leak_building_apparent_dna_companion_owner`
+
+Selected next owner counters:
+`newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 2`,
+`newCalculableTargetOutputs: 2`,
+`runtimeBasisPromotions: 2`,
+`runtimeValuesMoved 4`,
+`runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+
+Selected next owner follow-up:
+`post_v1_wall_opening_leak_building_apparent_dna_companion_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-opening-leak-building-apparent-dna-companion-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_OPENING_LEAK_BUILDING_APPARENT_DNA_COMPANION_COVERAGE_REFRESH_PLAN_2026-06-23.md`
 
 Previous owner counters:
 `newCalculableLayerTemplates: 0`,
@@ -87,3 +125,21 @@ opening/leak owner and previous local-substitution coverage files passed
 inside it, but the full gate still exits non-zero because of existing
 unrelated global failures. This selected coverage refresh should add
 only the guard file named above and must not retune runtime values.
+
+## Landed Refresh Behavior
+
+- The complete opening/leak building request still returns
+  `DnT,A 31.3` and `DnT,A,k 30.4`.
+- Mixed building requests still keep `R'w 31.6`, `DnT,w 32.1`,
+  `DnT,A 31.3`, and `DnT,A,k 30.4` together on the opening/leak
+  A-weighted building basis.
+- Missing frequency band, missing receiving-room volume, missing
+  building output basis, apparent-only standardized basis, field
+  context, lab context, and impact aliases remain outside this
+  characteristic owner.
+- Counters: `coverageRefreshContractFilesTouched: 1`,
+  `newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+  `newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+  `runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+  `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+  This is not a broad source crawl.

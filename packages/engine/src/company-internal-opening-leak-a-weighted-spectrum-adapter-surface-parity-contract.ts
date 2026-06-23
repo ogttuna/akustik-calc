@@ -62,6 +62,7 @@ const FIELD_TARGETS = [
 
 const BUILDING_TARGETS = [
   "R'w",
+  "Dn,w",
   "DnT,w",
   "DnT,A",
   "Dn,A"
@@ -191,7 +192,8 @@ export function assertCompanyInternalOpeningLeakAWeightedSurfaceParityContract(
   if (
     contract.buildingSnapshot.basisId !== COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD ||
     contract.buildingSnapshot.candidateId !== COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_SELECTED_CANDIDATE_ID ||
-    contract.buildingSnapshot.dnA !== null ||
+    contract.buildingSnapshot.dnA !== 31.1 ||
+    contract.buildingSnapshot.dnw !== 31.9 ||
     contract.buildingSnapshot.dntA !== 31.3 ||
     contract.buildingSnapshot.errorBudgetDb !== COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_BUILDING_TOLERANCE_DB ||
     contract.buildingSnapshot.frequencyBandSet !== COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FREQUENCY_BAND_SET
