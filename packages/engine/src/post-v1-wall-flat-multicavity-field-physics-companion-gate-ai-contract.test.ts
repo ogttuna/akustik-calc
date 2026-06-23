@@ -145,8 +145,8 @@ describe("post-V1 wall flat multicavity field physics companion Gate AI", () => 
       selectedMethod: "screening_mass_law_curve_seed_v3",
       strategy: "multileaf_screening_blend"
     });
-    expect(result.supportedTargetOutputs).toEqual([]);
-    expect(result.unsupportedTargetOutputs).toEqual([...WALL_FLAT_MULTICAVITY_FIELD_OUTPUTS]);
+    expect(result.supportedTargetOutputs).toEqual(["Rw", "STC", "C", "Ctr", "R'w", "Dn,w", "Dn,A"]);
+    expect(result.unsupportedTargetOutputs).toEqual(["DnT,w", "DnT,A"]);
   });
 
   it("keeps floor bound C and exact floor STC/Ctr aliases closed while adding the wall physics companion", () => {

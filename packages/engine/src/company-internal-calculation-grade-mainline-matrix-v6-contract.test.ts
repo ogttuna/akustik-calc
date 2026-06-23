@@ -248,8 +248,8 @@ describe("company-internal calculation-grade mainline matrix v6 refresh", () => 
       requestedMetrics: ["Dn,A"],
       runtime: {
         errorBudgetDb: null,
-        supportedTargetOutputs: [],
-        unsupportedTargetOutputs: ["Dn,A"],
+        supportedTargetOutputs: ["Dn,A"],
+        unsupportedTargetOutputs: [],
         valuePins: []
       }
     });

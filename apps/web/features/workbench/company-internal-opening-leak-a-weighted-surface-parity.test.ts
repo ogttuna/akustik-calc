@@ -315,11 +315,12 @@ function expectFieldAWeightedRuntime(result: AssemblyCalculation): void {
 }
 
 function expectBuildingAWeightedRuntime(result: AssemblyCalculation): void {
-  expect(result.supportedTargetOutputs).toEqual(["R'w", "DnT,w", "DnT,A"]);
-  expect(result.unsupportedTargetOutputs).toEqual(["Rw", "STC", "Dn,w", "Dn,A"]);
+  expect(result.supportedTargetOutputs).toEqual(["R'w", "Dn,w", "DnT,w", "Dn,A", "DnT,A"]);
+  expect(result.unsupportedTargetOutputs).toEqual(["Rw", "STC"]);
   expect(result.metrics.estimatedRwPrimeDb).toBe(31.6);
+  expect(result.metrics.estimatedDnWDb).toBe(31.9);
   expect(result.metrics.estimatedDnTwDb).toBe(32.1);
-  expect(result.metrics.estimatedDnADb).toBeUndefined();
+  expect(result.metrics.estimatedDnADb).toBe(31.1);
   expect(result.metrics.estimatedDnTADb).toBe(31.3);
   expect(result.airborneBasis).toMatchObject({
     errorBudgetDb: COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_BUILDING_TOLERANCE_DB,
@@ -537,7 +538,7 @@ describe("company-internal opening/leak A-weighted surface parity", () => {
     expect(body.result?.airborneBasis?.method).toBe(COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD);
   });
 
-  it("keeps UI-derived saved and server building replay on DnT,A while Dn,A stays parked", async () => {
+  it("keeps UI-derived saved and server building replay on DnT,A with apparent companions live", async () => {
     const liveScenario = evaluateInputSurfaceScenario({
       airborneFieldContextInputSurface: COMPLETE_BUILDING_SURFACE,
       id: "opening-leak-a-weighted-building-live",
@@ -562,11 +563,11 @@ describe("company-internal opening/leak A-weighted surface parity", () => {
       value: "31.3 dB"
     });
     expect(dnACard).toMatchObject({
-      postureLabel: "Opening/leak field/building boundary",
-      status: "unsupported",
-      value: "Not ready"
+      postureLabel: "Opening/leak A-weighted building adapter",
+      status: "live",
+      value: "31.1 dB"
     });
-    expect(dnACard?.detail).toContain("not a building Dn,A shortcut");
+    expect(dnACard?.detail).toContain(COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD);
 
     const savedSnapshot = await saveCompleteAWeightedBuildingStoreSnapshot();
     expect(savedSnapshot.airborneFrequencyBandSet).toBe(
@@ -602,7 +603,7 @@ describe("company-internal opening/leak A-weighted surface parity", () => {
 
     const report = buildReport(savedScenario, BUILDING_TARGETS);
     expect(report).toContain(
-      "- Airborne opening/leak building values: R'w 31.6 dB, DnT,w 32.1 dB, and DnT,A 31.3 dB; source-absent budget +/-11 dB; not measured evidence yes."
+      "- Airborne opening/leak building values: R'w 31.6 dB, Dn,w 31.9 dB, DnT,w 32.1 dB, Dn,A 31.1 dB, and DnT,A 31.3 dB; source-absent budget +/-11 dB; not measured evidence yes."
     );
   });
 });

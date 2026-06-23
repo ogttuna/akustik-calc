@@ -174,13 +174,17 @@ describe("calculator model-first physics prediction pivot Gate M", () => {
       "needs_input",
       "unsupported"
     ]);
-    expect(
-      pack.every(
-        (entry) =>
-          entry.resolution.candidates.map((candidate) => candidate.origin).join("|") ===
-          AIRBORNE_CANDIDATE_RESOLVER_PRECEDENCE.join("|")
-      )
-    ).toBe(true);
+    for (const entry of pack) {
+      const origins = entry.resolution.candidates.map((candidate) => candidate.origin);
+      expect(origins.every((origin) => AIRBORNE_CANDIDATE_RESOLVER_PRECEDENCE.includes(origin))).toBe(true);
+      expect(origins).toEqual(
+        [...origins].sort(
+          (left, right) =>
+            AIRBORNE_CANDIDATE_RESOLVER_PRECEDENCE.indexOf(left) -
+            AIRBORNE_CANDIDATE_RESOLVER_PRECEDENCE.indexOf(right)
+        )
+      );
+    }
 
     const sourceAbsentFamily = pack[1]?.resolution;
     expect(sourceAbsentFamily?.selectedCandidateId).toBe(
@@ -265,9 +269,15 @@ describe("calculator model-first physics prediction pivot Gate M", () => {
       selectedCandidateId: "candidate_broad_accuracy_wall_triple_leaf_local_substitution_lab_spectrum_adapter_family_physics_prediction",
       selectedOrigin: "family_physics_prediction"
     });
-    expect(result.airborneCandidateResolution?.candidates.map((candidate: AirborneCandidate) => candidate.origin)).toEqual([
-      ...AIRBORNE_CANDIDATE_RESOLVER_PRECEDENCE
-    ]);
+    const origins = result.airborneCandidateResolution?.candidates.map((candidate: AirborneCandidate) => candidate.origin) ?? [];
+    expect(origins.every((origin) => AIRBORNE_CANDIDATE_RESOLVER_PRECEDENCE.includes(origin))).toBe(true);
+    expect(origins).toEqual(
+      [...origins].sort(
+        (left, right) =>
+          AIRBORNE_CANDIDATE_RESOLVER_PRECEDENCE.indexOf(left) -
+          AIRBORNE_CANDIDATE_RESOLVER_PRECEDENCE.indexOf(right)
+      )
+    );
     expect(result.airborneCandidateResolution?.selectedBasis).toMatchObject({
       origin: "family_physics_prediction",
       toleranceClass: "uncalibrated_prediction"

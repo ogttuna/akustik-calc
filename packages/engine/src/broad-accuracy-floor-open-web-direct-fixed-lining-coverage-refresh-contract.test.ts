@@ -239,8 +239,8 @@ describe("broad accuracy floor open-web direct-fixed lining coverage refresh con
       RwCtr: 43.5,
       basis: OPEN_WEB_DIRECT_FIXED_LINING_BASIS
     });
-    expect(fl23.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "CI", "Ln,w+CI"]);
-    expect(fl23.unsupportedTargetOutputs).toEqual(["L'n,w", "IIC", "R'w", "DnT,w"]);
+    expect(fl23.supportedTargetOutputs).toEqual(["Ln,w", "CI", "Ln,w+CI"]);
+    expect(fl23.unsupportedTargetOutputs).toEqual(["Rw", "L'n,w", "IIC", "R'w", "DnT,w"]);
 
     expect(fl25.impact).toMatchObject({
       CI: -0.5,

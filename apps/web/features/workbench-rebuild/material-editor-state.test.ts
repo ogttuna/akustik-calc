@@ -107,7 +107,9 @@ describe("material editor state", () => {
     };
 
     expect(validateMaterialEditorDraft(porousDraft, []).errors).toEqual({});
-    expect(validateMaterialEditorDraft(porousDraft, []).warnings.flowResistivityPaSM2).toMatch(/flow resistivity/iu);
+    expect(validateMaterialEditorDraft(porousDraft, []).warnings.flowResistivityPaSM2).toContain(
+      "This porous absorber material is missing flow resistivity"
+    );
     expect(validateMaterialEditorDraft(invalidDraft, []).errors.densityKgM3).toMatch(/greater than zero/iu);
     expect(validateMaterialEditorDraft(invalidDraft, []).errors.lossFactor).toMatch(/no more than 1/iu);
   });

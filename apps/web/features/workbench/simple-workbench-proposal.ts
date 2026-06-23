@@ -286,10 +286,11 @@ function normalizeCoverageItem(value: unknown): SimpleWorkbenchProposalCoverageI
       ? value.status
       : "unsupported";
   const fallbackPosture = getFallbackSimpleWorkbenchOutputPosture(status);
+  const calculatorDisplayValueAllowed = status === "live" || status === "bound";
 
   return {
     detail: value.detail,
-    engineDisplayValue: typeof value.engineDisplayValue === "string" ? value.engineDisplayValue : undefined,
+    engineDisplayValue: calculatorDisplayValueAllowed && typeof value.engineDisplayValue === "string" ? value.engineDisplayValue : undefined,
     label: value.label,
     metricBasis: normalizeProposalMetricBasis(value.metricBasis),
     metricDirection: normalizeProposalMetricDirection(value.metricDirection),

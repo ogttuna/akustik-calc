@@ -145,4 +145,102 @@ describe("report assistant project workspace snapshot loader", () => {
     });
     expect(snapshot?.availableReadTools.every((tool) => tool.mutates === false)).toBe(true);
   });
+
+  it("does not carry stale blocked assembly values into assistant project context", async () => {
+    const fetchMock = vi.fn(async (_url: string | URL | Request, init?: RequestInit) => {
+      const body = JSON.parse(String(init?.body)) as {
+        action: string;
+        projectId?: string;
+        reportId?: string;
+      };
+
+      if (body.action === "read_project_summary") {
+        return new Response(JSON.stringify({
+          ok: true,
+          result: {
+            project: {
+              id: body.projectId,
+              name: "Blocked project",
+              updatedAtIso: "2026-06-15T10:00:00.000Z"
+            }
+          }
+        }));
+      }
+
+      if (body.action === "list_project_reports") {
+        return new Response(JSON.stringify({
+          ok: true,
+          result: {
+            reports: [
+              {
+                assemblyId: "assembly-blocked",
+                currentRevisionId: "revision-1",
+                id: "report-1",
+                name: "Blocked report",
+                revisionCount: 1,
+                status: "draft",
+                updatedAtIso: "2026-06-15T10:05:00.000Z"
+              }
+            ]
+          }
+        }));
+      }
+
+      if (body.action === "list_project_assemblies") {
+        return new Response(JSON.stringify({
+          ok: true,
+          result: {
+            assemblies: [
+              {
+                calculationSummary: {
+                  primaryOutput: "Rw",
+                  primaryValueLabel: "99 dB",
+                  selectedOutputs: ["Rw"],
+                  status: "needs_input"
+                },
+                id: "assembly-blocked",
+                kind: "wall",
+                name: "Blocked wall",
+                updatedAtIso: "2026-06-15T10:02:00.000Z",
+                version: 1
+              }
+            ]
+          }
+        }));
+      }
+
+      if (body.action === "list_project_report_revisions") {
+        return new Response(JSON.stringify({
+          ok: true,
+          result: {
+            revisions: [
+              {
+                createdAtIso: "2026-06-15T10:00:00.000Z",
+                id: "revision-1",
+                source: "generated"
+              }
+            ]
+          }
+        }));
+      }
+
+      return new Response(JSON.stringify({
+        errors: ["Unexpected action"],
+        ok: false
+      }), { status: 400 });
+    });
+
+    const snapshot = await loadReportAssistantProjectWorkspaceSnapshot({
+      serverProjectId: "project-blocked",
+      serverProjectReportId: "report-1"
+    }, fetchMock);
+
+    expect(snapshot?.linkedAssembly).toMatchObject({
+      calculationPrimaryOutput: "Rw",
+      calculationStatus: "needs_input",
+      id: "assembly-blocked"
+    });
+    expect(snapshot?.linkedAssembly?.calculationPrimaryValueLabel).toBeUndefined();
+    expect(JSON.stringify(snapshot)).not.toContain("99 dB");
+  });
 });

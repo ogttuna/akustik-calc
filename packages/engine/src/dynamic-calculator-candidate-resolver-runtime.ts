@@ -132,6 +132,10 @@ import {
   POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_SELECTED_CANDIDATE_ID,
   POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_RUNTIME_METHOD
 } from "./post-v1-wall-compatible-anchor-delta";
+import {
+  POST_V1_WALL_BRITISH_GYPSUM_EXACT_LAB_CALCULATED_LAB_COMPANION_RUNTIME_METHOD,
+  POST_V1_WALL_BRITISH_GYPSUM_EXACT_LAB_CALCULATED_LAB_COMPANION_SELECTED_CANDIDATE_ID
+} from "./british-gypsum-exact-lab-field-building-adapter";
 import { PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_EXACT_CURVE_METRIC_LABEL } from "./project-user-measured-wall-airborne-frequency-exact-curve-bridge";
 import {
   POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_COMPATIBLE_DELTA_SELECTED_CANDIDATE_ID
@@ -640,6 +644,8 @@ function selectLane(input: {
   if (
     input.runtimeSignal?.airborneBasis?.method === GATE_DT_MASONRY_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD ||
     input.runtimeSignal?.airborneBasis?.method === GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD ||
+    input.runtimeSignal?.airborneBasis?.method ===
+      POST_V1_WALL_BRITISH_GYPSUM_EXACT_LAB_CALCULATED_LAB_COMPANION_RUNTIME_METHOD ||
     input.runtimeSignal?.airborneBasis?.method === POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_RUNTIME_METHOD
   ) {
     return "family_physics";
@@ -664,6 +670,13 @@ function selectLane(input: {
     })
   ) {
     return "anchored_delta";
+  }
+
+  if (
+    input.runtimeSignal?.strategy === "british_gypsum_exact_lab_field_building_adapter" &&
+    input.runtimeSignal.airborneBasis?.origin === "family_physics_prediction"
+  ) {
+    return "family_physics";
   }
 
   if (
@@ -796,6 +809,10 @@ function familyPhysicsCandidateId(runtimeBasis?: AirborneResultBasis): string {
 
   if (runtimeBasis?.method === GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD) {
     return GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_SELECTED_CANDIDATE_ID;
+  }
+
+  if (runtimeBasis?.method === POST_V1_WALL_BRITISH_GYPSUM_EXACT_LAB_CALCULATED_LAB_COMPANION_RUNTIME_METHOD) {
+    return POST_V1_WALL_BRITISH_GYPSUM_EXACT_LAB_CALCULATED_LAB_COMPANION_SELECTED_CANDIDATE_ID;
   }
 
   if (runtimeBasis?.method === POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_RUNTIME_METHOD) {

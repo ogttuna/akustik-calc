@@ -314,7 +314,7 @@ describe("reinforced concrete low-confidence proposal honesty", () => {
     expect(report).toContain("- Predictor active: yes");
     expect(report).toContain("- Predictor input mode: derived_from_visible_layers");
     expect(report).toContain(
-      "- Predictor warning: Dynamic Calculator reinforced-concrete combined upper/lower impact runtime is waiting for resilientLayerDynamicStiffnessMNm3, loadBasisKgM2 before promoting Ln,w / DeltaLw from the heavy-concrete combined formula corridor."
+      "- Predictor warning: Dynamic Calculator reinforced-concrete combined upper/lower impact runtime is waiting for dynamic stiffness, load basis before promoting Ln,w / DeltaLw from the heavy-concrete combined formula corridor."
     );
     expect(report).not.toContain("- Low-confidence fallback family: reinforced concrete");
     expect(report).not.toContain("- Nearby published rows:");

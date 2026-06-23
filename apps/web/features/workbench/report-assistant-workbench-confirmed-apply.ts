@@ -6,6 +6,7 @@ import type {
   WorkbenchV2DraftLayer,
   WorkbenchV2StudyMode
 } from "../workbench-rebuild/workbench-v2-project-snapshot";
+import { filterWorkbenchV2OutputsForMode } from "../workbench-rebuild/workbench-v2-output-catalog";
 
 export type ReportAssistantWorkbenchConfirmedApplyPayload = {
   contextPatch: Partial<WorkbenchV2ContextDraft>;
@@ -50,6 +51,15 @@ function validateApplyProposal(proposal: ReportAssistantWorkbenchApplyProposal):
 
   if (!proposal.proposedWorkbench.layers.length) {
     return "Workbench apply proposal has no layer rows to apply.";
+  }
+
+  const selectedOutputs = proposal.proposedWorkbench.selectedOutputs;
+  if (!selectedOutputs.length) {
+    return "Workbench apply proposal has no selected outputs to apply.";
+  }
+
+  if (filterWorkbenchV2OutputsForMode(selectedOutputs, proposal.proposedWorkbench.mode).length !== selectedOutputs.length) {
+    return "Workbench apply proposal selected outputs are not supported by its mode.";
   }
 
   return null;

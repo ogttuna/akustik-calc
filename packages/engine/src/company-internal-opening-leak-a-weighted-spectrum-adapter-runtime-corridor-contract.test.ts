@@ -28,7 +28,6 @@ import {
   COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_SELECTED_CANDIDATE_ID,
   COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_BUILDING_TOLERANCE_DB,
   COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FIELD_TOLERANCE_DB,
-  COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD,
   COMPANY_INTERNAL_OPENING_LEAK_FIELD_RUNTIME_METHOD,
   COMPANY_INTERNAL_OPENING_LEAK_FIELD_TOLERANCE_DB
 } from "./company-internal-opening-leak-building-runtime-corridor";
@@ -129,30 +128,31 @@ describe("company-internal opening/leak A-weighted spectrum-adapter runtime corr
     });
   });
 
-  it("promotes explicit building DnT,A without opening a building Dn,A alias", () => {
+  it("promotes explicit building DnT,A while the later apparent companion owner opens building Dn,A", () => {
     const contract = buildCompanyInternalOpeningLeakAWeightedRuntimeCorridorContract();
 
     expect(contract.buildingRuntimeProbe).toMatchObject({
       basisId: COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD,
-      computedDnADb: null,
+      computedDnADb: 31.1,
       computedDnTADb: 31.3,
       computedDnTwDb: 32.1,
-      computedDnWDb: null,
+      computedDnWDb: 31.9,
       computedRwPrimeDb: 31.6,
       errorBudgetDb: COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_BUILDING_TOLERANCE_DB,
       frequencyBandSet: COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FREQUENCY_BAND_SET,
       origin: "family_physics_prediction",
       requestedMetrics: [...COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_BUILDING_RUNTIME_TARGET_OUTPUTS],
       selectedCandidateId: COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_SELECTED_CANDIDATE_ID,
-      supportedTargetOutputs: ["DnT,A", "DnT,w", "R'w"],
-      unsupportedTargetOutputs: ["Dn,A"],
+      supportedTargetOutputs: ["DnT,A", "DnT,w", "R'w", "Dn,A"],
+      unsupportedTargetOutputs: [],
       warningMatched: true
     });
     expect(contract.buildingDnAUnsupportedProbe).toMatchObject({
-      basisId: COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD,
-      computedDnADb: null,
-      supportedTargetOutputs: [],
-      unsupportedTargetOutputs: ["Dn,A"]
+      basisId: COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD,
+      computedDnADb: 31.1,
+      computedDnWDb: 31.9,
+      supportedTargetOutputs: ["Dn,A"],
+      unsupportedTargetOutputs: []
     });
   });
 
@@ -164,7 +164,7 @@ describe("company-internal opening/leak A-weighted spectrum-adapter runtime corr
       computedDnADb: null,
       computedDnTADb: null,
       computedDnTwDb: 36.9,
-      computedDnWDb: 36.7,
+      computedDnWDb: null,
       errorBudgetDb: COMPANY_INTERNAL_OPENING_LEAK_FIELD_TOLERANCE_DB,
       frequencyBandSet: null,
       supportedTargetOutputs: [],

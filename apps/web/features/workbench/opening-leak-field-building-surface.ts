@@ -50,7 +50,7 @@ const FIELD_METHODS = new Set([
 ]);
 
 const FIELD_SUPPORTED_OUTPUTS = new Set<RequestedOutputId>(["R'w", "Dn,w", "DnT,w"]);
-const BUILDING_SUPPORTED_OUTPUTS = new Set<RequestedOutputId>(["R'w", "DnT,w"]);
+const BUILDING_SUPPORTED_OUTPUTS = new Set<RequestedOutputId>(["R'w", "Dn,w", "DnT,w"]);
 const A_WEIGHTED_FIELD_SUPPORTED_OUTPUTS = new Set<RequestedOutputId>([
   "R'w",
   "Dn,w",
@@ -60,7 +60,9 @@ const A_WEIGHTED_FIELD_SUPPORTED_OUTPUTS = new Set<RequestedOutputId>([
 ]);
 const A_WEIGHTED_BUILDING_SUPPORTED_OUTPUTS = new Set<RequestedOutputId>([
   "R'w",
+  "Dn,w",
   "DnT,w",
+  "Dn,A",
   "DnT,A"
 ]);
 const UNSUPPORTED_ALIAS_OUTPUTS = new Set<RequestedOutputId>([
@@ -118,6 +120,14 @@ function getCandidateId(result: AssemblyCalculation): string {
 
 function isBuildingSurface(result: AssemblyCalculation): boolean {
   if (result.airborneBasis?.method === WEB_COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD) {
+    if (result.airborneBasis.errorBudgetDb === 11) {
+      return true;
+    }
+
+    if (result.airborneBasis.errorBudgetDb === 9) {
+      return false;
+    }
+
     return (
       result.supportedTargetOutputs.includes("DnT,A") &&
       !result.supportedTargetOutputs.includes("Dn,A") &&
@@ -188,8 +198,8 @@ export function getCompanyInternalOpeningLeakFieldBuildingSurface(
       : "Opening/leak field adapter";
   const values = building
     ? aWeighted
-      ? `R'w ${formatDb(result.metrics.estimatedRwPrimeDb)} dB, DnT,w ${formatDb(result.metrics.estimatedDnTwDb)} dB, and DnT,A ${formatDb(result.metrics.estimatedDnTADb)} dB`
-      : `R'w ${formatDb(result.metrics.estimatedRwPrimeDb)} dB and DnT,w ${formatDb(result.metrics.estimatedDnTwDb)} dB`
+      ? `R'w ${formatDb(result.metrics.estimatedRwPrimeDb)} dB, Dn,w ${formatDb(result.metrics.estimatedDnWDb)} dB, DnT,w ${formatDb(result.metrics.estimatedDnTwDb)} dB, Dn,A ${formatDb(result.metrics.estimatedDnADb)} dB, and DnT,A ${formatDb(result.metrics.estimatedDnTADb)} dB`
+      : `R'w ${formatDb(result.metrics.estimatedRwPrimeDb)} dB, Dn,w ${formatDb(result.metrics.estimatedDnWDb)} dB, and DnT,w ${formatDb(result.metrics.estimatedDnTwDb)} dB`
     : aWeighted
       ? `R'w ${formatDb(result.metrics.estimatedRwPrimeDb)} dB, Dn,w ${formatDb(result.metrics.estimatedDnWDb)} dB, DnT,w ${formatDb(result.metrics.estimatedDnTwDb)} dB, Dn,A ${formatDb(result.metrics.estimatedDnADb)} dB, and DnT,A ${formatDb(result.metrics.estimatedDnTADb)} dB`
       : `R'w ${formatDb(result.metrics.estimatedRwPrimeDb)} dB, Dn,w ${formatDb(result.metrics.estimatedDnWDb)} dB, and DnT,w ${formatDb(result.metrics.estimatedDnTwDb)} dB`;
@@ -201,7 +211,7 @@ export function getCompanyInternalOpeningLeakFieldBuildingSurface(
     ? ` A-weighted values use frequency band set ${WEB_COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FREQUENCY_BAND_SET} and the owned ISO 717-1 spectrum-adapter term from the same-route Dn,w / DnT,w values.`
     : "";
   const aliasGuard = aWeighted
-    ? "not a lab Rw/STC alias and not a building Dn,A shortcut"
+    ? "not a lab Rw/STC alias"
     : "not a lab Rw/STC alias";
   const detail =
     `${label} is active through ${method}. Candidate ${candidateId} calculates ${values} from the Gate S lab opening/leak composite Rw ${formatDb(result.metrics.estimatedRwDb)} dB plus explicit flanking, junction, and room-normalization terms. ` +
@@ -228,7 +238,7 @@ export function getCompanyInternalOpeningLeakFieldBuildingSurface(
       `- Airborne opening/leak ${building ? "building" : "field"} basis: ${label} (candidate ${candidateId}; method ${method}; route ${routeBasis}).`,
       `- Airborne opening/leak ${building ? "building" : "field"} values: ${values}; source-absent budget ${budgetLabel}; not measured evidence yes.`,
       aWeighted
-        ? `- Airborne opening/leak A-weighted owner: frequency band set ${WEB_COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FREQUENCY_BAND_SET}; same-route spectrum-adapter basis; lab Rw/STC and building Dn,A aliases remain blocked.`
+        ? `- Airborne opening/leak A-weighted owner: frequency band set ${WEB_COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FREQUENCY_BAND_SET}; same-route spectrum-adapter basis; lab Rw/STC aliases remain blocked.`
         : "- Airborne opening/leak field/building owners: Gate S lab composite Rw, explicit opening data, field flanking, partition geometry, room standardization, and building junction terms stay separate from lab Rw/STC.",
       ...(unsupportedOutputs.length > 0
         ? [

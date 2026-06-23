@@ -294,11 +294,11 @@ export function validateMaterialEditorDraft(
   }
 
   if (draft.behavior === "porous_absorber" && !draft.flowResistivityPaSM2.trim()) {
-    warnings.flowResistivityPaSM2 = "Porous absorber routes may need flow resistivity before calculation can proceed.";
+    warnings.flowResistivityPaSM2 = "This porous absorber material is missing flow resistivity; porous cavity damping routes will ask for it before calculating.";
   }
 
   if (draft.behavior === "resilient_layer" && !draft.dynamicStiffnessMNm3.trim()) {
-    warnings.dynamicStiffnessMNm3 = "Impact routes may need dynamic stiffness before calculation can proceed.";
+    warnings.dynamicStiffnessMNm3 = "This resilient layer material is missing dynamic stiffness; impact routes will ask for it before calculating.";
   }
 
   return { errors, warnings };

@@ -374,9 +374,10 @@ describe("company-internal opening/leak field/building surface parity", () => {
     const surface = getCompanyInternalOpeningLeakFieldBuildingSurface(result);
 
     expect(savedScenario.source).toBe("saved");
-    expect(result.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
-    expect(result.unsupportedTargetOutputs).toEqual(["Rw", "STC", "Dn,w", "Dn,A", "DnT,A"]);
+    expect(result.supportedTargetOutputs).toEqual(["R'w", "Dn,w", "DnT,w"]);
+    expect(result.unsupportedTargetOutputs).toEqual(["Rw", "STC", "Dn,A", "DnT,A"]);
     expect(result.metrics.estimatedRwPrimeDb).toBe(31.6);
+    expect(result.metrics.estimatedDnWDb).toBe(31.9);
     expect(result.metrics.estimatedDnTwDb).toBe(32.1);
     expect(result.airborneBasis).toMatchObject({
       errorBudgetDb: 10,
@@ -402,8 +403,13 @@ describe("company-internal opening/leak field/building surface parity", () => {
       status: "live",
       value: "32.1 dB"
     });
+    expect(dnWCard).toMatchObject({
+      postureLabel: "Opening/leak building adapter",
+      status: "live",
+      value: "31.9 dB"
+    });
 
-    for (const card of [rwCard, stcCard, dnWCard]) {
+    for (const card of [rwCard, stcCard]) {
       expect(card).toMatchObject({
         postureLabel: "Opening/leak field/building boundary",
         status: "unsupported",
@@ -427,7 +433,7 @@ describe("company-internal opening/leak field/building surface parity", () => {
       `- Airborne opening/leak building basis: Opening/leak building adapter (candidate ${COMPANY_INTERNAL_OPENING_LEAK_BUILDING_SELECTED_CANDIDATE_ID}; method ${COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD}; route building_prediction).`
     );
     expect(report).toContain(
-      "- Airborne opening/leak building values: R'w 31.6 dB and DnT,w 32.1 dB; source-absent budget +/-10 dB; not measured evidence yes."
+      "- Airborne opening/leak building values: R'w 31.6 dB, Dn,w 31.9 dB, and DnT,w 32.1 dB; source-absent budget +/-10 dB; not measured evidence yes."
     );
   });
 });

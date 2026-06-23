@@ -306,6 +306,36 @@ describe("workbench v2 calculator assistant", () => {
       previewOnly: true,
       statusCode: 400
     });
+    expect(
+      previewWorkbenchV2CalculatorSnapshot({
+        snapshot: wallSnapshot(),
+        targetOutputs: ["AIIC"]
+      })
+    ).toMatchObject({
+      code: "invalid_workbench_v2_calculator_outputs",
+      mutates: false,
+      ok: false,
+      previewOnly: true,
+      statusCode: 400
+    });
+  });
+
+  it("filters snapshot preview output overrides by the snapshot mode", () => {
+    const result = previewWorkbenchV2CalculatorSnapshot({
+      snapshot: wallSnapshot(),
+      targetOutputs: ["Rw", "AIIC"]
+    });
+
+    expect(result).toMatchObject({
+      mutates: false,
+      name: "preview_workbench_v2_calculator_snapshot",
+      ok: true,
+      previewOnly: true
+    });
+    expect(result.ok && result.preview.calculationSummary.selectedOutputs).toEqual(["Rw"]);
+    expect(result.ok && result.preview.estimatePayload).toMatchObject({
+      targetOutputs: ["Rw"]
+    });
   });
 
   it("parses a described wall layer configuration and runs the calculator", () => {
@@ -542,7 +572,7 @@ describe("workbench v2 calculator assistant", () => {
     });
     expect(result.ok && result.preview.outputRows).toEqual([
       {
-        detail: "Needs impactFieldContext, CI,50-2500",
+        detail: "Needs Impact field context, CI,50-2500",
         label: "L'nT,50",
         status: "needs_input",
         value: "--"
@@ -552,6 +582,10 @@ describe("workbench v2 calculator assistant", () => {
       "route-impactFieldContext",
       "route-impactFieldContext.ci50_2500Db"
     ]);
+    expect(result.ok && result.preview.tasks[0]).toMatchObject({
+      detail: "Complete the impact field context required by the selected field impact output.",
+      label: "Impact field context"
+    });
   });
 
   it("blocks AIIC and IIC numeric rows until required floor impact physical inputs are explicit", () => {
@@ -600,7 +634,7 @@ describe("workbench v2 calculator assistant", () => {
       status: "unsupported"
     });
     expect(result.ok && result.preview.outputRows).toEqual([
-      { detail: "Unsupported for route", label: "AIIC", status: "unsupported", value: "--" }
+      { detail: "Unsupported by the current route", label: "AIIC", status: "unsupported", value: "--" }
     ]);
     expect(result.ok && result.preview.engineSummary?.acousticBoundary).toMatchObject({
       origin: "unsupported",
@@ -625,7 +659,7 @@ describe("workbench v2 calculator assistant", () => {
     expect(result.ok && result.preview.outputRows).toEqual([
       { detail: "Calculated", label: "Rw", status: "live", value: "58 dB" },
       { detail: "Calculated", label: "STC", status: "live", value: "59 dB" },
-      { detail: "Unsupported for route", label: "AIIC", status: "unsupported", value: "--" }
+      { detail: "Unsupported by the current route", label: "AIIC", status: "unsupported", value: "--" }
     ]);
     expect(result.ok && result.preview.estimatePayload).toMatchObject({
       floorImpactContext: {
@@ -880,5 +914,52 @@ describe("workbench v2 calculator assistant", () => {
     });
     expect(result.ok && result.preview.estimatePayload).toBeUndefined();
     expect(result.ok && result.preview.layerStackDraft).toBeUndefined();
+  });
+
+  it("does not let described wall previews request floor-only impact outputs", () => {
+    const described = previewDescribedLayerConfiguration({
+      description: "AIIC için gypsum wall"
+    });
+
+    expect(described).toMatchObject({
+      mutates: false,
+      name: "preview_described_layer_configuration",
+      ok: true,
+      preview: {
+        calculationSummary: {
+          selectedOutputs: ["AIIC"],
+          status: "unsupported"
+        },
+        outputRows: [
+          {
+            label: "AIIC",
+            status: "unsupported",
+            value: "--"
+          }
+        ],
+        tasks: [
+          {
+            id: "unsupported-described-output-mode-boundary",
+            label: "Unsupported output for mode",
+            source: "described_layer_configuration"
+          }
+        ]
+      },
+      previewOnly: true
+    });
+
+    const explicit = previewDescribedLayerConfiguration({
+      description: "gypsum wall",
+      mode: "wall",
+      targetOutputs: ["AIIC"]
+    });
+
+    expect(explicit).toMatchObject({
+      code: "invalid_described_layer_configuration_outputs",
+      mutates: false,
+      name: "preview_described_layer_configuration",
+      ok: false,
+      statusCode: 400
+    });
   });
 });

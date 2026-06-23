@@ -91,6 +91,10 @@ const OUTPUT_FACT_BASIS_CATEGORIES = new Set<string>([
 ]);
 const FORBIDDEN_ACTION_HINTS = /\b(?:apply|export|download|save|reset|write|delete|read\s+file|tool|system|ignore)\b/iu;
 
+function canCarryCalculatorBackedMetricValue(status: SimpleWorkbenchProposalCoverageStatus): boolean {
+  return status === "live" || status === "bound";
+}
+
 function isObjectRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
@@ -171,18 +175,21 @@ function parseAssistantMetric(value: unknown): ReportAssistantMetric | null {
     return null;
   }
 
+  const status = value.status as SimpleWorkbenchProposalCoverageStatus;
+  const canCarryCalculatorValue = canCarryCalculatorBackedMetricValue(status);
+
   return {
     basis: value.basis as ReportAssistantMetric["basis"],
     direction: value.direction as ReportAssistantMetric["direction"],
-    engineDisplayValue: typeof value.engineDisplayValue === "string" ? value.engineDisplayValue : undefined,
+    engineDisplayValue: canCarryCalculatorValue && typeof value.engineDisplayValue === "string" ? value.engineDisplayValue : undefined,
     id: value.id,
     label: value.label,
     locations,
     metric: value.metric,
-    numericDb: typeof value.numericDb === "number" && Number.isFinite(value.numericDb) ? value.numericDb : undefined,
+    numericDb: canCarryCalculatorValue && typeof value.numericDb === "number" && Number.isFinite(value.numericDb) ? value.numericDb : undefined,
     outputId: isRequestedOutputId(value.outputId) ? value.outputId : undefined,
     reportDisplayValue: value.reportDisplayValue,
-    status: value.status as SimpleWorkbenchProposalCoverageStatus
+    status
   };
 }
 
@@ -236,6 +243,11 @@ function parseAssistantOutputFact(value: unknown, metrics: readonly ReportAssist
     return null;
   }
 
+  const canCarryCalculatorValue = canCarryCalculatorBackedMetricValue(status);
+  const usedInputs = stringArray(value.usedInputs).filter(
+    (entry) => canCarryCalculatorValue || !/\bvalue\s+pin\b/iu.test(entry)
+  );
+
   return {
     basis,
     basisCategory: OUTPUT_FACT_BASIS_CATEGORIES.has(String(value.basisCategory))
@@ -251,7 +263,10 @@ function parseAssistantOutputFact(value: unknown, metrics: readonly ReportAssist
           reportDisplayValue: value.reportDisplayValue,
           status
         }).basisCategory,
-    engineDisplayValue: typeof value.engineDisplayValue === "string" ? value.engineDisplayValue : metric?.engineDisplayValue,
+    // Coordination note: old serialized contexts may contain blocked calculator values; preserve report text but drop numeric evidence.
+    engineDisplayValue: canCarryCalculatorValue
+      ? typeof value.engineDisplayValue === "string" ? value.engineDisplayValue : metric?.engineDisplayValue
+      : undefined,
     formulaOrSupportNote: typeof value.formulaOrSupportNote === "string" ? value.formulaOrSupportNote : undefined,
     label: value.label,
     metricId: value.metricId,
@@ -262,8 +277,8 @@ function parseAssistantOutputFact(value: unknown, metrics: readonly ReportAssist
     selectedCandidateId: typeof value.selectedCandidateId === "string" ? value.selectedCandidateId : undefined,
     status,
     supportBucket: typeof value.supportBucket === "string" ? value.supportBucket : undefined,
-    usedInputs: stringArray(value.usedInputs),
-    valuePinDb: typeof value.valuePinDb === "number" && Number.isFinite(value.valuePinDb) ? value.valuePinDb : undefined,
+    usedInputs,
+    valuePinDb: canCarryCalculatorValue && typeof value.valuePinDb === "number" && Number.isFinite(value.valuePinDb) ? value.valuePinDb : undefined,
     warnings: stringArray(value.warnings)
   };
 }

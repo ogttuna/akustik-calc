@@ -102,6 +102,7 @@ function compactProjectReadEvidence(
   for (const entry of [
     countEvidence("Project count", getArray(result, "projects")),
     countEvidence("Assembly count", getArray(result, "assemblies")),
+    countEvidence("Verified calculated reference count", getArray(result, "verifiedCalculatedReferences")),
     countEvidence("Report count", getArray(result, "reports")),
     countEvidence("Revision count", getArray(result, "revisions"))
   ]) {

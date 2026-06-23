@@ -184,8 +184,8 @@ function expectRawBareRuntime(
     ["Ln,w+CI", 12.5]
   ]);
   expect(result.impact?.errorBudgets?.every((budget: ImpactErrorBudget) => budget.notMeasuredEvidence)).toBe(true);
-  expect(result.supportedTargetOutputs).toEqual(["Rw", "C", "Ctr", "Ln,w", "CI", "CI,50-2500", "Ln,w+CI"]);
-  expect(result.unsupportedTargetOutputs).toEqual(["L'n,w", "IIC", "R'w", "DnT,w"]);
+  expect(result.supportedTargetOutputs).toEqual(["Ln,w", "CI", "CI,50-2500", "Ln,w+CI"]);
+  expect(result.unsupportedTargetOutputs).toEqual(["Rw", "C", "Ctr", "L'n,w", "IIC", "R'w", "DnT,w"]);
 
   return result;
 }
@@ -414,8 +414,11 @@ describe("broad accuracy floor open-web raw-bare coverage refresh contract", () 
     }
 
     for (const screening of [partial, deckOnly, outOfRange]) {
-      expect(screening.supportedTargetOutputs).toEqual(["Rw", "C", "Ctr"]);
+      expect(screening.supportedTargetOutputs).toEqual([]);
       expect(screening.unsupportedTargetOutputs).toEqual([
+        "Rw",
+        "C",
+        "Ctr",
         "Ln,w",
         "CI",
         "CI,50-2500",

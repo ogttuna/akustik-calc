@@ -19,6 +19,11 @@ Current source of truth:
 Current operational handoff:
 `docs/calculator/NEXT_AGENT_BRIEF.md`.
 
+Latest user-requested material catalog support handoff:
+`docs/calculator/PUBLIC_SOURCE_MATERIAL_CATALOG_EXPANSION_HANDOFF_2026-06-23.md`.
+It is catalog-input support, not a replacement for the selected
+calculator slice.
+
 Older selected-next notes in long docs are historical unless the
 documentation map and next-agent brief name them as current.
 

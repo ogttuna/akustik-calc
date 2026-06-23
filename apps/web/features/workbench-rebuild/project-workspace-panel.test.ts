@@ -36,6 +36,21 @@ describe("ProjectWorkspacePanel", () => {
               name: "Layer combination",
               updatedAtIso: "2026-06-15T08:00:00.000Z",
               version: 1
+            },
+            {
+              calculationSummary: {
+                primaryOutput: "Rw",
+                primaryValueLabel: "99 dB",
+                selectedOutputs: ["Rw"],
+                status: "needs_input"
+              },
+              description: "Missing cavity depth",
+              displayCode: "ASM-0002",
+              id: "assembly-blocked",
+              kind: "wall",
+              name: "Blocked combination",
+              updatedAtIso: "2026-06-15T08:05:00.000Z",
+              version: 1
             }
           ],
           assemblyDescriptionDraft: "Guest wall combination note",
@@ -181,6 +196,9 @@ describe("ProjectWorkspacePanel", () => {
     expect(html).toContain("Open saved report");
     expect(html).toContain("Rename report");
     expect(html).toContain("Archive report");
+    expect(html).toContain("Blocked combination");
+    expect(html).toContain("needs input");
+    expect(html).not.toContain("99 dB");
   });
 
   it("keeps project combinations collapsed until the project row is expanded", () => {

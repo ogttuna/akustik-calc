@@ -242,4 +242,49 @@ describe("report assistant instruction parser", () => {
     expect(parsed?.metrics.map((metric) => metric.id)).toContain(RW_METRIC_ID);
     expect(parseReportAssistantContextPayload({ metrics: [] })).toBeNull();
   });
+
+  it("does not replay blocked calculator evidence from serialized context payloads", () => {
+    const serialized = JSON.parse(JSON.stringify(context())) as {
+      assistantOutputFacts: Array<Record<string, unknown>>;
+      metrics: Array<Record<string, unknown>>;
+    };
+    const rwMetric = serialized.metrics.find((metric) => metric.id === RW_METRIC_ID);
+    if (!rwMetric) {
+      throw new Error("Expected Rw metric in assistant context fixture.");
+    }
+    rwMetric.status = "needs_input";
+    rwMetric.reportDisplayValue = "99 dB";
+    rwMetric.engineDisplayValue = "99 dB";
+    rwMetric.numericDb = 99;
+
+    const rwFact = serialized.assistantOutputFacts.find((fact) => fact.metricId === RW_METRIC_ID);
+    if (!rwFact) {
+      throw new Error("Expected Rw output fact in assistant context fixture.");
+    }
+    rwFact.status = "needs_input";
+    rwFact.basisCategory = "needs_input";
+    rwFact.reportDisplayValue = "99 dB";
+    rwFact.engineDisplayValue = "99 dB";
+    rwFact.valuePinDb = 99;
+    rwFact.usedInputs = ["value pin: Rw 99 dB", "route: stale"];
+
+    const parsed = parseReportAssistantContextPayload(serialized);
+    const parsedRwMetric = parsed?.metrics.find((metric) => metric.id === RW_METRIC_ID);
+    const parsedRwFact = parsed?.assistantOutputFacts.find((fact) => fact.metricId === RW_METRIC_ID);
+
+    expect(parsedRwMetric).toMatchObject({
+      reportDisplayValue: "99 dB",
+      status: "needs_input"
+    });
+    expect(parsedRwMetric?.engineDisplayValue).toBeUndefined();
+    expect(parsedRwMetric?.numericDb).toBeUndefined();
+    expect(parsedRwFact).toMatchObject({
+      basisCategory: "needs_input",
+      reportDisplayValue: "99 dB",
+      status: "needs_input"
+    });
+    expect(parsedRwFact?.engineDisplayValue).toBeUndefined();
+    expect(parsedRwFact?.valuePinDb).toBeUndefined();
+    expect(parsedRwFact?.usedInputs).toEqual(["route: stale"]);
+  });
 });

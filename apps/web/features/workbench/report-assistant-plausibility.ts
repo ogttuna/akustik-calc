@@ -417,8 +417,13 @@ function currentCalculatorPacketContextSignature(packet: ReportAssistantCurrentC
     `current-calculator-review:${packet.source}:${packet.sourceName}:${packet.metric.metricId}`;
 }
 
+function currentCalculatorPacketCalculatorDisplayValue(packet: ReportAssistantCurrentCalculatorReviewPacket): string | undefined {
+  // AGENT COORDINATION 2026-06-22: Current-calculator packet replay value gating only; keep route review status semantics unchanged.
+  return packet.reviewStatus === "ready" && packet.numericReviewAllowed ? packet.metric.calculatorDisplayValue : undefined;
+}
+
 function currentCalculatorPacketDisplayValue(packet: ReportAssistantCurrentCalculatorReviewPacket): string {
-  return packet.metric.calculatorDisplayValue ??
+  return currentCalculatorPacketCalculatorDisplayValue(packet) ??
     packet.metric.reportDisplayValue ??
     packet.numericReviewBlocker ??
     "Not ready";
@@ -442,10 +447,11 @@ export function buildReportAssistantContextFromCurrentCalculatorReviewPacket(
   packet: ReportAssistantCurrentCalculatorReviewPacket
 ): ReportAssistantContext {
   const status = metricStatusFromCurrentCalculatorPacket(packet);
+  const calculatorDisplayValue = currentCalculatorPacketCalculatorDisplayValue(packet);
   const displayValue = currentCalculatorPacketDisplayValue(packet);
   const signature = currentCalculatorPacketContextSignature(packet);
   const outputId = packet.metric.outputId;
-  const parsedDisplayValue = parseDbValue(packet.metric.calculatorDisplayValue ?? displayValue);
+  const parsedDisplayValue = parseDbValue(calculatorDisplayValue ?? displayValue);
   const warnings = uniqueReviewStrings([
     ...packet.warnings,
     packet.numericReviewBlocker,
@@ -465,7 +471,7 @@ export function buildReportAssistantContextFromCurrentCalculatorReviewPacket(
       {
         basis: packet.metric.basis,
         basisCategory: basisCategoryFromCurrentCalculatorPacket(packet),
-        ...(packet.metric.calculatorDisplayValue ? { engineDisplayValue: packet.metric.calculatorDisplayValue } : {}),
+        ...(calculatorDisplayValue ? { engineDisplayValue: calculatorDisplayValue } : {}),
         label: packet.metric.label,
         metricId: packet.metric.metricId,
         missingInputs,
@@ -489,7 +495,7 @@ export function buildReportAssistantContextFromCurrentCalculatorReviewPacket(
       {
         basis: packet.metric.basis,
         direction: packet.metric.direction,
-        ...(packet.metric.calculatorDisplayValue ? { engineDisplayValue: packet.metric.calculatorDisplayValue } : {}),
+        ...(calculatorDisplayValue ? { engineDisplayValue: calculatorDisplayValue } : {}),
         id: packet.metric.metricId,
         label: packet.metric.label,
         locations: [],

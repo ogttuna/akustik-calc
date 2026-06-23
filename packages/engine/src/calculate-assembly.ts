@@ -284,6 +284,15 @@ import {
   buildProjectUserMeasuredWallAirborneFrequencyFieldBuildingDirectCurveBasis
 } from "./project-user-measured-wall-airborne-frequency-field-building-adapter";
 import {
+  POST_V1_WALL_BRITISH_GYPSUM_EXACT_LAB_CALCULATED_LAB_COMPANION_WARNING,
+  POST_V1_WALL_BRITISH_GYPSUM_EXACT_LAB_A_WEIGHTED_FIELD_BUILDING_ADAPTER_WARNING,
+  POST_V1_WALL_BRITISH_GYPSUM_EXACT_LAB_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_WARNING,
+  POST_V1_WALL_BRITISH_GYPSUM_EXACT_LAB_FIELD_BUILDING_ADAPTER_WARNING,
+  buildPostV1WallBritishGypsumExactLabFieldBuildingDirectCurveBasis,
+  isPostV1WallBritishGypsumExactLabFieldBuildingSourceId,
+  maybeBuildPostV1WallBritishGypsumExactLabCalculatedLabCompanionBasis
+} from "./british-gypsum-exact-lab-field-building-adapter";
+import {
   maybeBuildProjectUserVerifiedCalculatedExactBridge
 } from "./project-user-verified-calculated-exact-bridge";
 import {
@@ -335,6 +344,9 @@ const WALL_COMPATIBLE_ANCHOR_DELTA_BUILDING_A_WEIGHTED_OUTPUTS = new Set<Request
 const WALL_COMPATIBLE_ANCHOR_DELTA_FIELD_BUILDING_REQUEST_OUTPUTS = new Set<RequestedOutputId>([
   ...WALL_COMPATIBLE_ANCHOR_DELTA_FIELD_BUILDING_BASE_OUTPUTS,
   ...WALL_COMPATIBLE_ANCHOR_DELTA_FIELD_A_WEIGHTED_OUTPUTS
+]);
+const WALL_BRITISH_GYPSUM_EXACT_LAB_BUILDING_CHARACTERISTIC_OUTPUTS = new Set<RequestedOutputId>([
+  "DnT,A,k"
 ]);
 
 function hasWallCompatibleAnchorDeltaFieldBuildingTargetOutput(
@@ -418,6 +430,135 @@ function describeWallCompatibleAnchorDeltaFieldBuildingOwnedOutputs(
   return ownedOutputs.length > 0 ? ownedOutputs.join(", ") : "no field/building outputs";
 }
 
+function hasBritishGypsumExactLabFieldBuildingTargetOutput(
+  targetOutputs: readonly RequestedOutputId[]
+): boolean {
+  return targetOutputs.some(
+    (output) =>
+      WALL_COMPATIBLE_ANCHOR_DELTA_FIELD_BUILDING_REQUEST_OUTPUTS.has(output) ||
+      WALL_BRITISH_GYPSUM_EXACT_LAB_BUILDING_CHARACTERISTIC_OUTPUTS.has(output)
+  );
+}
+
+function hasExplicitBritishGypsumResilientBarSideCount(
+  context: AirborneContext | null | undefined
+): boolean {
+  return context?.resilientBarSideCount === "one_side" || context?.resilientBarSideCount === "both_sides";
+}
+
+function getBritishGypsumExactLabFieldBuildingSupportedOutputs(input: {
+  adapterBasis: AirborneResultBasis | null | undefined;
+  airborneContext: AirborneContext | null | undefined;
+  targetOutputs: readonly RequestedOutputId[];
+}): RequestedOutputId[] {
+  if (
+    input.adapterBasis?.method !== GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD &&
+    input.adapterBasis?.method !== GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD
+  ) {
+    return [];
+  }
+
+  if (!isPostV1WallBritishGypsumExactLabFieldBuildingSourceId(input.adapterBasis.exactSourceId)) {
+    return [];
+  }
+
+  const characteristicBuildingScopeAllowed =
+    input.adapterBasis.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD &&
+    (
+      input.airborneContext?.buildingPredictionOutputBasis === "standardized" ||
+      input.airborneContext?.buildingPredictionOutputBasis === "apparent_and_standardized"
+    );
+
+  return input.targetOutputs.filter(
+    (output) =>
+      WALL_COMPATIBLE_ANCHOR_DELTA_FIELD_BUILDING_REQUEST_OUTPUTS.has(output) ||
+      (
+        characteristicBuildingScopeAllowed &&
+        WALL_BRITISH_GYPSUM_EXACT_LAB_BUILDING_CHARACTERISTIC_OUTPUTS.has(output)
+      )
+  );
+}
+
+function getBritishGypsumExactLabFieldBuildingUnsupportedOutputs(input: {
+  adapterBasis: AirborneResultBasis | null | undefined;
+  airborneContext: AirborneContext | null | undefined;
+  targetOutputs: readonly RequestedOutputId[];
+}): RequestedOutputId[] {
+  if (
+    input.adapterBasis?.method !== GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD &&
+    input.adapterBasis?.method !== GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD
+  ) {
+    return [];
+  }
+
+  if (!isPostV1WallBritishGypsumExactLabFieldBuildingSourceId(input.adapterBasis.exactSourceId)) {
+    return [];
+  }
+
+  const characteristicBuildingScopeAllowed =
+    input.adapterBasis.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD &&
+    (
+      input.airborneContext?.buildingPredictionOutputBasis === "standardized" ||
+      input.airborneContext?.buildingPredictionOutputBasis === "apparent_and_standardized"
+    );
+
+  return input.targetOutputs.filter(
+    (output) =>
+      !WALL_COMPATIBLE_ANCHOR_DELTA_FIELD_BUILDING_REQUEST_OUTPUTS.has(output) &&
+      !(
+        characteristicBuildingScopeAllowed &&
+        WALL_BRITISH_GYPSUM_EXACT_LAB_BUILDING_CHARACTERISTIC_OUTPUTS.has(output)
+      )
+  );
+}
+
+function getBritishGypsumExactLabFieldBuildingAWeightedSupportedOutputs(input: {
+  adapterBasis: AirborneResultBasis | null | undefined;
+  supportedTargetOutputs: readonly RequestedOutputId[];
+}): RequestedOutputId[] {
+  if (
+    input.adapterBasis?.method !== GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD &&
+    input.adapterBasis?.method !== GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD
+  ) {
+    return [];
+  }
+
+  if (!isPostV1WallBritishGypsumExactLabFieldBuildingSourceId(input.adapterBasis.exactSourceId)) {
+    return [];
+  }
+
+  return input.supportedTargetOutputs.filter(
+    (output) =>
+      WALL_COMPATIBLE_ANCHOR_DELTA_FIELD_A_WEIGHTED_OUTPUTS.has(output) ||
+      WALL_COMPATIBLE_ANCHOR_DELTA_BUILDING_A_WEIGHTED_OUTPUTS.has(output)
+  );
+}
+
+function getBritishGypsumExactLabBuildingCharacteristicSupportedOutputs(input: {
+  adapterBasis: AirborneResultBasis | null | undefined;
+  airborneContext: AirborneContext | null | undefined;
+  supportedTargetOutputs: readonly RequestedOutputId[];
+}): RequestedOutputId[] {
+  if (input.adapterBasis?.method !== GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD) {
+    return [];
+  }
+
+  if (
+    input.airborneContext?.buildingPredictionOutputBasis !== "standardized" &&
+    input.airborneContext?.buildingPredictionOutputBasis !== "apparent_and_standardized"
+  ) {
+    return [];
+  }
+
+  if (!isPostV1WallBritishGypsumExactLabFieldBuildingSourceId(input.adapterBasis.exactSourceId)) {
+    return [];
+  }
+
+  return input.supportedTargetOutputs.filter((output) =>
+    WALL_BRITISH_GYPSUM_EXACT_LAB_BUILDING_CHARACTERISTIC_OUTPUTS.has(output)
+  );
+}
+
 function getProjectUserMeasuredWallAirborneFrequencyFieldBuildingSupportedOutputs(input: {
   adapterBasis: AirborneResultBasis | null | undefined;
   targetOutputs: readonly RequestedOutputId[];
@@ -468,6 +609,12 @@ const ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_WALL_AIRBORNE_OUTPUTS = new Set<Reque
   "DnT,A,k",
   "DnT,w",
   "R'w",
+  "Rw",
+  "STC"
+]);
+const ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_WALL_LAB_OUTPUTS = new Set<RequestedOutputId>([
+  "C",
+  "Ctr",
   "Rw",
   "STC"
 ]);
@@ -2165,6 +2312,37 @@ function getAnswerEngineV1ExactMeasuredMetricUnsupportedOutputs(input: {
   return input.supportedTargetOutputs.filter((output) => !exactOutputSet.has(output));
 }
 
+function getAnswerEngineV1ElementLabProtectedOutputs(input: {
+  contextMode: AirborneContext["contextMode"] | undefined;
+  detectedFamily: string | undefined;
+  missingPhysicalInputs: readonly string[];
+  sourceAnchorApplied: boolean;
+  sourceMode: string | null | undefined;
+  supportedTargetOutputs: readonly RequestedOutputId[];
+}): RequestedOutputId[] {
+  if (input.contextMode !== "element_lab") {
+    return [];
+  }
+
+  const hasExactLabSource = input.sourceAnchorApplied && input.sourceMode === "lab";
+  const hasOnlyGroupedOrFieldContextMissingInputs =
+    input.missingPhysicalInputs.length > 0 &&
+    input.missingPhysicalInputs.every((missingInput) =>
+      ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FIELD_CONTEXT_MISSING_INPUTS.has(missingInput) ||
+        ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_GROUPED_TOPOLOGY_MISSING_INPUTS.has(missingInput)
+    );
+  const hasOwnedStudWallFormulaLabOutput =
+    input.detectedFamily === "stud_wall_system" &&
+    hasOnlyGroupedOrFieldContextMissingInputs;
+  if (!hasExactLabSource && !hasOwnedStudWallFormulaLabOutput) {
+    return [];
+  }
+
+  return input.supportedTargetOutputs.filter((output) =>
+    ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_WALL_LAB_OUTPUTS.has(output)
+  );
+}
+
 function canPromoteZeroDeltaVerifiedAirborneExactSource(input: {
   sourceAnchorAlreadyApplied: boolean;
   sourceMetricLabel: string | null | undefined;
@@ -2375,6 +2553,7 @@ function buildAnswerEngineV1WallNeedsInputBoundary(input: {
   basis: AirborneResultBasis | undefined;
   contextMode?: AirborneContext["contextMode"];
   outputs: readonly RequestedOutputId[];
+  protectedOutputs?: readonly RequestedOutputId[];
 }): AcousticAnswerBoundary | null {
   if (
     input.basis?.origin !== "needs_input" ||
@@ -2386,7 +2565,8 @@ function buildAnswerEngineV1WallNeedsInputBoundary(input: {
   const unsupportedOutputs = getAnswerEngineV1WallNeedsInputUnsupportedOutputs({
     basis: input.basis,
     contextMode: input.contextMode,
-    outputs: input.outputs
+    outputs: input.outputs,
+    protectedOutputs: input.protectedOutputs
   });
   if (unsupportedOutputs.length === 0) {
     return null;
@@ -2442,6 +2622,18 @@ function hasAnswerEngineV1FieldOrBuildingAirborneOutput(outputs: readonly Reques
     output === "DnT,A" ||
     output === "DnT,A,k"
   );
+}
+
+function filterAnswerEngineV1ProtectedOutputs(input: {
+  outputs: readonly RequestedOutputId[];
+  protectedOutputs?: readonly RequestedOutputId[];
+}): RequestedOutputId[] {
+  if (!input.protectedOutputs?.length) {
+    return [...input.outputs];
+  }
+
+  const protectedOutputSet = new Set(input.protectedOutputs);
+  return input.outputs.filter((output) => !protectedOutputSet.has(output));
 }
 
 const ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FIELD_CONTEXT_MISSING_INPUTS = new Set([
@@ -2503,26 +2695,38 @@ function getAnswerEngineV1WallNeedsInputUnsupportedOutputs(input: {
   basis: AirborneResultBasis;
   contextMode?: AirborneContext["contextMode"];
   outputs: readonly RequestedOutputId[];
+  protectedOutputs?: readonly RequestedOutputId[];
 }): RequestedOutputId[] {
+  const filterProtectedOutputs = (outputs: readonly RequestedOutputId[]) =>
+    filterAnswerEngineV1ProtectedOutputs({
+      outputs,
+      protectedOutputs: input.protectedOutputs
+    });
   const missingInputs = new Set(input.basis.missingPhysicalInputs);
   const hasRouteOwnedMissingInput = input.basis.missingPhysicalInputs.some(
     (missingInput) => !ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FIELD_CONTEXT_MISSING_INPUTS.has(missingInput)
   );
 
   if (hasRouteOwnedMissingInput) {
-    return input.outputs.filter((output) =>
-      ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_WALL_AIRBORNE_OUTPUTS.has(output)
+    return filterProtectedOutputs(
+      input.outputs.filter((output) =>
+        ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_WALL_AIRBORNE_OUTPUTS.has(output)
+      )
     );
   }
 
   if (!hasAnswerEngineV1FieldOrBuildingMissingPhysicalInput(input.basis)) {
-    return input.outputs.filter((output) =>
-      ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_WALL_AIRBORNE_OUTPUTS.has(output)
+    return filterProtectedOutputs(
+      input.outputs.filter((output) =>
+        ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_WALL_AIRBORNE_OUTPUTS.has(output)
+      )
     );
   }
 
   if (input.contextMode === "building_prediction") {
-    return input.outputs.filter((output) => hasAnswerEngineV1FieldOrBuildingAirborneOutput([output]));
+    return filterProtectedOutputs(
+      input.outputs.filter((output) => hasAnswerEngineV1FieldOrBuildingAirborneOutput([output]))
+    );
   }
 
   if (
@@ -2530,7 +2734,9 @@ function getAnswerEngineV1WallNeedsInputUnsupportedOutputs(input: {
     input.outputs.length > 0 &&
     input.outputs.every((output) => hasAnswerEngineV1FieldOrBuildingAirborneOutput([output]))
   ) {
-    return input.outputs.filter((output) => hasAnswerEngineV1FieldOrBuildingAirborneOutput([output]));
+    return filterProtectedOutputs(
+      input.outputs.filter((output) => hasAnswerEngineV1FieldOrBuildingAirborneOutput([output]))
+    );
   }
 
   const missingFieldGeometry =
@@ -2543,7 +2749,7 @@ function getAnswerEngineV1WallNeedsInputUnsupportedOutputs(input: {
     missingInputs.has("receivingRoomRt60S") ||
     missingInputs.has("receivingRoomVolumeM3");
 
-  return input.outputs.filter((output) => {
+  return filterProtectedOutputs(input.outputs.filter((output) => {
     if (!hasAnswerEngineV1FieldOrBuildingAirborneOutput([output])) {
       return false;
     }
@@ -2557,7 +2763,7 @@ function getAnswerEngineV1WallNeedsInputUnsupportedOutputs(input: {
     }
 
     return false;
-  });
+  }));
 }
 
 function isAnswerEngineV1WallFieldOrBuildingBoundary(input: {
@@ -2922,7 +3128,8 @@ function applyExplicitDoubleLeafSurfaceMassNeedsInputBoundary(input: {
 }
 
 function applyAcousticCalculatorAnswerEngineV1WallNeedsInputBoundary(
-  result: AssemblyCalculation
+  result: AssemblyCalculation,
+  protectedOutputs: readonly RequestedOutputId[] = []
 ): void {
   const ownedPhysicalInputStop = isAnswerEngineV1WallOwnedPhysicalInputStop({
     basis: result.airborneBasis,
@@ -2969,7 +3176,8 @@ function applyAcousticCalculatorAnswerEngineV1WallNeedsInputBoundary(
   const boundary = buildAnswerEngineV1WallNeedsInputBoundary({
     basis: result.airborneBasis,
     contextMode: result.airborneOverlay?.contextMode,
-    outputs: result.targetOutputs
+    outputs: result.targetOutputs,
+    protectedOutputs
   });
 
   if (boundary) {
@@ -4840,6 +5048,44 @@ export function calculateAssembly(
     airborneContext,
     airborneOverlayResult.overlay?.fieldFlankingPenaltyDb ?? 0
   );
+  const britishGypsumExactLabFieldBuildingRequest = Boolean(
+    options.calculator === "dynamic" &&
+      airborneContext?.contextMode &&
+      airborneContext.contextMode !== "element_lab" &&
+      hasBritishGypsumExactLabFieldBuildingTargetOutput(targetOutputs) &&
+      hasExplicitBritishGypsumResilientBarSideCount(airborneContext)
+  );
+  const britishGypsumExactLabFieldBuildingLookupContext =
+    britishGypsumExactLabFieldBuildingRequest && airborneContext
+      ? {
+          ...airborneContext,
+          contextMode: "element_lab" as const
+        }
+      : airborneContext;
+  const britishGypsumExactLabFieldBuildingDirectOverlayResult =
+    britishGypsumExactLabFieldBuildingRequest
+      ? applyAirborneContextOverlay(
+          selectedCalculatorCurve,
+          airborneResolvedLayers,
+          britishGypsumExactLabFieldBuildingLookupContext
+        )
+      : null;
+  const britishGypsumExactLabFieldBuildingDirectAnchorResult =
+    britishGypsumExactLabFieldBuildingDirectOverlayResult
+      ? applyVerifiedAirborneCatalogAnchor(
+          britishGypsumExactLabFieldBuildingDirectOverlayResult.curve,
+          britishGypsumExactLabFieldBuildingDirectOverlayResult.ratings,
+          airborneResolvedLayers,
+          britishGypsumExactLabFieldBuildingLookupContext,
+          0
+        )
+      : null;
+  const britishGypsumExactLabFieldBuildingDirectAnchorActive = Boolean(
+    britishGypsumExactLabFieldBuildingDirectAnchorResult?.applied &&
+      isPostV1WallBritishGypsumExactLabFieldBuildingSourceId(
+        britishGypsumExactLabFieldBuildingDirectAnchorResult.match?.id
+      )
+  );
   const compatibleAnchorDeltaFieldBuildingRequest = Boolean(
     options.calculator === "dynamic" &&
       airborneContext?.contextMode &&
@@ -5149,6 +5395,50 @@ export function calculateAssembly(
             sourceDescription: "the Gate AY advanced-wall source-absent direct curve"
           })
         : null;
+  const britishGypsumExactLabFieldBuildingOverlayResult =
+    britishGypsumExactLabFieldBuildingDirectAnchorActive &&
+    britishGypsumExactLabFieldBuildingDirectAnchorResult?.curve
+      ? applyAirborneContextOverlay(
+          britishGypsumExactLabFieldBuildingDirectAnchorResult.curve,
+          airborneResolvedLayers,
+          airborneContext
+        )
+      : null;
+  const britishGypsumExactLabFieldBuildingDirectCurveBasis =
+    britishGypsumExactLabFieldBuildingDirectAnchorActive &&
+    britishGypsumExactLabFieldBuildingDirectAnchorResult
+      ? buildPostV1WallBritishGypsumExactLabFieldBuildingDirectCurveBasis({
+          family: dynamicAirborneResult?.trace.detectedFamily,
+          result: britishGypsumExactLabFieldBuildingDirectAnchorResult,
+          transmissionLossCurve: britishGypsumExactLabFieldBuildingDirectAnchorResult.curve
+        })
+      : null;
+  const britishGypsumExactLabFieldBuildingFrequencyBands =
+    britishGypsumExactLabFieldBuildingDirectCurveBasis
+      ? {
+          bandSet: "post_v1_wall_british_gypsum_exact_lab_field_building_adapter_curve",
+          frequenciesHz: [...(britishGypsumExactLabFieldBuildingDirectAnchorResult?.curve.frequenciesHz ?? [])]
+        }
+      : undefined;
+  const britishGypsumExactLabFieldBuildingBasis =
+    britishGypsumExactLabFieldBuildingDirectCurveBasis &&
+    airborneContext?.contextMode === "field_between_rooms"
+      ? maybeBuildGateIAirborneFieldContextBasisFromBase({
+          baseBasis: britishGypsumExactLabFieldBuildingDirectCurveBasis,
+          context: airborneContext,
+          family: dynamicAirborneResult?.trace.detectedFamily,
+          frequencyBands: britishGypsumExactLabFieldBuildingFrequencyBands
+        })
+      : britishGypsumExactLabFieldBuildingDirectCurveBasis &&
+        airborneContext?.contextMode === "building_prediction"
+        ? maybeBuildGateARAirborneBuildingPredictionBasisFromBase({
+            baseBasis: britishGypsumExactLabFieldBuildingDirectCurveBasis,
+            context: airborneContext,
+            family: dynamicAirborneResult?.trace.detectedFamily,
+            frequencyBands: britishGypsumExactLabFieldBuildingFrequencyBands,
+            sourceDescription: "the exact British Gypsum lab Rw direct curve"
+          })
+        : null;
   const approximateAirborneFieldCompanionResult = applyApproximateAirborneFieldCompanion(
     verifiedAirborneAnchorResult.ratings,
     airborneResolvedLayers,
@@ -5160,6 +5450,10 @@ export function calculateAssembly(
     : advancedWallSourceAbsentFieldBuildingSource?.curve
     ? advancedWallSourceAbsentFieldBuildingOverlayResult?.curve ??
       advancedWallSourceAbsentFieldBuildingSource.curve
+    : britishGypsumExactLabFieldBuildingDirectAnchorActive
+    ? britishGypsumExactLabFieldBuildingOverlayResult?.curve ??
+      britishGypsumExactLabFieldBuildingDirectAnchorResult?.curve ??
+      verifiedAirborneAnchorResult.curve
     : compatibleWallAnchorDeltaResult.applied
     ? compatibleWallAnchorDeltaFieldBuildingOverlayResult?.curve ?? compatibleWallAnchorDeltaResult.curve
     : verifiedAirborneAnchorResult.curve;
@@ -5177,13 +5471,20 @@ export function calculateAssembly(
         advancedWallSourceAbsentFieldBuildingSource.curve.transmissionLossDb,
         airborneContext
       )
+    : britishGypsumExactLabFieldBuildingDirectAnchorActive
+    ? britishGypsumExactLabFieldBuildingOverlayResult?.ratings ??
+      britishGypsumExactLabFieldBuildingDirectAnchorResult?.ratings ??
+      verifiedAirborneAnchorResult.ratings
     : compatibleWallAnchorDeltaResult.applied
     ? compatibleWallAnchorDeltaFieldBuildingOverlayResult?.ratings ?? compatibleWallAnchorDeltaResult.ratings
     : approximateAirborneFieldCompanionResult.ratings;
   const adjustedEstimatedRwDb = Math.max(
     0,
     round1(
-      compatibleWallAnchorDeltaResult.applied && typeof compatibleWallAnchorDeltaResult.predictedRwDb === "number"
+      britishGypsumExactLabFieldBuildingDirectAnchorActive &&
+        typeof britishGypsumExactLabFieldBuildingDirectAnchorResult?.match?.metricValue === "number"
+        ? britishGypsumExactLabFieldBuildingDirectAnchorResult.match.metricValue
+        : compatibleWallAnchorDeltaResult.applied && typeof compatibleWallAnchorDeltaResult.predictedRwDb === "number"
         ? compatibleWallAnchorDeltaResult.predictedRwDb
         : projectUserMeasuredWallAirborneFrequencyFieldBuildingSource?.result.curve
         ? ratings.iso717.Rw
@@ -5686,11 +5987,13 @@ export function calculateAssembly(
   const visibleAirborneOverlay =
     floorAirborneBuildingPredictionRuntime?.overlay ??
     projectUserMeasuredWallAirborneFrequencyFieldBuildingOverlayResult?.overlay ??
+    britishGypsumExactLabFieldBuildingOverlayResult?.overlay ??
     compatibleWallAnchorDeltaFieldBuildingOverlayResult?.overlay ??
     airborneOverlayResult.overlay;
   const visibleAirborneOverlayWarnings =
     floorAirborneBuildingPredictionRuntime?.warnings ??
     projectUserMeasuredWallAirborneFrequencyFieldBuildingOverlayResult?.warnings ??
+    britishGypsumExactLabFieldBuildingOverlayResult?.warnings ??
     compatibleWallAnchorDeltaFieldBuildingOverlayResult?.warnings ??
     airborneOverlayResult.warnings;
   const visibleEstimatedRwDbWithFieldBuildingRuntime =
@@ -5818,6 +6121,17 @@ export function calculateAssembly(
           transmissionLossCurve: curve
         })
       : null;
+  const britishGypsumExactLabCalculatedLabCompanionBasis =
+    options.calculator === "dynamic"
+      ? maybeBuildPostV1WallBritishGypsumExactLabCalculatedLabCompanionBasis({
+          airborneContext,
+          dynamicFamily: dynamicAirborneResult?.trace.detectedFamily,
+          sourceMatch: verifiedAirborneAnchorResult.match,
+          strategy: dynamicAirborneResult?.trace.strategy,
+          targetOutputs: targetOutputSupportWithGateYCltCtr.targetOutputs,
+          transmissionLossCurve: curve
+        })
+      : null;
   const compatibleWallAnchorDeltaLabCompanionBasis =
     options.calculator === "dynamic"
       ? maybeBuildPostV1WallCompatibleAnchorDeltaLabCompanionBasis({
@@ -5917,6 +6231,12 @@ export function calculateAssembly(
       adapterBasis: advancedWallSourceAbsentFieldBuildingBasis,
       targetOutputs: rockwoolSplitTripleLeafExactOutputWithhold.targetOutputSupport.targetOutputs
     });
+  const britishGypsumExactLabFieldBuildingSupportedOutputs =
+    getBritishGypsumExactLabFieldBuildingSupportedOutputs({
+      adapterBasis: britishGypsumExactLabFieldBuildingBasis,
+      airborneContext,
+      targetOutputs: rockwoolSplitTripleLeafExactOutputWithhold.targetOutputSupport.targetOutputs
+    });
   const targetOutputSupportBeforeProjectUserMeasuredFrequencyCurve = moveUnsupportedOutputsToSupported(
     rockwoolSplitTripleLeafExactOutputWithhold.targetOutputSupport,
     [
@@ -5925,7 +6245,8 @@ export function calculateAssembly(
           ...postV1WallScreeningFieldLabCompanionOutputs,
           ...postV1SingleLeafMassLawFieldLabCompanionOutputs,
           ...projectUserMeasuredWallAirborneFrequencyFieldBuildingSupportedOutputs,
-          ...advancedWallSourceAbsentFieldBuildingSupportedOutputs
+          ...advancedWallSourceAbsentFieldBuildingSupportedOutputs,
+          ...britishGypsumExactLabFieldBuildingSupportedOutputs
         ])
       ]
   );
@@ -6014,6 +6335,14 @@ export function calculateAssembly(
               selectedMethod: dynamicAirborneResult?.trace.selectedMethod,
               strategy: "advanced_wall_source_absent_field_building_adapter"
             }
+          : britishGypsumExactLabFieldBuildingBasis
+          ? {
+              airborneBasis: britishGypsumExactLabFieldBuildingBasis,
+              detectedFamily: dynamicAirborneResult?.trace.detectedFamily ?? "stud_wall_system",
+              runtimeValueMovement: true,
+              selectedMethod: dynamicAirborneResult?.trace.selectedMethod,
+              strategy: "british_gypsum_exact_lab_field_building_adapter"
+            }
           : companyInternalOpeningLeakFieldBuildingRuntime?.basis
           ? {
               airborneBasis: companyInternalOpeningLeakFieldBuildingRuntime.basis,
@@ -6038,6 +6367,7 @@ export function calculateAssembly(
                 gateYCltMassTimberCtrSpectrumAdapterBasis ??
                 gateDTMasonryExactRwCompanionBasis ??
                 gateDVLsfExactRwCompanionBasis ??
+                britishGypsumExactLabCalculatedLabCompanionBasis ??
                 compatibleWallAnchorDeltaLabCompanionBasis ??
                 gateDXExactSourceFamilyFieldContextBasis ??
                 dynamicAirborneResult.airborneBasis,
@@ -6091,6 +6421,7 @@ export function calculateAssembly(
   const shouldParkAirborneBuildingPredictionRuntime =
     !projectUserMeasuredWallAirborneFrequencyFieldBuildingBasis &&
     !advancedWallSourceAbsentFieldBuildingBasis &&
+    !britishGypsumExactLabFieldBuildingBasis &&
     dynamicCandidateResolverRuntime?.routeInputAssessment.outputBasis === "building_prediction" &&
     (
       dynamicCandidateResolverRuntime.resolution.selectedOrigin === "needs_input" ||
@@ -6099,6 +6430,7 @@ export function calculateAssembly(
   const suppressParkedBuildingPredictionOverlayWarnings =
     Boolean(projectUserMeasuredWallAirborneFrequencyFieldBuildingBasis) ||
     Boolean(advancedWallSourceAbsentFieldBuildingBasis) ||
+    Boolean(britishGypsumExactLabFieldBuildingBasis) ||
     dynamicCandidateResolverRuntime?.routeInputAssessment.outputBasis === "building_prediction" &&
     (
       dynamicCandidateResolverRuntime.resolution.selectedOrigin === "needs_input" ||
@@ -6182,9 +6514,36 @@ export function calculateAssembly(
       adapterBasis: compatibleWallAnchorDeltaFieldBuildingBasis,
       supportedTargetOutputs: targetOutputSupport.supportedTargetOutputs
     });
+  const britishGypsumExactLabFieldBuildingUnsupportedOutputs =
+    getBritishGypsumExactLabFieldBuildingUnsupportedOutputs({
+      adapterBasis: britishGypsumExactLabFieldBuildingBasis,
+      airborneContext,
+      targetOutputs: targetOutputSupport.targetOutputs
+    });
   const compatibleAnchorDeltaAWeightedSupportedOutputs =
     getWallCompatibleAnchorDeltaFieldBuildingAWeightedSupportedOutputs({
       adapterBasis: compatibleWallAnchorDeltaFieldBuildingBasis,
+      supportedTargetOutputs: targetOutputSupport.supportedTargetOutputs
+    });
+  const britishGypsumExactLabAWeightedSupportedOutputs =
+    getBritishGypsumExactLabFieldBuildingAWeightedSupportedOutputs({
+      adapterBasis: britishGypsumExactLabFieldBuildingBasis,
+      supportedTargetOutputs: targetOutputSupport.supportedTargetOutputs
+    });
+  const britishGypsumExactLabBuildingCharacteristicSupportedOutputs =
+    getBritishGypsumExactLabBuildingCharacteristicSupportedOutputs({
+      adapterBasis: britishGypsumExactLabFieldBuildingBasis,
+      airborneContext,
+      supportedTargetOutputs: targetOutputSupport.supportedTargetOutputs
+    });
+  const answerEngineV1ElementLabProtectedOutputs =
+    getAnswerEngineV1ElementLabProtectedOutputs({
+      contextMode: visibleAirborneOverlay?.contextMode,
+      detectedFamily: dynamicAirborneResult?.trace.detectedFamily,
+      missingPhysicalInputs:
+        dynamicCandidateResolverRuntime?.resolution.selectedBasis?.missingPhysicalInputs ?? [],
+      sourceAnchorApplied: verifiedAirborneAnchorResult.applied,
+      sourceMode: verifiedAirborneAnchorResult.match?.sourceMode,
       supportedTargetOutputs: targetOutputSupport.supportedTargetOutputs
     });
   const exactMeasuredFloorMetricUnsupportedOutputs =
@@ -6249,7 +6608,8 @@ export function calculateAssembly(
             getAnswerEngineV1WallNeedsInputUnsupportedOutputs({
               basis: dynamicCandidateResolverRuntime.resolution.selectedBasis,
               contextMode: visibleAirborneOverlay?.contextMode,
-              outputs: answerEngineV1CandidateOutputs
+              outputs: answerEngineV1CandidateOutputs,
+              protectedOutputs: answerEngineV1ElementLabProtectedOutputs
             })
           )
         ].filter((output) => !projectUserVerifiedCalculatedExactOutputSet.has(output))
@@ -6280,7 +6640,10 @@ export function calculateAssembly(
           visibleTargetOutputSupport,
           exactMeasuredSourceMetricUnsupportedOutputs
         ),
-        compatibleAnchorDeltaFieldBuildingUnsupportedOutputs
+        [
+          ...compatibleAnchorDeltaFieldBuildingUnsupportedOutputs,
+          ...britishGypsumExactLabFieldBuildingUnsupportedOutputs
+        ]
       ),
       anchoredDeltaMetricUnsupportedOutputs
     ),
@@ -6509,7 +6872,10 @@ export function calculateAssembly(
         ])
       ]
     ),
-    compatibleAnchorDeltaFieldBuildingUnsupportedOutputs
+    [
+      ...compatibleAnchorDeltaFieldBuildingUnsupportedOutputs,
+      ...britishGypsumExactLabFieldBuildingUnsupportedOutputs
+    ]
   );
   const visibleTargetOutputSupportWithProjectUserMeasuredFrequencyBoundary = moveSupportedOutputsToUnsupported(
     visibleTargetOutputSupportWithPostV1Companions,
@@ -6724,6 +7090,11 @@ export function calculateAssembly(
         advancedWallSourceAbsentFieldBuildingBasis?.method ===
           GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD &&
         warning === GATE_L_AIRBORNE_BUILDING_PREDICTION_BOUNDARY_WARNING
+      ) &&
+      !(
+        britishGypsumExactLabFieldBuildingBasis?.method ===
+          GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD &&
+        warning === GATE_L_AIRBORNE_BUILDING_PREDICTION_BOUNDARY_WARNING
       )
   );
   warnings.push(
@@ -6740,6 +7111,9 @@ export function calculateAssembly(
   }
   if (gateDVLsfExactRwCompanionBasis) {
     warnings.push(GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_WARNING);
+  }
+  if (britishGypsumExactLabCalculatedLabCompanionBasis) {
+    warnings.push(POST_V1_WALL_BRITISH_GYPSUM_EXACT_LAB_CALCULATED_LAB_COMPANION_WARNING);
   }
   if (compatibleWallAnchorDeltaLabCompanionBasis) {
     warnings.push(POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_WARNING);
@@ -6772,6 +7146,22 @@ export function calculateAssembly(
       warnings.push(adapterWarning);
     }
   }
+  if (britishGypsumExactLabFieldBuildingBasis) {
+    const adapterWarning =
+      britishGypsumExactLabFieldBuildingBasis.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD
+        ? GATE_AR_AIRBORNE_BUILDING_PREDICTION_WARNING
+        : GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING;
+    warnings.push(POST_V1_WALL_BRITISH_GYPSUM_EXACT_LAB_FIELD_BUILDING_ADAPTER_WARNING);
+    if (!warnings.includes(adapterWarning)) {
+      warnings.push(adapterWarning);
+    }
+    if (britishGypsumExactLabAWeightedSupportedOutputs.length > 0) {
+      warnings.push(POST_V1_WALL_BRITISH_GYPSUM_EXACT_LAB_A_WEIGHTED_FIELD_BUILDING_ADAPTER_WARNING);
+    }
+    if (britishGypsumExactLabBuildingCharacteristicSupportedOutputs.length > 0) {
+      warnings.push(POST_V1_WALL_BRITISH_GYPSUM_EXACT_LAB_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_WARNING);
+    }
+  }
   if (compatibleWallAnchorDeltaFieldBuildingBasis) {
     const adapterWarning =
       compatibleWallAnchorDeltaFieldBuildingBasis.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD
@@ -6800,7 +7190,16 @@ export function calculateAssembly(
       `Finished open-box floor airborne building-prediction adapter active: ${openBoxFinishedPackageFloorAirborneBuildingPredictionRuntime.sourceBasis} direct Rw ${openBoxFinishedPackageFloorAirborneBuildingPredictionRuntime.directRwDb} was used before building flanking and room normalization; the generic screening airborne curve was not used for R'w / Dn / DnT.`
     );
   }
-  warnings.push(...verifiedAirborneAnchorResult.warnings);
+  warnings.push(
+    ...(britishGypsumExactLabFieldBuildingBasis
+      ? [
+          ...(britishGypsumExactLabFieldBuildingDirectAnchorResult?.warnings ?? []),
+          ...verifiedAirborneAnchorResult.warnings.filter(
+            (warning) => !/Curated airborne lab fallback active in field context/i.test(warning)
+          )
+        ]
+      : verifiedAirborneAnchorResult.warnings)
+  );
   warnings.push(...projectUserMeasuredWallAirborneFrequencyExactCurveBridge.warnings);
   warnings.push(...projectUserMeasuredWallAirborneFrequencyCompatibleDelta.warnings);
   warnings.push(...projectUserMeasuredWallRwExactBridge.warnings);
@@ -7203,7 +7602,10 @@ export function calculateAssembly(
     airborneContext,
     result
   });
-  applyAcousticCalculatorAnswerEngineV1WallNeedsInputBoundary(result);
+  applyAcousticCalculatorAnswerEngineV1WallNeedsInputBoundary(
+    result,
+    answerEngineV1ElementLabProtectedOutputs
+  );
   applyAcousticCalculatorAnswerEngineV1WallUnsupportedBoundary(result);
   applyAcousticCalculatorAnswerEngineV1FloorImpactNeedsInputBoundary({
     gateWFloorImpactContract,

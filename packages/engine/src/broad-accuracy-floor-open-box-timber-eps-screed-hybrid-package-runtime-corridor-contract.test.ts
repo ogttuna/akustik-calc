@@ -232,8 +232,8 @@ function expectHybridRuntime(layers: readonly LayerInput[]) {
     RwCtrSemantic: "rw_plus_c",
     basis: OPEN_BOX_TIMBER_EPS_SCREED_HYBRID_PACKAGE_BASIS
   });
-  expect(result.supportedTargetOutputs).toEqual(["Rw", "C", "Ln,w", "CI", "CI,50-2500", "Ln,w+CI"]);
-  expect(result.unsupportedTargetOutputs).toEqual(["R'w", "IIC"]);
+  expect(result.supportedTargetOutputs).toEqual(["Ln,w", "CI", "CI,50-2500", "Ln,w+CI"]);
+  expect(result.unsupportedTargetOutputs).toEqual(["Rw", "C", "R'w", "IIC"]);
   expect(
     result.warnings.some((warning: string) => /EPS\/screed hybrid package formula corridor/i.test(warning))
   ).toBe(true);

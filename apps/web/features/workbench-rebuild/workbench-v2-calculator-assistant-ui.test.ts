@@ -3,8 +3,11 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 import {
+  CALCULATOR_ASSISTANT_PROMPT_EXAMPLES,
   buildCalculatorAssistantSourceReviewSnapshot,
   classifyCalculatorAssistantCommandRouting,
+  ensureCalculatorAssistantRwFirstSelectedOutputs,
+  isCalculatorAssistantReportOverrideFollowupCommand,
   isCalculatorAssistantSourceReviewCommand,
   resolveCalculatorAssistantSourceReviewOutputId
 } from "./calculator-workbench";
@@ -63,6 +66,97 @@ describe("workbench v2 calculator assistant ui", () => {
     expect(source).toContain("Preview");
     expect(source).toContain("Preview all");
     expect(source).toContain("Use");
+  });
+
+  it("shows assistant prompt examples as fill-only command chips", () => {
+    expect(CALCULATOR_ASSISTANT_PROMPT_EXAMPLES).toEqual([
+      {
+        label: "Rw kontrol et",
+        prompt: "Ekrandaki stacke bak Rw fazla mı az mı? İnternetten araştır."
+      },
+      {
+        label: "Rw artır",
+        prompt: "Bu layer kombinasyonunun Rw değerini beğenmedim, birkaç layer daha ekle ki Rw artsın, en mantıklısını seç."
+      },
+      {
+        label: "Edit planı",
+        prompt: "2. layerı sil, 15 mm gypsum ekle, Rw ve STC seç, hesapla."
+      },
+      {
+        label: "Alternatif ara",
+        prompt: "Bu katman kombinasyonuna alternatif malzeme araştır."
+      },
+      {
+        label: "Araştırmayı ayır",
+        prompt: "internetten araştır sonra gypsum ekle."
+      }
+    ]);
+    expect(new Set(CALCULATOR_ASSISTANT_PROMPT_EXAMPLES.map((example) => example.label)).size).toBe(
+      CALCULATOR_ASSISTANT_PROMPT_EXAMPLES.length
+    );
+    expect(source).toContain("calc-assistant-prompt-examples");
+    expect(source).toContain("calc-assistant-prompt-chip");
+    expect(source).toContain("Use assistant prompt:");
+    expect(source).toContain("setCalculatorAssistantCommand(example.prompt)");
+    expect(source).toContain("calculatorAssistantCommandInputRef.current?.focus()");
+    expect(source).toContain("Rw kontrol et");
+    expect(source).toContain("Rw artır");
+    expect(source).toContain("Edit planı");
+    expect(source).toContain("Alternatif ara");
+    expect(source).toContain("Araştırmayı ayır");
+    expect(source).not.toContain("applyCalculatorAssistantLayerStackCommand(example.prompt)");
+  });
+
+  it("keeps every assistant prompt example routed to its intended safe assistant lane", () => {
+    const expectedRoutes = [
+      {
+        label: "Rw kontrol et",
+        reason: "explicit_source_review",
+        status: "source_review"
+      },
+      {
+        label: "Rw artır",
+        reason: "wall_rw_improvement_candidate_planning",
+        status: "objective_candidate_planning"
+      },
+      {
+        label: "Edit planı",
+        reason: "multi_step_edit_plan_required",
+        status: "bounded_edit_plan"
+      },
+      {
+        label: "Alternatif ara",
+        reason: "source_backed_layer_alternative_research",
+        status: "source_alternative_research"
+      },
+      {
+        label: "Araştırmayı ayır",
+        reason: "research_write_requires_clarification",
+        status: "clarify"
+      }
+    ] as const;
+
+    for (const expectedRoute of expectedRoutes) {
+      const example = CALCULATOR_ASSISTANT_PROMPT_EXAMPLES.find((candidate) =>
+        candidate.label === expectedRoute.label
+      );
+
+      expect(example, expectedRoute.label).toBeDefined();
+      expect(classifyCalculatorAssistantCommandRouting({
+        instruction: example?.prompt ?? "",
+        selectedOutputs: ["Rw"]
+      }), expectedRoute.label).toMatchObject({
+        reason: expectedRoute.reason,
+        status: expectedRoute.status
+      });
+    }
+
+    for (const example of CALCULATOR_ASSISTANT_PROMPT_EXAMPLES) {
+      expect(classifyCalculatorAssistantCommandRouting({
+        instruction: example.prompt,
+        selectedOutputs: ["Rw"]
+      }).status, example.label).not.toBe("layer_mutation");
+    }
   });
 
   it("routes source-review wording away from calculator draft mutation", () => {
@@ -134,6 +228,124 @@ describe("workbench v2 calculator assistant ui", () => {
     })).toMatchObject({
       status: "layer_mutation"
     });
+  });
+
+  it("answers mixed research-and-edit wording without treating it as a draft mutation", () => {
+    expect(classifyCalculatorAssistantCommandRouting({
+      instruction: "internetten araştır sonra gypsum ekle",
+      selectedOutputs: ["Rw"]
+    })).toMatchObject({
+      reason: "research_write_requires_clarification",
+      status: "clarify"
+    });
+    expect(classifyCalculatorAssistantCommandRouting({
+      instruction: "ekrandaki katmanların kalınlıklarını internetten araştırıp doldur",
+      selectedOutputs: ["Rw"]
+    })).toMatchObject({
+      reason: "research_write_requires_clarification",
+      status: "clarify"
+    });
+    expect(source).toContain("Research edit needs clarification");
+    expect(source).toContain("Research wording was not applied");
+  });
+
+  it("routes objective-driven Rw improvement prompts to planner candidates before generic candidate generation", () => {
+    expect(classifyCalculatorAssistantCommandRouting({
+      instruction: "Rw'yi artirmak icin layer ekle ve alternatifleri calculator ile dene",
+      selectedOutputs: ["Rw"]
+    })).toMatchObject({
+      reason: "wall_rw_improvement_candidate_planning",
+      status: "objective_candidate_planning"
+    });
+    expect(classifyCalculatorAssistantCommandRouting({
+      instruction: "Bu layer kombinasyonunun Rw degerini begenmedim, birkac layer daha ekle ki Rw artsin, en mantiklisini sec",
+      selectedOutputs: ["Rw"]
+    })).toMatchObject({
+      reason: "wall_rw_improvement_candidate_planning",
+      status: "objective_candidate_planning"
+    });
+  });
+
+  it("routes source-backed layer alternative prompts to assembly research candidate bridging", () => {
+    expect(classifyCalculatorAssistantCommandRouting({
+      instruction: "Bu katman kombinasyonuna alternatif malzeme araştır",
+      selectedOutputs: ["Rw"]
+    })).toMatchObject({
+      reason: "source_backed_layer_alternative_research",
+      status: "source_alternative_research"
+    });
+    expect(classifyCalculatorAssistantCommandRouting({
+      instruction: "SilentFX özel panel gibi bir alternatif kaynaklardan bak",
+      selectedOutputs: ["Rw"]
+    })).toMatchObject({
+      reason: "source_backed_layer_alternative_research",
+      status: "source_alternative_research"
+    });
+    expect(source).toContain('fetch("/api/report-assistant/assembly-alternatives"');
+    expect(source).toContain("createWorkbenchV2AssistantSourceAlternativeCandidatesFromReview");
+    expect(source).toContain("setCalculatorAssistantCandidateStacks(candidateBridge.candidateStacks)");
+    expect(source).toContain("Source alternative candidates prepared");
+    expect(source).toContain("Source alternative needs clarification");
+    expect(source).toContain("calculatorAssistantSourceAlternativeState.clarificationPrompts");
+    expect(source).toContain("No Workbench layer changed yet.");
+  });
+
+  it("wires objective planner output into existing candidate state without applying it", () => {
+    expect(source).toContain("planWorkbenchWallRwImprovementCandidates");
+    expect(source).toContain('routingDecision.status === "objective_candidate_planning"');
+    expect(source).toContain("ensureCalculatorAssistantRwFirstSelectedOutputs(selectedOutputs)");
+    expect(source).toContain("setCalculatorAssistantCandidateStacks(improvementPlan.candidateStacks)");
+    expect(source).toContain("setCalculatorAssistantCandidateComparisonState({ status: \"idle\" })");
+    expect(source).toContain("Rw improvement candidates prepared");
+    expect(source).toContain("No calculator value was generated yet.");
+  });
+
+  it("routes objective candidate use through a confirmed Workbench apply proposal", () => {
+    expect(source).toContain("Objective planner candidates must prepare a confirmed Workbench proposal");
+    expect(source).toContain("isWorkbenchWallRwImprovementCandidateStack(candidate)");
+    expect(source).toContain("createWorkbenchV2AssistantCandidateApplyProposal");
+    expect(source).toContain("calculatorAssistantCandidatePreviewSummaryForApply(candidate)");
+    expect(source).toContain("setCalculatorAssistantWorkbenchApplyProposal(proposalResult.proposal)");
+    expect(source).toContain("No Workbench layer changed yet.");
+  });
+
+  it("keeps Rw first for objective candidate preview and ranking while preserving other outputs", () => {
+    expect(ensureCalculatorAssistantRwFirstSelectedOutputs(["STC", "Rw", "DnT,w"])).toEqual(["Rw", "STC", "DnT,w"]);
+    expect(ensureCalculatorAssistantRwFirstSelectedOutputs(["STC", "DnT,w"])).toEqual(["Rw", "STC", "DnT,w"]);
+    expect(ensureCalculatorAssistantRwFirstSelectedOutputs(["Rw", "STC"])).toEqual(["Rw", "STC"]);
+  });
+
+  it("routes multi-step edit-plan prompts to the bounded dry-run panel before single-command parsing", () => {
+    expect(classifyCalculatorAssistantCommandRouting({
+      instruction: "rockwool'u cikar, iki gypsum layer ekle, iki alternatif dene",
+      selectedOutputs: ["Rw"]
+    })).toMatchObject({
+      reason: "multi_step_edit_plan_required",
+      status: "bounded_edit_plan"
+    });
+    expect(source).toContain("createWorkbenchV2AssistantBoundedEditPlan");
+    expect(source).toContain('routingDecision.status === "bounded_edit_plan"');
+    expect(source).toContain("setCalculatorAssistantBoundedEditPlanState");
+    expect(source).toContain('data-kind="bounded-edit-plan-dry-run"');
+    expect(source).toContain("No Workbench layer changed yet.");
+    expect(source).toContain("Multi-step dry run ready");
+    expect(source).toContain("Multi-step dry run blocked");
+    expect(source).not.toContain("confirmCalculatorAssistantBoundedEditPlan");
+  });
+
+  it("wires bounded edit-plan dry runs into the existing confirmed Workbench apply proposal gate", () => {
+    expect(source).toContain("createWorkbenchV2AssistantBoundedEditPlanApplyProposal");
+    expect(source).toContain("function prepareCalculatorAssistantBoundedEditPlanApplyProposal()");
+    expect(source).toContain("calculatorAssistantBoundedEditPlanState.status !== \"ready\"");
+    expect(source).toContain("getWorkbenchV2AssistantLayerStackSignature(layers)");
+    expect(source).toContain("calculatorAssistantBoundedEditPlanState.result.initialLayerSignature");
+    expect(source).toContain("The visible layer stack changed after this dry run. Run the dry run again before preparing an apply proposal.");
+    expect(source).toContain("plan: calculatorAssistantBoundedEditPlanState.result");
+    expect(source).toContain("setCalculatorAssistantWorkbenchApplyProposal(proposalResult.proposal)");
+    expect(source).toContain("Prepare apply proposal");
+    expect(source).toContain("Apply bounded edit plan to draft");
+    expect(source).toContain("confirmCalculatorAssistantWorkbenchApplyProposal(calculatorAssistantWorkbenchApplyProposal)");
+    expect(source).not.toContain("confirmCalculatorAssistantBoundedEditPlan");
   });
 
   it("selects the explicitly requested source-review output before falling back", () => {
@@ -214,6 +426,17 @@ describe("workbench v2 calculator assistant ui", () => {
     expect(source).not.toContain("Rw 41 yanlış, 52 yapıyorum");
   });
 
+  it("routes report-apply follow-up wording to the source-review proposal gate", () => {
+    expect(isCalculatorAssistantReportOverrideFollowupCommand("tamam rapora uygula")).toBe(true);
+    expect(isCalculatorAssistantReportOverrideFollowupCommand("ok report apply")).toBe(true);
+    expect(isCalculatorAssistantReportOverrideFollowupCommand("Rw değeri makul mü araştır")).toBe(false);
+    expect(source).toContain("isCalculatorAssistantReportOverrideFollowupCommand(instruction)");
+    expect(source).toContain("await prepareCalculatorAssistantReportOverrideProposal()");
+    expect(source).toContain("Run a source review before preparing a report draft edit.");
+    expect(source).toContain("The visible Workbench draft changed after this source review. Run source review again before preparing a report edit.");
+    expect(source).toContain("The selected report target changed after this report edit was prepared.");
+  });
+
   it("lets assistant context commands update calculator inputs before preview", () => {
     expect(source).toContain('if (result.commandKind === "set_context")');
     expect(source).toContain("const nextContext = {");
@@ -230,7 +453,7 @@ describe("workbench v2 calculator assistant ui", () => {
     expect(source).toContain("function confirmCalculatorAssistantWorkbenchApplyProposal(proposal: ReportAssistantWorkbenchApplyProposal)");
     expect(source).toContain('window.confirm("Apply this assistant proposal to the current unsaved Workbench draft?")');
     expect(source).toContain('commitLayerStackChange("assistant Workbench apply proposal"');
-    expect(source).toContain("setSelectedOutputs([...payload.selectedOutputs])");
+    expect(source).toContain("normalizeWorkbenchV2SelectedOutputs(payload.selectedOutputs, payload.mode)");
     expect(source).toContain("...payload.contextPatch");
     expect(source).toContain("Apply to draft");
     expect(source).toContain("Saved projects, reports, presets, and engine routes were not changed.");

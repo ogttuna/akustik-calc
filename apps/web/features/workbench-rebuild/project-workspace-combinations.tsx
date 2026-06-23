@@ -44,7 +44,7 @@ function getProjectWorkspaceAssemblyKindLabel(kind: ProjectWorkspaceAssemblySumm
 }
 
 function getProjectWorkspaceAssemblyResultLabel(assembly: ProjectWorkspaceAssemblySummary): string {
-  if (assembly.calculationSummary?.primaryValueLabel) {
+  if (assembly.calculationSummary?.status === "ready" && assembly.calculationSummary.primaryValueLabel) {
     return `${assembly.calculationSummary.primaryOutput ?? "Result"} ${assembly.calculationSummary.primaryValueLabel}`;
   }
 

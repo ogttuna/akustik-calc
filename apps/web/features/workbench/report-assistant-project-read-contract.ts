@@ -2,6 +2,7 @@ export type ReportAssistantProjectReadToolName =
   | "list_projects"
   | "read_project_summary"
   | "list_project_assemblies"
+  | "list_project_verified_calculated_references"
   | "read_project_assembly_snapshot"
   | "list_project_reports"
   | "read_project_report_document"
@@ -32,6 +33,12 @@ export const REPORT_ASSISTANT_PROJECT_READ_TOOL_DEFINITIONS: readonly ReportAssi
     description: "List saved layer-combination summaries for one explicit project id.",
     mutates: false,
     name: "list_project_assemblies",
+    requiredInputs: ["projectId"]
+  },
+  {
+    description: "List user-verified calculated references tied to one explicit project id without using them as runtime evidence.",
+    mutates: false,
+    name: "list_project_verified_calculated_references",
     requiredInputs: ["projectId"]
   },
   {

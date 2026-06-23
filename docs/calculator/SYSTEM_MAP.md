@@ -1,6 +1,7 @@
 # System Map
 
-Last reviewed: 2026-06-16
+Last reviewed for full route map: 2026-06-16
+Material catalog support note added: 2026-06-23
 
 Documentation map:
 [DOCUMENTATION_MAP.md](./DOCUMENTATION_MAP.md). Use that file for the
@@ -9,6 +10,16 @@ orientation after the current handoff is understood.
 
 Latest calculator excellence and cleanup review:
 [CALCULATOR_EXCELLENCE_AND_CLEANUP_REVIEW_2026-06-15.md](./CALCULATOR_EXCELLENCE_AND_CLEANUP_REVIEW_2026-06-15.md).
+
+Latest material catalog support orientation:
+[PUBLIC_SOURCE_MATERIAL_CATALOG_EXPANSION_HANDOFF_2026-06-23.md](./PUBLIC_SOURCE_MATERIAL_CATALOG_EXPANSION_HANDOFF_2026-06-23.md).
+The 2026-06-23 catalog expansion adds product-specific public-source
+material rows and aliases under `packages/catalogs/src/materials/` and
+`packages/engine/src/material-catalog.ts`, then proves those rows can
+feed existing dynamic airborne and heavy floating-floor impact routes in
+`packages/engine/src/material-catalog-expansion-direct-calculation-contract.test.ts`.
+This did not add source result rows, retune formulas, move runtime
+values, or replace the selected calculator slice.
 
 Historical route notes below may preserve the `current` or `selected
 next` wording from the checkpoint that created them. The current active

@@ -125,6 +125,7 @@ export async function POST(request: Request) {
 
       case "read_project_summary":
       case "list_project_assemblies":
+      case "list_project_verified_calculated_references":
       case "list_project_reports":
         return runReportAssistantProjectReadTool({
           name: action,

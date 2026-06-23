@@ -260,8 +260,8 @@ function expectHelperOnlyRuntime(
   });
   expect(result.impact?.errorBudgets?.map((budget: ImpactErrorBudget) => [budget.metricId, budget.toleranceDb])).toEqual(expected.budgets);
   expect(result.impact?.errorBudgets?.every((budget: ImpactErrorBudget) => budget.notMeasuredEvidence)).toBe(true);
-  expect(result.supportedTargetOutputs).toEqual(["Rw", "C", "Ctr", "Ln,w", "CI", "CI,50-2500", "Ln,w+CI"]);
-  expect(result.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w", "L'n,w", "L'nT,w", "IIC", "AIIC"]);
+  expect(result.supportedTargetOutputs).toEqual(["Ln,w", "CI", "CI,50-2500", "Ln,w+CI"]);
+  expect(result.unsupportedTargetOutputs).toEqual(["Rw", "C", "Ctr", "R'w", "DnT,w", "L'n,w", "L'nT,w", "IIC", "AIIC"]);
 
   return result;
 }

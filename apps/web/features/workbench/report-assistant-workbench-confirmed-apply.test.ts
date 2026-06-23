@@ -184,4 +184,30 @@ describe("report assistant Workbench confirmed apply", () => {
     });
     expect(apply).not.toHaveBeenCalled();
   });
+
+  it("rejects proposals whose selected outputs do not belong to the proposal mode", () => {
+    const { proposal, targetSignature } = proposalFixture();
+    const apply = vi.fn();
+    const confirm = vi.fn(() => true);
+
+    expect(confirmReportAssistantWorkbenchApplyProposal({
+      apply,
+      confirm,
+      currentTargetWorkbenchSnapshotSignature: targetSignature,
+      proposal: {
+        ...proposal,
+        proposedWorkbench: {
+          ...proposal.proposedWorkbench,
+          selectedOutputs: ["AIIC"]
+        }
+      } as typeof proposal
+    })).toEqual({
+      code: "invalid_proposal",
+      message: "Workbench apply proposal selected outputs are not supported by its mode.",
+      mutatesSavedState: false,
+      ok: false
+    });
+    expect(confirm).not.toHaveBeenCalled();
+    expect(apply).not.toHaveBeenCalled();
+  });
 });

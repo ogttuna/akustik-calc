@@ -208,6 +208,7 @@ describe("post-V1 floor local-guide input-surface Gate AM parity", () => {
       unsupportedOutputs: ["L'nT,50"]
     });
     expect(card.status).toBe("needs_input");
-    expect(card.detail).toContain("impactFieldContext.guideHdDb_or_receivingRoomVolumeM3");
+    expect(card.detail).toContain("guide Hd or receiving-room volume");
+    expect(card.detail).not.toContain("impactFieldContext.guideHdDb_or_receivingRoomVolumeM3");
   });
 });

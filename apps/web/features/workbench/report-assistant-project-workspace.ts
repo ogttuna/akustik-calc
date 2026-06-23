@@ -135,8 +135,9 @@ function parseAssemblies(payload: unknown): ReportAssistantProjectWorkspaceAssem
       {
         calculationPrimaryOutput:
           typeof calculationSummary?.primaryOutput === "string" ? calculationSummary.primaryOutput : undefined,
+        // Coordination note: assistant workspace summaries can be loaded from older project records; only ready rows get numeric labels.
         calculationPrimaryValueLabel:
-          typeof calculationSummary?.primaryValueLabel === "string" ? calculationSummary.primaryValueLabel : undefined,
+          calculationStatus === "ready" && typeof calculationSummary?.primaryValueLabel === "string" ? calculationSummary.primaryValueLabel : undefined,
         calculationStatus,
         displayCode: typeof entry.displayCode === "string" ? entry.displayCode : undefined,
         id: entry.id,

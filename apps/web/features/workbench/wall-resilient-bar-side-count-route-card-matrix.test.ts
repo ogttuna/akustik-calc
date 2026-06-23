@@ -484,17 +484,17 @@ const EXPLICIT_SIDE_COUNT_CASES: readonly PairContextCase[] = [
     },
     branchDetail:
       "Mass Law anchor is active with stud surrogate blend+framed wall calibration. Stud Wall Surrogate is on an ambiguous boundary with Double Leaf, and a conservative family-boundary hold is active.",
-    warningPattern: /No curated exact floor-system landed/i,
+    warningPattern: /British Gypsum exact lab A-weighted field\/building owner active/i,
     cards: {
-      Rw: { status: "live", value: "50 dB" },
-      "R'w": { status: "live", value: "50 dB" },
-      "Dn,w": { status: "live", value: "49 dB" },
-      "Dn,A": { status: "live", value: "48.2 dB" },
-      "DnT,w": { status: "live", value: "51 dB" },
-      "DnT,A": { status: "live", value: "50.7 dB" },
-      STC: { status: "live", value: "50 dB" },
-      C: { status: "live", value: "-0.8 dB" },
-      Ctr: { status: "live", value: "-5.6 dB" }
+      Rw: { status: "unsupported", value: "Not ready" },
+      "R'w": { status: "live", value: "49 dB" },
+      "Dn,w": { status: "live", value: "48 dB" },
+      "Dn,A": { status: "live", value: "47 dB" },
+      "DnT,w": { status: "live", value: "50 dB" },
+      "DnT,A": { status: "live", value: "49.5 dB" },
+      STC: { status: "unsupported", value: "Not ready" },
+      C: { status: "unsupported", value: "Not ready" },
+      Ctr: { status: "unsupported", value: "Not ready" }
     }
   },
   {
@@ -517,17 +517,17 @@ const EXPLICIT_SIDE_COUNT_CASES: readonly PairContextCase[] = [
     },
     branchDetail:
       "Mass Law anchor is active with stud surrogate blend+framed wall calibration. Stud Wall Surrogate is on an ambiguous boundary with Double Leaf, and a conservative family-boundary hold is active.",
-    warningPattern: /No curated exact floor-system landed/i,
+    warningPattern: /British Gypsum exact lab A-weighted field\/building owner active/i,
     cards: {
-      Rw: { status: "live", value: "53 dB" },
-      "R'w": { status: "live", value: "53 dB" },
-      "Dn,w": { status: "live", value: "52 dB" },
-      "Dn,A": { status: "live", value: "51.2 dB" },
-      "DnT,w": { status: "live", value: "54 dB" },
-      "DnT,A": { status: "live", value: "53.7 dB" },
-      STC: { status: "live", value: "53 dB" },
-      C: { status: "live", value: "-0.8 dB" },
-      Ctr: { status: "live", value: "-5.6 dB" }
+      Rw: { status: "unsupported", value: "Not ready" },
+      "R'w": { status: "live", value: "52 dB" },
+      "Dn,w": { status: "live", value: "51 dB" },
+      "Dn,A": { status: "live", value: "50 dB" },
+      "DnT,w": { status: "live", value: "53 dB" },
+      "DnT,A": { status: "live", value: "52.5 dB" },
+      STC: { status: "unsupported", value: "Not ready" },
+      C: { status: "unsupported", value: "Not ready" },
+      Ctr: { status: "unsupported", value: "Not ready" }
     }
   },
   {

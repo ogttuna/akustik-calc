@@ -546,29 +546,29 @@ describe("layer combination resolver runtime candidate surface parity contract",
 
     expect(rawOpenWeb.layerCombinationResolverTrace).toMatchObject({
       boundaryCandidateIds: ["generic.astm_iic_aiic.unsupported_boundary"],
-      runtimeBasisId: OPEN_WEB_RAW_BARE_FORMULA_BASIS,
-      selectedCandidateId: "floor.open_web.raw_bare_source_absent"
+      runtimeBasisId: null,
+      selectedCandidateId: "generic.required_input_owner.needs_input_boundary"
     });
     expect(rawOpenWeb.impact).toMatchObject({ CI50_2500: 5.2, LnW: 96, basis: OPEN_WEB_RAW_BARE_FORMULA_BASIS });
 
     expect(helperOnly.layerCombinationResolverTrace).toMatchObject({
       boundaryCandidateIds: ["generic.astm_iic_aiic.unsupported_boundary"],
-      runtimeBasisId: HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS,
-      selectedCandidateId: "floor.helper_only_timber_open_web.source_absent"
+      runtimeBasisId: null,
+      selectedCandidateId: "generic.required_input_owner.needs_input_boundary"
     });
     expect(helperOnly.impact).toMatchObject({ CI50_2500: 4, LnW: 59.6, basis: HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS });
     expect(helperOnly.floorSystemRatings).toMatchObject({ Rw: 46.7, basis: HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS });
 
     expect(directFixed.layerCombinationResolverTrace).toMatchObject({
-      runtimeBasisId: OPEN_WEB_DIRECT_FIXED_LINING_BASIS,
-      selectedCandidateId: "floor.open_web.direct_fixed_lining.source_absent"
+      runtimeBasisId: null,
+      selectedCandidateId: "generic.required_input_owner.needs_input_boundary"
     });
     expect(directFixed.impact).toMatchObject({ CI: -0.5, LnW: 77, basis: OPEN_WEB_DIRECT_FIXED_LINING_BASIS });
     expect(directFixed.floorSystemRatings).toMatchObject({ Rw: 52, basis: OPEN_WEB_DIRECT_FIXED_LINING_BASIS });
 
     expect(supportedBand.layerCombinationResolverTrace).toMatchObject({
-      runtimeBasisId: OPEN_WEB_SUPPORTED_BAND_SIMILARITY_BASIS,
-      selectedCandidateId: "floor.open_web.supported_band_similarity"
+      runtimeBasisId: null,
+      selectedCandidateId: "generic.required_input_owner.needs_input_boundary"
     });
     expect(supportedBand.impact).toMatchObject({ CI: -1.5, LnW: 61.5, basis: OPEN_WEB_SUPPORTED_BAND_SIMILARITY_BASIS });
     expect(supportedBand.floorSystemRatings).toMatchObject({ Rw: 61.5, basis: OPEN_WEB_SUPPORTED_BAND_SIMILARITY_BASIS });

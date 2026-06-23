@@ -89,7 +89,7 @@ describe("MaterialEditorPanel", () => {
           },
           flowResistivityPaSM2: {
             status: "needed",
-            title: "Required before this porous absorber route can calculate"
+            title: "Needed: this porous absorber material is missing flow resistivity, so the active porous cavity damping route cannot calculate the current output"
           },
           tags: {
             status: "inactive",
@@ -102,6 +102,7 @@ describe("MaterialEditorPanel", () => {
     );
 
     expect(html).toContain("Flow resistivity");
+    expect(html).toContain("Material property for porous absorbers");
     expect(html).toContain("material-route-input-effectiveness");
     expect(html).toContain("Needed");
     expect(html).toContain("Inactive");

@@ -139,6 +139,7 @@ describe("report assistant project read tools", () => {
       "list_projects",
       "read_project_summary",
       "list_project_assemblies",
+      "list_project_verified_calculated_references",
       "read_project_assembly_snapshot",
       "list_project_reports",
       "read_project_report_document",
@@ -256,6 +257,46 @@ describe("report assistant project read tools", () => {
     expect(JSON.stringify([assemblies, reports, revisions])).not.toContain("PRIVATE_REPORT_DOCUMENT_BODY");
     expect(JSON.stringify([assemblies, reports, revisions])).not.toContain("PRIVATE_REPORT_REVISION_BODY");
     expect(JSON.stringify([assemblies, reports, revisions])).not.toContain("PRIVATE_ASSEMBLY_SNAPSHOT");
+  });
+
+  it("does not expose stale blocked assembly values in project-read summaries", async () => {
+    const repository = await makeRepository();
+    const seeded = await seedProject(repository, OWNER_A);
+    const withBlockedAssembly = await repository.appendAssembly(OWNER_A, seeded.project.id, {
+      calculationSummary: {
+        primaryOutput: "Rw",
+        primaryValueLabel: "99 dB",
+        selectedOutputs: ["Rw"],
+        status: "needs_input"
+      },
+      kind: "wall",
+      name: "Blocked wall",
+      snapshot: ASSEMBLY_SNAPSHOT
+    });
+    const blockedAssembly = withBlockedAssembly.assemblies.find((assembly) => assembly.name === "Blocked wall");
+
+    const result = await runReportAssistantProjectReadTool({
+      name: "list_project_assemblies",
+      owner: OWNER_A,
+      projectId: seeded.project.id,
+      repository
+    });
+    const body = result as {
+      result?: {
+        assemblies?: Array<{
+          calculationSummary?: Record<string, unknown>;
+          id: string;
+        }>;
+      };
+    };
+    const blockedSummary = body.result?.assemblies?.find((assembly) => assembly.id === blockedAssembly?.id)?.calculationSummary;
+
+    expect(blockedSummary).toMatchObject({
+      primaryOutput: "Rw",
+      status: "needs_input"
+    });
+    expect(blockedSummary).not.toHaveProperty("primaryValueLabel");
+    expect(JSON.stringify(result)).not.toContain("99 dB");
   });
 
   it("requires project and child ids for project-bound reads", async () => {

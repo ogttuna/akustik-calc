@@ -244,6 +244,54 @@ describe("report assistant Workbench apply proposal", () => {
     expect(JSON.stringify(result.proposal)).not.toContain("preset");
   });
 
+  it("filters proposed Workbench outputs by the source draft mode", () => {
+    const draft = readyWallDraft({
+      requestedOutputs: ["Rw", "AIIC"]
+    });
+    const target = targetWorkbench();
+
+    const result = createReportAssistantWorkbenchApplyProposal({
+      calculatorPreviewSummary: {
+        routeStatus: "ready",
+        selectedOutputs: ["Rw", "AIIC"]
+      },
+      draft,
+      expectedSourceDraftContextSignature: draft.contextSignature,
+      expectedTargetWorkbenchSnapshotSignature: target.snapshotSignature,
+      targetWorkbench: target
+    });
+
+    expect(result.ok).toBe(true);
+    if (!result.ok) {
+      return;
+    }
+
+    expect(result.proposal.proposedWorkbench.selectedOutputs).toEqual(["Rw"]);
+    expect(result.proposal.diff.selectedOutputs.after).toEqual(["Rw"]);
+    expect(result.proposal.calculatorPreviewSummary.selectedOutputs).toEqual(["Rw"]);
+    expect(result.proposal.sourceDraft.requestedOutputs).toEqual(["Rw", "AIIC"]);
+    expect(result.warnings).toContain("Ignored AIIC because wall mode does not expose those outputs.");
+  });
+
+  it("rejects apply proposals when every requested output is mode-incompatible", () => {
+    const draft = readyWallDraft({
+      requestedOutputs: ["AIIC"]
+    });
+    const target = targetWorkbench();
+
+    expect(createReportAssistantWorkbenchApplyProposal({
+      draft,
+      expectedSourceDraftContextSignature: draft.contextSignature,
+      expectedTargetWorkbenchSnapshotSignature: target.snapshotSignature,
+      targetWorkbench: target
+    })).toMatchObject({
+      code: "unsupported_draft_outputs",
+      mutates: false,
+      ok: false,
+      statusCode: 400
+    });
+  });
+
   it("rejects stale source draft signatures before building a proposal", () => {
     const draft = readyWallDraft();
     const target = targetWorkbench();

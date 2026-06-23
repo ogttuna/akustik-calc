@@ -1,5 +1,6 @@
 import type {
   JsonValue,
+  ProjectUserVerifiedCalculatedAnchor,
   ServerProjectAssemblyRecord,
   ServerProjectRecord,
   ServerProjectReportRecord,
@@ -17,6 +18,10 @@ import {
   type FileServerProjectRepository,
   type ProjectOwnerScope
 } from "../../lib/server-project-storage";
+import {
+  createDefaultWorkbenchV2VerifiedCalculatedAnchorRepository,
+  type FileWorkbenchV2VerifiedCalculatedAnchorRepository
+} from "../../lib/workbench-v2-verified-calculated-anchor-storage";
 import type { ReportAssistantProjectReadToolName } from "./report-assistant-project-read-contract";
 
 export {
@@ -69,11 +74,36 @@ export type ReportAssistantProjectReportRevisionSummary = {
   sourceAssemblyVersion: number;
 };
 
+export type ReportAssistantProjectVerifiedCalculatedReference = Pick<
+  ProjectUserVerifiedCalculatedAnchor,
+  | "anchorKind"
+  | "createdAtIso"
+  | "createdFromProjectId"
+  | "description"
+  | "fingerprint"
+  | "id"
+  | "name"
+  | "resultBasisTrace"
+  | "revision"
+  | "scope"
+  | "status"
+  | "updatedAtIso"
+  | "values"
+> & {
+  mode: ProjectUserVerifiedCalculatedAnchor["requestContext"]["mode"];
+  valueMetrics: ProjectUserVerifiedCalculatedAnchor["values"][number]["metric"][];
+};
+
 type ReportAssistantProjectReadRepository = Pick<FileServerProjectRepository, "listProjects" | "readProject">;
+type ReportAssistantVerifiedCalculatedAnchorRepository = Pick<
+  FileWorkbenchV2VerifiedCalculatedAnchorRepository,
+  "listVerifiedCalculatedAnchors"
+>;
 
 type ReportAssistantProjectReadBaseInvocation = {
   owner: ProjectOwnerScope;
   repository?: ReportAssistantProjectReadRepository;
+  verifiedCalculatedAnchorRepository?: ReportAssistantVerifiedCalculatedAnchorRepository;
 };
 
 export type ReportAssistantProjectReadInvocation =
@@ -81,7 +111,11 @@ export type ReportAssistantProjectReadInvocation =
       name: "list_projects";
     })
   | (ReportAssistantProjectReadBaseInvocation & {
-      name: "read_project_summary" | "list_project_assemblies" | "list_project_reports";
+      name:
+        | "read_project_summary"
+        | "list_project_assemblies"
+        | "list_project_verified_calculated_references"
+        | "list_project_reports";
       projectId?: string;
     })
   | (ReportAssistantProjectReadBaseInvocation & {
@@ -201,9 +235,24 @@ function ok(name: ReportAssistantProjectReadToolName, result: JsonValue): Report
   };
 }
 
+function summarizeAssemblyCalculationSummary(
+  summary: ServerProjectAssemblyRecord["calculationSummary"]
+): ServerProjectAssemblyRecord["calculationSummary"] {
+  if (!summary || summary.status === "ready") {
+    return summary;
+  }
+
+  return {
+    primaryOutput: summary.primaryOutput,
+    selectedOutputs: summary.selectedOutputs,
+    status: summary.status
+  };
+}
+
 function summarizeAssembly(assembly: ServerProjectAssemblyRecord): ReportAssistantProjectAssemblySummary {
   return {
-    calculationSummary: assembly.calculationSummary,
+    // Coordination note: project-read tools are assistant context, so stale blocked numeric labels are stripped at the boundary.
+    calculationSummary: summarizeAssemblyCalculationSummary(assembly.calculationSummary),
     createdAtIso: assembly.createdAtIso,
     displayCode: assembly.displayCode,
     id: assembly.id,
@@ -246,6 +295,28 @@ function summarizeRevision(revision: ServerProjectReportRevisionRecord): ReportA
     source: revision.source,
     sourceAssemblyId: revision.sourceAssemblyId,
     sourceAssemblyVersion: revision.sourceAssemblyVersion
+  };
+}
+
+function summarizeVerifiedCalculatedReference(
+  anchor: ProjectUserVerifiedCalculatedAnchor
+): ReportAssistantProjectVerifiedCalculatedReference {
+  return {
+    anchorKind: anchor.anchorKind,
+    createdAtIso: anchor.createdAtIso,
+    createdFromProjectId: anchor.createdFromProjectId,
+    description: anchor.description,
+    fingerprint: anchor.fingerprint,
+    id: anchor.id,
+    mode: anchor.requestContext.mode,
+    name: anchor.name,
+    resultBasisTrace: anchor.resultBasisTrace,
+    revision: anchor.revision,
+    scope: anchor.scope,
+    status: anchor.status,
+    updatedAtIso: anchor.updatedAtIso,
+    valueMetrics: anchor.values.map((value) => value.metric),
+    values: anchor.values
   };
 }
 
@@ -419,6 +490,24 @@ export async function runReportAssistantProjectReadTool(
       return ok(invocation.name, {
         assemblies: project.assemblies.map((assembly) => summarizeAssembly(assembly))
       });
+
+    case "list_project_verified_calculated_references": {
+      const verifiedCalculatedAnchorRepository =
+        invocation.verifiedCalculatedAnchorRepository ?? createDefaultWorkbenchV2VerifiedCalculatedAnchorRepository();
+
+      try {
+        const anchors = await verifiedCalculatedAnchorRepository.listVerifiedCalculatedAnchors(invocation.owner);
+
+        return ok(invocation.name, {
+          project: summarizeServerProject(project),
+          verifiedCalculatedReferences: anchors
+            .filter((anchor) => anchor.createdFromProjectId === project.id)
+            .map((anchor) => summarizeVerifiedCalculatedReference(anchor))
+        });
+      } catch (error) {
+        return storageFailure(invocation.name, error);
+      }
+    }
 
     case "read_project_assembly_snapshot": {
       const assembly = findAssembly(invocation.name, project, invocation.assemblyId);

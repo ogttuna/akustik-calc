@@ -78,6 +78,35 @@ Selected next plan:
 Selected next label:
 `post-V1 wall opening/leak building apparent Dn,w/Dn,A companion coverage refresh`
 
+Selected next landed no-runtime coverage refresh:
+`post_v1_wall_opening_leak_building_apparent_dna_companion_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-opening-leak-building-apparent-dna-companion-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_OPENING_LEAK_BUILDING_APPARENT_DNA_COMPANION_COVERAGE_REFRESH_PLAN_2026-06-23.md`
+/
+`post_v1_wall_opening_leak_building_apparent_dna_companion_coverage_refresh_landed_no_runtime_selected_runtime_first_rerank_after_opening_leak_building_apparent_dna_companion_coverage_refresh`.
+It re-probes selected candidate
+`wall.opening_leak_building_apparent_dna_companion_owner`.
+Counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next action:
+`post_v1_runtime_first_route_family_rerank_after_wall_opening_leak_building_apparent_dna_companion_coverage_refresh_plan`
+
+Current selected next file:
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-opening-leak-building-apparent-dna-companion-coverage-refresh-contract.test.ts`
+
+Current selected next plan:
+`docs/calculator/POST_V1_RUNTIME_FIRST_RERANK_AFTER_WALL_OPENING_LEAK_BUILDING_APPARENT_DNA_COMPANION_COVERAGE_REFRESH_PLAN_2026-06-23.md`
+
+Current selected next label:
+`post-V1 runtime-first route-family rerank after wall opening/leak building apparent Dn,w/Dn,A companion coverage refresh`
+
 ## Selection Card
 
 User construction / formula family:

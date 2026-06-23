@@ -163,8 +163,8 @@ function expectRawBareRuntime(
     RwCtrSemantic: "rw_plus_c",
     basis: OPEN_WEB_RAW_BARE_FORMULA_BASIS
   });
-  expect(result.supportedTargetOutputs).toEqual(["Rw", "C", "Ctr", "Ln,w", "CI", "CI,50-2500", "Ln,w+CI"]);
-  expect(result.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w", "L'n,w", "IIC"]);
+  expect(result.supportedTargetOutputs).toEqual(["Ln,w", "CI", "CI,50-2500", "Ln,w+CI"]);
+  expect(result.unsupportedTargetOutputs).toEqual(["Rw", "C", "Ctr", "R'w", "DnT,w", "L'n,w", "IIC"]);
   expect(result.warnings.some((warning: string) => /raw-bare open-web steel formula corridor/i.test(warning))).toBe(true);
   expect(
     result.dynamicImpactTrace?.notes.some((note: string) => /without borrowing UBIQ INEX\/firestop package rows/i.test(note))

@@ -1713,21 +1713,16 @@ describe("acoustic calculator answer engine V1 contract", () => {
     });
 
     expect(packageTransfer.layerCombinationResolverTrace).toMatchObject({
-      candidateKind: "similarity_anchor",
-      runtimeBasisId: OPEN_BOX_TIMBER_SIMILARITY_BASIS,
-      selectedCandidateId: "floor.open_box_timber.package_transfer_similarity",
-      supportBucket: "anchored_estimate",
-      supportedMetrics: ["Rw", "C", "Ln,w", "CI", "CI,50-2500", "Ln,w+CI"]
+      candidateKind: "needs_input_boundary",
+      runtimeBasisId: null,
+      selectedCandidateId: "generic.required_input_owner.needs_input_boundary",
+      supportBucket: "needs_input",
+      supportedMetrics: []
     });
-    expect(packageTransfer.supportedTargetOutputs).toEqual([
+    expect(packageTransfer.supportedTargetOutputs).toEqual(["Ln,w", "CI", "CI,50-2500", "Ln,w+CI"]);
+    expect(packageTransfer.unsupportedTargetOutputs).toEqual([
       "Rw",
       "C",
-      "Ln,w",
-      "CI",
-      "CI,50-2500",
-      "Ln,w+CI"
-    ]);
-    expect(packageTransfer.unsupportedTargetOutputs).toEqual([
       "Ctr",
       "R'w",
       "DnT,w",
@@ -1738,16 +1733,7 @@ describe("acoustic calculator answer engine V1 contract", () => {
     ]);
     expect(packageTransfer.layerCombinationResolverTrace?.supportedMetrics).not.toContain("Ctr");
     expect(packageTransfer.layerCombinationResolverTrace?.supportedMetrics).not.toContain("L'n,w");
-    expect(packageTransfer.layerCombinationResolverTrace?.valuePins).toEqual(
-      expect.arrayContaining([
-        { metric: "Rw", value: 66 },
-        { metric: "C", value: -3.9 },
-        { metric: "Ln,w", value: 50.8 },
-        { metric: "CI", value: 1.3 },
-        { metric: "CI,50-2500", value: 3.3 },
-        { metric: "Ln,w+CI", value: 52 }
-      ])
-    );
+    expect(packageTransfer.layerCombinationResolverTrace?.valuePins ?? []).toEqual([]);
 
     expect(supportedBand.layerCombinationResolverTrace).toMatchObject({
       candidateKind: "similarity_anchor",

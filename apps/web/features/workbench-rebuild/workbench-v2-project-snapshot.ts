@@ -17,6 +17,10 @@ import {
   parseMaterialEditorPersistedState,
   type MaterialVisualOverride
 } from "./material-editor-state";
+import {
+  WORKBENCH_V2_USER_OUTPUT_ID_SET,
+  normalizeWorkbenchV2SelectedOutputs
+} from "./workbench-v2-output-catalog";
 
 export const WORKBENCH_V2_PROJECT_SNAPSHOT_SCHEMA_ID = "dynecho.workbench-v2.snapshot.v1";
 
@@ -71,22 +75,6 @@ export type WorkbenchV2ProjectSnapshotParseResult = {
   droppedVisualOverrides: number;
   snapshot: WorkbenchV2ProjectSnapshot | null;
 };
-
-const REQUESTED_OUTPUT_IDS = new Set<RequestedOutputId>([
-  "Rw",
-  "R'w",
-  "DnT,w",
-  "STC",
-  "C",
-  "Ctr",
-  "Ln,w",
-  "L'n,w",
-  "L'nT,w",
-  "L'nT,50",
-  "DeltaLw",
-  "CI",
-  "CI,50-2500"
-]);
 
 export const WORKBENCH_V2_DEFAULT_CONTEXT: WorkbenchV2ContextDraft = {
   airborneMode: "element_lab",
@@ -191,11 +179,14 @@ function parseRequestedOutputs(value: unknown): RequestedOutputId[] {
     return [];
   }
 
-  return Array.from(new Set(value.filter((entry): entry is RequestedOutputId => typeof entry === "string" && REQUESTED_OUTPUT_IDS.has(entry as RequestedOutputId))));
-}
-
-function getDefaultSelectedOutputs(mode: WorkbenchV2StudyMode): RequestedOutputId[] {
-  return mode === "floor" ? ["Ln,w"] : ["Rw"];
+  return Array.from(
+    new Set(
+      value.filter(
+        (entry): entry is RequestedOutputId =>
+          typeof entry === "string" && WORKBENCH_V2_USER_OUTPUT_ID_SET.has(entry as RequestedOutputId)
+      )
+    )
+  );
 }
 
 export function buildWorkbenchV2ProjectSnapshot(input: {
@@ -221,7 +212,7 @@ export function buildWorkbenchV2ProjectSnapshot(input: {
     savedAtIso: input.savedAtIso,
     schemaId: WORKBENCH_V2_PROJECT_SNAPSHOT_SCHEMA_ID,
     selectedLayerId: input.selectedLayerId,
-    selectedOutputs: [...input.selectedOutputs]
+    selectedOutputs: normalizeWorkbenchV2SelectedOutputs(input.selectedOutputs, input.mode)
   };
 }
 
@@ -251,7 +242,7 @@ export function parseWorkbenchV2ProjectSnapshot(value: unknown): WorkbenchV2Proj
   const selectedLayerId = typeof value.selectedLayerId === "string" && layers.some((layer) => layer.id === value.selectedLayerId)
     ? value.selectedLayerId
     : layers[0]?.id ?? null;
-  const selectedOutputs = parseRequestedOutputs(value.selectedOutputs);
+  const selectedOutputs = normalizeWorkbenchV2SelectedOutputs(parseRequestedOutputs(value.selectedOutputs), mode);
 
   return {
     droppedCustomMaterials: materialState.droppedCustomMaterials,
@@ -267,7 +258,7 @@ export function parseWorkbenchV2ProjectSnapshot(value: unknown): WorkbenchV2Proj
       savedAtIso: value.savedAtIso,
       schemaId: WORKBENCH_V2_PROJECT_SNAPSHOT_SCHEMA_ID,
       selectedLayerId,
-      selectedOutputs: selectedOutputs.length ? selectedOutputs : getDefaultSelectedOutputs(mode)
+      selectedOutputs
     }
   };
 }

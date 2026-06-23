@@ -260,9 +260,10 @@ function expectFieldRuntime(result: AssemblyCalculation): void {
 }
 
 function expectBuildingRuntime(result: AssemblyCalculation): void {
-  expect(result.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
-  expect(result.unsupportedTargetOutputs).toEqual(["Rw", "STC", "Dn,w", "Dn,A", "DnT,A"]);
+  expect(result.supportedTargetOutputs).toEqual(["R'w", "Dn,w", "DnT,w"]);
+  expect(result.unsupportedTargetOutputs).toEqual(["Rw", "STC", "Dn,A", "DnT,A"]);
   expect(result.metrics.estimatedRwPrimeDb).toBe(31.6);
+  expect(result.metrics.estimatedDnWDb).toBe(31.9);
   expect(result.metrics.estimatedDnTwDb).toBe(32.1);
   expect(result.airborneBasis).toMatchObject({
     errorBudgetDb: 10,

@@ -175,6 +175,12 @@ import {
   type WorkbenchV2ProjectSnapshot,
   type WorkbenchV2StudyMode
 } from "./workbench-v2-project-snapshot";
+import {
+  WORKBENCH_V2_OUTPUT_OPTIONS,
+  getDefaultWorkbenchV2SelectedOutputs,
+  getWorkbenchV2OutputOption,
+  normalizeWorkbenchV2SelectedOutputs
+} from "./workbench-v2-output-catalog";
 
 type StudyMode = WorkbenchV2StudyMode;
 type WorkbenchDrawerTab = "materials" | "presets" | "projects";
@@ -309,13 +315,6 @@ type LayerInputEffectivenessMap = Record<string, Partial<Record<LayerInputFieldI
 
 type DraftLayer = LayerStackUndoLayer;
 
-type OutputOption = {
-  group: "Airborne" | "Impact" | "Spectrum";
-  id: RequestedOutputId;
-  label: string;
-  modes: readonly StudyMode[];
-};
-
 type OutputRow = {
   detail: string;
   label: string;
@@ -414,21 +413,7 @@ type ServerProjectReportRecordPayload = ServerProjectReportSummaryPayload & {
 type ServerProjectStatus = "error" | "idle" | "loading" | "restoring" | "syncing";
 type WorkbenchVerifiedCalculatedAnchorStatus = "error" | "idle" | "syncing";
 
-const OUTPUT_OPTIONS: readonly OutputOption[] = [
-  { group: "Airborne", id: "Rw", label: "Rw", modes: ["wall", "floor"] },
-  { group: "Airborne", id: "R'w", label: "R'w", modes: ["wall", "floor"] },
-  { group: "Airborne", id: "DnT,w", label: "DnT,w", modes: ["wall", "floor"] },
-  { group: "Airborne", id: "STC", label: "STC", modes: ["wall", "floor"] },
-  { group: "Spectrum", id: "C", label: "C", modes: ["wall", "floor"] },
-  { group: "Spectrum", id: "Ctr", label: "Ctr", modes: ["wall", "floor"] },
-  { group: "Impact", id: "Ln,w", label: "Ln,w", modes: ["floor"] },
-  { group: "Impact", id: "L'n,w", label: "L'n,w", modes: ["floor"] },
-  { group: "Impact", id: "L'nT,w", label: "L'nT,w", modes: ["floor"] },
-  { group: "Impact", id: "L'nT,50", label: "L'nT,50", modes: ["floor"] },
-  { group: "Impact", id: "DeltaLw", label: "DeltaLw", modes: ["floor"] },
-  { group: "Impact", id: "CI", label: "CI", modes: ["floor"] },
-  { group: "Impact", id: "CI,50-2500", label: "CI,50", modes: ["floor"] }
-];
+const OUTPUT_OPTIONS = WORKBENCH_V2_OUTPUT_OPTIONS;
 
 const CALCULATOR_SOURCE_REVIEW_RESEARCH_PATTERN =
   /\b(?:analiz|analyze|arastir\w*|bak|check|comment|compare|degerlendir\w*|evaluate|google|incele\w*|internet|karsilastir\w*|kaynak|kontrol|net|netten|referans|reference|research|review|search|source|web|yorumla\w*)\b/u;
@@ -3064,15 +3049,23 @@ function outputRequiresAirborneContext(outputId: RequestedOutputId): boolean {
 }
 
 function outputRequiresImpactContext(outputId: RequestedOutputId): boolean {
-  return outputId.includes("'n") || outputId.startsWith("L'nT") || outputId === "CI" || outputId === "CI,50-2500";
+  return (
+    outputId.includes("'n") ||
+    outputId.startsWith("L'nT") ||
+    outputId === "AIIC" ||
+    outputId === "CI" ||
+    outputId === "CI,50-2500" ||
+    outputId === "Ln,w+CI" ||
+    outputId === "LnT,A"
+  );
 }
 
 function isImpactOutput(outputId: RequestedOutputId): boolean {
-  return OUTPUT_OPTIONS.find((output) => output.id === outputId)?.group === "Impact";
+  return getWorkbenchV2OutputOption(outputId)?.group === "Impact";
 }
 
 function isAirborneCurveOutput(outputId: RequestedOutputId): boolean {
-  const group = OUTPUT_OPTIONS.find((output) => output.id === outputId)?.group;
+  const group = getWorkbenchV2OutputOption(outputId)?.group;
   return group === "Airborne" || group === "Spectrum";
 }
 
@@ -3093,7 +3086,7 @@ export function showBuildingPredictionContext(
   return selectedAirborneOutput && (context.airborneMode === "building_prediction" || getMissingPhysicalInputs(result).some(isBuildingPredictionInput));
 }
 
-function showImpactContext(selectedOutputs: readonly RequestedOutputId[], result: AssemblyCalculation | null): boolean {
+export function showImpactContext(selectedOutputs: readonly RequestedOutputId[], result: AssemblyCalculation | null): boolean {
   const missingPhysicalInputs = getMissingPhysicalInputs(result);
   return (
     selectedOutputs.some(outputRequiresImpactContext) ||
@@ -3101,10 +3094,10 @@ function showImpactContext(selectedOutputs: readonly RequestedOutputId[], result
   );
 }
 
-function showFloorImpactContext(selectedOutputs: readonly RequestedOutputId[], result: AssemblyCalculation | null): boolean {
+export function showFloorImpactContext(selectedOutputs: readonly RequestedOutputId[], result: AssemblyCalculation | null): boolean {
   const missingPhysicalInputs = getMissingPhysicalInputs(result);
   return (
-    selectedOutputs.includes("DeltaLw") ||
+    selectedOutputs.some(isImpactOutput) ||
     missingPhysicalInputs.some((field: string) => field.includes("loadBasisKgM2") || field.includes("resilientLayerDynamicStiffnessMNm3"))
   );
 }
@@ -4794,7 +4787,7 @@ export function CalculatorWorkbench() {
       // keep clarification prompts non-mutating and preview/ranking calculator-backed.
       const candidateBridge = createWorkbenchV2AssistantSourceAlternativeCandidatesFromReview({
         currentLayers: layers,
-        idFactory: (_candidateIndex, _layerIndex) => createLayerId(),
+        idFactory: () => createLayerId(),
         materials,
         mode,
         review: result.review,
@@ -5097,7 +5090,7 @@ export function CalculatorWorkbench() {
       setMode(payload.mode);
     }
 
-    setSelectedOutputs([...payload.selectedOutputs]);
+    setSelectedOutputs(normalizeWorkbenchV2SelectedOutputs(payload.selectedOutputs, payload.mode));
     setContext((current) => ({
       ...current,
       ...payload.contextPatch
@@ -5731,12 +5724,12 @@ export function CalculatorWorkbench() {
     if (result.mode !== mode) {
       setMode(result.mode);
       if (!result.selectedOutputs) {
-        setSelectedOutputs(result.mode === "floor" ? ["Ln,w"] : ["Rw"]);
+        setSelectedOutputs(getDefaultWorkbenchV2SelectedOutputs(result.mode));
       }
     }
 
     if (result.selectedOutputs) {
-      setSelectedOutputs([...result.selectedOutputs]);
+      setSelectedOutputs(normalizeWorkbenchV2SelectedOutputs(result.selectedOutputs, result.mode));
     }
 
     if (result.candidateStacks) {
@@ -7133,7 +7126,7 @@ export function CalculatorWorkbench() {
     const nextSelectedLayerId = nextLayers.some((layer) => layer.id === selectedLayerId) ? selectedLayerId : nextLayers[0]?.id ?? null;
 
     setMode(nextMode);
-    setSelectedOutputs(nextMode === "floor" ? ["Ln,w"] : ["Rw"]);
+    setSelectedOutputs(getDefaultWorkbenchV2SelectedOutputs(nextMode));
     setLayers(nextLayers);
     setSelectedLayerId(nextSelectedLayerId);
     setLayerUndoStack([]);

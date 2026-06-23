@@ -1078,6 +1078,82 @@ const PUBLIC_SOURCE_MATERIALS: readonly MaterialDefinition[] = [
     tags: ["lining", "board", "gyproc", "wallboard-ten", "plasterboard", "public-source"]
   },
   {
+    id: "gyproc_soundbloc_12_5",
+    name: "Gyproc SoundBloc 12.5 mm",
+    category: "finish",
+    densityKgM3: 824,
+    acoustic: {
+      behavior: "panel_leaf",
+      lossFactor: 0.035,
+      notes: [
+        "Density is derived from British Gypsum's public PDS minimum board weight of 10.3 kg/m2 at 12.5 mm.",
+        "Elastic and damping values remain nominal enhanced gypsum-board inputs; do not treat this as a measured acoustic curve."
+      ],
+      poissonRatio: 0.25,
+      propertySourceStatus: "catalog_nominal",
+      youngModulusPa: 2800000000
+    },
+    notes: "Public-source seed: https://www.british-gypsum.com/documents/product-data-sheet-pds/british-gypsum-pds-gyproc-soundbloc-12-5mm.pdf",
+    tags: ["lining", "board", "gyproc", "soundbloc", "plasterboard", "acoustic-board", "public-source"]
+  },
+  {
+    id: "gyproc_soundbloc_15",
+    name: "Gyproc SoundBloc 15 mm",
+    category: "finish",
+    densityKgM3: 867,
+    acoustic: {
+      behavior: "panel_leaf",
+      lossFactor: 0.035,
+      notes: [
+        "Density is derived from British Gypsum's public PDS minimum board weight of 13.0 kg/m2 at 15 mm.",
+        "Elastic and damping values remain nominal enhanced gypsum-board inputs; do not treat this as a measured acoustic curve."
+      ],
+      poissonRatio: 0.25,
+      propertySourceStatus: "catalog_nominal",
+      youngModulusPa: 2800000000
+    },
+    notes: "Public-source seed: https://www.british-gypsum.com/documents/product-data-sheet-pds/british-gypsum-pds-gyproc-soundbloc-15mm.pdf",
+    tags: ["lining", "board", "gyproc", "soundbloc", "plasterboard", "acoustic-board", "public-source"]
+  },
+  {
+    id: "gyproc_habito_12_5",
+    name: "Gyproc Habito 12.5 mm",
+    category: "finish",
+    densityKgM3: 936,
+    acoustic: {
+      behavior: "panel_leaf",
+      lossFactor: 0.035,
+      notes: [
+        "Density is derived from British Gypsum's public PDS minimum board weight of 11.7 kg/m2 at 12.5 mm.",
+        "Elastic and damping values remain nominal very-high-density gypsum-board inputs; do not treat this as a measured acoustic curve."
+      ],
+      poissonRatio: 0.25,
+      propertySourceStatus: "catalog_nominal",
+      youngModulusPa: 3000000000
+    },
+    notes: "Public-source seed: https://www.british-gypsum.com/documents/product-data-sheet-pds/british-gypsum-pds-gyproc-habito-12-5mm.pdf",
+    tags: ["lining", "board", "gyproc", "habito", "plasterboard", "impact-resistant-board", "public-source"]
+  },
+  {
+    id: "gyproc_fireline_12_5",
+    name: "Gyproc FireLine 12.5 mm",
+    category: "finish",
+    densityKgM3: 776,
+    acoustic: {
+      behavior: "panel_leaf",
+      lossFactor: 0.03,
+      notes: [
+        "Density is derived from British Gypsum's public PDS minimum board weight of 9.7 kg/m2 at 12.5 mm.",
+        "Elastic and damping values remain nominal fire-rated gypsum-board inputs; do not treat this as a measured acoustic curve."
+      ],
+      poissonRatio: 0.25,
+      propertySourceStatus: "catalog_nominal",
+      youngModulusPa: 2500000000
+    },
+    notes: "Public-source seed: https://www.british-gypsum.com/documents/product-data-sheet-pds/british-gypsum-pds-gyproc-fireline-12-5mm.pdf",
+    tags: ["lining", "board", "gyproc", "fireline", "plasterboard", "fire-board", "public-source"]
+  },
+  {
     id: "knauf_pro_hd_12_5",
     name: "Knauf PRO HD 12.5 mm",
     category: "finish",
@@ -1097,6 +1173,44 @@ const PUBLIC_SOURCE_MATERIALS: readonly MaterialDefinition[] = [
     tags: ["lining", "board", "knauf", "pro-hd", "gypsum", "public-source"]
   },
   {
+    id: "knauf_soundshield_plus_12_5",
+    name: "Knauf Soundshield Plus 12.5 mm",
+    category: "finish",
+    densityKgM3: 920,
+    acoustic: {
+      behavior: "panel_leaf",
+      lossFactor: 0.035,
+      notes: [
+        "Density follows Knauf Soundshield Plus public datasheet board-density row for 12.5 mm.",
+        "Elastic and damping values remain nominal enhanced gypsum board inputs."
+      ],
+      poissonRatio: 0.25,
+      propertySourceStatus: "catalog_nominal",
+      youngModulusPa: 2800000000
+    },
+    notes: "Public-source seed: https://knauf.com/api/download-center/v1/assets/128d62d1-6570-4c71-9e2d-c93a46d4ab77?download=true",
+    tags: ["lining", "board", "knauf", "soundshield-plus", "gypsum", "acoustic-board", "public-source"]
+  },
+  {
+    id: "knauf_soundshield_plus_15",
+    name: "Knauf Soundshield Plus 15 mm",
+    category: "finish",
+    densityKgM3: 887,
+    acoustic: {
+      behavior: "panel_leaf",
+      lossFactor: 0.035,
+      notes: [
+        "Density follows Knauf Soundshield Plus public datasheet board-density row for 15 mm.",
+        "Elastic and damping values remain nominal enhanced gypsum board inputs."
+      ],
+      poissonRatio: 0.25,
+      propertySourceStatus: "catalog_nominal",
+      youngModulusPa: 2800000000
+    },
+    notes: "Public-source seed: https://knauf.com/api/download-center/v1/assets/128d62d1-6570-4c71-9e2d-c93a46d4ab77?download=true",
+    tags: ["lining", "board", "knauf", "soundshield-plus", "gypsum", "acoustic-board", "public-source"]
+  },
+  {
     id: "knauf_pro_hd_15",
     name: "Knauf PRO HD 15 mm",
     category: "finish",
@@ -1114,6 +1228,44 @@ const PUBLIC_SOURCE_MATERIALS: readonly MaterialDefinition[] = [
     },
     notes: "Public-source seed: https://knauf.com/api/download-center/v1/assets/342853ac-e96a-433a-a0f5-5124dfedbed7?download=true",
     tags: ["lining", "board", "knauf", "pro-hd", "gypsum", "public-source"]
+  },
+  {
+    id: "quietrock_510",
+    name: "QuietRock 510",
+    category: "finish",
+    densityKgM3: 819,
+    acoustic: {
+      behavior: "panel_leaf",
+      lossFactor: 0.06,
+      notes: [
+        "Density is derived from PABCO QuietRock 510 public datasheet approximate weight of 2.13 lb/ft2 at 1/2 in.",
+        "The higher damping input is nominal for the viscoelastic laminated board family; it is not a measured acoustic curve."
+      ],
+      poissonRatio: 0.25,
+      propertySourceStatus: "catalog_nominal",
+      youngModulusPa: 2500000000
+    },
+    notes: "Public-source seed: https://pabcogypsum.com/cms/resources/media/2022/12/QuietRock_510_Datasheet.pdf",
+    tags: ["lining", "board", "quietrock", "pabco", "damped-gypsum", "acoustic-board", "public-source"]
+  },
+  {
+    id: "quietrock_530",
+    name: "QuietRock 530",
+    category: "finish",
+    densityKgM3: 884,
+    acoustic: {
+      behavior: "panel_leaf",
+      lossFactor: 0.06,
+      notes: [
+        "Density is derived from PABCO QuietRock 530 public datasheet approximate weight of 2.88 lb/ft2 at 5/8 in.",
+        "The higher damping input is nominal for the viscoelastic laminated board family; it is not a measured acoustic curve."
+      ],
+      poissonRatio: 0.25,
+      propertySourceStatus: "catalog_nominal",
+      youngModulusPa: 2500000000
+    },
+    notes: "Public-source seed: https://pabcogypsum.com/cms/resources/media/2022/12/QuietRock_530_Datasheet.pdf",
+    tags: ["lining", "board", "quietrock", "pabco", "damped-gypsum", "acoustic-board", "public-source"]
   },
   {
     id: "fermacell_gypsum_fibreboard_1150",
@@ -1165,6 +1317,150 @@ const PUBLIC_SOURCE_MATERIALS: readonly MaterialDefinition[] = [
     },
     notes: "Public-source seed: https://cwc.ca/wp-content/uploads/2019/03/Oriented-Strand-Board-OSB-Sizes.pdf",
     tags: ["deck", "subfloor", "wood-board", "osb", "structural", "timber", "public-source"]
+  },
+  {
+    id: "stora_enso_clt_490",
+    name: "Stora Enso CLT 490",
+    category: "mass",
+    densityKgM3: 490,
+    acoustic: {
+      behavior: "mass_timber",
+      lossFactor: 0.025,
+      notes: [
+        "Density follows the Stora Enso CLT public technical product data row.",
+        "The stiffness input remains the catalog nominal isotropic mass-timber placeholder; orthotropic CLT calibration is separate."
+      ],
+      poissonRatio: 0.3,
+      propertySourceStatus: "catalog_nominal",
+      youngModulusPa: 11000000000
+    },
+    notes: "Public-source seed: https://www.storaenso.com/en/products/mass-timber-construction/building-products/clt",
+    tags: ["mass-timber", "structural", "clt", "stora-enso", "public-source"]
+  },
+  {
+    id: "hh_celcon_solar_460",
+    name: "H+H Celcon Solar Grade 460",
+    category: "mass",
+    densityKgM3: 460,
+    acoustic: {
+      behavior: "rigid_mass",
+      lossFactor: 0.03,
+      notes: [
+        "Density follows the current H+H Celcon Solar Grade public product/data rows.",
+        "This product-specific public seed does not replace the older Celcon acoustic-reference-slice material ids."
+      ],
+      poissonRatio: 0.2,
+      propertySourceStatus: "catalog_nominal",
+      youngModulusPa: 3000000000
+    },
+    notes: "Public-source seed: https://www.hhcelcon.co.uk/products-applications/products/solar-grade-blocks",
+    tags: ["aac", "aircrete", "celcon", "h+h", "block", "masonry", "lightweight-mineral", "public-source"]
+  },
+  {
+    id: "hh_celcon_standard_600",
+    name: "H+H Celcon Standard Grade 600",
+    category: "mass",
+    densityKgM3: 600,
+    acoustic: {
+      behavior: "rigid_mass",
+      lossFactor: 0.03,
+      notes: [
+        "Density follows the current H+H Celcon Standard Grade public product/data rows.",
+        "This product-specific public seed does not replace the older Celcon acoustic-reference-slice material ids."
+      ],
+      poissonRatio: 0.2,
+      propertySourceStatus: "catalog_nominal",
+      youngModulusPa: 3200000000
+    },
+    notes: "Public-source seed: https://www.hhcelcon.co.uk/products-applications/products/standard-grade-blocks",
+    tags: ["aac", "aircrete", "celcon", "h+h", "block", "masonry", "lightweight-mineral", "public-source"]
+  },
+  {
+    id: "hh_celcon_high_strength_730",
+    name: "H+H Celcon High Strength Grade 730",
+    category: "mass",
+    densityKgM3: 730,
+    acoustic: {
+      behavior: "rigid_mass",
+      lossFactor: 0.03,
+      notes: [
+        "Density follows the current H+H Celcon High Strength public product/data rows.",
+        "This product-specific public seed does not replace the older Celcon acoustic-reference-slice material ids."
+      ],
+      poissonRatio: 0.2,
+      propertySourceStatus: "catalog_nominal",
+      youngModulusPa: 3500000000
+    },
+    notes: "Public-source seed: https://www.hhcelcon.co.uk/products-applications/products/high-strength-grade-blocks",
+    tags: ["aac", "aircrete", "celcon", "h+h", "block", "masonry", "lightweight-mineral", "public-source"]
+  },
+  {
+    id: "tecsound_sy_35",
+    name: "TECSOUND SY 35",
+    category: "finish",
+    densityKgM3: 2000,
+    acoustic: {
+      behavior: "limp_mass_membrane",
+      lossFactor: 0.12,
+      notes: [
+        "Density is derived from SOPREMA TECSOUND SY 35 area weight of 3.5 kg/m2 at 1.75 mm.",
+        "Limp-mass damping remains nominal until product-specific frequency data is source-owned."
+      ],
+      propertySourceStatus: "catalog_nominal"
+    },
+    notes: "Public-source seed: https://www.soprema.co.uk/products/tecsound-sy",
+    tags: ["membrane", "barrier", "limp-mass", "tecsound", "soprema", "self-adhesive", "public-source"]
+  },
+  {
+    id: "tecsound_sy_50",
+    name: "TECSOUND SY 50",
+    category: "finish",
+    densityKgM3: 2000,
+    acoustic: {
+      behavior: "limp_mass_membrane",
+      lossFactor: 0.12,
+      notes: [
+        "Density is derived from SOPREMA TECSOUND SY 50 area weight of 5 kg/m2 at 2.5 mm.",
+        "Limp-mass damping remains nominal until product-specific frequency data is source-owned."
+      ],
+      propertySourceStatus: "catalog_nominal"
+    },
+    notes: "Public-source seed: https://www.soprema.co.uk/products/tecsound-sy",
+    tags: ["membrane", "barrier", "limp-mass", "tecsound", "soprema", "self-adhesive", "public-source"]
+  },
+  {
+    id: "tecsound_sy_70",
+    name: "TECSOUND SY 70",
+    category: "finish",
+    densityKgM3: 2000,
+    acoustic: {
+      behavior: "limp_mass_membrane",
+      lossFactor: 0.12,
+      notes: [
+        "Density is derived from SOPREMA TECSOUND SY 70 area weight of 7 kg/m2 at 3.5 mm.",
+        "Limp-mass damping remains nominal until product-specific frequency data is source-owned."
+      ],
+      propertySourceStatus: "catalog_nominal"
+    },
+    notes: "Public-source seed: https://www.soprema.co.uk/products/tecsound-sy",
+    tags: ["membrane", "barrier", "limp-mass", "tecsound", "soprema", "self-adhesive", "public-source"]
+  },
+  {
+    id: "tecsound_sy_100",
+    name: "TECSOUND SY 100",
+    category: "finish",
+    densityKgM3: 2000,
+    acoustic: {
+      behavior: "limp_mass_membrane",
+      lossFactor: 0.12,
+      notes: [
+        "Density is derived from SOPREMA TECSOUND SY 100 area weight of 10 kg/m2 at 5 mm.",
+        "Limp-mass damping remains nominal until product-specific frequency data is source-owned."
+      ],
+      propertySourceStatus: "catalog_nominal"
+    },
+    notes: "Public-source seed: https://www.soprema.co.uk/products/tecsound-sy",
+    tags: ["membrane", "barrier", "limp-mass", "tecsound", "soprema", "self-adhesive", "public-source"]
   },
   {
     id: "rockwool_rwa45",
@@ -1260,6 +1556,25 @@ const PUBLIC_SOURCE_MATERIALS: readonly MaterialDefinition[] = [
     },
     notes: "Public-source density seed: https://www.rockwool.com/syssiteassets/rw-uk/downloads/nbs-specifications/rockwool-insulation-slabs--rwa45--rw3-rw4-rw5-rw6---nbs-specification.pdf",
     tags: ["cavity-fill", "porous", "rockwool", "rw6", "stone-wool", "public-source"]
+  },
+  {
+    id: "rockwool_afb_40",
+    name: "ROCKWOOL AFB 40",
+    category: "insulation",
+    densityKgM3: 40,
+    acoustic: {
+      absorberClass: "porous_absorptive",
+      behavior: "porous_absorber",
+      flowResistivityPaSM2: 14000,
+      notes: [
+        "Density follows ROCKWOOL AFB public brochure nominal density of 40 kg/m3.",
+        "Flow resistivity is an engineering nominal for porous absorber modelling and is not declared in that brochure."
+      ],
+      porosity: 0.95,
+      propertySourceStatus: "engineering_default"
+    },
+    notes: "Public-source density seed: https://www.rockwool.com/siteassets/o2-rockwool/documentation/brochures/commercial/afb-acoustical-fire-batts-steel-studs-brochure.pdf",
+    tags: ["cavity-fill", "porous", "rockwool", "afb", "stone-wool", "north-america", "public-source"]
   },
   {
     id: "owens_corning_703",
@@ -1420,6 +1735,146 @@ const PUBLIC_SOURCE_MATERIALS: readonly MaterialDefinition[] = [
     },
     notes: "Public-source seed: https://jelinek.com/quietcork-underlayment-specifications",
     tags: ["resilient", "underlay", "cork", "floor", "public-source"]
+  },
+  {
+    id: "regupol_sound_12",
+    name: "REGUPOL sound 12",
+    category: "support",
+    densityKgM3: 0,
+    acoustic: {
+      behavior: "resilient_layer",
+      lossFactor: 0.08,
+      notes: [
+        "Dynamic stiffness follows REGUPOL sound public product-family table; mass density is not declared in the source page.",
+        "Use this as an impact resilient layer, not as an airborne mass contribution."
+      ],
+      propertySourceStatus: "catalog_nominal"
+    },
+    impact: {
+      dynamicStiffnessMNm3: 6
+    },
+    notes: "Public-source seed: https://acoustics.regupol.com/products/range/regupol-sound/",
+    tags: ["resilient", "underlay", "impact", "regupol", "sound", "public-source"]
+  },
+  {
+    id: "regupol_sound_15",
+    name: "REGUPOL sound 15",
+    category: "support",
+    densityKgM3: 0,
+    acoustic: {
+      behavior: "resilient_layer",
+      lossFactor: 0.08,
+      notes: [
+        "Dynamic stiffness follows REGUPOL sound public product-family table; mass density is not declared in the source page.",
+        "Use this as an impact resilient layer, not as an airborne mass contribution."
+      ],
+      propertySourceStatus: "catalog_nominal"
+    },
+    impact: {
+      dynamicStiffnessMNm3: 6
+    },
+    notes: "Public-source seed: https://acoustics.regupol.com/products/range/regupol-sound/",
+    tags: ["resilient", "underlay", "impact", "regupol", "sound", "public-source"]
+  },
+  {
+    id: "regupol_sound_17",
+    name: "REGUPOL sound 17",
+    category: "support",
+    densityKgM3: 0,
+    acoustic: {
+      behavior: "resilient_layer",
+      lossFactor: 0.08,
+      notes: [
+        "Dynamic stiffness follows REGUPOL sound public product-family table; mass density is not declared in the source page.",
+        "Use this as an impact resilient layer, not as an airborne mass contribution."
+      ],
+      propertySourceStatus: "catalog_nominal"
+    },
+    impact: {
+      dynamicStiffnessMNm3: 19
+    },
+    notes: "Public-source seed: https://acoustics.regupol.com/products/range/regupol-sound/",
+    tags: ["resilient", "underlay", "impact", "regupol", "sound", "public-source"]
+  },
+  {
+    id: "regupol_sound_47",
+    name: "REGUPOL sound 47",
+    category: "support",
+    densityKgM3: 0,
+    acoustic: {
+      behavior: "resilient_layer",
+      lossFactor: 0.08,
+      notes: [
+        "Dynamic stiffness follows REGUPOL sound public product-family table; mass density is not declared in the source page.",
+        "Use this as an impact resilient layer, not as an airborne mass contribution."
+      ],
+      propertySourceStatus: "catalog_nominal"
+    },
+    impact: {
+      dynamicStiffnessMNm3: 30
+    },
+    notes: "Public-source seed: https://acoustics.regupol.com/products/range/regupol-sound/",
+    tags: ["resilient", "underlay", "impact", "regupol", "sound", "public-source"]
+  },
+  {
+    id: "regupol_comfort_8",
+    name: "REGUPOL comfort 8",
+    category: "support",
+    densityKgM3: 325,
+    acoustic: {
+      behavior: "resilient_layer",
+      lossFactor: 0.08,
+      notes: [
+        "Density is derived from the ETA mass-per-unit-area midpoint of 2.6 kg/m2 at 8 mm.",
+        "Dynamic stiffness follows REGUPOL's public comfort 8 product page."
+      ],
+      propertySourceStatus: "catalog_nominal"
+    },
+    impact: {
+      dynamicStiffnessMNm3: 15
+    },
+    notes: "Public-source seed: https://acoustics.regupol.com/products/range/regupol-comfort/regupol-comfort-8/",
+    tags: ["resilient", "underlay", "impact", "regupol", "comfort", "public-source"]
+  },
+  {
+    id: "regupol_comfort_12",
+    name: "REGUPOL comfort 12",
+    category: "support",
+    densityKgM3: 250,
+    acoustic: {
+      behavior: "resilient_layer",
+      lossFactor: 0.08,
+      notes: [
+        "Density is derived from the ETA mass-per-unit-area midpoint of 3.0 kg/m2 at 12 mm.",
+        "Dynamic stiffness follows REGUPOL's public comfort 12 product page."
+      ],
+      propertySourceStatus: "catalog_nominal"
+    },
+    impact: {
+      dynamicStiffnessMNm3: 10
+    },
+    notes: "Public-source seed: https://acoustics.regupol.com/products/range/regupol-comfort/regupol-comfort-12/",
+    tags: ["resilient", "underlay", "impact", "regupol", "comfort", "public-source"]
+  },
+  {
+    id: "regupol_sound_and_drain_22",
+    name: "REGUPOL sound and drain 22",
+    category: "support",
+    densityKgM3: 0,
+    acoustic: {
+      behavior: "resilient_layer",
+      lossFactor: 0.08,
+      notes: [
+        "Dynamic stiffness follows REGUPOL sound and drain 22 public product page; mass density is not declared in the source page.",
+        "Use this as an impact resilient layer, not as an airborne mass contribution."
+      ],
+      propertySourceStatus: "catalog_nominal"
+    },
+    impact: {
+      dynamicStiffnessMNm3: 21
+    },
+    notes: "Public-source seed: https://acoustics.regupol.com/products/range/regupol-sound-and-drain/regupol-sound-and-drain-22/",
+    tags: ["resilient", "underlay", "impact", "regupol", "sound-and-drain", "public-source"]
   },
   {
     id: "scanrubber_825_underlay",

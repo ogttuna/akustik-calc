@@ -167,6 +167,7 @@ describe("post-V1 floor bound explicit CI local-guide Gate AP parity", () => {
       unsupportedOutputs: ["L'nT,50"]
     });
     expect(card.status).toBe("needs_input");
-    expect(card.detail).toContain("impactFieldContext.ciDb");
+    expect(card.detail).toContain("CI");
+    expect(card.detail).not.toContain("impactFieldContext.ciDb");
   });
 });

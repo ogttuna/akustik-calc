@@ -198,12 +198,12 @@ describe("post-V1 opening/leak common wall same-basis residual owner Gate FB", (
       basisId: COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD,
       errorBudgetDb: COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_BUILDING_TOLERANCE_DB,
       metrics: {
-        "Dn,A": null,
+        "Dn,A": 31.1,
         "DnT,A": 31.3,
         "DnT,w": 32.1,
         "R'w": 31.6
       },
-      supportedTargetOutputs: ["DnT,A", "DnT,w", "R'w"]
+      supportedTargetOutputs: ["DnT,A", "DnT,w", "R'w", "Dn,A"]
     });
     expect(pins.commonWallBuildingValuePins).toEqual(POST_V1_GATE_CJ_BUILDING_VALUE_PINS);
   });
@@ -241,9 +241,9 @@ describe("post-V1 opening/leak common wall same-basis residual owner Gate FB", (
       computedDnTADb: null
     });
     expect(aWeighted.buildingDnAUnsupportedProbe).toMatchObject({
-      computedDnADb: null,
-      supportedTargetOutputs: [],
-      unsupportedTargetOutputs: ["Dn,A"]
+      computedDnADb: 31.1,
+      supportedTargetOutputs: ["Dn,A"],
+      unsupportedTargetOutputs: []
     });
   });
 

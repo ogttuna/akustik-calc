@@ -361,9 +361,14 @@ describe("company-internal final internal-use rehearsal", () => {
 
       expect(releaseBucket(row), row.id).toBe("release_unsupported_boundary");
       expect(row.runtime.errorBudgetDb, row.id).toBeNull();
-      expect(row.runtime.supportedTargetOutputs, row.id).toEqual([]);
+      if (row.id === "wall.opening_leak_a_weighted_building_dna.unsupported") {
+        expect(row.runtime.supportedTargetOutputs, row.id).toEqual(["Dn,A"]);
+        expect(row.runtime.unsupportedTargetOutputs, row.id).toEqual([]);
+      } else {
+        expect(row.runtime.supportedTargetOutputs, row.id).toEqual([]);
+        expect(row.runtime.unsupportedTargetOutputs.length, row.id).toBeGreaterThan(0);
+      }
       expect(row.runtime.valuePins, row.id).toEqual([]);
-      expect(row.runtime.unsupportedTargetOutputs.length, row.id).toBeGreaterThan(0);
     }
 
     for (const rowId of PARTIAL_SUPPORTED_BOUNDARY_ROW_IDS) {

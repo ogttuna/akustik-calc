@@ -1,13 +1,13 @@
 # Post-V1 Wall Opening/Leak Building Apparent Dn,w/Dn,A Companion Coverage Refresh Plan - 2026-06-23
 
 Status:
-`post_v1_wall_opening_leak_building_apparent_dna_companion_coverage_refresh_plan_selected_after_opening_leak_building_apparent_dna_companion_owner`
+`post_v1_wall_opening_leak_building_apparent_dna_companion_coverage_refresh_landed_no_runtime_selected_runtime_first_rerank_after_opening_leak_building_apparent_dna_companion_coverage_refresh`
 
 ## Purpose
 
-This is the selected next no-runtime guard after the opening/leak
-building apparent `Dn,w` / `Dn,A` companion owner. It should re-probe
-the new apparent-normalized building companions, the full mixed
+This is the landed no-runtime guard after the opening/leak building
+apparent `Dn,w` / `Dn,A` companion owner. It re-probes the new
+apparent-normalized building companions, the full mixed
 apparent-and-standardized output set, and the fail-closed boundaries.
 
 This is not a broad source crawl, UI polish pass, confidence-labeling
@@ -39,6 +39,18 @@ Selected coverage refresh plan:
 
 Selected coverage refresh label:
 `post-V1 wall opening/leak building apparent Dn,w/Dn,A companion coverage refresh`
+
+Selected next action:
+`post_v1_runtime_first_route_family_rerank_after_wall_opening_leak_building_apparent_dna_companion_coverage_refresh_plan`
+
+Selected next file:
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-opening-leak-building-apparent-dna-companion-coverage-refresh-contract.test.ts`
+
+Selected next plan:
+`docs/calculator/POST_V1_RUNTIME_FIRST_RERANK_AFTER_WALL_OPENING_LEAK_BUILDING_APPARENT_DNA_COMPANION_COVERAGE_REFRESH_PLAN_2026-06-23.md`
+
+Selected next label:
+`post-V1 runtime-first route-family rerank after wall opening/leak building apparent Dn,w/Dn,A companion coverage refresh`
 
 Previous owner counters:
 `newCalculableLayerTemplates: 0`,

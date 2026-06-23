@@ -14,6 +14,7 @@ import type {
   WorkbenchV2DraftLayer,
   WorkbenchV2StudyMode
 } from "../workbench-rebuild/workbench-v2-project-snapshot";
+import { filterWorkbenchV2OutputsForMode } from "../workbench-rebuild/workbench-v2-output-catalog";
 
 export type ReportAssistantWorkbenchApplyAction = "apply_layer_stack_draft_to_workbench";
 
@@ -121,6 +122,7 @@ export type ReportAssistantWorkbenchApplyProposalResult =
         | "draft_needs_input"
         | "stale_source_draft"
         | "stale_target_workbench"
+        | "unsupported_draft_outputs"
         | "unsupported_draft_mode";
       errors: readonly string[];
       mutates: false;
@@ -359,14 +361,20 @@ function buildContextDiff(input: {
 
 function buildCalculatorPreviewSummary(input: {
   draft: ReportAssistantLayerStackDraft;
+  mode: WorkbenchV2StudyMode;
   preview?: Partial<ReportAssistantWorkbenchApplyCalculatorPreviewSummary>;
   selectedOutputs: readonly RequestedOutputId[];
 }): ReportAssistantWorkbenchApplyCalculatorPreviewSummary {
+  const previewSelectedOutputs = input.preview?.selectedOutputs
+    ? filterWorkbenchV2OutputsForMode(input.preview.selectedOutputs, input.mode)
+    : [];
+  const selectedOutputs = previewSelectedOutputs.length ? previewSelectedOutputs : input.selectedOutputs;
+
   return {
     basis: input.preview?.basis ?? [],
     ...(input.preview?.primaryOutput ? { primaryOutput: input.preview.primaryOutput } : {}),
     routeStatus: input.preview?.routeStatus ?? input.draft.lastCalculatorPreview?.routeStatus ?? "not_run",
-    selectedOutputs: input.preview?.selectedOutputs ?? input.selectedOutputs,
+    selectedOutputs,
     ...(input.preview?.snapshotSignature ?? input.draft.lastCalculatorPreview?.snapshotSignature
       ? { snapshotSignature: input.preview?.snapshotSignature ?? input.draft.lastCalculatorPreview?.snapshotSignature }
       : {})
@@ -436,7 +444,17 @@ export function createReportAssistantWorkbenchApplyProposal(
   }
 
   const proposedLayers = proposedLayersFromDraft(input.draft);
-  const proposedSelectedOutputs = uniqueOutputs(input.draft.requestedOutputs);
+  const requestedOutputs = uniqueOutputs(input.draft.requestedOutputs);
+  const proposedSelectedOutputs = filterWorkbenchV2OutputsForMode(requestedOutputs, input.draft.mode);
+  const ignoredOutputs = requestedOutputs.filter((outputId) => !proposedSelectedOutputs.includes(outputId));
+  if (!proposedSelectedOutputs.length) {
+    return fail({
+      code: "unsupported_draft_outputs",
+      errors: [`No requested outputs are supported by ${input.draft.mode} mode.`],
+      statusCode: 400
+    });
+  }
+
   const contextPatch = buildContextPatch({
     current: input.targetWorkbench.context,
     draft: input.draft,
@@ -457,13 +475,19 @@ export function createReportAssistantWorkbenchApplyProposal(
   });
   const calculatorPreviewSummary = buildCalculatorPreviewSummary({
     draft: input.draft,
+    mode: input.draft.mode,
     preview: input.calculatorPreviewSummary,
     selectedOutputs: proposedSelectedOutputs
   });
-  const warnings = proposalWarnings({
-    draft: input.draft,
-    preview: calculatorPreviewSummary
-  });
+  const warnings = [
+    ...proposalWarnings({
+      draft: input.draft,
+      preview: calculatorPreviewSummary
+    }),
+    ...(ignoredOutputs.length
+      ? [`Ignored ${ignoredOutputs.join(", ")} because ${input.draft.mode} mode does not expose those outputs.`]
+      : [])
+  ];
   const title = "Apply assistant layer-stack draft to Workbench";
   const summary = `${layerChangeSummary(layerDiff)} in the unsaved Workbench calculator draft. Confirmation is required before browser state changes.`;
 
@@ -526,7 +550,7 @@ export function createReportAssistantWorkbenchApplyProposal(
         draftId: input.draft.draftId,
         layerCount: input.draft.layers.length,
         mode: input.draft.mode,
-        requestedOutputs: proposedSelectedOutputs
+        requestedOutputs
       },
       staleGuards: {
         sourceDraftContextSignature: input.expectedSourceDraftContextSignature,

@@ -509,6 +509,7 @@ describe("calculator model-first physics prediction pivot Gate E", () => {
     expect(resolution.candidatePrecedence).toEqual([
       "measured_exact_full_stack",
       "measured_exact_subassembly_plus_calculated_delta",
+      "user_verified_calculated_exact",
       "calibrated_family_physics",
       "family_physics_prediction",
       "bounded_prediction",

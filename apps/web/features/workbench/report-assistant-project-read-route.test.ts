@@ -2,11 +2,17 @@ import { mkdtemp, rm } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
-import type { JsonValue } from "@dynecho/shared";
+import type {
+  JsonValue,
+  ProjectUserVerifiedCalculatedAnchorRequestContext,
+  ProjectUserVerifiedCalculatedAnchorResultBasisTrace,
+  ProjectUserVerifiedCalculatedAnchorValue
+} from "@dynecho/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { buildProjectOwnerId } from "../../lib/project-storage-auth";
 import { FileServerProjectRepository, type ProjectOwnerScope } from "../../lib/server-project-storage";
+import { FileWorkbenchV2VerifiedCalculatedAnchorRepository } from "../../lib/workbench-v2-verified-calculated-anchor-storage";
 import type { ReportAssistantResultEnvelope } from "./report-assistant-result-contract";
 
 const mockAuthState = vi.hoisted(() => ({
@@ -82,6 +88,52 @@ const REPORT_DOCUMENT: JsonValue = {
   projectName: "Route assistant project"
 };
 
+const VERIFIED_REQUEST_CONTEXT = {
+  calculator: "dynamic",
+  layers: [{ materialId: "gypsum_board", thicknessMm: 12.5 }],
+  materialCatalog: [],
+  mode: "wall",
+  targetOutputs: ["Rw"]
+} as const satisfies ProjectUserVerifiedCalculatedAnchorRequestContext;
+
+const VERIFIED_RESULT_TRACE = {
+  airborneBasis: {
+    assumptions: ["assistant project read route test"],
+    curveBasis: "calculated_frequency_curve",
+    errorBudgetDb: 2,
+    kind: "airborne_physics_prediction",
+    method: "test_assistant_project_read_verified_calculated_reference",
+    missingPhysicalInputs: [],
+    missingSourceEvidence: [],
+    origin: "family_physics_prediction",
+    propertyDefaults: [],
+    requiredInputs: [],
+    toleranceClass: "uncalibrated_prediction"
+  },
+  assumptions: ["user confirmed calculated package"],
+  calculator: "dynamic",
+  ratingAdapterBasisSet: [],
+  supportedImpactOutputs: [],
+  supportedTargetOutputs: ["Rw"],
+  targetOutputs: ["Rw"],
+  unsupportedImpactOutputs: [],
+  unsupportedTargetOutputs: [],
+  warnings: []
+} as const satisfies ProjectUserVerifiedCalculatedAnchorResultBasisTrace;
+
+const VERIFIED_VALUES = [
+  {
+    metric: "Rw",
+    metricBasis: "airborne_lab",
+    provenance: {
+      outputStatus: "supported",
+      routeId: "test_assistant_project_read_verified_calculated_reference",
+      source: "calculated_live_result"
+    },
+    valueDb: 52
+  }
+] as const satisfies readonly ProjectUserVerifiedCalculatedAnchorValue[];
+
 async function seedProject() {
   const repository = new FileServerProjectRepository();
   const owner = previewOwner();
@@ -120,6 +172,28 @@ async function seedProject() {
     project: withReport,
     report: withReport.reports[0]!
   };
+}
+
+async function seedVerifiedCalculatedReference(projectId: string, input: { thicknessMm?: number } = {}) {
+  const repository = new FileWorkbenchV2VerifiedCalculatedAnchorRepository();
+  const requestContext = input.thicknessMm === undefined
+    ? VERIFIED_REQUEST_CONTEXT
+    : {
+        ...VERIFIED_REQUEST_CONTEXT,
+        layers: [{ materialId: "gypsum_board", thicknessMm: input.thicknessMm }]
+      } satisfies ProjectUserVerifiedCalculatedAnchorRequestContext;
+
+  return repository.createVerifiedCalculatedAnchor(previewOwner(), {
+    createdFromProjectId: projectId,
+    description: "Assistant-visible verified calculated reference",
+    name: `Verified reference for ${projectId}`,
+    requestContext,
+    resultBasisTrace: VERIFIED_RESULT_TRACE,
+    values: [...VERIFIED_VALUES],
+    workbenchSnapshot: {
+      selectedOutputs: ["Rw"]
+    }
+  });
 }
 
 beforeEach(async () => {
@@ -342,6 +416,70 @@ describe("report assistant project-read route", () => {
     expect(JSON.stringify(body)).not.toContain("ROUTE_PRIVATE_ASSEMBLY_SNAPSHOT");
   });
 
+  it("lists project user-verified calculated references as read-only assistant evidence", async () => {
+    const seeded = await seedProject();
+    const visibleReference = await seedVerifiedCalculatedReference(seeded.project.id);
+    await seedVerifiedCalculatedReference("other-project-id", { thicknessMm: 15 });
+    const { POST } = await import("../../app/api/report-assistant/project-read/route");
+
+    const response = await POST(
+      routeRequest({
+        action: "list_project_verified_calculated_references",
+        projectId: seeded.project.id
+      })
+    );
+    const body = (await response.json()) as {
+      assistantResults?: ReportAssistantResultEnvelope[];
+      result?: {
+        verifiedCalculatedReferences?: Array<{
+          anchorKind?: string;
+          id?: string;
+          resultBasisTrace?: {
+            supportedTargetOutputs?: string[];
+          };
+          valueMetrics?: string[];
+          values?: Array<{
+            metric?: string;
+            metricBasis?: string;
+            valueDb?: number;
+          }>;
+        }>;
+      };
+    };
+
+    expect(response.status).toBe(200);
+    expect(body.result?.verifiedCalculatedReferences).toEqual([
+      expect.objectContaining({
+        anchorKind: "user_verified_calculated_result",
+        id: visibleReference.id,
+        resultBasisTrace: expect.objectContaining({
+          supportedTargetOutputs: ["Rw"]
+        }),
+        valueMetrics: ["Rw"],
+        values: [
+          expect.objectContaining({
+            metric: "Rw",
+            metricBasis: "airborne_lab",
+            valueDb: 52
+          })
+        ]
+      })
+    ]);
+    expect(JSON.stringify(body.result)).not.toContain("other-project-id");
+    expect(body.assistantResults?.[0]).toMatchObject({
+      authority: "saved_project_state",
+      capabilityName: "list_project_verified_calculated_references",
+      mutates: false,
+      routeStatus: "ready"
+    });
+    expect(body.assistantResults?.[0]?.evidence).toEqual(expect.arrayContaining([
+      {
+        detail: "1",
+        label: "Verified calculated reference count"
+      }
+    ]));
+  });
+
   it("returns full saved documents only for explicit child read actions", async () => {
     const seeded = await seedProject();
     const { POST } = await import("../../app/api/report-assistant/project-read/route");
@@ -424,6 +562,7 @@ describe("report assistant project-read route", () => {
     expect(body.status?.tools.every((tool) => tool.mutates === false)).toBe(true);
     expect(body.status?.tools.map((tool) => tool.name)).toEqual(expect.arrayContaining([
       "list_projects",
+      "list_project_verified_calculated_references",
       "read_project_report_document",
       "preview_report_patch"
     ]));

@@ -154,6 +154,7 @@ describe("post-V1 floor explicit CI,50-2500 standardized-field Gate AO parity", 
       unsupportedOutputs: ["L'nT,50"]
     });
     expect(card.status).toBe("needs_input");
-    expect(card.detail).toContain("impactFieldContext.ci50_2500Db");
+    expect(card.detail).toContain("CI,50-2500");
+    expect(card.detail).not.toContain("impactFieldContext.ci50_2500Db");
   });
 });

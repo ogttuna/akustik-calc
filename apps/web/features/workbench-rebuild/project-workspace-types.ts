@@ -50,7 +50,7 @@ export function formatProjectWorkspaceProjectOptionLabel(project: ProjectWorkspa
 
 export function formatProjectWorkspaceAssemblyOptionLabel(assembly: ProjectWorkspaceAssemblySummary): string {
   const displayCode = assembly.displayCode ? `${assembly.displayCode} - ` : "";
-  const resultLabel = assembly.calculationSummary?.primaryValueLabel
+  const resultLabel = assembly.calculationSummary?.status === "ready" && assembly.calculationSummary.primaryValueLabel
     ? ` - ${assembly.calculationSummary.primaryOutput ?? "Result"} ${assembly.calculationSummary.primaryValueLabel}`
     : "";
   return `${displayCode}${assembly.name}${resultLabel}`;

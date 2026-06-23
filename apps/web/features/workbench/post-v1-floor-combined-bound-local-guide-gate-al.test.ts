@@ -150,6 +150,7 @@ describe("post-V1 floor combined bound local-guide Gate AL surface parity", () =
       unsupportedOutputs: ["L'nT,50"]
     });
     expect(card.status).toBe("needs_input");
-    expect(card.detail).toContain("impactFieldContext");
+    expect(card.detail).toContain("impact field context");
+    expect(card.detail).not.toContain("impactFieldContext");
   });
 });

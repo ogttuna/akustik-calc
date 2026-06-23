@@ -7,6 +7,7 @@ import {
   getReportAssistantMetricId
 } from "./report-assistant-context";
 import {
+  buildReportAssistantContextFromCurrentCalculatorReviewPacket,
   parseReportAssistantPlausibilityRequest,
   reviewReportAssistantMetricPlausibility
 } from "./report-assistant-plausibility";
@@ -628,6 +629,32 @@ describe("report assistant plausibility review", () => {
       routeStatus: "ready"
     });
   }, 15000);
+
+  it("does not replay stale calculator values from blocked current-calculator packets", () => {
+    const packet: ReportAssistantCurrentCalculatorReviewPacket = {
+      ...calculatorReviewPacket({
+        status: "unsupported"
+      }),
+      metric: {
+        ...calculatorReviewPacket({
+          status: "unsupported"
+        }).metric,
+        calculatorDisplayValue: "61 dB",
+        valueAuthority: "captured_engine_value"
+      },
+      numericReviewAllowed: false,
+      numericReviewBlocker: "Unsupported calculator outputs: Rw.",
+      unsupportedOutputs: ["Rw"]
+    };
+    const context = buildReportAssistantContextFromCurrentCalculatorReviewPacket(packet);
+
+    expect(context.metrics[0]).toMatchObject({
+      reportDisplayValue: "Unsupported calculator outputs: Rw.",
+      status: "unsupported"
+    });
+    expect(context.metrics[0]?.engineDisplayValue).toBeUndefined();
+    expect(context.assistantOutputFacts[0]?.engineDisplayValue).toBeUndefined();
+  });
 
   it("keeps blocked calculator packets non-numeric in the review route", async () => {
     const { POST } = await import("../../app/api/report-assistant/plausibility/route");

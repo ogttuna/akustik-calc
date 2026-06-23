@@ -285,14 +285,46 @@ function setNotInStackMaterialEffectiveness(
   target: MaterialRouteInputEffectivenessMap,
   fieldId: MaterialRouteInputFieldId
 ): void {
-  setMaterialEffectiveness(target, fieldId, "inactive", "This material is not used by the current layer stack");
+  setMaterialEffectiveness(
+    target,
+    fieldId,
+    "inactive",
+    "This material is not in the active layer stack, so changing it will not affect the current result"
+  );
 }
 
 function setExactSourceMaterialEffectiveness(
   target: MaterialRouteInputEffectivenessMap,
   fieldId: MaterialRouteInputFieldId
 ): void {
-  setMaterialEffectiveness(target, fieldId, "inactive", "Exact source selected; this material field is not used by the current result");
+  setMaterialEffectiveness(
+    target,
+    fieldId,
+    "inactive",
+    "Exact source owns the current output; this material field is not used by a formula route"
+  );
+}
+
+function buildMechanicalMaterialFieldUsedTitle(fieldId: "lossFactor" | "poissonRatio" | "youngModulusPa"): string {
+  switch (fieldId) {
+    case "youngModulusPa":
+      return "Used by the current formula route as the Young modulus input for panel bending stiffness";
+    case "poissonRatio":
+      return "Used by the current formula route as the Poisson ratio input";
+    case "lossFactor":
+      return "Used by the current formula route as the panel loss factor input";
+  }
+}
+
+function buildMechanicalMaterialFieldNeededTitle(fieldId: "lossFactor" | "poissonRatio" | "youngModulusPa"): string {
+  switch (fieldId) {
+    case "youngModulusPa":
+      return "Needed: this panel material is missing Young modulus, so the active formula route cannot calculate the current output";
+    case "poissonRatio":
+      return "Needed: this panel material is missing Poisson ratio, so the active formula route cannot calculate the current output";
+    case "lossFactor":
+      return "Needed: this panel material is missing loss factor, so the active formula route cannot calculate the current output";
+  }
 }
 
 export function buildMaterialRouteInputEffectiveness(input: {
@@ -353,11 +385,11 @@ export function buildMaterialRouteInputEffectiveness(input: {
     if (!materialInStack) {
       setNotInStackMaterialEffectiveness(effectiveness, fieldId);
     } else if (missingInputsReference(input.result, fieldTokens)) {
-      setMaterialEffectiveness(effectiveness, fieldId, "needed", "Required before this route can calculate");
+      setMaterialEffectiveness(effectiveness, fieldId, "needed", buildMechanicalMaterialFieldNeededTitle(fieldId));
     } else if (exactSourceRoute && !liveFormulaOutput) {
       setExactSourceMaterialEffectiveness(effectiveness, fieldId);
     } else if (liveFormulaOutput && routeBasisReferencesTokens(input.result, fieldTokens)) {
-      setMaterialEffectiveness(effectiveness, fieldId, "used", "Used by the current formula route");
+      setMaterialEffectiveness(effectiveness, fieldId, "used", buildMechanicalMaterialFieldUsedTitle(fieldId));
     } else if (liveAirborneOutput || liveImpactOutput) {
       setMaterialEffectiveness(effectiveness, fieldId, "inactive", "The current route does not report using this material field");
     }
@@ -370,18 +402,33 @@ export function buildMaterialRouteInputEffectiveness(input: {
     setExactSourceMaterialEffectiveness(effectiveness, "absorberClass");
     setExactSourceMaterialEffectiveness(effectiveness, "porosity");
   } else if (missingFlowResistivity && material.acoustic?.absorberClass === "unknown") {
-    setMaterialEffectiveness(effectiveness, "absorberClass", "needed", "Required before this porous absorber route can calculate");
+    setMaterialEffectiveness(
+      effectiveness,
+      "absorberClass",
+      "needed",
+      "Needed: this porous absorber material is missing absorber class, so the active formula route cannot calculate the current output"
+    );
   } else if (liveAirborneOutput && airborneBasisReferencesFlowResistivity(input.result)) {
-    setMaterialEffectiveness(effectiveness, "absorberClass", "used", "Used by the current porous absorber airborne route");
+    setMaterialEffectiveness(
+      effectiveness,
+      "absorberClass",
+      "used",
+      "Used by the current porous absorber airborne formula route as the absorber class input"
+    );
   } else if (liveAirborneOutput || liveImpactOutput) {
     setMaterialEffectiveness(effectiveness, "absorberClass", "inactive", "The current route does not report using absorber class");
   }
 
   if (materialInStack && !effectiveness.porosity) {
     if (missingInputsReference(input.result, ["porosity"])) {
-      setMaterialEffectiveness(effectiveness, "porosity", "needed", "Required before this porous absorber route can calculate");
+      setMaterialEffectiveness(
+        effectiveness,
+        "porosity",
+        "needed",
+        "Needed: this porous absorber material is missing porosity, so the active formula route cannot calculate the current output"
+      );
     } else if (liveFormulaOutput && routeBasisReferencesTokens(input.result, ["porosity"])) {
-      setMaterialEffectiveness(effectiveness, "porosity", "used", "Used by the current formula route");
+      setMaterialEffectiveness(effectiveness, "porosity", "used", "Used by the current formula route as the porosity input");
     } else if (liveAirborneOutput || liveImpactOutput) {
       setMaterialEffectiveness(effectiveness, "porosity", "inactive", "The current route does not report using porosity");
     }
@@ -395,28 +442,28 @@ export function buildMaterialRouteInputEffectiveness(input: {
         effectiveness,
         "flowResistivityPaSM2",
         "inactive",
-        "This material is not used by the current layer stack"
+        "This material is not in the active layer stack, so changing flow resistivity will not affect the current result"
       );
     } else if (missingFlowResistivity && !materialHasFlowResistivity) {
       setMaterialEffectiveness(
         effectiveness,
         "flowResistivityPaSM2",
         "needed",
-        "Required before this porous absorber route can calculate"
+        "Needed: this porous absorber material is missing flow resistivity, so the active porous cavity damping route cannot calculate the current output"
       );
     } else if (hasImpactSelection && !hasAirborneSelection) {
       setMaterialEffectiveness(
         effectiveness,
         "flowResistivityPaSM2",
         "inactive",
-        "Flow resistivity is not used by the current impact output set"
+        "Flow resistivity belongs to airborne porous cavity damping, so it does not affect the current impact output set"
       );
     } else if (hasAirborneSelection && isMeasuredExactAirborneRoute(input.result)) {
       setMaterialEffectiveness(
         effectiveness,
         "flowResistivityPaSM2",
         "inactive",
-        "Exact airborne source selected; this material field is not used"
+        "Exact airborne source owns the current output; flow resistivity is not used by a formula route"
       );
     } else if (
       materialHasFlowResistivity &&
@@ -427,7 +474,7 @@ export function buildMaterialRouteInputEffectiveness(input: {
         effectiveness,
         "flowResistivityPaSM2",
         "used",
-        "Used by the current porous absorber airborne route"
+        "Used: this material's flow resistivity feeds the current porous absorber airborne formula route"
       );
     }
   }
@@ -440,14 +487,14 @@ export function buildMaterialRouteInputEffectiveness(input: {
         effectiveness,
         "dynamicStiffnessMNm3",
         "inactive",
-        "This material is not used by the current layer stack"
+        "This material is not in the active layer stack, so changing dynamic stiffness will not affect the current result"
       );
     } else if (missingDynamicStiffness && !materialHasDynamicStiffness) {
       setMaterialEffectiveness(
         effectiveness,
         "dynamicStiffnessMNm3",
         "needed",
-        "Required before this resilient layer route can calculate"
+        "Needed: this resilient layer material is missing dynamic stiffness, so the active floor impact route cannot calculate the current output"
       );
     } else if (hasAirborneSelection && !hasImpactSelection) {
       setMaterialEffectiveness(
@@ -461,7 +508,7 @@ export function buildMaterialRouteInputEffectiveness(input: {
         effectiveness,
         "dynamicStiffnessMNm3",
         "inactive",
-        "Exact impact source selected; this material field is not used"
+        "Exact impact source owns the current output; dynamic stiffness is not used by a formula route"
       );
     } else if (
       input.mode === "floor" &&
@@ -473,7 +520,7 @@ export function buildMaterialRouteInputEffectiveness(input: {
         effectiveness,
         "dynamicStiffnessMNm3",
         "used",
-        "Used by the current floor impact route"
+        "Used: this material's dynamic stiffness feeds the current floor impact formula route"
       );
     }
   }

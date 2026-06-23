@@ -855,10 +855,10 @@ function getProjectAssemblyCalculationSummary(context: SimpleWorkbenchProposalPr
       typeof (calculationSummary as { primaryOutput?: unknown }).primaryOutput === "string"
         ? (calculationSummary as { primaryOutput: string }).primaryOutput
         : undefined,
-    primaryValueLabel:
-      typeof (calculationSummary as { primaryValueLabel?: unknown }).primaryValueLabel === "string"
-        ? (calculationSummary as { primaryValueLabel: string }).primaryValueLabel
-        : undefined,
+    // Coordination note: report project context may contain older cached summaries; blocked states must not carry numeric labels.
+    ...(status === "ready" && typeof (calculationSummary as { primaryValueLabel?: unknown }).primaryValueLabel === "string"
+      ? { primaryValueLabel: (calculationSummary as { primaryValueLabel: string }).primaryValueLabel }
+      : {}),
     selectedOutputs: (calculationSummary as { selectedOutputs: unknown[] }).selectedOutputs.filter(
       (entry): entry is string => typeof entry === "string"
     ),
@@ -1089,7 +1089,7 @@ function parseAssistantProjectAssemblySummaries(payload: unknown): AssistantProj
         calculationPrimaryOutput:
           typeof calculationSummary?.primaryOutput === "string" ? calculationSummary.primaryOutput : undefined,
         calculationPrimaryValueLabel:
-          typeof calculationSummary?.primaryValueLabel === "string" ? calculationSummary.primaryValueLabel : undefined,
+          calculationStatus === "ready" && typeof calculationSummary?.primaryValueLabel === "string" ? calculationSummary.primaryValueLabel : undefined,
         calculationStatus,
         displayCode: typeof entry.displayCode === "string" ? entry.displayCode : undefined,
         id: entry.id,

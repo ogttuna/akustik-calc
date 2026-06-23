@@ -170,8 +170,8 @@ function expectRawBareSurface(
     origin: "source_absent_formula_error_budget",
     toleranceDb: 12
   });
-  expect(result.supportedTargetOutputs).toEqual(["Rw", "C", "Ctr", "Ln,w", "CI", "CI,50-2500", "Ln,w+CI"]);
-  expect(result.unsupportedTargetOutputs).toEqual(["R'w", "DnT,w", "L'n,w", "IIC"]);
+  expect(result.supportedTargetOutputs).toEqual(["Ln,w", "CI", "CI,50-2500", "Ln,w+CI"]);
+  expect(result.unsupportedTargetOutputs).toEqual(["Rw", "C", "Ctr", "R'w", "DnT,w", "L'n,w", "IIC"]);
 
   return result;
 }

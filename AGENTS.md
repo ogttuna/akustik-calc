@@ -150,9 +150,368 @@ building `DnT,A,k` coverage refresh, double-leaf/framed building
 refresh, compatible anchor-delta building `DnT,A,k` owner and coverage
 refresh, direct-fixed double-leaf/framed building `DnT,A,k` owner and
 coverage refresh, local-substitution building `DnT,A,k` owner,
-local-substitution building `DnT,A,k` coverage refresh, and
-opening/leak building `DnT,A,k` owner sections below. It does not
-replace the documentation map or selected next plan.
+local-substitution building `DnT,A,k` coverage refresh, opening/leak
+building `DnT,A,k` owner and coverage refresh, opening/leak apparent
+`Dn,w` / `Dn,A` companion owner and coverage refresh, the post-refresh
+rerank, the current-gate stale metric/basis reconciliation, and the
+British Gypsum exact lab needs-input boundary fix, the runtime-first
+rerank after current-gate stale metric/basis reconciliation, the
+British Gypsum exact lab field/building adapter owner, and the British
+Gypsum exact lab field/building adapter coverage refresh, and the
+British Gypsum exact lab A-weighted field/building adapter owner,
+British Gypsum exact lab A-weighted field/building adapter coverage
+refresh, and British Gypsum exact lab building `DnT,A,k`
+characteristic adapter owner and coverage refresh, and British Gypsum
+exact lab calculated lab companion owner sections below.
+It does not replace the documentation map or selected next plan.
+
+## Latest Public-Source Material Catalog Expansion Support Handoff - 2026-06-23
+
+User-requested support handoff:
+`docs/calculator/PUBLIC_SOURCE_MATERIAL_CATALOG_EXPANSION_HANDOFF_2026-06-23.md`.
+This records product-specific public-source material seed rows and
+aliases added for British Gypsum/Gyproc, Knauf, QuietRock, Tecsound,
+ROCKWOOL, Stora Enso CLT, H+H Celcon, and REGUPOL products, plus the
+direct-calculation contract proving those material IDs feed existing
+dynamic airborne and heavy floating-floor impact routes. Treat this as
+catalog-input support only. It is not the active selected calculator
+slice, not an acoustic source-row import, not a broad source crawl, not
+a formula retune, and not permission to copy manufacturer ratings into
+runtime outputs. Counters: `materialSeedRowsAdded: 24`,
+`engineAliasRowsAdded: 38`,
+`engineDirectCalculationContractFilesAdded: 1`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+The current selected next remains the British Gypsum exact lab
+calculated lab companion coverage refresh.
+
+## Latest Wall British Gypsum Exact Lab Calculated Lab Companion Owner - 2026-06-23
+
+Latest landed runtime/scope-basis owner:
+`post_v1_wall_british_gypsum_exact_lab_calculated_lab_companion_owner_plan`.
+Owner file:
+`packages/engine/src/post-v1-wall-british-gypsum-exact-lab-calculated-lab-companion-owner-contract.test.ts`.
+Owner plan doc:
+`docs/calculator/POST_V1_WALL_BRITISH_GYPSUM_EXACT_LAB_CALCULATED_LAB_COMPANION_OWNER_PLAN_2026-06-23.md`.
+Owner status:
+`post_v1_wall_british_gypsum_exact_lab_calculated_lab_companion_owner_landed_runtime_scope_basis_selected_coverage_refresh`.
+It follows
+`post_v1_wall_british_gypsum_exact_lab_building_dntak_characteristic_adapter_coverage_refresh_landed_no_runtime_selected_british_gypsum_exact_lab_calculated_lab_companion_owner`.
+Selected candidate:
+`wall.british_gypsum_exact_lab_calculated_lab_companion_owner`.
+The British Gypsum `A046005` and `A046006` exact lab mixed
+`Rw + STC + C + Ctr` requests now keep exact measured `Rw` while
+publishing calculated lab companions from the selected dynamic
+transmission-loss curve and rating adapters. `A046005` returns
+`Rw 55`, `STC 55`, `C -0.6`, and `Ctr -5.4`; `A046006` returns
+`Rw 58`, `STC 58`, `C -0.6`, and `Ctr -5.4`. Single-output `Rw`
+stays measured exact; field/building aliases, impact aliases, nearby
+BG rows, legacy `auto` exact-source promotion, and lab-to-field/building
+copying remain closed. Counters: `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 2`, `newCalculableTargetOutputs: 6`,
+`runtimeBasisPromotions: 2`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`,
+`frontendImplementationFilesTouched: 0`,
+`protectedSingleOutputExactRequestShapes: 2`, and
+`protectedFieldOrBuildingAliasRequestShapes: 2`. This is not a broad
+source crawl.
+
+Validation for this owner: targeted British Gypsum suite passed
+`4 files / 24 tests`; `pnpm calculator:gate:current` passed with engine
+`827 files / 4529 tests`, web `127 files / 506 passed / 18 skipped`,
+repo build `5/5` tasks, and `git diff --check` passed.
+
+Current selected next action:
+`post_v1_wall_british_gypsum_exact_lab_calculated_lab_companion_coverage_refresh_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-wall-british-gypsum-exact-lab-calculated-lab-companion-coverage-refresh-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_WALL_BRITISH_GYPSUM_EXACT_LAB_CALCULATED_LAB_COMPANION_COVERAGE_REFRESH_PLAN_2026-06-23.md`.
+Current selected next label:
+`post-V1 wall British Gypsum exact lab calculated lab companion coverage refresh`.
+
+## Latest Wall British Gypsum Exact Lab Building DnT,A,k Characteristic Adapter Coverage Refresh - 2026-06-23
+
+Latest landed no-runtime coverage refresh:
+`post_v1_wall_british_gypsum_exact_lab_building_dntak_characteristic_adapter_coverage_refresh_plan`.
+Coverage refresh file:
+`packages/engine/src/post-v1-wall-british-gypsum-exact-lab-building-dntak-characteristic-adapter-coverage-refresh-contract.test.ts`.
+Coverage refresh plan doc:
+`docs/calculator/POST_V1_WALL_BRITISH_GYPSUM_EXACT_LAB_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-23.md`.
+Coverage refresh status:
+`post_v1_wall_british_gypsum_exact_lab_building_dntak_characteristic_adapter_coverage_refresh_landed_no_runtime_selected_british_gypsum_exact_lab_calculated_lab_companion_owner`.
+It follows
+`post_v1_wall_british_gypsum_exact_lab_building_dntak_characteristic_adapter_owner_landed_runtime_selected_coverage_refresh`
+and re-probes selected candidate
+`wall.british_gypsum_exact_lab_building_dntak_characteristic_adapter_owner`.
+Counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Selected next:
+`post_v1_wall_british_gypsum_exact_lab_calculated_lab_companion_owner_plan`
+/
+`packages/engine/src/post-v1-wall-british-gypsum-exact-lab-calculated-lab-companion-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_BRITISH_GYPSUM_EXACT_LAB_CALCULATED_LAB_COMPANION_OWNER_PLAN_2026-06-23.md`
+/
+`post-V1 wall British Gypsum exact lab calculated lab companion owner`.
+
+## Latest Wall British Gypsum Exact Lab Building DnT,A,k Characteristic Adapter Owner - 2026-06-23
+
+Latest landed runtime/accuracy owner:
+`post_v1_wall_british_gypsum_exact_lab_building_dntak_characteristic_adapter_owner_plan`.
+Owner file:
+`packages/engine/src/post-v1-wall-british-gypsum-exact-lab-building-dntak-characteristic-adapter-owner-contract.test.ts`.
+Owner plan doc:
+`docs/calculator/POST_V1_WALL_BRITISH_GYPSUM_EXACT_LAB_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_OWNER_PLAN_2026-06-23.md`.
+Owner status:
+`post_v1_wall_british_gypsum_exact_lab_building_dntak_characteristic_adapter_owner_landed_runtime_selected_coverage_refresh`.
+It follows
+`post_v1_wall_british_gypsum_exact_lab_a_weighted_field_building_adapter_coverage_refresh_landed_no_runtime_selected_british_gypsum_exact_lab_building_dntak_characteristic_adapter_owner`.
+Selected candidate:
+`wall.british_gypsum_exact_lab_building_dntak_characteristic_adapter_owner`.
+The British Gypsum `A046005` one-side RB1 and `A046006` both-side RB2
+exact lab rows now calculate building `DnT,A,k` through the exact lab
+`Rw` direct curve, owned Gate AR `DnT,A`, receiving-room volume,
+partition area with the 7 m2 minimum, and `T0=0.5 s`. `A046005`
+returns `DnT,A 49.1` and `DnT,A,k 48.0`; `A046006` returns
+`DnT,A 52.1` and `DnT,A,k 51.0`. Mixed building requests keep `R'w`,
+`Dn,w`, `Dn,A`, `DnT,w`, `DnT,A`, and `DnT,A,k` together on the BG
+exact-lab Gate AR building basis. Missing receiving-room volume,
+missing building output basis, apparent-only basis, field context, lab
+context, impact aliases, nearby BG rows, legacy `auto` exact-source
+promotion, and lab-to-building copying remain closed. Counters:
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 2`,
+`newCalculableTargetOutputs: 1`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 2`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, `frontendImplementationFilesTouched: 0`, and
+`unsupportedBoundariesProtected: 5`. This is not a broad source crawl.
+
+Current selected next action:
+`post_v1_wall_british_gypsum_exact_lab_building_dntak_characteristic_adapter_coverage_refresh_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-wall-british-gypsum-exact-lab-building-dntak-characteristic-adapter-coverage-refresh-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_WALL_BRITISH_GYPSUM_EXACT_LAB_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-23.md`.
+Current selected next label:
+`post-V1 wall British Gypsum exact lab building DnT,A,k characteristic adapter coverage refresh`.
+
+## Latest Wall British Gypsum Exact Lab A-Weighted Field/Building Adapter Coverage Refresh - 2026-06-23
+
+Latest landed no-runtime coverage refresh:
+`post_v1_wall_british_gypsum_exact_lab_a_weighted_field_building_adapter_coverage_refresh_plan`.
+Coverage refresh file:
+`packages/engine/src/post-v1-wall-british-gypsum-exact-lab-a-weighted-field-building-adapter-coverage-refresh-contract.test.ts`.
+Coverage refresh plan doc:
+`docs/calculator/POST_V1_WALL_BRITISH_GYPSUM_EXACT_LAB_A_WEIGHTED_FIELD_BUILDING_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-23.md`.
+Coverage refresh status:
+`post_v1_wall_british_gypsum_exact_lab_a_weighted_field_building_adapter_coverage_refresh_landed_no_runtime_selected_british_gypsum_exact_lab_building_dntak_characteristic_adapter_owner`.
+It follows
+`post_v1_wall_british_gypsum_exact_lab_a_weighted_field_building_adapter_owner_landed_runtime_selected_coverage_refresh`
+and re-probes selected candidate
+`wall.british_gypsum_exact_lab_a_weighted_field_building_adapter_owner`.
+The refresh protects the A-weighted BG exact-lab field/building pins
+for `A046005` and `A046006` while keeping missing inputs, lab aliases,
+impact aliases, nearby BG rows, legacy `auto` exact-source promotion,
+and lab-to-field/building copying closed. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Selected next:
+`post_v1_wall_british_gypsum_exact_lab_building_dntak_characteristic_adapter_owner_plan`
+/
+`packages/engine/src/post-v1-wall-british-gypsum-exact-lab-building-dntak-characteristic-adapter-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_BRITISH_GYPSUM_EXACT_LAB_BUILDING_DNTAK_CHARACTERISTIC_ADAPTER_OWNER_PLAN_2026-06-23.md`
+/
+`post-V1 wall British Gypsum exact lab building DnT,A,k characteristic adapter owner`.
+
+## Latest Wall British Gypsum Exact Lab A-Weighted Field/Building Adapter Owner - 2026-06-23
+
+Latest landed runtime/accuracy owner:
+`post_v1_wall_british_gypsum_exact_lab_a_weighted_field_building_adapter_owner_plan`.
+Owner file:
+`packages/engine/src/post-v1-wall-british-gypsum-exact-lab-a-weighted-field-building-adapter-owner-contract.test.ts`.
+Owner plan doc:
+`docs/calculator/POST_V1_WALL_BRITISH_GYPSUM_EXACT_LAB_A_WEIGHTED_FIELD_BUILDING_ADAPTER_OWNER_PLAN_2026-06-23.md`.
+Owner status:
+`post_v1_wall_british_gypsum_exact_lab_a_weighted_field_building_adapter_owner_landed_runtime_selected_coverage_refresh`.
+It follows
+`post_v1_wall_british_gypsum_exact_lab_field_building_adapter_coverage_refresh_landed_no_runtime_selected_runtime_first_rerank_after_british_gypsum_exact_lab_field_building_adapter_coverage_refresh`
+and uses selected candidate
+`wall.british_gypsum_exact_lab_a_weighted_field_building_adapter_owner`.
+The British Gypsum `A046005` one-side RB1 and `A046006` both-side RB2
+exact lab rows now calculate A-weighted field/building companions
+through the exact lab `Rw` direct curve plus Gate I / Gate AR. `A046005`
+returns `R'w 49`, `Dn,w 49`, `Dn,A 48.0`, `DnT,w 50`, and
+`DnT,A 49.1`; `A046006` returns `R'w 52`, `Dn,w 52`, `Dn,A 51.0`,
+`DnT,w 53`, and `DnT,A 52.1`. A-only `Dn,A` / `DnT,A` requests are
+calculable when the field/building context is complete. Missing room
+context, missing building output basis, lab aliases, impact aliases,
+nearby British Gypsum rows, legacy `auto` exact-source promotion, and
+lab-to-field/building copying remain closed. Counters:
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 4`,
+`newCalculableTargetOutputs: 8`, `runtimeBasisPromotions: 4`,
+`runtimeValuesMoved 8`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, `frontendImplementationFilesTouched: 0`, and
+`unsupportedBoundariesProtected: 6`.
+
+Current selected next action:
+`post_v1_wall_british_gypsum_exact_lab_a_weighted_field_building_adapter_coverage_refresh_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-wall-british-gypsum-exact-lab-a-weighted-field-building-adapter-coverage-refresh-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_WALL_BRITISH_GYPSUM_EXACT_LAB_A_WEIGHTED_FIELD_BUILDING_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-23.md`.
+Current selected next label:
+`post-V1 wall British Gypsum exact lab A-weighted field/building adapter coverage refresh`.
+
+## Latest Wall British Gypsum Exact Lab Field/Building Adapter Coverage Refresh - 2026-06-23
+
+Latest landed no-runtime coverage refresh:
+`post_v1_wall_british_gypsum_exact_lab_field_building_adapter_coverage_refresh_plan`.
+Coverage refresh file:
+`packages/engine/src/post-v1-wall-british-gypsum-exact-lab-field-building-adapter-coverage-refresh-contract.test.ts`.
+Coverage refresh plan doc:
+`docs/calculator/POST_V1_WALL_BRITISH_GYPSUM_EXACT_LAB_FIELD_BUILDING_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-23.md`.
+Coverage refresh status:
+`post_v1_wall_british_gypsum_exact_lab_field_building_adapter_coverage_refresh_landed_no_runtime_selected_runtime_first_rerank_after_british_gypsum_exact_lab_field_building_adapter_coverage_refresh`.
+It follows
+`post_v1_wall_british_gypsum_exact_lab_field_building_adapter_owner_landed_runtime_selected_coverage_refresh`
+and re-probes selected candidate
+`wall.british_gypsum_exact_lab_field_building_adapter_owner`.
+The refresh protects the `A046005` / `A046006` exact lab `Rw` direct
+curve through Gate I / Gate AR pins (`R'w`, `Dn,w`, and `DnT,w`) while
+keeping missing context, legacy `auto` side-count exact promotion,
+A-weighted `Dn,A` / `DnT,A`, field/building `Rw` / `STC` / `C` /
+`Ctr` lab aliases, impact aliases, nearby British Gypsum rows, and
+lab-to-field/building copying closed. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next action:
+`post_v1_runtime_first_route_family_rerank_after_wall_british_gypsum_exact_lab_field_building_adapter_coverage_refresh_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-british-gypsum-exact-lab-field-building-adapter-coverage-refresh-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_RUNTIME_FIRST_RERANK_AFTER_WALL_BRITISH_GYPSUM_EXACT_LAB_FIELD_BUILDING_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-23.md`.
+Current selected next label:
+`post-V1 runtime-first route-family rerank after wall British Gypsum exact lab field/building adapter coverage refresh`.
+
+## Latest Wall British Gypsum Exact Lab Field/Building Adapter Owner - 2026-06-23
+
+Latest landed runtime/accuracy owner:
+`post_v1_wall_british_gypsum_exact_lab_field_building_adapter_owner_plan`.
+Owner file:
+`packages/engine/src/post-v1-wall-british-gypsum-exact-lab-field-building-adapter-owner-contract.test.ts`.
+Owner plan doc:
+`docs/calculator/POST_V1_WALL_BRITISH_GYPSUM_EXACT_LAB_FIELD_BUILDING_ADAPTER_OWNER_PLAN_2026-06-23.md`.
+Owner status:
+`post_v1_wall_british_gypsum_exact_lab_field_building_adapter_owner_landed_runtime_selected_coverage_refresh`.
+Selected candidate:
+`wall.british_gypsum_exact_lab_field_building_adapter_owner`.
+The British Gypsum `A046005` one-side RB1 and `A046006` both-side RB2
+exact lab rows now feed complete `field_between_rooms` and
+`building_prediction` requests through the exact lab `Rw` direct curve
+plus the owned Gate I / Gate AR adapters. `A046005` returns direct
+`Rw 55`, `R'w 49`, `Dn,w 49`, and `DnT,w 50`; `A046006` returns direct
+`Rw 58`, `R'w 52`, `Dn,w 52`, and `DnT,w 53`. Missing field/building
+context, legacy `auto` side-count, A-weighted outputs, lab aliases,
+impact aliases, nearby British Gypsum rows, and lab-to-field/building
+copying remain closed. Counters: `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 4`, `newCalculableTargetOutputs: 12`,
+`runtimeBasisPromotions: 4`, `runtimeValuesMoved 12`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`,
+`frontendImplementationFilesTouched: 0`, and
+`unsupportedBoundariesProtected: 7`.
+
+Current selected next action:
+`post_v1_wall_british_gypsum_exact_lab_field_building_adapter_coverage_refresh_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-wall-british-gypsum-exact-lab-field-building-adapter-coverage-refresh-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_WALL_BRITISH_GYPSUM_EXACT_LAB_FIELD_BUILDING_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-23.md`.
+Current selected next label:
+`post-V1 wall British Gypsum exact lab field/building adapter coverage refresh`.
+
+## Latest Runtime-First Rerank After Current-Gate Stale Metric/Basis Reconciliation - 2026-06-23
+
+Latest landed no-runtime rerank:
+`post_v1_runtime_first_route_family_rerank_after_current_gate_stale_metric_basis_reconciliation_plan`.
+Rerank file:
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-current-gate-stale-metric-basis-reconciliation-contract.test.ts`.
+Rerank plan doc:
+`docs/calculator/POST_V1_RUNTIME_FIRST_RERANK_AFTER_CURRENT_GATE_STALE_METRIC_BASIS_RECONCILIATION_PLAN_2026-06-23.md`.
+Rerank status:
+`post_v1_runtime_first_route_family_rerank_after_current_gate_stale_metric_basis_reconciliation_landed_no_runtime_selected_british_gypsum_exact_lab_field_building_adapter_owner`.
+It follows the current-gate stale metric/basis reconciliation and the
+British Gypsum exact lab needs-input boundary fix. Selected candidate:
+`wall.british_gypsum_exact_lab_field_building_adapter_owner`.
+The rerank selects the next runtime owner that should use exact British
+Gypsum `A046005` / `A046006` element-lab `Rw` rows as the direct base
+for complete `field_between_rooms` and `building_prediction` contexts
+through owned Gate I / Gate AR adapters. The rerank itself moves no
+runtime values. Counters: `candidateCount: 8`,
+`roiAnalysisIterations: 4`, `estimatedNextCalculableRequestShapes: 4`,
+`estimatedNextCalculableTargetOutputs: 12`,
+`estimatedNextRequiredPhysicalInputsCaptured: 10`,
+`estimatedNextRuntimeBasisPromotions: 4`,
+`estimatedNextRuntimeValuesMoved: 12`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+
+Current selected next action:
+`post_v1_wall_british_gypsum_exact_lab_field_building_adapter_owner_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-wall-british-gypsum-exact-lab-field-building-adapter-owner-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_WALL_BRITISH_GYPSUM_EXACT_LAB_FIELD_BUILDING_ADAPTER_OWNER_PLAN_2026-06-23.md`.
+Current selected next label:
+`post-V1 wall British Gypsum exact lab field/building adapter owner`.
+
+## Latest Wall British Gypsum Exact Lab Needs-Input Boundary Fix - 2026-06-23
+
+Latest landed runtime boundary fix:
+`post_v1_wall_british_gypsum_exact_lab_needs_input_boundary_fix_plan`.
+Boundary fix file:
+`packages/engine/src/post-v1-wall-british-gypsum-exact-lab-needs-input-boundary-fix-contract.test.ts`.
+Boundary fix plan doc:
+`docs/calculator/POST_V1_WALL_BRITISH_GYPSUM_EXACT_LAB_NEEDS_INPUT_BOUNDARY_FIX_PLAN_2026-06-23.md`.
+Boundary fix status:
+`post_v1_wall_british_gypsum_exact_lab_needs_input_boundary_fix_landed_runtime_boundary_selected_runtime_first_rerank_after_current_gate_reconciliation`.
+It follows
+`post_v1_current_gate_stale_metric_basis_reconciliation_after_opening_leak_apparent_dna_landed_no_runtime_selected_runtime_first_rerank_after_current_gate_reconciliation`.
+The British Gypsum `A046005` one-side RB1 and `A046006` both-side RB2
+explicit exact and legacy auto-side-count lab mixed requests now keep
+same-basis `Rw`, `STC`, `C`, and `Ctr` live while `R'w`, `Dn,w`,
+`Dn,A`, `DnT,w`, and `DnT,A` remain explicit `needs_input` behind
+grouped topology/context inputs. Counters:
+`newCalculableRequestShapes: 3`, `newCalculableTargetOutputs: 4`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`,
+`engineImplementationFilesTouched: 1`, `engineContractFilesTouched: 1`,
+and `frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl, value retune, or lab-to-field alias.
+
+Current selected next action:
+`post_v1_runtime_first_route_family_rerank_after_current_gate_stale_metric_basis_reconciliation_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-current-gate-stale-metric-basis-reconciliation-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_RUNTIME_FIRST_RERANK_AFTER_CURRENT_GATE_STALE_METRIC_BASIS_RECONCILIATION_PLAN_2026-06-23.md`.
+Current selected next label:
+`post-V1 runtime-first route-family rerank after current-gate stale metric/basis reconciliation`.
 
 ## Latest Wall Opening/Leak Building Apparent Dn,w/Dn,A Companion Owner - 2026-06-23
 
@@ -201,14 +560,86 @@ aliases remain closed. Counters: `newCalculableLayerTemplates: 0`,
 `frontendImplementationFilesTouched: 0`. This is not a broad source
 crawl.
 
-Current selected next action:
+Latest landed no-runtime coverage refresh:
 `post_v1_wall_opening_leak_building_apparent_dna_companion_coverage_refresh_plan`.
-Current selected next file:
+Coverage refresh file:
 `packages/engine/src/post-v1-wall-opening-leak-building-apparent-dna-companion-coverage-refresh-contract.test.ts`.
-Current selected next plan doc:
+Coverage refresh plan doc:
 `docs/calculator/POST_V1_WALL_OPENING_LEAK_BUILDING_APPARENT_DNA_COMPANION_COVERAGE_REFRESH_PLAN_2026-06-23.md`.
+Coverage refresh status:
+`post_v1_wall_opening_leak_building_apparent_dna_companion_coverage_refresh_landed_no_runtime_selected_runtime_first_rerank_after_opening_leak_building_apparent_dna_companion_coverage_refresh`.
+It follows
+`post_v1_wall_opening_leak_building_apparent_dna_companion_owner_landed_runtime_selected_coverage_refresh`
+and re-probes selected candidate
+`wall.opening_leak_building_apparent_dna_companion_owner`.
+The refresh protects the complete apparent-and-standardized
+opening/leak building request with `R'w 31.6`, `Dn,w 31.9`,
+`Dn,A 31.1`, `DnT,w 32.1`, `DnT,A 31.3`, and `DnT,A,k 30.4`,
+apparent-only output limits, missing-frequency honesty, missing volume
+and output-basis `needs_input`, and lab/impact unsupported boundaries.
+Counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Current selected next action:
+`post_v1_runtime_first_route_family_rerank_after_current_gate_stale_metric_basis_reconciliation_plan`.
+Current selected next file:
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-current-gate-stale-metric-basis-reconciliation-contract.test.ts`.
+Current selected next plan doc:
+`docs/calculator/POST_V1_RUNTIME_FIRST_RERANK_AFTER_CURRENT_GATE_STALE_METRIC_BASIS_RECONCILIATION_PLAN_2026-06-23.md`.
 Current selected next label:
-`post-V1 wall opening/leak building apparent Dn,w/Dn,A companion coverage refresh`.
+`post-V1 runtime-first route-family rerank after current-gate stale metric/basis reconciliation`.
+
+Latest landed no-runtime rerank:
+`post_v1_runtime_first_route_family_rerank_after_wall_opening_leak_building_apparent_dna_companion_coverage_refresh_plan`.
+Rerank file:
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-opening-leak-building-apparent-dna-companion-coverage-refresh-contract.test.ts`.
+Rerank plan doc:
+`docs/calculator/POST_V1_RUNTIME_FIRST_RERANK_AFTER_WALL_OPENING_LEAK_BUILDING_APPARENT_DNA_COMPANION_COVERAGE_REFRESH_PLAN_2026-06-23.md`.
+Rerank status:
+`post_v1_runtime_first_route_family_rerank_after_wall_opening_leak_building_apparent_dna_companion_coverage_refresh_landed_no_runtime_selected_current_gate_stale_metric_basis_reconciliation`.
+Selected candidate:
+`current_gate_stale_metric_basis_reconciliation_after_opening_leak_apparent_dna`.
+Counters: `candidateCount: 7`,
+`knownCurrentGateFailureAssertions: 34`, `roiAnalysisIterations: 3`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+No runtime behavior should move until stale current-gate metric/basis
+expectations are reconciled. This is not a broad source crawl.
+
+Latest landed no-runtime current-gate reconciliation:
+`post_v1_current_gate_stale_metric_basis_reconciliation_after_opening_leak_apparent_dna_plan`.
+Reconciliation file:
+`packages/engine/src/post-v1-current-gate-stale-metric-basis-reconciliation-after-opening-leak-apparent-dna-contract.test.ts`.
+Reconciliation plan doc:
+`docs/calculator/POST_V1_CURRENT_GATE_STALE_METRIC_BASIS_RECONCILIATION_AFTER_OPENING_LEAK_APPARENT_DNA_PLAN_2026-06-23.md`.
+Reconciliation status:
+`post_v1_current_gate_stale_metric_basis_reconciliation_after_opening_leak_apparent_dna_landed_no_runtime_selected_runtime_first_rerank_after_current_gate_reconciliation`.
+It reconciled 34 stale engine current-gate metric/basis assertions
+across 22 engine contract files without moving engine runtime values,
+formula coefficients, source rows, request-shape coverage, or
+target-output support. Four web current-gate stale surface/report
+assertions were also reconciled, and one web surface helper was updated
+so building A-weighted opening/leak results are not mislabeled as field
+results. Counters:
+`currentGateKnownFailureAssertionsReconciled: 34`,
+`staleExpectationFilesTouched: 22`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 1`; additional web counters:
+`webCurrentGateStaleFailureAssertionsReconciled: 4` and
+`webStaleExpectationFilesTouched: 4`. Selected next:
+`post_v1_runtime_first_route_family_rerank_after_current_gate_stale_metric_basis_reconciliation_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-current-gate-stale-metric-basis-reconciliation-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_RERANK_AFTER_CURRENT_GATE_STALE_METRIC_BASIS_RECONCILIATION_PLAN_2026-06-23.md`
+/
+`post-V1 runtime-first route-family rerank after current-gate stale metric/basis reconciliation`.
 
 ## Latest Wall Opening/Leak Building DnT,A,k Characteristic Adapter Owner - 2026-06-22
 

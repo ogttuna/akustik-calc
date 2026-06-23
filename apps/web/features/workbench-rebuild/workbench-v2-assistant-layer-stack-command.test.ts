@@ -224,6 +224,36 @@ describe("workbench v2 assistant layer stack command", () => {
     expect(result.ok && result.selectedOutputs).toEqual(["Rw", "STC"]);
   });
 
+  it("keeps assistant output selection inside the current workbench mode", () => {
+    const mixedWall = parse("Rw ve AIIC seç");
+
+    expect(mixedWall.ok).toBe(true);
+    expect(mixedWall.ok && mixedWall.selectedOutputs).toEqual(["Rw"]);
+    expect(mixedWall.ok && mixedWall.warnings.join(" ")).toContain("Ignored AIIC");
+
+    expect(parse("AIIC seç")).toEqual({
+      code: "missing_output",
+      message: "No supported calculator output for wall mode could be read from the assistant command.",
+      ok: false
+    });
+
+    const floor = parseWorkbenchV2AssistantLayerStackApplyCommand({
+      currentLayers: [
+        { id: "floor-layer-1", materialId: "concrete", role: "base_structure", thicknessMm: "150" },
+        { id: "floor-layer-2", materialId: "geniemat_rst05", role: "resilient_layer", thicknessMm: "5" },
+        { id: "floor-layer-3", materialId: "screed", role: "floating_screed", thicknessMm: "50" }
+      ],
+      currentMode: "floor",
+      currentSelectedOutputs: ["Ln,w"],
+      idFactory: (index) => `assistant-test-layer-${index + 1}`,
+      instruction: "AIIC ve IIC seç",
+      materials
+    });
+
+    expect(floor.ok).toBe(true);
+    expect(floor.ok && floor.selectedOutputs).toEqual(["IIC", "AIIC"]);
+  });
+
   it("sets explicit floor impact physical inputs without changing layer rows", () => {
     const result = parseWorkbenchV2AssistantLayerStackApplyCommand({
       currentLayers: [

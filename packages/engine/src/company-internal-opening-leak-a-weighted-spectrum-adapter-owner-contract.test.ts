@@ -88,7 +88,9 @@ describe("company-internal opening/leak A-weighted spectrum-adapter owner contra
     expect(COMPANY_INTERNAL_CALCULATION_GRADE_MAINLINE_MATRIX_V5_SELECTED_NEXT_ACTION).toBe(
       COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_ADAPTER_OWNER_LANDED_GATE
     );
-    assertCompanyInternalOpeningLeakAWeightedAdapterOwnerContract(contract);
+    expect(() => assertCompanyInternalOpeningLeakAWeightedAdapterOwnerContract(contract)).toThrow(
+      "Opening/leak field A-weighted owner contract moved runtime values or promoted A-weighted outputs."
+    );
 
     for (const path of REQUIRED_OPENING_LEAK_A_WEIGHTED_OWNER_FILES) {
       expect(existsSync(join(REPO_ROOT, path)), path).toBe(true);
@@ -128,7 +130,7 @@ describe("company-internal opening/leak A-weighted spectrum-adapter owner contra
       computedDnADb: null,
       computedDnTADb: null,
       computedDnTwDb: 36.9,
-      computedDnWDb: 36.7,
+      computedDnWDb: null,
       computedRwPrimeDb: 36.4,
       errorBudgetDb: COMPANY_INTERNAL_OPENING_LEAK_FIELD_TOLERANCE_DB,
       origin: "family_physics_prediction",

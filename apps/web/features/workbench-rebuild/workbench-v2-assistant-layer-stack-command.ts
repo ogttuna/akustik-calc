@@ -1,14 +1,14 @@
-import {
-  REQUESTED_OUTPUT_IDS,
-  type MaterialDefinition,
-  type RequestedOutputId
-} from "@dynecho/shared";
+import type { MaterialDefinition, RequestedOutputId } from "@dynecho/shared";
 
 import type {
   WorkbenchV2ContextDraft,
   WorkbenchV2DraftLayer,
   WorkbenchV2StudyMode
 } from "./workbench-v2-project-snapshot";
+import {
+  WORKBENCH_V2_USER_OUTPUT_ID_SET,
+  filterWorkbenchV2OutputsForMode
+} from "./workbench-v2-output-catalog";
 
 export type WorkbenchV2AssistantLayerStackCommandTask = {
   code: string;
@@ -87,8 +87,6 @@ const THICKNESS_PATTERN = /(\d+(?:[.,]\d+)?)\s*(?:mm|millimeters?|millimetres?|m
 const SIGNED_THICKNESS_PATTERN = /([+-]?\d+(?:[.,]\d+)?)\s*(?:mm|millimeters?|millimetres?|milimetre|milimeter)\b/iu;
 const CONTEXT_NUMBER_PATTERN = /([+-]?\d+(?:[.,]\d+)?)/u;
 const MAX_REPEAT_COUNT = 8;
-const REQUESTED_OUTPUT_ID_SET = new Set<string>(REQUESTED_OUTPUT_IDS);
-
 const MATERIAL_ALIASES: readonly {
   aliases: readonly string[];
   materialId: string;
@@ -436,7 +434,7 @@ function parseRequestedOutputs(instruction: string): RequestedOutputId[] {
   const outputIds: RequestedOutputId[] = [];
 
   for (const definition of TARGET_OUTPUT_ALIASES) {
-    if (!REQUESTED_OUTPUT_ID_SET.has(definition.outputId)) {
+    if (!WORKBENCH_V2_USER_OUTPUT_ID_SET.has(definition.outputId)) {
       continue;
     }
 
@@ -1448,11 +1446,15 @@ export function parseWorkbenchV2AssistantLayerStackApplyCommand(input: {
   }
 
   if (commandKind === "set_outputs") {
-    const selectedOutputs = parseRequestedOutputs(instruction);
+    const parsedOutputs = parseRequestedOutputs(instruction);
+    const selectedOutputs = filterWorkbenchV2OutputsForMode(parsedOutputs, input.currentMode);
+    const ignoredOutputs = parsedOutputs.filter((outputId) => !selectedOutputs.includes(outputId));
     if (!selectedOutputs.length) {
       return {
         code: "missing_output",
-        message: "No supported calculator output could be read from the assistant command.",
+        message: parsedOutputs.length
+          ? `No supported calculator output for ${input.currentMode} mode could be read from the assistant command.`
+          : "No supported calculator output could be read from the assistant command.",
         ok: false
       };
     }
@@ -1469,7 +1471,9 @@ export function parseWorkbenchV2AssistantLayerStackApplyCommand(input: {
       selectedLayerId: currentSelectedLayerId,
       selectedOutputs,
       tasks: [],
-      warnings: []
+      warnings: ignoredOutputs.length
+        ? [`Ignored ${ignoredOutputs.join(", ")} because ${input.currentMode} mode does not expose those outputs.`]
+        : []
     };
   }
 

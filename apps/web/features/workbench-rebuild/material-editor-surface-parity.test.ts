@@ -151,6 +151,126 @@ describe("material editor surface parity", () => {
     ]);
   });
 
+  it("does not display stale helper values outside the supported output bucket", () => {
+    const result = {
+      impact: null,
+      layers: [],
+      metrics: {
+        airGapCount: 1,
+        estimatedCDb: -1,
+        estimatedCtrDb: -6,
+        estimatedRwDb: 46,
+        estimatedRwPrimeDb: 40,
+        estimatedStc: 46,
+        insulationCount: 1,
+        method: "dynamic",
+        surfaceMassKgM2: 21.2,
+        totalThicknessMm: 115
+      },
+      ok: true,
+      ratings: {
+        astmE413: {
+          STC: 46
+        },
+        field: {
+          RwPrime: 40
+        },
+        iso717: {
+          C: -1,
+          Ctr: -6,
+          Rw: 46
+        }
+      },
+      supportedTargetOutputs: ["Rw"],
+      targetOutputs: ["R'w", "STC"],
+      unsupportedTargetOutputs: ["R'w"],
+      warnings: []
+    } as AssemblyCalculation;
+
+    expect(buildOutputRows(result, ["R'w", "STC"])).toEqual([
+      {
+        detail: "Unsupported by the current route",
+        label: "R'w",
+        status: "unsupported",
+        value: "--"
+      },
+      {
+        detail: "No supported value for the selected output yet",
+        label: "STC",
+        status: "pending",
+        value: "--"
+      }
+    ]);
+  });
+
+  it("uses human route-input labels for material-property needs-input rows", () => {
+    const result = {
+      acousticAnswerBoundary: {
+        basis: "route_input_test",
+        missingPhysicalInputs: ["flowResistivityPaSM2"],
+        origin: "needs_input",
+        status: "needs_input",
+        unsupportedOutputs: ["Rw"]
+      },
+      impact: null,
+      metrics: {
+        airGapCount: 1,
+        estimatedCDb: -1,
+        estimatedCtrDb: -6,
+        insulationCount: 1,
+        method: "dynamic",
+        surfaceMassKgM2: 21.2,
+        totalThicknessMm: 115
+      },
+      ok: true,
+      ratings: {
+        astmE413: {},
+        iso717: {}
+      },
+      supportedTargetOutputs: [],
+      targetOutputs: ["Rw"],
+      unsupportedTargetOutputs: ["Rw"],
+      warnings: []
+    } as unknown as AssemblyCalculation;
+
+    expect(buildOutputRows(result, ["Rw"])).toEqual([
+      { detail: "Needs Flow resistivity", label: "Rw", status: "needs_input", value: "--" }
+    ]);
+  });
+
+  it("uses human route-input labels for grouped impact field-context needs-input rows", () => {
+    const result = {
+      acousticAnswerBoundary: {
+        basis: "route_input_test",
+        missingPhysicalInputs: ["impactFieldContext", "impactFieldContext.ci50_2500Db"],
+        origin: "needs_input",
+        status: "needs_input",
+        unsupportedOutputs: ["L'nT,50"]
+      },
+      impact: null,
+      metrics: {
+        airGapCount: 0,
+        insulationCount: 0,
+        method: "dynamic",
+        surfaceMassKgM2: 300,
+        totalThicknessMm: 200
+      },
+      ok: true,
+      ratings: {
+        astmE413: {},
+        iso717: {}
+      },
+      supportedTargetOutputs: [],
+      targetOutputs: ["L'nT,50"],
+      unsupportedTargetOutputs: ["L'nT,50"],
+      warnings: []
+    } as unknown as AssemblyCalculation;
+
+    expect(buildOutputRows(result, ["L'nT,50"])).toEqual([
+      { detail: "Needs Impact field context, CI,50-2500", label: "L'nT,50", status: "needs_input", value: "--" }
+    ]);
+  });
+
   it("keeps solver-active custom materials live from workbench payload through output rows", () => {
     const payload = buildEstimatePayload("wall", customLayerStack, LAB_OUTPUTS, explicitDoubleLeafContext, customMaterials);
 

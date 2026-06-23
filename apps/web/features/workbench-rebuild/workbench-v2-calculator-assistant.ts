@@ -19,6 +19,10 @@ import {
   type WorkbenchV2StudyMode
 } from "./workbench-v2-project-snapshot";
 import {
+  WORKBENCH_V2_USER_OUTPUT_ID_SET,
+  filterWorkbenchV2OutputsForMode
+} from "./workbench-v2-output-catalog";
+import {
   validateReportAssistantLayerStackDraft,
   type ReportAssistantLayerStackDraft,
   type ReportAssistantLayerStackDraftLayer,
@@ -155,30 +159,6 @@ export type WorkbenchV2CalculatorAssistantPreviewResult =
 const SNAPSHOT_TOOL_NAME = "preview_workbench_v2_calculator_snapshot" satisfies WorkbenchV2CalculatorAssistantToolName;
 const DESCRIBED_LAYER_TOOL_NAME = "preview_described_layer_configuration" satisfies WorkbenchV2CalculatorAssistantToolName;
 const LAYER_STACK_DRAFT_TOOL_NAME = "preview_layer_stack_draft" satisfies WorkbenchV2CalculatorAssistantToolName;
-
-const WORKBENCH_V2_ASSISTANT_OUTPUT_IDS = new Set<RequestedOutputId>([
-  "Rw",
-  "R'w",
-  "DnT,w",
-  "DnT,A",
-  "DnT,A,k",
-  "Dn,w",
-  "Dn,A",
-  "STC",
-  "C",
-  "Ctr",
-  "Ln,w",
-  "L'n,w",
-  "L'nT,w",
-  "L'nT,50",
-  "Ln,w+CI",
-  "LnT,A",
-  "DeltaLw",
-  "CI",
-  "CI,50-2500",
-  "IIC",
-  "AIIC"
-]);
 
 const DESCRIBED_LAYER_THICKNESS_PATTERN =
   /(\d+(?:[.,]\d+)?)\s*(?:mm|millimeters?|millimetres?|milimetre|milimeter)\b/iu;
@@ -337,7 +317,7 @@ function parseTargetOutputs(value: unknown): RequestedOutputId[] | null {
   }
 
   return Array.from(
-    new Set(value.filter((entry): entry is RequestedOutputId => typeof entry === "string" && WORKBENCH_V2_ASSISTANT_OUTPUT_IDS.has(entry as RequestedOutputId)))
+    new Set(value.filter((entry): entry is RequestedOutputId => typeof entry === "string" && WORKBENCH_V2_USER_OUTPUT_ID_SET.has(entry as RequestedOutputId)))
   );
 }
 
@@ -1739,7 +1719,17 @@ export function previewWorkbenchV2CalculatorSnapshot(input: {
     });
   }
 
-  const selectedOutputs = overrideOutputs ?? parsed.snapshot.selectedOutputs;
+  const selectedOutputs = overrideOutputs !== null
+    ? filterWorkbenchV2OutputsForMode(overrideOutputs, parsed.snapshot.mode)
+    : parsed.snapshot.selectedOutputs;
+  if (overrideOutputs !== null && selectedOutputs.length === 0) {
+    return fail({
+      code: "invalid_workbench_v2_calculator_outputs",
+      errors: [`Calculator preview targetOutputs are not supported by ${parsed.snapshot.mode} mode.`],
+      statusCode: 400
+    });
+  }
+
   const materials = buildResolvedMaterialCatalog(parsed.snapshot.customMaterials);
   const materialById = new Map(materials.map((material) => [material.id, material]));
   const tasks = localTasks({
@@ -2078,6 +2068,30 @@ export function previewDescribedLayerConfiguration(input: {
     });
   }
   const explicitOutputs = overrideOutputs ?? targetOutputsFromDescription(description);
+  const modeExplicitOutputs = filterWorkbenchV2OutputsForMode(explicitOutputs, mode);
+  if (overrideOutputs !== null && overrideOutputs.length > 0 && modeExplicitOutputs.length === 0) {
+    return fail({
+      code: "invalid_described_layer_configuration_outputs",
+      errors: [`Described calculator preview targetOutputs are not supported by ${mode} mode.`],
+      name: DESCRIBED_LAYER_TOOL_NAME,
+      statusCode: 400
+    });
+  }
+  if (overrideOutputs === null && explicitOutputs.length > 0 && modeExplicitOutputs.length === 0) {
+    return describedUnsupportedResult({
+      description,
+      mode,
+      selectedOutputs: explicitOutputs,
+      tasks: [
+        {
+          detail: `The described ${mode} configuration requested ${explicitOutputs.join(", ")}, but that output set is not available for this mode.`,
+          id: "unsupported-described-output-mode-boundary",
+          label: "Unsupported output for mode",
+          source: "described_layer_configuration"
+        }
+      ]
+    });
+  }
   if (mode === "floor" && overrideOutputs === null && explicitOutputs.length === 0 && hasGenericImpactMetricBasisAlias(description)) {
     return describedUnsupportedResult({
       description,
@@ -2093,7 +2107,11 @@ export function previewDescribedLayerConfiguration(input: {
       ]
     });
   }
-  const selectedOutputs = overrideOutputs ?? (explicitOutputs.length ? explicitOutputs : inferTargetOutputsFromDescription({ description, mode }));
+  const selectedOutputs = overrideOutputs !== null
+    ? modeExplicitOutputs
+    : explicitOutputs.length
+      ? modeExplicitOutputs
+      : inferTargetOutputsFromDescription({ description, mode });
   const assumeReasonableDraftInputs = wantsDescribedAssumedInputs(description);
 
   if (mode !== "wall") {

@@ -242,16 +242,16 @@ describe("broad accuracy floor open-web raw-bare carrier owner contract", () => 
       floorSystemMatchId: null,
       impact: { CI: 1.8, LnW: 96, LnWPlusCI: 97.8, basis: OPEN_WEB_RAW_BARE_FORMULA_BASIS },
       ratings: { Rw: 32, basis: OPEN_WEB_RAW_BARE_FORMULA_BASIS },
-      supported: ["Rw", "Ln,w", "CI", "CI,50-2500", "Ln,w+CI"],
-      unsupported: ["R'w", "DnT,w", "L'n,w", "L'nT,w", "IIC", "AIIC"]
+      supported: ["Ln,w", "CI", "CI,50-2500", "Ln,w+CI"],
+      unsupported: ["Rw", "R'w", "DnT,w", "L'n,w", "L'nT,w", "IIC", "AIIC"]
     });
     expect(calculatorPosture(RAW_OPEN_WEB_SAFE_SPLIT)).toMatchObject({
       estimateKind: "family_archetype",
       floorSystemMatchId: null,
       impact: { CI: 1.8, LnW: 96, LnWPlusCI: 97.8, basis: OPEN_WEB_RAW_BARE_FORMULA_BASIS },
       ratings: { Rw: 32, basis: OPEN_WEB_RAW_BARE_FORMULA_BASIS },
-      supported: ["Rw", "Ln,w", "CI", "CI,50-2500", "Ln,w+CI"],
-      unsupported: ["R'w", "DnT,w", "L'n,w", "L'nT,w", "IIC", "AIIC"]
+      supported: ["Ln,w", "CI", "CI,50-2500", "Ln,w+CI"],
+      unsupported: ["Rw", "R'w", "DnT,w", "L'n,w", "L'nT,w", "IIC", "AIIC"]
     });
 
     expect(calculatorPosture(OPEN_WEB_INEX_DECK_ONLY)).toMatchObject({
@@ -259,8 +259,8 @@ describe("broad accuracy floor open-web raw-bare carrier owner contract", () => 
       floorSystemMatchId: null,
       impact: null,
       ratings: { Rw: 79, basis: "screening_mass_law_curve_seed_v3" },
-      supported: ["Rw"],
-      unsupported: ["R'w", "DnT,w", "Ln,w", "CI", "CI,50-2500", "Ln,w+CI", "L'n,w", "L'nT,w", "IIC", "AIIC"]
+      supported: [],
+      unsupported: ["Rw", "R'w", "DnT,w", "Ln,w", "CI", "CI,50-2500", "Ln,w+CI", "L'n,w", "L'nT,w", "IIC", "AIIC"]
     });
 
     expect(calculatorPosture(OPEN_WEB_LOWER_ONLY_PACKAGED_SYSTEM)).toMatchObject({
@@ -271,8 +271,8 @@ describe("broad accuracy floor open-web raw-bare carrier owner contract", () => 
         Rw: 34,
         basis: "screening_mass_law_curve_seed_v3"
       },
-      supported: ["Rw"],
-      unsupported: ["R'w", "DnT,w", "Ln,w", "CI", "CI,50-2500", "Ln,w+CI", "L'n,w", "L'nT,w", "IIC", "AIIC"]
+      supported: [],
+      unsupported: ["Rw", "R'w", "DnT,w", "Ln,w", "CI", "CI,50-2500", "Ln,w+CI", "L'n,w", "L'nT,w", "IIC", "AIIC"]
     });
   });
 
