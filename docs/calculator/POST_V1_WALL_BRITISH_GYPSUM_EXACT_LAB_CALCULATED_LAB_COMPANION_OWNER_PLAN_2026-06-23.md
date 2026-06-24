@@ -3,6 +3,33 @@
 Status:
 `post_v1_wall_british_gypsum_exact_lab_calculated_lab_companion_owner_landed_runtime_scope_basis_selected_coverage_refresh`
 
+Follow-up coverage refresh:
+`post_v1_wall_british_gypsum_exact_lab_calculated_lab_companion_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-british-gypsum-exact-lab-calculated-lab-companion-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_BRITISH_GYPSUM_EXACT_LAB_CALCULATED_LAB_COMPANION_COVERAGE_REFRESH_PLAN_2026-06-23.md`
+/
+`post_v1_wall_british_gypsum_exact_lab_calculated_lab_companion_coverage_refresh_landed_no_runtime_selected_runtime_first_rerank_after_british_gypsum_exact_lab_calculated_lab_companion_coverage_refresh`.
+The refresh re-probes selected candidate
+`wall.british_gypsum_exact_lab_calculated_lab_companion_owner` and
+keeps the owner values and boundaries unchanged.
+
+Selected next action after the refresh:
+`post_v1_runtime_first_route_family_rerank_after_wall_british_gypsum_exact_lab_calculated_lab_companion_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-british-gypsum-exact-lab-calculated-lab-companion-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_RERANK_AFTER_WALL_BRITISH_GYPSUM_EXACT_LAB_CALCULATED_LAB_COMPANION_COVERAGE_REFRESH_PLAN_2026-06-24.md`
+/
+`post-V1 runtime-first route-family rerank after wall British Gypsum exact lab calculated lab companion coverage refresh`.
+Refresh counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
 ## Purpose
 
 This runtime/scope-basis owner follows the no-runtime coverage refresh:

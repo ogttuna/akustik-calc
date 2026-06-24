@@ -1,7 +1,19 @@
 # Post-V1 Wall British Gypsum Exact Lab Calculated Lab Companion Coverage Refresh Plan - 2026-06-23
 
 Status:
-`post_v1_wall_british_gypsum_exact_lab_calculated_lab_companion_coverage_refresh_plan_selected_after_owner`
+`post_v1_wall_british_gypsum_exact_lab_calculated_lab_companion_coverage_refresh_landed_no_runtime_selected_runtime_first_rerank_after_british_gypsum_exact_lab_calculated_lab_companion_coverage_refresh`
+
+Selected next action:
+`post_v1_runtime_first_route_family_rerank_after_wall_british_gypsum_exact_lab_calculated_lab_companion_coverage_refresh_plan`
+
+Selected next file:
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-british-gypsum-exact-lab-calculated-lab-companion-coverage-refresh-contract.test.ts`
+
+Selected next plan:
+`docs/calculator/POST_V1_RUNTIME_FIRST_RERANK_AFTER_WALL_BRITISH_GYPSUM_EXACT_LAB_CALCULATED_LAB_COMPANION_COVERAGE_REFRESH_PLAN_2026-06-24.md`
+
+Selected next label:
+`post-V1 runtime-first route-family rerank after wall British Gypsum exact lab calculated lab companion coverage refresh`
 
 ## Purpose
 
@@ -73,4 +85,26 @@ exact-source promotion, and lab-to-field/building copying closed.
 - `sourceRowsImported: 0`
 - `frontendImplementationFilesTouched: 0`
 
+This is not a broad source crawl.
+
+## Landed Refresh Notes - 2026-06-24
+
+Contract file:
+`packages/engine/src/post-v1-wall-british-gypsum-exact-lab-calculated-lab-companion-coverage-refresh-contract.test.ts`.
+
+Re-probed candidate:
+`wall.british_gypsum_exact_lab_calculated_lab_companion_owner`.
+
+The landed refresh keeps `A046005` at `Rw 55`, `STC 55`, `C -0.6`,
+and `Ctr -5.4`, and keeps `A046006` at `Rw 58`, `STC 58`, `C -0.6`,
+and `Ctr -5.4`. Single-output `Rw` still uses the measured exact route;
+field/building aliases, impact aliases, nearby rows, legacy `auto`
+exact-source promotion, and lab-to-field/building copying remain
+closed.
+
+Landed counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
 This is not a broad source crawl.
