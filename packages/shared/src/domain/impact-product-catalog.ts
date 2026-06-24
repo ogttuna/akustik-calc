@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { ImpactCalculationSchema } from "./impact";
 import { ImpactBoundCalculationSchema } from "./impact-bound";
+import { ImpactSupportingElementFamilySchema } from "./impact-flanking";
 import { FloorRoleSchema } from "./layer";
 
 export const ImpactProductCatalogMatchModeSchema = z.enum([
@@ -12,6 +13,7 @@ export const ImpactProductCatalogMatchModeSchema = z.enum([
 
 export const ImpactProductCatalogSourceTypeSchema = z.enum([
   "official_manufacturer_catalog_pdf",
+  "official_manufacturer_product_page",
   "official_manufacturer_technical_data_pdf"
 ]);
 
@@ -19,10 +21,33 @@ export const ImpactProductCatalogTrustTierSchema = z.enum([
   "official_manufacturer"
 ]);
 
+export const ImpactProductSurfaceMassRangeSchema = z.object({
+  max: z.number().positive().optional(),
+  min: z.number().nonnegative().optional()
+}).superRefine((value, ctx) => {
+  if (typeof value.min !== "number" && typeof value.max !== "number") {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Surface-mass range requires min or max."
+    });
+  }
+
+  if (typeof value.min === "number" && typeof value.max === "number" && value.min > value.max) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Surface-mass range min cannot exceed max."
+    });
+  }
+});
+
 export const ImpactProductRoleCriteriaSchema = z.object({
   layerCount: z.number().int().positive().optional(),
   materialIds: z.array(z.string().min(1)).min(1).optional(),
-  thicknessMm: z.number().positive().optional()
+  surfaceMassKgM2: z.number().nonnegative().optional(),
+  surfaceMassRangeKgM2: ImpactProductSurfaceMassRangeSchema.optional(),
+  surfaceMassToleranceKgM2: z.number().nonnegative().optional(),
+  thicknessMm: z.number().positive().optional(),
+  thicknessToleranceMm: z.number().nonnegative().optional()
 });
 
 export const ImpactProductCatalogMatchCriteriaSchema = z.object({
@@ -30,7 +55,8 @@ export const ImpactProductCatalogMatchCriteriaSchema = z.object({
   baseStructure: ImpactProductRoleCriteriaSchema.optional(),
   floatingScreed: ImpactProductRoleCriteriaSchema.optional(),
   floorCovering: ImpactProductRoleCriteriaSchema.optional(),
-  resilientLayer: ImpactProductRoleCriteriaSchema.optional()
+  resilientLayer: ImpactProductRoleCriteriaSchema.optional(),
+  supportingElementFamilies: z.array(ImpactSupportingElementFamilySchema).min(1).optional()
 });
 
 export const ImpactProductCatalogRatingsSchema = z.object({
@@ -77,3 +103,4 @@ export type ImpactProductCatalogRatings = z.infer<typeof ImpactProductCatalogRat
 export type ImpactProductCatalogSourceType = z.infer<typeof ImpactProductCatalogSourceTypeSchema>;
 export type ImpactProductCatalogTrustTier = z.infer<typeof ImpactProductCatalogTrustTierSchema>;
 export type ImpactProductRoleCriteria = z.infer<typeof ImpactProductRoleCriteriaSchema>;
+export type ImpactProductSurfaceMassRange = z.infer<typeof ImpactProductSurfaceMassRangeSchema>;

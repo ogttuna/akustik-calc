@@ -172,6 +172,7 @@ import {
   resolveLayerBasedImpactLane,
   shouldHideLowConfidenceProxyAirborne
 } from "./impact-lane";
+import { matchImpactProductCatalog } from "./impact-product-catalog";
 import {
   FLOOR_RAW_BARE_AIRBORNE_BUILDING_PREDICTION_OUTPUTS,
   FLOOR_RAW_BARE_AIRBORNE_BUILDING_PREDICTION_RUNTIME_BASIS
@@ -1531,6 +1532,30 @@ function getFiniteRequestedLabSpectrumOutputs(input: {
   return companionOutputs;
 }
 
+function getFiniteLabSpectrumOutputs(input: {
+  readonly estimatedCDb: number | null | undefined;
+  readonly estimatedCtrDb: number | null | undefined;
+  readonly estimatedRwDb: number | null | undefined;
+  readonly estimatedStcDb: number | null | undefined;
+}): RequestedOutputId[] {
+  const companionOutputs: RequestedOutputId[] = [];
+
+  if (typeof input.estimatedRwDb === "number" && Number.isFinite(input.estimatedRwDb)) {
+    companionOutputs.push("Rw");
+  }
+  if (typeof input.estimatedStcDb === "number" && Number.isFinite(input.estimatedStcDb)) {
+    companionOutputs.push("STC");
+  }
+  if (typeof input.estimatedCDb === "number" && Number.isFinite(input.estimatedCDb)) {
+    companionOutputs.push("C");
+  }
+  if (typeof input.estimatedCtrDb === "number" && Number.isFinite(input.estimatedCtrDb)) {
+    companionOutputs.push("Ctr");
+  }
+
+  return companionOutputs;
+}
+
 function getPostV1OpenBoxFinishedPackageBuildingLabCompanionOutputs(input: {
   readonly floorSystemRatings: (FloorSystemAirborneRatings & { readonly basis?: string }) | null;
   readonly runtime: PostV1OpenBoxFinishedPackageFloorAirborneBuildingPredictionRuntime | null;
@@ -1911,7 +1936,6 @@ function getPostV1GateARBuildingLabSpectrumCompanionOutputs(input: {
     input.support.targetOutputs.every((output) =>
       GATE_AR_AIRBORNE_BUILDING_PREDICTION_LAB_ALIAS_OUTPUTS.has(output)
     );
-  const targetSetHasRw = input.support.targetOutputs.includes("Rw");
   const hasGateARBuildingBasis =
     input.airborneBasis?.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD &&
     input.airborneBasis.origin === "family_physics_prediction" &&
@@ -1944,13 +1968,13 @@ function getPostV1GateARBuildingLabSpectrumCompanionOutputs(input: {
     return [];
   }
 
-  if (targetSetIsLabOnly && !targetSetHasRw) {
-    return [];
-  }
-
-  return targetSetIsLabOnly
-    ? getFiniteRequestedLabSpectrumOutputs(input)
-    : getFiniteRequestedUnsupportedLabSpectrumOutputs(input);
+  // Agent coordination, 2026-06-24:
+  // Complete Gate AR building-prediction routes can expose field/building
+  // outputs from ISO 12354 while their lab companions still come from the
+  // owned direct separating-element curve. Keep visible Rw/STC/C/Ctr metrics
+  // target-output-independent; moveUnsupportedOutputsToSupported filters the
+  // supported list back to requested outputs, so this does not widen support.
+  return getFiniteLabSpectrumOutputs(input);
 }
 
 function hasPostV1WallContextOwnedPorousCavityInput(
@@ -2017,9 +2041,10 @@ function getPostV1WallUserMaterialFormulaBuildingLabCompanionOutputs(input: {
   const hasRequestedBuildingOutput = input.support.targetOutputs.some((output) =>
     ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_FLOOR_FIELD_CONTINUATION_OUTPUTS.has(output)
   );
-  const targetSetIsLabOnly = input.support.targetOutputs.every((output) =>
-    GATE_AR_AIRBORNE_BUILDING_PREDICTION_LAB_ALIAS_OUTPUTS.has(output)
-  );
+  const targetSetIsLabOnly = input.support.targetOutputs.length > 0 &&
+    input.support.targetOutputs.every((output) =>
+      GATE_AR_AIRBORNE_BUILDING_PREDICTION_LAB_ALIAS_OUTPUTS.has(output)
+    );
   const hasGateARBuildingBasis =
     input.airborneBasis?.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD &&
     input.airborneBasis.origin === "family_physics_prediction" &&
@@ -2044,9 +2069,13 @@ function getPostV1WallUserMaterialFormulaBuildingLabCompanionOutputs(input: {
     return [];
   }
 
-  return targetSetIsLabOnly
-    ? getFiniteRequestedLabSpectrumOutputs(input)
-    : getFiniteRequestedUnsupportedLabSpectrumOutputs(input);
+  // Agent coordination, 2026-06-24:
+  // User-material double-leaf building requests expose field/building values
+  // from Gate AR, but their lab companions still come from the same owned
+  // direct curve. Keep visible Rw/STC/C/Ctr metrics target-output-independent;
+  // moveUnsupportedOutputsToSupported below still filters support to requested
+  // outputs, so this does not widen the user's supported output list.
+  return getFiniteLabSpectrumOutputs(input);
 }
 
 function getPostV1WallUserMaterialFormulaFieldLabCompanionOutputs(input: {
@@ -3028,7 +3057,8 @@ const EXPLICIT_DOUBLE_LEAF_SURFACE_MASS_AIRBORNE_OUTPUTS = new Set<RequestedOutp
   "Dn,w",
   "Dn,A",
   "DnT,w",
-  "DnT,A"
+  "DnT,A",
+  "DnT,A,k"
 ]);
 
 function isExplicitDoubleLeafSurfaceMassNeedsInputEligibleResult(result: AssemblyCalculation): boolean {
@@ -3052,7 +3082,14 @@ function isExplicitDoubleLeafSurfaceMassNeedsInputEligibleResult(result: Assembl
     return true;
   }
 
-  return result.airborneBasis?.method === GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_METHOD;
+  // Agent coordination, 2026-06-24:
+  // Gate AR can otherwise promote a building_prediction result before the
+  // explicit double-leaf leaf-mass guard runs. Keep the missing leaf-mass
+  // boundary method-owned here; this is not a Gate AR formula retune.
+  return (
+    result.airborneBasis?.method === GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_METHOD ||
+    result.airborneBasis?.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD
+  );
 }
 
 function buildExplicitDoubleLeafSurfaceMassNeedsInputBasis(): AirborneResultBasis {
@@ -3124,6 +3161,118 @@ function applyExplicitDoubleLeafSurfaceMassNeedsInputBoundary(input: {
   parkResultTargetOutputs(input.result, parkedOutputs);
   input.result.warnings.push(
     `Gate S double-leaf/framed route selected needs_input for ${parkedOutputs.join(", ")}; provide surfaceMassKgM2 for each side leaf before DynEcho publishes this wall answer.`
+  );
+}
+
+const POST_V1_USER_MATERIAL_FORMULA_REQUIRED_INPUT_SURFACE_METHOD =
+  "post_v1_wall_user_material_formula_required_input_surface_missing_leaf_mass";
+const POST_V1_USER_MATERIAL_FORMULA_REQUIRED_INPUT_SURFACE_MISSING_INPUTS = [
+  "layer.surfaceMassKgM2_or_materialCatalog.densityKgM3_and_thicknessMm"
+] as const;
+
+function isUserMaterialFormulaLeaf(layer: ResolvedLayer): boolean {
+  if (
+    layer.material.category === "gap" ||
+    layer.material.category === "insulation" ||
+    layer.material.category === "support"
+  ) {
+    return false;
+  }
+
+  const behavior = layer.material.acoustic?.behavior;
+  const leafBehavior = !behavior ||
+    behavior === "limp_mass_membrane" ||
+    behavior === "mass_timber" ||
+    behavior === "panel_leaf" ||
+    behavior === "rigid_mass";
+  const tags = layer.material.tags ?? [];
+  const userOrProjectMaterial =
+    layer.material.acoustic?.propertySourceStatus === "user_supplied" ||
+    tags.includes("custom") ||
+    tags.some((tag) => tag.startsWith("project"));
+
+  return leafBehavior && userOrProjectMaterial;
+}
+
+function hasPositiveLeafSurfaceMass(layer: ResolvedLayer): boolean {
+  return Number.isFinite(layer.surfaceMassKgM2) && layer.surfaceMassKgM2 > 0;
+}
+
+function buildUserMaterialFormulaRequiredInputSurfaceBasis(): AirborneResultBasis {
+  return {
+    assumptions: [
+      "A source-absent user/project wall leaf was supplied without positive surface mass.",
+      "DynEcho accepts either layer.surfaceMassKgM2 or materialCatalog.densityKgM3 with layer.thicknessMm before publishing the owned formula route.",
+      "The calculator blocks screening and field/building adapters here because zero surface mass would turn a missing input into a false acoustic value."
+    ],
+    calculationStandard: "engine_mass_law",
+    curveBasis: "no_curve",
+    family: "single_leaf_panel",
+    kind: "airborne_needs_input",
+    method: POST_V1_USER_MATERIAL_FORMULA_REQUIRED_INPUT_SURFACE_METHOD,
+    missingPhysicalInputs: [...POST_V1_USER_MATERIAL_FORMULA_REQUIRED_INPUT_SURFACE_MISSING_INPUTS],
+    missingSourceEvidence: [],
+    origin: "needs_input",
+    propertyDefaults: [],
+    ratingStandard: "none",
+    requiredInputs: [
+      ...POST_V1_USER_MATERIAL_FORMULA_REQUIRED_INPUT_SURFACE_MISSING_INPUTS,
+      "materialCatalog.acoustic.behavior",
+      "ISO717-1 rating adapter"
+    ]
+  };
+}
+
+function applyPostV1UserMaterialFormulaRequiredInputSurfaceBoundary(input: {
+  airborneContext?: AirborneContext | null;
+  result: AssemblyCalculation;
+}): void {
+  if (
+    input.result.acousticAnswerBoundary ||
+    !hasAnswerEngineV1WallAirborneOutput(input.result.targetOutputs) ||
+    input.airborneContext?.wallTopology?.topologyMode === "double_leaf_framed"
+  ) {
+    return;
+  }
+
+  const selectedFamily =
+    input.result.dynamicAirborneTrace?.detectedFamily ?? input.result.airborneBasis?.family;
+  if (selectedFamily !== "single_leaf_panel") {
+    return;
+  }
+
+  const missingMassUserLeaves = input.result.layers.filter((layer: ResolvedLayer) =>
+    isUserMaterialFormulaLeaf(layer) && !hasPositiveLeafSurfaceMass(layer)
+  );
+  if (missingMassUserLeaves.length === 0) {
+    return;
+  }
+
+  const basis = buildUserMaterialFormulaRequiredInputSurfaceBasis();
+  const boundary = buildAnswerEngineV1WallNeedsInputBoundary({
+    basis,
+    contextMode: input.airborneContext?.contextMode,
+    outputs: input.result.targetOutputs
+  });
+  if (!boundary) {
+    return;
+  }
+
+  input.result.airborneBasis = basis;
+  input.result.acousticAnswerBoundary = boundary;
+
+  if (input.result.airborneCandidateResolution) {
+    input.result.airborneCandidateResolution = selectAnswerEngineV1NeedsInputCandidate({
+      basis,
+      resolution: input.result.airborneCandidateResolution
+    });
+    input.result.airborneCandidateSet = input.result.airborneCandidateResolution.candidates;
+  }
+
+  const parkedOutputs = boundary.unsupportedOutputs;
+  parkResultTargetOutputs(input.result, parkedOutputs);
+  input.result.warnings.push(
+    `Post-V1 user-material formula input surface selected needs_input for ${parkedOutputs.join(", ")}; provide layer.surfaceMassKgM2 or materialCatalog.densityKgM3 with layer.thicknessMm before DynEcho publishes this wall formula answer.`
   );
 }
 
@@ -5666,6 +5815,7 @@ export function calculateAssembly(
           predictorSpecificFloorSystemEstimate: null
         }
       : rawDirectImpactLane;
+  const directImpactCatalogHasLiveImpact = Boolean(directImpactLane.impactCatalogMatch?.impact);
   const visibleLayerDeltaLwMissingPhysicalInputs =
     visibleTimberCltDeltaLwLayerStackReady
       ? collectTimberCltDeltaLwFormulaMissingPhysicalInputs(visibleLayerDeltaLwPredictorInput)
@@ -5704,6 +5854,9 @@ export function calculateAssembly(
   let floorSystemEstimate = directImpactLane.floorSystemEstimate;
   let explicitDeltaImpact = directImpactLane.explicitDeltaImpact;
   let predictorDeltaLwCompanion = directImpactLane.predictorDeltaLwCompanion;
+  if (!floorSystemMatch && !boundFloorSystemMatch && !impactCatalogMatch) {
+    impactCatalogMatch = matchImpactProductCatalog(resolvedLayers);
+  }
   if (!floorSystemMatch && (predictorDeltaLwCompanion || options.targetOutputs?.includes("Ln,w"))) {
     const visibleFamily = inferImpactSupportingElementFamilyFromLayers(resolvedLayers);
     const predictorFamily = inferImpactSupportingElementFamilyFromPredictorInput(predictorInput);
@@ -5734,7 +5887,7 @@ export function calculateAssembly(
     !exactImpact &&
     !directImpactLane.floorSystemMatch &&
     !directImpactLane.boundFloorSystemMatch &&
-    !directImpactLane.impactCatalogMatch
+    !directImpactCatalogHasLiveImpact
       ? getVisibleLayerPredictorBlockerWarning(layers, catalog)
       : null;
 
@@ -5744,7 +5897,7 @@ export function calculateAssembly(
     !exactImpact &&
     !directImpactLane.floorSystemMatch &&
     !directImpactLane.boundFloorSystemMatch &&
-    !directImpactLane.impactCatalogMatch
+    !directImpactCatalogHasLiveImpact
   ) {
     const derivedPredictorInput = maybeBuildImpactPredictorInputFromLayerStack(
       layers,
@@ -5817,7 +5970,7 @@ export function calculateAssembly(
         impactResolvedLayers = derivedImpactResolvedLayers;
         floorSystemMatch = derivedImpactLane.floorSystemMatch;
         boundFloorSystemMatch = derivedImpactLane.boundFloorSystemMatch;
-        impactCatalogMatch = derivedImpactLane.impactCatalogMatch;
+        impactCatalogMatch = derivedImpactLane.impactCatalogMatch ?? impactCatalogMatch;
         floorSystemRecommendations = derivedImpactLane.floorSystemRecommendations;
         narrowImpact = derivedImpactLane.narrowImpact;
         boundFloorSystemEstimate = derivedImpactLane.boundFloorSystemEstimate;
@@ -6913,6 +7066,7 @@ export function calculateAssembly(
     projectUserVerifiedCalculatedExactSupportedOutputs
   );
   const postV1WallDirectFormulaLabCompanionOutputSet = new Set([
+    ...postV1GateARBuildingLabSpectrumCompanionOutputs,
     ...postV1WallUserMaterialFormulaBuildingLabCompanionOutputs,
     ...postV1WallUserMaterialFormulaFieldLabCompanionOutputs,
     ...postV1WallTimberStudCltFormulaFieldLabCompanionOutputs,
@@ -7599,6 +7753,10 @@ export function calculateAssembly(
     result
   });
   applyExplicitDoubleLeafSurfaceMassNeedsInputBoundary({
+    airborneContext,
+    result
+  });
+  applyPostV1UserMaterialFormulaRequiredInputSurfaceBoundary({
     airborneContext,
     result
   });

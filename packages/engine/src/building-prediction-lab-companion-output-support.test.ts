@@ -43,7 +43,7 @@ function calculateUiBuilding(targetOutputs: readonly RequestedOutputId[]) {
 }
 
 describe("building prediction lab companion output support", () => {
-  it("keeps Rw live when the UI requests only Rw from a complete building-prediction wall", () => {
+  it("keeps lab Rw live when the UI requests only Rw from a complete building-prediction wall", () => {
     const result = calculateUiBuilding(["Rw"]);
 
     expect(result.supportedTargetOutputs).toEqual(["Rw"]);
@@ -51,7 +51,7 @@ describe("building prediction lab companion output support", () => {
     expect(result.metrics).toMatchObject({
       airborneIsoDescriptor: "R'w",
       estimatedDnTwDb: 41,
-      estimatedRwDb: 38,
+      estimatedRwDb: 44,
       estimatedRwPrimeDb: 38
     });
     expect(result.airborneBasis).toMatchObject({
@@ -69,11 +69,11 @@ describe("building prediction lab companion output support", () => {
     expect(result.unsupportedTargetOutputs).toEqual([]);
     expect(result.metrics).toMatchObject({
       estimatedCDb: -1.3,
-      estimatedCtrDb: -6,
+      estimatedCtrDb: -6.4,
       estimatedDnTwDb: 41,
-      estimatedRwDb: 38,
+      estimatedRwDb: 44,
       estimatedRwPrimeDb: 38,
-      estimatedStc: 38
+      estimatedStc: 44
     });
   });
 });

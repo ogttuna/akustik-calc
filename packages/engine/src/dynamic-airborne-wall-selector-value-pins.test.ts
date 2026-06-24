@@ -299,12 +299,12 @@ const EXPECTED: Readonly<Record<CorridorLabel, Readonly<Record<ContextName, Pinn
   double_leaf: {
     lab: { c: -1, ctr: -6.3, detectedFamily: "double_leaf", dnA: null, dnTA: null, dnTw: null, dnW: null, rw: 48, rwPrime: null, stc: 48 },
     field: { c: -0.9, ctr: -6.1, detectedFamily: "double_leaf", dnA: 46, dnTA: 45.8, dnTw: 47, dnW: 47, rw: 46, rwPrime: 46, stc: 46 },
-    building: { c: -0.9, ctr: -6.1, detectedFamily: "double_leaf", dnA: 45.1, dnTA: 46.6, dnTw: 48, dnW: 46, rw: 46, rwPrime: 46, stc: 46 }
+    building: { c: -1, ctr: -6.3, detectedFamily: "double_leaf", dnA: 45.1, dnTA: 46.6, dnTw: 48, dnW: 46, rw: 48, rwPrime: 46, stc: 48 }
   },
   lined_massive_wall: {
     lab: { c: -1.7, ctr: -6.5, detectedFamily: "lined_massive_wall", dnA: null, dnTA: null, dnTw: null, dnW: null, rw: 49, rwPrime: null, stc: 49 },
     field: { c: -1.6, ctr: -6.3, detectedFamily: "lined_massive_wall", dnA: 46.3, dnTA: 46.1, dnTw: 47, dnW: 47, rw: 47, rwPrime: 47, stc: 47 },
-    building: { c: -1.6, ctr: -6.3, detectedFamily: "lined_massive_wall", dnA: 45.4, dnTA: 46.9, dnTw: 48, dnW: 47, rw: 47, rwPrime: 47, stc: 47 }
+    building: { c: -1.7, ctr: -6.5, detectedFamily: "lined_massive_wall", dnA: 45.4, dnTA: 46.9, dnTw: 48, dnW: 47, rw: 49, rwPrime: 47, stc: 49 }
   },
   // Boundary-hold case — detected as `lined_massive_wall`
   // but runner-up is `double_leaf`. Pinned here so future
@@ -313,7 +313,7 @@ const EXPECTED: Readonly<Record<CorridorLabel, Readonly<Record<ContextName, Pinn
   aac_boundary: {
     lab: { c: -1.7, ctr: -7, detectedFamily: "lined_massive_wall", dnA: null, dnTA: null, dnTw: null, dnW: null, rw: 46, rwPrime: null, stc: 46 },
     field: { c: -0.7, ctr: -5.8, detectedFamily: "lined_massive_wall", dnA: 44.2, dnTA: 44, dnTw: 45, dnW: 45, rw: 44, rwPrime: 44, stc: 44 },
-    building: { c: -0.7, ctr: -5.8, detectedFamily: "lined_massive_wall", dnA: 43.3, dnTA: 44.8, dnTw: 46, dnW: 44, rw: 44, rwPrime: 44, stc: 44 }
+    building: { c: -1.7, ctr: -7, detectedFamily: "lined_massive_wall", dnA: 43.3, dnTA: 44.8, dnTw: 46, dnW: 44, rw: 47, rwPrime: 44, stc: 47 }
   },
   // G5 masonry sibling — detects as `lined_massive_wall`
   // family today (not a separate `g5_sibling` family id).
@@ -322,12 +322,12 @@ const EXPECTED: Readonly<Record<CorridorLabel, Readonly<Record<ContextName, Pinn
   g5_sibling: {
     lab: { c: -1.1, ctr: -6.3, detectedFamily: "lined_massive_wall", dnA: null, dnTA: null, dnTw: null, dnW: null, rw: 48, rwPrime: null, stc: 48 },
     field: { c: -1.1, ctr: -6.1, detectedFamily: "lined_massive_wall", dnA: 44.8, dnTA: 44.6, dnTw: 46, dnW: 46, rw: 45, rwPrime: 45, stc: 45 },
-    building: { c: -1.1, ctr: -6.1, detectedFamily: "lined_massive_wall", dnA: 43.9, dnTA: 45.4, dnTw: 47, dnW: 45, rw: 45, rwPrime: 45, stc: 45 }
+    building: { c: -1.1, ctr: -6.3, detectedFamily: "lined_massive_wall", dnA: 43.9, dnTA: 45.4, dnTw: 47, dnW: 45, rw: 47, rwPrime: 45, stc: 47 }
   },
   heavy_core_trim: {
     lab: { c: -0.8, ctr: -5.6, detectedFamily: "lined_massive_wall", dnA: null, dnTA: null, dnTw: null, dnW: null, rw: 49, rwPrime: null, stc: 49 },
     field: { c: -0.7, ctr: -5.4, detectedFamily: "lined_massive_wall", dnA: 47.2, dnTA: 47, dnTw: 48, dnW: 48, rw: 47, rwPrime: 47, stc: 47 },
-    building: { c: -0.7, ctr: -5.4, detectedFamily: "lined_massive_wall", dnA: 46.3, dnTA: 47.8, dnTw: 49, dnW: 47, rw: 47, rwPrime: 47, stc: 47 }
+    building: { c: -0.8, ctr: -5.6, detectedFamily: "lined_massive_wall", dnA: 46.3, dnTA: 47.8, dnTw: 49, dnW: 47, rw: 49, rwPrime: 47, stc: 49 }
   },
   // Double-stud: uses stud-aware contexts across all three
   // modes (see FRAMED_FIELD_CONTEXT / FRAMED_BUILDING_CONTEXT
@@ -339,7 +339,7 @@ const EXPECTED: Readonly<Record<CorridorLabel, Readonly<Record<ContextName, Pinn
   lab_double_stud: {
     lab: { c: -1.6, ctr: -6.2, detectedFamily: "double_stud_system", dnA: null, dnTA: null, dnTw: null, dnW: null, rw: 61, rwPrime: null, stc: 61 },
     field: { c: -0.9, ctr: -5.6, detectedFamily: "double_stud_system", dnA: 52, dnTA: 51.8, dnTw: 53, dnW: 53, rw: 52, rwPrime: 52, stc: 52 },
-    building: { c: -0.9, ctr: -5.6, detectedFamily: "double_stud_system", dnA: 51.1, dnTA: 52.6, dnTw: 54, dnW: 52, rw: 52, rwPrime: 52, stc: 52 }
+    building: { c: -1.6, ctr: -6.2, detectedFamily: "double_stud_system", dnA: 51.1, dnTA: 52.6, dnTw: 54, dnW: 52, rw: 61, rwPrime: 52, stc: 61 }
   }
 };
 

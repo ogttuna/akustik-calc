@@ -44,15 +44,15 @@ export const POST_V1_GATE_AX_WALL_FRAMED_VALUE_PINS = [
   {
     caseId: "wall-lsf-knauf",
     values: {
-      "C": -1.4,
+      "C": -1.5,
       "Ctr": -6.4,
       "Dn,A": 49.6,
       "Dn,w": 51,
       "DnT,A": 51.1,
       "DnT,w": 52,
       "R'w": 51,
-      "Rw": 51,
-      "STC": 51
+      "Rw": 60,
+      "STC": 60
     }
   },
   {

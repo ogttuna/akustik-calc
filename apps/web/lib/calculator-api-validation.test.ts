@@ -1,5 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
+import { buildCalculatorExceptionErrorPayload } from "./calculator-api-validation";
+
 const AUTH_ENV_KEYS = ["DYNECHO_AUTH_USERNAME", "DYNECHO_AUTH_PASSWORD", "DYNECHO_AUTH_SECRET"] as const;
 
 let originalEnv: Record<string, string | undefined>;
@@ -209,5 +211,59 @@ describe("calculator API validation guidance", () => {
     expect(impactBody.ok).toBe(false);
     expect(impactBody.result).toBeUndefined();
     expect(impactBody.issues?.map((issue) => issue.path.join("."))).toContain("layers.0.thicknessMm");
+  });
+
+  it("normalizes thrown result-validation issues into user-safe estimate guidance", () => {
+    const payload = buildCalculatorExceptionErrorPayload({
+      error: {
+        issues: [
+          {
+            code: "too_small",
+            message: "Number must be greater than 0",
+            path: ["ratings", "field", "partitionAreaM2"]
+          }
+        ]
+      },
+      fallbackError: "Estimate failed while calculating. Review the calculator inputs and try again.",
+      route: "estimate"
+    });
+
+    expect(payload).toMatchObject({
+      error: "The calculation needs valid panel area metadata before it can publish field or building outputs.",
+      errorKind: "result_validation",
+      nextField: {
+        action: "Enter positive panel width and height, then run the calculation again.",
+        label: "Panel area",
+        path: "ratings.field.partitionAreaM2"
+      },
+      ok: false
+    });
+    expect(payload.error).not.toContain("Number must be greater than 0");
+    expect(payload.issues).toEqual([
+      {
+        message: "Number must be greater than 0",
+        path: ["ratings", "field", "partitionAreaM2"]
+      }
+    ]);
+  });
+
+  it("normalizes generic impact-only exceptions without exposing raw messages", () => {
+    const payload = buildCalculatorExceptionErrorPayload({
+      error: new Error("internal stack trace with private route details"),
+      fallbackError: "Impact-only calculation failed. Review the calculator inputs and try again.",
+      route: "impact-only"
+    });
+
+    expect(payload).toEqual({
+      error: "Impact-only calculation failed. Review the calculator inputs and try again.",
+      errorKind: "internal_error",
+      issues: [],
+      nextField: {
+        action: "Review the calculator inputs and run the calculation again.",
+        label: "Impact-only input",
+        path: "payload"
+      },
+      ok: false
+    });
   });
 });

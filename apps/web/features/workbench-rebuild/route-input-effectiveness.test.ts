@@ -2,8 +2,11 @@ import type { AssemblyCalculation, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import {
+  buildRouteInputTaskElementIds,
   buildLayerInputEffectiveness,
   buildRouteInputEffectiveness,
+  getMissingInputTask,
+  parseEstimateError,
   showBuildingPredictionContext,
   showFloorImpactContext,
   showImpactContext
@@ -130,6 +133,94 @@ function expectEffectiveness(
 }
 
 describe("route input effectiveness", () => {
+  it("parses structured estimate error envelopes without exposing issue JSON", () => {
+    const message = parseEstimateError({
+      error: "The estimate result could not be published safely. Review the highlighted calculator inputs and try again.",
+      errorKind: "result_validation",
+      issues: [
+        {
+          message: "Number must be greater than 0",
+          path: ["ratings", "field", "receivingRoomVolumeM3"]
+        }
+      ],
+      ok: false
+    });
+
+    expect(message).toBe("The estimate result could not be published safely. Review the highlighted calculator inputs and try again.");
+    expect(message).not.toContain("Number must be greater than 0");
+    expect(message).not.toContain("ratings");
+  });
+
+  it("keeps estimate error parsing safe for malformed payloads", () => {
+    expect(parseEstimateError(null)).toBe("Estimate failed.");
+    expect(parseEstimateError({ error: "" })).toBe("Estimate failed.");
+    expect(parseEstimateError({ issues: [{ message: "raw issue", path: ["ratings"] }] })).toBe("Estimate failed.");
+  });
+
+  it("maps area-family remote tasks to both panel dimension fields", () => {
+    const targets = buildRouteInputTaskElementIds([
+      getMissingInputTask("ratings.field.partitionAreaM2")
+    ]);
+
+    expect([...targets].sort()).toEqual([
+      "rebuild-panel-height",
+      "rebuild-panel-width"
+    ]);
+  });
+
+  it("keeps direct panel dimension remote tasks narrow", () => {
+    const widthTargets = buildRouteInputTaskElementIds([
+      getMissingInputTask("panelWidthMm")
+    ]);
+    const heightTargets = buildRouteInputTaskElementIds([
+      getMissingInputTask("panelHeightMm")
+    ]);
+
+    expect([...widthTargets].sort()).toEqual(["rebuild-panel-width"]);
+    expect([...heightTargets].sort()).toEqual(["rebuild-panel-height"]);
+  });
+
+  it("maps grouped impact field context to the visible impact context controls", () => {
+    const targets = buildRouteInputTaskElementIds([
+      getMissingInputTask("impactFieldContext")
+    ]);
+
+    expect([...targets].sort()).toEqual([
+      "rebuild-ci-db",
+      "rebuild-ci50-2500-db",
+      "rebuild-field-k-db",
+      "rebuild-impact-room-volume"
+    ]);
+  });
+
+  it("merges mixed remote route-input targets without dropping area, building, or impact controls", () => {
+    const targets = buildRouteInputTaskElementIds([
+      getMissingInputTask("ratings.field.partition_area_m2"),
+      getMissingInputTask("sourceRoomVolumeM3"),
+      getMissingInputTask("buildingPredictionOutputBasis"),
+      getMissingInputTask("impactFieldContext")
+    ]);
+
+    expect([...targets].sort()).toEqual([
+      "rebuild-building-output-basis",
+      "rebuild-ci-db",
+      "rebuild-ci50-2500-db",
+      "rebuild-field-k-db",
+      "rebuild-impact-room-volume",
+      "rebuild-panel-height",
+      "rebuild-panel-width",
+      "rebuild-source-room-volume"
+    ]);
+  });
+
+  it("does not turn layer-stack route tasks into numeric context field highlights", () => {
+    const targets = buildRouteInputTaskElementIds([
+      getMissingInputTask("toppingOrFloatingLayer")
+    ]);
+
+    expect([...targets]).toEqual([]);
+  });
+
   it("does not show building prediction inputs for non-airborne output sets", () => {
     const context = {
       ...WORKBENCH_V2_DEFAULT_CONTEXT,

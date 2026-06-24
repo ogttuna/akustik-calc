@@ -173,8 +173,8 @@ describe("airborne building-prediction surface parity", () => {
 
     expect(result.supportedTargetOutputs).toEqual(["Rw", "STC", "R'w", "DnT,w"]);
     expect(result.unsupportedTargetOutputs).toEqual([]);
-    expect(result.metrics.estimatedRwDb).toBe(58);
-    expect(result.metrics.estimatedStc).toBe(58);
+    expect(result.metrics.estimatedRwDb).toBe(60);
+    expect(result.metrics.estimatedStc).toBe(60);
     expect(result.metrics.estimatedRwPrimeDb).toBe(58);
     expect(result.metrics.estimatedDnTwDb).toBe(59);
     expect(result.airborneBasis).toMatchObject({
@@ -210,12 +210,12 @@ describe("airborne building-prediction surface parity", () => {
 
     expect(rwCard).toMatchObject({
       status: "live",
-      value: "58 dB"
+      value: "60 dB"
     });
     expect(rwCard.postureDetail).toContain("Requested lab companions stay on the direct element-lab curve: Rw, STC");
     expect(stcCard).toMatchObject({
       status: "live",
-      value: "58 dB"
+      value: "60 dB"
     });
     expect(stcCard.postureDetail).toContain("companion term derived from the primary live lane");
 

@@ -44,6 +44,10 @@ import { toast } from "sonner";
 
 import { buildWorkbenchResponseCurveFigures } from "../workbench/response-curve-model";
 import {
+  resolveWorkbenchRequiredInputPresentation,
+  type WorkbenchRequiredInputTargetField
+} from "../workbench/route-input-presentation";
+import {
   buildReportAssistantContext,
   type ReportAssistantContext
 } from "../workbench/report-assistant-context";
@@ -344,6 +348,7 @@ type RequiredTask = {
   id: string;
   label: string;
   targetElementId?: string;
+  targetFields?: readonly WorkbenchRequiredInputTargetField[];
   targetLayerId?: string;
 };
 
@@ -849,6 +854,26 @@ const CONTEXT_INPUT_IDS: Record<keyof ContextDraft, string> = {
   wallTopologyMode: "rebuild-wall-topology-mode"
 };
 
+// AGENT COORDINATION 2026-06-24 (Codex): shared route-input
+// presentation returns semantic fields only. This rebuild adapter owns
+// DOM ids so assistant/report surfaces do not depend on rebuild markup.
+function getContextInputIdForRequiredInputTarget(targetField: WorkbenchRequiredInputTargetField): string | undefined {
+  return CONTEXT_INPUT_IDS[targetField as keyof ContextDraft];
+}
+
+function getPrimaryContextInputIdForRequiredInputTargets(
+  targetFields: readonly WorkbenchRequiredInputTargetField[]
+): string | undefined {
+  for (const targetField of targetFields) {
+    const targetElementId = getContextInputIdForRequiredInputTarget(targetField);
+    if (targetElementId) {
+      return targetElementId;
+    }
+  }
+
+  return undefined;
+}
+
 const INITIAL_CONTEXT: ContextDraft = WORKBENCH_V2_DEFAULT_CONTEXT;
 
 const ROUTE_INPUT_EFFECTIVENESS_LABELS: Record<RouteInputEffectivenessStatus, string> = {
@@ -1312,307 +1337,16 @@ function isBuildingPredictionInput(fieldId: string): boolean {
   ].some((field) => normalized.includes(field));
 }
 
-function getMissingInputTask(fieldId: string): RequiredTask {
-  // AGENT COORDINATION 2026-06-22: Copy-only route input guidance; keep task ids, focusing, and route status semantics unchanged.
-  const normalized = fieldId.toLowerCase().replace(/[^a-z0-9]/g, "");
-
-  if (normalized.includes("flowresistivitypasm2")) {
-    return {
-      actionLabel: "Edit material",
-      detail: "The active porous cavity damping route needs flow resistivity on the selected porous absorber material.",
-      id: `remote-${fieldId}`,
-      label: "Flow resistivity"
-    };
-  }
-
-  if (normalized.includes("surfacemasskgm2")) {
-    return {
-      actionLabel: "Review material",
-      detail: "The active leaf route needs positive surface mass from the leaf material or its density and thickness.",
-      id: `remote-${fieldId}`,
-      label: "Leaf surface mass"
-    };
-  }
-
-  if (normalized.includes("sidealeafgroup")) {
-    return {
-      actionLabel: "Group",
-      detail: "Set Wall topology to Double leaf, then enter the visible row number(s) for the Side A leaf.",
-      id: `remote-${fieldId}`,
-      label: "Side A leaf rows",
-      targetElementId: CONTEXT_INPUT_IDS.wallSideALeafLayerIndices
-    };
-  }
-
-  if (normalized.includes("sidebleafgroup")) {
-    return {
-      actionLabel: "Group",
-      detail: "Enter the visible row number(s) for the Side B leaf.",
-      id: `remote-${fieldId}`,
-      label: "Side B leaf rows",
-      targetElementId: CONTEXT_INPUT_IDS.wallSideBLeafLayerIndices
-    };
-  }
-
-  if (normalized.includes("leafgrouping")) {
-    return {
-      actionLabel: "Review",
-      detail: "Leaf and cavity row groups must be non-empty, non-overlapping, and inside the current layer list.",
-      id: `remote-${fieldId}`,
-      label: "Layer ownership",
-      targetElementId: CONTEXT_INPUT_IDS.wallTopologyMode
-    };
-  }
-
-  if (normalized.includes("cavity1depthmm") || normalized.includes("cavitydepthmm")) {
-    return {
-      actionLabel: "Enter",
-      detail: "Enter the cavity depth in millimetres or use the current cavity layer role to fill it.",
-      id: `remote-${fieldId}`,
-      label: "Cavity depth",
-      targetElementId: CONTEXT_INPUT_IDS.wallCavity1DepthMm
-    };
-  }
-
-  if (normalized.includes("cavity1fillcoverage") || normalized.includes("fillstate")) {
-    return {
-      actionLabel: "Select",
-      detail: "Select whether the cavity is empty, partially filled, or fully filled.",
-      id: `remote-${fieldId}`,
-      label: "Cavity fill",
-      targetElementId: CONTEXT_INPUT_IDS.wallCavity1FillCoverage
-    };
-  }
-
-  if (normalized.includes("absorberclass")) {
-    return {
-      actionLabel: "Select",
-      detail: "Select the cavity absorption class for the fill layer.",
-      id: `remote-${fieldId}`,
-      label: "Cavity absorption",
-      targetElementId: CONTEXT_INPUT_IDS.wallCavity1AbsorptionClass
-    };
-  }
-
-  if (normalized.includes("framebridgeclass")) {
-    return {
-      actionLabel: "Select",
-      detail: "Choose the support topology; the dynamic route derives the frame bridge class from that support path.",
-      id: `remote-${fieldId}`,
-      label: "Frame bridge path",
-      targetElementId: CONTEXT_INPUT_IDS.wallSupportTopology
-    };
-  }
-
-  if (normalized.includes("supporttopology")) {
-    return {
-      actionLabel: "Select",
-      detail: "Select the support path used by the framed wall route.",
-      id: `remote-${fieldId}`,
-      label: "Support topology",
-      targetElementId: CONTEXT_INPUT_IDS.wallSupportTopology
-    };
-  }
-
-  if (normalized.includes("supportspacingmm") || normalized.includes("studspacingmm")) {
-    return {
-      actionLabel: "Enter",
-      detail: "Enter support or stud spacing in millimetres.",
-      id: `remote-${fieldId}`,
-      label: "Support spacing",
-      targetElementId: CONTEXT_INPUT_IDS.supportSpacingMm
-    };
-  }
-
-  if (normalized.includes("resilientbarsidecount")) {
-    return {
-      actionLabel: "Select",
-      detail: "Select whether resilient bars/channels are on one side or both sides.",
-      id: `remote-${fieldId}`,
-      label: "Resilient bars",
-      targetElementId: CONTEXT_INPUT_IDS.airborneResilientBarSideCount
-    };
-  }
-
-  if (normalized.includes("contextmode")) {
-    return {
-      actionLabel: "Select",
-      detail: "Select Field or Building mode for apparent airborne outputs.",
-      id: `remote-${fieldId}`,
-      label: "Airborne mode",
-      targetElementId: CONTEXT_INPUT_IDS.airborneMode
-    };
-  }
-
-  if (normalized.includes("partitionaream2")) {
-    return {
-      actionLabel: "Enter",
-      detail: "Enter panel width and height; the route derives partition area from those dimensions.",
-      id: `remote-${fieldId}`,
-      label: "Panel area",
-      targetElementId: CONTEXT_INPUT_IDS.panelWidthMm
-    };
-  }
-
-  if (normalized.includes("sourceroomvolumem3")) {
-    return {
-      actionLabel: "Enter",
-      detail: "Required for building prediction.",
-      id: `remote-${fieldId}`,
-      label: "Source room volume",
-      targetElementId: CONTEXT_INPUT_IDS.sourceRoomVolumeM3
-    };
-  }
-
-  if (normalized.includes("flankingjunctionclass")) {
-    return {
-      actionLabel: "Select",
-      detail: "Select the flanking junction class used by the building route.",
-      id: `remote-${fieldId}`,
-      label: "Flanking junction",
-      targetElementId: CONTEXT_INPUT_IDS.flankingJunctionClass
-    };
-  }
-
-  if (normalized.includes("conservativeflankingassumption")) {
-    return {
-      actionLabel: "Select",
-      detail: "Select the conservative flanking assumption for the route.",
-      id: `remote-${fieldId}`,
-      label: "Flanking assumption",
-      targetElementId: CONTEXT_INPUT_IDS.conservativeFlankingAssumption
-    };
-  }
-
-  if (normalized.includes("junctioncouplinglengthm")) {
-    return {
-      actionLabel: "Enter",
-      detail: "Required for the building prediction flanking path.",
-      id: `remote-${fieldId}`,
-      label: "Coupling length",
-      targetElementId: CONTEXT_INPUT_IDS.junctionCouplingLengthM
-    };
-  }
-
-  if (normalized.includes("buildingpredictionoutputbasis")) {
-    return {
-      actionLabel: "Select",
-      detail: "Select whether the building route should publish apparent, standardized, or both outputs.",
-      id: `remote-${fieldId}`,
-      label: "Building output basis",
-      targetElementId: CONTEXT_INPUT_IDS.buildingPredictionOutputBasis
-    };
-  }
-
-  if (normalized.includes("ci502500db")) {
-    return {
-      actionLabel: "Enter",
-      detail: "Required for low-frequency impact field output.",
-      id: `remote-${fieldId}`,
-      label: "CI,50-2500",
-      targetElementId: CONTEXT_INPUT_IDS.ci50_2500Db
-    };
-  }
-
-  if (normalized.includes("cidb")) {
-    return {
-      actionLabel: "Enter",
-      detail: "Required for impact spectrum adaptation.",
-      id: `remote-${fieldId}`,
-      label: "CI",
-      targetElementId: CONTEXT_INPUT_IDS.ciDb
-    };
-  }
-
-  if (normalized.includes("fieldkdb")) {
-    return {
-      actionLabel: "Enter",
-      detail: "Required for field correction.",
-      id: `remote-${fieldId}`,
-      label: "K correction",
-      targetElementId: CONTEXT_INPUT_IDS.fieldKDb
-    };
-  }
-
-  if (normalized === "impactfieldcontext") {
-    return {
-      actionLabel: "Review",
-      detail: "Complete the impact field context required by the selected field impact output.",
-      id: `remote-${fieldId}`,
-      label: "Impact field context",
-      targetElementId: CONTEXT_INPUT_IDS.fieldKDb
-    };
-  }
-
-  if (normalized.includes("receivingroomrt60s")) {
-    return {
-      actionLabel: "Enter",
-      detail: "Required for standardized receiving-room output.",
-      id: `remote-${fieldId}`,
-      label: "RT60",
-      targetElementId: CONTEXT_INPUT_IDS.receivingRoomRt60S
-    };
-  }
-
-  if (normalized.includes("receivingroomvolumem3")) {
-    return {
-      actionLabel: "Enter",
-      detail: "Required for field or standardized output.",
-      id: `remote-${fieldId}`,
-      label: "Room volume",
-      targetElementId: normalized.includes("impactfieldcontext")
-        ? CONTEXT_INPUT_IDS.impactReceivingRoomVolumeM3
-        : CONTEXT_INPUT_IDS.receivingRoomVolumeM3
-    };
-  }
-
-  if (normalized.includes("panelwidthmm")) {
-    return {
-      actionLabel: "Enter",
-      detail: "Required for field/building airborne output.",
-      id: `remote-${fieldId}`,
-      label: "Panel width",
-      targetElementId: CONTEXT_INPUT_IDS.panelWidthMm
-    };
-  }
-
-  if (normalized.includes("panelheightmm")) {
-    return {
-      actionLabel: "Enter",
-      detail: "Required for field/building airborne output.",
-      id: `remote-${fieldId}`,
-      label: "Panel height",
-      targetElementId: CONTEXT_INPUT_IDS.panelHeightMm
-    };
-  }
-
-  if (normalized.includes("loadbasiskgm2")) {
-    return {
-      actionLabel: "Enter",
-      detail: "Required by the floor impact route.",
-      id: `remote-${fieldId}`,
-      label: "Load basis",
-      targetElementId: CONTEXT_INPUT_IDS.loadBasisKgM2
-    };
-  }
-
-  if (normalized.includes("resilientlayerdynamicstiffnessmnm3")) {
-    return {
-      actionLabel: "Enter",
-      detail: "Required by the resilient layer route.",
-      id: `remote-${fieldId}`,
-      label: "Dynamic stiffness",
-      targetElementId: CONTEXT_INPUT_IDS.resilientLayerDynamicStiffnessMNm3
-    };
-  }
+export function getMissingInputTask(fieldId: string): RequiredTask {
+  const presentation = resolveWorkbenchRequiredInputPresentation(fieldId);
 
   return {
-    detail: "The active formula route needs this physical input before it can calculate the selected output.",
+    actionLabel: presentation.actionLabel,
+    detail: presentation.detail,
     id: `remote-${fieldId}`,
-    label: (fieldId.split(".").at(-1) ?? fieldId)
-      .replace(/_/gu, " ")
-      .replace(/([a-z])([A-Z])/gu, "$1 $2")
-      .replace(/\b\w/gu, (match) => match.toUpperCase())
+    label: presentation.label,
+    targetElementId: getPrimaryContextInputIdForRequiredInputTargets(presentation.targetFields),
+    targetFields: presentation.targetFields
   };
 }
 
@@ -1627,14 +1361,24 @@ function getRemoteTasks(result: AssemblyCalculation | null): readonly RequiredTa
   return missingPhysicalInputs.map(getMissingInputTask);
 }
 
-function buildRouteInputTaskElementIds(tasks: readonly RequiredTask[]): Set<string> {
+export function buildRouteInputTaskElementIds(tasks: readonly RequiredTask[]): Set<string> {
   const targetElementIds = new Set<string>();
 
   for (const task of tasks) {
+    for (const targetField of task.targetFields ?? []) {
+      const targetElementId = getContextInputIdForRequiredInputTarget(targetField);
+      if (targetElementId) {
+        targetElementIds.add(targetElementId);
+      }
+    }
+
     if (task.targetElementId) {
       targetElementIds.add(task.targetElementId);
     }
 
+    // AGENT COORDINATION 2026-06-24 (Codex): this fallback protects any
+    // legacy remote task that was created before semantic targetFields were
+    // attached. New tasks should reach both fields via the shared presenter.
     if (normalizeRouteInputFieldId(task.id).includes("partitionaream2")) {
       targetElementIds.add(CONTEXT_INPUT_IDS.panelWidthMm);
       targetElementIds.add(CONTEXT_INPUT_IDS.panelHeightMm);
@@ -1858,11 +1602,33 @@ function stableJsonForVerifiedCalculatedCapture(value: unknown): string {
   return `{${entries.map(([key, entryValue]) => `${JSON.stringify(key)}:${stableJsonForVerifiedCalculatedCapture(entryValue)}`).join(",")}}`;
 }
 
-export function estimateRequestsEqualForVerifiedCalculatedCapture(
+export function estimateRequestsEqual(
   left: EstimateRequest,
   right: EstimateRequest
 ): boolean {
   return stableJsonForVerifiedCalculatedCapture(left) === stableJsonForVerifiedCalculatedCapture(right);
+}
+
+export function estimateRequestsEqualForVerifiedCalculatedCapture(
+  left: EstimateRequest,
+  right: EstimateRequest
+): boolean {
+  return estimateRequestsEqual(left, right);
+}
+
+type EstimateStateForFreshness =
+  | { request: EstimateRequest; result: AssemblyCalculation; status: "ready" }
+  | { status: Exclude<EstimateState["status"], "ready"> };
+
+export function getActiveEstimateResultForCurrentRequest(input: {
+  currentRequest: EstimateRequest | null;
+  estimateState: EstimateStateForFreshness;
+}): AssemblyCalculation | null {
+  if (input.estimateState.status !== "ready" || !input.currentRequest) {
+    return null;
+  }
+
+  return estimateRequestsEqual(input.currentRequest, input.estimateState.request) ? input.estimateState.result : null;
 }
 
 export function getVerifiedCalculatedMetricBasis(
@@ -2559,7 +2325,9 @@ export function buildLayerInputEffectiveness(input: {
   return effectiveness;
 }
 
-function parseEstimateError(payload: unknown): string {
+// AGENT COORDINATION 2026-06-24 (Codex): exported for focused client-boundary
+// tests so API-safe error envelopes cannot regress into raw Workbench copy.
+export function parseEstimateError(payload: unknown): string {
   if (typeof payload === "object" && payload !== null && "error" in payload) {
     const error = (payload as { error?: unknown }).error;
     if (typeof error === "string" && error.trim()) {
@@ -3712,13 +3480,23 @@ export function CalculatorWorkbench() {
 
   const materials = useMemo(() => buildResolvedMaterialCatalog(customMaterials), [customMaterials]);
   const materialById = useMemo(() => new Map(materials.map((material) => [material.id, material])), [materials]);
-  const estimateResult = estimateState.status === "ready" ? estimateState.result : null;
+  const currentEstimateRequest = useMemo(
+    () => buildEstimatePayload(mode, layers, selectedOutputs, context, customMaterials),
+    [context, customMaterials, layers, mode, selectedOutputs]
+  );
+  // AGENT COORDINATION 2026-06-24 (Codex): visible calculated state is
+  // request-fresh. A debounced stale ready result may stay in state, but
+  // it must not drive output rows, route-input highlights, or report saves.
+  const estimateResult = getActiveEstimateResultForCurrentRequest({
+    currentRequest: currentEstimateRequest,
+    estimateState
+  });
   const availableOutputs = OUTPUT_OPTIONS.filter((output) => output.modes.includes(mode));
   const outputRows = estimateResult ? buildOutputRows(estimateResult, selectedOutputs) : [];
   const verifiedCalculatedCaptureLiveValueCount = outputRows.filter((row) => row.status === "live").length;
   const verifiedCalculatedCaptureBusy = workbenchVerifiedCalculatedAnchorStatus === "syncing";
   const canSaveVerifiedCalculatedAnchor =
-    estimateState.status === "ready" && verifiedCalculatedCaptureLiveValueCount > 0 && !verifiedCalculatedCaptureBusy;
+    estimateResult !== null && verifiedCalculatedCaptureLiveValueCount > 0 && !verifiedCalculatedCaptureBusy;
   const activeWorkbenchVerifiedCalculatedAnchors = workbenchVerifiedCalculatedAnchors.filter(
     (anchor) => anchor.status === "active"
   );
@@ -3726,20 +3504,15 @@ export function CalculatorWorkbench() {
   // UX hardening for user-verified calculated references. This fingerprint is
   // display-only; runtime still resolves exact matches through /api/estimate.
   const currentVerifiedCalculatedAnchorFingerprint = useMemo(() => {
-    if (estimateState.status !== "ready") {
-      return null;
-    }
-
-    const currentRequest = buildEstimatePayload(mode, layers, selectedOutputs, context, customMaterials);
-    if (!currentRequest || !estimateRequestsEqualForVerifiedCalculatedCapture(currentRequest, estimateState.request)) {
+    if (!currentEstimateRequest || !estimateResult) {
       return null;
     }
 
     const capture = buildVerifiedCalculatedAnchorCapturePackage({
       context,
-      currentRequest,
+      currentRequest: currentEstimateRequest,
       mode,
-      result: estimateState.result,
+      result: estimateResult,
       selectedOutputs
     });
     if (capture.status !== "ready") {
@@ -3749,7 +3522,7 @@ export function CalculatorWorkbench() {
     return buildProjectUserVerifiedCalculatedAnchorFingerprint({
       requestContext: capture.package.requestContext
     });
-  }, [context, customMaterials, estimateState, layers, mode, selectedOutputs]);
+  }, [context, currentEstimateRequest, estimateResult, mode, selectedOutputs]);
   const applicableWorkbenchVerifiedCalculatedAnchors = getApplicableWorkbenchV2VerifiedCalculatedAnchors(
     activeWorkbenchVerifiedCalculatedAnchors,
     currentVerifiedCalculatedAnchorFingerprint
@@ -3784,9 +3557,9 @@ export function CalculatorWorkbench() {
     return selectedAirborneCurveOutputs;
   });
   const missingSelectedImpactCurve =
-    estimateState.status === "ready" && selectedImpactOutputs && !responseFigures.some((figure) => figure.id === "impact");
+    estimateResult !== null && selectedImpactOutputs && !responseFigures.some((figure) => figure.id === "impact");
   const missingSelectedAirborneCurve =
-    estimateState.status === "ready" && selectedAirborneCurveOutputs && !responseFigures.some((figure) => figure.id === "airborne");
+    estimateResult !== null && selectedAirborneCurveOutputs && !responseFigures.some((figure) => figure.id === "airborne");
   const illustrationLayers = useMemo(
     () => buildIllustrationLayers(layers, mode, selectedLayerId, materialById, materialVisualOverrides),
     [layers, materialById, materialVisualOverrides, mode, selectedLayerId]
@@ -4520,7 +4293,7 @@ export function CalculatorWorkbench() {
   function buildAssemblyCalculationSummary() {
     const selectedOutputLabels = selectedOutputs.map((output) => output);
 
-    if (estimateState.status === "ready" && primaryOutput) {
+    if (estimateResult && primaryOutput) {
       return {
         primaryOutput: primaryOutput.label,
         primaryValueLabel: primaryOutput.value,
@@ -7427,7 +7200,7 @@ export function CalculatorWorkbench() {
   }
 
   function getStatusLabel(): string {
-    if (estimateState.status === "ready") return "Ready";
+    if (estimateState.status === "ready") return estimateResult ? "Ready" : "Pending";
     if (estimateState.status === "loading") return "Calculating";
     if (estimateState.status === "error") return "Error";
     if (estimateState.status === "blocked") return "Needs input";

@@ -69,6 +69,8 @@ function formatCatalogSourceType(sourceType: ImpactProductCatalogSourceType): st
   switch (sourceType) {
     case "official_manufacturer_catalog_pdf":
       return "Official manufacturer catalog PDF";
+    case "official_manufacturer_product_page":
+      return "Official manufacturer product page";
     case "official_manufacturer_technical_data_pdf":
       return "Official technical data PDF";
   }

@@ -194,7 +194,7 @@ describe("company-internal calculation-grade mainline matrix v2 refresh", () => 
         unsupportedTargetOutputs: []
       }
     });
-    expect(values(broad)).toEqual({ Rw: 58, STC: 58, "R'w": 58, "DnT,w": 59 });
+    expect(values(broad)).toEqual({ Rw: 60, STC: 60, "R'w": 58, "DnT,w": 59 });
 
     expect(partial).toMatchObject({
       currentPosture: "needs_input",

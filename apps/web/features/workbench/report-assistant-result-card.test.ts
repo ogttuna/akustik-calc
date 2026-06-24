@@ -125,10 +125,57 @@ describe("report assistant result card", () => {
 
     expect(html).toContain('data-authority="needs_input"');
     expect(html).toContain('data-tone="warning"');
-    expect(html).toContain("missing_layer_thickness");
+    expect(html).toContain("Layer thickness");
+    expect(html).not.toContain("missing_layer_thickness");
     expect(html).not.toContain("report-assistant-calculator-preview");
     expect(html).not.toContain("Metric basis");
     expect(html).not.toContain("46 dB");
+  });
+
+  // AGENT COORDINATION 2026-06-24 (Codex): protects the same route-input
+  // presentation adapter used by Workbench so assistant cards cannot regress
+  // to raw engine/input ids for the missing-input cases reported by the user.
+  it("server-renders route-input task ids as user-facing labels and guidance", () => {
+    const result = createReportAssistantResultEnvelope({
+      authority: "needs_input",
+      basis: [],
+      capabilityName: "preview_described_layer_configuration",
+      confidenceReason: "The assistant needs route-specific physical inputs before previewing calculator values.",
+      routeStatus: "needs_input",
+      tasks: [
+        {
+          code: "toppingOrFloatingLayer",
+          message: "toppingOrFloatingLayer: Required physical input is missing.",
+          severity: "warning"
+        },
+        {
+          code: "impactFieldContext",
+          message: "impactFieldContext: Required physical input is missing.",
+          severity: "warning"
+        },
+        {
+          code: "ratings.field.partitionAreaM2",
+          message: "Number must be greater than 0.",
+          severity: "error"
+        }
+      ]
+    });
+
+    const html = renderToStaticMarkup(createElement(AssistantResultCard, {
+      calculatorPreview: CALCULATOR_PREVIEW,
+      result
+    }));
+
+    expect(html).toContain("Upper topping / floating layer");
+    expect(html).toContain("Classify or add the upper topping / floating layer required by the selected floor impact route.");
+    expect(html).toContain("Impact field context");
+    expect(html).toContain("Complete the impact field context required by the selected field impact output.");
+    expect(html).toContain("Panel area");
+    expect(html).toContain("Enter panel width and height; the route derives partition area from those dimensions.");
+    expect(html).not.toContain("toppingOrFloatingLayer");
+    expect(html).not.toContain("impactFieldContext");
+    expect(html).not.toContain("ratings.field.partitionAreaM2");
+    expect(html).not.toContain("Number must be greater than 0");
   });
 
   it("server-renders wall comparison envelopes without legacy calculator preview props", () => {
@@ -176,7 +223,9 @@ describe("report assistant result card", () => {
     expect(html).toContain("Wall comparison");
     expect(html).toContain("51 dB");
     expect(html).toContain("53 dB");
-    expect(html).toContain("wall-candidate-2:assistant_layer_material_missing");
+    expect(html).toContain("Layer material");
+    expect(html).toContain("Candidate 2: Layer 2 has no normalized material id.");
+    expect(html).not.toContain("wall-candidate-2:assistant_layer_material_missing");
     expect(html).not.toContain("report-assistant-calculator-preview");
     expect(html).not.toContain("Apply");
     expect(html).not.toContain("Save");

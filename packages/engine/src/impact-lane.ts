@@ -372,6 +372,7 @@ export function resolveLayerBasedImpactLane(
           input.explicitPredictorInput,
           input.catalog
         );
+  const hasLiveImpactCatalogMatch = Boolean(impactCatalogMatch?.impact);
   const explicitDeltaImpact = buildExplicitDeltaImpact(input.predictorInput);
   const rejectProductDeltaFormulaFallback =
     Boolean(input.explicitPredictorInput) &&
@@ -393,7 +394,7 @@ export function resolveLayerBasedImpactLane(
     !input.officialFloorSystemId &&
     !floorSystemMatch &&
     !boundFloorSystemMatch &&
-    !impactCatalogMatch &&
+    !hasLiveImpactCatalogMatch &&
     !explicitDeltaImpact &&
     !blockSteelFormulaFallback &&
     !blockHeavyConcreteCombinedFormulaFallback &&
@@ -408,7 +409,7 @@ export function resolveLayerBasedImpactLane(
     !input.officialFloorSystemId &&
     !floorSystemMatch &&
     !boundFloorSystemMatch &&
-    !impactCatalogMatch &&
+    !hasLiveImpactCatalogMatch &&
     !explicitDeltaImpact &&
     !openBoxTimberSimilarityEstimate &&
     !blockSteelFormulaFallback &&
@@ -424,7 +425,7 @@ export function resolveLayerBasedImpactLane(
     !input.officialFloorSystemId &&
     !floorSystemMatch &&
     !boundFloorSystemMatch &&
-    !impactCatalogMatch &&
+    !hasLiveImpactCatalogMatch &&
     !explicitDeltaImpact &&
     !openBoxTimberSimilarityEstimate &&
     !openBoxTimberEpsScreedHybridPackageEstimate &&
@@ -441,7 +442,7 @@ export function resolveLayerBasedImpactLane(
     !input.officialFloorSystemId &&
     !floorSystemMatch &&
     !boundFloorSystemMatch &&
-    !impactCatalogMatch &&
+    !hasLiveImpactCatalogMatch &&
     !explicitDeltaImpact &&
     !openBoxTimberSimilarityEstimate &&
     !openBoxTimberEpsScreedHybridPackageEstimate &&
@@ -460,7 +461,7 @@ export function resolveLayerBasedImpactLane(
     !input.officialFloorSystemId &&
     !floorSystemMatch &&
     !boundFloorSystemMatch &&
-    !impactCatalogMatch &&
+    !hasLiveImpactCatalogMatch &&
     !explicitDeltaImpact &&
     !openBoxTimberSimilarityEstimate &&
     !openBoxTimberEpsScreedHybridPackageEstimate &&
@@ -476,7 +477,7 @@ export function resolveLayerBasedImpactLane(
     !input.officialFloorSystemId &&
     !floorSystemMatch &&
     !boundFloorSystemMatch &&
-    !impactCatalogMatch &&
+    !hasLiveImpactCatalogMatch &&
     !explicitDeltaImpact &&
     !openBoxTimberSimilarityEstimate &&
     !openBoxTimberEpsScreedHybridPackageEstimate &&
@@ -489,7 +490,7 @@ export function resolveLayerBasedImpactLane(
     input.predictorInput &&
     input.targetOutputs?.includes("DeltaLw") &&
     !input.officialFloorSystemId &&
-    !impactCatalogMatch &&
+    !hasLiveImpactCatalogMatch &&
     !explicitDeltaImpact
       ? estimateTimberCltDeltaLwFromPredictorInput(input.predictorInput)
       : null;
@@ -503,7 +504,7 @@ export function resolveLayerBasedImpactLane(
       )
     ) &&
     !input.officialFloorSystemId &&
-    !impactCatalogMatch &&
+    !hasLiveImpactCatalogMatch &&
     !explicitDeltaImpact
       ? estimateLightweightConcreteDeltaLwFromPredictorInput(input.predictorInput)
       : null;
@@ -515,7 +516,7 @@ export function resolveLayerBasedImpactLane(
     !input.exactImpact &&
     !floorSystemMatch &&
     !boundFloorSystemMatch &&
-    !impactCatalogMatch &&
+    !hasLiveImpactCatalogMatch &&
     !explicitDeltaImpact &&
     !predictorFormulaImpact &&
     !openBoxTimberSimilarityEstimate &&
@@ -532,7 +533,7 @@ export function resolveLayerBasedImpactLane(
     !input.officialFloorSystemId &&
     !floorSystemMatch &&
     !boundFloorSystemMatch &&
-    !impactCatalogMatch &&
+    !hasLiveImpactCatalogMatch &&
     !predictorFormulaImpact &&
     !openBoxTimberSimilarityEstimate &&
     !openBoxTimberEpsScreedHybridPackageEstimate &&
@@ -562,7 +563,7 @@ export function resolveLayerBasedImpactLane(
     !input.officialFloorSystemId &&
     !floorSystemMatch &&
     !boundFloorSystemMatch &&
-    !impactCatalogMatch &&
+    !hasLiveImpactCatalogMatch &&
     !explicitDeltaImpact &&
     !predictorSpecificFloorSystemEstimate &&
     !narrowImpact &&
@@ -576,7 +577,7 @@ export function resolveLayerBasedImpactLane(
     !input.officialFloorSystemId &&
     !floorSystemMatch &&
     !boundFloorSystemMatch &&
-    !impactCatalogMatch &&
+    !hasLiveImpactCatalogMatch &&
     !explicitDeltaImpact &&
     !predictorSpecificFloorSystemEstimate &&
     !openWebSupportedBandSimilarityEstimate &&
@@ -594,7 +595,7 @@ export function resolveLayerBasedImpactLane(
     !input.officialFloorSystemId &&
     !floorSystemMatch &&
     !boundFloorSystemMatch &&
-    !impactCatalogMatch &&
+    !hasLiveImpactCatalogMatch &&
     !explicitDeltaImpact &&
     !predictorSpecificFloorSystemEstimate &&
     !openWebSupportedBandSimilarityEstimate &&
@@ -612,7 +613,7 @@ export function resolveLayerBasedImpactLane(
     !input.exactImpact &&
     !floorSystemMatch &&
     !boundFloorSystemMatch &&
-    !impactCatalogMatch &&
+    !hasLiveImpactCatalogMatch &&
     !explicitDeltaImpact &&
     !predictorSpecificFloorSystemEstimate &&
     !openWebSupportedBandSimilarityEstimate &&
@@ -647,7 +648,7 @@ export function resolveLayerBasedImpactLane(
           !openBoxTimberRawBareEstimate &&
           !helperOnlyTimberOpenWebImpactStackEstimate &&
           !tuasC11cGuardedIsoWeightedImpact &&
-          !impactCatalogMatch &&
+          !hasLiveImpactCatalogMatch &&
           !narrowImpact &&
           !blockSteelFormulaFallback &&
           !blockHeavyConcreteCombinedFormulaFallback &&

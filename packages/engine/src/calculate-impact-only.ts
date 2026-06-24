@@ -57,6 +57,7 @@ import {
 import {
   filterImpactCatalogMatchForExplicitPredictorInput,
   matchImpactProductCatalog,
+  matchImpactProductCatalogEntryById,
   resolveImpactProductCatalogById
 } from "./impact-product-catalog";
 import {
@@ -678,6 +679,8 @@ export function calculateImpactOnly(
   let predictorDeltaLwCompanion: ImpactCalculation | null = null;
   let directVisibleNarrowImpact: ImpactCalculation | null = null;
   let explicitDeltaImpact: ImpactCalculation | null = null;
+  let blockedDirectProductDeltaCatalogId: string | null = null;
+  let blockedDirectLowerBoundCatalogId: string | null = null;
   let visibleLayerPredictorBlockerWarning: string | null = null;
   const exactImpact = exactImpactSource ? buildOwnedImpactFromExactSource(exactImpactSource) : null;
 
@@ -686,6 +689,22 @@ export function calculateImpactOnly(
   } else if (typeof options.officialImpactCatalogId === "string") {
     sourceMode = "official_product_catalog";
     impactCatalogMatch = resolveImpactProductCatalogById(options.officialImpactCatalogId);
+    if (impactCatalogMatch && impactCatalogMatch.catalog.matchMode !== "exact_system") {
+      const matchingLayerCatalog = matchImpactProductCatalogEntryById(
+        options.officialImpactCatalogId,
+        resolvedSourceLayers
+      );
+      if (matchingLayerCatalog?.catalog.id === options.officialImpactCatalogId) {
+        impactCatalogMatch = matchingLayerCatalog;
+      } else {
+        if (impactCatalogMatch.catalog.matchMode === "product_property_delta") {
+          blockedDirectProductDeltaCatalogId = options.officialImpactCatalogId;
+        } else {
+          blockedDirectLowerBoundCatalogId = options.officialImpactCatalogId;
+        }
+        impactCatalogMatch = null;
+      }
+    }
   } else if (typeof options.officialFloorSystemId === "string") {
     sourceMode = "official_floor_system";
     floorSystemMatch = resolveExactFloorSystemById(options.officialFloorSystemId);
@@ -1006,7 +1025,39 @@ export function calculateImpactOnly(
     );
   }
 
-  if (sourceMode === "official_product_catalog" && typeof options.officialImpactCatalogId === "string") {
+  if (blockedDirectProductDeltaCatalogId) {
+    warnings.push(
+      `Direct official product-delta row selection was ignored: ${blockedDirectProductDeltaCatalogId}. DynEcho requires a matching floor-role layer stack before using product DeltaLw as a live calculator value.`
+    );
+  } else if (blockedDirectLowerBoundCatalogId) {
+    warnings.push(
+      `Direct official lower-bound row selection was ignored: ${blockedDirectLowerBoundCatalogId}. DynEcho requires a matching floor-role layer stack before showing lower-bound product support.`
+    );
+  } else if (
+    sourceMode === "official_product_catalog" &&
+    typeof options.officialImpactCatalogId === "string" &&
+    !impactCatalogMatch
+  ) {
+    warnings.push(
+      `Direct official impact-product row selection was ignored: ${options.officialImpactCatalogId}. No compatible curated product evidence row was resolved.`
+    );
+  } else if (
+    sourceMode === "official_product_catalog" &&
+    typeof options.officialImpactCatalogId === "string" &&
+    impactCatalogMatch?.catalog.matchMode === "product_property_delta"
+  ) {
+    warnings.push(
+      `Direct official product-delta row selection is active: ${options.officialImpactCatalogId}. DynEcho verified the floor-role source stack before using product DeltaLw as a live calculator value.`
+    );
+  } else if (
+    sourceMode === "official_product_catalog" &&
+    typeof options.officialImpactCatalogId === "string" &&
+    impactCatalogMatch?.catalog.matchMode === "lower_bound_support"
+  ) {
+    warnings.push(
+      `Direct official lower-bound row selection is active: ${options.officialImpactCatalogId}. DynEcho verified the floor-role source stack before showing lower-bound product support.`
+    );
+  } else if (sourceMode === "official_product_catalog" && typeof options.officialImpactCatalogId === "string") {
     warnings.push(
       `Direct official impact-product row selection is active: ${options.officialImpactCatalogId}. DynEcho bypassed layer scoring and resolved the curated product evidence directly.`
     );

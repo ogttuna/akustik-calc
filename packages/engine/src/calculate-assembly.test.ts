@@ -5214,22 +5214,21 @@ describe("calculateAssembly", () => {
     ).toBe(true);
   });
 
-  it("matches an official Getzner DeltaLw row as a heavy-reference product lane", () => {
+  it("keeps generic Getzner DeltaLw rows parked while using AFM dynamic stiffness in the formula route", () => {
     const result = calculateAssembly([
       { floorRole: "floor_covering", materialId: "ceramic_tile", thicknessMm: 8 },
       { floorRole: "floating_screed", materialId: "screed", thicknessMm: 50 },
-      { floorRole: "resilient_layer", materialId: "getzner_afm_33", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "getzner_afm_33", thicknessMm: 16 },
       { floorRole: "base_structure", materialId: "concrete", thicknessMm: 150 }
     ]);
 
-    expect(result.impactCatalogMatch?.catalog.id).toBe("getzner_afm33_catalog_2026");
-    expect(result.impact?.basis).toBe("predictor_catalog_product_delta_official");
-    expect(result.impact?.LnW).toBe(45);
-    expect(result.impact?.DeltaLw).toBe(33);
-    expect(result.impact?.confidence.provenance).toBe("official_product_catalog");
-    expect(result.impact?.metricBasis?.LnW).toBe("predictor_catalog_product_delta_heavy_reference_derived");
-    expect(result.impact?.metricBasis?.DeltaLw).toBe("predictor_catalog_product_delta_official");
-    expect(result.impactSupport?.formulaNotes.some((note: string) => /Ln,w = 78 - DeltaLw/i.test(note))).toBe(true);
+    expect(result.impactCatalogMatch).toBeNull();
+    expect(result.impact?.basis).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");
+    expect(result.impact?.resilientDynamicStiffnessMNm3).toBe(9);
+    expect(result.impact?.LnW).toBeGreaterThan(0);
+    expect(result.impact?.DeltaLw).toBeGreaterThan(0);
+    expect(result.impact?.metricBasis?.LnW).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");
+    expect(result.impact?.metricBasis?.DeltaLw).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");
   });
 
   it("rejects product-delta catalog support on the assembly route when explicit dynamic stiffness conflicts with the matched product", () => {
@@ -5256,9 +5255,8 @@ describe("calculateAssembly", () => {
     });
 
     expect(result.impactPredictorStatus?.matchedCatalogCaseId ?? "").toBe("");
-    expect(Number.isFinite(Number(result.impact?.DeltaLw))).toBe(false);
-    expect(result.supportedImpactOutputs).toEqual([]);
-    expect(result.unsupportedImpactOutputs).toEqual(["DeltaLw"]);
+    expect(result.impactCatalogMatch).toBeNull();
+    expect(result.impact?.basis).not.toBe("predictor_catalog_product_delta_official");
   });
 
   it("keeps product-delta catalog support fail-closed on the assembly route outside explicit delta catalog mode", () => {
@@ -5287,12 +5285,11 @@ describe("calculateAssembly", () => {
     });
 
     expect(result.impactPredictorStatus?.matchedCatalogCaseId ?? "").toBe("");
-    expect(Number.isFinite(Number(result.impact?.DeltaLw))).toBe(false);
-    expect(result.supportedImpactOutputs).toEqual([]);
-    expect(result.unsupportedImpactOutputs).toEqual(["DeltaLw"]);
+    expect(result.impactCatalogMatch).toBeNull();
+    expect(result.impact?.basis).not.toBe("predictor_catalog_product_delta_official");
   });
 
-  it("matches official product-delta support on the assembly route with product identity alone when dynamic stiffness is omitted", () => {
+  it("keeps generic Getzner product-delta support parked on the assembly route even in explicit catalog mode", () => {
     const result = calculateAssembly([{ materialId: "concrete", thicknessMm: 140 }], {
       impactPredictorInput: {
         structuralSupportType: "reinforced_concrete",
@@ -5314,15 +5311,13 @@ describe("calculateAssembly", () => {
       targetOutputs: ["Ln,w", "DeltaLw"]
     });
 
-    expect(result.impactPredictorStatus?.matchedCatalogCaseId).toBe("getzner_afm26_catalog_2026");
-    expect(result.impact?.basis).toBe("predictor_catalog_product_delta_official");
-    expect(result.impact?.LnW).toBe(52);
-    expect(result.impact?.DeltaLw).toBe(26);
-    expect(result.impact?.metricBasis?.LnW).toBe("predictor_catalog_product_delta_heavy_reference_derived");
-    expect(result.impact?.metricBasis?.DeltaLw).toBe("predictor_catalog_product_delta_official");
+    expect(result.impactPredictorStatus?.matchedCatalogCaseId ?? "").toBe("");
+    expect(result.impactCatalogMatch).toBeNull();
+    expect(result.impact?.basis).not.toBe("predictor_catalog_product_delta_official");
+    expect(Number.isFinite(Number(result.impact?.DeltaLw))).toBe(false);
   });
 
-  it("keeps exact lab Ln,w primary while filling missing DeltaLw from compatible product-delta support on the assembly route", () => {
+  it("keeps exact lab Ln,w primary without filling missing DeltaLw from generic Getzner product rows", () => {
     const result = calculateAssembly([{ materialId: "concrete", thicknessMm: 140 }], {
       exactImpactSource: EXACT_IMPACT_SOURCE_19,
       impactPredictorInput: {
@@ -5346,14 +5341,14 @@ describe("calculateAssembly", () => {
       targetOutputs: ["Ln,w", "DeltaLw"]
     });
 
-    expect(result.impactPredictorStatus?.matchedCatalogCaseId).toBe("getzner_afm29_catalog_2026");
+    expect(result.impactPredictorStatus?.matchedCatalogCaseId ?? "").toBe("");
     expect(result.impact?.basis).toBe("exact_source_band_curve_iso7172");
     expect(result.impact?.LnW).toBe(53);
-    expect(result.impact?.DeltaLw).toBe(29);
+    expect(result.impact?.DeltaLw).toBeUndefined();
     expect(result.impact?.metricBasis?.LnW).toBe("exact_source_band_curve_iso7172");
-    expect(result.impact?.metricBasis?.DeltaLw).toBe("predictor_catalog_product_delta_official");
-    expect(result.supportedImpactOutputs).toEqual(["Ln,w", "DeltaLw"]);
-    expect(result.unsupportedImpactOutputs).toEqual([]);
+    expect(result.impact?.metricBasis?.DeltaLw).toBeUndefined();
+    expect(result.supportedImpactOutputs).toEqual(["Ln,w"]);
+    expect(result.unsupportedImpactOutputs).toEqual(["DeltaLw"]);
   });
 
   it("keeps exact source DeltaLw primary over product-property catalog support on the assembly route", () => {
@@ -5385,7 +5380,7 @@ describe("calculateAssembly", () => {
       targetOutputs: ["DeltaLw"]
     });
 
-    expect(result.impactPredictorStatus?.matchedCatalogCaseId).toBe("getzner_afm29_catalog_2026");
+    expect(result.impactPredictorStatus?.matchedCatalogCaseId ?? "").toBe("");
     expect(result.impact?.basis).toBe("exact_source_band_curve_iso7172");
     expect(result.impact?.DeltaLw).toBe(18);
     expect(result.impact?.metricBasis?.DeltaLw).toBe("exact_source_rating_override");

@@ -45,42 +45,42 @@ export const POST_V1_GATE_AW_WALL_BUILDING_LAB_COMPANION_VALUE_PINS = [
     caseId: "wall-screening-concrete",
     values: {
       "C": -1.6,
-      "Ctr": -6.3,
+      "Ctr": -6.5,
       "Dn,A": 53.4,
       "Dn,w": 55,
       "DnT,A": 54.9,
       "DnT,w": 56,
       "R'w": 55,
-      "Rw": 55,
-      "STC": 55
+      "Rw": 57,
+      "STC": 57
     }
   },
   {
     caseId: "wall-heavy-composite-hint-suppression",
     values: {
       "C": -1.4,
-      "Ctr": -6.1,
+      "Ctr": -6.3,
       "Dn,A": 58.6,
       "Dn,w": 60,
       "DnT,A": 60.1,
       "DnT,w": 61,
       "R'w": 60,
-      "Rw": 60,
-      "STC": 60
+      "Rw": 62,
+      "STC": 62
     }
   },
   {
     caseId: "wall-masonry-brick",
     values: {
-      "C": -0.2,
-      "Ctr": -4.7,
+      "C": -1,
+      "Ctr": -5.5,
       "Dn,A": 39.8,
       "Dn,w": 40,
       "DnT,A": 41.3,
       "DnT,w": 42,
       "R'w": 40,
-      "Rw": 40,
-      "STC": 40
+      "Rw": 43,
+      "STC": 43
     }
   },
   {
@@ -100,15 +100,15 @@ export const POST_V1_GATE_AW_WALL_BUILDING_LAB_COMPANION_VALUE_PINS = [
   {
     caseId: "wall-held-aac",
     values: {
-      "C": -1.9,
-      "Ctr": -8,
+      "C": -2.4,
+      "Ctr": -8.8,
       "Dn,A": 58.1,
       "Dn,w": 60,
       "DnT,A": 59.6,
       "DnT,w": 61,
       "R'w": 60,
-      "Rw": 60,
-      "STC": 60
+      "Rw": 62,
+      "STC": 62
     }
   }
 ] as const;

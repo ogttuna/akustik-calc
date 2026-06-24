@@ -332,26 +332,26 @@ describe("post-V1 wall timber-stud + CLT formula building lab-companion basis in
     });
 
     expect(resultSnapshot(timberBuildingOnly)).toMatchObject({
-      c: 0.4,
-      ctr: -4.3,
+      c: 0.5,
+      ctr: -4.2,
       dnTA: 43.9,
       dnTw: 43,
       dnW: 42,
       rw: 42,
       rwPrimeDb: 42,
-      stc: 42,
+      stc: 50,
       supportedTargetOutputs: [...BUILDING_OUTPUTS],
       unsupportedTargetOutputs: []
     });
     expect(resultSnapshot(cltBuildingOnly)).toMatchObject({
-      c: -1.8,
-      ctr: -7.6,
+      c: -1.1,
+      ctr: -7.1,
       dnTA: 40.7,
       dnTw: 42,
       dnW: 41,
       rw: 41,
       rwPrimeDb: 41,
-      stc: 41,
+      stc: 43,
       supportedTargetOutputs: [...BUILDING_OUTPUTS],
       unsupportedTargetOutputs: []
     });

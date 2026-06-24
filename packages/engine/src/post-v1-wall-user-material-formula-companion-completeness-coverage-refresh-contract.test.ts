@@ -283,10 +283,13 @@ describe("post-V1 wall user-material formula companion completeness coverage ref
 
     expect(buildingOnly.supportedTargetOutputs).toEqual([...BUILDING_OUTPUTS]);
     expect(buildingOnly.unsupportedTargetOutputs).toEqual([]);
+    // Agent coordination, 2026-06-24: building-only requests keep their
+    // supported output set narrow, but visible lab companions now come from the
+    // same owned direct curve instead of mirroring Gate AR apparent values.
     expect(buildingOnly.metrics).toMatchObject({
-      estimatedRwDb: 40,
+      estimatedRwDb: 46,
       estimatedRwPrimeDb: 40,
-      estimatedStc: 40
+      estimatedStc: 46
     });
 
     expect(labOnly.supportedTargetOutputs).toEqual([...LAB_OUTPUTS]);

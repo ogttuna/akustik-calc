@@ -106,15 +106,15 @@ describe("post-V1 wall framed building adapter Gate AX surface parity", () => {
     expect(result?.supportedTargetOutputs).toEqual([...TARGET_OUTPUTS]);
     expect(result?.unsupportedTargetOutputs).toEqual([]);
     expect(result?.metrics).toMatchObject({
-      estimatedCDb: -1.4,
+      estimatedCDb: -1.5,
       estimatedCtrDb: -6.4,
       estimatedDnADb: 49.6,
       estimatedDnTADb: 51.1,
       estimatedDnTwDb: 52,
       estimatedDnWDb: 51,
-      estimatedRwDb: 51,
+      estimatedRwDb: 60,
       estimatedRwPrimeDb: 51,
-      estimatedStc: 51
+      estimatedStc: 60
     });
     expect(result?.layerCombinationResolverTrace).toMatchObject({
       requestedBasis: "building_prediction",
@@ -138,8 +138,8 @@ describe("post-V1 wall framed building adapter Gate AX surface parity", () => {
       expect.arrayContaining([
         expect.objectContaining({
           companions: expect.arrayContaining([
-            { label: "STC", valueLabel: "51 dB" },
-            { label: "C / Ctr", valueLabel: "-1.4 dB / -6.4 dB" },
+            { label: "STC", valueLabel: "60 dB" },
+            { label: "C / Ctr", valueLabel: "-1.5 dB / -6.4 dB" },
             { label: "DnT,A", valueLabel: "51.1 dB" }
           ]),
           id: "airborne",

@@ -510,19 +510,93 @@ describe("calculateImpactOnly", () => {
     expect(result.impact?.metricBasis?.DeltaLw).toBe("predictor_catalog_exact_match_official");
   });
 
-  it("keeps official DeltaLw catalog provenance separate from explicit heavy-reference input", () => {
+  it("does not use direct official product-delta catalog selection without a matching stack", () => {
     const result = calculateImpactOnly([], {
-      officialImpactCatalogId: "getzner_afm29_catalog_2026",
+      officialImpactCatalogId: "tarkett_iq_optima_acoustic_16_db_catalog_delta_lw_2026",
       targetOutputs: ["Ln,w", "DeltaLw"]
     });
 
     expect(result.sourceMode).toBe("official_product_catalog");
-    expect(result.impactCatalogMatch?.catalog.id).toBe("getzner_afm29_catalog_2026");
+    expect(result.impactCatalogMatch).toBeNull();
+    expect(result.impact).toBeNull();
+    expect(result.supportedImpactOutputs).toEqual([]);
+    expect(result.unsupportedImpactOutputs).toEqual(["Ln,w", "DeltaLw"]);
+    expect(result.warnings.some((warning: string) => /requires a matching floor-role layer stack/i.test(warning))).toBe(true);
+  });
+
+  it("does not use direct official lower-bound support without a matching stack", () => {
+    const result = calculateImpactOnly([], {
+      officialImpactCatalogId: "regupol_sound_15_catalog_delta_lw_2026",
+      targetOutputs: ["Ln,w", "DeltaLw"]
+    });
+
+    expect(result.sourceMode).toBe("official_product_catalog");
+    expect(result.impactCatalogMatch).toBeNull();
+    expect(result.impact).toBeNull();
+    expect(result.lowerBoundImpact).toBeNull();
+    expect(result.supportedImpactOutputs).toEqual([]);
+    expect(result.unsupportedImpactOutputs).toEqual(["Ln,w", "DeltaLw"]);
+    expect(result.warnings.some((warning: string) => /lower-bound.*requires a matching floor-role layer stack/i.test(warning))).toBe(
+      true
+    );
+  });
+
+  it("keeps official DeltaLw catalog provenance when direct product-delta selection matches the source stack", () => {
+    const result = calculateImpactOnly([], {
+      officialImpactCatalogId: "tarkett_iq_optima_acoustic_16_db_catalog_delta_lw_2026",
+      sourceLayers: [
+        { floorRole: "floor_covering", materialId: "tarkett_iq_optima_acoustic_16_db", thicknessMm: 3.15 },
+        { floorRole: "base_structure", materialId: "concrete", thicknessMm: 150 }
+      ],
+      targetOutputs: ["Ln,w", "DeltaLw"]
+    });
+
+    expect(result.sourceMode).toBe("official_product_catalog");
+    expect(result.impactCatalogMatch?.catalog.id).toBe("tarkett_iq_optima_acoustic_16_db_catalog_delta_lw_2026");
     expect(result.impact?.basis).toBe("predictor_catalog_product_delta_official");
-    expect(result.impact?.DeltaLw).toBe(29);
-    expect(result.impact?.LnW).toBe(49);
+    expect(result.impact?.DeltaLw).toBe(16);
+    expect(result.impact?.LnW).toBe(62);
     expect(result.impact?.metricBasis?.DeltaLw).toBe("predictor_catalog_product_delta_official");
     expect(result.impact?.metricBasis?.LnW).toBe("predictor_catalog_product_delta_heavy_reference_derived");
+  });
+
+  it("keeps direct official product-delta selection behind the selected row stack criteria", () => {
+    const result = calculateImpactOnly([], {
+      officialImpactCatalogId: "tarkett_iq_optima_acoustic_16_db_catalog_delta_lw_2026",
+      sourceLayers: [
+        { floorRole: "floor_covering", materialId: "tarkett_iq_optima_acoustic_16_db", thicknessMm: 3.15 },
+        { floorRole: "base_structure", materialId: "concrete", thicknessMm: 80 }
+      ],
+      targetOutputs: ["Ln,w", "DeltaLw"]
+    });
+
+    expect(result.sourceMode).toBe("official_product_catalog");
+    expect(result.impactCatalogMatch).toBeNull();
+    expect(result.impact).toBeNull();
+    expect(result.supportedImpactOutputs).toEqual([]);
+    expect(result.unsupportedImpactOutputs).toEqual(["Ln,w", "DeltaLw"]);
+    expect(result.warnings.some((warning: string) => /product-delta.*requires a matching floor-role layer stack/i.test(warning))).toBe(
+      true
+    );
+  });
+
+  it("keeps direct official lower-bound support when the source stack matches its boundary", () => {
+    const result = calculateImpactOnly([], {
+      officialImpactCatalogId: "regupol_sound_15_catalog_delta_lw_2026",
+      sourceLayers: [
+        { floorRole: "floating_screed", materialId: "screed", thicknessMm: 50 },
+        { floorRole: "resilient_layer", materialId: "regupol_sound_15", thicknessMm: 12 },
+        { floorRole: "base_structure", materialId: "concrete", thicknessMm: 180 }
+      ],
+      targetOutputs: ["Ln,w", "DeltaLw"]
+    });
+
+    expect(result.sourceMode).toBe("official_product_catalog");
+    expect(result.impactCatalogMatch?.catalog.id).toBe("regupol_sound_15_catalog_delta_lw_2026");
+    expect(result.impactCatalogMatch?.catalog.matchMode).toBe("lower_bound_support");
+    expect(result.lowerBoundImpact?.DeltaLwLowerBound).toBe(29);
+    expect(result.lowerBoundImpact?.LnWUpperBound).toBe(49);
+    expect(result.warnings.some((warning: string) => /lower-bound row selection is active/i.test(warning))).toBe(true);
   });
 
   it("rejects official product-delta catalog support when explicit dynamic stiffness conflicts with the matched product", () => {
@@ -549,9 +623,8 @@ describe("calculateImpactOnly", () => {
     });
 
     expect(result.impactPredictorStatus?.matchedCatalogCaseId ?? "").toBe("");
-    expect(Number.isFinite(Number(result.impact?.DeltaLw))).toBe(false);
-    expect(result.supportedImpactOutputs).toEqual([]);
-    expect(result.unsupportedImpactOutputs).toEqual(["DeltaLw"]);
+    expect(result.impactCatalogMatch).toBeNull();
+    expect(result.impact?.basis).not.toBe("predictor_catalog_product_delta_official");
   });
 
   it("keeps product-delta catalog support fail-closed outside explicit delta catalog mode", () => {
@@ -580,12 +653,11 @@ describe("calculateImpactOnly", () => {
     });
 
     expect(result.impactPredictorStatus?.matchedCatalogCaseId ?? "").toBe("");
-    expect(Number.isFinite(Number(result.impact?.DeltaLw))).toBe(false);
-    expect(result.supportedImpactOutputs).toEqual([]);
-    expect(result.unsupportedImpactOutputs).toEqual(["DeltaLw"]);
+    expect(result.impactCatalogMatch).toBeNull();
+    expect(result.impact?.basis).not.toBe("predictor_catalog_product_delta_official");
   });
 
-  it("matches official product-delta support with product identity alone when dynamic stiffness is omitted", () => {
+  it("keeps generic Getzner product-delta support parked even in explicit catalog mode", () => {
     const result = calculateImpactOnly([], {
       impactPredictorInput: {
         structuralSupportType: "reinforced_concrete",
@@ -607,15 +679,13 @@ describe("calculateImpactOnly", () => {
       targetOutputs: ["Ln,w", "DeltaLw"]
     });
 
-    expect(result.impactPredictorStatus?.matchedCatalogCaseId).toBe("getzner_afm26_catalog_2026");
-    expect(result.impact?.basis).toBe("predictor_catalog_product_delta_official");
-    expect(result.impact?.LnW).toBe(52);
-    expect(result.impact?.DeltaLw).toBe(26);
-    expect(result.impact?.metricBasis?.LnW).toBe("predictor_catalog_product_delta_heavy_reference_derived");
-    expect(result.impact?.metricBasis?.DeltaLw).toBe("predictor_catalog_product_delta_official");
+    expect(result.impactPredictorStatus?.matchedCatalogCaseId ?? "").toBe("");
+    expect(result.impactCatalogMatch).toBeNull();
+    expect(result.impact?.basis).not.toBe("predictor_catalog_product_delta_official");
+    expect(Number.isFinite(Number(result.impact?.DeltaLw))).toBe(false);
   });
 
-  it("keeps exact lab Ln,w primary while filling missing DeltaLw from compatible product-delta support", () => {
+  it("keeps exact lab Ln,w primary without filling missing DeltaLw from generic Getzner product rows", () => {
     const result = calculateImpactOnly([], {
       exactImpactSource: EXACT_IMPACT_SOURCE_19,
       impactPredictorInput: {
@@ -639,14 +709,14 @@ describe("calculateImpactOnly", () => {
       targetOutputs: ["Ln,w", "DeltaLw"]
     });
 
-    expect(result.impactPredictorStatus?.matchedCatalogCaseId).toBe("getzner_afm29_catalog_2026");
+    expect(result.impactPredictorStatus?.matchedCatalogCaseId ?? "").toBe("");
     expect(result.impact?.basis).toBe("exact_source_band_curve_iso7172");
     expect(result.impact?.LnW).toBe(53);
-    expect(result.impact?.DeltaLw).toBe(29);
+    expect(result.impact?.DeltaLw).toBeUndefined();
     expect(result.impact?.metricBasis?.LnW).toBe("exact_source_band_curve_iso7172");
-    expect(result.impact?.metricBasis?.DeltaLw).toBe("predictor_catalog_product_delta_official");
-    expect(result.supportedImpactOutputs).toEqual(["Ln,w", "DeltaLw"]);
-    expect(result.unsupportedImpactOutputs).toEqual([]);
+    expect(result.impact?.metricBasis?.DeltaLw).toBeUndefined();
+    expect(result.supportedImpactOutputs).toEqual(["Ln,w"]);
+    expect(result.unsupportedImpactOutputs).toEqual(["DeltaLw"]);
   });
 
   it("keeps exact source DeltaLw primary over product-property catalog support", () => {
@@ -678,7 +748,7 @@ describe("calculateImpactOnly", () => {
       targetOutputs: ["DeltaLw"]
     });
 
-    expect(result.impactPredictorStatus?.matchedCatalogCaseId).toBe("getzner_afm29_catalog_2026");
+    expect(result.impactPredictorStatus?.matchedCatalogCaseId ?? "").toBe("");
     expect(result.impact?.basis).toBe("exact_source_band_curve_iso7172");
     expect(result.impact?.DeltaLw).toBe(18);
     expect(result.impact?.metricBasis?.DeltaLw).toBe("exact_source_rating_override");

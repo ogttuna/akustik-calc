@@ -204,7 +204,7 @@ describe("Personal-Use MVP Coverage Sprint Gate AT acceptance matrix refresh aft
         unsupportedTargetOutputs: []
       }
     });
-    expect(values(broadAlias)).toEqual({ Rw: 58, STC: 58, "R'w": 58, "DnT,w": 59 });
+    expect(values(broadAlias)).toEqual({ Rw: 60, STC: 60, "R'w": 58, "DnT,w": 59 });
   });
 
   it("keeps partial building, opening/building, ASTM, hostile-layer, and exact-source boundaries explicit", () => {

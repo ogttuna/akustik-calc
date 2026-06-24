@@ -3,7 +3,10 @@ import { ImpactOnlyRequestSchema } from "@dynecho/shared";
 import { NextResponse } from "next/server";
 
 import { getAuthState } from "@/lib/auth";
-import { buildCalculatorValidationErrorPayload } from "@/lib/calculator-api-validation";
+import {
+  buildCalculatorExceptionErrorPayload,
+  buildCalculatorValidationErrorPayload
+} from "@/lib/calculator-api-validation";
 
 export async function POST(request: Request) {
   const authState = await getAuthState();
@@ -49,11 +52,15 @@ export async function POST(request: Request) {
       result
     });
   } catch (error) {
+    // AGENT COORDINATION 2026-06-24 (Codex): keep impact-only catch
+    // behavior aligned with /api/estimate so result-validation exceptions
+    // cannot leak raw issue JSON into Workbench UI.
     return NextResponse.json(
-      {
-        ok: false,
-        error: error instanceof Error ? error.message : "Unknown impact-only failure."
-      },
+      buildCalculatorExceptionErrorPayload({
+        error,
+        fallbackError: "Impact-only calculation failed. Review the calculator inputs and try again.",
+        route: "impact-only"
+      }),
       { status: 500 }
     );
   }

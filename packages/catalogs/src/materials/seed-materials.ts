@@ -1737,6 +1737,27 @@ const PUBLIC_SOURCE_MATERIALS: readonly MaterialDefinition[] = [
     tags: ["resilient", "underlay", "cork", "floor", "public-source"]
   },
   {
+    id: "regufoam_sound_10",
+    name: "REGUFOAM sound 10",
+    category: "support",
+    densityKgM3: 135,
+    acoustic: {
+      behavior: "resilient_layer",
+      lossFactor: 0.08,
+      notes: [
+        "Density is derived from REGUPOL's public 2.3 kg/m2 area weight at 17 mm.",
+        "Dynamic stiffness follows the public product page as an upper-bound value, so the seeded value is the conservative formula input.",
+        "Use this as an impact resilient layer, not as an airborne mass contribution."
+      ],
+      propertySourceStatus: "catalog_nominal"
+    },
+    impact: {
+      dynamicStiffnessMNm3: 6
+    },
+    notes: "Public-source seed: https://acoustics.regupol.com/products/range/regupol-sound/regufoam-sound-10/",
+    tags: ["resilient", "underlay", "impact", "regupol", "regufoam", "sound", "public-source"]
+  },
+  {
     id: "regupol_sound_12",
     name: "REGUPOL sound 12",
     category: "support",
@@ -1746,6 +1767,7 @@ const PUBLIC_SOURCE_MATERIALS: readonly MaterialDefinition[] = [
       lossFactor: 0.08,
       notes: [
         "Dynamic stiffness follows REGUPOL sound public product-family table; mass density is not declared in the source page.",
+        "The public table publishes s' as an upper-bound value, so the seeded value is the conservative formula input.",
         "Use this as an impact resilient layer, not as an airborne mass contribution."
       ],
       propertySourceStatus: "catalog_nominal"
@@ -1766,6 +1788,7 @@ const PUBLIC_SOURCE_MATERIALS: readonly MaterialDefinition[] = [
       lossFactor: 0.08,
       notes: [
         "Dynamic stiffness follows REGUPOL sound public product-family table; mass density is not declared in the source page.",
+        "The public table publishes s' as an upper-bound value, so the seeded value is the conservative formula input.",
         "Use this as an impact resilient layer, not as an airborne mass contribution."
       ],
       propertySourceStatus: "catalog_nominal"
@@ -1786,6 +1809,7 @@ const PUBLIC_SOURCE_MATERIALS: readonly MaterialDefinition[] = [
       lossFactor: 0.08,
       notes: [
         "Dynamic stiffness follows REGUPOL sound public product-family table; mass density is not declared in the source page.",
+        "The public table publishes s' as an upper-bound value, so the seeded value is the conservative formula input.",
         "Use this as an impact resilient layer, not as an airborne mass contribution."
       ],
       propertySourceStatus: "catalog_nominal"
@@ -1806,6 +1830,7 @@ const PUBLIC_SOURCE_MATERIALS: readonly MaterialDefinition[] = [
       lossFactor: 0.08,
       notes: [
         "Dynamic stiffness follows REGUPOL sound public product-family table; mass density is not declared in the source page.",
+        "The public table publishes s' as an upper-bound value, so the seeded value is the conservative formula input.",
         "Use this as an impact resilient layer, not as an airborne mass contribution."
       ],
       propertySourceStatus: "catalog_nominal"
@@ -1875,6 +1900,313 @@ const PUBLIC_SOURCE_MATERIALS: readonly MaterialDefinition[] = [
     },
     notes: "Public-source seed: https://acoustics.regupol.com/products/range/regupol-sound-and-drain/regupol-sound-and-drain-22/",
     tags: ["resilient", "underlay", "impact", "regupol", "sound-and-drain", "public-source"]
+  },
+  {
+    id: "isolgomma_upgrei",
+    name: "Isolgomma UPGREI",
+    category: "support",
+    densityKgM3: 265,
+    acoustic: {
+      behavior: "resilient_layer",
+      lossFactor: 0.08,
+      notes: [
+        "Density is derived from Isolgomma's public 2.65 kg/m2 area weight at 10 mm.",
+        "Dynamic stiffness follows the public product page; use this as an impact resilient layer, not as an airborne mass contribution."
+      ],
+      propertySourceStatus: "catalog_nominal"
+    },
+    impact: {
+      dynamicStiffnessMNm3: 6
+    },
+    notes: "Public-source seed: https://www.isolgomma.com/product/upgrei/",
+    tags: ["resilient", "underlay", "impact", "isolgomma", "upgrei", "public-source"]
+  },
+  {
+    id: "isolgomma_uproll",
+    name: "Isolgomma UPROLL",
+    category: "support",
+    densityKgM3: 344,
+    acoustic: {
+      behavior: "resilient_layer",
+      lossFactor: 0.08,
+      notes: [
+        "Density is derived from Isolgomma's public 3.10 kg/m2 area weight at 9 mm.",
+        "Dynamic stiffness follows the public product page; use this as an impact resilient layer, not as an airborne mass contribution."
+      ],
+      propertySourceStatus: "catalog_nominal"
+    },
+    impact: {
+      dynamicStiffnessMNm3: 11
+    },
+    notes: "Public-source seed: https://www.isolgomma.com/product/uproll/",
+    tags: ["resilient", "underlay", "impact", "isolgomma", "uproll", "public-source"]
+  },
+  {
+    id: "isolgomma_grei",
+    name: "Isolgomma GREI",
+    category: "support",
+    densityKgM3: 400,
+    acoustic: {
+      behavior: "resilient_layer",
+      lossFactor: 0.08,
+      notes: [
+        "Density is derived from Isolgomma's public 2.80 kg/m2 area weight at 7 mm.",
+        "Dynamic stiffness follows the public product page; use this as an impact resilient layer, not as an airborne mass contribution."
+      ],
+      propertySourceStatus: "catalog_nominal"
+    },
+    impact: {
+      dynamicStiffnessMNm3: 8
+    },
+    notes: "Public-source seed: https://www.isolgomma.com/product/grei/",
+    tags: ["resilient", "underlay", "impact", "isolgomma", "grei", "public-source"]
+  },
+  {
+    id: "isolgomma_roll",
+    name: "Isolgomma ROLL",
+    category: "support",
+    densityKgM3: 380,
+    acoustic: {
+      behavior: "resilient_layer",
+      lossFactor: 0.08,
+      notes: [
+        "Density is derived from Isolgomma's public 1.90 kg/m2 area weight at 5 mm.",
+        "Dynamic stiffness follows the public product page; use this as an impact resilient layer, not as an airborne mass contribution."
+      ],
+      propertySourceStatus: "catalog_nominal"
+    },
+    impact: {
+      dynamicStiffnessMNm3: 21
+    },
+    notes: "Public-source seed: https://www.isolgomma.com/product/roll/",
+    tags: ["resilient", "underlay", "impact", "isolgomma", "roll", "public-source"]
+  },
+  {
+    id: "isolgomma_highmat_30",
+    name: "Isolgomma HIGHMAT 30",
+    category: "support",
+    densityKgM3: 63,
+    acoustic: {
+      behavior: "resilient_layer",
+      lossFactor: 0.08,
+      notes: [
+        "Effective density is derived from Isolgomma's public 1.90 kg/m2 superficial weight at 30 mm.",
+        "Dynamic stiffness follows Isolgomma's official technical data. The technical data publishes DeltaLw 36 dB, but the live catalog row stays withheld until the matcher can encode the required screed thickness and density boundary."
+      ],
+      propertySourceStatus: "catalog_nominal"
+    },
+    impact: {
+      dynamicStiffnessMNm3: 4
+    },
+    notes:
+      "Public-source seed: https://www.isolgomma.com/downloads/technical-data/Isolgomma_Highmat_30-EN.pdf",
+    tags: ["resilient", "underlay", "impact", "isolgomma", "highmat", "public-source"]
+  },
+  {
+    id: "isolgomma_bifloor",
+    name: "Isolgomma BIFLOOR",
+    category: "support",
+    densityKgM3: 68,
+    acoustic: {
+      behavior: "resilient_layer",
+      lossFactor: 0.08,
+      notes: [
+        "Effective density is derived from Isolgomma's public 1.90 kg/m2 superficial weight at 28 mm.",
+        "Dynamic stiffness follows the public product page; use this as an impact resilient layer, not as an airborne mass contribution."
+      ],
+      propertySourceStatus: "catalog_nominal"
+    },
+    impact: {
+      dynamicStiffnessMNm3: 10
+    },
+    notes: "Public-source seed: https://www.isolgomma.com/product/bifloor/",
+    tags: ["resilient", "underlay", "impact", "isolgomma", "bifloor", "public-source"]
+  },
+  {
+    id: "isolgomma_sylcer_3",
+    name: "Isolgomma SYLCER 3",
+    category: "support",
+    densityKgM3: 820,
+    acoustic: {
+      behavior: "resilient_layer",
+      lossFactor: 0.08,
+      notes: [
+        "Density and 2.46 kg/m2 superficial weight follow Isolgomma's official technical data.",
+        "Dynamic stiffness and DeltaLw follow the official technical data; use the live catalog DeltaLw row only for the bonded ceramic-tile stack shape."
+      ],
+      propertySourceStatus: "catalog_nominal"
+    },
+    impact: {
+      dynamicStiffnessMNm3: 180
+    },
+    notes:
+      "Public-source seed: https://www.isolgomma.com/downloads/technical-data/Isolgomma_Sylcer-EN.pdf",
+    tags: ["resilient", "underlay", "impact", "isolgomma", "sylcer", "public-source"]
+  },
+  {
+    id: "schluter_ditra_sound",
+    name: "Schluter DITRA-SOUND",
+    category: "support",
+    densityKgM3: 0,
+    acoustic: {
+      behavior: "resilient_layer",
+      lossFactor: 0.08,
+      notes: [
+        "The official brochure declares 3.5 mm thickness and a tested 13 dB impact-sound reduction, but not density or dynamic stiffness.",
+        "Use this product through the official impact catalog DeltaLw lane, not through the dynamic-stiffness formula route."
+      ],
+      propertySourceStatus: "catalog_nominal"
+    },
+    notes:
+      "Public-source seed: https://assets.schluter.com/asset/570120892212/document_bd9ftlao5926r0vrla5ukp4b77/552264_Prospekt_Ditra_Sound_GB?content-disposition=inline",
+    tags: ["resilient", "underlay", "impact", "schluter", "ditra-sound", "tile", "public-source"]
+  },
+  {
+    id: "damtec_estra_6",
+    name: "DAMTEC estra 6 mm",
+    category: "support",
+    densityKgM3: 717,
+    acoustic: {
+      behavior: "resilient_layer",
+      lossFactor: 0.08,
+      notes: [
+        "Density is derived from the official 3.87-4.73 kg/m2 area-weight range midpoint at 6 mm.",
+        "Dynamic stiffness follows the official under-screed brochure. DeltaLw values are not seeded here because they depend on screed thickness and surface mass."
+      ],
+      propertySourceStatus: "catalog_nominal"
+    },
+    impact: {
+      dynamicStiffnessMNm3: 70
+    },
+    notes:
+      "Public-source seed: https://www.kraiburg-relastec.com/damtec/wp-content/uploads/sites/2/2019/09/DAMTEC_under_screed_EN_v1_2019.pdf",
+    tags: ["resilient", "underlay", "impact", "damtec", "estra", "public-source"]
+  },
+  {
+    id: "damtec_estra_8",
+    name: "DAMTEC estra 8 mm",
+    category: "support",
+    densityKgM3: 717,
+    acoustic: {
+      behavior: "resilient_layer",
+      lossFactor: 0.08,
+      notes: [
+        "Density is derived from the official 5.16-6.31 kg/m2 area-weight range midpoint at 8 mm.",
+        "Dynamic stiffness follows the official under-screed brochure. DeltaLw values are not seeded here because they depend on screed thickness and surface mass."
+      ],
+      propertySourceStatus: "catalog_nominal"
+    },
+    impact: {
+      dynamicStiffnessMNm3: 60
+    },
+    notes:
+      "Public-source seed: https://www.kraiburg-relastec.com/damtec/wp-content/uploads/sites/2/2019/09/DAMTEC_under_screed_EN_v1_2019.pdf",
+    tags: ["resilient", "underlay", "impact", "damtec", "estra", "public-source"]
+  },
+  {
+    id: "damtec_estra_3d_8_4",
+    name: "DAMTEC estra 3D 8/4",
+    category: "support",
+    densityKgM3: 538,
+    acoustic: {
+      behavior: "resilient_layer",
+      lossFactor: 0.08,
+      notes: [
+        "Effective density is derived from the official 3.87-4.73 kg/m2 area-weight range midpoint at 8 mm nominal thickness.",
+        "Dynamic stiffness follows the official under-screed brochure. DeltaLw values are not seeded here because they depend on screed thickness and surface mass."
+      ],
+      propertySourceStatus: "catalog_nominal"
+    },
+    impact: {
+      dynamicStiffnessMNm3: 20
+    },
+    notes:
+      "Public-source seed: https://www.kraiburg-relastec.com/damtec/wp-content/uploads/sites/2/2019/09/DAMTEC_under_screed_EN_v1_2019.pdf",
+    tags: ["resilient", "underlay", "impact", "damtec", "estra-3d", "public-source"]
+  },
+  {
+    id: "damtec_3d_17_8",
+    name: "DAMTEC 3D 17/8",
+    category: "support",
+    densityKgM3: 550,
+    acoustic: {
+      behavior: "resilient_layer",
+      lossFactor: 0.08,
+      notes: [
+        "Density uses the midpoint of the official 500-600 kg/m3 area-weight/density row for DAMTEC 3D 17/8.",
+        "Dynamic stiffness follows the official under-screed brochure. DeltaLw values are not seeded here because they depend on screed thickness, layer count, and surface mass."
+      ],
+      propertySourceStatus: "catalog_nominal"
+    },
+    impact: {
+      dynamicStiffnessMNm3: 15
+    },
+    notes:
+      "Public-source seed: https://www.kraiburg-relastec.com/damtec/wp-content/uploads/sites/2/2019/09/DAMTEC_under_screed_EN_v1_2019.pdf",
+    tags: ["resilient", "underlay", "impact", "damtec", "3d-17-8", "public-source"]
+  },
+  {
+    id: "forbo_sarlon_19_db",
+    name: "Forbo Sarlon 19 dB Acoustic Vinyl",
+    category: "finish",
+    densityKgM3: 0,
+    notes:
+      "Public-source seed: https://www.forbo.com/flooring/en-gl/products/acoustic-flooring/sarlon-19-db-acoustic-vinyl/bdqcop. Use as a floor_covering identity material only; the product DeltaLw lane stays parked until thickness/test-system boundaries are encoded. Density is not seeded from this source and must not be used as an airborne mass contribution.",
+    tags: ["floor-finish", "acoustic-vinyl", "impact", "forbo", "sarlon", "public-source"]
+  },
+  {
+    id: "forbo_sarlon_15_db",
+    name: "Forbo Sarlon 15 dB Acoustic Vinyl",
+    category: "finish",
+    densityKgM3: 0,
+    notes:
+      "Public-source seed: https://www.forbo.com/flooring/en-gl/products/acoustic-flooring/sarlon-15-db-acoustic-vinyl/buxjuc. Use as a floor_covering identity material only; the product DeltaLw lane stays parked until thickness/test-system boundaries are encoded. Density is not seeded from this source and must not be used as an airborne mass contribution.",
+    tags: ["floor-finish", "acoustic-vinyl", "impact", "forbo", "sarlon", "public-source"]
+  },
+  {
+    id: "forbo_eternal_de_luxe_acoustic",
+    name: "Forbo Eternal de Luxe Acoustic",
+    category: "finish",
+    densityKgM3: 0,
+    notes:
+      "Public-source seed: https://www.forbo.com/flooring/en-gl/products/acoustic-flooring/eternal-de-luxe-design-vinyl/bxm0k2. Use as a floor_covering identity material only; the product DeltaLw lane stays parked until thickness/test-system boundaries are encoded. Density is not seeded from this source and must not be used as an airborne mass contribution.",
+    tags: ["floor-finish", "acoustic-vinyl", "impact", "forbo", "eternal", "public-source"]
+  },
+  {
+    id: "forbo_modulup_19_db",
+    name: "Forbo Modul'up 19 dB Loose Lay Vinyl",
+    category: "finish",
+    densityKgM3: 0,
+    notes:
+      "Public-source seed: https://www.forbo.com/flooring/en-gl/products/heterogeneous-vinyl/modul-up-19-db-loose-lay-vinyl/bxnlic. Use as a floor_covering identity material only; the product DeltaLw lane stays parked until thickness/test-system boundaries are encoded. Density is not seeded from this source and must not be used as an airborne mass contribution.",
+    tags: ["floor-finish", "acoustic-vinyl", "impact", "forbo", "modulup", "loose-lay", "public-source"]
+  },
+  {
+    id: "tarkett_comfort_acoustic_19_db",
+    name: "Tarkett Comfort Acoustic 19 dB",
+    category: "finish",
+    densityKgM3: 0,
+    notes:
+      "Public-source seed: https://professionals.tarkett.co.uk/en_GB/collection-C002828-comfort-acoustic-35-residential. Use as a floor_covering layer through the official impact catalog DeltaLw lane; density is not seeded from this source and must not be used as an airborne mass contribution.",
+    tags: ["floor-finish", "acoustic-vinyl", "impact", "tarkett", "comfort-acoustic", "public-source"]
+  },
+  {
+    id: "tarkett_iq_optima_acoustic_16_db",
+    name: "Tarkett iQ Optima Acoustic 16 dB",
+    category: "finish",
+    densityKgM3: 0,
+    notes:
+      "Public-source seed: https://professionals.tarkett.com/en_EU/collection-C000127-iq-optima-acoustic. Use as a floor_covering layer through the official impact catalog DeltaLw lane; density is not seeded from this source and must not be used as an airborne mass contribution.",
+    tags: ["floor-finish", "acoustic-vinyl", "impact", "tarkett", "iq-optima", "public-source"]
+  },
+  {
+    id: "tarkett_iq_natural_acoustic_15_db",
+    name: "Tarkett iQ Natural Acoustic 15 dB",
+    category: "finish",
+    densityKgM3: 0,
+    notes:
+      "Public-source seed: https://professionals.tarkett.com/en_EU/node/iq-natural-sustainable-vinyl-flooring-9685. Use as a floor_covering identity material only; the product DeltaLw lane stays parked until thickness/test-system boundaries are encoded. Density is not seeded from this source and must not be used as an airborne mass contribution.",
+    tags: ["floor-finish", "acoustic-vinyl", "impact", "tarkett", "iq-natural", "public-source"]
   },
   {
     id: "scanrubber_825_underlay",

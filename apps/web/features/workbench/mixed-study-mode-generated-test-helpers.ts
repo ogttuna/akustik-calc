@@ -812,7 +812,7 @@ export const ROUTE_MIXED_GENERATED_CASES: readonly RouteMixedGeneratedCase[] = [
   },
   {
     id: "route-getzner-afm-35-delta",
-    label: "Getzner AFM 35 Delta floor",
+    label: "Getzner AFM 35 formula floor",
     requestedOutputs: DEFAULT_FLOOR_REQUESTED_OUTPUTS,
     rows: getPresetById("getzner_afm_35_delta").rows,
     splitPlans: [
@@ -823,7 +823,7 @@ export const ROUTE_MIXED_GENERATED_CASES: readonly RouteMixedGeneratedCase[] = [
   },
   {
     id: "route-getzner-afm-33-delta",
-    label: "Getzner AFM 33 Delta floor",
+    label: "Getzner AFM 33 formula floor",
     requestedOutputs: DEFAULT_FLOOR_REQUESTED_OUTPUTS,
     rows: getPresetById("getzner_afm_33_delta").rows,
     splitPlans: [

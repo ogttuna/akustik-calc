@@ -100,15 +100,15 @@ describe("post-V1 wall building lab companion Gate AW surface parity", () => {
     expect(result?.supportedTargetOutputs).toEqual([...TARGET_OUTPUTS]);
     expect(result?.unsupportedTargetOutputs).toEqual([]);
     expect(result?.metrics).toMatchObject({
-      estimatedCDb: -0.2,
-      estimatedCtrDb: -4.7,
+      estimatedCDb: -1,
+      estimatedCtrDb: -5.5,
       estimatedDnADb: 39.8,
       estimatedDnTADb: 41.3,
       estimatedDnTwDb: 42,
       estimatedDnWDb: 40,
-      estimatedRwDb: 40,
+      estimatedRwDb: 43,
       estimatedRwPrimeDb: 40,
-      estimatedStc: 40
+      estimatedStc: 43
     });
     expect(result?.layerCombinationResolverTrace).toMatchObject({
       requestedBasis: "building_prediction",
@@ -134,8 +134,8 @@ describe("post-V1 wall building lab companion Gate AW surface parity", () => {
       expect.arrayContaining([
         expect.objectContaining({
           companions: expect.arrayContaining([
-            { label: "STC", valueLabel: "40 dB" },
-            { label: "C / Ctr", valueLabel: "-0.2 dB / -4.7 dB" },
+            { label: "STC", valueLabel: "43 dB" },
+            { label: "C / Ctr", valueLabel: "-1 dB / -5.5 dB" },
             { label: "DnT,A", valueLabel: "41.3 dB" }
           ]),
           id: "airborne",

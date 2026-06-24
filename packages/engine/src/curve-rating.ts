@@ -148,6 +148,15 @@ function getPanelAreaM2(context?: CurveRatingContext | null): number | null {
   return (panelWidthMm * panelHeightMm) / 1_000_000;
 }
 
+function roundedPositiveMetadata(value: number | null | undefined): number | undefined {
+  if (typeof value !== "number" || !Number.isFinite(value) || !(value > 0)) {
+    return undefined;
+  }
+
+  const rounded = ksRound1(value);
+  return rounded > 0 ? rounded : undefined;
+}
+
 function computeEquivalentAbsorptionArea(context?: CurveRatingContext | null): {
   absorptionAreaM2Sabine: number | null;
   available: boolean;
@@ -186,10 +195,12 @@ function buildFieldAirborneRatings(
   const c = computeSpectrumAdaptationTerm(frequenciesHz, transmissionLossDb, ISO_SPECTRUM_C);
   const ctr = computeSpectrumAdaptationTerm(frequenciesHz, transmissionLossDb, ISO_SPECTRUM_CTR);
   const partitionAreaM2 = getPanelAreaM2(context);
+  const serializedPartitionAreaM2 = roundedPositiveMetadata(partitionAreaM2);
   const receivingRoomVolumeM3 =
     typeof context?.receivingRoomVolumeM3 === "number" && Number.isFinite(context.receivingRoomVolumeM3) && context.receivingRoomVolumeM3 > 0
       ? context.receivingRoomVolumeM3
       : null;
+  const serializedReceivingRoomVolumeM3 = roundedPositiveMetadata(receivingRoomVolumeM3);
   const field: FieldAirborneRating = {
     basis: "apparent_curve_overlay",
     C: c,
@@ -212,6 +223,15 @@ function buildFieldAirborneRatings(
 
       return !(typeof context?.panelHeightMm === "number" && context.panelHeightMm > 0);
     });
+  } else if (!serializedPartitionAreaM2 || !serializedReceivingRoomVolumeM3) {
+    // AGENT COORDINATION 2026-06-24 (Codex): formulas keep raw positive
+    // geometry, but field/building outputs must not be published when the
+    // critical metadata would serialize as schema-invalid zero.
+    field.geometryMissing = true;
+    field.geometryNeeded = [
+      ...(!serializedPartitionAreaM2 ? ["panelWidthMm", "panelHeightMm"] : []),
+      ...(!serializedReceivingRoomVolumeM3 ? ["receivingRoomVolumeM3"] : [])
+    ];
   } else {
     const normalizationDb = ksRound1(
       10 * log10Safe(((SABINE_COEFFICIENT / REFERENCE_REVERB_TIME_S) * receivingRoomVolumeM3) / partitionAreaM2)
@@ -226,12 +246,12 @@ function buildFieldAirborneRatings(
     field.DnTCtr = dnTCtr;
     field.DnTA = ksRound1(dnTw + dnTC);
     field.normalizationDb = normalizationDb;
-    field.partitionAreaM2 = ksRound1(partitionAreaM2);
-    field.receivingRoomVolumeM3 = ksRound1(receivingRoomVolumeM3);
+    field.partitionAreaM2 = serializedPartitionAreaM2;
+    field.receivingRoomVolumeM3 = serializedReceivingRoomVolumeM3;
     field.basis = "apparent_curve_overlay + 10log10(0.32V/S)";
   }
 
-  if (partitionAreaM2 && partitionAreaM2 > 0) {
+  if (partitionAreaM2 && partitionAreaM2 > 0 && serializedPartitionAreaM2) {
     const dnOffsetDb = ksRound1(10 * log10Safe(REFERENCE_ABSORPTION_AREA_M2 / partitionAreaM2));
     const dnCurveDb = applyCurveOffset(transmissionLossDb, dnOffsetDb);
     const dnW = computeRwFromCurve(frequenciesHz, dnCurveDb);
@@ -242,15 +262,16 @@ function buildFieldAirborneRatings(
     field.DnC = dnC;
     field.DnCtr = dnCtr;
     field.DnA = ksRound1(dnW + dnC);
-    field.partitionAreaM2 = ksRound1(partitionAreaM2);
+    field.partitionAreaM2 = serializedPartitionAreaM2;
     field.dnOffsetDb = dnOffsetDb;
     field.dnBasis = "apparent_curve_overlay + 10log10(A0/S)";
 
     const absorptionInfo = computeEquivalentAbsorptionArea(context);
     if (absorptionInfo.available && absorptionInfo.absorptionAreaM2Sabine && absorptionInfo.absorptionAreaM2Sabine > 0) {
       field.absorptionAreaM2Sabine = absorptionInfo.absorptionAreaM2Sabine;
-      if (typeof context?.receivingRoomRt60S === "number" && context.receivingRoomRt60S > 0) {
-        field.receivingRoomRt60S = ksRound1(context.receivingRoomRt60S);
+      const serializedReceivingRoomRt60S = roundedPositiveMetadata(context?.receivingRoomRt60S);
+      if (serializedReceivingRoomRt60S) {
+        field.receivingRoomRt60S = serializedReceivingRoomRt60S;
       }
       field.levelDifferenceOffsetDb = ksRound1(
         10 * log10Safe(absorptionInfo.absorptionAreaM2Sabine / partitionAreaM2)

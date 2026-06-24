@@ -26,6 +26,7 @@ type ImpactProductCatalogPanelProps = {
 
 const SOURCE_TYPE_LABELS: Record<ImpactProductCatalogSourceType, string> = {
   official_manufacturer_catalog_pdf: "Official catalog PDF",
+  official_manufacturer_product_page: "Official product page",
   official_manufacturer_technical_data_pdf: "Technical data PDF"
 };
 
@@ -206,8 +207,9 @@ export function ImpactProductCatalogPanel({ result }: ImpactProductCatalogPanelP
             No official product row matched the current stack
           </div>
           <p className="mt-3">
-            Current local slice includes REGUPOL exact-system rows, REGUPOL lower-bound wet-screed support, and Getzner
-            AFM DeltaLw rows. Use product-specific resilient layers if you want this lane to activate.
+            Current local slice includes REGUPOL exact-system rows, REGUPOL lower-bound wet-screed support, and bounded
+            tile or acoustic floor-covering DeltaLw rows. Use product-specific layers with matching floor roles if you want
+            this lane to activate.
           </p>
         </div>
       )}

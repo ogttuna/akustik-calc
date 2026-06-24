@@ -273,11 +273,20 @@ function buildLabCompositeRuntime(input: {
   });
 }
 
-function partitionAreaM2(context: {
+function rawPartitionAreaM2(context: {
   panelHeightMm: number;
   panelWidthMm: number;
 }): number {
-  return round1((context.panelWidthMm * context.panelHeightMm) / 1_000_000);
+  return (context.panelWidthMm * context.panelHeightMm) / 1_000_000;
+}
+
+function roundedPositiveMetadata(value: number): number | null {
+  if (!Number.isFinite(value) || !(value > 0)) {
+    return null;
+  }
+
+  const rounded = round1(value);
+  return rounded > 0 ? rounded : null;
 }
 
 function standardizedRoomNormalizationDb(context: {
@@ -424,7 +433,42 @@ function promotedResult(input: {
   labCompositeRwDb: number;
   targetOutputs: readonly RequestedOutputId[];
 }): CompanyInternalOpeningLeakRuntimeResult {
-  const areaM2 = partitionAreaM2(input.context);
+  const rawAreaM2 = rawPartitionAreaM2(input.context);
+  const areaM2 = roundedPositiveMetadata(rawAreaM2);
+
+  if (areaM2 === null) {
+    const missingPhysicalInputs = ["partitionAreaM2"];
+    const blockedOutputs = requestedOpeningFieldBuildingOutputs(input.targetOutputs);
+    const warning =
+      "Opening/leak field/building runtime is blocked because panel width and height produce partition area below serialized positive metadata precision.";
+
+    // AGENT COORDINATION 2026-06-24 (Codex): do not promote opening/leak
+    // field/building outputs when the critical area metadata would serialize
+    // as zero. This preserves formula values for normal geometry only.
+    return {
+      basis: blockedBasis({
+        missingPhysicalInputs,
+        targetOutputs: input.targetOutputs
+      }),
+      basisId: null,
+      blockedOutputs,
+      dnTwDb: null,
+      dnWDb: null,
+      errorBudgetDb: null,
+      fieldRating: null,
+      labCompositeRwDb: input.labCompositeRwDb,
+      missingPhysicalInputs,
+      partitionAreaM2: null,
+      requestedOutputs: input.targetOutputs,
+      roomNormalizationDb: null,
+      rwPrimeDb: null,
+      status: "blocked_missing_input",
+      supportedOutputs: [],
+      warning,
+      warnings: [warning]
+    };
+  }
+
   const roomNormalization = standardizedRoomNormalizationDb(input.context);
   const totalFlankingPenaltyDb = round1(
     input.fieldFlankingPenaltyDb + (input.buildingJunctionPenaltyDb ?? 0)

@@ -119,10 +119,10 @@ describe("post-V1 wall flat multicavity building physics Gate AJ", () => {
     ]);
     expect(result.unsupportedTargetOutputs).toEqual([]);
     expect(result.metrics).toMatchObject({
-      estimatedCDb: -1.9,
-      estimatedCtrDb: -8,
-      estimatedRwDb: 60,
-      estimatedStc: 60
+      estimatedCDb: -2.4,
+      estimatedCtrDb: -8.8,
+      estimatedRwDb: 62,
+      estimatedStc: 62
     });
     expect(result.warnings.join("\n")).not.toContain("Unsupported target outputs: Rw, STC, C, Ctr");
     expect(result.warnings.join("\n")).not.toContain("Unsupported target outputs: R'w");

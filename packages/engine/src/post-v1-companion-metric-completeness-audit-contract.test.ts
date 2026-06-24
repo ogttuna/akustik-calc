@@ -338,8 +338,16 @@ describe("post-V1 companion metric completeness audit", () => {
       calculator: "dynamic",
       targetOutputs: C_CTR_PAIR_OUTPUTS
     });
-    expect(buildingCAndCtr.supportedTargetOutputs).toEqual([]);
-    expect(buildingCAndCtr.unsupportedTargetOutputs).toEqual(["C", "Ctr"]);
+    // Agent coordination, 2026-06-24:
+    // This adjacent stack is still not owned by the compatible-anchor lab
+    // companion candidate, but complete Gate AR building prediction now owns
+    // direct-curve lab C/Ctr companions independently of that anchor route.
+    expect(buildingCAndCtr.supportedTargetOutputs).toEqual(["C", "Ctr"]);
+    expect(buildingCAndCtr.unsupportedTargetOutputs).toEqual([]);
+    expect(buildingCAndCtr.metrics).toMatchObject({
+      estimatedCDb: -1.1,
+      estimatedCtrDb: -6
+    });
     expect(buildingCAndCtr.layerCombinationResolverTrace?.selectedCandidateId).not.toBe(
       POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_SELECTED_CANDIDATE_ID
     );

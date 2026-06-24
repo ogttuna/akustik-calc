@@ -1181,6 +1181,10 @@ function firstLayerForRole(layers: readonly ResolvedLayerStackEntry[], role: Lay
   return layers.find((layer) => layer.floorRole === role);
 }
 
+function positiveDensityKgM3(material: MaterialDefinition): number | undefined {
+  return material.densityKgM3 > 0 ? material.densityKgM3 : undefined;
+}
+
 function resolveStructuralSupportFromBaseLayer(
   layer: ResolvedLayerStackEntry | undefined
 ): Pick<ImpactPredictorInput, "baseSlab" | "structuralSupportType" | "supportForm"> {
@@ -1646,7 +1650,7 @@ export function buildImpactPredictorInputFromLayerStack(
     ...structuralSupport,
     floorCovering: floorCovering
       ? {
-          densityKgM3: floorCovering.material.densityKgM3,
+          densityKgM3: positiveDensityKgM3(floorCovering.material),
           materialClass: resolveFloorCoveringMaterialClass({
             floorCoveringLayer: floorCovering,
             resilientLayer

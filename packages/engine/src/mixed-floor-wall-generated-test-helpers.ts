@@ -387,14 +387,14 @@ const REGUPOL_CURVE_8_WET_BOUND_ROWS: readonly LayerInput[] = [
 const GETZNER_AFM_33_DELTA_ROWS: readonly LayerInput[] = [
   { floorRole: "floor_covering", materialId: "ceramic_tile", thicknessMm: 8 },
   { floorRole: "floating_screed", materialId: "screed", thicknessMm: 50 },
-  { floorRole: "resilient_layer", materialId: "getzner_afm_33", thicknessMm: 8 },
+  { floorRole: "resilient_layer", materialId: "getzner_afm_33", thicknessMm: 16 },
   { floorRole: "base_structure", materialId: "concrete", thicknessMm: 150 }
 ];
 
 const GETZNER_AFM_35_DELTA_ROWS: readonly LayerInput[] = [
   { floorRole: "floor_covering", materialId: "ceramic_tile", thicknessMm: 8 },
   { floorRole: "floating_screed", materialId: "screed", thicknessMm: 50 },
-  { floorRole: "resilient_layer", materialId: "getzner_afm_35", thicknessMm: 8 },
+  { floorRole: "resilient_layer", materialId: "getzner_afm_35", thicknessMm: 16 },
   { floorRole: "base_structure", materialId: "concrete", thicknessMm: 150 }
 ];
 
@@ -621,7 +621,7 @@ export const ENGINE_MIXED_GENERATED_CASES: readonly EngineMixedGeneratedCase[] =
       targetOutputs: FLOOR_FIELD_OUTPUTS
     },
     id: "floor-getzner-afm-35-delta",
-    label: "Getzner AFM 35 Delta floor",
+    label: "Getzner AFM 35 formula floor",
     labOptions: { targetOutputs: FLOOR_LAB_OUTPUTS },
     rows: GETZNER_AFM_35_DELTA_ROWS,
     splitPlans: [
@@ -653,7 +653,7 @@ export const ENGINE_MIXED_GENERATED_CASES: readonly EngineMixedGeneratedCase[] =
       targetOutputs: FLOOR_FIELD_OUTPUTS
     },
     id: "floor-getzner-afm-33-delta",
-    label: "Getzner AFM 33 Delta floor",
+    label: "Getzner AFM 33 formula floor",
     labOptions: { targetOutputs: FLOOR_LAB_OUTPUTS },
     rows: GETZNER_AFM_33_DELTA_ROWS,
     splitPlans: [

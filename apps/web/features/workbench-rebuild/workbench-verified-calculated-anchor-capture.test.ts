@@ -4,7 +4,9 @@ import type { AssemblyCalculation, EstimateRequest } from "@dynecho/shared";
 
 import {
   buildVerifiedCalculatedAnchorCapturePackage,
+  estimateRequestsEqual,
   estimateRequestsEqualForVerifiedCalculatedCapture,
+  getActiveEstimateResultForCurrentRequest,
   getVerifiedCalculatedMetricBasis
 } from "./calculator-workbench";
 import { WORKBENCH_V2_DEFAULT_CONTEXT } from "./workbench-v2-project-snapshot";
@@ -118,6 +120,7 @@ describe("verified calculated anchor capture helpers", () => {
   });
 
   it("blocks capture when selected outputs no longer match the request that produced the result", () => {
+    expect(estimateRequestsEqual(REQUEST, { ...REQUEST })).toBe(true);
     expect(estimateRequestsEqualForVerifiedCalculatedCapture(REQUEST, { ...REQUEST })).toBe(true);
     expect(
       estimateRequestsEqualForVerifiedCalculatedCapture(REQUEST, {
@@ -125,6 +128,51 @@ describe("verified calculated anchor capture helpers", () => {
         targetOutputs: ["Rw"]
       })
     ).toBe(false);
+  });
+
+  it("suppresses stale ready results before they drive visible Workbench state", () => {
+    expect(
+      getActiveEstimateResultForCurrentRequest({
+        currentRequest: REQUEST,
+        estimateState: {
+          request: { ...REQUEST },
+          result: RESULT,
+          status: "ready"
+        }
+      })
+    ).toBe(RESULT);
+
+    expect(
+      getActiveEstimateResultForCurrentRequest({
+        currentRequest: {
+          ...REQUEST,
+          targetOutputs: ["Rw"]
+        },
+        estimateState: {
+          request: REQUEST,
+          result: RESULT,
+          status: "ready"
+        }
+      })
+    ).toBeNull();
+
+    expect(
+      getActiveEstimateResultForCurrentRequest({
+        currentRequest: null,
+        estimateState: {
+          request: REQUEST,
+          result: RESULT,
+          status: "ready"
+        }
+      })
+    ).toBeNull();
+
+    expect(
+      getActiveEstimateResultForCurrentRequest({
+        currentRequest: REQUEST,
+        estimateState: { status: "loading" }
+      })
+    ).toBeNull();
   });
 
   it("returns blocked when no selected output has a live supported value", () => {

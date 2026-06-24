@@ -611,9 +611,9 @@ export const WORKBENCH_PRESETS: readonly PresetDefinition[] = [
   {
     id: "getzner_afm_21_delta",
     label: "Getzner AFM 21",
-    note: "official DeltaLw lane on the lighter AFM edge",
+    note: "dynamic-stiffness formula seed on the lighter AFM edge",
     summary:
-      "A product-property preset that carries the official AFM 21 DeltaLw row so the lighter end of the AFM range is visible without implying an exact solved assembly.",
+      "A material-seed preset that uses AFM dynamic stiffness through the heavy floating-floor formula; generic AFM DeltaLw rows stay parked until exact system boundaries are encoded.",
     studyMode: "floor",
     rows: [
       { materialId: "ceramic_tile", thicknessMm: "8", floorRole: "floor_covering" },
@@ -625,27 +625,27 @@ export const WORKBENCH_PRESETS: readonly PresetDefinition[] = [
   {
     id: "getzner_afm_33_delta",
     label: "Getzner AFM 33",
-    note: "official DeltaLw lane on heavy slab reference",
-    summary: "A product-property preset that carries the official AFM 33 DeltaLw row without pretending the live stack was solved exactly.",
+    note: "dynamic-stiffness formula seed on heavy slab reference",
+    summary: "A material-seed preset that uses AFM 33 dynamic stiffness through the heavy floating-floor formula without carrying a generic product DeltaLw row.",
     studyMode: "floor",
     rows: [
       { materialId: "ceramic_tile", thicknessMm: "8", floorRole: "floor_covering" },
       { materialId: "screed", thicknessMm: "50", floorRole: "floating_screed" },
-      { materialId: "getzner_afm_33", thicknessMm: "8", floorRole: "resilient_layer" },
+      { materialId: "getzner_afm_33", thicknessMm: "16", floorRole: "resilient_layer" },
       { materialId: "concrete", thicknessMm: "150", floorRole: "base_structure" }
     ]
   },
   {
     id: "getzner_afm_35_delta",
     label: "Getzner AFM 35",
-    note: "official DeltaLw lane on the stronger AFM edge",
+    note: "dynamic-stiffness formula seed on the stronger AFM edge",
     summary:
-      "A product-property preset that carries the official AFM 35 DeltaLw row so the stronger end of the AFM range is visible on the same heavy-floor reference surface.",
+      "A material-seed preset that uses AFM 35 dynamic stiffness through the heavy floating-floor formula without carrying a generic product DeltaLw row.",
     studyMode: "floor",
     rows: [
       { materialId: "ceramic_tile", thicknessMm: "8", floorRole: "floor_covering" },
       { materialId: "screed", thicknessMm: "50", floorRole: "floating_screed" },
-      { materialId: "getzner_afm_35", thicknessMm: "8", floorRole: "resilient_layer" },
+      { materialId: "getzner_afm_35", thicknessMm: "16", floorRole: "resilient_layer" },
       { materialId: "concrete", thicknessMm: "150", floorRole: "base_structure" }
     ]
   },

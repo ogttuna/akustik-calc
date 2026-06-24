@@ -12,6 +12,7 @@ type CalculatorValidationNextField = {
 };
 
 export type CalculatorValidationErrorPayload = {
+  errorKind?: "internal_error" | "request_validation" | "result_validation";
   error: string;
   issues: readonly CalculatorValidationIssue[];
   nextField: CalculatorValidationNextField;
@@ -106,6 +107,61 @@ function impactOnlyGuidance(
   };
 }
 
+function resultValidationGuidance(
+  issues: readonly CalculatorValidationIssue[],
+  route: CalculatorValidationRoute
+): Omit<CalculatorValidationErrorPayload, "issues" | "ok"> {
+  if (hasIssuePath(issues, "ratings.field.partitionAreaM2")) {
+    return {
+      error: "The calculation needs valid panel area metadata before it can publish field or building outputs.",
+      errorKind: "result_validation",
+      nextField: {
+        action: "Enter positive panel width and height, then run the calculation again.",
+        label: "Panel area",
+        path: "ratings.field.partitionAreaM2"
+      }
+    };
+  }
+
+  return {
+    error:
+      route === "estimate"
+        ? "The estimate result could not be published safely. Review the highlighted calculator inputs and try again."
+        : "The impact-only result could not be published safely. Review the highlighted calculator inputs and try again.",
+    errorKind: "result_validation",
+    nextField: {
+      action: "Review the calculator input that produced the invalid result shape.",
+      label: route === "estimate" ? "Estimate result" : "Impact-only result",
+      path: firstIssuePath(issues)
+    }
+  };
+}
+
+function isIssueLike(value: unknown): value is CalculatorValidationIssue {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+
+  const issue = value as Record<string, unknown>;
+  return typeof issue.message === "string" && Array.isArray(issue.path);
+}
+
+function extractValidationIssues(error: unknown): readonly CalculatorValidationIssue[] {
+  if (typeof error !== "object" || error === null || !("issues" in error)) {
+    return [];
+  }
+
+  const issues = (error as { issues?: unknown }).issues;
+  if (!Array.isArray(issues)) {
+    return [];
+  }
+
+  return issues.filter(isIssueLike).map((issue) => ({
+    message: issue.message,
+    path: issue.path
+  }));
+}
+
 export function buildCalculatorValidationErrorPayload(input: {
   issues: readonly CalculatorValidationIssue[];
   route: CalculatorValidationRoute;
@@ -114,7 +170,36 @@ export function buildCalculatorValidationErrorPayload(input: {
 
   return {
     ok: false,
+    errorKind: "request_validation",
     ...guidance,
     issues: input.issues
+  };
+}
+
+export function buildCalculatorExceptionErrorPayload(input: {
+  error: unknown;
+  fallbackError: string;
+  route: CalculatorValidationRoute;
+}): CalculatorValidationErrorPayload {
+  const issues = extractValidationIssues(input.error);
+
+  if (issues.length > 0) {
+    return {
+      ok: false,
+      ...resultValidationGuidance(issues, input.route),
+      issues
+    };
+  }
+
+  return {
+    ok: false,
+    error: input.fallbackError,
+    errorKind: "internal_error",
+    issues: [],
+    nextField: {
+      action: "Review the calculator inputs and run the calculation again.",
+      label: input.route === "estimate" ? "Estimate input" : "Impact-only input",
+      path: "payload"
+    }
   };
 }

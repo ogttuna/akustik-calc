@@ -278,13 +278,18 @@ export function defaultThicknessForMaterial(material: MaterialDefinition): strin
     return "4.5";
   }
 
+  if (material.id === "getzner_afm_29") {
+    return "11";
+  }
+
+  if (material.id === "getzner_afm_33" || material.id === "getzner_afm_35") {
+    return "16";
+  }
+
   if (
     material.id === "getzner_afm_21" ||
     material.id === "getzner_afm_23" ||
-    material.id === "getzner_afm_26" ||
-    material.id === "getzner_afm_29" ||
-    material.id === "getzner_afm_33" ||
-    material.id === "getzner_afm_35"
+    material.id === "getzner_afm_26"
   ) {
     return "8";
   }

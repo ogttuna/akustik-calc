@@ -484,14 +484,14 @@ const CASES: readonly ExactCompanionSplitParityCase[] = [
     canonical: [
       { floorRole: "floor_covering", materialId: "ceramic_tile", thicknessMm: 8 },
       { floorRole: "floating_screed", materialId: "screed", thicknessMm: 50 },
-      { floorRole: "resilient_layer", materialId: "getzner_afm_33", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "getzner_afm_33", thicknessMm: 16 },
       { floorRole: "base_structure", materialId: "concrete", thicknessMm: 150 }
     ],
     split: [
       { floorRole: "floor_covering", materialId: "ceramic_tile", thicknessMm: 8 },
       { floorRole: "floating_screed", materialId: "screed", thicknessMm: 25 },
       { floorRole: "floating_screed", materialId: "screed", thicknessMm: 25 },
-      { floorRole: "resilient_layer", materialId: "getzner_afm_33", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "getzner_afm_33", thicknessMm: 16 },
       { floorRole: "base_structure", materialId: "concrete", thicknessMm: 75 },
       { floorRole: "base_structure", materialId: "concrete", thicknessMm: 75 }
     ]

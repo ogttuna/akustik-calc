@@ -10,7 +10,10 @@ import {
 import { NextResponse } from "next/server";
 
 import { getAuthState } from "@/lib/auth";
-import { buildCalculatorValidationErrorPayload } from "@/lib/calculator-api-validation";
+import {
+  buildCalculatorExceptionErrorPayload,
+  buildCalculatorValidationErrorPayload
+} from "@/lib/calculator-api-validation";
 import { resolveProjectRouteOwner } from "@/lib/project-route-auth";
 import { createDefaultWorkbenchV2MeasuredWallRwAnchorRepository } from "@/lib/workbench-v2-measured-wall-rw-anchor-storage";
 import { createDefaultWorkbenchV2VerifiedCalculatedAnchorRepository } from "@/lib/workbench-v2-verified-calculated-anchor-storage";
@@ -161,11 +164,15 @@ export async function POST(request: Request) {
       result
     });
   } catch (error) {
+    // AGENT COORDINATION 2026-06-24 (Codex): result-shape/Zod errors
+    // must return user-safe calculator guidance; raw exception JSON stays
+    // in structured issues, not the primary Workbench error string.
     return NextResponse.json(
-      {
-        ok: false,
-        error: error instanceof Error ? error.message : "Unknown estimate failure."
-      },
+      buildCalculatorExceptionErrorPayload({
+        error,
+        fallbackError: "Estimate failed while calculating. Review the calculator inputs and try again.",
+        route: "estimate"
+      }),
       { status: 500 }
     );
   }

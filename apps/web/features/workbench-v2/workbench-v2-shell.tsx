@@ -5,6 +5,11 @@ import { ArrowDown, ArrowRight, ArrowUp, Copy, FileText, Plus, Trash2 } from "lu
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
+import {
+  resolveWorkbenchRequiredInputPresentation,
+  type WorkbenchRequiredInputTargetField
+} from "../workbench/route-input-presentation";
+
 type StudyMode = "floor" | "wall";
 type WorkbenchStep = "setup" | "stack" | "result" | "report";
 type OutputStatus = "live" | "needs_input" | "unsupported" | "pending";
@@ -239,6 +244,26 @@ const CONTEXT_INPUT_IDS: Record<keyof ContextDraft, string> = {
   resilientLayerDynamicStiffnessMNm3: "workbench-v2-dynamic-stiffness"
 };
 
+// AGENT COORDINATION 2026-06-24 (Codex): legacy shell adapts shared
+// semantic route-input targets to its own DOM ids; the shared presenter
+// deliberately does not import this shell's markup ids.
+function getContextInputIdForRequiredInputTarget(targetField: WorkbenchRequiredInputTargetField): string | undefined {
+  return CONTEXT_INPUT_IDS[targetField as keyof ContextDraft];
+}
+
+function getPrimaryContextInputIdForRequiredInputTargets(
+  targetFields: readonly WorkbenchRequiredInputTargetField[]
+): string | undefined {
+  for (const targetField of targetFields) {
+    const targetElementId = getContextInputIdForRequiredInputTarget(targetField);
+    if (targetElementId) {
+      return targetElementId;
+    }
+  }
+
+  return undefined;
+}
+
 const OUTPUT_PICKER_ID = "workbench-v2-output-picker";
 
 function createLayerId(): string {
@@ -316,109 +341,13 @@ function getRoleLabel(mode: StudyMode, roleValue: string): string {
   return ROLE_OPTIONS[mode].find((role) => role.value === roleValue)?.label ?? roleValue.replace(/_/g, " ");
 }
 
-function normalizeMissingFieldId(fieldId: string): string {
-  return fieldId.toLowerCase().replace(/[^a-z0-9]/g, "");
-}
-
-function humanizeMissingFieldId(fieldId: string): string {
-  const parts = fieldId.split(".");
-  const lastPart = parts[parts.length - 1] ?? fieldId;
-  return lastPart
-    .replace(/([a-z])([A-Z])/g, "$1 $2")
-    .replace(/M Nm3/g, "MN/m3")
-    .replace(/M3/g, "m3")
-    .replace(/Mm/g, "mm")
-    .replace(/Db/g, "dB")
-    .replace(/Rt60/g, "RT60")
-    .trim();
-}
-
-function getMissingInputCopy(fieldId: string): Pick<RequiredTask, "detail" | "label" | "targetElementId"> {
-  const normalized = normalizeMissingFieldId(fieldId);
-
-  if (normalized.includes("ci502500db")) {
-    return {
-      detail: "Enter CI,50-2500 for low-frequency impact output.",
-      label: "CI50 dB",
-      targetElementId: CONTEXT_INPUT_IDS.ci50_2500Db
-    };
-  }
-
-  if (normalized.includes("cidb")) {
-    return {
-      detail: "Enter impact spectrum adaptation term.",
-      label: "CI dB",
-      targetElementId: CONTEXT_INPUT_IDS.ciDb
-    };
-  }
-
-  if (normalized.includes("fieldkdb")) {
-    return {
-      detail: "Enter field correction K.",
-      label: "K correction",
-      targetElementId: CONTEXT_INPUT_IDS.fieldKDb
-    };
-  }
-
-  if (normalized.includes("impactfieldcontext") && normalized.includes("receivingroomvolumem3")) {
-    return {
-      detail: "Enter impact receiving-room volume.",
-      label: "Impact room volume",
-      targetElementId: CONTEXT_INPUT_IDS.impactReceivingRoomVolumeM3
-    };
-  }
-
-  if (normalized.includes("receivingroomrt60s")) {
-    return {
-      detail: "Enter receiving-room reverberation time.",
-      label: "RT60",
-      targetElementId: CONTEXT_INPUT_IDS.receivingRoomRt60S
-    };
-  }
-
-  if (normalized.includes("receivingroomvolumem3")) {
-    return {
-      detail: "Enter receiving-room volume.",
-      label: "Room volume",
-      targetElementId: CONTEXT_INPUT_IDS.receivingRoomVolumeM3
-    };
-  }
-
-  if (normalized.includes("panelwidthmm")) {
-    return {
-      detail: "Enter panel width.",
-      label: "Panel width",
-      targetElementId: CONTEXT_INPUT_IDS.panelWidthMm
-    };
-  }
-
-  if (normalized.includes("panelheightmm")) {
-    return {
-      detail: "Enter panel height.",
-      label: "Panel height",
-      targetElementId: CONTEXT_INPUT_IDS.panelHeightMm
-    };
-  }
-
-  if (normalized.includes("loadbasiskgm2")) {
-    return {
-      detail: "Enter floor load basis.",
-      label: "Load kg/m2",
-      targetElementId: CONTEXT_INPUT_IDS.loadBasisKgM2
-    };
-  }
-
-  if (normalized.includes("resilientlayerdynamicstiffnessmnm3")) {
-    return {
-      detail: "Enter resilient layer dynamic stiffness.",
-      label: "Dynamic stiffness",
-      targetElementId: CONTEXT_INPUT_IDS.resilientLayerDynamicStiffnessMNm3
-    };
-  }
+export function getMissingInputCopy(fieldId: string): Pick<RequiredTask, "detail" | "label" | "targetElementId"> {
+  const presentation = resolveWorkbenchRequiredInputPresentation(fieldId);
 
   return {
-    detail: "Enter the required physical input.",
-    label: humanizeMissingFieldId(fieldId)
+    detail: presentation.detail,
+    label: presentation.label,
+    targetElementId: getPrimaryContextInputIdForRequiredInputTargets(presentation.targetFields)
   };
 }
 

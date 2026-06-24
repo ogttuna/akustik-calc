@@ -46,6 +46,7 @@ const PUBLIC_SOURCE_IDS = [
   "xps_foam_board_40",
   "pir_board_30",
   "cork_underlay_184",
+  "regufoam_sound_10",
   "regupol_sound_12",
   "regupol_sound_15",
   "regupol_sound_17",
@@ -53,6 +54,25 @@ const PUBLIC_SOURCE_IDS = [
   "regupol_comfort_8",
   "regupol_comfort_12",
   "regupol_sound_and_drain_22",
+  "isolgomma_upgrei",
+  "isolgomma_uproll",
+  "isolgomma_grei",
+  "isolgomma_roll",
+  "isolgomma_highmat_30",
+  "isolgomma_bifloor",
+  "isolgomma_sylcer_3",
+  "schluter_ditra_sound",
+  "damtec_estra_6",
+  "damtec_estra_8",
+  "damtec_estra_3d_8_4",
+  "damtec_3d_17_8",
+  "forbo_sarlon_19_db",
+  "forbo_sarlon_15_db",
+  "forbo_eternal_de_luxe_acoustic",
+  "forbo_modulup_19_db",
+  "tarkett_comfort_acoustic_19_db",
+  "tarkett_iq_optima_acoustic_16_db",
+  "tarkett_iq_natural_acoustic_15_db",
   "scanrubber_825_underlay"
 ] as const;
 
@@ -103,6 +123,22 @@ describe("material seed catalog", () => {
     expect(materialCatalogById.regupol_sound_15?.impact?.dynamicStiffnessMNm3).toBe(6);
     expect(materialCatalogById.regupol_comfort_8?.impact?.dynamicStiffnessMNm3).toBe(15);
     expect(materialCatalogById.regupol_sound_and_drain_22?.impact?.dynamicStiffnessMNm3).toBe(21);
+    expect(materialCatalogById.regufoam_sound_10?.impact?.dynamicStiffnessMNm3).toBe(6);
+    expect(materialCatalogById.isolgomma_upgrei?.impact?.dynamicStiffnessMNm3).toBe(6);
+    expect(materialCatalogById.isolgomma_uproll?.impact?.dynamicStiffnessMNm3).toBe(11);
+    expect(materialCatalogById.isolgomma_grei?.impact?.dynamicStiffnessMNm3).toBe(8);
+    expect(materialCatalogById.isolgomma_roll?.impact?.dynamicStiffnessMNm3).toBe(21);
+    expect(materialCatalogById.isolgomma_highmat_30?.impact?.dynamicStiffnessMNm3).toBe(4);
+    expect(materialCatalogById.isolgomma_bifloor?.impact?.dynamicStiffnessMNm3).toBe(10);
+    expect(materialCatalogById.isolgomma_sylcer_3?.densityKgM3).toBe(820);
+    expect(materialCatalogById.isolgomma_sylcer_3?.impact?.dynamicStiffnessMNm3).toBe(180);
+    expect(materialCatalogById.schluter_ditra_sound?.impact?.dynamicStiffnessMNm3).toBeUndefined();
+    expect(materialCatalogById.damtec_estra_6?.impact?.dynamicStiffnessMNm3).toBe(70);
+    expect(materialCatalogById.damtec_estra_8?.impact?.dynamicStiffnessMNm3).toBe(60);
+    expect(materialCatalogById.damtec_estra_3d_8_4?.impact?.dynamicStiffnessMNm3).toBe(20);
+    expect(materialCatalogById.damtec_3d_17_8?.impact?.dynamicStiffnessMNm3).toBe(15);
+    expect(materialCatalogById.forbo_sarlon_19_db?.impact?.dynamicStiffnessMNm3).toBeUndefined();
+    expect(materialCatalogById.tarkett_iq_optima_acoustic_16_db?.densityKgM3).toBe(0);
     expect(materialCatalogById.scanrubber_825_underlay?.impact?.dynamicStiffnessMNm3).toBe(37);
   });
 

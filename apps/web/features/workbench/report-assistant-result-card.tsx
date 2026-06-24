@@ -5,6 +5,7 @@ import {
   formatReportAssistantResultToken
 } from "./report-assistant-result-card-model";
 import type { ReportAssistantResultEnvelope } from "./report-assistant-result-contract";
+import { resolveWorkbenchRequiredInputPresentation } from "./route-input-presentation";
 import type { WorkbenchV2CalculatorAssistantPreview } from "../workbench-rebuild/workbench-v2-calculator-assistant";
 
 const SOURCE_REVIEW_SUMMARY_EVIDENCE_LABELS = new Set([
@@ -21,6 +22,32 @@ const SOURCE_REVIEW_SUMMARY_EVIDENCE_LABELS = new Set([
 
 function getResultEvidenceDetail(result: ReportAssistantResultEnvelope, label: string): string | undefined {
   return result.evidence.find((entry) => entry.label === label)?.detail;
+}
+
+function getVisibleAssistantTaskCopy(task: ReportAssistantResultEnvelope["tasks"][number]): {
+  detail: string;
+  label: string;
+} {
+  const presentation = resolveWorkbenchRequiredInputPresentation(task.code, {
+    fallbackDetail: task.message,
+    severity: task.severity === "info" ? "info" : "warning"
+  });
+  const rawTail = task.code.split(":").at(-1) ?? task.code;
+  const messageContainsRawCode = task.message.includes(task.code) || task.message.includes(rawTail);
+  const hasOwnedPresentation =
+    presentation.targetFields.length > 0 || Boolean(presentation.targetIntent) || Boolean(presentation.actionLabel);
+  const messageLooksLikeRawValidation = /\b(number must|expected|required|too_small|too_big|invalid)\b/iu.test(task.message);
+
+  // AGENT COORDINATION 2026-06-24 (Codex): result envelopes keep raw
+  // task.code for trace/eval compatibility; this render path owns the
+  // user-visible copy so raw engine ids and low-level validation text are not
+  // primary UI labels/details when a route-input presentation is known.
+  return {
+    detail: messageContainsRawCode || (hasOwnedPresentation && messageLooksLikeRawValidation)
+      ? presentation.detail
+      : task.message,
+    label: presentation.label
+  };
 }
 
 export function AssistantCalculatorPreviewBlock(props: {
@@ -220,15 +247,19 @@ export function AssistantResultCard(props: {
         <div className="report-assistant-result-section">
           <strong>Tasks</strong>
           <div className="calc-task-list">
-            {result.tasks.map((task) => (
-              <div className="calc-task-row calc-assistant-task-row" data-severity={task.severity} key={task.code}>
-                <span>
-                  <strong>{task.code}</strong>
-                  <small>{task.message}</small>
-                </span>
-                <em>{task.severity}</em>
-              </div>
-            ))}
+            {result.tasks.map((task) => {
+              const visibleTask = getVisibleAssistantTaskCopy(task);
+
+              return (
+                <div className="calc-task-row calc-assistant-task-row" data-severity={task.severity} key={task.code}>
+                  <span>
+                    <strong>{visibleTask.label}</strong>
+                    <small>{visibleTask.detail}</small>
+                  </span>
+                  <em>{task.severity}</em>
+                </div>
+              );
+            })}
           </div>
         </div>
       ) : null}

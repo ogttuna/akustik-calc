@@ -186,7 +186,7 @@ export const FLOOR_SYSTEM_MATERIALS: readonly MaterialDefinition[] = [
     impact: {
       dynamicStiffnessMNm3: 40
     },
-    notes: "Official Getzner AFM catalog lane for DeltaLw-backed heavy-reference product matching.",
+    notes: "Official Getzner AFM material seed for dynamic-stiffness formula routing; generic DeltaLw rows stay parked until exact system boundaries are encoded.",
     tags: ["resilient", "official-product", "getzner", "impact"]
   },
   {
@@ -197,7 +197,7 @@ export const FLOOR_SYSTEM_MATERIALS: readonly MaterialDefinition[] = [
     impact: {
       dynamicStiffnessMNm3: 35
     },
-    notes: "Official Getzner AFM catalog lane for DeltaLw-backed heavy-reference product matching.",
+    notes: "Official Getzner AFM material seed for dynamic-stiffness formula routing; generic DeltaLw rows stay parked until exact system boundaries are encoded.",
     tags: ["resilient", "official-product", "getzner", "impact"]
   },
   {
@@ -208,7 +208,7 @@ export const FLOOR_SYSTEM_MATERIALS: readonly MaterialDefinition[] = [
     impact: {
       dynamicStiffnessMNm3: 20
     },
-    notes: "Official Getzner AFM catalog lane for DeltaLw-backed heavy-reference product matching.",
+    notes: "Official Getzner AFM material seed for dynamic-stiffness formula routing; generic DeltaLw rows stay parked until exact system boundaries are encoded.",
     tags: ["resilient", "official-product", "getzner", "impact"]
   },
   {
@@ -219,7 +219,7 @@ export const FLOOR_SYSTEM_MATERIALS: readonly MaterialDefinition[] = [
     impact: {
       dynamicStiffnessMNm3: 10
     },
-    notes: "Official Getzner AFM catalog lane for DeltaLw-backed heavy-reference product matching.",
+    notes: "Official Getzner AFM material seed for dynamic-stiffness formula routing; generic DeltaLw rows stay parked until exact system boundaries are encoded.",
     tags: ["resilient", "official-product", "getzner", "impact"]
   },
   {
@@ -228,9 +228,9 @@ export const FLOOR_SYSTEM_MATERIALS: readonly MaterialDefinition[] = [
     category: "support",
     densityKgM3: 760,
     impact: {
-      dynamicStiffnessMNm3: 7
+      dynamicStiffnessMNm3: 9
     },
-    notes: "Official Getzner AFM catalog lane for DeltaLw-backed heavy-reference product matching.",
+    notes: "Official Getzner AFM material seed for dynamic-stiffness formula routing; generic DeltaLw rows stay parked until exact system boundaries are encoded.",
     tags: ["resilient", "official-product", "getzner", "impact"]
   },
   {
@@ -241,7 +241,7 @@ export const FLOOR_SYSTEM_MATERIALS: readonly MaterialDefinition[] = [
     impact: {
       dynamicStiffnessMNm3: 5
     },
-    notes: "Official Getzner AFM catalog lane for DeltaLw-backed heavy-reference product matching.",
+    notes: "Official Getzner AFM material seed for dynamic-stiffness formula routing; generic DeltaLw rows stay parked until exact system boundaries are encoded.",
     tags: ["resilient", "official-product", "getzner", "impact"]
   },
   {

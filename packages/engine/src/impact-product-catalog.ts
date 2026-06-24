@@ -6,18 +6,21 @@ import type {
   ImpactCatalogMatchResult,
   ImpactProductCatalogEntry,
   ImpactProductRoleCriteria,
+  ImpactSupportingElementFamily,
   ImpactPredictorInput,
   MaterialDefinition,
   ResolvedLayer
 } from "@dynecho/shared";
 
 import { getImpactConfidenceForBasis } from "./impact-confidence";
+import { inferImpactSupportingElementFamilyFromLayers } from "./impact-supporting-element-family";
 import { createImpactMetricBasis } from "./impact-metric-basis";
 import { resolveMaterial } from "./material-catalog";
 import { deriveHeavyReferenceImpactFromDeltaLw } from "./impact-reference";
 import { ksRound1 } from "./math";
 
 const THICKNESS_TOLERANCE_MM = 2;
+const SURFACE_MASS_TOLERANCE_KG_M2 = 1;
 const PRODUCT_DELTA_DYNAMIC_STIFFNESS_TOLERANCE_MNM3 = 5;
 
 const ROLE_LABELS: Record<FloorRole, string> = {
@@ -41,12 +44,46 @@ function layersForRole(layers: readonly ResolvedLayer[], role: FloorRole): Resol
   return layers.filter((layer) => layer.floorRole === role);
 }
 
-function thicknessMatches(actual: number, expected: number): boolean {
-  return Math.abs(actual - expected) <= THICKNESS_TOLERANCE_MM;
+function thicknessMatches(actual: number, expected: number, tolerance: number): boolean {
+  return Math.abs(actual - expected) <= tolerance;
+}
+
+function surfaceMassMatches(actual: number, expected: number, tolerance: number): boolean {
+  return Math.abs(actual - expected) <= tolerance;
+}
+
+function surfaceMassRangeMatches(
+  actual: number,
+  range: NonNullable<ImpactProductRoleCriteria["surfaceMassRangeKgM2"]>
+): boolean {
+  if (typeof range.min === "number" && actual < range.min) {
+    return false;
+  }
+
+  if (typeof range.max === "number" && actual > range.max) {
+    return false;
+  }
+
+  return true;
 }
 
 function scoreRoleCriteria(criteria: ImpactProductRoleCriteria): number {
-  return (criteria.layerCount ? 1 : 0) + (criteria.materialIds ? 1 : 0) + (typeof criteria.thicknessMm === "number" ? 1 : 0);
+  return (
+    (criteria.layerCount ? 1 : 0) +
+    (criteria.materialIds ? 1 : 0) +
+    (typeof criteria.thicknessMm === "number" ? 1 : 0) +
+    (typeof criteria.surfaceMassKgM2 === "number" ? 1 : 0) +
+    (criteria.surfaceMassRangeKgM2 ? 1 : 0)
+  );
+}
+
+function roleSurfaceMassKgM2(layers: readonly ResolvedLayer[]): number | null {
+  if (layers.length === 0) {
+    return null;
+  }
+
+  const total = layers.reduce((sum, layer) => sum + layer.surfaceMassKgM2, 0);
+  return Number.isFinite(total) ? total : null;
 }
 
 function evaluateRoleCriteria(
@@ -67,7 +104,35 @@ function evaluateRoleCriteria(
   if (
     typeof criteria.thicknessMm === "number" &&
     layers.length > 0 &&
-    layers.every((layer) => thicknessMatches(layer.thicknessMm, criteria.thicknessMm as number))
+    layers.every((layer) =>
+      thicknessMatches(
+        layer.thicknessMm,
+        criteria.thicknessMm as number,
+        criteria.thicknessToleranceMm ?? THICKNESS_TOLERANCE_MM
+      )
+    )
+  ) {
+    matchedSignals += 1;
+  }
+
+  const surfaceMassKgM2 = roleSurfaceMassKgM2(layers);
+
+  if (
+    typeof criteria.surfaceMassKgM2 === "number" &&
+    surfaceMassKgM2 !== null &&
+    surfaceMassMatches(
+      surfaceMassKgM2,
+      criteria.surfaceMassKgM2,
+      criteria.surfaceMassToleranceKgM2 ?? SURFACE_MASS_TOLERANCE_KG_M2
+    )
+  ) {
+    matchedSignals += 1;
+  }
+
+  if (
+    criteria.surfaceMassRangeKgM2 &&
+    surfaceMassKgM2 !== null &&
+    surfaceMassRangeMatches(surfaceMassKgM2, criteria.surfaceMassRangeKgM2)
   ) {
     matchedSignals += 1;
   }
@@ -76,6 +141,17 @@ function evaluateRoleCriteria(
     exact: matchedSignals === scoreRoleCriteria(criteria),
     matchedSignals
   };
+}
+
+function supportingElementFamilyMatches(
+  actualFamily: ImpactSupportingElementFamily | null,
+  expectedFamilies: readonly ImpactSupportingElementFamily[] | undefined
+): boolean {
+  if (!expectedFamilies?.length) {
+    return true;
+  }
+
+  return Boolean(actualFamily && expectedFamilies.includes(actualFamily));
 }
 
 function buildImpactFromCatalog(entry: ImpactProductCatalogEntry): ImpactCalculation | null {
@@ -191,9 +267,19 @@ function evaluateEntry(layers: readonly ResolvedLayer[], entry: ImpactProductCat
 
   let exact = true;
   let score = entry.match.absentRoles.length;
+  const expectedSupportingFamilies = entry.match.supportingElementFamilies;
 
   for (const role of entry.match.absentRoles) {
     if (layersForRole(layers, role).length !== 0) {
+      exact = false;
+    }
+  }
+
+  if (expectedSupportingFamilies?.length) {
+    const supportFamily = inferImpactSupportingElementFamilyFromLayers(layers);
+    if (supportingElementFamilyMatches(supportFamily, expectedSupportingFamilies)) {
+      score += 1;
+    } else {
       exact = false;
     }
   }
@@ -215,6 +301,19 @@ function evaluateEntry(layers: readonly ResolvedLayer[], entry: ImpactProductCat
     exact,
     score
   };
+}
+
+export function matchImpactProductCatalogEntryById(
+  id: string,
+  layers: readonly ResolvedLayer[]
+): ImpactCatalogMatchResult | null {
+  const entry = OFFICIAL_IMPACT_PRODUCT_CATALOG.find((catalogEntry) => catalogEntry.id === id);
+  if (!entry) {
+    return null;
+  }
+
+  const evaluation = evaluateEntry(layers, entry);
+  return evaluation.exact ? toMatchResult(evaluation) : null;
 }
 
 function toMatchResult(evaluation: CatalogEvaluation): ImpactCatalogMatchResult | null {
@@ -243,7 +342,7 @@ function toMatchResult(evaluation: CatalogEvaluation): ImpactCatalogMatchResult 
     notes: [
       `Official product lane active via ${evaluation.entry.matchMode.replaceAll("_", " ")} match.`,
       roleHint ? `Matched roles: ${roleHint}.` : "Matched through product metadata only.",
-      `Match score ${evaluation.score} with +/- ${THICKNESS_TOLERANCE_MM} mm tolerance on explicit thickness checks.`
+      `Match score ${evaluation.score} with fail-closed role criteria and row-specific tolerance where declared.`
     ],
     score: evaluation.score
   };

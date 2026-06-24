@@ -67,39 +67,21 @@ describe("official product preset breadth", () => {
     }
   });
 
-  it("keeps the added official product-delta presets on the product-delta lane without fabricating CI companions", () => {
+  it("keeps generic Getzner AFM presets off the product-delta lane until exact boundaries are encoded", () => {
     const cases = [
-      {
-        catalogId: "getzner_afm21_catalog_2026",
-        deltaLw: 21,
-        lnW: 57,
-        presetId: "getzner_afm_21_delta" as const
-      },
-      {
-        catalogId: "getzner_afm35_catalog_2026",
-        deltaLw: 35,
-        lnW: 43,
-        presetId: "getzner_afm_35_delta" as const
-      }
-    ];
+      "getzner_afm_21_delta",
+      "getzner_afm_35_delta"
+    ] as const;
 
-    for (const testCase of cases) {
-      const scenario = evaluatePreset(testCase.presetId);
+    for (const presetId of cases) {
+      const scenario = evaluatePreset(presetId);
 
       expect(scenario.result).not.toBeNull();
-      expect(scenario.result?.impactCatalogMatch?.catalog.id).toBe(testCase.catalogId);
-      expect(scenario.result?.impact?.basis).toBe("predictor_catalog_product_delta_official");
-      expect(scenario.result?.impact?.LnW).toBe(testCase.lnW);
-      expect(scenario.result?.impact?.DeltaLw).toBe(testCase.deltaLw);
-      expect(scenario.result?.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "DeltaLw"]);
+      expect(scenario.result?.impactCatalogMatch).toBeNull();
+      expect(scenario.result?.impact?.basis).not.toBe("predictor_catalog_product_delta_official");
+      expect(scenario.result?.supportedTargetOutputs).toContain("Ln,w");
+      expect(scenario.result?.supportedTargetOutputs).toContain("DeltaLw");
       expect(scenario.result?.unsupportedTargetOutputs).toContain("Ln,w+CI");
-      expect(
-        scenario.warnings.some((warning) =>
-          new RegExp(`Official impact product row active: Getzner AFM ${testCase.deltaLw} catalog DeltaLw`, "i").test(
-            warning
-          )
-        )
-      ).toBe(true);
     }
   });
 });
