@@ -79,6 +79,22 @@ should start with a fresh runtime-first rerank against the current
 post-gate state, unless the user explicitly selects a known historical
 owner.
 
+Current selected next after this checkpoint:
+
+`post_v1_runtime_first_route_family_rerank_after_advanced_wall_current_gate_checkpoint_plan`
+
+Selected next file:
+
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-advanced-wall-current-gate-checkpoint-contract.test.ts`
+
+Selected next plan:
+
+`docs/calculator/POST_V1_RUNTIME_FIRST_RERANK_AFTER_ADVANCED_WALL_CURRENT_GATE_CHECKPOINT_PLAN_2026-06-24.md`
+
+Selected next label:
+
+`post-V1 runtime-first route-family rerank after advanced-wall current-gate checkpoint`
+
 ## Validation
 
 Targeted engine validation:

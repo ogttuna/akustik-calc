@@ -1,6 +1,6 @@
 # Calculator Source Of Truth
 
-Last reviewed: 2026-06-23
+Last reviewed: 2026-06-24
 
 ## Documentation Map
 
@@ -44,6 +44,35 @@ runtime/accuracy behavior moved.
 
 Latest checkpoint reconciliation:
 
+`docs/calculator/CHECKPOINT_2026-06-24_ADVANCED_WALL_CURRENT_GATE_HANDOFF.md`
+
+That checkpoint records the current docs/implementation comparison
+after the wall Gate AR direct-curve building lab-companion
+target-output independence owner chain and the advanced-wall
+source-absent field/building lab-companion target-output independence
+coverage refresh were wired into the current gate. It confirms the
+selected coverage refresh is validated as a no-runtime support slice and
+that the next runtime owner should be selected by a fresh current-state
+rerank rather than by stale historical selected-next prose.
+
+Current selected implementation action:
+
+`post_v1_runtime_first_route_family_rerank_after_advanced_wall_current_gate_checkpoint_plan`
+
+Current selected implementation file:
+
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-advanced-wall-current-gate-checkpoint-contract.test.ts`
+
+Current selected implementation plan:
+
+`docs/calculator/POST_V1_RUNTIME_FIRST_RERANK_AFTER_ADVANCED_WALL_CURRENT_GATE_CHECKPOINT_PLAN_2026-06-24.md`
+
+Current selected implementation label:
+
+`post-V1 runtime-first route-family rerank after advanced-wall current-gate checkpoint`
+
+Previous broad checkpoint reconciliation:
+
 `docs/calculator/CHECKPOINT_2026-06-20_FULL_GATE_AND_CAVITY_DEPTH_HANDOFF.md`
 
 That checkpoint records the broad full-gate validation, the live
@@ -73,11 +102,182 @@ Gypsum exact lab field/building adapter owner and coverage refresh, and
 the British Gypsum exact lab A-weighted field/building adapter owner
 and coverage refresh, and the British Gypsum exact lab building
 `DnT,A,k` characteristic adapter owner and coverage refresh, and the
-British Gypsum exact lab calculated lab companion owner have now landed;
-the current selected next is the British Gypsum exact lab calculated
-lab companion coverage refresh.
+British Gypsum exact lab calculated lab companion owner and coverage
+refresh, and the runtime-first rerank after that coverage refresh have
+now landed; the wall user-material formula required input-surface owner
+and coverage refresh, the runtime-first rerank after that coverage
+refresh, and the wall user-material double-leaf building leaf-mass
+boundary owner and coverage refresh, the runtime-first rerank after
+that coverage refresh, and the wall user-material double-leaf building
+lab companion target-output independence owner and coverage refresh
+have now landed. The runtime-first rerank after that coverage refresh,
+the wall Gate AR direct-curve building lab companion target-output
+independence owner, its coverage refresh, the runtime-first rerank
+after that coverage refresh, and the advanced-wall source-absent
+field/building lab-companion target-output independence owner and
+coverage refresh have now landed too. The current selected next is the
+fresh runtime-first rerank after the advanced-wall current-gate
+checkpoint.
 The focused 2026-06-19 double-leaf/framed physical-input sensitivity
 checkpoint remains the owner-chain validation reference.
+
+Latest landed runtime/accuracy owner:
+`post_v1_wall_gate_ar_direct_curve_building_lab_companion_target_output_independence_owner_plan`
+/
+`packages/engine/src/post-v1-wall-gate-ar-direct-curve-building-lab-companion-target-output-independence-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_GATE_AR_DIRECT_CURVE_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_OWNER_PLAN_2026-06-24.md`
+/
+`post_v1_wall_gate_ar_direct_curve_building_lab_companion_target_output_independence_owner_landed_runtime_accuracy_selected_coverage_refresh`.
+It follows
+`post_v1_runtime_first_rerank_after_wall_user_material_double_leaf_building_lab_companion_target_output_independence_coverage_refresh_landed_no_runtime_selected_wall_gate_ar_direct_curve_building_lab_companion_target_output_independence_owner`
+and uses selected candidate
+`wall.gate_ar_direct_curve_building_lab_companion_target_output_independence_owner`.
+Selected owner label:
+`post-V1 wall Gate AR direct-curve building lab-companion target-output independence owner`.
+Complete built-in gypsum/rockwool/gypsum double-leaf/framed building
+requests now keep `Rw 44`, `STC 44`, `C -1.3`, and `Ctr -6.4` from
+the owned direct curve while field/building values stay `R'w 38`,
+`Dn,w 39`, `Dn,A 37.8`, `DnT,w 41`, `DnT,A 39.8`, and
+`DnT,A,k 36.7`. Counters: `runtimeValuesMoved 40`,
+`newCalculableRequestShapes: 3`, `newCalculableTargetOutputs: 3`,
+`runtimeBasisPromotions: 3`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Latest landed no-runtime rerank:
+`post_v1_runtime_first_rerank_after_wall_user_material_double_leaf_building_lab_companion_target_output_independence_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-rerank-after-wall-user-material-double-leaf-building-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_RERANK_AFTER_WALL_USER_MATERIAL_DOUBLE_LEAF_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_COVERAGE_REFRESH_PLAN_2026-06-24.md`
+/
+`post_v1_runtime_first_rerank_after_wall_user_material_double_leaf_building_lab_companion_target_output_independence_coverage_refresh_landed_no_runtime_selected_wall_gate_ar_direct_curve_building_lab_companion_target_output_independence_owner`.
+It selects candidate
+`wall.gate_ar_direct_curve_building_lab_companion_target_output_independence_owner`.
+Counters: `candidateCount: 6`, `roiAnalysisIterations: 4`,
+`estimatedNextRuntimeValuesMoved: 40`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+
+Latest landed no-runtime coverage refresh:
+`post_v1_wall_gate_ar_direct_curve_building_lab_companion_target_output_independence_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-gate-ar-direct-curve-building-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_GATE_AR_DIRECT_CURVE_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_COVERAGE_REFRESH_PLAN_2026-06-24.md`
+/
+`post_v1_wall_gate_ar_direct_curve_building_lab_companion_target_output_independence_coverage_refresh_landed_no_runtime_selected_runtime_first_rerank_after_wall_gate_ar_direct_curve_building_lab_companion_target_output_independence_coverage_refresh`.
+Coverage refresh label:
+`post-V1 wall Gate AR direct-curve building lab-companion target-output independence coverage refresh`.
+It follows
+`post_v1_wall_gate_ar_direct_curve_building_lab_companion_target_output_independence_owner_landed_runtime_accuracy_selected_coverage_refresh`
+and re-probes selected candidate
+`wall.gate_ar_direct_curve_building_lab_companion_target_output_independence_owner`.
+The refresh keeps `Rw 44`, `STC 44`, `C -1.3`, and `Ctr -6.4`
+visible from the owned direct curve while field/building values stay
+`R'w 38`, `Dn,w 39`, `Dn,A 37.8`, `DnT,w 41`, `DnT,A 39.8`, and
+`DnT,A,k 36.7`. Counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Historical selected next now landed:
+`post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_target_output_independence_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-advanced-wall-source-absent-field-building-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_COVERAGE_REFRESH_PLAN_2026-06-18.md`
+/
+`post-V1 wall advanced-wall source-absent field/building lab-companion target-output independence coverage refresh`.
+
+Current selected next:
+`post_v1_runtime_first_route_family_rerank_after_advanced_wall_current_gate_checkpoint_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-advanced-wall-current-gate-checkpoint-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_RERANK_AFTER_ADVANCED_WALL_CURRENT_GATE_CHECKPOINT_PLAN_2026-06-24.md`
+/
+`post-V1 runtime-first route-family rerank after advanced-wall current-gate checkpoint`.
+
+Latest landed no-runtime rerank:
+`post_v1_runtime_first_rerank_after_wall_gate_ar_direct_curve_building_lab_companion_target_output_independence_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-rerank-after-wall-gate-ar-direct-curve-building-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_RERANK_AFTER_WALL_GATE_AR_DIRECT_CURVE_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_COVERAGE_REFRESH_PLAN_2026-06-24.md`
+/
+`post_v1_runtime_first_rerank_after_wall_gate_ar_direct_curve_building_lab_companion_target_output_independence_coverage_refresh_landed_no_runtime_selected_wall_advanced_wall_source_absent_field_building_lab_companion_target_output_independence_owner`.
+It follows
+`post_v1_wall_gate_ar_direct_curve_building_lab_companion_target_output_independence_coverage_refresh_landed_no_runtime_selected_runtime_first_rerank_after_wall_gate_ar_direct_curve_building_lab_companion_target_output_independence_coverage_refresh`
+and selects candidate
+`wall.advanced_wall_source_absent_field_building_lab_companion_target_output_independence_owner`.
+Selected next:
+`post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_target_output_independence_owner_plan`
+/
+`packages/engine/src/post-v1-wall-advanced-wall-source-absent-field-building-lab-companion-target-output-independence-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_OWNER_PLAN_2026-06-18.md`
+/
+`post-V1 wall advanced-wall source-absent field/building lab-companion target-output independence owner`.
+Counters: `candidateCount: 7`, `roiAnalysisIterations: 4`,
+`estimatedNextCalculableRequestShapes: 2`,
+`estimatedNextCalculableTargetOutputs: 8`,
+`estimatedNextRequiredPhysicalInputsCaptured: 0`,
+`estimatedNextRuntimeBasisPromotions: 2`,
+`estimatedNextRuntimeValuesMoved: 8`,
+`estimatedNextUnsupportedBoundariesProtected: 7`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Latest landed runtime owner:
+`post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_target_output_independence_owner_plan`
+/
+`packages/engine/src/post-v1-wall-advanced-wall-source-absent-field-building-lab-companion-target-output-independence-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_ADVANCED_WALL_SOURCE_ABSENT_FIELD_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_OWNER_PLAN_2026-06-18.md`
+/
+`post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_target_output_independence_owner_landed_runtime_selected_coverage_refresh`.
+It follows the Gate AR post-refresh rerank in the active current chain
+and uses selected candidate
+`wall.advanced_wall_source_absent_field_building_lab_companion_target_output_independence_owner`.
+Complete source-absent advanced-wall field/building contexts now
+publish Gate AY lab-only companions `Rw 65`, `STC 65`, `C -1.1`, and
+`Ctr -6.4`; mixed requests keep field `R'w 63`, building `DnT,w 66`,
+and lab companions basis-separated. Counters:
+`newCalculableRequestShapes: 2`, `newCalculableTargetOutputs: 8`,
+`runtimeBasisPromotions: 2`, `runtimeValuesMoved 8`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+
+Previous landed no-runtime coverage refresh:
+`post_v1_wall_user_material_double_leaf_building_lab_companion_target_output_independence_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-user-material-double-leaf-building-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_USER_MATERIAL_DOUBLE_LEAF_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_COVERAGE_REFRESH_PLAN_2026-06-24.md`
+/
+`post_v1_wall_user_material_double_leaf_building_lab_companion_target_output_independence_coverage_refresh_landed_no_runtime_selected_runtime_first_rerank_after_wall_user_material_double_leaf_building_lab_companion_target_output_independence_coverage_refresh`.
+It re-probes selected candidate
+`wall.user_material_double_leaf_building_lab_companion_target_output_independence_owner`,
+keeps `Rw 46`, `STC 46`, `C -1`, `Ctr -6.1`, `R'w 40`, `Dn,w 41`,
+`Dn,A 39.5`, `DnT,w 43`, `DnT,A 41.9`, and `DnT,A,k 39`, and moves
+`runtimeValuesMoved 0`. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Historical selected next at that coverage refresh:
+`post_v1_runtime_first_rerank_after_wall_user_material_double_leaf_building_lab_companion_target_output_independence_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-rerank-after-wall-user-material-double-leaf-building-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_RERANK_AFTER_WALL_USER_MATERIAL_DOUBLE_LEAF_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_COVERAGE_REFRESH_PLAN_2026-06-24.md`
+/
+`post-V1 runtime-first rerank after wall user-material double-leaf building lab-companion target-output independence coverage refresh`.
 
 User-requested material catalog expansion support handoff:
 
@@ -168,8 +368,249 @@ exists and is in the current calculator gate. The British Gypsum exact
 lab building `DnT,A,k` characteristic adapter coverage refresh file
 also exists and is in the current calculator gate. The British Gypsum
 exact lab calculated lab companion owner contract file also exists and
-is in the current calculator gate. The selected British Gypsum exact
-lab calculated lab companion coverage refresh file does not exist yet.
+is in the current calculator gate. The British Gypsum exact lab
+calculated lab companion coverage refresh file also exists and is in
+the current calculator gate. The runtime-first rerank after that
+coverage refresh also exists and is in the current calculator gate. The
+selected wall user-material formula required input-surface owner has
+now landed and is in the current calculator gate. The selected wall
+user-material formula required input-surface coverage refresh has also
+landed and is in the current calculator gate. The runtime-first rerank
+after that coverage refresh, the wall user-material double-leaf
+building leaf-mass boundary owner, its coverage refresh, the
+runtime-first rerank after that coverage refresh, and the wall
+user-material double-leaf building lab companion target-output
+independence owner and coverage refresh, the runtime-first rerank after
+that coverage refresh, and the wall Gate AR direct-curve building lab
+companion target-output independence owner have also landed and are in
+the current calculator gate.
+
+Latest landed no-runtime coverage refresh:
+`post_v1_wall_user_material_formula_required_input_surface_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-user-material-formula-required-input-surface-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_USER_MATERIAL_FORMULA_REQUIRED_INPUT_SURFACE_COVERAGE_REFRESH_PLAN_2026-06-24.md`
+/
+`post_v1_wall_user_material_formula_required_input_surface_coverage_refresh_landed_no_runtime_selected_runtime_first_rerank_after_wall_user_material_formula_required_input_surface_coverage_refresh`.
+It follows
+`post_v1_wall_user_material_formula_required_input_surface_owner_landed_runtime_input_boundary_selected_coverage_refresh`
+and re-probes selected candidate
+`wall.user_material_formula_required_input_surface_owner`.
+Complete source-absent user-material wall formula routes remain
+calculable when the physical inputs are explicit; zero-mass
+user/project leaf requests remain `needs_input` for
+`layer.surfaceMassKgM2_or_materialCatalog.densityKgM3_and_thicknessMm`.
+Counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Latest landed no-runtime rerank:
+`post_v1_runtime_first_route_family_rerank_after_wall_user_material_formula_required_input_surface_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-user-material-formula-required-input-surface-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_RERANK_AFTER_WALL_USER_MATERIAL_FORMULA_REQUIRED_INPUT_SURFACE_COVERAGE_REFRESH_PLAN_2026-06-24.md`
+/
+`post_v1_runtime_first_route_family_rerank_after_wall_user_material_formula_required_input_surface_coverage_refresh_landed_no_runtime_selected_wall_user_material_double_leaf_building_leaf_mass_boundary_owner`.
+It follows
+`post_v1_wall_user_material_formula_required_input_surface_coverage_refresh_landed_no_runtime_selected_runtime_first_rerank_after_wall_user_material_formula_required_input_surface_coverage_refresh`
+and selects candidate
+`wall.user_material_double_leaf_building_leaf_mass_boundary_owner`.
+Selected next label:
+`post-V1 wall user-material double-leaf building leaf-mass boundary owner`.
+
+Latest landed runtime boundary owner:
+`post_v1_wall_user_material_double_leaf_building_leaf_mass_boundary_owner_plan`
+/
+`packages/engine/src/post-v1-wall-user-material-double-leaf-building-leaf-mass-boundary-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_USER_MATERIAL_DOUBLE_LEAF_BUILDING_LEAF_MASS_BOUNDARY_OWNER_PLAN_2026-06-24.md`
+/
+`post_v1_wall_user_material_double_leaf_building_leaf_mass_boundary_owner_landed_runtime_boundary_selected_coverage_refresh`.
+It follows
+`post_v1_runtime_first_route_family_rerank_after_wall_user_material_formula_required_input_surface_coverage_refresh_landed_no_runtime_selected_wall_user_material_double_leaf_building_leaf_mass_boundary_owner`
+and uses selected candidate
+`wall.user_material_double_leaf_building_leaf_mass_boundary_owner`.
+Explicit double-leaf/framed user/project wall `building_prediction`
+requests with missing or zero side-leaf mass now park behind Gate S
+`needs_input` before Gate AR can publish false values. Complete
+positive-mass double-leaf/framed building requests remain calculable.
+Counters: `falseGateARBuildingRequestShapesBlocked: 2`,
+`targetOutputsMovedToNeedsInput: 10`,
+`requiredPhysicalInputsCaptured: 1`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+
+Latest landed no-runtime coverage refresh:
+`post_v1_wall_user_material_double_leaf_building_leaf_mass_boundary_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-user-material-double-leaf-building-leaf-mass-boundary-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_USER_MATERIAL_DOUBLE_LEAF_BUILDING_LEAF_MASS_BOUNDARY_COVERAGE_REFRESH_PLAN_2026-06-24.md`
+/
+`post_v1_wall_user_material_double_leaf_building_leaf_mass_boundary_coverage_refresh_landed_no_runtime_selected_runtime_first_rerank_after_wall_user_material_double_leaf_building_leaf_mass_boundary_coverage_refresh`.
+
+Current selected next:
+`post_v1_wall_user_material_double_leaf_building_lab_companion_target_output_independence_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-user-material-double-leaf-building-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_USER_MATERIAL_DOUBLE_LEAF_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_COVERAGE_REFRESH_PLAN_2026-06-24.md`
+/
+`post-V1 wall user-material double-leaf building lab-companion target-output independence coverage refresh`.
+
+Latest landed no-runtime rerank:
+`post_v1_runtime_first_route_family_rerank_after_wall_user_material_double_leaf_building_leaf_mass_boundary_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-user-material-double-leaf-building-leaf-mass-boundary-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_RERANK_AFTER_WALL_USER_MATERIAL_DOUBLE_LEAF_BUILDING_LEAF_MASS_BOUNDARY_COVERAGE_REFRESH_PLAN_2026-06-24.md`
+/
+`post_v1_runtime_first_route_family_rerank_after_wall_user_material_double_leaf_building_leaf_mass_boundary_coverage_refresh_landed_no_runtime_selected_wall_user_material_double_leaf_building_lab_companion_target_output_independence_owner`.
+It follows
+`post_v1_wall_user_material_double_leaf_building_leaf_mass_boundary_coverage_refresh_landed_no_runtime_selected_runtime_first_rerank_after_wall_user_material_double_leaf_building_leaf_mass_boundary_coverage_refresh`
+and selects candidate
+`wall.user_material_double_leaf_building_lab_companion_target_output_independence_owner`.
+Selected next label:
+`post-V1 wall user-material double-leaf building lab-companion target-output independence owner`.
+Counters: `candidateCount: 7`, `roiAnalysisIterations: 4`,
+`estimatedNextAccuracyPromotedRequestShapes: 10`,
+`estimatedNextTargetOutputIndependentMetricSets: 10`,
+`estimatedNextRuntimeValuesMoved: 40`,
+`estimatedNextCalculableRequestShapes: 0`,
+`estimatedNextCalculableTargetOutputs: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+
+Latest landed runtime/accuracy owner:
+`post_v1_wall_user_material_double_leaf_building_lab_companion_target_output_independence_owner_plan`
+/
+`packages/engine/src/post-v1-wall-user-material-double-leaf-building-lab-companion-target-output-independence-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_USER_MATERIAL_DOUBLE_LEAF_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_OWNER_PLAN_2026-06-24.md`
+/
+`post_v1_wall_user_material_double_leaf_building_lab_companion_target_output_independence_owner_landed_runtime_accuracy_selected_coverage_refresh`.
+It follows
+`post_v1_runtime_first_route_family_rerank_after_wall_user_material_double_leaf_building_leaf_mass_boundary_coverage_refresh_landed_no_runtime_selected_wall_user_material_double_leaf_building_lab_companion_target_output_independence_owner`
+and uses selected candidate
+`wall.user_material_double_leaf_building_lab_companion_target_output_independence_owner`.
+Complete positive-mass user/project double-leaf/framed building
+requests now keep direct-curve lab companions target-output independent:
+`Rw 46`, `STC 46`, `C -1`, and `Ctr -6.1`. Field/building values
+remain `R'w 40`, `Dn,w 41`, `Dn,A 39.5`, `DnT,w 43`, `DnT,A 41.9`,
+and `DnT,A,k 39`; zero/missing side-leaf mass remains Gate S
+`needs_input`, and impact aliases remain unsupported. Counters:
+`accuracyPromotedRequestShapes: 10`,
+`targetOutputIndependentMetricSets: 10`, `runtimeValuesMoved 40`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`requiredPhysicalInputsCaptured: 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+
+Latest landed runtime/input-surface owner:
+`post_v1_wall_user_material_formula_required_input_surface_owner_plan`
+/
+`packages/engine/src/post-v1-wall-user-material-formula-required-input-surface-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_USER_MATERIAL_FORMULA_REQUIRED_INPUT_SURFACE_OWNER_PLAN_2026-06-24.md`
+/
+`post_v1_wall_user_material_formula_required_input_surface_owner_landed_runtime_input_boundary_selected_coverage_refresh`.
+It follows
+`post_v1_runtime_first_route_family_rerank_after_wall_british_gypsum_exact_lab_calculated_lab_companion_coverage_refresh_landed_no_runtime_selected_wall_user_material_formula_required_input_surface_owner`
+and uses selected candidate
+`wall.user_material_formula_required_input_surface_owner`.
+Complete source-absent user-material wall stacks remain calculable
+through owned formula routes when physical inputs are explicit; zero
+surface-mass user/project leaf requests now return `needs_input` for
+`layer.surfaceMassKgM2_or_materialCatalog.densityKgM3_and_thicknessMm`
+instead of publishing fallback wall airborne values. Counters:
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 2`,
+`newCalculableTargetOutputs: 8`, `requiredPhysicalInputsCaptured: 8`,
+`runtimeBasisPromotions: 2`, `runtimeValuesMoved 8`,
+`zeroMassFallbackTargetOutputsParked: 9`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Selected next:
+`post_v1_wall_user_material_formula_required_input_surface_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-user-material-formula-required-input-surface-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_USER_MATERIAL_FORMULA_REQUIRED_INPUT_SURFACE_COVERAGE_REFRESH_PLAN_2026-06-24.md`
+/
+`post-V1 wall user-material formula required input surface coverage refresh`.
+
+Latest landed no-runtime rerank:
+`post_v1_runtime_first_route_family_rerank_after_wall_british_gypsum_exact_lab_calculated_lab_companion_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-british-gypsum-exact-lab-calculated-lab-companion-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_RERANK_AFTER_WALL_BRITISH_GYPSUM_EXACT_LAB_CALCULATED_LAB_COMPANION_COVERAGE_REFRESH_PLAN_2026-06-24.md`
+/
+`post_v1_runtime_first_route_family_rerank_after_wall_british_gypsum_exact_lab_calculated_lab_companion_coverage_refresh_landed_no_runtime_selected_wall_user_material_formula_required_input_surface_owner`.
+It follows
+`post_v1_wall_british_gypsum_exact_lab_calculated_lab_companion_coverage_refresh_landed_no_runtime_selected_runtime_first_rerank_after_british_gypsum_exact_lab_calculated_lab_companion_coverage_refresh`
+and
+`packages/engine/src/post-v1-wall-british-gypsum-exact-lab-calculated-lab-companion-coverage-refresh-contract.test.ts`,
+then selects candidate
+`wall.user_material_formula_required_input_surface_owner`.
+Nearby British Gypsum same-family delta work remains blocked until
+primary-source same-family, same-basis evidence and a bounded delta rule
+exist. Counters: `candidateCount: 6`, `roiAnalysisIterations: 4`,
+`estimatedNextCalculableRequestShapes: 2`,
+`estimatedNextCalculableTargetOutputs: 8`,
+`estimatedNextRequiredPhysicalInputsCaptured: 8`,
+`estimatedNextRuntimeBasisPromotions: 2`,
+`estimatedNextRuntimeValuesMoved: 8`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Selected next:
+`post_v1_wall_user_material_formula_required_input_surface_owner_plan`
+/
+`packages/engine/src/post-v1-wall-user-material-formula-required-input-surface-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_USER_MATERIAL_FORMULA_REQUIRED_INPUT_SURFACE_OWNER_PLAN_2026-06-24.md`
+/
+`post-V1 wall user-material formula required input surface owner`.
+
+Latest landed no-runtime coverage refresh:
+`post_v1_wall_british_gypsum_exact_lab_calculated_lab_companion_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-wall-british-gypsum-exact-lab-calculated-lab-companion-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_WALL_BRITISH_GYPSUM_EXACT_LAB_CALCULATED_LAB_COMPANION_COVERAGE_REFRESH_PLAN_2026-06-23.md`
+/
+`post_v1_wall_british_gypsum_exact_lab_calculated_lab_companion_coverage_refresh_landed_no_runtime_selected_runtime_first_rerank_after_british_gypsum_exact_lab_calculated_lab_companion_coverage_refresh`.
+It follows
+`post_v1_wall_british_gypsum_exact_lab_calculated_lab_companion_owner_landed_runtime_scope_basis_selected_coverage_refresh`
+and re-probes selected candidate
+`wall.british_gypsum_exact_lab_calculated_lab_companion_owner`.
+The refresh keeps `A046005` at `Rw 55`, `STC 55`, `C -0.6`, and
+`Ctr -5.4`, and keeps `A046006` at `Rw 58`, `STC 58`, `C -0.6`, and
+`Ctr -5.4`. Single-output `Rw` remains measured exact; field/building
+aliases, impact aliases, nearby rows, legacy `auto`, and
+lab-to-field/building copying remain closed. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Selected next:
+`post_v1_runtime_first_route_family_rerank_after_wall_british_gypsum_exact_lab_calculated_lab_companion_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-british-gypsum-exact-lab-calculated-lab-companion-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_RERANK_AFTER_WALL_BRITISH_GYPSUM_EXACT_LAB_CALCULATED_LAB_COMPANION_COVERAGE_REFRESH_PLAN_2026-06-24.md`
+/
+`post-V1 runtime-first route-family rerank after wall British Gypsum exact lab calculated lab companion coverage refresh`.
 
 Latest landed runtime/scope-basis owner:
 `post_v1_wall_british_gypsum_exact_lab_calculated_lab_companion_owner_plan`

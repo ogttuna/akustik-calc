@@ -8,11 +8,18 @@ seed rows and direct-calculation coverage so later agents do not treat
 catalog data as measured acoustic results.
 
 Current selected implementation action remains:
-`post_v1_wall_british_gypsum_exact_lab_calculated_lab_companion_coverage_refresh_plan`
+`post_v1_runtime_first_route_family_rerank_after_advanced_wall_current_gate_checkpoint_plan`
 /
-`packages/engine/src/post-v1-wall-british-gypsum-exact-lab-calculated-lab-companion-coverage-refresh-contract.test.ts`
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-advanced-wall-current-gate-checkpoint-contract.test.ts`
 /
-`docs/calculator/POST_V1_WALL_BRITISH_GYPSUM_EXACT_LAB_CALCULATED_LAB_COMPANION_COVERAGE_REFRESH_PLAN_2026-06-23.md`.
+`docs/calculator/POST_V1_RUNTIME_FIRST_RERANK_AFTER_ADVANCED_WALL_CURRENT_GATE_CHECKPOINT_PLAN_2026-06-24.md`.
+
+Follow-up handoff:
+`docs/calculator/EXCEL_IMPACT_PRODUCT_CANDIDATE_RESCREEN_HANDOFF_2026-06-24.md`.
+That later user-requested slice records impact product catalog matcher
+hardening and two Getzner AFM29 exact-system rows. This 2026-06-23
+handoff remains material-seed support only; its `sourceRowsImported: 0`
+counter is intentionally not retroactively changed.
 
 ## Selection Card
 

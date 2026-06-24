@@ -19,15 +19,59 @@ Current source of truth:
 Current operational handoff:
 `docs/calculator/NEXT_AGENT_BRIEF.md`.
 
+Current selected implementation action:
+`post_v1_runtime_first_route_family_rerank_after_advanced_wall_current_gate_checkpoint_plan`.
+
+Current selected implementation file:
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-advanced-wall-current-gate-checkpoint-contract.test.ts`.
+
+Current selected implementation plan:
+`docs/calculator/POST_V1_RUNTIME_FIRST_RERANK_AFTER_ADVANCED_WALL_CURRENT_GATE_CHECKPOINT_PLAN_2026-06-24.md`.
+
+Current checkpoint:
+`docs/calculator/CHECKPOINT_2026-06-24_ADVANCED_WALL_CURRENT_GATE_HANDOFF.md`.
+
+The advanced-wall source-absent field/building lab-companion
+target-output independence owner and coverage refresh are already in
+the current gate. The selected next step is a no-runtime rerank that
+chooses the next high-ROI calculator owner from the current post-gate
+state.
+
+Latest landed no-runtime rerank:
+`post_v1_runtime_first_rerank_after_wall_gate_ar_direct_curve_building_lab_companion_target_output_independence_coverage_refresh_plan`
+in
+`packages/engine/src/post-v1-runtime-first-rerank-after-wall-gate-ar-direct-curve-building-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`.
+It selected
+`wall.advanced_wall_source_absent_field_building_lab_companion_target_output_independence_owner`;
+that owner and its coverage refresh have since landed. The new selected
+next rerank exists to avoid resuming stale historical selected-next
+prose.
+
+Latest landed runtime owner:
+`post_v1_wall_advanced_wall_source_absent_field_building_lab_companion_target_output_independence_owner_plan`
+in
+`packages/engine/src/post-v1-wall-advanced-wall-source-absent-field-building-lab-companion-target-output-independence-owner-contract.test.ts`.
+It publishes Gate AY lab companions `Rw 65`, `STC 65`, `C -1.1`, and
+`Ctr -6.4` for complete source-absent advanced-wall field/building
+contexts while keeping field/building context, incomplete Gate AY input,
+impact metrics, ASTM/IIC/AIIC, OITC, and broad source crawling bounded.
+
 Latest user-requested material catalog support handoff:
 `docs/calculator/PUBLIC_SOURCE_MATERIAL_CATALOG_EXPANSION_HANDOFF_2026-06-23.md`.
 It is catalog-input support, not a replacement for the selected
 calculator slice.
 
-Older selected-next notes in long docs are historical unless the
-documentation map and next-agent brief name them as current.
+Latest user-requested Workbench V2 route-input validation support:
+`docs/calculator/WORKBENCH_V2_ROUTE_INPUT_VALIDATION_AND_NEEDS_INPUT_FIX_PLAN_2026-06-24.md`.
+It is Workbench/API/metadata-boundary support, not a formula retune,
+source-row import, runtime value move, or replacement for the selected
+calculator slice.
 
-## Latest Wall User-Material Formula Field Lab-Companion Basis Integrity Coverage Refresh
+Older selected-next notes in long docs are historical unless the
+documentation map and next-agent brief name them as current. The
+selected rerank file is expected next and is not present yet.
+
+## Historical Wall User-Material Formula Field Lab-Companion Basis Integrity Coverage Refresh
 
 `post_v1_wall_user_material_formula_field_lab_companion_basis_integrity_coverage_refresh_plan`
 landed in
@@ -76,7 +120,7 @@ This is not a broad source crawl. The refresh protects `Rw 46`,
 `STC 46`, `C -1`, `Ctr -6.1`, `R'w 40`, `Dn,w 41`,
 `Dn,A 39.5`, `DnT,w 43`, and `DnT,A 41.9`.
 
-Current selected next:
+Historical selected next at that checkpoint:
 `post_v1_runtime_first_route_family_rerank_after_wall_user_material_formula_field_lab_companion_basis_integrity_plan`
 /
 `packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-user-material-formula-field-lab-companion-basis-integrity-contract.test.ts`
@@ -85,7 +129,7 @@ Current selected next:
 /
 `post-V1 runtime-first route-family rerank after wall user-material formula field lab-companion basis integrity`.
 
-## Latest Wall User-Material Formula Field Lab-Companion Basis Integrity Owner
+## Historical Wall User-Material Formula Field Lab-Companion Basis Integrity Owner
 
 `post_v1_wall_user_material_formula_field_lab_companion_basis_integrity_owner_plan`
 landed in
@@ -122,7 +166,7 @@ Runtime counters: `accuracyPromotedRequestShapes: 2`,
 crawl. The owner publishes `Rw 46`, `STC 46`, `C -1`, `Ctr -6.1`,
 `R'w 40`, `Dn,w 41`, `Dn,A 39.5`, `DnT,w 43`, and `DnT,A 41.9`.
 
-Current selected next:
+Historical selected next at that checkpoint:
 `post_v1_wall_user_material_formula_field_lab_companion_basis_integrity_coverage_refresh_plan`
 /
 `packages/engine/src/post-v1-wall-user-material-formula-field-lab-companion-basis-integrity-coverage-refresh-contract.test.ts`
@@ -131,7 +175,7 @@ Current selected next:
 /
 `post-V1 wall user-material formula field lab-companion basis integrity coverage refresh`.
 
-## Latest Wall User-Material Formula Companion Completeness Coverage Refresh
+## Historical Wall User-Material Formula Companion Completeness Coverage Refresh
 
 `post_v1_wall_user_material_formula_companion_completeness_coverage_refresh_plan`
 landed in
@@ -163,7 +207,7 @@ This is not a broad source crawl. The refresh protects `Rw 46`,
 `STC 46`, `C -1`, `Ctr -6.1`, `R'w 40`, `Dn,w 41`, `Dn,A 39.5`,
 `DnT,w 43`, and `DnT,A 41.9`.
 
-Current selected next:
+Historical selected next at that checkpoint:
 `post_v1_runtime_first_route_family_rerank_after_wall_user_material_formula_companion_completeness_plan`
 /
 `packages/engine/src/post-v1-runtime-first-route-family-rerank-after-wall-user-material-formula-companion-completeness-contract.test.ts`
@@ -172,7 +216,7 @@ Current selected next:
 /
 `post-V1 runtime-first route-family rerank after wall user-material formula companion completeness`.
 
-## Latest Wall User-Material Formula Companion Completeness Owner
+## Historical Wall User-Material Formula Companion Completeness Owner
 
 `post_v1_wall_user_material_formula_companion_completeness_owner_plan`
 landed in
@@ -207,7 +251,7 @@ Runtime counters: `newCalculableLayerTemplates: 0`,
 crawl. The owner publishes `Rw 46`, `STC 46`, `C -1`, `Ctr -6.1`,
 `R'w 40`, `Dn,w 41`, `Dn,A 39.5`, `DnT,w 43`, and `DnT,A 41.9`.
 
-Current selected next:
+Historical selected next at that checkpoint:
 `post_v1_wall_user_material_formula_companion_completeness_coverage_refresh_plan`
 /
 `packages/engine/src/post-v1-wall-user-material-formula-companion-completeness-coverage-refresh-contract.test.ts`
@@ -244,7 +288,7 @@ Counters: `coverageRefreshContractFilesTouched: 1`,
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
 This is not a broad source crawl.
 
-Current selected next:
+Historical selected next at that checkpoint:
 `post_v1_runtime_first_route_family_rerank_after_floor_user_material_low_density_exact_astm_lab_airborne_impact_target_output_independence_plan`
 /
 `packages/engine/src/post-v1-runtime-first-route-family-rerank-after-floor-user-material-low-density-exact-astm-lab-airborne-impact-target-output-independence-contract.test.ts`
@@ -334,7 +378,7 @@ Counters: `coverageRefreshContractFilesTouched: 1`,
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
 This is not a broad source crawl.
 
-Current selected next:
+Historical selected next at that checkpoint:
 `post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_exact_astm_lab_airborne_companion_basis_integrity_plan`
 /
 `packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-low-density-exact-astm-lab-airborne-companion-basis-integrity-contract.test.ts`
@@ -362,7 +406,7 @@ Counters: `runtimeValuesMoved 4`, `runtimeFormulaRetunes: 0`,
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
 This is not a broad source crawl.
 
-Current selected next:
+Historical selected next at that checkpoint:
 `post_v1_floor_user_material_low_density_exact_astm_lab_airborne_companion_basis_integrity_coverage_refresh_plan`
 /
 `packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-lab-airborne-companion-basis-integrity-coverage-refresh-contract.test.ts`
@@ -398,7 +442,7 @@ The rerank ran `candidateCount: 9`, estimated
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
 This is not a broad source crawl.
 
-Current selected next:
+Historical selected next at that checkpoint:
 `post_v1_floor_user_material_low_density_exact_astm_lab_airborne_companion_basis_integrity_owner_plan`
 /
 `packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-lab-airborne-companion-basis-integrity-owner-contract.test.ts`
@@ -439,7 +483,7 @@ and complete building companions `R'w 51`, `Dn,w 51`, `Dn,A 50.2`,
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
 This is not a broad source crawl.
 
-Current selected next:
+Historical selected next at that checkpoint:
 `post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_exact_astm_field_direct_flanking_companion_plan`
 /
 `packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-low-density-exact-astm-field-direct-flanking-companion-contract.test.ts`
@@ -491,7 +535,7 @@ It keeps exact field ASTM `AIIC 50` while calculating `L'n,w 66.1`,
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
 This is not a broad source crawl.
 
-Current selected next:
+Historical selected next at that checkpoint:
 `post_v1_floor_user_material_low_density_exact_astm_field_direct_flanking_companion_coverage_refresh_plan`
 /
 `packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-field-direct-flanking-companion-coverage-refresh-contract.test.ts`
@@ -531,7 +575,7 @@ companions `R'w 51`, `Dn,w 51`, `Dn,A 50.2`, `DnT,w 54`, and
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
 This is not a broad source crawl.
 
-Current selected next:
+Historical selected next at that checkpoint:
 `post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_exact_astm_direct_flanking_companion_plan`
 /
 `packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-low-density-exact-astm-direct-flanking-companion-contract.test.ts`
@@ -583,7 +627,7 @@ companions `L'n,w 62`, `L'nT,w 60`, and `L'nT,50 63`. Counters:
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
 This is not a broad source crawl.
 
-Current selected next:
+Historical selected next at that checkpoint:
 `post_v1_floor_user_material_low_density_exact_astm_direct_flanking_companion_coverage_refresh_plan`
 /
 `packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-direct-flanking-companion-coverage-refresh-contract.test.ts`
@@ -623,7 +667,7 @@ The refresh protects `Rw 53`, `Ln,w 64.3`, `DeltaLw 24.3`,
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
 This is not a broad source crawl.
 
-Current selected next:
+Historical selected next at that checkpoint:
 `post_v1_next_numeric_coverage_gap_after_floor_user_material_low_density_exact_astm_companion_plan`
 /
 `packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-low-density-exact-astm-companion-contract.test.ts`
@@ -669,7 +713,7 @@ stack. Counters: `newCalculableLayerTemplates: 0`,
 `frontendImplementationFilesTouched: 0`. This is not a broad source
 crawl.
 
-Current selected next:
+Historical selected next at that checkpoint:
 `post_v1_floor_user_material_low_density_exact_astm_companion_coverage_refresh_plan`
 /
 `packages/engine/src/post-v1-floor-user-material-low-density-exact-astm-companion-coverage-refresh-contract.test.ts`
@@ -705,7 +749,7 @@ and formula retuning remain outside. Counters:
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
 This is not a broad source crawl.
 
-Current selected next:
+Historical selected next at that checkpoint:
 `post_v1_next_numeric_coverage_gap_after_floor_user_material_visible_floating_astm_exact_band_field_impact_companion_plan`
 /
 `packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-visible-floating-astm-exact-band-field-impact-companion-contract.test.ts`
@@ -740,7 +784,7 @@ and formula retuning remain outside. Counters:
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
 This is not a broad source crawl.
 
-Current selected next:
+Historical selected next at that checkpoint:
 `post_v1_floor_user_material_visible_floating_astm_exact_band_field_impact_companion_coverage_refresh_plan`
 /
 `packages/engine/src/post-v1-floor-user-material-visible-floating-astm-exact-band-field-impact-companion-coverage-refresh-contract.test.ts`
@@ -779,7 +823,7 @@ complete field impact context. Counters: `candidateCount: 10`,
 `frontendImplementationFilesTouched: 0`. This is not a broad source
 crawl.
 
-Current selected next:
+Historical selected next at that checkpoint:
 `post_v1_floor_user_material_visible_floating_astm_exact_band_field_impact_companion_owner_plan`
 /
 `packages/engine/src/post-v1-floor-user-material-visible-floating-astm-exact-band-field-impact-companion-owner-contract.test.ts`
@@ -814,7 +858,7 @@ exact methods, and missing physical inputs remain outside. Counters:
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
 This is not a broad source crawl.
 
-Current selected next:
+Historical selected next at that checkpoint:
 `post_v1_next_numeric_coverage_gap_after_floor_user_material_visible_floating_astm_exact_band_mixed_iso_companion_plan`
 /
 `packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-visible-floating-astm-exact-band-mixed-iso-companion-contract.test.ts`
@@ -848,7 +892,7 @@ missing physical inputs remain outside. Counters:
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
 This is not a broad source crawl.
 
-Current selected next:
+Historical selected next at that checkpoint:
 `post_v1_floor_user_material_visible_floating_astm_exact_band_mixed_iso_companion_coverage_refresh_plan`
 /
 `packages/engine/src/post-v1-floor-user-material-visible-floating-astm-exact-band-mixed-iso-companion-coverage-refresh-contract.test.ts`
@@ -890,7 +934,7 @@ screening. Counters: `candidateCount 9`, `roiAnalysisIterations: 4`,
 `frontendImplementationFilesTouched: 0`. This is not a broad source
 crawl.
 
-Current selected next:
+Historical selected next at that checkpoint:
 `post_v1_floor_user_material_visible_floating_astm_exact_band_mixed_iso_companion_owner_plan`
 /
 `packages/engine/src/post-v1-floor-user-material-visible-floating-astm-exact-band-mixed-iso-companion-owner-contract.test.ts`
@@ -928,7 +972,7 @@ stiffness, default-catalog laminate airborne companions, and generic
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
 This is not a broad source crawl.
 
-Current selected next:
+Historical selected next at that checkpoint:
 `post_v1_next_numeric_coverage_gap_after_floor_user_material_visible_floating_heavy_airborne_companion_plan`
 /
 `packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-visible-floating-heavy-airborne-companion-contract.test.ts`
@@ -1008,7 +1052,7 @@ floating floors already calculate `Ln,w 50.1` and `DeltaLw 24.4` from
 `frontendImplementationFilesTouched: 0`. This is not a broad source
 crawl.
 
-Current selected next:
+Historical selected next at that checkpoint:
 `post_v1_floor_user_material_visible_floating_heavy_airborne_companion_owner_plan`
 /
 `packages/engine/src/post-v1-floor-user-material-visible-floating-heavy-airborne-companion-owner-contract.test.ts`
@@ -1195,7 +1239,7 @@ moving runtime values. Counters: `coverageRefreshContractFilesTouched: 1`,
 `frontendImplementationFilesTouched: 0`. This is not a broad source
 crawl.
 
-Current selected next:
+Historical selected next at that checkpoint:
 `post_v1_next_numeric_coverage_gap_after_floor_user_material_impact_context_field_only_adapter_plan`
 /
 `packages/engine/src/post-v1-next-numeric-coverage-gap-after-floor-user-material-impact-context-field-only-adapter-contract.test.ts`
@@ -1228,7 +1272,7 @@ Counters: `newCalculableLayerTemplates: 0`,
 `frontendImplementationFilesTouched: 0`. This is not a broad source
 crawl.
 
-Current selected next:
+Historical selected next at that checkpoint:
 `post_v1_floor_user_material_impact_context_field_only_adapter_coverage_refresh_plan`
 /
 `packages/engine/src/post-v1-floor-user-material-impact-context-field-only-adapter-coverage-refresh-contract.test.ts`

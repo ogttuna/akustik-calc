@@ -33,50 +33,43 @@ for the closed company-internal V1 acceptance contract and answer-order
 rules.
 
 For current calculator implementation, use only the living authority
-chain under `docs/calculator/`: `CALCULATOR_SOURCE_OF_TRUTH.md`,
-`USABLE_V1_EXECUTION_PLAN.md`, `CURRENT_STATE.md`,
-`NEXT_IMPLEMENTATION_PLAN.md`,
-`POST_V1_CALCULATOR_CAPABILITY_PLAN_2026-05-25.md`,
-`CHECKPOINT_2026-06-08_DOUBLE_LEAF_ROUTE_INPUT_BOUNDARY_CHECKPOINT.md`,
-the landed Gate ES/ET boundary plan
-`POST_V1_GATE_ES_ET_REINFORCED_CONCRETE_VISIBLE_DERIVED_BOUNDARY_PLAN_2026-06-08.md`,
-the landed Gate EU/EV current coverage/accuracy gap ledger plan
-`POST_V1_GATE_EU_EV_CURRENT_COVERAGE_ACCURACY_GAP_LEDGER_PLAN_2026-06-09.md`,
-the landed Gate EV/EW heavy-core lined-massive calibration owner plan
-`POST_V1_GATE_EV_EW_HEAVY_CORE_LINED_MASSIVE_CALIBRATION_OWNER_PLAN_2026-06-09.md`,
-the landed Gate EX/EY heavy-core lined-massive targeted evidence plan
-`POST_V1_GATE_EX_EY_HEAVY_CORE_LINED_MASSIVE_TARGETED_EVIDENCE_PLAN_2026-06-09.md`,
-the landed Gate EY/EZ heavy-core lined-massive targeted evidence
-closeout plan
-`POST_V1_GATE_EY_EZ_HEAVY_CORE_LINED_MASSIVE_TARGETED_EVIDENCE_CLOSEOUT_PLAN_2026-06-09.md`,
-the landed Gate EZ/FA current coverage/accuracy gap ledger plan
-`POST_V1_GATE_EZ_FA_CURRENT_COVERAGE_ACCURACY_GAP_LEDGER_PLAN_2026-06-09.md`,
-the landed Gate FA/FB opening leak common wall residual owner plan
-`POST_V1_GATE_FA_FB_OPENING_LEAK_COMMON_WALL_RESIDUAL_OWNER_PLAN_2026-06-09.md`,
-the landed Gate FB/FC opening leak common wall owner closeout and next
-numeric gap plan
-`POST_V1_GATE_FB_FC_OPENING_LEAK_COMMON_WALL_OWNER_CLOSEOUT_AND_NEXT_NUMERIC_GAP_PLAN_2026-06-09.md`,
-the landed Gate FC/FD floor raw-bare floating holdout plan
-`POST_V1_GATE_FC_FD_FLOOR_RAW_BARE_FLOATING_HOLDOUT_PLAN_2026-06-09.md`,
-the landed Gate FD/FE floor raw-bare floating holdout closeout plan
-`POST_V1_GATE_FD_FE_FLOOR_RAW_BARE_FLOATING_HOLDOUT_CLOSEOUT_PLAN_2026-06-09.md`,
-the landed Gate FE/FF current formula scope accuracy ledger plan
-`POST_V1_GATE_FE_FF_CURRENT_FORMULA_SCOPE_ACCURACY_LEDGER_PLAN_2026-06-09.md`,
-the landed Gate EQ/ER runtime plan
-`POST_V1_GATE_EQ_ER_WALL_DIRECT_FIXED_DOUBLE_LEAF_FIELD_BUILDING_ADAPTER_RUNTIME_PLAN_2026-06-08.md`,
-the landed thick-board family-boundary safety plan
-`POST_V1_THICK_BOARD_AUTO_FAMILY_BOUNDARY_SAFETY_PLAN_2026-06-09.md`,
-`CALCULATION_MODEL_AND_VALIDATION.md`, and `SYSTEM_MAP.md`. Older
-`CHECKPOINT_*`, `SLICE_*`, roadmap, source-ledger, pilot, and
-productization files are historical or secondary context unless the
-source-of-truth chain explicitly reselects them.
+chain under `docs/calculator/`: `DOCUMENTATION_MAP.md`,
+`CALCULATOR_SOURCE_OF_TRUTH.md`, `NEXT_AGENT_BRIEF.md`,
+`CURRENT_STATE.md`, `NEXT_IMPLEMENTATION_PLAN.md`, and the selected
+slice plan named by those files. Older `CHECKPOINT_*`, `SLICE_*`,
+roadmap, source-ledger, pilot, Gate E/F, and productization files are
+historical or secondary context unless the source-of-truth chain
+explicitly reselects them.
 
 ## Current Implementation Snapshot
 
-As of 2026-06-09, usable V1 Steps 0-5 are closed for the current
-company-internal envelope. The post-V1 calculator chain has advanced
-through Gate FF. The current selected next action is the post
-double-leaf/framed coverage revalidation:
+As of 2026-06-24, the current checkpoint is:
+`docs/calculator/CHECKPOINT_2026-06-24_ADVANCED_WALL_CURRENT_GATE_HANDOFF.md`.
+
+The current selected implementation action is:
+`post_v1_runtime_first_route_family_rerank_after_advanced_wall_current_gate_checkpoint_plan`
+in
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-advanced-wall-current-gate-checkpoint-contract.test.ts`.
+
+Selected plan:
+`docs/calculator/POST_V1_RUNTIME_FIRST_RERANK_AFTER_ADVANCED_WALL_CURRENT_GATE_CHECKPOINT_PLAN_2026-06-24.md`.
+
+The advanced-wall source-absent field/building lab-companion
+target-output independence owner and coverage refresh are already wired
+into the current gate and validated. The selected next step is a fresh
+runtime-first rerank to choose the next high-ROI calculator owner.
+Support work landed around this checkpoint includes Workbench V2
+output-selection flow, Workbench V2 route-input validation /
+needs-input presentation, public-source material catalog expansion, and
+Excel impact-product candidate rescreening; none replaces this selected
+calculator rerank.
+
+## Historical Implementation Snapshot - 2026-06-09
+
+As of 2026-06-09, usable V1 Steps 0-5 were closed for the
+company-internal envelope. The post-V1 calculator chain had advanced
+through Gate FF. The selected next action at that checkpoint was the
+post double-leaf/framed coverage revalidation:
 `layer_combination_resolver_post_double_leaf_framed_wall_banded_coverage_revalidation_plan`
 in
 `packages/engine/src/layer-combination-resolver-post-double-leaf-framed-wall-banded-coverage-revalidation-contract.test.ts`.

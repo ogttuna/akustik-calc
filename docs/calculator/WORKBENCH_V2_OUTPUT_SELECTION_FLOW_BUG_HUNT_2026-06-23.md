@@ -174,7 +174,7 @@ Regression coverage:
 - No new calculable layer template was opened.
 - No selected calculator implementation action changed.
 - The current selected next remains
-  `post_v1_wall_british_gypsum_exact_lab_calculated_lab_companion_coverage_refresh_plan`.
+  `post_v1_runtime_first_route_family_rerank_after_advanced_wall_current_gate_checkpoint_plan`.
 
 This support work protects the UI and assistant state boundary so the
 selected output list cannot silently cross the wall/floor mode boundary.
