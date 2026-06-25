@@ -510,7 +510,7 @@ export function MaterialEditorPanel({
             </select>
           </div>
           <div className="material-editor-list" role="listbox">
-            {filteredMaterials.slice(0, 80).map((material) => {
+            {filteredMaterials.map((material) => {
               const usageCount = countMaterialUsage(layers, material.id);
               const builtIn = isBuiltInMaterial(material);
 

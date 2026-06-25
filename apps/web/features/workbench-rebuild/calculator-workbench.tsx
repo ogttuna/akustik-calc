@@ -1045,13 +1045,12 @@ function getFilteredMaterials(
       })
     : materials;
   const selected = getMaterialFromCatalog(selectedId, materialById);
-  const limited = filtered.slice(0, 48);
 
   if (normalized) {
-    return limited;
+    return [...filtered];
   }
 
-  return limited.some((material) => material.id === selected.id) ? limited : [selected, ...limited];
+  return filtered.some((material) => material.id === selected.id) ? [...filtered] : [selected, ...filtered];
 }
 
 function parsePositiveNumber(value: string): number | null {
