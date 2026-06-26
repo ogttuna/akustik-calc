@@ -5,6 +5,6 @@ export const LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORR
   "candidate_layer_combination_resolver_single_leaf_mass_law_banded_source_absent_family_solver";
 
 export const LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_WARNING =
-  "Layer-combination resolver single-leaf mass-law banded runtime corridor is active for complete element-lab direct-airborne wall/floor stacks. Values are source-absent formula predictions with not-measured budgets; exact rights-safe rows still win first.";
+  "Layer-combination resolver single-leaf mass-law banded runtime corridor is active for complete element-lab direct-airborne wall/floor/ceiling stacks. Values are source-absent formula predictions with not-measured budgets; exact rights-safe rows still win first.";
 
 export const LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_ERROR_BUDGET_DB = 6;

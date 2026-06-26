@@ -26,6 +26,7 @@ export const REQUESTED_OUTPUT_LABELS: Record<RequestedOutputId, string> = {
   "L'nT,50": "L'nT,50",
   "LnT,A": "LnT,A",
   "NISR": "NISR",
+  "OITC": "OITC",
   "Rw": "Rw",
   "R'w": "R'w",
   "STC": "STC"
@@ -55,6 +56,7 @@ export const REQUESTED_OUTPUT_DESCRIPTIONS: Record<RequestedOutputId, string> = 
   "L'nT,50": "Standardized field-side weighted impact rating with the 50..2500 Hz companion term.",
   "LnT,A": "Dutch NEN 5077 A-weighted normalized impact sound pressure level from exact 125..2000 Hz field octave bands.",
   "NISR": "ASTM normalized impact sound rating from field-side impact bands.",
+  "OITC": "ASTM E1332 outdoor-indoor transmission class for facade, window, and door assemblies.",
   "Rw": "ISO 717 weighted airborne sound reduction index.",
   "R'w": "ISO 717 apparent on-site weighted sound reduction index derived from the final field curve.",
   "STC": "ASTM E413 single-number airborne rating."
@@ -84,6 +86,7 @@ export const REQUESTED_OUTPUT_SUPPORT_NOTES: Record<RequestedOutputId, string> =
   "L'nT,50": "Live when CI,50-2500 is present together with standardized field normalization or the Turkish simple guide.",
   "LnT,A": "Live only on the narrow Dutch exact-band lane when an exact field source is imported on the 125..2000 Hz octave grid.",
   "NISR": "Requested and tracked, but intentionally unsupported until an ASTM field-impact adapter is implemented.",
+  "OITC": "Requested and tracked for outdoor-indoor facade/opening routes, but intentionally unsupported until an owned OITC spectral adapter is implemented.",
   "Rw": "Live from the calibrated airborne curve and curated floor-family companions.",
   "R'w": "Live when the airborne lane is explicitly in field/building mode and the visible curve is being treated as apparent performance.",
   "STC": "Live from the calibrated airborne curve."
@@ -93,7 +96,7 @@ export const LIVE_OUTPUTS = new Set<RequestedOutputId>(["Rw", "R'w", "STC", "C",
 export const SCOPED_OUTPUTS = new Set<RequestedOutputId>(["Ln,w", "DeltaLw", "LnT,A", "IIC", "AIIC"]);
 export const GUIDE_OUTPUTS = new Set<RequestedOutputId>(["CI", "CI,50-2500", "Ln,w+CI", "L'n,w", "L'nT,w", "L'nT,50"]);
 export const UPSTREAM_ONLY_OUTPUTS = new Set<RequestedOutputId>([]);
-export const RESEARCH_OUTPUTS = new Set<RequestedOutputId>(["NISR", "ISR", "LIIC", "LIR", "HIIC"]);
+export const RESEARCH_OUTPUTS = new Set<RequestedOutputId>(["NISR", "ISR", "LIIC", "LIR", "HIIC", "OITC"]);
 
 export const STUDY_CONTEXT_LABELS: Record<StudyContext, string> = {
   concept: "Concept",

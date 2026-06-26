@@ -306,10 +306,10 @@ const NULL_RUNTIME_VALUES = {
 
 const FORMULA_TERMS = [
   {
-    description: "Admit only true single-visible-leaf direct-airborne wall or floor stacks.",
+    description: "Admit only true single-visible-leaf direct-airborne wall, floor, or ceiling stacks.",
     owner: "singleLeafVisibleTopologyOwner",
     requiredInputs: [
-      "route=wall_or_floor",
+      "route=wall_floor_or_ceiling",
       "visibleLeafCount=1",
       "cavityCount=0",
       "supportLayerCount=0",

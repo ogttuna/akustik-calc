@@ -4,6 +4,7 @@ export const RequestedOutputSchema = z.enum([
   "Rw",
   "R'w",
   "STC",
+  "OITC",
   "C",
   "Ctr",
   "DnT,w",

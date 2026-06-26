@@ -218,20 +218,20 @@ describe("layer combination resolver candidate coverage matrix refresh contract"
       sourceRowsAreEvidenceNotProduct: true
     });
     expect(contract.summary).toEqual({
-      activeRuntimeCandidateCount: 47,
+      activeRuntimeCandidateCount: 50,
       allCandidateDeclarationsCovered: true,
       boundaryCandidateCount: 3,
-      candidateDeclarationCount: 50,
-      coverageMatrixRowCount: 50,
+      candidateDeclarationCount: 53,
+      coverageMatrixRowCount: 53,
       readinessBucketCount: {
         needs_input: 1,
         ready: 4,
-        ready_with_budget: 43,
+        ready_with_budget: 46,
         research_only: 0,
         unsupported: 2
       },
       selectedNextAction: LAYER_COMBINATION_RESOLVER_CANDIDATE_COVERAGE_MATRIX_REFRESH_SELECTED_NEXT_ACTION,
-      surfaceRowCount: 50
+      surfaceRowCount: 53
     });
 
     for (const path of REQUIRED_SURFACES) {
@@ -279,6 +279,7 @@ describe("layer combination resolver candidate coverage matrix refresh contract"
           BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_SELECTED_CANDIDATE_ID,
           "candidate_post_v1_wall_multileaf_generalized_source_absent_family_solver",
           LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID,
+          "ceiling.single_leaf_airborne_mass_law.source_absent",
           LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID,
           GATE_H_LINED_MASSIVE_WALL_SELECTED_CANDIDATE_ID,
           COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_SELECTED_CANDIDATE_ID,
@@ -305,6 +306,8 @@ describe("layer combination resolver candidate coverage matrix refresh contract"
       {
         candidateIds: [
           BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
+          "ceiling.single_leaf_airborne_field_context_adapter",
+          "ceiling.single_leaf_airborne_building_prediction_adapter",
           FLAT_LIST_MULTILEAF_GUARD_FIELD_SELECTED_CANDIDATE_ID,
           "floor.impact_field_context.field_building_adapter",
           "candidate_company_internal_opening_leak_building_family_physics_prediction",

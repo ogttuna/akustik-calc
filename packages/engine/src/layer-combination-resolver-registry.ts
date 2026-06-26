@@ -169,7 +169,7 @@ export const LAYER_COMBINATION_RESOLVER_REGISTRY_SELECTED_NEXT_FILE =
 export const LAYER_COMBINATION_RESOLVER_REGISTRY_SELECTED_NEXT_LABEL =
   "layer combination resolver runtime candidate adapter";
 
-export type LayerCombinationResolverRoute = "floor" | "wall";
+export type LayerCombinationResolverRoute = "ceiling" | "floor" | "wall";
 
 export type LayerCombinationResolverBasis =
   | "astm_rating_boundary"
@@ -1277,6 +1277,201 @@ const CANDIDATE_DECLARATIONS = [
       { metric: "Rw", value: 31 },
       { metric: "STC", value: 31 }
     ]
+  },
+  {
+    basis: "element_lab",
+    errorBudgetTerms: [
+      {
+        metric: "Rw",
+        notMeasuredEvidence: true,
+        toleranceDb: LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_ERROR_BUDGET_DB
+      },
+      {
+        metric: "STC",
+        notMeasuredEvidence: true,
+        toleranceDb: LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_ERROR_BUDGET_DB
+      }
+    ],
+    exactPrecedenceRules: [
+      "same_ceiling_panel_exact_lab_row_wins_before_source_absent_mass_law_formula",
+      "ceiling_route_must_not_borrow_floor_impact_or_wall_field_values"
+    ],
+    formulaTerms: [
+      "ceiling_only_floor_role_detection",
+      "surface_mass_input_normalization",
+      "one_third_octave_mass_law_transmission_loss_curve",
+      "iso_717_1_airborne_rating_adapter",
+      "source_absent_design_budget"
+    ],
+    hardCompatibilityGates: [
+      "ceiling_route",
+      "ceiling_board_only_airborne_element_lab_request",
+      "single_visible_leaf",
+      "zero_framed_support_layers",
+      "element_lab_metric_basis",
+      "not_floor_impact_not_field_not_building_not_astm_rating_not_oitc"
+    ],
+    hostileInputCases: [
+      "ceiling_impact_outputs_do_not_inherit_airborne_panel_values",
+      "ceiling_field_or_building_context_requires_future_room_or_plenum_owner",
+      "mixed_floor_and_ceiling_role_stack_remains_floor_or_needs_input",
+      "OITC_stays_outside_indoor_ceiling_airborne_route"
+    ],
+    id: "ceiling.single_leaf_airborne_mass_law.source_absent",
+    kind: "source_absent_family_solver",
+    label: "Ceiling single-leaf airborne mass-law source-absent solver",
+    ownedRuntimeBasisId: LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_FORMULA_CORRIDOR_BASIS,
+    priorityRank: 3,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      "route=ceiling",
+      "ceilingOnlyLayerRoles",
+      "visibleLeafCount",
+      "densityKgM3",
+      "surfaceMassKgM2",
+      "thicknessMm",
+      "oneThirdOctaveTransmissionLossCurve",
+      "iso717AirborneRatingAdapter"
+    ],
+    route: "ceiling",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "wall_or_floor_single_leaf_mass_law_backbone_can_share_formula_math_but_not_route_identity",
+      "future ceiling exact rows or plenum adapters must declare their own basis before outranking this panel route"
+    ],
+    supportedMetrics: ["Rw", "C", "Ctr", "STC"],
+    surfaceRequirements: ELEMENT_LAB_SURFACES,
+    valuePins: []
+  },
+  {
+    basis: "field_apparent",
+    errorBudgetTerms: [
+      { metric: "R'w", notMeasuredEvidence: true, toleranceDb: 6 },
+      { metric: "Dn,w", notMeasuredEvidence: true, toleranceDb: 6 },
+      { metric: "Dn,A", notMeasuredEvidence: true, toleranceDb: 6 },
+      { metric: "DnT,w", notMeasuredEvidence: true, toleranceDb: 6 },
+      { metric: "DnT,A", notMeasuredEvidence: true, toleranceDb: 6 }
+    ],
+    exactPrecedenceRules: [
+      "same_stack_ceiling_field_rows_win_before_source_absent_field_adapter",
+      "ceiling_lab_curve_values_do_not_become_field_values_without explicit field context",
+      "field companions remain route=ceiling and do not fall back to floor impact ownership"
+    ],
+    formulaTerms: [
+      "ceiling_single_leaf_direct_transmission_loss_curve",
+      "field_between_rooms_context",
+      "receiving_room_rt60_normalization",
+      "receiving_room_volume_normalization",
+      "conservative_field_flanking_overlay"
+    ],
+    hardCompatibilityGates: [
+      "ceiling_route",
+      "ceiling_only_layer_roles",
+      "field_between_rooms_context",
+      "complete_panel_area_or_width_height",
+      "complete_receiving_room_volume_and_rt60",
+      "owned_ceiling_single_leaf_direct_curve",
+      "not_floor_impact_not_oitc_not_astm_rating"
+    ],
+    hostileInputCases: [
+      "missing_field_context_needs_input_or_unsupported",
+      "floor_impact_outputs_stay_floor_needs_input",
+      "building_prediction_context_uses_separate_ceiling_building_adapter",
+      "OITC_stays_outside_indoor_ceiling_airborne_route"
+    ],
+    id: "ceiling.single_leaf_airborne_field_context_adapter",
+    kind: "field_building_adapter",
+    label: "Ceiling single-leaf airborne field-context adapter",
+    ownedRuntimeBasisId: LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_FORMULA_CORRIDOR_BASIS,
+    priorityRank: 4,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      "route=ceiling",
+      "ceilingOnlyLayerRoles",
+      "airborneContext.contextMode=field_between_rooms",
+      "airborneContext.panelWidthHeight",
+      "airborneContext.receivingRoomVolumeM3",
+      "airborneContext.receivingRoomRt60S",
+      "ownedCeilingDirectLabCurve"
+    ],
+    route: "ceiling",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "field_values_stay_tied_to_owned_ceiling_direct_curve_and_explicit_room_context",
+      "nearby_wall_or_floor_lab_rows_may_not anchor ceiling field outputs",
+      "future ceiling field measurements may outrank this source-absent adapter only on same route and basis"
+    ],
+    supportedMetrics: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A"],
+    surfaceRequirements: FIELD_SURFACES,
+    valuePins: []
+  },
+  {
+    basis: "building_prediction",
+    errorBudgetTerms: [
+      { metric: "R'w", notMeasuredEvidence: true, toleranceDb: 9 },
+      { metric: "Dn,w", notMeasuredEvidence: true, toleranceDb: 9 },
+      { metric: "Dn,A", notMeasuredEvidence: true, toleranceDb: 9 },
+      { metric: "DnT,w", notMeasuredEvidence: true, toleranceDb: 9 },
+      { metric: "DnT,A", notMeasuredEvidence: true, toleranceDb: 9 },
+      { metric: "DnT,A,k", notMeasuredEvidence: true, toleranceDb: 9 }
+    ],
+    exactPrecedenceRules: [
+      "same_stack_ceiling_building_rows_win_before_source_absent_building_prediction",
+      "ceiling_lab_exact_rows_do_not_become_building values",
+      "lab companions remain separate from building candidate pins"
+    ],
+    formulaTerms: [
+      "ceiling_single_leaf_direct_transmission_loss_curve",
+      "explicit_flanking_path_energy_overlay",
+      "explicit_junction_coupling_length_and_class",
+      "source_and_receiving_room_volume_normalization",
+      "receiving_room_rt60_standardization",
+      "iso_12354_1_building_prediction_runtime_budget"
+    ],
+    hardCompatibilityGates: [
+      "ceiling_route",
+      "ceiling_only_layer_roles",
+      "building_prediction_context",
+      "complete_flanking_junction_context",
+      "complete_room_standardization_context",
+      "owned_ceiling_direct_lab_curve",
+      "not_floor_impact_not_oitc_not_astm_rating"
+    ],
+    hostileInputCases: [
+      "missing_room_or_flanking_terms_needs_input",
+      "lab_outputs_requested_with_building_context_do_not_relabel_building_pins",
+      "field_context_cannot_use_building_prediction_ceiling_basis",
+      "OITC_stays_outside_ceiling_building_adapter"
+    ],
+    id: "ceiling.single_leaf_airborne_building_prediction_adapter",
+    kind: "field_building_adapter",
+    label: "Ceiling single-leaf airborne building-prediction adapter",
+    ownedRuntimeBasisId: GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD,
+    priorityRank: 4,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      "route=ceiling",
+      "ceilingOnlyLayerRoles",
+      "airborneContext.contextMode=building_prediction",
+      "airborneContext.panelWidthHeight",
+      "airborneContext.sourceRoomVolumeM3",
+      "airborneContext.receivingRoomVolumeM3",
+      "airborneContext.receivingRoomRt60S",
+      "airborneContext.flankingJunctionClass",
+      "airborneContext.conservativeFlankingAssumption",
+      "airborneContext.junctionCouplingLengthM",
+      "ownedCeilingDirectLabCurve"
+    ],
+    route: "ceiling",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "building_values_stay_tied_to_owned_ceiling_direct_curve_and_explicit_building_context",
+      "nearby_lab rows may not anchor ceiling building outputs without same-basis room and flanking terms",
+      "future ceiling building measurements may outrank this source-absent adapter only on same route and basis"
+    ],
+    supportedMetrics: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "DnT,A,k"],
+    surfaceRequirements: FIELD_SURFACES,
+    valuePins: []
   },
   {
     basis: "element_lab",
@@ -3085,7 +3280,7 @@ export function buildLayerCombinationResolverRegistryContract(): LayerCombinatio
       ),
       routeCount: countBy(
         CANDIDATE_DECLARATIONS.map((candidate) => candidate.route),
-        ["floor", "wall"]
+        ["ceiling", "floor", "wall"]
       ),
       selectedNextAction: LAYER_COMBINATION_RESOLVER_REGISTRY_SELECTED_NEXT_ACTION
     }

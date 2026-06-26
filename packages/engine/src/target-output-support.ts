@@ -195,6 +195,8 @@ function isTargetOutputAvailable(
       return isFiniteNumber(getCarrierRwPrime(input));
     case "STC":
       return isFiniteNumber(input.metrics?.estimatedStc);
+    case "OITC":
+      return false;
     case "C":
       return isFiniteNumber(getCarrierC(input));
     case "Ctr":

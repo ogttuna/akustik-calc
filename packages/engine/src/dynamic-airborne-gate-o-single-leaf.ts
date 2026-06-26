@@ -221,7 +221,7 @@ export function maybeBuildGateOSingleLeafMassivePanelBasis(input: {
     propertyDefaults: buildPropertyDefaults(input.layers),
     ratingStandard: "ISO 717-1",
     requiredInputs: [
-      "route=wall_or_floor",
+      "route=wall_floor_or_ceiling",
       "visibleLeafCount=1",
       "cavityCount=0",
       "supportLayerCount=0",

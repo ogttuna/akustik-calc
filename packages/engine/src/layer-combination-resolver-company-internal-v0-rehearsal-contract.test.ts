@@ -128,16 +128,16 @@ describe("layer combination resolver company-internal V0 rehearsal contract", ()
     });
     expect(contract.summary).toEqual({
       allowedExactRowCount: 4,
-      allowedWithBudgetRowCount: 43,
+      allowedWithBudgetRowCount: 46,
       blockedActionCount: 4,
       blockedRowCount: 2,
-      coverageMatrixRowCount: 50,
-      companyInternalV0AllowedRowCount: 47,
+      coverageMatrixRowCount: 53,
+      companyInternalV0AllowedRowCount: 50,
       needsUserInputRowCount: 1,
       readinessBucketCount: {
         needs_input: 1,
         ready: 4,
-        ready_with_budget: 43,
+        ready_with_budget: 46,
         research_only: 0,
         unsupported: 2
       },
@@ -175,6 +175,9 @@ describe("layer combination resolver company-internal V0 rehearsal contract", ()
       [BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
       ["candidate_post_v1_wall_multileaf_generalized_source_absent_family_solver", "allowed_with_budget"],
       [LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
+      ["ceiling.single_leaf_airborne_mass_law.source_absent", "allowed_with_budget"],
+      ["ceiling.single_leaf_airborne_field_context_adapter", "allowed_with_budget"],
+      ["ceiling.single_leaf_airborne_building_prediction_adapter", "allowed_with_budget"],
       [LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
       [GATE_H_LINED_MASSIVE_WALL_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
       [COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_SELECTED_CANDIDATE_ID, "allowed_with_budget"],

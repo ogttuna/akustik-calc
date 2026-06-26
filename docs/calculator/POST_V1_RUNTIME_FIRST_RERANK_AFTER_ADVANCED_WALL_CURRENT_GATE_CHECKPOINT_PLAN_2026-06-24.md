@@ -1,16 +1,31 @@
 # Post-V1 Runtime-First Rerank After Advanced-Wall Current-Gate Checkpoint Plan - 2026-06-24
 
 Status:
-`post_v1_runtime_first_route_family_rerank_after_advanced_wall_current_gate_checkpoint_plan_selected_docs_sync`
+`post_v1_runtime_first_route_family_rerank_after_advanced_wall_current_gate_checkpoint_landed_no_runtime_selected_opening_facade_door_window_frequency_input_boundary_owner`
 
-Selected next action:
+Rerank action:
 `post_v1_runtime_first_route_family_rerank_after_advanced_wall_current_gate_checkpoint_plan`
 
-Selected next file:
+Rerank file:
 `packages/engine/src/post-v1-runtime-first-route-family-rerank-after-advanced-wall-current-gate-checkpoint-contract.test.ts`
 
-Selected next label:
+Rerank label:
 `post-V1 runtime-first route-family rerank after advanced-wall current-gate checkpoint`
+
+Selected candidate:
+`opening.facade_door_window_frequency_input_boundary_owner`
+
+Selected next action:
+`post_v1_opening_facade_door_window_frequency_input_boundary_owner_plan`
+
+Selected next file:
+`packages/engine/src/post-v1-opening-facade-door-window-frequency-input-boundary-owner-contract.test.ts`
+
+Selected next plan:
+`docs/calculator/POST_V1_OPENING_FACADE_DOOR_WINDOW_FREQUENCY_INPUT_BOUNDARY_OWNER_PLAN_2026-06-25.md`
+
+Selected next label:
+`post-V1 opening/facade door/window frequency-input boundary owner`
 
 ## Purpose
 
@@ -23,10 +38,20 @@ field/building lab-companion target-output independence coverage
 refresh as a no-runtime support slice. The refresh is now a protected
 landed behavior in the current gate, not the next implementation task.
 
-The next useful calculator step is a fresh runtime-first rerank against
-the current post-gate state. The rerank must select a high-ROI runtime
-owner, accuracy owner, required-input boundary owner, or explicitly
-record why no safe runtime behavior can move yet.
+The fresh runtime-first rerank against the current post-gate state has
+landed. It selected the opening/facade door/window frequency-input
+boundary owner. This is a required-input and unsupported-boundary owner,
+not a runtime value movement or formula retune.
+
+Landing counters: `candidateCount: 8`, `roiAnalysisIterations: 4`,
+`estimatedNextRequiredPhysicalInputsCaptured: 6`,
+`estimatedNextUnsupportedBoundariesProtected: 8`,
+`estimatedNextCalculableRequestShapes: 0`,
+`estimatedNextCalculableTargetOutputs: 0`,
+`estimatedNextRuntimeBasisPromotions: 0`,
+`estimatedNextRuntimeValuesMoved: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
 
 ## Selection Card
 

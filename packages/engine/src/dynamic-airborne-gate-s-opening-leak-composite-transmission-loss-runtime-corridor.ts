@@ -2,9 +2,12 @@ import {
   AirborneResultBasisSchema,
   type AirborneContext,
   type AirborneResultBasis,
-  type RequestedOutputId
+  type AirborneOpeningLeakElement,
+  type RequestedOutputId,
+  type TransmissionLossCurve
 } from "@dynecho/shared";
 
+import { buildRatingsFromCurve } from "./curve-rating";
 import {
   buildGateROpeningLeakCompositeFormulaAssessment,
   GATE_R_OPENING_LEAK_COMPOSITE_FORMULA_BASIS,
@@ -33,6 +36,9 @@ export const GATE_S_OPENING_LEAK_COMPOSITE_SELECTED_NEXT_FILE =
 export const GATE_S_OPENING_LEAK_COMPOSITE_RUNTIME_METHOD =
   "gate_s_opening_leak_composite_area_energy_runtime_corridor";
 
+export const POST_V1_OPENING_FACADE_DOOR_WINDOW_SPECTRAL_OPENING_CURVE_RUNTIME_METHOD =
+  "post_v1_opening_facade_door_window_spectral_opening_curve_runtime_owner";
+
 export const GATE_S_OPENING_LEAK_COMPOSITE_SUPPORT_LABEL =
   "Opening/leak composite runtime corridor";
 
@@ -50,6 +56,7 @@ export type GateSOpeningLeakCompositeRuntimeStatus =
 
 export type GateSOpeningLeakCompositeRuntimeInput = {
   airborneContext?: AirborneContext | null;
+  hostCurve?: TransmissionLossCurve | null;
   hostWallRatingBasis: GateROpeningLeakCompositeHostWallRatingBasis;
   hostWallRwDb: number;
   targetOutputs: readonly RequestedOutputId[];
@@ -59,6 +66,7 @@ export type GateSOpeningLeakCompositeRuntimeResult = {
   assessment: GateROpeningLeakCompositeAssessment;
   basis: AirborneResultBasis | null;
   blockedOutputs: readonly RequestedOutputId[];
+  compositeCurve: TransmissionLossCurve | null;
   runtimeRwDb: number | null;
   status: GateSOpeningLeakCompositeRuntimeStatus;
   supportLabel: typeof GATE_S_OPENING_LEAK_COMPOSITE_SUPPORT_LABEL;
@@ -134,6 +142,10 @@ function uniqueStrings(outputs: readonly string[]): string[] {
   return [...new Set(outputs)];
 }
 
+function roundOne(value: number): number {
+  return Math.round(value * 10) / 10;
+}
+
 function routeRequested(airborneContext: AirborneContext | null | undefined): boolean {
   return typeof airborneContext?.hostWallAreaM2 === "number" ||
     (airborneContext?.openingLeakElements?.length ?? 0) > 0;
@@ -181,6 +193,119 @@ function runtimeStatus(status: GateROpeningLeakCompositeCorridorStatus): GateSOp
   }
 }
 
+function positive(value: number | undefined): value is number {
+  return typeof value === "number" && Number.isFinite(value) && value > 0;
+}
+
+function positiveInteger(value: number | undefined): value is number {
+  return typeof value === "number" && Number.isInteger(value) && value > 0;
+}
+
+function transmissionCoefficient(db: number): number {
+  return 10 ** (-db / 10);
+}
+
+function usableCurve(curve: TransmissionLossCurve | null | undefined): curve is TransmissionLossCurve {
+  return Boolean(
+    curve &&
+      curve.frequenciesHz.length > 0 &&
+      curve.frequenciesHz.length === curve.transmissionLossDb.length &&
+      curve.frequenciesHz.every((frequency) => Number.isFinite(frequency) && frequency > 0) &&
+      curve.transmissionLossDb.every((value) => Number.isFinite(value))
+  );
+}
+
+function sameFrequencies(
+  left: TransmissionLossCurve,
+  right: TransmissionLossCurve
+): boolean {
+  return left.frequenciesHz.length === right.frequenciesHz.length &&
+    left.frequenciesHz.every((frequency, index) => frequency === right.frequenciesHz[index]);
+}
+
+function leakagePenaltyDb(
+  opening: AirborneOpeningLeakElement
+): number | null {
+  switch (opening.sealLeakageClass) {
+    case "sealed":
+      return 0;
+    case "average":
+      return 2;
+    case "leaky":
+      return 6;
+    case "open_gap":
+      return 12;
+    case "unknown":
+    case undefined:
+      return null;
+  }
+}
+
+function buildSpectralCompositeCurve(input: {
+  airborneContext?: AirborneContext | null;
+  hostCurve?: TransmissionLossCurve | null;
+}): TransmissionLossCurve | null {
+  const hostCurve = input.hostCurve;
+  const context = input.airborneContext;
+  const openings = context?.openingLeakElements ?? [];
+
+  if (!usableCurve(hostCurve) || !positive(context?.hostWallAreaM2) || openings.length === 0) {
+    return null;
+  }
+
+  const hostWallAreaM2 = context.hostWallAreaM2;
+  const openingContributions: Array<{
+    readonly areaM2: number;
+    readonly count: number;
+    readonly curve: TransmissionLossCurve;
+    readonly leakagePenaltyDb: number;
+  }> = [];
+  let effectiveOpeningAreaM2 = 0;
+
+  for (const opening of openings) {
+    const penaltyDb = leakagePenaltyDb(opening);
+
+    if (
+      !positive(opening.areaM2) ||
+      !positiveInteger(opening.count) ||
+      !usableCurve(opening.elementTransmissionLossCurve) ||
+      !sameFrequencies(hostCurve, opening.elementTransmissionLossCurve) ||
+      penaltyDb === null
+    ) {
+      return null;
+    }
+
+    effectiveOpeningAreaM2 += opening.areaM2 * opening.count;
+    openingContributions.push({
+      areaM2: opening.areaM2,
+      count: opening.count,
+      curve: opening.elementTransmissionLossCurve,
+      leakagePenaltyDb: penaltyDb
+    });
+  }
+
+  if (!(effectiveOpeningAreaM2 > 0) || effectiveOpeningAreaM2 > hostWallAreaM2) {
+    return null;
+  }
+
+  const hostNetWallAreaM2 = hostWallAreaM2 - effectiveOpeningAreaM2;
+  const transmissionLossDb = hostCurve.frequenciesHz.map((_, frequencyIndex) => {
+    const hostTauArea = hostNetWallAreaM2 * transmissionCoefficient(hostCurve.transmissionLossDb[frequencyIndex]);
+    const openingTauArea = openingContributions.reduce((total, opening) => {
+      const bandTlDb = opening.curve.transmissionLossDb[frequencyIndex] - opening.leakagePenaltyDb;
+      return total + (opening.areaM2 * opening.count * transmissionCoefficient(bandTlDb));
+    }, 0);
+    const totalTau = (hostTauArea + openingTauArea) / hostWallAreaM2;
+
+    return roundOne(-10 * Math.log10(totalTau));
+  });
+
+  return {
+    frequenciesHz: [...hostCurve.frequenciesHz],
+    transmissionLossDb
+  };
+}
+
 function scenarioIdForRuntime(
   airborneContext: AirborneContext | null | undefined
 ): GateROpeningLeakCompositeScenarioId {
@@ -193,6 +318,7 @@ function scenarioIdForRuntime(
 
 function buildRuntimeBasis(input: {
   assessment: GateROpeningLeakCompositeAssessment;
+  compositeCurve?: TransmissionLossCurve | null;
 }): AirborneResultBasis | null {
   const assessment = input.assessment;
 
@@ -201,6 +327,39 @@ function buildRuntimeBasis(input: {
   }
 
   if (assessment.status === "formula_corridor_defined_runtime_gate_required") {
+    if (input.compositeCurve) {
+      return AirborneResultBasisSchema.parse({
+        assumptions: [
+          "Composite lab Rw/STC/C/Ctr are rated from the area-energy opening transmission-loss curve calculated band-by-band.",
+          "Opening element frequency curves are formula inputs only; they do not replace the selected host-wall candidate.",
+          "Field, building, outdoor-indoor facade, OITC, scalar STC alias, and impact outputs remain unsupported until separately owned adapters exist."
+        ],
+        calculationStandard: "ISO 12354-1",
+        curveBasis: "calculated_frequency_curve",
+        errorBudgetDb: GATE_R_OPENING_LEAK_COMPOSITE_TOLERANCE_DB,
+        kind: "airborne_physics_prediction",
+        measurementStandard: "none",
+        method: POST_V1_OPENING_FACADE_DOOR_WINDOW_SPECTRAL_OPENING_CURVE_RUNTIME_METHOD,
+        missingPhysicalInputs: [],
+        missingSourceEvidence: [
+          "source-owned same-stack opening/facade door/window frequency-curve holdout rows"
+        ],
+        origin: "family_physics_prediction",
+        ratingStandard: "ISO 717-1",
+        requiredInputs: [
+          "hostWallTransmissionLossCurve",
+          "hostWallAreaM2",
+          "openingAreaM2",
+          "openingCount",
+          "openingElementTransmissionLossCurve",
+          "openingRatingBasis",
+          "openingSealLeakageClass",
+          "openingOrigin"
+        ],
+        toleranceClass: "uncalibrated_prediction"
+      });
+    }
+
     return AirborneResultBasisSchema.parse({
       assumptions: [
         "Composite lab Rw is calculated by summing host-wall and opening transmission coefficients by area before converting back to dB.",
@@ -317,16 +476,31 @@ export function maybeBuildGateSOpeningLeakCompositeRuntimeCorridor(
     targetOutputs: formulaTargetOutputs
   });
   const status = runtimeStatus(assessment.status);
+  const compositeCurve =
+    status === "runtime_corridor_promoted"
+      ? buildSpectralCompositeCurve({
+          airborneContext: input.airborneContext,
+          hostCurve: input.hostCurve
+        })
+      : null;
+  const compositeRatings = compositeCurve
+    ? buildRatingsFromCurve(compositeCurve.frequenciesHz, compositeCurve.transmissionLossDb, {
+        contextMode: "element_lab"
+      })
+    : null;
   const runtimeRwDb =
-    status === "runtime_corridor_promoted" ? assessment.designCorridorEstimateDb : null;
+    status === "runtime_corridor_promoted"
+      ? compositeRatings?.iso717.Rw ?? assessment.designCorridorEstimateDb
+      : null;
 
   return {
     assessment,
-    basis: buildRuntimeBasis({ assessment }),
+    basis: buildRuntimeBasis({ assessment, compositeCurve }),
     blockedOutputs: blockedOutputsForStatus({
       assessment,
       targetOutputs: input.targetOutputs
     }),
+    compositeCurve,
     runtimeRwDb,
     status,
     supportLabel: GATE_S_OPENING_LEAK_COMPOSITE_SUPPORT_LABEL,

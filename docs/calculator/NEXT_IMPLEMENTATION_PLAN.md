@@ -95,16 +95,733 @@ immediately below, cross-checked with the documentation map and
 next-agent brief.
 
 Current selected implementation action:
-`post_v1_runtime_first_route_family_rerank_after_advanced_wall_current_gate_checkpoint_plan`.
+`post_v1_ceiling_single_leaf_field_building_context_adapter_coverage_refresh_plan`.
 
 Current selected implementation file:
-`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-advanced-wall-current-gate-checkpoint-contract.test.ts`.
+`packages/engine/src/post-v1-ceiling-single-leaf-field-building-context-adapter-coverage-refresh-contract.test.ts`.
 
 Current selected implementation plan:
-`docs/calculator/POST_V1_RUNTIME_FIRST_RERANK_AFTER_ADVANCED_WALL_CURRENT_GATE_CHECKPOINT_PLAN_2026-06-24.md`.
+`docs/calculator/POST_V1_CEILING_SINGLE_LEAF_FIELD_BUILDING_CONTEXT_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-26.md`.
 
 Current selected implementation label:
-`post-V1 runtime-first route-family rerank after advanced-wall current-gate checkpoint`.
+`post-V1 ceiling single-leaf field/building context adapter coverage refresh`.
+
+Latest landed no-runtime rerank:
+`post_v1_runtime_first_route_family_rerank_after_ceiling_single_leaf_airborne_route_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-ceiling-single-leaf-airborne-route-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_CEILING_SINGLE_LEAF_AIRBORNE_ROUTE_COVERAGE_REFRESH_PLAN_2026-06-26.md`
+/
+`post_v1_runtime_first_route_family_rerank_after_ceiling_single_leaf_airborne_route_coverage_refresh_landed_no_runtime_selected_ceiling_single_leaf_field_building_context_adapter_owner`.
+It follows
+`post_v1_ceiling_single_leaf_airborne_route_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank_after_ceiling_single_leaf_airborne_route_coverage_refresh`
+and selects candidate
+`ceiling.single_leaf_field_building_context_adapter_owner`.
+Counters: `candidateCount: 8`, `roiAnalysisIterations: 4`,
+`estimatedNextCalculableRequestShapes: 2`,
+`estimatedNextCalculableTargetOutputs: 6`,
+`estimatedNextRequiredPhysicalInputsCaptured: 3`,
+`estimatedNextRuntimeBasisPromotions: 2`,
+`estimatedNextRuntimeValuesMoved: 11`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Latest landed runtime owner:
+`post_v1_ceiling_single_leaf_field_building_context_adapter_owner_plan`
+/
+`packages/engine/src/post-v1-ceiling-single-leaf-field-building-context-adapter-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_CEILING_SINGLE_LEAF_FIELD_BUILDING_CONTEXT_ADAPTER_OWNER_PLAN_2026-06-26.md`
+/
+`post_v1_ceiling_single_leaf_field_building_context_adapter_owner_landed_runtime_basis_selected_coverage_refresh`.
+Owner label:
+`post-V1 ceiling single-leaf field/building context adapter owner`.
+It uses selected candidate
+`ceiling.single_leaf_field_building_context_adapter_owner` and runtime
+resolver candidates `ceiling.single_leaf_airborne_field_context_adapter`
+and `ceiling.single_leaf_airborne_building_prediction_adapter`.
+Complete ceiling-only field requests now publish `R'w 33`, `Dn,w 33`,
+`Dn,A 36.5`, `DnT,w 36`, and `DnT,A 38.9` on route `ceiling`.
+Complete ceiling-only building requests now publish `R'w 33`,
+`Dn,w 33`, `Dn,A 36.5`, `DnT,w 36`, `DnT,A 38.9`, and `DnT,A,k 36`
+on route `ceiling`; lab companions remain separate. Missing context,
+impact, ASTM, and OITC boundaries remain blocked. Counters:
+`newCalculableRequestShapes: 2`, `newCalculableTargetOutputs: 6`,
+`requiredPhysicalInputsCaptured: 3`, `runtimeBasisPromotions: 2`,
+`runtimeValuesMoved 11`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, `frontendImplementationFilesTouched: 0`, and
+`unsupportedBoundariesProtected: 6`. This is not a broad source crawl.
+Selected next:
+`post_v1_ceiling_single_leaf_field_building_context_adapter_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-ceiling-single-leaf-field-building-context-adapter-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_CEILING_SINGLE_LEAF_FIELD_BUILDING_CONTEXT_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-26.md`.
+
+Latest landed no-runtime rerank:
+`post_v1_runtime_first_route_family_rerank_after_floor_user_material_impact_lower_treatment_depth_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-floor-user-material-impact-lower-treatment-depth-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_FLOOR_USER_MATERIAL_IMPACT_LOWER_TREATMENT_DEPTH_COVERAGE_REFRESH_PLAN_2026-06-26.md`
+/
+`post_v1_runtime_first_route_family_rerank_after_floor_user_material_impact_lower_treatment_depth_coverage_refresh_landed_no_runtime_selected_ceiling_single_leaf_airborne_route_owner`.
+It selects candidate `ceiling.single_leaf_airborne_route_owner`.
+Counters: `candidateCount: 7`, `roiAnalysisIterations: 4`,
+`estimatedNextCalculableRequestShapes: 1`,
+`estimatedNextCalculableTargetOutputs: 4`,
+`estimatedNextRequiredPhysicalInputsCaptured: 1`,
+`estimatedNextRuntimeBasisPromotions: 1`,
+`estimatedNextRuntimeValuesMoved: 4`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl.
+
+Latest landed runtime owner:
+`post_v1_ceiling_single_leaf_airborne_route_owner_plan`
+/
+`packages/engine/src/post-v1-ceiling-single-leaf-airborne-route-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_CEILING_SINGLE_LEAF_AIRBORNE_ROUTE_OWNER_PLAN_2026-06-26.md`
+/
+`post_v1_ceiling_single_leaf_airborne_route_owner_landed_runtime_basis_selected_coverage_refresh`.
+It uses selected candidate
+`ceiling.single_leaf_airborne_mass_law.source_absent`. Standalone
+ceiling-only gypsum-board single-leaf requests now calculate `Rw 34`,
+`STC 34`, `C 3.7`, and `Ctr 8` on route `ceiling`; impact requests
+remain floor `needs_input`, and OITC/ASTM/field/building ceiling
+metrics remain blocked. Counters: `newCalculableLayerTemplates: 1`,
+`newCalculableRequestShapes: 1`, `newCalculableTargetOutputs: 4`,
+`requiredPhysicalInputsCaptured: 1`, `runtimeBasisPromotions: 1`,
+`runtimeValuesMoved 4`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, `frontendImplementationFilesTouched: 0`, and
+`unsupportedBoundariesProtected: 5`. This is not a broad source crawl.
+Selected next:
+`post_v1_ceiling_single_leaf_airborne_route_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-ceiling-single-leaf-airborne-route-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_CEILING_SINGLE_LEAF_AIRBORNE_ROUTE_COVERAGE_REFRESH_PLAN_2026-06-26.md`.
+
+Latest landed no-runtime coverage refresh:
+`post_v1_ceiling_single_leaf_airborne_route_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-ceiling-single-leaf-airborne-route-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_CEILING_SINGLE_LEAF_AIRBORNE_ROUTE_COVERAGE_REFRESH_PLAN_2026-06-26.md`
+/
+`post_v1_ceiling_single_leaf_airborne_route_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank_after_ceiling_single_leaf_airborne_route_coverage_refresh`.
+It re-probes selected candidate
+`ceiling.single_leaf_airborne_mass_law.source_absent` and keeps
+standalone ceiling-only gypsum-board single-leaf requests pinned on
+route `ceiling` with `Rw 34`, `STC 34`, `C 3.7`, and `Ctr 8`.
+Ceiling-only implicit floor-impact family estimates remain suppressed;
+impact requests remain floor `needs_input`, and OITC/ASTM/field-building
+ceiling metrics remain outside. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`,
+`requiredPhysicalInputsCaptured: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+Selected next:
+`post_v1_runtime_first_route_family_rerank_after_ceiling_single_leaf_airborne_route_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-ceiling-single-leaf-airborne-route-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_CEILING_SINGLE_LEAF_AIRBORNE_ROUTE_COVERAGE_REFRESH_PLAN_2026-06-26.md`
+/
+`post-V1 runtime-first route-family rerank after ceiling single-leaf airborne route coverage refresh`.
+
+Latest landed runtime owner:
+`post_v1_floor_user_material_impact_lower_treatment_depth_owner_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-impact-lower-treatment-depth-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_FLOOR_USER_MATERIAL_IMPACT_LOWER_TREATMENT_DEPTH_OWNER_PLAN_2026-06-26.md`
+/
+`post_v1_floor_user_material_impact_lower_treatment_depth_owner_landed_runtime_selected_coverage_refresh`.
+It follows
+`post_v1_runtime_first_route_family_rerank_after_opening_facade_outdoor_indoor_oitc_metric_schema_and_adapter_bridge_coverage_refresh_landed_no_runtime_selected_floor_user_material_impact_lower_treatment_depth_owner`
+and uses selected candidate
+`floor.user_material_impact_lower_treatment_depth_owner`. Complete
+custom user-material reinforced-concrete upper/lower floor impact
+stacks now calculate `Ln,w 43.6` and `DeltaLw 30.9` on
+`predictor_heavy_combined_upper_lower_floor_iso12354_annexc_estimate`;
+field-only `L'n,w` / `L'nT,w` requests use that same hidden combined
+lab anchor and publish `L'n,w 45.6` and `L'nT,w 43.2`. Missing field
+context, missing dynamic stiffness, and missing lower support/cavity
+remain `needs_input`; `IIC`/`AIIC`, OITC, airborne aliases, and source
+row proximity substitution remain blocked. Counters:
+`newCalculableLayerTemplates: 1`,
+`newCalculableRequestShapes: 3`,
+`newCalculableTargetOutputs: 4`,
+`requiredPhysicalInputsCaptured: 2`,
+`runtimeBasisPromotions: 3`, `runtimeValuesMoved 8`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`,
+`frontendImplementationFilesTouched: 0`, and
+`unsupportedBoundariesProtected: 7`. This is not a broad source crawl.
+Selected next:
+`post_v1_floor_user_material_impact_lower_treatment_depth_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-impact-lower-treatment-depth-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_FLOOR_USER_MATERIAL_IMPACT_LOWER_TREATMENT_DEPTH_COVERAGE_REFRESH_PLAN_2026-06-26.md`.
+
+Latest landed no-runtime coverage refresh:
+`post_v1_floor_user_material_impact_lower_treatment_depth_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-impact-lower-treatment-depth-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_FLOOR_USER_MATERIAL_IMPACT_LOWER_TREATMENT_DEPTH_COVERAGE_REFRESH_PLAN_2026-06-26.md`
+/
+`post_v1_floor_user_material_impact_lower_treatment_depth_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank_after_floor_user_material_impact_lower_treatment_depth_coverage_refresh`.
+It follows
+`post_v1_floor_user_material_impact_lower_treatment_depth_owner_landed_runtime_selected_coverage_refresh`
+and re-probes selected candidate
+`floor.user_material_impact_lower_treatment_depth_owner`. It keeps
+custom user-material reinforced-concrete upper/lower floor impact
+requests pinned at `Ln,w 43.6`, `DeltaLw 30.9`, `L'n,w 45.6`, and
+`L'nT,w 43.2`, with missing field context, missing dynamic stiffness,
+missing lower support/cavity, `IIC`/`AIIC`, OITC, airborne aliases, and
+source-row proximity substitution still blocked. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `requiredPhysicalInputsCaptured: 0`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl. Selected next:
+`post_v1_runtime_first_route_family_rerank_after_floor_user_material_impact_lower_treatment_depth_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-floor-user-material-impact-lower-treatment-depth-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_FLOOR_USER_MATERIAL_IMPACT_LOWER_TREATMENT_DEPTH_COVERAGE_REFRESH_PLAN_2026-06-26.md`.
+
+Latest landed no-runtime rerank:
+`post_v1_runtime_first_route_family_rerank_after_opening_facade_outdoor_indoor_oitc_metric_schema_and_adapter_bridge_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-opening-facade-outdoor-indoor-oitc-metric-schema-and-adapter-bridge-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_OPENING_FACADE_OUTDOOR_INDOOR_OITC_METRIC_SCHEMA_AND_ADAPTER_BRIDGE_COVERAGE_REFRESH_PLAN_2026-06-26.md`
+/
+`post_v1_runtime_first_route_family_rerank_after_opening_facade_outdoor_indoor_oitc_metric_schema_and_adapter_bridge_coverage_refresh_landed_no_runtime_selected_floor_user_material_impact_lower_treatment_depth_owner`.
+It follows
+`post_v1_opening_facade_outdoor_indoor_oitc_metric_schema_and_adapter_bridge_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank_after_opening_facade_outdoor_indoor_oitc_metric_schema_and_adapter_bridge_coverage_refresh`,
+rejects direct OITC runtime because no owned outdoor-indoor spectral
+rating adapter exists yet, and selects candidate
+`floor.user_material_impact_lower_treatment_depth_owner`. Selected
+next:
+`post_v1_floor_user_material_impact_lower_treatment_depth_owner_plan`
+/
+`packages/engine/src/post-v1-floor-user-material-impact-lower-treatment-depth-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_FLOOR_USER_MATERIAL_IMPACT_LOWER_TREATMENT_DEPTH_OWNER_PLAN_2026-06-26.md`.
+Counters: `candidateCount: 9`, `roiAnalysisIterations: 4`,
+`estimatedNextCalculableRequestShapes: 3`,
+`estimatedNextCalculableTargetOutputs: 4`,
+`estimatedNextRequiredPhysicalInputsCaptured: 2`,
+`estimatedNextRuntimeBasisPromotions: 3`,
+`estimatedNextRuntimeValuesMoved: 8`,
+`estimatedNextUnsupportedBoundariesProtected: 7`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This has no support-only loop.
+
+Latest landed no-runtime coverage refresh:
+`post_v1_opening_facade_outdoor_indoor_oitc_metric_schema_and_adapter_bridge_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-opening-facade-outdoor-indoor-oitc-metric-schema-and-adapter-bridge-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_OPENING_FACADE_OUTDOOR_INDOOR_OITC_METRIC_SCHEMA_AND_ADAPTER_BRIDGE_COVERAGE_REFRESH_PLAN_2026-06-26.md`
+/
+`post_v1_opening_facade_outdoor_indoor_oitc_metric_schema_and_adapter_bridge_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank_after_opening_facade_outdoor_indoor_oitc_metric_schema_and_adapter_bridge_coverage_refresh`.
+It re-probes selected candidate
+`opening.facade_outdoor_indoor_oitc_metric_schema_and_adapter_bridge_owner`,
+keeps `OITC` requestable, keeps complete outdoor-indoor facade OITC
+requests `unsupported`, and keeps missing facade/opening context as
+`needs_input`. Counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`newRequestedTargetOutputs: 1`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. Selected next:
+`post_v1_runtime_first_route_family_rerank_after_opening_facade_outdoor_indoor_oitc_metric_schema_and_adapter_bridge_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-opening-facade-outdoor-indoor-oitc-metric-schema-and-adapter-bridge-coverage-refresh-contract.test.ts`.
+
+Latest landed input-surface owner:
+`post_v1_opening_facade_outdoor_indoor_oitc_metric_schema_and_adapter_bridge_owner_plan`
+/
+`packages/engine/src/post-v1-opening-facade-outdoor-indoor-oitc-metric-schema-and-adapter-bridge-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_OPENING_FACADE_OUTDOOR_INDOOR_OITC_METRIC_SCHEMA_AND_ADAPTER_BRIDGE_OWNER_PLAN_2026-06-26.md`
+/
+`post_v1_opening_facade_outdoor_indoor_oitc_metric_schema_and_adapter_bridge_owner_landed_input_surface_selected_coverage_refresh`.
+`OITC` is now a valid requested output and routes through the
+opening/facade boundary, but complete outdoor-indoor facade requests
+remain `unsupported` until a separate spectral OITC adapter owns the
+formula. Missing facade/opening context remains `needs_input`; `STC`,
+`Rw`, `NISR`/`ISR`, indoor `DnT,w`, and source report rows are not
+aliases. Counters: `newRequestedTargetOutputs: 1`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`requiredPhysicalInputsCaptured: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, `frontendImplementationFilesTouched: 0`, and
+`unsupportedBoundariesProtected: 6`. Post-gate web compile compatibility
+maps `OITC` labels/support text and value readers to the same explicit
+`null` / unsupported surface; it does not open a calculated frontend
+value. Selected next:
+`post_v1_opening_facade_outdoor_indoor_oitc_metric_schema_and_adapter_bridge_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-opening-facade-outdoor-indoor-oitc-metric-schema-and-adapter-bridge-coverage-refresh-contract.test.ts`.
+
+Latest landed no-runtime rerank:
+`post_v1_runtime_first_route_family_rerank_after_opening_facade_door_window_spectral_field_building_adapter_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-opening-facade-door-window-spectral-field-building-adapter-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_OPENING_FACADE_DOOR_WINDOW_SPECTRAL_FIELD_BUILDING_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-26.md`
+/
+`post_v1_runtime_first_route_family_rerank_after_opening_facade_door_window_spectral_field_building_adapter_coverage_refresh_landed_no_runtime_selected_opening_facade_outdoor_indoor_oitc_metric_schema_and_adapter_bridge_owner`.
+It follows
+`post_v1_opening_facade_door_window_spectral_field_building_adapter_coverage_refresh_plan`,
+selects candidate
+`opening.facade_outdoor_indoor_oitc_metric_schema_and_adapter_bridge_owner`,
+records `estimatedNextTargetOutputSurfacePromotions: 1`, keeps
+`runtimeValuesMoved 0`, and has no support-only loop.
+
+Latest landed no-runtime coverage refresh:
+`post_v1_opening_facade_door_window_spectral_field_building_adapter_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-opening-facade-door-window-spectral-field-building-adapter-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_OPENING_FACADE_DOOR_WINDOW_SPECTRAL_FIELD_BUILDING_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-25.md`.
+It re-probes the spectral field/building adapter and keeps
+`runtimeValuesMoved 0` before the OITC bridge rerank.
+
+Latest landed no-runtime rerank:
+`post_v1_runtime_first_route_family_rerank_after_opening_facade_door_window_spectral_opening_curve_runtime_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-opening-facade-door-window-spectral-opening-curve-runtime-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_OPENING_FACADE_DOOR_WINDOW_SPECTRAL_OPENING_CURVE_RUNTIME_COVERAGE_REFRESH_PLAN_2026-06-25.md`
+/
+`post_v1_runtime_first_route_family_rerank_after_opening_facade_door_window_spectral_opening_curve_runtime_coverage_refresh_landed_no_runtime_selected_opening_facade_door_window_spectral_field_building_adapter_owner`.
+It follows
+`post_v1_opening_facade_door_window_spectral_opening_curve_runtime_coverage_refresh_plan`
+and selected candidate
+`opening.facade_door_window_spectral_field_building_adapter_owner`
+because it opens more real field/building outputs than the smaller
+C/Ctr-only spectral lab hygiene item. Counters: `candidateCount: 8`,
+`roiAnalysisIterations: 4`, `estimatedNextCalculableRequestShapes: 2`,
+`estimatedNextCalculableTargetOutputs: 6`,
+`estimatedNextRequiredPhysicalInputsCaptured: 0`,
+`estimatedNextRuntimeBasisPromotions: 2`,
+`estimatedNextRuntimeValuesMoved: 11`,
+`estimatedNextUnsupportedBoundariesProtected: 5`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This has no support-only loop and is not a broad source crawl.
+
+Latest landed runtime owner:
+`post_v1_opening_facade_door_window_spectral_field_building_adapter_owner_plan`
+/
+`packages/engine/src/post-v1-opening-facade-door-window-spectral-field-building-adapter-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_OPENING_FACADE_DOOR_WINDOW_SPECTRAL_FIELD_BUILDING_ADAPTER_OWNER_PLAN_2026-06-25.md`
+/
+`post_v1_opening_facade_door_window_spectral_field_building_adapter_owner_landed_runtime_selected_coverage_refresh`.
+Complete curve-only indoor partition field requests now calculate
+`R'w 44.2`, `Dn,w 44.5`, `Dn,A 43.7`, `DnT,w 44.7`, and `DnT,A 43.9`;
+building requests calculate `R'w 39.4`, `Dn,w 39.7`, `Dn,A 38.9`,
+`DnT,w 39.9`, `DnT,A 39.1`, and `DnT,A,k 38.2` through
+`openingElementTransmissionLossCurve` plus explicit flanking and
+room-normalization context. Missing building context remains
+`needs_input`; outdoor-indoor/OITC, impact aliases, scalar STC
+shortcuts, and direct lab-curve copying remain unsupported. Counters:
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 2`,
+`newCalculableTargetOutputs: 6`, `requiredPhysicalInputsCaptured: 0`,
+`runtimeBasisPromotions: 2`, `runtimeValuesMoved 11`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`,
+`frontendImplementationFilesTouched: 0`, and
+`unsupportedBoundariesProtected: 5`. Selected next:
+`post_v1_opening_facade_door_window_spectral_field_building_adapter_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-opening-facade-door-window-spectral-field-building-adapter-coverage-refresh-contract.test.ts`.
+
+Latest landed no-runtime coverage refresh:
+`post_v1_opening_facade_door_window_spectral_opening_curve_runtime_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-opening-facade-door-window-spectral-opening-curve-runtime-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_OPENING_FACADE_DOOR_WINDOW_SPECTRAL_OPENING_CURVE_RUNTIME_COVERAGE_REFRESH_PLAN_2026-06-25.md`
+/
+`post_v1_opening_facade_door_window_spectral_opening_curve_runtime_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank_after_opening_facade_door_window_spectral_opening_curve_runtime_coverage_refresh`.
+It re-probes selected candidate
+`opening.facade_door_window_spectral_opening_curve_runtime_owner`.
+Complete element-lab door/window/facade requests keep
+`openingElementTransmissionLossCurve` pinned at `Rw 46`, `STC 46`,
+`C -1.3`, and `Ctr -5.9`; scalar requests remain on `Rw 38.2`,
+`STC 39`, `C -1.6`, and `Ctr -6.3`. Curve-only field/building outputs
+remain unsupported until a spectral field/building adapter owns
+apparent and standardized outputs. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `requiredPhysicalInputsCaptured: 0`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl. Selected next:
+`post_v1_runtime_first_route_family_rerank_after_opening_facade_door_window_spectral_opening_curve_runtime_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-opening-facade-door-window-spectral-opening-curve-runtime-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_OPENING_FACADE_DOOR_WINDOW_SPECTRAL_OPENING_CURVE_RUNTIME_COVERAGE_REFRESH_PLAN_2026-06-25.md`.
+
+Latest landed runtime owner:
+`post_v1_opening_facade_door_window_spectral_opening_curve_runtime_owner_plan`
+/
+`packages/engine/src/post-v1-opening-facade-door-window-spectral-opening-curve-runtime-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_OPENING_FACADE_DOOR_WINDOW_SPECTRAL_OPENING_CURVE_RUNTIME_OWNER_PLAN_2026-06-25.md`
+/
+`post_v1_opening_facade_door_window_spectral_opening_curve_runtime_owner_landed_runtime_selected_coverage_refresh`.
+It follows
+`post_v1_runtime_first_route_family_rerank_after_opening_facade_door_window_acoustic_rating_input_boundary_coverage_refresh_landed_no_runtime_selected_opening_facade_door_window_spectral_opening_curve_runtime_owner`.
+Complete element-lab door/window/facade requests can now provide
+`openingElementTransmissionLossCurve`; the opening transmission-loss
+curve runtime returns `Rw 46`, `STC 46`, `C -1.3`, and `Ctr -5.9`.
+Curve-only field/building outputs remain unsupported until a spectral
+field/building adapter owns them. Counters:
+`newCalculableRequestShapes: 3`, `newCalculableTargetOutputs: 4`,
+`requiredPhysicalInputsCaptured: 1`, `runtimeBasisPromotions: 3`,
+`runtimeValuesMoved 12`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+Selected next:
+`post_v1_opening_facade_door_window_spectral_opening_curve_runtime_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-opening-facade-door-window-spectral-opening-curve-runtime-coverage-refresh-contract.test.ts`.
+
+Latest landed no-runtime rerank:
+`post_v1_runtime_first_route_family_rerank_after_opening_facade_door_window_acoustic_rating_input_boundary_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-opening-facade-door-window-acoustic-rating-input-boundary-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_OPENING_FACADE_DOOR_WINDOW_ACOUSTIC_RATING_INPUT_BOUNDARY_COVERAGE_REFRESH_PLAN_2026-06-25.md`
+/
+`post_v1_runtime_first_route_family_rerank_after_opening_facade_door_window_acoustic_rating_input_boundary_coverage_refresh_landed_no_runtime_selected_opening_facade_door_window_spectral_opening_curve_runtime_owner`.
+It selects an explicit opening transmission-loss curve runtime, records
+`estimatedNextRuntimeValuesMoved: 12`, and has no support-only loop.
+
+Latest landed no-runtime coverage refresh:
+`post_v1_opening_facade_door_window_acoustic_rating_input_boundary_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-opening-facade-door-window-acoustic-rating-input-boundary-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_OPENING_FACADE_DOOR_WINDOW_ACOUSTIC_RATING_INPUT_BOUNDARY_COVERAGE_REFRESH_PLAN_2026-06-25.md`
+/
+`post_v1_opening_facade_door_window_acoustic_rating_input_boundary_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank_after_opening_facade_door_window_acoustic_rating_input_boundary_coverage_refresh`.
+
+
+Latest landed input-boundary owner:
+`post_v1_opening_facade_door_window_acoustic_rating_input_boundary_owner_plan`
+/
+`packages/engine/src/post-v1-opening-facade-door-window-acoustic-rating-input-boundary-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_OPENING_FACADE_DOOR_WINDOW_ACOUSTIC_RATING_INPUT_BOUNDARY_OWNER_PLAN_2026-06-25.md`
+/
+`post_v1_opening_facade_door_window_acoustic_rating_input_boundary_owner_landed_input_boundary_selected_coverage_refresh`.
+It follows
+`post_v1_runtime_first_route_family_rerank_after_opening_facade_door_window_c_ctr_lab_companion_target_output_independence_coverage_refresh_landed_no_runtime_selected_opening_facade_door_window_acoustic_rating_input_boundary_owner`
+and uses selected candidate
+`opening.facade_door_window_acoustic_rating_input_boundary_owner`.
+Complete opening inputs remain unchanged: mixed lab requests keep
+`Rw 38.2`, `STC 39`, `C -1.6`, and `Ctr -6.3`; complete building
+requests keep `R'w 31.6`, `Dn,w 31.9`, `Dn,A 31.1`, `DnT,w 32.1`,
+`DnT,A 31.3`, and `DnT,A,k 30.4`. Otherwise complete door/window/facade
+requests that omit `openingElementRwDb` now return precise `needs_input`
+for `openingElementRwDb` instead of host-wall value substitution,
+generic door/window label shortcuts, or opening leakage adapter parking.
+Missing frequency/rating basis and impact aliases remain owned by their
+older boundaries. Counters: `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`newNeedsInputRequestShapes: 3`, `requiredPhysicalInputsCaptured: 1`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`,
+`frontendImplementationFilesTouched: 0`, and
+`unsupportedBoundariesProtected: 6`. This is not a broad source crawl.
+Selected next:
+`post_v1_opening_facade_door_window_acoustic_rating_input_boundary_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-opening-facade-door-window-acoustic-rating-input-boundary-coverage-refresh-contract.test.ts`.
+
+Latest landed no-runtime rerank:
+`post_v1_runtime_first_route_family_rerank_after_opening_facade_door_window_c_ctr_lab_companion_target_output_independence_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-opening-facade-door-window-c-ctr-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_OPENING_FACADE_DOOR_WINDOW_C_CTR_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_COVERAGE_REFRESH_PLAN_2026-06-25.md`
+/
+`post_v1_runtime_first_route_family_rerank_after_opening_facade_door_window_c_ctr_lab_companion_target_output_independence_coverage_refresh_landed_no_runtime_selected_opening_facade_door_window_acoustic_rating_input_boundary_owner`.
+It selects `opening.facade_door_window_acoustic_rating_input_boundary_owner`
+with `candidateCount: 9`, `roiAnalysisIterations: 4`,
+`estimatedNextRequiredPhysicalInputsCaptured: 1`,
+`estimatedNextRuntimeValuesMoved: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, and `sourceRowsImported: 0`. There is no
+support-only loop.
+
+Latest landed no-runtime coverage refresh:
+`post_v1_opening_facade_door_window_c_ctr_lab_companion_target_output_independence_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-opening-facade-door-window-c-ctr-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_OPENING_FACADE_DOOR_WINDOW_C_CTR_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_COVERAGE_REFRESH_PLAN_2026-06-25.md`
+/
+`post_v1_opening_facade_door_window_c_ctr_lab_companion_target_output_independence_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank_after_opening_facade_door_window_c_ctr_lab_companion_target_output_independence_coverage_refresh`.
+It re-probes selected candidate
+`opening.facade_door_window_c_ctr_lab_companion_target_output_independence_owner`,
+keeps `C -1.6` and `Ctr -6.3` live as request-scoped lab companions,
+keeps mixed lab `Rw 38.2`, `STC 39`, `C -1.6`, and `Ctr -6.3`, keeps
+mixed field/building values basis-separated, and keeps missing frequency,
+outdoor-indoor/OITC, scalar STC shortcut, and impact boundaries blocked.
+Counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source crawl.
+
+
+Latest landed runtime/basis owner:
+`post_v1_opening_facade_door_window_c_ctr_lab_companion_target_output_independence_owner_plan`
+/
+`packages/engine/src/post-v1-opening-facade-door-window-c-ctr-lab-companion-target-output-independence-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_OPENING_FACADE_DOOR_WINDOW_C_CTR_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_OWNER_PLAN_2026-06-25.md`
+/
+`post_v1_opening_facade_door_window_c_ctr_lab_companion_target_output_independence_owner_landed_runtime_basis_selected_coverage_refresh`.
+It follows
+`post_v1_runtime_first_route_family_rerank_after_opening_facade_door_window_indoor_field_building_adapter_coverage_refresh_landed_no_runtime_selected_opening_facade_door_window_c_ctr_lab_companion_target_output_independence_owner`
+and opens complete indoor field/building door/window/facade `C -1.6`
+and `Ctr -6.3` as request-scoped lab companions from the owned Gate S
+shifted ISO 717-1 spectrum route. Mixed requests keep `Rw 38.2`,
+`STC 39`, `C -1.6`, and `Ctr -6.3` basis-separated from
+field/building values. Missing frequency input, outdoor-indoor/OITC,
+scalar STC ratings, source imports, broad catalog crawl, formula
+retunes, frontend work, and impact aliases remain blocked. Counters:
+`newCalculableRequestShapes: 4`, `newCalculableTargetOutputs: 2`,
+`runtimeBasisPromotions: 4`, `runtimeValuesMoved 8`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl. Selected next:
+`post_v1_opening_facade_door_window_acoustic_rating_input_boundary_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-opening-facade-door-window-acoustic-rating-input-boundary-coverage-refresh-contract.test.ts`.
+
+Latest landed no-runtime rerank:
+`post_v1_runtime_first_route_family_rerank_after_opening_facade_door_window_indoor_field_building_adapter_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-opening-facade-door-window-indoor-field-building-adapter-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_OPENING_FACADE_DOOR_WINDOW_INDOOR_FIELD_BUILDING_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-25.md`
+/
+`post_v1_runtime_first_route_family_rerank_after_opening_facade_door_window_indoor_field_building_adapter_coverage_refresh_landed_no_runtime_selected_opening_facade_door_window_c_ctr_lab_companion_target_output_independence_owner`.
+It selects `opening.facade_door_window_c_ctr_lab_companion_target_output_independence_owner`
+with `candidateCount: 8`, `roiAnalysisIterations: 4`,
+`estimatedNextCalculableRequestShapes: 4`,
+`estimatedNextCalculableTargetOutputs: 2`,
+`estimatedNextRuntimeBasisPromotions: 4`,
+`estimatedNextRuntimeValuesMoved: 8`, and no support-only loop.
+
+Latest landed no-runtime coverage refresh:
+`post_v1_opening_facade_door_window_indoor_field_building_adapter_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-opening-facade-door-window-indoor-field-building-adapter-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_OPENING_FACADE_DOOR_WINDOW_INDOOR_FIELD_BUILDING_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-25.md`
+/
+`post_v1_opening_facade_door_window_indoor_field_building_adapter_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank_after_opening_facade_door_window_indoor_field_building_adapter_coverage_refresh`.
+It re-probes selected candidate
+`opening.facade_door_window_indoor_field_building_adapter_owner`,
+keeps complete indoor partition field/building values and lab
+companions pinned, and keeps missing frequency input,
+outdoor-indoor/OITC, and impact aliases blocked. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`. This is not a broad source
+crawl. Selected next:
+`post_v1_runtime_first_route_family_rerank_after_opening_facade_door_window_indoor_field_building_adapter_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-opening-facade-door-window-indoor-field-building-adapter-coverage-refresh-contract.test.ts`.
+
+Latest landed runtime owner:
+`post_v1_opening_facade_door_window_indoor_field_building_adapter_owner_plan`
+/
+`packages/engine/src/post-v1-opening-facade-door-window-indoor-field-building-adapter-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_OPENING_FACADE_DOOR_WINDOW_INDOOR_FIELD_BUILDING_ADAPTER_OWNER_PLAN_2026-06-25.md`
+/
+`post_v1_opening_facade_door_window_indoor_field_building_adapter_owner_landed_runtime_selected_coverage_refresh`.
+It opens complete indoor partition door/window/facade
+`field_between_rooms` outputs `R'w 36.4`, `Dn,w 36.7`,
+`Dn,A 35.9`, `DnT,w 36.9`, and `DnT,A 36.1`, plus complete
+`building_prediction` outputs `R'w 31.6`, `Dn,w 31.9`,
+`Dn,A 31.1`, `DnT,w 32.1`, `DnT,A 31.3`, and
+`DnT,A,k 30.4`. Mixed requests keep `Rw 38.2` and `STC 39` as lab
+companions. Outdoor-indoor/OITC, missing frequency input, source
+imports, broad facade prediction, and impact aliases remain blocked.
+Counters: `newCalculableRequestShapes: 4`,
+`newCalculableTargetOutputs: 6`, `runtimeBasisPromotions: 4`,
+`runtimeValuesMoved 22`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+Selected next:
+`post_v1_opening_facade_door_window_indoor_field_building_adapter_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-opening-facade-door-window-indoor-field-building-adapter-coverage-refresh-contract.test.ts`.
+
+Latest landed no-runtime rerank:
+`post_v1_runtime_first_route_family_rerank_after_opening_facade_door_window_building_lab_companion_target_output_independence_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-opening-facade-door-window-building-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_OPENING_FACADE_DOOR_WINDOW_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_COVERAGE_REFRESH_PLAN_2026-06-25.md`
+/
+`post_v1_runtime_first_route_family_rerank_after_opening_facade_door_window_building_lab_companion_target_output_independence_coverage_refresh_landed_no_runtime_selected_opening_facade_door_window_indoor_field_building_adapter_owner`.
+It selects candidate
+`opening.facade_door_window_indoor_field_building_adapter_owner` with
+`estimatedNextRuntimeValuesMoved: 22` and no support-only loop.
+
+Latest landed no-runtime coverage refresh:
+`post_v1_opening_facade_door_window_building_lab_companion_target_output_independence_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-opening-facade-door-window-building-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_OPENING_FACADE_DOOR_WINDOW_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_COVERAGE_REFRESH_PLAN_2026-06-25.md`
+/
+`post_v1_opening_facade_door_window_building_lab_companion_target_output_independence_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank_after_opening_facade_door_window_building_lab_companion_target_output_independence_coverage_refresh`.
+Counters: `coverageRefreshContractFilesTouched: 1`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Latest landed runtime/basis owner:
+`post_v1_opening_facade_door_window_building_lab_companion_target_output_independence_owner_plan`
+/
+`packages/engine/src/post-v1-opening-facade-door-window-building-lab-companion-target-output-independence-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_OPENING_FACADE_DOOR_WINDOW_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_OWNER_PLAN_2026-06-25.md`
+/
+`post_v1_opening_facade_door_window_building_lab_companion_target_output_independence_owner_landed_runtime_basis_selected_coverage_refresh`.
+It follows the landed runtime-first rerank after the opening/facade
+frequency-input boundary coverage refresh and opens complete indoor
+door/window/facade field/building lab companions `Rw 38.2` and
+`STC 39` from Gate S/Gate AH. Field/building facade outputs,
+outdoor-indoor/OITC, missing frequency input, and impact aliases remain
+blocked. Counters: `newCalculableRequestShapes: 4`,
+`newCalculableTargetOutputs: 2`, `runtimeBasisPromotions: 4`,
+`runtimeValuesMoved 8`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+Selected next:
+`post_v1_opening_facade_door_window_building_lab_companion_target_output_independence_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-opening-facade-door-window-building-lab-companion-target-output-independence-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_OPENING_FACADE_DOOR_WINDOW_BUILDING_LAB_COMPANION_TARGET_OUTPUT_INDEPENDENCE_COVERAGE_REFRESH_PLAN_2026-06-25.md`.
+
+Latest landed no-runtime rerank:
+`post_v1_runtime_first_route_family_rerank_after_opening_facade_door_window_frequency_input_boundary_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-opening-facade-door-window-frequency-input-boundary-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_OPENING_FACADE_DOOR_WINDOW_FREQUENCY_INPUT_BOUNDARY_COVERAGE_REFRESH_PLAN_2026-06-25.md`
+/
+`post_v1_runtime_first_route_family_rerank_after_opening_facade_door_window_frequency_input_boundary_coverage_refresh_landed_no_runtime_selected_opening_facade_door_window_building_lab_companion_target_output_independence_owner`.
+It selects candidate
+`opening.facade_door_window_building_lab_companion_target_output_independence_owner`
+with `candidateCount: 8`, `roiAnalysisIterations: 4`,
+`estimatedNextCalculableRequestShapes: 4`,
+`estimatedNextCalculableTargetOutputs: 2`,
+`estimatedNextRuntimeBasisPromotions: 4`, and
+`estimatedNextRuntimeValuesMoved: 8`.
+
+Latest landed no-runtime coverage refresh:
+`post_v1_opening_facade_door_window_frequency_input_boundary_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-opening-facade-door-window-frequency-input-boundary-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_OPENING_FACADE_DOOR_WINDOW_FREQUENCY_INPUT_BOUNDARY_COVERAGE_REFRESH_PLAN_2026-06-25.md`
+/
+`post_v1_opening_facade_door_window_frequency_input_boundary_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank_after_opening_facade_door_window_frequency_input_boundary_coverage_refresh`.
+It follows
+`post_v1_opening_facade_door_window_frequency_input_boundary_owner_landed_input_boundary_selected_coverage_refresh`
+and re-probes selected candidate
+`opening.facade_door_window_frequency_input_boundary_owner`.
+The refresh keeps legacy generic and explicit complete opening/leak lab
+`Rw 38.2` and `STC 39` live, keeps
+`openingFrequencyBandsOrRatingBasis` as a precise single-field
+`needs_input`, and keeps field/building facade, outdoor-indoor facade,
+and impact aliases unsupported. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`requiredPhysicalInputsCaptured: 0`,
+`newCalculableLayerTemplates: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl. Selected next:
+`post_v1_runtime_first_route_family_rerank_after_opening_facade_door_window_frequency_input_boundary_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-opening-facade-door-window-frequency-input-boundary-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_OPENING_FACADE_DOOR_WINDOW_FREQUENCY_INPUT_BOUNDARY_COVERAGE_REFRESH_PLAN_2026-06-25.md`
+/
+`post-V1 runtime-first route-family rerank after opening/facade door/window frequency-input boundary coverage refresh`.
+
+Latest landed input-boundary owner:
+`post_v1_opening_facade_door_window_frequency_input_boundary_owner_plan`
+/
+`packages/engine/src/post-v1-opening-facade-door-window-frequency-input-boundary-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_OPENING_FACADE_DOOR_WINDOW_FREQUENCY_INPUT_BOUNDARY_OWNER_PLAN_2026-06-25.md`
+/
+`post_v1_opening_facade_door_window_frequency_input_boundary_owner_landed_input_boundary_selected_coverage_refresh`.
+It uses selected candidate
+`opening.facade_door_window_frequency_input_boundary_owner`
+and selects
+`post_v1_opening_facade_door_window_frequency_input_boundary_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-opening-facade-door-window-frequency-input-boundary-coverage-refresh-contract.test.ts`
+/
+`post-V1 opening/facade door/window frequency-input boundary coverage refresh`.
+Counters: `requiredPhysicalInputsCaptured: 6`,
+`unsupportedBoundariesProtected: 8`, `newCalculableLayerTemplates: 0`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
+
+Latest landed no-runtime rerank:
+`post_v1_runtime_first_route_family_rerank_after_advanced_wall_current_gate_checkpoint_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-advanced-wall-current-gate-checkpoint-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_RERANK_AFTER_ADVANCED_WALL_CURRENT_GATE_CHECKPOINT_PLAN_2026-06-24.md`
+/
+`post_v1_runtime_first_route_family_rerank_after_advanced_wall_current_gate_checkpoint_landed_no_runtime_selected_opening_facade_door_window_frequency_input_boundary_owner`.
+It selects candidate
+`opening.facade_door_window_frequency_input_boundary_owner`.
+Counters: `candidateCount: 8`, `roiAnalysisIterations: 4`,
+`estimatedNextRequiredPhysicalInputsCaptured: 6`,
+`estimatedNextUnsupportedBoundariesProtected: 8`,
+`estimatedNextCalculableRequestShapes: 0`,
+`estimatedNextCalculableTargetOutputs: 0`,
+`estimatedNextRuntimeBasisPromotions: 0`,
+`estimatedNextRuntimeValuesMoved: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`, and
+`frontendImplementationFilesTouched: 0`.
 
 Latest landed runtime/accuracy owner:
 `post_v1_wall_gate_ar_direct_curve_building_lab_companion_target_output_independence_owner_plan`

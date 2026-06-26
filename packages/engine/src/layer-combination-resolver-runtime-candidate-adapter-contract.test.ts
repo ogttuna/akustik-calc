@@ -283,7 +283,7 @@ describe("layer combination resolver runtime candidate adapter contract", () => 
       selectionStatus: LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_ADAPTER_SELECTION_STATUS
     });
     expect(contract.summary).toEqual({
-      adaptedRuntimeBasisCount: 47,
+      adaptedRuntimeBasisCount: 50,
       boundaryCandidateCount: 3,
       selectedNextAction: LAYER_COMBINATION_RESOLVER_RUNTIME_CANDIDATE_ADAPTER_SELECTED_NEXT_ACTION
     });
@@ -296,12 +296,13 @@ describe("layer combination resolver runtime candidate adapter contract", () => 
   it("maps every active registry runtime basis into a selected adapter candidate", () => {
     const registry = buildLayerCombinationResolverRegistryContract();
     const contract = buildLayerCombinationResolverRuntimeCandidateAdapterContract();
-    const rowsByBasis = new Map(contract.adapterRows.map((row) => [row.runtimeBasisId, row]));
+    const rowsByBasisAndRoute = new Map(contract.adapterRows.map((row) => [`${row.route}:${row.runtimeBasisId}`, row]));
+    const rowsByCandidateId = new Map(contract.adapterRows.map((row) => [row.selectedCandidateId, row]));
 
     for (const candidate of registry.candidateDeclarations.filter(
       (entry) => entry.runtimeSelectionState === "active_runtime_existing" && entry.ownedRuntimeBasisId
     )) {
-      expect(rowsByBasis.get(candidate.ownedRuntimeBasisId), candidate.id).toMatchObject({
+      expect(rowsByCandidateId.get(candidate.id), candidate.id).toMatchObject({
         requestedBasis: candidate.basis,
         route: candidate.route,
         selectedCandidateId: candidate.id,
@@ -316,25 +317,25 @@ describe("layer combination resolver runtime candidate adapter contract", () => 
       });
     }
 
-    expect(rowsByBasis.get("open_measured_floor_system_exact_match")?.selectedCandidateId).toBe(
+    expect(rowsByBasisAndRoute.get("floor:open_measured_floor_system_exact_match")?.selectedCandidateId).toBe(
       "floor.exact_measured_floor_system.same_topology_metric_basis"
     );
-    expect(rowsByBasis.get(EXACT_IMPACT_SOURCE_BAND_CURVE_BASIS)?.selectedCandidateId).toBe(
+    expect(rowsByBasisAndRoute.get(`floor:${EXACT_IMPACT_SOURCE_BAND_CURVE_BASIS}`)?.selectedCandidateId).toBe(
       "floor.exact_impact_band_source.metric_basis"
     );
-    expect(rowsByBasis.get(ASTM_E989_IMPACT_RATING_BASIS)?.selectedCandidateId).toBe(
+    expect(rowsByBasisAndRoute.get(`floor:${ASTM_E989_IMPACT_RATING_BASIS}`)?.selectedCandidateId).toBe(
       ASTM_E989_IMPACT_RATING_SELECTED_CANDIDATE_ID
     );
-    expect(rowsByBasis.get(OPEN_BOX_TIMBER_SIMILARITY_BASIS)?.selectedCandidateId).toBe(
+    expect(rowsByBasisAndRoute.get(`floor:${OPEN_BOX_TIMBER_SIMILARITY_BASIS}`)?.selectedCandidateId).toBe(
       "floor.open_box_timber.package_transfer_similarity"
     );
-    expect(rowsByBasis.get(OPEN_WEB_SUPPORTED_BAND_SIMILARITY_BASIS)?.selectedCandidateId).toBe(
+    expect(rowsByBasisAndRoute.get(`floor:${OPEN_WEB_SUPPORTED_BAND_SIMILARITY_BASIS}`)?.selectedCandidateId).toBe(
       "floor.open_web.supported_band_similarity"
     );
-    expect(rowsByBasis.get(HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS)?.selectedCandidateId).toBe(
+    expect(rowsByBasisAndRoute.get(`floor:${HEAVY_FLOATING_FLOOR_IMPACT_FORMULA_BASIS}`)?.selectedCandidateId).toBe(
       "floor.heavy_concrete_floating_floor.lab_impact_formula"
     );
-    expect(rowsByBasis.get(HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_ESTIMATE_BASIS)).toMatchObject({
+    expect(rowsByBasisAndRoute.get(`floor:${HEAVY_CONCRETE_PUBLISHED_UPPER_TREATMENT_ESTIMATE_BASIS}`)).toMatchObject({
       requestedBasis: "element_lab",
       route: "floor",
       selectedCandidateId: "floor.heavy_concrete_floating.published_upper_treatment_anchor_owned",
@@ -346,19 +347,19 @@ describe("layer combination resolver runtime candidate adapter contract", () => 
         valuePins: [{ metric: "Ln,w", value: 50 }]
       }
     });
-    expect(rowsByBasis.get(HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS)?.selectedCandidateId).toBe(
+    expect(rowsByBasisAndRoute.get(`floor:${HEAVY_CONCRETE_COMBINED_IMPACT_FORMULA_BASIS}`)?.selectedCandidateId).toBe(
       "floor.heavy_concrete_combined_upper_lower.lab_impact_formula"
     );
-    expect(rowsByBasis.get(HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS)?.selectedCandidateId).toBe(
+    expect(rowsByBasisAndRoute.get(`floor:${HELPER_ONLY_TIMBER_OPEN_WEB_IMPACT_STACK_BASIS}`)?.selectedCandidateId).toBe(
       "floor.helper_only_timber_open_web.source_absent"
     );
-    expect(rowsByBasis.get(STEEL_FLOOR_FORMULA_BASIS)?.selectedCandidateId).toBe(
+    expect(rowsByBasisAndRoute.get(`floor:${STEEL_FLOOR_FORMULA_BASIS}`)?.selectedCandidateId).toBe(
       "floor.lightweight_steel.upper_lower_mass_spring.source_absent"
     );
-    expect(rowsByBasis.get(STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_BASIS)?.selectedCandidateId).toBe(
+    expect(rowsByBasisAndRoute.get(`floor:${STEEL_FLOOR_SUSPENDED_CEILING_FORMULA_BASIS}`)?.selectedCandidateId).toBe(
       "floor.lightweight_steel.suspended_ceiling_only.source_absent"
     );
-    expect(rowsByBasis.get(BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_RUNTIME_METHOD)).toMatchObject({
+    expect(rowsByBasisAndRoute.get(`wall:${BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_RUNTIME_METHOD}`)).toMatchObject({
       requestedBasis: "element_lab",
       route: "wall",
       selectedCandidateId: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_SELECTED_CANDIDATE_ID,
@@ -370,7 +371,7 @@ describe("layer combination resolver runtime candidate adapter contract", () => 
         supportedMetrics: ["Rw"]
       }
     });
-    expect(rowsByBasis.get(BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_RUNTIME_METHOD)).toMatchObject({
+    expect(rowsByBasisAndRoute.get(`wall:${BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_RUNTIME_METHOD}`)).toMatchObject({
       requestedBasis: "element_lab",
       route: "wall",
       selectedCandidateId: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_SELECTED_CANDIDATE_ID,
@@ -382,13 +383,26 @@ describe("layer combination resolver runtime candidate adapter contract", () => 
         supportedMetrics: ["Rw", "STC", "C", "Ctr"]
       }
     });
-    expect(rowsByBasis.get(LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_FORMULA_CORRIDOR_BASIS)?.selectedCandidateId).toBe(
+    expect(rowsByBasisAndRoute.get(`wall:${LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_FORMULA_CORRIDOR_BASIS}`)?.selectedCandidateId).toBe(
       LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID
     );
-    expect(rowsByBasis.get(LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_FORMULA_CORRIDOR_BASIS)?.selectedCandidateId).toBe(
+    expect(rowsByCandidateId.get("ceiling.single_leaf_airborne_mass_law.source_absent")?.selectedCandidateId).toBe(
+      "ceiling.single_leaf_airborne_mass_law.source_absent"
+    );
+    expect(rowsByCandidateId.get("ceiling.single_leaf_airborne_field_context_adapter")).toMatchObject({
+      requestedBasis: "field_apparent",
+      route: "ceiling",
+      selectedCandidateId: "ceiling.single_leaf_airborne_field_context_adapter"
+    });
+    expect(rowsByCandidateId.get("ceiling.single_leaf_airborne_building_prediction_adapter")).toMatchObject({
+      requestedBasis: "building_prediction",
+      route: "ceiling",
+      selectedCandidateId: "ceiling.single_leaf_airborne_building_prediction_adapter"
+    });
+    expect(rowsByBasisAndRoute.get(`wall:${LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_FORMULA_CORRIDOR_BASIS}`)?.selectedCandidateId).toBe(
       LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID
     );
-    expect(rowsByBasis.get(GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD)).toMatchObject({
+    expect(rowsByBasisAndRoute.get(`wall:${GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD}`)).toMatchObject({
       requestedBasis: "element_lab",
       route: "wall",
       selectedCandidateId: GATE_H_LINED_MASSIVE_WALL_SELECTED_CANDIDATE_ID,
@@ -400,7 +414,7 @@ describe("layer combination resolver runtime candidate adapter contract", () => 
         supportedMetrics: ["Rw", "STC", "C", "Ctr"]
       }
     });
-    expect(rowsByBasis.get(COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_RUNTIME_METHOD)).toMatchObject({
+    expect(rowsByBasisAndRoute.get(`wall:${COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_RUNTIME_METHOD}`)).toMatchObject({
       requestedBasis: "element_lab",
       route: "wall",
       selectedCandidateId: COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_SELECTED_CANDIDATE_ID,
@@ -412,7 +426,7 @@ describe("layer combination resolver runtime candidate adapter contract", () => 
         supportedMetrics: ["Rw", "STC", "C", "Ctr"]
       }
     });
-    expect(rowsByBasis.get(FLAT_LIST_MULTILEAF_GUARD_LAB_RUNTIME_METHOD)).toMatchObject({
+    expect(rowsByBasisAndRoute.get(`wall:${FLAT_LIST_MULTILEAF_GUARD_LAB_RUNTIME_METHOD}`)).toMatchObject({
       requestedBasis: "element_lab",
       route: "wall",
       selectedCandidateId: FLAT_LIST_MULTILEAF_GUARD_LAB_SELECTED_CANDIDATE_ID,
@@ -424,7 +438,7 @@ describe("layer combination resolver runtime candidate adapter contract", () => 
         supportedMetrics: ["Rw", "STC", "C", "Ctr"]
       }
     });
-    expect(rowsByBasis.get(GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD)).toMatchObject({
+    expect(rowsByBasisAndRoute.get(`wall:${GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD}`)).toMatchObject({
       requestedBasis: "field_apparent",
       route: "wall",
       selectedCandidateId: "wall.airborne_field_context.field_apparent_adapter",
@@ -436,7 +450,7 @@ describe("layer combination resolver runtime candidate adapter contract", () => 
         supportedMetrics: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "DnT,A,k"]
       }
     });
-    expect(rowsByBasis.get(BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD)).toMatchObject({
+    expect(rowsByBasisAndRoute.get(`wall:${BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_RUNTIME_METHOD}`)).toMatchObject({
       requestedBasis: "field_apparent",
       route: "wall",
       selectedCandidateId: BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
@@ -448,7 +462,7 @@ describe("layer combination resolver runtime candidate adapter contract", () => 
         supportedMetrics: ["R'w", "DnT,w"]
       }
     });
-    expect(rowsByBasis.get(FLAT_LIST_MULTILEAF_GUARD_FIELD_RUNTIME_METHOD)).toMatchObject({
+    expect(rowsByBasisAndRoute.get(`wall:${FLAT_LIST_MULTILEAF_GUARD_FIELD_RUNTIME_METHOD}`)).toMatchObject({
       requestedBasis: "field_apparent",
       route: "wall",
       selectedCandidateId: FLAT_LIST_MULTILEAF_GUARD_FIELD_SELECTED_CANDIDATE_ID,
@@ -460,7 +474,7 @@ describe("layer combination resolver runtime candidate adapter contract", () => 
         supportedMetrics: ["R'w", "DnT,w", "DnT,A", "Dn,w", "Dn,A"]
       }
     });
-    expect(rowsByBasis.get(GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD)).toMatchObject({
+    expect(rowsByBasisAndRoute.get(`wall:${GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD}`)).toMatchObject({
       boundaryCandidateIds: [],
       requestedBasis: "building_prediction",
       route: "wall",

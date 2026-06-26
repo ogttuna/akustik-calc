@@ -1527,6 +1527,7 @@ function readOutputValue(result: AssemblyCalculation, outputId: RequestedOutputI
       return result.ratings.field?.RwPrime ?? result.metrics.estimatedRwPrimeDb ?? null;
     case "STC":
       return result.metrics.estimatedStc ?? result.ratings.astmE413.STC;
+    case "OITC":
     case "HIIC":
     case "ISR":
     case "LIIC":

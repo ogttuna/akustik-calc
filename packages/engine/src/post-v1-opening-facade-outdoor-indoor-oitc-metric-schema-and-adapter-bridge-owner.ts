@@ -1,0 +1,14 @@
+export const POST_V1_OPENING_FACADE_OUTDOOR_INDOOR_OITC_METRIC_SCHEMA_AND_ADAPTER_BRIDGE_OWNER_PLAN =
+  "post_v1_opening_facade_outdoor_indoor_oitc_metric_schema_and_adapter_bridge_owner_plan";
+
+export const POST_V1_OPENING_FACADE_OUTDOOR_INDOOR_OITC_METRIC_SCHEMA_AND_ADAPTER_BRIDGE_OWNER_STATUS =
+  "post_v1_opening_facade_outdoor_indoor_oitc_metric_schema_and_adapter_bridge_owner_landed_input_surface_selected_coverage_refresh";
+
+export const POST_V1_OPENING_FACADE_OUTDOOR_INDOOR_OITC_METRIC_SCHEMA_AND_ADAPTER_BRIDGE_OWNER_WARNING =
+  "Opening/facade outdoor-indoor OITC metric schema bridge active: OITC is a valid requested output and is routed through the facade boundary, but no OITC value is calculated until an owned outdoor-indoor spectral rating adapter is implemented.";
+
+export const POST_V1_OPENING_FACADE_OUTDOOR_INDOOR_OITC_METRIC_SCHEMA_AND_ADAPTER_BRIDGE_SELECTED_NEXT_ACTION =
+  "post_v1_opening_facade_outdoor_indoor_oitc_metric_schema_and_adapter_bridge_coverage_refresh_plan";
+
+export const POST_V1_OPENING_FACADE_OUTDOOR_INDOOR_OITC_METRIC_SCHEMA_AND_ADAPTER_BRIDGE_SELECTED_NEXT_FILE =
+  "packages/engine/src/post-v1-opening-facade-outdoor-indoor-oitc-metric-schema-and-adapter-bridge-coverage-refresh-contract.test.ts";

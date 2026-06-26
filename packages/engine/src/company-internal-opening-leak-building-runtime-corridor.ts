@@ -3,7 +3,8 @@ import {
   type AirborneContext,
   type AirborneResultBasis,
   type FieldAirborneRating,
-  type RequestedOutputId
+  type RequestedOutputId,
+  type TransmissionLossCurve
 } from "@dynecho/shared";
 
 import { GATE_R_OPENING_LEAK_COMPOSITE_TOLERANCE_DB } from "./dynamic-airborne-gate-r-opening-leak-composite-transmission-loss-formula-corridor";
@@ -37,6 +38,9 @@ export const COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD =
 export const COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD =
   "company_internal_opening_leak_a_weighted_spectrum_adapter_runtime_corridor";
 
+export const COMPANY_INTERNAL_OPENING_LEAK_SPECTRAL_FIELD_BUILDING_RUNTIME_METHOD =
+  "post_v1_opening_facade_door_window_spectral_field_building_adapter_owner";
+
 export const COMPANY_INTERNAL_OPENING_LEAK_FIELD_SELECTED_CANDIDATE_ID =
   "candidate_company_internal_opening_leak_field_family_physics_prediction";
 
@@ -45,6 +49,9 @@ export const COMPANY_INTERNAL_OPENING_LEAK_BUILDING_SELECTED_CANDIDATE_ID =
 
 export const COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_SELECTED_CANDIDATE_ID =
   "candidate_company_internal_opening_leak_a_weighted_family_physics_prediction";
+
+export const COMPANY_INTERNAL_OPENING_LEAK_SPECTRAL_FIELD_BUILDING_SELECTED_CANDIDATE_ID =
+  "candidate_post_v1_opening_facade_door_window_spectral_field_building_adapter";
 
 export const COMPANY_INTERNAL_OPENING_LEAK_FIELD_TOLERANCE_DB = 8;
 export const COMPANY_INTERNAL_OPENING_LEAK_BUILDING_TOLERANCE_DB = 10;
@@ -61,8 +68,14 @@ export const COMPANY_INTERNAL_OPENING_LEAK_RUNTIME_WARNING =
 export const COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_WARNING =
   "Opening/leak A-weighted runtime corridor active: Dn,A / DnT,A are calculated from the same-route opening/leak field/building value plus the owned -0.8 dB A-weighted adapter over third-octave 100-3150 Hz input. The result is source-absent, not measured A-weighted evidence.";
 
+export const COMPANY_INTERNAL_OPENING_LEAK_SPECTRAL_FIELD_BUILDING_RUNTIME_WARNING =
+  "Opening/leak spectral field/building adapter active: apparent and standardized outputs are calculated from the frequency-curve composite opening transmission-loss anchor plus explicit flanking and room-normalization terms; lab curve values are not copied directly into field/building outputs.";
+
 export const COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_MISSING_FREQUENCY_WARNING =
   "Opening/leak A-weighted runtime is waiting for frequencyBandSet before promoting Dn,A / DnT,A.";
+
+export const COMPANY_INTERNAL_OPENING_LEAK_SPECTRAL_FIELD_BUILDING_UNSUPPORTED_WARNING =
+  "Opening/leak field/building runtime is blocked for curve-only opening elements until a spectral field/building adapter owns apparent and standardized outputs from the composite transmission-loss curve.";
 
 type CompleteOpeningLeakFieldContext = AirborneContext & {
   contextMode: "field_between_rooms";
@@ -108,6 +121,7 @@ export type CompanyInternalOpeningLeakRuntimeResult = {
     | typeof COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD
     | typeof COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD
     | typeof COMPANY_INTERNAL_OPENING_LEAK_FIELD_RUNTIME_METHOD
+    | typeof COMPANY_INTERNAL_OPENING_LEAK_SPECTRAL_FIELD_BUILDING_RUNTIME_METHOD
     | null;
   blockedOutputs: readonly RequestedOutputId[];
   dnTwDb: number | null;
@@ -142,6 +156,16 @@ function finitePositive(value: unknown): value is number {
   return typeof value === "number" && Number.isFinite(value) && value > 0;
 }
 
+function usableCurve(curve: TransmissionLossCurve | undefined): curve is TransmissionLossCurve {
+  return Boolean(
+    curve &&
+      curve.frequenciesHz.length > 0 &&
+      curve.frequenciesHz.length === curve.transmissionLossDb.length &&
+      curve.frequenciesHz.every((frequency) => Number.isFinite(frequency) && frequency > 0) &&
+      curve.transmissionLossDb.every((value) => Number.isFinite(value))
+  );
+}
+
 function unique<T extends string>(items: readonly T[]): T[] {
   return [...new Set(items)];
 }
@@ -166,6 +190,12 @@ function requestedOpeningFieldBuildingOutputs(outputs: readonly RequestedOutputI
 
 function requestedAWeightedOpeningOutputs(outputs: readonly RequestedOutputId[]): RequestedOutputId[] {
   return outputs.filter((output) => A_WEIGHTED_OUTPUTS.has(output));
+}
+
+function hasCurveOnlyOpeningElement(context: AirborneContext | null | undefined): boolean {
+  return (context?.openingLeakElements ?? []).some((opening) =>
+    !finitePositive(opening.elementRwDb) && usableCurve(opening.elementTransmissionLossCurve)
+  );
 }
 
 function hasAWeightedFrequencyBandSet(context: AirborneContext): boolean {
@@ -259,6 +289,7 @@ function requestedSupportedOutputs(input: {
 
 function buildLabCompositeRuntime(input: {
   airborneContext: AirborneContext;
+  hostCurve?: TransmissionLossCurve | null;
   hostWallRatingBasis: GateSOpeningLeakCompositeRuntimeInput["hostWallRatingBasis"];
   hostWallRwDb: number;
 }) {
@@ -267,6 +298,7 @@ function buildLabCompositeRuntime(input: {
       ...input.airborneContext,
       contextMode: "element_lab"
     },
+    hostCurve: input.hostCurve,
     hostWallRatingBasis: input.hostWallRatingBasis,
     hostWallRwDb: input.hostWallRwDb,
     targetOutputs: ["Rw"]
@@ -338,9 +370,12 @@ function basisForPromotedRuntime(input: {
   labCompositeRwDb: number;
   partitionAreaM2: number;
   roomNormalizationDb: number;
+  spectralFieldBuildingAdapterOwnerActive: boolean;
 }): AirborneResultBasis {
   const isBuilding = input.basis === "building_prediction";
-  const method = input.aWeightedRuntimeSelected
+  const method = input.spectralFieldBuildingAdapterOwnerActive
+    ? COMPANY_INTERNAL_OPENING_LEAK_SPECTRAL_FIELD_BUILDING_RUNTIME_METHOD
+    : input.aWeightedRuntimeSelected
     ? COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD
     : isBuilding
       ? COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD
@@ -349,6 +384,12 @@ function basisForPromotedRuntime(input: {
   return AirborneResultBasisSchema.parse({
     assumptions: [
       "Gate S owns only the element-lab opening/leak composite Rw anchor; this runtime adapts it with explicit field/building terms rather than aliasing lab Rw.",
+      ...(input.spectralFieldBuildingAdapterOwnerActive
+        ? [
+            "The Gate S anchor is derived from the calculated opening/facade transmission-loss curve before field/building adaptation.",
+            "The field/building adapter uses the curve-derived composite Rw as an anchor; it does not copy lab Rw/STC/C/Ctr into apparent or standardized outputs."
+          ]
+        : []),
       `field flanking penalty term: ${input.fieldFlankingPenaltyDb.toFixed(1)} dB`,
       ...(isBuilding
         ? [`building junction/flanking add-on term: ${(input.buildingJunctionPenaltyDb ?? 0).toFixed(1)} dB`]
@@ -365,7 +406,9 @@ function basisForPromotedRuntime(input: {
       `source-absent opening/leak field/building budget is +/-${input.errorBudgetDb} dB and is not measured evidence`
     ],
     calculationStandard: "ISO 12354-1",
-    curveBasis: "calculated_single_number_estimate",
+    curveBasis: input.spectralFieldBuildingAdapterOwnerActive
+      ? "calculated_frequency_curve"
+      : "calculated_single_number_estimate",
     errorBudgetDb: input.errorBudgetDb,
     frequencyBands: input.aWeightedRuntimeSelected
       ? { bandSet: COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_FREQUENCY_BAND_SET }
@@ -384,6 +427,9 @@ function basisForPromotedRuntime(input: {
       "openingLeakElementsOrHostWallAreaRouteOwner",
       "hostWallAreaM2",
       "openingLeakElements",
+      ...(input.spectralFieldBuildingAdapterOwnerActive
+        ? ["hostWallTransmissionLossCurve", "openingElementTransmissionLossCurve"]
+        : []),
       "panelWidthMm",
       "panelHeightMm",
       "receivingRoomVolumeM3",
@@ -423,6 +469,30 @@ function blockedBasis(input: {
   });
 }
 
+function spectralFieldBuildingUnsupportedBasis(input: {
+  targetOutputs: readonly RequestedOutputId[];
+}): AirborneResultBasis {
+  return AirborneResultBasisSchema.parse({
+    assumptions: [
+      "Curve-only opening elements are currently owned for element-lab spectral composite ratings only.",
+      "DynEcho does not copy lab Rw/STC/C/Ctr or scalarize the spectral opening route into field/building outputs without a dedicated adapter."
+    ],
+    calculationStandard: "none",
+    curveBasis: "calculated_frequency_curve",
+    kind: "airborne_unsupported",
+    measurementStandard: "none",
+    method: COMPANY_INTERNAL_OPENING_LEAK_FIELD_RUNTIME_METHOD,
+    missingPhysicalInputs: [],
+    origin: "unsupported",
+    ratingStandard: "none",
+    requiredInputs: [
+      "openingElementRwDb",
+      "PostV1OpeningFacadeDoorWindowSpectralFieldBuildingAdapterOwner",
+      ...input.targetOutputs
+    ]
+  });
+}
+
 function promotedResult(input: {
   basis: CompanyInternalOpeningLeakRuntimeBasis;
   buildingJunctionPenaltyDb?: number;
@@ -431,6 +501,7 @@ function promotedResult(input: {
   errorBudgetDb: number;
   fieldFlankingPenaltyDb: number;
   labCompositeRwDb: number;
+  spectralFieldBuildingAdapterOwnerActive: boolean;
   targetOutputs: readonly RequestedOutputId[];
 }): CompanyInternalOpeningLeakRuntimeResult {
   const rawAreaM2 = rawPartitionAreaM2(input.context);
@@ -513,8 +584,12 @@ function promotedResult(input: {
     ...(dnTADb === null ? {} : { DnTA: dnTADb }),
     DnTw: dnTwDb,
     RwPrime: rwPrimeDb,
-    basis: aWeightedRuntimeSelected
-      ? "company_internal_opening_leak_a_weighted_spectrum_adapter"
+    basis: input.spectralFieldBuildingAdapterOwnerActive
+      ? input.basis === "building_prediction"
+        ? "post_v1_opening_facade_door_window_spectral_building_prediction_adapter"
+        : "post_v1_opening_facade_door_window_spectral_field_area_energy_adapter"
+      : aWeightedRuntimeSelected
+        ? "company_internal_opening_leak_a_weighted_spectrum_adapter"
       : input.basis === "building_prediction"
         ? "company_internal_opening_leak_building_prediction_area_energy_adapter"
         : "company_internal_opening_leak_field_area_energy_adapter",
@@ -527,9 +602,14 @@ function promotedResult(input: {
   };
 
   const warnings = [
-    aWeightedRuntimeSelected
-      ? COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_WARNING
+    input.spectralFieldBuildingAdapterOwnerActive
+      ? COMPANY_INTERNAL_OPENING_LEAK_SPECTRAL_FIELD_BUILDING_RUNTIME_WARNING
+      : aWeightedRuntimeSelected
+        ? COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_WARNING
       : COMPANY_INTERNAL_OPENING_LEAK_RUNTIME_WARNING,
+    ...(input.spectralFieldBuildingAdapterOwnerActive && aWeightedRuntimeSelected
+      ? [COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_WARNING]
+      : []),
     ...(missingAWeightedInputs.length > 0
       ? [COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_MISSING_FREQUENCY_WARNING]
       : [])
@@ -544,10 +624,13 @@ function promotedResult(input: {
       fieldFlankingPenaltyDb: input.fieldFlankingPenaltyDb,
       labCompositeRwDb: input.labCompositeRwDb,
       partitionAreaM2: areaM2,
-      roomNormalizationDb: roomNormalization
+      roomNormalizationDb: roomNormalization,
+      spectralFieldBuildingAdapterOwnerActive: input.spectralFieldBuildingAdapterOwnerActive
     }),
-    basisId: aWeightedRuntimeSelected
-      ? COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD
+    basisId: input.spectralFieldBuildingAdapterOwnerActive
+      ? COMPANY_INTERNAL_OPENING_LEAK_SPECTRAL_FIELD_BUILDING_RUNTIME_METHOD
+      : aWeightedRuntimeSelected
+        ? COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD
       : input.basis === "building_prediction"
         ? COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD
         : COMPANY_INTERNAL_OPENING_LEAK_FIELD_RUNTIME_METHOD,
@@ -572,8 +655,10 @@ function promotedResult(input: {
 export function maybeBuildCompanyInternalOpeningLeakFieldBuildingRuntimeCorridor(input: {
   airborneContext?: AirborneContext | null;
   fieldFlankingPenaltyDb?: number | null;
+  hostCurve?: TransmissionLossCurve | null;
   hostWallRatingBasis: GateSOpeningLeakCompositeRuntimeInput["hostWallRatingBasis"];
   hostWallRwDb: number;
+  spectralFieldBuildingAdapterOwnerActive?: boolean;
   targetOutputs: readonly RequestedOutputId[];
 }): CompanyInternalOpeningLeakRuntimeResult | null {
   const context = input.airborneContext;
@@ -626,8 +711,34 @@ export function maybeBuildCompanyInternalOpeningLeakFieldBuildingRuntimeCorridor
     };
   }
 
+  const spectralFieldBuildingAdapterOwnerActive =
+    input.spectralFieldBuildingAdapterOwnerActive === true && hasCurveOnlyOpeningElement(context);
+
+  if (hasCurveOnlyOpeningElement(context) && !spectralFieldBuildingAdapterOwnerActive) {
+    return {
+      basis: spectralFieldBuildingUnsupportedBasis({ targetOutputs: input.targetOutputs }),
+      basisId: null,
+      blockedOutputs: requestedOutputs,
+      dnTwDb: null,
+      dnWDb: null,
+      errorBudgetDb: null,
+      fieldRating: null,
+      labCompositeRwDb: null,
+      missingPhysicalInputs: [],
+      partitionAreaM2: null,
+      requestedOutputs: input.targetOutputs,
+      roomNormalizationDb: null,
+      rwPrimeDb: null,
+      status: "blocked_unsupported",
+      supportedOutputs: [],
+      warning: COMPANY_INTERNAL_OPENING_LEAK_SPECTRAL_FIELD_BUILDING_UNSUPPORTED_WARNING,
+      warnings: [COMPANY_INTERNAL_OPENING_LEAK_SPECTRAL_FIELD_BUILDING_UNSUPPORTED_WARNING]
+    };
+  }
+
   const labCompositeRuntime = buildLabCompositeRuntime({
     airborneContext: context,
+    hostCurve: input.hostCurve,
     hostWallRatingBasis: input.hostWallRatingBasis,
     hostWallRwDb: input.hostWallRwDb
   });
@@ -675,6 +786,7 @@ export function maybeBuildCompanyInternalOpeningLeakFieldBuildingRuntimeCorridor
       errorBudgetDb: COMPANY_INTERNAL_OPENING_LEAK_FIELD_TOLERANCE_DB,
       fieldFlankingPenaltyDb,
       labCompositeRwDb,
+      spectralFieldBuildingAdapterOwnerActive,
       targetOutputs: input.targetOutputs
     });
   }
@@ -688,6 +800,7 @@ export function maybeBuildCompanyInternalOpeningLeakFieldBuildingRuntimeCorridor
       errorBudgetDb: COMPANY_INTERNAL_OPENING_LEAK_BUILDING_TOLERANCE_DB,
       fieldFlankingPenaltyDb,
       labCompositeRwDb,
+      spectralFieldBuildingAdapterOwnerActive,
       targetOutputs: input.targetOutputs
     });
   }

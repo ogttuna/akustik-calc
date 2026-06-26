@@ -4,9 +4,11 @@ import type {
   AirborneOpeningLeakElement,
   AirborneOpeningRatingBasis,
   AirborneOpeningSealLeakageClass,
-  RequestedOutputId
+  RequestedOutputId,
+  TransmissionLossCurve
 } from "@dynecho/shared";
 
+import { buildRatingsFromCurve } from "./curve-rating";
 import {
   buildGateQOpeningLeakCompositeAssessment,
   GATE_Q_OPENING_LEAK_COMPOSITE_INPUT_CONTRACT_PLAN,
@@ -339,6 +341,34 @@ function roundThree(value: number): number {
   return Math.round(value * 1000) / 1000;
 }
 
+function usableCurve(curve: TransmissionLossCurve | undefined): curve is TransmissionLossCurve {
+  return Boolean(
+    curve &&
+      curve.frequenciesHz.length > 0 &&
+      curve.frequenciesHz.length === curve.transmissionLossDb.length &&
+      curve.frequenciesHz.every((frequency) => Number.isFinite(frequency) && frequency > 0) &&
+      curve.transmissionLossDb.every((value) => Number.isFinite(value))
+  );
+}
+
+function openingRwDb(opening: AirborneOpeningLeakElement): number | null {
+  if (positive(opening.elementRwDb)) {
+    return opening.elementRwDb;
+  }
+
+  if (!usableCurve(opening.elementTransmissionLossCurve)) {
+    return null;
+  }
+
+  const ratings = buildRatingsFromCurve(
+    opening.elementTransmissionLossCurve.frequenciesHz,
+    opening.elementTransmissionLossCurve.transmissionLossDb,
+    { contextMode: "element_lab" }
+  );
+
+  return positive(ratings.iso717.Rw) ? ratings.iso717.Rw : null;
+}
+
 function requestedFormulaOutputs(outputs: readonly RequestedOutputId[]): RequestedOutputId[] {
   return outputs.filter((output) => GATE_R_LAB_FORMULA_OUTPUTS.has(output));
 }
@@ -354,11 +384,16 @@ function openingRouteRequested(input: GateROpeningLeakCompositeFormulaInput): bo
 }
 
 function openingSignature(opening: AirborneOpeningLeakElement): string {
+  const curveSignature = usableCurve(opening.elementTransmissionLossCurve)
+    ? `curve-${opening.elementTransmissionLossCurve.frequenciesHz.join(",")}-${opening.elementTransmissionLossCurve.transmissionLossDb.join(",")}`
+    : "no-curve";
+
   return [
     opening.id ?? "no-id",
     opening.areaM2 ?? "no-area",
     opening.count ?? "no-count",
     opening.elementRwDb ?? "no-rw",
+    curveSignature,
     opening.ratingBasis ?? "no-rating-basis",
     opening.sealLeakageClass ?? "no-seal-class",
     opening.origin ?? "no-origin"
@@ -472,7 +507,7 @@ function buildOpeningContributions(
 ): GateROpeningLeakCompositeOpeningContribution[] {
   return openings.map((opening, index) => {
     const penaltyDb = leakagePenaltyDb(opening.sealLeakageClass ?? "unknown");
-    const effectiveRwDb = (opening.elementRwDb ?? 0) - (penaltyDb ?? 0);
+    const effectiveRwDb = (openingRwDb(opening) ?? 0) - (penaltyDb ?? 0);
     const areaM2 = opening.areaM2 ?? 0;
     const count = opening.count ?? 0;
 
@@ -501,10 +536,12 @@ function canComputeDesignCorridor(input: {
   }
 
   for (const opening of input.openings) {
+    const rwDb = openingRwDb(opening);
+
     if (
       !positive(opening.areaM2) ||
       !positiveInteger(opening.count) ||
-      !positive(opening.elementRwDb) ||
+      !positive(rwDb ?? undefined) ||
       !isRwCompatibleOpeningBasis(opening.ratingBasis) ||
       leakagePenaltyDb(opening.sealLeakageClass ?? "unknown") === null
     ) {

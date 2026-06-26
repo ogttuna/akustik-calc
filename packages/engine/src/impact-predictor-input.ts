@@ -1,6 +1,8 @@
 import { EXACT_FLOOR_SYSTEMS } from "@dynecho/catalogs";
 import type {
   FloorSystemEstimateMatch,
+  ImpactPredictorLowerTreatmentSupportClass,
+  ImpactPredictorLowerTreatmentType,
   LayerInput,
   MaterialDefinition
 } from "@dynecho/shared";
@@ -173,6 +175,33 @@ const MERGE_SAFE_IMPACT_LAYER_ROLES = new Set<NonNullable<LayerInput["floorRole"
   "upper_fill"
 ]);
 const CEILING_BOARD_SCHEDULE_PACK_TOLERANCE_MM = 0.1;
+
+function normalizedMaterialTags(material: MaterialDefinition): Set<string> {
+  return new Set(material.tags.map((tag) => normalizePredictorToken(tag).replaceAll("_", "-")));
+}
+
+function materialHasAnyTag(material: MaterialDefinition, tags: readonly string[]): boolean {
+  const normalizedTags = normalizedMaterialTags(material);
+  return tags.some((tag) => normalizedTags.has(tag));
+}
+
+function isTaggedCeilingSupportMaterial(material: MaterialDefinition): boolean {
+  return material.category === "support" && materialHasAnyTag(material, ["ceiling-support", "lower-ceiling-support"]);
+}
+
+function isUserTaggedCeilingSupportMaterial(material: MaterialDefinition): boolean {
+  return isTaggedCeilingSupportMaterial(material) &&
+    material.acoustic?.propertySourceStatus === "user_supplied";
+}
+
+function rawLayerMaterial(rawLayer: LayerInput, catalog: readonly MaterialDefinition[]): MaterialDefinition | undefined {
+  const materialId = normalizePredictorToken(rawLayer.materialId);
+  if (!materialId) {
+    return undefined;
+  }
+
+  return catalog.find((material) => material.id === materialId);
+}
 
 function hasUpperFloorRoleEvidence(
   layers: readonly Pick<LayerInput, "floorRole">[]
@@ -608,6 +637,10 @@ function inferMissingFloorRole(
     return context.hasSeparateTopFloorFinish ? "floating_screed" : "floor_covering";
   }
 
+  if (isUserTaggedCeilingSupportMaterial(material)) {
+    return "ceiling_cavity";
+  }
+
   if (CEILING_CAVITY_MATERIAL_IDS.has(material.id)) {
     return "ceiling_cavity";
   }
@@ -777,13 +810,18 @@ function normalizeScheduleEquivalentCeilingBoards(
   ];
 }
 
-function hasPotentialFloorRoleInferenceEvidence(rawLayers: readonly LayerInput[]): boolean {
+function hasPotentialFloorRoleInferenceEvidence(
+  rawLayers: readonly LayerInput[],
+  catalog: readonly MaterialDefinition[] = getDefaultMaterialCatalog()
+): boolean {
   let hasBaseCandidate = false;
   let hasExplicitFloorRole = false;
   let hasAuxiliaryHint = false;
   let hasSafeBareBaseCandidate = false;
 
   for (const layer of rawLayers) {
+    const material = rawLayerMaterial(layer, catalog);
+
     if (layer.floorRole) {
       hasExplicitFloorRole = true;
       if (layer.floorRole === "base_structure") {
@@ -808,6 +846,10 @@ function hasPotentialFloorRoleInferenceEvidence(rawLayers: readonly LayerInput[]
 
     if (SAFE_BARE_BASE_ROLE_INFERENCE_MATERIAL_IDS.has(materialId)) {
       hasSafeBareBaseCandidate = true;
+    }
+
+    if (material && isUserTaggedCeilingSupportMaterial(material)) {
+      hasAuxiliaryHint = true;
     }
   }
 
@@ -837,7 +879,7 @@ export function maybeInferFloorRoleLayerStack(
     return null;
   }
 
-  if (!hasPotentialFloorRoleInferenceEvidence(rawLayers) && !hasSafeBareBaseCandidate) {
+  if (!hasPotentialFloorRoleInferenceEvidence(rawLayers, catalog) && !hasSafeBareBaseCandidate) {
     return null;
   }
 
@@ -1351,7 +1393,7 @@ function resolveResilientDynamicStiffness(
 
 function resolveLowerTreatmentType(
   cavityLayer: ResolvedLayerStackEntry | undefined
-): "direct_fixed_ceiling" | "suspended_ceiling_elastic_hanger" | "suspended_ceiling_rigid_hanger" {
+): Exclude<ImpactPredictorLowerTreatmentType, "none"> {
   if (!cavityLayer) {
     return "direct_fixed_ceiling";
   }
@@ -1368,13 +1410,29 @@ function resolveLowerTreatmentType(
     case "furring_channel":
       return "suspended_ceiling_rigid_hanger";
     default:
-      return "suspended_ceiling_rigid_hanger";
+      break;
   }
+
+  if (isUserTaggedCeilingSupportMaterial(cavityLayer.material)) {
+    if (materialHasAnyTag(cavityLayer.material, ["spring", "spring-hanger", "hanger-track"])) {
+      return "suspended_ceiling_spring_hanger";
+    }
+
+    if (materialHasAnyTag(cavityLayer.material, ["clip", "elastic", "resilient", "stud"])) {
+      return "suspended_ceiling_elastic_hanger";
+    }
+
+    if (materialHasAnyTag(cavityLayer.material, ["direct", "direct-fixed", "direct-to-joists"])) {
+      return "direct_fixed_ceiling";
+    }
+  }
+
+  return "suspended_ceiling_rigid_hanger";
 }
 
 function resolveLowerTreatmentSupportClass(
   cavityLayer: ResolvedLayerStackEntry | undefined
-): "direct_to_joists" | "furred_channels" | "tuas_open_box_family_a" | undefined {
+): ImpactPredictorLowerTreatmentSupportClass | undefined {
   if (!cavityLayer) {
     return "direct_to_joists";
   }
@@ -1387,19 +1445,40 @@ function resolveLowerTreatmentSupportClass(
     return "furred_channels";
   }
 
+  if (isUserTaggedCeilingSupportMaterial(cavityLayer.material)) {
+    if (materialHasAnyTag(cavityLayer.material, ["direct", "direct-fixed", "direct-to-joists"])) {
+      return "direct_to_joists";
+    }
+
+    if (
+      materialHasAnyTag(cavityLayer.material, [
+        "channel",
+        "clip",
+        "elastic",
+        "furring",
+        "hanger-track",
+        "resilient",
+        "spring",
+        "stud"
+      ])
+    ) {
+      return "furred_channels";
+    }
+  }
+
   return undefined;
 }
 
-function resolveLowerTreatmentSupportProductId(
-  cavityLayer: ResolvedLayerStackEntry | undefined
-): "acoustic_hanger_ceiling" | "resilient_channel" | "resilient_stud_ceiling" | undefined {
+function resolveLowerTreatmentSupportProductId(cavityLayer: ResolvedLayerStackEntry | undefined): string | undefined {
   switch (cavityLayer?.material.id) {
     case "acoustic_hanger_ceiling":
     case "resilient_channel":
     case "resilient_stud_ceiling":
       return cavityLayer.material.id;
     default:
-      return undefined;
+      return cavityLayer && isUserTaggedCeilingSupportMaterial(cavityLayer.material)
+        ? cavityLayer.material.id
+        : undefined;
   }
 }
 
@@ -1720,7 +1799,7 @@ function canDerivePredictorInputFromLayerStack(
     return false;
   }
 
-  if (!hasPotentialFloorRoleInferenceEvidence(rawLayers) && !hasNormalizedSafeBareBaseCandidate(normalizedLayers)) {
+  if (!hasPotentialFloorRoleInferenceEvidence(rawLayers, catalog) && !hasNormalizedSafeBareBaseCandidate(normalizedLayers)) {
     return false;
   }
 
@@ -1766,7 +1845,7 @@ export function getVisibleLayerPredictorBlockerWarning(
   rawLayers: readonly BuildImpactPredictorLayerInput[],
   catalog: readonly MaterialDefinition[] = getDefaultMaterialCatalog()
 ): string | null {
-  if (!hasPotentialFloorRoleInferenceEvidence(rawLayers)) {
+  if (!hasPotentialFloorRoleInferenceEvidence(rawLayers, catalog)) {
     return null;
   }
 

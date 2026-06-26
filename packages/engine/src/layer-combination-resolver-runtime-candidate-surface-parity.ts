@@ -844,23 +844,40 @@ function withScenarioSpecificAirborneRuntimePins(
   const isWallCompatibleAnchorDelta =
     trace.runtimeBasisId === POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_RUNTIME_METHOD ||
     trace.runtimeBasisId === POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_COMPATIBLE_DELTA_RUNTIME_METHOD;
-  const isWallFieldAdapter =
+  const isWallFieldAdapter = (
+    trace.route === "wall" &&
     trace.runtimeBasisId === GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD ||
+    trace.route === "wall" &&
     trace.runtimeBasisId === COMPANY_INTERNAL_OPENING_LEAK_FIELD_RUNTIME_METHOD ||
     (
+      trace.route === "wall" &&
       trace.runtimeBasisId === COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD &&
       trace.requestedBasis !== "building_prediction"
     ) ||
-    isWallLocalSubstitutionFieldAdapter ||
-    isWallFlatListGuardFieldAdapter;
-  const isWallBuildingAdapter =
+    (trace.route === "wall" && isWallLocalSubstitutionFieldAdapter) ||
+    (trace.route === "wall" && isWallFlatListGuardFieldAdapter)
+  );
+  const isWallBuildingAdapter = (
+    trace.route === "wall" &&
     trace.runtimeBasisId === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD ||
+    trace.route === "wall" &&
     trace.runtimeBasisId === COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD ||
     (
+      trace.route === "wall" &&
       trace.runtimeBasisId === COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD &&
       trace.requestedBasis === "building_prediction"
-    );
+    )
+  );
+  const isCeilingFieldAdapter =
+    trace.route === "ceiling" &&
+    trace.requestedBasis === "field_apparent" &&
+    trace.runtimeBasisId === LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_FORMULA_CORRIDOR_BASIS;
+  const isCeilingBuildingAdapter =
+    trace.route === "ceiling" &&
+    trace.requestedBasis === "building_prediction" &&
+    trace.runtimeBasisId === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD;
   const isWallContextAdapter = isWallFieldAdapter || isWallBuildingAdapter;
+  const isCeilingContextAdapter = isCeilingFieldAdapter || isCeilingBuildingAdapter;
   const isWallLocalSubstitutionRuntime =
     trace.runtimeBasisId === BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_RUNTIME_METHOD ||
     trace.runtimeBasisId === BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_LAB_SPECTRUM_ADAPTER_RUNTIME_METHOD ||
@@ -875,6 +892,7 @@ function withScenarioSpecificAirborneRuntimePins(
     !isWallFormulaRuntime &&
     !isWallCompatibleAnchorDelta &&
     !isWallContextAdapter &&
+    !isCeilingContextAdapter &&
     !isFloorRuntime &&
     !isExactFloor &&
     !isExactImpactSource
@@ -887,6 +905,7 @@ function withScenarioSpecificAirborneRuntimePins(
   if (
     !isExactMeasured &&
     !isWallContextAdapter &&
+    !isCeilingContextAdapter &&
     result.airborneOverlay?.contextMode &&
     result.airborneOverlay.contextMode !== "element_lab"
   ) {
@@ -901,6 +920,8 @@ function withScenarioSpecificAirborneRuntimePins(
   const supportedMetrics = isExactImpactSource
     ? getExactImpactSourceSupportedMetrics(result, result.supportedTargetOutputs)
     : isWallContextAdapter
+      ? getRuntimeSupportedMetricsForAssembly(trace, result)
+    : isCeilingContextAdapter
       ? getRuntimeSupportedMetricsForAssembly(trace, result)
     : isWallCompatibleAnchorDelta
       ? trace.supportedMetrics.filter((metric) =>
@@ -924,8 +945,8 @@ function withScenarioSpecificAirborneRuntimePins(
 
   return {
     ...trace,
-    basis: isExactMeasured || isWallContextAdapter || isWallCompatibleAnchorDelta ? trace.requestedBasis : trace.basis,
-    errorBudgetMetrics: isSingleLeaf ? ["Rw", "STC"] : trace.errorBudgetMetrics,
+    basis: isExactMeasured || isWallContextAdapter || isCeilingContextAdapter || isWallCompatibleAnchorDelta ? trace.requestedBasis : trace.basis,
+    errorBudgetMetrics: isSingleLeaf && !isCeilingContextAdapter ? ["Rw", "STC"] : trace.errorBudgetMetrics,
     supportedMetrics,
     surfaceDetail: isExactMeasured
       ? `${trace.surfaceDetail} Current assembly value pins come from the selected exact measured row.`
@@ -933,8 +954,12 @@ function withScenarioSpecificAirborneRuntimePins(
         ? `${trace.surfaceDetail} Current assembly value pins come from the measured subassembly anchor plus the owned calculated added-layer delta; companion metrics stay unsupported unless separately owned.`
       : isWallBuildingAdapter
         ? `${trace.surfaceDetail} Current wall building-prediction value pins are scenario-specific and come from the active ISO 12354-1 building calculation path; lab companions stay separate.`
+      : isCeilingBuildingAdapter
+        ? `${trace.surfaceDetail} Current ceiling building-prediction value pins are scenario-specific and come from the active ISO 12354-1 building calculation path; lab companions stay separate.`
       : isWallFieldAdapter
         ? `${trace.surfaceDetail} Current wall field-adapter value pins are scenario-specific and come from the active field-apparent calculation path.`
+      : isCeilingFieldAdapter
+        ? `${trace.surfaceDetail} Current ceiling field-adapter value pins are scenario-specific and come from the active field-apparent calculation path.`
         : `${trace.surfaceDetail} Current assembly value pins are scenario-specific and are not measured evidence.`,
     valuePins: buildAirborneRuntimeValuePins(result, supportedMetrics)
   };
@@ -1099,6 +1124,12 @@ export function buildLayerCombinationResolverTraceForAssembly(
   const hasFloorRoleLayer = result.layers.some(
     (layer: { readonly floorRole?: unknown }) => Boolean(layer.floorRole)
   );
+  const hasOnlyCeilingRoleLayers = result.layers.length > 0 &&
+    result.layers.every((layer: { readonly floorRole?: unknown }) =>
+      layer.floorRole === "ceiling_board" ||
+      layer.floorRole === "ceiling_cavity" ||
+      layer.floorRole === "ceiling_fill"
+    );
   const requestedOrUnsupportedOutputs = [...result.targetOutputs, ...result.unsupportedTargetOutputs];
   const hasSingleLeafAirborneBasis =
     result.airborneBasis?.method === LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_FORMULA_CORRIDOR_BASIS;
@@ -1163,8 +1194,35 @@ export function buildLayerCombinationResolverTraceForAssembly(
       Boolean(result.floorSystemEstimate) ||
       Boolean(result.floorSystemMatch) ||
       Boolean(result.dynamicImpactTrace));
-  const looksFloor = !shouldPreferWallAirborneRoute && (hasFloorRoleLayer || hasFloorImpactResult || hasFloorSystemOnlyResult);
-  const route: LayerCombinationResolverRoute = answerBoundary?.route ?? (looksFloor ? "floor" : "wall");
+  const hasSupportedAirborneOutput = result.supportedTargetOutputs.some((output: RequestedOutputId) =>
+    output === "Rw" ||
+    output === "STC" ||
+    output === "C" ||
+    output === "Ctr" ||
+    output === "R'w" ||
+    output === "Dn,w" ||
+    output === "Dn,A" ||
+    output === "DnT,w" ||
+    output === "DnT,A" ||
+    output === "DnT,A,k"
+  );
+  const hasCeilingSingleLeafAirborneRoute =
+    hasOnlyCeilingRoleLayers &&
+    hasSingleLeafAirborneBasis &&
+    hasSupportedAirborneOutput &&
+    !hasRequestedImpactMetric(requestedOrUnsupportedOutputs);
+  const hasCeilingBuildingAirborneRoute =
+    hasOnlyCeilingRoleLayers &&
+    hasWallBuildingAirborneBasis &&
+    hasSupportedAirborneOutput &&
+    !hasRequestedImpactMetric(requestedOrUnsupportedOutputs);
+  const looksFloor =
+    !hasCeilingSingleLeafAirborneRoute &&
+    !hasCeilingBuildingAirborneRoute &&
+    !shouldPreferWallAirborneRoute &&
+    (hasFloorRoleLayer || hasFloorImpactResult || hasFloorSystemOnlyResult);
+  const route: LayerCombinationResolverRoute = answerBoundary?.route ??
+    (hasCeilingSingleLeafAirborneRoute || hasCeilingBuildingAirborneRoute ? "ceiling" : looksFloor ? "floor" : "wall");
   const hasFieldAdapter = hasFieldAdapterBudget(result) && hasFieldImpactValues(result);
   const airborneAnswerStop =
     result.airborneBasis &&
@@ -1176,6 +1234,15 @@ export function buildLayerCombinationResolverTraceForAssembly(
   const shouldUseSingleLeafFloorAirborneBasis =
     route === "floor" &&
     hasSingleLeafAirborneBasis &&
+    !hasRequestedImpactMetric(requestedOrUnsupportedOutputs);
+  const shouldUseSingleLeafCeilingAirborneBasis =
+    route === "ceiling" &&
+    hasSingleLeafAirborneBasis &&
+    hasSupportedAirborneOutput &&
+    !hasRequestedImpactMetric(requestedOrUnsupportedOutputs);
+  const shouldUseBuildingCeilingAirborneBasis =
+    route === "ceiling" &&
+    hasCeilingBuildingAirborneRoute &&
     !hasRequestedImpactMetric(requestedOrUnsupportedOutputs);
   const timberCltDeltaLwRuntimeBasisId =
     route === "floor"
@@ -1201,6 +1268,12 @@ export function buildLayerCombinationResolverTraceForAssembly(
           result.impact?.basis ??
           result.floorSystemRatings?.basis ??
           null
+      : route === "ceiling"
+        ? shouldUseBuildingCeilingAirborneBasis && !airborneAnswerStop
+          ? result.airborneBasis?.method ?? null
+        : shouldUseSingleLeafCeilingAirborneBasis && !airborneAnswerStop
+          ? result.airborneBasis?.method ?? null
+          : null
       : partialWallFormulaRuntimeBasisId ??
         (airborneAnswerStop
         ? null
@@ -1214,6 +1287,8 @@ export function buildLayerCombinationResolverTraceForAssembly(
           targetOutputs: result.targetOutputs,
           unsupportedOutputs: result.unsupportedTargetOutputs
         })
+      : route === "ceiling"
+      ? requestedBasisForWallResult(result)
       : requestedBasisForWallResult(result);
 
   return withAnswerEngineBoundaryInputs(

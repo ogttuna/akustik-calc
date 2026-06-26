@@ -47,9 +47,17 @@ function isElementLabContext(context?: AirborneContext | null): boolean {
 }
 
 function buildShiftedCurve(input: {
+  compositeCurve?: TransmissionLossCurve | null;
   hostCurve: TransmissionLossCurve;
   rwLossDb: number;
 }): TransmissionLossCurve {
+  if (input.compositeCurve) {
+    return {
+      frequenciesHz: [...input.compositeCurve.frequenciesHz],
+      transmissionLossDb: [...input.compositeCurve.transmissionLossDb]
+    };
+  }
+
   return {
     frequenciesHz: [...input.hostCurve.frequenciesHz],
     transmissionLossDb: input.hostCurve.transmissionLossDb.map((value) =>
@@ -122,6 +130,7 @@ export function maybeBuildGateAHOpeningLeakStcSpectrumAdapter(input: {
   }
 
   const shiftedCurve = buildShiftedCurve({
+    compositeCurve: gateSRuntime.compositeCurve,
     hostCurve: input.hostCurve,
     rwLossDb
   });

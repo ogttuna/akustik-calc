@@ -124,7 +124,8 @@ const UNSUPPORTED_RUNTIME_OUTPUTS = new Set<RequestedOutputId>([
   "ISR",
   "LIIC",
   "LIR",
-  "NISR"
+  "NISR",
+  "OITC"
 ]);
 
 const WALL_AIRBORNE_OUTPUTS = ["Rw", "STC", "C", "Ctr"] as const satisfies readonly RequestedOutputId[];

@@ -105,11 +105,11 @@ describe("post-V1 floor lightweight-concrete family solver owner Gate M", () => 
       { profile: "low_density_predictor_input", metric: "Rw", value: 49 }
     ]);
     expect(registry.summary).toMatchObject({
-      activeRuntimeCandidateCount: 47,
-      candidateCount: 50
+      activeRuntimeCandidateCount: 50,
+      candidateCount: 53
     });
-    expect(adapter.summary.adaptedRuntimeBasisCount).toBe(47);
-    expect(surface.summary.surfaceRowCount).toBe(50);
+    expect(adapter.summary.adaptedRuntimeBasisCount).toBe(50);
+    expect(surface.summary.surfaceRowCount).toBe(53);
     expect(candidate).toMatchObject({
       basis: "element_lab",
       errorBudgetTerms: [

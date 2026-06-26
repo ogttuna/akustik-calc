@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { RequestedOutputSchema } from "./output";
+import { TransmissionLossCurveSchema } from "./rating";
 
 export const AirborneContextModeSchema = z.enum(["element_lab", "field_between_rooms", "building_prediction"]);
 export type AirborneContextMode = z.infer<typeof AirborneContextModeSchema>;
@@ -98,6 +99,31 @@ export type AirborneOpeningSealLeakageClass = z.infer<
 
 export const AirborneOpeningOriginSchema = z.enum(["unknown", "measured", "catalogued", "source_absent"]);
 export type AirborneOpeningOrigin = z.infer<typeof AirborneOpeningOriginSchema>;
+
+export const AirborneOpeningElementTypeSchema = z.enum([
+  "unknown",
+  "generic_opening",
+  "door",
+  "window",
+  "facade_element",
+  "louver",
+  "penetration"
+]);
+export type AirborneOpeningElementType = z.infer<typeof AirborneOpeningElementTypeSchema>;
+
+export const AirborneFacadeOutdoorContextSchema = z.enum([
+  "unknown",
+  "indoor_partition",
+  "outdoor_indoor_facade"
+]);
+export type AirborneFacadeOutdoorContext = z.infer<typeof AirborneFacadeOutdoorContextSchema>;
+
+export const AirborneOpeningFacadeBoundaryIntentSchema = z.enum([
+  "door_window_facade_frequency_input_boundary"
+]);
+export type AirborneOpeningFacadeBoundaryIntent = z.infer<
+  typeof AirborneOpeningFacadeBoundaryIntentSchema
+>;
 
 export const AirborneAdvancedWallPanelMaterialClassSchema = z.enum([
   "cement_board",
@@ -200,7 +226,10 @@ export const WallTopologySchema: z.ZodType<
 const AirborneOpeningLeakElementSchemaInternal = z.object({
   areaM2: z.number().positive().optional(),
   count: z.number().int().positive().optional(),
+  elementType: AirborneOpeningElementTypeSchema.optional(),
   elementRwDb: z.number().positive().optional(),
+  elementTransmissionLossCurve: TransmissionLossCurveSchema.optional(),
+  frequencyBandSet: z.literal("third_octave_100_3150").optional(),
   id: z.string().min(1).optional(),
   origin: AirborneOpeningOriginSchema.optional(),
   ratingBasis: AirborneOpeningRatingBasisSchema.optional(),
@@ -334,10 +363,12 @@ const AirborneContextShape = {
   resilientBarSideCount: AirborneResilientBarSideCountSchema.optional(),
   flankingJunctionClass: AirborneFlankingJunctionClassSchema.optional(),
   conservativeFlankingAssumption: AirborneConservativeFlankingAssumptionSchema.optional(),
+  facadeOutdoorContext: AirborneFacadeOutdoorContextSchema.optional(),
   junctionCouplingLengthM: z.number().positive().optional(),
   buildingPredictionOutputBasis: AirborneBuildingPredictionOutputBasisSchema.optional(),
   frequencyBandSet: z.literal("third_octave_100_3150").optional(),
   hostWallAreaM2: z.number().positive().optional(),
+  openingFacadeBoundaryIntent: AirborneOpeningFacadeBoundaryIntentSchema.optional(),
   openingLeakFieldBuildingAdapterBoundary: z.literal(true).optional(),
   openingLeakElements: z.array(AirborneOpeningLeakElementSchema).optional(),
   sharedTrack: SharedTrackClassSchema.optional(),

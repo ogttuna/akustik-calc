@@ -2,6 +2,7 @@ import type {
   AcousticInputFieldId,
   AirborneContext,
   AirborneOpeningLeakElement,
+  TransmissionLossCurve,
   RequestedOutputId
 } from "@dynecho/shared";
 
@@ -154,6 +155,16 @@ function positiveInteger(value: number | undefined): value is number {
   return typeof value === "number" && Number.isInteger(value) && value > 0;
 }
 
+function usableCurve(curve: TransmissionLossCurve | undefined): boolean {
+  return Boolean(
+    curve &&
+      curve.frequenciesHz.length > 0 &&
+      curve.frequenciesHz.length === curve.transmissionLossDb.length &&
+      curve.frequenciesHz.every((frequency) => Number.isFinite(frequency) && frequency > 0) &&
+      curve.transmissionLossDb.every((value) => Number.isFinite(value))
+  );
+}
+
 function known(value: string | undefined): boolean {
   return typeof value === "string" && value !== "unknown";
 }
@@ -245,7 +256,7 @@ function missingPhysicalInputs(input: GateQOpeningLeakCompositeInput): AcousticI
     if (!positive(opening.areaM2)) {
       missing.push("openingAreaM2");
     }
-    if (!positive(opening.elementRwDb)) {
+    if (!positive(opening.elementRwDb) && !usableCurve(opening.elementTransmissionLossCurve)) {
       missing.push("openingElementRwDb");
     }
     if (!known(opening.ratingBasis)) {

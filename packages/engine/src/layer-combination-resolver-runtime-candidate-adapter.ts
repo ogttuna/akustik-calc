@@ -111,9 +111,16 @@ function candidateToAdapterCandidate(
 function candidateAppliesToRoute(candidate: LayerCombinationResolverCandidateDeclaration, route: LayerCombinationResolverRoute) {
   if (
     candidate.ownedRuntimeBasisId === LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_FORMULA_CORRIDOR_BASIS &&
+    route === "ceiling"
+  ) {
+    return candidate.route === "ceiling" || candidate.id.startsWith("generic.");
+  }
+
+  if (
+    candidate.ownedRuntimeBasisId === LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_FORMULA_CORRIDOR_BASIS &&
     (route === "wall" || route === "floor")
   ) {
-    return true;
+    return candidate.route === "wall" || candidate.id.startsWith("generic.");
   }
 
   return candidate.route === route || candidate.id.startsWith("generic.");
@@ -165,9 +172,12 @@ function selectCandidate(input: LayerCombinationResolverRuntimeCandidateAdapterI
   const runtimeBasisId = input.runtimeBasisId ?? null;
 
   if (runtimeBasisId) {
-    const runtimeCandidate = registry.candidateDeclarations.find(
+    const runtimeCandidates = registry.candidateDeclarations.filter(
       (candidate) => candidateAppliesToRoute(candidate, input.route) && candidate.ownedRuntimeBasisId === runtimeBasisId
     );
+    const runtimeCandidate =
+      runtimeCandidates.find((candidate) => candidate.basis === input.requestedBasis) ??
+      runtimeCandidates[0];
     if (!runtimeCandidate) {
       throw new Error(`Layer combination resolver adapter cannot map runtime basis ${runtimeBasisId}.`);
     }

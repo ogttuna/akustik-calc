@@ -107,12 +107,39 @@ import {
   maybeBuildGateSOpeningLeakCompositeRuntimeCorridor
 } from "./dynamic-airborne-gate-s-opening-leak-composite-transmission-loss-runtime-corridor";
 import {
+  maybeBuildPostV1OpeningFacadeDoorWindowFrequencyInputBoundary
+} from "./post-v1-opening-facade-door-window-frequency-input-boundary-owner";
+import {
+  maybeBuildPostV1OpeningFacadeDoorWindowAcousticRatingInputBoundary
+} from "./post-v1-opening-facade-door-window-acoustic-rating-input-boundary-owner";
+import {
+  maybeBuildPostV1OpeningFacadeDoorWindowBuildingLabCompanionRequest
+} from "./post-v1-opening-facade-door-window-building-lab-companion-target-output-independence-owner";
+import {
+  maybeBuildPostV1OpeningFacadeDoorWindowCCtrLabCompanionRequest,
+  maybeBuildPostV1OpeningFacadeDoorWindowCCtrLabCompanionRuntime
+} from "./post-v1-opening-facade-door-window-c-ctr-lab-companion-target-output-independence-owner";
+import {
+  maybeBuildPostV1OpeningFacadeDoorWindowIndoorFieldBuildingAdapterRequest
+} from "./post-v1-opening-facade-door-window-indoor-field-building-adapter-owner";
+import {
   COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD,
+  COMPANY_INTERNAL_OPENING_LEAK_SPECTRAL_FIELD_BUILDING_RUNTIME_METHOD,
   maybeBuildCompanyInternalOpeningLeakFieldBuildingRuntimeCorridor
 } from "./company-internal-opening-leak-building-runtime-corridor";
 import {
   maybeBuildGateAHOpeningLeakStcSpectrumAdapter
 } from "./dynamic-airborne-gate-ah-opening-leak-stc-spectrum-adapter";
+import {
+  POST_V1_OPENING_FACADE_DOOR_WINDOW_SPECTRAL_OPENING_CURVE_RUNTIME_OWNER_METHOD,
+  maybeBuildPostV1OpeningFacadeDoorWindowSpectralOpeningCurveRuntime
+} from "./post-v1-opening-facade-door-window-spectral-opening-curve-runtime-owner";
+import {
+  maybeBuildPostV1OpeningFacadeDoorWindowSpectralFieldBuildingAdapterRequest
+} from "./post-v1-opening-facade-door-window-spectral-field-building-adapter-owner";
+import {
+  POST_V1_OPENING_FACADE_OUTDOOR_INDOOR_OITC_METRIC_SCHEMA_AND_ADAPTER_BRIDGE_OWNER_WARNING
+} from "./post-v1-opening-facade-outdoor-indoor-oitc-metric-schema-and-adapter-bridge-owner";
 import {
   buildDynamicCalculatorCandidateResolverRuntime,
   inferDynamicCalculatorRuntimeRoute
@@ -881,6 +908,7 @@ function isGateARCharacteristicDnTAkRuntimeBasis(
   return (
     airborneBasis?.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD ||
     airborneBasis?.method === COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD ||
+    airborneBasis?.method === COMPANY_INTERNAL_OPENING_LEAK_SPECTRAL_FIELD_BUILDING_RUNTIME_METHOD ||
     airborneBasis?.method === BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_BUILDING_RUNTIME_METHOD
   );
 }
@@ -1180,6 +1208,18 @@ function hasPostV1GateNImpactCiOwner(input: {
   );
 }
 
+function hasVisibleFloorImpactRoleEvidence(layers: readonly LayerInput[]): boolean {
+  return layers.some((layer) =>
+    layer.floorRole === "base_structure" ||
+      layer.floorRole === "resilient_layer" ||
+      layer.floorRole === "floating_screed" ||
+      layer.floorRole === "floor_covering" ||
+      layer.floorRole === "ceiling_cavity" ||
+      layer.floorRole === "ceiling_fill" ||
+      layer.floorRole === "ceiling_board"
+  );
+}
+
 function hasPostV1LowerTreatmentFieldCompanionPredictorSeed(input: {
   catalog: readonly MaterialDefinition[];
   floorImpactContext: DynamicCalculatorFloorImpactContext | null;
@@ -1190,37 +1230,37 @@ function hasPostV1LowerTreatmentFieldCompanionPredictorSeed(input: {
   const requestedFieldOutputs = input.targetOutputs.filter((output) =>
     GATE_Z_FIELD_IMPACT_OUTPUTS.has(output)
   );
+  if (requestedFieldOutputs.length === 0) {
+    return false;
+  }
+
+  if (!hasVisibleFloorImpactRoleEvidence(input.layers)) {
+    return false;
+  }
+
   const needsStandardizedField = requestedFieldOutputs.some((output) =>
     output === "L'nT,w" || output === "L'nT,50"
   );
-  const hasVisibleLowerTreatment = input.layers.some((layer) =>
-    layer.floorRole === "ceiling_board" ||
-      layer.floorRole === "ceiling_cavity" ||
-      layer.floorRole === "ceiling_fill"
-  );
-  const loadBasisKgM2 =
-    typeof input.floorImpactContext?.loadBasisKgM2 === "number" &&
-    input.floorImpactContext.loadBasisKgM2 > 0
-      ? input.floorImpactContext.loadBasisKgM2
-      : resolveVisibleFloatingFloorLoadBasisKgM2({
-          catalog: input.catalog,
-          layers: input.layers
-        });
-  const dynamicStiffnessMNm3 = resolveFloorImpactDynamicStiffness({
+  const predictorSeed = buildGateWImpactPredictorSeed({
     catalog: input.catalog,
     floorImpactContext: input.floorImpactContext,
     layers: input.layers
   });
-  const hasFloorImpactAnchorInputs =
-    typeof loadBasisKgM2 === "number" &&
-    loadBasisKgM2 > 0 &&
-    typeof dynamicStiffnessMNm3 === "number" &&
-    dynamicStiffnessMNm3 > 0;
+  const predictorInput = maybeBuildImpactPredictorInputFromLayerStack(
+    input.layers,
+    predictorSeed,
+    {
+      allowContextOwnedHeavyConcreteBase: true
+    },
+    input.catalog
+  );
+  const hasCompleteHeavyCombinedLowerTreatmentRoute =
+    predictorInput?.structuralSupportType === "reinforced_concrete" &&
+    predictorInput.impactSystemType === "combined_upper_lower_system" &&
+    collectHeavyConcreteCombinedImpactFormulaMissingPhysicalInputs(predictorInput).length === 0;
 
   return Boolean(
-    requestedFieldOutputs.length > 0 &&
-      hasVisibleLowerTreatment &&
-      hasFloorImpactAnchorInputs &&
+    hasCompleteHeavyCombinedLowerTreatmentRoute &&
       hasPostV1GateNFieldKPolicy(input.impactFieldContext) &&
       (!needsStandardizedField || hasPostV1GateNReceivingRoomVolume(input.impactFieldContext))
   );
@@ -4986,6 +5026,16 @@ function hasInferredConcreteCeilingHelperSupportSignal(input: {
   return hasCeilingBoard && hasCeilingHelper;
 }
 
+function hasOnlyCeilingRoleLayers(layers: readonly LayerInput[]): boolean {
+  return layers.length > 0 &&
+    layers.every(
+      (layer) =>
+        layer.floorRole === "ceiling_board" ||
+        layer.floorRole === "ceiling_cavity" ||
+        layer.floorRole === "ceiling_fill"
+    );
+}
+
 export function calculateAssembly(
   inputLayers: readonly LayerInput[],
   options: CalculateAssemblyOptions = {}
@@ -5138,7 +5188,10 @@ export function calculateAssembly(
   };
   const resolvedLayers = resolveLayers(layers, catalog);
   const hasFullyTaggedFloorStack = layers.length > 0 && layers.every((layer) => Boolean(layer.floorRole));
-  const normalizedExplicitImpactLayers = hasFullyTaggedFloorStack
+  const hasCeilingOnlyLayerRoleStack = hasOnlyCeilingRoleLayers(layers);
+  const shouldBlockCeilingOnlyImplicitFloorImpact =
+    hasCeilingOnlyLayerRoleStack && !explicitPredictorInput && !exactImpactSource;
+  const normalizedExplicitImpactLayers = hasFullyTaggedFloorStack && !shouldBlockCeilingOnlyImplicitFloorImpact
     ? normalizeExplicitFloorRoleLayerStack(layers, catalog)
     : null;
   const inferredImpactLayers =
@@ -5149,7 +5202,7 @@ export function calculateAssembly(
       : hasFullyTaggedFloorStack
         ? normalizedExplicitImpactLayers
         : maybeInferFloorRoleLayerStack(layers, catalog);
-  const hasVisibleFloorCarrier = layers.some((layer) => Boolean(layer.floorRole));
+  const hasVisibleFloorCarrier = layers.some((layer) => Boolean(layer.floorRole)) && !hasCeilingOnlyLayerRoleStack;
   let impactResolvedLayers =
     predictorAdaptation?.sourceLayers.length && !predictorAdaptation.officialFloorSystemId
       ? resolveLayers(predictorAdaptation.sourceLayers, catalog)
@@ -5648,9 +5701,26 @@ export function calculateAssembly(
           )
     )
   );
-  const gateSOpeningLeakCompositeRuntime = options.calculator === "dynamic"
+  const postV1OpeningFacadeDoorWindowFrequencyInputBoundary = options.calculator === "dynamic"
+    ? maybeBuildPostV1OpeningFacadeDoorWindowFrequencyInputBoundary({
+        airborneContext,
+        targetOutputs
+      })
+    : null;
+  const postV1OpeningFacadeDoorWindowAcousticRatingInputBoundary = options.calculator === "dynamic"
+    ? maybeBuildPostV1OpeningFacadeDoorWindowAcousticRatingInputBoundary({
+        airborneContext,
+        frequencyInputBoundary: postV1OpeningFacadeDoorWindowFrequencyInputBoundary,
+        targetOutputs
+      })
+    : null;
+  const gateSOpeningLeakCompositeRuntime =
+    options.calculator === "dynamic" &&
+    postV1OpeningFacadeDoorWindowFrequencyInputBoundary?.shouldSuppressOpeningLeakRuntime !== true &&
+    postV1OpeningFacadeDoorWindowAcousticRatingInputBoundary?.shouldSuppressOpeningLeakRuntime !== true
     ? maybeBuildGateSOpeningLeakCompositeRuntimeCorridor({
         airborneContext,
+        hostCurve: curve,
         hostWallRatingBasis: resolveOpeningLeakHostWallBasis({
           dynamicRuntimeActive: Boolean(dynamicAirborneResult),
           importedCalculatorActive: Boolean(importedCalculatorResult),
@@ -5665,6 +5735,17 @@ export function calculateAssembly(
     : null;
   const visibleEstimatedRwDb =
     gateSOpeningLeakCompositeRuntime?.runtimeRwDb ?? adjustedEstimatedRwDb;
+  const postV1OpeningFacadeDoorWindowSpectralOpeningCurveRuntime = options.calculator === "dynamic"
+    ? maybeBuildPostV1OpeningFacadeDoorWindowSpectralOpeningCurveRuntime({
+        airborneContext,
+        gateSRuntime: gateSOpeningLeakCompositeRuntime,
+        targetOutputs
+      })
+    : null;
+  const postV1OpeningFacadeDoorWindowSpectralOpeningCurveOutputs =
+    postV1OpeningFacadeDoorWindowSpectralOpeningCurveRuntime?.supportedOutputs ?? [];
+  const postV1OpeningFacadeDoorWindowSpectralOpeningCurveOutputSet =
+    new Set(postV1OpeningFacadeDoorWindowSpectralOpeningCurveOutputs);
   const gateAHOpeningLeakStcSpectrumAdapter = options.calculator === "dynamic"
     ? maybeBuildGateAHOpeningLeakStcSpectrumAdapter({
         airborneContext,
@@ -5675,7 +5756,102 @@ export function calculateAssembly(
       })
     : null;
   const visibleEstimatedStcDb =
-    gateAHOpeningLeakStcSpectrumAdapter?.runtimeStcDb ?? ratings.astmE413.STC;
+    postV1OpeningFacadeDoorWindowSpectralOpeningCurveOutputSet.has("STC") &&
+    typeof postV1OpeningFacadeDoorWindowSpectralOpeningCurveRuntime?.estimatedStcDb === "number" &&
+    Number.isFinite(postV1OpeningFacadeDoorWindowSpectralOpeningCurveRuntime.estimatedStcDb)
+      ? postV1OpeningFacadeDoorWindowSpectralOpeningCurveRuntime.estimatedStcDb
+      : gateAHOpeningLeakStcSpectrumAdapter?.runtimeStcDb ?? ratings.astmE413.STC;
+  const postV1OpeningFacadeDoorWindowBuildingLabCompanionRequest =
+    options.calculator === "dynamic" &&
+    postV1OpeningFacadeDoorWindowAcousticRatingInputBoundary?.shouldSuppressOpeningLeakRuntime !== true
+      ? maybeBuildPostV1OpeningFacadeDoorWindowBuildingLabCompanionRequest({
+          airborneContext,
+          frequencyInputBoundary: postV1OpeningFacadeDoorWindowFrequencyInputBoundary,
+          targetOutputs
+        })
+      : null;
+  const postV1OpeningFacadeDoorWindowBuildingLabCompanionGateS =
+    postV1OpeningFacadeDoorWindowBuildingLabCompanionRequest
+      ? maybeBuildGateSOpeningLeakCompositeRuntimeCorridor({
+          airborneContext: postV1OpeningFacadeDoorWindowBuildingLabCompanionRequest.airborneContext,
+          hostCurve: curve,
+          hostWallRatingBasis: resolveOpeningLeakHostWallBasis({
+            dynamicRuntimeActive: Boolean(dynamicAirborneResult),
+            importedCalculatorActive: Boolean(importedCalculatorResult),
+            verifiedLabAnchorApplied: Boolean(
+              verifiedAirborneAnchorResult.applied &&
+                verifiedAirborneAnchorResult.match?.sourceMode === "lab"
+            )
+          }),
+          hostWallRwDb: adjustedEstimatedRwDb,
+          targetOutputs: postV1OpeningFacadeDoorWindowBuildingLabCompanionRequest.labTargetOutputs
+        })
+      : null;
+  const postV1OpeningFacadeDoorWindowBuildingLabCompanionGateAH =
+    postV1OpeningFacadeDoorWindowBuildingLabCompanionRequest
+      ? maybeBuildGateAHOpeningLeakStcSpectrumAdapter({
+          airborneContext: postV1OpeningFacadeDoorWindowBuildingLabCompanionRequest.airborneContext,
+          gateSRuntime: postV1OpeningFacadeDoorWindowBuildingLabCompanionGateS,
+          hostCurve: curve,
+          hostWallRwDb: adjustedEstimatedRwDb,
+          targetOutputs: postV1OpeningFacadeDoorWindowBuildingLabCompanionRequest.labTargetOutputs
+        })
+      : null;
+  const postV1OpeningFacadeDoorWindowBuildingLabCompanionOutputs =
+    postV1OpeningFacadeDoorWindowBuildingLabCompanionRequest?.labTargetOutputs.filter((output) =>
+      output === "Rw"
+        ? typeof postV1OpeningFacadeDoorWindowBuildingLabCompanionGateS?.runtimeRwDb === "number" &&
+          Number.isFinite(postV1OpeningFacadeDoorWindowBuildingLabCompanionGateS.runtimeRwDb)
+        : output === "STC"
+        ? typeof postV1OpeningFacadeDoorWindowBuildingLabCompanionGateAH?.runtimeStcDb === "number" &&
+          Number.isFinite(postV1OpeningFacadeDoorWindowBuildingLabCompanionGateAH.runtimeStcDb)
+        : false
+    ) ?? [];
+  const postV1OpeningFacadeDoorWindowBuildingLabCompanionOutputSet =
+    new Set(postV1OpeningFacadeDoorWindowBuildingLabCompanionOutputs);
+  const visibleEstimatedStcDbWithOpeningFacadeDoorWindowLabCompanion =
+    postV1OpeningFacadeDoorWindowBuildingLabCompanionOutputSet.has("STC") &&
+    typeof postV1OpeningFacadeDoorWindowBuildingLabCompanionGateAH?.runtimeStcDb === "number" &&
+    Number.isFinite(postV1OpeningFacadeDoorWindowBuildingLabCompanionGateAH.runtimeStcDb)
+      ? postV1OpeningFacadeDoorWindowBuildingLabCompanionGateAH.runtimeStcDb
+      : visibleEstimatedStcDb;
+  const postV1OpeningFacadeDoorWindowCCtrLabCompanionRequest =
+    options.calculator === "dynamic" &&
+    postV1OpeningFacadeDoorWindowAcousticRatingInputBoundary?.shouldSuppressOpeningLeakRuntime !== true
+      ? maybeBuildPostV1OpeningFacadeDoorWindowCCtrLabCompanionRequest({
+          airborneContext,
+          frequencyInputBoundary: postV1OpeningFacadeDoorWindowFrequencyInputBoundary,
+          targetOutputs
+        })
+      : null;
+  const postV1OpeningFacadeDoorWindowCCtrLabCompanionGateS =
+    postV1OpeningFacadeDoorWindowCCtrLabCompanionRequest
+      ? maybeBuildGateSOpeningLeakCompositeRuntimeCorridor({
+          airborneContext: postV1OpeningFacadeDoorWindowCCtrLabCompanionRequest.airborneContext,
+          hostCurve: curve,
+          hostWallRatingBasis: resolveOpeningLeakHostWallBasis({
+            dynamicRuntimeActive: Boolean(dynamicAirborneResult),
+            importedCalculatorActive: Boolean(importedCalculatorResult),
+            verifiedLabAnchorApplied: Boolean(
+              verifiedAirborneAnchorResult.applied &&
+                verifiedAirborneAnchorResult.match?.sourceMode === "lab"
+            )
+          }),
+          hostWallRwDb: adjustedEstimatedRwDb,
+          targetOutputs: ["Rw"]
+        })
+      : null;
+  const postV1OpeningFacadeDoorWindowCCtrLabCompanionRuntime =
+    maybeBuildPostV1OpeningFacadeDoorWindowCCtrLabCompanionRuntime({
+      gateSRuntime: postV1OpeningFacadeDoorWindowCCtrLabCompanionGateS,
+      hostCurve: curve,
+      hostWallRwDb: adjustedEstimatedRwDb,
+      request: postV1OpeningFacadeDoorWindowCCtrLabCompanionRequest
+    });
+  const postV1OpeningFacadeDoorWindowCCtrLabCompanionOutputs =
+    postV1OpeningFacadeDoorWindowCCtrLabCompanionRuntime?.supportedOutputs ?? [];
+  const postV1OpeningFacadeDoorWindowCCtrLabCompanionOutputSet =
+    new Set(postV1OpeningFacadeDoorWindowCCtrLabCompanionOutputs);
   const wallDirectLabRatings = dynamicAirborneResult
     ? buildRatingsFromCurve(dynamicAirborneResult.curve.frequenciesHz, dynamicAirborneResult.curve.transmissionLossDb)
     : null;
@@ -5713,10 +5889,36 @@ export function calculateAssembly(
   const hasUserSuppliedAirborneMaterial = airborneResolvedLayers.some(
     (layer) => layer.material.acoustic?.propertySourceStatus === "user_supplied"
   );
-  const companyInternalOpeningLeakFieldBuildingRuntime = options.calculator === "dynamic"
+  const postV1OpeningFacadeDoorWindowIndoorFieldBuildingAdapterRequest =
+    options.calculator === "dynamic" &&
+    postV1OpeningFacadeDoorWindowAcousticRatingInputBoundary?.shouldSuppressFieldBuildingRuntime !== true
+      ? maybeBuildPostV1OpeningFacadeDoorWindowIndoorFieldBuildingAdapterRequest({
+          airborneContext,
+          frequencyInputBoundary: postV1OpeningFacadeDoorWindowFrequencyInputBoundary,
+          targetOutputs
+        })
+      : null;
+  const postV1OpeningFacadeDoorWindowSpectralFieldBuildingAdapterRequest =
+    options.calculator === "dynamic" &&
+    postV1OpeningFacadeDoorWindowAcousticRatingInputBoundary?.shouldSuppressFieldBuildingRuntime !== true
+      ? maybeBuildPostV1OpeningFacadeDoorWindowSpectralFieldBuildingAdapterRequest({
+          airborneContext,
+          frequencyInputBoundary: postV1OpeningFacadeDoorWindowFrequencyInputBoundary,
+          targetOutputs
+        })
+      : null;
+  const companyInternalOpeningLeakFieldBuildingRuntime =
+    options.calculator === "dynamic" &&
+    postV1OpeningFacadeDoorWindowAcousticRatingInputBoundary?.shouldSuppressFieldBuildingRuntime !== true &&
+    (
+      postV1OpeningFacadeDoorWindowFrequencyInputBoundary?.shouldSuppressFieldBuildingRuntime !== true ||
+      postV1OpeningFacadeDoorWindowIndoorFieldBuildingAdapterRequest !== null ||
+      postV1OpeningFacadeDoorWindowSpectralFieldBuildingAdapterRequest !== null
+    )
     ? maybeBuildCompanyInternalOpeningLeakFieldBuildingRuntimeCorridor({
         airborneContext,
         fieldFlankingPenaltyDb: airborneOverlayResult.overlay?.fieldFlankingPenaltyDb,
+        hostCurve: curve,
         hostWallRatingBasis: resolveOpeningLeakHostWallBasis({
           dynamicRuntimeActive: Boolean(dynamicAirborneResult),
           importedCalculatorActive: Boolean(importedCalculatorResult),
@@ -5726,6 +5928,8 @@ export function calculateAssembly(
           )
         }),
         hostWallRwDb: adjustedEstimatedRwDb,
+        spectralFieldBuildingAdapterOwnerActive:
+          postV1OpeningFacadeDoorWindowSpectralFieldBuildingAdapterRequest !== null,
         targetOutputs
       })
     : null;
@@ -5749,19 +5953,37 @@ export function calculateAssembly(
     : gateAHOpeningLeakStcSpectrumAdapter
       ? gateSOpeningLeakCompositeRuntime?.blockedOutputs.filter((output) =>
           output !== "STC" &&
+          !postV1OpeningFacadeDoorWindowSpectralOpeningCurveOutputSet.has(output) &&
+          !postV1OpeningFacadeDoorWindowBuildingLabCompanionOutputSet.has(output) &&
+          !postV1OpeningFacadeDoorWindowCCtrLabCompanionOutputSet.has(output) &&
           !(companyInternalOpeningLeakFieldBuildingRuntime?.supportedOutputs.includes(output) ?? false)
         ) ?? []
       : gateSOpeningLeakCompositeRuntime?.blockedOutputs.filter(
-          (output) => !(companyInternalOpeningLeakFieldBuildingRuntime?.supportedOutputs.includes(output) ?? false)
+          (output) =>
+            !postV1OpeningFacadeDoorWindowSpectralOpeningCurveOutputSet.has(output) &&
+            !postV1OpeningFacadeDoorWindowBuildingLabCompanionOutputSet.has(output) &&
+            !postV1OpeningFacadeDoorWindowCCtrLabCompanionOutputSet.has(output) &&
+            !(companyInternalOpeningLeakFieldBuildingRuntime?.supportedOutputs.includes(output) ?? false)
         ) ?? [];
-  const impactLaneTargetOutputs =
+  const rawPostV1OpeningFacadeDoorWindowFrequencyInputBoundaryBlockedOutputs =
+    postV1OpeningFacadeDoorWindowFrequencyInputBoundary?.blockedOutputs ?? [];
+  const rawPostV1OpeningFacadeDoorWindowAcousticRatingInputBoundaryBlockedOutputs =
+    postV1OpeningFacadeDoorWindowAcousticRatingInputBoundary?.blockedOutputs ?? [];
+  const impactLaneTargetOutputSet = new Set<RequestedOutputId>(targetOutputs);
+  if (
     hasRawBareFloorAirborneBuildingPredictionSeedRequest({
       airborneContext,
       resolvedLayers: impactResolvedLayers,
       targetOutputs
-    }) && !targetOutputs.includes("Ln,w")
-      ? [...targetOutputs, "Ln,w" as const]
-      : options.targetOutputs;
+    })
+  ) {
+    impactLaneTargetOutputSet.add("Ln,w");
+  }
+  if (lowerTreatmentFieldCompanionPredictorSeedReady) {
+    impactLaneTargetOutputSet.add("Ln,w");
+    impactLaneTargetOutputSet.add("DeltaLw");
+  }
+  const impactLaneTargetOutputs = [...impactLaneTargetOutputSet];
   const visibleLayerDeltaLwPredictorInput =
     visibleTimberCltDeltaLwLayerStackReady || visibleLightweightConcreteDeltaLwLayerStackReady
       ? maybeBuildImpactPredictorInputFromLayerStack(
@@ -5792,12 +6014,51 @@ export function calculateAssembly(
     visibleSteelFormulaSurfaceRouteActive
       ? visibleSteelFormulaSurfaceResult?.missingPhysicalInputs ?? []
       : [];
+  const pureFieldImpactOutputRequest = isPostV1GateNPureFieldImpactRequest(targetOutputs);
+  const pureFieldImpactNeedsStandardizedOutput = targetOutputs.some((output) =>
+    output === "L'nT,w" || output === "L'nT,50"
+  );
+  const pureFieldLowerTreatmentPredictorSeed =
+    !explicitPredictorInput &&
+    options.calculator === "dynamic" &&
+    pureFieldImpactOutputRequest
+      ? buildGateWImpactPredictorSeed({
+          catalog: baseCatalog,
+          floorImpactContext,
+          layers
+        })
+      : {};
+  const pureFieldLowerTreatmentPredictorInputCandidate =
+    !explicitPredictorInput &&
+    options.calculator === "dynamic" &&
+    pureFieldImpactOutputRequest &&
+    hasPostV1GateNFieldKPolicy(impactFieldContext) &&
+    (!pureFieldImpactNeedsStandardizedOutput || hasPostV1GateNReceivingRoomVolume(impactFieldContext))
+      ? maybeBuildImpactPredictorInputFromLayerStack(
+          layers,
+          pureFieldLowerTreatmentPredictorSeed,
+          {
+            ...layerDerivedImpactPredictorMeta,
+            allowContextOwnedHeavyConcreteBase: true
+          },
+          catalog
+        )
+      : null;
+  const pureFieldLowerTreatmentPredictorInput =
+    pureFieldLowerTreatmentPredictorInputCandidate?.structuralSupportType === "reinforced_concrete" &&
+    pureFieldLowerTreatmentPredictorInputCandidate.impactSystemType === "combined_upper_lower_system" &&
+    collectHeavyConcreteCombinedImpactFormulaMissingPhysicalInputs(pureFieldLowerTreatmentPredictorInputCandidate).length === 0
+      ? pureFieldLowerTreatmentPredictorInputCandidate
+      : null;
   const directImpactLanePredictorInput =
-    predictorInput ?? visibleLayerDeltaLwPredictorInput ?? visibleSteelFormulaPredictorInput;
+    predictorInput ??
+    visibleLayerDeltaLwPredictorInput ??
+    visibleSteelFormulaPredictorInput ??
+    pureFieldLowerTreatmentPredictorInput;
   const rawDirectImpactLane = resolveLayerBasedImpactLane({
     catalog,
     exactImpact,
-    explicitFloorRoleStack: hasFullyTaggedFloorStack,
+    explicitFloorRoleStack: hasFullyTaggedFloorStack && !shouldBlockCeilingOnlyImplicitFloorImpact,
     explicitPredictorInput,
     predictorInput: directImpactLanePredictorInput,
     officialFloorSystemId: predictorAdaptation?.officialFloorSystemId ?? null,
@@ -5815,7 +6076,9 @@ export function calculateAssembly(
           predictorSpecificFloorSystemEstimate: null
         }
       : rawDirectImpactLane;
-  const directImpactCatalogHasLiveImpact = Boolean(directImpactLane.impactCatalogMatch?.impact);
+  const directImpactCatalogHasLiveImpact = Boolean(
+    !shouldBlockCeilingOnlyImplicitFloorImpact && directImpactLane.impactCatalogMatch?.impact
+  );
   const visibleLayerDeltaLwMissingPhysicalInputs =
     visibleTimberCltDeltaLwLayerStackReady
       ? collectTimberCltDeltaLwFormulaMissingPhysicalInputs(visibleLayerDeltaLwPredictorInput)
@@ -5844,17 +6107,31 @@ export function calculateAssembly(
     predictorInput = visibleSteelFormulaPredictorInput;
     predictorInputMode = "derived_from_visible_layers";
   }
-  const directNarrowImpact = directImpactLane.narrowImpact;
-  let floorSystemMatch = directImpactLane.floorSystemMatch;
-  let boundFloorSystemMatch = directImpactLane.boundFloorSystemMatch;
-  let impactCatalogMatch = directImpactLane.impactCatalogMatch;
-  let floorSystemRecommendations = directImpactLane.floorSystemRecommendations;
-  let narrowImpact = directImpactLane.narrowImpact;
-  let boundFloorSystemEstimate = directImpactLane.boundFloorSystemEstimate;
-  let floorSystemEstimate = directImpactLane.floorSystemEstimate;
-  let explicitDeltaImpact = directImpactLane.explicitDeltaImpact;
-  let predictorDeltaLwCompanion = directImpactLane.predictorDeltaLwCompanion;
-  if (!floorSystemMatch && !boundFloorSystemMatch && !impactCatalogMatch) {
+  if (
+    !predictorInput &&
+    pureFieldLowerTreatmentPredictorInput &&
+    directImpactLane.narrowImpact
+  ) {
+    predictorInput = pureFieldLowerTreatmentPredictorInput;
+    predictorInputMode = "derived_from_visible_layers";
+  }
+  const directNarrowImpact = shouldBlockCeilingOnlyImplicitFloorImpact ? null : directImpactLane.narrowImpact;
+  let floorSystemMatch = shouldBlockCeilingOnlyImplicitFloorImpact ? null : directImpactLane.floorSystemMatch;
+  let boundFloorSystemMatch = shouldBlockCeilingOnlyImplicitFloorImpact ? null : directImpactLane.boundFloorSystemMatch;
+  let impactCatalogMatch = shouldBlockCeilingOnlyImplicitFloorImpact ? null : directImpactLane.impactCatalogMatch;
+  let floorSystemRecommendations = shouldBlockCeilingOnlyImplicitFloorImpact
+    ? []
+    : directImpactLane.floorSystemRecommendations;
+  let narrowImpact = shouldBlockCeilingOnlyImplicitFloorImpact ? null : directImpactLane.narrowImpact;
+  let boundFloorSystemEstimate = shouldBlockCeilingOnlyImplicitFloorImpact
+    ? null
+    : directImpactLane.boundFloorSystemEstimate;
+  let floorSystemEstimate = shouldBlockCeilingOnlyImplicitFloorImpact ? null : directImpactLane.floorSystemEstimate;
+  let explicitDeltaImpact = shouldBlockCeilingOnlyImplicitFloorImpact ? null : directImpactLane.explicitDeltaImpact;
+  let predictorDeltaLwCompanion = shouldBlockCeilingOnlyImplicitFloorImpact
+    ? null
+    : directImpactLane.predictorDeltaLwCompanion;
+  if (!shouldBlockCeilingOnlyImplicitFloorImpact && !floorSystemMatch && !boundFloorSystemMatch && !impactCatalogMatch) {
     impactCatalogMatch = matchImpactProductCatalog(resolvedLayers);
   }
   if (!floorSystemMatch && (predictorDeltaLwCompanion || options.targetOutputs?.includes("Ln,w"))) {
@@ -5893,6 +6170,7 @@ export function calculateAssembly(
 
   if (
     !visibleSteelFormulaSurfaceRouteActive &&
+    !shouldBlockCeilingOnlyImplicitFloorImpact &&
     !explicitPredictorInput &&
     !exactImpact &&
     !directImpactLane.floorSystemMatch &&
@@ -5920,13 +6198,26 @@ export function calculateAssembly(
         predictorInput: derivedPredictorInput,
         officialFloorSystemId: derivedPredictorAdaptation.officialFloorSystemId,
         resolvedLayers: derivedImpactResolvedLayers,
-        targetOutputs: options.targetOutputs
+        targetOutputs: impactLaneTargetOutputs
       });
       const derivedHeavyConcreteCombinedFormulaFallbackBlockerWarning =
         buildHeavyConcreteCombinedImpactFormulaFallbackBlockerWarning(derivedPredictorInput);
+      const completeHeavyConcreteCombinedPureFieldAnchor = Boolean(
+        isPostV1GateNPureFieldImpactRequest(targetOutputs) &&
+          derivedImpactLane.narrowImpact &&
+          derivedPredictorInput.structuralSupportType === "reinforced_concrete" &&
+          derivedPredictorInput.impactSystemType === "combined_upper_lower_system" &&
+          collectHeavyConcreteCombinedImpactFormulaMissingPhysicalInputs(derivedPredictorInput).length === 0 &&
+          hasPostV1GateNFieldKPolicy(impactFieldContext) &&
+          (
+            !targetOutputs.some((output) => output === "L'nT,w" || output === "L'nT,50") ||
+            hasPostV1GateNReceivingRoomVolume(impactFieldContext)
+          )
+      );
       const shouldUseDerived =
         !blocksBoundOnlyUbiqOpenWebCarpetDerivedEstimate &&
         (
+          completeHeavyConcreteCombinedPureFieldAnchor ||
           Boolean(derivedHeavyConcreteCombinedFormulaFallbackBlockerWarning) ||
           Boolean(
               derivedImpactLane.floorSystemMatch ||
@@ -6151,7 +6442,16 @@ export function calculateAssembly(
     airborneOverlayResult.warnings;
   const visibleEstimatedRwDbWithFieldBuildingRuntime =
     floorAirborneBuildingPredictionRuntime?.directRwDb ??
-    visibleEstimatedRwDbWithOpeningLeakFieldBuildingRuntime;
+    (
+      (
+        postV1OpeningFacadeDoorWindowBuildingLabCompanionOutputSet.has("Rw") ||
+        postV1OpeningFacadeDoorWindowBuildingLabCompanionOutputSet.has("STC")
+      ) &&
+        typeof postV1OpeningFacadeDoorWindowBuildingLabCompanionGateS?.runtimeRwDb === "number" &&
+        Number.isFinite(postV1OpeningFacadeDoorWindowBuildingLabCompanionGateS.runtimeRwDb)
+        ? postV1OpeningFacadeDoorWindowBuildingLabCompanionGateS.runtimeRwDb
+        : visibleEstimatedRwDbWithOpeningLeakFieldBuildingRuntime
+    );
   const canUseFloorLabAirborneCompanion = Boolean(
     floorSystemRatings &&
       (isFloorLabAirborneCompanionBasis({
@@ -6228,7 +6528,7 @@ export function calculateAssembly(
       estimatedRwDb: visibleEstimatedRwDbWithFloorPackageLabCompanion,
       estimatedRwPrimeDb: ratingsWithFloorAirborneBuildingPredictionRuntime.field?.RwPrime ??
         ratingsWithFloorAirborneBuildingPredictionRuntime.iso717.RwPrime,
-      estimatedStc: visibleEstimatedStcDb
+      estimatedStc: visibleEstimatedStcDbWithOpeningFacadeDoorWindowLabCompanion
     },
     targetOutputs: options.targetOutputs ?? []
   });
@@ -6627,7 +6927,7 @@ export function calculateAssembly(
     airborneContext,
     dnTADb: ratingsWithFloorAirborneBuildingPredictionRuntime.field?.DnTA
   });
-  const postV1GateARCharacteristicDnTAkOutputs =
+  const postV1GateARCharacteristicDnTAkOutputs: RequestedOutputId[] =
     gateARAirborneBuildingPredictionActive && gateARCharacteristicDnTAkDb !== undefined
       ? targetOutputSupport.targetOutputs.filter((output) => output === "DnT,A,k")
       : [];
@@ -6637,6 +6937,24 @@ export function calculateAssembly(
           GATE_AR_AIRBORNE_BUILDING_PREDICTION_LAB_ALIAS_OUTPUTS.has(output)
         )
       : [];
+  const postV1OpeningFacadeDoorWindowFrequencyInputBoundaryBlockedOutputs =
+    rawPostV1OpeningFacadeDoorWindowFrequencyInputBoundaryBlockedOutputs.filter(
+      (output) =>
+        !postV1OpeningFacadeDoorWindowSpectralOpeningCurveOutputSet.has(output) &&
+        !postV1OpeningFacadeDoorWindowBuildingLabCompanionOutputSet.has(output) &&
+        !postV1OpeningFacadeDoorWindowCCtrLabCompanionOutputSet.has(output) &&
+        !(companyInternalOpeningLeakFieldBuildingRuntime?.supportedOutputs.includes(output) ?? false) &&
+        !postV1GateARCharacteristicDnTAkOutputs.includes(output)
+    );
+  const postV1OpeningFacadeDoorWindowAcousticRatingInputBoundaryBlockedOutputs =
+    rawPostV1OpeningFacadeDoorWindowAcousticRatingInputBoundaryBlockedOutputs.filter(
+      (output) =>
+        !postV1OpeningFacadeDoorWindowSpectralOpeningCurveOutputSet.has(output) &&
+        !postV1OpeningFacadeDoorWindowBuildingLabCompanionOutputSet.has(output) &&
+        !postV1OpeningFacadeDoorWindowCCtrLabCompanionOutputSet.has(output) &&
+        !(companyInternalOpeningLeakFieldBuildingRuntime?.supportedOutputs.includes(output) ?? false) &&
+        !postV1GateARCharacteristicDnTAkOutputs.includes(output)
+    );
   const advancedWallSourceAbsentFieldBuildingLabAliasBlockedOutputs =
     advancedWallSourceAbsentFieldBuildingBasis
       ? targetOutputSupport.targetOutputs.filter((output) =>
@@ -6777,7 +7095,11 @@ export function calculateAssembly(
           ),
           answerEngineV1ParkedOutputs
         ),
-        gateSOpeningLeakBlockedOutputs
+        [
+          ...gateSOpeningLeakBlockedOutputs,
+          ...postV1OpeningFacadeDoorWindowFrequencyInputBoundaryBlockedOutputs,
+          ...postV1OpeningFacadeDoorWindowAcousticRatingInputBoundaryBlockedOutputs
+        ]
       ),
       gateAYAdvancedWallBlockedOutputs
     ),
@@ -6811,7 +7133,7 @@ export function calculateAssembly(
           estimatedCDb: visibleEstimatedCDbWithFloorPackageLabCompanion,
           estimatedCtrDb: visibleEstimatedCtrDbWithFloorPackageLabCompanion,
           estimatedRwDb: visibleEstimatedRwDbWithFloorPackageLabCompanion,
-          estimatedStcDb: visibleEstimatedStcDb,
+          estimatedStcDb: visibleEstimatedStcDbWithOpeningFacadeDoorWindowLabCompanion,
           sourceAnchorCandidatePresent: Boolean(
             compatibleWallAnchorDeltaResult.match || verifiedAirborneAnchorResult.match
           ),
@@ -6829,7 +7151,7 @@ export function calculateAssembly(
           estimatedCDb: visibleEstimatedCDbWithFloorPackageLabCompanion,
           estimatedCtrDb: visibleEstimatedCtrDbWithFloorPackageLabCompanion,
           estimatedRwDb: visibleEstimatedRwDbWithFloorPackageLabCompanion,
-          estimatedStcDb: visibleEstimatedStcDb,
+          estimatedStcDb: visibleEstimatedStcDbWithOpeningFacadeDoorWindowLabCompanion,
           sourceAnchorCandidatePresent: Boolean(
             compatibleWallAnchorDeltaResult.match || verifiedAirborneAnchorResult.match
           ),
@@ -7017,6 +7339,9 @@ export function calculateAssembly(
           ...postV1WallAdvancedWallSourceAbsentFieldBuildingLabCompanionOutputs,
           ...postV1WallTimberStudCltFormulaFieldLabCompanionOutputs,
           ...postV1WallTimberStudCltFormulaBuildingLabCompanionOutputs,
+          ...postV1OpeningFacadeDoorWindowSpectralOpeningCurveOutputs,
+          ...postV1OpeningFacadeDoorWindowBuildingLabCompanionOutputs,
+          ...postV1OpeningFacadeDoorWindowCCtrLabCompanionOutputs,
           ...postV1OpenBoxFinishedPackageBuildingLabCompanionOutputs,
           ...postV1RawBareFloorBuildingDirectRwCompanionOutputs,
           ...postV1LowDensityExactAstmLabAirborneCompanionOutputs,
@@ -7111,12 +7436,24 @@ export function calculateAssembly(
     typeof projectUserVerifiedCalculatedExactBridge.values.Rw === "number"
       ? projectUserVerifiedCalculatedExactBridge.values.Rw
       : visibleEstimatedRwDbWithProjectUserMeasuredFrequencyCurve;
+  const visibleEstimatedCDbWithOpeningFacadeDoorWindowSpectralOpeningCurve =
+    postV1OpeningFacadeDoorWindowSpectralOpeningCurveOutputSet.has("C") &&
+    typeof postV1OpeningFacadeDoorWindowSpectralOpeningCurveRuntime?.estimatedCDb === "number" &&
+    Number.isFinite(postV1OpeningFacadeDoorWindowSpectralOpeningCurveRuntime.estimatedCDb)
+      ? postV1OpeningFacadeDoorWindowSpectralOpeningCurveRuntime.estimatedCDb
+      : visibleEstimatedCDbWithFloorPackageLabCompanion;
+  const visibleEstimatedCDbWithOpeningFacadeDoorWindowCCtrLabCompanion =
+    postV1OpeningFacadeDoorWindowCCtrLabCompanionOutputSet.has("C") &&
+    typeof postV1OpeningFacadeDoorWindowCCtrLabCompanionRuntime?.estimatedCDb === "number" &&
+    Number.isFinite(postV1OpeningFacadeDoorWindowCCtrLabCompanionRuntime.estimatedCDb)
+      ? postV1OpeningFacadeDoorWindowCCtrLabCompanionRuntime.estimatedCDb
+      : visibleEstimatedCDbWithOpeningFacadeDoorWindowSpectralOpeningCurve;
   const visibleEstimatedCDbWithPostV1WallLabCompanion =
     postV1WallDirectFormulaLabCompanionOutputSet.has("C") &&
     typeof wallDirectLabRatings?.iso717.C === "number" &&
     Number.isFinite(wallDirectLabRatings.iso717.C)
       ? round1(wallDirectLabRatings.iso717.C)
-      : visibleEstimatedCDbWithFloorPackageLabCompanion;
+      : visibleEstimatedCDbWithOpeningFacadeDoorWindowCCtrLabCompanion;
   const visibleEstimatedCDbWithAdvancedWallSourceAbsentLabCompanion =
     postV1WallAdvancedWallSourceAbsentLabCompanionOutputSet.has("C") &&
     typeof advancedWallSourceAbsentFieldBuildingLabRatings?.iso717.C === "number" &&
@@ -7139,12 +7476,24 @@ export function calculateAssembly(
     typeof projectUserVerifiedCalculatedExactBridge.values.C === "number"
       ? projectUserVerifiedCalculatedExactBridge.values.C
       : visibleEstimatedCDbWithProjectUserMeasuredFrequencyCurve;
+  const visibleEstimatedCtrDbWithOpeningFacadeDoorWindowSpectralOpeningCurve =
+    postV1OpeningFacadeDoorWindowSpectralOpeningCurveOutputSet.has("Ctr") &&
+    typeof postV1OpeningFacadeDoorWindowSpectralOpeningCurveRuntime?.estimatedCtrDb === "number" &&
+    Number.isFinite(postV1OpeningFacadeDoorWindowSpectralOpeningCurveRuntime.estimatedCtrDb)
+      ? postV1OpeningFacadeDoorWindowSpectralOpeningCurveRuntime.estimatedCtrDb
+      : visibleEstimatedCtrDbWithFloorPackageLabCompanion;
+  const visibleEstimatedCtrDbWithOpeningFacadeDoorWindowCCtrLabCompanion =
+    postV1OpeningFacadeDoorWindowCCtrLabCompanionOutputSet.has("Ctr") &&
+    typeof postV1OpeningFacadeDoorWindowCCtrLabCompanionRuntime?.estimatedCtrDb === "number" &&
+    Number.isFinite(postV1OpeningFacadeDoorWindowCCtrLabCompanionRuntime.estimatedCtrDb)
+      ? postV1OpeningFacadeDoorWindowCCtrLabCompanionRuntime.estimatedCtrDb
+      : visibleEstimatedCtrDbWithOpeningFacadeDoorWindowSpectralOpeningCurve;
   const visibleEstimatedCtrDbWithPostV1WallLabCompanion =
     postV1WallDirectFormulaLabCompanionOutputSet.has("Ctr") &&
     typeof wallDirectLabRatings?.iso717.Ctr === "number" &&
     Number.isFinite(wallDirectLabRatings.iso717.Ctr)
       ? round1(wallDirectLabRatings.iso717.Ctr)
-      : visibleEstimatedCtrDbWithFloorPackageLabCompanion;
+      : visibleEstimatedCtrDbWithOpeningFacadeDoorWindowCCtrLabCompanion;
   const visibleEstimatedCtrDbWithAdvancedWallSourceAbsentLabCompanion =
     postV1WallAdvancedWallSourceAbsentLabCompanionOutputSet.has("Ctr") &&
     typeof advancedWallSourceAbsentFieldBuildingLabRatings?.iso717.Ctr === "number" &&
@@ -7172,7 +7521,7 @@ export function calculateAssembly(
     typeof wallDirectLabRatings?.astmE413.STC === "number" &&
     Number.isFinite(wallDirectLabRatings.astmE413.STC)
       ? round1(wallDirectLabRatings.astmE413.STC)
-      : visibleEstimatedStcDb;
+      : visibleEstimatedStcDbWithOpeningFacadeDoorWindowLabCompanion;
   const visibleEstimatedStcDbWithAdvancedWallSourceAbsentLabCompanion =
     postV1WallAdvancedWallSourceAbsentLabCompanionOutputSet.has("STC") &&
     typeof advancedWallSourceAbsentFieldBuildingLabRatings?.astmE413.STC === "number" &&
@@ -7371,10 +7720,50 @@ export function calculateAssembly(
   }
   if (gateAHOpeningLeakStcSpectrumAdapter?.warning) {
     warnings.push(gateAHOpeningLeakStcSpectrumAdapter.warning);
+  } else if (postV1OpeningFacadeDoorWindowBuildingLabCompanionGateAH?.warning) {
+    warnings.push(postV1OpeningFacadeDoorWindowBuildingLabCompanionGateAH.warning);
   } else if (companyInternalOpeningLeakFieldBuildingRuntime?.warnings.length) {
     warnings.push(...companyInternalOpeningLeakFieldBuildingRuntime.warnings);
-  } else if (!projectUserMeasuredWallAirborneFrequencyFieldBuildingBasis && gateSOpeningLeakCompositeRuntime?.warning) {
+  } else if (
+    !projectUserMeasuredWallAirborneFrequencyFieldBuildingBasis &&
+    gateSOpeningLeakCompositeRuntime?.warning &&
+    postV1OpeningFacadeDoorWindowBuildingLabCompanionOutputs.length === 0
+  ) {
     warnings.push(gateSOpeningLeakCompositeRuntime.warning);
+  }
+  if (postV1OpeningFacadeDoorWindowSpectralOpeningCurveRuntime?.warning) {
+    warnings.push(postV1OpeningFacadeDoorWindowSpectralOpeningCurveRuntime.warning);
+  }
+  if (postV1OpeningFacadeDoorWindowBuildingLabCompanionRequest) {
+    warnings.push(postV1OpeningFacadeDoorWindowBuildingLabCompanionRequest.warning);
+  }
+  if (postV1OpeningFacadeDoorWindowCCtrLabCompanionRequest) {
+    warnings.push(postV1OpeningFacadeDoorWindowCCtrLabCompanionRequest.warning);
+  }
+  if (
+    postV1OpeningFacadeDoorWindowIndoorFieldBuildingAdapterRequest &&
+    companyInternalOpeningLeakFieldBuildingRuntime?.warnings.length
+  ) {
+    for (const warning of companyInternalOpeningLeakFieldBuildingRuntime.warnings) {
+      if (!warnings.includes(warning)) {
+        warnings.push(warning);
+      }
+    }
+  }
+  if (postV1OpeningFacadeDoorWindowIndoorFieldBuildingAdapterRequest) {
+    warnings.push(postV1OpeningFacadeDoorWindowIndoorFieldBuildingAdapterRequest.warning);
+  }
+  if (postV1OpeningFacadeDoorWindowSpectralFieldBuildingAdapterRequest) {
+    warnings.push(postV1OpeningFacadeDoorWindowSpectralFieldBuildingAdapterRequest.warning);
+  }
+  if (postV1OpeningFacadeDoorWindowFrequencyInputBoundary?.warning) {
+    warnings.push(postV1OpeningFacadeDoorWindowFrequencyInputBoundary.warning);
+  }
+  if (targetOutputs.includes("OITC")) {
+    warnings.push(POST_V1_OPENING_FACADE_OUTDOOR_INDOOR_OITC_METRIC_SCHEMA_AND_ADAPTER_BRIDGE_OWNER_WARNING);
+  }
+  if (postV1OpeningFacadeDoorWindowAcousticRatingInputBoundary?.warning) {
+    warnings.push(postV1OpeningFacadeDoorWindowAcousticRatingInputBoundary.warning);
   }
   if (gateYCltMassTimberCtrSpectrumAdapterBasis) {
     warnings.push(GATE_Y_CLT_MASS_TIMBER_CTR_SPECTRUM_ADAPTER_WARNING);
@@ -7691,6 +8080,9 @@ export function calculateAssembly(
       gateAHOpeningLeakStcSpectrumAdapter &&
       result.airborneBasis.origin === "family_physics_prediction"
     ) {
+      const spectralOpeningCurveBasis =
+        result.airborneBasis.method ===
+        POST_V1_OPENING_FACADE_DOOR_WINDOW_SPECTRAL_OPENING_CURVE_RUNTIME_OWNER_METHOD;
       result.airborneBasis = {
         ...result.airborneBasis,
         assumptions: [
@@ -7698,18 +8090,98 @@ export function calculateAssembly(
             (assumption: string) => !/STC, field, and building outputs remain unsupported/i.test(assumption)
           ),
           "Opening ratings must be Rw / ISO 717-1 lab compatible for the Gate S composite Rw formula.",
-          "Gate AH separately owns element-lab STC by applying the Gate S Rw loss to the selected host-wall frequency curve and re-rating it with ASTM E413.",
+          spectralOpeningCurveBasis
+            ? "Gate AH separately owns element-lab STC by re-rating the calculated opening/facade composite transmission-loss curve with ASTM E413."
+            : "Gate AH separately owns element-lab STC by applying the Gate S Rw loss to the selected host-wall frequency curve and re-rating it with ASTM E413.",
           "Field and building outputs remain unsupported until separately owned adapters exist."
         ],
         requiredInputs: [
           ...result.airborneBasis.requiredInputs,
-          "GateAHOpeningLeakStcSpectrumAdapter:ASTM E413 contour from shifted TL curve"
+          spectralOpeningCurveBasis
+            ? "PostV1OpeningFacadeDoorWindowSpectralOpeningCurveRuntime:ASTM E413 contour from composite TL curve"
+            : "GateAHOpeningLeakStcSpectrumAdapter:ASTM E413 contour from shifted TL curve"
         ]
       };
     }
   }
   if (companyInternalOpeningLeakFieldBuildingRuntime?.basis) {
     result.airborneBasis = companyInternalOpeningLeakFieldBuildingRuntime.basis;
+  }
+  if (
+    postV1OpeningFacadeDoorWindowFrequencyInputBoundary?.basis &&
+    (
+      postV1OpeningFacadeDoorWindowFrequencyInputBoundary.status === "needs_input" ||
+      (
+        postV1OpeningFacadeDoorWindowFrequencyInputBoundary.status === "unsupported_boundary" &&
+        postV1OpeningFacadeDoorWindowBuildingLabCompanionOutputs.length === 0 &&
+        postV1OpeningFacadeDoorWindowCCtrLabCompanionOutputs.length === 0 &&
+        companyInternalOpeningLeakFieldBuildingRuntime?.status !== "blocked_missing_input" &&
+        (companyInternalOpeningLeakFieldBuildingRuntime?.supportedOutputs.length ?? 0) === 0 &&
+        postV1GateARCharacteristicDnTAkOutputs.length === 0
+      ) ||
+      postV1OpeningFacadeDoorWindowFrequencyInputBoundary.shouldSuppressOpeningLeakRuntime
+    )
+  ) {
+    result.airborneBasis = postV1OpeningFacadeDoorWindowFrequencyInputBoundary.basis;
+  }
+  if (
+    postV1OpeningFacadeDoorWindowAcousticRatingInputBoundary?.basis &&
+    postV1OpeningFacadeDoorWindowAcousticRatingInputBoundary.status === "needs_input"
+  ) {
+    result.airborneBasis = postV1OpeningFacadeDoorWindowAcousticRatingInputBoundary.basis;
+  }
+  if (
+    postV1OpeningFacadeDoorWindowBuildingLabCompanionGateS?.basis &&
+    postV1OpeningFacadeDoorWindowBuildingLabCompanionOutputs.length > 0 &&
+    (companyInternalOpeningLeakFieldBuildingRuntime?.supportedOutputs.length ?? 0) === 0 &&
+    postV1GateARCharacteristicDnTAkOutputs.length === 0
+  ) {
+    const labCompanionMetricLabel =
+      postV1OpeningFacadeDoorWindowCCtrLabCompanionOutputs.length > 0
+        ? "Rw/STC/C/Ctr"
+        : "Rw/STC";
+    result.airborneBasis = {
+      ...postV1OpeningFacadeDoorWindowBuildingLabCompanionGateS.basis,
+      assumptions: [
+        ...postV1OpeningFacadeDoorWindowBuildingLabCompanionGateS.basis.assumptions.filter(
+          (assumption: string) =>
+            !/field and building outputs remain unsupported/i.test(assumption) &&
+            !/STC, field, and building outputs remain unsupported/i.test(assumption)
+        ),
+        `Opening/facade door/window field/building requests keep ${labCompanionMetricLabel} as lab companions from a cloned element-lab Gate S/Gate AH/ISO 717-1 route.`,
+        "Facade field/building outputs, outdoor-indoor facade ratings, OITC, and impact metrics remain unsupported until separately owned adapters exist."
+      ],
+      requiredInputs: [
+        ...postV1OpeningFacadeDoorWindowBuildingLabCompanionGateS.basis.requiredInputs,
+        "PostV1OpeningFacadeDoorWindowBuildingLabCompanion:cloned element_lab context",
+        ...(postV1OpeningFacadeDoorWindowCCtrLabCompanionOutputs.length > 0
+          ? ["PostV1OpeningFacadeDoorWindowCCtrLabCompanion:ISO 717-1 C/Ctr from Gate S shifted TL curve"]
+          : [])
+      ]
+    };
+  }
+  if (
+    postV1OpeningFacadeDoorWindowCCtrLabCompanionGateS?.basis &&
+    postV1OpeningFacadeDoorWindowCCtrLabCompanionOutputs.length > 0 &&
+    postV1OpeningFacadeDoorWindowBuildingLabCompanionOutputs.length === 0 &&
+    (companyInternalOpeningLeakFieldBuildingRuntime?.supportedOutputs.length ?? 0) === 0 &&
+    postV1GateARCharacteristicDnTAkOutputs.length === 0
+  ) {
+    result.airborneBasis = {
+      ...postV1OpeningFacadeDoorWindowCCtrLabCompanionGateS.basis,
+      assumptions: [
+        ...postV1OpeningFacadeDoorWindowCCtrLabCompanionGateS.basis.assumptions.filter(
+          (assumption: string) => !/STC, field, and building outputs remain unsupported/i.test(assumption)
+        ),
+        "Opening/facade door/window field/building requests keep C/Ctr as lab companions from a cloned element-lab Gate S shifted ISO 717-1 route.",
+        "Field/building C/Ctr, outdoor-indoor facade ratings, OITC, scalar STC aliases, and impact metrics remain unsupported until separately owned adapters exist."
+      ],
+      requiredInputs: [
+        ...postV1OpeningFacadeDoorWindowCCtrLabCompanionGateS.basis.requiredInputs,
+        "PostV1OpeningFacadeDoorWindowCCtrLabCompanion:cloned element_lab context",
+        "PostV1OpeningFacadeDoorWindowCCtrLabCompanion:ISO 717-1 C/Ctr from Gate S shifted TL curve"
+      ]
+    };
   }
   if (advancedWallSourceAbsentFieldBuildingBasis) {
     result.airborneBasis = advancedWallSourceAbsentFieldBuildingBasis;
