@@ -20,16 +20,23 @@ Documentation map:
 [DOCUMENTATION_MAP.md](./DOCUMENTATION_MAP.md). Use it to distinguish
 current authority docs from historical slice evidence.
 
+Current opening sequence drift lock:
+[CALCULATOR_OPENING_SEQUENCE_DRIFT_LOCK_2026-06-29.md](./CALCULATOR_OPENING_SEQUENCE_DRIFT_LOCK_2026-06-29.md).
+Use it when selecting the next owner after a rerank. It records the
+expected order from the current ceiling multileaf/plenum rerank through
+formula ownership, field/building adapters, route-boundary cleanup,
+`IIC`/`AIIC`, `OITC`, and calibration, and blocks broad source crawling
+or support drift.
+
 Latest checkpoint reconciliation:
-[CHECKPOINT_2026-06-24_ADVANCED_WALL_CURRENT_GATE_HANDOFF.md](./CHECKPOINT_2026-06-24_ADVANCED_WALL_CURRENT_GATE_HANDOFF.md).
-It records the current docs/implementation comparison after the wall
-Gate AR direct-curve building lab-companion target-output independence
-owner chain and the advanced-wall source-absent field/building
-lab-companion target-output independence coverage refresh were wired
-into the current gate. The selected coverage refresh remains the active
-no-runtime support slice and has current-gate validation. After this
-checkpoint, choose the next runtime owner with a fresh current-state
-rerank instead of blindly resuming stale historical selected-next prose.
+[CHECKPOINT_2026-06-29_OITC_OWNER_READY_HANDOFF.md](./CHECKPOINT_2026-06-29_OITC_OWNER_READY_HANDOFF.md).
+It records the current docs/implementation comparison after the ceiling
+multileaf/plenum runtime sequence, ceiling/roof/suspended-ceiling route
+split boundary closeout, and follow-up no-runtime rerank selected the
+opening/facade outdoor-indoor OITC spectral rating owner. The selected
+OITC owner file is intentionally not implemented yet; the current gate
+is wired through the latest no-runtime rerank and the next calculator
+behavior is the bounded OITC spectral rating owner.
 
 Previous broad checkpoint reconciliation:
 [CHECKPOINT_2026-06-20_FULL_GATE_AND_CAVITY_DEPTH_HANDOFF.md](./CHECKPOINT_2026-06-20_FULL_GATE_AND_CAVITY_DEPTH_HANDOFF.md).
@@ -76,16 +83,21 @@ direct-curve building lab companion target-output independence owner,
 and its coverage refresh.
 The advanced-wall source-absent field/building lab-companion
 target-output independence owner and coverage refresh have now landed
-and are protected by the current gate. The current selected
-implementation is the fresh runtime-first rerank after the
-advanced-wall current-gate checkpoint.
+and are protected by the current gate. The fresh runtime-first rerank
+after the advanced-wall current-gate checkpoint has also landed and is
+now historical selection evidence.
 
-Calculator scope lock: this plan is valid only insofar as it advances
-the acoustic calculator. Do not replace the selected slice with UI
-polish, generic refactoring, broad source crawling, document cleanup, or
-confidence-copy work. A slice must improve calculable layer
-combinations, numeric accuracy, formula-route ownership,
-route-required input capture, or metric/boundary protection.
+Calculator direction and support-work policy: this plan exists to keep
+the acoustic calculator moving, but not every necessary task has to move
+runtime values by itself. Support work is allowed when it is bounded,
+has an exit condition, and removes a concrete blocker, protects a
+just-landed calculator behavior, clarifies required inputs, validates
+implementation state, or is explicitly requested by the user. Do not
+replace the selected slice with unbounded UI polish, generic
+refactoring, broad source crawling, document cleanup, or
+confidence-copy work. Record support slices as support, then name the
+calculator behavior, input surface, accuracy move, or boundary they
+protect or unlock.
 
 Historical sections guard: this file has accumulated older sections
 whose headings or prose may say `Active Slice`, `current`, or
@@ -94,17 +106,517 @@ that section. The only current implementation action is the one named
 immediately below, cross-checked with the documentation map and
 next-agent brief.
 
+Latest completed selected implementation action:
+`post_v1_runtime_first_route_family_rerank_after_ceiling_roof_suspended_ceiling_route_split_boundary_coverage_refresh_plan`.
+
 Current selected implementation action:
-`post_v1_ceiling_single_leaf_field_building_context_adapter_coverage_refresh_plan`.
+`post_v1_opening_facade_outdoor_indoor_oitc_spectral_rating_owner_plan`.
 
 Current selected implementation file:
-`packages/engine/src/post-v1-ceiling-single-leaf-field-building-context-adapter-coverage-refresh-contract.test.ts`.
+`packages/engine/src/post-v1-opening-facade-outdoor-indoor-oitc-spectral-rating-owner-contract.test.ts`.
 
 Current selected implementation plan:
-`docs/calculator/POST_V1_CEILING_SINGLE_LEAF_FIELD_BUILDING_CONTEXT_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-26.md`.
+`docs/calculator/POST_V1_OPENING_FACADE_OUTDOOR_INDOOR_OITC_SPECTRAL_RATING_OWNER_PLAN_2026-06-29.md`.
 
 Current selected implementation label:
-`post-V1 ceiling single-leaf field/building context adapter coverage refresh`.
+`post-V1 opening/facade outdoor-indoor OITC spectral rating owner`.
+
+Latest landed no-runtime rerank:
+`post_v1_runtime_first_route_family_rerank_after_ceiling_roof_suspended_ceiling_route_split_boundary_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-ceiling-roof-suspended-ceiling-route-split-boundary-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_CEILING_ROOF_SUSPENDED_CEILING_ROUTE_SPLIT_BOUNDARY_COVERAGE_REFRESH_PLAN_2026-06-29.md`
+/
+`post_v1_runtime_first_route_family_rerank_after_ceiling_roof_suspended_ceiling_route_split_boundary_coverage_refresh_landed_no_runtime_selected_opening_facade_outdoor_indoor_oitc_spectral_rating_owner`.
+It follows the landed ceiling/roof/suspended-ceiling route split
+boundary coverage refresh and selects candidate
+`opening.facade_outdoor_indoor_oitc_spectral_rating_owner`. It rejects
+repeating already-landed ASTM `IIC` / `AIIC` exact-band owner and
+input-surface work, rejects a source-absent ASTM estimator, rejects
+reopening the landed ceiling route boundary, rejects ceiling calibration
+without same-basis evidence, and rejects broad source crawling,
+confidence-label work, or frontend polish. Complete outdoor-indoor
+facade OITC requests remain unsupported until the selected spectral
+rating owner lands. Counters: `candidateCount: 8`,
+`roiAnalysisIterations: 4`, `estimatedNextCalculableRequestShapes: 1`,
+`estimatedNextCalculableTargetOutputs: 1`,
+`estimatedNextRequiredPhysicalInputsCaptured: 4`,
+`estimatedNextRuntimeBasisPromotions: 1`,
+`estimatedNextRuntimeValuesMoved: 1`,
+`estimatedNextUnsupportedBoundariesProtected: 7`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl. Selected next:
+`post_v1_opening_facade_outdoor_indoor_oitc_spectral_rating_owner_plan`
+/
+`packages/engine/src/post-v1-opening-facade-outdoor-indoor-oitc-spectral-rating-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_OPENING_FACADE_OUTDOOR_INDOOR_OITC_SPECTRAL_RATING_OWNER_PLAN_2026-06-29.md`
+/
+`post-V1 opening/facade outdoor-indoor OITC spectral rating owner`.
+
+Latest landed no-runtime coverage refresh:
+`post_v1_ceiling_roof_suspended_ceiling_route_split_boundary_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-ceiling-roof-suspended-ceiling-route-split-boundary-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_CEILING_ROOF_SUSPENDED_CEILING_ROUTE_SPLIT_BOUNDARY_COVERAGE_REFRESH_PLAN_2026-06-29.md`
+/
+`post_v1_ceiling_roof_suspended_ceiling_route_split_boundary_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank_after_ceiling_roof_suspended_ceiling_route_split_boundary_coverage_refresh`.
+It follows
+`post_v1_ceiling_roof_suspended_ceiling_route_split_boundary_owner_landed_input_boundary_selected_coverage_refresh`
+and re-probes selected candidate
+`ceiling.roof_suspended_ceiling_route_split_boundary_owner`. Ambiguous
+roof/ceiling/suspended-ceiling plenum stacks remain on
+`post_v1_ceiling_roof_suspended_ceiling_route_split_boundary_missing_route_context`;
+explicit roof/facade, ceiling-airborne impact, and lower-treatment
+airborne aliases remain on
+`post_v1_ceiling_roof_suspended_ceiling_route_split_boundary_unsupported_route_family`;
+explicit ceiling-airborne plenum field/building values remain pinned at
+`R'w 47`, `Dn,w 44.9`, `Dn,A 43.2`, `DnT,w 45.7`,
+`DnT,A 44`, and `DnT,A,k 41.1`. Counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`requiredPhysicalInputsCaptured: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, `frontendImplementationFilesTouched: 0`, and
+`unsupportedBoundariesProtected: 0`. This is not a broad source crawl.
+Selected next:
+`post_v1_runtime_first_route_family_rerank_after_ceiling_roof_suspended_ceiling_route_split_boundary_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-ceiling-roof-suspended-ceiling-route-split-boundary-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_CEILING_ROOF_SUSPENDED_CEILING_ROUTE_SPLIT_BOUNDARY_COVERAGE_REFRESH_PLAN_2026-06-29.md`
+/
+`post-V1 runtime-first route-family rerank after ceiling roof/suspended-ceiling route split boundary coverage refresh`.
+
+Latest landed input-boundary owner:
+`post_v1_ceiling_roof_suspended_ceiling_route_split_boundary_owner_plan`
+/
+`packages/engine/src/post-v1-ceiling-roof-suspended-ceiling-route-split-boundary-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_CEILING_ROOF_SUSPENDED_CEILING_ROUTE_SPLIT_BOUNDARY_OWNER_PLAN_2026-06-29.md`
+/
+`post_v1_ceiling_roof_suspended_ceiling_route_split_boundary_owner_landed_input_boundary_selected_coverage_refresh`.
+It follows the landed runtime-first rerank after the ceiling multileaf
+airborne plenum field/building adapter coverage refresh and uses
+selected candidate
+`ceiling.roof_suspended_ceiling_route_split_boundary_owner`.
+Ambiguous roof/ceiling/suspended-ceiling plenum stacks now return
+`post_v1_ceiling_roof_suspended_ceiling_route_split_boundary_missing_route_context`
+with `airborneContext.routeIntent`,
+`airborneContext.roofOrCeilingMountingContext`,
+`airborneContext.suspendedCeilingAirborneOrImpactIntent`, and
+`airborneContext.hangerOrSupportCouplingClass` as required inputs.
+Explicit roof/facade, ceiling-airborne impact, and lower-treatment
+airborne aliases return
+`post_v1_ceiling_roof_suspended_ceiling_route_split_boundary_unsupported_route_family`.
+Explicit ceiling-airborne plenum route context keeps `R'w 47`,
+`Dn,w 44.9`, `Dn,A 43.2`, `DnT,w 45.7`, `DnT,A 44`, and
+`DnT,A,k 41.1` pinned. Counters: `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `requiredPhysicalInputsCaptured: 4`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`,
+`frontendImplementationFilesTouched: 0`, and
+`unsupportedBoundariesProtected: 8`. This is not a broad source crawl.
+Selected next:
+`post_v1_ceiling_roof_suspended_ceiling_route_split_boundary_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-ceiling-roof-suspended-ceiling-route-split-boundary-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_CEILING_ROOF_SUSPENDED_CEILING_ROUTE_SPLIT_BOUNDARY_COVERAGE_REFRESH_PLAN_2026-06-29.md`
+/
+`post-V1 ceiling roof/suspended-ceiling route split boundary coverage refresh`.
+
+Latest landed no-runtime rerank:
+`post_v1_runtime_first_route_family_rerank_after_ceiling_multileaf_airborne_plenum_field_building_adapter_owner_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-ceiling-multileaf-airborne-plenum-field-building-adapter-owner-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_BUILDING_ADAPTER_OWNER_COVERAGE_REFRESH_PLAN_2026-06-29.md`
+/
+`post_v1_runtime_first_route_family_rerank_after_ceiling_multileaf_airborne_plenum_field_building_adapter_owner_coverage_refresh_landed_no_runtime_selected_ceiling_roof_suspended_ceiling_route_split_boundary_owner`.
+It follows
+`post_v1_ceiling_multileaf_airborne_plenum_field_building_adapter_owner_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank_after_ceiling_multileaf_airborne_plenum_field_building_adapter_owner_coverage_refresh`
+and previous owner
+`post_v1_ceiling_multileaf_airborne_plenum_field_building_adapter_owner_plan`
+/
+`post_v1_ceiling_multileaf_airborne_plenum_field_building_adapter_owner_landed_runtime_basis_selected_coverage_refresh`.
+It keeps candidates
+`ceiling.multileaf_airborne_plenum_field_building_adapter_owner`,
+`ceiling.multileaf_airborne_plenum_field_context_adapter`, and
+`ceiling.multileaf_airborne_plenum_building_prediction_adapter`
+protected, selects candidate
+`ceiling.roof_suspended_ceiling_route_split_boundary_owner`, and selects
+next
+`post_v1_ceiling_roof_suspended_ceiling_route_split_boundary_owner_plan`
+/
+`packages/engine/src/post-v1-ceiling-roof-suspended-ceiling-route-split-boundary-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_CEILING_ROOF_SUSPENDED_CEILING_ROUTE_SPLIT_BOUNDARY_OWNER_PLAN_2026-06-29.md`
+/
+`post-V1 ceiling roof/suspended-ceiling route split boundary owner`.
+Counters: `candidateCount: 7`, `roiAnalysisIterations: 4`,
+`estimatedNextCalculableRequestShapes: 0`,
+`estimatedNextCalculableTargetOutputs: 0`,
+`estimatedNextRequiredPhysicalInputsCaptured: 4`,
+`estimatedNextRuntimeBasisPromotions: 0`,
+`estimatedNextRuntimeValuesMoved: 0`,
+`estimatedNextUnsupportedBoundariesProtected: 8`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Latest landed no-runtime coverage refresh:
+`post_v1_ceiling_multileaf_airborne_plenum_field_building_adapter_owner_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-ceiling-multileaf-airborne-plenum-field-building-adapter-owner-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_BUILDING_ADAPTER_OWNER_COVERAGE_REFRESH_PLAN_2026-06-29.md`
+/
+`post_v1_ceiling_multileaf_airborne_plenum_field_building_adapter_owner_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank_after_ceiling_multileaf_airborne_plenum_field_building_adapter_owner_coverage_refresh`.
+It follows
+`post_v1_ceiling_multileaf_airborne_plenum_field_building_adapter_owner_landed_runtime_basis_selected_coverage_refresh`
+and re-probes runtime resolver candidates
+`ceiling.multileaf_airborne_plenum_field_context_adapter` and
+`ceiling.multileaf_airborne_plenum_building_prediction_adapter`.
+Complete ceiling-only multileaf/plenum field values remain pinned at
+`R'w 47`, `Dn,w 44.9`, `Dn,A 43.2`, `DnT,w 45.7`, and `DnT,A 44`;
+complete building values remain pinned at those values plus
+`DnT,A,k 41.1`. Missing room/flanking context remains `needs_input`;
+lab aliasing, impact, `IIC`/`AIIC`, `OITC`, ASTM aliases,
+source-row proximity substitution, and confidence fallback remain
+blocked. Counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`requiredPhysicalInputsCaptured: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, `frontendImplementationFilesTouched: 0`, and
+`unsupportedBoundariesProtected: 0`. This is not a broad source crawl.
+Selected next:
+`post_v1_runtime_first_route_family_rerank_after_ceiling_multileaf_airborne_plenum_field_building_adapter_owner_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-ceiling-multileaf-airborne-plenum-field-building-adapter-owner-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_BUILDING_ADAPTER_OWNER_COVERAGE_REFRESH_PLAN_2026-06-29.md`
+/
+`post-V1 runtime-first route-family rerank after ceiling multileaf airborne plenum field/building adapter owner coverage refresh`.
+
+Latest landed runtime owner:
+`post_v1_ceiling_multileaf_airborne_plenum_field_building_adapter_owner_plan`
+/
+`packages/engine/src/post-v1-ceiling-multileaf-airborne-plenum-field-building-adapter-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_BUILDING_ADAPTER_OWNER_PLAN_2026-06-29.md`
+/
+`post_v1_ceiling_multileaf_airborne_plenum_field_building_adapter_owner_landed_runtime_basis_selected_coverage_refresh`.
+It follows previous coverage
+`post_v1_ceiling_multileaf_airborne_plenum_element_lab_formula_owner_coverage_refresh_plan`
+/
+`post_v1_ceiling_multileaf_airborne_plenum_element_lab_formula_owner_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank_after_ceiling_multileaf_airborne_plenum_element_lab_formula_owner_coverage_refresh`
+and previous rerank
+`post_v1_runtime_first_route_family_rerank_after_ceiling_multileaf_airborne_plenum_element_lab_formula_owner_coverage_refresh_plan`
+/
+`post_v1_runtime_first_route_family_rerank_after_ceiling_multileaf_airborne_plenum_element_lab_formula_owner_coverage_refresh_landed_no_runtime_selected_ceiling_multileaf_airborne_plenum_field_building_adapter_owner`.
+It uses selected owner candidate
+`ceiling.multileaf_airborne_plenum_field_building_adapter_owner`
+with runtime resolver candidates
+`ceiling.multileaf_airborne_plenum_field_context_adapter` and
+`ceiling.multileaf_airborne_plenum_building_prediction_adapter`.
+Complete ceiling-only multileaf/plenum field requests now publish
+`R'w 47`, `Dn,w 44.9`, `Dn,A 43.2`, `DnT,w 45.7`, and `DnT,A 44`
+on route `ceiling`. Complete building requests publish those values
+plus `DnT,A,k 41.1`. Missing room/flanking context remains
+`needs_input`; lab aliasing, impact, `IIC`/`AIIC`, `OITC`, ASTM
+aliases, source-row proximity substitution, and confidence fallback
+remain blocked. Counters: `newCalculableRequestShapes: 2`,
+`newCalculableTargetOutputs: 6`, `requiredPhysicalInputsCaptured: 4`,
+`runtimeBasisPromotions: 2`, `runtimeValuesMoved 11`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`,
+`frontendImplementationFilesTouched: 0`, and
+`unsupportedBoundariesProtected: 6`. This is not a broad source crawl.
+Selected next:
+`post_v1_ceiling_multileaf_airborne_plenum_field_building_adapter_owner_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-ceiling-multileaf-airborne-plenum-field-building-adapter-owner-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_BUILDING_ADAPTER_OWNER_COVERAGE_REFRESH_PLAN_2026-06-29.md`
+/
+`post-V1 ceiling multileaf airborne plenum field/building adapter owner coverage refresh`.
+
+Latest landed no-runtime rerank:
+`post_v1_runtime_first_route_family_rerank_after_ceiling_multileaf_airborne_plenum_element_lab_formula_owner_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-ceiling-multileaf-airborne-plenum-element-lab-formula-owner-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_FORMULA_OWNER_COVERAGE_REFRESH_PLAN_2026-06-29.md`
+/
+`post_v1_runtime_first_route_family_rerank_after_ceiling_multileaf_airborne_plenum_element_lab_formula_owner_coverage_refresh_landed_no_runtime_selected_ceiling_multileaf_airborne_plenum_field_building_adapter_owner`.
+It follows previous coverage
+`post_v1_ceiling_multileaf_airborne_plenum_element_lab_formula_owner_coverage_refresh_plan`
+/
+`post_v1_ceiling_multileaf_airborne_plenum_element_lab_formula_owner_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank_after_ceiling_multileaf_airborne_plenum_element_lab_formula_owner_coverage_refresh`
+and previous owner
+`post_v1_ceiling_multileaf_airborne_plenum_element_lab_formula_owner_plan`
+/
+`post_v1_ceiling_multileaf_airborne_plenum_element_lab_formula_owner_landed_runtime_basis_selected_coverage_refresh`.
+It keeps method
+`post_v1_ceiling_multileaf_airborne_plenum_element_lab_formula_owner`
+and candidate
+`ceiling.multileaf_airborne_plenum_element_lab_formula_owner`
+protected at `Rw 48`, `STC 48`, `C -1.7`, and `Ctr -6.5`, selects
+candidate `ceiling.multileaf_airborne_plenum_field_building_adapter_owner`,
+and selects next
+`post_v1_ceiling_multileaf_airborne_plenum_field_building_adapter_owner_plan`
+/
+`packages/engine/src/post-v1-ceiling-multileaf-airborne-plenum-field-building-adapter-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_BUILDING_ADAPTER_OWNER_PLAN_2026-06-29.md`
+/
+`post-V1 ceiling multileaf airborne plenum field/building adapter owner`.
+Counters: `candidateCount: 7`, `roiAnalysisIterations: 4`,
+`estimatedNextCalculableRequestShapes: 2`,
+`estimatedNextCalculableTargetOutputs: 6`,
+`estimatedNextRequiredPhysicalInputsCaptured: 4`,
+`estimatedNextRuntimeBasisPromotions: 2`,
+`estimatedNextRuntimeValuesMoved: 11`,
+`estimatedNextUnsupportedBoundariesProtected: 6`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl.
+
+Latest landed no-runtime coverage refresh:
+`post_v1_ceiling_multileaf_airborne_plenum_element_lab_formula_owner_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-ceiling-multileaf-airborne-plenum-element-lab-formula-owner-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_FORMULA_OWNER_COVERAGE_REFRESH_PLAN_2026-06-29.md`
+/
+`post_v1_ceiling_multileaf_airborne_plenum_element_lab_formula_owner_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank_after_ceiling_multileaf_airborne_plenum_element_lab_formula_owner_coverage_refresh`.
+It follows
+`post_v1_ceiling_multileaf_airborne_plenum_element_lab_formula_owner_landed_runtime_basis_selected_coverage_refresh`
+and re-probes selected candidate
+`ceiling.multileaf_airborne_plenum_element_lab_formula_owner`.
+Complete explicit ceiling plenum element-lab context stays pinned at
+`Rw 48`, `STC 48`, `C -1.7`, and `Ctr -6.5`; incomplete plenum inputs
+stay on
+`post_v1_ceiling_multileaf_airborne_plenum_input_boundary_missing_physical_inputs`;
+field/building, impact, `IIC`/`AIIC`, `OITC`, ASTM aliases,
+source-row proximity substitution, and confidence fallback remain
+blocked. Counters: `coverageRefreshContractFilesTouched: 1`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`requiredPhysicalInputsCaptured: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, `frontendImplementationFilesTouched: 0`, and
+`unsupportedBoundariesProtected: 0`. This is not a broad source crawl.
+Selected next:
+`post_v1_runtime_first_route_family_rerank_after_ceiling_multileaf_airborne_plenum_element_lab_formula_owner_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-ceiling-multileaf-airborne-plenum-element-lab-formula-owner-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_FORMULA_OWNER_COVERAGE_REFRESH_PLAN_2026-06-29.md`
+/
+`post-V1 runtime-first route-family rerank after ceiling multileaf airborne plenum element-lab formula owner coverage refresh`.
+
+Latest landed runtime owner:
+`post_v1_ceiling_multileaf_airborne_plenum_element_lab_formula_owner_plan`
+/
+`packages/engine/src/post-v1-ceiling-multileaf-airborne-plenum-element-lab-formula-owner-contract.test.ts`
+/
+`docs/calculator/POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_FORMULA_OWNER_PLAN_2026-06-29.md`
+/
+`post_v1_ceiling_multileaf_airborne_plenum_element_lab_formula_owner_landed_runtime_basis_selected_coverage_refresh`.
+Complete ceiling-only gypsum-board plus plenum/fill element-lab requests
+with explicit `ceilingPlenum` context now publish `Rw 48`, `STC 48`,
+`C -1.7`, and `Ctr -6.5` through route `ceiling`; incomplete plenum
+context stays `needs_input`, and field/building, impact, `IIC`/`AIIC`,
+`OITC`, ASTM aliases, source-row proximity substitution, and confidence
+fallback remain blocked. Movement:
+`newCalculableLayerTemplates: 1`, `newCalculableRequestShapes: 1`,
+`newCalculableTargetOutputs: 4`, `requiredPhysicalInputsCaptured: 0`,
+`runtimeBasisPromotions: 1`, `runtimeValuesMoved 4`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`,
+`frontendImplementationFilesTouched: 0`, and
+`unsupportedBoundariesProtected: 6`. Selected next:
+`post_v1_ceiling_multileaf_airborne_plenum_element_lab_formula_owner_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-ceiling-multileaf-airborne-plenum-element-lab-formula-owner-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_FORMULA_OWNER_COVERAGE_REFRESH_PLAN_2026-06-29.md`
+/
+`post-V1 ceiling multileaf airborne plenum element-lab formula owner coverage refresh`.
+
+## Near-Term Sequence
+
+1. Latest landed support slice:
+   `post_v1_ceiling_single_leaf_field_building_context_adapter_coverage_refresh_plan`
+   landed as
+   `post_v1_ceiling_single_leaf_field_building_context_adapter_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank_after_ceiling_single_leaf_field_building_context_adapter_coverage_refresh`
+   in
+   `packages/engine/src/post-v1-ceiling-single-leaf-field-building-context-adapter-coverage-refresh-contract.test.ts`.
+   It protects the just-landed ceiling field/building adapter behavior,
+   keeps complete field and building requests pinned to the owned
+   ceiling route, and preserves missing-context, impact, ASTM/IIC/AIIC,
+   OITC, source-row fallback, and confidence-label fallback boundaries.
+   Movement: `coverageRefreshContractFilesTouched: 1`,
+   `runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+   `sourceRowsImported: 0`, and
+   `frontendImplementationFilesTouched: 0`.
+
+2. Latest landed support slice:
+   the runtime-first rerank after the ceiling single-leaf field/building
+   context adapter coverage refresh landed as
+   `post_v1_runtime_first_route_family_rerank_after_ceiling_single_leaf_field_building_context_adapter_coverage_refresh_landed_no_runtime_selected_ceiling_multileaf_airborne_plenum_input_boundary_owner`.
+   The action is
+   `post_v1_runtime_first_route_family_rerank_after_ceiling_single_leaf_field_building_context_adapter_coverage_refresh_plan`,
+   the contract file is
+   `packages/engine/src/post-v1-runtime-first-route-family-rerank-after-ceiling-single-leaf-field-building-context-adapter-coverage-refresh-contract.test.ts`,
+   and the plan is
+   `docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_CEILING_SINGLE_LEAF_FIELD_BUILDING_CONTEXT_ADAPTER_COVERAGE_REFRESH_PLAN_2026-06-29.md`.
+   It selected candidate
+   `ceiling.multileaf_airborne_plenum_input_boundary_owner`.
+   Movement: `candidateCount: 8`, `roiAnalysisIterations: 4`,
+   `estimatedNextCalculableRequestShapes: 0`,
+   `estimatedNextCalculableTargetOutputs: 0`,
+   `estimatedNextRequiredPhysicalInputsCaptured: 5`,
+   `estimatedNextRuntimeBasisPromotions: 0`,
+   `estimatedNextRuntimeValuesMoved: 0`,
+   `estimatedNextUnsupportedBoundariesProtected: 7`,
+   `runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+   `sourceRowsImported: 0`, and
+   `frontendImplementationFilesTouched: 0`. This is not a broad source
+   crawl.
+
+3. Latest landed input-boundary owner:
+   `post_v1_ceiling_multileaf_airborne_plenum_input_boundary_owner_plan`
+   in
+   `packages/engine/src/post-v1-ceiling-multileaf-airborne-plenum-input-boundary-owner-contract.test.ts`.
+   The plan is
+   `docs/calculator/POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_INPUT_BOUNDARY_OWNER_PLAN_2026-06-29.md`,
+   and the status is
+   `post_v1_ceiling_multileaf_airborne_plenum_input_boundary_owner_landed_input_boundary_selected_coverage_refresh`.
+   The landed owner label is
+   `post-V1 ceiling multileaf airborne plenum input-boundary owner`.
+   It uses selected candidate
+   `ceiling.multileaf_airborne_plenum_input_boundary_owner` and method
+   `post_v1_ceiling_multileaf_airborne_plenum_input_boundary_missing_physical_inputs`.
+   It captures `ceilingLeafGrouping`,
+   `ceilingLeafSurfaceMassKgM2`, `ceilingCavityOrPlenumDepthMm`,
+   `ceilingAbsorberThicknessAndFlowResistivity`, and
+   `ceilingSupportCouplingOrHangerClass`; keeps runtime values frozen;
+   blocks single-leaf, floor-impact, source-row, field/building, and
+   OITC fallback for plenum airborne outputs; and leaves board-only
+   ceiling single-leaf calculable. Movement:
+   `newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+   `requiredPhysicalInputsCaptured: 5`, `runtimeBasisPromotions: 0`,
+   `runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+   `sourceRowsImported: 0`, `frontendImplementationFilesTouched: 0`,
+   and `unsupportedBoundariesProtected: 7`. This is not a broad source
+   crawl.
+
+4. Latest landed support slice:
+   `post_v1_ceiling_multileaf_airborne_plenum_input_boundary_coverage_refresh_plan`
+   in
+   `packages/engine/src/post-v1-ceiling-multileaf-airborne-plenum-input-boundary-coverage-refresh-contract.test.ts`.
+   The plan is
+   `docs/calculator/POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_INPUT_BOUNDARY_COVERAGE_REFRESH_PLAN_2026-06-29.md`,
+   and the status is
+   `post_v1_ceiling_multileaf_airborne_plenum_input_boundary_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank_after_ceiling_multileaf_airborne_plenum_input_boundary_coverage_refresh`.
+   It re-probes
+   `post_v1_ceiling_multileaf_airborne_plenum_input_boundary_missing_physical_inputs`
+   and protects `ceilingLeafGrouping`, `ceilingLeafSurfaceMassKgM2`,
+   `ceilingCavityOrPlenumDepthMm`,
+   `ceilingAbsorberThicknessAndFlowResistivity`, and
+   `ceilingSupportCouplingOrHangerClass`. Movement:
+   `coverageRefreshContractFilesTouched: 1`,
+   `newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+   `requiredPhysicalInputsCaptured: 0`, `runtimeBasisPromotions: 0`,
+   `runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+   `sourceRowsImported: 0`, `frontendImplementationFilesTouched: 0`,
+   and `unsupportedBoundariesProtected: 0`. This is not a broad source
+   crawl.
+
+5. Latest landed support slice:
+   `post_v1_runtime_first_route_family_rerank_after_ceiling_multileaf_airborne_plenum_input_boundary_coverage_refresh_plan`
+   in
+   `packages/engine/src/post-v1-runtime-first-route-family-rerank-after-ceiling-multileaf-airborne-plenum-input-boundary-coverage-refresh-contract.test.ts`.
+   The plan is
+   `docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_CEILING_MULTILEAF_AIRBORNE_PLENUM_INPUT_BOUNDARY_COVERAGE_REFRESH_PLAN_2026-06-29.md`,
+   and the status is
+   `post_v1_runtime_first_route_family_rerank_after_ceiling_multileaf_airborne_plenum_input_boundary_coverage_refresh_landed_no_runtime_selected_ceiling_multileaf_airborne_plenum_element_lab_formula_owner`.
+   It follows previous coverage
+   `post_v1_ceiling_multileaf_airborne_plenum_input_boundary_coverage_refresh_plan`
+   /
+   `post_v1_ceiling_multileaf_airborne_plenum_input_boundary_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank_after_ceiling_multileaf_airborne_plenum_input_boundary_coverage_refresh`
+   and previous owner
+   `post_v1_ceiling_multileaf_airborne_plenum_input_boundary_owner_plan`
+   /
+   `post_v1_ceiling_multileaf_airborne_plenum_input_boundary_owner_landed_input_boundary_selected_coverage_refresh`.
+   It keeps method
+   `post_v1_ceiling_multileaf_airborne_plenum_input_boundary_missing_physical_inputs`
+   protected, selects candidate
+   `ceiling.multileaf_airborne_plenum_element_lab_formula_owner`, and
+   selects next
+   `post_v1_ceiling_multileaf_airborne_plenum_element_lab_formula_owner_plan`
+   /
+   `packages/engine/src/post-v1-ceiling-multileaf-airborne-plenum-element-lab-formula-owner-contract.test.ts`
+   /
+   `docs/calculator/POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_FORMULA_OWNER_PLAN_2026-06-29.md`
+   /
+   `post-V1 ceiling multileaf airborne plenum element-lab formula owner`.
+   Movement: `candidateCount: 7`, `roiAnalysisIterations: 4`,
+   `estimatedNextCalculableRequestShapes: 1`,
+   `estimatedNextCalculableTargetOutputs: 4`,
+   `estimatedNextRequiredPhysicalInputsCaptured: 0`,
+   `estimatedNextRuntimeBasisPromotions: 1`,
+   `estimatedNextRuntimeValuesMoved: 4`,
+   `estimatedNextUnsupportedBoundariesProtected: 6`,
+   `runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+   `sourceRowsImported: 0`, and
+   `frontendImplementationFilesTouched: 0`. This is not a broad source
+   crawl.
+
+6. Current selected runtime slice:
+   implement
+   `post_v1_ceiling_multileaf_airborne_plenum_element_lab_formula_owner_plan`
+   in
+   `packages/engine/src/post-v1-ceiling-multileaf-airborne-plenum-element-lab-formula-owner-contract.test.ts`.
+   The plan is
+   `docs/calculator/POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_FORMULA_OWNER_PLAN_2026-06-29.md`,
+   and the label is
+   `post-V1 ceiling multileaf airborne plenum element-lab formula owner`.
+   Open only the bounded ceiling-only multileaf/plenum airborne
+   element-lab family for `Rw`, `STC`, `C`, and `Ctr`; keep missing
+   physical inputs on the landed `needs_input` boundary.
+
+## Scope Refinement
+
+The current selected formula owner exists because the input-boundary
+owner already made the missing ceiling plenum physical inputs explicit.
+This slice should move runtime behavior only for complete ceiling-only
+multileaf/plenum airborne element-lab requests. It should not reopen
+field/building adapters, impact ratings, OITC, source-row proximity,
+confidence labels, or broad catalog work.
+
+The owner must preserve these exact boundaries:
+
+- missing `ceilingLeafGrouping`, `ceilingLeafSurfaceMassKgM2`,
+  `ceilingCavityOrPlenumDepthMm`,
+  `ceilingAbsorberThicknessAndFlowResistivity`, or
+  `ceilingSupportCouplingOrHangerClass` stays on
+  `post_v1_ceiling_multileaf_airborne_plenum_input_boundary_missing_physical_inputs`;
+- complete element-lab ceiling plenum stacks may open `Rw`, `STC`, `C`,
+  and `Ctr` only through the owned ceiling formula route;
+- board-only ceiling single-leaf stacks stay on their existing
+  single-leaf route and do not inherit plenum assumptions;
+- field/building, floor impact, OITC, ASTM/IIC/AIIC, source-row
+  proximity, and confidence-label fallback remain outside this owner.
+
+The expected runtime ledger for the owner, once implemented, is
+`newCalculableRequestShapes: 1`, `newCalculableTargetOutputs: 4`,
+`runtimeBasisPromotions: 1`, and `runtimeValuesMoved 4`. Do not claim
+those counters until the owner contract and runtime implementation
+actually publish the values.
 
 Latest landed no-runtime rerank:
 `post_v1_runtime_first_route_family_rerank_after_ceiling_single_leaf_airborne_route_coverage_refresh_plan`

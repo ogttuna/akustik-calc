@@ -5,7 +5,7 @@ import { RequestedOutputSchema } from "./output";
 export const AcousticAnswerBoundaryOriginSchema = z.enum(["needs_input", "unsupported"]);
 export type AcousticAnswerBoundaryOrigin = z.infer<typeof AcousticAnswerBoundaryOriginSchema>;
 
-export const AcousticAnswerBoundaryRouteSchema = z.enum(["wall", "floor"]);
+export const AcousticAnswerBoundaryRouteSchema = z.enum(["wall", "floor", "ceiling"]);
 export type AcousticAnswerBoundaryRoute = z.infer<typeof AcousticAnswerBoundaryRouteSchema>;
 
 const AcousticAnswerBoundarySchemaInternal = z

@@ -53,6 +53,9 @@ import {
   LIGHTWEIGHT_CONCRETE_DELTA_LW_SELECTED_CANDIDATE_ID
 } from "./lightweight-concrete-delta-lw-runtime-corridor";
 import { LIGHTWEIGHT_CONCRETE_FAMILY_SELECTED_CANDIDATE_ID } from "./lightweight-concrete-family-runtime-constants";
+import {
+  POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_FORMULA_OWNER_SELECTED_CANDIDATE_ID
+} from "./post-v1-ceiling-multileaf-airborne-plenum-element-lab-formula-owner";
 import { MIXED_SUPPORT_FLOOR_IMPACT_SELECTED_CANDIDATE_ID } from "./mixed-support-floor-impact-runtime-corridor";
 import {
   POST_V1_WALL_COMPATIBLE_ANCHOR_DELTA_LAB_COMPANION_SELECTED_CANDIDATE_ID,
@@ -128,16 +131,16 @@ describe("layer combination resolver company-internal V0 rehearsal contract", ()
     });
     expect(contract.summary).toEqual({
       allowedExactRowCount: 4,
-      allowedWithBudgetRowCount: 46,
+      allowedWithBudgetRowCount: 49,
       blockedActionCount: 4,
       blockedRowCount: 2,
-      coverageMatrixRowCount: 53,
-      companyInternalV0AllowedRowCount: 50,
+      coverageMatrixRowCount: 56,
+      companyInternalV0AllowedRowCount: 53,
       needsUserInputRowCount: 1,
       readinessBucketCount: {
         needs_input: 1,
         ready: 4,
-        ready_with_budget: 46,
+        ready_with_budget: 49,
         research_only: 0,
         unsupported: 2
       },
@@ -178,6 +181,12 @@ describe("layer combination resolver company-internal V0 rehearsal contract", ()
       ["ceiling.single_leaf_airborne_mass_law.source_absent", "allowed_with_budget"],
       ["ceiling.single_leaf_airborne_field_context_adapter", "allowed_with_budget"],
       ["ceiling.single_leaf_airborne_building_prediction_adapter", "allowed_with_budget"],
+      [
+        POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_FORMULA_OWNER_SELECTED_CANDIDATE_ID,
+        "allowed_with_budget"
+      ],
+      ["ceiling.multileaf_airborne_plenum_field_context_adapter", "allowed_with_budget"],
+      ["ceiling.multileaf_airborne_plenum_building_prediction_adapter", "allowed_with_budget"],
       [LAYER_COMBINATION_RESOLVER_DOUBLE_LEAF_FRAMED_WALL_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
       [GATE_H_LINED_MASSIVE_WALL_SELECTED_CANDIDATE_ID, "allowed_with_budget"],
       [COMPANY_INTERNAL_HEAVY_COMPOSITE_WALL_SELECTED_CANDIDATE_ID, "allowed_with_budget"],

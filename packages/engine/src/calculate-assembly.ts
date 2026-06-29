@@ -148,6 +148,29 @@ import {
   buildLayerCombinationResolverTraceForAssembly
 } from "./layer-combination-resolver-runtime-candidate-surface-parity";
 import {
+  POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_FORMULA_OWNER_ERROR_BUDGET_DB,
+  POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_FORMULA_OWNER_METHOD,
+  POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_FORMULA_OWNER_REQUIRED_INPUTS,
+  POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_FORMULA_OWNER_WARNING
+} from "./post-v1-ceiling-multileaf-airborne-plenum-element-lab-formula-owner";
+import {
+  POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_BUILDING_PREDICTION_METHOD,
+  POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_BUILDING_PREDICTION_REQUIRED_INPUTS,
+  POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_BUILDING_PREDICTION_RUNTIME_CANDIDATE_ID,
+  POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_BUILDING_ERROR_BUDGET_DB,
+  POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_BUILDING_WARNING,
+  POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_CONTEXT_METHOD,
+  POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_CONTEXT_REQUIRED_INPUTS,
+  POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_CONTEXT_RUNTIME_CANDIDATE_ID
+} from "./post-v1-ceiling-multileaf-airborne-plenum-field-building-adapter-owner";
+import {
+  POST_V1_CEILING_ROOF_SUSPENDED_CEILING_ROUTE_SPLIT_BOUNDARY_WARNING,
+  POST_V1_CEILING_ROOF_SUSPENDED_CEILING_ROUTE_SPLIT_NEEDS_INPUT_METHOD,
+  POST_V1_CEILING_ROOF_SUSPENDED_CEILING_ROUTE_SPLIT_REQUIRED_INPUTS,
+  POST_V1_CEILING_ROOF_SUSPENDED_CEILING_ROUTE_SPLIT_UNSUPPORTED_METHOD,
+  POST_V1_CEILING_ROOF_SUSPENDED_CEILING_ROUTE_SPLIT_UNSUPPORTED_WARNING
+} from "./post-v1-ceiling-roof-suspended-ceiling-route-split-boundary-owner";
+import {
   type DynamicCalculatorFloorImpactContext
 } from "./dynamic-calculator-route-input-topology";
 import {
@@ -283,7 +306,8 @@ import {
   maybeBuildBroadAccuracyWallTripleLeafLocalSubstitutionLabSpectrumAdapter
 } from "./broad-accuracy-wall-multileaf-triple-leaf-local-substitution-lab-spectrum-adapter";
 import {
-  LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_FORMULA_CORRIDOR_BASIS
+  LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_FORMULA_CORRIDOR_BASIS,
+  LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_WARNING
 } from "./layer-combination-resolver-single-leaf-mass-law-banded-runtime-constants";
 import {
   buildPostV1WallCompatibleAnchorDeltaDirectCurveBasis,
@@ -907,6 +931,7 @@ function isGateARCharacteristicDnTAkRuntimeBasis(
 ): boolean {
   return (
     airborneBasis?.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD ||
+    airborneBasis?.method === POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_BUILDING_PREDICTION_METHOD ||
     airborneBasis?.method === COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD ||
     airborneBasis?.method === COMPANY_INTERNAL_OPENING_LEAK_SPECTRAL_FIELD_BUILDING_RUNTIME_METHOD ||
     airborneBasis?.method === BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_BUILDING_RUNTIME_METHOD
@@ -3313,6 +3338,1150 @@ function applyPostV1UserMaterialFormulaRequiredInputSurfaceBoundary(input: {
   parkResultTargetOutputs(input.result, parkedOutputs);
   input.result.warnings.push(
     `Post-V1 user-material formula input surface selected needs_input for ${parkedOutputs.join(", ")}; provide layer.surfaceMassKgM2 or materialCatalog.densityKgM3 with layer.thicknessMm before DynEcho publishes this wall formula answer.`
+  );
+}
+
+const POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_INPUT_BOUNDARY_METHOD =
+  "post_v1_ceiling_multileaf_airborne_plenum_input_boundary_missing_physical_inputs";
+const POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_INPUT_BOUNDARY_MISSING_INPUTS = [
+  "ceilingLeafGrouping",
+  "ceilingLeafSurfaceMassKgM2",
+  "ceilingCavityOrPlenumDepthMm",
+  "ceilingAbsorberThicknessAndFlowResistivity",
+  "ceilingSupportCouplingOrHangerClass"
+] as const;
+const POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_INPUT_BOUNDARY_OUTPUTS = new Set<RequestedOutputId>([
+  "C",
+  "Ctr",
+  "Dn,A",
+  "Dn,w",
+  "DnT,A",
+  "DnT,A,k",
+  "DnT,w",
+  "R'w",
+  "Rw",
+  "STC"
+]);
+const POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_INPUT_BOUNDARY_ELIGIBLE_ORIGINS = new Set([
+  "bounded_prediction",
+  "family_physics_prediction",
+  "needs_input",
+  "screening_fallback",
+  "unsupported"
+]);
+const POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_OUTPUTS = new Set<RequestedOutputId>([
+  "C",
+  "Ctr",
+  "Rw",
+  "STC"
+]);
+const POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_OUTPUTS = new Set<RequestedOutputId>([
+  "Dn,A",
+  "Dn,w",
+  "DnT,A",
+  "DnT,w",
+  "R'w"
+]);
+const POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_BUILDING_OUTPUTS = new Set<RequestedOutputId>([
+  "Dn,A",
+  "Dn,w",
+  "DnT,A",
+  "DnT,A,k",
+  "DnT,w",
+  "R'w"
+]);
+const POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_BUILDING_OUTPUTS = new Set<RequestedOutputId>([
+  ...POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_OUTPUTS,
+  ...POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_BUILDING_OUTPUTS
+]);
+const POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_BUILDING_MISSING_CONTEXT_METHOD =
+  "post_v1_ceiling_multileaf_airborne_plenum_field_building_context_missing_physical_inputs";
+const POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_SELECTED_CANDIDATE_ID =
+  "candidate_post_v1_ceiling_multileaf_airborne_plenum_element_lab_formula_owner";
+const POST_V1_CEILING_ROOF_SUSPENDED_CEILING_ROUTE_SPLIT_AIRBORNE_OUTPUTS =
+  new Set<RequestedOutputId>([
+    "C",
+    "Ctr",
+    "Dn,A",
+    "Dn,w",
+    "DnT,A",
+    "DnT,A,k",
+    "DnT,w",
+    "R'w",
+    "Rw",
+    "STC"
+  ]);
+const POST_V1_CEILING_ROOF_SUSPENDED_CEILING_ROUTE_SPLIT_IMPACT_OUTPUTS =
+  new Set<RequestedOutputId>(["AIIC", "DeltaLw", "IIC", "Ln,w"]);
+const POST_V1_CEILING_ROOF_SUSPENDED_CEILING_ROUTE_SPLIT_BLOCKED_OUTPUTS =
+  new Set<RequestedOutputId>([
+    ...POST_V1_CEILING_ROOF_SUSPENDED_CEILING_ROUTE_SPLIT_AIRBORNE_OUTPUTS,
+    ...POST_V1_CEILING_ROOF_SUSPENDED_CEILING_ROUTE_SPLIT_IMPACT_OUTPUTS
+  ]);
+
+type PostV1CeilingPlenumInput = NonNullable<AirborneContext["ceilingPlenum"]>;
+
+function isPostV1CeilingMultileafAirbornePlenumInputBoundaryStack(
+  layers: readonly LayerInput[]
+): boolean {
+  if (!hasOnlyCeilingRoleLayers(layers)) {
+    return false;
+  }
+
+  const hasCeilingBoard = layers.some((layer) => layer.floorRole === "ceiling_board");
+  const hasPlenumOrHelper = layers.some(
+    (layer) => layer.floorRole === "ceiling_cavity" || layer.floorRole === "ceiling_fill"
+  );
+
+  return hasCeilingBoard && hasPlenumOrHelper;
+}
+
+function getPostV1CeilingRoofSuspendedCeilingRouteSplitOutputs(
+  targetOutputs: readonly RequestedOutputId[]
+): RequestedOutputId[] {
+  return targetOutputs.filter((output: RequestedOutputId) =>
+    POST_V1_CEILING_ROOF_SUSPENDED_CEILING_ROUTE_SPLIT_BLOCKED_OUTPUTS.has(output)
+  );
+}
+
+function getPostV1CeilingRoofSuspendedCeilingRouteSplitAirborneOutputs(
+  targetOutputs: readonly RequestedOutputId[]
+): RequestedOutputId[] {
+  return targetOutputs.filter((output: RequestedOutputId) =>
+    POST_V1_CEILING_ROOF_SUSPENDED_CEILING_ROUTE_SPLIT_AIRBORNE_OUTPUTS.has(output)
+  );
+}
+
+function getPostV1CeilingRoofSuspendedCeilingRouteSplitImpactOutputs(
+  targetOutputs: readonly RequestedOutputId[]
+): RequestedOutputId[] {
+  return targetOutputs.filter((output: RequestedOutputId) =>
+    POST_V1_CEILING_ROOF_SUSPENDED_CEILING_ROUTE_SPLIT_IMPACT_OUTPUTS.has(output)
+  );
+}
+
+function getPostV1CeilingRoofSuspendedCeilingRouteSplitMissingInputs(
+  airborneContext: AirborneContext | null | undefined
+): string[] {
+  const missing: string[] = [];
+
+  if (!airborneContext?.routeIntent || airborneContext.routeIntent === "unknown") {
+    missing.push("airborneContext.routeIntent");
+  }
+  if (
+    !airborneContext?.roofOrCeilingMountingContext ||
+    airborneContext.roofOrCeilingMountingContext === "unknown"
+  ) {
+    missing.push("airborneContext.roofOrCeilingMountingContext");
+  }
+  if (
+    !airborneContext?.suspendedCeilingAirborneOrImpactIntent ||
+    airborneContext.suspendedCeilingAirborneOrImpactIntent === "unknown"
+  ) {
+    missing.push("airborneContext.suspendedCeilingAirborneOrImpactIntent");
+  }
+  if (!airborneContext?.hangerOrSupportCouplingClass) {
+    missing.push("airborneContext.hangerOrSupportCouplingClass");
+  }
+
+  return missing;
+}
+
+function hasPostV1CeilingRoofSuspendedCeilingCeilingAirborneIntent(
+  airborneContext: AirborneContext | null | undefined
+): boolean {
+  return Boolean(
+    (
+      airborneContext?.routeIntent === "ceiling_airborne" ||
+      airborneContext?.routeIntent === "suspended_ceiling_airborne_lining"
+    ) &&
+      airborneContext?.roofOrCeilingMountingContext !== "roof_or_facade_element" &&
+      (
+        airborneContext?.suspendedCeilingAirborneOrImpactIntent === "airborne_ceiling_plenum" ||
+        airborneContext?.suspendedCeilingAirborneOrImpactIntent === "not_suspended_ceiling"
+      ) &&
+      airborneContext?.hangerOrSupportCouplingClass
+  );
+}
+
+function hasPostV1CeilingRoofSuspendedCeilingFloorImpactIntent(
+  airborneContext: AirborneContext | null | undefined
+): boolean {
+  return Boolean(
+    airborneContext?.routeIntent === "suspended_ceiling_floor_impact_lower_treatment" ||
+      airborneContext?.suspendedCeilingAirborneOrImpactIntent === "floor_impact_lower_treatment"
+  );
+}
+
+function hasPostV1CeilingRoofSuspendedCeilingRoofIntent(
+  airborneContext: AirborneContext | null | undefined
+): boolean {
+  return Boolean(
+    airborneContext?.routeIntent === "roof_airborne" ||
+      airborneContext?.roofOrCeilingMountingContext === "roof_or_facade_element" ||
+      airborneContext?.roofOrCeilingMountingContext === "ceiling_lining_below_roof"
+  );
+}
+
+function buildPostV1CeilingRoofSuspendedCeilingRouteSplitBasis(input: {
+  missingPhysicalInputs: readonly string[];
+  origin: "needs_input" | "unsupported";
+}): AirborneResultBasis {
+  return {
+    assumptions: input.origin === "needs_input"
+      ? [
+          "Ceiling-only plenum layers are ambiguous between indoor ceiling airborne, roof/facade transmission, and suspended-ceiling lower-treatment impact routes until route context is explicit.",
+          "DynEcho will not promote by layer role, product name, or nearby ceiling/floor candidate alone.",
+          "Provide route intent, roof/ceiling mounting context, suspended-ceiling airborne-vs-impact intent, and hanger/support coupling before a family owner can publish values."
+        ]
+      : [
+          "The requested metric belongs to a different physical route than the explicit ceiling/roof/suspended-ceiling context supplied for this stack.",
+          "Roof/facade transmission, floor-impact lower-treatment values, OITC, and ASTM impact aliases require separate owned route adapters.",
+          "Ceiling airborne plenum values are not reused as roof, floor-impact, or facade ratings."
+        ],
+    calculationStandard: "none",
+    curveBasis: "no_curve",
+    family: "multileaf_multicavity",
+    kind: input.origin === "needs_input" ? "airborne_needs_input" : "airborne_unsupported",
+    method: input.origin === "needs_input"
+      ? POST_V1_CEILING_ROOF_SUSPENDED_CEILING_ROUTE_SPLIT_NEEDS_INPUT_METHOD
+      : POST_V1_CEILING_ROOF_SUSPENDED_CEILING_ROUTE_SPLIT_UNSUPPORTED_METHOD,
+    missingPhysicalInputs: [...input.missingPhysicalInputs],
+    missingSourceEvidence: [],
+    origin: input.origin,
+    propertyDefaults: [],
+    ratingStandard: "none",
+    requiredInputs: [...POST_V1_CEILING_ROOF_SUSPENDED_CEILING_ROUTE_SPLIT_REQUIRED_INPUTS]
+  };
+}
+
+function applyPostV1CeilingRoofSuspendedCeilingRouteSplitBoundary(input: {
+  airborneContext: AirborneContext | null | undefined;
+  result: AssemblyCalculation;
+}): void {
+  if (
+    input.result.acousticAnswerBoundary ||
+    !isPostV1CeilingMultileafAirbornePlenumInputBoundaryStack(input.result.layers)
+  ) {
+    return;
+  }
+
+  const stoppedOutputs = getPostV1CeilingRoofSuspendedCeilingRouteSplitOutputs(input.result.targetOutputs);
+  if (stoppedOutputs.length === 0) {
+    return;
+  }
+
+  const airborneOutputs =
+    getPostV1CeilingRoofSuspendedCeilingRouteSplitAirborneOutputs(input.result.targetOutputs);
+  const impactOutputs =
+    getPostV1CeilingRoofSuspendedCeilingRouteSplitImpactOutputs(input.result.targetOutputs);
+  const missingRouteInputs =
+    getPostV1CeilingRoofSuspendedCeilingRouteSplitMissingInputs(input.airborneContext);
+
+  if (missingRouteInputs.length > 0) {
+    const basis = buildPostV1CeilingRoofSuspendedCeilingRouteSplitBasis({
+      missingPhysicalInputs: missingRouteInputs,
+      origin: "needs_input"
+    });
+
+    input.result.airborneBasis = basis;
+    input.result.acousticAnswerBoundary = {
+      method: basis.method,
+      missingPhysicalInputs: [...basis.missingPhysicalInputs],
+      origin: "needs_input",
+      requiredInputs: [...basis.requiredInputs],
+      route: "ceiling",
+      unsupportedOutputs: stoppedOutputs
+    };
+
+    if (input.result.airborneCandidateResolution) {
+      input.result.airborneCandidateResolution = selectPostV1CeilingMultileafAirbornePlenumNeedsInputCandidate({
+        basis,
+        resolution: input.result.airborneCandidateResolution
+      });
+      input.result.airborneCandidateSet = input.result.airborneCandidateResolution.candidates;
+    }
+
+    parkResultTargetOutputs(input.result, stoppedOutputs);
+    input.result.impact = null;
+    input.result.warnings = input.result.warnings.filter(
+      (warning: string) => warning !== LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_WARNING
+    );
+    if (!input.result.warnings.includes(POST_V1_CEILING_ROOF_SUSPENDED_CEILING_ROUTE_SPLIT_BOUNDARY_WARNING)) {
+      input.result.warnings.push(POST_V1_CEILING_ROOF_SUSPENDED_CEILING_ROUTE_SPLIT_BOUNDARY_WARNING);
+    }
+    return;
+  }
+
+  const ceilingAirborneIntent =
+    hasPostV1CeilingRoofSuspendedCeilingCeilingAirborneIntent(input.airborneContext);
+  const floorImpactIntent =
+    hasPostV1CeilingRoofSuspendedCeilingFloorImpactIntent(input.airborneContext);
+  const roofIntent = hasPostV1CeilingRoofSuspendedCeilingRoofIntent(input.airborneContext);
+  const wrongFamilyOutputs =
+    roofIntent
+      ? stoppedOutputs
+      : ceilingAirborneIntent
+        ? impactOutputs
+        : floorImpactIntent
+          ? airborneOutputs
+          : stoppedOutputs;
+
+  if (wrongFamilyOutputs.length === 0) {
+    return;
+  }
+
+  const basis = buildPostV1CeilingRoofSuspendedCeilingRouteSplitBasis({
+    missingPhysicalInputs: [],
+    origin: "unsupported"
+  });
+  input.result.airborneBasis = basis;
+  input.result.acousticAnswerBoundary = {
+    method: basis.method,
+    missingPhysicalInputs: [],
+    origin: "unsupported",
+    requiredInputs: [...basis.requiredInputs],
+    route: "ceiling",
+    unsupportedOutputs: wrongFamilyOutputs
+  };
+
+  parkResultTargetOutputs(input.result, wrongFamilyOutputs);
+  if (impactOutputs.length > 0) {
+    input.result.impact = null;
+  }
+  input.result.warnings = input.result.warnings.filter(
+    (warning: string) => warning !== LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_WARNING
+  );
+  if (!input.result.warnings.includes(POST_V1_CEILING_ROOF_SUSPENDED_CEILING_ROUTE_SPLIT_UNSUPPORTED_WARNING)) {
+    input.result.warnings.push(POST_V1_CEILING_ROOF_SUSPENDED_CEILING_ROUTE_SPLIT_UNSUPPORTED_WARNING);
+  }
+}
+
+function getPostV1CeilingMultileafAirbornePlenumMissingPhysicalInputs(
+  airborneContext: AirborneContext | null | undefined
+): string[] {
+  const plenum = airborneContext?.ceilingPlenum;
+  const missing: string[] = [];
+
+  if (!plenum?.leafGrouping) {
+    missing.push("ceilingLeafGrouping");
+  }
+  if (typeof plenum?.leafSurfaceMassKgM2 !== "number") {
+    missing.push("ceilingLeafSurfaceMassKgM2");
+  }
+  if (typeof plenum?.cavityOrPlenumDepthMm !== "number") {
+    missing.push("ceilingCavityOrPlenumDepthMm");
+  }
+  if (
+    typeof plenum?.absorberThicknessMm !== "number" ||
+    typeof plenum?.absorberFlowResistivityPaSM2 !== "number"
+  ) {
+    missing.push("ceilingAbsorberThicknessAndFlowResistivity");
+  }
+  if (!plenum?.supportCouplingOrHangerClass) {
+    missing.push("ceilingSupportCouplingOrHangerClass");
+  }
+
+  return missing;
+}
+
+function getPostV1CeilingPlenumSupportCouplingGainDb(
+  supportCouplingOrHangerClass: PostV1CeilingPlenumInput["supportCouplingOrHangerClass"]
+): number {
+  switch (supportCouplingOrHangerClass) {
+    case "isolated_hanger":
+      return 6;
+    case "resilient_hanger":
+      return 5;
+    case "resilient_channel":
+      return 4;
+    case "direct_fixed":
+    default:
+      return 1;
+  }
+}
+
+function getPostV1CeilingPlenumLeafGroupingGainDb(
+  leafGrouping: PostV1CeilingPlenumInput["leafGrouping"]
+): number {
+  switch (leafGrouping) {
+    case "double_leaf_decoupled_plenum":
+      return 2;
+    case "single_leaf_below_plenum":
+      return -1.5;
+    case "double_layer_single_leaf_below_plenum":
+    default:
+      return 0;
+  }
+}
+
+function calculatePostV1CeilingMultileafAirbornePlenumElementLabFormula(
+  plenum: Required<PostV1CeilingPlenumInput>
+): {
+  readonly absorberGainDb: number;
+  readonly cDb: number;
+  readonly ctrDb: number;
+  readonly rwDb: number;
+  readonly stc: number;
+  readonly surfaceMassKgM2: number;
+} {
+  const leafRwDb = 20 * Math.log10(plenum.leafSurfaceMassKgM2) + 7.1;
+  const cavityGainDb = clamp(5 + 4 * Math.log10(plenum.cavityOrPlenumDepthMm / 50), 3, 10);
+  const absorberGainDb = clamp(
+    plenum.absorberThicknessMm / 50 + Math.log10(plenum.absorberFlowResistivityPaSM2 / 5000),
+    0,
+    5
+  );
+  const supportGainDb = getPostV1CeilingPlenumSupportCouplingGainDb(
+    plenum.supportCouplingOrHangerClass
+  );
+  const groupingGainDb = getPostV1CeilingPlenumLeafGroupingGainDb(plenum.leafGrouping);
+  const rwDb = Math.round(
+    leafRwDb + cavityGainDb + absorberGainDb + supportGainDb + groupingGainDb
+  );
+  const cDb = round1(-1.25 - Math.max(0, rwDb - 45) * 0.15);
+  const ctrDb = round1(cDb - 4.6 - absorberGainDb * 0.1);
+
+  return {
+    absorberGainDb: round1(absorberGainDb),
+    cDb,
+    ctrDb,
+    rwDb,
+    stc: rwDb,
+    surfaceMassKgM2: round1(plenum.leafSurfaceMassKgM2)
+  };
+}
+
+function buildPostV1CeilingMultileafAirbornePlenumElementLabFormulaBasis(
+  plenum: Required<PostV1CeilingPlenumInput>,
+  formula: ReturnType<typeof calculatePostV1CeilingMultileafAirbornePlenumElementLabFormula>
+): AirborneResultBasis {
+  return {
+    assumptions: [
+      "Ceiling-only stack is treated as a suspended/multileaf plenum airborne element-lab route, not as a single visible leaf.",
+      `Leaf mass ${formula.surfaceMassKgM2} kg/m2, plenum depth ${plenum.cavityOrPlenumDepthMm} mm, absorber ${plenum.absorberThicknessMm} mm / ${plenum.absorberFlowResistivityPaSM2} Pa.s/m2, and support class ${plenum.supportCouplingOrHangerClass} are explicit request inputs.`,
+      "C and Ctr are produced by the same plenum formula corridor as separate spectral-shape terms; they are not aliases copied from Rw."
+    ],
+    calculationStandard: "engine_double_leaf_cavity",
+    curveBasis: "calculated_single_number_estimate",
+    errorBudgetDb: POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_FORMULA_OWNER_ERROR_BUDGET_DB,
+    family: "multileaf_multicavity",
+    kind: "airborne_physics_prediction",
+    method: POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_FORMULA_OWNER_METHOD,
+    missingPhysicalInputs: [],
+    missingSourceEvidence: [],
+    origin: "family_physics_prediction",
+    propertyDefaults: [],
+    ratingStandard: "ISO 717-1",
+    requiredInputs: [
+      ...POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_FORMULA_OWNER_REQUIRED_INPUTS
+    ]
+  };
+}
+
+function buildPostV1CeilingMultileafAirbornePlenumFormulaRejectedCandidate(
+  candidate: AirborneCandidate
+): AirborneCandidate["rejectionReasons"] {
+  if (candidate.id === POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_SELECTED_CANDIDATE_ID) {
+    return [];
+  }
+
+  return [
+    {
+      code: candidate.origin === "needs_input" ? "complete_physical_inputs_supplied" : "lower_precedence_than_selected",
+      detail:
+        "Complete ceiling multileaf/plenum element-lab physical inputs select the owned ceiling plenum formula owner; nearby single-leaf, wall, floor, and generic boundary candidates do not publish this request."
+    }
+  ];
+}
+
+function selectPostV1CeilingMultileafAirbornePlenumElementLabFormulaCandidate(input: {
+  basis: AirborneResultBasis;
+  outputs: readonly RequestedOutputId[];
+  resolution: AirborneCandidateResolution | undefined;
+}): AirborneCandidateResolution {
+  const selectedCandidate: AirborneCandidate = {
+    basis: input.basis,
+    id: POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_SELECTED_CANDIDATE_ID,
+    metricIds: [...input.outputs],
+    origin: "family_physics_prediction",
+    outputIds: [...input.outputs],
+    rejectionReasons: [],
+    selected: true
+  };
+  const retainedCandidates = (input.resolution?.candidates ?? [])
+    .filter((candidate) => candidate.id !== selectedCandidate.id)
+    .map((candidate) => ({
+      ...candidate,
+      rejectionReasons: buildPostV1CeilingMultileafAirbornePlenumFormulaRejectedCandidate(candidate),
+      selected: false
+    }));
+  const candidates = [selectedCandidate, ...retainedCandidates];
+
+  return {
+    candidatePrecedence: [...AIRBORNE_CANDIDATE_RESOLVER_PRECEDENCE],
+    candidates,
+    deterministicTieBreakers: input.resolution?.deterministicTieBreakers ?? [
+      "origin_precedence",
+      "input_completeness_status",
+      "error_budget_db",
+      "stable_candidate_id"
+    ],
+    id: "resolver_post_v1_ceiling_multileaf_airborne_plenum_element_lab_formula_owner",
+    inputCompletenessIds: [
+      ...POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_INPUT_BOUNDARY_MISSING_INPUTS
+    ],
+    policyId: "model_first_airborne_candidate_precedence_v1",
+    ratingAdapterBasisIds: input.resolution?.ratingAdapterBasisIds ?? ["ISO 717-1"],
+    rejectedCandidateIds: retainedCandidates.map((candidate) => candidate.id),
+    runtimeValueMovement: true,
+    selectedBasis: input.basis,
+    selectedCandidateId: selectedCandidate.id,
+    selectedOrigin: "family_physics_prediction"
+  };
+}
+
+function promotePostV1CeilingMultileafAirbornePlenumElementLabOutputs(input: {
+  result: AssemblyCalculation;
+  outputs: readonly RequestedOutputId[];
+}): void {
+  const updatedSupport = moveUnsupportedOutputsToSupported({
+    supportedImpactOutputs: input.result.supportedImpactOutputs,
+    supportedTargetOutputs: input.result.supportedTargetOutputs,
+    targetOutputs: input.result.targetOutputs,
+    unsupportedImpactOutputs: input.result.unsupportedImpactOutputs,
+    unsupportedTargetOutputs: input.result.unsupportedTargetOutputs
+  }, input.outputs);
+
+  input.result.supportedImpactOutputs = updatedSupport.supportedImpactOutputs;
+  input.result.supportedTargetOutputs = updatedSupport.supportedTargetOutputs;
+  input.result.unsupportedImpactOutputs = updatedSupport.unsupportedImpactOutputs;
+  input.result.unsupportedTargetOutputs = updatedSupport.unsupportedTargetOutputs;
+}
+
+function applyPostV1CeilingMultileafAirbornePlenumElementLabFormulaOwner(input: {
+  airborneContext: AirborneContext | null | undefined;
+  result: AssemblyCalculation;
+}): void {
+  if (
+    input.result.acousticAnswerBoundary ||
+    input.airborneContext?.contextMode !== "element_lab" ||
+    !isPostV1CeilingMultileafAirbornePlenumInputBoundaryStack(input.result.layers)
+  ) {
+    return;
+  }
+
+  const formulaOutputs = input.result.targetOutputs.filter((output: RequestedOutputId) =>
+    POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_OUTPUTS.has(output)
+  );
+  if (formulaOutputs.length === 0) {
+    return;
+  }
+
+  if (getPostV1CeilingMultileafAirbornePlenumMissingPhysicalInputs(input.airborneContext).length > 0) {
+    return;
+  }
+
+  const plenum = input.airborneContext.ceilingPlenum as Required<PostV1CeilingPlenumInput>;
+  const formula = calculatePostV1CeilingMultileafAirbornePlenumElementLabFormula(plenum);
+  const basis = buildPostV1CeilingMultileafAirbornePlenumElementLabFormulaBasis(plenum, formula);
+
+  input.result.airborneBasis = basis;
+  input.result.metrics = {
+    ...input.result.metrics,
+    airborneIsoDescriptor: "Rw",
+    estimatedCDb: formula.cDb,
+    estimatedCtrDb: formula.ctrDb,
+    estimatedRwDb: formula.rwDb,
+    estimatedStc: formula.stc,
+    surfaceMassKgM2: formula.surfaceMassKgM2
+  };
+  input.result.ratings = {
+    ...input.result.ratings,
+    astmE413: {
+      ...input.result.ratings.astmE413,
+      STC: formula.stc,
+      basis: POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_FORMULA_OWNER_METHOD,
+      estimated: true
+    },
+    iso717: {
+      ...input.result.ratings.iso717,
+      C: formula.cDb,
+      Ctr: formula.ctrDb,
+      Rw: formula.rwDb,
+      composite: "ceiling_multileaf_plenum_source_absent_formula",
+      descriptor: "Rw"
+    }
+  };
+  input.result.airborneCandidateResolution =
+    selectPostV1CeilingMultileafAirbornePlenumElementLabFormulaCandidate({
+      basis,
+      outputs: formulaOutputs,
+      resolution: input.result.airborneCandidateResolution
+    });
+  input.result.airborneCandidateSet = input.result.airborneCandidateResolution.candidates;
+  promotePostV1CeilingMultileafAirbornePlenumElementLabOutputs({
+    result: input.result,
+    outputs: formulaOutputs
+  });
+  input.result.warnings = input.result.warnings.filter(
+    (warning: string) => warning !== LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_WARNING
+  );
+  if (!input.result.warnings.includes(POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_FORMULA_OWNER_WARNING)) {
+    input.result.warnings.push(POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_FORMULA_OWNER_WARNING);
+  }
+}
+
+function getPostV1CeilingMultileafAirbornePlenumFieldBuildingTargetOutputs(input: {
+  airborneContext: AirborneContext | null | undefined;
+  targetOutputs: readonly RequestedOutputId[];
+}): RequestedOutputId[] {
+  const outputSet =
+    input.airborneContext?.contextMode === "building_prediction"
+      ? POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_BUILDING_OUTPUTS
+      : POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_OUTPUTS;
+
+  return input.targetOutputs.filter((output: RequestedOutputId) => outputSet.has(output));
+}
+
+function getPostV1CeilingMultileafAirbornePlenumFieldBuildingMissingPhysicalInputs(
+  airborneContext: AirborneContext | null | undefined
+): string[] {
+  const missing = [
+    ...getPostV1CeilingMultileafAirbornePlenumMissingPhysicalInputs(airborneContext)
+  ];
+
+  if (
+    airborneContext?.contextMode !== "field_between_rooms" &&
+    airborneContext?.contextMode !== "building_prediction"
+  ) {
+    missing.push("airborneContext.contextMode=field_between_rooms_or_building_prediction");
+  }
+  if (!hasPositiveNumber(airborneContext?.panelWidthMm) || !hasPositiveNumber(airborneContext?.panelHeightMm)) {
+    missing.push("airborneContext.panelWidthHeight");
+  }
+  if (!hasPositiveNumber(airborneContext?.receivingRoomVolumeM3)) {
+    missing.push("airborneContext.receivingRoomVolumeM3");
+  }
+  if (!hasPositiveNumber(airborneContext?.receivingRoomRt60S)) {
+    missing.push("airborneContext.receivingRoomRt60S");
+  }
+
+  if (airborneContext?.contextMode === "building_prediction") {
+    if (!hasPositiveNumber(airborneContext.sourceRoomVolumeM3)) {
+      missing.push("airborneContext.sourceRoomVolumeM3");
+    }
+    if (!airborneContext.flankingJunctionClass) {
+      missing.push("airborneContext.flankingJunctionClass");
+    }
+    if (!airborneContext.conservativeFlankingAssumption) {
+      missing.push("airborneContext.conservativeFlankingAssumption");
+    }
+    if (!hasPositiveNumber(airborneContext.junctionCouplingLengthM)) {
+      missing.push("airborneContext.junctionCouplingLengthM");
+    }
+  }
+
+  return [...new Set(missing)];
+}
+
+function getPostV1CeilingMultileafAirbornePlenumFlankingPenaltyDb(
+  airborneContext: AirborneContext
+): number {
+  if (airborneContext.contextMode !== "building_prediction") {
+    return 1;
+  }
+
+  const junctionPenalty =
+    airborneContext.flankingJunctionClass === "isolated_junction" ? -0.4 :
+    airborneContext.flankingJunctionClass === "rigid_cross_junction" ? 0 :
+    airborneContext.flankingJunctionClass === "rigid_t_junction" ? 0.4 :
+    airborneContext.flankingJunctionClass === "lightweight_junction" ? 0.8 :
+    airborneContext.flankingJunctionClass === "mixed_junction" ? 0.6 :
+    1.2;
+  const conservativePenalty =
+    airborneContext.conservativeFlankingAssumption === "single_conservative_path" ? 0.6 :
+    airborneContext.conservativeFlankingAssumption === "multi_path_conservative" ? 1 :
+    airborneContext.conservativeFlankingAssumption === "worst_case_screening" ? 2 :
+    1.3;
+  const couplingPenalty =
+    typeof airborneContext.junctionCouplingLengthM === "number"
+      ? clamp(4 / airborneContext.junctionCouplingLengthM, 0.4, 1.4) - 1
+      : 0;
+
+  return round1(clamp(junctionPenalty + conservativePenalty + couplingPenalty, 0.5, 4));
+}
+
+function calculatePostV1CeilingMultileafAirbornePlenumFieldBuildingValues(input: {
+  airborneContext: AirborneContext;
+  formula: ReturnType<typeof calculatePostV1CeilingMultileafAirbornePlenumElementLabFormula>;
+  basis: AirborneResultBasis;
+}): {
+  readonly dnADb: number;
+  readonly dnTADb: number;
+  readonly dnTAkDb?: number;
+  readonly dnTwDb: number;
+  readonly dnWDb: number;
+  readonly equivalentAbsorptionAreaM2: number;
+  readonly fieldFlankingPenaltyDb: number;
+  readonly partitionAreaM2: number;
+  readonly rwPrimeDb: number;
+  readonly standardizationCorrectionDb: number;
+} {
+  const partitionAreaM2 =
+    (input.airborneContext.panelWidthMm as number) *
+    (input.airborneContext.panelHeightMm as number) /
+    1_000_000;
+  const equivalentAbsorptionAreaM2 =
+    0.16 * (input.airborneContext.receivingRoomVolumeM3 as number) /
+    (input.airborneContext.receivingRoomRt60S as number);
+  const fieldFlankingPenaltyDb =
+    getPostV1CeilingMultileafAirbornePlenumFlankingPenaltyDb(input.airborneContext);
+  const rwPrimeDb = round1(input.formula.rwDb - fieldFlankingPenaltyDb);
+  const dnWDb = round1(rwPrimeDb + 10 * Math.log10(partitionAreaM2 / equivalentAbsorptionAreaM2));
+  const standardizationCorrectionDb =
+    round1(10 * Math.log10((input.airborneContext.receivingRoomRt60S as number) / 0.5));
+  const dnTwDb = round1(dnWDb + standardizationCorrectionDb);
+  const dnADb = round1(dnWDb + input.formula.cDb);
+  const dnTADb = round1(dnTwDb + input.formula.cDb);
+  const dnTAkDb = computeGateARCharacteristicDnTAkDb({
+    airborneBasis: input.basis,
+    airborneContext: input.airborneContext,
+    dnTADb
+  });
+
+  return {
+    dnADb,
+    dnTADb,
+    dnTAkDb,
+    dnTwDb,
+    dnWDb,
+    equivalentAbsorptionAreaM2: round1(equivalentAbsorptionAreaM2),
+    fieldFlankingPenaltyDb,
+    partitionAreaM2: round1(partitionAreaM2),
+    rwPrimeDb,
+    standardizationCorrectionDb
+  };
+}
+
+function buildPostV1CeilingMultileafAirbornePlenumFieldBuildingBasis(input: {
+  airborneContext: AirborneContext;
+  formula: ReturnType<typeof calculatePostV1CeilingMultileafAirbornePlenumElementLabFormula>;
+  plenum: Required<PostV1CeilingPlenumInput>;
+}): AirborneResultBasis {
+  const building = input.airborneContext.contextMode === "building_prediction";
+  const method = building
+    ? POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_BUILDING_PREDICTION_METHOD
+    : POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_CONTEXT_METHOD;
+  const requiredInputs = building
+    ? POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_BUILDING_PREDICTION_REQUIRED_INPUTS
+    : POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_CONTEXT_REQUIRED_INPUTS;
+
+  return {
+    assumptions: [
+      "Ceiling-only stack is treated as a suspended/multileaf plenum airborne field/building route.",
+      `The direct transmission anchor is the owned plenum formula Rw ${input.formula.rwDb} / C ${input.formula.cDb} / Ctr ${input.formula.ctrDb}, not a measured row or copied lab-to-field value.`,
+      `Leaf mass ${input.formula.surfaceMassKgM2} kg/m2, plenum depth ${input.plenum.cavityOrPlenumDepthMm} mm, absorber ${input.plenum.absorberThicknessMm} mm / ${input.plenum.absorberFlowResistivityPaSM2} Pa.s/m2, and support class ${input.plenum.supportCouplingOrHangerClass} are explicit request inputs.`,
+      building
+        ? "Building outputs require explicit source/receiving room and flanking junction context before apparent and standardized values are published."
+        : "Field outputs require explicit panel area, receiving room volume, and receiving room RT60 before apparent and standardized values are published."
+    ],
+    calculationStandard: "ISO 12354-1",
+    curveBasis: "calculated_single_number_estimate",
+    errorBudgetDb: POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_BUILDING_ERROR_BUDGET_DB,
+    family: "multileaf_multicavity",
+    kind: "airborne_physics_prediction",
+    method,
+    missingPhysicalInputs: [],
+    missingSourceEvidence: [],
+    origin: "family_physics_prediction",
+    propertyDefaults: [],
+    ratingStandard: "ISO 717-1",
+    requiredInputs: [...requiredInputs]
+  };
+}
+
+function buildPostV1CeilingMultileafAirbornePlenumFieldBuildingMissingContextBasis(input: {
+  airborneContext: AirborneContext | null | undefined;
+  missingPhysicalInputs: readonly string[];
+}): AirborneResultBasis {
+  const building = input.airborneContext?.contextMode === "building_prediction";
+  const requiredInputs = building
+    ? POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_BUILDING_PREDICTION_REQUIRED_INPUTS
+    : POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_CONTEXT_REQUIRED_INPUTS;
+
+  return {
+    assumptions: [
+      "Ceiling multileaf/plenum field/building outputs are blocked until the direct plenum formula inputs and route-required room context are complete.",
+      "DynEcho does not copy element-lab Rw/STC into field or building outputs when panel area, receiving room, RT60, or flanking terms are missing.",
+      "Impact, OITC, ASTM, and source-row proximity substitutions remain outside this ceiling airborne adapter."
+    ],
+    calculationStandard: "none",
+    curveBasis: "no_curve",
+    family: "multileaf_multicavity",
+    kind: "airborne_needs_input",
+    method: POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_BUILDING_MISSING_CONTEXT_METHOD,
+    missingPhysicalInputs: [...input.missingPhysicalInputs],
+    missingSourceEvidence: [],
+    origin: "needs_input",
+    propertyDefaults: [],
+    ratingStandard: "none",
+    requiredInputs: [...requiredInputs]
+  };
+}
+
+function buildPostV1CeilingMultileafAirbornePlenumFieldBuildingRejectedCandidate(
+  candidate: AirborneCandidate
+): AirborneCandidate["rejectionReasons"] {
+  if (
+    candidate.id === POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_CONTEXT_RUNTIME_CANDIDATE_ID ||
+    candidate.id === POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_BUILDING_PREDICTION_RUNTIME_CANDIDATE_ID
+  ) {
+    return [];
+  }
+
+  return [
+    {
+      code: candidate.origin === "needs_input" ? "complete_field_building_context_supplied" : "lower_precedence_than_selected",
+      detail:
+        "Complete ceiling multileaf/plenum field/building context selects the owned plenum field/building adapter; lab values, nearby source rows, wall routes, and floor impact candidates do not publish this request."
+    }
+  ];
+}
+
+function selectPostV1CeilingMultileafAirbornePlenumFieldBuildingCandidate(input: {
+  basis: AirborneResultBasis;
+  outputs: readonly RequestedOutputId[];
+  resolution: AirborneCandidateResolution | undefined;
+}): AirborneCandidateResolution {
+  const selectedCandidateId =
+    input.basis.method === POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_BUILDING_PREDICTION_METHOD
+      ? POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_BUILDING_PREDICTION_RUNTIME_CANDIDATE_ID
+      : POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_CONTEXT_RUNTIME_CANDIDATE_ID;
+  const selectedCandidate: AirborneCandidate = {
+    basis: input.basis,
+    id: selectedCandidateId,
+    metricIds: [...input.outputs],
+    origin: "family_physics_prediction",
+    outputIds: [...input.outputs],
+    rejectionReasons: [],
+    selected: true
+  };
+  const retainedCandidates = (input.resolution?.candidates ?? [])
+    .filter((candidate) => candidate.id !== selectedCandidate.id)
+    .map((candidate) => ({
+      ...candidate,
+      rejectionReasons: buildPostV1CeilingMultileafAirbornePlenumFieldBuildingRejectedCandidate(candidate),
+      selected: false
+    }));
+  const candidates = [selectedCandidate, ...retainedCandidates];
+
+  return {
+    candidatePrecedence: [...AIRBORNE_CANDIDATE_RESOLVER_PRECEDENCE],
+    candidates,
+    deterministicTieBreakers: input.resolution?.deterministicTieBreakers ?? [
+      "origin_precedence",
+      "input_completeness_status",
+      "error_budget_db",
+      "stable_candidate_id"
+    ],
+    id: "resolver_post_v1_ceiling_multileaf_airborne_plenum_field_building_adapter_owner",
+    inputCompletenessIds: [...input.basis.requiredInputs],
+    policyId: "model_first_airborne_candidate_precedence_v1",
+    ratingAdapterBasisIds: input.resolution?.ratingAdapterBasisIds ?? ["ISO 717-1", "ISO 12354-1"],
+    rejectedCandidateIds: retainedCandidates.map((candidate) => candidate.id),
+    runtimeValueMovement: true,
+    selectedBasis: input.basis,
+    selectedCandidateId: selectedCandidate.id,
+    selectedOrigin: "family_physics_prediction"
+  };
+}
+
+function applyPostV1CeilingMultileafAirbornePlenumFieldBuildingMissingContextBoundary(input: {
+  airborneContext: AirborneContext | null | undefined;
+  missingPhysicalInputs: readonly string[];
+  outputs: readonly RequestedOutputId[];
+  result: AssemblyCalculation;
+}): void {
+  const basis = buildPostV1CeilingMultileafAirbornePlenumFieldBuildingMissingContextBasis({
+    airborneContext: input.airborneContext,
+    missingPhysicalInputs: input.missingPhysicalInputs
+  });
+  input.result.airborneBasis = basis;
+  input.result.acousticAnswerBoundary = {
+    method: basis.method,
+    missingPhysicalInputs: [...basis.missingPhysicalInputs],
+    origin: "needs_input",
+    requiredInputs: [...basis.requiredInputs],
+    route: "ceiling",
+    unsupportedOutputs: [...input.outputs]
+  };
+
+  if (input.result.airborneCandidateResolution) {
+    input.result.airborneCandidateResolution = selectPostV1CeilingMultileafAirbornePlenumNeedsInputCandidate({
+      basis,
+      resolution: input.result.airborneCandidateResolution
+    });
+    input.result.airborneCandidateSet = input.result.airborneCandidateResolution.candidates;
+  }
+
+  parkResultTargetOutputs(input.result, input.outputs);
+  input.result.warnings = input.result.warnings.filter(
+    (warning: string) => warning !== LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_WARNING
+  );
+  input.result.warnings.push(
+    `Post-V1 ceiling multileaf/plenum field/building adapter selected needs_input for ${input.outputs.join(", ")}; provide ${basis.missingPhysicalInputs.join(", ")} before DynEcho publishes apparent or standardized ceiling plenum answers.`
+  );
+}
+
+function promotePostV1CeilingMultileafAirbornePlenumFieldBuildingOutputs(input: {
+  result: AssemblyCalculation;
+  outputs: readonly RequestedOutputId[];
+}): void {
+  const updatedSupport = moveUnsupportedOutputsToSupported({
+    supportedImpactOutputs: input.result.supportedImpactOutputs,
+    supportedTargetOutputs: input.result.supportedTargetOutputs,
+    targetOutputs: input.result.targetOutputs,
+    unsupportedImpactOutputs: input.result.unsupportedImpactOutputs,
+    unsupportedTargetOutputs: input.result.unsupportedTargetOutputs
+  }, input.outputs);
+
+  input.result.supportedImpactOutputs = updatedSupport.supportedImpactOutputs;
+  input.result.supportedTargetOutputs = updatedSupport.supportedTargetOutputs;
+  input.result.unsupportedImpactOutputs = updatedSupport.unsupportedImpactOutputs;
+  input.result.unsupportedTargetOutputs = updatedSupport.unsupportedTargetOutputs;
+}
+
+function applyPostV1CeilingMultileafAirbornePlenumFieldBuildingAdapterOwner(input: {
+  airborneContext: AirborneContext | null | undefined;
+  result: AssemblyCalculation;
+}): void {
+  if (
+    input.result.acousticAnswerBoundary ||
+    !isPostV1CeilingMultileafAirbornePlenumInputBoundaryStack(input.result.layers) ||
+    (
+      input.airborneContext?.contextMode !== "field_between_rooms" &&
+      input.airborneContext?.contextMode !== "building_prediction"
+    )
+  ) {
+    return;
+  }
+
+  const fieldBuildingOutputs = getPostV1CeilingMultileafAirbornePlenumFieldBuildingTargetOutputs({
+    airborneContext: input.airborneContext,
+    targetOutputs: input.result.targetOutputs
+  });
+  if (fieldBuildingOutputs.length === 0) {
+    return;
+  }
+
+  const missingInputs =
+    getPostV1CeilingMultileafAirbornePlenumFieldBuildingMissingPhysicalInputs(input.airborneContext);
+  if (missingInputs.length > 0) {
+    applyPostV1CeilingMultileafAirbornePlenumFieldBuildingMissingContextBoundary({
+      airborneContext: input.airborneContext,
+      missingPhysicalInputs: missingInputs,
+      outputs: fieldBuildingOutputs,
+      result: input.result
+    });
+    return;
+  }
+
+  const plenum = input.airborneContext.ceilingPlenum as Required<PostV1CeilingPlenumInput>;
+  const formula = calculatePostV1CeilingMultileafAirbornePlenumElementLabFormula(plenum);
+  const basis = buildPostV1CeilingMultileafAirbornePlenumFieldBuildingBasis({
+    airborneContext: input.airborneContext,
+    formula,
+    plenum
+  });
+  const fieldValues = calculatePostV1CeilingMultileafAirbornePlenumFieldBuildingValues({
+    airborneContext: input.airborneContext,
+    basis,
+    formula
+  });
+
+  input.result.airborneBasis = basis;
+  input.result.metrics = {
+    ...input.result.metrics,
+    airborneIsoDescriptor: input.airborneContext.contextMode === "building_prediction" ? "DnT,w" : "R'w",
+    estimatedDnADb: fieldValues.dnADb,
+    estimatedDnTADb: fieldValues.dnTADb,
+    estimatedDnTAkDb: fieldValues.dnTAkDb,
+    estimatedDnTwDb: fieldValues.dnTwDb,
+    estimatedDnWDb: fieldValues.dnWDb,
+    estimatedRwPrimeDb: fieldValues.rwPrimeDb,
+    surfaceMassKgM2: formula.surfaceMassKgM2
+  };
+  input.result.ratings = {
+    ...input.result.ratings,
+    field: {
+      ...input.result.ratings.field,
+      DnA: fieldValues.dnADb,
+      DnTA: fieldValues.dnTADb,
+      DnTAk: fieldValues.dnTAkDb,
+      DnTw: fieldValues.dnTwDb,
+      DnW: fieldValues.dnWDb,
+      RwPrime: fieldValues.rwPrimeDb,
+      absorptionAreaM2: fieldValues.equivalentAbsorptionAreaM2,
+      fieldFlankingPenaltyDb: fieldValues.fieldFlankingPenaltyDb,
+      partitionAreaM2: fieldValues.partitionAreaM2,
+      standardizationCorrectionDb: fieldValues.standardizationCorrectionDb
+    }
+  };
+  input.result.airborneCandidateResolution =
+    selectPostV1CeilingMultileafAirbornePlenumFieldBuildingCandidate({
+      basis,
+      outputs: fieldBuildingOutputs,
+      resolution: input.result.airborneCandidateResolution
+    });
+  input.result.airborneCandidateSet = input.result.airborneCandidateResolution.candidates;
+  promotePostV1CeilingMultileafAirbornePlenumFieldBuildingOutputs({
+    result: input.result,
+    outputs: fieldBuildingOutputs
+  });
+  input.result.warnings = input.result.warnings.filter(
+    (warning: string) => warning !== LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_WARNING
+  );
+  if (!input.result.warnings.includes(POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_BUILDING_WARNING)) {
+    input.result.warnings.push(POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_BUILDING_WARNING);
+  }
+}
+
+function buildPostV1CeilingMultileafAirbornePlenumInputBoundaryBasis(): AirborneResultBasis {
+  return {
+    assumptions: [
+      "Ceiling-only airborne stack contains a board leaf plus plenum/cavity/fill layers, so the single-leaf mass-law route is not physically owned for this request.",
+      "DynEcho blocks single-leaf, floor-impact, source-row proximity, and field/building promotion until the ceiling multileaf/plenum formula owner has the required physical inputs.",
+      "This input-boundary slice captures the missing fields only; it does not publish Rw, STC, C, Ctr, field/building metrics, OITC, or impact values."
+    ],
+    calculationStandard: "none",
+    curveBasis: "no_curve",
+    family: "multileaf_multicavity",
+    kind: "airborne_needs_input",
+    method: POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_INPUT_BOUNDARY_METHOD,
+    missingPhysicalInputs: [...POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_INPUT_BOUNDARY_MISSING_INPUTS],
+    missingSourceEvidence: [],
+    origin: "needs_input",
+    propertyDefaults: [],
+    ratingStandard: "none",
+    requiredInputs: [
+      ...POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_INPUT_BOUNDARY_MISSING_INPUTS,
+      "futureCeilingMultileafPlenumFormulaOwner"
+    ]
+  };
+}
+
+function buildPostV1CeilingMultileafAirbornePlenumBoundaryRejectedCandidate(
+  candidate: AirborneCandidate
+): AirborneCandidate["rejectionReasons"] {
+  if (ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_NUMERIC_ORIGINS.has(candidate.origin)) {
+    return [
+      {
+        code: "missing_physical_input",
+        detail:
+          "Ceiling multileaf/plenum airborne requests cannot publish numeric candidates until leaf grouping, leaf mass, cavity/plenum depth, absorber properties, and support coupling are supplied to an owned ceiling formula route."
+      }
+    ];
+  }
+
+  return [
+    {
+      code: "lower_precedence_than_selected",
+      detail: "The ceiling multileaf/plenum missing-input boundary owns this request until the formula route lands."
+    }
+  ];
+}
+
+function selectPostV1CeilingMultileafAirbornePlenumNeedsInputCandidate(input: {
+  basis: AirborneResultBasis;
+  resolution: AirborneCandidateResolution;
+}): AirborneCandidateResolution {
+  const selectedCandidateId = "candidate_dynamic_needs_input";
+  const candidates = input.resolution.candidates.map((candidate) => {
+    const selected = candidate.id === selectedCandidateId;
+
+    return {
+      ...candidate,
+      basis: selected ? input.basis : candidate.basis,
+      rejectionReasons: selected
+        ? []
+        : buildPostV1CeilingMultileafAirbornePlenumBoundaryRejectedCandidate(candidate),
+      selected
+    };
+  });
+
+  if (!candidates.some((candidate) => candidate.selected)) {
+    return input.resolution;
+  }
+
+  return {
+    ...input.resolution,
+    candidatePrecedence: [...AIRBORNE_CANDIDATE_RESOLVER_PRECEDENCE],
+    candidates,
+    id: "resolver_post_v1_ceiling_multileaf_airborne_plenum_input_boundary",
+    rejectedCandidateIds: candidates.filter((candidate) => !candidate.selected).map((candidate) => candidate.id),
+    runtimeValueMovement: false,
+    selectedBasis: input.basis,
+    selectedCandidateId,
+    selectedOrigin: "needs_input"
+  };
+}
+
+function applyPostV1CeilingMultileafAirbornePlenumInputBoundary(input: {
+  airborneContext: AirborneContext | null | undefined;
+  result: AssemblyCalculation;
+}): void {
+  if (
+    input.result.acousticAnswerBoundary ||
+    !isPostV1CeilingMultileafAirbornePlenumInputBoundaryStack(input.result.layers) ||
+    !POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_INPUT_BOUNDARY_ELIGIBLE_ORIGINS.has(
+      input.result.airborneBasis?.origin ?? ""
+    )
+  ) {
+    return;
+  }
+
+  const formulaOwnerActive =
+    input.result.airborneBasis?.method ===
+      POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_FORMULA_OWNER_METHOD;
+  const fieldBuildingOwnerActive =
+    input.result.airborneBasis?.method ===
+      POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_CONTEXT_METHOD ||
+    input.result.airborneBasis?.method ===
+      POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_BUILDING_PREDICTION_METHOD;
+  const stoppedOutputs = input.result.targetOutputs.filter((output: RequestedOutputId) =>
+    POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_INPUT_BOUNDARY_OUTPUTS.has(output) &&
+    (!formulaOwnerActive && !fieldBuildingOwnerActive || !input.result.supportedTargetOutputs.includes(output))
+  );
+  if (stoppedOutputs.length === 0) {
+    return;
+  }
+
+  const basis = buildPostV1CeilingMultileafAirbornePlenumInputBoundaryBasis();
+  input.result.airborneBasis = basis;
+  input.result.acousticAnswerBoundary = {
+    method: basis.method,
+    missingPhysicalInputs: [...basis.missingPhysicalInputs],
+    origin: "needs_input",
+    requiredInputs: [...basis.requiredInputs],
+    route: "ceiling",
+    unsupportedOutputs: stoppedOutputs
+  };
+
+  if (input.result.airborneCandidateResolution) {
+    input.result.airborneCandidateResolution = selectPostV1CeilingMultileafAirbornePlenumNeedsInputCandidate({
+      basis,
+      resolution: input.result.airborneCandidateResolution
+    });
+    input.result.airborneCandidateSet = input.result.airborneCandidateResolution.candidates;
+  }
+
+  parkResultTargetOutputs(input.result, stoppedOutputs);
+  input.result.warnings = input.result.warnings.filter(
+    (warning: string) => warning !== LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_WARNING
+  );
+  input.result.warnings.push(
+    `Post-V1 ceiling multileaf/plenum input boundary selected needs_input for ${stoppedOutputs.join(", ")}; provide ${basis.missingPhysicalInputs.join(", ")} before DynEcho publishes ceiling multileaf airborne answers.`
   );
 }
 
@@ -8229,6 +9398,22 @@ export function calculateAssembly(
     result
   });
   applyPostV1UserMaterialFormulaRequiredInputSurfaceBoundary({
+    airborneContext,
+    result
+  });
+  applyPostV1CeilingRoofSuspendedCeilingRouteSplitBoundary({
+    airborneContext,
+    result
+  });
+  applyPostV1CeilingMultileafAirbornePlenumElementLabFormulaOwner({
+    airborneContext,
+    result
+  });
+  applyPostV1CeilingMultileafAirbornePlenumFieldBuildingAdapterOwner({
+    airborneContext,
+    result
+  });
+  applyPostV1CeilingMultileafAirbornePlenumInputBoundary({
     airborneContext,
     result
   });

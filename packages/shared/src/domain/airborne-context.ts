@@ -199,6 +199,72 @@ export type WallSupportTopology = z.infer<typeof WallSupportTopologySchema>;
 
 const WallLayerIndicesSchema = z.array(z.number().int().nonnegative()).min(1);
 
+export const AirborneCeilingPlenumLeafGroupingSchema = z.enum([
+  "single_leaf_below_plenum",
+  "double_layer_single_leaf_below_plenum",
+  "double_leaf_decoupled_plenum"
+]);
+export type AirborneCeilingPlenumLeafGrouping = z.infer<
+  typeof AirborneCeilingPlenumLeafGroupingSchema
+>;
+
+export const AirborneCeilingPlenumSupportCouplingSchema = z.enum([
+  "direct_fixed",
+  "resilient_channel",
+  "resilient_hanger",
+  "isolated_hanger"
+]);
+export type AirborneCeilingPlenumSupportCoupling = z.infer<
+  typeof AirborneCeilingPlenumSupportCouplingSchema
+>;
+
+export const AirborneRouteIntentSchema = z.enum([
+  "unknown",
+  "ceiling_airborne",
+  "roof_airborne",
+  "suspended_ceiling_airborne_lining",
+  "suspended_ceiling_floor_impact_lower_treatment"
+]);
+export type AirborneRouteIntent = z.infer<typeof AirborneRouteIntentSchema>;
+
+export const AirborneRoofOrCeilingMountingContextSchema = z.enum([
+  "unknown",
+  "indoor_ceiling",
+  "roof_or_facade_element",
+  "suspended_ceiling_below_floor",
+  "ceiling_lining_below_roof"
+]);
+export type AirborneRoofOrCeilingMountingContext = z.infer<
+  typeof AirborneRoofOrCeilingMountingContextSchema
+>;
+
+export const AirborneSuspendedCeilingIntentSchema = z.enum([
+  "unknown",
+  "not_suspended_ceiling",
+  "airborne_ceiling_plenum",
+  "floor_impact_lower_treatment",
+  "both_require_separate_routes"
+]);
+export type AirborneSuspendedCeilingIntent = z.infer<
+  typeof AirborneSuspendedCeilingIntentSchema
+>;
+
+const AirborneCeilingPlenumInputSchemaInternal = z.object({
+  absorberFlowResistivityPaSM2: z.number().positive().optional(),
+  absorberThicknessMm: z.number().positive().optional(),
+  cavityOrPlenumDepthMm: z.number().positive().optional(),
+  leafGrouping: AirborneCeilingPlenumLeafGroupingSchema.optional(),
+  leafSurfaceMassKgM2: z.number().positive().optional(),
+  supportCouplingOrHangerClass: AirborneCeilingPlenumSupportCouplingSchema.optional()
+});
+export type AirborneCeilingPlenumInput = z.infer<typeof AirborneCeilingPlenumInputSchemaInternal>;
+
+export const AirborneCeilingPlenumInputSchema: z.ZodType<
+  AirborneCeilingPlenumInput,
+  z.ZodTypeDef,
+  z.input<typeof AirborneCeilingPlenumInputSchemaInternal>
+> = AirborneCeilingPlenumInputSchemaInternal;
+
 const WallTopologySchemaInternal = z.object({
   cavity1AbsorptionClass: WallCavityAbsorptionClassSchema.optional(),
   cavity1DepthMm: z.number().positive().optional(),
@@ -349,6 +415,7 @@ export const AirborneAdvancedWallInputSchema: z.ZodType<
 const AirborneContextShape = {
   advancedWall: AirborneAdvancedWallInputSchema.optional(),
   airtightness: AirtightnessClassSchema.optional(),
+  ceilingPlenum: AirborneCeilingPlenumInputSchema.optional(),
   connectionType: AirborneConnectionTypeSchema.optional(),
   contextMode: AirborneContextModeSchema.optional(),
   electricalBoxes: ElectricalBoxStateSchema.optional(),
@@ -371,9 +438,13 @@ const AirborneContextShape = {
   openingFacadeBoundaryIntent: AirborneOpeningFacadeBoundaryIntentSchema.optional(),
   openingLeakFieldBuildingAdapterBoundary: z.literal(true).optional(),
   openingLeakElements: z.array(AirborneOpeningLeakElementSchema).optional(),
+  hangerOrSupportCouplingClass: AirborneCeilingPlenumSupportCouplingSchema.optional(),
+  roofOrCeilingMountingContext: AirborneRoofOrCeilingMountingContextSchema.optional(),
+  routeIntent: AirborneRouteIntentSchema.optional(),
   sharedTrack: SharedTrackClassSchema.optional(),
   studSpacingMm: z.number().positive().optional(),
   studType: AirborneStudTypeSchema.optional(),
+  suspendedCeilingAirborneOrImpactIntent: AirborneSuspendedCeilingIntentSchema.optional(),
   wallTopology: WallTopologySchema.optional()
 } satisfies z.ZodRawShape;
 

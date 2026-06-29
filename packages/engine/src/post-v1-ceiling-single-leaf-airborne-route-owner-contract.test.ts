@@ -202,13 +202,13 @@ describe("post-V1 ceiling single-leaf airborne route owner", () => {
   it("keeps registry and adapter route-aware for the shared single-leaf backbone", () => {
     const registry = buildLayerCombinationResolverRegistryContract();
     expect(registry.summary.routeCount).toMatchObject({
-      ceiling: 3,
+      ceiling: 6,
       floor: 28,
       wall: 22
     });
     expect(registry.summary).toMatchObject({
-      activeRuntimeCandidateCount: 50,
-      candidateCount: 53
+      activeRuntimeCandidateCount: 53,
+      candidateCount: 56
     });
 
     const ceilingAdapter = adaptLayerCombinationRuntimeCandidate({

@@ -59,6 +59,12 @@ import {
   LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID
 } from "./layer-combination-resolver-single-leaf-mass-law-banded-runtime-constants";
 import {
+  POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_BUILDING_PREDICTION_METHOD,
+  POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID,
+  POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_CONTEXT_METHOD,
+  POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_CONTEXT_SELECTED_CANDIDATE_ID
+} from "./post-v1-ceiling-multileaf-airborne-plenum-field-building-adapter-owner";
+import {
   LIGHTWEIGHT_CONCRETE_FAMILY_ESTIMATE_BASIS,
   LIGHTWEIGHT_CONCRETE_FAMILY_SELECTED_CANDIDATE_ID
 } from "./lightweight-concrete-family-runtime-constants";
@@ -205,26 +211,26 @@ describe("layer combination resolver registry contract", () => {
       sourceRowsAreEvidenceNotProduct: true
     });
     expect(contract.summary).toEqual({
-      activeRuntimeCandidateCount: 50,
+      activeRuntimeCandidateCount: 53,
       basisCount: {
         astm_rating_boundary: 2,
-        building_prediction: 6,
-        element_lab: 38,
-        field_apparent: 7
+        building_prediction: 7,
+        element_lab: 39,
+        field_apparent: 8
       },
-      candidateCount: 53,
+      candidateCount: 56,
       kindCount: {
         basis_boundary: 1,
         calibrated_family_solver: 1,
         exact_measured_override: 4,
-        field_building_adapter: 12,
+        field_building_adapter: 14,
         needs_input_boundary: 1,
         similarity_anchor: 6,
-        source_absent_family_solver: 27,
+        source_absent_family_solver: 28,
         unsupported_boundary: 1
       },
       routeCount: {
-        ceiling: 3,
+        ceiling: 6,
         floor: 28,
         wall: 22
       },
@@ -484,6 +490,22 @@ describe("layer combination resolver registry contract", () => {
       priorityRank: 4,
       route: "wall",
       supportedMetrics: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A"]
+    });
+    expect(byId.get(POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_CONTEXT_SELECTED_CANDIDATE_ID)).toMatchObject({
+      basis: "field_apparent",
+      kind: "field_building_adapter",
+      ownedRuntimeBasisId: POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_CONTEXT_METHOD,
+      priorityRank: 4,
+      route: "ceiling",
+      supportedMetrics: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A"]
+    });
+    expect(byId.get(POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID)).toMatchObject({
+      basis: "building_prediction",
+      kind: "field_building_adapter",
+      ownedRuntimeBasisId: POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_BUILDING_PREDICTION_METHOD,
+      priorityRank: 4,
+      route: "ceiling",
+      supportedMetrics: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "DnT,A,k"]
     });
     expect(byId.get("generic.lab_field_building_basis_boundary")).toMatchObject({
       basis: "building_prediction",

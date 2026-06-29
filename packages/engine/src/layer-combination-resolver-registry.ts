@@ -88,6 +88,21 @@ import {
   LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_ERROR_BUDGET_DB,
   LAYER_COMBINATION_RESOLVER_SINGLE_LEAF_MASS_LAW_BANDED_RUNTIME_CORRIDOR_SELECTED_CANDIDATE_ID
 } from "./layer-combination-resolver-single-leaf-mass-law-banded-runtime-constants";
+import {
+  POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_FORMULA_OWNER_ERROR_BUDGET_DB,
+  POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_FORMULA_OWNER_METHOD,
+  POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_FORMULA_OWNER_REQUIRED_INPUTS,
+  POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_FORMULA_OWNER_SELECTED_CANDIDATE_ID
+} from "./post-v1-ceiling-multileaf-airborne-plenum-element-lab-formula-owner";
+import {
+  POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_BUILDING_PREDICTION_METHOD,
+  POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_BUILDING_PREDICTION_REQUIRED_INPUTS,
+  POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID,
+  POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_BUILDING_ERROR_BUDGET_DB,
+  POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_CONTEXT_METHOD,
+  POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_CONTEXT_REQUIRED_INPUTS,
+  POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_CONTEXT_SELECTED_CANDIDATE_ID
+} from "./post-v1-ceiling-multileaf-airborne-plenum-field-building-adapter-owner";
 import { OPEN_WEB_DIRECT_FIXED_LINING_BASIS } from "./lightweight-steel-open-web-direct-fixed-lining-estimate";
 import { OPEN_WEB_SUPPORTED_BAND_SIMILARITY_BASIS } from "./lightweight-steel-open-web-supported-band-estimate";
 import { OPEN_BOX_TIMBER_RAW_BARE_FORMULA_BASIS } from "./open-box-timber-raw-bare-estimate";
@@ -1468,6 +1483,233 @@ const CANDIDATE_DECLARATIONS = [
       "building_values_stay_tied_to_owned_ceiling_direct_curve_and_explicit_building_context",
       "nearby_lab rows may not anchor ceiling building outputs without same-basis room and flanking terms",
       "future ceiling building measurements may outrank this source-absent adapter only on same route and basis"
+    ],
+    supportedMetrics: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "DnT,A,k"],
+    surfaceRequirements: FIELD_SURFACES,
+    valuePins: []
+  },
+  {
+    basis: "element_lab",
+    errorBudgetTerms: [
+      {
+        metric: "Rw",
+        notMeasuredEvidence: true,
+        toleranceDb: POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_FORMULA_OWNER_ERROR_BUDGET_DB
+      },
+      {
+        metric: "STC",
+        notMeasuredEvidence: true,
+        toleranceDb: POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_FORMULA_OWNER_ERROR_BUDGET_DB
+      },
+      { metric: "C", notMeasuredEvidence: true, toleranceDb: 2.5 },
+      { metric: "Ctr", notMeasuredEvidence: true, toleranceDb: 4.5 }
+    ],
+    exactPrecedenceRules: [
+      "same_stack_ceiling_multileaf_plenum_exact_lab_row_wins_before_source_absent_formula",
+      "complete_plenum_context_does_not_allow_single_leaf_mass_law_to_publish_the_whole_assembly",
+      "field_building_impact_astm_and_oitc_outputs_require_separate_owned_routes"
+    ],
+    formulaTerms: [
+      "ceiling_only_multileaf_plenum_role_detection",
+      "explicit_leaf_grouping",
+      "leaf_surface_mass_mass_law_component",
+      "cavity_or_plenum_depth_gain",
+      "absorber_thickness_and_flow_resistivity_gain",
+      "support_coupling_or_hanger_class_gain",
+      "iso_717_1_airborne_single_number_and_companion_terms"
+    ],
+    hardCompatibilityGates: [
+      "ceiling_route",
+      "ceiling_only_layer_roles",
+      "board_leaf_plus_plenum_or_absorber_layers",
+      "airborneContext.contextMode=element_lab",
+      "complete_ceiling_plenum_physical_inputs",
+      "element_lab_metric_basis",
+      "not_floor_impact_not_field_not_building_not_astm_rating_not_oitc"
+    ],
+    hostileInputCases: [
+      "missing_plenum_physical_inputs_stay_needs_input",
+      "field_or_building_context_does_not_relabel_lab_formula_values",
+      "floor_impact_outputs_stay_floor_or_ceiling_boundary_needs_input",
+      "OITC_stays_outside_indoor_ceiling_plenum_route",
+      "nearby_single_leaf_ceiling_values_do_not_alias_multileaf_plenum"
+    ],
+    id: POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_FORMULA_OWNER_SELECTED_CANDIDATE_ID,
+    kind: "source_absent_family_solver",
+    label: "Ceiling multileaf airborne plenum element-lab formula owner",
+    ownedRuntimeBasisId: POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_FORMULA_OWNER_METHOD,
+    priorityRank: 3,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      ...POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_ELEMENT_LAB_FORMULA_OWNER_REQUIRED_INPUTS
+    ],
+    route: "ceiling",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "exact_or_calibrated_ceiling_plenum_rows_may_calibrate_later_but_are_not_required_for_source_absent_runtime",
+      "single_leaf_ceiling_route_can_share_leaf_level_mass_law_math_but_not whole-assembly route identity",
+      "future ceiling field or building adapters must declare separate basis before publishing apparent or standardized outputs"
+    ],
+    supportedMetrics: ["Rw", "STC", "C", "Ctr"],
+    surfaceRequirements: ELEMENT_LAB_SURFACES,
+    valuePins: []
+  },
+  {
+    basis: "field_apparent",
+    errorBudgetTerms: [
+      {
+        metric: "R'w",
+        notMeasuredEvidence: true,
+        toleranceDb: POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_BUILDING_ERROR_BUDGET_DB
+      },
+      {
+        metric: "Dn,w",
+        notMeasuredEvidence: true,
+        toleranceDb: POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_BUILDING_ERROR_BUDGET_DB
+      },
+      {
+        metric: "Dn,A",
+        notMeasuredEvidence: true,
+        toleranceDb: POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_BUILDING_ERROR_BUDGET_DB
+      },
+      {
+        metric: "DnT,w",
+        notMeasuredEvidence: true,
+        toleranceDb: POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_BUILDING_ERROR_BUDGET_DB
+      },
+      {
+        metric: "DnT,A",
+        notMeasuredEvidence: true,
+        toleranceDb: POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_BUILDING_ERROR_BUDGET_DB
+      }
+    ],
+    exactPrecedenceRules: [
+      "same_stack_ceiling_multileaf_plenum_field_rows_win_before_source_absent_field_adapter",
+      "element_lab_Rw_STC_C_Ctr_do_not_become_field_outputs_without_explicit_room_context",
+      "field companions remain route=ceiling and do not fall back to wall or floor ownership"
+    ],
+    formulaTerms: [
+      "ceiling_multileaf_plenum_direct_formula_anchor",
+      "field_between_rooms_context",
+      "panel_area_to_absorption_area_level_difference_normalization",
+      "receiving_room_rt60_standardization",
+      "iso_717_1_C_term_A_weighted_companion"
+    ],
+    hardCompatibilityGates: [
+      "ceiling_route",
+      "ceiling_only_layer_roles",
+      "board_leaf_plus_plenum_or_absorber_layers",
+      "airborneContext.contextMode=field_between_rooms",
+      "complete_ceiling_plenum_physical_inputs",
+      "complete_panel_area_receiving_volume_and_rt60",
+      "not_floor_impact_not_building_not_astm_rating_not_oitc"
+    ],
+    hostileInputCases: [
+      "missing_field_context_needs_input",
+      "lab_outputs_do_not_alias_to_field_values",
+      "floor_impact_outputs_stay_floor_or_ceiling_boundary_needs_input",
+      "OITC_stays_outside_indoor_ceiling_plenum_route",
+      "nearby_single_leaf_ceiling_values_do_not_alias_multileaf_plenum_field_outputs"
+    ],
+    id: POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
+    kind: "field_building_adapter",
+    label: "Ceiling multileaf airborne plenum field-context adapter",
+    ownedRuntimeBasisId: POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_CONTEXT_METHOD,
+    priorityRank: 4,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      ...POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_CONTEXT_REQUIRED_INPUTS
+    ],
+    route: "ceiling",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "field_values_stay_tied_to_owned_ceiling_plenum_direct_formula_and_explicit_room_context",
+      "nearby_wall_floor_or_single_leaf_lab_rows_may_not_anchor ceiling multileaf field outputs",
+      "future ceiling plenum field measurements may outrank this source-absent adapter only on same route and basis"
+    ],
+    supportedMetrics: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A"],
+    surfaceRequirements: FIELD_SURFACES,
+    valuePins: []
+  },
+  {
+    basis: "building_prediction",
+    errorBudgetTerms: [
+      {
+        metric: "R'w",
+        notMeasuredEvidence: true,
+        toleranceDb: POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_BUILDING_ERROR_BUDGET_DB
+      },
+      {
+        metric: "Dn,w",
+        notMeasuredEvidence: true,
+        toleranceDb: POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_BUILDING_ERROR_BUDGET_DB
+      },
+      {
+        metric: "Dn,A",
+        notMeasuredEvidence: true,
+        toleranceDb: POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_BUILDING_ERROR_BUDGET_DB
+      },
+      {
+        metric: "DnT,w",
+        notMeasuredEvidence: true,
+        toleranceDb: POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_BUILDING_ERROR_BUDGET_DB
+      },
+      {
+        metric: "DnT,A",
+        notMeasuredEvidence: true,
+        toleranceDb: POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_BUILDING_ERROR_BUDGET_DB
+      },
+      {
+        metric: "DnT,A,k",
+        notMeasuredEvidence: true,
+        toleranceDb: POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_FIELD_BUILDING_ERROR_BUDGET_DB
+      }
+    ],
+    exactPrecedenceRules: [
+      "same_stack_ceiling_multileaf_plenum_building_rows_win_before_source_absent_building_prediction",
+      "element_lab_Rw_STC_C_Ctr_do_not_become_building_values_without_explicit_room_and_flanking_context",
+      "field_context_and_building_prediction_context_stay_separate_bases"
+    ],
+    formulaTerms: [
+      "ceiling_multileaf_plenum_direct_formula_anchor",
+      "explicit_flanking_path_energy_penalty",
+      "source_and_receiving_room_context",
+      "panel_area_to_absorption_area_level_difference_normalization",
+      "receiving_room_rt60_standardization",
+      "characteristic_DnT_A_k_adapter"
+    ],
+    hardCompatibilityGates: [
+      "ceiling_route",
+      "ceiling_only_layer_roles",
+      "board_leaf_plus_plenum_or_absorber_layers",
+      "airborneContext.contextMode=building_prediction",
+      "complete_ceiling_plenum_physical_inputs",
+      "complete_room_standardization_context",
+      "complete_flanking_junction_context",
+      "not_floor_impact_not_field_not_astm_rating_not_oitc"
+    ],
+    hostileInputCases: [
+      "missing_room_or_flanking_context_needs_input",
+      "lab_outputs_requested_with_building_context_do_not_relabel_building_pins",
+      "field_context_cannot_use_building_prediction_ceiling_basis",
+      "floor_impact_outputs_stay_floor_or_ceiling_boundary_needs_input",
+      "OITC_stays_outside_ceiling_plenum_building_adapter"
+    ],
+    id: POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_BUILDING_PREDICTION_SELECTED_CANDIDATE_ID,
+    kind: "field_building_adapter",
+    label: "Ceiling multileaf airborne plenum building-prediction adapter",
+    ownedRuntimeBasisId: POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_BUILDING_PREDICTION_METHOD,
+    priorityRank: 4,
+    rejectedMetricAliases: REQUIRED_ALIAS_REJECTIONS,
+    requiredInputs: [
+      ...POST_V1_CEILING_MULTILEAF_AIRBORNE_PLENUM_BUILDING_PREDICTION_REQUIRED_INPUTS
+    ],
+    route: "ceiling",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "building_values_stay_tied_to_owned_ceiling_plenum_direct_formula_and_explicit_room_flanking_context",
+      "nearby_lab_rows_may_not_anchor ceiling multileaf building outputs without same-basis room and flanking terms",
+      "future ceiling plenum building measurements may outrank this source-absent adapter only on same route and basis"
     ],
     supportedMetrics: ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "DnT,A,k"],
     surfaceRequirements: FIELD_SURFACES,
