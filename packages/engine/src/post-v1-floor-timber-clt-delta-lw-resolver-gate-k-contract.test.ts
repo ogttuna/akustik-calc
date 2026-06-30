@@ -139,11 +139,11 @@ describe("post-V1 floor timber/CLT DeltaLw resolver Gate K", () => {
     ]);
     expect(contract.toleranceDb).toBe(TIMBER_CLT_DELTA_LW_FORMULA_TOLERANCE_DB);
     expect(registry.summary).toMatchObject({
-      activeRuntimeCandidateCount: 53,
-      candidateCount: 56
+      activeRuntimeCandidateCount: 54,
+      candidateCount: 57
     });
-    expect(adapter.summary.adaptedRuntimeBasisCount).toBe(53);
-    expect(surface.summary.surfaceRowCount).toBe(56);
+    expect(adapter.summary.adaptedRuntimeBasisCount).toBe(54);
+    expect(surface.summary.surfaceRowCount).toBe(57);
 
     for (const [candidate, basis] of [
       [timberCandidate, TIMBER_JOIST_DELTA_LW_FORMULA_BASIS],

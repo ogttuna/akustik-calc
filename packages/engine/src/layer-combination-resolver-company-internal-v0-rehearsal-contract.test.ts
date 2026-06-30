@@ -131,16 +131,16 @@ describe("layer combination resolver company-internal V0 rehearsal contract", ()
     });
     expect(contract.summary).toEqual({
       allowedExactRowCount: 4,
-      allowedWithBudgetRowCount: 49,
+      allowedWithBudgetRowCount: 50,
       blockedActionCount: 4,
       blockedRowCount: 2,
-      coverageMatrixRowCount: 56,
-      companyInternalV0AllowedRowCount: 53,
+      coverageMatrixRowCount: 57,
+      companyInternalV0AllowedRowCount: 54,
       needsUserInputRowCount: 1,
       readinessBucketCount: {
         needs_input: 1,
         ready: 4,
-        ready_with_budget: 49,
+        ready_with_budget: 50,
         research_only: 0,
         unsupported: 2
       },
@@ -212,6 +212,7 @@ describe("layer combination resolver company-internal V0 rehearsal contract", ()
       ["candidate_company_internal_opening_leak_building_family_physics_prediction", "allowed_with_budget"],
       ["candidate_company_internal_opening_leak_field_family_physics_prediction", "allowed_with_budget"],
       ["candidate_company_internal_opening_leak_a_weighted_family_physics_prediction", "allowed_with_budget"],
+      ["opening.facade_outdoor_indoor_oitc_spectral_rating_owner", "allowed_with_budget"],
       ["floor.raw_bare_floor_airborne.building_prediction_adapter", "allowed_with_budget"],
       ["floor.open_box_timber_finished_package.airborne_building_prediction_adapter", "allowed_with_budget"],
       ["wall.airborne_field_context.field_apparent_adapter", "allowed_with_budget"],

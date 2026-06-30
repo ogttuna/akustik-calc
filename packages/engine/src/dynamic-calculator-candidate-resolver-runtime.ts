@@ -142,6 +142,9 @@ import { PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_EXACT_CURVE_METRIC_LABEL 
 import {
   POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_COMPATIBLE_DELTA_SELECTED_CANDIDATE_ID
 } from "./project-user-measured-wall-airborne-frequency-compatible-delta";
+import {
+  POST_V1_OPENING_FACADE_OUTDOOR_INDOOR_OITC_SPECTRAL_RATING_OWNER_METHOD
+} from "./post-v1-opening-facade-outdoor-indoor-oitc-spectral-rating-owner";
 
 export type DynamicCalculatorCandidateResolverSourceAnchor = {
   anchorKind?: "compatible_delta" | "exact_full_stack";
@@ -213,8 +216,7 @@ const IMPACT_OR_FLOOR_OUTPUTS = new Set<RequestedOutputId>([
   "Ln,w",
   "Ln,w+CI",
   "LnT,A",
-  "NISR",
-  "OITC"
+  "NISR"
 ]);
 
 const FIELD_OR_BUILDING_OUTPUTS = new Set<RequestedOutputId>([
@@ -698,7 +700,9 @@ function selectLane(input: {
       input.runtimeSignal?.airborneBasis?.method === COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD ||
       input.runtimeSignal?.airborneBasis?.method === COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD ||
       input.runtimeSignal?.airborneBasis?.method ===
-        COMPANY_INTERNAL_OPENING_LEAK_SPECTRAL_FIELD_BUILDING_RUNTIME_METHOD
+        COMPANY_INTERNAL_OPENING_LEAK_SPECTRAL_FIELD_BUILDING_RUNTIME_METHOD ||
+      input.runtimeSignal?.airborneBasis?.method ===
+        POST_V1_OPENING_FACADE_OUTDOOR_INDOOR_OITC_SPECTRAL_RATING_OWNER_METHOD
       ? "family_physics"
       : "unsupported";
   }

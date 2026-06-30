@@ -146,6 +146,10 @@ import {
   TUAS_C11C_GUARDED_ISO_WEIGHTED_IMPACT_BASIS,
   TUAS_C11C_GUARDED_ISO_WEIGHTED_IMPACT_SELECTED_CANDIDATE_ID
 } from "./tuas-c11c-exact-import-readiness";
+import {
+  POST_V1_OPENING_FACADE_OUTDOOR_INDOOR_OITC_SPECTRAL_RATING_OWNER_METHOD,
+  POST_V1_OPENING_FACADE_OUTDOOR_INDOOR_OITC_SPECTRAL_RATING_OWNER_SELECTED_CANDIDATE_ID
+} from "./post-v1-opening-facade-outdoor-indoor-oitc-spectral-rating-owner";
 
 const BROAD_ACCURACY_WALL_TRIPLE_LEAF_LOCAL_SUBSTITUTION_RUNTIME_METHOD =
   "broad_accuracy_wall_triple_leaf_local_substitution_source_absent_rw_runtime_corridor";
@@ -184,7 +188,13 @@ export const LAYER_COMBINATION_RESOLVER_REGISTRY_SELECTED_NEXT_FILE =
 export const LAYER_COMBINATION_RESOLVER_REGISTRY_SELECTED_NEXT_LABEL =
   "layer combination resolver runtime candidate adapter";
 
-export type LayerCombinationResolverRoute = "ceiling" | "floor" | "wall";
+export type LayerCombinationResolverRoute =
+  | "ceiling"
+  | "facade"
+  | "floor"
+  | "opening"
+  | "roof"
+  | "wall";
 
 export type LayerCombinationResolverBasis =
   | "astm_rating_boundary"
@@ -211,6 +221,7 @@ export type LayerCombinationResolverMetricId =
   | "LnT,A"
   | "Ln,w"
   | "Ln,w+CI"
+  | "OITC"
   | "R'w"
   | "Rw"
   | "STC";
@@ -3086,6 +3097,70 @@ const CANDIDATE_DECLARATIONS = [
   {
     basis: "building_prediction",
     errorBudgetTerms: [
+      { metric: "OITC", notMeasuredEvidence: true, toleranceDb: 6 }
+    ],
+    exactPrecedenceRules: [
+      "same_stack_outdoor_indoor_oitc_source_rows_win_only_when_construction_metric_standard_and_context_match",
+      "source_report_scalar_oitc_rows_do_not_become_generic_facade_values",
+      "indoor_partition_or_lab_opening_rows_do_not_become_outdoor_indoor_oitc"
+    ],
+    formulaTerms: [
+      "gate_s_opening_leak_area_energy_composite_transmission_loss_curve",
+      "one_third_octave_80_4000_frequency_band_set",
+      "astm_e1332_reference_outdoor_spectrum",
+      "a_weighted_outdoor_minus_indoor_energy_sum",
+      "oitc_integer_rating"
+    ],
+    hardCompatibilityGates: [
+      "wall_route",
+      "opening_facade_route_present",
+      "facadeOutdoorContext=outdoor_indoor_facade",
+      "frequencyBandSet=one_third_octave_80_4000",
+      "complete_opening_or_facade_area_energy_context",
+      "complete_opening_element_transmission_loss_curve"
+    ],
+    hostileInputCases: [
+      "missing_80_4000_band_set_needs_input",
+      "third_octave_100_3150_iso_curve_does_not_promote_oitc",
+      "rw_or_stc_request_does_not_alias_oitc",
+      "nisr_isr_and_indoor_dntw_stay_separate"
+    ],
+    id: POST_V1_OPENING_FACADE_OUTDOOR_INDOOR_OITC_SPECTRAL_RATING_OWNER_SELECTED_CANDIDATE_ID,
+    kind: "field_building_adapter",
+    label: "Opening/facade outdoor-indoor OITC ASTM E1332 spectral rating owner",
+    ownedRuntimeBasisId: POST_V1_OPENING_FACADE_OUTDOOR_INDOOR_OITC_SPECTRAL_RATING_OWNER_METHOD,
+    priorityRank: 4,
+    rejectedMetricAliases: [
+      ...REQUIRED_ALIAS_REJECTIONS,
+      "rw_to_oitc_alias",
+      "stc_to_oitc_alias",
+      "nisr_isr_to_oitc_alias",
+      "indoor_dntw_to_oitc_alias"
+    ],
+    requiredInputs: [
+      "GateSOpeningLeakCompositeTransmissionLossCurve",
+      "facadeOutdoorContext=outdoor_indoor_facade",
+      "frequencyBandSet=one_third_octave_80_4000",
+      "hostWallAreaM2",
+      "openingAreaM2",
+      "openingCount",
+      "openingElementTransmissionLossCurve",
+      "openingElementType",
+      "openingSealLeakageClass"
+    ],
+    route: "wall",
+    runtimeSelectionState: "active_runtime_existing",
+    similarityAnchorRules: [
+      "nearby_stc_or_rw_rows_are_not_oitc_anchors_without_astm_e1332_basis",
+      "same_family_oitc_anchors_require_same_outdoor_indoor_context_and_owned_delta"
+    ],
+    supportedMetrics: ["OITC"],
+    surfaceRequirements: ASTM_RATING_SURFACES,
+    valuePins: []
+  },
+  {
+    basis: "building_prediction",
+    errorBudgetTerms: [
       { metric: "R'w", notMeasuredEvidence: true, toleranceDb: 9 },
       { metric: "Dn,w", notMeasuredEvidence: true, toleranceDb: 9 },
       { metric: "Dn,A", notMeasuredEvidence: true, toleranceDb: 9 },
@@ -3522,7 +3597,7 @@ export function buildLayerCombinationResolverRegistryContract(): LayerCombinatio
       ),
       routeCount: countBy(
         CANDIDATE_DECLARATIONS.map((candidate) => candidate.route),
-        ["ceiling", "floor", "wall"]
+        ["ceiling", "facade", "floor", "opening", "roof", "wall"]
       ),
       selectedNextAction: LAYER_COMBINATION_RESOLVER_REGISTRY_SELECTED_NEXT_ACTION
     }

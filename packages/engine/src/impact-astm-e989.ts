@@ -9,6 +9,7 @@ import {
 import { createImpactMetricBasis } from "./impact-metric-basis";
 import { buildImpactTraceFromExactSource } from "./impact-trace";
 import { ksRound1 } from "./math";
+import { pickRequiredFrequencyCoverage } from "./rating-band-coverage";
 
 export const ASTM_E989_IMPACT_RATING_BASIS = "astm_e989_impact_rating_metric_schema_adapter_bridge";
 export const ASTM_E989_AIIC_METRIC_BASIS = "astm_e989_aiic_metric_schema_adapter_bridge";
@@ -46,26 +47,13 @@ function pickCompleteAstmOneThirdOctaveValues(
   frequenciesHz: readonly number[],
   levelsDb: readonly number[]
 ): number[] {
-  const required = new Set<number>(IMPACT_RATING_FREQS_THIRD);
-  const byFrequency = new Map<number, number>();
+  const coverage = pickRequiredFrequencyCoverage({
+    frequenciesHz,
+    requiredFrequenciesHz: IMPACT_RATING_FREQS_THIRD,
+    valuesDb: levelsDb
+  });
 
-  for (let index = 0; index < frequenciesHz.length; index += 1) {
-    const frequency = frequenciesHz[index];
-    const level = levelsDb[index];
-
-    if (!required.has(frequency)) {
-      continue;
-    }
-
-    if (!Number.isFinite(frequency) || !Number.isFinite(level) || byFrequency.has(frequency)) {
-      return [];
-    }
-
-    byFrequency.set(frequency, level);
-  }
-
-  const picked = IMPACT_RATING_FREQS_THIRD.map((frequency) => byFrequency.get(frequency));
-  return picked.every((value) => Number.isFinite(value)) ? picked as number[] : [];
+  return coverage.status === "complete" ? [...coverage.samplesDb] : [];
 }
 
 export function computeAstmE989ImpactRating(

@@ -29,6 +29,7 @@ export type TargetOutputSupportInput = {
     estimatedDnTwDb?: number | null;
     estimatedDnWDb?: number | null;
     estimatedDnTAkDb?: number | null;
+    estimatedOitcDb?: number | null;
     estimatedRwDb?: number | null;
     estimatedRwPrimeDb?: number | null;
     estimatedStc?: number | null;
@@ -196,7 +197,7 @@ function isTargetOutputAvailable(
     case "STC":
       return isFiniteNumber(input.metrics?.estimatedStc);
     case "OITC":
-      return false;
+      return isFiniteNumber(input.metrics?.estimatedOitcDb);
     case "C":
       return isFiniteNumber(getCarrierC(input));
     case "Ctr":

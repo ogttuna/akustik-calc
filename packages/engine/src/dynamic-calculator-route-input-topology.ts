@@ -124,8 +124,7 @@ const UNSUPPORTED_RUNTIME_OUTPUTS = new Set<RequestedOutputId>([
   "ISR",
   "LIIC",
   "LIR",
-  "NISR",
-  "OITC"
+  "NISR"
 ]);
 
 const WALL_AIRBORNE_OUTPUTS = ["Rw", "STC", "C", "Ctr"] as const satisfies readonly RequestedOutputId[];
@@ -530,8 +529,11 @@ function addAdvancedWallSourceAbsentContract(input: {
   targetOutputs: readonly RequestedOutputId[];
 }): AcousticInputCompleteness {
   const advancedWall = input.context?.advancedWall ?? {};
+  const frequencyBandSet =
+    advancedWall.frequencyBandSet === "third_octave_100_3150" ? advancedWall.frequencyBandSet : undefined;
   const runtimeResult = calculateGateAYAdvancedWallRuntimeCorridor({
     ...advancedWall,
+    frequencyBandSet,
     outputBasis: advancedWall.outputBasis ?? input.context?.contextMode ?? "element_lab",
     targetOutputs: input.targetOutputs.length > 0 ? input.targetOutputs : WALL_AIRBORNE_OUTPUTS
   });

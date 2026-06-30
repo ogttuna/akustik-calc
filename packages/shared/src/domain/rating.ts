@@ -27,6 +27,13 @@ export const AstmE413RatingSchema = z.object({
   estimated: z.boolean().optional()
 });
 
+export const AstmE1332RatingSchema = z.object({
+  OITC: z.number().nonnegative(),
+  bandSet: z.literal("one_third_octave_80_4000"),
+  basis: z.string().min(1),
+  estimated: z.boolean().optional()
+});
+
 export const FieldAirborneRatingSchema = z.object({
   C: z.number().optional(),
   Ctr: z.number().optional(),
@@ -58,6 +65,7 @@ export const FieldAirborneRatingSchema = z.object({
 });
 
 export const AssemblyRatingsSchema = z.object({
+  astmE1332: AstmE1332RatingSchema.optional(),
   astmE413: AstmE413RatingSchema,
   field: FieldAirborneRatingSchema.optional(),
   iso717: Iso717RatingSchema
@@ -66,5 +74,6 @@ export const AssemblyRatingsSchema = z.object({
 export type TransmissionLossCurve = z.infer<typeof TransmissionLossCurveSchema>;
 export type Iso717Rating = z.infer<typeof Iso717RatingSchema>;
 export type AstmE413Rating = z.infer<typeof AstmE413RatingSchema>;
+export type AstmE1332Rating = z.infer<typeof AstmE1332RatingSchema>;
 export type FieldAirborneRating = z.infer<typeof FieldAirborneRatingSchema>;
 export type AssemblyRatings = z.infer<typeof AssemblyRatingsSchema>;

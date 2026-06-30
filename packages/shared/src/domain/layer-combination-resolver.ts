@@ -34,7 +34,14 @@ export const LayerCombinationResolverSupportBucketSchema = z.enum([
 ]);
 export type LayerCombinationResolverSupportBucket = z.infer<typeof LayerCombinationResolverSupportBucketSchema>;
 
-export const LayerCombinationResolverRouteSchema = z.enum(["ceiling", "floor", "wall"]);
+export const LayerCombinationResolverRouteSchema = z.enum([
+  "ceiling",
+  "facade",
+  "floor",
+  "opening",
+  "roof",
+  "wall"
+]);
 export type LayerCombinationResolverRoute = z.infer<typeof LayerCombinationResolverRouteSchema>;
 
 export const LayerCombinationResolverValuePinSchema = z.object({

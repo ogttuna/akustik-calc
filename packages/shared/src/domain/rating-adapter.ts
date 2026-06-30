@@ -9,6 +9,7 @@ export const RatingAdapterIdSchema = z.enum([
   "iso_717_1_dnw_from_normalized_airborne_curve",
   "astm_e413_stc_from_airborne_transmission_loss_curve",
   "astm_e413_astc_from_apparent_airborne_curve",
+  "astm_e1332_oitc_from_outdoor_indoor_transmission_loss_curve",
   "iso_717_2_lnw_from_impact_level_curve",
   "iso_717_2_lprime_nw_from_field_impact_curve",
   "iso_717_2_lprime_ntw_from_standardized_field_impact_curve",
@@ -36,6 +37,7 @@ export const RatingAdapterInputBasisSchema = z.enum([
   "airborne_apparent_transmission_loss_curve",
   "airborne_standardized_level_difference_curve",
   "airborne_normalized_level_difference_curve",
+  "outdoor_indoor_transmission_loss_curve",
   "impact_level_curve",
   "impact_field_level_curve",
   "impact_standardized_field_level_curve",
@@ -48,6 +50,7 @@ export const RatingAdapterStandardSchema = z.enum([
   "ISO 717-1",
   "ISO 717-2",
   "ASTM E413",
+  "ASTM E1332",
   "ASTM E989",
   "source_report",
   "engine_native_bounded_estimate"
@@ -73,6 +76,7 @@ const airborneOutputs = new Set<RequestedOutputId>([
   "Rw",
   "R'w",
   "STC",
+  "OITC",
   "C",
   "Ctr",
   "DnT,w",
@@ -126,6 +130,7 @@ const iso7172Metrics = new Set<RequestedOutputId>([
 ]);
 
 const astmE989Metrics = new Set<RequestedOutputId>(["IIC", "AIIC", "LIIC", "LIR", "HIIC"]);
+const astmE1332Metrics = new Set<RequestedOutputId>(["OITC"]);
 const fieldOrBuildingMetrics = new Set<RequestedOutputId>([
   "R'w",
   "DnT,w",
@@ -181,6 +186,10 @@ export const RatingAdapterBasisSchema = z
       addIssue(ctx, ["ratingStandard"], "STC requires the ASTM E413 rating standard");
     }
 
+    if (basis.metricId === "OITC" && basis.ratingStandard !== "ASTM E1332") {
+      addIssue(ctx, ["ratingStandard"], "OITC requires the ASTM E1332 outdoor-indoor rating standard");
+    }
+
     if (iso7171Metrics.has(basis.metricId) && basis.ratingStandard === "ASTM E413") {
       addIssue(ctx, ["ratingStandard"], `${basis.metricId} must not be silently rated as ASTM E413/STC`);
     }
@@ -191,6 +200,10 @@ export const RatingAdapterBasisSchema = z
 
     if (astmE989Metrics.has(basis.metricId) && basis.ratingStandard !== "ASTM E989") {
       addIssue(ctx, ["ratingStandard"], `${basis.metricId} requires the ASTM E989 impact rating standard`);
+    }
+
+    if (!astmE1332Metrics.has(basis.metricId) && basis.ratingStandard === "ASTM E1332") {
+      addIssue(ctx, ["ratingStandard"], `${basis.metricId} must not be silently rated as ASTM E1332/OITC`);
     }
 
     if (fieldOrBuildingMetrics.has(basis.metricId) && basis.contextBasis === "element_lab") {

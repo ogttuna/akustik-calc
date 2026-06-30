@@ -54,6 +54,7 @@ const AssemblyMetricsShape = {
   estimatedDnTAkDb: z.number().optional(),
   estimatedDnWDb: z.number().optional(),
   estimatedDnADb: z.number().optional(),
+  estimatedOitcDb: z.number().nonnegative().optional(),
   estimatedStc: z.number().nonnegative(),
   airGapCount: z.number().int().nonnegative(),
   insulationCount: z.number().int().nonnegative(),

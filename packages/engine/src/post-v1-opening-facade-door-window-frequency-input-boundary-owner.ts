@@ -108,7 +108,9 @@ function isBoundaryRequested(airborneContext: AirborneContext | null | undefined
 }
 
 function hasFrequencyOrRatingBasis(opening: AirborneOpeningLeakElement): boolean {
-  return opening.frequencyBandSet === "third_octave_100_3150" || known(opening.ratingBasis);
+  return opening.frequencyBandSet === "third_octave_100_3150" ||
+    opening.frequencyBandSet === "one_third_octave_80_4000" ||
+    known(opening.ratingBasis);
 }
 
 function missingPhysicalInputs(

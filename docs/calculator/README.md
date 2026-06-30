@@ -23,11 +23,13 @@ Current opening sequence drift lock:
 `docs/calculator/CALCULATOR_OPENING_SEQUENCE_DRIFT_LOCK_2026-06-29.md`.
 Read this when choosing what opens next. It records the intended order:
 landed ceiling route-boundary closeout, already-landed floor
-`IIC`/`AIIC` exact-band work, current opening/facade `OITC` owner, and
-later calibration.
+`IIC`/`AIIC` exact-band work, landed opening/facade `OITC` owner,
+landed post-OITC rerank, landed spectral rating backbone, landed
+route/input surface, landed golden matrix, landed question engine, and
+the current roof airborne formula owner after input surface V1.
 
 Current checkpoint:
-`docs/calculator/CHECKPOINT_2026-06-29_OITC_OWNER_READY_HANDOFF.md`.
+`docs/calculator/CHECKPOINT_2026-06-30_ROUTE_REQUIRED_INPUT_QUESTION_ENGINE_HANDOFF.md`.
 
 Support work note:
 bounded docs, tooling, validation, UI/workbench clarity, source triage,
@@ -37,19 +39,19 @@ not count them as runtime progress unless calculator behavior actually
 moves.
 
 Latest completed selected implementation action:
-`post_v1_runtime_first_route_family_rerank_after_ceiling_roof_suspended_ceiling_route_split_boundary_coverage_refresh_plan`.
+`post_v1_route_required_input_question_engine_v1_plan`.
 
 Current selected implementation action:
-`post_v1_opening_facade_outdoor_indoor_oitc_spectral_rating_owner_plan`.
+`post_v1_roof_airborne_formula_owner_after_input_surface_v1_plan`.
 
 Current selected implementation file:
-`packages/engine/src/post-v1-opening-facade-outdoor-indoor-oitc-spectral-rating-owner-contract.test.ts`.
+`packages/engine/src/post-v1-roof-airborne-formula-owner-after-input-surface-v1-contract.test.ts`.
 
 Current selected implementation plan:
-`docs/calculator/POST_V1_OPENING_FACADE_OUTDOOR_INDOOR_OITC_SPECTRAL_RATING_OWNER_PLAN_2026-06-29.md`.
+`docs/calculator/POST_V1_ROOF_AIRBORNE_FORMULA_OWNER_AFTER_INPUT_SURFACE_V1_PLAN_2026-06-30.md`.
 
 Current selected implementation label:
-`post-V1 opening/facade outdoor-indoor OITC spectral rating owner`.
+`post-V1 roof airborne formula owner after input surface V1`.
 
 Current scope in one sentence:
 the ceiling field/building adapter coverage refresh and follow-up rerank
@@ -62,8 +64,179 @@ owner has landed runtime values, that owner coverage refresh has landed,
 the follow-up runtime-first rerank has landed, the
 ceiling/roof/suspended-ceiling route split boundary owner has landed,
 that owner's coverage refresh has landed, the runtime-first rerank after
-that coverage refresh has landed no-runtime, and the current selected
-next is the opening/facade outdoor-indoor OITC spectral rating owner.
+that coverage refresh has landed no-runtime, the opening/facade
+outdoor-indoor OITC spectral rating owner has landed runtime, that
+owner coverage refresh has landed no-runtime, the post-refresh rerank
+has landed no-runtime, the spectral rating backbone V1 support
+prerequisite has landed, the route/input family first-class surface
+input-surface slice has landed, the bounded industry-grade golden
+scenario matrix has landed, the route-required input question engine
+has landed, and the current selected next is the roof airborne formula
+owner after input surface V1.
+
+Latest landed input-surface question engine:
+`post_v1_route_required_input_question_engine_v1_plan`
+/
+`packages/engine/src/post-v1-route-required-input-question-engine-v1-contract.test.ts`
+/
+`docs/calculator/POST_V1_ROUTE_REQUIRED_INPUT_QUESTION_ENGINE_V1_PLAN_2026-06-30.md`
+/
+`post_v1_route_required_input_question_engine_v1_landed_input_surface_selected_post_v1_roof_airborne_formula_owner_after_input_surface_v1`.
+It follows
+`post_v1_industry_grade_golden_scenario_matrix_v1_landed_no_runtime_selected_post_v1_route_required_input_question_engine_v1`
+and uses selected candidate
+`post_v1_route_required_input_question_engine_v1`. It captures ordered
+minimum unblocker question groups from typed route/input completeness
+rows and preserves unsupported-only output boundaries. Counters:
+`minimumUnblockerQuestions: 9`, `routeQuestionFamiliesCaptured: 9`,
+`optionalPrecisionQuestions: 0`, `newCalculableRequestShapes: 0`,
+`newCalculableTargetOutputs: 0`, `requiredPhysicalInputsCaptured: 9`,
+`runtimeBasisPromotions: 0`, `runtimeValuesMoved 0`,
+`runtimeFormulaRetunes: 0`, `sourceRowsImported: 0`,
+`frontendImplementationFilesTouched: 0`, and
+`unsupportedBoundariesProtected: 8`. This is not a broad source crawl.
+Selected next:
+`post_v1_roof_airborne_formula_owner_after_input_surface_v1_plan`
+/
+`packages/engine/src/post-v1-roof-airborne-formula-owner-after-input-surface-v1-contract.test.ts`
+/
+`docs/calculator/POST_V1_ROOF_AIRBORNE_FORMULA_OWNER_AFTER_INPUT_SURFACE_V1_PLAN_2026-06-30.md`
+/
+`post-V1 roof airborne formula owner after input surface V1`.
+
+Latest landed no-runtime matrix:
+`post_v1_industry_grade_golden_scenario_matrix_v1_plan`
+/
+`packages/engine/src/post-v1-industry-grade-golden-scenario-matrix-v1-contract.test.ts`
+/
+`docs/calculator/POST_V1_INDUSTRY_GRADE_GOLDEN_SCENARIO_MATRIX_V1_PLAN_2026-06-30.md`
+/
+`post_v1_industry_grade_golden_scenario_matrix_v1_landed_no_runtime_selected_post_v1_route_required_input_question_engine_v1`.
+It follows
+`post_v1_route_input_family_first_class_surface_v1_landed_input_surface_selected_post_v1_industry_grade_golden_scenario_matrix_v1`
+and uses selected candidate
+`post_v1_industry_grade_golden_scenario_matrix_v1`. The matrix pins 40
+representative wall, floor, ceiling, roof, opening/facade, OITC,
+impact, and field/building scenarios plus an 8-row ranked gap ledger.
+It selects the route-required input question engine because the largest
+current blocker is ordered collection of route-required physics for
+arbitrary user assemblies. Counters: `goldenScenarioRows: 40`,
+`rankedGapLedgerRows: 8`, `selectedNextValueOrBoundaryOwner: 1`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`requiredPhysicalInputsCaptured: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, `frontendImplementationFilesTouched: 0`, and
+`unsupportedBoundariesProtected: 12`. This is not a broad source crawl.
+Selected next:
+`post_v1_route_required_input_question_engine_v1_plan`
+/
+`packages/engine/src/post-v1-route-required-input-question-engine-v1-contract.test.ts`
+/
+`docs/calculator/POST_V1_ROUTE_REQUIRED_INPUT_QUESTION_ENGINE_V1_PLAN_2026-06-30.md`
+/
+`post-V1 route-required input question engine V1`.
+
+Latest landed input-surface prerequisite:
+`post_v1_route_input_family_first_class_surface_v1_plan`
+/
+`packages/engine/src/post-v1-route-input-family-first-class-surface-v1-contract.test.ts`
+/
+`docs/calculator/POST_V1_ROUTE_INPUT_FAMILY_FIRST_CLASS_SURFACE_V1_PLAN_2026-06-29.md`
+/
+`post_v1_route_input_family_first_class_surface_v1_landed_input_surface_selected_post_v1_industry_grade_golden_scenario_matrix_v1`.
+It follows
+`post_v1_spectral_rating_backbone_v1_landed_support_selected_post_v1_route_input_family_first_class_surface_v1`
+and uses selected candidate
+`post_v1_route_input_family_first_class_surface_v1`. Counters:
+`firstClassRouteFamiliesCaptured: 6`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`requiredPhysicalInputsCaptured: 6`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, `frontendImplementationFilesTouched: 0`, and
+`unsupportedBoundariesProtected: 8`. This is not a broad source crawl.
+Selected next:
+`post_v1_industry_grade_golden_scenario_matrix_v1_plan`
+/
+`packages/engine/src/post-v1-industry-grade-golden-scenario-matrix-v1-contract.test.ts`
+/
+`docs/calculator/POST_V1_INDUSTRY_GRADE_GOLDEN_SCENARIO_MATRIX_V1_PLAN_2026-06-30.md`
+/
+`post-V1 industry-grade golden scenario matrix V1`.
+
+Latest landed support prerequisite:
+`post_v1_spectral_rating_backbone_v1_plan`
+/
+`packages/engine/src/post-v1-spectral-rating-backbone-v1-contract.test.ts`
+/
+`docs/calculator/POST_V1_SPECTRAL_RATING_BACKBONE_V1_PLAN_2026-06-29.md`
+/
+`post_v1_spectral_rating_backbone_v1_landed_support_selected_post_v1_route_input_family_first_class_surface_v1`.
+It follows the post-OITC rerank and uses selected candidate
+`post_v1_spectral_rating_backbone_v1`. Counters:
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`requiredPhysicalInputsCaptured: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, `frontendImplementationFilesTouched: 0`,
+`reusableRatingProceduresMoved: 3`, and
+`unsupportedBoundariesProtected: 6`. This is not a broad source crawl.
+Selected next:
+`post_v1_route_input_family_first_class_surface_v1_plan`
+/
+`packages/engine/src/post-v1-route-input-family-first-class-surface-v1-contract.test.ts`
+/
+`docs/calculator/POST_V1_ROUTE_INPUT_FAMILY_FIRST_CLASS_SURFACE_V1_PLAN_2026-06-29.md`
+/
+`post-V1 route/input family first-class surface V1`.
+
+Latest landed no-runtime rerank:
+`post_v1_runtime_first_route_family_rerank_after_opening_facade_outdoor_indoor_oitc_spectral_rating_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-opening-facade-outdoor-indoor-oitc-spectral-rating-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_OPENING_FACADE_OUTDOOR_INDOOR_OITC_SPECTRAL_RATING_COVERAGE_REFRESH_PLAN_2026-06-29.md`
+/
+`post_v1_runtime_first_route_family_rerank_after_opening_facade_outdoor_indoor_oitc_spectral_rating_coverage_refresh_landed_no_runtime_selected_post_v1_spectral_rating_backbone_v1`.
+It follows
+`post_v1_opening_facade_outdoor_indoor_oitc_spectral_rating_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank_after_opening_facade_outdoor_indoor_oitc_spectral_rating_coverage_refresh`
+and selects candidate `post_v1_spectral_rating_backbone_v1`. Counters:
+`candidateCount: 6`, `roiAnalysisIterations: 4`,
+`estimatedNextCalculableRequestShapes: 0`,
+`estimatedNextCalculableTargetOutputs: 0`,
+`estimatedNextRequiredPhysicalInputsCaptured: 0`,
+`estimatedNextRuntimeBasisPromotions: 0`,
+`estimatedNextRuntimeValuesMoved: 0`,
+`estimatedNextReusableRatingProceduresMoved: 3`,
+`estimatedNextUnsupportedBoundariesProtected: 6`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl. Selected next:
+`post_v1_spectral_rating_backbone_v1_plan`
+/
+`packages/engine/src/post-v1-spectral-rating-backbone-v1-contract.test.ts`
+/
+`docs/calculator/POST_V1_SPECTRAL_RATING_BACKBONE_V1_PLAN_2026-06-29.md`
+/
+`post-V1 spectral rating backbone V1`.
+
+Latest landed no-runtime coverage refresh:
+`post_v1_opening_facade_outdoor_indoor_oitc_spectral_rating_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-opening-facade-outdoor-indoor-oitc-spectral-rating-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_OPENING_FACADE_OUTDOOR_INDOOR_OITC_SPECTRAL_RATING_COVERAGE_REFRESH_PLAN_2026-06-29.md`
+/
+`post_v1_opening_facade_outdoor_indoor_oitc_spectral_rating_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank_after_opening_facade_outdoor_indoor_oitc_spectral_rating_coverage_refresh`.
+Counters: `coverageRefreshContractFilesTouched: 1`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
+This is not a broad source crawl. Selected next:
+`post_v1_runtime_first_route_family_rerank_after_opening_facade_outdoor_indoor_oitc_spectral_rating_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-opening-facade-outdoor-indoor-oitc-spectral-rating-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_OPENING_FACADE_OUTDOOR_INDOOR_OITC_SPECTRAL_RATING_COVERAGE_REFRESH_PLAN_2026-06-29.md`
+/
+`post-V1 runtime-first route-family rerank after opening/facade outdoor-indoor OITC spectral rating coverage refresh`.
 
 Latest landed no-runtime rerank:
 `post_v1_runtime_first_route_family_rerank_after_ceiling_roof_suspended_ceiling_route_split_boundary_coverage_refresh_plan`
@@ -984,7 +1157,7 @@ Counters: `coverageRefreshContractFilesTouched: 1`,
 `frontendImplementationFilesTouched: 0`. This is not a broad source crawl.
 
 Current checkpoint:
-`docs/calculator/CHECKPOINT_2026-06-29_OITC_OWNER_READY_HANDOFF.md`.
+`docs/calculator/CHECKPOINT_2026-06-30_ROUTE_REQUIRED_INPUT_QUESTION_ENGINE_HANDOFF.md`.
 
 The ceiling multileaf/plenum runtime sequence,
 ceiling/roof/suspended-ceiling route split boundary closeout, and

@@ -1,6 +1,9 @@
 # Post-V1 Opening/Facade Outdoor-Indoor OITC Spectral Rating Owner Plan - 2026-06-29
 
 Status:
+`post_v1_opening_facade_outdoor_indoor_oitc_spectral_rating_owner_landed_runtime_basis_selected_coverage_refresh`
+
+Owner action:
 `post_v1_opening_facade_outdoor_indoor_oitc_spectral_rating_owner_plan`
 
 Selected by:
@@ -11,6 +14,9 @@ Selected by status:
 
 Selected candidate:
 `opening.facade_outdoor_indoor_oitc_spectral_rating_owner`
+
+Selected owner label:
+`post-V1 opening/facade outdoor-indoor OITC spectral rating owner`
 
 Owner file:
 `packages/engine/src/post-v1-opening-facade-outdoor-indoor-oitc-spectral-rating-owner-contract.test.ts`
@@ -46,14 +52,23 @@ Previous route-boundary owner:
 `post_v1_ceiling_roof_suspended_ceiling_route_split_boundary_owner_landed_input_boundary_selected_coverage_refresh`
 
 Selected next label:
-`post-V1 opening/facade outdoor-indoor OITC spectral rating owner`
+`post-V1 opening/facade outdoor-indoor OITC spectral rating coverage refresh`
+
+Selected next action:
+`post_v1_opening_facade_outdoor_indoor_oitc_spectral_rating_coverage_refresh_plan`
+
+Selected next file:
+`packages/engine/src/post-v1-opening-facade-outdoor-indoor-oitc-spectral-rating-coverage-refresh-contract.test.ts`
+
+Selected next plan:
+`docs/calculator/POST_V1_OPENING_FACADE_OUTDOOR_INDOOR_OITC_SPECTRAL_RATING_COVERAGE_REFRESH_PLAN_2026-06-29.md`
 
 Checkpoint reconciliation:
 `docs/calculator/CHECKPOINT_2026-06-29_OITC_OWNER_READY_HANDOFF.md`.
-That checkpoint confirms the selected owner file is intentionally not
-implemented yet, the current gate is wired through the latest no-runtime
-rerank, complete outdoor-indoor `OITC` requests remain unsupported, and
-this owner is still the next bounded calculator behavior.
+That checkpoint is pre-owner evidence: it selected this owner as the
+next bounded calculator behavior. This owner has now landed runtime, and
+the follow-up no-runtime OITC spectral rating coverage refresh has also
+landed.
 
 Rerank counters:
 `candidateCount: 8`, `roiAnalysisIterations: 4`,
@@ -67,6 +82,50 @@ Rerank counters:
 `sourceRowsImported: 0`, and `frontendImplementationFilesTouched: 0`.
 
 This is not a broad source crawl.
+
+Landed runtime counters:
+`newCalculableRequestShapes: 1`,
+`newCalculableTargetOutputs: 1`,
+`requiredPhysicalInputsCaptured: 4`,
+`runtimeBasisPromotions: 1`,
+`runtimeValuesMoved 1`,
+`runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`,
+`frontendImplementationFilesTouched: 0`, and
+`unsupportedBoundariesProtected: 7`.
+
+Landed runtime behavior:
+complete outdoor-indoor facade/opening requests with explicit
+`one_third_octave_80_4000` transmission-loss curves now calculate
+`OITC` through ASTM E1332 from the owned Gate S area-energy composite
+transmission-loss curve. Missing OITC band-set context remains
+`needs_input`; legacy `third_octave_100_3150` ISO curves, indoor
+partition requests, `Rw`, `STC`, `NISR`/`ISR`, indoor `DnT,w`, and
+source-report scalar OITC aliases remain blocked.
+
+Landed coverage refresh:
+`post_v1_opening_facade_outdoor_indoor_oitc_spectral_rating_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-opening-facade-outdoor-indoor-oitc-spectral-rating-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_OPENING_FACADE_OUTDOOR_INDOOR_OITC_SPECTRAL_RATING_COVERAGE_REFRESH_PLAN_2026-06-29.md`
+/
+`post_v1_opening_facade_outdoor_indoor_oitc_spectral_rating_coverage_refresh_landed_no_runtime_selected_runtime_first_route_family_rerank_after_opening_facade_outdoor_indoor_oitc_spectral_rating_coverage_refresh`.
+Coverage refresh counters:
+`coverageRefreshContractFilesTouched: 1`,
+`newCalculableRequestShapes: 0`, `newCalculableTargetOutputs: 0`,
+`requiredPhysicalInputsCaptured: 0`, `runtimeBasisPromotions: 0`,
+`runtimeValuesMoved 0`, `runtimeFormulaRetunes: 0`,
+`sourceRowsImported: 0`, `frontendImplementationFilesTouched: 0`, and
+`unsupportedBoundariesProtected: 0`. This is not a broad source crawl.
+Coverage selected next:
+`post_v1_runtime_first_route_family_rerank_after_opening_facade_outdoor_indoor_oitc_spectral_rating_coverage_refresh_plan`
+/
+`packages/engine/src/post-v1-runtime-first-route-family-rerank-after-opening-facade-outdoor-indoor-oitc-spectral-rating-coverage-refresh-contract.test.ts`
+/
+`docs/calculator/POST_V1_RUNTIME_FIRST_ROUTE_FAMILY_RERANK_AFTER_OPENING_FACADE_OUTDOOR_INDOOR_OITC_SPECTRAL_RATING_COVERAGE_REFRESH_PLAN_2026-06-29.md`
+/
+`post-V1 runtime-first route-family rerank after opening/facade outdoor-indoor OITC spectral rating coverage refresh`.
 
 ## Selection Card
 

@@ -59,6 +59,7 @@ export const AirborneRatingStandardSchema = z.enum([
   "ISO 717-1",
   "ISO 717-2",
   "ASTM E413",
+  "ASTM E1332",
   "ASTM E989",
   "engine_native_bounded_estimate",
   "source_report",

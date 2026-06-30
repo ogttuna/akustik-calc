@@ -221,20 +221,20 @@ describe("layer combination resolver candidate coverage matrix refresh contract"
       sourceRowsAreEvidenceNotProduct: true
     });
     expect(contract.summary).toEqual({
-      activeRuntimeCandidateCount: 53,
+      activeRuntimeCandidateCount: 54,
       allCandidateDeclarationsCovered: true,
       boundaryCandidateCount: 3,
-      candidateDeclarationCount: 56,
-      coverageMatrixRowCount: 56,
+      candidateDeclarationCount: 57,
+      coverageMatrixRowCount: 57,
       readinessBucketCount: {
         needs_input: 1,
         ready: 4,
-        ready_with_budget: 49,
+        ready_with_budget: 50,
         research_only: 0,
         unsupported: 2
       },
       selectedNextAction: LAYER_COMBINATION_RESOLVER_CANDIDATE_COVERAGE_MATRIX_REFRESH_SELECTED_NEXT_ACTION,
-      surfaceRowCount: 56
+      surfaceRowCount: 57
     });
 
     for (const path of REQUIRED_SURFACES) {
@@ -319,6 +319,7 @@ describe("layer combination resolver candidate coverage matrix refresh contract"
           "candidate_company_internal_opening_leak_building_family_physics_prediction",
           "candidate_company_internal_opening_leak_field_family_physics_prediction",
           "candidate_company_internal_opening_leak_a_weighted_family_physics_prediction",
+          "opening.facade_outdoor_indoor_oitc_spectral_rating_owner",
           "floor.raw_bare_floor_airborne.building_prediction_adapter",
           "floor.open_box_timber_finished_package.airborne_building_prediction_adapter",
           "wall.airborne_field_context.field_apparent_adapter",

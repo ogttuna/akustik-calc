@@ -14,13 +14,24 @@ It constrains what the next reranks and owners should select unless a
 newer source-of-truth document records a deliberate change.
 
 Current selected implementation:
-`post_v1_opening_facade_outdoor_indoor_oitc_spectral_rating_owner_plan`
+`post_v1_roof_airborne_formula_owner_after_input_surface_v1_plan`
 /
-`packages/engine/src/post-v1-opening-facade-outdoor-indoor-oitc-spectral-rating-owner-contract.test.ts`
+`packages/engine/src/post-v1-roof-airborne-formula-owner-after-input-surface-v1-contract.test.ts`
 /
-`docs/calculator/POST_V1_OPENING_FACADE_OUTDOOR_INDOOR_OITC_SPECTRAL_RATING_OWNER_PLAN_2026-06-29.md`
+`docs/calculator/POST_V1_ROOF_AIRBORNE_FORMULA_OWNER_AFTER_INPUT_SURFACE_V1_PLAN_2026-06-30.md`
 /
-`post-V1 opening/facade outdoor-indoor OITC spectral rating owner`.
+`post-V1 roof airborne formula owner after input surface V1`.
+
+Current live handoff note:
+the opening/facade OITC owner, OITC coverage refresh, post-refresh
+rerank, spectral rating backbone, route/input family first-class
+surface, industry-grade golden scenario matrix, and route-required
+input question engine have all landed. The selected next is the
+value-moving roof airborne formula owner after input surface V1. This
+keeps the sequence calculator-first: it opens roof airborne calculation
+only after required route inputs are explicit, and it still rejects
+broad source crawling, UI polish, metric aliasing, and confidence-label
+loops.
 
 Latest landed no-runtime rerank:
 `post_v1_runtime_first_route_family_rerank_after_ceiling_roof_suspended_ceiling_route_split_boundary_coverage_refresh_plan`

@@ -44,8 +44,12 @@ function normalizeGateAYInput(
   options: DynamicAirborneOptions,
   input: AirborneAdvancedWallInput
 ): GateAYAdvancedWallRuntimeInput {
+  const frequencyBandSet =
+    input.frequencyBandSet === "third_octave_100_3150" ? input.frequencyBandSet : undefined;
+
   return {
     ...input,
+    frequencyBandSet,
     outputBasis: input.outputBasis ?? options.airborneContext?.contextMode ?? "element_lab",
     targetOutputs: targetOutputsFor(options, input)
   };

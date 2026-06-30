@@ -204,11 +204,11 @@ describe("post-V1 ceiling single-leaf airborne route owner", () => {
     expect(registry.summary.routeCount).toMatchObject({
       ceiling: 6,
       floor: 28,
-      wall: 22
+      wall: 23
     });
     expect(registry.summary).toMatchObject({
-      activeRuntimeCandidateCount: 53,
-      candidateCount: 56
+      activeRuntimeCandidateCount: 54,
+      candidateCount: 57
     });
 
     const ceilingAdapter = adaptLayerCombinationRuntimeCandidate({

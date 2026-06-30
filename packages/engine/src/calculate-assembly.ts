@@ -141,6 +141,11 @@ import {
   POST_V1_OPENING_FACADE_OUTDOOR_INDOOR_OITC_METRIC_SCHEMA_AND_ADAPTER_BRIDGE_OWNER_WARNING
 } from "./post-v1-opening-facade-outdoor-indoor-oitc-metric-schema-and-adapter-bridge-owner";
 import {
+  POST_V1_OPENING_FACADE_OUTDOOR_INDOOR_OITC_SPECTRAL_RATING_OWNER_METHOD,
+  maybeBuildPostV1OpeningFacadeOutdoorIndoorOitcSpectralRatingGateSContext,
+  maybeBuildPostV1OpeningFacadeOutdoorIndoorOitcSpectralRatingOwner
+} from "./post-v1-opening-facade-outdoor-indoor-oitc-spectral-rating-owner";
+import {
   buildDynamicCalculatorCandidateResolverRuntime,
   inferDynamicCalculatorRuntimeRoute
 } from "./dynamic-calculator-candidate-resolver-runtime";
@@ -660,6 +665,7 @@ const ACOUSTIC_CALCULATOR_ANSWER_ENGINE_V1_WALL_AIRBORNE_OUTPUTS = new Set<Reque
   "DnT,A",
   "DnT,A,k",
   "DnT,w",
+  "OITC",
   "R'w",
   "Rw",
   "STC"
@@ -6915,6 +6921,40 @@ export function calculateAssembly(
     postV1OpeningFacadeDoorWindowSpectralOpeningCurveRuntime?.supportedOutputs ?? [];
   const postV1OpeningFacadeDoorWindowSpectralOpeningCurveOutputSet =
     new Set(postV1OpeningFacadeDoorWindowSpectralOpeningCurveOutputs);
+  const postV1OpeningFacadeOutdoorIndoorOitcGateSContext =
+    maybeBuildPostV1OpeningFacadeOutdoorIndoorOitcSpectralRatingGateSContext({
+      airborneContext,
+      targetOutputs
+    });
+  const postV1OpeningFacadeOutdoorIndoorOitcGateSRuntime =
+    options.calculator === "dynamic" && postV1OpeningFacadeOutdoorIndoorOitcGateSContext
+      ? maybeBuildGateSOpeningLeakCompositeRuntimeCorridor({
+          airborneContext: postV1OpeningFacadeOutdoorIndoorOitcGateSContext,
+          hostCurve: curve,
+          hostWallRatingBasis: resolveOpeningLeakHostWallBasis({
+            dynamicRuntimeActive: Boolean(dynamicAirborneResult),
+            importedCalculatorActive: Boolean(importedCalculatorResult),
+            verifiedLabAnchorApplied: Boolean(
+              verifiedAirborneAnchorResult.applied &&
+                verifiedAirborneAnchorResult.match?.sourceMode === "lab"
+            )
+          }),
+          hostWallRwDb: adjustedEstimatedRwDb,
+          targetOutputs: ["Rw"]
+        })
+      : null;
+  const postV1OpeningFacadeOutdoorIndoorOitcSpectralRatingOwner =
+    options.calculator === "dynamic"
+      ? maybeBuildPostV1OpeningFacadeOutdoorIndoorOitcSpectralRatingOwner({
+          airborneContext,
+          gateSRuntime: postV1OpeningFacadeOutdoorIndoorOitcGateSRuntime,
+          targetOutputs
+        })
+      : null;
+  const postV1OpeningFacadeOutdoorIndoorOitcOutputs =
+    postV1OpeningFacadeOutdoorIndoorOitcSpectralRatingOwner?.supportedOutputs ?? [];
+  const postV1OpeningFacadeOutdoorIndoorOitcOutputSet =
+    new Set(postV1OpeningFacadeOutdoorIndoorOitcOutputs);
   const gateAHOpeningLeakStcSpectrumAdapter = options.calculator === "dynamic"
     ? maybeBuildGateAHOpeningLeakStcSpectrumAdapter({
         airborneContext,
@@ -7123,6 +7163,7 @@ export function calculateAssembly(
       ? gateSOpeningLeakCompositeRuntime?.blockedOutputs.filter((output) =>
           output !== "STC" &&
           !postV1OpeningFacadeDoorWindowSpectralOpeningCurveOutputSet.has(output) &&
+          !postV1OpeningFacadeOutdoorIndoorOitcOutputSet.has(output) &&
           !postV1OpeningFacadeDoorWindowBuildingLabCompanionOutputSet.has(output) &&
           !postV1OpeningFacadeDoorWindowCCtrLabCompanionOutputSet.has(output) &&
           !(companyInternalOpeningLeakFieldBuildingRuntime?.supportedOutputs.includes(output) ?? false)
@@ -7130,6 +7171,7 @@ export function calculateAssembly(
       : gateSOpeningLeakCompositeRuntime?.blockedOutputs.filter(
           (output) =>
             !postV1OpeningFacadeDoorWindowSpectralOpeningCurveOutputSet.has(output) &&
+            !postV1OpeningFacadeOutdoorIndoorOitcOutputSet.has(output) &&
             !postV1OpeningFacadeDoorWindowBuildingLabCompanionOutputSet.has(output) &&
             !postV1OpeningFacadeDoorWindowCCtrLabCompanionOutputSet.has(output) &&
             !(companyInternalOpeningLeakFieldBuildingRuntime?.supportedOutputs.includes(output) ?? false)
@@ -7694,6 +7736,7 @@ export function calculateAssembly(
       estimatedDnTAkDb: ratingsWithFloorAirborneBuildingPredictionRuntime.field?.DnTAk,
       estimatedDnTwDb: ratingsWithFloorAirborneBuildingPredictionRuntime.field?.DnTw,
       estimatedDnWDb: ratingsWithFloorAirborneBuildingPredictionRuntime.field?.DnW,
+      estimatedOitcDb: postV1OpeningFacadeOutdoorIndoorOitcSpectralRatingOwner?.estimatedOitcDb,
       estimatedRwDb: visibleEstimatedRwDbWithFloorPackageLabCompanion,
       estimatedRwPrimeDb: ratingsWithFloorAirborneBuildingPredictionRuntime.field?.RwPrime ??
         ratingsWithFloorAirborneBuildingPredictionRuntime.iso717.RwPrime,
@@ -7982,6 +8025,15 @@ export function calculateAssembly(
               selectedMethod: dynamicAirborneResult?.trace.selectedMethod,
               strategy: "compatible_anchor_delta_field_building_adapter"
             }
+          : postV1OpeningFacadeOutdoorIndoorOitcSpectralRatingOwner?.basis
+          ? {
+              airborneBasis: postV1OpeningFacadeOutdoorIndoorOitcSpectralRatingOwner.basis,
+              detectedFamily: dynamicAirborneResult?.trace.detectedFamily ?? "single_leaf_panel",
+              runtimeValueMovement:
+                postV1OpeningFacadeOutdoorIndoorOitcSpectralRatingOwner.status === "runtime_promoted",
+              selectedMethod: POST_V1_OPENING_FACADE_OUTDOOR_INDOOR_OITC_SPECTRAL_RATING_OWNER_METHOD,
+              strategy: POST_V1_OPENING_FACADE_OUTDOOR_INDOOR_OITC_SPECTRAL_RATING_OWNER_METHOD
+            }
           : dynamicAirborneResult
           ? {
               airborneBasis:
@@ -8044,6 +8096,7 @@ export function calculateAssembly(
     !projectUserMeasuredWallAirborneFrequencyFieldBuildingBasis &&
     !advancedWallSourceAbsentFieldBuildingBasis &&
     !britishGypsumExactLabFieldBuildingBasis &&
+    !postV1OpeningFacadeOutdoorIndoorOitcSpectralRatingOwner?.basis &&
     dynamicCandidateResolverRuntime?.routeInputAssessment.outputBasis === "building_prediction" &&
     (
       dynamicCandidateResolverRuntime.resolution.selectedOrigin === "needs_input" ||
@@ -8053,6 +8106,7 @@ export function calculateAssembly(
     Boolean(projectUserMeasuredWallAirborneFrequencyFieldBuildingBasis) ||
     Boolean(advancedWallSourceAbsentFieldBuildingBasis) ||
     Boolean(britishGypsumExactLabFieldBuildingBasis) ||
+    Boolean(postV1OpeningFacadeOutdoorIndoorOitcSpectralRatingOwner?.basis) ||
     dynamicCandidateResolverRuntime?.routeInputAssessment.outputBasis === "building_prediction" &&
     (
       dynamicCandidateResolverRuntime.resolution.selectedOrigin === "needs_input" ||
@@ -8110,6 +8164,7 @@ export function calculateAssembly(
     rawPostV1OpeningFacadeDoorWindowFrequencyInputBoundaryBlockedOutputs.filter(
       (output) =>
         !postV1OpeningFacadeDoorWindowSpectralOpeningCurveOutputSet.has(output) &&
+        !postV1OpeningFacadeOutdoorIndoorOitcOutputSet.has(output) &&
         !postV1OpeningFacadeDoorWindowBuildingLabCompanionOutputSet.has(output) &&
         !postV1OpeningFacadeDoorWindowCCtrLabCompanionOutputSet.has(output) &&
         !(companyInternalOpeningLeakFieldBuildingRuntime?.supportedOutputs.includes(output) ?? false) &&
@@ -8119,6 +8174,7 @@ export function calculateAssembly(
     rawPostV1OpeningFacadeDoorWindowAcousticRatingInputBoundaryBlockedOutputs.filter(
       (output) =>
         !postV1OpeningFacadeDoorWindowSpectralOpeningCurveOutputSet.has(output) &&
+        !postV1OpeningFacadeOutdoorIndoorOitcOutputSet.has(output) &&
         !postV1OpeningFacadeDoorWindowBuildingLabCompanionOutputSet.has(output) &&
         !postV1OpeningFacadeDoorWindowCCtrLabCompanionOutputSet.has(output) &&
         !(companyInternalOpeningLeakFieldBuildingRuntime?.supportedOutputs.includes(output) ?? false) &&
@@ -8494,6 +8550,19 @@ export function calculateAssembly(
       runtime: openBoxFinishedPackageFloorAirborneBuildingPredictionRuntime,
       support: visibleTargetOutputSupportWithExactMetricScope
     });
+  const postV1OpeningFacadeOutdoorIndoorOitcAliasBlockedOutputs =
+    postV1OpeningFacadeOutdoorIndoorOitcSpectralRatingOwner?.status === "runtime_promoted"
+      ? targetOutputSupport.targetOutputs.filter((output) =>
+          output !== "OITC" &&
+          (
+            output === "Rw" ||
+            output === "STC" ||
+            output === "NISR" ||
+            output === "ISR" ||
+            output === "DnT,w"
+          )
+        )
+      : [];
   const visibleTargetOutputSupportWithPostV1Companions = moveSupportedOutputsToUnsupported(
     moveUnsupportedOutputsToSupported(
       visibleTargetOutputSupportWithExactMetricScope,
@@ -8521,7 +8590,8 @@ export function calculateAssembly(
     ),
     [
       ...compatibleAnchorDeltaFieldBuildingUnsupportedOutputs,
-      ...britishGypsumExactLabFieldBuildingUnsupportedOutputs
+      ...britishGypsumExactLabFieldBuildingUnsupportedOutputs,
+      ...postV1OpeningFacadeOutdoorIndoorOitcAliasBlockedOutputs
     ]
   );
   const visibleTargetOutputSupportWithProjectUserMeasuredFrequencyBoundary = moveSupportedOutputsToUnsupported(
@@ -8741,6 +8811,13 @@ export function calculateAssembly(
         field: undefined
       }
     : ratingsWithGateARCharacteristicDnTAk;
+  const visibleRatingsWithOitc =
+    postV1OpeningFacadeOutdoorIndoorOitcSpectralRatingOwner?.rating
+      ? {
+          ...visibleRatings,
+          astmE1332: postV1OpeningFacadeOutdoorIndoorOitcSpectralRatingOwner.rating
+        }
+      : visibleRatings;
   const warnings = buildEstimateWarnings(resolvedLayers, selectedCalculatorLabel);
   if (gateARCharacteristicDnTAkDb !== undefined && targetOutputSupport.targetOutputs.includes("DnT,A,k")) {
     warnings.push(
@@ -8929,7 +9006,11 @@ export function calculateAssembly(
     warnings.push(postV1OpeningFacadeDoorWindowFrequencyInputBoundary.warning);
   }
   if (targetOutputs.includes("OITC")) {
-    warnings.push(POST_V1_OPENING_FACADE_OUTDOOR_INDOOR_OITC_METRIC_SCHEMA_AND_ADAPTER_BRIDGE_OWNER_WARNING);
+    warnings.push(
+      postV1OpeningFacadeOutdoorIndoorOitcSpectralRatingOwner
+        ? postV1OpeningFacadeOutdoorIndoorOitcSpectralRatingOwner.warning
+        : POST_V1_OPENING_FACADE_OUTDOOR_INDOOR_OITC_METRIC_SCHEMA_AND_ADAPTER_BRIDGE_OWNER_WARNING
+    );
   }
   if (postV1OpeningFacadeDoorWindowAcousticRatingInputBoundary?.warning) {
     warnings.push(postV1OpeningFacadeDoorWindowAcousticRatingInputBoundary.warning);
@@ -9171,6 +9252,9 @@ export function calculateAssembly(
 
   const ratingAdapterBasisSet = [
     ...(gateAHOpeningLeakStcSpectrumAdapter ? [gateAHOpeningLeakStcSpectrumAdapter.ratingAdapterBasis] : []),
+    ...(postV1OpeningFacadeOutdoorIndoorOitcSpectralRatingOwner?.ratingAdapterBasis
+      ? [postV1OpeningFacadeOutdoorIndoorOitcSpectralRatingOwner.ratingAdapterBasis]
+      : []),
     ...(localSubstitutionLabSpectrumAdapter?.ratingAdapterBasisSet ?? [])
   ];
 
@@ -9196,26 +9280,27 @@ export function calculateAssembly(
     curve,
     layers: resolvedLayers,
     metrics: {
-      airborneIsoDescriptor: visibleRatings.iso717.descriptor,
+      airborneIsoDescriptor: visibleRatingsWithOitc.iso717.descriptor,
       totalThicknessMm,
       surfaceMassKgM2,
       estimatedRwDb: visibleEstimatedRwDbWithUserVerifiedCalculatedExact,
       estimatedRwPrimeDb: hideParkedAirborneBuildingPredictionMetrics
         ? undefined
-        : visibleRatings.field?.RwPrime ?? visibleRatings.iso717.RwPrime,
+        : visibleRatingsWithOitc.field?.RwPrime ?? visibleRatingsWithOitc.iso717.RwPrime,
       estimatedCDb: visibleEstimatedCDbWithUserVerifiedCalculatedExact,
       estimatedCtrDb: visibleEstimatedCtrDbWithUserVerifiedCalculatedExact,
-      estimatedDnTwDb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatings.field?.DnTw,
-      estimatedDnTADb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatings.field?.DnTA,
-      estimatedDnTAkDb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatings.field?.DnTAk,
-      estimatedDnWDb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatings.field?.DnW,
-      estimatedDnADb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatings.field?.DnA,
+      estimatedDnTwDb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatingsWithOitc.field?.DnTw,
+      estimatedDnTADb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatingsWithOitc.field?.DnTA,
+      estimatedDnTAkDb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatingsWithOitc.field?.DnTAk,
+      estimatedDnWDb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatingsWithOitc.field?.DnW,
+      estimatedDnADb: hideParkedAirborneBuildingPredictionMetrics ? undefined : visibleRatingsWithOitc.field?.DnA,
+      estimatedOitcDb: postV1OpeningFacadeOutdoorIndoorOitcSpectralRatingOwner?.estimatedOitcDb,
       estimatedStc: visibleEstimatedStcDbWithUserVerifiedCalculatedExact,
       airGapCount: resolvedLayers.filter((layer) => layer.material.category === "gap").length,
       insulationCount: resolvedLayers.filter((layer) => layer.material.category === "insulation").length,
       method: dynamicAirborneResult?.id ?? importedCalculatorResult?.id ?? "screening_mass_law_curve_seed_v3"
     },
-    ratings: visibleRatings,
+    ratings: visibleRatingsWithOitc,
     ratingAdapterBasisSet: ratingAdapterBasisSet.length > 0 ? ratingAdapterBasisSet : undefined,
     supportedImpactOutputs: visibleTargetOutputSupportWithUserVerifiedCalculatedExact.supportedImpactOutputs,
     supportedTargetOutputs: visibleTargetOutputSupportWithUserVerifiedCalculatedExact.supportedTargetOutputs,
@@ -9284,6 +9369,7 @@ export function calculateAssembly(
         postV1OpeningFacadeDoorWindowFrequencyInputBoundary.status === "unsupported_boundary" &&
         postV1OpeningFacadeDoorWindowBuildingLabCompanionOutputs.length === 0 &&
         postV1OpeningFacadeDoorWindowCCtrLabCompanionOutputs.length === 0 &&
+        postV1OpeningFacadeOutdoorIndoorOitcOutputs.length === 0 &&
         companyInternalOpeningLeakFieldBuildingRuntime?.status !== "blocked_missing_input" &&
         (companyInternalOpeningLeakFieldBuildingRuntime?.supportedOutputs.length ?? 0) === 0 &&
         postV1GateARCharacteristicDnTAkOutputs.length === 0
@@ -9292,6 +9378,15 @@ export function calculateAssembly(
     )
   ) {
     result.airborneBasis = postV1OpeningFacadeDoorWindowFrequencyInputBoundary.basis;
+  }
+  if (
+    postV1OpeningFacadeOutdoorIndoorOitcSpectralRatingOwner?.basis &&
+    (
+      postV1OpeningFacadeOutdoorIndoorOitcSpectralRatingOwner.status === "runtime_promoted" ||
+      !result.supportedTargetOutputs.includes("OITC")
+    )
+  ) {
+    result.airborneBasis = postV1OpeningFacadeOutdoorIndoorOitcSpectralRatingOwner.basis;
   }
   if (
     postV1OpeningFacadeDoorWindowAcousticRatingInputBoundary?.basis &&
@@ -9389,7 +9484,8 @@ export function calculateAssembly(
       projectUserMeasuredWallAirborneFrequencyExactCurveBridge.basis ||
       projectUserMeasuredWallAirborneFrequencyCompatibleDelta.basis ||
       projectUserMeasuredWallRwExactBridge.basis ||
-      projectUserVerifiedCalculatedExactBridge.basis
+      projectUserVerifiedCalculatedExactBridge.basis ||
+      postV1OpeningFacadeOutdoorIndoorOitcSpectralRatingOwner?.basis
     ),
     result
   });

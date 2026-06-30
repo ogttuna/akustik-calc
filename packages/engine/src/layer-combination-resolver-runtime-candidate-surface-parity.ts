@@ -73,6 +73,9 @@ import {
   POST_V1_PROJECT_USER_MEASURED_WALL_AIRBORNE_FREQUENCY_COMPATIBLE_DELTA_RUNTIME_METHOD
 } from "./project-user-measured-wall-airborne-frequency-compatible-delta";
 import {
+  POST_V1_OPENING_FACADE_OUTDOOR_INDOOR_OITC_SPECTRAL_RATING_OWNER_METHOD
+} from "./post-v1-opening-facade-outdoor-indoor-oitc-spectral-rating-owner";
+import {
   GATE_DV_LSF_EXACT_RW_CALCULATED_COMPANION_RUNTIME_METHOD
 } from "./dynamic-airborne-gate-dv-lsf-exact-source-mixed-companion";
 import {
@@ -122,6 +125,7 @@ const RESOLVER_METRIC_IDS = new Set<string>([
   "LnT,A",
   "Ln,w",
   "Ln,w+CI",
+  "OITC",
   "R'w",
   "Rw",
   "STC"
@@ -510,6 +514,9 @@ function buildAirborneRuntimeValuePins(
   if (outputSet.has("Dn,A") && typeof result.metrics.estimatedDnADb === "number") {
     pins.push({ metric: "Dn,A", value: result.metrics.estimatedDnADb });
   }
+  if (outputSet.has("OITC") && typeof result.metrics.estimatedOitcDb === "number") {
+    pins.push({ metric: "OITC", value: result.metrics.estimatedOitcDb });
+  }
 
   return pins;
 }
@@ -868,10 +875,12 @@ function withScenarioSpecificAirborneRuntimePins(
     trace.route === "wall" &&
     trace.runtimeBasisId === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD ||
     trace.route === "wall" &&
-    trace.runtimeBasisId === COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD ||
-    (
-      trace.route === "wall" &&
-      trace.runtimeBasisId === COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD &&
+	    trace.runtimeBasisId === COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD ||
+	    trace.route === "wall" &&
+	    trace.runtimeBasisId === POST_V1_OPENING_FACADE_OUTDOOR_INDOOR_OITC_SPECTRAL_RATING_OWNER_METHOD ||
+	    (
+	      trace.route === "wall" &&
+	      trace.runtimeBasisId === COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD &&
       trace.requestedBasis === "building_prediction"
     )
   );
@@ -1192,7 +1201,8 @@ export function buildLayerCombinationResolverTraceForAssembly(
     result.airborneBasis?.method === COMPANY_INTERNAL_OPENING_LEAK_A_WEIGHTED_RUNTIME_METHOD;
   const hasWallBuildingAirborneBasis =
     result.airborneBasis?.method === GATE_AR_AIRBORNE_BUILDING_PREDICTION_RUNTIME_METHOD ||
-    result.airborneBasis?.method === COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD;
+    result.airborneBasis?.method === COMPANY_INTERNAL_OPENING_LEAK_BUILDING_RUNTIME_METHOD ||
+    result.airborneBasis?.method === POST_V1_OPENING_FACADE_OUTDOOR_INDOOR_OITC_SPECTRAL_RATING_OWNER_METHOD;
   const hasRawBareFloorAirborneBuildingBasis =
     result.airborneBasis?.method === FLOOR_RAW_BARE_AIRBORNE_BUILDING_PREDICTION_RUNTIME_BASIS;
   const hasOpenBoxFinishedPackageFloorAirborneBuildingBasis =
@@ -1239,7 +1249,8 @@ export function buildLayerCombinationResolverTraceForAssembly(
     output === "Dn,A" ||
     output === "DnT,w" ||
     output === "DnT,A" ||
-    output === "DnT,A,k"
+    output === "DnT,A,k" ||
+    output === "OITC"
   );
   const hasCeilingSingleLeafAirborneRoute =
     hasOnlyCeilingRoleLayers &&
